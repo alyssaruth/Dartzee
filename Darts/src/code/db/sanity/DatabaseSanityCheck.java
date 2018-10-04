@@ -62,8 +62,24 @@ public class DatabaseSanityCheck
 				}
 			};
 			
-			TableModelDialog dlg = new TableModelDialog("Sanity Results", new ScrollTableButton(2, tm, showResults));
-			dlg.setColumnWidths("-1;50;150");
+			Action autoFix = new AbstractAction()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					int modelRow = Integer.valueOf(e.getActionCommand());
+					
+					AbstractSanityCheckResult result = sanityErrors.get(modelRow);
+					result.autoFix();
+				}
+			};
+			
+			SuperHashMap<Integer, Action> hmColumnToAction = new SuperHashMap<>();
+			hmColumnToAction.put(2, showResults);
+			hmColumnToAction.put(3, autoFix);
+			
+			TableModelDialog dlg = new TableModelDialog("Sanity Results", new ScrollTableButton(hmColumnToAction, tm));
+			dlg.setColumnWidths("-1;50;150;150");
 			dlg.setLocationRelativeTo(ScreenCache.getMainScreen());
 			dlg.setVisible(true);
 		}
@@ -78,10 +94,11 @@ public class DatabaseSanityCheck
 		model.addColumn("Description");
 		model.addColumn("Count");
 		model.addColumn("");
+		model.addColumn("");
 		
 		for (AbstractSanityCheckResult result : sanityErrors)
 		{
-			Object[] row = {result.getDescription(), result.getCount(), "View Results >"};
+			Object[] row = {result.getDescription(), result.getCount(), "View Results >", "Auto-fix"};
 			model.addRow(row);
 		}
 		

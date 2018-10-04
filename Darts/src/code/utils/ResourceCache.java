@@ -29,6 +29,7 @@ public class ResourceCache
 	
 	private static boolean initialisedUpFront = false;
 	
+	@SuppressWarnings("resource")
 	public static void initialiseResources()
 	{
 		if (!PreferenceUtil.getBooleanValue(DartsRegistry.PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES))

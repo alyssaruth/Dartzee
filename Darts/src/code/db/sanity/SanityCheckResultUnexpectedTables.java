@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 import bean.ScrollTable;
 import code.utils.DatabaseUtil;
@@ -54,6 +55,23 @@ public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSi
 			}
 		};
 	}
+	
+	private HandyArrayList<String> getTableNames()
+	{
+		DefaultTableModel model = getResultsModel();
+		
+		int rowCount = model.getRowCount();
+		
+		HandyArrayList<String> tableNames = new HandyArrayList<>();
+		for (int i=0; i<rowCount; i++)
+		{
+			String tableName = (String)model.getValueAt(i, 1);
+			tableNames.add(tableName);
+		}
+		
+		return tableNames;
+	}
+	
 	private boolean deleteSelectedTables(HandyArrayList<String> tableNames)
 	{
 		boolean success = true;
@@ -63,5 +81,23 @@ public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSi
 		}
 		
 		return success;
+	}
+	
+	@Override
+	public void autoFix()
+	{
+		HandyArrayList<String> tableNames = getTableNames();
+		
+		int response = DialogUtil.showQuestion("This will drop all " + tableNames.size() + " tables from the database. Are you sure?", false);
+		if (response == JOptionPane.NO_OPTION)
+		{
+			return;
+		}
+		
+		boolean success = deleteSelectedTables(tableNames);
+		if (!success)
+		{
+			DialogUtil.showError("An error occurred dropping the tables. You should re-run the sanity check and check logs.");
+		}
 	}
 }
