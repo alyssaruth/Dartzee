@@ -12,7 +12,7 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel
 	public PreferencesPanelMisc()
 	{
 		nfLeaderboardSize.setColumns(10);
-		setLayout(new MigLayout("", "[][grow][]", "[][][][][]"));
+		setLayout(new MigLayout("", "[][grow][]", "[][][][][][]"));
 		
 		add(lblDefaultAiSpeed, "cell 0 0");
 		add(slider, "cell 1 0");
@@ -25,6 +25,8 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel
 		add(chckbxCheckForUpdates, "flowx,cell 0 3");
 		
 		add(chckbxShowAnimations, "cell 0 4");
+		
+		add(chckbxPreloadResources, "cell 0 5");
 	}
 	
 	private final JLabel lblDefaultAiSpeed = new JLabel("Default AI speed");
@@ -34,6 +36,7 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel
 	private final JLabel lblRowsToShow = new JLabel("Rows to show on Leaderboards");
 	private final NumberField nfLeaderboardSize = new NumberField(10, 200);
 	private final JCheckBox chckbxShowAnimations = new JCheckBox("Show animations");
+	private final JCheckBox chckbxPreloadResources = new JCheckBox("Pre-load resources (recommended)");
 	
 	@Override
 	public void refresh(boolean useDefaults)
@@ -52,6 +55,10 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel
 		
 		boolean showAnimations = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults);
 		chckbxShowAnimations.setSelected(showAnimations);
+		
+		boolean preLoad = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, useDefaults);
+		chckbxPreloadResources.setSelected(preLoad);
+		
 	}
 
 	@Override
@@ -77,6 +84,9 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel
 		
 		boolean showAnimations = chckbxShowAnimations.isSelected();
 		PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, showAnimations);
+		
+		boolean preLoad = chckbxPreloadResources.isSelected();
+		PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, preLoad);
 	}
 
 }

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.Line;
@@ -27,13 +28,13 @@ import code.listener.DartboardListener;
 import code.object.ColourWrapper;
 import code.object.Dart;
 import code.object.DartboardSegment;
-import code.screen.game.GamePanelRoundTheClock;
 import code.screen.game.GamePanelX01;
 import code.utils.DartboardUtil;
 import code.utils.DartsColour;
 import code.utils.DartsRegistry;
 import code.utils.GeometryUtil;
 import code.utils.PreferenceUtil;
+import code.utils.ResourceCache;
 import object.SuperHashMap;
 import util.Debug;
 
@@ -43,7 +44,6 @@ public class Dartboard extends JLayeredPane
 {
 	private static final ImageIcon DARTIMG = new ImageIcon(GamePanelX01.class.getResource("/dartImage.png"));
 	
-	private static SuperHashMap<String, ImageIcon> hmResourceNameToImage = new SuperHashMap<>();
 	private static SuperHashMap<String, URL> hmSoundNameToUrl = new SuperHashMap<>();
 	
 	private SuperHashMap<Point, DartboardSegment> hmPointToSegment = new SuperHashMap<>();
@@ -60,11 +60,10 @@ public class Dartboard extends JLayeredPane
 	
 	private boolean simulation = false;
 	
-	private Clip clip = null;
-	
 	//Cached things
 	private DartboardSegment lastHoveredSegment = null;
 	private ColourWrapper colourWrapper = null;
+	private Clip clip = null;
 	
 	public Dartboard()
 	{
@@ -451,12 +450,12 @@ public class Dartboard extends JLayeredPane
 		Random rand = new Random();
 		int brucey = rand.nextInt(4) + 1;
 		
-		doDodgy("forsyth1", 300, 478, "forsyth" + brucey);
+		doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "forsyth" + brucey);
 	}
 	
 	public void doBull()
 	{
-		doDodgy("dev", 400, 476, "bull");
+		doDodgy(ResourceCache.IMG_DEV, 400, 476, "bull");
 	}
 	
 	public void doBadMiss()
@@ -467,33 +466,25 @@ public class Dartboard extends JLayeredPane
 		//4-1 ratio because mitchell > spencer!
 		if (miss <= 4)
 		{
-			doDodgy("mitchell", 300, 250, "badmiss" + miss);
+			doDodgy(ResourceCache.IMG_MITCHELL, 300, 250, "badmiss" + miss);
 		}
 		else
 		{
-			doDodgy("spencer", 460, 490, "damage");
+			doDodgy(ResourceCache.IMG_SPENCER, 460, 490, "damage");
 		}
 	}
 	
 	public void doGolfMiss()
 	{
-		doDodgy("dev", 400, 476, "fourTrimmed");
+		doDodgy(ResourceCache.IMG_DEV, 400, 476, "fourTrimmed");
 	}
 	
-	private void doDodgy(String imageName, int width, int height, String soundName)
+	private void doDodgy(ImageIcon ii, int width, int height, String soundName)
 	{
 		if (!PreferenceUtil.getBooleanValue(DartsRegistry.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
 		  || simulation)
 		{
 			return;
-		}
-		
-		//On-the-fly caching for the ImageIcons, so we're not delving into the JAR all the time
-		ImageIcon ii = hmResourceNameToImage.get(imageName);
-		if (ii == null)
-		{
-			ii = new ImageIcon(GamePanelRoundTheClock.class.getResource("/horrific/" + imageName + ".png"));
-			hmResourceNameToImage.put(imageName, ii);
 		}
 		
 		dodgyLabel.setIcon(ii);
@@ -516,55 +507,106 @@ public class Dartboard extends JLayeredPane
 	public void playDodgySound(String soundName)
 	{
 		try
-	    {
-			URL url = hmSoundNameToUrl.get(soundName);
-			if (url == null)
+		{
+			if (ResourceCache.isInitialised())
 			{
-				url = getClass().getResource("/wav/" + soundName + ".wav");
-				hmSoundNameToUrl.put(soundName, url);
+				playDodgySoundCached(soundName);
 			}
-			
-			//Resource may still be null if it genuinely doesn't exist. Just return.
-			if (url == null)
+			else
 			{
-				return;
+				playDodgySoundAdHoc(soundName);
 			}
-			
-			clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
-	        clip.addLineListener(new LineListener()
-	        {
-	            @Override
-	            public void update(LineEvent event)
-	            {
-	            	if (event.getType() == LineEvent.Type.STOP)
-	                {
-	            		//Always close our one
-	            		try (Clip myClip = (Clip)event.getLine();)
-	            		{
-	            			myClip.stop();
-	            			myClip.close();
-	            		}
-	            		
-	            		//See whether there's currently any clip running. If there isn't, also dismiss our dodgyLabel
-	            		if (!clip.isRunning())
-	            		{
-	            			remove(dodgyLabel);
-	            	        repaint();
-	            			revalidate();
-	            		}
-	                }
-	            }
-	        });
+		}
+		catch (Exception e)
+		{
+			Debug.stackTrace(e, "Caught error playing sound [" + soundName + "]");
+		}
+	}
+	
+	@SuppressWarnings("resource")
+	private void playDodgySoundCached(String soundName) throws Exception
+	{
+		AudioInputStream stream = ResourceCache.borrowInputStream(soundName);
+		if (stream == null)
+		{
+			return;
+		}
+		
+		Clip clip = initialiseAudioClip(stream, soundName);
+		
+		clip.open(stream);
+		clip.start();
+	}
+	
+	/**
+	 * Old, ad-hoc version for playing sounds (was really slow on home PC).
+	 * 
+	 * Caches the URL on-the-fly, but still initialises a fresh InputStream every time.
+	 */
+	@SuppressWarnings("resource")
+	private void playDodgySoundAdHoc(String soundName) throws Exception
+	{
+		URL url = hmSoundNameToUrl.get(soundName);
+		if (url == null)
+		{
+			url = getClass().getResource("/wav/" + soundName + ".wav");
+			hmSoundNameToUrl.put(soundName, url);
+		}
+		
+		//Resource may still be null if it genuinely doesn't exist. Just return.
+		if (url == null)
+		{
+			return;
+		}
+		
+		Clip clip = initialiseAudioClip(null, null);
 
-	        //This is still slow. Can we cache a 'pool' of the InputStreams? Then rather than close them, call reset() and return them
-	        //to the pool. Need more than one in case we try to play the same sound twice.
-	        clip.open(AudioSystem.getAudioInputStream(url));
-	        clip.start();
-	    }
-	    catch (Exception exc)
-	    {
-	        Debug.stackTrace(exc);
-	    }
+        //This is still slow. Can we cache a 'pool' of the InputStreams? Then rather than close them, call reset() and return them
+        //to the pool. Need more than one in case we try to play the same sound twice.
+        clip.open(AudioSystem.getAudioInputStream(url));
+        clip.start();
+	}
+	
+	private Clip initialiseAudioClip(AudioInputStream stream, String soundName) throws Exception
+	{
+		//Overwrite the 'clip' variable so this always stores the latest sound. 
+		//Allows us to not dismiss the label until the final sound has finished, in the case of overlapping sounds.
+		clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
+        clip.addLineListener(new LineListener()
+        {
+            @Override
+            public void update(LineEvent event)
+            {
+            	if (event.getType() == LineEvent.Type.STOP)
+                {
+            		//Always close or return our one
+            		try (Clip myClip = (Clip)event.getLine();)
+            		{
+            			myClip.stop();
+            			
+            			if (ResourceCache.isInitialised())
+            			{
+            				ResourceCache.returnInputStream(soundName, stream);
+            			}
+            			else
+            			{
+            				//Close the ad-hoc stream
+            				myClip.close();
+            			}
+            		}
+            		
+            		//See whether there's currently any clip running. If there isn't, also dismiss our dodgyLabel
+            		if (!clip.isRunning())
+            		{
+            			remove(dodgyLabel);
+            	        repaint();
+            			revalidate();
+            		}
+                }
+            }
+        });
+        
+        return clip;
 	}
 	
 	private void addDart(Point pt)

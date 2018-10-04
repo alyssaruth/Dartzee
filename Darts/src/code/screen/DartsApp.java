@@ -23,6 +23,7 @@ import code.db.sanity.DatabaseSanityCheck;
 import code.screen.game.DartsGameScreen;
 import code.utils.DartsDatabaseUtil;
 import code.utils.DevUtilities;
+import code.utils.ResourceCache;
 import screen.DebugConsoleAdv;
 import util.AbstractClient;
 import util.Debug;
@@ -57,6 +58,8 @@ public class DartsApp extends AbstractDevScreen
 	public void init()
 	{
 		setIcon();
+		
+		ResourceCache.initialiseResources();
 		
 		DartsDatabaseUtil.initialiseDatabase();
 		
