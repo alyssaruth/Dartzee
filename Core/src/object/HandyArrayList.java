@@ -117,6 +117,14 @@ public class HandyArrayList<E> extends ArrayList<E>
 		return ret;
 	}
 	
+	public void addUnique(E obj)
+	{
+		if (!contains(obj))
+		{
+			add(obj);
+		}
+	}
+	
 	public static <E> HandyArrayList<HandyArrayList<E>> getBatches(HandyArrayList<E> list, int batchSize)
 	{
 		HandyArrayList<HandyArrayList<E>> ret = new HandyArrayList<>();

@@ -346,7 +346,7 @@ public class DatabaseSanityCheck
 		int count = games.size();
 		if (count > 0)
 		{
-			sanityErrors.add(new SanityCheckResultEntitiesSimple(games, "Games with duplicate MatchOrdinals"));
+			sanityErrors.add(new SanityCheckResultDuplicateMatchOrdinals(games, "Games with duplicate MatchOrdinals"));
 		}
 	}
 	
