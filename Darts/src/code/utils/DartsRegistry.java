@@ -18,6 +18,7 @@ public interface DartsRegistry
 	public static final String PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE = "aiauto;true";
 	public static final String PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES = "chkupd;true";
 	public static final String PREFERENCES_BOOLEAN_SHOW_ANIMATIONS = "anim;true";
+	public static final String PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES = "rsrc;true";
 	
 	public static final String PREFERENCES_INT_AI_SPEED = "aispd;1000";
 	public static final String PREFERENCES_INT_LEADERBOARD_SIZE = "ldbrdsz;50";
