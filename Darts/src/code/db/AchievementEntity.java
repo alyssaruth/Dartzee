@@ -15,7 +15,7 @@ import object.HandyArrayList;
 public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 {
 	private long playerId = -1;
-	private int achievementId = -1;
+	private int achievementRef = -1;
 	private long gameIdEarned = -1;
 	private int achievementCounter = -1;
 	
@@ -29,7 +29,7 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	public String getCreateTableSqlSpecific()
 	{
 		return "PlayerId INT NOT NULL, "
-		  + "AchievementId INT NOT NULL, "
+		  + "AchievementRef INT NOT NULL, "
 		  + "GameIdEarned INT NOT NULL, "
 		  + "AchievementCounter INT NOT NULL";
 	}
@@ -39,7 +39,7 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 			throws SQLException
 	{
 		entity.setPlayerId(rs.getInt("PlayerId"));
-		entity.setAchievementId(rs.getInt("AchievementId"));
+		entity.setAchievementRef(rs.getInt("AchievementRef"));
 		entity.setGameIdEarned(rs.getInt("GameIdEarned"));
 		entity.setAchievementCounter(rs.getInt("AchievementCounter"));
 	}
@@ -48,7 +48,7 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	public String writeValuesToStatement(PreparedStatement statement, int i, String statementStr) throws SQLException
 	{
 		statementStr = writeLong(statement, i++, playerId, statementStr);
-		statementStr = writeInt(statement, i++, achievementId, statementStr);
+		statementStr = writeInt(statement, i++, achievementRef, statementStr);
 		statementStr = writeLong(statement, i++, gameIdEarned, statementStr);
 		statementStr = writeInt(statement, i++, achievementCounter, statementStr);
 		
@@ -59,7 +59,7 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	public void addListsOfColumnsForIndexes(ArrayList<ArrayList<String>> indexes)
 	{
 		ArrayList<String> ix = HandyArrayList.factoryAdd("PlayerId");
-		ArrayList<String> ix2 = HandyArrayList.factoryAdd("AchievementId");
+		ArrayList<String> ix2 = HandyArrayList.factoryAdd("AchievementRef");
 		
 		indexes.add(ix);
 		indexes.add(ix2);
@@ -76,13 +76,13 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	{
 		this.playerId = playerId;
 	}
-	public int getAchievementId()
+	public int getAchievementRef()
 	{
-		return achievementId;
+		return achievementRef;
 	}
-	public void setAchievementId(int achievementId)
+	public void setAchievementRef(int achievementId)
 	{
-		this.achievementId = achievementId;
+		this.achievementRef = achievementId;
 	}
 	public long getGameIdEarned()
 	{

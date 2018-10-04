@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 
 import bean.ScrollTable;
 import screen.TableModelDialog;
+import util.DialogUtil;
 
 public abstract class AbstractSanityCheckResult
 {
@@ -42,6 +43,11 @@ public abstract class AbstractSanityCheckResult
 	public Action getDeleteAction(ScrollTable t)
 	{
 		return null;
+	}
+	
+	public void autoFix()
+	{
+		DialogUtil.showError("No auto-fix available.");
 	}
 	
 	@Override
