@@ -34,6 +34,7 @@ public class ChangeLog extends JFrame
 		textArea.append("\n--------- v2.4.2 ---------");
 		textArea.append("\n");
 		textArea.append("\n+ Added pre-loading of sounds and images to improve performance");
+		textArea.append("\n+ Auto-fix feature for sanity checks");
 		textArea.append("\n= Fixed slow database check SQL");
 		textArea.append("\n= Fixed default on DartsMatch table");
 		textArea.append("\n");
