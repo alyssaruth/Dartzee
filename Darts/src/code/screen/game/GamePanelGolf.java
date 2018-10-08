@@ -166,4 +166,10 @@ public class GamePanelGolf extends DartsGamePanel<DartsScorerGolf>
 	{
 		dartboard.doGolfMiss();
 	}
+
+	@Override
+	public GameStatisticsPanel factoryStatsPanel()
+	{
+		return null;
+	}
 }

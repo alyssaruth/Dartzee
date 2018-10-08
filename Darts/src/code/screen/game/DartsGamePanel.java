@@ -15,6 +15,7 @@ import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
 import code.ai.AbstractDartsModel;
@@ -87,9 +88,16 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		panelButtons.add(btnConfirm);
 		panelButtons.add(btnReset);
 		
+		panelButtons.add(btnStats);
+		
 		btnConfirm.addActionListener(this);
 		btnReset.addActionListener(this);
+		btnStats.addActionListener(this);
 		
+		if (statsPanel == null)
+		{
+			btnStats.setVisible(false);
+		}
 		
 		dartboard.setRenderScoreLabels(true);
 	}
@@ -98,6 +106,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	 * Screen stuff
 	 */
 	protected final Dartboard dartboard = new Dartboard();
+	protected final GameStatisticsPanel statsPanel = factoryStatsPanel();
 	
 	private final JPanel panelSouth = new JPanel();
 	private final JPanel panelSpeedSlider = new JPanel();
@@ -105,6 +114,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	private final JPanel panelButtons = new JPanel();
 	private final JButton btnConfirm = new JButton("Confirm");
 	private final JButton btnReset = new JButton("Reset");
+	private final JToggleButton btnStats = new JToggleButton("Stats...");
 	
 	
 	/**
@@ -119,6 +129,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	public abstract boolean shouldAIStop();
 	public abstract void saveDartsAndProceed();
 	public abstract void initImpl(String gameParams);
+	public abstract GameStatisticsPanel factoryStatsPanel();
 	
 	/**
 	 * Regular methods
@@ -727,6 +738,29 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		{
 			confirmRound();
 		}
+		else if (source == btnStats)
+		{
+			viewStats();
+		}
+	}
+	
+	private void viewStats()
+	{
+		if (btnStats.isSelected())
+		{
+			panelCenter.remove(dartboard);
+			panelCenter.add(statsPanel, BorderLayout.CENTER);
+			
+			statsPanel.showStats(getGameId());
+		}
+		else
+		{
+			panelCenter.remove(statsPanel);
+			panelCenter.add(dartboard, BorderLayout.CENTER);
+		}
+		
+		panelCenter.revalidate();
+		panelCenter.repaint();
 	}
 	
 	private void addParticipant(int playerNumber, ParticipantEntity participant)
