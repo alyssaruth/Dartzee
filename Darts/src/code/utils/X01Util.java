@@ -1,5 +1,7 @@
 package code.utils;
 
+import java.util.ArrayList;
+
 import code.ai.AbstractDartsModel;
 import code.object.Dart;
 
@@ -46,5 +48,40 @@ public abstract class X01Util
 		
 		return startingScore % 2 == 0 //Even
 		  && startingScore <= 40;
+	}
+	
+	/**
+	 * Refactored out of GameWrapper for use in game stats panel
+	 */
+	public static ArrayList<Dart> getScoringDarts(ArrayList<Dart> allDarts, int scoreCutOff)
+	{
+		ArrayList<Dart> ret = new ArrayList<>();
+		if (allDarts == null)
+		{
+			return ret;
+		}
+		
+		for (Dart d : allDarts)
+		{
+			if (d.getStartingScore() > scoreCutOff)
+			{
+				ret.add(d);
+			}
+		}
+		
+		return ret;
+	}
+	public static double calculateThreeDartAverage(ArrayList<Dart> darts, int scoreCutOff)
+	{
+		ArrayList<Dart> scoringDarts = getScoringDarts(darts, scoreCutOff);
+		
+		double totalScoringDarts = scoringDarts.size();
+		double amountScored = 0;
+		for (Dart dart : scoringDarts)
+		{
+			amountScored += dart.getTotal();
+		}
+		
+		return (amountScored / totalScoringDarts) * 3;
 	}
 }

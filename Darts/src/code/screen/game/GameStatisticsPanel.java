@@ -7,9 +7,11 @@ import java.sql.SQLException;
 import javax.swing.JPanel;
 
 import bean.ScrollTable;
+import code.db.ParticipantEntity;
 import code.object.Dart;
 import code.utils.DatabaseUtil;
 import object.HashMapList;
+import object.SuperHashMap;
 import util.Debug;
 
 /**
@@ -18,6 +20,7 @@ import util.Debug;
  */
 public abstract class GameStatisticsPanel extends JPanel
 {
+	protected SuperHashMap<Integer, ParticipantEntity> hmPlayerNumberToParticipant = null;
 	protected HashMapList<String, Dart> hmPlayerToDarts = new HashMapList<>();
 	
 	public GameStatisticsPanel() 
@@ -29,8 +32,10 @@ public abstract class GameStatisticsPanel extends JPanel
 	protected final ScrollTable table = new ScrollTable();
 	
 	
-	public void showStats(long gameId)
+	public void showStats(long gameId, SuperHashMap<Integer, ParticipantEntity> hmPlayerNumberToParticipant)
 	{
+		this.hmPlayerNumberToParticipant = hmPlayerNumberToParticipant;
+		
 		hmPlayerToDarts = new HashMapList<>();
 		
 		StringBuilder sbSql = new StringBuilder();
