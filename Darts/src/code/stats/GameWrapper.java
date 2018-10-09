@@ -7,6 +7,7 @@ import java.util.HashMap;
 import code.object.Dart;
 import code.screen.game.DartsScorerGolf;
 import code.screen.stats.player.HoleBreakdownWrapper;
+import code.utils.X01Util;
 import object.HandyArrayList;
 import object.HashMapList;
 import util.DateUtil;
@@ -110,20 +111,13 @@ public class GameWrapper
 	 */
 	public double getThreeDartAverage(int scoreCutOff)
 	{
-		ArrayList<Dart> darts = getScoringDarts(scoreCutOff);
+		ArrayList<Dart> darts = getAllDartsFlattened();
 		if (darts == null)
 		{
 			return -1;
 		}
 		
-		double totalScoringDarts = darts.size();
-		double amountScored = 0;
-		for (Dart dart : darts)
-		{
-			amountScored += dart.getTotal();
-		}
-		
-		return (amountScored / totalScoringDarts) * 3;
+		return X01Util.calculateThreeDartAverage(darts, scoreCutOff);
 	}
 	
 	public int getMissedDartsX01(int scoreCutOff)
@@ -146,17 +140,18 @@ public class GameWrapper
 		return misses;
 	}
 	
-	@SuppressWarnings("unchecked")
+	public HandyArrayList<Dart> getAllDartsFlattened()
+	{
+		HandyArrayList<HandyArrayList<Dart>> allDarts = hmRoundNumberToDarts.getValuesAsVector();
+		return HandyArrayList.flattenBatches(allDarts);
+	}
 	public ArrayList<Dart> getScoringDarts(int scoreCutOff)
 	{
-		return (ArrayList<Dart>)getScoringDartVectors(scoreCutOff).get(0);
+		HandyArrayList<Dart> allDarts = getAllDartsFlattened();
+		return X01Util.getScoringDarts(allDarts, scoreCutOff);
 	}
-	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<Dart>> getScoringDartsGroupedByRound(int scoreCutOff)
-	{
-		return (ArrayList<ArrayList<Dart>>)getScoringDartVectors(scoreCutOff).get(1);
-	}
-	private ArrayList<ArrayList<?>> getScoringDartVectors(int scoreCutOff)
+	
+	private ArrayList<ArrayList<Dart>> getScoringDartsGroupedByRound(int scoreCutOff)
 	{
 		if (scoreCutOff < 62)
 		{
@@ -165,9 +160,6 @@ public class GameWrapper
 		}
 		
 		ArrayList<ArrayList<Dart>> allDartsInRounds = new ArrayList<>();
-		ArrayList<Dart> allDarts = new ArrayList<>();
-		
-		HandyArrayList<ArrayList<?>> ret = HandyArrayList.factoryAdd(allDarts, allDartsInRounds);
 		
 		int score = Integer.parseInt(gameParams);
 		for (int i=1; i<=totalRounds; i++)
@@ -176,7 +168,6 @@ public class GameWrapper
 			for (int j=0; j<drts.size(); j++)
 			{
 				Dart dart = drts.get(j);
-				allDarts.add(dart);
 				
 				if (j == drts.size() - 1)
 				{
@@ -187,7 +178,7 @@ public class GameWrapper
 				score -= dart.getTotal();
 				if (score <= scoreCutOff)
 				{
-					return ret;
+					return allDartsInRounds;
 				}
 			}
 		}
@@ -199,7 +190,7 @@ public class GameWrapper
 		}
 		
 		//If we get to here, it's an unfinished game that never went below the threshold. THat's fine - just return what we've got.
-		return ret;
+		return allDartsInRounds;
 	}
 	
 	/**

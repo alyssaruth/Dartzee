@@ -149,4 +149,15 @@ public class HandyArrayList<E> extends ArrayList<E>
 		ret.add(currentBatch);
 		return ret;
 	}
+	
+	public static <E> HandyArrayList<E> flattenBatches(HandyArrayList<HandyArrayList<E>> batchedList)
+	{
+		HandyArrayList<E> ret = new HandyArrayList<>();
+		for (HandyArrayList<E> batch : batchedList)
+		{
+			ret.addAll(batch);
+		}
+		
+		return ret;
+	}
 }
