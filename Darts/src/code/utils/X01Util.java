@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import code.ai.AbstractDartsModel;
 import code.object.Dart;
+import object.HandyArrayList;
 
 public abstract class X01Util
 {
@@ -53,25 +54,16 @@ public abstract class X01Util
 	/**
 	 * Refactored out of GameWrapper for use in game stats panel
 	 */
-	public static ArrayList<Dart> getScoringDarts(ArrayList<Dart> allDarts, int scoreCutOff)
+	public static HandyArrayList<Dart> getScoringDarts(HandyArrayList<Dart> allDarts, int scoreCutOff)
 	{
-		ArrayList<Dart> ret = new ArrayList<>();
 		if (allDarts == null)
 		{
-			return ret;
+			return new HandyArrayList<>();
 		}
 		
-		for (Dart d : allDarts)
-		{
-			if (d.getStartingScore() > scoreCutOff)
-			{
-				ret.add(d);
-			}
-		}
-		
-		return ret;
+		return allDarts.createFilteredCopy(d -> d.getStartingScore() > scoreCutOff);
 	}
-	public static double calculateThreeDartAverage(ArrayList<Dart> darts, int scoreCutOff)
+	public static double calculateThreeDartAverage(HandyArrayList<Dart> darts, int scoreCutOff)
 	{
 		ArrayList<Dart> scoringDarts = getScoringDarts(darts, scoreCutOff);
 		
@@ -83,5 +75,10 @@ public abstract class X01Util
 		}
 		
 		return (amountScored / totalScoringDarts) * 3;
+	}
+	
+	public static int sumScore(HandyArrayList<Dart> darts)
+	{
+		return darts.stream().mapToInt(d -> d.getTotal()).sum();
 	}
 }

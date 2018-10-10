@@ -3,6 +3,7 @@ package code.screen.game;
 import java.awt.BorderLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -10,8 +11,8 @@ import bean.ScrollTable;
 import code.db.ParticipantEntity;
 import code.object.Dart;
 import code.utils.DatabaseUtil;
+import object.HandyArrayList;
 import object.HashMapList;
-import object.SuperHashMap;
 import util.Debug;
 
 /**
@@ -20,8 +21,8 @@ import util.Debug;
  */
 public abstract class GameStatisticsPanel extends JPanel
 {
-	protected SuperHashMap<Integer, ParticipantEntity> hmPlayerNumberToParticipant = null;
-	protected HashMapList<String, Dart> hmPlayerToDarts = new HashMapList<>();
+	protected ArrayList<ParticipantEntity> participants = null;
+	protected HashMapList<String, HandyArrayList<Dart>> hmPlayerToDarts = new HashMapList<>();
 	
 	public GameStatisticsPanel() 
 	{
@@ -32,40 +33,52 @@ public abstract class GameStatisticsPanel extends JPanel
 	protected final ScrollTable table = new ScrollTable();
 	
 	
-	public void showStats(long gameId, SuperHashMap<Integer, ParticipantEntity> hmPlayerNumberToParticipant)
+	public void showStats(long gameId, ArrayList<ParticipantEntity> participants)
 	{
-		this.hmPlayerNumberToParticipant = hmPlayerNumberToParticipant;
+		this.participants = participants;
 		
 		hmPlayerToDarts = new HashMapList<>();
 		
-		StringBuilder sbSql = new StringBuilder();
-		sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, rnd.RoundNumber, p.Name");
-		sbSql.append(" FROM Dart d, Participant pt, Player p, Round rnd");
-		sbSql.append(" WHERE pt.GameId = " + gameId);
-		sbSql.append(" AND rnd.ParticipantId = pt.RowId");
-		sbSql.append(" AND pt.PlayerId = p.RowId");
-		sbSql.append(" AND d.RoundId = rnd.RowId");
-		sbSql.append(" ORDER BY pt.Ordinal, rnd.RoundNumber, d.Ordinal");
-		
-		try (ResultSet rs = DatabaseUtil.executeQuery(sbSql))
+		for (ParticipantEntity participant : participants)
 		{
-			while (rs.next())
+			String playerName = participant.getPlayerName();
+			
+			StringBuilder sbSql = new StringBuilder();
+			sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, rnd.RoundNumber");
+			sbSql.append(" FROM Dart d, Round rnd");
+			sbSql.append(" WHERE rnd.ParticipantId = " + participant.getRowId());
+			sbSql.append(" AND d.RoundId = rnd.RowId");
+			sbSql.append(" ORDER BY rnd.RoundNumber, d.Ordinal");
+			
+			try (ResultSet rs = DatabaseUtil.executeQuery(sbSql))
 			{
-				int score = rs.getInt("Score");
-				int multiplier = rs.getInt("Multiplier");
-				int startingScore = rs.getInt("StartingScore");
+				HandyArrayList<Dart> dartsForRound = new HandyArrayList<>();
+				int currentRoundNumber = 1;
 				
-				Dart d = new Dart(score, multiplier);
-				d.setStartingScore(startingScore);
-				
-				String playerName = rs.getString("Name");
-				
-				hmPlayerToDarts.putInList(playerName, d);
+				while (rs.next())
+				{
+					int score = rs.getInt("Score");
+					int multiplier = rs.getInt("Multiplier");
+					int startingScore = rs.getInt("StartingScore");
+					
+					Dart d = new Dart(score, multiplier);
+					d.setStartingScore(startingScore);
+					
+					int roundNumber = rs.getInt("RoundNumber");
+					if (roundNumber > currentRoundNumber)
+					{
+						hmPlayerToDarts.putInList(playerName, dartsForRound);
+						dartsForRound = new HandyArrayList<>();
+						currentRoundNumber = roundNumber;
+					}
+					
+					dartsForRound.add(d);
+				}
 			}
-		}
-		catch (SQLException sqle)
-		{
-			Debug.logSqlException("" + sbSql, sqle);
+			catch (SQLException sqle)
+			{
+				Debug.logSqlException("" + sbSql, sqle);
+			}
 		}
 		
 		buildTableModel();
