@@ -751,7 +751,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			panelCenter.remove(dartboard);
 			panelCenter.add(statsPanel, BorderLayout.CENTER);
 			
-			statsPanel.showStats(getGameId(), hmPlayerNumberToParticipant);
+			statsPanel.showStats(getGameId(), getOrderedParticipants());
 		}
 		else
 		{
@@ -761,6 +761,22 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		panelCenter.revalidate();
 		panelCenter.repaint();
+	}
+	
+	private ArrayList<ParticipantEntity> getOrderedParticipants()
+	{
+		ArrayList<ParticipantEntity> participants = new ArrayList<>();
+		
+		for (int i=0; i<4; i++)
+		{
+			ParticipantEntity pt = hmPlayerNumberToParticipant.get(i);
+			if (pt != null)
+			{
+				participants.add(pt);
+			}
+		}
+		
+		return participants;
 	}
 	
 	private void addParticipant(int playerNumber, ParticipantEntity participant)

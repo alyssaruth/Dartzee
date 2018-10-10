@@ -111,7 +111,7 @@ public class GameWrapper
 	 */
 	public double getThreeDartAverage(int scoreCutOff)
 	{
-		ArrayList<Dart> darts = getAllDartsFlattened();
+		HandyArrayList<Dart> darts = getAllDartsFlattened();
 		if (darts == null)
 		{
 			return -1;
