@@ -5,5 +5,5 @@ package code.utils;
  */
 public interface AchievementConstants
 {
-	public static final int ACHIEVEMENT_TYPE_BEST_FINISH = 0;
+	public static final int ACHIEVEMENT_REF_BEST_FINISH = 0;
 }

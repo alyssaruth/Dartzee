@@ -123,6 +123,22 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 		return retrieveEntities("", "", dbPath);
 	}
  	
+	public E retrieveEntity(String whereSql)
+	{
+		HandyArrayList<E> entities = retrieveEntities(whereSql);
+		if (entities.size() > 1)
+		{
+			Debug.stackTrace("Retrieved " + entities.size() + " rows from " + getTableName() + ". Expected 1. WhereSQL [" + whereSql + "]");
+		}
+		
+		if (entities.isEmpty())
+		{
+			return null;
+		}
+		
+		return entities.firstElement();
+	}
+	
 	public HandyArrayList<E> retrieveEntities()
 	{
 		return retrieveEntities("");

@@ -58,11 +58,48 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	@Override
 	public void addListsOfColumnsForIndexes(ArrayList<ArrayList<String>> indexes)
 	{
-		ArrayList<String> ix = HandyArrayList.factoryAdd("PlayerId");
-		ArrayList<String> ix2 = HandyArrayList.factoryAdd("AchievementRef");
+		ArrayList<String> ix = HandyArrayList.factoryAdd("PlayerId", "AchievementRef");
 		
 		indexes.add(ix);
-		indexes.add(ix2);
+	}
+	
+	public static AchievementEntity retrieveAchievement(int achievementRef, long playerId)
+	{
+		return new AchievementEntity().retrieveEntity("PlayerId = " + playerId + " AND AchievementRef = " + achievementRef);
+	}
+	public static void updateAchievement(int achievementRef, long playerId, long gameId, int counter)
+	{
+		AchievementEntity existingAchievement = retrieveAchievement(achievementRef, playerId);
+	
+		if (existingAchievement == null)
+		{
+			AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, counter);
+		}
+		else
+		{
+			int existingCounter = existingAchievement.getAchievementCounter();
+			
+			//Update the achievement if appropriate
+			if (counter > existingCounter)
+			{
+				existingAchievement.setAchievementCounter(counter);
+				existingAchievement.setGameIdEarned(gameId);
+				existingAchievement.saveToDatabase();
+			}
+		}
+	}
+	
+	public static AchievementEntity factoryAndSave(int achievementRef, long playerId, long gameId, int counter)
+	{
+		AchievementEntity ae = new AchievementEntity();
+		ae.assignRowId();
+		ae.achievementRef = achievementRef;
+		ae.playerId = playerId;
+		ae.gameIdEarned = gameId;
+		ae.achievementCounter = counter;
+		ae.saveToDatabase();
+		
+		return ae;
 	}
 
 	/**
