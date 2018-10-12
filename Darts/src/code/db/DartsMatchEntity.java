@@ -127,10 +127,11 @@ public class DartsMatchEntity extends AbstractDartsEntity<DartsMatchEntity>
 		
 		try (ResultSet rs = DatabaseUtil.executeQuery(sb))
 		{
-			rs.next();
-			int count = rs.getInt("WinCount");
-			return count == games;
-			
+			if (rs.next())
+			{
+				int count = rs.getInt("WinCount");
+				return count == games;
+			}
 		}
 		catch (SQLException sqle)
 		{
