@@ -60,6 +60,7 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		tm.addRow(getScoresBetween(playerNamesOrdered, 80, 100, "80+"));
 		tm.addRow(getScoresBetween(playerNamesOrdered, 60, 80, "60+"));
 		
+		//TODO - Disable sorting
 		table.setModel(tm);
 	}
 	
