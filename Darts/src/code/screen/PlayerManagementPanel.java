@@ -18,6 +18,7 @@ import code.db.GameEntity;
 import code.db.PlayerEntity;
 import code.screen.ai.AIConfigurationDialog;
 import code.screen.ai.AISimulationSetup;
+import code.screen.stats.player.PlayerAchievementsScreen;
 import net.miginfocom.swing.MigLayout;
 import util.DialogUtil;
 
@@ -32,6 +33,8 @@ public class PlayerManagementPanel extends JPanel
 		
 		JPanel panelOptions = new JPanel();
 		add(panelOptions, BorderLayout.SOUTH);
+		
+		panelOptions.add(btnAchievements);
 		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panelOptions.add(btnEdit);
 		btnRunSimulation.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -40,9 +43,12 @@ public class PlayerManagementPanel extends JPanel
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panelOptions.add(btnDelete);
 		
+		btnAchievements.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		
 		btnEdit.addActionListener(this);
 		btnRunSimulation.addActionListener(this);
 		btnDelete.addActionListener(this);
+		btnAchievements.addActionListener(this);
 		
 		add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
@@ -70,6 +76,7 @@ public class PlayerManagementPanel extends JPanel
 	private final PlayerSummaryPanel panelGolf = new PlayerSummaryPanel(GameEntity.GAME_TYPE_GOLF);
 	private final PlayerSummaryPanel panelClock = new PlayerSummaryPanel(GameEntity.GAME_TYPE_ROUND_THE_CLOCK);
 	private final JButton btnRunSimulation = new JButton("Run Simulation");
+	private final JButton btnAchievements = new JButton("Achievements");
 	
 	public void init(PlayerEntity player)
 	{
@@ -82,6 +89,7 @@ public class PlayerManagementPanel extends JPanel
 		btnRunSimulation.setVisible(player.isAi());
 		
 		btnDelete.setEnabled(true);
+		btnAchievements.setEnabled(true);
 		
 		avatar.setVisible(true);
 		panelX01.init(player);
@@ -102,6 +110,7 @@ public class PlayerManagementPanel extends JPanel
 		panelClock.setVisible(false);
 		
 		btnDelete.setEnabled(false);
+		btnAchievements.setEnabled(false);
 	}
 
 	@Override
@@ -120,6 +129,13 @@ public class PlayerManagementPanel extends JPanel
 		{
 			AISimulationSetup dlg = new AISimulationSetup(player);
 			dlg.setVisible(true);
+		}
+		else if (source == btnAchievements)
+		{
+			PlayerAchievementsScreen scrn = ScreenCache.getScreen(PlayerAchievementsScreen.class);
+			scrn.setPlayer(player);
+			
+			ScreenCache.switchScreen(scrn);
 		}
 	}
 	

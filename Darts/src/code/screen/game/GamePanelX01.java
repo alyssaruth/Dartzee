@@ -1,9 +1,11 @@
 package code.screen.game;
 
 import code.ai.AbstractDartsModel;
+import code.db.AchievementEntity;
 import code.db.DartEntity;
 import code.db.ParticipantEntity;
 import code.object.Dart;
+import code.utils.AchievementConstants;
 import code.utils.X01Util;
 import object.HandyArrayList;
 import object.HashMapList;
@@ -87,6 +89,16 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 		Dart lastDart = dartsThrown.lastElement();
 		return currentScore == 0
 		  && lastDart.isDouble();
+	}
+	
+	@Override
+	protected void updateAchievementsForFinish()
+	{
+		super.updateAchievementsForFinish();
+		
+		//TODO replace with helper once branches are merged
+		int sum = dartsThrown.stream().mapToInt(d -> d.getTotal()).sum();
+		AchievementEntity.updateAchievement(ACHIEVEMENT_REF_BEST_FINISH, getCurrentPlayerId(), getGameId(), sum);
 	}
 		
 	@Override

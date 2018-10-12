@@ -27,6 +27,7 @@ import code.listener.DartboardListener;
 import code.object.Dart;
 import code.screen.Dartboard;
 import code.stats.PlayerSummaryStats;
+import code.utils.AchievementConstants;
 import code.utils.DartsRegistry;
 import code.utils.DatabaseUtil;
 import code.utils.PreferenceUtil;
@@ -40,7 +41,8 @@ import util.DialogUtil;
 public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithScorers<S>
 														  	implements DartboardListener,
 														  			   ActionListener,
-														  			   DartsRegistry
+														  			   DartsRegistry,
+														  			   AchievementConstants
 {
 	protected static final boolean VERBOSE_LOGGING = false;
 	
@@ -547,8 +549,15 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		long playerId = participant.getPlayerId();
 		PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.getGameType());
+		
+		updateAchievementsForFinish();
 	
 		return finishingPosition;
+	}
+	
+	protected void updateAchievementsForFinish()
+	{
+		//Nothing currently, but watch this space
 	}
 	
 	protected int getFinishingPositionFromPlayersRemaining()
@@ -700,6 +709,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		}
 		
 		return participant.getModel();
+	}
+	
+	protected long getCurrentPlayerId()
+	{
+		ParticipantEntity pt = hmPlayerNumberToParticipant.get(currentPlayerNumber);
+		return pt.getPlayerId();
 	}
 	
 	public int getTotalPlayers()
