@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
+import code.bean.AchievementMedal;
 import code.db.AchievementEntity;
 import code.db.PlayerEntity;
 import code.screen.EmbeddedScreen;
@@ -25,10 +26,10 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		add(tabbedPane, BorderLayout.CENTER);
 		
-		JPanel panelGeneral = new JPanel();
+		
 		tabbedPane.addTab("General", null, panelGeneral, null);
 		
-		JPanel panelX01 = new JPanel();
+		
 		FlowLayout flowLayout = (FlowLayout) panelX01.getLayout();
 		flowLayout.setVgap(20);
 		flowLayout.setHgap(20);
@@ -38,7 +39,10 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 		panelX01.add(lblNewLabel);
 	}
 	
+	private final JPanel panelGeneral = new JPanel();
+	private final JPanel panelX01 = new JPanel();
 	private final JLabel lblNewLabel = new JLabel("");
+	private AchievementMedal medal = new AchievementMedal();
 	
 	@Override
 	public String getScreenName()
@@ -60,6 +64,10 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 		{
 			lblNewLabel.setText("");
 		}
+		
+		panelGeneral.remove(medal);
+		medal = new AchievementMedal();
+		panelGeneral.add(medal);
 	}
 	
 	@Override
