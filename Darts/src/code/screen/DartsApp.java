@@ -145,6 +145,8 @@ public class DartsApp extends AbstractDevScreen
 		//Need repaint() in case we don't resize.
 		pack();
 		repaint();
+		
+		scrn.postInit();
 	}
 	public EmbeddedScreen getCurrentScreen()
 	{
