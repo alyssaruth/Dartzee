@@ -132,7 +132,8 @@ public class PlayerManagementPanel extends JPanel
 		}
 		else if (source == btnAchievements)
 		{
-			PlayerAchievementsScreen scrn = ScreenCache.getScreen(PlayerAchievementsScreen.class);
+			//PlayerAchievementsScreen scrn = ScreenCache.getScreen(PlayerAchievementsScreen.class);
+			PlayerAchievementsScreen scrn = new PlayerAchievementsScreen();
 			scrn.setPlayer(player);
 			
 			ScreenCache.switchScreen(scrn);

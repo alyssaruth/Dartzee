@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.SwingUtilities;
+
 import code.utils.GeometryUtil;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
@@ -23,43 +25,69 @@ public class AchievementMedal extends JFXPanel
 	private static final int CENTER_X = 90;
 	private static final int CENTER_Y = 90;
 	private static final int OUTER_RADIUS = 85;
-	private static final int INNER_RADIUS = 80;
+	private static final int INNER_RADIUS = 75;
 	
-	private int currentAngle = 0;
-	private int finalAngle = 350;
+	private double currentAngle = 0;
+	private double finalAngle = 358;
+	private Color color = null;
 	
-	public AchievementMedal() 
+	private int millisBetweenSteps = -1;
+	
+	private Timer timer = new Timer("Timer-Achievement");
+	
+	private double increment = 0;
+	
+	public AchievementMedal(int angle, Color color) 
 	{
-		setSize(180, 180);
+		setSize(200, 200);
+		
+		this.finalAngle = angle;
+		this.color = color;
 		
 		animateProgressBar();
 	}
-	
-	private void animateProgressBar()
+
+	public void animateProgressBar()
 	{
-		Timer timer = new Timer("Timer-Achievement");
+		timer.cancel();
+		timer = new Timer("Timer-Achievement");
+		
 		currentAngle = 0;
 		
-		for (int i=1; i<=finalAngle; i+=4)
-		{
-			timer.schedule(new IncrementProgressBar(), 5 * i);
-		}
+		//Let's say we want them to take 2 seconds to draw.
+		//Work out how much to increase by
+		increment = Math.max(finalAngle/30, 1);
+		
+		//Work out how many increments there will be...
+		int animationSteps = (int)Math.ceil(finalAngle/increment);
+		millisBetweenSteps = 1000/animationSteps;
+		
+		//Schedule the 1st immediately
+		timer.schedule(new IncrementProgressBar(), 0);
 	}
 	
 	/**
 	 * ArcTo always goes anti-clockwise, as far as I can tell.
 	 * So this uses MoveTos to get around this unfortunate fact.
 	 */
-	private Path drawSemiRing(Color fill, double degrees) 
+	private Path drawPartialRing(double degrees) 
 	{
 		Point centerPt = new Point(CENTER_X, CENTER_Y);
         Point innerArcTo = GeometryUtil.translatePoint(centerPt, INNER_RADIUS, degrees, false);
         Point outerArcTo = GeometryUtil.translatePoint(centerPt, OUTER_RADIUS, degrees, false);
+        
+        if (degrees == 360)
+        {
+        	innerArcTo = new Point(CENTER_X, CENTER_Y - INNER_RADIUS);
+        	outerArcTo = new Point(CENTER_X, CENTER_Y - OUTER_RADIUS);
+        }
 		
         Path path = new Path();
-        path.setFill(fill);
-        path.setStroke(fill);
+        path.setFill(color);
+        path.setStroke(Color.BLACK);
         path.setFillRule(FillRule.EVEN_ODD);
+        
+        //path.setEffect(new Lighting());
         
         //Move to where the inner arc goes to (e.g. 45 degrees around from the top of the circle).
         MoveTo moveTo = new MoveTo(innerArcTo.getX(), innerArcTo.getY());
@@ -72,47 +100,51 @@ public class AchievementMedal extends JFXPanel
         path.getElements().add(moveTo);
         
         //Draw the line out to the outer arc
-        LineTo lineTo = new LineTo(outerArcTo.getX(), outerArcTo.getY());
-        path.getElements().add(lineTo);
+        if (degrees < 360)
+        {
+	        LineTo lineTo = new LineTo(outerArcTo.getX(), outerArcTo.getY());
+	        path.getElements().add(lineTo);
+        }
+        else
+        {
+        	MoveTo moveToOuter = new MoveTo(outerArcTo.getX(), outerArcTo.getY());
+        	path.getElements().add(moveToOuter);
+        }
         
         //Draw the larger arc back up to the top
         arcPathBackToTop(path, degrees, OUTER_RADIUS);
         
         //Draw the vertical line down to join up the top two points
-        LineTo lineTo2 = new LineTo(CENTER_X, CENTER_Y - INNER_RADIUS);
-        path.getElements().add(lineTo2);
+        if (degrees < 360)
+        {
+	        LineTo lineTo2 = new LineTo(CENTER_X, CENTER_Y - INNER_RADIUS);
+	        path.getElements().add(lineTo2);
+        }
 
         return path;
     }
 	private void arcPathBackToTop(Path path, double degrees, int radiusToUse)
 	{
-		if (degrees <= 180)
-        {
-	        ArcTo arcToInner = new ArcTo();
-	        arcToInner.setX(CENTER_X);
-	        arcToInner.setY(CENTER_Y - radiusToUse);
-	        arcToInner.setRadiusX(radiusToUse);
-	        arcToInner.setRadiusY(radiusToUse);
-	        
-	        path.getElements().add(arcToInner);
-        }
-        else
-        {
-        	ArcTo miniArc = new ArcTo();
-        	miniArc.setRadiusX(radiusToUse);
-        	miniArc.setRadiusY(radiusToUse);
-        	miniArc.setX(CENTER_X);
-        	miniArc.setY(CENTER_Y + radiusToUse);
-        	
-        	ArcTo semiArc = new ArcTo();
-        	semiArc.setRadiusX(radiusToUse);
-        	semiArc.setRadiusY(radiusToUse);
-        	semiArc.setX(CENTER_X);
-        	semiArc.setY(CENTER_Y - radiusToUse);
-        	
-        	path.getElements().add(miniArc);
-        	path.getElements().add(semiArc);
-        }
+		if (degrees > 270)
+		{
+			ArcTo arcTo270 = new ArcTo(radiusToUse, radiusToUse, 0, CENTER_X - radiusToUse, CENTER_Y, false, false);
+			path.getElements().add(arcTo270);
+		}
+		
+		if (degrees > 180)
+		{
+			ArcTo arcTo180 = new ArcTo(radiusToUse, radiusToUse, 0, CENTER_X, CENTER_Y + radiusToUse, false, false);
+			path.getElements().add(arcTo180);
+		}
+		
+		if (degrees > 90)
+		{
+			ArcTo arcTo90 = new ArcTo(radiusToUse, radiusToUse, 0, CENTER_X + radiusToUse, CENTER_Y, false, false);
+			path.getElements().add(arcTo90);
+		}
+		
+		ArcTo arcToTop = new ArcTo(radiusToUse, radiusToUse, 0, CENTER_X, CENTER_Y - radiusToUse, false, false);
+		path.getElements().add(arcToTop);
 	}
 	
 	
@@ -121,46 +153,35 @@ public class AchievementMedal extends JFXPanel
 		@Override
 		public void run() 
 		{
-			if (isVisible())
+			if (currentAngle < finalAngle)
 			{
-				if (currentAngle < finalAngle)
-				{
-					currentAngle+=4;
-				}
-				
-				Color color = null;
-				if (currentAngle < 10)
-				{
-					color = Color.GREY;
-				}
-				else if (currentAngle < 25)
-				{
-					color = Color.RED;
-				}
-				else if (currentAngle < 50)
-				{
-					color = Color.ORANGE;
-				}
-				else if (currentAngle < 90)
-				{
-					color = Color.YELLOW;
-				}
-				else if (currentAngle < 170)
-				{
-					color = Color.GREEN;
-				}
-				else if (currentAngle < 270)
-				{
-					color = Color.CYAN;
-				}
-				else
-				{
-					color = Color.PINK;
-				}
-				
-				Path p = drawSemiRing(color, currentAngle);
-			    setScene(new Scene(new Group(p), 180, 180));
+				currentAngle += increment;
+				currentAngle = Math.min(currentAngle, finalAngle);
 			}
+			
+			Path p = drawPartialRing(currentAngle);
+			Scene scene = new Scene(new Group(p), 180, 180);
+			
+			scene.setFill(Color.TRANSPARENT);
+			
+			SwingUtilities.invokeLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					setScene(scene);
+				    
+				    if (currentAngle == finalAngle)
+				    {
+				    	timer.cancel();
+				    }
+				    else
+				    {
+				    	timer.schedule(new IncrementProgressBar(), millisBetweenSteps);
+				    }
+				}
+			});
+		    
 		}
 	}
 	

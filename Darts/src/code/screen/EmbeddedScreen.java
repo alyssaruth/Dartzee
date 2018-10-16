@@ -50,6 +50,14 @@ public abstract class EmbeddedScreen extends JPanel
 	public abstract String getScreenName();
 	public abstract void init();
 	
+	/**
+	 * Called after the new screen has been switched in etc
+	 */
+	public void postInit()
+	{
+		
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
