@@ -118,19 +118,19 @@ public final class DartsColour implements DartsRegistry
 	}
 	
 	
-	public static Color getScorerForegroundColour(int totalScore)
+	public static Color getScorerForegroundColour(double totalScore)
 	{
 		double hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR);
 		double fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS);
 		return getScorerColour(totalScore, hueFactor, fgBrightness);
 	}
-	public static Color getScorerBackgroundColour(int totalScore)
+	public static Color getScorerBackgroundColour(double totalScore)
 	{
 		double hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR);
 		double bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS);
 		return getScorerColour(totalScore, hueFactor, bgBrightness);
 	}
-	public static Color getScorerColour(int totalScore, double multiplier, double brightness)
+	public static Color getScorerColour(double totalScore, double multiplier, double brightness)
 	{
 		float hue = (float)(totalScore * multiplier) / 180;
 		return Color.getHSBColor(hue, 1, (float)brightness);
