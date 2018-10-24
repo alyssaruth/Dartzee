@@ -33,7 +33,7 @@ public abstract class GameStatisticsPanel extends JPanel
 	protected final ScrollTable table = new ScrollTable();
 	
 	
-	public void showStats(long gameId, ArrayList<ParticipantEntity> participants)
+	public void showStats(ArrayList<ParticipantEntity> participants)
 	{
 		this.participants = participants;
 		
@@ -74,6 +74,9 @@ public abstract class GameStatisticsPanel extends JPanel
 					
 					dartsForRound.add(d);
 				}
+				
+				//Always add the last one
+				hmPlayerToDarts.putInList(playerName, dartsForRound);
 			}
 			catch (SQLException sqle)
 			{

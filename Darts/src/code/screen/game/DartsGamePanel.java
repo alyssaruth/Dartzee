@@ -751,7 +751,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			panelCenter.remove(dartboard);
 			panelCenter.add(statsPanel, BorderLayout.CENTER);
 			
-			statsPanel.showStats(getGameId(), getOrderedParticipants());
+			statsPanel.showStats(getOrderedParticipants());
 		}
 		else
 		{
