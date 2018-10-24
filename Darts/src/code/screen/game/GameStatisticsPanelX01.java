@@ -47,24 +47,53 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 			
 		}
 		
-		tm.addRow(getScoreRow(playerNamesOrdered, i -> i.max().getAsInt(), "Highest Score"));
+		tm.addRow(getScoreRow(i -> i.max().getAsInt(), "Highest Score"));
 		tm.addRow(threeDartAvgs);
-		tm.addRow(getScoreRow(playerNamesOrdered, i -> i.min().getAsInt(), "Lowest Score"));
-		tm.addRow(getMissesRow(playerNamesOrdered));
+		tm.addRow(getScoreRow(i -> i.min().getAsInt(), "Lowest Score"));
+		tm.addRow(getMissesRow());
 		
 		tm.addRow(new Object[getRowWidth()]);
 		
-		tm.addRow(getScoresBetween(playerNamesOrdered, 180, 181, "180s"));
-		tm.addRow(getScoresBetween(playerNamesOrdered, 140, 180, "140+"));
-		tm.addRow(getScoresBetween(playerNamesOrdered, 100, 140, "100+"));
-		tm.addRow(getScoresBetween(playerNamesOrdered, 80, 100, "80+"));
-		tm.addRow(getScoresBetween(playerNamesOrdered, 60, 80, "60+"));
+		tm.addRow(getScoresBetween(180, 181, "180s"));
+		tm.addRow(getScoresBetween(140, 180, "140 - 179"));
+		tm.addRow(getScoresBetween(100, 140, "100 - 139"));
+		tm.addRow(getScoresBetween(80, 100, "80 - 99"));
+		tm.addRow(getScoresBetween(60, 80, "60 - 79"));
+		tm.addRow(getScoresBetween(40, 60, "40 - 59"));
+		tm.addRow(getScoresBetween(20, 40, "20 - 39"));
+		tm.addRow(getScoresBetween(0, 20, "0 - 20"));
 		
-		//TODO - Disable sorting
+		tm.addRow(new Object[getRowWidth()]);
+		
+		tm.addRow(getCheckoutPercentRow());
+		
 		table.setModel(tm);
+		table.disableSorting();
 	}
 	
-	private Object[] getScoresBetween(HandyArrayList<String> playerNamesOrdered, int min, int max, String desc)
+	private Object[] getCheckoutPercentRow()
+	{
+		Object[] row = new Object[getRowWidth()];
+		row[0] = "Checkout %";
+		
+		for (int i=0; i<playerNamesOrdered.size(); i++)
+		{
+			String playerName = playerNamesOrdered.get(i);
+			HandyArrayList<Dart> darts = getFlattenedDarts(playerName);
+			
+			HandyArrayList<Dart> potentialFinishers = darts.createFilteredCopy(d -> X01Util.isCheckoutDart(d));
+			HandyArrayList<Dart> actualFinishes = potentialFinishers.createFilteredCopy(d -> d.isDouble() && (d.getTotal() == d.getStartingScore()));
+			
+			int p1 = 10000 * actualFinishes.size() / potentialFinishers.size();
+			double percent = (double)p1/100;
+			
+			row[i+1] = percent;
+		}
+		
+		return row;
+	}
+	
+	private Object[] getScoresBetween(int min, int max, String desc)
 	{
 		Object[] row = new Object[getRowWidth()];
 		row[0] = desc;
@@ -82,7 +111,7 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		return row;
 	}
 	
-	private Object[] getScoreRow(HandyArrayList<String> playerNamesOrdered, Function<IntStream, Integer> f, String desc)
+	private Object[] getScoreRow(Function<IntStream, Integer> f, String desc)
 	{
 		Object[] row = new Object[getRowWidth()];
 		row[0] = desc;
@@ -99,7 +128,7 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		return row;
 	}
 	
-	private Object[] getMissesRow(HandyArrayList<String> playerNamesOrdered)
+	private Object[] getMissesRow()
 	{
 		Object[] row = new Object[getRowWidth()];
 		row[0] = "Miss %";
@@ -125,10 +154,15 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		return rounds.createFilteredCopy(r -> r.lastElement().getStartingScore() > 140);
 	}
 	
-	private HandyArrayList<Dart> getScoringDarts(String playerName)
+	private HandyArrayList<Dart> getFlattenedDarts(String playerName)
 	{
 		ArrayList<HandyArrayList<Dart>> rounds = hmPlayerToDarts.get(playerName);
-		HandyArrayList<Dart> darts = HandyArrayList.flattenBatches(rounds);
+		return HandyArrayList.flattenBatches(rounds);
+	}
+	
+	private HandyArrayList<Dart> getScoringDarts(String playerName)
+	{
+		HandyArrayList<Dart> darts = getFlattenedDarts(playerName);
 		return X01Util.getScoringDarts(darts, 140);
 	}
 	
