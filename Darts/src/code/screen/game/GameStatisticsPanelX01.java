@@ -1,13 +1,21 @@
 package code.screen.game;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import code.db.ParticipantEntity;
 import code.object.Dart;
+import code.utils.DartsColour;
 import code.utils.X01Util;
 import object.HandyArrayList;
 
@@ -43,6 +51,9 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 			HandyArrayList<Dart> darts = HandyArrayList.flattenBatches(rounds);
 			
 			double avg = X01Util.calculateThreeDartAverage(darts, 140);
+			int p1 = (int)(100 * avg);
+			avg = (double)p1/100;
+			
 			threeDartAvgs[i+1] = avg;
 			
 		}
@@ -67,8 +78,17 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		
 		tm.addRow(getCheckoutPercentRow());
 		
+		table.setRowHeight(20);
 		table.setModel(tm);
 		table.disableSorting();
+		
+		table.setColumnWidths("120");
+		
+		//Rendering
+		for (int i=0; i<getRowWidth(); i++)
+		{
+			table.getColumn(i).setCellRenderer(new ScorerRenderer());
+		}
 	}
 	
 	private Object[] getCheckoutPercentRow()
@@ -84,10 +104,19 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 			HandyArrayList<Dart> potentialFinishers = darts.createFilteredCopy(d -> X01Util.isCheckoutDart(d));
 			HandyArrayList<Dart> actualFinishes = potentialFinishers.createFilteredCopy(d -> d.isDouble() && (d.getTotal() == d.getStartingScore()));
 			
-			int p1 = 10000 * actualFinishes.size() / potentialFinishers.size();
-			double percent = (double)p1/100;
+			if (actualFinishes.isEmpty())
+			{
+				row[i+1] = "N/A";
+			}
+			else
+			{
+				int p1 = 10000 * actualFinishes.size() / potentialFinishers.size();
+				double percent = (double)p1/100;
+				
+				row[i+1] = percent;
+			}
 			
-			row[i+1] = percent;
+			
 		}
 		
 		return row;
@@ -170,4 +199,85 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 	{
 		return playerNamesOrdered.size() + 1;
 	}
+	
+	
+	private static class ScorerRenderer extends DefaultTableCellRenderer
+	{
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object
+            value, boolean isSelected, boolean hasFocus, int row, int column) 
+        {
+    		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    		setHorizontalAlignment(SwingConstants.CENTER);
+    		
+    		if (column == 0)
+    		{
+    			setFont(new Font("Trebuchet MS", Font.BOLD, 15));
+    		}
+    		else
+    		{
+    			setFont(new Font("Trebuchet MS", Font.PLAIN, 15));
+    		}
+    		
+    		setColours(table, row, column);
+    		return this;
+        }
+        
+        private void setColours(JTable table, int row, int column)
+        {
+        	if (column == 0)
+        	{
+        		//Do nothing
+        		setForeground(null);
+        		setBackground(Color.WHITE);
+        		return;
+        	}
+        	
+        	TableModel tm = table.getModel();
+        	if (row >= 0
+        	  && row <= 2)
+        	{
+        		//Manually unbox as this can be Integer or Double
+        		Number scoreNum = (Number)tm.getValueAt(row, column);
+        		double score = scoreNum.doubleValue();
+        		
+        		Color fg = DartsColour.getScorerForegroundColour(score);
+            	Color bg = DartsColour.getScorerBackgroundColour(score);
+            	
+            	setForeground(fg);
+            	setBackground(bg);
+        	}
+        	else if (row >= 5
+        	  && row <= 12)
+        	{
+        		int sum = getHistogramSum(tm, column);
+        		
+        		Number thisValue = (Number)tm.getValueAt(row, column);
+        		double thisValueD = thisValue.doubleValue();
+        		
+        		float percent = (float)thisValueD / sum;
+        		
+        		Color bg = Color.getHSBColor((float)0.5, percent, 1);
+        		
+        		setForeground(null);
+        		setBackground(bg);
+        	}
+        	else
+        	{
+        		setForeground(null);
+        		setBackground(Color.WHITE);
+        	}
+        }
+        
+        private int getHistogramSum(TableModel tm, int col)
+        {
+        	int sum = 0;
+        	for (int i=5; i<= 12; i++)
+        	{
+        		sum += (int)tm.getValueAt(i, col);
+        	}
+
+        	return sum;
+        }
+    }
 }

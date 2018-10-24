@@ -65,16 +65,11 @@ public abstract class X01Util
 	}
 	public static double calculateThreeDartAverage(HandyArrayList<Dart> darts, int scoreCutOff)
 	{
-		ArrayList<Dart> scoringDarts = getScoringDarts(darts, scoreCutOff);
+		HandyArrayList<Dart> scoringDarts = getScoringDarts(darts, scoreCutOff);
 		
-		double totalScoringDarts = scoringDarts.size();
-		double amountScored = 0;
-		for (Dart dart : scoringDarts)
-		{
-			amountScored += dart.getTotal();
-		}
+		double amountScored = sumScore(scoringDarts);
 		
-		return (amountScored / totalScoringDarts) * 3;
+		return (amountScored / scoringDarts.size()) * 3;
 	}
 	
 	public static int sumScore(HandyArrayList<Dart> darts)
