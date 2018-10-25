@@ -1,8 +1,10 @@
 package code.screen.game;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 
 import code.db.DartsMatchEntity;
+import code.db.GameEntity;
 import code.db.ParticipantEntity;
 import code.db.PlayerEntity;
 import object.HandyArrayList;
@@ -14,9 +16,21 @@ import object.SuperHashMap;
 public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 {
 	private SuperHashMap<Long, MatchScorer> hmPlayerIdToScorer = new SuperHashMap<>();
+	private HandyArrayList<ParticipantEntity> participants = new HandyArrayList<>();
+	private DartsMatchEntity match = null;
+	
+	private GameStatisticsPanel statsPanel;
 	
 	public void init(DartsMatchEntity match)
 	{
+		this.match = match;
+		
+		statsPanel = factoryStatsPanel();
+		if (statsPanel != null)
+		{
+			panelCenter.add(statsPanel, BorderLayout.CENTER);
+		}
+		
 		HandyArrayList<PlayerEntity> players = match.getPlayers();
 		
 		int totalPlayers = players.size();
@@ -36,6 +50,8 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		
 		Object[] row = {gameId, participant, participant, participant};
 		scorer.addRow(row);
+		
+		participants.add(participant);
 	}
 	public void updateTotalScores()
 	{
@@ -44,11 +60,28 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		{
 			scorer.updateResult();
 		}
+		
+		updateStats();
+	}
+	public void updateStats()
+	{
+		statsPanel.showStats(participants);
 	}
 
 	@Override
 	public MatchScorer factoryScorer()
 	{
 		return new MatchScorer();
+	}
+	
+	private GameStatisticsPanel factoryStatsPanel()
+	{
+		int type = match.getGameType();
+		if (type == GameEntity.GAME_TYPE_X01)
+		{
+			return new GameStatisticsPanelX01();
+		}
+		
+		return null;
 	}
 }

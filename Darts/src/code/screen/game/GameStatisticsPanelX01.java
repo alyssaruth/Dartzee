@@ -18,6 +18,7 @@ import code.object.Dart;
 import code.utils.DartsColour;
 import code.utils.X01Util;
 import object.HandyArrayList;
+import util.Debug;
 
 /**
  * Shows running stats for X01 games - three-dart average, checkout % etc.
@@ -36,6 +37,10 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		{
 			String playerName = pt.getPlayerName();
 			playerNamesOrdered.addUnique(playerName);
+		}
+		
+		for (String playerName : playerNamesOrdered)
+		{
 			tm.addColumn(playerName);
 		}
 		
@@ -279,6 +284,13 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
         private double getDoubleAt(TableModel tm, int row, int col)
         {
         	Number thisValue = (Number)tm.getValueAt(row, col);
+        	
+        	if (thisValue == null)
+        	{
+        		Debug.append("ROW: " + row + ", COL: " + col);
+        		return -1;
+        	}
+        	
     		return thisValue.doubleValue();
         }
         
@@ -294,7 +306,8 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
         	int myPosition = 1;
         	for (int i=1; i<tm.getColumnCount(); i++)
         	{
-        		if (i == col)
+        		if (i == col
+        		  || tm.getValueAt(row, i) instanceof String)
         		{
         			continue;
         		}

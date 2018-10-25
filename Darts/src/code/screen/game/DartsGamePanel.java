@@ -300,6 +300,13 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			btnReset.setEnabled(false);
 		}
 		
+		//Default to showing the stats panel for completed games, if applicable
+		if (btnStats.isVisible())
+		{
+			btnStats.setSelected(true);
+			viewStats();
+		}
+			
 		updateScorersWithFinishingPositions();
 	}
 	protected void updateScorersWithFinishingPositions()
