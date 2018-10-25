@@ -174,6 +174,8 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		btnReset.setEnabled(false);
 		btnConfirm.setEnabled(false);
 		
+		btnStats.setEnabled(newRoundNo > 1);
+		
 		readyForThrow();
 	}
 	private int getLastRoundNumber()
