@@ -65,14 +65,14 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		
 		tm.addRow(new Object[getRowWidth()]);
 		
-		tm.addRow(getScoresBetween(180, 181, "180s"));
+		tm.addRow(getScoresBetween(180, 181, "180"));
 		tm.addRow(getScoresBetween(140, 180, "140 - 179"));
 		tm.addRow(getScoresBetween(100, 140, "100 - 139"));
 		tm.addRow(getScoresBetween(80, 100, "80 - 99"));
 		tm.addRow(getScoresBetween(60, 80, "60 - 79"));
 		tm.addRow(getScoresBetween(40, 60, "40 - 59"));
 		tm.addRow(getScoresBetween(20, 40, "20 - 39"));
-		tm.addRow(getScoresBetween(0, 20, "0 - 20"));
+		tm.addRow(getScoresBetween(0, 20, "0 - 19"));
 		
 		tm.addRow(new Object[getRowWidth()]);
 		
@@ -237,25 +237,32 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
         	if (row >= 0
         	  && row <= 2)
         	{
-        		//Manually unbox as this can be Integer or Double
-        		Number scoreNum = (Number)tm.getValueAt(row, column);
-        		double score = scoreNum.doubleValue();
+        		//double score = getDoubleAt(tm, row, column);
+        		//Color fg = DartsColour.getScorerForegroundColour(score);
+            	//Color bg = DartsColour.getScorerBackgroundColour(score);
+            	//setForeground(fg);
+            	//setBackground(bg);
         		
-        		Color fg = DartsColour.getScorerForegroundColour(score);
-            	Color bg = DartsColour.getScorerBackgroundColour(score);
-            	
-            	setForeground(fg);
-            	setBackground(bg);
+        		int pos = getPositionForColour(tm, row, column, true);
+        		DartsColour.setFgAndBgColoursForPosition(this, pos);
+        	}
+        	else if (row == 3)
+        	{
+        		int pos = getPositionForColour(tm, row, column, false);
+        		DartsColour.setFgAndBgColoursForPosition(this, pos);
+        	}
+        	else if (row == 14)
+        	{
+        		int pos = getPositionForColour(tm, row, column, true);
+        		DartsColour.setFgAndBgColoursForPosition(this, pos);
         	}
         	else if (row >= 5
         	  && row <= 12)
         	{
         		int sum = getHistogramSum(tm, column);
         		
-        		Number thisValue = (Number)tm.getValueAt(row, column);
-        		double thisValueD = thisValue.doubleValue();
-        		
-        		float percent = (float)thisValueD / sum;
+        		double thisValue = getDoubleAt(tm, row, column);
+        		float percent = (float)thisValue / sum;
         		
         		Color bg = Color.getHSBColor((float)0.5, percent, 1);
         		
@@ -267,6 +274,43 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
         		setForeground(null);
         		setBackground(Color.WHITE);
         	}
+        }
+        
+        private double getDoubleAt(TableModel tm, int row, int col)
+        {
+        	Number thisValue = (Number)tm.getValueAt(row, col);
+    		return thisValue.doubleValue();
+        }
+        
+        private int getPositionForColour(TableModel tm, int row, int col, boolean highestWins)
+        {
+        	if (tm.getValueAt(row, col) instanceof String)
+        	{
+        		return -1;
+        	}
+        	
+        	double myScore = getDoubleAt(tm, row, col);
+        	
+        	int myPosition = 1;
+        	for (int i=1; i<tm.getColumnCount(); i++)
+        	{
+        		if (i == col)
+        		{
+        			continue;
+        		}
+        		
+        		double theirScore = getDoubleAt(tm, row, i);
+        		
+        		//Compare positivity to the boolean
+        		int result = Double.compare(theirScore, myScore);
+        		if ((result > 0) == highestWins
+        		  && result != 0)
+        		{
+        			myPosition++;
+        		}
+        	}
+        	
+        	return myPosition;
         }
         
         private int getHistogramSum(TableModel tm, int col)
