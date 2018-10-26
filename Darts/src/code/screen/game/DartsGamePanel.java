@@ -772,9 +772,9 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		panelCenter.repaint();
 	}
 	
-	private ArrayList<ParticipantEntity> getOrderedParticipants()
+	private HandyArrayList<ParticipantEntity> getOrderedParticipants()
 	{
-		ArrayList<ParticipantEntity> participants = new ArrayList<>();
+		HandyArrayList<ParticipantEntity> participants = new HandyArrayList<>();
 		
 		for (int i=0; i<4; i++)
 		{

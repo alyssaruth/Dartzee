@@ -10,44 +10,25 @@ import java.util.stream.IntStream;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import code.db.ParticipantEntity;
 import code.object.Dart;
 import code.utils.DartsColour;
 import code.utils.X01Util;
 import object.HandyArrayList;
 import util.Debug;
+import util.MathsUtil;
 
 /**
  * Shows running stats for X01 games - three-dart average, checkout % etc.
  */
-public final class GameStatisticsPanelX01 extends GameStatisticsPanel
+public class GameStatisticsPanelX01 extends GameStatisticsPanel
 {
-	private HandyArrayList<String> playerNamesOrdered = new HandyArrayList<>();
-	
 	@Override
-	protected void buildTableModel()
+	protected void addRowsToTable()
 	{
-		DefaultTableModel tm = new DefaultTableModel();
-		tm.addColumn("");
-		
-		for (ParticipantEntity pt : participants)
-		{
-			String playerName = pt.getPlayerName();
-			playerNamesOrdered.addUnique(playerName);
-		}
-		
-		for (String playerName : playerNamesOrdered)
-		{
-			tm.addColumn(playerName);
-		}
-		
-		int rowSize = playerNamesOrdered.size() + 1;
-		
 		//3-dart average
-		Object[] threeDartAvgs = new Object[rowSize];
+		Object[] threeDartAvgs = new Object[getRowWidth()];
 		threeDartAvgs[0] = "3-dart avg";
 		for (int i=0; i<playerNamesOrdered.size(); i++)
 		{
@@ -63,29 +44,25 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 			
 		}
 		
-		tm.addRow(getScoreRow(i -> i.max().getAsInt(), "Highest Score"));
-		tm.addRow(threeDartAvgs);
-		tm.addRow(getScoreRow(i -> i.min().getAsInt(), "Lowest Score"));
-		tm.addRow(getMissesRow());
+		addRow(getScoreRow(i -> i.max().getAsInt(), "Highest Score"));
+		addRow(threeDartAvgs);
+		addRow(getScoreRow(i -> i.min().getAsInt(), "Lowest Score"));
+		addRow(getMissesRow());
 		
-		tm.addRow(new Object[getRowWidth()]);
+		addRow(new Object[getRowWidth()]);
 		
-		tm.addRow(getScoresBetween(180, 181, "180"));
-		tm.addRow(getScoresBetween(140, 180, "140 - 179"));
-		tm.addRow(getScoresBetween(100, 140, "100 - 139"));
-		tm.addRow(getScoresBetween(80, 100, "80 - 99"));
-		tm.addRow(getScoresBetween(60, 80, "60 - 79"));
-		tm.addRow(getScoresBetween(40, 60, "40 - 59"));
-		tm.addRow(getScoresBetween(20, 40, "20 - 39"));
-		tm.addRow(getScoresBetween(0, 20, "0 - 19"));
+		addRow(getScoresBetween(180, 181, "180"));
+		addRow(getScoresBetween(140, 180, "140 - 179"));
+		addRow(getScoresBetween(100, 140, "100 - 139"));
+		addRow(getScoresBetween(80, 100, "80 - 99"));
+		addRow(getScoresBetween(60, 80, "60 - 79"));
+		addRow(getScoresBetween(40, 60, "40 - 59"));
+		addRow(getScoresBetween(20, 40, "20 - 39"));
+		addRow(getScoresBetween(0, 20, "0 - 19"));
 		
-		tm.addRow(new Object[getRowWidth()]);
+		addRow(new Object[getRowWidth()]);
 		
-		tm.addRow(getCheckoutPercentRow());
-		
-		table.setRowHeight(20);
-		table.setModel(tm);
-		table.disableSorting();
+		addRow(getCheckoutPercentRow());
 		
 		table.setColumnWidths("120");
 		
@@ -173,8 +150,8 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 			HandyArrayList<Dart> scoringDarts = getScoringDarts(playerName);
 			HandyArrayList<Dart> misses = scoringDarts.createFilteredCopy(d -> d.getMultiplier() == 0);
 			
-			int p1 = 10000 * misses.size() / scoringDarts.size();
-			double percent = (double)p1/100;
+			double percent = 100 * (double)misses.size() / scoringDarts.size();
+			percent = MathsUtil.round(percent, 2);
 			
 			row[i+1] = percent;
 		}
@@ -188,23 +165,11 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
 		return rounds.createFilteredCopy(r -> r.lastElement().getStartingScore() > 140);
 	}
 	
-	private HandyArrayList<Dart> getFlattenedDarts(String playerName)
-	{
-		ArrayList<HandyArrayList<Dart>> rounds = hmPlayerToDarts.get(playerName);
-		return HandyArrayList.flattenBatches(rounds);
-	}
-	
 	private HandyArrayList<Dart> getScoringDarts(String playerName)
 	{
 		HandyArrayList<Dart> darts = getFlattenedDarts(playerName);
 		return X01Util.getScoringDarts(darts, 140);
 	}
-	
-	private int getRowWidth()
-	{
-		return playerNamesOrdered.size() + 1;
-	}
-	
 	
 	private static class ScorerRenderer extends DefaultTableCellRenderer
 	{
@@ -251,12 +216,15 @@ public final class GameStatisticsPanelX01 extends GameStatisticsPanel
         		int pos = getPositionForColour(tm, row, column, true);
         		DartsColour.setFgAndBgColoursForPosition(this, pos);
         	}
-        	else if (row == 3)
+        	else if (row == 3
+        	  || row == 17  //Best Game
+        	  || row == 18) //Avg Game
         	{
         		int pos = getPositionForColour(tm, row, column, false);
         		DartsColour.setFgAndBgColoursForPosition(this, pos);
         	}
-        	else if (row == 14)
+        	else if (row == 14 //Checkout %
+        	  || row == 15) //Best Finish
         	{
         		int pos = getPositionForColour(tm, row, column, true);
         		DartsColour.setFgAndBgColoursForPosition(this, pos);
