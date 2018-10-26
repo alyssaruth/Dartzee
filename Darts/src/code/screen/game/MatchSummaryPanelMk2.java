@@ -1,7 +1,12 @@
 package code.screen.game;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import code.db.DartsMatchEntity;
 import code.db.GameEntity;
@@ -14,7 +19,10 @@ import object.SuperHashMap;
  * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
  */
 public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
+								  implements ActionListener
 {
+	public MatchSummaryPanelMk2() {
+	}
 	private SuperHashMap<Long, MatchScorer> hmPlayerIdToScorer = new SuperHashMap<>();
 	private HandyArrayList<ParticipantEntity> participants = new HandyArrayList<>();
 	private DartsMatchEntity match = null;
@@ -29,6 +37,10 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		if (statsPanel != null)
 		{
 			panelCenter.add(statsPanel, BorderLayout.CENTER);
+			panelCenter.add(refreshPanel, BorderLayout.SOUTH);
+			
+			refreshPanel.add(btnRefresh);
+			btnRefresh.addActionListener(this);
 		}
 		
 		HandyArrayList<PlayerEntity> players = match.getPlayers();
@@ -43,6 +55,10 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 			scorer.setMatch(match);
 		}
 	}
+	
+	private final JPanel refreshPanel = new JPanel();
+	private final JButton btnRefresh = new JButton("Refresh Stats");
+	
 	public void addParticipant(long gameId, ParticipantEntity participant)
 	{
 		long playerId = participant.getPlayerId();
@@ -79,9 +95,15 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		int type = match.getGameType();
 		if (type == GameEntity.GAME_TYPE_X01)
 		{
-			return new GameStatisticsPanelX01();
+			return new MatchStatisticsPanelX01();
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		updateStats();
 	}
 }

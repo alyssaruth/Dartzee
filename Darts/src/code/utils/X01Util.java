@@ -51,6 +51,13 @@ public abstract class X01Util
 		  && startingScore <= 40;
 	}
 	
+	public static boolean isFinishRound(HandyArrayList<Dart> round)
+	{
+		Dart drt = round.lastElement();
+		return drt.isDouble()
+		  && (drt.getTotal() == drt.getStartingScore());
+	}
+	
 	/**
 	 * Refactored out of GameWrapper for use in game stats panel
 	 */

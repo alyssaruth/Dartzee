@@ -276,4 +276,13 @@ public final class MathsUtil
 		
 		return powerSeq == number;
 	}
+	
+	public static double round(double number, int decimalPlaces)
+	{
+		double product = Math.pow(10, decimalPlaces);
+		
+		int rounded = (int)(product * number);
+		
+		return rounded / product;
+	}
 }
