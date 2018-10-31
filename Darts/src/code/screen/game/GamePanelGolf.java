@@ -170,6 +170,6 @@ public class GamePanelGolf extends DartsGamePanel<DartsScorerGolf>
 	@Override
 	public GameStatisticsPanel factoryStatsPanel()
 	{
-		return null;
+		return new GameStatisticsPanelGolf();
 	}
 }

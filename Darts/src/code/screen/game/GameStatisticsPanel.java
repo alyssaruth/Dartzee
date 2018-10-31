@@ -1,6 +1,9 @@
 package code.screen.game;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,11 +12,16 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import bean.ScrollTable;
 import code.db.ParticipantEntity;
 import code.object.Dart;
+import code.utils.DartsColour;
 import code.utils.DatabaseUtil;
 import object.HandyArrayList;
 import object.HashMapList;
@@ -39,8 +47,6 @@ public abstract class GameStatisticsPanel extends JPanel
 	
 	protected final ScrollTable table = new ScrollTable();
 	
-	
-	
 	public void showStats(HandyArrayList<ParticipantEntity> participants)
 	{
 		this.participants = participants;
@@ -52,7 +58,7 @@ public abstract class GameStatisticsPanel extends JPanel
 			String playerName = participant.getPlayerName();
 			
 			StringBuilder sbSql = new StringBuilder();
-			sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, rnd.RoundNumber");
+			sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, rnd.RoundNumber");
 			sbSql.append(" FROM Dart d, Round rnd");
 			sbSql.append(" WHERE rnd.ParticipantId = " + participant.getRowId());
 			sbSql.append(" AND d.RoundId = rnd.RowId");
@@ -68,9 +74,11 @@ public abstract class GameStatisticsPanel extends JPanel
 					int score = rs.getInt("Score");
 					int multiplier = rs.getInt("Multiplier");
 					int startingScore = rs.getInt("StartingScore");
+					int segmentType = rs.getInt("SegmentType");
 					
 					Dart d = new Dart(score, multiplier);
 					d.setStartingScore(startingScore);
+					d.setSegmentType(segmentType);
 					
 					int roundNumber = rs.getInt("RoundNumber");
 					if (roundNumber > currentRoundNumber)
@@ -79,6 +87,9 @@ public abstract class GameStatisticsPanel extends JPanel
 						dartsForRound = new HandyArrayList<>();
 						currentRoundNumber = roundNumber;
 					}
+					
+					//only needed for golf but doesn't hurt to always set it
+					d.setGolfHole(roundNumber);
 					
 					dartsForRound.add(d);
 				}
@@ -116,6 +127,12 @@ public abstract class GameStatisticsPanel extends JPanel
 		table.disableSorting();
 	
 		addRowsToTable();
+		
+		//Rendering
+		for (int i=0; i<getRowWidth(); i++)
+		{
+			table.getColumn(i).setCellRenderer(new ScorerRenderer());
+		}
 	}
 	
 	protected int getRowWidth()
@@ -192,4 +209,123 @@ public abstract class GameStatisticsPanel extends JPanel
 	}
 	
 	protected abstract void addRowsToTable();
+	protected abstract ArrayList<Integer> getRankedRowsHighestWins();
+	protected abstract ArrayList<Integer> getRankedRowsLowestWins();
+	protected abstract ArrayList<Integer> getHistogramRows();
+	
+	private class ScorerRenderer extends DefaultTableCellRenderer
+	{
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object
+            value, boolean isSelected, boolean hasFocus, int row, int column) 
+        {
+    		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    		setHorizontalAlignment(SwingConstants.CENTER);
+    		
+    		if (column == 0)
+    		{
+    			setFont(new Font("Trebuchet MS", Font.BOLD, 15));
+    		}
+    		else
+    		{
+    			setFont(new Font("Trebuchet MS", Font.PLAIN, 15));
+    		}
+    		
+    		setColours(table, row, column);
+    		return this;
+        }
+        
+        private void setColours(JTable table, int row, int column)
+        {
+        	if (column == 0)
+        	{
+        		//Do nothing
+        		setForeground(null);
+        		setBackground(Color.WHITE);
+        		return;
+        	}
+        	
+        	TableModel tm = table.getModel();
+        	
+        	if (getRankedRowsHighestWins().contains(row))
+        	{
+        		int pos = getPositionForColour(tm, row, column, true);
+        		DartsColour.setFgAndBgColoursForPosition(this, pos);
+        	}
+        	else if (getRankedRowsLowestWins().contains(row))
+        	{
+        		int pos = getPositionForColour(tm, row, column, false);
+        		DartsColour.setFgAndBgColoursForPosition(this, pos);
+        	}
+        	else if (getHistogramRows().contains(row))
+        	{
+        		int sum = getHistogramSum(tm, column);
+        		
+        		double thisValue = getDoubleAt(tm, row, column);
+        		float percent = (float)thisValue / sum;
+        		
+        		Color bg = Color.getHSBColor((float)0.5, percent, 1);
+        		
+        		setForeground(null);
+        		setBackground(bg);
+        	}
+        	else
+        	{
+        		setForeground(null);
+        		setBackground(Color.WHITE);
+        	}
+        }
+        
+        private double getDoubleAt(TableModel tm, int row, int col)
+        {
+        	Number thisValue = (Number)tm.getValueAt(row, col);
+        	
+        	if (thisValue == null)
+        	{
+        		Debug.append("ROW: " + row + ", COL: " + col);
+        		return -1;
+        	}
+        	
+    		return thisValue.doubleValue();
+        }
+        
+        private int getPositionForColour(TableModel tm, int row, int col, boolean highestWins)
+        {
+        	if (tm.getValueAt(row, col) instanceof String)
+        	{
+        		return -1;
+        	}
+        	
+        	double myScore = getDoubleAt(tm, row, col);
+        	
+        	int myPosition = 1;
+        	for (int i=1; i<tm.getColumnCount(); i++)
+        	{
+        		if (i == col
+        		  || tm.getValueAt(row, i) instanceof String)
+        		{
+        			continue;
+        		}
+        		
+        		double theirScore = getDoubleAt(tm, row, i);
+        		
+        		//Compare positivity to the boolean
+        		int result = Double.compare(theirScore, myScore);
+        		if ((result > 0) == highestWins
+        		  && result != 0)
+        		{
+        			myPosition++;
+        		}
+        	}
+        	
+        	return myPosition;
+        }
+        
+        private int getHistogramSum(TableModel tm, int col)
+        {
+        	return getHistogramRows().stream()
+        							 .mapToInt(row -> (int)tm.getValueAt(row, col))
+        							 .sum();
+        }
+    }
 }
