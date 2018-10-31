@@ -27,6 +27,11 @@ public class HandyArrayList<E> extends ArrayList<E>
 		return get(size() - 1);
 	}
 	
+	public E removeLast()
+	{
+		return remove(size() - 1);
+	}
+	
 	public HandyArrayList<E> factoryCopy()
 	{
 		HandyArrayList<E> ret = new HandyArrayList<>();

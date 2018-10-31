@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import code.object.Dart;
+import code.utils.X01Util;
 import object.HandyArrayList;
 import util.MathsUtil;
 
@@ -20,6 +21,8 @@ public class GameStatisticsPanelGolf extends GameStatisticsPanel
 		addRow(getScoreRow(is -> MathsUtil.round(is.average().getAsDouble(), 2), "Avg. Hole"));
 		addRow(getScoreRow(is -> (double)is.max().getAsInt(), "Worst Hole"));
 		addRow(getMissesRow());
+		addRow(getGambleRow(r -> getPointsSquandered(r), "Points Squandered"));
+		addRow(getGambleRow(r -> getPointsImproved(r), "Points Improved"));
 		
 		addRow(new Object[getRowWidth()]);
 		
@@ -28,6 +31,68 @@ public class GameStatisticsPanelGolf extends GameStatisticsPanel
 		addRow(getScoreCountRow(3));
 		addRow(getScoreCountRow(4));
 		addRow(getScoreCountRow(5));
+		
+		table.setColumnWidths("150");
+	}
+	
+	/**
+	 * Any round where you could have "banked" and ended on something higher.
+	 */
+	private Object[] getGambleRow(Function<HandyArrayList<Dart>, Integer> f, String desc)
+	{
+		Object[] pointsSquandered = new Object[getRowWidth()];
+		pointsSquandered[0] = desc;
+		for (int i=0; i<playerNamesOrdered.size(); i++)
+		{
+			String playerName = playerNamesOrdered.get(i);
+			ArrayList<HandyArrayList<Dart>> rounds = hmPlayerToDarts.get(playerName);
+			
+			pointsSquandered[i+1] = rounds.stream().mapToInt(r -> f.apply(r)).sum();
+		}
+		
+		return pointsSquandered;
+	}
+	
+	private int getPointsSquandered(HandyArrayList<Dart> round)
+	{
+		int finalScore = round.lastElement().getGolfScore();
+		int bestScore = round.stream().mapToInt(d -> d.getGolfScore()).min().getAsInt();
+		
+		return finalScore - bestScore;
+	}
+	
+	/**
+	 * A bit difficult to define. Some examples:
+	 * 
+	 * 4-3-2. You've gambled twice, and gained 1 each time. So method should return 2.
+	 * 3-4-2. You've gambled the 3, stuffed it, then clawed it back. Method should return 1.
+	 * 5-5-1. You've not gambled anything. Method should return 0.
+	 * 4-3-5. You've stuffed it - there was a gain but it's gone. Method should return 0.
+	 * 4-2-3. You've gained 1 (and also lost 1). Method should return 1 for the original '4' gamble. I guess.
+	 */
+	private int getPointsImproved(HandyArrayList<Dart> round)
+	{
+		int finalScore = round.lastElement().getGolfScore();
+		int bestScore = round.stream().mapToInt(d -> d.getGolfScore()).min().getAsInt();
+		
+		//This round is stuffed - points have been squandered, not gained! Or it's just 1 dart!
+		if (finalScore > bestScore
+		  || round.size() == 1)
+		{
+			return 0;
+		}
+		
+		//Filter out the 5s - they're not interesting.
+		HandyArrayList<Dart> roundWithoutMisses = round.createFilteredCopy(d -> d.getGolfScore() < 5);
+		if (roundWithoutMisses.isEmpty())
+		{
+			//Round is all misses, so nothing to do
+			return 0;
+		}
+		
+		//Now get the first non-5. Result is the difference between this and where you ended up.
+		int gambledScore = roundWithoutMisses.firstElement().getGolfScore();
+		return gambledScore - bestScore;
 	}
 	
 	
@@ -55,9 +120,8 @@ public class GameStatisticsPanelGolf extends GameStatisticsPanel
 		for (int i=0; i<playerNamesOrdered.size(); i++)
 		{
 			String playerName = playerNamesOrdered.get(i);
-			ArrayList<HandyArrayList<Dart>> rounds = hmPlayerToDarts.get(playerName);
-			
-			IntStream is = rounds.stream().map(r -> r.lastElement()).mapToInt(d -> d.getGolfScore());
+			HandyArrayList<Dart> countedDarts = getCountedDarts(playerName);
+			IntStream is = countedDarts.stream().mapToInt(d -> d.getGolfScore());
 			row[i+1] = f.apply(is);
 		}
 		
@@ -98,18 +162,18 @@ public class GameStatisticsPanelGolf extends GameStatisticsPanel
 	@Override
 	protected ArrayList<Integer> getRankedRowsHighestWins()
 	{
-		return new ArrayList<>();
+		return HandyArrayList.factoryAdd(5);
 	}
 	
 	@Override
 	protected ArrayList<Integer> getRankedRowsLowestWins()
 	{
-		return HandyArrayList.factoryAdd(0, 1, 2, 3);
+		return HandyArrayList.factoryAdd(0, 1, 2, 3, 4);
 	}
 	
 	@Override
 	protected ArrayList<Integer> getHistogramRows()
 	{
-		return HandyArrayList.factoryAdd(5, 6, 7, 8, 9);
+		return HandyArrayList.factoryAdd(7, 8, 9, 10, 11);
 	}
 }
