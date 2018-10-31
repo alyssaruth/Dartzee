@@ -22,6 +22,9 @@ public class Dart implements DartsRegistry
 	//For Round the Clock, this'll be what they were to aim for
 	private int startingScore = 1; 
 	
+	//Never set on the DB. Used for in-game stats, and is just set to the round number.
+	private int golfHole = -1;
+	
 	public Dart(int score, int multiplier)
 	{
 		this.score = score;
@@ -58,6 +61,11 @@ public class Dart implements DartsRegistry
 		}
 		
 		return DartboardSegment.getGolfScore(segmentType);
+	}
+	
+	public int getGolfScore()
+	{
+		return getGolfScore(golfHole);
 	}
 	
 	
@@ -111,6 +119,10 @@ public class Dart implements DartsRegistry
 	public void setStartingScore(int clockNumber)
 	{
 		this.startingScore = clockNumber;
+	}
+	public void setGolfHole(int hole)
+	{
+		this.golfHole = hole;
 	}
 	
 	@Override

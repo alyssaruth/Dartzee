@@ -97,6 +97,10 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		{
 			return new MatchStatisticsPanelX01();
 		}
+		else if (type == GameEntity.GAME_TYPE_GOLF)
+		{
+			return new MatchStatisticsPanelGolf();
+		}
 		
 		return null;
 	}
