@@ -19,8 +19,8 @@ public class MatchStatisticsPanelGolf extends GameStatisticsPanelGolf
 	protected ArrayList<Integer> getRankedRowsLowestWins()
 	{
 		ArrayList<Integer> rows = super.getRankedRowsLowestWins();
-		rows.add(11);
-		rows.add(12);
+		rows.add(13);
+		rows.add(14);
 		return rows;
 	}
 }
