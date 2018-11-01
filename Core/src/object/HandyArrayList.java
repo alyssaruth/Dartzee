@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -164,5 +165,18 @@ public class HandyArrayList<E> extends ArrayList<E>
 		}
 		
 		return ret;
+	}
+	
+	public <K> HandyArrayList<HandyArrayList<E>> groupBy(Function<E, K> fnIdentifier)
+	{
+		HashMapList<K, E> hmIdentifierToItems = new HashMapList<>();
+		
+		for (E item : this)
+		{
+			K key = fnIdentifier.apply(item);
+			hmIdentifierToItems.putInList(key, item);
+		}
+		
+		return hmIdentifierToItems.getValuesAsVector();
 	}
 }

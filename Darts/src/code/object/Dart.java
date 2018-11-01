@@ -24,6 +24,7 @@ public class Dart implements DartsRegistry
 	
 	//Never set on the DB. Used for in-game stats, and is just set to the round number.
 	private int golfHole = -1;
+	private long participantId = -1;
 	
 	public Dart(int score, int multiplier)
 	{
@@ -123,6 +124,14 @@ public class Dart implements DartsRegistry
 	public void setGolfHole(int hole)
 	{
 		this.golfHole = hole;
+	}
+	public long getParticipantId()
+	{
+		return participantId;
+	}
+	public void setParticipantId(long participantId)
+	{
+		this.participantId = participantId;
 	}
 	
 	@Override

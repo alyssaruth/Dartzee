@@ -37,6 +37,8 @@ public abstract class GameStatisticsPanel extends JPanel
 	protected HandyArrayList<String> playerNamesOrdered = new HandyArrayList<>();
 	protected HandyArrayList<ParticipantEntity> participants = null;
 	protected HashMapList<String, HandyArrayList<Dart>> hmPlayerToDarts = new HashMapList<>();
+	protected String gameParams = null;
+	
 	private DefaultTableModel tm = new DefaultTableModel();
 	
 	public GameStatisticsPanel() 
@@ -90,6 +92,7 @@ public abstract class GameStatisticsPanel extends JPanel
 					
 					//only needed for golf but doesn't hurt to always set it
 					d.setGolfHole(roundNumber);
+					d.setParticipantId(participant.getRowId());
 					
 					dartsForRound.add(d);
 				}
@@ -151,6 +154,13 @@ public abstract class GameStatisticsPanel extends JPanel
 		return HandyArrayList.flattenBatches(rounds);
 	}
 	
+	protected Object[] factoryRow(String rowName)
+	{
+		Object[] row = new Object[getRowWidth()];
+		row[0] = rowName;
+		return row;
+	}
+	
 	protected Object[] getBestGameRow(Function<IntStream, OptionalInt> fn)
 	{
 		Object[] row = new Object[getRowWidth()];
@@ -208,6 +218,11 @@ public abstract class GameStatisticsPanel extends JPanel
 				 								  && pt.getFinalScore() > -1);
 	}
 	
+	public void setGameParams(String gameParams)
+	{
+		this.gameParams = gameParams;
+	}
+	
 	protected abstract void addRowsToTable();
 	protected abstract ArrayList<Integer> getRankedRowsHighestWins();
 	protected abstract ArrayList<Integer> getRankedRowsLowestWins();
@@ -259,7 +274,7 @@ public abstract class GameStatisticsPanel extends JPanel
         	}
         	else if (getHistogramRows().contains(row))
         	{
-        		int sum = getHistogramSum(tm, column);
+        		long sum = getHistogramSum(tm, column);
         		
         		double thisValue = getDoubleAt(tm, row, column);
         		float percent = (float)thisValue / sum;
@@ -321,10 +336,10 @@ public abstract class GameStatisticsPanel extends JPanel
         	return myPosition;
         }
         
-        private int getHistogramSum(TableModel tm, int col)
+        private long getHistogramSum(TableModel tm, int col)
         {
         	return getHistogramRows().stream()
-        							 .mapToInt(row -> (int)tm.getValueAt(row, col))
+        							 .mapToLong(row -> (long)tm.getValueAt(row, col))
         							 .sum();
         }
     }

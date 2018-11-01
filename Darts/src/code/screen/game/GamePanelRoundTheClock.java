@@ -162,7 +162,7 @@ public final class GamePanelRoundTheClock extends GamePanelPausable<DartsScorerR
 	@Override
 	public GameStatisticsPanel factoryStatsPanel()
 	{
-		return null;
+		return new GameStatisticsPanelRoundTheClock();
 	}
 
 }
