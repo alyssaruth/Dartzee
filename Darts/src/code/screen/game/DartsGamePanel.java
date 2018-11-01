@@ -222,6 +222,11 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		String gameDesc = gameEntity.getTypeDesc();
 		gameTitle = "Game #" + gameNo + " (" + gameDesc + ", " + totalPlayers + " players)";
 		
+		if (statsPanel != null)
+		{
+			statsPanel.setGameParams(gameEntity.getGameParams());
+		}
+		
 		initScorers(totalPlayers);
 		
 		initImpl(gameEntity.getGameParams());

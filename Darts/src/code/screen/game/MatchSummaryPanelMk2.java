@@ -34,6 +34,8 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		this.match = match;
 		
 		statsPanel = factoryStatsPanel();
+		statsPanel.setGameParams(match.getGameParams());
+		
 		if (statsPanel != null)
 		{
 			panelCenter.add(statsPanel, BorderLayout.CENTER);
@@ -81,7 +83,10 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 	}
 	public void updateStats()
 	{
-		statsPanel.showStats(participants);
+		if (statsPanel != null)
+		{
+			statsPanel.showStats(participants);
+		}
 	}
 
 	@Override
@@ -100,6 +105,10 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		else if (type == GameEntity.GAME_TYPE_GOLF)
 		{
 			return new MatchStatisticsPanelGolf();
+		}
+		else if (type == GameEntity.GAME_TYPE_ROUND_THE_CLOCK)
+		{
+			return new MatchStatisticsPanelRoundTheClock();
 		}
 		
 		return null;
