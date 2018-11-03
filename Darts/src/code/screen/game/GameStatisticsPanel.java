@@ -109,7 +109,7 @@ public abstract class GameStatisticsPanel extends JPanel
 		buildTableModel();
 	}
 	
-	private void buildTableModel()
+	protected void buildTableModel()
 	{
 		tm = new DefaultTableModel();
 		tm.addColumn("");
@@ -277,7 +277,7 @@ public abstract class GameStatisticsPanel extends JPanel
         		long sum = getHistogramSum(tm, column);
         		
         		double thisValue = getDoubleAt(tm, row, column);
-        		float percent = (float)thisValue / sum;
+        		float percent = (sum == 0)? 0 : (float)thisValue / sum;
         		
         		Color bg = Color.getHSBColor((float)0.5, percent, 1);
         		
@@ -339,7 +339,7 @@ public abstract class GameStatisticsPanel extends JPanel
         private long getHistogramSum(TableModel tm, int col)
         {
         	return getHistogramRows().stream()
-        							 .mapToLong(row -> (long)tm.getValueAt(row, col))
+        							 .mapToLong(row -> ((Number)tm.getValueAt(row, col)).longValue())
         							 .sum();
         }
     }
