@@ -1,9 +1,16 @@
 package code.screen.game;
 
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import bean.NumberField;
 import code.object.Dart;
 import code.utils.X01Util;
 import object.HandyArrayList;
@@ -13,10 +20,34 @@ import util.MathsUtil;
  * Shows running stats for X01 games - three-dart average, checkout % etc.
  */
 public class GameStatisticsPanelX01 extends GameStatisticsPanel
+									implements PropertyChangeListener
 {
+	public GameStatisticsPanelX01() 
+	{
+		super();
+		
+		
+		add(panel, BorderLayout.NORTH);
+		panel.add(lblSetupThreshold);
+		
+		panel.add(nfSetupThreshold);
+		nfSetupThreshold.setColumns(10);
+		
+		nfSetupThreshold.setValue(100);
+		nfSetupThreshold.addPropertyChangeListener(this);
+	}
+	
+	private final JPanel panel = new JPanel();
+	private final JLabel lblSetupThreshold = new JLabel("Setup Threshold");
+	private final NumberField nfSetupThreshold = new NumberField();
+	
+	
 	@Override
 	protected void addRowsToTable()
 	{
+		nfSetupThreshold.setMinimum(62);
+		nfSetupThreshold.setMaximum(Integer.parseInt(gameParams) - 1);
+		
 		addRow(getScoreRow(i -> i.max().getAsInt(), "Highest Score"));
 		addRow(getThreeDartAvgsRow());
 		addRow(getScoreRow(i -> i.min().getAsInt(), "Lowest Score"));
@@ -50,7 +81,7 @@ public class GameStatisticsPanelX01 extends GameStatisticsPanel
 			ArrayList<HandyArrayList<Dart>> rounds = hmPlayerToDarts.get(playerName);
 			HandyArrayList<Dart> darts = HandyArrayList.flattenBatches(rounds);
 			
-			double avg = X01Util.calculateThreeDartAverage(darts, 140);
+			double avg = X01Util.calculateThreeDartAverage(darts, nfSetupThreshold.getNumber());
 			int p1 = (int)(100 * avg);
 			avg = (double)p1/100;
 			
@@ -120,8 +151,15 @@ public class GameStatisticsPanelX01 extends GameStatisticsPanel
 			String playerName = playerNamesOrdered.get(i);
 			ArrayList<HandyArrayList<Dart>> rounds = getScoringRounds(playerName);
 			
-			IntStream roundsAsTotal = rounds.stream().mapToInt(rnd -> X01Util.sumScore(rnd));
-			row[i+1] = f.apply(roundsAsTotal);
+			if (!rounds.isEmpty())
+			{
+				IntStream roundsAsTotal = rounds.stream().mapToInt(rnd -> X01Util.sumScore(rnd));
+				row[i+1] = f.apply(roundsAsTotal);
+			}
+			else
+			{
+				row[i+1] = "N/A";
+			}
 		}
 		
 		return row;
@@ -150,13 +188,13 @@ public class GameStatisticsPanelX01 extends GameStatisticsPanel
 	private HandyArrayList<HandyArrayList<Dart>> getScoringRounds(String playerName)
 	{
 		HandyArrayList<HandyArrayList<Dart>> rounds = hmPlayerToDarts.get(playerName);
-		return rounds.createFilteredCopy(r -> r.lastElement().getStartingScore() > 140);
+		return rounds.createFilteredCopy(r -> r.lastElement().getStartingScore() > nfSetupThreshold.getNumber());
 	}
 	
 	private HandyArrayList<Dart> getScoringDarts(String playerName)
 	{
 		HandyArrayList<Dart> darts = getFlattenedDarts(playerName);
-		return X01Util.getScoringDarts(darts, 140);
+		return X01Util.getScoringDarts(darts, nfSetupThreshold.getNumber());
 	}
 	
 	@Override
@@ -175,5 +213,16 @@ public class GameStatisticsPanelX01 extends GameStatisticsPanel
 	protected ArrayList<Integer> getHistogramRows()
 	{
 		return HandyArrayList.factoryAdd(5, 6, 7, 8, 9, 10, 11, 12);
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0)
+	{
+		String propertyName = arg0.getPropertyName();
+		if (propertyName.equals("value"))
+		{
+			buildTableModel();
+			repaint();
+		}
 	}
 }
