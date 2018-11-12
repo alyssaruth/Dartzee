@@ -1,6 +1,7 @@
 package code.screen;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -349,6 +350,12 @@ public class Dartboard extends JLayeredPane
 			
 			listener.dartThrown(dart);
 		}
+	}
+	
+	public void addOverlay(Point pt, Component overlay)
+	{
+		add(overlay, 10);
+		overlay.setLocation(pt);
 	}
 	
 	public Dart convertPointToDart(Point pt, boolean rationalise)

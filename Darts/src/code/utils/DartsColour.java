@@ -90,6 +90,10 @@ public final class DartsColour implements DartsRegistry
 	
 	public static void setFgAndBgColoursForPosition(Component c, int finishPos)
 	{
+		setFgAndBgColoursForPosition(c, finishPos, null);
+	}
+	public static void setFgAndBgColoursForPosition(Component c, int finishPos, Color defaultBg)
+	{
 		if (finishPos == 1)
 		{
 			c.setBackground(Color.YELLOW);
@@ -112,7 +116,7 @@ public final class DartsColour implements DartsRegistry
 		}
 		else
 		{
-			c.setBackground(null);
+			c.setBackground(defaultBg);
 			c.setForeground(null);
 		}
 	}

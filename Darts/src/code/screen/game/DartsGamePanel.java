@@ -13,10 +13,11 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import javax.swing.border.TitledBorder;
+import javax.swing.SwingConstants;
 
 import code.ai.AbstractDartsModel;
 import code.bean.SliderAiSpeed;
@@ -70,6 +71,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	public DartsGamePanel(DartsGameScreen parent)
 	{
 		super();
+		scorerEast.tableScores.setToolTipText("View Stats");
 		
 		this.parentWindow = parent;
 		
@@ -77,22 +79,35 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		dartboard.addDartboardListener(this);
 		panelCenter.add(panelSouth, BorderLayout.SOUTH);
 		panelSouth.setLayout(new BorderLayout(0, 0));
-		panelSpeedSlider.setBorder(new TitledBorder(null, "Cpu Speed", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelSouth.add(panelSpeedSlider, BorderLayout.NORTH);
-		panelSpeedSlider.setLayout(new BorderLayout(0, 0));
 		slider.setValue(1000);
-		slider.setPreferredSize(new Dimension(200, 100));
-		panelSpeedSlider.setPreferredSize(new Dimension(200, 100));
-		panelSpeedSlider.add(slider);
+		slider.setSize(new Dimension(100, 200));
+		slider.setPreferredSize(new Dimension(40, 200));
 		panelSouth.add(panelButtons, BorderLayout.SOUTH);
+		btnConfirm.setPreferredSize(new Dimension(80, 80));
+		btnConfirm.setIcon(new ImageIcon(DartsGamePanel.class.getResource("/buttons/Confirm.png")));
+		btnConfirm.setToolTipText("Confirm round");
 		panelButtons.add(btnConfirm);
+		btnReset.setPreferredSize(new Dimension(80, 80));
+		btnReset.setIcon(new ImageIcon(DartsGamePanel.class.getResource("/buttons/Reset.png")));
+		btnReset.setToolTipText("Reset round");
 		panelButtons.add(btnReset);
+		btnStats.setToolTipText("View stats");
+		btnStats.setPreferredSize(new Dimension(80, 80));
+		btnStats.setIcon(new ImageIcon(DartsGamePanel.class.getResource("/buttons/stats.png")));
 		
 		panelButtons.add(btnStats);
+		btnSlider.setToolTipText("AI throw speed");
+		btnSlider.setPreferredSize(new Dimension(80, 80));
+		
+		slider.setOrientation(SwingConstants.VERTICAL);
+		slider.setVisible(false);
+		
+		panelButtons.add(btnSlider);
 		
 		btnConfirm.addActionListener(this);
 		btnReset.addActionListener(this);
 		btnStats.addActionListener(this);
+		btnSlider.addActionListener(this);
 		
 		if (statsPanel == null)
 		{
@@ -109,12 +124,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	protected final GameStatisticsPanel statsPanel = factoryStatsPanel();
 	
 	private final JPanel panelSouth = new JPanel();
-	private final JPanel panelSpeedSlider = new JPanel();
-	protected final SliderAiSpeed slider = new SliderAiSpeed();
+	protected final SliderAiSpeed slider = new SliderAiSpeed(true);
 	private final JPanel panelButtons = new JPanel();
-	private final JButton btnConfirm = new JButton("Confirm");
-	private final JButton btnReset = new JButton("Reset");
-	private final JToggleButton btnStats = new JToggleButton("Stats...");
+	private final JButton btnConfirm = new JButton("");
+	private final JButton btnReset = new JButton("");
+	private final JToggleButton btnStats = new JToggleButton("");
+	private final JToggleButton btnSlider = new JToggleButton("");
 	
 	
 	/**
@@ -204,7 +219,8 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	}
 	private void initForAi(boolean hasAi)
 	{
-		panelSpeedSlider.setVisible(hasAi);
+		dartboard.addOverlay(new Point(329, 350), slider);
+		btnSlider.setVisible(hasAi);
 		
 		int defaultSpd = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED);
 		slider.setValue(defaultSpd);
@@ -294,7 +310,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		if (getActiveCount() == 0)
 		{
-			panelSpeedSlider.setVisible(false);
+			btnSlider.setVisible(false);
 			btnConfirm.setVisible(false);
 			btnReset.setVisible(false);
 		}
@@ -756,6 +772,15 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		{
 			viewStats();
 		}
+		else if (source == btnSlider)
+		{
+			toggleSlider();
+		}
+	}
+	
+	private void toggleSlider()
+	{
+		slider.setVisible(btnSlider.isSelected());
 	}
 	
 	private void viewStats()
