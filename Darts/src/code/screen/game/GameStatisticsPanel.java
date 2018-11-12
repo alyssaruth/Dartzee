@@ -106,7 +106,17 @@ public abstract class GameStatisticsPanel extends JPanel
 			}
 		}
 		
-		buildTableModel();
+		if (isSufficientData())
+		{
+			buildTableModel();
+		}
+	}
+	
+	private boolean isSufficientData()
+	{
+		ArrayList<String> playerNames = hmPlayerToDarts.getKeysAsVector();
+		
+		return playerNames.stream().allMatch(p -> !getFlattenedDarts(p).isEmpty());
 	}
 	
 	protected void buildTableModel()
