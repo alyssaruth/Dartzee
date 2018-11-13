@@ -51,7 +51,8 @@ public class GameStatisticsPanelX01 extends GameStatisticsPanel
 		addRow(getScoreRow(i -> i.max().getAsInt(), "Highest Score"));
 		addRow(getThreeDartAvgsRow());
 		addRow(getScoreRow(i -> i.min().getAsInt(), "Lowest Score"));
-		addRow(getMissesRow());
+		addRow(getMultiplePercent("Miss %", 0));
+		addRow(getMultiplePercent("Treble %", 3));
 		
 		addRow(new Object[getRowWidth()]);
 		
@@ -165,18 +166,18 @@ public class GameStatisticsPanelX01 extends GameStatisticsPanel
 		return row;
 	}
 	
-	private Object[] getMissesRow()
+	private Object[] getMultiplePercent(String desc, int multiplier)
 	{
 		Object[] row = new Object[getRowWidth()];
-		row[0] = "Miss %";
+		row[0] = desc;
 		
 		for (int i=0; i<playerNamesOrdered.size(); i++)
 		{
 			String playerName = playerNamesOrdered.get(i);
 			HandyArrayList<Dart> scoringDarts = getScoringDarts(playerName);
-			HandyArrayList<Dart> misses = scoringDarts.createFilteredCopy(d -> d.getMultiplier() == 0);
+			HandyArrayList<Dart> hits = scoringDarts.createFilteredCopy(d -> d.getMultiplier() == multiplier);
 			
-			double percent = 100 * (double)misses.size() / scoringDarts.size();
+			double percent = 100 * (double)hits.size() / scoringDarts.size();
 			percent = MathsUtil.round(percent, 2);
 			
 			row[i+1] = percent;
@@ -200,19 +201,19 @@ public class GameStatisticsPanelX01 extends GameStatisticsPanel
 	@Override
 	protected ArrayList<Integer> getRankedRowsHighestWins()
 	{
-		return HandyArrayList.factoryAdd(0, 1, 2, 14, 15);
+		return HandyArrayList.factoryAdd(0, 1, 2, 4, 15, 16);
 	}
 	
 	@Override
 	protected ArrayList<Integer> getRankedRowsLowestWins()
 	{
-		return HandyArrayList.factoryAdd(3, 17, 18);
+		return HandyArrayList.factoryAdd(3, 18, 19);
 	}
 	
 	@Override
 	protected ArrayList<Integer> getHistogramRows()
 	{
-		return HandyArrayList.factoryAdd(5, 6, 7, 8, 9, 10, 11, 12);
+		return HandyArrayList.factoryAdd(6, 7, 8, 9, 10, 11, 12, 13);
 	}
 	
 	@Override

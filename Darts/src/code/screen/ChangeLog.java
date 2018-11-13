@@ -31,7 +31,7 @@ public class ChangeLog extends JFrame
 		textArea.setText("");
 		
 		textArea.append("\n");
-		textArea.append("\n--------- v2.4.2 ---------");
+		textArea.append("\n--------- v2.5.0 ---------");
 		textArea.append("\n");
 		textArea.append("\n+ Added pre-loading of sounds and images to improve performance");
 		textArea.append("\n+ Auto-fix feature for sanity checks");

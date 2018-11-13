@@ -1,8 +1,9 @@
 package code.screen.game;
 
 import java.util.ArrayList;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.function.Function;
-import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
 import code.object.Dart;
@@ -15,9 +16,9 @@ public class GameStatisticsPanelRoundTheClock extends GameStatisticsPanel
 	@Override
 	protected void addRowsToTable()
 	{
-		addRow(getDartsPerNumber(i -> i.max().getAsInt(), "Most darts"));
-		addRow(getDartsPerNumber(i -> MathsUtil.round(i.average().getAsDouble(), 2), "Avg. darts"));
-		addRow(getDartsPerNumber(i -> i.min().getAsInt(), "Fewest darts"));
+		addRow(getDartsPerNumber(i -> getMaxDartsForAnyRound(i), "Most darts", true));
+		addRow(getDartsPerNumber(i -> getAverageDartsForAnyRound(i), "Avg. darts", false));
+		addRow(getDartsPerNumber(i -> getMinDartsForAnyRound(i), "Fewest darts", false));
 		
 		addRow(new Object[getRowWidth()]);
 		
@@ -36,6 +37,32 @@ public class GameStatisticsPanelRoundTheClock extends GameStatisticsPanel
 		addRow(getDartsPerNumber(21, Integer.MAX_VALUE, "21+"));
 		
 		table.setColumnWidths("140");
+	}
+	
+	private Object getMaxDartsForAnyRound(IntStream darts)
+	{
+		//This includes incomplete rounds, so there'll always be something.#
+		return darts.max().getAsInt();
+	}
+	private Object getAverageDartsForAnyRound(IntStream darts)
+	{
+		OptionalDouble oi = darts.average();
+		if (!oi.isPresent())
+		{
+			return "N/A";
+		}
+		
+		return MathsUtil.round(oi.getAsDouble(), 2);
+	}
+	private Object getMinDartsForAnyRound(IntStream darts)
+	{
+		OptionalInt oi = darts.min();
+		if (!oi.isPresent())
+		{
+			return "N/A";
+		}
+		
+		return oi.getAsInt();
 	}
 	
 	private Object[] getBruceys(String desc, boolean enforceSuccess)
@@ -130,15 +157,19 @@ public class GameStatisticsPanelRoundTheClock extends GameStatisticsPanel
 		return row;
 	}
 	
-	private Object[] getDartsPerNumber(Function<IntStream, Number> fn, String desc)
+	private Object[] getDartsPerNumber(Function<IntStream, Object> fn, String desc, boolean includeUnfinished)
 	{
 		Object[] row = factoryRow(desc);
 		for (int i=0; i<playerNamesOrdered.size(); i++)
 		{
 			String playerName = playerNamesOrdered.get(i);
 			
-			
 			HandyArrayList<HandyArrayList<Dart>> dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName);
+			if (!includeUnfinished)
+			{
+				dartsGrouped = dartsGrouped.createFilteredCopy(g -> g.lastElement().hitClockTarget(gameParams));
+			}
+			
 			IntStream is = dartsGrouped.stream().mapToInt(g -> g.size());
 			row[i+1] = fn.apply(is);
 		}
