@@ -1,19 +1,25 @@
 package code.screen;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import code.bean.ScrollTableDartsGame;
 import code.db.PlayerEntity;
 import code.object.Dart;
 import code.screen.game.DartsScorerRoundTheClock;
-import code.utils.GeometryUtil;
 import net.miginfocom.swing.MigLayout;
+import util.Debug;
 import util.TableUtil.DefaultModel;
 
 public class TestScreen extends EmbeddedScreen
@@ -89,21 +95,19 @@ public class TestScreen extends EmbeddedScreen
 	{
 		if (arg0.getSource() == btnTest)
 		{
-			GeometryUtil.translatePoint(new Point(5,5), 5, 90, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 90.5, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 89.5, true);
-			
-			GeometryUtil.translatePoint(new Point(5,5), 5, 180, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 180.5, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 179.5, true);
-			
-			GeometryUtil.translatePoint(new Point(5,5), 5, 270, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 270.5, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 269.5, true);
-			
-			GeometryUtil.translatePoint(new Point(5,5), 5, 0, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 0.5, true);
-			GeometryUtil.translatePoint(new Point(5,5), 5, 359.5, true);
+			List<String> colorKeys = new ArrayList<>();
+		    Set<Entry<Object, Object>> entries = UIManager.getLookAndFeelDefaults().entrySet();
+		    for (Entry entry : entries)
+		    {
+			      if (entry.getValue() instanceof Color)
+			      {
+			    	  Debug.append(entry.getKey() + " | " + entry.getValue());
+			      }
+		    }
+
+		    // sort the color keys
+		    Collections.sort(colorKeys);
+		    
 		}
 		else if (arg0.getSource() == btnTest_1)
 		{

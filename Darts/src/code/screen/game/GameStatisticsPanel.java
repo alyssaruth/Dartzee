@@ -13,10 +13,18 @@ import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import bean.ScrollTable;
 import code.db.ParticipantEntity;
@@ -45,6 +53,14 @@ public abstract class GameStatisticsPanel extends JPanel
 	{
 		setLayout(new BorderLayout(0, 0));
 		add(table, BorderLayout.CENTER);
+		
+		table.setBorder(new EmptyBorder(10, 5, 0, 5));
+		
+		Color c = UIManager.getColor("Panel.background");
+		Color c2 = new Color(c.getRed(), c.getGreen(), c.getBlue());
+		table.setBackgroundProper(c2);
+		
+		table.setShowRowCount(false);
 	}
 	
 	protected final ScrollTable table = new ScrollTable();
@@ -148,6 +164,7 @@ public abstract class GameStatisticsPanel extends JPanel
 		for (int i=0; i<getRowWidth(); i++)
 		{
 			table.getColumn(i).setCellRenderer(new ScorerRenderer());
+			table.getColumn(i).setHeaderRenderer(new HeaderRenderer());
 		}
 	}
 	
@@ -241,6 +258,46 @@ public abstract class GameStatisticsPanel extends JPanel
 	protected abstract ArrayList<Integer> getRankedRowsLowestWins();
 	protected abstract ArrayList<Integer> getHistogramRows();
 	
+	private class HeaderRenderer extends JTextPane implements TableCellRenderer
+	{
+		public HeaderRenderer()
+		{
+			StyledDocument doc = this.getStyledDocument();
+			SimpleAttributeSet center = new SimpleAttributeSet();
+			StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+			doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		}
+		
+		@Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column)
+		{
+			setText((String)value);
+			setFont(new Font("Trebuchet MS", Font.BOLD, 15));
+			setBorder(getBorder(column));
+			
+			setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
+			
+			if (column == 0)
+			{
+				setBackground(new Color(0, 0, 0, 0));
+				setOpaque(false);
+			}
+			
+			return this;
+		}
+		
+		private MatteBorder getBorder(int column)
+		{
+			int top = column==0?0:2;
+			int left = column==0?0:1;
+			int right = column==getRowWidth() - 1?2:1;
+			
+			return new MatteBorder(top, left, 2, right, Color.BLACK);
+		}
+	}
+	
 	private class ScorerRenderer extends DefaultTableCellRenderer
 	{
         @Override
@@ -260,7 +317,19 @@ public abstract class GameStatisticsPanel extends JPanel
     		}
     		
     		setColours(table, row, column);
+    		setBorder(getBorder(table, row, column));
+    		
     		return this;
+        }
+        
+        private MatteBorder getBorder(JTable table, int row, int column)
+        {
+        	int left = column == 0?2:1;
+        	int right = column == getRowWidth() - 1?2:1;
+        	
+        	int bottom = row == table.getRowCount()-1?2:0;
+        	
+        	return new MatteBorder(0, left, bottom, right, Color.BLACK);
         }
         
         private void setColours(JTable table, int row, int column)
