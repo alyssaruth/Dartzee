@@ -104,6 +104,13 @@ public final class MathsUtil
 		return results;
 	}
 	
+	public static long getLargestPrimeFactor(long x)
+	{
+		ArrayList<Long> factors = MathsUtil.primeFactorise(x);
+		
+		return factors.stream().mapToLong(l -> l.longValue()).max().getAsLong();
+	}
+	
 	public static BigInteger getFirstPrimeFactor(BigInteger x)
 	{
 		if (isPrime(x))

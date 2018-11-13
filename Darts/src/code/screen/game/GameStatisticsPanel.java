@@ -97,8 +97,11 @@ public abstract class GameStatisticsPanel extends JPanel
 					dartsForRound.add(d);
 				}
 				
-				//Always add the last one
-				hmPlayerToDarts.putInList(playerName, dartsForRound);
+				//Always add the last one, if it's populated
+				if (!dartsForRound.isEmpty())
+				{
+					hmPlayerToDarts.putInList(playerName, dartsForRound);
+				}
 			}
 			catch (SQLException sqle)
 			{
@@ -275,12 +278,12 @@ public abstract class GameStatisticsPanel extends JPanel
         	if (getRankedRowsHighestWins().contains(row))
         	{
         		int pos = getPositionForColour(tm, row, column, true);
-        		DartsColour.setFgAndBgColoursForPosition(this, pos);
+        		DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE);
         	}
         	else if (getRankedRowsLowestWins().contains(row))
         	{
         		int pos = getPositionForColour(tm, row, column, false);
-        		DartsColour.setFgAndBgColoursForPosition(this, pos);
+        		DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE);
         	}
         	else if (getHistogramRows().contains(row))
         	{
