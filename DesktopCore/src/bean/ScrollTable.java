@@ -26,6 +26,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -685,6 +686,17 @@ public class ScrollTable extends JPanel
 	public void addDoubleClickListener(DoubleClickListener listener)
 	{
 		clickListeners.add(listener);
+	}
+	
+	public void setBorder(AbstractBorder border)
+	{
+		scrollPane.setBorder(border);
+		table.setBorder(border);
+	}
+	
+	public void setBackgroundProper(Color bg)
+	{
+		table.setBackground(bg);
 	}
 	
 	@Override

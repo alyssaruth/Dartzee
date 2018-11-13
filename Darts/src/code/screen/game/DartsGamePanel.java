@@ -760,6 +760,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	public void actionPerformed(ActionEvent arg0)
 	{
 		Object source = arg0.getSource();
+		if (source != btnSlider)
+		{
+			btnSlider.setSelected(false);
+			slider.setVisible(false);
+		}
+		
 		if (source == btnReset)
 		{
 			resetRound();
@@ -781,6 +787,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	private void toggleSlider()
 	{
 		slider.setVisible(btnSlider.isSelected());
+		
+		if (btnStats.isSelected())
+		{
+			btnStats.setSelected(false);
+			viewStats();
+		}
 	}
 	
 	private void viewStats()
