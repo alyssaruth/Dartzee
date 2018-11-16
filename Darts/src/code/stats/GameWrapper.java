@@ -120,7 +120,7 @@ public class GameWrapper
 		return X01Util.calculateThreeDartAverage(darts, scoreCutOff);
 	}
 	
-	public int getMissedDartsX01(int scoreCutOff)
+	public int getDartsForMultiplierX01(int scoreCutOff, int multiplier)
 	{
 		ArrayList<Dart> darts = getScoringDarts(scoreCutOff);
 		if (darts == null)
@@ -131,7 +131,7 @@ public class GameWrapper
 		int misses = 0;
 		for (Dart dart : darts)
 		{
-			if (dart.getTotal() == 0)
+			if (dart.getMultiplier() == multiplier)
 			{
 				misses++;
 			}

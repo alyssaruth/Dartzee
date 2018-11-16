@@ -389,11 +389,10 @@ public abstract class AbstractDartsModel
 		
 		double avgScore = 0;
 		double missPercent = 0;
+		double treblePercent = 0;
 		
 		//Get the scoring point once, not 20,000 times
 		//Point ptToAimAt = getScoringPoint(dartboard);
-		
-		int noTripleTwenties = 0;
 		for (int i=0; i<SCORING_DARTS_TO_THROW; i++)
 		{
 			Point ptToAimAt = getScoringPoint(dartboard);
@@ -420,17 +419,16 @@ public abstract class AbstractDartsModel
 				missPercent++;
 			}
 			
-			if (dart.getScore() == (scoringDart)
-			  && dart.isTriple())
+			if (dart.getMultiplier() == 3
+			  && dart.getScore() == (scoringDart))
 			{
-				noTripleTwenties++;
+				treblePercent++;
 			}
 		}
 		
-		Debug.append("T" + scoringDart + "s: " + noTripleTwenties);
-		
 		avgScore = avgScore/SCORING_DARTS_TO_THROW;
 		missPercent = 100 * missPercent/SCORING_DARTS_TO_THROW;
+		treblePercent = 100 * treblePercent/SCORING_DARTS_TO_THROW;
 		
 		Debug.append("Simulating throws at random doubles for " + DOUBLE_DARTS_TO_THROW + " darts");
 		
@@ -457,7 +455,7 @@ public abstract class AbstractDartsModel
 		Debug.append("Finished simulation");
 		
 		double doublePercent = 100 * doublesHit/DOUBLE_DARTS_TO_THROW;
-		return new SimulationWrapper(avgScore, missPercent, doublePercent, hmPointToCount);
+		return new SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount);
 	}
 	/*private HashMap<Integer, Point> getHmOfDoublePoints(Dartboard dartboard)
 	{
