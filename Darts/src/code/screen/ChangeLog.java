@@ -36,6 +36,7 @@ public class ChangeLog extends JFrame
 		textArea.append("\n+ Added running stats that are viewable during any game/match");
 		textArea.append("\n+ Added pre-loading of sounds and images to improve performance");
 		textArea.append("\n+ Auto-fix feature for sanity checks");
+		textArea.append("\n+ Leaderboards now show worst games as well as best");
 		textArea.append("\n= Improved game layout by hiding AI slider and providing enlarged buttons with icons");
 		textArea.append("\n= Fixed slow database check SQL");
 		textArea.append("\n= Fixed default on DartsMatch table");

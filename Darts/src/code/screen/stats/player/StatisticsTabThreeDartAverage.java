@@ -16,6 +16,7 @@ import code.bean.ScrollTableDartsGame;
 import code.stats.GameWrapper;
 import net.miginfocom.swing.MigLayout;
 import object.HandyArrayList;
+import util.Debug;
 import util.TableUtil;
 import util.TableUtil.DefaultModel;
 
@@ -133,6 +134,7 @@ public class StatisticsTabThreeDartAverage extends AbstractStatisticsTab
 		HandyArrayList<GameWrapper> filteredGamesFinished = filteredGames.createFilteredCopy(g -> g.isFinished());
 		filteredGamesFinished.sort((GameWrapper g1, GameWrapper g2) -> g1.getDtStart().compareTo(g2.getDtStart()));
 		
+		double trebles = 0;
 		double misses = 0;
 		double dartsTotal = 0;
 		double avgTotal = 0;
@@ -148,7 +150,8 @@ public class StatisticsTabThreeDartAverage extends AbstractStatisticsTab
 			long gameId = game.getGameId();
 			
 			dartsTotal += game.getScoringDarts(scoreThreshold).size();
-			misses += game.getMissedDartsX01(scoreThreshold);
+			misses += game.getDartsForMultiplierX01(scoreThreshold, 0);
+			trebles += game.getDartsForMultiplierX01(scoreThreshold, 3);
 			
 			//Table row - only show the raw data for the actual player, not the comparison
 			if (model != null)
@@ -173,5 +176,7 @@ public class StatisticsTabThreeDartAverage extends AbstractStatisticsTab
 		//Miss percent, to 1 d.p
 		double missPercentage = (double)Math.round(1000 * misses / dartsTotal) / 10;
 		nfMissPercent.setText("" + missPercentage);
+		
+		Debug.append("Treble %: " + 100 * trebles / dartsTotal);
 	}
 }
