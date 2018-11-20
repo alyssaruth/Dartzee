@@ -28,7 +28,7 @@ import util.FileUtil;
  */
 public class DartsDatabaseUtil
 {
-	public static final int DATABASE_VERSION = 4;
+	public static final int DATABASE_VERSION = 3;
 	
 	private static final String DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying";
 	
@@ -69,13 +69,6 @@ public class DartsDatabaseUtil
 			version.saveToDatabase();
 		}
 		
-		if (versionNumber == 3)
-		{
-			upgradeDatabaseToVersion4();
-			version.setVersion(4);
-			version.saveToDatabase();
-		}
-		
 		initialiseDatabase(version);
 	}
 	
@@ -112,25 +105,6 @@ public class DartsDatabaseUtil
 		alterColumnsToNotAllowNulls();
 		
 		Debug.appendBanner("Finished database upgrade");
-	}
-	
-	private static void upgradeDatabaseToVersion4()
-	{
-		Debug.appendBanner("Upgrading to Version 4");
-		
-		String sql = "ALTER TABLE DartsMatch ALTER COLUMN MatchParams DROP DEFAULT";
-		DatabaseUtil.executeUpdate(sql);
-		
-		new AchievementEntity().createTable();
-		
-		unlockV4Achievements();
-		
-		Debug.appendBanner("Finished database upgrade");
-	}
-	
-	private static void unlockV4Achievements()
-	{
-		//TODO - Write me
 	}
 	
 	private static void createAllTables()

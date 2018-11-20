@@ -217,14 +217,14 @@ public class DartsMatchEntity extends AbstractDartsEntity<DartsMatchEntity>
 		return hmPositionToPoints;
 	}
 	
-	public void cacheMetadataFromGame(GameEntity game)
+	public void cacheMetadataFromGame(GameEntity firstGame, GameEntity lastGame)
 	{
-		this.gameType = game.getGameType();
-		this.gameParams = game.getGameParams();
-		this.players = game.retrievePlayersVector();
+		this.gameType = lastGame.getGameType();
+		this.gameParams = lastGame.getGameParams();
+		this.players = firstGame.retrievePlayersVector();
 		
 		//Should've been setting this too...
-		this.currentOrdinal = game.getMatchOrdinal();
+		this.currentOrdinal = lastGame.getMatchOrdinal();
 	}
 	
 	/**

@@ -1,11 +1,43 @@
 package util;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import object.HandyArrayList;
 
 public final class MathsUtil
 {
+	public static boolean isPrime(BigInteger x)
+	{
+		//Can't square root a BigInteger easily. But can estimate it.
+		double numberOfDigits = x.toString().length();
+		if (numberOfDigits == 1)
+		{
+			return isPrime(x.longValue());
+		}
+		
+		if (!x.isProbablePrime(10))
+		{
+			return false;
+		}
+		
+		int digitsRounded = (int)Math.ceil(numberOfDigits/2);
+		BigInteger max = BigInteger.valueOf(10);
+		max = max.pow(digitsRounded);
+		
+		
+		for (BigInteger factor = BigInteger.valueOf(2); (max.compareTo(factor) == 1); factor = factor.add(BigInteger.valueOf(1)))
+		{
+			BigInteger[] result = x.divideAndRemainder(factor);
+			if (result[1].equals(BigInteger.valueOf(0)))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public static boolean isPrime(long x)
 	{
 		int maxFactor = (int)Math.floor(Math.sqrt(x));
@@ -43,6 +75,107 @@ public final class MathsUtil
 		}
 		
 		return true;
+	}
+	
+	public static ArrayList<BigInteger> getAllPrimeFactorsLessThan(BigInteger x, int threshold)
+	{
+		if (isPrime(x))
+		{
+			return HandyArrayList.factoryAdd(x);
+		}
+		
+		HandyArrayList<BigInteger> results = new HandyArrayList<>();
+		BigInteger p = BigInteger.valueOf(2);
+		while (x.compareTo(BigInteger.valueOf(1)) == 1 //X > 1
+		  && p.compareTo(BigInteger.valueOf(threshold)) == -1) //P < threshold
+		{
+			BigInteger[] division = x.divideAndRemainder(p);
+			if (division[1].equals(BigInteger.valueOf(0)))
+			{
+				x = division[0];
+				results.add(p);
+			}
+			else
+			{
+				p = getNextPrime(p);
+			}
+		}
+		
+		return results;
+	}
+	
+	public static long getLargestPrimeFactor(long x)
+	{
+		ArrayList<Long> factors = MathsUtil.primeFactorise(x);
+		
+		return factors.stream().mapToLong(l -> l.longValue()).max().getAsLong();
+	}
+	
+	public static BigInteger getFirstPrimeFactor(BigInteger x)
+	{
+		if (isPrime(x))
+		{
+			return x;
+		}
+		
+		BigInteger p = BigInteger.valueOf(2);
+		while (x.compareTo(p) == 1) //x > p
+		{
+			BigInteger[] division = x.divideAndRemainder(p);
+			if (division[1].equals(BigInteger.valueOf(0)))
+			{
+				return p;
+			}
+			else
+			{
+				p = getNextPrime(p);
+			}
+		}
+		
+		Debug.stackTrace("Prime check broken? Number was [" + x + "], found 0 prime factors");
+		return x;
+	}
+	
+	public static HandyArrayList<BigInteger> primeFactorise(BigInteger x)
+	{
+		if (isPrime(x))
+		{
+			return HandyArrayList.factoryAdd(x);
+		}
+		
+		HandyArrayList<BigInteger> results = new HandyArrayList<>();
+		BigInteger p = BigInteger.valueOf(2);
+		while (x.compareTo(BigInteger.valueOf(1)) == 1)
+		{
+			BigInteger[] division = x.divideAndRemainder(p);
+			if (division[1].equals(BigInteger.valueOf(0)))
+			{
+				x = division[0];
+				results.add(p);
+				
+				if (isPrime(x))
+				{
+					results.add(x);
+					return results;
+				}
+			}
+			else
+			{
+				p = getNextPrime(p);
+			}
+		}
+		
+		return results;
+	}
+	private static BigInteger getNextPrime(BigInteger x)
+	{
+		BigInteger ret = x.add(BigInteger.valueOf(1));
+		while (!isPrime(ret))
+		{
+			ret = ret.add(BigInteger.valueOf(1));
+		}
+		
+		return ret;
 	}
 	
 	public static HandyArrayList<Long> primeFactorise(long x)
@@ -106,18 +239,23 @@ public final class MathsUtil
 		return factorsTotal == x;
 	}
 	
-	public static int getFactorCount(int x)
+	public static HandyArrayList<Long> getFactors(long x)
 	{
-		int count = 0;
-		for (int i=1; i<=x; i++)
+		HandyArrayList<Long> ret = new HandyArrayList<>();
+		for (long i=1; i<=x; i++)
 		{
 			if ((x % i) == 0)
 			{
-				count++;
+				ret.add(i);
 			}
 		}
 		
-		return count;
+		return ret;
+	}
+	
+	public static int getFactorCount(int x)
+	{
+		return getFactors(x).size();
 	}
 	
 	public static String convertToBase(String x, int fromBase, int toBase) 
@@ -220,7 +358,7 @@ public final class MathsUtil
 		ArrayList<Long> ret = new ArrayList<>();
 		for (long i=min; i<max; i++)
 		{
-			Debug.logProgress(i+1, max, 1, "substitutions");
+			Debug.logProgress(i-min+1, max-min, 1, "substitutions");
 			
 			String subStr = "" + i;
 			while (subStr.length() < substitutionsNeeded)
@@ -275,5 +413,62 @@ public final class MathsUtil
 		}
 		
 		return powerSeq == number;
+	}
+	
+	public static double round(double number, int decimalPlaces)
+	{
+		double product = Math.pow(10, decimalPlaces);
+		
+		int rounded = (int)(product * number);
+		
+		return rounded / product;
+	}
+	
+	public static ArrayList<Long> factoryAll(int length)
+	{
+		ArrayList<Long> ret = new ArrayList<>();
+		
+		long min = (long)Math.pow(10, length-1);
+		long max = (long)Math.pow(10, length);
+		for (long i=min; i<max; i++)
+		{
+			ret.add(i);
+		}
+		
+		return ret;
+	}
+	
+	public static boolean isDivisible(long number, long factor)
+	{
+		return (number % factor) == 0;
+	}
+	
+	public static long gcd(long l1, long l2)
+	{
+		ArrayList<Long> factorsOne = primeFactorise(l1);
+		ArrayList<Long> factorsTwo = primeFactorise(l2);
+		
+		ArrayList<Long> factorsIntersect = intersect(factorsOne, factorsTwo);
+		return factorsIntersect.stream().reduce(1L, (a, b) -> a * b);
+	}
+	
+	public static ArrayList<Long> intersect(ArrayList<Long> listOne, ArrayList<Long> listTwo)
+	{
+		ArrayList<Long> intersection = new ArrayList<>();
+		for (long l : listOne)
+		{
+			if (listTwo.contains(l))
+			{
+				intersection.add(l);
+				listTwo.remove(Long.valueOf(l));
+			}
+		}
+		
+		return intersection;
+	}
+	
+	public static boolean areCoprime(long l1, long l2)
+	{
+		return gcd(l1, l2) == 1;
 	}
 }
