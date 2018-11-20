@@ -96,6 +96,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		btnStats.setIcon(new ImageIcon(DartsGamePanel.class.getResource("/buttons/stats_large.png")));
 		
 		panelButtons.add(btnStats);
+		btnSlider.setIcon(new ImageIcon(DartsGamePanel.class.getResource("/buttons/aiSpeed.png")));
 		btnSlider.setToolTipText("AI throw speed");
 		btnSlider.setPreferredSize(new Dimension(80, 80));
 		
