@@ -1,20 +1,21 @@
 package code.screen.stats.overall;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.JPanel;
 
+import bean.RadioButtonPanel;
 import code.bean.GameParamFilterPanel;
 import code.bean.PlayerTypeFilterPanel;
 import code.bean.ScrollTableDartsGame;
 import code.db.GameEntity;
 import code.utils.DartsRegistry;
 import code.utils.PreferenceUtil;
-
-import java.awt.Component;
-import javax.swing.Box;
+import javax.swing.JRadioButton;
 
 public final class OverallStatsTabTotalScore extends JPanel
 											 implements ActionListener
@@ -33,6 +34,7 @@ public final class OverallStatsTabTotalScore extends JPanel
 		panelGameParams.addActionListener(this);
 		panelPlayerFilters.addActionListener(this);
 		
+		
 		scrollPane.setRowHeight(23);
 		
 		add(panelFilters, BorderLayout.NORTH);
@@ -40,18 +42,32 @@ public final class OverallStatsTabTotalScore extends JPanel
 		
 		panelFilters.add(horizontalStrut);
 		panelFilters.add(panelPlayerFilters);
+		
+		panelFilters.add(horizontalStrut_1);
+		
+		panelFilters.add(panelBestOrWorst);
+		
+		panelBestOrWorst.add(rdbtnBest);
+		
+		panelBestOrWorst.add(rdbtnWorst);
 		add(scrollPane, BorderLayout.CENTER);
+		
+		panelBestOrWorst.addActionListener(this);
 	}
 	
 	private final JPanel panelFilters = new JPanel();
 	private final ScrollTableDartsGame scrollPane = new ScrollTableDartsGame();
 	private final PlayerTypeFilterPanel panelPlayerFilters = new PlayerTypeFilterPanel();
 	private final Component horizontalStrut = Box.createHorizontalStrut(20);
+	private final Component horizontalStrut_1 = Box.createHorizontalStrut(20);
+	private final RadioButtonPanel panelBestOrWorst = new RadioButtonPanel();
+	private final JRadioButton rdbtnBest = new JRadioButton("Best");
+	private final JRadioButton rdbtnWorst = new JRadioButton("Worst");
 
 	public void buildTable()
 	{
 		String sql = getTotalScoreSql();
-		OverallStatsScreen.buildStandardLeaderboard(scrollPane, sql, "Score", false);
+		OverallStatsScreen.buildStandardLeaderboard(scrollPane, sql, "Score", rdbtnWorst.isSelected());
 	}
 	private String getTotalScoreSql()
 	{
@@ -76,7 +92,9 @@ public final class OverallStatsTabTotalScore extends JPanel
 			sb.append(playerWhereSql);
 		}
 		
-		sb.append(" ORDER BY pt.FinalScore ASC");
+		String orderStr = rdbtnBest.isSelected()?"ASC":"DESC";
+		sb.append(" ORDER BY pt.FinalScore ");
+		sb.append(orderStr);
 		sb.append(" FETCH FIRST ");
 		sb.append(leaderboardSize);
 		sb.append(" ROWS ONLY");

@@ -282,12 +282,11 @@ public final class DartsGameScreen extends JFrame
 	{
 		HandyArrayList<GameEntity> allGames = GameEntity.retrieveGamesForMatch(matchId);
 		
-		//Get the last one so we can set the ordinal too. Oops.
-		//GameEntity firstGame = allGames.get(0);
+		GameEntity firstGame = allGames.firstElement();
 		GameEntity lastGame = allGames.lastElement();
 		
 		DartsMatchEntity match = new DartsMatchEntity().retrieveForId(matchId);
-		match.cacheMetadataFromGame(lastGame);
+		match.cacheMetadataFromGame(firstGame, lastGame);
 		
 		DartsGameScreen scrn = new DartsGameScreen();
 		scrn.initMatch(match);

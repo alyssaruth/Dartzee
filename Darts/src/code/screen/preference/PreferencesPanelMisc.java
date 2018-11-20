@@ -30,7 +30,7 @@ public class PreferencesPanelMisc extends AbstractPreferencesPanel
 	}
 	
 	private final JLabel lblDefaultAiSpeed = new JLabel("Default AI speed");
-	private final SliderAiSpeed slider = new SliderAiSpeed();
+	private final SliderAiSpeed slider = new SliderAiSpeed(false);
 	private final JCheckBox chckbxAiAutomaticallyFinish = new JCheckBox("AI automatically finish");
 	private final JCheckBox chckbxCheckForUpdates = new JCheckBox("Automatically check for updates");
 	private final JLabel lblRowsToShow = new JLabel("Rows to show on Leaderboards");
