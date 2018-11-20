@@ -49,4 +49,9 @@ public class NumberField extends JFormattedTextField
 		NumberFormatter nf = (NumberFormatter)getFormatter();
 		nf.setMaximum(max);
 	}
+	public void setMinimum(int min)
+	{
+		NumberFormatter nf = (NumberFormatter)getFormatter();
+		nf.setMinimum(min);
+	}
 }

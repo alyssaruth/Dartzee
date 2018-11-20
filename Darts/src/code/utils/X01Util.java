@@ -1,7 +1,10 @@
 package code.utils;
 
+import java.util.ArrayList;
+
 import code.ai.AbstractDartsModel;
 import code.object.Dart;
+import object.HandyArrayList;
 
 public abstract class X01Util
 {
@@ -46,5 +49,38 @@ public abstract class X01Util
 		
 		return startingScore % 2 == 0 //Even
 		  && startingScore <= 40;
+	}
+	
+	public static boolean isFinishRound(HandyArrayList<Dart> round)
+	{
+		Dart drt = round.lastElement();
+		return drt.isDouble()
+		  && (drt.getTotal() == drt.getStartingScore());
+	}
+	
+	/**
+	 * Refactored out of GameWrapper for use in game stats panel
+	 */
+	public static HandyArrayList<Dart> getScoringDarts(HandyArrayList<Dart> allDarts, int scoreCutOff)
+	{
+		if (allDarts == null)
+		{
+			return new HandyArrayList<>();
+		}
+		
+		return allDarts.createFilteredCopy(d -> d.getStartingScore() > scoreCutOff);
+	}
+	public static double calculateThreeDartAverage(HandyArrayList<Dart> darts, int scoreCutOff)
+	{
+		HandyArrayList<Dart> scoringDarts = getScoringDarts(darts, scoreCutOff);
+		
+		double amountScored = sumScore(scoringDarts);
+		
+		return (amountScored / scoringDarts.size()) * 3;
+	}
+	
+	public static int sumScore(HandyArrayList<Dart> darts)
+	{
+		return darts.stream().mapToInt(d -> d.getTotal()).sum();
 	}
 }

@@ -173,4 +173,10 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 	{
 		return DartsScorerX01.factory(this);
 	}
+	
+	@Override
+	public GameStatisticsPanel factoryStatsPanel()
+	{
+		return new GameStatisticsPanelX01();
+	}
 }

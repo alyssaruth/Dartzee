@@ -34,6 +34,8 @@ public final class MatchScorer extends AbstractScorer
 		{
 			tableScores.getColumn(i).setCellRenderer(new ParticipantRenderer(i));
 		}
+		
+		tableScores.setColumnWidths("100");
 	}
 	
 	public void setMatch(DartsMatchEntity match)
