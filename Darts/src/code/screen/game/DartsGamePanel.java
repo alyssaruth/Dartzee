@@ -71,7 +71,6 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	public DartsGamePanel(DartsGameScreen parent)
 	{
 		super();
-		scorerEast.tableScores.setToolTipText("View Stats");
 		
 		this.parentWindow = parent;
 		
