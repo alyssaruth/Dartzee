@@ -159,4 +159,10 @@ public final class GamePanelRoundTheClock extends GamePanelPausable<DartsScorerR
 		return scorer;
 	}
 
+	@Override
+	public GameStatisticsPanel factoryStatsPanel()
+	{
+		return new GameStatisticsPanelRoundTheClock();
+	}
+
 }

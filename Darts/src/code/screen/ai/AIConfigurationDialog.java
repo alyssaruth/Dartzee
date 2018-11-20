@@ -59,14 +59,20 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 		
 		panel.add(textFieldAverageScore);
 		textFieldAverageScore.setEditable(false);
-		textFieldAverageScore.setColumns(10);
+		textFieldAverageScore.setColumns(5);
 		
 		JLabel lblMiss = new JLabel("Miss %");
 		panel.add(lblMiss);
 		textFieldMissPercent.setEditable(false);
-		textFieldMissPercent.setColumns(10);
+		textFieldMissPercent.setColumns(5);
 		
 		panel.add(textFieldMissPercent);
+		
+		panel.add(lblTreble);
+		textFieldTreblePercent.setEditable(false);
+		textFieldTreblePercent.setColumns(5);
+		
+		panel.add(textFieldTreblePercent);
 		
 		JLabel lblDouble = new JLabel("Double %");
 		panel.add(lblDouble);
@@ -75,7 +81,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 		
 		panel.add(textFieldFinishPercent);
 		textFieldFinishPercent.setEditable(false);
-		textFieldFinishPercent.setColumns(10);
+		textFieldFinishPercent.setColumns(5);
 		
 		JPanel panelCalculate = new JPanel();
 		panelCalculateStats.add(panelCalculate, BorderLayout.SOUTH);
@@ -148,6 +154,8 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 	private AbstractAIConfigurationPanel panelAIConfig = new AIConfigurationNormalDistribution();
 	private final JButton btnRunSimulation = new JButton("Run Simulation...");
 	private final JTextField textFieldMissPercent = new JTextField();
+	private final JLabel lblTreble = new JLabel("Treble %");
+	private final JTextField textFieldTreblePercent = new JTextField();
 	
 	public void init(PlayerEntity aiPlayer)
 	{
@@ -201,6 +209,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 		//Reset the calculation stuff too
 		textFieldAverageScore.setText("");
 		textFieldMissPercent.setText("");
+		textFieldTreblePercent.setText("");
 		textFieldFinishPercent.setText("");
 		btnCalculate.setText("Calculate");
 	}
@@ -357,6 +366,9 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 		
 		double missPercent = simulationWrapper.getMissPercent();
 		textFieldMissPercent.setText("" + missPercent);
+		
+		double treblePercent = simulationWrapper.getTreblePercent();
+		textFieldTreblePercent.setText("" + treblePercent);
 		
 		double finishPercent = simulationWrapper.getFinishPercent();
 		textFieldFinishPercent.setText("" + finishPercent);

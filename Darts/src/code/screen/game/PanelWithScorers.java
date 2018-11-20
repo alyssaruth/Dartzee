@@ -1,6 +1,7 @@
 package code.screen.game;
 
 import java.awt.BorderLayout;
+import java.beans.Beans;
 
 import javax.swing.JPanel;
 
@@ -42,7 +43,15 @@ public abstract class PanelWithScorers<S extends AbstractScorer> extends JPanel
 	/**
 	 * Abstract methods
 	 */
-	public abstract S factoryScorer();
+	public S factoryScorer()
+	{
+		if (!Beans.isDesignTime())
+		{
+			Debug.stackTrace("Shouldn't be calling this directly.");
+		}
+		
+		return (S)new DartsScorerX01();
+	}
 	
 	/**
 	 * Instance methods
@@ -70,10 +79,11 @@ public abstract class PanelWithScorers<S extends AbstractScorer> extends JPanel
 			hmKeyToScorer.put(key, scorer);
 			scorer.init(player, gameParams);
 			
-			if (scorer == getFirstVisibleScorer())
+			//Don't know why this was ever here. It was always the leftmost player!
+			/*if (scorer == getFirstVisibleScorer())
 			{
 				scorer.assignAsterisk();
-			}
+			}*/
 			
 			return scorer;
 		}
@@ -81,7 +91,7 @@ public abstract class PanelWithScorers<S extends AbstractScorer> extends JPanel
 		Debug.stackTrace("Unable to assign scorer for player " + player + " and key " + key);
 		return null;
 	}
-	private S getFirstVisibleScorer()
+	/*private S getFirstVisibleScorer()
 	{
 		for (S scorer : scorersOrdered)
 		{
@@ -93,7 +103,7 @@ public abstract class PanelWithScorers<S extends AbstractScorer> extends JPanel
 			return scorer;
 		}
 		
-		Debug.stackTrace("WTF U DOIN");
+		Debug.stackTrace("No scorers visible - this shouldn't happen");
 		return null;
-	}
+	}*/
 }
