@@ -41,19 +41,11 @@ public class SliderAiSpeed extends JSlider
 		}
 		
 		@Override
-		public void paintTrack(Graphics arg0)
-		{
-			// TODO Auto-generated method stub
-			super.paintTrack(arg0);
-		}
-		
-		@Override
 		protected void paintTrack(SynthContext arg0, Graphics arg1,
 				Rectangle arg2)
 		{
 			arg2.setSize(30, 200);
 			
-			// TODO Auto-generated method stub
 			super.paintTrack(arg0, arg1, arg2);
 		}
 	}
