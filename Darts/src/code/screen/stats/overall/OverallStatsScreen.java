@@ -30,7 +30,7 @@ import util.TableUtil;
 
 public class OverallStatsScreen extends EmbeddedScreen
 {
-	private static final String TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)";
+	public static final String TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)";
 	
 	public OverallStatsScreen() 
 	{	

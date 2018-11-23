@@ -5,7 +5,9 @@ package code.utils;
  */
 public interface AchievementConstants
 {
-	public static final int ACHIEVEMENT_REF_BEST_FINISH = 0;
+	public static final int ACHIEVEMENT_REF_X01_BEST_FINISH = 0;
+	public static final int ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE = 1;
+	public static final int ACHIEVEMENT_REF_X01_ALL_FINISHES = 2;
 	
 	//Grades low-to-high
 	public static final int GRADE_NONE = 0;

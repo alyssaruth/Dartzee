@@ -22,6 +22,7 @@ import bean.AbstractDevScreen;
 import code.db.sanity.DatabaseSanityCheck;
 import code.screen.game.DartsGameScreen;
 import code.utils.DartsDatabaseUtil;
+import code.utils.DatabaseUtil;
 import code.utils.DevUtilities;
 import code.utils.ResourceCache;
 import screen.DebugConsoleAdv;
@@ -198,6 +199,12 @@ public class DartsApp extends AbstractDevScreen
 		else if (cmd.equals(CMD_SANITY))
 		{
 			DatabaseSanityCheck.runSanityCheck();
+		}
+		else if (cmd.equals("convert"))
+		{
+			DatabaseUtil.executeUpdate("DELETE FROM Achievement");
+			
+			DartsDatabaseUtil.unlockV4Achievements();
 		}
 		
 		return textToShow;

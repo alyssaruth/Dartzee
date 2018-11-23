@@ -217,7 +217,11 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	
 	public void saveToDatabase()
 	{
-		dtLastUpdate = DateUtil.getSqlDateNow();
+		saveToDatabase(DateUtil.getSqlDateNow());
+	}
+	public void saveToDatabase(Timestamp dtLastUpdate)
+	{
+		this.dtLastUpdate = dtLastUpdate;
 		
 		if (retrievedFromDb)
 		{

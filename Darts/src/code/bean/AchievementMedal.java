@@ -4,9 +4,8 @@ import java.awt.Point;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.SwingUtilities;
-
 import code.utils.GeometryUtil;
+import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -164,7 +163,7 @@ public class AchievementMedal extends JFXPanel
 			
 			scene.setFill(Color.TRANSPARENT);
 			
-			SwingUtilities.invokeLater(new Runnable()
+			Platform.runLater(new Runnable()
 			{
 				@Override
 				public void run()
