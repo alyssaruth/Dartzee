@@ -1,6 +1,9 @@
 package code.utils;
 
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -18,7 +21,9 @@ import code.db.VersionEntity;
 import code.screen.PlayerMatchingDialog;
 import code.screen.ScreenCache;
 import code.screen.game.DartsGameScreen;
+import code.screen.stats.overall.OverallStatsScreen;
 import object.HandyArrayList;
+import util.DateUtil;
 import util.Debug;
 import util.DialogUtil;
 import util.FileUtil;
@@ -26,7 +31,7 @@ import util.FileUtil;
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
  */
-public class DartsDatabaseUtil
+public class DartsDatabaseUtil implements AchievementConstants
 {
 	public static final int DATABASE_VERSION = 4;
 	
@@ -114,9 +119,80 @@ public class DartsDatabaseUtil
 		Debug.appendBanner("Finished database upgrade");
 	}
 	
-	private static void unlockV4Achievements()
+	public static void unlockV4Achievements()
 	{
-		//TODO - Write me
+		unlockBestFinishAchievement(); //ACHIEVEMENT_REF_X01_BEST_FINISH
+		unlockThreeDartAchievement("drtLast.DtCreation", "drtLast.Ordinal = 3", ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE);
+	}
+	
+	private static void unlockBestFinishAchievement()
+	{
+		String whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0"
+						+ " AND drtLast.Multiplier = 2";
+		
+		unlockThreeDartAchievement("pt.DtFinished", whereSql, ACHIEVEMENT_REF_X01_BEST_FINISH);
+	}
+	private static void unlockThreeDartAchievement(String dtColumn, String lastDartWhereSql, int achievementRef)
+	{
+		String tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId INT, GameId INT, DtAchieved TIMESTAMP, Score INT");
+		if (tempTable == null)
+		{
+			return;
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO " + tempTable);
+		sb.append(" SELECT p.RowId, pt.GameId, " + dtColumn + ", ");
+		sb.append(OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR);
+		sb.append(" FROM Dart drtFirst, Dart drtLast, Round rnd, Participant pt, Player p, Game g");
+		sb.append(" WHERE drtFirst.RoundId = rnd.RowId");
+		sb.append(" AND drtLast.RoundId = rnd.RowId");
+		sb.append(" AND drtFirst.Ordinal = 1");
+		sb.append(" AND rnd.ParticipantId = pt.RowId");
+		sb.append(" AND pt.PlayerId = p.RowId");
+		sb.append(" AND pt.DtFinished < "); 
+		sb.append(DateUtil.getEndOfTimeSqlString());
+		sb.append("	AND " + lastDartWhereSql);
+		sb.append(" AND pt.GameId = g.RowId");
+		sb.append(" AND g.GameType = " + GameEntity.GAME_TYPE_X01);
+		
+		if (!DatabaseUtil.executeUpdate("" + sb))
+		{
+			DatabaseUtil.dropTable(tempTable);
+			return;
+		}
+		
+		sb = new StringBuilder();
+		sb.append(" SELECT PlayerId, GameId, DtAchieved, Score");
+		sb.append(" FROM " + tempTable + " zz1");
+		sb.append(" WHERE NOT EXISTS (");
+		sb.append(" 	SELECT 1");
+		sb.append(" 	FROM " + tempTable + " zz2");
+		sb.append(" 	WHERE zz2.PlayerId = zz1.PlayerId");
+		sb.append(" 	AND (zz2.Score > zz1.Score OR (zz2.Score = zz1.Score AND zz2.GameId < zz1.GameId))");
+		sb.append(" )");
+		sb.append(" ORDER BY PlayerId");
+		
+		try (ResultSet rs = DatabaseUtil.executeQuery(sb))
+		{
+			while (rs.next())
+			{
+				long playerId = rs.getLong("PlayerId");
+				long gameId = rs.getLong("GameId");
+				Timestamp dtAchieved = rs.getTimestamp("DtAchieved");
+				int score = rs.getInt("Score");
+				
+				AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, dtAchieved);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			Debug.logSqlException(sb.toString(), sqle);
+		}
+		finally
+		{
+			DatabaseUtil.dropTable(tempTable);
+		}
 	}
 	
 	private static void upgradeDatabaseToVersion3()

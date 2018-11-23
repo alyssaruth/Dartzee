@@ -5,7 +5,6 @@ import code.db.AchievementEntity;
 import code.db.DartEntity;
 import code.db.ParticipantEntity;
 import code.object.Dart;
-import code.utils.AchievementConstants;
 import code.utils.X01Util;
 import object.HandyArrayList;
 import object.HashMapList;
@@ -58,6 +57,9 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 		if (!bust)
 		{
 			dartboard.playDodgySound("" + totalScore);
+			
+			int total = X01Util.sumScore(dartsThrown);
+			AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total);
 		}
 		
 		activeScorer.finaliseRoundScore(startingScore, bust);
@@ -96,9 +98,11 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 	{
 		super.updateAchievementsForFinish();
 		
-		//TODO replace with helper once branches are merged
-		int sum = dartsThrown.stream().mapToInt(d -> d.getTotal()).sum();
-		AchievementEntity.updateAchievement(ACHIEVEMENT_REF_BEST_FINISH, getCurrentPlayerId(), getGameId(), sum);
+		int sum = X01Util.sumScore(dartsThrown);
+		AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, getCurrentPlayerId(), getGameId(), sum);
+		
+		int checkout = dartsThrown.lastElement().getScore();
+		AchievementEntity.insertIfNotExists(ACHIEVEMENT_REF_X01_ALL_FINISHES, getCurrentPlayerId(), getGameId(), checkout);
 	}
 		
 	@Override

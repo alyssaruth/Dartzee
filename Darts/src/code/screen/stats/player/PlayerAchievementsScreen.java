@@ -29,7 +29,7 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 		
 		tabbedPane.addTab("General", null, panelGeneral, null);
 		
-		//panelGeneral.add(gray);
+		panelGeneral.add(gray);
 		panelGeneral.add(red);
 		panelGeneral.add(orange);
 		panelGeneral.add(yellow);
@@ -68,7 +68,7 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 	{
 		long playerId = player.getRowId();
 		
-		AchievementEntity achievement = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_BEST_FINISH, playerId);
+		AchievementEntity achievement = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId);
 		if (achievement != null)
 		{
 			lblNewLabel.setText("Best Finish: " + achievement.getAchievementCounter() + ", Game #" + achievement.getGameIdEarned());

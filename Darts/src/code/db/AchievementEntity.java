@@ -1,11 +1,13 @@
 package code.db;
 
+import object.HandyArrayList;
+import util.DateUtil;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-
-import object.HandyArrayList;
 
 /**
  * Entity to record a particular that a particular achievement has been earned by a player.
@@ -67,6 +69,15 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	{
 		return new AchievementEntity().retrieveEntity("PlayerId = " + playerId + " AND AchievementRef = " + achievementRef);
 	}
+	public static void insertIfNotExists(int achievementRef, long playerId, long gameId, int counter)
+	{
+		String whereSql = "PlayerId = " + playerId + " AND AchievementRef = " + achievementRef + " AND AchievementCounter = " + counter;
+		
+		if (new AchievementEntity().retrieveEntity(whereSql) == null)
+		{
+			factoryAndSave(achievementRef, playerId, gameId, counter);
+		}
+	}
 	public static void updateAchievement(int achievementRef, long playerId, long gameId, int counter)
 	{
 		AchievementEntity existingAchievement = retrieveAchievement(achievementRef, playerId);
@@ -91,13 +102,18 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	
 	public static AchievementEntity factoryAndSave(int achievementRef, long playerId, long gameId, int counter)
 	{
+		return factoryAndSave(achievementRef, playerId, gameId, counter, DateUtil.getSqlDateNow());
+	}
+	public static AchievementEntity factoryAndSave(int achievementRef, long playerId, long gameId, int counter,
+	  Timestamp dtLastUpdate)
+	{
 		AchievementEntity ae = new AchievementEntity();
 		ae.assignRowId();
 		ae.achievementRef = achievementRef;
 		ae.playerId = playerId;
 		ae.gameIdEarned = gameId;
 		ae.achievementCounter = counter;
-		ae.saveToDatabase();
+		ae.saveToDatabase(dtLastUpdate);
 		
 		return ae;
 	}
