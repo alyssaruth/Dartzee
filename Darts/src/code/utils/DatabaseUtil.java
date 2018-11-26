@@ -1,19 +1,13 @@
 package code.utils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Properties;
-
-import javax.sql.rowset.CachedRowSet;
-
 import com.sun.rowset.CachedRowSetImpl;
-
 import util.AbstractClient;
 import util.Debug;
 import util.DialogUtil;
+
+import javax.sql.rowset.CachedRowSet;
+import java.sql.*;
+import java.util.Properties;
 
 /**
  * Generic derby helper methods

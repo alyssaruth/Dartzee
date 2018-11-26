@@ -1,23 +1,20 @@
 package code.screen.ai;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
-
+import bean.ScrollTable;
+import bean.SuperTextPane;
+import code.object.Dart;
+import code.screen.ScreenCache;
 import object.SuperHashMap;
 import screen.SimpleDialog;
 import util.DialogUtil;
 import util.TableUtil;
 import util.TableUtil.SimpleRenderer;
-import bean.ScrollTable;
-import bean.SuperTextPane;
-import code.object.Dart;
-import code.screen.ScreenCache;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 /**
  * Dialog to specify setup darts that override defaults. Some examples:

@@ -61,8 +61,8 @@ public class HashMapCount<K> extends SuperHashMap<K, Integer>
 		Set<Map.Entry<K, Integer>> set = entrySet();
 		
 		HandyArrayList<Map.Entry<K, Integer>> list = new HandyArrayList<>(set);
-		list.sort((Map.Entry<K, Integer> m1, Map.Entry<K, Integer> m2) -> Integer.compare(m1.getValue(), m2.getValue()));
-		
+		list.sort(Comparator.comparingInt(e -> e.getValue()));
+
 		return list.lastElement();
 	}
 	
@@ -84,33 +84,6 @@ public class HashMapCount<K> extends SuperHashMap<K, Integer>
 		double roundedAvg = (double)Math.round(10 * avg) / 10;
 		
 		return roundedAvg;
-	}
-	public double calculateMedian()
-	{
-		if (isEmpty())
-		{
-			return 0;
-		}
-		
-		ArrayList<K> allKeys = getFlattenedOrderedList((K k1, K k2) -> Integer.compare((int)k1, (int)k2));
-		
-		int n = allKeys.size();
-		if (n % 2 == 0)
-		{
-			//Even, so we want either side of the middle value and then to take the average of them.#
-			int bigIx = n/2;
-			int smallIx = (n/2) - 1;
-			
-			double sum = ((int)allKeys.get(bigIx) + (int)allKeys.get(smallIx));
-			
-			return sum/2;
-		}
-		else
-		{
-			//Odd, so we just want the middle value. It's (n-1)/2 because of stupid index starting at 0 not 1.
-			int ix = (n-1)/2;
-			return (int)allKeys.get(ix);
-		}
 	}
 	
 	/**

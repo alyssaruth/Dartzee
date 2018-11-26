@@ -1,2 +1,5 @@
 /.idea
+/Databases
+/out
+/lib
 *.iml

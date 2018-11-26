@@ -1,27 +1,12 @@
 package code.screen.stats.player;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.function.Predicate;
-import java.util.stream.IntStream;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-
+import bean.NumberField;
+import code.bean.ScrollTableDartsGame;
+import code.stats.GameWrapper;
+import net.miginfocom.swing.MigLayout;
+import object.HandyArrayList;
+import object.HashMapCount;
+import object.HashMapCountInteger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -30,14 +15,19 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.XYSeries;
-
-import bean.NumberField;
-import code.bean.ScrollTableDartsGame;
-import code.stats.GameWrapper;
-import net.miginfocom.swing.MigLayout;
-import object.HandyArrayList;
-import object.HashMapCount;
 import util.TableUtil.DefaultModel;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 /**
  * A tab to show bar a line representations for the 'FinalScore' column on Participant.
@@ -336,7 +326,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		
 		//Now get what scores should now show
 		HandyArrayList<String> startingScores = getDistinctGameParams();
-		startingScores.sort((x, y) -> x.compareTo(y));
+		startingScores.sort(Comparator.naturalOrder());
 		
 		//Handle 0 games
 		if (startingScores.isEmpty())
@@ -395,7 +385,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		//Build up counts for each game finish value
 		String suffix = " (" + legendKey + ")";
 		XYSeries series = new XYSeries(graphTitle + suffix);
-		HashMapCount<Integer> hmNoDartsToCount = new HashMapCount<>();
+		HashMapCountInteger hmNoDartsToCount = new HashMapCountInteger();
 		for (int i=0; i<gamesToGraph.size(); i++)
 		{
 			GameWrapper game = gamesToGraph.get(i);

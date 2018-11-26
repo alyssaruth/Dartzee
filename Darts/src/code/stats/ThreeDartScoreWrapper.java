@@ -1,10 +1,10 @@
 package code.stats;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import object.HandyArrayList;
 import object.HashMapCount;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Wraps up the stuff for a specific 3 dart score
