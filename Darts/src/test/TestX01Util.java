@@ -1,22 +1,13 @@
 package test;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import code.ai.AbstractDartsModel;
 import code.object.Dart;
 import code.utils.X01Util;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TestX01Util
 {
-
-	@BeforeClass
-	public static void initialiseTest()
-	{
-		new X01Util(){}.toString();
-	}
-	
 	@Test
 	public void testIsBust()
 	{
