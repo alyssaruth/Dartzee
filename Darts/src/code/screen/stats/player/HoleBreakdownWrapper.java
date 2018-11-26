@@ -1,8 +1,8 @@
 package code.screen.stats.player;
 
-import java.util.ArrayList;
-
 import object.HashMapCount;
+
+import java.util.ArrayList;
 
 public final class HoleBreakdownWrapper
 {
