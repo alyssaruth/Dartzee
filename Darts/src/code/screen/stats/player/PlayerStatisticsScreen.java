@@ -1,17 +1,5 @@
 package code.screen.stats.player;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-
 import code.db.GameEntity;
 import code.db.PlayerEntity;
 import code.object.Dart;
@@ -24,6 +12,14 @@ import object.HandyArrayList;
 import object.SuperHashMap;
 import util.ComponentUtil;
 import util.Debug;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class PlayerStatisticsScreen extends EmbeddedScreen
 {
@@ -101,7 +97,7 @@ public class PlayerStatisticsScreen extends EmbeddedScreen
 		filterPanel.init(player, gameType, false);
 		filterPanelOther.setVisible(false);
 		btnAdd.setVisible(false);
-		btnBack.setVisible(false);
+		hideBackButton();
 		
 		this.hmGameIdToWrapper = hmGameIdToWrapper;
 		
