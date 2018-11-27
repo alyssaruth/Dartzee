@@ -6,7 +6,7 @@ import burlton.dartzee.code.stats.GameWrapper;
 import net.miginfocom.swing.MigLayout;
 import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapCounter;
-import burlton.core.code.obj.HashMapCounterInteger;
+import burlton.core.code.obj.HashMapCountInteger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -385,7 +385,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		//Build up counts for each game finish value
 		String suffix = " (" + legendKey + ")";
 		XYSeries series = new XYSeries(graphTitle + suffix);
-		HashMapCounterInteger hmNoDartsToCount = new HashMapCounterInteger();
+		HashMapCountInteger hmNoDartsToCount = new HashMapCountInteger();
 		for (int i=0; i<gamesToGraph.size(); i++)
 		{
 			GameWrapper game = gamesToGraph.get(i);

@@ -3,7 +3,7 @@ package burlton.core.code.obj;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class HashMapCounterInteger extends HashMapCounter<Integer>
+public class HashMapCountInteger extends HashMapCounter<Integer>
 {
     public double calculateMedian()
     {

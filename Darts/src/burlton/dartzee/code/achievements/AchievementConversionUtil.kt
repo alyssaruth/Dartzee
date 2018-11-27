@@ -3,6 +3,8 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.AchievementConversionDialog
+import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateUtil
@@ -10,7 +12,16 @@ import java.sql.SQLException
 
 fun runAchievementConversion()
 {
+    val dlg = AchievementConversionDialog()
+    dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+    dlg.isVisible = true
+}
 
+fun getAllAchievements() : MutableList<AbstractAchievement>
+{
+    return mutableListOf(AchievementX01BestFinish(),
+                         AchievementX01BestThreeDarts(),
+                         AchievementX01CheckoutCompleteness())
 }
 
 
