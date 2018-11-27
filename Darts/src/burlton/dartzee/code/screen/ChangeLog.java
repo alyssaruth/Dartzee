@@ -1,0 +1,176 @@
+package burlton.dartzee.code.screen;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+public class ChangeLog extends JFrame 
+{
+	public ChangeLog() 
+	{
+		setTitle("Change Log");
+		setSize(500, 570);
+		setLocationRelativeTo(null);
+		getContentPane().setLayout(new BorderLayout(0, 0));
+		getContentPane().add(scrollPane);
+		textArea.setForeground(Color.BLACK);
+		textArea.setBackground(Color.WHITE);
+		textArea.setEditable(false);
+		appendChangeLog();
+		scrollPane.setViewportView(textArea);
+	}
+	
+	private final JScrollPane scrollPane = new JScrollPane();
+	private final JTextArea textArea = new JTextArea();
+	
+	private void appendChangeLog()
+	{
+		textArea.setText("");
+		
+		textArea.append("\n");
+		textArea.append("\n--------- v2.5.0 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Added running stats that are viewable during any game/match");
+		textArea.append("\n+ Added pre-loading of sounds and images to improve performance");
+		textArea.append("\n+ Auto-fix feature for sanity checks");
+		textArea.append("\n+ Leaderboards now show worst games as well as best");
+		textArea.append("\n= Improved game layout by hiding AI slider and providing enlarged buttons with icons");
+		textArea.append("\n= Fixed slow database check SQL");
+		textArea.append("\n= Fixed default on DartsMatch table");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.4.1 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Points mode for matches");
+		textArea.append("\n+ Nicer icons for the player selectors");
+		textArea.append("\n+ Dartboard Icon for the app itself");
+		textArea.append("\n+ Unfinished games in the 'Total Score' tab. Only included in the table for now");
+		textArea.append("\n= Match Summary now shows total score");
+		textArea.append("\n= Misc other improvements to match summary");
+		textArea.append("\n= X01 and Round the Clock now show running darts tally");
+		textArea.append("\n= Fixed a bug where MatchOrdinals reset when loading an incomplete match");
+		textArea.append("\n= Fixed a bug where the Checkout % tab didn't work for simulations");
+		textArea.append("\n= Player summary now updates as soon as a player finishes (rather than waiting for the whole game to complete)");
+		textArea.append("\n= Player selector now responds to double-click and enter");
+		textArea.append("\n\n+ Something much, much worse...");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.4.0 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Round the Clock mode (Standard, Doubles or Trebles)");
+		textArea.append("\n+ Reporting options for Round the Clock");
+		textArea.append("\n+ Leaderboard for Round the Clock");
+		textArea.append("\n+ Preference to control how many rows are shown on leaderboards. Default upped to 50 (from 20)");
+		textArea.append("\n+ Ability to filter leaderboards to humans/AIs only");
+		textArea.append("\n+ More checks added to the 'Database Check'");
+		textArea.append("\n+ Checkout % tab for X01");
+		textArea.append("\n= Upped the limit on number of legs in a match to 15 (from 7)");
+		textArea.append("\n= Made the total scores bar graph automatically pick sensible groupings/outlier thresholds");
+		textArea.append("\n= Stopped player stats from breaking when there are no games to display");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.3.1 ---------");
+		textArea.append("\n");
+		textArea.append("\n= Fixed a benign error when changing preferences with a match open.");
+		textArea.append("\n= Fixed a bug with play order when loading a game where nobody has thrown yet.");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.3.0 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Ability to play matches, either 'First To' X games or a fixed number of games with points for position");
+		textArea.append("\n+ Ability to report on games in matches.");
+		textArea.append("\n+ Loading a game in a match will load the whole match, with the appropriate tab selected");
+		textArea.append("\n+ Miss % stat for X01");
+		textArea.append("\n+ Burlton Constant tab changed to generic 'Three Dart Scores', with more detail");
+		textArea.append("\n= Improvements to the database sanity check, to allow data to be viewed and manually resolved");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.2.0 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Added summary row to Darts Hole Breakdown, and changed chart colours to match scorers");
+		textArea.append("\n+ Line graph and Box and Whisker plots to 'total darts' tab in X01");
+		textArea.append("\n+ 'Burlton Constant' tab for X01 - shows all permutations of a given score attained in 3 darts");
+		textArea.append("\n+ 'All Scores' tab for Golf stats - equivalent of 'Total Darts' in X01");
+		textArea.append("\n+ 'Scorecards' tab for Golf stats - shows all scorecards from all games");
+		textArea.append("\n+ 'Optimal Scorecard' tab for Golf stats - shows the best result per hole across all games");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.1.2 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Added confirmation before exiting if game windows are still open");
+		textArea.append("\n+ Thread Stacks button on Utilities (to diagnose slowness when running multiple games)");
+		textArea.append("\n= Fixed compilation issue that prevented viewing player stats (tuuuug)");
+		textArea.append("\n= Fixed a bug changing appearance preferences during an AI turn");
+		textArea.append("\n= Improved AI speed by optimising XML parsing");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.1.1 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Smoother player selection when creating a new game");
+		textArea.append("\n+ Reporting option for unset player score");
+		textArea.append("\n= Golf defaults to 18 holes when setting up a new game");
+		textArea.append("\n= Player tables are pre-sorted by name everywhere in the system");
+		textArea.append("\n= Fixed a bug with closing games during the AI turn");
+		textArea.append("\n= Fixed a bug where you could still click the dartboard after a game had finished");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.1.0 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ 'Run Simulation' option, allowing you to view stats for a large sample size of AI games");
+		textArea.append("\n+ Golf strategy is now configurable");
+		textArea.append("\n+ AI Standard Deviation can be separately configured for doubles");
+		textArea.append("\n+ New 'Central Bias' option to reduce the frequency that an AI player misses the board");
+		textArea.append("\n+ Ability to select player order when starting a new game (rather than it being randomly selected)");
+		textArea.append("\n= Improved layout of Golf scorers");
+		textArea.append("\n- Removed horizontal and vertical bias options as they were crap");
+		textArea.append("\n");
+		textArea.append("\n--------- v2.0.0 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Golf mode: 18 or 9 holes");
+		textArea.append("\n+ Reporting options to report on Golf games");
+		textArea.append("\n+ More leaderboards in 'Game Stats', including one for Golf");
+		textArea.append("\n+ Sanity Check and View Logs options on Utilities screen");
+		textArea.append("\n");
+		textArea.append("\n--------- v1.0.0 ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Ability to report on players, including finishing position and number of darts");
+		textArea.append("\n+ Ability to exclude players from reporting");
+		textArea.append("\n+ Overall 'top finishes' leaderboard");
+		textArea.append("\n+ Game stats: total games, darts and 180s/140s/100s");
+		textArea.append("\n+ Setup configuration for AI players");
+		textArea.append("\n+ Utilities screen, allowing game deletion, database backup and restore");
+		textArea.append("\n+ Fleshed out player stats: Finish Breakdown, Top Finishes, Scoring and Total Darts");
+		textArea.append("\n+ Ability to compare the statistics of two players");
+		textArea.append("\n= Mercy Rule threshold is now configurable");
+		textArea.append("\n");
+		textArea.append("\n--------- BETA ---------");
+		textArea.append("\n");
+		textArea.append("\n+ Working games of X01");
+		textArea.append("\n+ AI speed slider");
+		textArea.append("\n+ 'Scorer' appearance preferences");
+		textArea.append("\n+ Game Report");
+		textArea.append("\n+ Ability to load games by clicking on a GameId");
+		textArea.append("\n+ Avatars for players, with 12 defaults and ability to upload your own");
+		textArea.append("\n+ Individual player stats: Top Finishes, Favourite Doubles");
+		textArea.append("\n+ Entities: Player, PlayerImage, Game, Participant, Round, Dart");
+		textArea.append("\n+ Automatic Updates through Entropy Server");
+		textArea.append("\n= Reworked, mostly embedded screenflow");
+		textArea.append("\n= Improved dartboard painting speed");
+		textArea.append("\n= Refined visualisation for AI players");
+		textArea.append("\n= Improved logger to log out all SQL in different colours");
+		textArea.append("\n");
+		textArea.append("\n--------- ALPHA VERSION ---------");
+		textArea.append("\n");
+		textArea.append("\n+ AI Configuration dialog");
+		textArea.append("\n+ Working Gaussian model");
+		textArea.append("\n+ Ability to calculate stats and visualise scatter/density diagrams");
+		textArea.append("\n+ Player Management screen allow basic amend/delete functionality");
+		textArea.append("\n+ Dartboard painted onto screen at an arbitrary size");
+		textArea.append("\n+ Dartboard highlights when sections are hovered over");
+		textArea.append("\n+ Dartboard accurately determines score when an area is clicked");
+		textArea.append("\n+ Logger, bug report, about dialog and change log ported from Entropy");
+		textArea.append("\n+ Local database structure, with basic 'Player' and 'Version' entities");
+		textArea.append("\n+ Preferences dialog allowing customisable dartboard (with preview)");
+		textArea.append("\n+ Beginnings of the screen flows from New Game onwards");
+		textArea.append("\n+ Beginnings of abstract darts modelling code");
+		textArea.append("\n");
+		
+		textArea.setCaretPosition(0);
+		textArea.setLineWrap(true);
+	}
+}
