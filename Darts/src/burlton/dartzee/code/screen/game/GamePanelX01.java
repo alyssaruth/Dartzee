@@ -1,14 +1,15 @@
 package burlton.dartzee.code.screen.game;
 
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.HashMapList;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.achievements.AchievementConstants;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.db.AchievementEntity;
 import burlton.dartzee.code.db.DartEntity;
 import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.utils.X01Util;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapList;
-import burlton.core.code.util.Debug;
 
 public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 {
@@ -59,7 +60,7 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 			dartboard.playDodgySound("" + totalScore);
 			
 			int total = X01Util.sumScore(dartsThrown);
-			AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total);
+			AchievementEntity.updateAchievement(AchievementConstants.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total);
 		}
 		
 		activeScorer.finaliseRoundScore(startingScore, bust);
@@ -99,10 +100,10 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 		super.updateAchievementsForFinish();
 		
 		int sum = X01Util.sumScore(dartsThrown);
-		AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, getCurrentPlayerId(), getGameId(), sum);
+		AchievementEntity.updateAchievement(AchievementConstants.ACHIEVEMENT_REF_X01_BEST_FINISH, getCurrentPlayerId(), getGameId(), sum);
 		
 		int checkout = dartsThrown.lastElement().getScore();
-		AchievementEntity.insertIfNotExists(ACHIEVEMENT_REF_X01_ALL_FINISHES, getCurrentPlayerId(), getGameId(), checkout);
+		AchievementEntity.insertIfNotExists(AchievementConstants.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, getCurrentPlayerId(), getGameId(), checkout);
 	}
 		
 	@Override

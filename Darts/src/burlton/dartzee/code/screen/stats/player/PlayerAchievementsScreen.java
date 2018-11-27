@@ -1,22 +1,17 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-
+import burlton.dartzee.code.achievements.AchievementConstants;
 import burlton.dartzee.code.bean.AchievementMedal;
 import burlton.dartzee.code.db.AchievementEntity;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.EmbeddedScreen;
 import burlton.dartzee.code.screen.ScreenCache;
-import burlton.dartzee.code.utils.AchievementConstants;
 import javafx.scene.paint.Color;
 
+import javax.swing.*;
+import java.awt.*;
+
 public final class PlayerAchievementsScreen extends EmbeddedScreen
-											implements AchievementConstants
 {
 	private PlayerEntity player = null;
 	
@@ -68,7 +63,7 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 	{
 		long playerId = player.getRowId();
 		
-		AchievementEntity achievement = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId);
+		AchievementEntity achievement = AchievementEntity.retrieveAchievement(AchievementConstants.ACHIEVEMENT_REF_X01_BEST_FINISH, playerId);
 		if (achievement != null)
 		{
 			lblNewLabel.setText("Best Finish: " + achievement.getAchievementCounter() + ", Game #" + achievement.getGameIdEarned());
