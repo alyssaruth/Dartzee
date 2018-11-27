@@ -1,37 +1,25 @@
 package burlton.dartzee.code.utils;
 
-import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.FileUtil;
+import burlton.dartzee.code.achievements.AchievementX01BestFinish;
+import burlton.dartzee.code.achievements.AchievementX01BestThreeDarts;
+import burlton.dartzee.code.achievements.AchievementX01CheckoutCompleteness;
+import burlton.dartzee.code.db.*;
 import burlton.dartzee.code.screen.PlayerMatchingDialog;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
-import burlton.dartzee.code.db.AbstractEntity;
-import burlton.dartzee.code.db.AchievementEntity;
-import burlton.dartzee.code.db.DartEntity;
-import burlton.dartzee.code.db.DartsMatchEntity;
-import burlton.dartzee.code.db.GameEntity;
-import burlton.dartzee.code.db.ParticipantEntity;
-import burlton.dartzee.code.db.PlayerEntity;
-import burlton.dartzee.code.db.PlayerImageEntity;
-import burlton.dartzee.code.db.RoundEntity;
-import burlton.dartzee.code.db.VersionEntity;
-import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
-import burlton.core.code.util.FileUtil;
+
+import javax.swing.*;
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
  */
-public class DartsDatabaseUtil implements AchievementConstants
+public class DartsDatabaseUtil
 {
 	public static final int DATABASE_VERSION = 4;
 	
@@ -121,78 +109,9 @@ public class DartsDatabaseUtil implements AchievementConstants
 	
 	public static void unlockV4Achievements()
 	{
-		unlockBestFinishAchievement(); //ACHIEVEMENT_REF_X01_BEST_FINISH
-		unlockThreeDartAchievement("drtLast.DtCreation", "drtLast.Ordinal = 3", ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE);
-	}
-	
-	private static void unlockBestFinishAchievement()
-	{
-		String whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0"
-						+ " AND drtLast.Multiplier = 2";
-		
-		unlockThreeDartAchievement("pt.DtFinished", whereSql, ACHIEVEMENT_REF_X01_BEST_FINISH);
-	}
-	private static void unlockThreeDartAchievement(String dtColumn, String lastDartWhereSql, int achievementRef)
-	{
-		String tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId INT, GameId INT, DtAchieved TIMESTAMP, Score INT");
-		if (tempTable == null)
-		{
-			return;
-		}
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append("INSERT INTO " + tempTable);
-		sb.append(" SELECT p.RowId, pt.GameId, " + dtColumn + ", ");
-		sb.append(OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR);
-		sb.append(" FROM Dart drtFirst, Dart drtLast, Round rnd, Participant pt, Player p, Game g");
-		sb.append(" WHERE drtFirst.RoundId = rnd.RowId");
-		sb.append(" AND drtLast.RoundId = rnd.RowId");
-		sb.append(" AND drtFirst.Ordinal = 1");
-		sb.append(" AND rnd.ParticipantId = pt.RowId");
-		sb.append(" AND pt.PlayerId = p.RowId");
-		sb.append(" AND pt.DtFinished < "); 
-		sb.append(DateUtil.getEndOfTimeSqlString());
-		sb.append("	AND " + lastDartWhereSql);
-		sb.append(" AND pt.GameId = g.RowId");
-		sb.append(" AND g.GameType = " + GameEntity.GAME_TYPE_X01);
-		
-		if (!DatabaseUtil.executeUpdate("" + sb))
-		{
-			DatabaseUtil.dropTable(tempTable);
-			return;
-		}
-		
-		sb = new StringBuilder();
-		sb.append(" SELECT PlayerId, GameId, DtAchieved, Score");
-		sb.append(" FROM " + tempTable + " zz1");
-		sb.append(" WHERE NOT EXISTS (");
-		sb.append(" 	SELECT 1");
-		sb.append(" 	FROM " + tempTable + " zz2");
-		sb.append(" 	WHERE zz2.PlayerId = zz1.PlayerId");
-		sb.append(" 	AND (zz2.Score > zz1.Score OR (zz2.Score = zz1.Score AND zz2.GameId < zz1.GameId))");
-		sb.append(" )");
-		sb.append(" ORDER BY PlayerId");
-		
-		try (ResultSet rs = DatabaseUtil.executeQuery(sb))
-		{
-			while (rs.next())
-			{
-				long playerId = rs.getLong("PlayerId");
-				long gameId = rs.getLong("GameId");
-				Timestamp dtAchieved = rs.getTimestamp("DtAchieved");
-				int score = rs.getInt("Score");
-				
-				AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, dtAchieved);
-			}
-		}
-		catch (SQLException sqle)
-		{
-			Debug.logSqlException(sb.toString(), sqle);
-		}
-		finally
-		{
-			DatabaseUtil.dropTable(tempTable);
-		}
+		new AchievementX01BestFinish().runConversion();
+		new AchievementX01BestThreeDarts().runConversion();
+		new AchievementX01CheckoutCompleteness().runConversion();
 	}
 	
 	private static void upgradeDatabaseToVersion3()

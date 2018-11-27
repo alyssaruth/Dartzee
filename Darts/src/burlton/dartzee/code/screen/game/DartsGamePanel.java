@@ -1,24 +1,9 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.SwingConstants;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.HashMapList;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.bean.SliderAiSpeed;
 import burlton.dartzee.code.db.GameEntity;
@@ -29,22 +14,28 @@ import burlton.dartzee.code.listener.DartboardListener;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.Dartboard;
 import burlton.dartzee.code.stats.PlayerSummaryStats;
-import burlton.dartzee.code.utils.AchievementConstants;
 import burlton.dartzee.code.utils.DartsRegistry;
 import burlton.dartzee.code.utils.DatabaseUtil;
 import burlton.dartzee.code.utils.PreferenceUtil;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapList;
-import burlton.core.code.obj.SuperHashMap;
 import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithScorers<S>
 														  	implements DartboardListener,
 														  			   ActionListener,
-														  			   DartsRegistry,
-														  			   AchievementConstants
+														  			   DartsRegistry
 {
 	protected static final boolean VERBOSE_LOGGING = false;
 	
