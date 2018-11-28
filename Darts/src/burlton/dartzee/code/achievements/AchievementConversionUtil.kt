@@ -25,7 +25,7 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
 }
 
 
-fun unlockThreeDartAchievement(dtColumn: String, lastDartWhereSql: String, achievementRef: Int)
+fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String, achievementRef: Int)
 {
     val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId INT, GameId INT, DtAchieved TIMESTAMP, Score INT")
             ?: return
@@ -39,6 +39,10 @@ fun unlockThreeDartAchievement(dtColumn: String, lastDartWhereSql: String, achie
     sb.append(" AND drtFirst.Ordinal = 1")
     sb.append(" AND rnd.ParticipantId = pt.RowId")
     sb.append(" AND pt.PlayerId = p.RowId")
+    if (!playerSql.isEmpty())
+    {
+        sb.append(" AND pt.PlayerId IN ($playerSql)")
+    }
     sb.append(" AND pt.DtFinished < ${DateUtil.getEndOfTimeSqlString()}")
     sb.append(" AND $lastDartWhereSql")
     sb.append(" AND pt.GameId = g.RowId")
