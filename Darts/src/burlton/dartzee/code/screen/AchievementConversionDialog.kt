@@ -5,12 +5,14 @@ import burlton.dartzee.code.achievements.getAllAchievements
 import burlton.dartzee.code.bean.PlayerSelector
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
+import burlton.desktopcore.code.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.util.*
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
+import javax.swing.JOptionPane
 import javax.swing.JRadioButton
 
 class AchievementConversionDialog : SimpleDialog()
@@ -43,7 +45,7 @@ class AchievementConversionDialog : SimpleDialog()
         initComboBox()
     }
 
-    fun initComboBox()
+    private fun initComboBox()
     {
         val achievements = Vector(getAllAchievements())
         cbConversionType.model = DefaultComboBoxModel(achievements)
@@ -51,7 +53,36 @@ class AchievementConversionDialog : SimpleDialog()
 
     override fun okPressed()
     {
+        if (!valid())
+        {
+            return
+        }
 
+
+        if (rdbtnAll.isSelected)
+        {
+            val achievements = getAllAchievements()
+            achievements.forEach {it.runConversion(playerSelector.selectedPlayers)}
+        }
+        else
+        {
+            val ix = cbConversionType.selectedIndex
+            cbConversionType.getItemAt(ix).runConversion(playerSelector.selectedPlayers)
+        }
+
+        DialogUtil.showInfo("Achievement conversion complete.")
+        dispose()
+    }
+
+    private fun valid() : Boolean
+    {
+        if (playerSelector.selectedPlayers.isEmpty())
+        {
+            val ans = DialogUtil.showQuestion("This will run the conversion(s) for ALL players. Proceed?", false)
+            return ans == JOptionPane.YES_OPTION
+        }
+
+        return true
     }
 
     override fun actionPerformed(arg0: ActionEvent?)

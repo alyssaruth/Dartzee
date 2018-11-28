@@ -109,9 +109,9 @@ public class DartsDatabaseUtil
 	
 	public static void unlockV4Achievements()
 	{
-		new AchievementX01BestFinish().runConversion();
-		new AchievementX01BestThreeDarts().runConversion();
-		new AchievementX01CheckoutCompleteness().runConversion();
+		new AchievementX01BestFinish().runConversion(new ArrayList<>());
+		new AchievementX01BestThreeDarts().runConversion(new ArrayList<>());
+		new AchievementX01CheckoutCompleteness().runConversion(new ArrayList<>());
 	}
 	
 	private static void upgradeDatabaseToVersion3()

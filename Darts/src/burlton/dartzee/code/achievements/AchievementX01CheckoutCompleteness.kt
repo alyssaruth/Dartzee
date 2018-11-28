@@ -7,8 +7,9 @@ import burlton.dartzee.code.utils.DatabaseUtil
 class AchievementX01CheckoutCompleteness : AbstractAchievement()
 {
     override val name = "Checkout Completeness"
+    override val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
 
-    override fun runConversion()
+    override fun populateForConversion(playerIds: String)
     {
         val tempTable = DatabaseUtil.createTempTable("PlayerCheckouts", "PlayerId INT, Score INT, GameId INT, DtAchieved TIMESTAMP")
                       ?: return
@@ -25,6 +26,10 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         sb.append(" AND rnd.ParticipantId = pt.RowId")
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND g.GameType = ${GameEntity.GAME_TYPE_X01}")
+        if (!playerIds.isEmpty())
+        {
+            sb.append(" AND pt.PlayerId IN ($playerIds)")
+        }
 
         if (!DatabaseUtil.executeUpdate("" + sb))
             return

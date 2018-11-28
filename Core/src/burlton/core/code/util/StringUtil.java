@@ -1,6 +1,7 @@
 package burlton.core.code.util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StringUtil 
 {
@@ -51,7 +52,7 @@ public class StringUtil
 		return list;
 	}
 	
-	public static String toDelims(ArrayList<? extends Object> list, String delimChar)
+	public static String toDelims(List<? extends Object> list, String delimChar)
 	{
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<list.size(); i++)
