@@ -1,12 +1,12 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import burlton.desktopcore.code.bean.NumberField;
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.HashMapCount;
 import burlton.dartzee.code.bean.ScrollTableDartsGame;
 import burlton.dartzee.code.stats.GameWrapper;
+import burlton.desktopcore.code.bean.NumberField;
+import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 import net.miginfocom.swing.MigLayout;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapCounter;
-import burlton.core.code.obj.HashMapCountInteger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -15,7 +15,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.XYSeries;
-import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -385,7 +384,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		//Build up counts for each game finish value
 		String suffix = " (" + legendKey + ")";
 		XYSeries series = new XYSeries(graphTitle + suffix);
-		HashMapCountInteger hmNoDartsToCount = new HashMapCountInteger();
+		HashMapCount<Integer> hmNoDartsToCount = new HashMapCount<>();
 		for (int i=0; i<gamesToGraph.size(); i++)
 		{
 			GameWrapper game = gamesToGraph.get(i);
@@ -402,11 +401,41 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		appendToDataset(legendKey, hmNoDartsToCount);
 
 		double avg = hmNoDartsToCount.calculateAverage();
-		double median = hmNoDartsToCount.calculateMedian();
+		double median = calculateMedian(hmNoDartsToCount);
 		nfMedian.setValue(median);
 		nfMean.setValue(avg);
 	}
-	private void appendToDataset(String legendKey, HashMapCounter<Integer> hmNoDartsToCount)
+
+	private double calculateMedian(HashMapCount<Integer> hm)
+	{
+		if (hm.isEmpty())
+		{
+			return 0;
+		}
+
+		ArrayList<Integer> allKeys = hm.getFlattenedOrderedList(Comparator.comparingInt(k -> k));
+
+		int n = allKeys.size();
+		if (n % 2 == 0)
+		{
+			//Even, so we want either side of the middle value and then to take the average of them.
+			int bigIx = n/2;
+			int smallIx = (n/2) - 1;
+
+			double sum = allKeys.get(bigIx) + allKeys.get(smallIx);
+
+			return sum/2;
+		}
+		else
+		{
+			//Odd, so we just want the middle value. It's (n-1)/2 because of stupid index starting at 0 not 1.
+			int ix = (n-1)/2;
+			return allKeys.get(ix);
+		}
+	}
+
+
+	private void appendToDataset(String legendKey, HashMapCount<Integer> hmNoDartsToCount)
 	{
 		int outlierLimit = nfOutlier.getNumber();
 		int groups = nfGroups.getNumber();

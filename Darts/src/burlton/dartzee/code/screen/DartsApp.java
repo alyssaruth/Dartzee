@@ -1,34 +1,21 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
-
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.ImageIcon;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.WindowConstants;
-
-import burlton.desktopcore.code.bean.AbstractDevScreen;
-import burlton.dartzee.code.screen.game.DartsGameScreen;
+import burlton.core.code.util.AbstractClient;
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck;
+import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.utils.DartsDatabaseUtil;
 import burlton.dartzee.code.utils.DatabaseUtil;
 import burlton.dartzee.code.utils.DevUtilities;
 import burlton.dartzee.code.utils.ResourceCache;
+import burlton.desktopcore.code.bean.AbstractDevScreen;
 import burlton.desktopcore.code.screen.DebugConsoleAdv;
-import burlton.core.code.util.AbstractClient;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 public class DartsApp extends AbstractDevScreen
 					  implements WindowListener
@@ -36,7 +23,7 @@ public class DartsApp extends AbstractDevScreen
 	private static final String CMD_PURGE_GAME = "purge ";
 	private static final String CMD_LOAD_GAME = "load ";
 	private static final String CMD_CLEAR_CONSOLE = "cls";
-	private static final String CMD_TEST = "burlton/dartzee/test";
+	private static final String CMD_TEST = "test";
 	private static final String CMD_EMPTY_SCREEN_CACHE = "emptyscr";
 	private static final String CMD_SANITY = "sanity";
 	

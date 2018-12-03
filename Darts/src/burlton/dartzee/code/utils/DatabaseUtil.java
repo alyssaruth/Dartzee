@@ -132,8 +132,8 @@ public class DatabaseUtil implements SqlErrorConstants
 		catch (SQLException sqle)
 		{
 			SQLException next = sqle.getNextException();
-			String msg = next.getMessage();
-			if (msg.contains("Another instance of Derby may have already booted the database"))
+			if (next != null
+			  && next.getMessage().contains("Another instance of Derby may have already booted the database"))
 			{
 				Debug.stackTraceSilently(sqle);
 				DialogUtil.showError("Database already in use - Dartzee will now exit.");
