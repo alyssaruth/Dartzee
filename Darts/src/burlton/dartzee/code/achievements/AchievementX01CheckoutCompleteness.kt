@@ -56,5 +56,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
                 AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, playerId, gameId, score, dtAchieved)
             }
         }
+
+        DatabaseUtil.dropTable(tempTable)
     }
 }

@@ -1,23 +1,20 @@
 package burlton.dartzee.test;
 
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.reporting.ReportParameters;
+import burlton.dartzee.code.reporting.ReportResultWrapper;
+import burlton.dartzee.code.reporting.ReportingSqlUtil;
+import burlton.desktopcore.code.util.DateUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
-
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import burlton.dartzee.code.db.GameEntity;
-import burlton.dartzee.code.reporting.ReportParameters;
-import burlton.dartzee.code.reporting.ReportResultWrapper;
-import burlton.dartzee.code.reporting.ReportingSqlUtil;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
 
 public class TestReporting
 {
@@ -26,16 +23,6 @@ public class TestReporting
 	
 	private HandyArrayList<ReportParameters> reportsToRun = new HandyArrayList<>();
 	private HandyArrayList<ReportParameters> reportsToRun_Tmp = new HandyArrayList<>();
-	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception
-	{
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception
-	{
-	}
 
 	@Test
 	public void test()
