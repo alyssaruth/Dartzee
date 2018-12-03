@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class HashMapCount<K> extends SuperHashMap<K, Integer>
+public class HashMapCounter<K> extends SuperHashMap<K, Integer>
 {
 	public int incrementCount(K key)
 	{

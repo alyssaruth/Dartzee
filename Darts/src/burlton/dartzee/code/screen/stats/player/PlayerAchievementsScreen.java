@@ -1,12 +1,15 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import burlton.dartzee.code.achievements.AchievementConstants;
+import burlton.core.code.obj.HandyArrayList;
+import burlton.dartzee.code.achievements.AbstractAchievement;
+import burlton.dartzee.code.achievements.AchievementX01BestFinish;
+import burlton.dartzee.code.achievements.AchievementX01BestThreeDarts;
+import burlton.dartzee.code.achievements.AchievementX01CheckoutCompleteness;
 import burlton.dartzee.code.bean.AchievementMedal;
 import burlton.dartzee.code.db.AchievementEntity;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.EmbeddedScreen;
 import burlton.dartzee.code.screen.ScreenCache;
-import javafx.scene.paint.Color;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,35 +25,16 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		
-		tabbedPane.addTab("General", null, panelGeneral, null);
-		
-		panelGeneral.add(gray);
-		panelGeneral.add(red);
-		panelGeneral.add(orange);
-		panelGeneral.add(yellow);
-		panelGeneral.add(green);
-		panelGeneral.add(cyan);
-		panelGeneral.add(hotpink);
-		
-		
-		//FlowLayout flowLayout = (FlowLayout) panelX01.getLayout();
-		//flowLayout.setVgap(20);
-		//flowLayout.setHgap(20);
-		//flowLayout.setAlignment(FlowLayout.LEFT);
-		//tabbedPane.addTab("X01", null, panelX01, null);
-			
-		//panelX01.add(lblNewLabel);
+		tabbedPane.addTab("X01", null, panelGeneral, null);
+
+		FlowLayout fl = new FlowLayout();
+		fl.setVgap(20);
+		fl.setHgap(20);
+		fl.setAlignment(FlowLayout.LEFT);
+		panelGeneral.setLayout(fl);
 	}
 	
 	private final JPanel panelGeneral = new JPanel();
-	private final AchievementMedal gray = new AchievementMedal(15, Color.GRAY);
-	private final AchievementMedal red = new AchievementMedal(45, Color.RED);
-	private final AchievementMedal orange = new AchievementMedal(85, Color.ORANGE);
-	private final AchievementMedal yellow = new AchievementMedal(180, Color.YELLOW);
-	private final AchievementMedal green = new AchievementMedal(210, Color.LIGHTGREEN);
-	private final AchievementMedal cyan = new AchievementMedal(266, Color.CYAN);
-	private final AchievementMedal hotpink = new AchievementMedal(360, Color.DEEPPINK);
-	private final JLabel lblNewLabel = new JLabel("");
 	
 	@Override
 	public String getScreenName()
@@ -63,26 +47,23 @@ public final class PlayerAchievementsScreen extends EmbeddedScreen
 	{
 		long playerId = player.getRowId();
 		
-		AchievementEntity achievement = AchievementEntity.retrieveAchievement(AchievementConstants.ACHIEVEMENT_REF_X01_BEST_FINISH, playerId);
-		if (achievement != null)
-		{
-			lblNewLabel.setText("Best Finish: " + achievement.getAchievementCounter() + ", Game #" + achievement.getGameIdEarned());
-		}
-		else
-		{
-			lblNewLabel.setText("");
-		}
+		HandyArrayList<AchievementEntity> achievementRows = new AchievementEntity().retrieveEntities("PlayerId = " + playerId);
+
+		addAchievement(new AchievementX01BestFinish(), achievementRows);
+		addAchievement(new AchievementX01BestThreeDarts(), achievementRows);
+		addAchievement(new AchievementX01CheckoutCompleteness(), achievementRows);
 	}
-	
-	/*@Override
-	public void postInit()
+	private void addAchievement(AbstractAchievement aa, HandyArrayList<AchievementEntity> achievementRows)
 	{
-		HandyArrayList<AchievementMedal> medals = ComponentUtil.getAllChildComponentsForType(this, AchievementMedal.class);
-		for (AchievementMedal medal : medals)
-		{
-			medal.animateProgressBar();
-		}
-	}*/
+		int ref = aa.getAchievementRef();
+		achievementRows = achievementRows.createFilteredCopy(a -> a.getAchievementRef() == ref);
+
+		aa.initialiseFromDb(achievementRows);
+
+		AchievementMedal medal = new AchievementMedal(aa);
+		medal.setPreferredSize(new Dimension(200, 200));
+		panelGeneral.add(medal);
+	}
 	
 	@Override
 	public EmbeddedScreen getBackTarget()

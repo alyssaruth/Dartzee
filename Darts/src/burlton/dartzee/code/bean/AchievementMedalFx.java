@@ -1,25 +1,21 @@
 package burlton.dartzee.code.bean;
 
-import java.awt.Point;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import burlton.dartzee.code.utils.GeometryUtil;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcTo;
-import javafx.scene.shape.FillRule;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
+import javafx.scene.shape.*;
+
+import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Class to contain the logic for the actual medals displayed for achievements.
  */
-public class AchievementMedal extends JFXPanel
+public class AchievementMedalFx extends JFXPanel
 {
 	private static final int CENTER_X = 90;
 	private static final int CENTER_Y = 90;
@@ -36,7 +32,7 @@ public class AchievementMedal extends JFXPanel
 	
 	private double increment = 0;
 	
-	public AchievementMedal(int angle, Color color) 
+	public AchievementMedalFx(int angle, Color color)
 	{
 		setSize(200, 200);
 		

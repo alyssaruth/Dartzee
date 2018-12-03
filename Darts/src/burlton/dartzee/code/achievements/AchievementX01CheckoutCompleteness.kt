@@ -8,6 +8,13 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
 {
     override val name = "Checkout Completeness"
     override val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
+    override val redThreshold = 1
+    override val orangeThreshold = 5
+    override val yellowThreshold = 10
+    override val greenThreshold = 15
+    override val blueThreshold = 20
+    override val pinkThreshold = 21
+    override val maxValue = 21
 
     override fun populateForConversion(playerIds: String)
     {
@@ -58,5 +65,10 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         }
 
         DatabaseUtil.dropTable(tempTable)
+    }
+
+    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>)
+    {
+        attainedValue = achievementRows.size
     }
 }
