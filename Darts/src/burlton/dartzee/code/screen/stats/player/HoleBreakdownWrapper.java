@@ -1,12 +1,12 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import burlton.core.code.obj.HashMapCount;
+import burlton.core.code.obj.HashMapCounter;
 
 import java.util.ArrayList;
 
 public final class HoleBreakdownWrapper
 {
-	private HashMapCount<Integer> hmScoreToCount = new HashMapCount<>();
+	private HashMapCounter<Integer> hmScoreToCount = new HashMapCounter<>();
 	
 	public void increment(int score)
 	{

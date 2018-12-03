@@ -21,7 +21,7 @@ import burlton.desktopcore.code.bean.ScrollTable;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.stats.GameWrapper;
 import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapCount;
+import burlton.core.code.obj.HashMapCounter;
 import burlton.desktopcore.code.util.ComponentUtil;
 import burlton.core.code.util.MathsUtil;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
@@ -91,7 +91,7 @@ public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 	
 	private DefaultPieDataset populateFavouriteDoubles(DefaultModel model, ArrayList<GameWrapper> filteredGames)
 	{
-		HashMapCount<Integer> hmScoreToCount = new HashMapCount<>();
+		HashMapCounter<Integer> hmScoreToCount = new HashMapCounter<>();
 		for (int i=0; i<filteredGames.size(); i++)
 		{
 			GameWrapper game = filteredGames.get(i);
