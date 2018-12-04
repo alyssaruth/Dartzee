@@ -21,6 +21,7 @@ abstract class AbstractAchievement
     abstract val maxValue : Int
 
     var attainedValue = 0
+    var gameIdEarned = -1L
 
     fun runConversion(players : MutableList<PlayerEntity>)
     {
@@ -62,6 +63,7 @@ abstract class AbstractAchievement
 
         val achievementRow = achievementRows.first()
         attainedValue = achievementRow.achievementCounter
+        gameIdEarned = achievementRow.gameIdEarned
     }
 
     fun getColor() : Color

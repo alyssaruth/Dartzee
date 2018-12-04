@@ -1,7 +1,7 @@
 package burlton.dartzee.code.stats;
 
 import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapCounter;
+import burlton.core.code.obj.HashMapCount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class ThreeDartScoreWrapper
 {
-	private HashMapCounter<String> hmDartStrToCount = new HashMapCounter<>();
+	private HashMapCount<String> hmDartStrToCount = new HashMapCount<>();
 	private HashMap<String, Long> hmDartStrToExampleGameId = new HashMap<>();
 	
 	public ThreeDartScoreWrapper()
