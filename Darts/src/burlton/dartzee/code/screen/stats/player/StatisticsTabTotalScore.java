@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.stats.player;
 
 import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapCounter;
+import burlton.core.code.obj.HashMapCount;
 import burlton.dartzee.code.bean.ScrollTableDartsGame;
 import burlton.dartzee.code.stats.GameWrapper;
 import burlton.desktopcore.code.bean.NumberField;
@@ -384,7 +384,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		//Build up counts for each game finish value
 		String suffix = " (" + legendKey + ")";
 		XYSeries series = new XYSeries(graphTitle + suffix);
-		HashMapCounter<Integer> hmNoDartsToCount = new HashMapCounter<>();
+		HashMapCount<Integer> hmNoDartsToCount = new HashMapCount<>();
 		for (int i=0; i<gamesToGraph.size(); i++)
 		{
 			GameWrapper game = gamesToGraph.get(i);
@@ -406,7 +406,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		nfMean.setValue(avg);
 	}
 
-	private double calculateMedian(HashMapCounter<Integer> hm)
+	private double calculateMedian(HashMapCount<Integer> hm)
 	{
 		if (hm.isEmpty())
 		{
@@ -435,7 +435,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 	}
 
 
-	private void appendToDataset(String legendKey, HashMapCounter<Integer> hmNoDartsToCount)
+	private void appendToDataset(String legendKey, HashMapCount<Integer> hmNoDartsToCount)
 	{
 		int outlierLimit = nfOutlier.getNumber();
 		int groups = nfGroups.getNumber();

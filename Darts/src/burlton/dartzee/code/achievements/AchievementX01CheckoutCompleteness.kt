@@ -21,7 +21,6 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         val tempTable = DatabaseUtil.createTempTable("PlayerCheckouts", "PlayerId INT, Score INT, GameId INT, DtAchieved TIMESTAMP")
                       ?: return
 
-
         var sb = StringBuilder()
 
         sb.append(" INSERT INTO $tempTable")
