@@ -11,7 +11,7 @@ import javax.swing.JComponent
 
 class AchievementMedal (achievement : AbstractAchievement) : JComponent(), MouseListener, MouseMotionListener
 {
-    var color: Color = Color.GRAY
+    var achievement = achievement
     var angle = 0.0
     var highlighted = false
     var gameIdEarned = -1L
@@ -19,7 +19,6 @@ class AchievementMedal (achievement : AbstractAchievement) : JComponent(), Mouse
     init
     {
         preferredSize = Dimension(200, 200)
-        color = achievement.getColor()
         angle = achievement.getAngle()
         gameIdEarned = achievement.gameIdEarned
 
@@ -31,24 +30,41 @@ class AchievementMedal (achievement : AbstractAchievement) : JComponent(), Mouse
     {
         if (g is Graphics2D)
         {
-            g.color = color.darker()
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
-            if (highlighted)
-            {
-                g.color = g.color.darker()
-            }
+            //Draw the track
+            g.color = Color.DARK_GRAY.brighter()
+            g.fillArc(0, 0, 200, 200, 0, 360)
 
+            //Mark the levels
+            markThreshold(g, Color.MAGENTA, achievement.pinkThreshold)
+            markThreshold(g, Color.CYAN, achievement.blueThreshold)
+            markThreshold(g, Color.GREEN, achievement.greenThreshold)
+            markThreshold(g, Color.YELLOW, achievement.yellowThreshold)
+            markThreshold(g, Color.ORANGE, achievement.orangeThreshold)
+            markThreshold(g, Color.RED, achievement.redThreshold)
+
+            //Draw an inner track?
+            //g.color = Color.DARK_GRAY.brighter()
+            //g.fillArc(13, 13, 174, 174, 0, 360)
+
+            //Draw the actual progress
+            g.color = achievement.getColor(highlighted).darker()
             g.fillArc(0, 0, 200, 200, 90, -angle.toInt())
 
-            g.color = color
-
-            if (highlighted)
-            {
-                g.color = g.color.darker()
-            }
+            //Inner circle
+            g.color = achievement.getColor(highlighted)
 
             g.fillArc(15, 15, 170, 170, 0, 360)
         }
+    }
+
+    private fun markThreshold(g : Graphics2D, color : Color, threshold : Int)
+    {
+        g.color = color
+        val thresholdAngle = (360 * threshold.toDouble() / achievement.maxValue)
+        //g.fillArc(2, 2, 196, 196, 90 - thresholdAngle.toInt(), 3)
+        g.fillArc(0, 0, 200, 200, 90 - thresholdAngle.toInt(), 3)
     }
 
     /**
