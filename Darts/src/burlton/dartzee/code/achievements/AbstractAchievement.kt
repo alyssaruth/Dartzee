@@ -66,9 +66,9 @@ abstract class AbstractAchievement
         gameIdEarned = achievementRow.gameIdEarned
     }
 
-    fun getColor() : Color
+    fun getColor(highlighted : Boolean) : Color
     {
-        return when (attainedValue)
+        val col = when (attainedValue)
         {
             in Int.MIN_VALUE until redThreshold -> Color.GRAY
             in redThreshold until orangeThreshold -> Color.RED
@@ -78,6 +78,14 @@ abstract class AbstractAchievement
             in blueThreshold until pinkThreshold -> Color.CYAN
             else -> Color.MAGENTA
         }
+
+        if (highlighted
+          && attainedValue >= redThreshold)
+        {
+            return col.darker()
+        }
+
+        return col
     }
 
     fun getAngle() : Double
