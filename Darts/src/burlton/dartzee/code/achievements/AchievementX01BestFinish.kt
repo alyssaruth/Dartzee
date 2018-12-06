@@ -1,5 +1,7 @@
 package burlton.dartzee.code.achievements
 
+import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+
 class AchievementX01BestFinish : AbstractAchievement()
 {
     override val name = "Best Finish"
@@ -17,6 +19,6 @@ class AchievementX01BestFinish : AbstractAchievement()
         val whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0  " +
                        "AND drtLast.Multiplier = 2"
 
-        unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, achievementRef)
+        unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }
 }
