@@ -6,6 +6,7 @@ import burlton.core.code.util.FileUtil;
 import burlton.dartzee.code.achievements.AchievementX01BestFinish;
 import burlton.dartzee.code.achievements.AchievementX01BestThreeDarts;
 import burlton.dartzee.code.achievements.AchievementX01CheckoutCompleteness;
+import burlton.dartzee.code.achievements.AchievementX01HighestBust;
 import burlton.dartzee.code.db.*;
 import burlton.dartzee.code.screen.PlayerMatchingDialog;
 import burlton.dartzee.code.screen.ScreenCache;
@@ -112,6 +113,7 @@ public class DartsDatabaseUtil
 		new AchievementX01BestFinish().runConversion(new ArrayList<>());
 		new AchievementX01BestThreeDarts().runConversion(new ArrayList<>());
 		new AchievementX01CheckoutCompleteness().runConversion(new ArrayList<>());
+		new AchievementX01HighestBust().runConversion(new ArrayList<>());
 	}
 	
 	private static void upgradeDatabaseToVersion3()

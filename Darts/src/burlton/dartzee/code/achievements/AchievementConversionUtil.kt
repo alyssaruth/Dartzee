@@ -5,7 +5,6 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.AchievementConversionDialog
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateUtil
 import java.sql.SQLException
@@ -21,18 +20,20 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
 {
     return mutableListOf(AchievementX01BestFinish(),
                          AchievementX01BestThreeDarts(),
-                         AchievementX01CheckoutCompleteness())
+                         AchievementX01CheckoutCompleteness(),
+                         AchievementX01HighestBust())
 }
 
 
-fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String, achievementRef: Int)
+fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
+                               achievementScoreSql : String, achievementRef: Int)
 {
     val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId INT, GameId INT, DtAchieved TIMESTAMP, Score INT")
             ?: return
 
     var sb = StringBuilder()
     sb.append("INSERT INTO $tempTable")
-    sb.append(" SELECT p.RowId, pt.GameId, $dtColumn, ${OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR}")
+    sb.append(" SELECT p.RowId, pt.GameId, $dtColumn, $achievementScoreSql")
     sb.append(" FROM Dart drtFirst, Dart drtLast, Round rnd, Participant pt, Player p, Game g")
     sb.append(" WHERE drtFirst.RoundId = rnd.RowId")
     sb.append(" AND drtLast.RoundId = rnd.RowId")
@@ -61,7 +62,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     sb.append(" 	SELECT 1")
     sb.append(" 	FROM $tempTable zz2")
     sb.append(" 	WHERE zz2.PlayerId = zz1.PlayerId")
-    sb.append(" 	AND (zz2.Score > zz1.Score OR (zz2.Score = zz1.Score AND zz2.GameId < zz1.GameId))")
+    sb.append(" 	AND (zz2.Score > zz1.Score OR (zz2.Score = zz1.Score AND zz2.DtAchieved < zz1.DtAchieved))")
     sb.append(" )")
     sb.append(" ORDER BY PlayerId")
 

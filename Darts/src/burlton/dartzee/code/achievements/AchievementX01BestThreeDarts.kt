@@ -1,5 +1,7 @@
 package burlton.dartzee.code.achievements
 
+import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+
 class AchievementX01BestThreeDarts : AbstractAchievement()
 {
     override val name = "Best Three Dart Score"
@@ -15,7 +17,7 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", "drtLast.Ordinal = 3", achievementRef)
+        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", "drtLast.Ordinal = 3", OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }
 
 }
