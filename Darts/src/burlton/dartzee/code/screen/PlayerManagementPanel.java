@@ -1,26 +1,19 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Timestamp;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
-import burlton.dartzee.code.screen.ai.AIConfigurationDialog;
-import burlton.dartzee.code.screen.ai.AISimulationSetup;
-import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen;
 import burlton.dartzee.code.bean.PlayerAvatar;
 import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.db.PlayerEntity;
-import net.miginfocom.swing.MigLayout;
+import burlton.dartzee.code.screen.ai.AIConfigurationDialog;
+import burlton.dartzee.code.screen.ai.AISimulationSetup;
+import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen;
 import burlton.desktopcore.code.util.DialogUtil;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 
 public class PlayerManagementPanel extends JPanel
 								   implements ActionListener
@@ -132,8 +125,7 @@ public class PlayerManagementPanel extends JPanel
 		}
 		else if (source == btnAchievements)
 		{
-			//PlayerAchievementsScreen scrn = ScreenCache.getScreen(PlayerAchievementsScreen.class);
-			PlayerAchievementsScreen scrn = new PlayerAchievementsScreen();
+			PlayerAchievementsScreen scrn = ScreenCache.getScreen(PlayerAchievementsScreen.class);
 			scrn.setPlayer(player);
 			
 			ScreenCache.switchScreen(scrn);

@@ -5,7 +5,11 @@ import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.ResourceCache
 import java.awt.Color
+import java.awt.image.BufferedImage
+import java.net.URL
+import javax.imageio.ImageIO
 import kotlin.streams.toList
 
 abstract class AbstractAchievement
@@ -45,6 +49,7 @@ abstract class AbstractAchievement
     }
 
     abstract fun populateForConversion(playerIds : String)
+    abstract fun getIconURL() : URL?
 
     /**
      * Basic init will be the same for most achievements - get the value from the single row
@@ -80,7 +85,7 @@ abstract class AbstractAchievement
         }
 
         if (highlighted
-          && attainedValue >= redThreshold)
+          && !isLocked())
         {
             return col.darker()
         }
@@ -93,6 +98,43 @@ abstract class AbstractAchievement
         return 360*attainedValue.toDouble() / maxValue
     }
 
+    fun isLocked() : Boolean
+    {
+        return attainedValue < redThreshold
+    }
+
+    fun getIcon(highlighted : Boolean) : BufferedImage?
+    {
+        var iconURL = getIconURL()
+        if (iconURL == null)
+        {
+            Debug.stackTrace("Icon URL is null for achievement [$name]")
+            return null
+        }
+
+        if (isLocked())
+        {
+            iconURL = ResourceCache.URL_ACHIEVEMENT_LOCKED
+        }
+
+        val bufferedImage = ImageIO.read(iconURL)
+        changeIconColor(bufferedImage, getColor(highlighted).darker())
+
+        return bufferedImage
+    }
+    protected open fun changeIconColor(img : BufferedImage, newColor: Color)
+    {
+        for (x in 0 until img.width)
+        {
+            for (y in 0 until img.height)
+            {
+                if (Color(img.getRGB(x, y)) == Color.BLACK)
+                {
+                    img.setRGB(x, y, newColor.rgb)
+                }
+            }
+        }
+    }
 
     override fun toString(): String
     {

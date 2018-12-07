@@ -1,17 +1,16 @@
 package burlton.dartzee.code.utils;
 
-import java.net.URL;
-import java.util.ArrayList;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.swing.ImageIcon;
-
 import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapList;
 import burlton.core.code.util.Debug;
-import burlton.desktopcore.code.util.DialogUtil;
 import burlton.core.code.util.FileUtil;
+import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.swing.*;
+import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Simple interface housing statics for various image/sound resources
@@ -23,7 +22,13 @@ public class ResourceCache
 	public static final ImageIcon IMG_DEV = new ImageIcon(ResourceCache.class.getResource("/horrific/dev.png"));
 	public static final ImageIcon IMG_MITCHELL = new ImageIcon(ResourceCache.class.getResource("/horrific/mitchell.png"));
 	public static final ImageIcon IMG_SPENCER = new ImageIcon(ResourceCache.class.getResource("/horrific/spencer.png"));
-	
+
+	public static final URL URL_ACHIEVEMENT_LOCKED = ResourceCache.class.getResource("/achievements/locked.png");
+	public static final URL URL_ACHIEVEMENT_BEST_FINISH = ResourceCache.class.getResource("/achievements/bestFinish.png");
+	public static final URL URL_ACHIEVEMENT_BEST_SCORE = ResourceCache.class.getResource("/achievements/bestScore.png");
+	public static final URL URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS = ResourceCache.class.getResource("/achievements/checkoutCompleteness.png");
+	public static final URL URL_ACHIEVEMENT_HIGHEST_BUST = ResourceCache.class.getResource("/achievements/bust.png");
+
 	private static final Object wavPoolLock = new Object();
 	private static final HashMapList<String, AudioInputStream> hmWavToInputStreams = new HashMapList<>();
 	

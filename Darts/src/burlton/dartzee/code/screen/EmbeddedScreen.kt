@@ -13,8 +13,6 @@ import javax.swing.JPanel
 
 abstract class EmbeddedScreen : JPanel(), ActionListener
 {
-    abstract val screenName: String
-
     private val btnBack = JButton(" < Back")
     private val btnNext = JButton(getNextText() + " > ")
 
@@ -46,6 +44,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     }
 
     abstract fun initialise()
+    abstract fun getScreenName() : String
 
     /**
      * Called after the new screen has been switched in etc

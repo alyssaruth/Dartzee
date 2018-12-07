@@ -8,12 +8,12 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import javax.swing.JComponent
+import javax.swing.JLabel
 
-class AchievementMedal (achievement : AbstractAchievement) : JComponent(), MouseListener, MouseMotionListener
+const val SIZE = 175
+
+class AchievementMedal (private var achievement : AbstractAchievement) : JComponent(), MouseListener, MouseMotionListener
 {
-    private val SIZE = 175
-
-    var achievement = achievement
     var angle = 0.0
     var highlighted = false
     var gameIdEarned = -1L
@@ -54,6 +54,28 @@ class AchievementMedal (achievement : AbstractAchievement) : JComponent(), Mouse
             g.color = achievement.getColor(highlighted)
 
             g.fillArc(15, 15, SIZE-30, SIZE-30, 0, 360)
+
+            val icon = achievement.getIcon(highlighted)
+
+            var y = 30
+            if (achievement.isLocked())
+            {
+                y = 50
+            }
+
+            icon?.let{g.drawImage(icon, null, 52, y)}
+
+            if (!achievement.isLocked())
+            {
+                val label = JLabel("${achievement.attainedValue}/${achievement.maxValue}")
+                label.setSize(SIZE, 25)
+                label.font = Font("Trebuchet MS", Font.PLAIN, 24)
+                label.horizontalAlignment = JLabel.CENTER
+                label.foreground = achievement.getColor(highlighted).darker()
+
+                g.translate(0, 100)
+                label.paint(g)
+            }
         }
     }
 

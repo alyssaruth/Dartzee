@@ -3,6 +3,11 @@ package burlton.dartzee.code.achievements
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.ResourceCache
+import java.awt.Color
+import java.awt.image.BufferedImage
+import java.net.URL
+import kotlin.streams.toList
 
 class AchievementX01CheckoutCompleteness : AbstractAchievement()
 {
@@ -15,6 +20,8 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
     override val blueThreshold = 20
     override val pinkThreshold = 21
     override val maxValue = 21
+
+    var hitDoubles = mutableListOf<Int>()
 
     override fun populateForConversion(playerIds: String)
     {
@@ -69,5 +76,40 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
     override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>)
     {
         attainedValue = achievementRows.size
+
+        hitDoubles = achievementRows.stream().map{row -> row.achievementCounter}.toList().toMutableList()
     }
+
+    override fun getIconURL(): URL?
+    {
+        return ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
+    }
+
+    override fun changeIconColor(img : BufferedImage, newColor: Color)
+    {
+        for (x in 0 until img.width)
+        {
+            for (y in 0 until img.height)
+            {
+                if (Color(img.getRGB(x, y)) == Color.BLACK)
+                {
+                    img.setRGB(x, y, newColor.rgb)
+                }
+                else
+                {
+                    val red = Color(img.getRGB(x, y)).red
+                    if (hitDoubles.contains(red))
+                    {
+                        img.setRGB(x, y, newColor.darker().rgb)
+                    }
+                    else
+                    {
+                        val transparent = Color(0, true)
+                        img.setRGB(x, y, transparent.rgb)
+                    }
+                }
+            }
+        }
+    }
+
 }
