@@ -1,6 +1,8 @@
 package burlton.dartzee.code.achievements
 
 import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+import burlton.dartzee.code.utils.ResourceCache
+import java.net.URL
 
 class AchievementX01BestFinish : AbstractAchievement()
 {
@@ -20,5 +22,10 @@ class AchievementX01BestFinish : AbstractAchievement()
                        "AND drtLast.Multiplier = 2"
 
         unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
+    }
+
+    override fun getIconURL(): URL?
+    {
+        return ResourceCache.URL_ACHIEVEMENT_BEST_FINISH
     }
 }

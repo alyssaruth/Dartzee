@@ -18,8 +18,6 @@ import javax.swing.JPanel
 
 class UtilitiesScreen : EmbeddedScreen()
 {
-    override val screenName = "Utilities"
-
     private val btnDeleteGame = JButton("Delete Game")
     private val btnCreateBackup = JButton("Create backup")
     private val btnRestoreFromBackup = JButton("Restore from backup")
@@ -77,4 +75,8 @@ class UtilitiesScreen : EmbeddedScreen()
         }
     }
 
+    override fun getScreenName(): String
+    {
+        return "Utilities"
+    }
 }

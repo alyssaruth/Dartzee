@@ -1,26 +1,24 @@
 package burlton.dartzee.code.screen;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.bean.ScrollTableDartsGame;
+import burlton.dartzee.code.db.PlayerEntity;
+import burlton.dartzee.code.object.ColourWrapper;
+import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.screen.game.DartsScorerRoundTheClock;
+import burlton.dartzee.code.utils.DartsColour;
+import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-
-import burlton.dartzee.code.screen.game.DartsScorerRoundTheClock;
-import burlton.dartzee.code.bean.ScrollTableDartsGame;
-import burlton.dartzee.code.db.PlayerEntity;
-import burlton.dartzee.code.object.Dart;
-import net.miginfocom.swing.MigLayout;
-import burlton.core.code.util.Debug;
-import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 
 public class TestScreen extends EmbeddedScreen
 {
@@ -47,7 +45,7 @@ public class TestScreen extends EmbeddedScreen
 		panel_3.setLayout(null);
 		
 		
-		dartboard.setBounds(12, 13, 16, 16);
+		dartboard.setBounds(12, 13, 60, 60);
 		panel_3.add(dartboard);
 		
 		panel.add(panel_2, "cell 4 0,grow");
@@ -75,7 +73,9 @@ public class TestScreen extends EmbeddedScreen
 	@Override
 	public void initialise()
 	{
-		dartboard.paintDartboard();
+		ColourWrapper wireframe = new ColourWrapper(DartsColour.TRANSPARENT);
+		wireframe.setEdgeColour(Color.BLACK);
+		dartboard.paintDartboard(wireframe, false);
 		
 		DefaultModel model = new DefaultModel();
 		model.addColumn("Game");
