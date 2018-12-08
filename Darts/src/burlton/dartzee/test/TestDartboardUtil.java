@@ -1,20 +1,19 @@
 package burlton.dartzee.test;
 
-import java.awt.Color;
-import java.awt.Point;
-
+import burlton.dartzee.code.object.ColourWrapper;
+import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.object.DartboardSegment;
+import burlton.dartzee.code.object.DartboardSegmentKt;
+import burlton.dartzee.code.utils.DartboardUtil;
+import burlton.dartzee.code.utils.DartsColour;
+import burlton.dartzee.code.utils.DartsRegistry;
+import burlton.dartzee.code.utils.PreferenceUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import burlton.dartzee.code.object.ColourWrapper;
-import burlton.dartzee.code.object.Dart;
-import burlton.dartzee.code.object.DartboardSegment;
-import burlton.dartzee.code.utils.DartboardUtil;
-import burlton.dartzee.code.utils.DartsColour;
-import burlton.dartzee.code.utils.DartsRegistry;
-import burlton.dartzee.code.utils.PreferenceUtil;
+import java.awt.*;
 
 public class TestDartboardUtil implements DartsRegistry
 {
@@ -92,8 +91,8 @@ public class TestDartboardUtil implements DartsRegistry
 		String key = DartboardUtil.factorySegmentKeyForPoint(pt, new Point(0, 0), 2000);
 		String expectedKey = score + "_" + segmentType;
 		Assert.assertEquals("SegmentKey for point " + pt + " for dartboard with radius 1000", expectedKey, key);
-		
-		DartboardSegment segment = new DartboardSegment(key);
+
+		DartboardSegmentKt segment = new DartboardSegmentKt(key);
 		
 		String segmentStr = "" + segment;
 		Assert.assertEquals("DartboardSegment.toString() for point " + pt, score + " (" + segmentType + ")", segmentStr);
@@ -121,7 +120,7 @@ public class TestDartboardUtil implements DartsRegistry
 	public void testHighlights()
 	{
 		ColourWrapper wrapper = new ColourWrapper(Color.BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN);
-		DartboardSegment segment = new DartboardSegment("20_4");
+		DartboardSegmentKt segment = new DartboardSegmentKt("20_4");
 		
 		assertColourForPointAndSegment(new Point(0, 0), segment, wrapper, Color.BLACK, false);
 		assertColourForPointAndSegment(new Point(0, 0), segment, wrapper, Color.BLACK.darker().darker(), true);
@@ -132,8 +131,8 @@ public class TestDartboardUtil implements DartsRegistry
 	{
 		ColourWrapper wrapper = new ColourWrapper(null);
 		wrapper.setEdgeColour(Color.YELLOW);
-		
-		DartboardSegment fakeSegment = new DartboardSegment("20_1");
+
+		DartboardSegmentKt fakeSegment = new DartboardSegmentKt("20_1");
 		for (int x=0; x<=200; x++)
 		{
 			for (int y=0; y<=200; y++)
@@ -169,7 +168,7 @@ public class TestDartboardUtil implements DartsRegistry
 		assertColourForPointAndSegment(new Point(0, 0), fakeSegment, wrapper, null, false);
 		assertColourForPointAndSegment(new Point(1, 1), fakeSegment, wrapper, null, false);
 	}
-	private void assertColourForPointAndSegment(Point pt, DartboardSegment segment, ColourWrapper wrapper, Color expected, boolean highlight)
+	private void assertColourForPointAndSegment(Point pt, DartboardSegmentKt segment, ColourWrapper wrapper, Color expected, boolean highlight)
 	{
 		Color color = DartboardUtil.getColourForPointAndSegment(pt, segment, highlight, wrapper);
 		Assert.assertEquals("Color for point " + pt + " and segment " + segment, expected, color);
