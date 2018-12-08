@@ -1,12 +1,12 @@
 package burlton.dartzee.code.utils;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.util.HashMap;
-
 import burlton.dartzee.code.object.ColourWrapper;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.object.DartboardSegment;
+import burlton.dartzee.code.object.DartboardSegmentKt;
+
+import java.awt.*;
+import java.util.HashMap;
 
 /**
  * Utility class for the Dartboard object.
@@ -27,7 +27,7 @@ public class DartboardUtil implements DartsRegistry
 	private static final double UPPER_BOUND_DOUBLE_RATIO = 1;
 	public static final double UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3;
 	
-	public static Dart getDartForSegment(Point pt, DartboardSegment segment)
+	public static Dart getDartForSegment(Point pt, DartboardSegmentKt segment)
 	{
 		int score = segment.getScore();
 		int multiplier = segment.getMultiplier();
@@ -99,7 +99,7 @@ public class DartboardUtil implements DartsRegistry
 		return numberOrder[index];
 	}
 	
-	public static Color getColourForPointAndSegment(Point pt, DartboardSegment segment, boolean highlighted,
+	public static Color getColourForPointAndSegment(Point pt, DartboardSegmentKt segment, boolean highlighted,
 	  ColourWrapper colourWrapper)
 	{
 		//For normal gameplay, we'll pass in null and get the colours from the user pref.
@@ -124,7 +124,7 @@ public class DartboardUtil implements DartsRegistry
 		
 		return colour;
 	}
-	private static Color getColourFromHashMap(DartboardSegment segment, ColourWrapper colourWrapper)
+	private static Color getColourFromHashMap(DartboardSegmentKt segment, ColourWrapper colourWrapper)
 	{
 		int type = segment.getType();
 		if (type == DartboardSegment.TYPE_MISS)

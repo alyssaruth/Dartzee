@@ -1,18 +1,18 @@
 package burlton.dartzee.code.utils;
 
-import java.awt.Point;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.object.Quadrant;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-import burlton.dartzee.code.object.Quadrant;
-import burlton.core.code.util.Debug;
-
 public abstract class GeometryUtil
 {
-	private static final Quadrant TOP_RIGHT = Quadrant.factory(0, 90, true, false);
-	private static final Quadrant BOTTOM_RIGHT = Quadrant.factory(90, 180, true, true);
-	private static final Quadrant BOTTOM_LEFT = Quadrant.factory(180, 270, false, true);
-	private static final Quadrant TOP_LEFT = Quadrant.factory(270, 360, false, false);
+	private static final Quadrant TOP_RIGHT = new Quadrant(0, 90, true, false);
+	private static final Quadrant BOTTOM_RIGHT = new Quadrant(90, 180, true, true);
+	private static final Quadrant BOTTOM_LEFT = new Quadrant(180, 270, false, true);
+	private static final Quadrant TOP_LEFT = new Quadrant(270, 360, false, false);
 	
 	private static final Quadrant[] QUADRANTS = {TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT};
 	
@@ -129,7 +129,7 @@ public abstract class GeometryUtil
 			int angleToAdd = quadrant.getMinimumAngle();
 			
 			double lengthForCalculation = Math.abs(xLength);
-			if (quadrant.isSinForX())
+			if (quadrant.getSinForX())
 			{
 				lengthForCalculation = Math.abs(yLength);
 			}

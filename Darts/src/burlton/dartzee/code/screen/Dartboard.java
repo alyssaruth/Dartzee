@@ -1,11 +1,18 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Point;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.listener.DartboardListener;
+import burlton.dartzee.code.object.ColourWrapper;
+import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.object.DartboardSegment;
+import burlton.dartzee.code.object.DartboardSegmentKt;
+import burlton.dartzee.code.screen.game.GamePanelX01;
+import burlton.dartzee.code.utils.*;
+
+import javax.sound.sampled.*;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -13,31 +20,6 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.SwingConstants;
-
-import burlton.dartzee.code.screen.game.GamePanelX01;
-import burlton.dartzee.code.listener.DartboardListener;
-import burlton.dartzee.code.object.ColourWrapper;
-import burlton.dartzee.code.object.Dart;
-import burlton.dartzee.code.object.DartboardSegment;
-import burlton.dartzee.code.utils.DartboardUtil;
-import burlton.dartzee.code.utils.DartsColour;
-import burlton.dartzee.code.utils.DartsRegistry;
-import burlton.dartzee.code.utils.GeometryUtil;
-import burlton.dartzee.code.utils.PreferenceUtil;
-import burlton.dartzee.code.utils.ResourceCache;
-import burlton.core.code.obj.SuperHashMap;
-import burlton.core.code.util.Debug;
 
 public class Dartboard extends JLayeredPane
 					   implements MouseListener,
@@ -47,8 +29,8 @@ public class Dartboard extends JLayeredPane
 	
 	private static SuperHashMap<String, URL> hmSoundNameToUrl = new SuperHashMap<>();
 	
-	private SuperHashMap<Point, DartboardSegment> hmPointToSegment = new SuperHashMap<>();
-	private SuperHashMap<String, DartboardSegment> hmSegmentKeyToSegment = new SuperHashMap<>();
+	private SuperHashMap<Point, DartboardSegmentKt> hmPointToSegment = new SuperHashMap<>();
+	private SuperHashMap<String, DartboardSegmentKt> hmSegmentKeyToSegment = new SuperHashMap<>();
 	
 	private ArrayList<JLabel> dartLabels = new ArrayList<>();
 	
@@ -62,7 +44,7 @@ public class Dartboard extends JLayeredPane
 	private boolean simulation = false;
 	
 	//Cached things
-	private DartboardSegment lastHoveredSegment = null;
+	private DartboardSegmentKt lastHoveredSegment = null;
 	private ColourWrapper colourWrapper = null;
 	private Clip clip = null;
 	
@@ -142,8 +124,8 @@ public class Dartboard extends JLayeredPane
 	        for (int x=0; x<width; x++)
 	        {
 	        	pt.setLocation(x, y);
-	        	
-	        	DartboardSegment segment = getSegmentForPoint(pt);
+
+				DartboardSegmentKt segment = getSegmentForPoint(pt);
 				Color colour = DartboardUtil.getColourForPointAndSegment(pt, segment, false, colourWrapper);
 		    	
 		    	if (colour != null)
@@ -240,7 +222,7 @@ public class Dartboard extends JLayeredPane
 
 	private void highlightDartboard(Point hoveredPoint)
 	{
-		DartboardSegment hoveredSegment = getSegmentForPoint(hoveredPoint);
+		DartboardSegmentKt hoveredSegment = getSegmentForPoint(hoveredPoint);
 		if (hoveredSegment.equals(lastHoveredSegment))
 		{
 			//Nothing to do
@@ -255,7 +237,7 @@ public class Dartboard extends JLayeredPane
 		lastHoveredSegment = hoveredSegment;
 		colourSegment(lastHoveredSegment, true);
 	}
-	private void colourSegment(DartboardSegment segment, boolean highlight)
+	private void colourSegment(DartboardSegmentKt segment, boolean highlight)
 	{
 		if (segment.isMiss())
 		{
@@ -288,9 +270,9 @@ public class Dartboard extends JLayeredPane
     	}
 	}
 	
-	private DartboardSegment getSegmentForPoint(Point pt)
+	private DartboardSegmentKt getSegmentForPoint(Point pt)
 	{
-		DartboardSegment segment = hmPointToSegment.get(pt);
+		DartboardSegmentKt segment = hmPointToSegment.get(pt);
 		if (segment != null)
 		{
 			return segment;
@@ -302,13 +284,13 @@ public class Dartboard extends JLayeredPane
 		return factoryAndCacheSegmentForPoint(pt);
 	}
 	
-	private DartboardSegment factoryAndCacheSegmentForPoint(Point pt)
+	private DartboardSegmentKt factoryAndCacheSegmentForPoint(Point pt)
 	{
 		String segmentKey = DartboardUtil.factorySegmentKeyForPoint(pt, centerPt, diameter);
-		DartboardSegment segment = hmSegmentKeyToSegment.get(segmentKey);
+		DartboardSegmentKt segment = hmSegmentKeyToSegment.get(segmentKey);
 		if (segment == null)
 		{
-			segment = new DartboardSegment(segmentKey);
+			segment = new DartboardSegmentKt(segmentKey);
 			hmSegmentKeyToSegment.put(segmentKey, segment);
 		}
 		
@@ -324,13 +306,13 @@ public class Dartboard extends JLayeredPane
 	public ArrayList<Point> getPointsForSegment(int score, int type)
 	{
 		String segmentKey = score + "_" + type;
-		DartboardSegment segment = hmSegmentKeyToSegment.get(segmentKey);
+		DartboardSegmentKt segment = hmSegmentKeyToSegment.get(segmentKey);
 		return segment.getPoints();
 	}
 	
 	public boolean isDouble(Point pt)
 	{
-		DartboardSegment seg = getSegmentForPoint(pt);
+		DartboardSegmentKt seg = getSegmentForPoint(pt);
 		return seg.isDoubleExcludingBull();
 	}
 	
@@ -364,8 +346,8 @@ public class Dartboard extends JLayeredPane
 		{
 			rationalisePoint(pt);
 		}
-		
-		DartboardSegment segment = getSegmentForPoint(pt);
+
+		DartboardSegmentKt segment = getSegmentForPoint(pt);
 		return DartboardUtil.getDartForSegment(pt, segment);
 	}
 	
