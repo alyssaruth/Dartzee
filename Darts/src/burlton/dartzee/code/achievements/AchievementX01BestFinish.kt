@@ -2,6 +2,7 @@ package burlton.dartzee.code.achievements
 
 import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.desktopcore.code.util.DateUtil
 import java.net.URL
 
 class AchievementX01BestFinish : AbstractAchievement()
@@ -19,7 +20,8 @@ class AchievementX01BestFinish : AbstractAchievement()
     override fun populateForConversion(playerIds : String)
     {
         val whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0  " +
-                       "AND drtLast.Multiplier = 2"
+                       "AND drtLast.Multiplier = 2 " +
+                       "AND pt.DtFinished < ${DateUtil.getEndOfTimeSqlString()}"
 
         unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }

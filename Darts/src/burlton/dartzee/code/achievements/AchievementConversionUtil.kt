@@ -6,7 +6,6 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.AchievementConversionDialog
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.DateUtil
 import java.sql.SQLException
 
 fun runAchievementConversion()
@@ -44,7 +43,6 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     {
         sb.append(" AND pt.PlayerId IN ($playerSql)")
     }
-    sb.append(" AND pt.DtFinished < ${DateUtil.getEndOfTimeSqlString()}")
     sb.append(" AND $lastDartWhereSql")
     sb.append(" AND pt.GameId = g.RowId")
     sb.append(" AND g.GameType = " + GameEntity.GAME_TYPE_X01)

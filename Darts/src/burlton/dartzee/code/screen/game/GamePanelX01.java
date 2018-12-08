@@ -64,7 +64,7 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 		}
 		else
 		{
-			int total = X01Util.sumScore(dartsThrown);
+			int total = startingScore;
 			AchievementEntity.updateAchievement(AchievementConstants.ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), total);
 		}
 		
