@@ -10,8 +10,8 @@ import burlton.desktopcore.code.bean.WrapLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
+import java.awt.Font
 import javax.swing.*
-import javax.swing.border.BevelBorder
 
 class PlayerAchievementsScreen : EmbeddedScreen()
 {
@@ -19,6 +19,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     private val panelGeneral = JPanel()
     private val panelAchievementDesc = JPanel()
+    private val lblAchievementName = JLabel()
 
     init
     {
@@ -34,10 +35,13 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         fl.alignment = FlowLayout.LEFT
         panelGeneral.layout = fl
 
-
         centerPanel.add(panelAchievementDesc, BorderLayout.SOUTH)
         panelAchievementDesc.preferredSize = Dimension(200, 100)
-        panelAchievementDesc.border = BevelBorder(5)
+        panelAchievementDesc.layout = BorderLayout()
+
+        panelAchievementDesc.add(lblAchievementName, BorderLayout.NORTH)
+        lblAchievementName.horizontalAlignment = JLabel.CENTER
+        lblAchievementName.font = Font("Trebuchet MS", Font.PLAIN, 20)
 
         val sp = JScrollPane()
         sp.setViewportView(panelGeneral)
@@ -75,6 +79,19 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         val medal = AchievementMedal(aa)
         panelGeneral.add(medal)
     }
+
+    fun toggleAchievementDesc(hovered: Boolean, achievement : AbstractAchievement)
+    {
+        if (hovered)
+        {
+            lblAchievementName.text = achievement.name
+        }
+        else
+        {
+            lblAchievementName.text = ""
+        }
+    }
+
 
     override fun getBackTarget(): EmbeddedScreen
     {

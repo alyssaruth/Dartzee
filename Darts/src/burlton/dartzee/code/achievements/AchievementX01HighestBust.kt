@@ -5,7 +5,7 @@ import java.net.URL
 
 class AchievementX01HighestBust : AbstractAchievement()
 {
-    override val name = "Highest bust"
+    override val name = "Highest Bust"
     override val achievementRef = ACHIEVEMENT_REF_X01_HIGHEST_BUST
     override val redThreshold = 2
     override val orangeThreshold = 20

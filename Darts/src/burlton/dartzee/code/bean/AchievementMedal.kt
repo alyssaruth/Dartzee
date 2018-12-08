@@ -1,7 +1,9 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.achievements.AbstractAchievement
+import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
+import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
 import burlton.dartzee.code.utils.GeometryUtil
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -10,13 +12,15 @@ import java.awt.event.MouseMotionListener
 import javax.swing.JComponent
 import javax.swing.JLabel
 
+
+
 const val SIZE = 175
 
 class AchievementMedal (private var achievement : AbstractAchievement) : JComponent(), MouseListener, MouseMotionListener
 {
-    var angle = 0.0
-    var highlighted = false
-    var gameIdEarned = -1L
+    private var angle = 0.0
+    private var highlighted = false
+    private var gameIdEarned = -1L
 
     init
     {
@@ -87,6 +91,26 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
         g.fillArc(0, 0, SIZE, SIZE, 90 - thresholdAngle.toInt(), 3)
     }
 
+    private fun updateForMouseOver(e : MouseEvent?)
+    {
+        val pt = e?.point
+        highlighted = GeometryUtil.getDistance(pt, Point(SIZE/2, SIZE/2)) < SIZE/2
+
+        ScreenCache.getScreen(PlayerAchievementsScreen::class.java).toggleAchievementDesc(highlighted, achievement)
+
+        cursor = if (highlighted && gameIdEarned > -1)
+        {
+            Cursor(Cursor.HAND_CURSOR)
+        }
+        else
+        {
+            Cursor(Cursor.DEFAULT_CURSOR)
+        }
+
+        repaint()
+    }
+
+
     /**
      * MouseListener
      */
@@ -102,15 +126,14 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
 
     override fun mouseEntered(e: MouseEvent?)
     {
-        val pt = e?.point
-        highlighted = GeometryUtil.getDistance(pt, Point(100, 100)) < 100
-
-        repaint()
+        updateForMouseOver(e)
     }
 
     override fun mouseExited(e: MouseEvent?)
     {
+        updateForMouseOver(e)
         highlighted = false
+
         repaint()
     }
 
@@ -119,10 +142,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
      */
     override fun mouseMoved(e: MouseEvent?)
     {
-        val pt = e?.point
-        highlighted = GeometryUtil.getDistance(pt, Point(100, 100)) < 100
-
-        repaint()
+        updateForMouseOver(e)
     }
 
     override fun mouseDragged(e: MouseEvent?) {}

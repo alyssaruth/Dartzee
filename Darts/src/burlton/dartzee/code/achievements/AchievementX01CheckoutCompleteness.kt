@@ -21,7 +21,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
     override val pinkThreshold = 21
     override val maxValue = 21
 
-    var hitDoubles = mutableListOf<Int>()
+    private var hitDoubles = mutableListOf<Int>()
 
     override fun populateForConversion(playerIds: String)
     {
@@ -93,14 +93,14 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
             {
                 if (Color(img.getRGB(x, y)) == Color.BLACK)
                 {
-                    img.setRGB(x, y, newColor.rgb)
+                    img.setRGB(x, y, newColor.darker().rgb)
                 }
                 else
                 {
                     val red = Color(img.getRGB(x, y)).red
                     if (hitDoubles.contains(red))
                     {
-                        img.setRGB(x, y, newColor.darker().rgb)
+                        img.setRGB(x, y, newColor.rgb)
                     }
                     else
                     {
