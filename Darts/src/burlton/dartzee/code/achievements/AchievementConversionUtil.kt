@@ -20,7 +20,8 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
     return mutableListOf(AchievementX01BestFinish(),
                          AchievementX01BestThreeDarts(),
                          AchievementX01CheckoutCompleteness(),
-                         AchievementX01HighestBust())
+                         AchievementX01HighestBust(),
+                         AchievementGolfPointsRisked())
 }
 
 

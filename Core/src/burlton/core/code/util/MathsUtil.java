@@ -1,9 +1,9 @@
 package burlton.core.code.util;
 
+import burlton.core.code.obj.HandyArrayList;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
-
-import burlton.core.code.obj.HandyArrayList;
 
 public final class MathsUtil
 {
@@ -471,4 +471,16 @@ public final class MathsUtil
 	{
 		return gcd(l1, l2) == 1;
 	}
+
+	public static long factorial(long l)
+	{
+		int result = 1;
+		for (long i=l; i>0; i--)
+		{
+			result *= i;
+		}
+
+		return result;
+	}
+
 }

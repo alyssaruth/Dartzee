@@ -28,6 +28,7 @@ public class ResourceCache
 	public static final URL URL_ACHIEVEMENT_BEST_SCORE = ResourceCache.class.getResource("/achievements/bestScore.png");
 	public static final URL URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS = ResourceCache.class.getResource("/achievements/checkoutCompleteness.png");
 	public static final URL URL_ACHIEVEMENT_HIGHEST_BUST = ResourceCache.class.getResource("/achievements/bust.png");
+	public static final URL URL_ACHIEVEMENT_POINTS_RISKED = ResourceCache.class.getResource("/achievements/pointsRisked.png");
 
 	private static final Object wavPoolLock = new Object();
 	private static final HashMapList<String, AudioInputStream> hmWavToInputStreams = new HashMapList<>();

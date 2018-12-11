@@ -5,8 +5,11 @@ import java.util.ArrayList
 import java.util.HashMap
 import kotlin.Comparator
 
-class HashMapCount<K> : HashMap<K, Int>()
+class HashMapCount<K>: HashMap<K, Int>
 {
+    constructor() : super()
+    constructor(hm: HashMapCount<K>) : super(hm)
+
     fun getTotalCount() : Int
     {
         return values.stream().mapToInt{v -> v}.sum()

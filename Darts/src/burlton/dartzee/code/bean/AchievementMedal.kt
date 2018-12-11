@@ -71,7 +71,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
 
             if (!achievement.isLocked())
             {
-                val label = JLabel("${achievement.attainedValue}/${achievement.maxValue}")
+                val label = JLabel("${achievement.getProgressDesc()}")
                 label.setSize(SIZE, 25)
                 label.font = Font("Trebuchet MS", Font.PLAIN, 24)
                 label.horizontalAlignment = JLabel.CENTER
@@ -87,7 +87,6 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     {
         g.color = color
         val thresholdAngle = (360 * threshold.toDouble() / achievement.maxValue)
-        //g.fillArc(2, 2, 196, 196, 90 - thresholdAngle.toInt(), 3)
         g.fillArc(0, 0, SIZE, SIZE, 90 - thresholdAngle.toInt(), 3)
     }
 
