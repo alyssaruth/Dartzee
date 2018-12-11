@@ -140,4 +140,21 @@ abstract class AbstractAchievement
     {
         return name
     }
+
+    open fun isUnbounded() : Boolean
+    {
+        return false
+    }
+
+    fun getProgressDesc() : String
+    {
+        var progressStr = "$attainedValue"
+        if (!isUnbounded())
+        {
+            progressStr += "/$maxValue"
+        }
+
+        return progressStr
+    }
+
 }

@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.dartzee.code.achievements.*
+import burlton.dartzee.code.achievements.AbstractAchievement
+import burlton.dartzee.code.achievements.getAllAchievements
 import burlton.dartzee.code.bean.AchievementMedal
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
@@ -11,7 +12,10 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
-import javax.swing.*
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.ScrollPaneConstants
 
 class PlayerAchievementsScreen : EmbeddedScreen()
 {
@@ -26,8 +30,8 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         val centerPanel = JPanel()
         add(centerPanel, BorderLayout.CENTER)
         centerPanel.layout = BorderLayout()
-        val tabbedPane = JTabbedPane(SwingConstants.TOP)
-        centerPanel.add(tabbedPane, BorderLayout.CENTER)
+        val sp = JScrollPane()
+        centerPanel.add(sp, BorderLayout.CENTER)
 
         val fl = WrapLayout()
         fl.vgap = 25
@@ -43,10 +47,9 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         lblAchievementName.horizontalAlignment = JLabel.CENTER
         lblAchievementName.font = Font("Trebuchet MS", Font.PLAIN, 20)
 
-        val sp = JScrollPane()
+
         sp.setViewportView(panelGeneral)
         sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-        tabbedPane.addTab("X01", null, sp, null)
     }
 
     override fun getScreenName() : String
@@ -62,11 +65,10 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         val playerId = player?.rowId
 
         val achievementRows = AchievementEntity().retrieveEntities("PlayerId = $playerId")
-
-        addAchievement(AchievementX01BestFinish(), achievementRows)
-        addAchievement(AchievementX01BestThreeDarts(), achievementRows)
-        addAchievement(AchievementX01CheckoutCompleteness(), achievementRows)
-        addAchievement(AchievementX01HighestBust(), achievementRows)
+        for (achievement in getAllAchievements())
+        {
+            addAchievement(achievement, achievementRows)
+        }
     }
 
     private fun addAchievement(aa: AbstractAchievement, achievementRows: MutableList<AchievementEntity>)

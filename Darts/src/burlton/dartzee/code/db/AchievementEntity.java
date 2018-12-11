@@ -99,6 +99,21 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 			}
 		}
 	}
+	public static void incrementAchievement(int achievementRef, long playerId, int amountBy)
+	{
+		AchievementEntity existingAchievement = retrieveAchievement(achievementRef, playerId);
+
+		if (existingAchievement == null)
+		{
+			AchievementEntity.factoryAndSave(achievementRef, playerId, -1, amountBy);
+		}
+		else
+		{
+			int existingCount = existingAchievement.getAchievementCounter();
+			existingAchievement.setAchievementCounter(existingCount + amountBy);
+			existingAchievement.saveToDatabase();
+		}
+	}
 	
 	public static AchievementEntity factoryAndSave(int achievementRef, long playerId, long gameId, int counter)
 	{
