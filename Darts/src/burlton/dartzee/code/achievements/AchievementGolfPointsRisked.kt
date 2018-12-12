@@ -35,6 +35,12 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         sb.append(" AND g.GameType = ${GameEntity.GAME_TYPE_GOLF}")
         sb.append(" AND rnd.RoundNumber = drtFirst.Score")
         sb.append(" AND drtFirst.Multiplier > 0")
+
+        if (!playerIds.isEmpty())
+        {
+            sb.append(" AND pt.PlayerId IN ($playerIds)")
+        }
+
         sb.append(" AND EXISTS (")
         sb.append("     SELECT 1")
         sb.append("     FROM Dart drt")

@@ -13,7 +13,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
     //Number of rounds - 9 holes or 18?
     private var numberOfRounds = -1
 
-    fun getScoreForMostRecentDart() : Int
+    private fun getScoreForMostRecentDart() : Int
     {
         val lastDart = dartsThrown.last()
 
