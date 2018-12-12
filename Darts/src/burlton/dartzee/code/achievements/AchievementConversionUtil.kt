@@ -27,6 +27,20 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
                          AchievementClockGamesWon())
 }
 
+fun getWinAchievementRef(gameType : Int) : Int
+{
+    for (achievement in getAllAchievements())
+    {
+        if (achievement is AbstractAchievementGamesWon
+          && achievement.gameType == gameType)
+        {
+            return achievement.achievementRef
+        }
+    }
+
+    Debug.stackTrace("No win achievement found for GameType [$gameType]")
+    return -1
+}
 
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int)
