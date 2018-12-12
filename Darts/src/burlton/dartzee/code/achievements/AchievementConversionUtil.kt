@@ -21,7 +21,10 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
                          AchievementX01BestThreeDarts(),
                          AchievementX01CheckoutCompleteness(),
                          AchievementX01HighestBust(),
-                         AchievementGolfPointsRisked())
+                         AchievementGolfPointsRisked(),
+                         AchievementX01GamesWon(),
+                         AchievementGolfGamesWon(),
+                         AchievementClockGamesWon())
 }
 
 

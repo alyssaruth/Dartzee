@@ -63,7 +63,7 @@ abstract class AbstractAchievement
 
         if (achievementRows.size > 1)
         {
-            Debug.stackTrace("Got ${achievementRows.size} rows - only expected 1")
+            Debug.stackTrace("Got ${achievementRows.size} rows (expected 1) for achievement $achievementRef and player ${achievementRows.first().playerId}")
         }
 
         val achievementRow = achievementRows.first()
