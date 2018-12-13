@@ -24,7 +24,7 @@ abstract class AbstractAchievement
     abstract val pinkThreshold : Int
     abstract val maxValue : Int
 
-    var attainedValue = 0
+    var attainedValue = -1
     var gameIdEarned = -1L
 
     fun runConversion(players : MutableList<PlayerEntity>)
@@ -73,15 +73,32 @@ abstract class AbstractAchievement
 
     fun getColor(highlighted : Boolean) : Color
     {
-        val col = when (attainedValue)
+        val col = if (isDecreasing())
         {
-            in Int.MIN_VALUE until redThreshold -> Color.GRAY
-            in redThreshold until orangeThreshold -> Color.RED
-            in orangeThreshold until yellowThreshold -> Color.ORANGE
-            in yellowThreshold until greenThreshold -> Color.YELLOW
-            in greenThreshold until blueThreshold -> Color.GREEN
-            in blueThreshold until pinkThreshold -> Color.CYAN
-            else -> Color.MAGENTA
+            when (attainedValue)
+            {
+                -1 -> Color.GRAY
+                in redThreshold+1 until Int.MAX_VALUE -> Color.GRAY
+                in orangeThreshold+1 until redThreshold+1 -> Color.RED
+                in yellowThreshold+1 until orangeThreshold+1 -> Color.ORANGE
+                in greenThreshold+1 until yellowThreshold+1 -> Color.YELLOW
+                in blueThreshold+1 until greenThreshold+1 -> Color.GREEN
+                in pinkThreshold+1 until blueThreshold+1 -> Color.CYAN
+                else -> Color.MAGENTA
+            }
+        }
+        else
+        {
+            when (attainedValue)
+            {
+                in Int.MIN_VALUE until redThreshold -> Color.GRAY
+                in redThreshold until orangeThreshold -> Color.RED
+                in orangeThreshold until yellowThreshold -> Color.ORANGE
+                in yellowThreshold until greenThreshold -> Color.YELLOW
+                in greenThreshold until blueThreshold -> Color.GREEN
+                in blueThreshold until pinkThreshold -> Color.CYAN
+                else -> Color.MAGENTA
+            }
         }
 
         if (highlighted
@@ -95,12 +112,43 @@ abstract class AbstractAchievement
 
     fun getAngle() : Double
     {
-        return 360*attainedValue.toDouble() / maxValue
+        return getAngle(attainedValue)
+    }
+    fun getAngle(attainedValue : Int) : Double
+    {
+        if (attainedValue == -1)
+        {
+            return 0.0
+        }
+
+        return if (!isDecreasing())
+        {
+            360 * attainedValue.toDouble() / maxValue
+        }
+        else
+        {
+            val denom = redThreshold - maxValue + 1
+            val num = Math.max(redThreshold - attainedValue + 1, 0)
+
+            360 * num / denom.toDouble()
+        }
     }
 
     fun isLocked() : Boolean
     {
-        return attainedValue < redThreshold
+        if (attainedValue == -1)
+        {
+            return true
+        }
+
+        return if (isDecreasing())
+        {
+            attainedValue > redThreshold
+        }
+        else
+        {
+            attainedValue < redThreshold
+        }
     }
 
     fun getIcon(highlighted : Boolean) : BufferedImage?
@@ -156,5 +204,11 @@ abstract class AbstractAchievement
 
         return progressStr
     }
+
+    open fun isDecreasing() : Boolean
+    {
+        return false
+    }
+
 
 }
