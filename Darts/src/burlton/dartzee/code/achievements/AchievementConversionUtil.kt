@@ -24,7 +24,10 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
                          AchievementGolfPointsRisked(),
                          AchievementX01GamesWon(),
                          AchievementGolfGamesWon(),
-                         AchievementClockGamesWon())
+                         AchievementClockGamesWon(),
+                         AchievementX01BestGame(),
+                         AchievementGolfBestGame(),
+                         AchievementClockBestGame())
 }
 
 fun getWinAchievementRef(gameType : Int) : Int

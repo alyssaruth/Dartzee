@@ -87,6 +87,12 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
 
     override fun changeIconColor(img : BufferedImage, newColor: Color)
     {
+        if (isLocked())
+        {
+            super.changeIconColor(img, newColor)
+            return
+        }
+
         for (x in 0 until img.width)
         {
             for (y in 0 until img.height)
