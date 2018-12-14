@@ -50,6 +50,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
         sp.setViewportView(panelGeneral)
         sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        sp.verticalScrollBar.unitIncrement = 16
     }
 
     override fun getScreenName() : String
@@ -103,5 +104,10 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     fun setPlayer(player: PlayerEntity)
     {
         this.player = player
+    }
+
+    override fun getDesiredSize(): Dimension?
+    {
+        return Dimension(840, 600)
     }
 }

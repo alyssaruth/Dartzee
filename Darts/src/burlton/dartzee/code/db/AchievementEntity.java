@@ -1,6 +1,7 @@
 package burlton.dartzee.code.db;
 
 import burlton.core.code.obj.HandyArrayList;
+import burlton.dartzee.code.achievements.AchievementUtilKt;
 import burlton.desktopcore.code.util.DateUtil;
 
 import java.sql.PreparedStatement;
@@ -89,9 +90,12 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 		else
 		{
 			int existingCounter = existingAchievement.getAchievementCounter();
-			
+
+			boolean decreasing = AchievementUtilKt.getAchievementForRef(achievementRef).isDecreasing();
+
 			//Update the achievement if appropriate
-			if (counter > existingCounter)
+			if ((counter > existingCounter && !decreasing)
+			 || (counter < existingCounter && decreasing))
 			{
 				existingAchievement.setAchievementCounter(counter);
 				existingAchievement.setGameIdEarned(gameId);

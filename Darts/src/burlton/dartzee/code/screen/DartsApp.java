@@ -131,6 +131,18 @@ public class DartsApp extends AbstractDevScreen
 		
 		//Need pack() to ensure the dialog resizes correctly.
 		//Need repaint() in case we don't resize.
+		Dimension desiredSize = scrn.getDesiredSize();
+		if (desiredSize != null)
+		{
+			setSize(desiredSize);
+			setMinimumSize(desiredSize);
+		}
+		else
+		{
+			setMinimumSize(new Dimension(800, 600));
+			setSize(800, 600); //Revert to default
+		}
+
 		pack();
 		repaint();
 		

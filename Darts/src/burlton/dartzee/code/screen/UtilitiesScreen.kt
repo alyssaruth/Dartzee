@@ -2,7 +2,6 @@ package burlton.dartzee.code.screen
 
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.ThreadUtil
-import burlton.dartzee.code.achievements.runAchievementConversion
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
@@ -73,6 +72,13 @@ class UtilitiesScreen : EmbeddedScreen()
             btnAchievementConversion -> runAchievementConversion()
             else -> super.actionPerformed(arg0)
         }
+    }
+
+    private fun runAchievementConversion()
+    {
+        val dlg = AchievementConversionDialog()
+        dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+        dlg.isVisible = true
     }
 
     override fun getScreenName(): String

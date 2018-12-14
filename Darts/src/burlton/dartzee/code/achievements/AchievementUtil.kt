@@ -3,17 +3,8 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
-import burlton.dartzee.code.screen.AchievementConversionDialog
-import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DatabaseUtil
 import java.sql.SQLException
-
-fun runAchievementConversion()
-{
-    val dlg = AchievementConversionDialog()
-    dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
-    dlg.isVisible = true
-}
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
@@ -27,22 +18,44 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
                          AchievementClockGamesWon(),
                          AchievementX01BestGame(),
                          AchievementGolfBestGame(),
-                         AchievementClockBestGame())
+                         AchievementClockBestGame(),
+                         AchievementClockBruceyBonuses())
+}
+
+fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
+{
+    for (achievement in getAllAchievements())
+    {
+        if (achievement.achievementRef == achievementRef)
+        {
+            return achievement
+        }
+    }
+
+    Debug.stackTrace("No achievement found for AchievementRef [$achievementRef]")
+    return null
+}
+
+fun getBestGameAchievementRef(gameType : Int) : Int
+{
+    val ref = getAllAchievements().find {it is AbstractAchievementBestGame && it.gameType == gameType}?.achievementRef
+    if (ref == null)
+    {
+        Debug.stackTrace("No best game achievement found for GameType [$gameType]")
+    }
+
+    return ref ?: -1
 }
 
 fun getWinAchievementRef(gameType : Int) : Int
 {
-    for (achievement in getAllAchievements())
+    val ref = getAllAchievements().find {it is AbstractAchievementGamesWon && it.gameType == gameType}?.achievementRef
+    if (ref == null)
     {
-        if (achievement is AbstractAchievementGamesWon
-          && achievement.gameType == gameType)
-        {
-            return achievement.achievementRef
-        }
+        Debug.stackTrace("No total wins achievement found for GameType [$gameType]")
     }
 
-    Debug.stackTrace("No win achievement found for GameType [$gameType]")
-    return -1
+    return ref ?: -1
 }
 
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
