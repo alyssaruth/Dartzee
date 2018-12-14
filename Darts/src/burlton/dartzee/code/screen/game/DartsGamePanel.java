@@ -4,7 +4,7 @@ import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
-import burlton.dartzee.code.achievements.AchievementConversionUtilKt;
+import burlton.dartzee.code.achievements.AchievementUtilKt;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.bean.SliderAiSpeed;
 import burlton.dartzee.code.db.*;
@@ -580,18 +580,22 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		long playerId = participant.getPlayerId();
 		PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.getGameType());
 		
-		updateAchievementsForFinish(playerId, finishingPosition);
+		updateAchievementsForFinish(playerId, finishingPosition, numberOfDarts);
 
 		return finishingPosition;
 	}
 	
-	protected void updateAchievementsForFinish(long playerId, int finishingPosition)
+	protected void updateAchievementsForFinish(long playerId, int finishingPosition, int score)
 	{
 		if (finishingPosition == 1)
 		{
-			int achievementRef = AchievementConversionUtilKt.getWinAchievementRef(gameEntity.getGameType());
+			int achievementRef = AchievementUtilKt.getWinAchievementRef(gameEntity.getGameType());
 			AchievementEntity.incrementAchievement(achievementRef, playerId, 1);
 		}
+
+		//Update the 'best game' achievement
+		int achievementRef = AchievementUtilKt.getBestGameAchievementRef(gameEntity.getGameType());
+		AchievementEntity.updateAchievement(achievementRef, playerId, gameEntity.getGameId(), score);
 	}
 	
 	protected int getFinishingPositionFromPlayersRemaining()

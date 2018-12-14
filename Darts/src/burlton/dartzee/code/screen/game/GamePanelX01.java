@@ -100,9 +100,9 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 	}
 	
 	@Override
-	protected void updateAchievementsForFinish(long playerId, int finishingPosition)
+	protected void updateAchievementsForFinish(long playerId, int finishingPosition, int score)
 	{
-		super.updateAchievementsForFinish(playerId, finishingPosition);
+		super.updateAchievementsForFinish(playerId, finishingPosition, score);
 		
 		int sum = X01Util.sumScore(dartsThrown);
 		AchievementEntity.updateAchievement(AchievementConstants.ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, getGameId(), sum);

@@ -33,7 +33,6 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
         }
         sb.append(" GROUP BY PlayerId")
 
-
         try
         {
             DatabaseUtil.executeQuery(sb).use { rs ->

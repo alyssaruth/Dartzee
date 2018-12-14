@@ -104,4 +104,11 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     {
         return false
     }
+
+
+    open fun getDesiredSize() : Dimension?
+    {
+        return null
+    }
+
 }
