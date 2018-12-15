@@ -1,14 +1,15 @@
 package burlton.dartzee.code.db;
 
+import burlton.core.code.util.StringUtil;
+import burlton.dartzee.code.ai.AbstractDartsModel;
+import burlton.desktopcore.code.util.DateStatics;
+import burlton.desktopcore.code.util.DateUtil;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
-import burlton.dartzee.code.ai.AbstractDartsModel;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.StringUtil;
 
 /**
  * Represents the participant of a game. This is a link between a player and a game, with additional information
@@ -21,7 +22,7 @@ public class ParticipantEntity extends AbstractDartsEntity<ParticipantEntity>
 	private int ordinal = -1;
 	private int finishingPosition = -1;
 	private int finalScore = -1;
-	private Timestamp dtFinished = DateUtil.END_OF_TIME;
+	private Timestamp dtFinished = DateStatics.END_OF_TIME;
 	
 	//In memory things
 	private PlayerEntity player = null;

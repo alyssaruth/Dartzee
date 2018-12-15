@@ -6,7 +6,7 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.DartEntity
-import burlton.desktopcore.code.util.DateUtil
+import burlton.desktopcore.code.util.getSqlDateNow
 
 class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(parent)
 {
@@ -114,7 +114,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
 
         if (pointsRisked > 0)
         {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, currentPlayerId, pointsRisked)
+            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, currentPlayerId, gameEntity.rowId, pointsRisked)
         }
     }
 
@@ -149,7 +149,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
 
         updateScorersWithFinishingPositions()
 
-        gameEntity.dtFinish = DateUtil.getSqlDateNow()
+        gameEntity.dtFinish = getSqlDateNow()
         gameEntity.saveToDatabase()
 
         parentWindow.startNextGameIfNecessary()

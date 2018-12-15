@@ -8,7 +8,8 @@ class AchievementClockGamesWon : AbstractAchievementGamesWon()
 {
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_GAMES_WON
     override val gameType = GameEntity.GAME_TYPE_ROUND_THE_CLOCK
-    override val name = "Round the Clock Wins"
+    override val name = "Clock Winner"
+    override val desc = "Total number of wins in Round the Clock"
 
     override fun getIconURL(): URL?
     {

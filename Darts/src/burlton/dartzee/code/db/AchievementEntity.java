@@ -1,9 +1,13 @@
 package burlton.dartzee.code.db;
 
 import burlton.core.code.obj.HandyArrayList;
+import burlton.dartzee.code.achievements.AbstractAchievement;
 import burlton.dartzee.code.achievements.AchievementUtilKt;
+import burlton.dartzee.code.screen.ScreenCache;
+import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.desktopcore.code.util.DateUtil;
 
+import java.awt.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,6 +74,10 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	{
 		return new AchievementEntity().retrieveEntity("PlayerId = " + playerId + " AND AchievementRef = " + achievementRef);
 	}
+
+	/**
+	 *  Methods for gameplay logic to update achievements
+	 */
 	public static void insertIfNotExists(int achievementRef, long playerId, long gameId, int counter)
 	{
 		String whereSql = "PlayerId = " + playerId + " AND AchievementRef = " + achievementRef + " AND AchievementCounter = " + counter;
@@ -86,6 +94,8 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 		if (existingAchievement == null)
 		{
 			AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, counter);
+
+			triggerAchievementUnlock(-1, counter, achievementRef, playerId, gameId);
 		}
 		else
 		{
@@ -100,22 +110,46 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 				existingAchievement.setAchievementCounter(counter);
 				existingAchievement.setGameIdEarned(gameId);
 				existingAchievement.saveToDatabase();
+
+				triggerAchievementUnlock(existingCounter, counter, achievementRef, playerId, gameId);
 			}
 		}
 	}
-	public static void incrementAchievement(int achievementRef, long playerId, int amountBy)
+	public static void incrementAchievement(int achievementRef, long playerId, long gameId, int amountBy)
 	{
 		AchievementEntity existingAchievement = retrieveAchievement(achievementRef, playerId);
 
 		if (existingAchievement == null)
 		{
 			AchievementEntity.factoryAndSave(achievementRef, playerId, -1, amountBy);
+
+			triggerAchievementUnlock(-1, amountBy, achievementRef, playerId, gameId);
 		}
 		else
 		{
 			int existingCount = existingAchievement.getAchievementCounter();
 			existingAchievement.setAchievementCounter(existingCount + amountBy);
 			existingAchievement.saveToDatabase();
+
+			triggerAchievementUnlock(existingCount, existingCount + amountBy, achievementRef, playerId, gameId);
+		}
+	}
+	private static void triggerAchievementUnlock(int oldValue, int newValue, int achievementRef, long playerId, long gameId)
+	{
+		//Work out if the threshold has changed
+		AbstractAchievement achievementTemplate = AchievementUtilKt.getAchievementForRef(achievementRef);
+		achievementTemplate.setAttainedValue(oldValue);
+
+		Color oldColor = achievementTemplate.getColor(false);
+
+		achievementTemplate.setAttainedValue(newValue);
+		Color newColor = achievementTemplate.getColor(false);
+
+		if (oldColor != newColor)
+		{
+			//Hooray we've done a thing!
+			DartsGameScreen scrn = ScreenCache.getDartsGameScreen(gameId);
+			scrn.achievementUnlocked(gameId, playerId, achievementTemplate);
 		}
 	}
 	

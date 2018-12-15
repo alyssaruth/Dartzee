@@ -1,20 +1,20 @@
 package burlton.dartzee.code.db;
 
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.XmlUtil;
+import burlton.dartzee.code.utils.DatabaseUtil;
+import burlton.desktopcore.code.util.DateStatics;
+import burlton.desktopcore.code.util.DateUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.HashMap;
-
-import burlton.dartzee.code.utils.DatabaseUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import burlton.core.code.obj.HandyArrayList;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
-import burlton.core.code.util.XmlUtil;
 
 /**
  * Simple entity to join multiple 'games' together into a 'match'.
@@ -27,7 +27,7 @@ public class DartsMatchEntity extends AbstractDartsEntity<DartsMatchEntity>
 	
 	private int games = -1;
 	private int mode = -1;
-	private Timestamp dtFinish = DateUtil.END_OF_TIME;
+	private Timestamp dtFinish = DateStatics.END_OF_TIME;
 	private String matchParams = "";
 	
 	//Non-db things

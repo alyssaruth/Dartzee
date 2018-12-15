@@ -11,7 +11,8 @@ import kotlin.streams.toList
 
 class AchievementX01CheckoutCompleteness : AbstractAchievement()
 {
-    override val name = "Checkout Completeness"
+    override val name = "Completionist"
+    override val desc = "Total unique doubles checked out on in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
     override val redThreshold = 1
     override val orangeThreshold = 5
@@ -78,6 +79,11 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         attainedValue = achievementRows.size
 
         hitDoubles = achievementRows.stream().map{row -> row.achievementCounter}.toList().toMutableList()
+
+        if (!achievementRows.isEmpty())
+        {
+            dtLatestUpdate = achievementRows.sortedBy { it.dtLastUpdate }.last().dtLastUpdate
+        }
     }
 
     override fun getIconURL(): URL?

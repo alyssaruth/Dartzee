@@ -1,15 +1,5 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-
 import burlton.dartzee.code.bean.PlayerAvatar;
 import burlton.dartzee.code.bean.ScrollTableDartsGame;
 import burlton.dartzee.code.db.PlayerEntity;
@@ -17,20 +7,28 @@ import burlton.dartzee.code.utils.DartsColour;
 import burlton.dartzee.code.utils.DartsRegistry;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+
 public abstract class AbstractScorer extends JPanel
  									 implements DartsRegistry
 {
 	protected boolean human = false;
 	protected int finishPos = -1;
-	
+	private long playerId = -1;
+
 	protected DefaultModel model = new DefaultModel();
 	
 	public AbstractScorer()
 	{
 		setLayout(new BorderLayout(0, 0));
 		setPreferredSize(new Dimension(180, 600));
-		
-		add(tableScores, BorderLayout.CENTER);
+
+		layeredPane.setLayout(new BorderLayout(0, 0));
+
+		layeredPane.add(tableScores, BorderLayout.CENTER);
+		add(layeredPane, BorderLayout.CENTER);
 		add(panelNorth, BorderLayout.NORTH);
 		panelNorth.setLayout(new BorderLayout(0, 0));
 		panelNorth.add(panel_1, BorderLayout.NORTH);
@@ -57,12 +55,13 @@ public abstract class AbstractScorer extends JPanel
 	}
 	
 	protected final JLabel lblName = new JLabel();
+	protected final JLayeredPane layeredPane = new JLayeredPane();
 	protected final ScrollTableDartsGame tableScores = new ScrollTableDartsGame();
 	protected final JLabel lblResult = new JLabel("X Darts (D20)");
 	protected final JPanel panelNorth = new JPanel();
 	private final JPanel panel_1 = new JPanel();
 	private final PlayerAvatar lblAvatar = new PlayerAvatar();
-	private final JPanel panel_2 = new JPanel();
+	protected final JPanel panel_2 = new JPanel();
 	protected final JPanel panelSouth = new JPanel();
 	
 	/**
@@ -86,6 +85,7 @@ public abstract class AbstractScorer extends JPanel
 			String playerName = player.getName();
 			lblName.setText(playerName);
 			lblAvatar.init(player, false);
+			playerId = player.getRowId();
 			
 			human = player.getStrategy() == -1;
 		}
@@ -158,7 +158,7 @@ public abstract class AbstractScorer extends JPanel
 	{
 		return getNumberOfColumns() - 1;
 	}
-	
+
 	/*public void assignAsterisk()
 	{
 		String text = lblName.getText();
@@ -170,4 +170,10 @@ public abstract class AbstractScorer extends JPanel
 	{
 		return model;
 	}
+
+	public long getPlayerId()
+	{
+		return playerId;
+	}
+
 }

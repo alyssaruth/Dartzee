@@ -1,19 +1,20 @@
 package burlton.dartzee.code.db;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.ClassUtil;
 import burlton.dartzee.code.bean.GameParamFilterPanel;
 import burlton.dartzee.code.bean.GameParamFilterPanelGolf;
 import burlton.dartzee.code.bean.GameParamFilterPanelRoundTheClock;
 import burlton.dartzee.code.bean.GameParamFilterPanelX01;
 import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.util.ClassUtil;
+import burlton.desktopcore.code.util.DateStatics;
 import burlton.desktopcore.code.util.DateUtil;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  * Represents a single game of Darts, e.g. X01 or Dartzee.
@@ -30,7 +31,7 @@ public class GameEntity extends AbstractDartsEntity<GameEntity>
 	
 	private int gameType = -1;
 	private String gameParams = "";
-	private Timestamp dtFinish = DateUtil.END_OF_TIME;
+	private Timestamp dtFinish = DateStatics.END_OF_TIME;
 	private long dartsMatchId = -1;
 	private int matchOrdinal = -1;
 	

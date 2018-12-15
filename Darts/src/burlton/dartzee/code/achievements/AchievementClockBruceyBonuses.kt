@@ -5,13 +5,14 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.util.DateUtil
+import burlton.desktopcore.code.util.getSqlDateNow
 import java.net.URL
 import java.sql.SQLException
 
 class AchievementClockBruceyBonuses : AbstractAchievement()
 {
     override val name = "Didn't he do well!?"
+    override val desc = "Total number of 'Brucey Bonuses' executed in Round the Clock"
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 
     override val redThreshold = 1
@@ -57,7 +58,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
                     val playerId = rs.getLong("PlayerId")
                     val score = rs.getInt("BruceCount")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, DateUtil.getSqlDateNow())
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, getSqlDateNow())
                 }
             }
         }

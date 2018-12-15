@@ -3,7 +3,7 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.DateUtil
+import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.SQLException
 
 abstract class AbstractAchievementGamesWon : AbstractAchievement()
@@ -41,7 +41,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
                     val playerId = rs.getLong("PlayerId")
                     val score = rs.getInt("WinCount")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, DateUtil.getSqlDateNow())
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, getSqlDateNow())
                 }
             }
         }

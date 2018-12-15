@@ -16,23 +16,25 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     private val btnBack = JButton(" < Back")
     private val btnNext = JButton(getNextText() + " > ")
 
+    protected val panelNavigation = JPanel()
+    protected val panelNext = JPanel()
+    protected val panelBack = JPanel()
+
     init
     {
         preferredSize = Dimension(800, 610)
         layout = BorderLayout(0, 0)
 
-        val panel = JPanel()
-        add(panel, BorderLayout.SOUTH)
-        panel.layout = BorderLayout(0, 0)
 
-        val panelNext = JPanel()
-        panel.add(panelNext, BorderLayout.EAST)
+        add(panelNavigation, BorderLayout.SOUTH)
+        panelNavigation.layout = BorderLayout(0, 0)
+
+        panelNavigation.add(panelNext, BorderLayout.EAST)
         btnNext.font = Font("Tahoma", Font.PLAIN, 16)
 
         panelNext.add(btnNext)
 
-        val panelBack = JPanel()
-        panel.add(panelBack, BorderLayout.WEST)
+        panelNavigation.add(panelBack, BorderLayout.WEST)
         btnBack.font = Font("Tahoma", Font.PLAIN, 16)
         panelBack.add(btnBack)
 

@@ -1,20 +1,20 @@
 package burlton.dartzee.code.db;
 
+import burlton.core.code.util.AbstractClient;
+import burlton.dartzee.code.ai.AbstractDartsModel;
+import burlton.dartzee.code.screen.HumanCreationDialog;
+import burlton.dartzee.code.screen.ScreenCache;
+import burlton.dartzee.code.screen.ai.AIConfigurationDialog;
+import burlton.desktopcore.code.util.DateStatics;
+import burlton.desktopcore.code.util.DateUtil;
+import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
-
-import burlton.dartzee.code.screen.HumanCreationDialog;
-import burlton.dartzee.code.screen.ScreenCache;
-import burlton.dartzee.code.screen.ai.AIConfigurationDialog;
-import burlton.dartzee.code.ai.AbstractDartsModel;
-import burlton.core.code.util.AbstractClient;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.desktopcore.code.util.DialogUtil;
 
 public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 {
@@ -24,7 +24,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 	private String name = "";
 	private int strategy = -1;
 	private String strategyXml = "";
-	private Timestamp dtDeleted = DateUtil.END_OF_TIME;
+	private Timestamp dtDeleted = DateStatics.END_OF_TIME;
 	private long playerImageId = -1;
 	
 	//Player match stuff

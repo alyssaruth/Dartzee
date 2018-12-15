@@ -76,8 +76,6 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
             if (dartsThrown.size == 4)
             {
                 dartboard.doForsyth()
-
-                AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, 1)
             }
         }
         else if (dartsThrown.size != 4)
@@ -121,6 +119,12 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
             val dart = dartsThrown[i]
             val target = dart.startingScore
             DartEntity.factoryAndSave(dart, roundId, i + 1, target)
+        }
+
+        if (dartsThrown.size == 4
+          && dartsThrown.last().hitClockTarget(clockType))
+        {
+            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, gameEntity.rowId, 1)
         }
     }
 

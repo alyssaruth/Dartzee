@@ -8,7 +8,8 @@ class AchievementGolfGamesWon : AbstractAchievementGamesWon()
 {
     override val achievementRef = ACHIEVEMENT_REF_GOLF_GAMES_WON
     override val gameType = GameEntity.GAME_TYPE_GOLF
-    override val name = "Golf Wins"
+    override val name = "Golf Winner"
+    override val desc = "Total number of wins in Golf"
 
     override fun getIconURL(): URL?
     {

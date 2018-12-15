@@ -8,14 +8,12 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.WrapLayout
-import java.awt.BorderLayout
-import java.awt.Dimension
-import java.awt.FlowLayout
-import java.awt.Font
+import java.awt.*
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants
+import javax.swing.border.EmptyBorder
 
 class PlayerAchievementsScreen : EmbeddedScreen()
 {
@@ -24,6 +22,8 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     private val panelGeneral = JPanel()
     private val panelAchievementDesc = JPanel()
     private val lblAchievementName = JLabel()
+    private val lblAchievementDesc = JLabel()
+    private val lblAchievementExtraDetails = JLabel()
 
     init
     {
@@ -45,8 +45,16 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
         panelAchievementDesc.add(lblAchievementName, BorderLayout.NORTH)
         lblAchievementName.horizontalAlignment = JLabel.CENTER
-        lblAchievementName.font = Font("Trebuchet MS", Font.PLAIN, 20)
+        lblAchievementName.font = Font("Trebuchet MS", Font.BOLD, 24)
+        lblAchievementDesc.horizontalAlignment = JLabel.CENTER
+        lblAchievementDesc.font = Font("Trebuchet MS", Font.PLAIN, 20)
+        lblAchievementExtraDetails.horizontalAlignment = JLabel.CENTER
+        lblAchievementExtraDetails.font = Font("Trebuchet MS", Font.ITALIC, 18)
 
+        panelAchievementDesc.add(lblAchievementDesc, BorderLayout.CENTER)
+        panelAchievementDesc.add(lblAchievementExtraDetails, BorderLayout.SOUTH)
+
+        panelAchievementDesc.border = EmptyBorder(5, 5, 5, 5)
 
         sp.setViewportView(panelGeneral)
         sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
@@ -75,7 +83,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     private fun addAchievement(aa: AbstractAchievement, achievementRows: MutableList<AchievementEntity>)
     {
         val ref = aa.achievementRef
-        var achievementRowsFiltered = achievementRows.filter { a -> a.achievementRef == ref }.toMutableList()
+        val achievementRowsFiltered = achievementRows.filter { a -> a.achievementRef == ref }.toMutableList()
 
         aa.initialiseFromDb(achievementRowsFiltered)
 
@@ -87,12 +95,40 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     {
         if (hovered)
         {
+            val color = achievement.getColor(false)
+            setPanelColors(color, color.darker().darker())
+
             lblAchievementName.text = achievement.name
+
+            if (!achievement.isLocked())
+            {
+                lblAchievementDesc.text = achievement.desc
+                lblAchievementExtraDetails.text = achievement.getExtraDetails()
+            }
         }
         else
         {
+            setPanelColors(null, null)
             lblAchievementName.text = ""
+            lblAchievementDesc.text = ""
+            lblAchievementExtraDetails.text = ""
         }
+    }
+
+    private fun setPanelColors(bgColor: Color?, fgColor: Color?)
+    {
+        panelNavigation.background = bgColor
+        panelAchievementDesc.background = bgColor
+        panelNext.background = bgColor
+        panelBack.background = bgColor
+
+        lblAchievementName.background = bgColor
+        lblAchievementDesc.background = bgColor
+        lblAchievementExtraDetails.background = bgColor
+
+        lblAchievementName.foreground = fgColor
+        lblAchievementDesc.foreground = fgColor
+        lblAchievementExtraDetails.foreground = fgColor
     }
 
 

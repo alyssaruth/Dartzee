@@ -5,7 +5,8 @@ import java.net.URL
 
 class AchievementX01HighestBust : AbstractAchievement()
 {
-    override val name = "Highest Bust"
+    override val name = "Bognor"
+    override val desc = "Highest number busted from in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_HIGHEST_BUST
     override val redThreshold = 2
     override val orangeThreshold = 20
@@ -13,7 +14,7 @@ class AchievementX01HighestBust : AbstractAchievement()
     override val greenThreshold = 60
     override val blueThreshold = 80
     override val pinkThreshold = 100
-    override val maxValue = 180
+    override val maxValue = 181
 
     override fun populateForConversion(playerIds : String)
     {
