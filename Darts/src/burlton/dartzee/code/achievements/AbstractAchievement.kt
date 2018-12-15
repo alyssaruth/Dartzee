@@ -6,6 +6,8 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.desktopcore.code.util.DateStatics.Companion.START_OF_TIME
+import burlton.desktopcore.code.util.formatAsDate
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL
@@ -15,6 +17,7 @@ import kotlin.streams.toList
 abstract class AbstractAchievement
 {
     abstract val name : String
+    abstract val desc : String
     abstract val achievementRef : Int
     abstract val redThreshold : Int
     abstract val orangeThreshold : Int
@@ -26,6 +29,7 @@ abstract class AbstractAchievement
 
     var attainedValue = -1
     var gameIdEarned = -1L
+    var dtLatestUpdate = START_OF_TIME
 
     fun runConversion(players : MutableList<PlayerEntity>)
     {
@@ -69,6 +73,7 @@ abstract class AbstractAchievement
         val achievementRow = achievementRows.first()
         attainedValue = achievementRow.achievementCounter
         gameIdEarned = achievementRow.gameIdEarned
+        dtLatestUpdate = achievementRow.dtLastUpdate
     }
 
     fun getColor(highlighted : Boolean) : Color
@@ -210,5 +215,23 @@ abstract class AbstractAchievement
         return false
     }
 
+    fun getExtraDetails() : String
+    {
+        var ret = if (isUnbounded())
+        {
+            "Last updated on ${dtLatestUpdate.formatAsDate()}"
+        }
+        else
+        {
+            "Earned on ${dtLatestUpdate.formatAsDate()}"
+        }
+
+        if (gameIdEarned > -1)
+        {
+            ret += " in Game #$gameIdEarned"
+        }
+
+        return ret
+    }
 
 }

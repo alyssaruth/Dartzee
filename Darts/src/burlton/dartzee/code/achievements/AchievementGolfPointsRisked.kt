@@ -5,13 +5,14 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.util.DateUtil
+import burlton.desktopcore.code.util.getSqlDateNow
 import java.net.URL
 import java.sql.SQLException
 
 class AchievementGolfPointsRisked : AbstractAchievement()
 {
     override val name = "Gambler"
+    override val desc = "Total number of points risked (by continuing to throw) in Golf"
     override val achievementRef = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
     override val redThreshold = 5
     override val orangeThreshold = 10
@@ -56,7 +57,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
                     val playerId = rs.getLong("PlayerId")
                     val score = rs.getInt("PointsRisked")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, DateUtil.getSqlDateNow())
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, getSqlDateNow())
                 }
             }
         }

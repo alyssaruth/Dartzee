@@ -4,6 +4,7 @@ import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
+import burlton.dartzee.code.achievements.AbstractAchievement;
 import burlton.dartzee.code.achievements.AchievementUtilKt;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.bean.SliderAiSpeed;
@@ -590,7 +591,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		if (finishingPosition == 1)
 		{
 			int achievementRef = AchievementUtilKt.getWinAchievementRef(gameEntity.getGameType());
-			AchievementEntity.incrementAchievement(achievementRef, playerId, 1);
+			AchievementEntity.incrementAchievement(achievementRef, playerId, gameEntity.getGameId(), 1);
 		}
 
 		//Update the 'best game' achievement
@@ -852,6 +853,18 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	public void closeResources()
 	{
 		cpuTurn.cancel();
+	}
+
+	public void achievementUnlocked(long playerId, AbstractAchievement achievement)
+	{
+		for (int i=0; i<scorersOrdered.size(); i++)
+		{
+			S scorer = scorersOrdered.get(i);
+			if (scorer.getPlayerId() == playerId)
+			{
+				scorer.achievementUnlocked(achievement);
+			}
+		}
 	}
 	
 	class DelayedOpponentTurn extends TimerTask

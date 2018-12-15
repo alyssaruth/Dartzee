@@ -1,24 +1,20 @@
 package burlton.dartzee.code.db;
 
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.AbstractClient;
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.StringUtil;
+import burlton.dartzee.code.utils.DatabaseUtil;
+import burlton.dartzee.code.utils.SqlErrorConstants;
+import burlton.desktopcore.code.util.DateStatics;
+import burlton.desktopcore.code.util.DateUtil;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
-
-import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.dartzee.code.utils.SqlErrorConstants;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.util.AbstractClient;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
-import burlton.core.code.util.StringUtil;
 
 public abstract class AbstractEntity<E extends AbstractEntity<E>>
 					  implements SqlErrorConstants
@@ -30,7 +26,7 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	//db fields
 	private long rowId = -1;
 	private Timestamp dtCreation = DateUtil.getSqlDateNow();
-	private Timestamp dtLastUpdate = DateUtil.END_OF_TIME;
+	private Timestamp dtLastUpdate = DateStatics.END_OF_TIME;
 	
 	//other variables
 	private boolean retrievedFromDb = false;

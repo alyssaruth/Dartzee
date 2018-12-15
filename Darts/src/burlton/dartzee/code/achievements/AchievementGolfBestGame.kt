@@ -7,7 +7,8 @@ import java.net.URL
 class AchievementGolfBestGame : AbstractAchievementBestGame()
 {
     override val achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME
-    override val name = "Best 18 holes of Golf"
+    override val name = "Career Round"
+    override val desc = "Best game of golf (18 holes)"
     override val gameType = GameEntity.GAME_TYPE_GOLF
     override val gameParams = "18"
 

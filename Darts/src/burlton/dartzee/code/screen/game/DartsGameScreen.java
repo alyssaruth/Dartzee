@@ -1,28 +1,24 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
-
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.achievements.AbstractAchievement;
 import burlton.dartzee.code.db.DartsMatchEntity;
 import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.ScreenCache;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.SuperHashMap;
 import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
 
 /**
  * DartsGameScreen
@@ -108,8 +104,8 @@ public final class DartsGameScreen extends JFrame
 	}
 	private void setScreenSize(int playerCount)
 	{
-		int extraScorers = playerCount - 2;
-		setSize(880 + (extraScorers * 180), 675 + (isMatch()?25:0));
+		Dimension newSize = new Dimension(520 + (playerCount * DartsScorerKt.SCORER_WIDTH), 675 + (isMatch()?25:0));
+		setSize(newSize);
 		setResizable(false);
 	}
 	
@@ -204,6 +200,20 @@ public final class DartsGameScreen extends JFrame
 	{
 		return match != null;
 	}
+
+	public void achievementUnlocked(long gameId, long playerId, AbstractAchievement achievement)
+	{
+		if (isMatch())
+		{
+			DartsGamePanel<? extends DartsScorer> tab = hmGameIdToTab.get(gameId);
+			tab.achievementUnlocked(playerId, achievement);
+		}
+		else
+		{
+			getGamePanel().achievementUnlocked(playerId, achievement);
+		}
+	}
+
 	
 	/**
 	 * Static methods

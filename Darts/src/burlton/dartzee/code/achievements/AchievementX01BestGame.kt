@@ -7,7 +7,8 @@ import java.net.URL
 class AchievementX01BestGame : AbstractAchievementBestGame()
 {
     override val achievementRef = ACHIEVEMENT_REF_X01_BEST_GAME
-    override val name = "Best game of 501"
+    override val name = "Leg-up"
+    override val desc = "Best game of 501"
     override val gameType = GameEntity.GAME_TYPE_X01
     override val gameParams = "501"
 

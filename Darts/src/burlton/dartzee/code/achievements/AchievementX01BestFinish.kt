@@ -2,12 +2,13 @@ package burlton.dartzee.code.achievements
 
 import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.util.DateUtil
+import burlton.desktopcore.code.util.getEndOfTimeSqlString
 import java.net.URL
 
 class AchievementX01BestFinish : AbstractAchievement()
 {
-    override val name = "Best Finish"
+    override val name = "Finisher"
+    override val desc = "Highest checkout in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH
     override val redThreshold = 2
     override val orangeThreshold = 41
@@ -21,7 +22,7 @@ class AchievementX01BestFinish : AbstractAchievement()
     {
         val whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0  " +
                        "AND drtLast.Multiplier = 2 " +
-                       "AND pt.DtFinished < ${DateUtil.getEndOfTimeSqlString()}"
+                       "AND pt.DtFinished < ${getEndOfTimeSqlString()}"
 
         unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }

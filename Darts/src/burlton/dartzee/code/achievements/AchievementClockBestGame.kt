@@ -7,7 +7,8 @@ import java.net.URL
 class AchievementClockBestGame : AbstractAchievementBestGame()
 {
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_BEST_GAME
-    override val name = "Best game of Round the Clock (singles)"
+    override val name = "Stop the Clock!"
+    override val desc = "Best game of Round the Clock (Standard)"
     override val gameType = GameEntity.GAME_TYPE_ROUND_THE_CLOCK
     override val gameParams = GameEntity.CLOCK_TYPE_STANDARD
 

@@ -6,6 +6,7 @@ import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.reporting.ReportParameters;
 import burlton.dartzee.code.reporting.ReportResultWrapper;
 import burlton.dartzee.code.reporting.ReportingSqlUtil;
+import burlton.desktopcore.code.util.DateStatics;
 import burlton.desktopcore.code.util.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -186,7 +187,7 @@ public class TestReporting
 	}
 	private Timestamp getMinimum(ReportParameters rp, Function<ReportResultWrapper, Timestamp> dtFn)
 	{
-		Timestamp ret = DateUtil.END_OF_TIME;
+		Timestamp ret = DateStatics.END_OF_TIME;
 		for (ReportResultWrapper rr : rawResults)
 		{
 			if (rr.getGameType() != rp.getGameType())
@@ -205,7 +206,7 @@ public class TestReporting
 	}
 	private Timestamp getMaximum(ReportParameters rp, Function<ReportResultWrapper, Timestamp> dtFn)
 	{
-		Timestamp ret = DateUtil.START_OF_TIME;
+		Timestamp ret = DateStatics.START_OF_TIME;
 		for (ReportResultWrapper rr : rawResults)
 		{
 			if (rr.getGameType() != rp.getGameType())

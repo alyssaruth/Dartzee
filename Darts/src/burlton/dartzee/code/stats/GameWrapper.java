@@ -1,17 +1,17 @@
 package burlton.dartzee.code.stats;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.HashMapList;
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.game.DartsScorerGolf;
 import burlton.dartzee.code.screen.stats.player.HoleBreakdownWrapper;
 import burlton.dartzee.code.utils.X01Util;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapList;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
+import burlton.desktopcore.code.util.DateStatics;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Wraps up an entire game of darts from a single player's perspective
@@ -27,7 +27,7 @@ public class GameWrapper
 	private long gameId = -1;
 	private String gameParams = "";
 	private Timestamp dtStart = null;
-	private Timestamp dtFinish = DateUtil.END_OF_TIME;
+	private Timestamp dtFinish = DateStatics.END_OF_TIME;
 	private int finalScore = -1;
 	
 	private int totalRounds = 0;

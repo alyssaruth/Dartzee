@@ -6,7 +6,8 @@ import java.net.URL
 
 class AchievementX01BestThreeDarts : AbstractAchievement()
 {
-    override val name = "Best Three Dart Score"
+    override val name = "Three Darter"
+    override val desc = "Best three dart score in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
 
     override val redThreshold = 60

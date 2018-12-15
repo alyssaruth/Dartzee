@@ -21,6 +21,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     private var angle = 0.0
     private var highlighted = false
     private var gameIdEarned = -1L
+    var hoveringEnabled = true
 
     init
     {
@@ -92,6 +93,11 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
 
     private fun updateForMouseOver(e : MouseEvent?)
     {
+        if (!hoveringEnabled)
+        {
+            return
+        }
+
         val pt = e?.point
         highlighted = GeometryUtil.getDistance(pt, Point(SIZE/2, SIZE/2)) < SIZE/2
 
@@ -116,7 +122,8 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     override fun mouseReleased(e: MouseEvent?) {}
     override fun mouseClicked(e: MouseEvent?)
     {
-        if (gameIdEarned > -1)
+        if (gameIdEarned > -1
+          && hoveringEnabled)
         {
             DartsGameScreen.loadAndDisplayGame(gameIdEarned)
         }
@@ -131,9 +138,6 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     override fun mouseExited(e: MouseEvent?)
     {
         updateForMouseOver(e)
-        highlighted = false
-
-        repaint()
     }
 
     /**
