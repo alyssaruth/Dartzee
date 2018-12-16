@@ -5,6 +5,7 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import java.sql.SQLException
+import kotlin.streams.toList
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
@@ -36,15 +37,15 @@ fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
     return null
 }
 
-fun getBestGameAchievementRef(gameType : Int) : Int
+fun getBestGameAchievement(gameType : Int) : AbstractAchievementBestGame?
 {
-    val ref = getAllAchievements().find {it is AbstractAchievementBestGame && it.gameType == gameType}?.achievementRef
+    val ref = getAllAchievements().find {it is AbstractAchievementBestGame && it.gameType == gameType}
     if (ref == null)
     {
         Debug.stackTrace("No best game achievement found for GameType [$gameType]")
     }
 
-    return ref ?: -1
+    return ref as AbstractAchievementBestGame
 }
 
 fun getWinAchievementRef(gameType : Int) : Int
@@ -119,5 +120,26 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     finally
     {
         DatabaseUtil.dropTable(tempTable)
+    }
+}
+
+fun insertForCheckoutCompleteness(playerId: Long, gameId: Long, counter: Int)
+{
+    val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
+    val whereSql = "PlayerId = $playerId AND AchievementRef = $achievementRef"
+
+    val achievementRows = AchievementEntity().retrieveEntities(whereSql)
+    val hitDoubles = achievementRows.stream().mapToInt{it.achievementCounter}.toList()
+    if (!hitDoubles.contains(counter))
+    {
+        AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, counter)
+
+        val template = AchievementX01CheckoutCompleteness()
+        val arrayList = ArrayList(hitDoubles)
+        arrayList.add(counter)
+
+        template.hitDoubles = arrayList
+
+        AchievementEntity.triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, template, playerId, gameId)
     }
 }

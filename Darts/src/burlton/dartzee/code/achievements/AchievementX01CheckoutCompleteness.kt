@@ -22,7 +22,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
     override val pinkThreshold = 21
     override val maxValue = 21
 
-    private var hitDoubles = mutableListOf<Int>()
+    var hitDoubles = mutableListOf<Int>()
 
     override fun populateForConversion(playerIds: String)
     {

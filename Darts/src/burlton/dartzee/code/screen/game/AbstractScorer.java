@@ -55,7 +55,7 @@ public abstract class AbstractScorer extends JPanel
 	}
 	
 	protected final JLabel lblName = new JLabel();
-	protected final JLayeredPane layeredPane = new JLayeredPane();
+	protected final JPanel layeredPane = new JPanel();
 	protected final ScrollTableDartsGame tableScores = new ScrollTableDartsGame();
 	protected final JLabel lblResult = new JLabel("X Darts (D20)");
 	protected final JPanel panelNorth = new JPanel();

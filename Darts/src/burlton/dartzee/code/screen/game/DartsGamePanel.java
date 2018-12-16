@@ -5,6 +5,7 @@ import burlton.core.code.obj.HashMapList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.achievements.AbstractAchievement;
+import burlton.dartzee.code.achievements.AbstractAchievementBestGame;
 import burlton.dartzee.code.achievements.AchievementUtilKt;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.bean.SliderAiSpeed;
@@ -595,8 +596,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		}
 
 		//Update the 'best game' achievement
-		int achievementRef = AchievementUtilKt.getBestGameAchievementRef(gameEntity.getGameType());
-		AchievementEntity.updateAchievement(achievementRef, playerId, gameEntity.getGameId(), score);
+		AbstractAchievementBestGame aa = AchievementUtilKt.getBestGameAchievement(gameEntity.getGameType());
+		String gameParams = aa.getGameParams();
+		if (gameParams.equals(gameEntity.getGameParams()))
+		{
+			AchievementEntity.updateAchievement(aa.getAchievementRef(), playerId, gameEntity.getGameId(), score);
+		}
 	}
 	
 	protected int getFinishingPositionFromPlayersRemaining()
@@ -755,11 +760,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		ParticipantEntity pt = hmPlayerNumberToParticipant.get(currentPlayerNumber);
 		return pt.getPlayerId();
 	}
-	
-	public int getTotalPlayers()
-	{
-		return totalPlayers;
-	}
+
 	public String getGameTitle()
 	{
 		return gameTitle;
