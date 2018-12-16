@@ -5,7 +5,6 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.util.getSqlDateNow
 import java.net.URL
 import java.sql.SQLException
 
@@ -28,7 +27,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
 
         val pointsRiskedSql = "5 - (CASE WHEN drtFirst.segmentType = 3 THEN 4 WHEN drtFirst.SegmentType = 4 THEN 3 ELSE drtFirst.SegmentType END)"
 
-        sb.append(" SELECT pt.PlayerId, SUM($pointsRiskedSql) AS PointsRisked")
+        sb.append(" SELECT pt.PlayerId, SUM($pointsRiskedSql) AS PointsRisked, MAX(drtFirst.DtCreation) AS DtLastUpdate")
         sb.append(" FROM Dart drtFirst, Round rnd, Participant pt, Game g")
         sb.append(" WHERE drtFirst.RoundId = rnd.RowId")
         sb.append(" AND rnd.ParticipantId = pt.RowId")
@@ -56,8 +55,9 @@ class AchievementGolfPointsRisked : AbstractAchievement()
                 {
                     val playerId = rs.getLong("PlayerId")
                     val score = rs.getInt("PointsRisked")
+                    val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, getSqlDateNow())
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, dtLastUpdate)
                 }
             }
         }

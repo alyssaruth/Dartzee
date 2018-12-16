@@ -4,6 +4,7 @@ import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapList;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.achievements.AchievementConstants;
+import burlton.dartzee.code.achievements.AchievementUtilKt;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.db.AchievementEntity;
 import burlton.dartzee.code.db.DartEntity;
@@ -108,7 +109,7 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 		AchievementEntity.updateAchievement(AchievementConstants.ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, getGameId(), sum);
 		
 		int checkout = dartsThrown.lastElement().getScore();
-		AchievementEntity.insertIfNotExists(AchievementConstants.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, playerId, getGameId(), checkout);
+		AchievementUtilKt.insertForCheckoutCompleteness(playerId, getGameId(), checkout);
 	}
 		
 	@Override

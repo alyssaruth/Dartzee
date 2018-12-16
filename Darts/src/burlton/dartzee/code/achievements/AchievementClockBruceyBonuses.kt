@@ -5,7 +5,6 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.util.getSqlDateNow
 import java.net.URL
 import java.sql.SQLException
 
@@ -31,7 +30,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
     override fun populateForConversion(playerIds: String)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, COUNT(1) AS BruceCount")
+        sb.append(" SELECT pt.PlayerId, COUNT(1) AS BruceCount, MAX(drt.DtCreation) AS DtLastUpdate")
         sb.append(" FROM Dart drt, Round rnd, Participant pt, Game g")
         sb.append(" WHERE drt.RoundId = rnd.RowId")
         sb.append(" AND rnd.ParticipantId = pt.RowId")
@@ -57,8 +56,9 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
                 {
                     val playerId = rs.getLong("PlayerId")
                     val score = rs.getInt("BruceCount")
+                    val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, getSqlDateNow())
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, dtLastUpdate)
                 }
             }
         }

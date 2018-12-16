@@ -78,15 +78,6 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	/**
 	 *  Methods for gameplay logic to update achievements
 	 */
-	public static void insertIfNotExists(int achievementRef, long playerId, long gameId, int counter)
-	{
-		String whereSql = "PlayerId = " + playerId + " AND AchievementRef = " + achievementRef + " AND AchievementCounter = " + counter;
-		
-		if (new AchievementEntity().retrieveEntity(whereSql) == null)
-		{
-			factoryAndSave(achievementRef, playerId, gameId, counter);
-		}
-	}
 	public static void updateAchievement(int achievementRef, long playerId, long gameId, int counter)
 	{
 		AchievementEntity existingAchievement = retrieveAchievement(achievementRef, playerId);
@@ -136,8 +127,12 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 	}
 	private static void triggerAchievementUnlock(int oldValue, int newValue, int achievementRef, long playerId, long gameId)
 	{
-		//Work out if the threshold has changed
 		AbstractAchievement achievementTemplate = AchievementUtilKt.getAchievementForRef(achievementRef);
+		triggerAchievementUnlock(oldValue, newValue, achievementTemplate, playerId, gameId);
+	}
+	public static void triggerAchievementUnlock(int oldValue, int newValue, AbstractAchievement achievementTemplate, long playerId, long gameId)
+	{
+		//Work out if the threshold has changed
 		achievementTemplate.setAttainedValue(oldValue);
 
 		Color oldColor = achievementTemplate.getColor(false);

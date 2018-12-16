@@ -3,7 +3,6 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.SQLException
 
 abstract class AbstractAchievementGamesWon : AbstractAchievement()
@@ -22,7 +21,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
     override fun populateForConversion(playerIds: String)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT PlayerId, COUNT(1) AS WinCount")
+        sb.append(" SELECT PlayerId, COUNT(1) AS WinCount, MAX(pt.DtFinished) AS DtLastUpdate")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = $gameType")
@@ -40,8 +39,9 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
                 {
                     val playerId = rs.getLong("PlayerId")
                     val score = rs.getInt("WinCount")
+                    val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, getSqlDateNow())
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, dtLastUpdate)
                 }
             }
         }

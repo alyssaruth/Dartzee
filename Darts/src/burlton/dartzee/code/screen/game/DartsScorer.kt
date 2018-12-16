@@ -24,6 +24,8 @@ const val SCORER_WIDTH = 210
 
 abstract class DartsScorer : AbstractScorer() {
 
+    private val overlays = mutableListOf<AchievementOverlay>()
+
     init
     {
         preferredSize = Dimension(SCORER_WIDTH, 600)
@@ -78,11 +80,13 @@ abstract class DartsScorer : AbstractScorer() {
     {
         val overlay = AchievementOverlay(achievement)
 
-        //Remove the underlying table to stop weird bollucks from happening.
-        //We're adding the achievement thing over the top, but sometimes the table can still "bleed through", e.g.
-        //the reset button or when you hover over the column headers.
-        layeredPane.remove(tableScores)
-        layeredPane.add(overlay, 0)
+        overlays.add(overlay)
+
+        //Let's just only ever have one thing at a time on display. Actually layering them sometimes worked but
+        //sometimes caused weird bollucks when things happened close together
+        layeredPane.removeAll()
+        layeredPane.add(overlay, BorderLayout.CENTER)
+        layeredPane.revalidate()
         layeredPane.repaint()
     }
 
@@ -168,17 +172,23 @@ abstract class DartsScorer : AbstractScorer() {
 
         override fun actionPerformed(e: ActionEvent)
         {
-            layeredPane.remove(this)
+            layeredPane.removeAll()
+            overlays.remove(this)
 
-            //Only add the table back if the thing is now empty.
-            //This serves two purposes - it stops us trying to add the table twice (which breaks)
-            //AND it stops us adding the table back until ALL achievement notifications are dismissed.
-            if (layeredPane.components.isEmpty())
+            //If there are more overlays stacked 'beneath', show the next one of them now
+            if (!overlays.isEmpty())
+            {
+                layeredPane.add(overlays.last(), BorderLayout.CENTER)
+            }
+            else
             {
                 layeredPane.add(tableScores)
             }
 
+            layeredPane.revalidate()
             layeredPane.repaint()
+            revalidate()
+            repaint()
         }
 
 
