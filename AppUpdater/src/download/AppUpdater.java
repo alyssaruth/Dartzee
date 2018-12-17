@@ -7,12 +7,12 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import screen.DebugConsole;
-import screen.ProgressDialog;
-import util.Debug;
-import util.DialogUtil;
-import util.FileUtil;
-import util.MessageUtil;
+import burlton.desktopcore.code.screen.DebugConsole;
+import burlton.desktopcore.code.screen.ProgressDialog;
+import burlton.core.code.util.Debug;
+import burlton.desktopcore.code.util.DialogUtil;
+import burlton.core.code.util.FileUtil;
+import burlton.core.code.util.MessageUtil;
 
 public class AppUpdater
 {
