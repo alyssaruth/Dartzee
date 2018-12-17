@@ -3,10 +3,6 @@ package burlton.dartzee.code.utils;
 import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.util.Debug;
 import burlton.core.code.util.FileUtil;
-import burlton.dartzee.code.achievements.AchievementX01BestFinish;
-import burlton.dartzee.code.achievements.AchievementX01BestThreeDarts;
-import burlton.dartzee.code.achievements.AchievementX01CheckoutCompleteness;
-import burlton.dartzee.code.achievements.AchievementX01HighestBust;
 import burlton.dartzee.code.db.*;
 import burlton.dartzee.code.screen.PlayerMatchingDialog;
 import burlton.dartzee.code.screen.ScreenCache;
@@ -102,18 +98,7 @@ public class DartsDatabaseUtil
 		//Create Achievement table
 		new AchievementEntity().createTable();
 		
-		//Retroactively unlock achievements
-		unlockV4Achievements();
-		
 		Debug.appendBanner("Finished database upgrade");
-	}
-	
-	public static void unlockV4Achievements()
-	{
-		new AchievementX01BestFinish().runConversion(new ArrayList<>());
-		new AchievementX01BestThreeDarts().runConversion(new ArrayList<>());
-		new AchievementX01CheckoutCompleteness().runConversion(new ArrayList<>());
-		new AchievementX01HighestBust().runConversion(new ArrayList<>());
 	}
 	
 	private static void upgradeDatabaseToVersion3()

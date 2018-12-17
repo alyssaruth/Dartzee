@@ -5,7 +5,6 @@ import burlton.core.code.util.Debug;
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.utils.DartsDatabaseUtil;
-import burlton.dartzee.code.utils.DatabaseUtil;
 import burlton.dartzee.code.utils.DevUtilities;
 import burlton.dartzee.code.utils.ResourceCache;
 import burlton.desktopcore.code.bean.AbstractDevScreen;
@@ -198,12 +197,6 @@ public class DartsApp extends AbstractDevScreen
 		else if (cmd.equals(CMD_SANITY))
 		{
 			DatabaseSanityCheck.runSanityCheck();
-		}
-		else if (cmd.equals("convert"))
-		{
-			DatabaseUtil.executeUpdate("DELETE FROM Achievement");
-			
-			DartsDatabaseUtil.unlockV4Achievements();
 		}
 		
 		return textToShow;
