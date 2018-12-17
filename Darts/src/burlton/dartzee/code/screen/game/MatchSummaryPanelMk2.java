@@ -1,22 +1,18 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.Beans;
-import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.SuperHashMap;
 import burlton.dartzee.code.db.DartsMatchEntity;
 import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.dartzee.code.db.PlayerEntity;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.SuperHashMap;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.Beans;
+import java.util.ArrayList;
 
 /**
  * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
@@ -35,7 +31,7 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 		refreshPanel.add(btnRefresh);
 		btnRefresh.addActionListener(this);
 		btnRefresh.setPreferredSize(new Dimension(80, 80));
-		btnRefresh.setIcon(new ImageIcon(DartsGamePanel.class.getResource("/buttons/Refresh.png")));
+		btnRefresh.setIcon(new ImageIcon(DartsGamePanel.class.getResource("/buttons/refresh.png")));
 		btnRefresh.setToolTipText("Refresh stats");
 	}
 	
