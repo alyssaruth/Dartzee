@@ -1,14 +1,14 @@
 package burlton.dartzee.code.utils;
 
-import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapList;
 import burlton.core.code.util.Debug;
-import burlton.core.code.util.FileUtil;
 import burlton.desktopcore.code.util.DialogUtil;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -55,16 +55,15 @@ public class ResourceCache
 		{
 			DialogUtil.showLoadingDialog("Loading resources...");
 			
-			HandyArrayList<String> wavFiles = FileUtil.listResources("/wav");
+			ArrayList<String> wavFiles = getWavFiles();
 			
 			Debug.append("Pre-loading " + wavFiles.size() + " WAVs");
 			
 			for (String wavFile : wavFiles)
 			{
-				URL url = ResourceCache.class.getResource("/wav/" + wavFile);
 				for (int i=0; i<5; i++)
 				{
-					AudioInputStream ais =  AudioSystem.getAudioInputStream(url);
+					AudioInputStream ais =  getAudioInputStream(wavFile);
 					ais.mark(Integer.MAX_VALUE);
 					
 					hmWavToInputStreams.putInList(wavFile, ais);
@@ -84,6 +83,29 @@ public class ResourceCache
 			DialogUtil.dismissLoadingDialog();
 		}
 	}
+	private static ArrayList<String> getWavFiles()
+	{
+		ArrayList<String> ret = new ArrayList<>();
+		ret.add("60.wav");
+		ret.add("100.wav");
+		ret.add("140.wav");
+		ret.add("180.wav");
+		ret.add("badmiss1.wav");
+		ret.add("badmiss2.wav");
+		ret.add("badmiss3.wav");
+		ret.add("badmiss4.wav");
+		ret.add("bull.wav");
+		ret.add("damage.wav");
+		ret.add("forsyth1.wav");
+		ret.add("forsyth2.wav");
+		ret.add("forsyth3.wav");
+		ret.add("forsyth4.wav");
+		ret.add("four.wav");
+		ret.add("fourTrimmed.wav");
+
+		return ret;
+	}
+
 	
 	public static boolean isInitialised()
 	{
@@ -105,9 +127,8 @@ public class ResourceCache
 			if (streams.isEmpty())
 			{
 				Debug.append("No streams left for WAV [" + wavName + "], will spawn another");
-				
-				URL url = ResourceCache.class.getResource("/wav/" + wavFile);
-				AudioInputStream ais =  AudioSystem.getAudioInputStream(url);
+
+				AudioInputStream ais = getAudioInputStream(wavFile);
 				ais.mark(Integer.MAX_VALUE);
 				
 				return ais;
@@ -115,6 +136,14 @@ public class ResourceCache
 			
 			return streams.remove(0);
 		}
+	}
+
+	private static AudioInputStream getAudioInputStream(String wavFile) throws Exception
+	{
+		InputStream is = ResourceCache.class.getResourceAsStream("/wav/" + wavFile);
+		BufferedInputStream bis = new BufferedInputStream(is);
+
+		return AudioSystem.getAudioInputStream(bis);
 	}
 	
 	public static void returnInputStream(String wavName, AudioInputStream stream)

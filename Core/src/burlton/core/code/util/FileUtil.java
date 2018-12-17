@@ -1,30 +1,18 @@
 package burlton.core.code.util;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.Iterator;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.ImageInputStream;
-import javax.swing.JFileChooser;
-
-import burlton.core.code.obj.HandyArrayList;
 
 public class FileUtil
 {
@@ -406,29 +394,5 @@ public class FileUtil
 		}
 		
 		return fc.getSelectedFile();
-	}
-	
-	public static HandyArrayList<String> listResources(String resourcePath)
-	{
-		HandyArrayList<String> resources = new HandyArrayList<>();
-		
-		try
-		(
-			InputStream in = FileUtil.class.getResourceAsStream(resourcePath);
-			BufferedReader br = new BufferedReader( new InputStreamReader( in ) ) 
-		) 
-		{
-			String resource;
-			while((resource = br.readLine()) != null ) 
-			{
-				resources.add(resource);
-			}
-		}
-		catch (IOException ioe)
-		{
-			Debug.stackTrace(ioe);
-		}
-		
-		return resources;
 	}
 }
