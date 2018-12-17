@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Simple interface housing statics for various image/sound resources
+ * Simple class housing statics for various image/sound resources
  * So that these can be pre-loaded on start-up, rather than causing lag the first time they're required.
  */
 public class ResourceCache

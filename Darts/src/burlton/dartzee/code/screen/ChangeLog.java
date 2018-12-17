@@ -1,11 +1,7 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import java.awt.*;
 
 public class ChangeLog extends JFrame 
 {
@@ -31,12 +27,17 @@ public class ChangeLog extends JFrame
 		textArea.setText("");
 		
 		textArea.append("\n");
-		textArea.append("\n--------- v2.5.0 ---------");
+		textArea.append("\n--------- v3.0.0 ---------");
 		textArea.append("\n");
-		textArea.append("\n+ Added running stats that are viewable during any game/match");
-		textArea.append("\n+ Added pre-loading of sounds and images to improve performance");
+		textArea.append("\n+ Individual player achievements (12 achievements to begin with)");
+		textArea.append("\n+ Utility for running SQL conversions to unlock achievements from past games");
+		textArea.append("\n+ In-game notifications when a player unlocks or upgrades an achievement");
+		textArea.append("\n+ Running stats, viewable any time during a game via a new button");
+		textArea.append("\n+ Similar running stats showing data for entire matches");
+		textArea.append("\n+ Pre-loading of sounds and images to improve performance");
 		textArea.append("\n+ Auto-fix feature for sanity checks");
 		textArea.append("\n+ Leaderboards now show worst games as well as best");
+		textArea.append("\n+ More stats are shown when calculating an AI's performance from the setup screen");
 		textArea.append("\n= Improved game layout by hiding AI slider and providing enlarged buttons with icons");
 		textArea.append("\n= Fixed slow database check SQL");
 		textArea.append("\n= Fixed default on DartsMatch table");
