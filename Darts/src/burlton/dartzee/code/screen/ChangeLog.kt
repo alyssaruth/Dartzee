@@ -44,7 +44,7 @@ class ChangeLog : JFrame() {
         textArea.append("\n= Improved game layout by hiding AI slider and providing enlarged buttons with icons")
         textArea.append("\n= Fixed slow database check SQL")
         textArea.append("\n= Fixed default on DartsMatch table")
-        textArea.append("\n= Conversion of codebase to Kotlin (8.7% - including this change log!)")
+        textArea.append("\n= Conversion of codebase to Kotlin (10% - including this change log!)")
         textArea.append("\n")
         textArea.append("\n--------- v2.4.1 ---------")
         textArea.append("\n")
