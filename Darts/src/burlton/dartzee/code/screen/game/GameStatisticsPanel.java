@@ -1,21 +1,16 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.OptionalInt;
-import java.util.function.Function;
-import java.util.stream.IntStream;
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.HashMapList;
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.MathsUtil;
+import burlton.dartzee.code.db.ParticipantEntity;
+import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.utils.DartsColour;
+import burlton.dartzee.code.utils.DatabaseUtil;
+import burlton.desktopcore.code.bean.ScrollTable;
 
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -25,16 +20,13 @@ import javax.swing.table.TableModel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.db.ParticipantEntity;
-import burlton.dartzee.code.object.Dart;
-import burlton.dartzee.code.utils.DartsColour;
-import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapList;
-import burlton.core.code.util.Debug;
-import burlton.core.code.util.MathsUtil;
+import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.OptionalInt;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 /**
  * Shows statistics for each player in a particular game.
@@ -74,6 +66,9 @@ public abstract class GameStatisticsPanel extends JPanel
 		for (ParticipantEntity participant : participants)
 		{
 			String playerName = participant.getPlayerName();
+
+			//Ensure all the keys are in this map ready for our empty check lower down
+			hmPlayerToDarts.put(playerName, new HandyArrayList<>());
 			
 			StringBuilder sbSql = new StringBuilder();
 			sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, rnd.RoundNumber");
