@@ -68,7 +68,10 @@ public abstract class GameStatisticsPanel extends JPanel
 			String playerName = participant.getPlayerName();
 
 			//Ensure all the keys are in this map ready for our empty check lower down
-			hmPlayerToDarts.put(playerName, new HandyArrayList<>());
+			if (!hmPlayerToDarts.containsKey(playerName))
+			{
+				hmPlayerToDarts.put(playerName, new HandyArrayList<>());
+			}
 			
 			StringBuilder sbSql = new StringBuilder();
 			sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, rnd.RoundNumber");

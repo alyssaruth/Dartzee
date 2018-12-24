@@ -30,6 +30,15 @@ class ChangeLog : JFrame() {
         textArea.text = ""
 
         textArea.append("\n")
+        textArea.append("\n--------- v3.0.1 ---------")
+        textArea.append("\n")
+        textArea.append("\n= Fixed a bug where match stats only populated from the latest game")
+        textArea.append("\n= Fixed leaderboard slowness by removing the 'Misc' tab")
+        textArea.append("\n= Fixed a bug caused by doing Swing stuff in the CpuTurn threads")
+        textArea.append("\n= Fixed a rare bug caused by the dodgy animations")
+        textArea.append("\n= Made it so that new darts always appear on top")
+
+        textArea.append("\n")
         textArea.append("\n--------- v3.0.0 ---------")
         textArea.append("\n")
         textArea.append("\n+ Individual player achievements (12 achievements to begin with)")
