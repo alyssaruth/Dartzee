@@ -484,8 +484,7 @@ public class Dartboard extends JLayeredPane
 		dodgyLabel.setLocation(x, y);
 		
 		remove(dodgyLabel);
-		add(dodgyLabel, -1);
-		moveToFront(dodgyLabel);
+		add(dodgyLabel, 0);
 		
 		repaint();
 		revalidate();
@@ -607,7 +606,7 @@ public class Dartboard extends JLayeredPane
 				JLabel lbl = new JLabel(DARTIMG);
 				lbl.setSize(76, 80);
 				lbl.setVisible(false);
-				add(lbl, i);
+				add(lbl, 5-i);
 				
 				dartLabels.add(lbl);
 			}

@@ -685,7 +685,8 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		{
 			//No need to wait for confirmation, the turn is over
 			try {Thread.sleep(slider.getValue());}catch(Throwable t){}
-			confirmRound();
+
+			SwingUtilities.invokeLater(() -> confirmRound());
 		}
 	}
 	private void confirmRound()
