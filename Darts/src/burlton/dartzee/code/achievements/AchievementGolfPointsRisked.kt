@@ -15,11 +15,11 @@ class AchievementGolfPointsRisked : AbstractAchievement()
     override val achievementRef = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
     override val redThreshold = 5
     override val orangeThreshold = 10
-    override val yellowThreshold = 15
-    override val greenThreshold = 25
-    override val blueThreshold = 50
-    override val pinkThreshold = 100
-    override val maxValue = 100
+    override val yellowThreshold = 25
+    override val greenThreshold = 50
+    override val blueThreshold = 100
+    override val pinkThreshold = 200
+    override val maxValue = 200
 
     override fun populateForConversion(playerIds : String)
     {

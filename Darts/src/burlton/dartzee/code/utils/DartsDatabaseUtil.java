@@ -1,10 +1,8 @@
 package burlton.dartzee.code.utils;
 
-import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.util.Debug;
 import burlton.core.code.util.FileUtil;
 import burlton.dartzee.code.db.*;
-import burlton.dartzee.code.screen.PlayerMatchingDialog;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.desktopcore.code.util.DialogUtil;
@@ -27,7 +25,10 @@ public class DartsDatabaseUtil
 		DialogUtil.showLoadingDialog("Checking database status...");
 		
 		DatabaseUtil.doDuplicateInstanceCheck();
-		
+
+		//Pool the db connections now. Initialise with 5 to begin with?
+		DatabaseUtil.initialiseConnectionPool(5);
+
 		//Ensure this exists
 		new VersionEntity().createTable();
 		VersionEntity version = VersionEntity.retrieveCurrentDatabaseVersion();
@@ -298,7 +299,7 @@ public class DartsDatabaseUtil
 	/**
 	 * Merge
 	 */
-	public static void startMerge()
+	/*public static void startMerge()
 	{
 		if (!checkAllGamesAreClosed())
 		{
@@ -327,5 +328,5 @@ public class DartsDatabaseUtil
 		question += "\n\nIt is recommended that you back up your current database before you continue. Do you want to proceed?";
 		int option = DialogUtil.showQuestion(question, false);
 		return option == JOptionPane.YES_OPTION;
-	}
+	}*/
 }

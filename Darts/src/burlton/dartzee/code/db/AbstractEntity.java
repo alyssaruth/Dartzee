@@ -114,10 +114,10 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	/**
 	 * Alternate DB methods
 	 */
-	public HandyArrayList<E> retrieveEntitiesAlternateDb(String dbPath)
+	/*public HandyArrayList<E> retrieveEntitiesAlternateDb(String dbPath)
 	{
 		return retrieveEntities("", "", dbPath);
-	}
+	}*/
  	
 	public E retrieveEntity(String whereSql)
 	{
@@ -145,25 +145,21 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	}
 	public HandyArrayList<E> retrieveEntities(String whereSql, String alias)
 	{
-		return retrieveEntities(whereSql, alias, null);
-	}
-	public HandyArrayList<E> retrieveEntities(String whereSql, String alias, String dbPath)
-	{
 		String queryWithFrom = "FROM " + getTableName() + " " + alias;
 		if (!whereSql.isEmpty())
 		{
 			queryWithFrom = queryWithFrom + " WHERE " + whereSql;
 		}
 		
-		return retrieveEntitiesWithFrom(queryWithFrom, alias, dbPath);
+		return retrieveEntitiesWithFrom(queryWithFrom, alias);
 	}
-	public HandyArrayList<E> retrieveEntitiesWithFrom(String whereSqlWithFrom, String alias, String dbPath)
+	public HandyArrayList<E> retrieveEntitiesWithFrom(String whereSqlWithFrom, String alias)
 	{
 		String query = "SELECT " + getColumnsForSelectStatement(alias) + " " + whereSqlWithFrom;
 		
 		HandyArrayList<E> ret = new HandyArrayList<>();
 		
-		try (ResultSet rs = DatabaseUtil.executeQuery(query, dbPath))
+		try (ResultSet rs = DatabaseUtil.executeQuery(query))
 		{
 			while (rs.next())
 			{
@@ -232,9 +228,9 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	private void updateDatabaseRow()
 	{
 		String updateQuery = buildUpdateQuery();
-		
-		try (Connection conn = DatabaseUtil.createDatabaseConnection();
-		  PreparedStatement psUpdate = conn.prepareStatement(updateQuery))
+
+		Connection conn = DatabaseUtil.borrowConnection();
+		try (PreparedStatement psUpdate = conn.prepareStatement(updateQuery))
 		{
 			updateQuery = writeTimestamp(psUpdate, 1, getDtCreation(), updateQuery);
 			updateQuery = writeTimestamp(psUpdate, 2, getDtLastUpdate(), updateQuery);
@@ -254,6 +250,10 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 		catch (SQLException sqle)
 		{
 			Debug.logSqlException(updateQuery, sqle);
+		}
+		finally
+		{
+			DatabaseUtil.returnConnection(conn);
 		}
 	}
 	
@@ -275,9 +275,9 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	private void insertIntoDatabase()
 	{
 		String insertQuery = buildInsertQuery();
-		
-		try (Connection conn = DatabaseUtil.createDatabaseConnection();
-		  PreparedStatement psInsert = conn.prepareStatement(insertQuery);)
+
+		Connection conn = DatabaseUtil.borrowConnection();
+		try (PreparedStatement psInsert = conn.prepareStatement(insertQuery))
 		{
 			insertQuery = writeLong(psInsert, 1, getRowId(), insertQuery);
 			insertQuery = writeTimestamp(psInsert, 2, getDtCreation(), insertQuery);
@@ -294,6 +294,10 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 		catch (SQLException sqle)
 		{
 			Debug.logSqlException(insertQuery, sqle);
+		}
+		finally
+		{
+			DatabaseUtil.returnConnection(conn);
 		}
 	}
 	

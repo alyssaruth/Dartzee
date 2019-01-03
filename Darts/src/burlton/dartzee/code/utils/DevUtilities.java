@@ -1,18 +1,17 @@
 package burlton.dartzee.code.utils;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
-import burlton.dartzee.code.screen.ScreenCache;
-import burlton.dartzee.code.screen.game.DartsGameScreen;
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.db.DartEntity;
 import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.dartzee.code.db.RoundEntity;
-import burlton.core.code.util.Debug;
+import burlton.dartzee.code.screen.ScreenCache;
+import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class DevUtilities
 {
@@ -81,8 +80,8 @@ public class DevUtilities
 		}
 		
 		ArrayList<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities("GameId = " + gameId);
-		ArrayList<RoundEntity> rounds = new RoundEntity().retrieveEntitiesWithFrom(getRoundFromSql(gameId), "rnd", null);
-		ArrayList<DartEntity> darts = new DartEntity().retrieveEntitiesWithFrom(getDartFromSql(gameId), "d", null);
+		ArrayList<RoundEntity> rounds = new RoundEntity().retrieveEntitiesWithFrom(getRoundFromSql(gameId), "rnd");
+		ArrayList<DartEntity> darts = new DartEntity().retrieveEntitiesWithFrom(getDartFromSql(gameId), "d");
 		
 		String question = "Purge all data for Game #" + gameId + "? The following rows will be deleted:"
 						+ "\n\n Participant: " + participants.size() + " rows"
