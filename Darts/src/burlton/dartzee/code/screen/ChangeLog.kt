@@ -30,6 +30,12 @@ class ChangeLog : JFrame() {
         textArea.text = ""
 
         textArea.append("\n")
+        textArea.append("\n--------- v3.1.0 ---------")
+        textArea.append("\n")
+        textArea.append("\n= Adjusted thresholds for Gambler achievement")
+        textArea.append("\n= Performance improvement: Reuse of database connections")
+
+        textArea.append("\n")
         textArea.append("\n--------- v3.0.1 ---------")
         textArea.append("\n")
         textArea.append("\n= Fixed a bug where match stats only populated from the latest game")
