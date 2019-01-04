@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAllAchievements
+import burlton.dartzee.code.achievements.runConversionsWithProgressBar
 import burlton.dartzee.code.bean.PlayerSelector
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
@@ -62,15 +63,16 @@ class AchievementConversionDialog : SimpleDialog()
         if (rdbtnAll.isSelected)
         {
             val achievements = getAllAchievements()
-            achievements.forEach {it.runConversion(playerSelector.selectedPlayers)}
+            runConversionsWithProgressBar(achievements, playerSelector.selectedPlayers)
         }
         else
         {
             val ix = cbConversionType.selectedIndex
-            cbConversionType.getItemAt(ix).runConversion(playerSelector.selectedPlayers)
+            val achievement = cbConversionType.getItemAt(ix)
+
+            runConversionsWithProgressBar(mutableListOf(achievement), playerSelector.selectedPlayers)
         }
 
-        DialogUtil.showInfo("Achievement conversion complete.")
         dispose()
     }
 
