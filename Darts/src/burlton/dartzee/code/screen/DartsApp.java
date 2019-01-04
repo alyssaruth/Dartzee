@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen;
 
 import burlton.core.code.util.AbstractClient;
 import burlton.core.code.util.Debug;
+import burlton.dartzee.code.achievements.AchievementUtilKt;
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.utils.DartsDatabaseUtil;
@@ -56,6 +57,8 @@ public class DartsApp extends AbstractDevScreen
 		//Pop up the change log if we've just updated
 		if (AbstractClient.justUpdated)
 		{
+			AchievementUtilKt.convertEmptyAchievements();
+
 			ChangeLog dialog = new ChangeLog();
 			dialog.setVisible(true);
 		}
@@ -88,7 +91,7 @@ public class DartsApp extends AbstractDevScreen
 		actionMap.put("showConsole", new AbstractAction()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e) 
+			public void actionPerformed(ActionEvent e)
 			{
 				DebugConsoleAdv loggingDialog = ScreenCache.getDebugConsole();
 				loggingDialog.setVisible(true);

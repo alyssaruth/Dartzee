@@ -3,9 +3,50 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.desktopcore.code.screen.ProgressDialog
 import java.sql.SQLException
 import kotlin.streams.toList
+
+fun convertEmptyAchievements()
+{
+    val emptyAchievements = getAllAchievements().filter{a -> !rowsExistForAchievement(a)}.toMutableList()
+
+    if (!emptyAchievements.isEmpty())
+    {
+        runConversionsWithProgressBar(emptyAchievements, mutableListOf())
+    }
+}
+
+fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: MutableList<PlayerEntity>)
+{
+    val r = Runnable { runConversionsInOtherThread(achievements, players)}
+    val t = Thread(r, "Conversion thread")
+    t.start()
+}
+
+private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: MutableList<PlayerEntity>)
+{
+    val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
+    dlg.setVisibleLater()
+
+    achievements.forEach{
+        it.runConversion(players)
+        dlg.incrementProgressLater()
+    }
+
+    dlg.disposeLater()
+}
+
+fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
+{
+    val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementRef = ${achievement.achievementRef}"
+    val count = DatabaseUtil.executeQueryAggregate(sql)
+
+    return count > 0
+}
+
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
