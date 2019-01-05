@@ -9,6 +9,28 @@ import burlton.desktopcore.code.screen.ProgressDialog
 import java.sql.SQLException
 import kotlin.streams.toList
 
+fun getAchievementMaximum() : Int
+{
+    return getAllAchievements().size * 6
+}
+
+
+fun getPlayerAchievementScore(allAchievementRows: MutableList<AchievementEntity>, player: PlayerEntity): Int
+{
+    val myAchievementRows = allAchievementRows.filter{it.playerId == player.rowId}
+
+    var score = 0
+    for (achievement in getAllAchievements())
+    {
+        val myRelevantRows = myAchievementRows.filter{it.achievementRef == achievement.achievementRef}.toMutableList()
+        achievement.initialiseFromDb(myRelevantRows)
+
+        score += achievement.getScore()
+    }
+
+    return score
+}
+
 fun convertEmptyAchievements()
 {
     val emptyAchievements = getAllAchievements().filter{a -> !rowsExistForAchievement(a)}.toMutableList()
