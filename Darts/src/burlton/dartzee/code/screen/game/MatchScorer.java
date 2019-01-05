@@ -28,7 +28,7 @@ public final class MatchScorer extends AbstractScorer
 	@Override
 	public void initImpl(String gameParams)
 	{
-		tableScores.setGameColumnIndex(0);
+		tableScores.setLinkColumnIndex(0);
 		
 		for (int i=COLUMN_NO_GAME_ID + 1; i<model.getColumnCount(); i++)
 		{

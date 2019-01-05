@@ -127,6 +127,7 @@ public class PlayerManagementPanel extends JPanel
 		{
 			PlayerAchievementsScreen scrn = ScreenCache.getScreen(PlayerAchievementsScreen.class);
 			scrn.setPlayer(player);
+			scrn.setPreviousScrn(ScreenCache.getPlayerManagementScreen());
 			
 			ScreenCache.switchScreen(scrn);
 		}

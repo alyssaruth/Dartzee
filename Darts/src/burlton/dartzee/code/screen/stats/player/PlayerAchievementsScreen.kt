@@ -1,7 +1,9 @@
 package burlton.dartzee.code.screen.stats.player
 
 import burlton.dartzee.code.achievements.AbstractAchievement
+import burlton.dartzee.code.achievements.getAchievementMaximum
 import burlton.dartzee.code.achievements.getAllAchievements
+import burlton.dartzee.code.achievements.getPlayerAchievementScore
 import burlton.dartzee.code.bean.AchievementMedal
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
@@ -17,7 +19,9 @@ import javax.swing.border.EmptyBorder
 
 class PlayerAchievementsScreen : EmbeddedScreen()
 {
+    var previousScrn: EmbeddedScreen = ScreenCache.getPlayerManagementScreen()
     private var player: PlayerEntity? = null
+    private var progressDesc = ""
 
     private val panelGeneral = JPanel()
     private val panelAchievementDesc = JPanel()
@@ -63,7 +67,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     override fun getScreenName() : String
     {
-        return "Achievements - " + player?.name
+        return "Achievements - ${player?.name} - $progressDesc"
     }
 
 
@@ -78,6 +82,9 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         {
             addAchievement(achievement, achievementRows)
         }
+
+        val score = getPlayerAchievementScore(achievementRows, player!!)
+        progressDesc = "$score/${getAchievementMaximum()}"
     }
 
     private fun addAchievement(aa: AbstractAchievement, achievementRows: MutableList<AchievementEntity>)
@@ -134,7 +141,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     override fun getBackTarget(): EmbeddedScreen
     {
-        return ScreenCache.getPlayerManagementScreen()
+        return previousScrn
     }
 
     fun setPlayer(player: PlayerEntity)

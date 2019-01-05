@@ -1,20 +1,15 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.util.ArrayList;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.utils.PreferenceUtil;
 
-import javax.swing.JComponent;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-
-import burlton.dartzee.code.object.Dart;
-import burlton.dartzee.code.utils.PreferenceUtil;
-import burlton.core.code.util.Debug;
+import java.awt.*;
+import java.util.ArrayList;
 
 public class DartsScorerGolf extends DartsScorer
 {
@@ -54,7 +49,7 @@ public class DartsScorerGolf extends DartsScorer
 		
 		if (showGameId)
 		{
-			tableScores.setGameColumnIndex(tableScores.getColumnCount() - 1);
+			tableScores.setLinkColumnIndex(tableScores.getColumnCount() - 1);
 		}
 	}
 

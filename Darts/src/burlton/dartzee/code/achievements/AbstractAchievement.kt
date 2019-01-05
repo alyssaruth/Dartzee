@@ -76,6 +76,21 @@ abstract class AbstractAchievement
         dtLatestUpdate = achievementRow.dtLastUpdate
     }
 
+    fun getScore() : Int
+    {
+        val color = getColor(false)
+        return when (color)
+        {
+            Color.MAGENTA -> 6
+            Color.CYAN -> 5
+            Color.GREEN -> 4
+            Color.YELLOW -> 3
+            Color.ORANGE -> 2
+            Color.RED -> 1
+            else -> 0
+        }
+    }
+
     fun getColor(highlighted : Boolean) : Color
     {
         val col = if (isDecreasing())
