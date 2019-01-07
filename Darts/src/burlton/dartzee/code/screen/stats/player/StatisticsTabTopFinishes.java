@@ -1,18 +1,16 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-
-import javax.swing.SwingConstants;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.StringUtil;
 import burlton.dartzee.code.bean.ScrollTableDartsGame;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.stats.GameWrapper;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.util.StringUtil;
 import burlton.desktopcore.code.util.TableUtil;
 import burlton.desktopcore.code.util.TableUtil.SimpleRenderer;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 
 public class StatisticsTabTopFinishes extends AbstractStatisticsTab
 {
@@ -68,7 +66,7 @@ public class StatisticsTabTopFinishes extends AbstractStatisticsTab
 			long gameId = game.getGameId();
 			int total = game.getCheckoutTotal();
 			
-			ArrayList<Dart> darts = game.getDartsForFinalRound();
+			List<Dart> darts = game.getDartsForFinalRound();
 			String dartStr = StringUtil.toDelims(darts, ", ");
 			
 			Object[] row = {total, dartStr, gameId};

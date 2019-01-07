@@ -1,0 +1,354 @@
+package burlton.dartzee.code.stats
+
+import burlton.core.code.obj.HashMapList
+import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.screen.game.DartsScorerGolf
+import burlton.dartzee.code.screen.stats.player.HoleBreakdownWrapper
+import burlton.dartzee.code.utils.calculateThreeDartAverage
+import burlton.dartzee.code.utils.getScoringDarts
+import burlton.dartzee.code.utils.getSortedDartStr
+import burlton.dartzee.code.utils.sumScore
+import java.sql.Timestamp
+import java.util.*
+
+
+const val MODE_FRONT_9 = 0
+const val MODE_BACK_9 = 1
+const val MODE_FULL_18 = 2
+
+/**
+ * Wraps up an entire game of darts from a single player's perspective
+ */
+class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timestamp, val dtFinish: Timestamp, val finalScore: Int)
+{
+    private var hmRoundNumberToDarts = HashMapList<Int, Dart>()
+    private var totalRounds = 0
+
+    /**
+     * Helpers
+     */
+    fun getAllDarts(): MutableList<Dart>
+    {
+        return hmRoundNumberToDarts.getAllValues()
+    }
+
+    fun isFinished(): Boolean
+    {
+        return finalScore > -1
+    }
+
+    private fun getScoreForFinalRound(): Int
+    {
+        return getScoreForRound(totalRounds)
+    }
+
+    fun getDartsForFinalRound(): MutableList<Dart>?
+    {
+        return getDartsForRound(totalRounds)
+    }
+
+    /**
+     * X01 Helpers
+     */
+    //For unfinished games, return -1 so they're sorted to the back
+    fun getCheckoutTotal(): Int
+    {
+        return if (finalScore == -1)
+        {
+            -1
+        }
+        else getScoreForFinalRound()
+    }
+    private fun getAllDartsFlattened(): MutableList<Dart>
+    {
+        val allDarts = hmRoundNumberToDarts.valuesAsVector
+        return allDarts.flatten().toMutableList()
+    }
+    fun getGameStartValueX01(): Int
+    {
+        return gameParams.toInt()
+    }
+    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<MutableList<Dart>>?
+    {
+        if (scoreCutOff < 62)
+        {
+            Debug.stackTrace("Calculating scoring darts with cutoff that makes busts possible: $scoreCutOff")
+            return null
+        }
+
+        val allDartsInRounds = mutableListOf<MutableList<Dart>>()
+
+        var score = Integer.parseInt(gameParams)
+        for (i in 1..totalRounds)
+        {
+            val drts = getDartsForRound(i)
+            for (j in drts.indices)
+            {
+                val dart = drts[j]
+
+                if (j == drts.size - 1)
+                {
+                    //We've got a full round, add this before we return
+                    allDartsInRounds.add(drts)
+                }
+
+                score -= dart.total
+                if (score <= scoreCutOff)
+                {
+                    return allDartsInRounds
+                }
+            }
+        }
+
+        if (isFinished())
+        {
+            Debug.stackTrace("Unable to calculate scoring darts for finished game $gameId. Score never went below threshold: $scoreCutOff")
+            return null
+        }
+
+        //If we get to here, it's an unfinished game that never went below the threshold. THat's fine - just return what we've got.
+        return allDartsInRounds
+    }
+
+
+    fun addDart(roundNumber: Int, dart: Dart)
+    {
+        if (roundNumber > totalRounds)
+        {
+            totalRounds = roundNumber
+        }
+
+        hmRoundNumberToDarts.putInList(roundNumber, dart)
+    }
+
+    private fun getDartsForRound(roundNumber: Int): MutableList<Dart>
+    {
+        return hmRoundNumberToDarts[roundNumber] ?: mutableListOf()
+    }
+
+    private fun getScoreForRound(roundNumber: Int): Int
+    {
+        val darts = getDartsForRound(roundNumber)
+
+        return sumScore(darts)
+    }
+
+    /**
+     * Calculate the 3-dart average, only counting the darts that were thrown up to a certain point.
+     * N.B: This method does NOT handle 'busts' when considering whether you've gone below the score threshold.
+     * Therefore, the smallest threshold that should ever be passed in is 62.
+     */
+    fun getThreeDartAverage(scoreCutOff: Int): Double
+    {
+        val darts = getAllDartsFlattened()
+        if (darts.isEmpty())
+        {
+            return -1.0
+        }
+
+        return calculateThreeDartAverage(darts, scoreCutOff)
+    }
+
+    fun getDartsForMultiplierX01(scoreCutOff: Int, multiplier: Int): Int
+    {
+        val darts = getScoringDarts(scoreCutOff)
+        return darts.filter{d -> d.multiplier == multiplier}.size
+    }
+
+    fun getScoringDarts(scoreCutOff: Int): MutableList<Dart>
+    {
+        val allDarts = getAllDartsFlattened()
+        return getScoringDarts(allDarts, scoreCutOff)
+    }
+
+
+
+    /**
+     * Burlton Constant
+     */
+    fun populateThreeDartScoreMap(hmScoreToBreakdownWrapper: HashMap<Int, ThreeDartScoreWrapper>, scoreThreshold: Int)
+    {
+        val dartsRounds = getScoringDartsGroupedByRound(scoreThreshold)
+
+        for (i in dartsRounds!!.indices)
+        {
+            val dartsForRound = dartsRounds[i]
+            val score = sumScore(dartsForRound)
+
+            var wrapper: ThreeDartScoreWrapper? = hmScoreToBreakdownWrapper[score]
+            if (wrapper == null)
+            {
+                wrapper = ThreeDartScoreWrapper()
+                hmScoreToBreakdownWrapper[score] = wrapper
+            }
+
+            val dartStr = getSortedDartStr(dartsForRound)
+            wrapper.addDartStr(dartStr, gameId)
+        }
+    }
+
+
+
+    /**
+     * Golf Helpers
+     */
+    private fun getScoreForHole(hole: Int): Int
+    {
+        val darts = getDartsForRound(hole)
+        val scoringDart = darts.last()
+        return scoringDart.getGolfScore(hole)
+    }
+
+    fun updateHoleBreakdowns(hm: HashMap<Int, HoleBreakdownWrapper>)
+    {
+        var overallBreakdown: HoleBreakdownWrapper? = hm[-1]
+        if (overallBreakdown == null)
+        {
+            overallBreakdown = HoleBreakdownWrapper()
+            hm[-1] = overallBreakdown
+        }
+
+        for (i in 1..totalRounds)
+        {
+            var wrapper: HoleBreakdownWrapper? = hm[i]
+            if (wrapper == null)
+            {
+                wrapper = HoleBreakdownWrapper()
+                hm[i] = wrapper
+            }
+
+            val score = getScoreForHole(i)
+            wrapper.increment(score)
+
+            //Increment an overall one
+            overallBreakdown.increment(score)
+        }
+    }
+
+    /**
+     * Get the overall score for front 9, back 9 or the whole lot
+     */
+    fun getRoundScore(mode: Int): Int
+    {
+        val startHole = getStartHoleForMode(mode)
+        val endHole = getEndHoleForMode(mode)
+
+        return getScore(startHole, endHole)
+    }
+
+    private fun getScore(startHole: Int, finishHole: Int): Int
+    {
+        if (totalRounds < finishHole)
+        {
+            //We haven't completed all the necessary rounds
+            return -1
+        }
+
+        var total = 0
+        for (i in startHole..finishHole)
+        {
+            total += getScoreForHole(i)
+        }
+
+        return total
+    }
+
+    fun populateScorer(scorer: DartsScorerGolf, mode: Int)
+    {
+        val startHole = getStartHoleForMode(mode)
+        val endHole = getEndHoleForMode(mode)
+        for (i in startHole..endHole)
+        {
+            val darts = getDartsForRound(i)
+            scorer.addDarts(darts)
+        }
+    }
+
+    private fun getStartHoleForMode(mode: Int): Int
+    {
+        return if (mode == MODE_BACK_9)
+        {
+            10
+        } else 1
+
+    }
+
+    private fun getEndHoleForMode(mode: Int): Int
+    {
+        return if (mode == MODE_FRONT_9)
+        {
+            9
+        } else 18
+
+    }
+
+    fun populateOptimalScorecardMaps(hmHoleToBestDarts: HashMapList<Int, Dart>, hmHoleToBestGameId: HashMap<Int, Long>)
+    {
+        for (i in 1..totalRounds)
+        {
+            val darts = getDartsForRound(i)
+            val currentDarts = hmHoleToBestDarts[i]
+
+            if (isBetterGolfRound(i, darts, currentDarts))
+            {
+                hmHoleToBestDarts[i] = darts
+                hmHoleToBestGameId[i] = gameId
+            }
+        }
+    }
+
+    private fun isBetterGolfRound(hole: Int, dartsNew: MutableList<Dart>, dartsCurrent: MutableList<Dart>?): Boolean
+    {
+        if (dartsCurrent == null)
+        {
+            return true
+        }
+
+        var lastDart = dartsNew.last()
+        val scoreNew = lastDart.getGolfScore(hole)
+
+        lastDart = dartsCurrent.last()
+        val scoreCurrent = lastDart.getGolfScore(hole)
+
+
+
+        //If the new score is strictly less, then it's better
+        if (scoreNew < scoreCurrent)
+        {
+            return true
+        }
+
+        if (scoreNew > scoreCurrent)
+        {
+            return false
+        }
+
+        //Equal scores, so go on number of darts thrown. Less is better.
+        val newSize = dartsNew.size
+        val currentSize = dartsCurrent.size
+        return newSize < currentSize
+    }
+
+    /**
+     * Generic helpers
+     */
+    fun compareStartDate(other: GameWrapper): Int
+    {
+        return dtStart.compareTo(other.dtStart)
+    }
+
+    /**
+     * These are normally calculated when adding darts retrieved from the DB.
+     * Need direct setters if we're from a simulation
+     */
+    fun setTotalRounds(totalRounds: Int)
+    {
+        this.totalRounds = totalRounds
+    }
+
+    fun setHmRoundNumberToDartsThrown(hmRoundNumberToDarts: HashMapList<Int, Dart>)
+    {
+        this.hmRoundNumberToDarts = hmRoundNumberToDarts
+    }
+}

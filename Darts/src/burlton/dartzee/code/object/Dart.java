@@ -274,15 +274,4 @@ public class Dart implements DartsRegistry
 		//Same total and same multiplier, so must be an equivalent dart
 		return 0;
 	}
-	
-	/**
-	 * Sorts the array of darts deterministically and then returns a String representation.
-	 * 
-	 * (5, T20, 1) -> "T20, 5, 1".
-	 */
-	public static String getSortedDartStr(ArrayList<Dart> darts)
-	{
-		darts.sort((Dart d1, Dart d2) -> d2.compareTo(d1));
-		return StringUtil.toDelims(darts, ", ");
-	}
 }

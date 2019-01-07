@@ -1,17 +1,14 @@
 package burlton.dartzee.code.screen.stats.player;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.swing.JPanel;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.HashMapList;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.game.DartsScorerGolf;
 import burlton.dartzee.code.stats.GameWrapper;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapList;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Cherry-picks your best performance ever for each hole and assembles it into an 'ideal' scorecard.
@@ -73,7 +70,7 @@ public class StatisticsTabGolfOptimalScorecard extends AbstractStatisticsTab
 		
 		for (int i=1; i<=18; i++)
 		{
-			ArrayList<Dart> darts = hmHoleToBestDarts.get(i);
+			ArrayList<Dart> darts = hmHoleToBestDarts.getAsHandyArrayList(i);
 			if (darts != null)
 			{
 				long gameId = hmHoleToBestGameId.get(i);
