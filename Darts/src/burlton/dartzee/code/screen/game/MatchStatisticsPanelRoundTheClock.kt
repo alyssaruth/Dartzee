@@ -6,7 +6,7 @@ class MatchStatisticsPanelRoundTheClock : GameStatisticsPanelRoundTheClock()
     {
         super.addRowsToTable()
 
-        addRow(arrayOfNulls(getRowWidth()))
+        //addRow(arrayOfNulls(getRowWidth()))
         addRow(getBestGameRow { stream -> stream.min() })
         addRow(getAverageGameRow())
     }

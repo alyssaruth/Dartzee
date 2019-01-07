@@ -33,6 +33,8 @@ class ChangeLog : JFrame() {
         textArea.append("\n--------- v3.1.0 ---------")
         textArea.append("\n")
         textArea.append("\n+ Achievements leaderboard in Overall Stats")
+        textArea.append("\n+ Most hit darts in X01 game stats")
+        textArea.append("\n= Replaced blank rows with grid lines for game stats to make more space")
         textArea.append("\n= Adjusted thresholds for Gambler achievement")
         textArea.append("\n= Performance improvement: Reuse of database connections")
 

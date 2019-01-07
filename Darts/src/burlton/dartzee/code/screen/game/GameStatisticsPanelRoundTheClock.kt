@@ -12,13 +12,13 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
         addRow(getDartsPerNumber({ i -> getAverageDartsForAnyRound(i) }, "Avg. darts", false))
         addRow(getDartsPerNumber({ i -> getMinDartsForAnyRound(i) }, "Fewest darts", false))
 
-        addRow(arrayOfNulls(getRowWidth()))
+        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getLongestStreak())
         addRow(getBruceys("Brucey chances", false))
         addRow(getBruceys("Bruceys executed", true))
 
-        addRow(arrayOfNulls(getRowWidth()))
+        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getDartsPerNumber(1, 1, "1"))
         addRow(getDartsPerNumber(2, 3))
@@ -169,7 +169,7 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
 
     override fun getRankedRowsHighestWins(): MutableList<String>
     {
-        return mutableListOf("Best streak", "Brucey chances", "Bruceys executed")
+        return mutableListOf("Best Streak", "Brucey chances", "Bruceys executed")
     }
 
     override fun getRankedRowsLowestWins(): MutableList<String>
@@ -182,4 +182,8 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
         return mutableListOf("1", "2 - 3", "4 - 6", "6 - 10", "10 - 15", "16 - 20", "21+")
     }
 
+    override fun getStartOfSectionRows(): MutableList<String>
+    {
+        return mutableListOf("Best Streak", "1", "Best Game")
+    }
 }

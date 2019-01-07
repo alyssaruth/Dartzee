@@ -1,14 +1,11 @@
 package burlton.dartzee.code.ai;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Vector;
-
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.XmlUtil;
 import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.object.DartKt;
 import burlton.dartzee.code.object.DartboardSegment;
 import burlton.dartzee.code.screen.Dartboard;
 import burlton.dartzee.code.utils.GeometryUtil;
@@ -16,9 +13,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import burlton.core.code.obj.SuperHashMap;
-import burlton.core.code.util.Debug;
-import burlton.core.code.util.XmlUtil;
+import java.awt.*;
+import java.util.*;
   
 public abstract class AbstractDartsModel 
 {
@@ -311,26 +307,26 @@ public abstract class AbstractDartsModel
 		if (score > 60)
 		{
 			Debug.stackTrace("Trying to get strategy-invariant default for score over 60. This will not work.");
-			return Dart.factoryTreble(20);
+			return DartKt.factoryTreble(20);
 		}
 		
 		//Aim for the single that puts you on double top
 		if (score > 40)
 		{
 			int single = score - 40;
-			return Dart.factorySingle(single);
+			return DartKt.factorySingle(single);
 		}
 		
 		//Aim for the double
 		if ((score % 2) == 0)
 		{
-			return Dart.factoryDouble(score/2);
+			return DartKt.factoryDouble(score/2);
 		}
 		
 		//On an odd number, less than 40. Aim to put ourselves on the highest possible power of 2.
 		int scoreToLeaveRemaining = getHighestPowerOfTwoLessThan(score);
 		int singleToAimFor = score - scoreToLeaveRemaining;
-		return Dart.factorySingle(singleToAimFor);
+		return DartKt.factorySingle(singleToAimFor);
 	}
 	private static int getHighestPowerOfTwoLessThan(int score)
 	{

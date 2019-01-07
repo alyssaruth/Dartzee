@@ -395,7 +395,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 					int posY = rs.getInt("PosY");
 					int segmentType = rs.getInt("SegmentType");
 					
-					Dart drt = new Dart(new Point(posX, posY), score, multiplier, segmentType);
+					Dart drt = new Dart(score, multiplier, new Point(posX, posY), segmentType);
 					hmRoundToDarts.putInList(roundNumber, drt);
 					
 					lastRound = roundNumber;
