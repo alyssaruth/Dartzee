@@ -12,7 +12,7 @@ fun isBust(score: Int, lastDart: Dart): Boolean
 {
     return (score < 0
             || score == 1
-            || score == 0 && !lastDart.isDouble)
+            || score == 0 && !lastDart.isDouble())
 }
 
 /**
@@ -49,7 +49,7 @@ fun isCheckoutDart(drt: Dart): Boolean {
 fun isFinishRound(round: MutableList<Dart>): Boolean
 {
     val drt = round.last()
-    return drt.isDouble && drt.total == drt.startingScore
+    return drt.isDouble() && drt.getTotal() == drt.startingScore
 }
 
 /**
@@ -77,7 +77,7 @@ fun calculateThreeDartAverage(darts: MutableList<Dart>, scoreCutOff: Int): Doubl
 
 fun sumScore(darts: MutableList<Dart>): Int
 {
-    return darts.stream().mapToInt { d -> d.total }.sum()
+    return darts.stream().mapToInt { d -> d.getTotal() }.sum()
 }
 
 /**
@@ -87,6 +87,6 @@ fun sumScore(darts: MutableList<Dart>): Int
  */
 fun getSortedDartStr(darts: MutableList<Dart>): String
 {
-    val sortedDarts = darts.sortedWith(compareByDescending<Dart>{it.total}.thenByDescending{it.multiplier})
+    val sortedDarts = darts.sortedWith(compareByDescending<Dart>{it.getTotal()}.thenByDescending{it.multiplier})
     return StringUtil.toDelims(sortedDarts, ", ")
 }

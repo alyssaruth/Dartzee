@@ -31,7 +31,7 @@ public class DartboardUtil implements DartsRegistry
 	{
 		int score = segment.getScore();
 		int multiplier = segment.getMultiplier();
-		return new Dart(pt, score, multiplier, segment.getType());
+		return new Dart(score, multiplier, pt, segment.getType());
 	}
 	
 	public static String factorySegmentKeyForPoint(Point dartPt, Point centerPt, double diameter)

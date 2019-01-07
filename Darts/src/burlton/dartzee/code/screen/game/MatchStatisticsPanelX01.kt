@@ -11,7 +11,7 @@ class MatchStatisticsPanelX01 : GameStatisticsPanelX01()
 
         addRow(getHighestFinishRow())
 
-        addRow(arrayOfNulls(getRowWidth()))
+        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getBestGameRow { s -> s.min() })
         addRow(getAverageGameRow())

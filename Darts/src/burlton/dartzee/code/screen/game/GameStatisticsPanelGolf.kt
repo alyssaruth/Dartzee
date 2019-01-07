@@ -16,7 +16,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         addRow(getGambleRow({ r -> getPointsSquandered(r) }, "Points Squandered"))
         addRow(getGambleRow({ r -> getPointsImproved(r) }, "Points Improved"))
 
-        addRow(arrayOfNulls(getRowWidth()))
+        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getScoreCountRow(1))
         addRow(getScoreCountRow(2))
@@ -36,7 +36,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         {
             val playerName = playerNamesOrdered[i]
             val darts = getFlattenedDarts(playerName)
-            val missDarts = darts.filter { d -> d.golfScore == 5 }
+            val missDarts = darts.filter { d -> d.getGolfScore() == 5 }
 
             val misses = missDarts.size.toDouble()
             val percent = 100 * misses / darts.size
@@ -67,8 +67,8 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
 
     private fun getPointsSquandered(round: List<Dart>): Int
     {
-        val finalScore = round.last().golfScore
-        val bestScore = round.stream().mapToInt { d -> d.golfScore }.min().asInt
+        val finalScore = round.last().getGolfScore()
+        val bestScore = round.stream().mapToInt { d -> d.getGolfScore() }.min().asInt
 
         return finalScore - bestScore
     }
@@ -84,8 +84,8 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
      */
     private fun getPointsImproved(round: List<Dart>): Int
     {
-        val finalScore = round.last().golfScore
-        val bestScore = round.stream().mapToInt { d -> d.golfScore }.min().asInt
+        val finalScore = round.last().getGolfScore()
+        val bestScore = round.stream().mapToInt { d -> d.getGolfScore() }.min().asInt
 
         //This round is stuffed - points have been squandered, not gained! Or it's just 1 dart!
         if (finalScore > bestScore || round.size == 1)
@@ -94,7 +94,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         }
 
         //Filter out the 5s - they're not interesting.
-        val roundWithoutMisses = round.filter { d -> d.golfScore < 5 }
+        val roundWithoutMisses = round.filter { d -> d.getGolfScore() < 5 }
         if (roundWithoutMisses.isEmpty())
         {
             //Round is all misses, so nothing to do
@@ -102,7 +102,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         }
 
         //Now get the first non-5. Result is the difference between this and where you ended up.
-        val gambledScore = roundWithoutMisses.first().golfScore
+        val gambledScore = roundWithoutMisses.first().getGolfScore()
         return gambledScore - bestScore
     }
 
@@ -116,7 +116,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         {
             val playerName = playerNamesOrdered[i]
             val darts = getCountedDarts(playerName)
-            val dartsOfScore = darts.filter { d -> d.golfScore == score }
+            val dartsOfScore = darts.filter { d -> d.getGolfScore() == score }
 
             row[i + 1] = dartsOfScore.size
         }
@@ -133,7 +133,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         {
             val playerName = playerNamesOrdered[i]
             val countedDarts = getCountedDarts(playerName)
-            val stream = countedDarts.stream().mapToInt { d -> d.golfScore }
+            val stream = countedDarts.stream().mapToInt { d -> d.getGolfScore() }
             row[i + 1] = f.invoke(stream)
         }
 
@@ -163,5 +163,10 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
     override fun getHistogramRows(): MutableList<String>
     {
         return mutableListOf("1", "2", "3", "4", "5")
+    }
+
+    override fun getStartOfSectionRows(): MutableList<String>
+    {
+        return mutableListOf("Points Squandered", "1", "Best Game")
     }
 }

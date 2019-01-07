@@ -93,7 +93,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
                     allDartsInRounds.add(drts)
                 }
 
-                score -= dart.total
+                score -= dart.getTotal()
                 if (score <= scoreCutOff)
                 {
                     return allDartsInRounds

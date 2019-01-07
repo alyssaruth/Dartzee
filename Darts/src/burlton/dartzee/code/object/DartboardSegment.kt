@@ -13,7 +13,7 @@ const val TYPE_INNER_SINGLE = 4
 const val TYPE_MISS = 5
 const val TYPE_MISSED_BOARD = 6
 
-fun getGolfScore(type: Int): Int
+fun getGolfScoreForSegment(type: Int): Int
 {
     return when (type)
     {

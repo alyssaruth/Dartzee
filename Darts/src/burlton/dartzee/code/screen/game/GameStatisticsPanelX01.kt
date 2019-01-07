@@ -47,7 +47,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         addRow(getMultiplePercent("Miss %", 0))
         addRow(getMultiplePercent("Treble %", 3))
 
-        addRow(arrayOfNulls(getRowWidth()))
+        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getScoresBetween(180, 181, "180"))
         addRow(getScoresBetween(140, 180, "140 - 179"))
@@ -58,12 +58,71 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         addRow(getScoresBetween(20, 40, "20 - 39"))
         addRow(getScoresBetween(0, 20, "0 - 19"))
 
-        addRow(arrayOfNulls(getRowWidth()))
+        //addRow(arrayOfNulls(getRowWidth()))
+        addTopDartsRows()
+        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getCheckoutPercentRow())
 
         table.setColumnWidths("120")
     }
+
+    private fun addTopDartsRows()
+    {
+        val topDarts = arrayOfNulls<Any>(getRowWidth())
+        val secondDarts = arrayOfNulls<Any>(getRowWidth())
+        val thirdDarts = arrayOfNulls<Any>(getRowWidth())
+        val fourthDarts = arrayOfNulls<Any>(getRowWidth())
+        val fifthDarts = arrayOfNulls<Any>(getRowWidth())
+        val remainingDarts = arrayOfNulls<Any>(getRowWidth())
+
+        topDarts[0] = "Top Darts"
+        for (i in playerNamesOrdered.indices)
+        {
+            val playerName = playerNamesOrdered[i]
+            val darts = getScoringDarts(playerName)
+
+            val hmHitScoreToDarts = darts.groupBy{it.getHitScore()}
+            val sortedEntries = hmHitScoreToDarts.entries
+                                                 .sortedWith(compareByDescending<Map.Entry<Int, List<Dart>>> {it.value.size}
+                                                 .thenByDescending{it.key})
+                                                 .toMutableList()
+
+            parseTopDartEntry(sortedEntries, topDarts, i, darts.size)
+            parseTopDartEntry(sortedEntries, secondDarts, i, darts.size)
+            parseTopDartEntry(sortedEntries, thirdDarts, i, darts.size)
+            parseTopDartEntry(sortedEntries, fourthDarts, i, darts.size)
+            parseTopDartEntry(sortedEntries, fifthDarts, i, darts.size)
+
+            //Deal with the remainder
+            val remainder = sortedEntries.stream().mapToInt{e -> e.value.size}.sum().toDouble()
+            val percent = MathsUtil.round(100*remainder / darts.size, 1)
+            remainingDarts[i+1] = "Other [$percent%]"
+        }
+
+        addRow(topDarts)
+        addRow(secondDarts)
+        addRow(thirdDarts)
+        addRow(fourthDarts)
+        addRow(fifthDarts)
+        addRow(remainingDarts)
+    }
+    private fun parseTopDartEntry(sortedEntries: MutableList<Map.Entry<Int, List<Dart>>>, row: Array<Any?>,
+                                  i: Int, totalDarts: Int)
+    {
+        if (sortedEntries.isEmpty())
+        {
+            row[i+1] = "N/A [0.0%]"
+        }
+        else
+        {
+            val entry = sortedEntries.removeAt(0)
+            val percent = MathsUtil.round((100*entry.value.size.toDouble()) / totalDarts, 1)
+
+            row[i+1] = "${entry.key} [$percent%]"
+        }
+    }
+
 
     private fun getThreeDartAvgsRow(): Array<Any?>
     {
@@ -96,7 +155,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
             val darts = getFlattenedDarts(playerName)
 
             val potentialFinishers = darts.filter { d -> isCheckoutDart(d) }
-            val actualFinishes = potentialFinishers.filter { d -> d.isDouble && d.total == d.startingScore }
+            val actualFinishes = potentialFinishers.filter { d -> d.isDouble() && d.getTotal() == d.startingScore }
 
             if (actualFinishes.isEmpty())
             {
@@ -202,6 +261,11 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
     override fun getHistogramRows(): MutableList<String>
     {
         return mutableListOf("180", "140 - 179", "100 - 139", "80 - 99", "60 - 79", "40 - 59", "20 - 39", "0 - 19")
+    }
+
+    override fun getStartOfSectionRows(): MutableList<String>
+    {
+        return mutableListOf("180", "Top Darts", "Checkout %", "Best Game")
     }
 
     override fun propertyChange(arg0: PropertyChangeEvent)

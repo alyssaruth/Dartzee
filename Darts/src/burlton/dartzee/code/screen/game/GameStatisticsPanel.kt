@@ -46,6 +46,7 @@ abstract class GameStatisticsPanel : JPanel()
     protected abstract fun getRankedRowsHighestWins(): MutableList<String>
     protected abstract fun getRankedRowsLowestWins(): MutableList<String>
     protected abstract fun getHistogramRows(): MutableList<String>
+    protected abstract fun getStartOfSectionRows(): MutableList<String>
 
     private fun getHistogramRowNumbers(): MutableList<Int>
     {
@@ -339,9 +340,13 @@ abstract class GameStatisticsPanel : JPanel()
             val left = if (column == 0) 2 else 1
             val right = if (column == getRowWidth() - 1) 2 else 1
 
+
             val bottom = if (row == table.rowCount - 1) 2 else 0
 
-            return MatteBorder(0, left, bottom, right, Color.BLACK)
+            val startOfSectionRow = getStartOfSectionRows().contains(table.getValueAt(row, 0))
+            val top = if (startOfSectionRow) 2 else 0
+
+            return MatteBorder(top, left, bottom, right, Color.BLACK)
         }
 
         private fun setColours(table: JTable?, row: Int, column: Int)
