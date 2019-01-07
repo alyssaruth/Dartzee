@@ -3,6 +3,7 @@
 package burlton.dartzee.code.utils
 
 import burlton.core.code.obj.HandyArrayList
+import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 
@@ -45,26 +46,27 @@ fun isCheckoutDart(drt: Dart): Boolean {
 
 }
 
-fun isFinishRound(round: HandyArrayList<Dart>): Boolean {
-    val drt = round.lastElement()
+fun isFinishRound(round: MutableList<Dart>): Boolean
+{
+    val drt = round.last()
     return drt.isDouble && drt.total == drt.startingScore
 }
 
 /**
  * Refactored out of GameWrapper for use in game stats panel
  */
-fun getScoringDarts(allDarts: HandyArrayList<Dart>?, scoreCutOff: Int): HandyArrayList<Dart>
+fun getScoringDarts(allDarts: MutableList<Dart>?, scoreCutOff: Int): MutableList<Dart>
 {
     return if (allDarts == null)
     {
         HandyArrayList()
     }
     else
-        allDarts.createFilteredCopy { d -> d.startingScore > scoreCutOff }
+        allDarts.filter { d -> d.startingScore > scoreCutOff }.toMutableList()
 
 }
 
-fun calculateThreeDartAverage(darts: HandyArrayList<Dart>, scoreCutOff: Int): Double
+fun calculateThreeDartAverage(darts: MutableList<Dart>, scoreCutOff: Int): Double
 {
     val scoringDarts = getScoringDarts(darts, scoreCutOff)
 
@@ -73,7 +75,18 @@ fun calculateThreeDartAverage(darts: HandyArrayList<Dart>, scoreCutOff: Int): Do
     return amountScored / scoringDarts.size * 3
 }
 
-fun sumScore(darts: HandyArrayList<Dart>): Int
+fun sumScore(darts: MutableList<Dart>): Int
 {
     return darts.stream().mapToInt { d -> d.total }.sum()
+}
+
+/**
+ * Sorts the array of darts deterministically and then returns a String representation.
+ *
+ * (5, T20, 1) -> "T20, 5, 1".
+ */
+fun getSortedDartStr(darts: MutableList<Dart>): String
+{
+    val sortedDarts = darts.sortedWith(compareByDescending<Dart>{it.total}.thenByDescending{it.multiplier})
+    return StringUtil.toDelims(sortedDarts, ", ")
 }

@@ -32,6 +32,7 @@ class ChangeLog : JFrame() {
         textArea.append("\n")
         textArea.append("\n--------- v3.1.0 ---------")
         textArea.append("\n")
+        textArea.append("\n+ Achievements leaderboard in Overall Stats")
         textArea.append("\n= Adjusted thresholds for Gambler achievement")
         textArea.append("\n= Performance improvement: Reuse of database connections")
 

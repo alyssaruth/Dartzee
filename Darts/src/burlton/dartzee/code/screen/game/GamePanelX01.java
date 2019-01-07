@@ -118,7 +118,7 @@ public class GamePanelX01 extends GamePanelPausable<DartsScorerX01>
 		DartsScorerX01 scorer = hmPlayerNumberToDartsScorer.get(playerNumber);
 		for (int i=1; i<=lastRound; i++)
 		{
-			HandyArrayList<Dart> darts = hmRoundToDarts.get(i);
+			HandyArrayList<Dart> darts = hmRoundToDarts.getAsHandyArrayList(i);
 			addDartsToScorer(darts, scorer);
 		}
 		

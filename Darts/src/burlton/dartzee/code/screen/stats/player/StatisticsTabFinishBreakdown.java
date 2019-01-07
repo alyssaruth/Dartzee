@@ -1,30 +1,26 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.HashMapCount;
+import burlton.core.code.util.MathsUtil;
+import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.stats.GameWrapper;
+import burlton.desktopcore.code.bean.ScrollTable;
+import burlton.desktopcore.code.util.ComponentUtil;
+import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.object.Dart;
-import burlton.dartzee.code.stats.GameWrapper;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.HashMapCount;
-import burlton.desktopcore.code.util.ComponentUtil;
-import burlton.core.code.util.MathsUtil;
-import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 										  implements ListSelectionListener
@@ -100,7 +96,7 @@ public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 				continue;
 			}
 			
-			ArrayList<Dart> darts = game.getDartsForFinalRound();
+			List<Dart> darts = game.getDartsForFinalRound();
 			Dart finalDart = darts.get(darts.size() - 1);
 			int score = finalDart.getScore();
 			

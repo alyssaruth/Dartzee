@@ -117,7 +117,7 @@ public class ResourceCache
 		synchronized (wavPoolLock)
 		{
 			String wavFile = wavName + ".wav";
-			ArrayList<AudioInputStream> streams = hmWavToInputStreams.get(wavFile);
+			ArrayList<AudioInputStream> streams = hmWavToInputStreams.getAsHandyArrayList(wavFile);
 			if (streams == null)
 			{
 				//If the wav file doesn't exist

@@ -9,7 +9,7 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Collection;
 
 public class DartsScorerGolf extends DartsScorer
 {
@@ -80,11 +80,11 @@ public class DartsScorerGolf extends DartsScorer
 	/**
 	 * Helper to add a full round at a time, for when we're viewing stats or loading a game
 	 */
-	public void addDarts(ArrayList<Dart> darts)
+	public void addDarts(Collection<Dart> darts)
 	{
 		addDarts(darts, -1);
 	}
-	public void addDarts(ArrayList<Dart> darts, long gameId)
+	public void addDarts(Collection<Dart> darts, long gameId)
 	{
 		for (Dart dart : darts)
 		{

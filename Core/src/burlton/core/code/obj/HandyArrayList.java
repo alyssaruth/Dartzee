@@ -177,6 +177,6 @@ public class HandyArrayList<E> extends ArrayList<E>
 			hmIdentifierToItems.putInList(key, item);
 		}
 		
-		return hmIdentifierToItems.getValuesAsVector();
+		return new HandyArrayList(hmIdentifierToItems.getValuesAsVector());
 	}
 }

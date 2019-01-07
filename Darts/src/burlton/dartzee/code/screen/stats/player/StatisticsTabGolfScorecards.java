@@ -1,25 +1,19 @@
 package burlton.dartzee.code.screen.stats.player;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.ListSelectionModel;
-
-import burlton.desktopcore.code.bean.ComboBoxItem;
-import burlton.desktopcore.code.bean.RowSelectionListener;
-import burlton.desktopcore.code.bean.ScrollTable;
+import burlton.core.code.obj.HandyArrayList;
 import burlton.dartzee.code.bean.ScrollTableDartsGame;
 import burlton.dartzee.code.screen.game.DartsScorerGolf;
 import burlton.dartzee.code.stats.GameWrapper;
-import burlton.core.code.obj.HandyArrayList;
+import burlton.dartzee.code.stats.GameWrapperKt;
+import burlton.desktopcore.code.bean.ComboBoxItem;
+import burlton.desktopcore.code.bean.RowSelectionListener;
+import burlton.desktopcore.code.bean.ScrollTable;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class StatisticsTabGolfScorecards extends AbstractStatisticsTab
 										 implements ActionListener, RowSelectionListener
@@ -106,13 +100,13 @@ public class StatisticsTabGolfScorecards extends AbstractStatisticsTab
 	private void initialiseComboBoxModel()
 	{
 		DefaultComboBoxModel<ComboBoxItem<Integer>> model = new DefaultComboBoxModel<>();
-		addMode("Front 9", GameWrapper.MODE_FRONT_9, model);
-		addMode("Back 9", GameWrapper.MODE_BACK_9, model);
-		addMode("Full 18", GameWrapper.MODE_FULL_18, model);
+		addMode("Front 9", GameWrapperKt.MODE_FRONT_9, model);
+		addMode("Back 9", GameWrapperKt.MODE_BACK_9, model);
+		addMode("Full 18", GameWrapperKt.MODE_FULL_18, model);
 		
 		if (model.getSize() == 0)
 		{
-			model.addElement(new ComboBoxItem<>(GameWrapper.MODE_FULL_18, "N/A"));
+			model.addElement(new ComboBoxItem<>(GameWrapperKt.MODE_FULL_18, "N/A"));
 		}
 		
 		comboBoxMode.setModel(model);
@@ -165,7 +159,7 @@ public class StatisticsTabGolfScorecards extends AbstractStatisticsTab
 	{
 		DartsScorerGolf scorer = new DartsScorerGolf();
 		scorer.init(null, game.getGameParams());
-		if (mode == GameWrapper.MODE_BACK_9)
+		if (mode == GameWrapperKt.MODE_BACK_9)
 		{
 			scorer.setFudgeFactor(9);
 		}

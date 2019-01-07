@@ -1,19 +1,17 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-
-import javax.swing.JPanel;
-
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.object.Dart;
-import burlton.dartzee.code.stats.GameWrapper;
-import burlton.dartzee.code.utils.X01Util;
 import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapList;
 import burlton.core.code.util.MathsUtil;
+import burlton.dartzee.code.object.Dart;
+import burlton.dartzee.code.stats.GameWrapper;
+import burlton.dartzee.code.utils.X01Util;
+import burlton.desktopcore.code.bean.ScrollTable;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Collection;
 
 /**
  * Checkout percentages for X01
@@ -77,7 +75,7 @@ public final class StatisticsTabX01CheckoutPercent extends AbstractStatisticsTab
 				continue;
 			}
 			
-			HandyArrayList<Dart> darts = hmDoubleToDartsThrown.get(i);
+			Collection<Dart> darts = hmDoubleToDartsThrown.get(i);
 			if (darts == null)
 			{
 				Object[] row = {i/2, 0, 0, 0};
@@ -110,7 +108,7 @@ public final class StatisticsTabX01CheckoutPercent extends AbstractStatisticsTab
 	}
 	private void addDartsToHashMap(GameWrapper g, HashMapList<Integer, Dart> hmDoubleToDartsThrown)
 	{
-		HandyArrayList<Dart> darts = g.getAllDarts();
+		Collection<Dart> darts = g.getAllDarts();
 		for (Dart drt : darts)
 		{
 			if (X01Util.isCheckoutDart(drt))

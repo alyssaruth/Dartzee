@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
@@ -35,7 +34,7 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         }
     }
 
-    private fun addDartsToScorer(darts: HandyArrayList<Dart>, scorer: DartsScorerRoundTheClock)
+    private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
     {
         var clockTarget = scorer.currentClockTarget
 
