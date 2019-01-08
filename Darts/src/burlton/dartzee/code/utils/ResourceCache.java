@@ -22,6 +22,7 @@ public class ResourceCache
 	public static final ImageIcon IMG_DEV = new ImageIcon(ResourceCache.class.getResource("/horrific/dev.png"));
 	public static final ImageIcon IMG_MITCHELL = new ImageIcon(ResourceCache.class.getResource("/horrific/mitchell.png"));
 	public static final ImageIcon IMG_SPENCER = new ImageIcon(ResourceCache.class.getResource("/horrific/spencer.png"));
+	public static final ImageIcon IMG_BASIL = new ImageIcon(ResourceCache.class.getResource("/horrific/basil.png"));
 
 	public static final URL URL_ACHIEVEMENT_LOCKED = ResourceCache.class.getResource("/achievements/locked.png");
 	public static final URL URL_ACHIEVEMENT_BEST_FINISH = ResourceCache.class.getResource("/achievements/bestFinish.png");
@@ -61,7 +62,7 @@ public class ResourceCache
 			
 			for (String wavFile : wavFiles)
 			{
-				for (int i=0; i<5; i++)
+				for (int i=0; i<4; i++)
 				{
 					AudioInputStream ais =  getAudioInputStream(wavFile);
 					ais.mark(Integer.MAX_VALUE);
@@ -94,6 +95,10 @@ public class ResourceCache
 		ret.add("badmiss2.wav");
 		ret.add("badmiss3.wav");
 		ret.add("badmiss4.wav");
+		ret.add("basil1.wav");
+		ret.add("basil2.wav");
+		ret.add("basil3.wav");
+		ret.add("basil4.wav");
 		ret.add("bull.wav");
 		ret.add("damage.wav");
 		ret.add("forsyth1.wav");

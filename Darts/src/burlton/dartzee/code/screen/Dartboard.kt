@@ -452,6 +452,14 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
+    fun doFawlty()
+    {
+        val rand = Random()
+        val brucey = rand.nextInt(4) + 1
+
+        doDodgy(ResourceCache.IMG_BASIL, 576, 419, "basil$brucey")
+    }
+
     fun doForsyth()
     {
         val rand = Random()
