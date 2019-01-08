@@ -52,6 +52,11 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
         if (!bust)
         {
+            if (totalScore == 26)
+            {
+                dartboard.doFawlty()
+            }
+
             dartboard.playDodgySound("" + totalScore)
 
             val total = sumScore(dartsThrown)

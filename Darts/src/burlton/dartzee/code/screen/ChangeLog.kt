@@ -34,6 +34,7 @@ class ChangeLog : JFrame() {
         textArea.append("\n")
         textArea.append("\n+ Achievements leaderboard in Overall Stats")
         textArea.append("\n+ Most hit darts in X01 game stats")
+        textArea.append("\n+ Bed & Breakfast animations")
         textArea.append("\n= Miss animations will no longer display when throwing at doubles in X01")
         textArea.append("\n= Replaced blank rows with grid lines for game stats to make more space")
         textArea.append("\n= Adjusted thresholds for Gambler achievement")
