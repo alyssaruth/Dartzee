@@ -34,9 +34,12 @@ class ChangeLog : JFrame() {
         textArea.append("\n")
         textArea.append("\n+ Achievements leaderboard in Overall Stats")
         textArea.append("\n+ Most hit darts in X01 game stats")
+        textArea.append("\n= Miss animations will no longer display when throwing at doubles in X01")
         textArea.append("\n= Replaced blank rows with grid lines for game stats to make more space")
         textArea.append("\n= Adjusted thresholds for Gambler achievement")
         textArea.append("\n= Performance improvement: Reuse of database connections")
+        textArea.append("\n= Performance improvement: Reuse of dartboard graphics for speedier game start-up")
+        textArea.append("\n= Memory improvement: Fixed a bug with audio caching that led to a pile-up of blocked \"Direct Clip\" threads")
 
         textArea.append("\n")
         textArea.append("\n--------- v3.0.1 ---------")
