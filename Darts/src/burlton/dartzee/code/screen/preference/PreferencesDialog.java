@@ -1,27 +1,21 @@
 package burlton.dartzee.code.screen.preference;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.utils.DartboardUtil;
 import burlton.dartzee.code.utils.DartsRegistry;
 import burlton.desktopcore.code.util.ComponentUtil;
-import burlton.core.code.util.Debug;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public final class PreferencesDialog extends JDialog
 									 implements ActionListener,
-        DartsRegistry
+        										DartsRegistry
 {
 	public PreferencesDialog() 
 	{

@@ -104,7 +104,7 @@ public final class DartsGameScreen extends JFrame
 	}
 	private void setScreenSize(int playerCount)
 	{
-		Dimension newSize = new Dimension(520 + (playerCount * DartsScorerKt.SCORER_WIDTH), 675 + (isMatch()?25:0));
+		Dimension newSize = new Dimension(520 + (playerCount * DartsScorerKt.SCORER_WIDTH), 675 + (isMatch()?30:0));
 		setSize(newSize);
 		setResizable(false);
 	}

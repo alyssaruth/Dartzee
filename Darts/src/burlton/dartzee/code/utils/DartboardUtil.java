@@ -4,6 +4,7 @@ import burlton.dartzee.code.object.ColourWrapper;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.object.DartboardSegment;
 import burlton.dartzee.code.object.DartboardSegmentKt;
+import burlton.dartzee.code.screen.Dartboard;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -197,5 +198,7 @@ public class DartboardUtil implements DartsRegistry
 	public static void resetCachedValues()
 	{
 		colourWrapperFromPrefs = null;
+
+		Dartboard.appearancePreferenceChanged();
 	}
 }

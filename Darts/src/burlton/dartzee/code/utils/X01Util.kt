@@ -35,15 +35,20 @@ fun shouldStopForMercyRule(model: AbstractDartsModel, startingScore: Int, curren
 /**
  * 50, 40, 38, 36, 34, ... , 8, 4, 2
  */
-fun isCheckoutDart(drt: Dart): Boolean {
+fun isCheckoutDart(drt: Dart): Boolean
+{
     val startingScore = drt.startingScore
+    return isCheckoutScore(startingScore)
 
-    //Special case for bullseye
-    return if (startingScore == 50) {
+}
+fun isCheckoutScore(score: Int): Boolean
+{
+    return if (score == 50)
+    {
         true
-    } else startingScore % 2 == 0 //Even
-            && startingScore <= 40
-
+    }
+    else score % 2 == 0 //Even
+            && score <= 40
 }
 
 fun isFinishRound(round: MutableList<Dart>): Boolean

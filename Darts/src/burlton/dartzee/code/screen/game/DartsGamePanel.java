@@ -156,7 +156,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		}
 		
 		initForAi(hasAi());
-		dartboard.paintDartboard();
+		dartboard.paintDartboardCached();
 		
 		nextTurn();
 	}
@@ -284,7 +284,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		loadScoresAndCurrentPlayer(gameId);
 		
 		//Paint the dartboard
-		dartboard.paintDartboard();
+		dartboard.paintDartboardCached();
 		
 		//If the game is over, do some extra stuff to sort the screen out
 		Timestamp dtFinish = gameEntity.getDtFinish();
@@ -662,7 +662,8 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	}
 	private void doAnimations(Dart dart)
 	{
-		if (dart.getMultiplier() == 0)
+		if (dart.getMultiplier() == 0
+		  && shouldAnimateMiss(dart))
 		{
 			doMissAnimation();
 		}
@@ -671,6 +672,13 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			dartboard.doBull();
 		}
 	}
+
+	protected boolean shouldAnimateMiss(Dart dart)
+	{
+		return true;
+	}
+
+
 	protected void doMissAnimation()
 	{
 		dartboard.doBadMiss();

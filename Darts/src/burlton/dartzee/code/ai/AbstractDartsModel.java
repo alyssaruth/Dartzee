@@ -14,8 +14,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.awt.*;
+import java.util.List;
 import java.util.*;
-  
+
 public abstract class AbstractDartsModel 
 {
 	//public static final int TYPE_HEURISTIC = 1;
@@ -353,7 +354,7 @@ public abstract class AbstractDartsModel
 		int multiplier = DartboardSegment.getMultiplier(type);
 		Debug.append("Aiming for " + new Dart(score, multiplier), logging);
 		
-		ArrayList<Point> points = dartboard.getPointsForSegment(score, type);
+		List<Point> points = dartboard.getPointsForSegment(score, type);
 		
 		//Don't get the average point, pick a random one
 		Point avgPoint = GeometryUtil.getAverage(points);

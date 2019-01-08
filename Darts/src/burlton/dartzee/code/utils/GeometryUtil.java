@@ -4,7 +4,7 @@ import burlton.core.code.util.Debug;
 import burlton.dartzee.code.object.Quadrant;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public abstract class GeometryUtil
@@ -183,7 +183,7 @@ public abstract class GeometryUtil
 	/**
 	 * For a group of points, calculate the average point
 	 */
-	public static Point getAverage(ArrayList<Point> points)
+	public static Point getAverage(List<Point> points)
 	{
 		int size = points.size();
 		double xAvg = 0;

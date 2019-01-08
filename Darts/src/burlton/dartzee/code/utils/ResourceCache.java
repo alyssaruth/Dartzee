@@ -134,7 +134,9 @@ public class ResourceCache
 				return ais;
 			}
 			
-			return streams.remove(0);
+			AudioInputStream ais = streams.remove(0);
+			ais.reset();
+			return ais;
 		}
 	}
 
@@ -152,7 +154,7 @@ public class ResourceCache
 		{
 			synchronized (wavPoolLock)
 			{
-				stream.reset();
+				//stream.reset();
 				hmWavToInputStreams.putInList(wavName + ".wav", stream);
 			}
 		}
