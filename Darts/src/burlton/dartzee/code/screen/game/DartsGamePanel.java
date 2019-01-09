@@ -24,6 +24,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -35,7 +37,8 @@ import java.util.TimerTask;
 public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithScorers<S>
 														  	implements DartboardListener,
 														  			   ActionListener,
-														  			   DartsRegistry
+														  			   DartsRegistry,
+																	   MouseListener
 {
 	protected static final boolean VERBOSE_LOGGING = false;
 	
@@ -101,6 +104,8 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		btnReset.addActionListener(this);
 		btnStats.addActionListener(this);
 		btnSlider.addActionListener(this);
+
+		addMouseListener(this);
 		
 		if (statsPanel == null)
 		{
@@ -636,6 +641,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		dartsThrown.add(dart);
 		activeScorer.addDart(dart);
+
+		//We've clicked on the dartboard, so dismiss the slider
+		if (activeScorer.getHuman())
+		{
+			dismissSlider();
+		}
 		
 		doAnimations(dart);
 		
@@ -817,7 +828,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			viewStats();
 		}
 	}
-	
+
 	private void viewStats()
 	{
 		if (btnStats.isSelected())
@@ -876,7 +887,30 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			}
 		}
 	}
-	
+
+	private void dismissSlider()
+	{
+		btnSlider.setSelected(false);
+		toggleSlider();
+	}
+
+
+	/**
+	 * MouseListener
+	 */
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+		if (e.getSource() != slider)
+		{
+			dismissSlider();
+		}
+	}
+	@Override public void mouseEntered(MouseEvent e) {}
+	@Override public void mouseExited(MouseEvent e) {}
+	@Override public void mousePressed(MouseEvent e) {}
+	@Override public void mouseReleased(MouseEvent e) {}
+
 	class DelayedOpponentTurn extends TimerTask
 	{
 		@Override
@@ -890,5 +924,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			AbstractDartsModel model = getCurrentPlayerStrategy();
 			doAiTurn(model);
 		}
+
+
 	}
 }
