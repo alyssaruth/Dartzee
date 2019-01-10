@@ -68,18 +68,12 @@ class DatabaseUtil : SqlErrorConstants
             connectionCreateCount++
 
             Debug.appendBanner("CREATED new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
-            return createDatabaseConnection(DATABASE_FILE_PATH, DATABASE_NAME_WITH_CREATE)
+            return createDatabaseConnection(dbName = DATABASE_NAME_WITH_CREATE)
         }
 
         @Throws(SQLException::class)
-        private fun createDatabaseConnection(dbFilePath: String?, dbName: String): Connection
+        private fun createDatabaseConnection(dbFilePath: String = DATABASE_FILE_PATH, dbName: String): Connection
         {
-            var dbFilePath = dbFilePath
-            if (dbFilePath == null)
-            {
-                dbFilePath = DATABASE_FILE_PATH
-            }
-
             val p = System.getProperties()
             p.setProperty("derby.system.home", dbFilePath)
 
@@ -128,7 +122,6 @@ class DatabaseUtil : SqlErrorConstants
             return executeQuery(sb.toString())
         }
 
-        @JvmOverloads
         @JvmStatic fun executeQuery(query: String): ResultSet
         {
             val startMillis = System.currentTimeMillis()
@@ -253,7 +246,7 @@ class DatabaseUtil : SqlErrorConstants
             else null
         }
 
-        @JvmStatic fun dropTable(tableName: String): Boolean
+        @JvmStatic fun dropTable(tableName: String?): Boolean
         {
             val sql = "DROP TABLE $tableName"
             return executeUpdate(sql)
@@ -280,7 +273,7 @@ class DatabaseUtil : SqlErrorConstants
         {
             try
             {
-                createDatabaseConnection(DATABASE_FILE_PATH, "jdbc:derby:;shutdown=true")
+                createDatabaseConnection(dbName = "jdbc:derby:;shutdown=true")
             }
             catch (sqle: SQLException)
             {
