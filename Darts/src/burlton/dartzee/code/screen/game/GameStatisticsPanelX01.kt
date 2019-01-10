@@ -77,6 +77,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         val remainingDarts = arrayOfNulls<Any>(getRowWidth())
 
         topDarts[0] = "Top Darts"
+        remainingDarts[0] = "Remainder"
         for (i in playerNamesOrdered.indices)
         {
             val playerName = playerNamesOrdered[i]
@@ -97,7 +98,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
             //Deal with the remainder
             val remainder = sortedEntries.stream().mapToInt{e -> e.value.size}.sum().toDouble()
             val percent = MathsUtil.round(100*remainder / darts.size, 1)
-            remainingDarts[i+1] = "Other [$percent%]"
+            remainingDarts[i+1] = "$percent%"
         }
 
         addRow(topDarts)

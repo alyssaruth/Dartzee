@@ -5,6 +5,7 @@ import burlton.dartzee.code.achievements.AbstractAchievement;
 import burlton.dartzee.code.achievements.AchievementUtilKt;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
+import burlton.dartzee.code.utils.DatabaseUtil;
 import burlton.desktopcore.code.util.DateUtil;
 
 import java.awt.*;
@@ -124,6 +125,14 @@ public final class AchievementEntity extends AbstractEntity<AchievementEntity>
 
 			triggerAchievementUnlock(existingCount, existingCount + amountBy, achievementRef, playerId, gameId);
 		}
+	}
+	public static void insertAchievement(int achievementRef, long playerId, long gameId)
+	{
+		String sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = " + playerId + " AND AchievementRef = " + achievementRef;
+		int count = DatabaseUtil.executeQueryAggregate(sql);
+
+		factoryAndSave(achievementRef, playerId, gameId, -1);
+		triggerAchievementUnlock(count, count+1, achievementRef, playerId, gameId);
 	}
 	private static void triggerAchievementUnlock(int oldValue, int newValue, int achievementRef, long playerId, long gameId)
 	{

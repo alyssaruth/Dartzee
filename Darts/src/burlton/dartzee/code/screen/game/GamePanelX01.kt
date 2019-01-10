@@ -3,17 +3,11 @@ package burlton.dartzee.code.screen.game
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
-import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
-import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_HIGHEST_BUST
-import burlton.dartzee.code.achievements.insertForCheckoutCompleteness
+import burlton.dartzee.code.achievements.*
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.DartEntity
-import burlton.dartzee.code.utils.isBust
-import burlton.dartzee.code.utils.isCheckoutScore
-import burlton.dartzee.code.utils.shouldStopForMercyRule
-import burlton.dartzee.code.utils.sumScore
+import burlton.dartzee.code.utils.*
 
 class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(parent)
 {
@@ -43,18 +37,17 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         val lastDart = dartsThrown.lastElement()
         val bust = isBust(currentScore, lastDart)
 
-        //Play a sound if we can...
-        var totalScore = 0
-        for (dart in dartsThrown)
-        {
-            totalScore += dart.getTotal()
-        }
-
         if (!bust)
         {
+            val totalScore = sumScore(dartsThrown)
             if (totalScore == 26)
             {
                 dartboard.doFawlty()
+            }
+
+            if (isShanghai(dartsThrown))
+            {
+                AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_SHANGHAI, currentPlayerId, gameId)
             }
 
             dartboard.playDodgySound("" + totalScore)
