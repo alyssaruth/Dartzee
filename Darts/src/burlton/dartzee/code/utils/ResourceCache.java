@@ -38,6 +38,7 @@ public class ResourceCache
 	public static final URL URL_ACHIEVEMENT_CLOCK_BEST_GAME = ResourceCache.class.getResource("/achievements/podiumClock.png");
 	public static final URL URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES = ResourceCache.class.getResource("/achievements/Bruce.png");
 	public static final URL URL_ACHIEVEMENT_X01_SHANGHAI = ResourceCache.class.getResource("/achievements/shanghai.png");
+	public static final URL URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR = ResourceCache.class.getResource("/achievements/hotelInspector.png");
 
 	private static final Object wavPoolLock = new Object();
 	private static final HashMapList<String, AudioInputStream> hmWavToInputStreams = new HashMapList<>();

@@ -95,7 +95,7 @@ class AchievementX01Shanghai : AbstractAchievement()
                     val gameId = rs.getLong("GameId")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, dtAchieved)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved)
                 }
             }
         }

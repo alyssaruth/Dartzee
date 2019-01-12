@@ -31,6 +31,8 @@ abstract class AbstractAchievement
     var gameIdEarned = -1L
     var dtLatestUpdate = START_OF_TIME
 
+    var breakdownRows = mutableListOf<AchievementEntity>()
+
     fun runConversion(players : MutableList<PlayerEntity>)
     {
         val playerIds = players.stream().map{p -> "" + p.rowId}.toList()

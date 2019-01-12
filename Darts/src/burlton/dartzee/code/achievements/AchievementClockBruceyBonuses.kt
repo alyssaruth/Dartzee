@@ -58,7 +58,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
                     val score = rs.getInt("BruceCount")
                     val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, dtLastUpdate)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, "", dtLastUpdate)
                 }
             }
         }
