@@ -49,7 +49,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
                     val dtFinished = rs.getTimestamp("DtFinished")
                     val score = rs.getInt("FinalScore")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, dtFinished)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtFinished)
                 }
             }
         }

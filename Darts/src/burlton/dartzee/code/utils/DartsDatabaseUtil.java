@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class DartsDatabaseUtil
 {
-	public static final int DATABASE_VERSION = 4;
+	public static final int DATABASE_VERSION = 5;
 	
 	private static final String DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying";
 	
@@ -66,6 +66,13 @@ public class DartsDatabaseUtil
 			version.setVersion(4);
 			version.saveToDatabase();
 		}
+
+		if (versionNumber == 4)
+		{
+			upgradeDatabaseToVersion5();
+			version.setVersion(5);
+			version.saveToDatabase();
+		}
 		
 		initialiseDatabase(version);
 	}
@@ -86,6 +93,15 @@ public class DartsDatabaseUtil
 		
 		Debug.appendBanner("Finished initting database");
 		DialogUtil.dismissLoadingDialog();
+	}
+
+	private static void upgradeDatabaseToVersion5()
+	{
+		Debug.appendBanner("Upgrading to Version 5");
+
+		new AchievementEntity().addStringColumn("AchievementDetail", 255);
+
+		Debug.appendBanner("Finished database upgrade");
 	}
 	
 	private static void upgradeDatabaseToVersion4()

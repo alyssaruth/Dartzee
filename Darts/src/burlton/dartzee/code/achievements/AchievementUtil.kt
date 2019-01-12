@@ -9,6 +9,18 @@ import burlton.desktopcore.code.screen.ProgressDialog
 import java.sql.SQLException
 import kotlin.streams.toList
 
+fun getNotBustSql(): String
+{
+    val sb = StringBuilder()
+    sb.append(" AND")
+    sb.append(" (")
+    sb.append("     (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) > 1)")
+    sb.append("     OR (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) = 0 AND drtLast.Multiplier = 2)")
+    sb.append(" )")
+
+    return sb.toString()
+}
+
 fun getAchievementMaximum() : Int
 {
     return getAllAchievements().size * 6
@@ -84,7 +96,8 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
                          AchievementGolfBestGame(),
                          AchievementClockBestGame(),
                          AchievementClockBruceyBonuses(),
-                         AchievementX01Shanghai())
+                         AchievementX01Shanghai(),
+                         AchievementX01HotelInspector())
 }
 
 fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
@@ -173,7 +186,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
                 val dtAchieved = rs.getTimestamp("DtAchieved")
                 val score = rs.getInt("Score")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, dtAchieved)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved)
             }
         }
     }

@@ -365,19 +365,27 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	
 	public boolean addIntColumn(String columnName)
 	{
+		return addColumn(columnName, "INT", "-1");
+	}
+	public boolean addStringColumn(String columnName, int length)
+	{
+		return addColumn(columnName, "VARCHAR(" + length + ")", "''");
+	}
+	private boolean addColumn(String columnName, String dataType, String defaultValue)
+	{
 		if (columnExists(columnName))
 		{
 			Debug.append("Not adding column " + columnName + " to " + getTableName() + " as it already exists");
 			return false;
 		}
-		
-		String sql = "ALTER TABLE " + getTableName() + " ADD COLUMN " + columnName + " INT NOT NULL DEFAULT -1";
+
+		String sql = "ALTER TABLE " + getTableName() + " ADD COLUMN " + columnName + " " + dataType + " NOT NULL DEFAULT " + defaultValue;
 		boolean addedColumn = DatabaseUtil.executeUpdate(sql);
 		if (!addedColumn)
 		{
 			return false;
 		}
-		
+
 		//We've added the column, now attempt to drop the default.
 		String defaultSql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " DEFAULT NULL";
 		return DatabaseUtil.executeUpdate(defaultSql);

@@ -41,7 +41,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
                     val score = rs.getInt("WinCount")
                     val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, dtLastUpdate)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, "", dtLastUpdate)
                 }
             }
         }

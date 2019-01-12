@@ -67,7 +67,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
                 val gameId = rs.getLong("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, playerId, gameId, score, dtAchieved)
+                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, playerId, gameId, score, "", dtAchieved)
             }
         }
 
