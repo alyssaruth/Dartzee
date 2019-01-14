@@ -3,7 +3,7 @@ package burlton.dartzee.code.ai;
 import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.Dartboard;
-import burlton.dartzee.code.utils.X01Util;
+import burlton.dartzee.code.utils.X01UtilKt;
 import burlton.core.code.util.Debug;
 
 /**
@@ -70,7 +70,7 @@ public class DartsSimulationX01 extends AbstractDartsSimulation
 		hmRoundNumberToDarts.put(currentRound, dartsThrown);
 		
 		//If we've bust, then reset the current score back
-		if (X01Util.isBust(currentScore, dartsThrown.lastElement()))
+		if (X01UtilKt.isBust(currentScore, dartsThrown.lastElement()))
 		{
 			currentScore = startingScore;
 		}
@@ -94,7 +94,7 @@ public class DartsSimulationX01 extends AbstractDartsSimulation
 		
 		if (currentScore <= 1
 		  || dartsThrown.size() == 3
-		  || X01Util.shouldStopForMercyRule(model, startingScore, currentScore))
+		  || X01UtilKt.shouldStopForMercyRule(model, startingScore, currentScore))
 		{
 			finishedRound();
 		}
