@@ -5,7 +5,7 @@ import burlton.core.code.obj.HashMapList;
 import burlton.core.code.util.MathsUtil;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.stats.GameWrapper;
-import burlton.dartzee.code.utils.X01Util;
+import burlton.dartzee.code.utils.X01UtilKt;
 import burlton.desktopcore.code.bean.ScrollTable;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 
@@ -111,7 +111,7 @@ public final class StatisticsTabX01CheckoutPercent extends AbstractStatisticsTab
 		Collection<Dart> darts = g.getAllDarts();
 		for (Dart drt : darts)
 		{
-			if (X01Util.isCheckoutDart(drt))
+			if (X01UtilKt.isCheckoutDart(drt))
 			{	
 				int startingScore = drt.getStartingScore();
 				hmDoubleToDartsThrown.putInList(startingScore, drt);

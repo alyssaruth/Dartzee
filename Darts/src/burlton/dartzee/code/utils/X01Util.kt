@@ -1,8 +1,5 @@
-@file:JvmName("X01Util")
-
 package burlton.dartzee.code.utils
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
@@ -64,7 +61,7 @@ fun getScoringDarts(allDarts: MutableList<Dart>?, scoreCutOff: Int): MutableList
 {
     return if (allDarts == null)
     {
-        HandyArrayList()
+        mutableListOf()
     }
     else
         allDarts.filter { d -> d.startingScore > scoreCutOff }.toMutableList()
