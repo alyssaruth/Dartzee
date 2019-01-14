@@ -487,7 +487,7 @@ public abstract class AbstractEntity<E extends AbstractEntity<E>>
 	public String writeString(PreparedStatement ps, int ix, String value, String statementStr) throws SQLException
 	{
 		ps.setString(ix, value);
-		return swapInValue(statementStr, value);
+		return swapInValue(statementStr, "'" + value + "'");
 	}
 	public String writeTimestamp(PreparedStatement ps, int ix, Timestamp value, String statementStr) throws SQLException
 	{
