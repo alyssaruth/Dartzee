@@ -43,6 +43,8 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
             if (totalScore == 26)
             {
                 dartboard.doFawlty()
+
+                updateHotelInspector()
             }
 
             if (isShanghai(dartsThrown))
@@ -64,6 +66,27 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         activeScorer.finaliseRoundScore(startingScore, bust)
 
         super.saveDartsAndProceed()
+    }
+
+    private fun updateHotelInspector()
+    {
+        //Need to have thrown 3 darts, all of which didn't miss.
+        if (dartsThrown.any { d -> d.multiplier == 0 }
+          || dartsThrown.size < 3)
+        {
+            return
+        }
+
+        val methodStr = getSortedDartStr(dartsThrown)
+        val whereSql = "AchievementRef = $ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR " +
+                       "AND PlayerId = $currentPlayerId " +
+                       "AND AchievementDetail = '$methodStr'"
+
+        val existingRow = AchievementEntity().retrieveEntity(whereSql)
+        if (existingRow == null)
+        {
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, currentPlayerId, gameId, methodStr)
+        }
     }
 
     /**
