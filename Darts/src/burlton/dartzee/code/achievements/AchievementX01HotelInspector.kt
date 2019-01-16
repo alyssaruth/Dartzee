@@ -3,7 +3,7 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
-import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 import java.net.URL
@@ -45,7 +45,7 @@ class AchievementX01HotelInspector : AbstractAchievement()
         sb.append(" AND drtFirst.Multiplier > 0")
         sb.append(" AND drtSecond.Multiplier > 0")
         sb.append(" AND drtLast.Multiplier > 0")
-        sb.append(" AND ${OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR} = 26")
+        sb.append(" AND $TOTAL_ROUND_SCORE_SQL_STR = 26")
         sb.append(getNotBustSql())
         if (!playerIds.isEmpty())
         {

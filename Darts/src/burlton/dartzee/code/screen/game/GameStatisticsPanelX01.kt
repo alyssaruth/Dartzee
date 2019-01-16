@@ -136,10 +136,19 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
             val darts = rounds!!.flattenBatches()
 
             var avg = calculateThreeDartAverage(darts, nfSetupThreshold.number)
-            val p1 = (100 * avg).toInt()
-            avg = p1.toDouble() / 100
+            if (avg < 0)
+            {
+                threeDartAvgs[i + 1] = "N/A"
+            }
+            else
+            {
+                val p1 = (100 * avg).toInt()
+                avg = p1.toDouble() / 100
 
-            threeDartAvgs[i + 1] = avg
+                threeDartAvgs[i + 1] = avg
+            }
+
+
         }
 
         return threeDartAvgs

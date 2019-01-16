@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements
 
-import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.ResourceCache
 import java.net.URL
 
@@ -20,7 +20,7 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", "drtLast.Ordinal = 3", OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
+        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", "drtLast.Ordinal = 3", TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }
 
     override fun getIconURL(): URL?

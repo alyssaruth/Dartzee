@@ -71,6 +71,10 @@ fun getScoringDarts(allDarts: MutableList<Dart>?, scoreCutOff: Int): MutableList
 fun calculateThreeDartAverage(darts: MutableList<Dart>, scoreCutOff: Int): Double
 {
     val scoringDarts = getScoringDarts(darts, scoreCutOff)
+    if (scoringDarts.isEmpty())
+    {
+        return -1.0
+    }
 
     val amountScored = sumScore(scoringDarts).toDouble()
 

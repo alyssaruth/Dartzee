@@ -49,7 +49,7 @@ class OverallStatsTabTotalScore(private val gameType: Int) : JPanel(), ActionLis
     fun buildTable()
     {
         val sql = getTotalScoreSql()
-        OverallStatsScreen.Companion.buildStandardLeaderboard(scrollPane, sql, "Score", rdbtnWorst.isSelected)
+        buildStandardLeaderboard(scrollPane, sql, "Score", rdbtnWorst.isSelected)
     }
 
     override fun actionPerformed(arg0: ActionEvent)

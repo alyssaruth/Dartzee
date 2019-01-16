@@ -1,11 +1,10 @@
 package burlton.dartzee.code.utils;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.util.ArrayList;
-
 import burlton.core.code.util.Debug;
 import burlton.core.code.util.StringUtil;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public final class DartsColour implements DartsRegistry
 {
@@ -30,7 +29,7 @@ public final class DartsColour implements DartsRegistry
 	{
 		if (colour == null)
 		{
-			return colour;
+			return null;
 		}
 		
 		Color brighterColour = colour.darker().darker();
