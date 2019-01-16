@@ -3,7 +3,7 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
-import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
 import java.net.URL
@@ -60,7 +60,7 @@ class AchievementX01Shanghai : AbstractAchievement()
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtLast.Ordinal = 3")
         sb.append(" AND drtLast.RoundId = drtFirst.RoundId")
-        sb.append(" AND ${OverallStatsScreen.TOTAL_ROUND_SCORE_SQL_STR} = 120")
+        sb.append(" AND $TOTAL_ROUND_SCORE_SQL_STR = 120")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")

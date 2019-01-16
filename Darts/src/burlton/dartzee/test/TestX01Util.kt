@@ -3,9 +3,14 @@ package burlton.dartzee.test
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.utils.*
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.Mockito.mock
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class TestX01Util
 {
@@ -116,5 +121,90 @@ class TestX01Util
         assertEquals(mutableListOf(), result)
     }
 
+    @Test
+    fun testGetScoringDarts()
+    {
+        val d1 = mock(Dart::class.java)
+        val d2 = mock(Dart::class.java)
+        val d3 = mock(Dart::class.java)
+        d1.startingScore = 51
+        d2.startingScore = 50
+        d3.startingScore = 49
 
+        val list = mutableListOf(d1, d2, d3)
+
+        val result = getScoringDarts(list, 50)
+
+        assertTrue(result.contains(d1))
+        assertFalse(result.contains(d2))
+        assertFalse(result.contains(d2))
+    }
+
+    @Test
+    fun testCalculateThreeDartAverage()
+    {
+        val d1 = Dart(20, 1)
+        val d2 = Dart(20, 2)
+        val d3 = Dart(10, 0)
+        val d4 = Dart(5, 3)
+
+        d1.startingScore = 100
+        d2.startingScore = 100
+        d3.startingScore = 80
+        d4.startingScore = 100
+
+        val list = mutableListOf(d1, d2, d3, d4)
+        val result = calculateThreeDartAverage(list, 70)
+        val resultTwo = calculateThreeDartAverage(list, 90) //The miss should be excluded
+        val resultThree = calculateThreeDartAverage(list, 200) //Test an empty list
+
+        assertThat(result, equalTo(56.25))
+        assertThat(resultTwo, equalTo(75.0))
+        assertThat(resultThree, equalTo(-1.0))
+    }
+
+    @Test
+    fun testSumScore()
+    {
+        val d1 = Dart(20, 2)
+        val d2 = Dart(13, 0)
+        val d3 = Dart(11, 1)
+
+        val list = mutableListOf(d1, d2, d3)
+
+
+        val sum = sumScore(list)
+        assertThat(sum, equalTo(51))
+    }
+
+    @Test
+    fun testIsShanghai()
+    {
+        val tooShort = mutableListOf(Dart(20, 3), Dart(20, 3))
+        val wrongSum = mutableListOf(Dart(20, 1), Dart(20, 3), Dart(20, 3))
+        val allDoubles = mutableListOf(Dart(20, 2), Dart(20, 2), Dart(20, 2))
+        val correct = mutableListOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
+        val correctDifferentOrder = mutableListOf(Dart(20, 2), Dart(20, 3), Dart(20, 1))
+
+        assertFalse(isShanghai(tooShort))
+        assertFalse(isShanghai(wrongSum))
+        assertFalse(isShanghai(allDoubles))
+
+        assertTrue(isShanghai(correct))
+        assertTrue(isShanghai(correctDifferentOrder))
+    }
+
+    @Test
+    fun testGetSortedDartStr()
+    {
+        val listOne = mutableListOf(Dart(2, 3), Dart(3, 2), Dart(20, 1))
+        val listTwo = mutableListOf(Dart(1, 1), Dart(7, 1), Dart(5, 1))
+        val listThree = mutableListOf(Dart(20, 3), Dart(20, 3), Dart(20, 3))
+        val listFour = mutableListOf(Dart(25, 2), Dart(20, 3), Dart(20, 0))
+
+        assertThat(getSortedDartStr(listOne), equalTo("20, T2, D3"))
+        assertThat(getSortedDartStr(listTwo), equalTo("7, 5, 1"))
+        assertThat(getSortedDartStr(listThree), equalTo("T20, T20, T20"))
+        assertThat(getSortedDartStr(listFour), equalTo("T20, D25, 0"))
+    }
 }

@@ -20,6 +20,60 @@ import javax.swing.JPanel
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
 
+const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
+
+/**
+ * Build a standard leaderboard table, which contains the flag, name, Game ID and a custom 'score' column.
+ */
+fun buildStandardLeaderboard(table: ScrollTableDartsGame, sql: String, scoreColumnName: String, desc: Boolean)
+{
+    val model = TableUtil.DefaultModel()
+    model.addColumn("")
+    model.addColumn("Player")
+    model.addColumn("Game")
+    model.addColumn(scoreColumnName)
+
+    val rows = retrieveDatabaseRowsForLeaderboard(sql)
+    for (row in rows)
+    {
+        model.addRow(row)
+    }
+
+    table.model = model
+    table.setColumnWidths("25")
+    table.sortBy(3, desc)
+}
+
+private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): ArrayList<Array<Any>>
+{
+    val rows = ArrayList<Array<Any>>()
+
+    try
+    {
+        DatabaseUtil.executeQuery(sqlStr).use { rs ->
+            while (rs.next())
+            {
+                val strategy = rs.getInt(1)
+                val playerName = rs.getString(2)
+                val gameId = rs.getLong(3)
+                val score = rs.getInt(4)
+
+                val playerFlag = PlayerEntity.getPlayerFlag(strategy == -1)
+
+                val row = arrayOf<Any>(playerFlag, playerName, gameId, score)
+                rows.add(row)
+            }
+        }
+    }
+    catch (sqle: SQLException)
+    {
+        Debug.logSqlException(sqlStr, sqle)
+        DialogUtil.showError("Failed to build finishes leaderboard.")
+    }
+
+    return rows
+}
+
 class OverallStatsScreen : EmbeddedScreen()
 {
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
@@ -135,62 +189,4 @@ class OverallStatsScreen : EmbeddedScreen()
 
         return sb.toString()
     }
-
-    companion object
-    {
-        const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
-
-        /**
-         * Build a standard leaderboard table, which contains the flag, name, Game ID and a custom 'score' column.
-         */
-        fun buildStandardLeaderboard(table: ScrollTableDartsGame, sql: String, scoreColumnName: String, desc: Boolean)
-        {
-            val model = TableUtil.DefaultModel()
-            model.addColumn("")
-            model.addColumn("Player")
-            model.addColumn("Game")
-            model.addColumn(scoreColumnName)
-
-            val rows = retrieveDatabaseRowsForLeaderboard(sql)
-            for (row in rows)
-            {
-                model.addRow(row)
-            }
-
-            table.model = model
-            table.setColumnWidths("25")
-            table.sortBy(3, desc)
-        }
-
-        private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): ArrayList<Array<Any>>
-        {
-            val rows = ArrayList<Array<Any>>()
-
-            try
-            {
-                DatabaseUtil.executeQuery(sqlStr).use { rs ->
-                    while (rs.next())
-                    {
-                        val strategy = rs.getInt(1)
-                        val playerName = rs.getString(2)
-                        val gameId = rs.getLong(3)
-                        val score = rs.getInt(4)
-
-                        val playerFlag = PlayerEntity.getPlayerFlag(strategy == -1)
-
-                        val row = arrayOf<Any>(playerFlag, playerName, gameId, score)
-                        rows.add(row)
-                    }
-                }
-            }
-            catch (sqle: SQLException)
-            {
-                Debug.logSqlException(sqlStr, sqle)
-                DialogUtil.showError("Failed to build finishes leaderboard.")
-            }
-
-            return rows
-        }
-    }
-
 }
