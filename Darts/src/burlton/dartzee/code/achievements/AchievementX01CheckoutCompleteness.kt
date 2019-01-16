@@ -2,6 +2,7 @@ package burlton.dartzee.code.achievements
 
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
 import java.awt.Color
@@ -74,8 +75,10 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         DatabaseUtil.dropTable(tempTable)
     }
 
-    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>)
+    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>, player: PlayerEntity?)
     {
+        this.player = player
+
         attainedValue = achievementRows.size
 
         hitDoubles = achievementRows.stream().map{row -> row.achievementCounter}.toList().toMutableList()

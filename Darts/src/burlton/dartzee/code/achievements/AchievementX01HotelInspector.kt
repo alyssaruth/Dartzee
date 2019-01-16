@@ -3,9 +3,11 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
+import burlton.desktopcore.code.util.TableUtil
 import java.net.URL
 import java.sql.SQLException
 
@@ -92,17 +94,29 @@ class AchievementX01HotelInspector : AbstractAchievement()
         }
     }
 
-    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>)
+    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>, player: PlayerEntity?)
     {
-        attainedValue = achievementRows.size
+        this.player = player
 
-        this.breakdownRows = achievementRows
+        attainedValue = achievementRows.size
 
         if (!achievementRows.isEmpty())
         {
-            val last = achievementRows.sortedBy { it.dtLastUpdate }.last()
+            val sortedRows = achievementRows.sortedBy {it.dtLastUpdate}
+            val last = sortedRows.last()
 
             dtLatestUpdate = last.dtLastUpdate
+
+            val tm = TableUtil.DefaultModel()
+            tm.addColumn("Method")
+            tm.addColumn("Game")
+            tm.addColumn("Date Achieved")
+
+            sortedRows.forEach{
+                tm.addRow(arrayOf(it.achievementDetail, it.gameIdEarned, it.dtLastUpdate))
+            }
+
+            tmBreakdown = tm
         }
     }
 

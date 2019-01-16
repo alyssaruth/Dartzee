@@ -3,6 +3,7 @@ package burlton.dartzee.code.bean
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
+import burlton.dartzee.code.screen.stats.player.PlayerAchievementBreakdown
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
 import burlton.dartzee.code.utils.GeometryUtil
 import java.awt.*
@@ -20,14 +21,12 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
 {
     private var angle = 0.0
     private var highlighted = false
-    private var gameIdEarned = -1L
     var hoveringEnabled = true
 
     init
     {
         preferredSize = Dimension(SIZE, SIZE)
         angle = achievement.getAngle()
-        gameIdEarned = achievement.gameIdEarned
 
         addMouseListener(this)
         addMouseMotionListener(this)
@@ -103,7 +102,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
 
         ScreenCache.getScreen(PlayerAchievementsScreen::class.java).toggleAchievementDesc(highlighted, achievement)
 
-        cursor = if (highlighted && gameIdEarned > -1)
+        cursor = if (highlighted && achievement.isClickable())
         {
             Cursor(Cursor.HAND_CURSOR)
         }
@@ -122,10 +121,16 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     override fun mouseReleased(e: MouseEvent?) {}
     override fun mouseClicked(e: MouseEvent?)
     {
-        if (gameIdEarned > -1
-          && hoveringEnabled)
+        if (achievement.tmBreakdown != null)
         {
-            DartsGameScreen.loadAndDisplayGame(gameIdEarned)
+            val scrn = ScreenCache.getScreen(PlayerAchievementBreakdown::class.java)
+            scrn.setState(achievement)
+
+            ScreenCache.switchScreen(scrn)
+        }
+        else if (achievement.gameIdEarned > -1)
+        {
+            DartsGameScreen.loadAndDisplayGame(achievement.gameIdEarned)
         }
     }
     override fun mousePressed(e: MouseEvent?) {}
