@@ -3,6 +3,7 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
@@ -32,8 +33,10 @@ class AchievementX01Shanghai : AbstractAchievement()
         return true
     }
 
-    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>)
+    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>, player: PlayerEntity?)
     {
+        this.player = player
+
         attainedValue = achievementRows.size
 
         if (!achievementRows.isEmpty())

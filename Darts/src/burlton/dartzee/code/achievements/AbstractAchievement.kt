@@ -12,6 +12,7 @@ import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL
 import javax.imageio.ImageIO
+import javax.swing.table.DefaultTableModel
 import kotlin.streams.toList
 
 abstract class AbstractAchievement
@@ -30,8 +31,9 @@ abstract class AbstractAchievement
     var attainedValue = -1
     var gameIdEarned = -1L
     var dtLatestUpdate = START_OF_TIME
+    var player : PlayerEntity? = null
 
-    var breakdownRows = mutableListOf<AchievementEntity>()
+    var tmBreakdown : DefaultTableModel? = null
 
     fun runConversion(players : MutableList<PlayerEntity>)
     {
@@ -60,7 +62,7 @@ abstract class AbstractAchievement
     /**
      * Basic init will be the same for most achievements - get the value from the single row
      */
-    open fun initialiseFromDb(achievementRows : MutableList<AchievementEntity>)
+    open fun initialiseFromDb(achievementRows : MutableList<AchievementEntity>, player: PlayerEntity?)
     {
         if (achievementRows.size == 0)
         {
@@ -76,6 +78,8 @@ abstract class AbstractAchievement
         attainedValue = achievementRow.achievementCounter
         gameIdEarned = achievementRow.gameIdEarned
         dtLatestUpdate = achievementRow.dtLastUpdate
+
+        this.player = player
     }
 
     fun getScore() : Int
@@ -171,6 +175,12 @@ abstract class AbstractAchievement
         {
             attainedValue < redThreshold
         }
+    }
+
+    fun isClickable(): Boolean
+    {
+        return gameIdEarned > -1
+          || tmBreakdown != null
     }
 
     fun getIcon(highlighted : Boolean) : BufferedImage?

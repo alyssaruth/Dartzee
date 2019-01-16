@@ -92,7 +92,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         val ref = aa.achievementRef
         val achievementRowsFiltered = achievementRows.filter { a -> a.achievementRef == ref }.toMutableList()
 
-        aa.initialiseFromDb(achievementRowsFiltered)
+        aa.initialiseFromDb(achievementRowsFiltered, player)
 
         val medal = AchievementMedal(aa)
         panelGeneral.add(medal)
