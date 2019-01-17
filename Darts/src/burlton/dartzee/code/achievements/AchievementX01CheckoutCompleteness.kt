@@ -5,6 +5,7 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.desktopcore.code.util.TableUtil
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL
@@ -85,7 +86,20 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
 
         if (!achievementRows.isEmpty())
         {
-            dtLatestUpdate = achievementRows.sortedBy { it.dtLastUpdate }.last().dtLastUpdate
+            val sortedRows = achievementRows.sortedBy { it.dtLastUpdate }
+            dtLatestUpdate = sortedRows.last().dtLastUpdate
+
+            val tm = TableUtil.DefaultModel()
+
+            tm.addColumn("Double")
+            tm.addColumn("Game")
+            tm.addColumn("Date Achieved")
+
+            sortedRows.forEach{
+                tm.addRow(arrayOf(it.achievementCounter, it.gameIdEarned, it.dtLastUpdate))
+            }
+
+            tmBreakdown = tm
         }
     }
 
