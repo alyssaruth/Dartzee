@@ -40,12 +40,18 @@ fun isCheckoutDart(drt: Dart): Boolean
 }
 fun isCheckoutScore(score: Int): Boolean
 {
-    return if (score == 50)
+    return getCheckoutScores().contains(score)
+}
+
+fun getCheckoutScores(): MutableList<Int>
+{
+    val list = mutableListOf(50)
+    for (i in 2..40 step 2)
     {
-        true
+        list.add(i)
     }
-    else score % 2 == 0 //Even
-            && score <= 40
+
+    return list
 }
 
 fun isFinishRound(round: MutableList<Dart>): Boolean

@@ -3,7 +3,7 @@ package burlton.dartzee.code.screen.preference;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
-import burlton.dartzee.code.utils.DartboardUtil;
+import burlton.dartzee.code.utils.DartboardUtilKt;
 import burlton.dartzee.code.utils.DartsRegistry;
 import burlton.desktopcore.code.util.ComponentUtil;
 
@@ -88,7 +88,7 @@ public final class PreferencesDialog extends JDialog
 		}
 		
 		//Refresh all active screens in case we've changed appearance preferences
-		DartboardUtil.resetCachedValues();
+		DartboardUtilKt.resetCachedDartboardValues();
 		
 		ArrayList<DartsGameScreen> visibleScreens = ScreenCache.getDartsGameScreens();
 		for (int i=0; i<visibleScreens.size(); i++)

@@ -97,7 +97,8 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
                          AchievementClockBestGame(),
                          AchievementClockBruceyBonuses(),
                          AchievementX01Shanghai(),
-                         AchievementX01HotelInspector())
+                         AchievementX01HotelInspector(),
+                         AchievementX01SuchBadLuck())
 }
 
 fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?

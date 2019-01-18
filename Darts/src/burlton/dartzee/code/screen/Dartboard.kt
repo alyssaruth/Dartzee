@@ -52,11 +52,11 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     private val dartboardLabel = JLabel()
     private val dodgyLabel = JLabel() //You know what this is...
 
-    fun getArea(): Double
+    /*fun getArea(): Double
     {
         val radius = diameter / 2
         return radius * radius * Math.PI
-    }
+    }*/
 
     constructor()
     {
@@ -162,7 +162,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
                 pt.setLocation(x, y)
 
                 val segment = getSegmentForPoint(pt)
-                val colour = DartboardUtil.getColourForPointAndSegment(pt, segment, false, colourWrapper)
+                val colour = getColourForPointAndSegment(pt, segment, false, colourWrapper)
 
                 if (colour != null)
                 {
@@ -188,7 +188,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
         //Get the height we want for our labels, which is half the thickness of the outer band
         val radius = diameter / 2
-        val outerRadius = DartboardUtil.UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
+        val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = Math.round((outerRadius - radius) / 2).toInt()
 
         val fontToUse = getFontForDartboardLabels(lblHeight)
@@ -282,7 +282,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             return
         }
 
-        val hoveredColour = DartboardUtil.getColourForPointAndSegment(null, segment, highlight, colourWrapper)
+        val hoveredColour = getColourForPointAndSegment(null, segment, highlight, colourWrapper)
         val pointsForCurrentSegment = segment.points
         for (i in pointsForCurrentSegment.indices)
         {
@@ -323,7 +323,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private fun factoryAndCacheSegmentForPoint(pt: Point): DartboardSegmentKt
     {
-        val segmentKey = DartboardUtil.factorySegmentKeyForPoint(pt, centerPoint, diameter)
+        val segmentKey = factorySegmentKeyForPoint(pt, centerPoint, diameter)
         var segment = hmSegmentKeyToSegment[segmentKey]
         if (segment == null)
         {
@@ -385,7 +385,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
 
         val segment = getSegmentForPoint(pt)
-        return DartboardUtil.getDartForSegment(pt, segment)
+        return getDartForSegment(pt, segment)
     }
 
     fun rationalisePoint(pt: Point)
