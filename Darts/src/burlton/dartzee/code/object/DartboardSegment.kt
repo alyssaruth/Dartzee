@@ -84,14 +84,16 @@ class DartboardSegmentKt(scoreAndType : String)
         return score.toString() + " (" + type + ")"
     }
 
-    fun isEdgePoint(pt: Point): Boolean
+    fun isEdgePoint(pt: Point?): Boolean
     {
+        pt ?: return false
+
         var canBeYMax = true
         var canBeYMin = true
         var canBeXMax = true
         var canBeXMin = true
 
-        val otherXPts = hmXCoordToPoints.getOrDefault(pt.x, mutableListOf<Point>())
+        val otherXPts = hmXCoordToPoints.getOrDefault(pt.x, mutableListOf())
         for (otherPt in otherXPts)
         {
             if (otherPt.getY() < pt.getY())

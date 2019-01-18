@@ -1,14 +1,14 @@
 package burlton.dartzee.test
 
 import burlton.dartzee.code.`object`.*
-import burlton.dartzee.code.utils.DartboardUtil
-import burlton.dartzee.code.utils.DartsColour
-import burlton.dartzee.code.utils.DartsRegistry
-import burlton.dartzee.code.utils.PreferenceUtil
+import burlton.dartzee.code.utils.*
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import org.junit.Assert
 import org.junit.Test
 import java.awt.Color
 import java.awt.Point
+import kotlin.test.assertTrue
 
 class TestDartboardUtil : DartsRegistry
 {
@@ -23,7 +23,7 @@ class TestDartboardUtil : DartsRegistry
         PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
         PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
-        DartboardUtil.resetCachedValues()
+        resetCachedDartboardValues()
 
         //Bullseyes
         assertSegment(Point(0, 0), TYPE_DOUBLE, 25, 2, DartsColour.DARTBOARD_RED)
@@ -54,7 +54,7 @@ class TestDartboardUtil : DartsRegistry
 
     private fun assertSegment(pt: Point, segmentType: Int, score: Int, multiplier: Int, expectedColor: Color?)
     {
-        val key = DartboardUtil.factorySegmentKeyForPoint(pt, Point(0, 0), 2000.0)
+        val key = factorySegmentKeyForPoint(pt, Point(0, 0), 2000.0)
         val expectedKey = score.toString() + "_" + segmentType
         Assert.assertEquals("SegmentKey for point $pt for dartboard with radius 1000", expectedKey, key)
 
@@ -63,7 +63,7 @@ class TestDartboardUtil : DartsRegistry
         val segmentStr = "" + segment
         Assert.assertEquals("DartboardSegment.toString() for point $pt", score.toString() + " (" + segmentType + ")", segmentStr)
 
-        val drt = DartboardUtil.getDartForSegment(pt, segment)
+        val drt = getDartForSegment(pt, segment)
 
         Assert.assertEquals("Dart score for point $pt", score.toLong(), drt.score.toLong())
         Assert.assertEquals("Dart multiplier for point $pt", multiplier.toLong(), drt.multiplier.toLong())
@@ -75,7 +75,7 @@ class TestDartboardUtil : DartsRegistry
     @Test
     fun testResetCachedValues()
     {
-        DartboardUtil.resetCachedValues()
+        resetCachedDartboardValues()
         val pink = Color.pink
         PreferenceUtil.saveString(DartsRegistry.PREFERENCES_STRING_EVEN_SINGLE_COLOUR, DartsColour.toPrefStr(pink))
         assertSegment(Point(0, -629), TYPE_OUTER_SINGLE, 20, 1, pink)
@@ -137,7 +137,37 @@ class TestDartboardUtil : DartsRegistry
 
     private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegmentKt, wrapper: ColourWrapper?, expected: Color?, highlight: Boolean)
     {
-        val color = DartboardUtil.getColourForPointAndSegment(pt, segment, highlight, wrapper)
+        val color = getColourForPointAndSegment(pt, segment, highlight, wrapper)
         Assert.assertEquals("Color for point $pt and segment $segment", expected, color)
     }
+
+    @Test
+    fun testGetAdjacentNumbersSize()
+    {
+        for (i in 1..20)
+        {
+            val adjacents = getAdjacentNumbers(i)
+
+            assertThat(adjacents.size, equalTo(2))
+        }
+    }
+
+    @Test
+    fun testGetAdjacentNumbers()
+    {
+        val adjacentTo20 = getAdjacentNumbers(20)
+        val adjacentTo3 = getAdjacentNumbers(3)
+        val adjacentTo6 = getAdjacentNumbers(6)
+        val adjacentTo11 = getAdjacentNumbers(11)
+
+        assertTrue(adjacentTo20.contains(1))
+        assertTrue(adjacentTo20.contains(5))
+        assertTrue(adjacentTo3.contains(19))
+        assertTrue(adjacentTo3.contains(17))
+        assertTrue(adjacentTo6.contains(10))
+        assertTrue(adjacentTo6.contains(13))
+        assertTrue(adjacentTo11.contains(14))
+        assertTrue(adjacentTo11.contains(8))
+    }
+
 }
