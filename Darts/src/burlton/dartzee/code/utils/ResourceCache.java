@@ -110,6 +110,8 @@ public class ResourceCache
 		ret.add("forsyth4.wav");
 		ret.add("four.wav");
 		ret.add("fourTrimmed.wav");
+		ret.add("badLuck1.wav");
+		ret.add("badLuck2.wav");
 
 		return ret;
 	}

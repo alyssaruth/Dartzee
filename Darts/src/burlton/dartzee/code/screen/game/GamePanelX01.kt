@@ -94,15 +94,10 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
      */
     override fun saveDartsToDatabase(roundId: Long)
     {
-        var score = startingScore
         for (i in dartsThrown.indices)
         {
             val dart = dartsThrown[i]
-            DartEntity.factoryAndSave(dart, roundId, i + 1, score)
-
-            //Adjust the starting score for the next DartEntity
-            val total = dart.getTotal()
-            score -= total
+            DartEntity.factoryAndSave(dart, roundId, i + 1, dart.startingScore)
         }
     }
 
@@ -161,8 +156,20 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
+        dart.startingScore = currentScore
+
         val dartTotal = dart.getTotal()
         currentScore -= dartTotal
+    }
+
+    override fun doAnimations(dart: Dart)
+    {
+        super.doAnimations(dart)
+
+        if (isNearMissDouble(dart))
+        {
+            dartboard.doBadLuck()
+        }
     }
 
     override fun shouldStopAfterDartThrown(): Boolean

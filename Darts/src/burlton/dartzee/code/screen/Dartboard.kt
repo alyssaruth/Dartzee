@@ -468,6 +468,14 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "forsyth$brucey")
     }
 
+    fun doBadLuck()
+    {
+        val rand = Random()
+        val ix = rand.nextInt(2) + 1
+
+        doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "badLuck$ix")
+    }
+
     fun doBull()
     {
         doDodgy(ResourceCache.IMG_DEV, 400, 476, "bull")
