@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.game
 
+import burlton.core.code.obj.HashMapCount
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
@@ -14,6 +15,8 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
     //Transient variables for each round
     private var startingScore = -1
     private var currentScore = -1
+
+    private val hmPlayerNumberToBadLuckCount = HashMapCount<Int>()
 
     override fun initImpl(gameParams: String)
     {
@@ -36,6 +39,11 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         //Finalise the scorer
         val lastDart = dartsThrown.lastElement()
         val bust = isBust(currentScore, lastDart)
+
+        updateNearMisses(dartsThrown, currentPlayerNumber)
+
+        val count = hmPlayerNumberToBadLuckCount.getCount(currentPlayerNumber)
+        AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, currentPlayerId, gameId, count)
 
         if (!bust)
         {
@@ -66,6 +74,16 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         activeScorer.finaliseRoundScore(startingScore, bust)
 
         super.saveDartsAndProceed()
+    }
+
+    private fun updateNearMisses(darts: MutableList<Dart>, playerNumber: Int)
+    {
+        darts.forEach{
+            if (isNearMissDouble(it))
+            {
+                hmPlayerNumberToBadLuckCount.incrementCount(playerNumber)
+            }
+        }
     }
 
     private fun updateHotelInspector()
@@ -125,6 +143,8 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         {
             val darts = hmRoundToDarts[i]!!
             addDartsToScorer(darts, scorer)
+
+            updateNearMisses(darts, playerNumber)
         }
 
         val pt = hmPlayerNumberToParticipant[playerNumber]!!
@@ -160,11 +180,6 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
         val dartTotal = dart.getTotal()
         currentScore -= dartTotal
-    }
-
-    override fun doAnimations(dart: Dart)
-    {
-        super.doAnimations(dart)
 
         if (isNearMissDouble(dart))
         {

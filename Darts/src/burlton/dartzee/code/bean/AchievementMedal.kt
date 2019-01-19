@@ -5,6 +5,7 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementBreakdown
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
+import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.GeometryUtil
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -47,7 +48,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
             markThreshold(g, Color.CYAN, achievement.blueThreshold)
             markThreshold(g, Color.GREEN, achievement.greenThreshold)
             markThreshold(g, Color.YELLOW, achievement.yellowThreshold)
-            markThreshold(g, Color.ORANGE, achievement.orangeThreshold)
+            markThreshold(g, DartsColour.COLOUR_ACHIEVEMENT_ORANGE, achievement.orangeThreshold)
             markThreshold(g, Color.RED, achievement.redThreshold)
 
             //Draw the actual progress

@@ -380,7 +380,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		for (int i=0; i<totalPlayers; i++)
 		{
 			ParticipantEntity pt = hmPlayerNumberToParticipant.get(i);
-			String sql = "SELECT rnd.RoundNumber, drt.Score, drt.Multiplier, drt.PosX, drt.PosY, drt.SegmentType"
+			String sql = "SELECT rnd.RoundNumber, drt.Score, drt.Multiplier, drt.PosX, drt.PosY, drt.SegmentType, drt.StartingScore"
 					   + " FROM Round rnd, Dart drt"
 					   + " WHERE drt.RoundId = rnd.RowId"
 					   + " AND rnd.ParticipantId = " + pt.getRowId()
@@ -399,8 +399,11 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 					int posX = rs.getInt("PosX");
 					int posY = rs.getInt("PosY");
 					int segmentType = rs.getInt("SegmentType");
+					int startingScore = rs.getInt("StartingScore");
 					
 					Dart drt = new Dart(score, multiplier, new Point(posX, posY), segmentType);
+					drt.setStartingScore(startingScore);
+
 					hmRoundToDarts.putInList(roundNumber, drt);
 					
 					lastRound = roundNumber;
