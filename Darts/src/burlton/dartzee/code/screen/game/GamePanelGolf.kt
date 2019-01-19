@@ -3,6 +3,7 @@ package burlton.dartzee.code.screen.game
 import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.DartEntity
@@ -143,6 +144,13 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
 
             pt.finishingPosition = finishPos
             pt.saveToDatabase()
+
+            if (finishPos == 1)
+            {
+                val achievementRef = getWinAchievementRef(gameEntity.gameType)
+                AchievementEntity.incrementAchievement(achievementRef, pt.playerId, gameId)
+            }
+
 
             previousScore = pt.finalScore
         }

@@ -112,7 +112,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             }
         }
 
-        @JvmStatic fun incrementAchievement(achievementRef: Int, playerId: Long, gameId: Long, amountBy: Int)
+        @JvmStatic fun incrementAchievement(achievementRef: Int, playerId: Long, gameId: Long, amountBy: Int = 1)
         {
             val existingAchievement = retrieveAchievement(achievementRef, playerId)
 
