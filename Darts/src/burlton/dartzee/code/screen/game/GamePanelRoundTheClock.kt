@@ -123,7 +123,7 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         if (dartsThrown.size == 4
           && dartsThrown.last().hitClockTarget(clockType))
         {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, gameEntity.rowId, 1)
+            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, gameId)
         }
     }
 
