@@ -45,6 +45,8 @@ class ChangeLog : JFrame() {
         textArea.append("\n= Performance improvement: Reuse of database connections")
         textArea.append("\n= Performance improvement: Reuse of dartboard graphics for speedier game start-up")
         textArea.append("\n= Memory improvement: Fixed a bug with audio caching that led to a pile-up of blocked \"Direct Clip\" threads")
+        textArea.append("\n= 27.5% Kotlin")
+        textArea.append("\n= 2.96% Test coverage (421 / 14,200 lines covered by 24 tests")
 
         textArea.append("\n")
         textArea.append("\n--------- v3.0.1 ---------")
