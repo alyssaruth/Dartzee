@@ -5,6 +5,7 @@ import burlton.dartzee.code.achievements.getPlayerAchievementScore
 import burlton.dartzee.code.bean.ScrollTableAchievements
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.utils.DartsColour
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Color
@@ -95,7 +96,7 @@ class OverallStatsTabAchievements : JPanel()
                 in 4*maximum/6 until 5*maximum/6 -> Color.CYAN
                 in 3*maximum/6 until 4*maximum/6 -> Color.GREEN
                 in 2*maximum/6 until 3*maximum/6 -> Color.YELLOW
-                in maximum/6 until 2*maximum/6 -> Color.ORANGE
+                in maximum/6 until 2*maximum/6 -> DartsColour.COLOUR_ACHIEVEMENT_ORANGE
                 in 1 until maximum/6 -> Color.RED
                 else -> Color.GRAY
             }

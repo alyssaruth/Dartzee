@@ -4,6 +4,7 @@ import burlton.core.code.util.Debug
 import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
 import burlton.desktopcore.code.util.DateStatics.Companion.START_OF_TIME
@@ -91,7 +92,7 @@ abstract class AbstractAchievement
             Color.CYAN -> 5
             Color.GREEN -> 4
             Color.YELLOW -> 3
-            Color.ORANGE -> 2
+            DartsColour.COLOUR_ACHIEVEMENT_ORANGE -> 2
             Color.RED -> 1
             else -> 0
         }
@@ -106,7 +107,7 @@ abstract class AbstractAchievement
                 -1 -> Color.GRAY
                 in redThreshold+1 until Int.MAX_VALUE -> Color.GRAY
                 in orangeThreshold+1 until redThreshold+1 -> Color.RED
-                in yellowThreshold+1 until orangeThreshold+1 -> Color.ORANGE
+                in yellowThreshold+1 until orangeThreshold+1 -> DartsColour.COLOUR_ACHIEVEMENT_ORANGE
                 in greenThreshold+1 until yellowThreshold+1 -> Color.YELLOW
                 in blueThreshold+1 until greenThreshold+1 -> Color.GREEN
                 in pinkThreshold+1 until blueThreshold+1 -> Color.CYAN
@@ -119,7 +120,7 @@ abstract class AbstractAchievement
             {
                 in Int.MIN_VALUE until redThreshold -> Color.GRAY
                 in redThreshold until orangeThreshold -> Color.RED
-                in orangeThreshold until yellowThreshold -> Color.ORANGE
+                in orangeThreshold until yellowThreshold -> DartsColour.COLOUR_ACHIEVEMENT_ORANGE
                 in yellowThreshold until greenThreshold -> Color.YELLOW
                 in greenThreshold until blueThreshold -> Color.GREEN
                 in blueThreshold until pinkThreshold -> Color.CYAN
