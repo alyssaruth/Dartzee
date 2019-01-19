@@ -36,11 +36,29 @@ fun isCheckoutDart(drt: Dart): Boolean
 {
     val startingScore = drt.startingScore
     return isCheckoutScore(startingScore)
-
 }
 fun isCheckoutScore(score: Int): Boolean
 {
     return getCheckoutScores().contains(score)
+}
+
+fun isNearMissDouble(dart: Dart): Boolean
+{
+    if (!isCheckoutDart(dart))
+    {
+        return false
+    }
+
+    //Outer bull case
+    if (dart.startingScore == 50)
+    {
+        return dart.score == 25 && dart.multiplier == 1
+    }
+
+    val adjacents = getAdjacentNumbers(dart.startingScore/2)
+
+    return dart.multiplier == 2
+      && adjacents.contains(dart.score)
 }
 
 fun getCheckoutScores(): MutableList<Int>

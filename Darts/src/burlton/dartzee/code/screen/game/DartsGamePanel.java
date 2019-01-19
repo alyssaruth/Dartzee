@@ -648,10 +648,10 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			dismissSlider();
 		}
 		
-		doAnimations(dart);
-		
 		//If there are any specific variables we need to update (e.g. current score for X01), do it now
 		updateVariablesForDartThrown(dart);
+
+		doAnimations(dart);
 		
 		//Enable both of these
 		btnReset.setEnabled(activeScorer.getHuman());
@@ -671,7 +671,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			readyForThrow();
 		}
 	}
-	private void doAnimations(Dart dart)
+	protected void doAnimations(Dart dart)
 	{
 		if (dart.getMultiplier() == 0
 		  && shouldAnimateMiss(dart))

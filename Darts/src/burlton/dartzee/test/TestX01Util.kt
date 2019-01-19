@@ -207,4 +207,37 @@ class TestX01Util
         assertThat(getSortedDartStr(listThree), equalTo("T20, T20, T20"))
         assertThat(getSortedDartStr(listFour), equalTo("T20, D25, 0"))
     }
+
+    @Test
+    fun testIsNearMissDouble()
+    {
+        val nonCheckoutDart = Dart(16, 2)
+        nonCheckoutDart.startingScore = 48
+
+        val hitBullseye = Dart(25, 2)
+        hitBullseye.startingScore = 50
+
+        val missedBullseye = Dart(19, 1)
+        missedBullseye.startingScore = 50
+
+        val nearMissBullseye = Dart(25, 1)
+        nearMissBullseye.startingScore = 50
+
+        val nonAdjacentDoubleTop = Dart(12, 2)
+        nonAdjacentDoubleTop.startingScore = 40
+
+        val nonDoubleDoubleTop = Dart(5, 1)
+        nonDoubleDoubleTop.startingScore = 40
+
+        val nearMissDoubleTop = Dart(5, 2)
+        nearMissDoubleTop.startingScore = 40
+
+        assertFalse(isNearMissDouble(nonCheckoutDart))
+        assertFalse(isNearMissDouble(hitBullseye))
+        assertFalse(isNearMissDouble(missedBullseye))
+        assertTrue(isNearMissDouble(nearMissBullseye))
+        assertFalse(isNearMissDouble(nonAdjacentDoubleTop))
+        assertFalse(isNearMissDouble(nonDoubleDoubleTop))
+        assertTrue(isNearMissDouble(nearMissDoubleTop))
+    }
 }
