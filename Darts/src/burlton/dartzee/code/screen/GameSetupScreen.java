@@ -1,21 +1,18 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-
-import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.bean.ComboBoxGameType;
 import burlton.dartzee.code.bean.GameParamFilterPanel;
 import burlton.dartzee.code.bean.GameParamFilterPanelX01;
 import burlton.dartzee.code.bean.PlayerSelector;
-import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.db.PlayerEntity;
+import burlton.dartzee.code.screen.game.DartsGameScreen;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public class GameSetupScreen extends EmbeddedScreen
 {
@@ -69,7 +66,7 @@ public class GameSetupScreen extends EmbeddedScreen
 		else if (arg0.getSource() == gameTypeComboBox)
 		{
 			panelGameType.remove(gameParamFilterPanel);
-			gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.getGameType());
+			gameParamFilterPanel = GameEntityKt.getFilterPanel(gameTypeComboBox.getGameType());
 			panelGameType.add(gameParamFilterPanel);
 			panelGameType.revalidate();
 		}

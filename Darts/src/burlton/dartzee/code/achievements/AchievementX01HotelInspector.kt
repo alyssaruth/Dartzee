@@ -2,7 +2,7 @@ package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -40,7 +40,7 @@ class AchievementX01HotelInspector : AbstractAchievement()
         sb.append(" AND d.RoundId = rnd.RowId")
         sb.append(" AND rnd.ParticipantId = pt.RowId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = ${GameEntity.GAME_TYPE_X01}")
+        sb.append(" AND g.GameType = $GAME_TYPE_X01")
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtSecond.Ordinal = 2")
         sb.append(" AND drtLast.Ordinal = 3")

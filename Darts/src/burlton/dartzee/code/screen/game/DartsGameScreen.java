@@ -4,10 +4,7 @@ import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.achievements.AbstractAchievement;
-import burlton.dartzee.code.db.DartsMatchEntity;
-import burlton.dartzee.code.db.GameEntity;
-import burlton.dartzee.code.db.ParticipantEntity;
-import burlton.dartzee.code.db.PlayerEntity;
+import burlton.dartzee.code.db.*;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.desktopcore.code.util.DateUtil;
 import burlton.desktopcore.code.util.DialogUtil;
@@ -187,7 +184,7 @@ public final class DartsGameScreen extends JFrame
 		}
 		
 		//Factory and save the next game
-		GameEntity nextGame = GameEntity.factoryAndSave(match);
+		GameEntity nextGame = GameEntityKt.factoryAndSave(match);
 		DartsGamePanel<? extends DartsScorer> panel = addGameToMatch(nextGame);
 		
 		//TODO - need to get the players off of the previous game (they're in the right order) then permute *those*
@@ -221,7 +218,7 @@ public final class DartsGameScreen extends JFrame
 	public static void launchNewGame(ArrayList<PlayerEntity> players, int gameType, String gameParams)
 	{
 		//Create and save a game
-		GameEntity gameEntity = GameEntity.factoryAndSave(gameType, gameParams);
+		GameEntity gameEntity = GameEntityKt.factoryAndSave(gameType, gameParams);
 		
 		//Construct the screen and factory a tab
 		DartsGameScreen scrn = new DartsGameScreen();
@@ -236,7 +233,7 @@ public final class DartsGameScreen extends JFrame
 		DartsGameScreen scrn = new DartsGameScreen();
 		scrn.initMatch(match);
 		
-		GameEntity game = GameEntity.factoryAndSave(match);
+		GameEntity game = GameEntityKt.factoryAndSave(match);
 		DartsGamePanel<? extends DartsScorer> panel = scrn.addGameToMatch(game);
 		panel.startNewGame(match.getPlayers());
 	}
@@ -290,7 +287,7 @@ public final class DartsGameScreen extends JFrame
 	}
 	private static void loadAndDisplayMatch(long matchId, long originalGameId)
 	{
-		HandyArrayList<GameEntity> allGames = GameEntity.retrieveGamesForMatch(matchId);
+		HandyArrayList<GameEntity> allGames = GameEntityKt.retrieveGamesForMatch(matchId);
 		
 		GameEntity firstGame = allGames.firstElement();
 		GameEntity lastGame = allGames.lastElement();

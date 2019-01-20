@@ -2,7 +2,7 @@ package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.screen.ProgressDialog
@@ -158,7 +158,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
     sb.append(" AND $lastDartWhereSql")
     sb.append(" AND pt.GameId = g.RowId")
-    sb.append(" AND g.GameType = " + GameEntity.GAME_TYPE_X01)
+    sb.append(" AND g.GameType = $GAME_TYPE_X01")
 
     if (!DatabaseUtil.executeUpdate("" + sb))
     {

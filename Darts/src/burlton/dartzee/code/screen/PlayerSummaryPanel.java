@@ -1,23 +1,16 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
-
-import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen;
-import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.db.PlayerEntity;
+import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen;
 import burlton.dartzee.code.stats.PlayerSummaryStats;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JLabel;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PlayerSummaryPanel extends JPanel
 								implements ActionListener
@@ -29,7 +22,7 @@ public class PlayerSummaryPanel extends JPanel
 	{
 		this.gameType = gameType;
 		
-		setBorder(new TitledBorder(null, GameEntity.getTypeDesc(gameType), TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 20)));
+		setBorder(new TitledBorder(null, GameEntityKt.getTypeDesc(gameType), TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 20)));
 		setLayout(new MigLayout("", "[][][][][][][][][grow][]", "[][][]"));
 		
 		add(lblP, "cell 0 0");

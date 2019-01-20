@@ -620,18 +620,19 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	
 	public static DartsGamePanel<? extends DartsScorer> factory(DartsGameScreen parent, int gameType)
 	{
-		if (gameType == GameEntity.GAME_TYPE_X01)
+		if (gameType == GameEntityKt.GAME_TYPE_X01)
 		{
 			return new GamePanelX01(parent);
 		}
-		else if (gameType == GameEntity.GAME_TYPE_GOLF)
+		else if (gameType == GameEntityKt.GAME_TYPE_GOLF)
 		{
 			return new GamePanelGolf(parent);
 		}
-		else if (gameType == GameEntity.GAME_TYPE_ROUND_THE_CLOCK)
+		else if (gameType == GameEntityKt.GAME_TYPE_ROUND_THE_CLOCK)
 		{
 			return new GamePanelRoundTheClock(parent);
 		}
+		//TODO - Implement Dartzee
 		
 		Debug.stackTrace("Unexpected gameType: " + gameType);
 		return null;

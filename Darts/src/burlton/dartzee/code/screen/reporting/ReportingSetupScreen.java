@@ -1,46 +1,33 @@
 package burlton.dartzee.code.screen.reporting;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 
-import javax.swing.AbstractButton;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTabbedPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import burlton.desktopcore.code.bean.DateFilterPanel;
-import burlton.desktopcore.code.bean.RadioButtonPanel;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.bean.ComboBoxGameType;
 import burlton.dartzee.code.bean.GameParamFilterPanel;
 import burlton.dartzee.code.bean.GameParamFilterPanelX01;
 import burlton.dartzee.code.bean.ScrollTablePlayers;
-import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.reporting.IncludedPlayerParameters;
 import burlton.dartzee.code.reporting.ReportParameters;
 import burlton.dartzee.code.screen.EmbeddedScreen;
 import burlton.dartzee.code.screen.PlayerSelectDialog;
 import burlton.dartzee.code.screen.ScreenCache;
-import net.miginfocom.swing.MigLayout;
-import burlton.core.code.obj.SuperHashMap;
+import burlton.desktopcore.code.bean.DateFilterPanel;
+import burlton.desktopcore.code.bean.RadioButtonPanel;
 import burlton.desktopcore.code.util.ComponentUtil;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class ReportingSetupScreen extends EmbeddedScreen
 								  implements ChangeListener,
@@ -381,7 +368,7 @@ public class ReportingSetupScreen extends EmbeddedScreen
 		if (src == comboBox)
 		{
 			panelGame.remove(panelGameParams);
-			panelGameParams = GameEntity.getFilterPanel(comboBox.getGameType());
+			panelGameParams = GameEntityKt.getFilterPanel(comboBox.getGameType());
 			panelGameParams.setEnabled(cbType.isSelected());
 			panelGame.add(panelGameParams, "cell 2 1");
 			panelGame.revalidate();

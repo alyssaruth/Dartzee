@@ -1,27 +1,21 @@
 package burlton.dartzee.code.screen;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.border.TitledBorder;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.XmlUtil;
+import burlton.dartzee.code.bean.PlayerSelector;
+import burlton.dartzee.code.db.DartsMatchEntity;
+import burlton.dartzee.code.db.GameEntityKt;
+import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
+import burlton.desktopcore.code.bean.RadioButtonPanel;
+import net.miginfocom.swing.MigLayout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import burlton.desktopcore.code.bean.RadioButtonPanel;
-import burlton.dartzee.code.bean.PlayerSelector;
-import burlton.dartzee.code.db.DartsMatchEntity;
-import burlton.dartzee.code.db.GameEntity;
-import burlton.dartzee.code.db.PlayerEntity;
-import net.miginfocom.swing.MigLayout;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.util.XmlUtil;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Follow-on from the Game Setup screen, to configure a whole match rather than just a single game.
@@ -151,7 +145,7 @@ public final class MatchSetupScreen extends EmbeddedScreen
 	@Override
 	public String getScreenName()
 	{
-		return "Match Setup (" + GameEntity.getTypeDesc(gameType, gameParams) + ")";
+		return "Match Setup (" + GameEntityKt.getTypeDesc(gameType, gameParams) + ")";
 	}
 	
 	@Override

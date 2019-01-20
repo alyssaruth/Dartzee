@@ -1,21 +1,17 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.sql.Timestamp;
-
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import burlton.desktopcore.code.bean.DateFilterPanel;
 import burlton.dartzee.code.bean.GameParamFilterPanel;
-import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.stats.GameWrapper;
+import burlton.desktopcore.code.bean.DateFilterPanel;
 import burlton.desktopcore.code.screen.SimpleDialog;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.sql.Timestamp;
 
 
 public class PlayerStatisticsFilterDialog extends SimpleDialog
@@ -28,7 +24,7 @@ public class PlayerStatisticsFilterDialog extends SimpleDialog
 	
 	public PlayerStatisticsFilterDialog(int gameType)
 	{
-		filterPanel = GameEntity.getFilterPanel(gameType);
+		filterPanel = GameEntityKt.getFilterPanel(gameType);
 		
 		setTitle("Filters");
 		setSize(473, 200);

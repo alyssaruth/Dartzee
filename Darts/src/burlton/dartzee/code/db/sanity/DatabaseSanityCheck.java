@@ -1,30 +1,25 @@
 package burlton.dartzee.code.db.sanity;
 
-import java.awt.event.ActionEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.table.DefaultTableModel;
-
-import burlton.desktopcore.code.bean.ScrollTableButton;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.StringUtil;
+import burlton.dartzee.code.db.*;
 import burlton.dartzee.code.object.DartboardSegment;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.utils.DartsDatabaseUtil;
 import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.dartzee.code.db.AbstractEntity;
-import burlton.dartzee.code.db.DartEntity;
-import burlton.dartzee.code.db.GameEntity;
-import burlton.dartzee.code.db.ParticipantEntity;
-import burlton.core.code.obj.SuperHashMap;
+import burlton.desktopcore.code.bean.ScrollTableButton;
 import burlton.desktopcore.code.screen.TableModelDialog;
 import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
-import burlton.core.code.util.StringUtil;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class DatabaseSanityCheck
 {
@@ -379,7 +374,7 @@ public class DatabaseSanityCheck
 		sb.append(" WHERE rnd.ParticipantId = pt.RowId");
 		sb.append(" AND pt.GameId = g.RowId");
 		sb.append(" AND g.GameType = ");
-		sb.append(GameEntity.GAME_TYPE_X01);
+		sb.append(GameEntityKt.GAME_TYPE_X01);
 		sb.append(" AND pt.FinalScore > -1");
 		sb.append(" GROUP BY pt.RowId");
 		
@@ -413,7 +408,7 @@ public class DatabaseSanityCheck
 		try
 		{
 			DatabaseUtil.executeUpdate(sql);
-			createFinalScoreSanityCheck(tempTable2, GameEntity.GAME_TYPE_X01);
+			createFinalScoreSanityCheck(tempTable2, GameEntityKt.GAME_TYPE_X01);
 		}
 		finally
 		{
@@ -448,7 +443,7 @@ public class DatabaseSanityCheck
 		sb.append(" WHERE drt.RoundId = rnd.RowId");
 		sb.append(" AND rnd.ParticipantId = pt.RowId");
 		sb.append(" AND pt.GameId = g.RowId");
-		sb.append(" AND g.GameType = " + GameEntity.GAME_TYPE_GOLF);
+		sb.append(" AND g.GameType = " + GameEntityKt.GAME_TYPE_GOLF);
 		sb.append(" AND pt.FinalScore > -1");
 		sb.append(" AND NOT EXISTS");
 		sb.append(" (");
@@ -470,7 +465,7 @@ public class DatabaseSanityCheck
 			
 		}
 		
-		createFinalScoreSanityCheck(tempTable, GameEntity.GAME_TYPE_GOLF);
+		createFinalScoreSanityCheck(tempTable, GameEntityKt.GAME_TYPE_GOLF);
 	}
 	
 	/**
@@ -494,7 +489,7 @@ public class DatabaseSanityCheck
 		sb.append(" AND rnd.ParticipantId = pt.RowId");
 		sb.append(" AND pt.GameId = g.RowId");
 		sb.append(" AND g.GameType = ");
-		sb.append(GameEntity.GAME_TYPE_ROUND_THE_CLOCK);
+		sb.append(GameEntityKt.GAME_TYPE_ROUND_THE_CLOCK);
 		sb.append(" AND pt.FinalScore > -1");
 		sb.append(" GROUP BY pt.RowId");
 		
@@ -505,7 +500,7 @@ public class DatabaseSanityCheck
 			return;
 		}
 		
-		createFinalScoreSanityCheck(tempTable, GameEntity.GAME_TYPE_ROUND_THE_CLOCK);
+		createFinalScoreSanityCheck(tempTable, GameEntityKt.GAME_TYPE_ROUND_THE_CLOCK);
 	}
 	private static void createFinalScoreSanityCheck(String tempTable, int gameType)
 	{

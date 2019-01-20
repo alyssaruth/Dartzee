@@ -1,6 +1,7 @@
 package burlton.dartzee.code.`object`
 
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
+import burlton.dartzee.code.db.CLOCK_TYPE_TREBLES
 import burlton.dartzee.code.utils.DartsRegistry
 import burlton.dartzee.code.utils.PreferenceUtil
 import java.awt.Point
@@ -126,12 +127,12 @@ open class Dart @JvmOverloads constructor(
 
     fun hitClockTarget(clockType: String?): Boolean
     {
-        if (clockType == GameEntity.CLOCK_TYPE_DOUBLES && !isDouble())
+        if (clockType == CLOCK_TYPE_DOUBLES && !isDouble())
         {
             return false
         }
 
-        return if (clockType == GameEntity.CLOCK_TYPE_TREBLES && !isTriple())
+        return if (clockType == CLOCK_TYPE_TREBLES && !isTriple())
         {
             false
         }
