@@ -180,7 +180,7 @@ public class DartsMatchEntity extends AbstractDartsEntity<DartsMatchEntity>
 	{
 		return "Match #" + getRowId() 
 			+ " (" + getMatchTypeDesc() + " - " 
-			+ GameEntity.getTypeDesc(gameType, gameParams) + ", " 
+			+ GameEntityKt.getTypeDesc(gameType, gameParams) + ", "
 			+ getPlayerCount() + " players)";
 	}
 	private String getMatchTypeDesc()
@@ -221,7 +221,7 @@ public class DartsMatchEntity extends AbstractDartsEntity<DartsMatchEntity>
 	{
 		this.gameType = lastGame.getGameType();
 		this.gameParams = lastGame.getGameParams();
-		this.players = firstGame.retrievePlayersVector();
+		this.players = new HandyArrayList<>(firstGame.retrievePlayersVector());
 		
 		//Should've been setting this too...
 		this.currentOrdinal = lastGame.getMatchOrdinal();

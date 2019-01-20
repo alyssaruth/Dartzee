@@ -2,7 +2,7 @@ package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
 import java.net.URL
@@ -32,7 +32,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         sb.append(" WHERE drtFirst.RoundId = rnd.RowId")
         sb.append(" AND rnd.ParticipantId = pt.RowId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = ${GameEntity.GAME_TYPE_GOLF}")
+        sb.append(" AND g.GameType = $GAME_TYPE_GOLF")
         sb.append(" AND rnd.RoundNumber = drtFirst.Score")
         sb.append(" AND drtFirst.Multiplier > 0")
 

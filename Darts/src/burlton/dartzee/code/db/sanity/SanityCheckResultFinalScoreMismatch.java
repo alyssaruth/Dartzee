@@ -1,16 +1,15 @@
 package burlton.dartzee.code.db.sanity;
 
-import java.sql.Timestamp;
-
-import javax.swing.table.DefaultTableModel;
-
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.bean.ScrollTableDartsGame;
-import burlton.dartzee.code.db.GameEntity;
-import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.SuperHashMap;
+import burlton.dartzee.code.bean.ScrollTableDartsGame;
+import burlton.dartzee.code.db.GameEntityKt;
+import burlton.dartzee.code.db.ParticipantEntity;
+import burlton.desktopcore.code.bean.ScrollTable;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+
+import javax.swing.table.DefaultTableModel;
+import java.sql.Timestamp;
 
 public final class SanityCheckResultFinalScoreMismatch extends AbstractSanityCheckResult
 {
@@ -26,7 +25,7 @@ public final class SanityCheckResultFinalScoreMismatch extends AbstractSanityChe
 	@Override
 	public String getDescription()
 	{
-		String gameDesc = GameEntity.getTypeDesc(gameType);
+		String gameDesc = GameEntityKt.getTypeDesc(gameType);
 		return "FinalScores that don't match the raw data (" + gameDesc + ")";
 	}
 	

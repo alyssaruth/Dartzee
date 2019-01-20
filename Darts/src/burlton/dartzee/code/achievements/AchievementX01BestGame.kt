@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements
 
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.ResourceCache
 import java.net.URL
 
@@ -9,7 +9,7 @@ class AchievementX01BestGame : AbstractAchievementBestGame()
     override val achievementRef = ACHIEVEMENT_REF_X01_BEST_GAME
     override val name = "Leg-up"
     override val desc = "Best game of 501"
-    override val gameType = GameEntity.GAME_TYPE_X01
+    override val gameType = GAME_TYPE_X01
     override val gameParams = "501"
 
     override val redThreshold = 99

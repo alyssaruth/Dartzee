@@ -3,7 +3,7 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
 import burlton.dartzee.code.utils.getAdjacentNumbers
@@ -40,7 +40,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" WHERE d.RoundId = rnd.RowId")
         sb.append(" AND rnd.ParticipantId = pt.RowId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = ${GameEntity.GAME_TYPE_X01}")
+        sb.append(" AND g.GameType = $GAME_TYPE_X01")
         sb.append(" AND d.StartingScore IN ($checkoutsStr)")
         if (!playerIds.isEmpty())
         {

@@ -1,6 +1,7 @@
 package burlton.dartzee.code.achievements
 
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.CLOCK_TYPE_STANDARD
+import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK
 import burlton.dartzee.code.utils.ResourceCache
 import java.net.URL
 
@@ -9,8 +10,8 @@ class AchievementClockBestGame : AbstractAchievementBestGame()
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_BEST_GAME
     override val name = "Stop the Clock!"
     override val desc = "Best game of Round the Clock (Standard)"
-    override val gameType = GameEntity.GAME_TYPE_ROUND_THE_CLOCK
-    override val gameParams = GameEntity.CLOCK_TYPE_STANDARD
+    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
+    override val gameParams = CLOCK_TYPE_STANDARD
 
     override val redThreshold = 120
     override val orangeThreshold = 100
