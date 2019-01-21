@@ -179,7 +179,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		//Create a new round for this player
 		int newRoundNo = lastRoundForThisPlayer+1;
-		currentRound = RoundEntity.factory(participant, newRoundNo);
+		currentRound = RoundEntity.Companion.factory(participant, newRoundNo);
 		hmPlayerNumberToLastRoundNumber.put(currentPlayerNumber, newRoundNo);
 		
 		Debug.appendBanner(activeScorer.getPlayerName() + ": Round " + newRoundNo, VERBOSE_LOGGING);
