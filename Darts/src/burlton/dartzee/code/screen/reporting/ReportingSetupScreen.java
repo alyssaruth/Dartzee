@@ -314,7 +314,10 @@ public class ReportingSetupScreen extends EmbeddedScreen
 		
 		if (src == cbType)
 		{
-			panelGameParams.setEnabled(cbType.isSelected());
+			if (panelGameParams != null)
+			{
+				panelGameParams.setEnabled(cbType.isSelected());
+			}
 		}
 		else if (src == cbStartDate)
 		{
@@ -367,10 +370,26 @@ public class ReportingSetupScreen extends EmbeddedScreen
 		Object src = arg0.getSource();
 		if (src == comboBox)
 		{
-			panelGame.remove(panelGameParams);
+			if (panelGameParams != null)
+			{
+				panelGame.remove(panelGameParams);
+			}
+
 			panelGameParams = GameEntityKt.getFilterPanel(comboBox.getGameType());
-			panelGameParams.setEnabled(cbType.isSelected());
-			panelGame.add(panelGameParams, "cell 2 1");
+
+			//Deal with there not being a filter panel, e.g. for Dartzee
+			if (panelGameParams != null)
+			{
+				cbType.setEnabled(true);
+				panelGameParams.setEnabled(cbType.isSelected());
+				panelGame.add(panelGameParams, "cell 2 1");
+			}
+			else
+			{
+				cbType.setSelected(false);
+				cbType.setEnabled(false);
+			}
+
 			panelGame.revalidate();
 		}
 		else if (src == btnAddIncluded)
