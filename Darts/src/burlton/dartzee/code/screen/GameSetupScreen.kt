@@ -6,6 +6,7 @@ import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.bean.PlayerSelector
 import burlton.dartzee.code.db.DartsMatchEntity
+import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.getFilterPanel
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.desktopcore.code.bean.RadioButtonPanel
@@ -201,7 +202,11 @@ class GameSetupScreen : EmbeddedScreen()
         if (!playerSelector.valid())
         {
             return
+        }
 
+        if (gameTypeComboBox.gameType == GAME_TYPE_DARTZEE)
+        {
+            //We need to set up all the rules etc before the game can begin
         }
 
         val selectedPlayers = playerSelector.selectedPlayers
