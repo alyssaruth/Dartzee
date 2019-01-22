@@ -9,6 +9,7 @@ import burlton.dartzee.code.utils.DartsDatabaseUtil;
 import burlton.dartzee.code.utils.DevUtilities;
 import burlton.dartzee.code.utils.ResourceCache;
 import burlton.desktopcore.code.bean.AbstractDevScreen;
+import burlton.desktopcore.code.bean.CheatBar;
 import burlton.desktopcore.code.screen.DebugConsoleAdv;
 import burlton.desktopcore.code.util.DialogUtil;
 
@@ -27,9 +28,9 @@ public class DartsApp extends AbstractDevScreen
 	private static final String CMD_EMPTY_SCREEN_CACHE = "emptyscr";
 	private static final String CMD_SANITY = "sanity";
 	
-	public DartsApp() 
+	public DartsApp(CheatBar commandBar)
 	{
-		super();
+		super(commandBar);
 		setTitle("Darts");
 		setSize(800, 600);
 		setLocationRelativeTo(null);
