@@ -8,14 +8,11 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.containsSubstring
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isEmptyString
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 import kotlin.test.assertFalse
@@ -26,26 +23,14 @@ import org.mockito.Mockito.`when` as whenInvoke
 
 class TestDevScreenCommands
 {
-    private val originalOut = System.out
-    private val newOut = ByteArrayOutputStream()
     var commandsEnabled = true
     var toggle = false
 
     @Before
     fun setup()
     {
-        System.setOut(PrintStream(newOut))
-
         Debug.initialise(DebugConsole())
-        Debug.setLogToSystemOut(true)
     }
-
-    @After
-    fun restore()
-    {
-        System.setOut(originalOut)
-    }
-
 
     @Test
     fun testCommandsDisabled()
@@ -133,9 +118,11 @@ class TestDevScreenCommands
         cheatBar.text = "exception"
         cheatBar.actionPerformed(mock(ActionEvent::class.java))
 
+        Debug.waitUntilLoggingFinished()
+
         assertThat(cheatBar.text, isEmptyString)
         assertFalse(cheatBar.isEnabled)
-        assertThat(newOut.toString(), containsSubstring("java.lang.Exception: Test"))
+        assertThat(Debug.getLogs(), containsSubstring("java.lang.Exception: Test"))
     }
 
 
