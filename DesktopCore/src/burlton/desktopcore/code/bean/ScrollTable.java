@@ -42,15 +42,15 @@ public class ScrollTable extends JPanel
 		btnMoveUp.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/upArrow.png")));
 		btnMoveUp.setPreferredSize(new Dimension(40, 40));
 		
-		panelOrdering.add(btnMoveUp, "cell 0 0");
+		panelOrdering.add(btnMoveUp, "cell 0 2");
 		btnMoveDown.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/downArrow.png")));
 		btnMoveDown.setPreferredSize(new Dimension(40, 40));
 		
-		panelOrdering.add(btnMoveDown, "cell 0 1");
+		panelOrdering.add(btnMoveDown, "cell 0 3");
 		btnRandomize.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/dice.png")));
 		btnRandomize.setPreferredSize(new Dimension(40, 40));
 		
-		panelOrdering.add(btnRandomize, "cell 0 2");
+		panelOrdering.add(btnRandomize, "cell 0 4");
 		panelOrdering.setVisible(false);
 		
 		btnMoveUp.addActionListener(this);
@@ -510,6 +510,12 @@ public class ScrollTable extends JPanel
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panelOrdering.setVisible(true);
 	}
+	public void addButtonToOrderingPanel(JButton btn, int row)
+	{
+		btn.setPreferredSize(new Dimension(40, 40));
+		panelOrdering.add(btn, "cell 0 " + row);
+	}
+
 	private void moveSelectedRowUp()
 	{
 		int row = getSelectedModelRow();

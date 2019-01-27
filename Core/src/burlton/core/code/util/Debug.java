@@ -74,27 +74,32 @@ public class Debug implements CoreRegistry
 			@Override
 			public void run()
 			{
-				String time = "";
-				if (includeDate)
-				{
-					time = getCurrentTimeForLogging();
-				}
-
-				output.append("\n" + time + text);
-
-				if (logToSystemOut)
-				{
-					System.out.println(time + text);
-				}
-
-				if (haveStackTraced != null)
-				{
-					haveStackTraced.setValue(true);
-				}
+				appendInCurrentThread(text, includeDate, haveStackTraced);
 			}
 		};
 
 		logService.execute(logRunnable);
+	}
+
+	public static void appendInCurrentThread(String text, boolean includeDate, BooleanWrapper haveStackTraced)
+	{
+		String time = "";
+		if (includeDate)
+		{
+			time = getCurrentTimeForLogging();
+		}
+
+		output.append("\n" + time + text);
+
+		if (logToSystemOut)
+		{
+			System.out.println(time + text);
+		}
+
+		if (haveStackTraced != null)
+		{
+			haveStackTraced.setValue(true);
+		}
 	}
 
 	public static void waitUntilLoggingFinished()
