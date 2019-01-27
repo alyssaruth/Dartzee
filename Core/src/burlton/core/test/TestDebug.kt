@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import org.mockito.Mockito.`when` as whenInvoke
 
 class TestDebug
 {
@@ -139,6 +140,20 @@ class TestDebug
         assertThat(logs, equalTo("\n                                      "))
     }
 
+    /*@Test
+    fun testNonBlocking()
+    {
+        whenInvoke(Debug.appendInCurrentThread(anyString(), anyBoolean(), null)).then{
+            Thread.sleep(10000)
+        }
+
+        val currentMillis = System.currentTimeMillis()
+        Debug.append("longTest")
+
+        val afterMillis = System.currentTimeMillis()
+        val diff = afterMillis - currentMillis
+        assertThat(diff, lessThan(1000))
+    }*/
 
     class SimpleDebugOutput: DebugOutput
     {

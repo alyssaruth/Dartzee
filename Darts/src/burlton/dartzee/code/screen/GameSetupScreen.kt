@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen
 
+import burlton.core.code.util.Debug
 import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.bean.ComboBoxGameType
 import burlton.dartzee.code.bean.GameParamFilterPanel
@@ -146,6 +147,8 @@ class GameSetupScreen : EmbeddedScreen()
             }
 
             panelGameType.revalidate()
+
+            toggleComponents()
         }
         else
         {
@@ -187,6 +190,10 @@ class GameSetupScreen : EmbeddedScreen()
             panel.remove(panelPointBreakdown)
         }
 
+        val dartzee = gameTypeComboBox.gameType == GAME_TYPE_DARTZEE
+        btnLaunch.isVisible = !dartzee
+        toggleNextVisibility(dartzee)
+
         invalidate()
         revalidate()
         validate()
@@ -197,27 +204,22 @@ class GameSetupScreen : EmbeddedScreen()
         return gameParamFilterPanel?.getGameParams() ?: ""
     }
 
-    fun launchGame()
+    private fun launchGame()
     {
         if (!playerSelector.valid())
         {
             return
         }
 
-        if (gameTypeComboBox.gameType == GAME_TYPE_DARTZEE)
-        {
-            //We need to set up all the rules etc before the game can begin
-        }
-
+        val match = factoryMatch()
         val selectedPlayers = playerSelector.selectedPlayers
 
-        if (rdbtnSingleGame.isSelected)
+        if (match == null)
         {
             DartsGameScreen.launchNewGame(selectedPlayers, gameTypeComboBox.gameType, getGameParams())
         }
         else
         {
-            val match = factoryMatch()
             match.players = selectedPlayers
             match.gameType = gameTypeComboBox.gameType
             match.gameParams = getGameParams()
@@ -226,17 +228,21 @@ class GameSetupScreen : EmbeddedScreen()
         }
     }
 
-    private fun factoryMatch(): DartsMatchEntity
+    private fun factoryMatch(): DartsMatchEntity?
     {
         if (rdbtnFirstTo.isSelected)
         {
             val games = spinnerWins.value as Int
             return DartsMatchEntity.factoryFirstTo(games)
         }
-        else
+        else if (rdbtnPoints.isSelected)
         {
             val games = spinnerGames.value as Int
             return DartsMatchEntity.factoryPoints(games, getPointsXml())
+        }
+        else
+        {
+            return null
         }
     }
 
@@ -251,11 +257,32 @@ class GameSetupScreen : EmbeddedScreen()
 
         doc.appendChild(rootElement)
         return XmlUtil.getStringFromDocument(doc)
-
     }
 
     override fun getScreenName(): String
     {
         return "Game Setup"
+    }
+
+    override fun nextPressed()
+    {
+        if (gameTypeComboBox.gameType == GAME_TYPE_DARTZEE)
+        {
+            if (!playerSelector.valid())
+            {
+                return
+            }
+
+            val match = factoryMatch()
+            val selectedPlayers = playerSelector.selectedPlayers
+
+            val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
+            scrn.setState(match, selectedPlayers)
+            ScreenCache.switchScreen(scrn)
+        }
+        else
+        {
+            Debug.stackTrace("Unexpected screen state. GameType = ${gameTypeComboBox.gameType}")
+        }
     }
 }
