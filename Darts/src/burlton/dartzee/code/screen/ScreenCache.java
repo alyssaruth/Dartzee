@@ -64,7 +64,12 @@ public final class ScreenCache
 		
 		return mainScreen;
 	}
-	
+
+	public static <K extends EmbeddedScreen> void switchScreen(Class<K> screenClass)
+	{
+		K screen = getScreen(screenClass);
+		switchScreen(screen);
+	}
 	public static void switchScreen(EmbeddedScreen scrn)
 	{
 		switchScreen(scrn, true);

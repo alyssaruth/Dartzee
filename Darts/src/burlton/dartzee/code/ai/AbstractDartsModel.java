@@ -3,7 +3,7 @@ package burlton.dartzee.code.ai;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.core.code.util.XmlUtil;
-import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.object.DartKt;
 import burlton.dartzee.code.object.DartboardSegment;
@@ -285,11 +285,11 @@ public abstract class AbstractDartsModel
 	}
 	private int getSegmentTypeForClockType(String clockType)
 	{
-		if (clockType.equals(GameEntity.CLOCK_TYPE_STANDARD))
+		if (clockType.equals(GameEntityKt.CLOCK_TYPE_STANDARD))
 		{
 			return DartboardSegment.TYPE_OUTER_SINGLE;
 		}
-		else if (clockType.equals(GameEntity.CLOCK_TYPE_DOUBLES))
+		else if (clockType.equals(GameEntityKt.CLOCK_TYPE_DOUBLES))
 		{
 			return DartboardSegment.TYPE_DOUBLE;
 		}

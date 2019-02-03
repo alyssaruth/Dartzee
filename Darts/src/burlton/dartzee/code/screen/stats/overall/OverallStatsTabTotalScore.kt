@@ -62,7 +62,7 @@ class OverallStatsTabTotalScore(private val gameType: Int) : JPanel(), ActionLis
         buildTable()
     }
 
-    fun getTotalScoreSql() : String
+    private fun getTotalScoreSql() : String
     {
         val leaderboardSize = PreferenceUtil.getIntValue(DartsRegistry.PREFERENCES_INT_LEADERBOARD_SIZE)
         val gameParams = panelGameParams?.getGameParams() ?: ""
