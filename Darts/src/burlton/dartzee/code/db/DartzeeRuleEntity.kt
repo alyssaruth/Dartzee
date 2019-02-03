@@ -13,7 +13,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     var inOrder = false
     var allowMisses = false
     var scoreMode = -1
+    var textualName = ""
     var textualDescription = "" //Allow textual rules
+    var ordinal = -1
 
     override fun getTableName(): String
     {
@@ -30,7 +32,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "InOrder BOOLEAN NOT NULL, "
                 + "AllowMisses BOOLEAN NOT NULL, "
                 + "ScoreMode INT NOT NULL, "
-                + "TextualDescription VARCHAR(2500) NOT NULL")
+                + "TextualName VARCHAR(255) NOT NULL, "
+                + "TextualDescription VARCHAR(2500) NOT NULL, "
+                + "Ordinal INT NOT NULL")
 
     }
 
@@ -44,6 +48,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         entity.inOrder = rs.getBoolean("InOrder")
         entity.allowMisses = rs.getBoolean("AllowMisses")
         entity.scoreMode = rs.getInt("ScoreMode")
+        entity.textualName = rs.getString("TextualName")
         entity.textualDescription = rs.getString("TextualDescription")
     }
 
@@ -60,7 +65,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         statementStr = writeBoolean(statement, i++, inOrder, statementStr)
         statementStr = writeBoolean(statement, i++, allowMisses, statementStr)
         statementStr = writeInt(statement, i++, scoreMode, statementStr)
-        statementStr = writeString(statement, i, textualDescription, statementStr)
+        statementStr = writeString(statement, i++, textualName, statementStr)
+        statementStr = writeString(statement, i++, textualDescription, statementStr)
+        statementStr = writeInt(statement, i, ordinal, statementStr)
 
         return statementStr
     }

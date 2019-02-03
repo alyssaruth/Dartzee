@@ -202,7 +202,12 @@ public class DartsApp extends AbstractDevScreen
 		{
 			DatabaseSanityCheck.runSanityCheck();
 		}
-		
+		else if (cmd.equals("dartzee"))
+		{
+			DartzeeRuleCreationDialog dlg = new DartzeeRuleCreationDialog();
+			dlg.setVisible(true);
+		}
+
 		return textToShow;
 	}
 
