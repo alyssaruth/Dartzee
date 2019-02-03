@@ -1,10 +1,10 @@
 package burlton.dartzee.code.ai;
 
-import burlton.dartzee.code.db.GameEntity;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.Dartboard;
 import burlton.dartzee.code.utils.X01UtilKt;
-import burlton.core.code.util.Debug;
 
 /**
  * Simulate a single game of X01 for an AI
@@ -31,7 +31,7 @@ public class DartsSimulationX01 extends AbstractDartsSimulation
 	@Override
 	public int getGameType()
 	{
-		return GameEntity.GAME_TYPE_X01;
+		return GameEntityKt.GAME_TYPE_X01;
 	}
 	
 	@Override
