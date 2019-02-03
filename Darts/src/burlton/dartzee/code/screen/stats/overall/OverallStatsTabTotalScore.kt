@@ -32,7 +32,12 @@ class OverallStatsTabTotalScore(private val gameType: Int) : JPanel(), ActionLis
         panelPlayerFilters.addActionListener(this)
         scrollPane.setRowHeight(23)
         add(panelFilters, BorderLayout.NORTH)
-        panelFilters.add(panelGameParams)
+
+        if (panelGameParams != null)
+        {
+            panelFilters.add(panelGameParams)
+        }
+
         val horizontalStrut = Box.createHorizontalStrut(20)
         panelFilters.add(horizontalStrut)
         panelFilters.add(panelPlayerFilters)

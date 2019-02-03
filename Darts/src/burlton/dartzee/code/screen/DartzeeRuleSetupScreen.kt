@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.db.DartsMatchEntity
+import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
@@ -11,6 +12,8 @@ import javax.swing.JButton
 
 class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 {
+    private val tm = TableUtil.DefaultModel()
+
     private val tableRules = ScrollTable()
     private val btnAddRule = JButton("+")
     private val btnAmendRule = JButton("#")
@@ -41,7 +44,6 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
     private fun setTableModel()
     {
-        val tm = TableUtil.DefaultModel()
         tm.addColumn("Rule")
         tm.addColumn("Description")
 
@@ -59,12 +61,29 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     {
         when (arg0.source)
         {
-            btnAddRule -> ""
+            btnAddRule -> addRule()
             btnAmendRule -> ""
             btnCalculateOrder -> ""
             else -> super.actionPerformed(arg0)
         }
     }
+
+    private fun addRule()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.isVisible = true
+
+        val rule = dlg.dartzeeRule
+        if (rule != null)
+        {
+            addRuleToTable(rule)
+        }
+    }
+    private fun addRuleToTable(rule: DartzeeRuleEntity)
+    {
+        tm.addRow(arrayOf(rule, rule))
+    }
+
 
     override fun selectionChanged(src: ScrollTable)
     {
