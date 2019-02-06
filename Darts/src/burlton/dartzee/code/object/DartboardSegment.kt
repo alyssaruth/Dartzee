@@ -70,6 +70,7 @@ class DartboardSegmentKt(scoreAndType : String)
     {
         return getMultiplier(type)
     }
+    fun getTotal(): Int = score * getMultiplier()
 
     fun addPoint(pt: Point)
     {
@@ -81,7 +82,7 @@ class DartboardSegmentKt(scoreAndType : String)
 
     override fun toString(): String
     {
-        return score.toString() + " (" + type + ")"
+        return "$score ($type)"
     }
 
     fun isEdgePoint(pt: Point?): Boolean

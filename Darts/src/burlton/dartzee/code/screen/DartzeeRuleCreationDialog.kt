@@ -66,7 +66,19 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
     override fun okPressed()
     {
+        val rule = DartzeeRuleEntity()
 
+        if (rdbtnAtLeastOne.isSelected)
+        {
+            rule.dart1Rule = targetSelector.getSelection()
+        }
+        else
+        {
+            rule.dart1Rule = dartOneSelector.getSelection()
+            rule.dart2Rule = dartTwoSelector.getSelection()
+            rule.dart3Rule = dartThreeSelector.getSelection()
+            rule.inOrder = cbInOrder.isSelected
+        }
     }
 
     override fun cancelPressed()
