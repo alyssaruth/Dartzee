@@ -1,14 +1,16 @@
 package burlton.dartzee.code.db
 
+import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
+import burlton.dartzee.code.dartzee.parseDartzeeRule
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
     var gameId = -1L
-    var dart1Rule = ""
-    var dart2Rule = ""
-    var dart3Rule = ""
+    var dart1Rule : AbstractDartzeeDartRule? = null
+    var dart2Rule : AbstractDartzeeDartRule? = null
+    var dart3Rule : AbstractDartzeeDartRule? = null
     var totalRule = ""
     var inOrder = false
     var allowMisses = false
@@ -41,9 +43,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     override fun populateFromResultSet(entity: DartzeeRuleEntity, rs: ResultSet)
     {
         entity.gameId = rs.getLong("GameId")
-        entity.dart1Rule = rs.getString("Dart1Rule")
-        entity.dart2Rule = rs.getString("Dart2Rule")
-        entity.dart3Rule = rs.getString("Dart3Rule")
+        entity.dart1Rule = parseDartzeeRule(rs.getString("Dart1Rule"))
+        entity.dart2Rule = parseDartzeeRule(rs.getString("Dart2Rule"))
+        entity.dart3Rule = parseDartzeeRule(rs.getString("Dart3Rule"))
         entity.totalRule = rs.getString("TotalRule")
         entity.inOrder = rs.getBoolean("InOrder")
         entity.allowMisses = rs.getBoolean("AllowMisses")
@@ -58,9 +60,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         var statementStr = emptyStatement
 
         statementStr = writeLong(statement, i++, gameId, statementStr)
-        statementStr = writeString(statement, i++, dart1Rule, statementStr)
-        statementStr = writeString(statement, i++, dart2Rule, statementStr)
-        statementStr = writeString(statement, i++, dart3Rule, statementStr)
+        statementStr = writeString(statement, i++, dart1Rule?.toDbString() ?: "", statementStr)
+        statementStr = writeString(statement, i++, dart2Rule?.toDbString() ?: "", statementStr)
+        statementStr = writeString(statement, i++, dart3Rule?.toDbString() ?: "", statementStr)
         statementStr = writeString(statement, i++, totalRule, statementStr)
         statementStr = writeBoolean(statement, i++, inOrder, statementStr)
         statementStr = writeBoolean(statement, i++, allowMisses, statementStr)
