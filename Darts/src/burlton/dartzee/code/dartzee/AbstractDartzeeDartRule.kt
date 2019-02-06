@@ -34,7 +34,8 @@ fun getAllDartRules(): MutableList<AbstractDartzeeDartRule>
 {
     return mutableListOf(DartzeeDartRuleEven(),
                          DartzeeDartRuleOdd(),
-                         DartzeeRuleInner())
+                         DartzeeRuleInner(),
+                         DartzeeRuleOuter())
 }
 
 fun parseDartzeeRule(xmlStr: String): AbstractDartzeeDartRule?

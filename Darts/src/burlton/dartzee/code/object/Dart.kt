@@ -68,9 +68,9 @@ open class Dart @JvmOverloads constructor(
     {
         return when (multiplier)
         {
-            1 -> TYPE_OUTER_SINGLE
-            2 -> TYPE_DOUBLE
-            else -> TYPE_TREBLE
+            1 -> SEGMENT_TYPE_OUTER_SINGLE
+            2 -> SEGMENT_TYPE_DOUBLE
+            else -> SEGMENT_TYPE_TREBLE
         }
     }
 

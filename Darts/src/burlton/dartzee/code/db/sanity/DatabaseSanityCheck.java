@@ -432,10 +432,10 @@ public class DatabaseSanityCheck
 		sb.append(" SELECT pt.RowId, SUM(");
 		sb.append(" 	CASE");
 		sb.append(" 		WHEN drt.Score <> rnd.RoundNumber THEN 5");
-		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.TYPE_DOUBLE + " THEN 1");
-		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.TYPE_TREBLE + " THEN 2");
-		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.TYPE_INNER_SINGLE + " THEN 3");
-		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.TYPE_OUTER_SINGLE + " THEN 4");
+		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.SEGMENT_TYPE_DOUBLE + " THEN 1");
+		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.SEGMENT_TYPE_TREBLE + " THEN 2");
+		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.SEGMENT_TYPE_INNER_SINGLE + " THEN 3");
+		sb.append(" 		WHEN drt.SegmentType = " + DartboardSegment.SEGMENT_TYPE_OUTER_SINGLE + " THEN 4");
 		sb.append(" 		ELSE 5");
 		sb.append(" 	END");
 		sb.append(" )");
