@@ -26,30 +26,30 @@ class TestDartboardUtil : DartsRegistry
         resetCachedDartboardValues()
 
         //Bullseyes
-        assertSegment(Point(0, 0), TYPE_DOUBLE, 25, 2, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(37, 0), TYPE_DOUBLE, 25, 2, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(38, 0), TYPE_OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
-        assertSegment(Point(48, 55), TYPE_OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
-        assertSegment(Point(0, -93), TYPE_OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
+        assertSegment(Point(0, 0), SEGMENT_TYPE_DOUBLE, 25, 2, DartsColour.DARTBOARD_RED)
+        assertSegment(Point(37, 0), SEGMENT_TYPE_DOUBLE, 25, 2, DartsColour.DARTBOARD_RED)
+        assertSegment(Point(38, 0), SEGMENT_TYPE_OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
+        assertSegment(Point(48, 55), SEGMENT_TYPE_OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
+        assertSegment(Point(0, -93), SEGMENT_TYPE_OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
 
         //Boundary conditions for varying radius
-        assertSegment(Point(0, 94), TYPE_INNER_SINGLE, 3, 1, DartsColour.DARTBOARD_BLACK)
-        assertSegment(Point(0, 581), TYPE_INNER_SINGLE, 3, 1, DartsColour.DARTBOARD_BLACK)
-        assertSegment(Point(0, -582), TYPE_TREBLE, 20, 3, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(0, -628), TYPE_TREBLE, 20, 3, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(629, 0), TYPE_OUTER_SINGLE, 6, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(-952, 0), TYPE_OUTER_SINGLE, 11, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(953, 0), TYPE_DOUBLE, 6, 2, DartsColour.DARTBOARD_GREEN)
-        assertSegment(Point(0, -999), TYPE_DOUBLE, 20, 2, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(0, -1000), TYPE_MISS, 20, 0, Color.black)
-        assertSegment(Point(0, -1299), TYPE_MISS, 20, 0, Color.black)
-        assertSegment(Point(0, -1300), TYPE_MISSED_BOARD, 20, 0, null)
+        assertSegment(Point(0, 94), SEGMENT_TYPE_INNER_SINGLE, 3, 1, DartsColour.DARTBOARD_BLACK)
+        assertSegment(Point(0, 581), SEGMENT_TYPE_INNER_SINGLE, 3, 1, DartsColour.DARTBOARD_BLACK)
+        assertSegment(Point(0, -582), SEGMENT_TYPE_TREBLE, 20, 3, DartsColour.DARTBOARD_RED)
+        assertSegment(Point(0, -628), SEGMENT_TYPE_TREBLE, 20, 3, DartsColour.DARTBOARD_RED)
+        assertSegment(Point(629, 0), SEGMENT_TYPE_OUTER_SINGLE, 6, 1, DartsColour.DARTBOARD_WHITE)
+        assertSegment(Point(-952, 0), SEGMENT_TYPE_OUTER_SINGLE, 11, 1, DartsColour.DARTBOARD_WHITE)
+        assertSegment(Point(953, 0), SEGMENT_TYPE_DOUBLE, 6, 2, DartsColour.DARTBOARD_GREEN)
+        assertSegment(Point(0, -999), SEGMENT_TYPE_DOUBLE, 20, 2, DartsColour.DARTBOARD_RED)
+        assertSegment(Point(0, -1000), SEGMENT_TYPE_MISS, 20, 0, Color.black)
+        assertSegment(Point(0, -1299), SEGMENT_TYPE_MISS, 20, 0, Color.black)
+        assertSegment(Point(0, -1300), SEGMENT_TYPE_MISSED_BOARD, 20, 0, null)
 
         //Test 45 degrees etc
-        assertSegment(Point(100, -100), TYPE_INNER_SINGLE, 4, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(-100, -100), TYPE_INNER_SINGLE, 9, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(-100, 100), TYPE_INNER_SINGLE, 7, 1, DartsColour.DARTBOARD_BLACK)
-        assertSegment(Point(100, 100), TYPE_INNER_SINGLE, 15, 1, DartsColour.DARTBOARD_WHITE)
+        assertSegment(Point(100, -100), SEGMENT_TYPE_INNER_SINGLE, 4, 1, DartsColour.DARTBOARD_WHITE)
+        assertSegment(Point(-100, -100), SEGMENT_TYPE_INNER_SINGLE, 9, 1, DartsColour.DARTBOARD_WHITE)
+        assertSegment(Point(-100, 100), SEGMENT_TYPE_INNER_SINGLE, 7, 1, DartsColour.DARTBOARD_BLACK)
+        assertSegment(Point(100, 100), SEGMENT_TYPE_INNER_SINGLE, 15, 1, DartsColour.DARTBOARD_WHITE)
     }
 
     private fun assertSegment(pt: Point, segmentType: Int, score: Int, multiplier: Int, expectedColor: Color?)
@@ -78,7 +78,7 @@ class TestDartboardUtil : DartsRegistry
         resetCachedDartboardValues()
         val pink = Color.pink
         PreferenceUtil.saveString(DartsRegistry.PREFERENCES_STRING_EVEN_SINGLE_COLOUR, DartsColour.toPrefStr(pink))
-        assertSegment(Point(0, -629), TYPE_OUTER_SINGLE, 20, 1, pink)
+        assertSegment(Point(0, -629), SEGMENT_TYPE_OUTER_SINGLE, 20, 1, pink)
     }
 
 
@@ -130,7 +130,7 @@ class TestDartboardUtil : DartsRegistry
         assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT, true)
 
         //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
-        fakeSegment.type = TYPE_MISS
+        fakeSegment.type = SEGMENT_TYPE_MISS
         assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
         assertColourForPointAndSegment(Point(1, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
     }

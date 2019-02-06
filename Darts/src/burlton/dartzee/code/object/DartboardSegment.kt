@@ -6,21 +6,21 @@ import burlton.core.code.util.StringUtil
 import java.awt.Point
 import java.util.*
 
-const val TYPE_DOUBLE = 1
-const val TYPE_TREBLE = 2
-const val TYPE_OUTER_SINGLE = 3
-const val TYPE_INNER_SINGLE = 4
-const val TYPE_MISS = 5
-const val TYPE_MISSED_BOARD = 6
+const val SEGMENT_TYPE_DOUBLE = 1
+const val SEGMENT_TYPE_TREBLE = 2
+const val SEGMENT_TYPE_OUTER_SINGLE = 3
+const val SEGMENT_TYPE_INNER_SINGLE = 4
+const val SEGMENT_TYPE_MISS = 5
+const val SEGMENT_TYPE_MISSED_BOARD = 6
 
 fun getGolfScoreForSegment(type: Int): Int
 {
     return when (type)
     {
-        TYPE_DOUBLE -> 1
-        TYPE_TREBLE -> 2
-        TYPE_INNER_SINGLE -> 3
-        TYPE_OUTER_SINGLE -> 4
+        SEGMENT_TYPE_DOUBLE -> 1
+        SEGMENT_TYPE_TREBLE -> 2
+        SEGMENT_TYPE_INNER_SINGLE -> 3
+        SEGMENT_TYPE_OUTER_SINGLE -> 4
         else -> 5
     }
 }
@@ -29,9 +29,9 @@ fun getMultiplier(type: Int): Int
 {
     return when(type)
     {
-        TYPE_DOUBLE -> 2
-        TYPE_TREBLE -> 3
-        TYPE_MISS, TYPE_MISSED_BOARD -> 0
+        SEGMENT_TYPE_DOUBLE -> 2
+        SEGMENT_TYPE_TREBLE -> 3
+        SEGMENT_TYPE_MISS, SEGMENT_TYPE_MISSED_BOARD -> 0
         else -> 1
     }
 }
@@ -60,11 +60,11 @@ class DartboardSegmentKt(scoreAndType : String)
      */
     fun isMiss() : Boolean
     {
-        return type == TYPE_MISS || type == TYPE_MISSED_BOARD
+        return type == SEGMENT_TYPE_MISS || type == SEGMENT_TYPE_MISSED_BOARD
     }
     fun isDoubleExcludingBull() : Boolean
     {
-        return type == TYPE_DOUBLE && score != 25
+        return type == SEGMENT_TYPE_DOUBLE && score != 25
     }
     fun getMultiplier() : Int
     {

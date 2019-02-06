@@ -5,7 +5,7 @@ import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegmentKt
-import burlton.dartzee.code.`object`.TYPE_MISS
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.game.GamePanelX01
 import burlton.dartzee.code.utils.*
@@ -209,7 +209,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             lbl.setSize(lblWidth, lblHeight)
 
             //Work out where to place the label
-            val points = getPointsForSegment(i, TYPE_MISS)
+            val points = getPointsForSegment(i, SEGMENT_TYPE_MISS)
             val avgPoint = GeometryUtil.getAverage(points)
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2

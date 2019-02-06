@@ -47,11 +47,11 @@ fun factorySegmentKeyForPoint(dartPt: Point, centerPt: Point, diameter: Double):
 
     if (ratio < RATIO_INNER_BULL)
     {
-        return "25_$TYPE_DOUBLE"
+        return "25_$SEGMENT_TYPE_DOUBLE"
     }
     else if (ratio < RATIO_OUTER_BULL)
     {
-        return "25_$TYPE_OUTER_SINGLE"
+        return "25_$SEGMENT_TYPE_OUTER_SINGLE"
     }
 
     //We've not hit the bullseye, so do other calculations to work out score/multiplier
@@ -70,26 +70,26 @@ private fun calculateTypeForRatioNonBullseye(ratioToDiameter: Double): Int
 {
     if (ratioToDiameter < LOWER_BOUND_TRIPLE_RATIO)
     {
-        return TYPE_INNER_SINGLE
+        return SEGMENT_TYPE_INNER_SINGLE
     }
     else if (ratioToDiameter < UPPER_BOUND_TRIPLE_RATIO)
     {
-        return TYPE_TREBLE
+        return SEGMENT_TYPE_TREBLE
     }
     else if (ratioToDiameter < LOWER_BOUND_DOUBLE_RATIO)
     {
-        return TYPE_OUTER_SINGLE
+        return SEGMENT_TYPE_OUTER_SINGLE
     }
     else if (ratioToDiameter < UPPER_BOUND_DOUBLE_RATIO)
     {
-        return TYPE_DOUBLE
+        return SEGMENT_TYPE_DOUBLE
     }
     else if (ratioToDiameter < UPPER_BOUND_OUTSIDE_BOARD_RATIO)
     {
-        return TYPE_MISS
+        return SEGMENT_TYPE_MISS
     }
 
-    return TYPE_MISSED_BOARD
+    return SEGMENT_TYPE_MISSED_BOARD
 }
 
 private fun getScoreForAngle(angle: Double): Int
@@ -130,12 +130,12 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegmentKt, highlig
 private fun getColourFromHashMap(segment: DartboardSegmentKt, colourWrapper: ColourWrapper): Color?
 {
     val type = segment.type
-    if (type == TYPE_MISS)
+    if (type == SEGMENT_TYPE_MISS)
     {
         return colourWrapper.outerDartboardColour
     }
 
-    if (type == TYPE_MISSED_BOARD)
+    if (type == SEGMENT_TYPE_MISSED_BOARD)
     {
         return colourWrapper.missedBoardColour
     }
