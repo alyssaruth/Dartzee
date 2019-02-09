@@ -85,7 +85,7 @@ class TestDartboardUtil : DartsRegistry
     @Test
     fun testHighlights()
     {
-        val wrapper = ColourWrapper(Color.BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
+        val wrapper = DEFAULT_COLOUR_WRAPPER
         val segment = DartboardSegmentKt("20_4")
 
         assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.BLACK, false)
