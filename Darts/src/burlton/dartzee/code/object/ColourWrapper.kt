@@ -2,6 +2,8 @@ package burlton.dartzee.code.`object`
 
 import java.awt.Color
 
+val DEFAULT_COLOUR_WRAPPER = ColourWrapper(Color.BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
+
 class ColourWrapper @JvmOverloads constructor(private var evenSingleColour : Color?, private var evenDoubleColour : Color?,
                                               private var evenTrebleColour : Color?, private var oddSingleColour : Color?,
                                               private var oddDoubleColour : Color?, private var oddTrebleColour : Color?,

@@ -116,7 +116,7 @@ class OverallStatsScreen : EmbeddedScreen()
 
     override fun getScreenName(): String
     {
-        return "Game Statistics"
+        return "Leaderboards"
     }
 
     override fun initialise()

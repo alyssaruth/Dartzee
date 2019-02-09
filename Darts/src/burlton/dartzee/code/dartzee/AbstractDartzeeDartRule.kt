@@ -14,6 +14,7 @@ abstract class AbstractDartzeeDartRule
     abstract fun populate(rootElement: Element)
 
     open fun getDisplayName(): String = getRuleIdentifier()
+    open fun isValid(): Boolean = true
 
     override fun toString() = getDisplayName()
 
@@ -35,7 +36,8 @@ fun getAllDartRules(): MutableList<AbstractDartzeeDartRule>
     return mutableListOf(DartzeeDartRuleEven(),
                          DartzeeDartRuleOdd(),
                          DartzeeRuleInner(),
-                         DartzeeRuleOuter())
+                         DartzeeRuleOuter(),
+                         DartzeeDartRuleColour())
 }
 
 fun parseDartzeeRule(xmlStr: String): AbstractDartzeeDartRule?
