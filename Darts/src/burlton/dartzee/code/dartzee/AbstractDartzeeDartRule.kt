@@ -43,7 +43,7 @@ fun getAllDartRules(): MutableList<AbstractDartzeeDartRule>
                          DartzeeDartRuleInner(),
                          DartzeeDartRuleOuter(),
                          DartzeeDartRuleColour(),
-                         DartzeeDartRuleNumber())
+                         DartzeeDartRuleScore())
 }
 
 fun parseDartzeeRule(xmlStr: String): AbstractDartzeeDartRule?
