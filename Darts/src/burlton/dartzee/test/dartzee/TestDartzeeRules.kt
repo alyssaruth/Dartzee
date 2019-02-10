@@ -90,6 +90,14 @@ class TestDartzeeRules
     }
 
     @Test
+    fun `simple rules are always valid`()
+    {
+        val rule = DartzeeDartRuleOdd()
+
+        assertTrue(rule.validate().isEmpty())
+    }
+
+    @Test
     fun `can't create empty colour rule`()
     {
         val rule = DartzeeDartRuleColour()
@@ -198,6 +206,18 @@ class TestDartzeeRules
     }
 
     @Test
+    fun `segment validation - score`()
+    {
+        val rule = DartzeeDartRuleScore()
+        rule.score = 20
+
+        assertTrue(rule.isValidSegment(singleTwenty))
+        assertTrue(rule.isValidSegment(doubleTwenty))
+        assertTrue(rule.isValidSegment(trebleTwenty))
+        assertFalse(rule.isValidSegment(miss))
+    }
+
+    @Test
     fun `no rules should have overlapping identifiers`()
     {
         val rules = getAllDartRules()
@@ -255,5 +275,28 @@ class TestDartzeeRules
             assertEquals(rule.black, black)
             assertEquals(rule.white, white)
         }
+    }
+
+    @Test
+    fun `write score XML`()
+    {
+        val rule = DartzeeDartRuleScore()
+        rule.score = 20
+
+        val xml = rule.toDbString()
+        val parsedRule = parseDartzeeRule(xml)
+
+        assertTrue(parsedRule is DartzeeDartRuleScore)
+        assertEquals(parsedRule.score, 20)
+    }
+
+    @Test
+    fun `write simple XML`()
+    {
+        val rule = DartzeeDartRuleEven()
+        val xml = rule.toDbString()
+        val parsedRule = parseDartzeeRule(xml)
+
+        assertTrue(parsedRule is DartzeeDartRuleEven)
     }
 }

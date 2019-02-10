@@ -9,9 +9,9 @@ import javax.swing.JPanel
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartzeeDartRuleNumber: AbstractDartzeeDartRule(), ChangeListener
+class DartzeeDartRuleScore: AbstractDartzeeDartRule(), ChangeListener
 {
-    private var score = -1
+    var score = -1
 
     private val configPanel = JPanel()
     private val spinner = SpinnerSingleSelector()
@@ -27,7 +27,7 @@ class DartzeeDartRuleNumber: AbstractDartzeeDartRule(), ChangeListener
 
     override fun isValidSegment(segment: DartboardSegmentKt): Boolean
     {
-        return segment.score == score
+        return segment.score == score && !segment.isMiss()
     }
 
     override fun getRuleIdentifier() = "Score"
