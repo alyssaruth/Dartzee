@@ -3,6 +3,7 @@ package burlton.dartzee.code.dartzee
 import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import org.w3c.dom.Element
+import javax.swing.JPanel
 
 abstract class AbstractDartzeeDartRule
 {
@@ -14,9 +15,14 @@ abstract class AbstractDartzeeDartRule
     abstract fun populate(rootElement: Element)
 
     open fun getDisplayName(): String = getRuleIdentifier()
-    open fun isValid(): Boolean = true
+    open fun isValid(): String = ""
 
     override fun toString() = getDisplayName()
+
+    open fun getConfigPanel(): JPanel?
+    {
+        return null
+    }
 
     fun toDbString(): String
     {

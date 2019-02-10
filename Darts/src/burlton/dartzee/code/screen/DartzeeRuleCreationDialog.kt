@@ -66,6 +66,11 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
     override fun okPressed()
     {
+        if (!valid())
+        {
+            return
+        }
+
         val rule = DartzeeRuleEntity()
 
         if (rdbtnAtLeastOne.isSelected)
@@ -79,7 +84,22 @@ class DartzeeRuleCreationDialog : SimpleDialog()
             rule.dart3Rule = dartThreeSelector.getSelection()
             rule.inOrder = cbInOrder.isSelected
         }
+
+        dispose()
     }
+
+    private fun valid(): Boolean
+    {
+        if (rdbtnAtLeastOne.isSelected)
+        {
+            return targetSelector.valid()
+        }
+        else
+        {
+            return dartOneSelector.valid() && dartTwoSelector.valid() && dartThreeSelector.valid()
+        }
+    }
+
 
     override fun cancelPressed()
     {
