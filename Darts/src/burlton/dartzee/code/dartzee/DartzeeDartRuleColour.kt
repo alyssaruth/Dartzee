@@ -3,16 +3,41 @@ package burlton.dartzee.code.dartzee
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.utils.getColourForPointAndSegment
-import burlton.desktopcore.code.util.DialogUtil
 import org.w3c.dom.Element
 import java.awt.Color
+import java.awt.FlowLayout
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import javax.swing.JCheckBox
+import javax.swing.JPanel
 
-class DartzeeDartRuleColour: AbstractDartzeeDartRule()
+class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
 {
     private var black = false
     private var white = false
     private var green = false
     private var red = false
+
+    private val configPanel = JPanel()
+    private val cbBlack = JCheckBox("Black")
+    private val cbWhite = JCheckBox("White")
+    private val cbGreen = JCheckBox("Green")
+    private val cbRed = JCheckBox("Red")
+
+    init
+    {
+        configPanel.layout = FlowLayout()
+
+        configPanel.add(cbBlack)
+        configPanel.add(cbWhite)
+        configPanel.add(cbRed)
+        configPanel.add(cbGreen)
+
+        cbBlack.addActionListener(this)
+        cbWhite.addActionListener(this)
+        cbGreen.addActionListener(this)
+        cbRed.addActionListener(this)
+    }
 
     override fun isValidSegment(segment: DartboardSegmentKt): Boolean
     {
@@ -25,15 +50,14 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule()
     }
 
     override fun getRuleIdentifier() = "Colour"
-    override fun isValid(): Boolean
+    override fun isValid(): String
     {
         if (!red && !green && !black && !white)
         {
-            DialogUtil.showError("You must select at least one colour.")
-            return false
+            return "You must select at least one colour."
         }
 
-        return true
+        return ""
     }
 
     override fun writeXmlAttributes(rootElement: Element)
@@ -50,6 +74,15 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule()
         white = rootElement.getAttribute("White")?.toBoolean() ?: false
         red = rootElement.getAttribute("Red")?.toBoolean() ?: false
         green = rootElement.getAttribute("Green")?.toBoolean() ?: false
+    }
+
+    override fun getConfigPanel() = configPanel
+    override fun actionPerformed(e: ActionEvent?)
+    {
+        black = cbBlack.isSelected
+        white = cbWhite.isSelected
+        green = cbGreen.isSelected
+        red = cbRed.isSelected
     }
 
 }
