@@ -1,4 +1,4 @@
-package burlton.dartzee.test
+package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel

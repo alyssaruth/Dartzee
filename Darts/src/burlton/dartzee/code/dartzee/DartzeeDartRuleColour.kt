@@ -84,5 +84,4 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
         green = cbGreen.isSelected
         red = cbRed.isSelected
     }
-
 }
