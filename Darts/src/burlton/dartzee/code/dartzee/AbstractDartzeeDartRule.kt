@@ -11,13 +11,12 @@ abstract class AbstractDartzeeDartRule
 
     abstract fun getRuleIdentifier(): String
 
-    abstract fun writeXmlAttributes(rootElement: Element)
-    abstract fun populate(rootElement: Element)
+    open fun writeXmlAttributes(rootElement: Element) {}
+    open fun populate(rootElement: Element) {}
 
-    open fun getDisplayName(): String = getRuleIdentifier()
-    open fun isValid(): String = ""
+    open fun validate(): String = ""
 
-    override fun toString() = getDisplayName()
+    override fun toString() = getRuleIdentifier()
 
     open fun getConfigPanel(): JPanel?
     {
@@ -41,8 +40,8 @@ fun getAllDartRules(): MutableList<AbstractDartzeeDartRule>
 {
     return mutableListOf(DartzeeDartRuleEven(),
                          DartzeeDartRuleOdd(),
-                         DartzeeRuleInner(),
-                         DartzeeRuleOuter(),
+                         DartzeeDartRuleInner(),
+                         DartzeeDartRuleOuter(),
                          DartzeeDartRuleColour(),
                          DartzeeDartRuleNumber())
 }

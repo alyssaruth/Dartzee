@@ -49,7 +49,7 @@ class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
 
     fun valid(): Boolean
     {
-        val errorStr = getSelection().isValid()
+        val errorStr = getSelection().validate()
         if (!errorStr.isEmpty())
         {
             DialogUtil.showError("${lblDesc.text}: $errorStr")

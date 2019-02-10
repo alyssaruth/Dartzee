@@ -13,10 +13,10 @@ import javax.swing.JPanel
 
 class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
 {
-    private var black = false
-    private var white = false
-    private var green = false
-    private var red = false
+    var black = false
+    var white = false
+    var green = false
+    var red = false
 
     private val configPanel = JPanel()
     private val cbBlack = JCheckBox("Black")
@@ -27,6 +27,11 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
     init
     {
         configPanel.layout = FlowLayout()
+
+        cbBlack.name = "Black"
+        cbWhite.name = "White"
+        cbGreen.name = "Green"
+        cbRed.name = "Red"
 
         configPanel.add(cbBlack)
         configPanel.add(cbWhite)
@@ -41,6 +46,11 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
 
     override fun isValidSegment(segment: DartboardSegmentKt): Boolean
     {
+        if (segment.isMiss())
+        {
+            return false
+        }
+
         val color = getColourForPointAndSegment(null, segment, false, DEFAULT_COLOUR_WRAPPER)
 
         return (color == Color.BLACK && black)
@@ -50,7 +60,7 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
     }
 
     override fun getRuleIdentifier() = "Colour"
-    override fun isValid(): String
+    override fun validate(): String
     {
         if (!red && !green && !black && !white)
         {
