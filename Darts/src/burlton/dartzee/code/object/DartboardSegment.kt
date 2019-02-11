@@ -36,7 +36,7 @@ fun getMultiplier(type: Int): Int
     }
 }
 
-class DartboardSegmentKt(scoreAndType : String)
+class DartboardSegmentKt(val scoreAndType : String)
 {
     var type : Int
     var score : Int
@@ -70,7 +70,6 @@ class DartboardSegmentKt(scoreAndType : String)
     {
         return getMultiplier(type)
     }
-    fun getTotal(): Int = score * getMultiplier()
 
     fun addPoint(pt: Point)
     {

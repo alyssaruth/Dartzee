@@ -3,6 +3,7 @@ package burlton.dartzee.code.dartzee
 import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.bean.SpinnerSingleSelector
+import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.FlowLayout
 import javax.swing.JPanel
@@ -11,7 +12,7 @@ import javax.swing.event.ChangeListener
 
 class DartzeeDartRuleScore: AbstractDartzeeDartRule(), ChangeListener
 {
-    var score = -1
+    var score = 20
 
     private val configPanel = JPanel()
     private val spinner = SpinnerSingleSelector()
@@ -22,7 +23,7 @@ class DartzeeDartRuleScore: AbstractDartzeeDartRule(), ChangeListener
         configPanel.add(spinner)
 
         spinner.addChangeListener(this)
-        spinner.value = 20
+        spinner.value = score
     }
 
     override fun isValidSegment(segment: DartboardSegmentKt): Boolean
@@ -32,7 +33,7 @@ class DartzeeDartRuleScore: AbstractDartzeeDartRule(), ChangeListener
 
     override fun getRuleIdentifier() = "Score"
 
-    override fun writeXmlAttributes(rootElement: Element)
+    override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
         rootElement.setAttribute("Target", "$score")
     }

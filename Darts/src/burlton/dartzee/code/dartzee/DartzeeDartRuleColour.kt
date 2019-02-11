@@ -3,6 +3,7 @@ package burlton.dartzee.code.dartzee
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.utils.getColourForPointAndSegment
+import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.Color
 import java.awt.FlowLayout
@@ -70,7 +71,7 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
         return ""
     }
 
-    override fun writeXmlAttributes(rootElement: Element)
+    override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
         rootElement.setAttribute("Black", black.toString())
         rootElement.setAttribute("White", white.toString())

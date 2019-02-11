@@ -25,7 +25,7 @@ private const val LAYER_DARTS = 2
 private const val LAYER_DODGY = 3
 private const val LAYER_SLIDER = 4
 
-class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
+open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 {
     private var hmPointToSegment = mutableMapOf<Point, DartboardSegmentKt>()
     private var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegmentKt>()
@@ -38,6 +38,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private var diameter = 360.0
 
+    var scoreLabelColor: Color = Color.WHITE
     var renderScoreLabels = false
 
     private var dartCount = 0
@@ -49,7 +50,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     private var latestClip: Clip? = null
 
     private var dartboardImage: BufferedImage? = null
-    private val dartboardLabel = JLabel()
+    protected val dartboardLabel = JLabel()
     private val dodgyLabel = JLabel() //You know what this is...
 
     /*fun getArea(): Double
@@ -83,7 +84,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     }
 
     @JvmOverloads
-    fun paintDartboard(colourWrapper: ColourWrapper? = null, listen: Boolean = true, cached: Boolean = false)
+    open fun paintDartboard(colourWrapper: ColourWrapper? = null, listen: Boolean = true, cached: Boolean = false)
     {
         val width = width
         val height = height
@@ -197,7 +198,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         {
             //Create a label with standard properties
             val lbl = JLabel("" + i)
-            lbl.foreground = Color.WHITE
+            lbl.foreground = scoreLabelColor
             lbl.background = DartsColour.TRANSPARENT
             lbl.isOpaque = true
             lbl.horizontalAlignment = SwingConstants.CENTER
@@ -282,18 +283,18 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             return
         }
 
-        val hoveredColour = getColourForPointAndSegment(null, segment, highlight, colourWrapper)
+        val hoveredColour = getColourForPointAndSegment(null, segment, highlight, colourWrapper)!!
         val pointsForCurrentSegment = segment.points
         for (i in pointsForCurrentSegment.indices)
         {
             val pt = pointsForCurrentSegment[i]
-            colourPoint(pt, hoveredColour!!)
+            colourPoint(pt, hoveredColour)
         }
 
         dartboardLabel.repaint()
     }
 
-    private fun colourPoint(pt: Point, colour: Color)
+    protected fun colourPoint(pt: Point, colour: Color)
     {
         val x = pt.getX().toInt()
         val y = pt.getY().toInt()
@@ -307,7 +308,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    private fun getSegmentForPoint(pt: Point): DartboardSegmentKt
+    protected fun getSegmentForPoint(pt: Point): DartboardSegmentKt
     {
         val segment = hmPointToSegment[pt]
         if (segment != null)
@@ -359,7 +360,7 @@ class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         dartThrown(pt)
     }
 
-    fun dartThrown(pt: Point)
+    open fun dartThrown(pt: Point)
     {
         val dart = convertPointToDart(pt, true)
         if (listener != null)

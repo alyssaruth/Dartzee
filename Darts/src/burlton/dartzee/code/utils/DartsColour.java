@@ -26,7 +26,9 @@ public final class DartsColour implements DartsRegistry
 	public static final Color COLOUR_BRONZE_TEXT = COLOUR_BRONZE.darker().darker();
 
 	public static final Color COLOUR_ACHIEVEMENT_ORANGE = new Color(255, 165, 0);
-	
+
+	public static final Color COLOUR_PASTEL_BLUE = Color.getHSBColor((float)242/360, (float)0.48, (float)0.8);
+
 	public static Color getDarkenedColour(Color colour)
 	{
 		if (colour == null)

@@ -2,6 +2,7 @@ package burlton.dartzee.code.dartzee
 
 import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.`object`.DartboardSegmentKt
+import org.w3c.dom.Document
 import org.w3c.dom.Element
 import javax.swing.JPanel
 
@@ -11,7 +12,7 @@ abstract class AbstractDartzeeDartRule
 
     abstract fun getRuleIdentifier(): String
 
-    open fun writeXmlAttributes(rootElement: Element) {}
+    open fun writeXmlAttributes(doc: Document, rootElement: Element) {}
     open fun populate(rootElement: Element) {}
 
     open fun validate(): String = ""
@@ -29,7 +30,7 @@ abstract class AbstractDartzeeDartRule
         xmlDoc ?: return "<NULL>"
 
         val rootElement = xmlDoc.createElement(getRuleIdentifier())
-        writeXmlAttributes(rootElement)
+        writeXmlAttributes(xmlDoc, rootElement)
 
         xmlDoc.appendChild(rootElement)
         return XmlUtil.getStringFromDocument(xmlDoc)
@@ -43,7 +44,8 @@ fun getAllDartRules(): MutableList<AbstractDartzeeDartRule>
                          DartzeeDartRuleInner(),
                          DartzeeDartRuleOuter(),
                          DartzeeDartRuleColour(),
-                         DartzeeDartRuleScore())
+                         DartzeeDartRuleScore(),
+                         DartzeeDartRuleCustom())
 }
 
 fun parseDartzeeRule(xmlStr: String): AbstractDartzeeDartRule?
