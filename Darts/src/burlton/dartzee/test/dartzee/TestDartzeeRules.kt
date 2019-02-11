@@ -1,8 +1,10 @@
 package burlton.dartzee.test.dartzee
 
 import burlton.dartzee.code.`object`.*
+import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.*
 import org.junit.Test
+import javax.swing.JCheckBox
 import kotlin.test.*
 
 class TestDartzeeRules
@@ -228,6 +230,22 @@ class TestDartzeeRules
     }
 
     @Test
+    fun `sensible toString implementation`()
+    {
+        val rule = DartzeeDartRuleOuter()
+
+        assertEquals("$rule", rule.getRuleIdentifier())
+    }
+
+    @Test
+    fun `test null configPanel default`()
+    {
+        val rule = DartzeeDartRuleOuter()
+
+        assertNull(rule.getConfigPanel())
+    }
+
+    @Test
     fun `invalid XML should return null rule`()
     {
         val rule = parseDartzeeRule("BAD")
@@ -298,5 +316,63 @@ class TestDartzeeRules
         val parsedRule = parseDartzeeRule(xml)
 
         assertTrue(parsedRule is DartzeeDartRuleEven)
+    }
+
+    @Test
+    fun `colour config panel updates rule correctly`()
+    {
+        val rule = DartzeeDartRuleColour()
+        val panel = rule.getConfigPanel()
+
+        val checkBoxes: List<JCheckBox> = panel.components.filterIsInstance(JCheckBox::class.java)
+
+        val cbBlack = checkBoxes.find{it.text == "Black"}
+        val cbWhite = checkBoxes.find{it.text == "White"}
+        val cbGreen = checkBoxes.find{it.text == "Green"}
+        val cbRed = checkBoxes.find{it.text == "Red"}
+
+        assertNotNull(cbBlack)
+        assertNotNull(cbWhite)
+        assertNotNull(cbGreen)
+        assertNotNull(cbRed)
+
+        for (i in 0..15)
+        {
+            cbBlack.isSelected = (i and 1) > 0
+            cbWhite.isSelected = (i and 2) > 0
+            cbRed.isSelected = (i and 4) > 0
+            cbGreen.isSelected = (i and 8) > 0
+
+            rule.actionPerformed(null)
+
+            assertEquals(cbBlack.isSelected, rule.black)
+            assertEquals(cbWhite.isSelected, rule.white)
+            assertEquals(cbRed.isSelected, rule.red)
+            assertEquals(cbGreen.isSelected, rule.green)
+        }
+    }
+
+    @Test
+    fun `Score config panel updates rule correctly`()
+    {
+        val rule = DartzeeDartRuleScore()
+
+        val panel = rule.getConfigPanel()
+
+        val spinner = panel.components.filterIsInstance(SpinnerSingleSelector::class.java).first()
+
+        assertNotNull(spinner)
+
+        assertEquals(spinner.value, rule.score)
+        assertTrue(rule.score > -1)
+
+        for (i in 1..25)
+        {
+            spinner.value = i
+            rule.stateChanged(null)
+
+            assertEquals(spinner.value, rule.score)
+            assertFalse(rule.score in 21..24)
+        }
     }
 }
