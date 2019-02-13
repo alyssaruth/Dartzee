@@ -1,13 +1,12 @@
 package burlton.dartzee.code.screen
 
-import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.listener.DartboardListener
+import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.utils.DartsColour
 import burlton.desktopcore.code.screen.SimpleDialog
 import java.awt.BorderLayout
 import javax.swing.JPanel
 
-class DartboardSegmentSelectDialog: SimpleDialog(), DartboardListener
+class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegmentKt>): SimpleDialog()
 {
     private val dartboard = DartboardSegmentSelector()
 
@@ -29,6 +28,13 @@ class DartboardSegmentSelectDialog: SimpleDialog(), DartboardListener
 
         panelCenter.background = DartsColour.COLOUR_PASTEL_BLUE
         panelOkCancel.background = DartsColour.COLOUR_PASTEL_BLUE
+
+        dartboard.initState(segments)
+    }
+
+    fun getSelection(): HashSet<DartboardSegmentKt>
+    {
+        return dartboard.selectedSegments
     }
 
     override fun okPressed()
@@ -36,8 +42,9 @@ class DartboardSegmentSelectDialog: SimpleDialog(), DartboardListener
         dispose()
     }
 
-    override fun dartThrown(dart: Dart)
+    override fun cancelPressed()
     {
-
+        dartboard.selectedSegments = segments
+        dispose()
     }
 }

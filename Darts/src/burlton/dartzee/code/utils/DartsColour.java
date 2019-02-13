@@ -36,8 +36,7 @@ public final class DartsColour implements DartsRegistry
 			return null;
 		}
 		
-		Color brighterColour = colour.darker().darker();
-		return brighterColour;
+		return colour.darker().darker();
 	}
 	public static Color getBrightenedColour(Color colour)
 	{

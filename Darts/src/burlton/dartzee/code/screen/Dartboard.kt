@@ -308,7 +308,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    protected fun getSegmentForPoint(pt: Point): DartboardSegmentKt
+    protected fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): DartboardSegmentKt
     {
         val segment = hmPointToSegment[pt]
         if (segment != null)
@@ -316,8 +316,11 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             return segment
         }
 
-        Debug.stackTrace("Couldn't find segment for point (" + pt.getX() + ", " + pt.getY() + ")."
-                + "Width = " + width + ", Height = " + height)
+        if (stackTrace)
+        {
+            Debug.stackTrace("Couldn't find segment for point (" + pt.getX() + ", " + pt.getY() + ")."
+                    + "Width = " + width + ", Height = " + height)
+        }
 
         return factoryAndCacheSegmentForPoint(pt)
     }

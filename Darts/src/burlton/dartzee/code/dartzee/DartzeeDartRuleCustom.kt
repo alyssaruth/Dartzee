@@ -12,7 +12,7 @@ import javax.swing.JPanel
 
 class DartzeeDartRuleCustom: AbstractDartzeeDartRule(), ActionListener
 {
-    var segments = mutableListOf<DartboardSegmentKt>()
+    var segments = hashSetOf<DartboardSegmentKt>()
 
     private val configPanel = JPanel()
     private val btnConfigure = JButton("Configure")
@@ -36,7 +36,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRule(), ActionListener
     {
         segments.forEach{
             val element = doc.createElement("Segment")
-            element.nodeValue = it.scoreAndType
+            element.setAttribute("Value", it.scoreAndType)
 
             rootElement.appendChild(element)
         }
@@ -44,20 +44,33 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRule(), ActionListener
 
     override fun populate(rootElement: Element)
     {
-        for (i in 0 until rootElement.childNodes.length)
+        val list = rootElement.getElementsByTagName("Segment")
+        for (i in 0 until list.length)
         {
-            val node = rootElement.childNodes.item(i)
-            val segment = DartboardSegmentKt(node.nodeValue)
+            val node = list.item(i) as Element
+            val segment = DartboardSegmentKt(node.getAttribute("Value"))
 
             segments.add(segment)
         }
     }
 
+    override fun validate(): String
+    {
+        if (segments.isEmpty())
+        {
+            return "You must select at least one segment."
+        }
+
+        return ""
+    }
+
     override fun getConfigPanel() = configPanel
     override fun actionPerformed(e: ActionEvent?)
     {
-        val dlg = DartboardSegmentSelectDialog()
+        val dlg = DartboardSegmentSelectDialog(segments)
         dlg.isVisible = true
+
+        segments = dlg.getSelection()
     }
 
 }

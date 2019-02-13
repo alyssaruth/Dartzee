@@ -11,13 +11,26 @@ import java.awt.event.MouseEvent
 
 class DartboardSegmentSelector: Dartboard(500, 500)
 {
-    private val selectedSegments = hashSetOf<DartboardSegmentKt>()
+    var selectedSegments = hashSetOf<DartboardSegmentKt>()
+
+    private var lastDraggedSegment: DartboardSegmentKt? = null
 
     init
     {
         scoreLabelColor = Color.BLACK
         renderScoreLabels = true
     }
+
+    fun initState(initialSelection: HashSet<DartboardSegmentKt>)
+    {
+        initialSelection.forEach{
+            selectedSegments.add(it)
+
+            val col = getColourForPointAndSegment(null, it, false, DEFAULT_COLOUR_WRAPPER)!!
+            colourSegment(it, col)
+        }
+    }
+
 
     fun paintDartboard()
     {
@@ -28,7 +41,13 @@ class DartboardSegmentSelector: Dartboard(500, 500)
 
     override fun dartThrown(pt: Point)
     {
-        val segment = getSegmentForPoint(pt)
+        val segment = getSegmentForPoint(pt, false)
+        toggleSegment(segment)
+    }
+
+    private fun toggleSegment(segment: DartboardSegmentKt)
+    {
+        lastDraggedSegment = segment
         if (segment.isMiss())
         {
             return
@@ -64,5 +83,19 @@ class DartboardSegmentSelector: Dartboard(500, 500)
         dartboardLabel.repaint()
     }
 
-    override fun mouseMoved(arg0: MouseEvent) {}
+    override fun mouseMoved(arg0: MouseEvent)
+    {
+        //Do nothing
+    }
+    override fun mouseDragged(arg0: MouseEvent)
+    {
+        val segment = getSegmentForPoint(arg0.point, false)
+        if (segment == lastDraggedSegment)
+        {
+            return
+        }
+
+        toggleSegment(segment)
+    }
+
 }
