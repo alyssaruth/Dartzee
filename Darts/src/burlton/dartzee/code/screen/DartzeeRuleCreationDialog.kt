@@ -85,6 +85,8 @@ class DartzeeRuleCreationDialog : SimpleDialog()
             rule.inOrder = cbInOrder.isSelected
         }
 
+        dartzeeRule = rule
+
         dispose()
     }
 
@@ -98,13 +100,6 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         {
             return dartOneSelector.valid() && dartTwoSelector.valid() && dartThreeSelector.valid()
         }
-    }
-
-
-    override fun cancelPressed()
-    {
-        dartzeeRule = null
-        dispose()
     }
 
     private fun toggleDartsComponents()

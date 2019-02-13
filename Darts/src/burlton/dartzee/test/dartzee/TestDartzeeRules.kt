@@ -3,6 +3,9 @@ package burlton.dartzee.test.dartzee
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.*
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.hasSize
 import org.junit.Test
 import javax.swing.JCheckBox
 import kotlin.test.*
@@ -106,6 +109,24 @@ class TestDartzeeRules
 
         assertFalse(rule.validate().isEmpty())
     }
+
+    @Test
+    fun `can't create empty custom rule`()
+    {
+        val rule = DartzeeDartRuleCustom()
+
+        assertFalse(rule.validate().isEmpty())
+    }
+
+    @Test
+    fun `a custom rule with at least one segment is valid`()
+    {
+        val rule = DartzeeDartRuleCustom()
+        rule.segments = hashSetOf(doubleTwenty)
+
+        assertTrue(rule.validate().isEmpty())
+    }
+
 
     @Test
     fun `all non-empty colour rules are valid`()
@@ -306,6 +327,25 @@ class TestDartzeeRules
 
         assertTrue(parsedRule is DartzeeDartRuleScore)
         assertEquals(parsedRule.score, 20)
+    }
+
+    @Test
+    fun `write custom XML`()
+    {
+        val rule = DartzeeDartRuleCustom()
+
+        rule.segments = hashSetOf(doubleTwenty, outerBull, trebleNineteen)
+
+        val xml = rule.toDbString()
+        val parsedRule = parseDartzeeRule(xml)
+
+        assertTrue(parsedRule is DartzeeDartRuleCustom)
+
+        assertThat(parsedRule.segments, hasSize(equalTo(3)))
+
+        assertTrue(parsedRule.isValidSegment(doubleTwenty))
+        assertFalse(parsedRule.isValidSegment(singleTwenty))
+
     }
 
     @Test
