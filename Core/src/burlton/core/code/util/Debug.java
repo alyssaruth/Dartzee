@@ -89,6 +89,11 @@ public class Debug implements CoreRegistry
 			time = getCurrentTimeForLogging();
 		}
 
+		if (output == null)
+		{
+			System.out.println("NULL OUTPUT: " + text);
+		}
+
 		output.append("\n" + time + text);
 
 		if (logToSystemOut)

@@ -81,7 +81,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     }
     private fun addRuleToTable(rule: DartzeeRuleEntity)
     {
-        tm.addRow(arrayOf(rule, rule))
+        tm.addRow(arrayOf(rule.dart1Rule?.toDbString(), rule.dart2Rule?.toDbString()))
     }
 
 
