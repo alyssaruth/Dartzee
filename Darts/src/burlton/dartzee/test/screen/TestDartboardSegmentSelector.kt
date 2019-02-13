@@ -2,6 +2,7 @@ package burlton.dartzee.test.screen
 
 import burlton.core.code.util.Debug
 import burlton.core.test.TestDebug
+import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.screen.DartboardSegmentSelector
@@ -82,6 +83,32 @@ class TestDartboardSegmentSelector
         dartboard.mouseDragged(me)
 
         assertThat(dartboard.selectedSegments, hasSize(equalTo(2)))
+    }
+
+    @Test
+    fun `reloaded state should respond to drags`()
+    {
+        val dartboard = DartboardSegmentSelector(100, 100)
+        dartboard.paintDartboard()
+
+        val segment = DartboardSegmentKt("10_$SEGMENT_TYPE_OUTER_SINGLE")
+        dartboard.initState(hashSetOf(segment))
+
+        //Check state has initialised properly
+        assertThat(dartboard.selectedSegments, hasSize(equalTo(1)))
+
+        val selectedSegment = dartboard.selectedSegments.first()
+        assertThat(selectedSegment.type, equalTo(SEGMENT_TYPE_OUTER_SINGLE))
+        assertThat(selectedSegment.score, equalTo(10))
+
+        //Mock a mouse event
+        val pt = dartboard.getPointsForSegment(10, SEGMENT_TYPE_OUTER_SINGLE).first()
+
+        val me = Mockito.mock(MouseEvent::class.java)
+        whenInvoke(me.point).thenReturn(pt)
+        dartboard.mouseDragged(me)
+
+        assertThat(dartboard.selectedSegments, isEmpty)
     }
 
 }

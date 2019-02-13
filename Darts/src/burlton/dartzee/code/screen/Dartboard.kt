@@ -349,6 +349,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         val segment = hmSegmentKeyToSegment[segmentKey]
         return segment?.points ?: mutableListOf()
     }
+    fun getSegment(score: Int, type: Int): DartboardSegmentKt? = hmSegmentKeyToSegment["${score}_$type"]
 
     fun isDouble(pt: Point): Boolean
     {
