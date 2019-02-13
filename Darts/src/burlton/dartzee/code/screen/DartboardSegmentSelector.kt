@@ -9,7 +9,7 @@ import java.awt.Color
 import java.awt.Point
 import java.awt.event.MouseEvent
 
-class DartboardSegmentSelector: Dartboard(500, 500)
+class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(width, height)
 {
     var selectedSegments = hashSetOf<DartboardSegmentKt>()
 

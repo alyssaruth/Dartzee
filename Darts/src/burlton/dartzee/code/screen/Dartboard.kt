@@ -252,9 +252,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private fun factoryFontMetrics(font: Font): FontMetrics
     {
-        //Get the graphics off the main window, because that will always be visible
-        val gfx = ScreenCache.getMainScreen().graphics
-        return gfx.getFontMetrics(font)
+        //Use a new Canvas rather than going via graphics, as then this will work headless (e.g. from tests)
+        return Canvas().getFontMetrics(font)
     }
 
     private fun highlightDartboard(hoveredPoint: Point)
