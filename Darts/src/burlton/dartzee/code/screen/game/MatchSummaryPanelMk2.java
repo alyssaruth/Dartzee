@@ -36,7 +36,7 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 	private final JPanel refreshPanel = new JPanel();
 	private final JButton btnRefresh = new JButton();
 	
-	public void init(DartsMatchEntity match)
+	public void init(DartsMatchEntity match, java.util.List<PlayerEntity> playersInStartingOrder)
 	{
 		this.match = match;
 		
@@ -49,12 +49,10 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 			panelCenter.add(refreshPanel, BorderLayout.SOUTH);
 		}
 		
-		HandyArrayList<PlayerEntity> players = match.getPlayers();
-		
-		int totalPlayers = players.size();
+		int totalPlayers = playersInStartingOrder.size();
 		initScorers(totalPlayers);
 		
-		for (PlayerEntity player : players)
+		for (PlayerEntity player : playersInStartingOrder)
 		{
 			long playerId = player.getRowId();
 			MatchScorer scorer = assignScorer(player, hmPlayerIdToScorer, playerId, "");
