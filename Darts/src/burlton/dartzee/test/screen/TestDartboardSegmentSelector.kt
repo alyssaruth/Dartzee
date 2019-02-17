@@ -5,6 +5,7 @@ import burlton.core.test.TestDebug
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.DartboardSegmentSelector
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
@@ -60,8 +61,7 @@ class TestDartboardSegmentSelector
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
         dartboard.dartThrown(pt)
 
-        val me = Mockito.mock(MouseEvent::class.java)
-        whenInvoke(me.point).thenReturn(pt)
+        val me = generateMouseEvent(dartboard, 20, SEGMENT_TYPE_OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
         assertThat(dartboard.selectedSegments, hasSize(equalTo(1)))
@@ -76,10 +76,7 @@ class TestDartboardSegmentSelector
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
         dartboard.dartThrown(pt)
 
-        val secondPt = dartboard.getPointsForSegment(19, SEGMENT_TYPE_OUTER_SINGLE).first()
-
-        val me = Mockito.mock(MouseEvent::class.java)
-        whenInvoke(me.point).thenReturn(secondPt)
+        val me = generateMouseEvent(dartboard, 19, SEGMENT_TYPE_OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
         assertThat(dartboard.selectedSegments, hasSize(equalTo(2)))
@@ -102,13 +99,20 @@ class TestDartboardSegmentSelector
         assertThat(selectedSegment.score, equalTo(10))
 
         //Mock a mouse event
+        val me = generateMouseEvent(dartboard, 10, SEGMENT_TYPE_OUTER_SINGLE)
+        dartboard.mouseDragged(me)
+
+        assertThat(dartboard.selectedSegments, isEmpty)
+    }
+
+    private fun generateMouseEvent(dartboard: Dartboard, score: Int, segmentType: Int): MouseEvent
+    {
         val pt = dartboard.getPointsForSegment(10, SEGMENT_TYPE_OUTER_SINGLE).first()
 
         val me = Mockito.mock(MouseEvent::class.java)
         whenInvoke(me.point).thenReturn(pt)
-        dartboard.mouseDragged(me)
 
-        assertThat(dartboard.selectedSegments, isEmpty)
+        return me
     }
 
 }
