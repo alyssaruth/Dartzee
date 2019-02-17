@@ -28,25 +28,26 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val sb = StringBuilder().apply {
-            append(" SELECT pt.PlayerId, COUNT(1) AS BruceCount, MAX(drt.DtCreation) AS DtLastUpdate")
-            append(" FROM Dart drt, Round rnd, Participant pt, Game g")
-            append(" WHERE drt.RoundId = rnd.RowId")
-            append(" AND rnd.ParticipantId = pt.RowId")
-            append(" AND pt.GameId = g.RowId")
-            append(" AND g.GameType = $GAME_TYPE_ROUND_THE_CLOCK")
-            append(" AND drt.Ordinal = 4")
-            append(" AND drt.Score = drt.StartingScore")
-            append(" AND (")
-            append("        (g.GameParams = '$CLOCK_TYPE_STANDARD' AND drt.Multiplier > 0)")
-            append("     OR (g.GameParams = '$CLOCK_TYPE_DOUBLES' AND drt.Multiplier = 2)")
-            append("     OR (g.GameParams = '$CLOCK_TYPE_TREBLES' AND drt.Multiplier = 3)")
-            append(" )")
-        }
+        val sb = StringBuilder()
+        sb.append(" SELECT pt.PlayerId, COUNT(1) AS BruceCount, MAX(drt.DtCreation) AS DtLastUpdate")
+        sb.append(" FROM Dart drt, Round rnd, Participant pt, Game g")
+        sb.append(" WHERE drt.RoundId = rnd.RowId")
+        sb.append(" AND rnd.ParticipantId = pt.RowId")
+        sb.append(" AND pt.GameId = g.RowId")
+        sb.append(" AND g.GameType = $GAME_TYPE_ROUND_THE_CLOCK")
+        sb.append(" AND drt.Ordinal = 4")
+        sb.append(" AND drt.Score = drt.StartingScore")
+        sb.append(" AND (")
+        sb.append("        (g.GameParams = '$CLOCK_TYPE_STANDARD' AND drt.Multiplier > 0)")
+        sb.append("     OR (g.GameParams = '$CLOCK_TYPE_DOUBLES' AND drt.Multiplier = 2)")
+        sb.append("     OR (g.GameParams = '$CLOCK_TYPE_TREBLES' AND drt.Multiplier = 3)")
+        sb.append(" )")
+
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN($playerIds)")
         }
+
         sb.append(" GROUP BY pt.PlayerId")
 
         try
