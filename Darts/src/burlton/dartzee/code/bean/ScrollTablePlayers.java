@@ -1,13 +1,12 @@
 package burlton.dartzee.code.bean;
 
-import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
-
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.db.PlayerEntity;
 import burlton.core.code.obj.HandyArrayList;
+import burlton.dartzee.code.db.PlayerEntity;
+import burlton.desktopcore.code.bean.ScrollTable;
 import burlton.desktopcore.code.util.TableUtil;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 public class ScrollTablePlayers extends ScrollTable
 {
@@ -67,7 +66,7 @@ public class ScrollTablePlayers extends ScrollTable
 	{
 		initTableModel(new ArrayList<>());
 	}
-	public void initTableModel(ArrayList<PlayerEntity> players)
+	public void initTableModel(java.util.List<PlayerEntity> players)
 	{
 		TableUtil.DefaultModel model = new TableUtil.DefaultModel();
 		model.addColumn("");
