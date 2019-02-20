@@ -53,12 +53,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     protected val dartboardLabel = JLabel()
     private val dodgyLabel = JLabel() //You know what this is...
 
-    /*fun getArea(): Double
-    {
-        val radius = diameter / 2
-        return radius * radius * Math.PI
-    }*/
-
     constructor()
     {
         layout = null
@@ -102,7 +96,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         if (cached
           && dartboardTemplate != null)
         {
-            initialiseFromTemplate(dartboardTemplate!!)
+            initialiseFromTemplate()
         }
         else
         {
@@ -142,14 +136,12 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    fun initialiseFromTemplate(template: DartboardTemplate)
+    open fun initialiseFromTemplate()
     {
-        hmPointToSegment = template.getPointToSegmentMap()
-        hmSegmentKeyToSegment = template.getSegmentKeyToSegmentMap()
-        dartboardImage = template.getDartboardImg()
+        hmPointToSegment = dartboardTemplate!!.getPointToSegmentMap()
+        hmSegmentKeyToSegment = dartboardTemplate!!.getSegmentKeyToSegmentMap()
+        dartboardImage = dartboardTemplate!!.getDartboardImg()
     }
-
-
 
     private fun renderDartboardImage(width: Int, height: Int)
     {
