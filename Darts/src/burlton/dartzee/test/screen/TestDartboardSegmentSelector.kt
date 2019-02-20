@@ -107,7 +107,7 @@ class TestDartboardSegmentSelector
 
     private fun generateMouseEvent(dartboard: Dartboard, score: Int, segmentType: Int): MouseEvent
     {
-        val pt = dartboard.getPointsForSegment(10, SEGMENT_TYPE_OUTER_SINGLE).first()
+        val pt = dartboard.getPointsForSegment(score, segmentType).first()
 
         val me = Mockito.mock(MouseEvent::class.java)
         whenInvoke(me.point).thenReturn(pt)
