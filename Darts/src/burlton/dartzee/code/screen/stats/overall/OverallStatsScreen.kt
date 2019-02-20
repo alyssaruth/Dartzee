@@ -3,8 +3,9 @@ package burlton.dartzee.code.screen.stats.overall
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableDartsGame
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.db.getAllGameTypes
+import burlton.dartzee.code.db.getTypeDesc
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.utils.DartsRegistry
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -105,17 +106,17 @@ class OverallStatsScreen : EmbeddedScreen()
      */
     private fun addTotalScoreTabs()
     {
-        val gameTypes = GameEntity.getAllGameTypes()
+        val gameTypes = getAllGameTypes()
         for (gameType in gameTypes)
         {
-            val tabTitle = GameEntity.getTypeDesc(gameType)
+            val tabTitle = getTypeDesc(gameType)
             tabbedPane.addTab(tabTitle, null, OverallStatsTabTotalScore(gameType), null)
         }
     }
 
     override fun getScreenName(): String
     {
-        return "Game Statistics"
+        return "Leaderboards"
     }
 
     override fun initialise()

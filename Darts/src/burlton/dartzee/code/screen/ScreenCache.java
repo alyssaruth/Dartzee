@@ -1,18 +1,18 @@
 package burlton.dartzee.code.screen;
 
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.screen.ai.AIConfigurationDialog;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.screen.preference.PreferencesDialog;
 import burlton.dartzee.code.screen.reporting.ConfigureReportColumnsDialog;
-import burlton.core.code.obj.SuperHashMap;
+import burlton.desktopcore.code.bean.CheatBar;
 import burlton.desktopcore.code.screen.BugReportDialog;
 import burlton.desktopcore.code.screen.DebugConsoleAdv;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 public final class ScreenCache 
 {
@@ -59,12 +59,17 @@ public final class ScreenCache
 	{
 		if (mainScreen == null)
 		{
-			mainScreen = new DartsApp();
+			mainScreen = new DartsApp(new CheatBar());
 		}
 		
 		return mainScreen;
 	}
-	
+
+	public static <K extends EmbeddedScreen> void switchScreen(Class<K> screenClass)
+	{
+		K screen = getScreen(screenClass);
+		switchScreen(screen);
+	}
 	public static void switchScreen(EmbeddedScreen scrn)
 	{
 		switchScreen(scrn, true);

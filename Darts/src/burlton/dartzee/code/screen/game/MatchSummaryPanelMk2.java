@@ -2,10 +2,7 @@ package burlton.dartzee.code.screen.game;
 
 import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.SuperHashMap;
-import burlton.dartzee.code.db.DartsMatchEntity;
-import burlton.dartzee.code.db.GameEntity;
-import burlton.dartzee.code.db.ParticipantEntity;
-import burlton.dartzee.code.db.PlayerEntity;
+import burlton.dartzee.code.db.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +36,7 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 	private final JPanel refreshPanel = new JPanel();
 	private final JButton btnRefresh = new JButton();
 	
-	public void init(DartsMatchEntity match)
+	public void init(DartsMatchEntity match, java.util.List<PlayerEntity> playersInStartingOrder)
 	{
 		this.match = match;
 		
@@ -52,12 +49,10 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 			panelCenter.add(refreshPanel, BorderLayout.SOUTH);
 		}
 		
-		HandyArrayList<PlayerEntity> players = match.getPlayers();
-		
-		int totalPlayers = players.size();
+		int totalPlayers = playersInStartingOrder.size();
 		initScorers(totalPlayers);
 		
-		for (PlayerEntity player : players)
+		for (PlayerEntity player : playersInStartingOrder)
 		{
 			long playerId = player.getRowId();
 			MatchScorer scorer = assignScorer(player, hmPlayerIdToScorer, playerId, "");
@@ -104,18 +99,19 @@ public class MatchSummaryPanelMk2 extends PanelWithScorers<MatchScorer>
 	private GameStatisticsPanel factoryStatsPanel()
 	{
 		int type = match.getGameType();
-		if (type == GameEntity.GAME_TYPE_X01)
+		if (type == GameEntityKt.GAME_TYPE_X01)
 		{
 			return new MatchStatisticsPanelX01();
 		}
-		else if (type == GameEntity.GAME_TYPE_GOLF)
+		else if (type == GameEntityKt.GAME_TYPE_GOLF)
 		{
 			return new MatchStatisticsPanelGolf();
 		}
-		else if (type == GameEntity.GAME_TYPE_ROUND_THE_CLOCK)
+		else if (type == GameEntityKt.GAME_TYPE_ROUND_THE_CLOCK)
 		{
 			return new MatchStatisticsPanelRoundTheClock();
 		}
+		//TODO - Implement Dartzee
 		
 		if (Beans.isDesignTime())
 		{

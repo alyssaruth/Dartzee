@@ -64,10 +64,10 @@ public class AIConfigurationGolfDartPanel extends JPanel
 	
 	private void setModels()
 	{
-		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.TYPE_DOUBLE, "Double (1)"));
-		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.TYPE_TREBLE, "Treble (2)"));
-		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.TYPE_INNER_SINGLE, "Inner Single (3)"));
-		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.TYPE_OUTER_SINGLE, "Outer Single (4)"));
+		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.SEGMENT_TYPE_DOUBLE, "Double (1)"));
+		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.SEGMENT_TYPE_TREBLE, "Treble (2)"));
+		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.SEGMENT_TYPE_INNER_SINGLE, "Inner Single (3)"));
+		comboBox.addItem(new ComboBoxItem<>(DartboardSegment.SEGMENT_TYPE_OUTER_SINGLE, "Outer Single (4)"));
 		
 		spinner.setModel(new SpinnerNumberModel(2, 1, 4, 1));
 	}

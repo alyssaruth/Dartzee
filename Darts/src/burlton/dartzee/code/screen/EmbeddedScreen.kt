@@ -89,6 +89,11 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
         ScreenCache.switchScreen(getBackTarget(), false)
     }
 
+    fun toggleNextVisibility(visible: Boolean)
+    {
+        btnNext.isVisible = visible
+    }
+
     open fun nextPressed()
     {
         //default method

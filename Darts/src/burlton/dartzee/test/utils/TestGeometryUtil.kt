@@ -1,4 +1,4 @@
-package burlton.dartzee.test
+package burlton.dartzee.test.utils
 
 import burlton.core.code.obj.HandyArrayList
 import burlton.dartzee.code.utils.GeometryUtil

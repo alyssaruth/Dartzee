@@ -1,9 +1,9 @@
 package burlton.dartzee.code.ai;
 
-import burlton.dartzee.code.db.GameEntity;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.Dartboard;
-import burlton.core.code.util.Debug;
 
 public final class DartsSimulationGolf extends AbstractDartsSimulation
 {
@@ -89,7 +89,7 @@ public final class DartsSimulationGolf extends AbstractDartsSimulation
 	@Override
 	public int getGameType()
 	{
-		return GameEntity.GAME_TYPE_GOLF;
+		return GameEntityKt.GAME_TYPE_GOLF;
 	}
 
 }

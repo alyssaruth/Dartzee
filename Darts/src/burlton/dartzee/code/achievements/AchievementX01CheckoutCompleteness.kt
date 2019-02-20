@@ -1,7 +1,7 @@
 package burlton.dartzee.code.achievements
 
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
@@ -41,7 +41,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         sb.append(" AND d.RoundId = rnd.RowId")
         sb.append(" AND rnd.ParticipantId = pt.RowId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = ${GameEntity.GAME_TYPE_X01}")
+        sb.append(" AND g.GameType = $GAME_TYPE_X01")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")

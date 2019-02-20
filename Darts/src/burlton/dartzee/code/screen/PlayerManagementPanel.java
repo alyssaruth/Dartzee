@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen;
 
 import burlton.dartzee.code.bean.PlayerAvatar;
-import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.ai.AIConfigurationDialog;
 import burlton.dartzee.code.screen.ai.AISimulationSetup;
@@ -65,9 +65,9 @@ public class PlayerManagementPanel extends JPanel
 	private final JPanel panel = new JPanel();
 	private final PlayerAvatar avatar = new PlayerAvatar();
 	private final JPanel panel_1 = new JPanel();
-	private final PlayerSummaryPanel panelX01 = new PlayerSummaryPanel(GameEntity.GAME_TYPE_X01);
-	private final PlayerSummaryPanel panelGolf = new PlayerSummaryPanel(GameEntity.GAME_TYPE_GOLF);
-	private final PlayerSummaryPanel panelClock = new PlayerSummaryPanel(GameEntity.GAME_TYPE_ROUND_THE_CLOCK);
+	private final PlayerSummaryPanel panelX01 = new PlayerSummaryPanel(GameEntityKt.GAME_TYPE_X01);
+	private final PlayerSummaryPanel panelGolf = new PlayerSummaryPanel(GameEntityKt.GAME_TYPE_GOLF);
+	private final PlayerSummaryPanel panelClock = new PlayerSummaryPanel(GameEntityKt.GAME_TYPE_ROUND_THE_CLOCK);
 	private final JButton btnRunSimulation = new JButton("Run Simulation");
 	private final JButton btnAchievements = new JButton("Achievements");
 	
