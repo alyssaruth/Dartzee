@@ -1,4 +1,4 @@
-package burlton.dartzee.test
+package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
@@ -181,12 +181,14 @@ class TestX01Util
     fun testIsShanghai()
     {
         val tooShort = mutableListOf(Dart(20, 3), Dart(20, 3))
+        val miss = mutableListOf(Dart(20, 3), Dart(20, 3), Dart(20, 0))
         val wrongSum = mutableListOf(Dart(20, 1), Dart(20, 3), Dart(20, 3))
         val allDoubles = mutableListOf(Dart(20, 2), Dart(20, 2), Dart(20, 2))
         val correct = mutableListOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
         val correctDifferentOrder = mutableListOf(Dart(20, 2), Dart(20, 3), Dart(20, 1))
 
         assertFalse(isShanghai(tooShort))
+        assertFalse(isShanghai(miss))
         assertFalse(isShanghai(wrongSum))
         assertFalse(isShanghai(allDoubles))
 

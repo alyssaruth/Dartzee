@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements
 
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.utils.ResourceCache
 import java.net.URL
 
@@ -9,7 +9,7 @@ class AchievementGolfBestGame : AbstractAchievementBestGame()
     override val achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME
     override val name = "Career Round"
     override val desc = "Best game of golf (18 holes)"
-    override val gameType = GameEntity.GAME_TYPE_GOLF
+    override val gameType = GAME_TYPE_GOLF
     override val gameParams = "18"
 
     override val redThreshold = 81    //4.5 per hole

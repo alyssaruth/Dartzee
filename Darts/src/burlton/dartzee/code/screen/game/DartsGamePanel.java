@@ -179,7 +179,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		//Create a new round for this player
 		int newRoundNo = lastRoundForThisPlayer+1;
-		currentRound = RoundEntity.factory(participant, newRoundNo);
+		currentRound = RoundEntity.Companion.factory(participant, newRoundNo);
 		hmPlayerNumberToLastRoundNumber.put(currentPlayerNumber, newRoundNo);
 		
 		Debug.appendBanner(activeScorer.getPlayerName() + ": Round " + newRoundNo, VERBOSE_LOGGING);
@@ -620,18 +620,19 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	
 	public static DartsGamePanel<? extends DartsScorer> factory(DartsGameScreen parent, int gameType)
 	{
-		if (gameType == GameEntity.GAME_TYPE_X01)
+		if (gameType == GameEntityKt.GAME_TYPE_X01)
 		{
 			return new GamePanelX01(parent);
 		}
-		else if (gameType == GameEntity.GAME_TYPE_GOLF)
+		else if (gameType == GameEntityKt.GAME_TYPE_GOLF)
 		{
 			return new GamePanelGolf(parent);
 		}
-		else if (gameType == GameEntity.GAME_TYPE_ROUND_THE_CLOCK)
+		else if (gameType == GameEntityKt.GAME_TYPE_ROUND_THE_CLOCK)
 		{
 			return new GamePanelRoundTheClock(parent);
 		}
+		//TODO - Implement Dartzee
 		
 		Debug.stackTrace("Unexpected gameType: " + gameType);
 		return null;

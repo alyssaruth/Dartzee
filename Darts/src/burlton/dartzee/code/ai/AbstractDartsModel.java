@@ -3,7 +3,7 @@ package burlton.dartzee.code.ai;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.core.code.util.XmlUtil;
-import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.object.DartKt;
 import burlton.dartzee.code.object.DartboardSegment;
@@ -223,11 +223,11 @@ public abstract class AbstractDartsModel
 	{
 		if (scoringDart == 25)
 		{
-			return getPointForScoreAdjustedForBias(scoringDart, dartboard, DartboardSegment.TYPE_DOUBLE);
+			return getPointForScoreAdjustedForBias(scoringDart, dartboard, DartboardSegment.SEGMENT_TYPE_DOUBLE);
 		}
 		else
 		{
-			return getPointForScoreAdjustedForBias(scoringDart, dartboard, DartboardSegment.TYPE_TREBLE);
+			return getPointForScoreAdjustedForBias(scoringDart, dartboard, DartboardSegment.SEGMENT_TYPE_TREBLE);
 		}
 	}
 	private Dart getOveriddenDartToAimAt(int score)
@@ -255,10 +255,10 @@ public abstract class AbstractDartsModel
 	{
 		if (dartNo == 1)
 		{
-			return DartboardSegment.TYPE_DOUBLE;
+			return DartboardSegment.SEGMENT_TYPE_DOUBLE;
 		}
 		
-		return DartboardSegment.TYPE_TREBLE;
+		return DartboardSegment.SEGMENT_TYPE_TREBLE;
 	}
 	private int getDefaultStopThreshold(int dartNo)
 	{
@@ -285,17 +285,17 @@ public abstract class AbstractDartsModel
 	}
 	private int getSegmentTypeForClockType(String clockType)
 	{
-		if (clockType.equals(GameEntity.CLOCK_TYPE_STANDARD))
+		if (clockType.equals(GameEntityKt.CLOCK_TYPE_STANDARD))
 		{
-			return DartboardSegment.TYPE_OUTER_SINGLE;
+			return DartboardSegment.SEGMENT_TYPE_OUTER_SINGLE;
 		}
-		else if (clockType.equals(GameEntity.CLOCK_TYPE_DOUBLES))
+		else if (clockType.equals(GameEntityKt.CLOCK_TYPE_DOUBLES))
 		{
-			return DartboardSegment.TYPE_DOUBLE;
+			return DartboardSegment.SEGMENT_TYPE_DOUBLE;
 		}
 		else
 		{
-			return DartboardSegment.TYPE_TREBLE;
+			return DartboardSegment.SEGMENT_TYPE_TREBLE;
 		}
 	}
 	
@@ -437,7 +437,7 @@ public abstract class AbstractDartsModel
 			int doubleToAimAt = rand.nextInt(20) + 1;
 			
 			//Point doublePtToAimAt = hm.get(doubleToAimAt);
-			Point doublePtToAimAt = getPointForScoreAdjustedForBias(doubleToAimAt, dartboard, DartboardSegment.TYPE_DOUBLE);
+			Point doublePtToAimAt = getPointForScoreAdjustedForBias(doubleToAimAt, dartboard, DartboardSegment.SEGMENT_TYPE_DOUBLE);
 			
 			Point pt = throwDartAtPoint(doublePtToAimAt, dartboard);
 			Dart dart = dartboard.convertPointToDart(pt, true);
@@ -459,7 +459,7 @@ public abstract class AbstractDartsModel
 		HashMap<Integer, Point> ret = new HashMap<>();
 		for (int i=1; i<=20; i++)
 		{
-			Point doublePtToAimAt = getPointForScoreAdjustedForBias(i, dartboard, DartboardSegment.TYPE_DOUBLE);
+			Point doublePtToAimAt = getPointForScoreAdjustedForBias(i, dartboard, DartboardSegment.SEGMENT_TYPE_DOUBLE);
 			ret.put(i, doublePtToAimAt);
 		}
 		

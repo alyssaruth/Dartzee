@@ -1,6 +1,9 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import burlton.dartzee.code.db.GameEntity;
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.EmbeddedScreen;
@@ -8,10 +11,7 @@ import burlton.dartzee.code.screen.PlayerSelectDialog;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.stats.GameWrapper;
 import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.SuperHashMap;
 import burlton.desktopcore.code.util.ComponentUtil;
-import burlton.core.code.util.Debug;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,7 +109,7 @@ public class PlayerStatisticsScreen extends EmbeddedScreen
 	{
 		tabbedPane.removeAll();
 		
-		if (gameType == GameEntity.GAME_TYPE_X01)
+		if (gameType == GameEntityKt.GAME_TYPE_X01)
 		{
 			tabbedPane.addTab("Finish Breakdown", null, tabFinishing, null);
 			tabbedPane.addTab("Checkout %", null, tabCheckoutPercent, null);
@@ -118,14 +118,14 @@ public class PlayerStatisticsScreen extends EmbeddedScreen
 			tabbedPane.addTab("Total Darts", null, tabTotalDarts, null);
 			tabbedPane.addTab("Three Dart Scores", null, tabThreeDartScores, null);
 		}
-		else if (gameType == GameEntity.GAME_TYPE_GOLF)
+		else if (gameType == GameEntityKt.GAME_TYPE_GOLF)
 		{
 			tabbedPane.addTab("Hole Breakdown", null, tabHoleBreakdown, null);
 			tabbedPane.addTab("Scorecards", null, tabBestRounds, null);
 			tabbedPane.addTab("Optimal Scorecard", null, tabOptimalScorecard, null);
 			tabbedPane.addTab("All Scores", null, tabAllScores, null);
 		}
-		else if (gameType == GameEntity.GAME_TYPE_ROUND_THE_CLOCK)
+		else if (gameType == GameEntityKt.GAME_TYPE_ROUND_THE_CLOCK)
 		{
 			tabbedPane.addTab("Total Darts", null, tabTotalClockDarts, null);
 		}
