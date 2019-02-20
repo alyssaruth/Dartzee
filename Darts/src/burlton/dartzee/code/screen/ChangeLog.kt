@@ -34,6 +34,7 @@ class ChangeLog : JFrame() {
         textArea.append("\n")
         textArea.append("\n= Made it possible to run a game report across different game modes")
         textArea.append("\n= Fixed a bug where 2 player matches could screw up play order when reloaded")
+        textArea.append("\n= Shanghai achievement now breaks down on click to show all examples")
         textArea.append("\n")
         textArea.append("\n--------- v3.1.0 ---------")
         textArea.append("\n")

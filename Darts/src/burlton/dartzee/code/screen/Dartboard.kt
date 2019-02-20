@@ -142,7 +142,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    private fun initialiseFromTemplate(template: DartboardTemplate)
+    fun initialiseFromTemplate(template: DartboardTemplate)
     {
         hmPointToSegment = template.getPointToSegmentMap()
         hmSegmentKeyToSegment = template.getSegmentKeyToSegmentMap()
@@ -725,7 +725,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         private val DARTIMG = ImageIcon(GamePanelX01::class.java.getResource("/dartImage.png"))
 
         private val hmSoundNameToUrl = SuperHashMap<String, URL>()
-        private var dartboardTemplate: DartboardTemplate? = null
+        var dartboardTemplate: DartboardTemplate? = null
 
         @JvmStatic fun appearancePreferenceChanged()
         {
