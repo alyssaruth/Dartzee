@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class DartsDatabaseUtil
 {
-	public static final int DATABASE_VERSION = 5;
+	public static final int DATABASE_VERSION = 6;
 	
 	private static final String DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying";
 	
@@ -74,12 +74,12 @@ public class DartsDatabaseUtil
 			version.saveToDatabase();
 		}
 
-//		if (versionNumber == 5)
-//		{
-//			upgradeDatabaseToVersion6();
-//			version.setVersion(6);
-//			version.saveToDatabase();
-//		}
+		if (versionNumber == 5)
+		{
+			upgradeDatabaseToVersion6();
+			version.setVersion(6);
+			version.saveToDatabase();
+		}
 		
 		initialiseDatabase(version);
 	}
