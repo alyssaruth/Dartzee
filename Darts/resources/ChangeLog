@@ -4,6 +4,8 @@
 = Made it possible to run a game report across different game modes
 = Fixed a bug where 2 player matches could screw up play order when reloaded
 = Shanghai achievement now breaks down on click to show all examples
+= 36.4% Kotlin
+= 7% test coverage (1009 / 14,370 lines covered by 80 tests)
 
 --------- v3.1.0 ---------
 
@@ -21,7 +23,7 @@
 = Performance improvement: Reuse of dartboard graphics for speedier game start-up
 = Memory improvement: Fixed a bug with audio caching that led to a pile-up of blocked "Direct Clip" threads
 = 27.5% Kotlin
-= 2.96% Test coverage (421 / 14,200 lines covered by 24 tests)
+= 2.96% test coverage (421 / 14,200 lines covered by 24 tests)
 
 --------- v3.0.1 ---------
 
