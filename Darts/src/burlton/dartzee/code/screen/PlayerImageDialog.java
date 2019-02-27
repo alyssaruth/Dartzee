@@ -1,33 +1,24 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import burlton.core.code.util.FileUtil;
+import burlton.dartzee.code.bean.PlayerImageRadio;
+import burlton.dartzee.code.db.PlayerImageEntity;
+import burlton.desktopcore.code.bean.FileUploadListener;
+import burlton.desktopcore.code.bean.FileUploader;
+import burlton.desktopcore.code.bean.WrapLayout;
+import burlton.desktopcore.code.util.ComponentUtil;
+import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import burlton.desktopcore.code.util.ComponentUtil;
-import burlton.desktopcore.code.util.DialogUtil;
-import burlton.core.code.util.FileUtil;
-import burlton.desktopcore.code.bean.FileUploadListener;
-import burlton.desktopcore.code.bean.FileUploader;
-import burlton.desktopcore.code.bean.WrapLayout;
-import burlton.dartzee.code.bean.PlayerImageRadio;
-import burlton.dartzee.code.db.PlayerImageEntity;
+import java.util.List;
 
 public class PlayerImageDialog extends JDialog
 							   implements ActionListener,
@@ -86,11 +77,11 @@ public class PlayerImageDialog extends JDialog
 	
 	private void init()
 	{
-		ArrayList<PlayerImageEntity> entities = new PlayerImageEntity().retrieveEntities();
+		List<PlayerImageEntity> entities = new PlayerImageEntity().retrieveEntities();
 		populatePanel(panelPresets, entities, true, new ButtonGroup());
 		populatePanel(panelPreviouslyUploaded, entities, false, bgUploaded);
 	}
-	private void populatePanel(JPanel panel, ArrayList<PlayerImageEntity> entities, boolean preset, ButtonGroup bg)
+	private void populatePanel(JPanel panel, List<PlayerImageEntity> entities, boolean preset, ButtonGroup bg)
 	{
 		for (int i=0; i<entities.size(); i++)
 		{

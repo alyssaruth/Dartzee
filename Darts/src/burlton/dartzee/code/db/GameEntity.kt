@@ -1,6 +1,5 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.bean.GameParamFilterPanelGolf
 import burlton.dartzee.code.bean.GameParamFilterPanelRoundTheClock
@@ -46,7 +45,7 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     {
         val sb = StringBuilder()
         sb.append("SELECT COUNT(1) FROM ")
-        sb.append(ParticipantEntity().tableName)
+        sb.append(ParticipantEntity().getTableName())
         sb.append(" WHERE GameId = ")
         sb.append(rowId)
 
@@ -76,19 +75,19 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     }
 
     @Throws(SQLException::class)
-    override fun populateFromResultSet(e: GameEntity, rs: ResultSet)
+    override fun populateFromResultSet(entity: GameEntity, rs: ResultSet)
     {
-        e.gameType = rs.getInt("GameType")
-        e.gameParams = rs.getString("GameParams")
-        e.dtFinish = rs.getTimestamp("DtFinish")
-        e.dartsMatchId = rs.getLong("DartsMatchId")
-        e.matchOrdinal = rs.getInt("MatchOrdinal")
+        entity.gameType = rs.getInt("GameType")
+        entity.gameParams = rs.getString("GameParams")
+        entity.dtFinish = rs.getTimestamp("DtFinish")
+        entity.dartsMatchId = rs.getLong("DartsMatchId")
+        entity.matchOrdinal = rs.getInt("MatchOrdinal")
     }
 
     @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIx: Int, emptyStatement: String): String
+    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
     {
-        var i = startIx
+        var i = startIndex
         var statementStr = emptyStatement
         statementStr = writeInt(statement, i++, gameType, statementStr)
         statementStr = writeString(statement, i++, gameParams, statementStr)
@@ -99,9 +98,9 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
         return statementStr
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: ArrayList<ArrayList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
     {
-        val gameTypeIndex = ArrayList<String>()
+        val gameTypeIndex = mutableListOf<String>()
         gameTypeIndex.add("GameType")
         indexes.add(gameTypeIndex)
     }
@@ -161,7 +160,7 @@ fun factoryAndSave(match: DartsMatchEntity): GameEntity
 /**
  * Ordered by RowId as well because of a bug with loading where the ordinals could get screwed up.
  */
-fun retrieveGamesForMatch(matchId: Long): HandyArrayList<GameEntity>
+fun retrieveGamesForMatch(matchId: Long): MutableList<GameEntity>
 {
     val sb = StringBuilder()
     sb.append("DartsMatchId = ")

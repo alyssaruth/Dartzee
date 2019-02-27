@@ -1,11 +1,12 @@
 package burlton.dartzee.code.db;
 
+import burlton.dartzee.code.object.Dart;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import burlton.dartzee.code.object.Dart;
+import java.util.List;
 
 public class DartEntity extends AbstractDartsEntity<DartEntity>
 {
@@ -51,7 +52,7 @@ public class DartEntity extends AbstractDartsEntity<DartEntity>
 	}
 
 	@Override
-	public String writeValuesToStatement(PreparedStatement statement, int i, String statementStr) throws SQLException 
+	public String writeValuesToStatement(PreparedStatement statement, int i, String statementStr) throws SQLException
 	{
 		statementStr = writeLong(statement, i++, roundId, statementStr);
 		statementStr = writeInt(statement, i++, ordinal, statementStr);
@@ -93,7 +94,7 @@ public class DartEntity extends AbstractDartsEntity<DartEntity>
 	}
 	
 	@Override
-	public void addListsOfColumnsForIndexes(ArrayList<ArrayList<String>> indexes)
+	public void addListsOfColumnsForIndexes(List<List<String>> indexes)
 	{
 		ArrayList<String> roundIdIndex = new ArrayList<>();
 		roundIdIndex.add("RoundId");

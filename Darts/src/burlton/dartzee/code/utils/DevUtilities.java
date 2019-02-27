@@ -11,7 +11,7 @@ import burlton.desktopcore.code.util.DialogUtil;
 import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class DevUtilities
 {
@@ -79,9 +79,9 @@ public class DevUtilities
 			return;
 		}
 		
-		ArrayList<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities("GameId = " + gameId);
-		ArrayList<RoundEntity> rounds = new RoundEntity().retrieveEntitiesWithFrom(getRoundFromSql(gameId), "rnd");
-		ArrayList<DartEntity> darts = new DartEntity().retrieveEntitiesWithFrom(getDartFromSql(gameId), "d");
+		List<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities("GameId = " + gameId);
+		List<RoundEntity> rounds = new RoundEntity().retrieveEntitiesWithFrom(getRoundFromSql(gameId), "rnd");
+		List<DartEntity> darts = new DartEntity().retrieveEntitiesWithFrom(getDartFromSql(gameId), "d");
 		
 		String question = "Purge all data for Game #" + gameId + "? The following rows will be deleted:"
 						+ "\n\n Participant: " + participants.size() + " rows"

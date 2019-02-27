@@ -1,21 +1,20 @@
 package burlton.dartzee.code.bean;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.db.AbstractEntity;
 
 import javax.swing.table.DefaultTableModel;
-
-import burlton.dartzee.code.db.AbstractEntity;
-import burlton.core.code.util.Debug;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 public class TableModelEntity extends DefaultTableModel
 {
-	public TableModelEntity(ArrayList<? extends AbstractEntity<?>> entities)	
+	public TableModelEntity(List<? extends AbstractEntity<?>> entities)
 	{
 		//Use the first entity to set up columns
 		AbstractEntity<?> entity = entities.get(0);
-		ArrayList<String> cols = entity.getColumns();
+		List<String> cols = entity.getColumns();
 		for (String col : cols)
 		{
 			addColumn(col);
@@ -25,7 +24,7 @@ public class TableModelEntity extends DefaultTableModel
 		//Now create the rows
 		addRows(entities, cols);
 	}
-	private void addRows(ArrayList<? extends AbstractEntity<?>> entities, ArrayList<String> columns)
+	private void addRows(List<? extends AbstractEntity<?>> entities, List<String> columns)
 	{
 		try
 		{

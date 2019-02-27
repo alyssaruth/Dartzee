@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseSanityCheck
 {
@@ -118,7 +119,7 @@ public class DatabaseSanityCheck
 	}
 	private static void checkForHangingOrUnsetIds(AbstractEntity<?> entity)
 	{
-		ArrayList<String> columns = entity.getColumns();
+		List<String> columns = entity.getColumns();
 		for (String column : columns)
 		{
 			if (column.equals("RowId")
@@ -157,7 +158,7 @@ public class DatabaseSanityCheck
 		sb.append(" = ref.RowId)");
 		
 		String whereSql = sb.toString();
-		ArrayList<? extends AbstractEntity<?>> entities = entity.retrieveEntities(whereSql, "e");
+		List<? extends AbstractEntity<?>> entities = entity.retrieveEntities(whereSql, "e");
 		
 		int count = entities.size();
 		if (count > 0)
@@ -168,7 +169,7 @@ public class DatabaseSanityCheck
 	private static void checkForUnsetValues(AbstractEntity<?> entity, String idColumn)
 	{
 		String whereSql = idColumn + " = -1";
-		ArrayList<? extends AbstractEntity<?>> entities = entity.retrieveEntities(whereSql);
+		List<? extends AbstractEntity<?>> entities = entity.retrieveEntities(whereSql);
 		
 		int count = entities.size();
 		if (count > 0)
@@ -185,7 +186,7 @@ public class DatabaseSanityCheck
 		sb.append(" AND FinalScore = -1");
 		
 		String whereSql = sb.toString();
-		ArrayList<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities(whereSql);
+		List<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities(whereSql);
 		
 		int count = participants.size();
 		if (count > 0)
@@ -206,7 +207,7 @@ public class DatabaseSanityCheck
 		sb.append(")");
 		
 		String whereSql = sb.toString();
-		ArrayList<DartEntity> darts = new DartEntity().retrieveEntities(whereSql, "drt");
+		List<DartEntity> darts = new DartEntity().retrieveEntities(whereSql, "drt");
 		int count = darts.size();
 		if (count > 0)
 		{
@@ -254,7 +255,7 @@ public class DatabaseSanityCheck
 	private static void checkForUnexpectedTables()
 	{
 		ArrayList<AbstractEntity<?>> entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion();
-		ArrayList<String> tableNames = AbstractEntity.makeFromEntityFields(entities, "TableNameUpperCase");
+		List<String> tableNames = AbstractEntity.makeFromEntityFields(entities, "TableNameUpperCase");
 		String tableInSql = StringUtil.toSqlInStatement(tableNames, false);
 		
 		DefaultModel tm = new DefaultModel();
@@ -314,7 +315,7 @@ public class DatabaseSanityCheck
 		sb.append(" )");
 		
 		String whereSql = sb.toString();
-		ArrayList<GameEntity> games = new GameEntity().retrieveEntities(whereSql, "g");
+		List<GameEntity> games = new GameEntity().retrieveEntities(whereSql, "g");
 		if (games.size() > 0)
 		{
 			sanityErrors.add(new SanityCheckResultEntitiesSimple(games, "Unfinished games without active players"));
@@ -337,7 +338,7 @@ public class DatabaseSanityCheck
 		sb.append(")");
 		
 		String whereSql = sb.toString();
-		ArrayList<GameEntity> games = new GameEntity().retrieveEntities(whereSql, "g");
+		List<GameEntity> games = new GameEntity().retrieveEntities(whereSql, "g");
 		int count = games.size();
 		if (count > 0)
 		{

@@ -10,6 +10,7 @@ import burlton.desktopcore.code.util.DialogUtil;
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
@@ -172,7 +173,7 @@ public class DartsDatabaseUtil
 	private static void alterColumnsToNotAllowNulls(AbstractEntity<? extends AbstractEntity<?>> entity)
 	{
 		String tableName = entity.getTableName();
-		ArrayList<String> columns = entity.getColumns();
+		List<String> columns = entity.getColumns();
 		for (String column : columns)
 		{
 			String sql = "ALTER TABLE " + tableName + " ALTER COLUMN " + column + " NOT NULL";

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents the participant of a game. This is a link between a player and a game, with additional information
@@ -84,7 +85,7 @@ public class ParticipantEntity extends AbstractDartsEntity<ParticipantEntity>
 	}
 	
 	@Override
-	public void addListsOfColumnsForIndexes(ArrayList<ArrayList<String>> indexes)
+	public void addListsOfColumnsForIndexes(List<List<String>> indexes)
 	{
 		ArrayList<String> playerId_gameId = new ArrayList<>();
 		playerId_gameId.add("PlayerId");

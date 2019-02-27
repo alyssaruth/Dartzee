@@ -1,15 +1,15 @@
 package burlton.dartzee.code.screen;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
-
-import burlton.desktopcore.code.bean.ScrollTableButton;
-import burlton.dartzee.code.db.PlayerEntity;
 import burlton.core.code.obj.HandyArrayList;
+import burlton.dartzee.code.db.PlayerEntity;
+import burlton.desktopcore.code.bean.ScrollTableButton;
 import burlton.desktopcore.code.screen.SimpleDialog;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 /**
  * Dialog to match up players from a remote DB to the local one during a merge
@@ -36,7 +36,7 @@ public final class PlayerMatchingDialog extends SimpleDialog
 		model.addColumn("Status");
 		model.addColumn("");
 		
-		ArrayList<PlayerEntity> currentPlayers = PlayerEntity.retrievePlayers("", false);
+		List<PlayerEntity> currentPlayers = PlayerEntity.retrievePlayers("", false);
 		
 		for (PlayerEntity player : playersToImport)
 		{
@@ -67,7 +67,7 @@ public final class PlayerMatchingDialog extends SimpleDialog
 		
 		getContentPane().add(scrollTable, BorderLayout.CENTER);
 	}
-	private static void attemptAutoMatch(PlayerEntity player, ArrayList<PlayerEntity> potentialMatches)
+	private static void attemptAutoMatch(PlayerEntity player, List<PlayerEntity> potentialMatches)
 	{
 		String playerName = player.getName();
 		for (PlayerEntity potentialMatch : potentialMatches)

@@ -1,29 +1,26 @@
 package burlton.dartzee.code.db.sanity;
 
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.bean.TableModelEntity;
-import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.dartzee.code.db.AbstractEntity;
 import burlton.core.code.obj.HandyArrayList;
-import burlton.desktopcore.code.util.DialogUtil;
 import burlton.core.code.util.StringUtil;
+import burlton.dartzee.code.bean.TableModelEntity;
+import burlton.dartzee.code.db.AbstractEntity;
+import burlton.dartzee.code.utils.DatabaseUtil;
+import burlton.desktopcore.code.bean.ScrollTable;
+import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 public abstract class AbstractSanityCheckResultEntities extends AbstractSanityCheckResult
 {
-	private ArrayList<? extends AbstractEntity<?>> entities = new ArrayList<>();
+	private List<? extends AbstractEntity<?>> entities;
 
 	/**
 	 * Constructor
 	 */
-	public AbstractSanityCheckResultEntities(ArrayList<? extends AbstractEntity<?>> entities)
+	public AbstractSanityCheckResultEntities(List<? extends AbstractEntity<?>> entities)
 	{
 		this.entities = entities;
 	}
@@ -81,7 +78,7 @@ public abstract class AbstractSanityCheckResultEntities extends AbstractSanityCh
 		return success;
 	}
 	
-	public ArrayList<? extends AbstractEntity<?>> getEntities()
+	public List<? extends AbstractEntity<?>> getEntities()
 	{
 		return entities;		
 	}	
