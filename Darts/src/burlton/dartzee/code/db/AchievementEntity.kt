@@ -10,7 +10,6 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Timestamp
-import java.util.*
 
 /**
  * Entity to record a particular that a particular achievement has been earned by a player.
@@ -51,9 +50,9 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
     }
 
     @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIx: Int, emptyStatement: String): String
+    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
     {
-        var i = startIx
+        var i = startIndex
         var statementStr = emptyStatement
 
         statementStr = writeLong(statement, i++, playerId, statementStr)
@@ -65,7 +64,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
         return statementStr
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: ArrayList<ArrayList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
     {
         val ix = HandyArrayList.factoryAdd("PlayerId", "AchievementRef")
 

@@ -1,23 +1,19 @@
 package burlton.dartzee.code.bean;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import burlton.core.code.obj.HandyArrayList;
+import burlton.dartzee.code.db.PlayerEntity;
+import burlton.desktopcore.code.bean.DoubleClickListener;
+import burlton.desktopcore.code.bean.ScrollTable;
+import burlton.desktopcore.code.util.DialogUtil;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import burlton.desktopcore.code.bean.DoubleClickListener;
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.db.PlayerEntity;
-import net.miginfocom.swing.MigLayout;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.desktopcore.code.util.DialogUtil;
+import java.util.List;
 
 public class PlayerSelector extends JPanel
 							implements ActionListener, DoubleClickListener
@@ -61,7 +57,7 @@ public class PlayerSelector extends JPanel
 	
 	public void init()
 	{
-		ArrayList<PlayerEntity> allPlayers = PlayerEntity.retrievePlayers("", false);
+		List<PlayerEntity> allPlayers = PlayerEntity.retrievePlayers("", false);
 		tablePlayersToSelectFrom.initTableModel(allPlayers);
 		tablePlayersSelected.removeAllRows();
 	}

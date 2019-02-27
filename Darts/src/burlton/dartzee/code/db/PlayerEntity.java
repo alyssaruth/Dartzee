@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 {
@@ -71,7 +72,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 	}
 	
 	@Override
-	public void addListsOfColumnsForIndexes(ArrayList<ArrayList<String>> v)
+	public void addListsOfColumnsForIndexes(List<List<String>> v)
 	{
 		ArrayList<String> nameIndex = new ArrayList<>();
 		nameIndex.add("Name");
@@ -180,7 +181,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 	/**
 	 * Retrieval methods
 	 */
-	public static ArrayList<PlayerEntity> retrievePlayers(String startingSql, boolean includeDeleted)
+	public static List<PlayerEntity> retrievePlayers(String startingSql, boolean includeDeleted)
 	{
 		if (!includeDeleted)
 		{
@@ -196,7 +197,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 	private static PlayerEntity retrieveForName(String name)
 	{
 		String whereSql = "Name = '" + name + "' AND DtDeleted = " + DateUtil.getEndOfTimeSqlString();
-		ArrayList<PlayerEntity> players = new PlayerEntity().retrieveEntities(whereSql);
+		List<PlayerEntity> players = new PlayerEntity().retrieveEntities(whereSql);
 		if (players.isEmpty())
 		{
 			return null;

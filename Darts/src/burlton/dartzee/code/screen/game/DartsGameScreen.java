@@ -73,6 +73,8 @@ public final class DartsGameScreen extends JFrame
 		this.match = match;
 		
 		matchPanel.init(match, players);
+
+		setTitle(match.getMatchDesc());
 		
 		setScreenSize(match.getPlayerCount());
 	}
@@ -283,10 +285,10 @@ public final class DartsGameScreen extends JFrame
 	}
 	private static void loadAndDisplayMatch(long matchId, long originalGameId)
 	{
-		HandyArrayList<GameEntity> allGames = GameEntityKt.retrieveGamesForMatch(matchId);
+		List<GameEntity> allGames = GameEntityKt.retrieveGamesForMatch(matchId);
 		
-		GameEntity firstGame = allGames.firstElement();
-		GameEntity lastGame = allGames.lastElement();
+		GameEntity firstGame = allGames.get(0);
+		GameEntity lastGame = allGames.get(allGames.size() - 1);
 		
 		DartsMatchEntity match = new DartsMatchEntity().retrieveForId(matchId);
 		match.cacheMetadataFromGame(lastGame);

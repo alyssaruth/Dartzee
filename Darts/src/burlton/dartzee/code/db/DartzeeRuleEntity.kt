@@ -54,9 +54,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         entity.textualDescription = rs.getString("TextualDescription")
     }
 
-    override fun writeValuesToStatement(statement: PreparedStatement, startIx: Int, emptyStatement: String): String
+    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
     {
-        var i = startIx
+        var i = startIndex
         var statementStr = emptyStatement
 
         statementStr = writeLong(statement, i++, gameId, statementStr)

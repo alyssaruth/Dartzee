@@ -1,3 +1,6 @@
+------- UNRELEASED -------
+
+= Fixed a bug where screen title wasn't set for new matches
 
 --------- v3.1.1 ---------
 

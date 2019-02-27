@@ -1,14 +1,14 @@
 package burlton.dartzee.code.db.sanity;
 
-import java.util.ArrayList;
-
 import burlton.dartzee.code.db.AbstractEntity;
+
+import java.util.List;
 
 public class SanityCheckResultHangingEntities extends AbstractSanityCheckResultEntities
 {
 	private String idColumn = "";
 	
-	public SanityCheckResultHangingEntities(String idColumn, ArrayList<? extends AbstractEntity<?>> entities)
+	public SanityCheckResultHangingEntities(String idColumn, List<? extends AbstractEntity<?>> entities)
 	{
 		super(entities);
 		this.idColumn = idColumn;

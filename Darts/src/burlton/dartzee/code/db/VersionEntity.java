@@ -1,11 +1,11 @@
 package burlton.dartzee.code.db;
 
+import burlton.dartzee.code.utils.DartsDatabaseUtil;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import burlton.dartzee.code.utils.DartsDatabaseUtil;
+import java.util.List;
 
 public class VersionEntity extends AbstractEntity<VersionEntity>
 {
@@ -47,13 +47,12 @@ public class VersionEntity extends AbstractEntity<VersionEntity>
 	
 	public static VersionEntity retrieveCurrentDatabaseVersion()
 	{
-		ArrayList<VersionEntity> entities = new VersionEntity().retrieveEntities("1 = 1");
+		List<VersionEntity> entities = new VersionEntity().retrieveEntities("1 = 1");
 		if (entities.isEmpty())
 		{
 			return null;
 		}
 		
-		VersionEntity entity = entities.get(0);
-		return entity;
+		return entities.get(0);
 	}
 }

@@ -1,24 +1,16 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import burlton.dartzee.code.bean.ScrollTablePlayers;
+import burlton.dartzee.code.db.PlayerEntity;
 
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import burlton.dartzee.code.bean.ScrollTablePlayers;
-import burlton.dartzee.code.db.PlayerEntity;
-
-import javax.swing.ImageIcon;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class PlayerManagementScreen extends EmbeddedScreen
 									implements ListSelectionListener
@@ -77,7 +69,7 @@ public class PlayerManagementScreen extends EmbeddedScreen
 	
 	private void buildTable()
 	{
-		ArrayList<PlayerEntity> players = PlayerEntity.retrievePlayers("", false);
+		List<PlayerEntity> players = PlayerEntity.retrievePlayers("", false);
 		tablePlayers.initTableModel(players);
 	}
 	

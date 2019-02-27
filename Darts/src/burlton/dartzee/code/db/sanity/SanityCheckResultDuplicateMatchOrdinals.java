@@ -1,14 +1,13 @@
 package burlton.dartzee.code.db.sanity;
 
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
+import burlton.core.code.obj.HandyArrayList;
 import burlton.dartzee.code.db.AbstractEntity;
 import burlton.dartzee.code.db.GameEntity;
-import burlton.core.code.obj.HandyArrayList;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 /**
  * Check for Games as part of the same match but with the same ordinal. 
@@ -16,7 +15,7 @@ import burlton.desktopcore.code.util.DialogUtil;
  */
 public final class SanityCheckResultDuplicateMatchOrdinals extends SanityCheckResultEntitiesSimple
 {
-	public SanityCheckResultDuplicateMatchOrdinals(ArrayList<? extends AbstractEntity<?>> entities, String description)
+	public SanityCheckResultDuplicateMatchOrdinals(List<? extends AbstractEntity<?>> entities, String description)
 	{
 		super(entities, description);
 	}
@@ -46,7 +45,7 @@ public final class SanityCheckResultDuplicateMatchOrdinals extends SanityCheckRe
 		for (long matchId : matchIds)
 		{
 			String gameSql = "DartsMatchId = " + matchId + " ORDER BY RowId";
-			HandyArrayList<GameEntity> games = new GameEntity().retrieveEntities(gameSql);
+			List<GameEntity> games = new GameEntity().retrieveEntities(gameSql);
 			
 			int ordinal = 0;
 			for (GameEntity game : games)

@@ -1,21 +1,21 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-
-import javax.swing.ListSelectionModel;
-
+import burlton.core.code.obj.HandyArrayList;
 import burlton.dartzee.code.bean.PlayerTypeFilterPanel;
 import burlton.dartzee.code.bean.ScrollTablePlayers;
 import burlton.dartzee.code.db.PlayerEntity;
-import burlton.core.code.obj.HandyArrayList;
 import burlton.desktopcore.code.screen.SimpleDialog;
 import burlton.desktopcore.code.util.DialogUtil;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerSelectDialog extends SimpleDialog
 {
-	private ArrayList<PlayerEntity> players = new ArrayList<>();
+	private List<PlayerEntity> players = new ArrayList<>();
 	private HandyArrayList<PlayerEntity> selectedPlayers = new HandyArrayList<>();
 	private ArrayList<PlayerEntity> playersToExclude = new ArrayList<>();
 	

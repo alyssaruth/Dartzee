@@ -68,7 +68,7 @@ public class StringUtil
 		return sb.toString();
 	}
 	
-	public static String toSqlInStatement(ArrayList<String> list, boolean in)
+	public static String toSqlInStatement(List<String> list, boolean in)
 	{
 		StringBuilder sb = new StringBuilder();
 		if (!in)

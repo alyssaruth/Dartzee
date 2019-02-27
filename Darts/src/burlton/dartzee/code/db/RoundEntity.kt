@@ -25,17 +25,17 @@ class RoundEntity : AbstractDartsEntity<RoundEntity>()
     }
 
     @Throws(SQLException::class)
-    override fun populateFromResultSet(round: RoundEntity, rs: ResultSet)
+    override fun populateFromResultSet(entity: RoundEntity, rs: ResultSet)
     {
-        round.participantId = rs.getLong("ParticipantId")
-        round.dartzeeRuleId = rs.getLong("DartzeeRuleId")
-        round.roundNumber = rs.getInt("RoundNumber")
+        entity.participantId = rs.getLong("ParticipantId")
+        entity.dartzeeRuleId = rs.getLong("DartzeeRuleId")
+        entity.roundNumber = rs.getInt("RoundNumber")
     }
 
     @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIx: Int, emptyStatement: String): String
+    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
     {
-        var i = startIx
+        var i = startIndex
         var statementStr = emptyStatement
         statementStr = writeLong(statement, i++, participantId, statementStr)
         statementStr = writeLong(statement, i++, dartzeeRuleId, statementStr)
@@ -53,10 +53,10 @@ class RoundEntity : AbstractDartsEntity<RoundEntity>()
 
     override fun getGameId(): Long
     {
-        return retrieveParticipant().gameId
+        return retrieveParticipant()?.gameId ?: -1
     }
 
-    fun retrieveParticipant(): ParticipantEntity
+    fun retrieveParticipant(): ParticipantEntity?
     {
         return ParticipantEntity().retrieveForId(participantId)
     }

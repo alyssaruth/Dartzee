@@ -352,7 +352,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		}
 		
 		String whereSql = "GameId = " + gameId + " ORDER BY Ordinal ASC";
-		ArrayList<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities(whereSql);
+		java.util.List<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities(whereSql);
 		
 		for (int i=0; i<participants.size(); i++)
 		{
