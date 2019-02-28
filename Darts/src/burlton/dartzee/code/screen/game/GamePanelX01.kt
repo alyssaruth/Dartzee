@@ -43,7 +43,10 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         updateNearMisses(dartsThrown, currentPlayerNumber)
 
         val count = hmPlayerNumberToBadLuckCount.getCount(currentPlayerNumber)
-        AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, currentPlayerId, gameId, count)
+        if (count > 0)
+        {
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, currentPlayerId, gameId, count)
+        }
 
         if (!bust)
         {
