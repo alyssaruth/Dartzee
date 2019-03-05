@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.core.code.obj.SuperHashMap
 import burlton.core.code.util.Debug
+import burlton.core.code.util.runOnEventThread
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegmentKt
@@ -17,7 +18,10 @@ import java.awt.image.BufferedImage
 import java.net.URL
 import java.util.*
 import javax.sound.sampled.*
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JLabel
+import javax.swing.JLayeredPane
+import javax.swing.SwingConstants
 
 
 private const val LAYER_NUMBERS = 1
@@ -505,15 +509,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             return
         }
 
-        if (!SwingUtilities.isEventDispatchThread())
-        {
-            SwingUtilities.invokeLater{doDodgyOnEdt(ii, width, height, soundName)}
-        }
-        else
-        {
-            doDodgyOnEdt(ii, width, height, soundName)
-        }
-
+        runOnEventThread { doDodgyOnEdt(ii, width, height, soundName) }
     }
 
     private fun doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, soundName: String)

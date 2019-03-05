@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen
 
 import burlton.core.code.util.AbstractClient
-import burlton.core.code.util.ThreadUtil
+import burlton.core.code.util.dumpThreadStacks
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
@@ -67,7 +67,7 @@ class UtilitiesScreen : EmbeddedScreen()
             btnViewLogs -> {val loggingDialog = ScreenCache.getDebugConsole()
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}
-            btnThreadStacks -> ThreadUtil.dumpStacks()
+            btnThreadStacks -> dumpThreadStacks()
             btnMerge -> DialogUtil.showError("This isn't finished!")
             btnAchievementConversion -> runAchievementConversion()
             else -> super.actionPerformed(arg0)
