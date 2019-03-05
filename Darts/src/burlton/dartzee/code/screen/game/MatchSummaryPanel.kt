@@ -14,8 +14,6 @@ import javax.swing.JPanel
  */
 class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
 {
-    private val refreshSync = Object()
-
     private val hmPlayerIdToScorer = mutableMapOf<Long, MatchScorer>()
     private val participants = mutableListOf<ParticipantEntity>()
     private var match: DartsMatchEntity? = null
@@ -68,10 +66,7 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
         val row = arrayOf(gameId, participant, participant, participant)
         scorer.addRow(row)
 
-        synchronized(refreshSync)
-        {
-            participants.add(participant)
-        }
+        participants.add(participant)
     }
 
     fun updateTotalScores()
@@ -87,16 +82,14 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
 
     fun updateStats()
     {
-        if (statsPanel != null)
+        if (statsPanel != null && btnRefresh.isEnabled)
         {
             btnRefresh.isEnabled = false
 
+            val participantsCopy = participants.toMutableList()
             val updateRunnable = Runnable{
-                synchronized(refreshSync) {
-                    statsPanel!!.showStats(participants)
-                    btnRefresh.isEnabled = true
-                }
-
+                statsPanel!!.showStats(participantsCopy)
+                btnRefresh.isEnabled = true
             }
 
             Thread(updateRunnable).start()
