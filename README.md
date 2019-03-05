@@ -12,3 +12,5 @@ Contains 4 projects:
 
 Work to build using a build tool (Gradle/Maven) is on the backlog, however in the meantime you'll have to manually configure dependencies in the IDE of your choice.
 Head to the /Dependencies directory to find all the JARs currently required, along with IntelliJ screenshots which should help you to get started.
+
+Full backlog can be found [here](https://trello.com/b/Plz8blWw/dartzee)
