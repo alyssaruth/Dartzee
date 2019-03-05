@@ -2,10 +2,7 @@ package burlton.dartzee.code.screen.game
 
 import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
-import burlton.core.code.util.MathsUtil
-import burlton.core.code.util.addUnique
-import burlton.core.code.util.flattenBatches
+import burlton.core.code.util.*
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.utils.DartsColour
@@ -37,7 +34,7 @@ abstract class GameStatisticsPanel : JPanel()
     protected var playerNamesOrdered = mutableListOf<String>()
     protected var participants: MutableList<ParticipantEntity>? = null
     protected var hmPlayerToDarts = HashMapList<String, MutableList<Dart>>()
-    protected var gameParams: String? = null
+    var gameParams: String? = null
 
     private var tm = DefaultTableModel()
 
@@ -149,7 +146,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         if (isSufficientData())
         {
-            buildTableModel()
+            runOnEventThread { buildTableModel() }
         }
     }
 

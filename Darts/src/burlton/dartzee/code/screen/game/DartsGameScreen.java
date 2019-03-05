@@ -39,7 +39,7 @@ public final class DartsGameScreen extends JFrame
 		addWindowListener(this);
 	}
 	
-	private final MatchSummaryPanelMk2 matchPanel = new MatchSummaryPanelMk2();
+	private final MatchSummaryPanel matchPanel = new MatchSummaryPanel();
 	private final JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 	private final SuperHashMap<Long, DartsGamePanel<? extends DartsScorer>> hmGameIdToTab = new SuperHashMap<>();
 	
@@ -174,7 +174,7 @@ public final class DartsGameScreen extends JFrame
 			return;
 		}
 		
-		matchPanel.updateTotalScores();
+		updateTotalScores();
 		
 		if (match.isComplete())
 		{
