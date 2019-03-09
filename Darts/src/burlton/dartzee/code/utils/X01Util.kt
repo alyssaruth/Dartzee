@@ -4,7 +4,6 @@ import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 
-
 fun isBust(score: Int, lastDart: Dart): Boolean
 {
     return (score < 0
