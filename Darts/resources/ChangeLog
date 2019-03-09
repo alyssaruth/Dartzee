@@ -1,6 +1,7 @@
 ------- UNRELEASED -------
 
 = Fixed a bug where screen title wasn't set for new matches
+= Performance improvement: Match stats refresh in the background
 
 --------- v3.1.1 ---------
 

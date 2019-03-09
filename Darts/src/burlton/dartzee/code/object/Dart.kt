@@ -98,16 +98,15 @@ open class Dart @JvmOverloads constructor(
         return result
     }
 
-    override fun equals(obj: Any?): Boolean
+    override fun equals(other: Any?): Boolean
     {
-        if (this === obj)
+        if (this === other)
             return true
-        if (obj == null)
+        if (other == null)
             return false
-        if (obj !is Dart)
+        if (other !is Dart)
             return false
-        val other = obj as Dart?
-        if (multiplier != other!!.multiplier)
+        if (multiplier != other.multiplier)
             return false
         if (ordinal != other.ordinal)
             return false
@@ -185,4 +184,23 @@ fun factoryDouble(score: Int): Dart
 fun factoryTreble(score: Int): Dart
 {
     return Dart(score, 3)
+}
+
+fun factoryFromString(dartStr: String): Dart?
+{
+    return if (dartStr.startsWith("D"))
+    {
+        val score = dartStr.replace("D", "").toInt()
+        Dart(score, 2)
+    }
+    else if (dartStr.startsWith("T"))
+    {
+        val score = dartStr.replace("T", "").toInt()
+        Dart(score, 3)
+    }
+    else
+    {
+        val score = dartStr.toInt()
+        Dart(score, 1)
+    }
 }
