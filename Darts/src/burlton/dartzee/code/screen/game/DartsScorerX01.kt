@@ -198,7 +198,7 @@ class DartsScorerX01 : DartsScorerPausable()
         }
     }
 
-    private class ScorerRenderer : DefaultTableCellRenderer()
+    private inner class ScorerRenderer : DefaultTableCellRenderer()
     {
         override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
         {
@@ -213,6 +213,13 @@ class DartsScorerX01 : DartsScorerPausable()
 
         private fun setColours(table: JTable, modelRow: Int)
         {
+            if (getDartsForRow(modelRow).isEmpty())
+            {
+                foreground = null
+                background = null
+                return
+            }
+
             val tm = table.model
             val totalScore = (getScoreAt(tm, modelRow, 0)
                     + getScoreAt(tm, modelRow, 1)
