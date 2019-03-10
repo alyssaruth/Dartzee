@@ -104,7 +104,7 @@ fun calculateThreeDartAverage(darts: MutableList<Dart>, scoreCutOff: Int): Doubl
     return amountScored / scoringDarts.size * 3
 }
 
-fun sumScore(darts: MutableList<Dart>): Int
+fun sumScore(darts: List<Dart>): Int
 {
     return darts.stream().mapToInt { d -> d.getTotal() }.sum()
 }
