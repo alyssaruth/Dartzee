@@ -3,70 +3,56 @@ package burlton.dartzee.test.utils
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.utils.*
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.junit.Assert
+import io.kotlintest.matchers.boolean.shouldBeFalse
+import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.shouldBe
 import org.junit.Test
-import org.mockito.Mockito.mock
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class TestX01Util
 {
     @Test
     fun testIsBust()
     {
-        assertBust(-5, Dart(2, 2), true)
-        assertBust(-5, Dart(2, 0), true)
-        assertBust(-8, Dart(4, 2), true)
+        isBust(-5, Dart(2, 2)).shouldBeTrue()
+        isBust(-5, Dart(2, 2)).shouldBeTrue()
+        isBust(-5, Dart(2, 0)).shouldBeTrue()
+        isBust(-8, Dart(4, 2)).shouldBeTrue()
 
-        assertBust(0, Dart(10, 1), true)
-        assertBust(0, Dart(20, 3), true)
+        isBust(0, Dart(10, 1)).shouldBeTrue()
+        isBust(0, Dart(20, 3)).shouldBeTrue()
 
-        assertBust(1, Dart(20, 2), true)
+        isBust(1, Dart(20, 2)).shouldBeTrue()
 
-        assertBust(0, Dart(20, 2), false)
-        assertBust(0, Dart(25, 2), false)
+        isBust(0, Dart(20, 2)).shouldBeFalse()
+        isBust(0, Dart(25, 2)).shouldBeFalse()
 
-        assertBust(20, Dart(20, 2), false)
-        assertBust(20, Dart(20, 1), false)
-    }
-
-    private fun assertBust(score: Int, drt: Dart, expected: Boolean)
-    {
-        Assert.assertTrue("Bust in X01 if ended on $score after $drt", isBust(score, drt) == expected)
+        isBust(20, Dart(20, 2)).shouldBeFalse()
+        isBust(20, Dart(20, 1)).shouldBeFalse()
     }
 
     @Test
     fun testShouldStopForMercyRule()
     {
         val model = AbstractDartsModel.factoryForType(AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION)
-        model!!.mercyThreshold = 19
+        model.mercyThreshold = 19
 
-        assertShouldStopForMercyRule(model, 19, 16, false)
-        assertShouldStopForMercyRule(model, 17, 16, true)
-        assertShouldStopForMercyRule(model, 15, 8, true)
-        assertShouldStopForMercyRule(model, 16, 8, false)
-        assertShouldStopForMercyRule(model, 17, 13, false)
-        assertShouldStopForMercyRule(model, 17, 17, false)
+        shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 16).shouldBeTrue()
+        shouldStopForMercyRule(model, 15, 8).shouldBeTrue()
+        shouldStopForMercyRule(model, 16, 8).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 13).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 17).shouldBeFalse()
 
         model.mercyThreshold = -1
 
-        assertShouldStopForMercyRule(model, 19, 16, false)
-        assertShouldStopForMercyRule(model, 17, 16, false)
-        assertShouldStopForMercyRule(model, 15, 8, false)
-        assertShouldStopForMercyRule(model, 16, 8, false)
-        assertShouldStopForMercyRule(model, 17, 13, false)
-        assertShouldStopForMercyRule(model, 17, 17, false)
-    }
-
-    private fun assertShouldStopForMercyRule(model: AbstractDartsModel, startingScore: Int, currentScore: Int, expected: Boolean)
-    {
-        val result = shouldStopForMercyRule(model, startingScore, currentScore)
-
-        val desc = "Mercy Rule - Threshold [" + model.mercyThreshold + "], Start [" + startingScore + "], current [" + currentScore + "]"
-        Assert.assertTrue(desc, result == expected)
+        shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 16).shouldBeFalse()
+        shouldStopForMercyRule(model, 15, 8).shouldBeFalse()
+        shouldStopForMercyRule(model, 16, 8).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 13).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 17).shouldBeFalse()
     }
 
     @Test
@@ -87,9 +73,7 @@ class TestX01Util
         val drt = Dart(20, 2)
         drt.startingScore = startingScore
 
-        val result = isCheckoutDart(drt)
-
-        Assert.assertTrue("Is a checkout dart for starting score $startingScore", result == expected)
+        isCheckoutDart(drt) shouldBe expected
     }
 
     @Test
@@ -100,17 +84,11 @@ class TestX01Util
 
         val round = mutableListOf(Dart(2, 1), d)
 
-        assertIsFinishRound(round, false)
+        isFinishRound(round).shouldBeFalse()
         d.multiplier = 2
-        assertIsFinishRound(round, false)
+        isFinishRound(round).shouldBeFalse()
         d.score = 10
-        assertIsFinishRound(round, true)
-    }
-    private fun assertIsFinishRound(round: MutableList<Dart>, expected: Boolean)
-    {
-        val actual = isFinishRound(round)
-
-        assertEquals(expected, actual, "Is finish round $round")
+        isFinishRound(round).shouldBeTrue()
     }
 
     @Test
@@ -118,15 +96,15 @@ class TestX01Util
     {
         val result = getScoringDarts(null, 20)
 
-        assertEquals(mutableListOf(), result)
+        result.shouldBeEmpty()
     }
 
     @Test
     fun testGetScoringDarts()
     {
-        val d1 = mock(Dart::class.java)
-        val d2 = mock(Dart::class.java)
-        val d3 = mock(Dart::class.java)
+        val d1 = Dart(20, 1)
+        val d2 = Dart(20, 1)
+        val d3 = Dart(20, 1)
         d1.startingScore = 51
         d2.startingScore = 50
         d3.startingScore = 49
@@ -134,10 +112,7 @@ class TestX01Util
         val list = mutableListOf(d1, d2, d3)
 
         val result = getScoringDarts(list, 50)
-
-        assertTrue(result.contains(d1))
-        assertFalse(result.contains(d2))
-        assertFalse(result.contains(d2))
+        result.shouldContainExactly(d1)
     }
 
     @Test
@@ -158,9 +133,9 @@ class TestX01Util
         val resultTwo = calculateThreeDartAverage(list, 90) //The miss should be excluded
         val resultThree = calculateThreeDartAverage(list, 200) //Test an empty list
 
-        assertThat(result, equalTo(56.25))
-        assertThat(resultTwo, equalTo(75.0))
-        assertThat(resultThree, equalTo(-1.0))
+        result shouldBe 56.25
+        resultTwo shouldBe 75.0
+        resultThree shouldBe -1.0
     }
 
     @Test
@@ -172,9 +147,7 @@ class TestX01Util
 
         val list = mutableListOf(d1, d2, d3)
 
-
-        val sum = sumScore(list)
-        assertThat(sum, equalTo(51))
+        sumScore(list) shouldBe 51
     }
 
     @Test
@@ -187,13 +160,13 @@ class TestX01Util
         val correct = mutableListOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
         val correctDifferentOrder = mutableListOf(Dart(20, 2), Dart(20, 3), Dart(20, 1))
 
-        assertFalse(isShanghai(tooShort))
-        assertFalse(isShanghai(miss))
-        assertFalse(isShanghai(wrongSum))
-        assertFalse(isShanghai(allDoubles))
+        isShanghai(tooShort).shouldBeFalse()
+        isShanghai(miss).shouldBeFalse()
+        isShanghai(wrongSum).shouldBeFalse()
+        isShanghai(allDoubles).shouldBeFalse()
 
-        assertTrue(isShanghai(correct))
-        assertTrue(isShanghai(correctDifferentOrder))
+        isShanghai(correct).shouldBeTrue()
+        isShanghai(correctDifferentOrder).shouldBeTrue()
     }
 
     @Test
@@ -204,10 +177,10 @@ class TestX01Util
         val listThree = mutableListOf(Dart(20, 3), Dart(20, 3), Dart(20, 3))
         val listFour = mutableListOf(Dart(25, 2), Dart(20, 3), Dart(20, 0))
 
-        assertThat(getSortedDartStr(listOne), equalTo("20, T2, D3"))
-        assertThat(getSortedDartStr(listTwo), equalTo("7, 5, 1"))
-        assertThat(getSortedDartStr(listThree), equalTo("T20, T20, T20"))
-        assertThat(getSortedDartStr(listFour), equalTo("T20, D25, 0"))
+        getSortedDartStr(listOne) shouldBe "20, T2, D3"
+        getSortedDartStr(listTwo) shouldBe "7, 5, 1"
+        getSortedDartStr(listThree) shouldBe "T20, T20, T20"
+        getSortedDartStr(listFour) shouldBe "T20, D25, 0"
     }
 
     @Test
@@ -234,12 +207,13 @@ class TestX01Util
         val nearMissDoubleTop = Dart(5, 2)
         nearMissDoubleTop.startingScore = 40
 
-        assertFalse(isNearMissDouble(nonCheckoutDart))
-        assertFalse(isNearMissDouble(hitBullseye))
-        assertFalse(isNearMissDouble(missedBullseye))
-        assertTrue(isNearMissDouble(nearMissBullseye))
-        assertFalse(isNearMissDouble(nonAdjacentDoubleTop))
-        assertFalse(isNearMissDouble(nonDoubleDoubleTop))
-        assertTrue(isNearMissDouble(nearMissDoubleTop))
+        isNearMissDouble(nonCheckoutDart).shouldBeFalse()
+        isNearMissDouble(hitBullseye).shouldBeFalse()
+        isNearMissDouble(missedBullseye).shouldBeFalse()
+        isNearMissDouble(nearMissBullseye).shouldBeTrue()
+
+        isNearMissDouble(nonAdjacentDoubleTop).shouldBeFalse()
+        isNearMissDouble(nonDoubleDoubleTop).shouldBeFalse()
+        isNearMissDouble(nearMissDoubleTop).shouldBeTrue()
     }
 }

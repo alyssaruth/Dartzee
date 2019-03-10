@@ -2,17 +2,14 @@ package burlton.core.test
 
 import burlton.core.code.util.Debug
 import burlton.core.code.util.DebugOutput
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.containsSubstring
-import com.natpryce.hamkrest.equalTo
+import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.matchers.string.shouldNotContain
+import io.kotlintest.shouldBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
-import org.mockito.Mockito.`when` as whenInvoke
 
 class TestDebug
 {
@@ -47,9 +44,10 @@ class TestDebug
         Debug.waitUntilLoggingFinished()
         val logs = Debug.getLogs()
 
-        assertThat(logs, containsSubstring("[SQL] SELECT * FROM OtherTable"))
-        assertThat(logs, containsSubstring(dayAndMonthStr))
-        assertFalse(logs.contains("SELECT * FROM Table"))
+        logs shouldContain("[SQL] SELECT * FROM OtherTable")
+        logs shouldContain(dayAndMonthStr)
+
+        logs shouldNotContain("SELECT * FROM Table")
     }
 
     @Test
@@ -67,10 +65,11 @@ class TestDebug
         Debug.waitUntilLoggingFinished()
         val logs = Debug.getLogs()
 
-        assertThat(logs, containsSubstring("                                      Present"))
-        assertThat(logs, containsSubstring("                                      \tTabbed"))
-        assertFalse(logs.contains(dayAndMonthStr))
-        assertFalse(logs.contains("Not here"))
+        logs shouldContain("                                      Present")
+        logs shouldContain("                                      \tTabbed")
+
+        logs shouldNotContain(dayAndMonthStr)
+        logs shouldNotContain("Not here")
     }
 
     @Test
@@ -84,10 +83,10 @@ class TestDebug
         Debug.waitUntilLoggingFinished()
         val logs = Debug.getLogs()
 
-        assertFalse(logs.contains("NoBanner"))
-        assertTrue(logs.contains("*************"))
-        assertTrue(logs.contains("* IMPORTANT *"))
-        assertFalse(logs.contains("**************"))
+        logs shouldNotContain("NoBanner")
+        logs shouldContain("*************")
+        logs shouldContain("* IMPORTANT *")
+        logs shouldNotContain("**************")
     }
 
     @Test
@@ -108,10 +107,11 @@ class TestDebug
         val debugLogs = Debug.getLogs()
         val systemOutLogs = newOut.toString()
 
-        assertTrue(debugLogs.contains("NotOut"))
-        assertTrue(debugLogs.contains("ToOut"))
-        assertFalse(systemOutLogs.contains("NotOut"))
-        assertTrue(systemOutLogs.contains("ToOut"))
+        debugLogs shouldContain("NotOut")
+        debugLogs shouldContain("ToOut")
+
+        systemOutLogs shouldNotContain("NotOut")
+        systemOutLogs shouldContain("ToOut")
     }
 
     @Test
@@ -124,9 +124,9 @@ class TestDebug
 
         val logs = Debug.getLogs()
 
-        assertTrue(logs.contains("This is a test"))
-        assertTrue(logs.contains("java.lang.Throwable"))
-        assertTrue(logs.contains("TestDebug.testStackTraceBasic(TestDebug.kt:"))
+        logs shouldContain("This is a test")
+        logs shouldContain("java.lang.Throwable")
+        logs shouldContain("TestDebug.testStackTraceBasic(TestDebug.kt:")
     }
 
     @Test
@@ -137,7 +137,7 @@ class TestDebug
         Debug.waitUntilLoggingFinished()
 
         val logs = Debug.getLogs()
-        assertThat(logs, equalTo("\n                                      "))
+        logs shouldBe("\n                                      ")
     }
 
     /*@Test

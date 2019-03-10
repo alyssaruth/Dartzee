@@ -2,13 +2,12 @@ package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.utils.*
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.junit.Assert
+import io.kotlintest.matchers.collections.shouldContainAll
+import io.kotlintest.matchers.collections.shouldHaveSize
+import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 import java.awt.Point
-import kotlin.test.assertTrue
 
 class TestDartboardUtil : DartsRegistry
 {
@@ -55,19 +54,18 @@ class TestDartboardUtil : DartsRegistry
     private fun assertSegment(pt: Point, segmentType: Int, score: Int, multiplier: Int, expectedColor: Color?)
     {
         val key = factorySegmentKeyForPoint(pt, Point(0, 0), 2000.0)
-        val expectedKey = score.toString() + "_" + segmentType
-        Assert.assertEquals("SegmentKey for point $pt for dartboard with radius 1000", expectedKey, key)
+        key shouldBe score.toString() + "_" + segmentType
 
         val segment = DartboardSegmentKt(key)
 
         val segmentStr = "" + segment
-        Assert.assertEquals("DartboardSegment.toString() for point $pt", score.toString() + " (" + segmentType + ")", segmentStr)
+        segmentStr shouldBe "$score ($segmentType)"
 
         val drt = getDartForSegment(pt, segment)
 
-        Assert.assertEquals("Dart score for point $pt", score.toLong(), drt.score.toLong())
-        Assert.assertEquals("Dart multiplier for point $pt", multiplier.toLong(), drt.multiplier.toLong())
-        Assert.assertEquals("SegmentType for point $pt", segmentType.toLong(), drt.segmentType.toLong())
+        drt.score shouldBe score
+        drt.multiplier shouldBe multiplier
+        drt.segmentType shouldBe segmentType
 
         assertColourForPointAndSegment(pt, segment, null, expectedColor, false)
     }
@@ -107,8 +105,7 @@ class TestDartboardUtil : DartsRegistry
             }
         }
 
-        val pointsTotal = fakeSegment.points.size
-        Assert.assertEquals("Total points in [0, 200] x [0, 200]", 40401, pointsTotal.toLong())
+        fakeSegment.points.shouldHaveSize(40401)
 
         //Four corners and four edge mid-points
         assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, Color.YELLOW, false)
@@ -138,7 +135,7 @@ class TestDartboardUtil : DartsRegistry
     private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegmentKt, wrapper: ColourWrapper?, expected: Color?, highlight: Boolean)
     {
         val color = getColourForPointAndSegment(pt, segment, highlight, wrapper)
-        Assert.assertEquals("Color for point $pt and segment $segment", expected, color)
+        color shouldBe expected
     }
 
     @Test
@@ -147,8 +144,7 @@ class TestDartboardUtil : DartsRegistry
         for (i in 1..20)
         {
             val adjacents = getAdjacentNumbers(i)
-
-            assertThat(adjacents.size, equalTo(2))
+            adjacents.shouldHaveSize(2)
         }
     }
 
@@ -160,14 +156,10 @@ class TestDartboardUtil : DartsRegistry
         val adjacentTo6 = getAdjacentNumbers(6)
         val adjacentTo11 = getAdjacentNumbers(11)
 
-        assertTrue(adjacentTo20.contains(1))
-        assertTrue(adjacentTo20.contains(5))
-        assertTrue(adjacentTo3.contains(19))
-        assertTrue(adjacentTo3.contains(17))
-        assertTrue(adjacentTo6.contains(10))
-        assertTrue(adjacentTo6.contains(13))
-        assertTrue(adjacentTo11.contains(14))
-        assertTrue(adjacentTo11.contains(8))
+        adjacentTo20.shouldContainAll(1, 5)
+        adjacentTo3.shouldContainAll(19, 17)
+        adjacentTo6.shouldContainAll(10, 13)
+        adjacentTo11.shouldContainAll(14, 8)
     }
 
 }

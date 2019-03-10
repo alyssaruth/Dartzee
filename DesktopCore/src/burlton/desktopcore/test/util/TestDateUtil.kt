@@ -2,16 +2,14 @@ package burlton.desktopcore.test.util
 
 import burlton.desktopcore.code.util.*
 import burlton.desktopcore.code.util.DateStatics.Companion.END_OF_TIME
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.isEmptyString
+import io.kotlintest.matchers.boolean.shouldBeFalse
+import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.matchers.string.shouldBeEmpty
+import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 import java.time.ZonedDateTime
 import java.util.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class TestDateUtil
 {
@@ -23,10 +21,10 @@ class TestDateUtil
         val dtNow = getSqlDateNow()
         val convertedDtNow = dtNow.toLocalDateTime()
 
-        assertEquals(now.year, convertedDtNow.year)
-        assertEquals(now.month, convertedDtNow.month)
-        assertEquals(now.dayOfMonth, convertedDtNow.dayOfMonth)
-        assertEquals(now.hour, convertedDtNow.hour)
+        now.year shouldBe  convertedDtNow.year
+        now.month shouldBe convertedDtNow.month
+        now.dayOfMonth shouldBe convertedDtNow.dayOfMonth
+        now.hour shouldBe convertedDtNow.hour
     }
 
     @Test
@@ -34,7 +32,7 @@ class TestDateUtil
     {
         val str = getEndOfTimeSqlString()
 
-        assertThat(str, equalTo("'9999-12-31 00:00:00'"))
+        str.shouldBe("'9999-12-31 00:00:00'")
     }
 
     @Test
@@ -45,10 +43,9 @@ class TestDateUtil
 
         val formattedBigNumbers = formatHHMMSS(55751000.0) //15h29m11s
 
-
-        assertThat(formattedOne, equalTo("05:09:00"))
-        assertThat(formattedRounded, equalTo("05:09:00"))
-        assertThat(formattedBigNumbers, equalTo("15:29:11"))
+        formattedOne shouldBe "05:09:00"
+        formattedRounded shouldBe "05:09:00"
+        formattedBigNumbers shouldBe "15:29:11"
     }
 
     @Test
@@ -61,22 +58,22 @@ class TestDateUtil
         val calendarStripped = Calendar.getInstance()
         calendarStripped.time = strippedDt
 
-        assertThat(calendarOrig.get(Calendar.YEAR), equalTo(calendarStripped.get(Calendar.YEAR)))
-        assertThat(calendarOrig.get(Calendar.MONTH), equalTo(calendarStripped.get(Calendar.MONTH)))
-        assertThat(calendarOrig.get(Calendar.DAY_OF_MONTH), equalTo(calendarStripped.get(Calendar.DAY_OF_MONTH)))
+        calendarOrig.get(Calendar.YEAR) shouldBe calendarStripped.get(Calendar.YEAR)
+        calendarOrig.get(Calendar.MONTH) shouldBe calendarStripped.get(Calendar.MONTH)
+        calendarOrig.get(Calendar.DAY_OF_MONTH) shouldBe calendarStripped.get(Calendar.DAY_OF_MONTH)
 
-        assertThat(calendarStripped.get(Calendar.HOUR_OF_DAY), equalTo(0))
-        assertThat(calendarStripped.get(Calendar.MINUTE), equalTo(0))
-        assertThat(calendarStripped.get(Calendar.SECOND), equalTo(0))
-        assertThat(calendarStripped.get(Calendar.MILLISECOND), equalTo(0))
+        calendarStripped.get(Calendar.HOUR_OF_DAY) shouldBe 0
+        calendarStripped.get(Calendar.MINUTE) shouldBe 0
+        calendarStripped.get(Calendar.SECOND) shouldBe 0
+        calendarStripped.get(Calendar.MILLISECOND) shouldBe 0
     }
 
     @Test
     fun testIsEndOfTime()
     {
-        assertFalse(isEndOfTime(null))
-        assertFalse(isEndOfTime(getSqlDateNow()))
-        assertTrue(isEndOfTime(END_OF_TIME))
+        isEndOfTime(null).shouldBeFalse()
+        isEndOfTime(getSqlDateNow()).shouldBeFalse()
+        isEndOfTime(END_OF_TIME).shouldBeTrue()
     }
 
     @Test
@@ -87,16 +84,16 @@ class TestDateUtil
         val slightlyLater = Timestamp(nowMillis + 1)
         val slightlyBefore = Timestamp(nowMillis - 1)
 
-        assertFalse(isOnOrAfter(null, dtNow))
-        assertFalse(isOnOrAfter(dtNow, null))
-        assertFalse(isOnOrAfter(null, null))
+        isOnOrAfter(null, dtNow).shouldBeFalse()
+        isOnOrAfter(dtNow, null).shouldBeFalse()
+        isOnOrAfter(null, null).shouldBeFalse()
 
-        assertTrue(isOnOrAfter(dtNow, dtNow))
-        assertTrue(isOnOrAfter(getSqlDateNow(), dtNow))
-        assertTrue(isOnOrAfter(END_OF_TIME, dtNow))
-        assertTrue(isOnOrAfter(dtNow, slightlyBefore))
+        isOnOrAfter(dtNow, dtNow).shouldBeTrue()
+        isOnOrAfter(getSqlDateNow(), dtNow).shouldBeTrue()
+        isOnOrAfter(END_OF_TIME, dtNow).shouldBeTrue()
+        isOnOrAfter(dtNow, slightlyBefore).shouldBeTrue()
 
-        assertFalse(isOnOrAfter(dtNow, slightlyLater))
+        isOnOrAfter(dtNow, slightlyLater).shouldBeFalse()
     }
 
     @Test
@@ -106,14 +103,14 @@ class TestDateUtil
 
         val timestamp = Timestamp(millis)
 
-        assertThat(timestamp.formatAsDate(), equalTo("25/12/2018"))
-        assertThat(timestamp.formatTimestamp(), equalTo("25-12-2018 10:25"))
+        timestamp.formatAsDate() shouldBe "25/12/2018"
+        timestamp.formatTimestamp() shouldBe "25-12-2018 10:25"
     }
 
     @Test
     fun testEndOfTimeFormats()
     {
-        assertThat(END_OF_TIME.formatAsDate(), isEmptyString)
-        assertThat(END_OF_TIME.formatTimestamp(), isEmptyString)
+        END_OF_TIME.formatAsDate().shouldBeEmpty()
+        END_OF_TIME.formatTimestamp().shouldBeEmpty()
     }
 }
