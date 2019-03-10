@@ -12,6 +12,52 @@ import org.junit.Test
 class TestDartsScorerX01
 {
     @Test
+    fun `should have 4 columns`()
+    {
+        val scorer = getTestScorer()
+        scorer.numberOfColumns shouldBe 4
+    }
+
+    @Test
+    fun `should clear the current round`()
+    {
+        val scorer = getTestScorer()
+
+        scorer.addDart(Dart(20, 1))
+        scorer.addDart(Dart(20, 1))
+        scorer.addDart(Dart(20, 1))
+
+        scorer.finaliseRoundScore(501, false)
+
+        scorer.addDart(Dart(20, 1))
+        scorer.addDart(Dart(20, 1))
+
+        scorer.clearCurrentRound()
+
+        scorer.getTotalScore() shouldBe 3
+    }
+
+    @Test
+    fun `should not clear finalised rounds`()
+    {
+        val scorer = getTestScorer()
+        scorer.addDart(Dart(1, 1))
+
+        scorer.finaliseRoundScore(501, false)
+
+        scorer.clearCurrentRound()
+        scorer.getDartsForRow(0).shouldContainExactly(Dart(1, 1))
+    }
+
+    @Test
+    fun `should do nothing if asked to clear when empty`()
+    {
+        val scorer = getTestScorer()
+
+        scorer.clearCurrentRound()
+    }
+
+    @Test
     fun `should only report finalised rows as completed`()
     {
         val scorer = getTestScorer()

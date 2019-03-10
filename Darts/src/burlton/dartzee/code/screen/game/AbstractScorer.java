@@ -158,13 +158,6 @@ public abstract class AbstractScorer extends JPanel
 	{
 		return getNumberOfColumns() - 1;
 	}
-
-	/*public void assignAsterisk()
-	{
-		String text = lblName.getText();
-		text += "*";
-		lblName.setText(text);
-	}*/
 	
 	public DefaultModel getTableModel()
 	{
