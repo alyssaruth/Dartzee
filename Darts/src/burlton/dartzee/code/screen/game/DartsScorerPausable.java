@@ -1,12 +1,9 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 public abstract class DartsScorerPausable extends DartsScorer
 										  implements ActionListener
@@ -105,7 +102,7 @@ public abstract class DartsScorerPausable extends DartsScorer
 			{
 				parent.pauseLastPlayer();
 			}
-			
+
 			toggleResume();
 		}
 	}

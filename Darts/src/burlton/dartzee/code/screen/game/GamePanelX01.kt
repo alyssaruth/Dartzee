@@ -33,6 +33,12 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
     override fun resetRoundVariables()
     {
         currentScore = startingScore
+    }
+
+    override fun readyForThrow()
+    {
+        super.readyForThrow()
+
         suggestCheckout()
     }
 
@@ -190,8 +196,6 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         {
             dartboard.doBadLuck()
         }
-
-        suggestCheckout()
     }
 
     private fun suggestCheckout()
