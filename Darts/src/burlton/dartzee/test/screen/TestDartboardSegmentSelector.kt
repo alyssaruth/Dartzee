@@ -7,15 +7,14 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.DartboardSegmentSelector
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.hasSize
-import com.natpryce.hamkrest.isEmpty
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldHaveSize
+import io.kotlintest.shouldBe
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import java.awt.event.MouseEvent
-import org.mockito.Mockito.`when` as whenInvoke
 
 class TestDartboardSegmentSelector
 {
@@ -34,10 +33,10 @@ class TestDartboardSegmentSelector
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
         dartboard.dartThrown(pt)
 
-        assertThat(dartboard.selectedSegments, hasSize(equalTo(1)))
+        dartboard.selectedSegments.shouldHaveSize(1)
 
         dartboard.dartThrown(pt)
-        assertThat(dartboard.selectedSegments, isEmpty)
+        dartboard.selectedSegments.shouldBeEmpty()
     }
 
     @Test
@@ -49,7 +48,7 @@ class TestDartboardSegmentSelector
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS).first()
         dartboard.dartThrown(pt)
 
-        assertThat(dartboard.selectedSegments, isEmpty)
+        dartboard.selectedSegments.shouldBeEmpty()
     }
 
     @Test
@@ -61,10 +60,12 @@ class TestDartboardSegmentSelector
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
         dartboard.dartThrown(pt)
 
+        dartboard.selectedSegments.shouldHaveSize(1)
+
         val me = generateMouseEvent(dartboard, 20, SEGMENT_TYPE_OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
-        assertThat(dartboard.selectedSegments, hasSize(equalTo(1)))
+        dartboard.selectedSegments.shouldHaveSize(1)
     }
 
     @Test
@@ -79,7 +80,7 @@ class TestDartboardSegmentSelector
         val me = generateMouseEvent(dartboard, 19, SEGMENT_TYPE_OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
-        assertThat(dartboard.selectedSegments, hasSize(equalTo(2)))
+        dartboard.selectedSegments.shouldHaveSize(2)
     }
 
     @Test
@@ -92,25 +93,25 @@ class TestDartboardSegmentSelector
         dartboard.initState(hashSetOf(segment))
 
         //Check state has initialised properly
-        assertThat(dartboard.selectedSegments, hasSize(equalTo(1)))
+        dartboard.selectedSegments.shouldHaveSize(1)
 
         val selectedSegment = dartboard.selectedSegments.first()
-        assertThat(selectedSegment.type, equalTo(SEGMENT_TYPE_OUTER_SINGLE))
-        assertThat(selectedSegment.score, equalTo(10))
+        selectedSegment.type shouldBe SEGMENT_TYPE_OUTER_SINGLE
+        selectedSegment.score shouldBe 10
 
         //Mock a mouse event
         val me = generateMouseEvent(dartboard, 10, SEGMENT_TYPE_OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
-        assertThat(dartboard.selectedSegments, isEmpty)
+        dartboard.selectedSegments.shouldBeEmpty()
     }
 
     private fun generateMouseEvent(dartboard: Dartboard, score: Int, segmentType: Int): MouseEvent
     {
         val pt = dartboard.getPointsForSegment(score, segmentType).first()
 
-        val me = Mockito.mock(MouseEvent::class.java)
-        whenInvoke(me.point).thenReturn(pt)
+        val me = mockk<MouseEvent>()
+        every { me.point } returns pt
 
         return me
     }

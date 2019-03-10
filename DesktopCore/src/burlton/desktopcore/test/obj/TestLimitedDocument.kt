@@ -1,8 +1,7 @@
 package burlton.desktopcore.test.obj
 
 import burlton.desktopcore.code.obj.LimitedDocument
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import io.kotlintest.shouldBe
 import org.junit.Test
 
 class TestLimitedDocument
@@ -20,6 +19,6 @@ class TestLimitedDocument
 
         val text = limitedDocument.getText(0, 50)
 
-        assertThat(text, equalTo("ccccccccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
+        text.shouldBe("ccccccccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     }
 }

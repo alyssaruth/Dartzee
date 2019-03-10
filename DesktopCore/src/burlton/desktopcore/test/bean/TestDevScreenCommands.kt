@@ -4,22 +4,17 @@ import burlton.core.code.util.Debug
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
 import burlton.desktopcore.code.screen.DebugConsole
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.containsSubstring
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.isEmptyString
+import io.kotlintest.matchers.boolean.shouldBeFalse
+import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.matchers.string.shouldBeEmpty
+import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.shouldBe
+import io.mockk.mockk
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
-import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
-import org.mockito.Mockito.`when` as whenInvoke
-
-
 
 class TestDevScreenCommands
 {
@@ -42,7 +37,7 @@ class TestDevScreenCommands
 
         simulateKeyStroke(devScreen)
 
-        assertFalse(cheatBar.isEnabled)
+        cheatBar.isEnabled shouldBe false
     }
 
     @Test
@@ -55,7 +50,7 @@ class TestDevScreenCommands
 
         simulateKeyStroke(devScreen)
 
-        assertTrue(cheatBar.isEnabled)
+        cheatBar.isEnabled shouldBe true
     }
 
     private fun simulateKeyStroke(devScreen: AbstractDevScreen)
@@ -63,7 +58,7 @@ class TestDevScreenCommands
         val cheatBarKeyStroke = devScreen.getKeyStrokeForCommandBar()
         val innerPanel = devScreen.contentPane as JPanel
 
-        val keyEvent = mock(KeyEvent::class.java)
+        val keyEvent = mockk<KeyEvent>(relaxed = true)
         val action = innerPanel.actionMap["showCheatBar"]
 
         SwingUtilities.notifyAction(action, cheatBarKeyStroke, keyEvent, this, keyEvent.modifiers)
@@ -80,10 +75,10 @@ class TestDevScreenCommands
         simulateKeyStroke(devScreen)
 
         cheatBar.text = "1+1"
-        cheatBar.actionPerformed(mock(ActionEvent::class.java))
+        cheatBar.actionPerformed(mockk())
 
-        assertThat(cheatBar.text, equalTo("2"))
-        assertTrue(cheatBar.isEnabled)
+        cheatBar.text shouldBe "2"
+        cheatBar.isEnabled shouldBe true
     }
 
     @Test
@@ -98,11 +93,11 @@ class TestDevScreenCommands
         simulateKeyStroke(devScreen)
 
         cheatBar.text = "SomethingElse"
-        cheatBar.actionPerformed(mock(ActionEvent::class.java))
+        cheatBar.actionPerformed(mockk())
 
-        assertThat(cheatBar.text, isEmptyString)
-        assertFalse(cheatBar.isEnabled)
-        assertTrue(toggle)
+        cheatBar.text.shouldBeEmpty()
+        cheatBar.isEnabled.shouldBeFalse()
+        toggle.shouldBeTrue()
     }
 
     @Test
@@ -116,13 +111,13 @@ class TestDevScreenCommands
         simulateKeyStroke(devScreen)
 
         cheatBar.text = "exception"
-        cheatBar.actionPerformed(mock(ActionEvent::class.java))
+        cheatBar.actionPerformed(mockk())
 
         Debug.waitUntilLoggingFinished()
 
-        assertThat(cheatBar.text, isEmptyString)
-        assertFalse(cheatBar.isEnabled)
-        assertThat(Debug.getLogs(), containsSubstring("java.lang.Exception: Test"))
+        cheatBar.text.shouldBeEmpty()
+        cheatBar.isEnabled.shouldBeFalse()
+        Debug.getLogs().shouldContain("java.lang.Exception: Test")
     }
 
 

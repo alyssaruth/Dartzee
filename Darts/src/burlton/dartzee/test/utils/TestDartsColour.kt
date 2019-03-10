@@ -1,12 +1,10 @@
 package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.utils.DartsColour
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 import javax.swing.JLabel
-import kotlin.test.assertNull
 
 class TestDartsColour
 {
@@ -19,9 +17,10 @@ class TestDartsColour
         val c1Result = DartsColour.getDarkenedColour(c1)
         val c2Result = DartsColour.getDarkenedColour(c2)
 
-        assertThat(c1Result.red, equalTo(49))
-        assertThat(c1Result.alpha, equalTo(c1.alpha))
-        assertNull(c2Result)
+        c1Result.red shouldBe 49
+        c1Result.alpha shouldBe c1.alpha
+
+        c2Result shouldBe null
     }
 
     @Test
@@ -41,23 +40,23 @@ class TestDartsColour
         DartsColour.setFgAndBgColoursForPosition(componentUnfinishedWithDefault, -1, Color.MAGENTA)
         DartsColour.setFgAndBgColoursForPosition(componentUnfinished, -1)
 
-        assertThat(componentFirst.foreground, equalTo(DartsColour.COLOUR_GOLD_TEXT))
-        assertThat(componentFirst.background, equalTo(Color.YELLOW))
+        componentFirst.foreground shouldBe DartsColour.COLOUR_GOLD_TEXT
+        componentFirst.background shouldBe Color.YELLOW
 
-        assertThat(componentSecond.foreground, equalTo(DartsColour.COLOUR_SILVER_TEXT))
-        assertThat(componentSecond.background, equalTo(Color.GRAY))
+        componentSecond.foreground shouldBe DartsColour.COLOUR_SILVER_TEXT
+        componentSecond.background shouldBe Color.GRAY
 
-        assertThat(componentThird.foreground, equalTo(DartsColour.COLOUR_BRONZE_TEXT))
-        assertThat(componentThird.background, equalTo(DartsColour.COLOUR_BRONZE))
+        componentThird.foreground shouldBe DartsColour.COLOUR_BRONZE_TEXT
+        componentThird.background shouldBe DartsColour.COLOUR_BRONZE
 
-        assertThat(componentFourth.foreground, equalTo(DartsColour.COLOUR_BRONZE))
-        assertThat(componentFourth.background, equalTo(Color.BLACK))
+        componentFourth.foreground shouldBe DartsColour.COLOUR_BRONZE
+        componentFourth.background shouldBe Color.BLACK
 
-        assertNull(componentUnfinishedWithDefault.foreground)
-        assertThat(componentUnfinishedWithDefault.background, equalTo(Color.MAGENTA))
+        componentUnfinishedWithDefault.foreground shouldBe null
+        componentUnfinishedWithDefault.background shouldBe Color.MAGENTA
 
-        assertNull(componentUnfinished.foreground)
-        assertNull(componentUnfinished.background)
+        componentUnfinished.foreground shouldBe null
+        componentUnfinished.background shouldBe null
     }
 }
 

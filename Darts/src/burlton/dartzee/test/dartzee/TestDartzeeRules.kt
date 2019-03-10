@@ -3,9 +3,7 @@ package burlton.dartzee.test.dartzee
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.*
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.hasSize
+import io.kotlintest.matchers.collections.shouldHaveSize
 import org.junit.Test
 import javax.swing.JCheckBox
 import kotlin.test.*
@@ -341,7 +339,7 @@ class TestDartzeeRules
 
         assertTrue(parsedRule is DartzeeDartRuleCustom)
 
-        assertThat(parsedRule.segments, hasSize(equalTo(3)))
+        parsedRule.segments shouldHaveSize(3)
 
         assertTrue(parsedRule.isValidSegment(doubleTwenty))
         assertFalse(parsedRule.isValidSegment(singleTwenty))
