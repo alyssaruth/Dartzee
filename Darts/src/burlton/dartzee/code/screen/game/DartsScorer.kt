@@ -36,7 +36,7 @@ abstract class DartsScorer : AbstractScorer() {
     /**
      * Add a dart to the scorer.
      */
-    fun addDart(drt: Dart)
+    open fun addDart(drt: Dart)
     {
         var rowCount = model.rowCount
         if (shouldAddRow(rowCount))

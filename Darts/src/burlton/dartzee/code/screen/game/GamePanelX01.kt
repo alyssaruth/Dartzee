@@ -3,6 +3,7 @@ package burlton.dartzee.code.screen.game
 import burlton.core.code.obj.HashMapCount
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.CheckoutSuggester
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.*
 import burlton.dartzee.code.ai.AbstractDartsModel
@@ -25,13 +26,14 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
     override fun updateVariablesForNewRound()
     {
-        startingScore = activeScorer.latestScoreRemaining
-        currentScore = startingScore
+        startingScore = activeScorer.getLatestScoreRemaining()
+        resetRoundVariables()
     }
 
     override fun resetRoundVariables()
     {
         currentScore = startingScore
+        suggestCheckout()
     }
 
     override fun saveDartsAndProceed()
@@ -162,7 +164,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
     {
         scorer ?: return
 
-        val startingScore = scorer.latestScoreRemaining
+        val startingScore = scorer.getLatestScoreRemaining()
 
         var score = startingScore
         for (dart in darts)
@@ -187,6 +189,18 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         if (isNearMissDouble(dart))
         {
             dartboard.doBadLuck()
+        }
+
+        suggestCheckout()
+    }
+
+    private fun suggestCheckout()
+    {
+        val dartsRemaining = 3 - dartsThrown.size
+        val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
+
+        checkout.forEach {
+            activeScorer.addHint(it)
         }
     }
 

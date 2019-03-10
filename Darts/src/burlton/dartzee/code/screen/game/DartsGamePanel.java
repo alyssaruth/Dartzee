@@ -730,12 +730,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	{
 		Debug.append("Reset pressed.", VERBOSE_LOGGING);
 		
-		resetRoundVariables();
-		
 		dartboard.clearDarts();
 		activeScorer.clearCurrentRound();
 		activeScorer.updatePlayerResult();
 		dartsThrown.clear();
+
+		resetRoundVariables();
 		
 		//If we're resetting, disable the buttons
 		btnConfirm.setEnabled(false);

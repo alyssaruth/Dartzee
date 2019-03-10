@@ -185,22 +185,3 @@ fun factoryTreble(score: Int): Dart
 {
     return Dart(score, 3)
 }
-
-fun factoryFromString(dartStr: String): Dart?
-{
-    return if (dartStr.startsWith("D"))
-    {
-        val score = dartStr.replace("D", "").toInt()
-        Dart(score, 2)
-    }
-    else if (dartStr.startsWith("T"))
-    {
-        val score = dartStr.replace("T", "").toInt()
-        Dart(score, 3)
-    }
-    else
-    {
-        val score = dartStr.toInt()
-        Dart(score, 1)
-    }
-}
