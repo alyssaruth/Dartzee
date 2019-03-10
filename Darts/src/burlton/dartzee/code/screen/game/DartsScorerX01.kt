@@ -78,13 +78,13 @@ class DartsScorerX01 : DartsScorerPausable()
         return dartCount
     }
 
-    private fun getDartsForRow(row: Int): List<Dart>
+    fun getDartsForRow(row: Int): List<Dart>
     {
         val ret = mutableListOf<Dart>()
         for (i in 0 until SCORE_COLUMN)
         {
             val drt = model.getValueAt(row, i) as Dart?
-            if (drt != null)
+            if (drt != null && drt !is DartHint)
             {
                 ret.add(drt)
             }
@@ -116,6 +116,8 @@ class DartsScorerX01 : DartsScorerPausable()
 
     fun finaliseRoundScore(startingScore: Int, bust: Boolean)
     {
+        removeHints()
+
         val row = model.rowCount - 1
 
         if (bust)
@@ -136,7 +138,7 @@ class DartsScorerX01 : DartsScorerPausable()
         super.addDart(drt)
     }
 
-    fun addHint(drt: Dart)
+    fun addHint(drt: DartHint)
     {
         super.addDart(drt)
     }

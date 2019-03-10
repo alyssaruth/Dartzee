@@ -8,7 +8,7 @@ object CheckoutSuggester
 {
     private val hmScoreToCheckout = readInCheckouts()
 
-    fun suggestCheckout(score: Int, dartsRemaining: Int): List<Dart>?
+    fun suggestCheckout(score: Int, dartsRemaining: Int): List<DartHint>?
     {
         for (dart in 1..dartsRemaining)
         {
@@ -59,7 +59,7 @@ object CheckoutSuggester
 
     fun addCheckoutsToMap(score: Int, darts: List<DartHint>, map: MutableMap<String, List<DartHint>>)
     {
-        var currentCheckout = darts.toMutableList()
+        val currentCheckout = darts.toMutableList()
         var currentScore = score
         while (currentCheckout.isNotEmpty())
         {
