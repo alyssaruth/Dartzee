@@ -11,13 +11,13 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
 {
 
     private val lblDefaultAiSpeed = JLabel("Default AI speed")
-    private val slider = SliderAiSpeed(false)
-    private val chckbxAiAutomaticallyFinish = JCheckBox("AI automatically finish")
-    private val chckbxCheckForUpdates = JCheckBox("Automatically check for updates")
+    val slider = SliderAiSpeed(false)
+    val chckbxAiAutomaticallyFinish = JCheckBox("AI automatically finish")
+    val chckbxCheckForUpdates = JCheckBox("Automatically check for updates")
     private val lblRowsToShow = JLabel("Rows to show on Leaderboards")
-    private val nfLeaderboardSize = NumberField(10, 200)
-    private val chckbxShowAnimations = JCheckBox("Play sounds/animations")
-    private val chckbxPreloadResources = JCheckBox("Pre-load resources (recommended)")
+    val nfLeaderboardSize = NumberField(10, 200)
+    val chckbxShowAnimations = JCheckBox("Play sounds/animations")
+    val chckbxPreloadResources = JCheckBox("Pre-load resources (recommended)")
 
     init
     {

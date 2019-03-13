@@ -2,6 +2,7 @@ package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.utils.*
+import burlton.dartzee.test.helper.AbstractRegistryTest
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
@@ -9,18 +10,22 @@ import org.junit.Test
 import java.awt.Color
 import java.awt.Point
 
-class TestDartboardUtil
+class TestDartboardUtil : AbstractRegistryTest()
 {
+    override fun getPreferencesAffected(): MutableList<String>
+    {
+        return mutableListOf(PREFERENCES_STRING_EVEN_SINGLE_COLOUR,
+                PREFERENCES_STRING_EVEN_DOUBLE_COLOUR,
+                PREFERENCES_STRING_EVEN_TREBLE_COLOUR,
+                PREFERENCES_STRING_ODD_SINGLE_COLOUR,
+                PREFERENCES_STRING_ODD_DOUBLE_COLOUR,
+                PREFERENCES_STRING_ODD_TREBLE_COLOUR)
+    }
 
     @Test
     fun testFactorySegmentKeyForPoint()
     {
-        PreferenceUtil.deleteSetting(PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
-        PreferenceUtil.deleteSetting(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
-        PreferenceUtil.deleteSetting(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
-        PreferenceUtil.deleteSetting(PREFERENCES_STRING_ODD_SINGLE_COLOUR)
-        PreferenceUtil.deleteSetting(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
-        PreferenceUtil.deleteSetting(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
+        clearPreferences()
 
         resetCachedDartboardValues()
 
