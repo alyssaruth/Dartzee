@@ -31,6 +31,26 @@ class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc
         panel.chckbxPreloadResources.isSelected = false
     }
 
+    override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelMisc)
+    {
+        panel.slider.value shouldBe 20
+        panel.nfLeaderboardSize.value shouldBe 100
+        panel.chckbxAiAutomaticallyFinish.isSelected shouldBe false
+        panel.chckbxCheckForUpdates.isSelected shouldBe false
+        panel.chckbxShowAnimations.isSelected shouldBe false
+        panel.chckbxPreloadResources.isSelected shouldBe false
+    }
+
+    override fun checkPreferencesAreSetToNonDefaults()
+    {
+        PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) shouldBe 20
+        PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE) shouldBe 100
+        PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) shouldBe false
+        PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES) shouldBe false
+        PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) shouldBe false
+        PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES) shouldBe false
+    }
+
     override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelMisc)
     {
         panel.slider.value shouldBe 1000

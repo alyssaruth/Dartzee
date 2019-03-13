@@ -125,11 +125,11 @@ public class PreferencesPanelScorer extends AbstractPreferencesPanel
 	}
 	
 	private final JPanel panelScorerPreview = new JPanel();
-	private final JSpinner spinnerHueFactor = new JSpinner();
-	private final JSpinner spinnerFgBrightness = new JSpinner();
-	private final JSpinner spinnerBgBrightness = new JSpinner();
-	private final JRadioButton rdbtnD20 = new JRadioButton("D20");
-	private final JRadioButton rdbtn40 = new JRadioButton("40");
+	public final JSpinner spinnerHueFactor = new JSpinner();
+	public final JSpinner spinnerFgBrightness = new JSpinner();
+	public final JSpinner spinnerBgBrightness = new JSpinner();
+	public final JRadioButton rdbtnD20 = new JRadioButton("D20");
+	public final JRadioButton rdbtn40 = new JRadioButton("40");
 	
 	@Override
 	public void refresh(boolean useDefaults)
