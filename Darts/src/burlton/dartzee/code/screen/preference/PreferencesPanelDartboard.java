@@ -56,12 +56,12 @@ public class PreferencesPanelDartboard extends AbstractPreferencesPanel
 		cpEvenTreble.addColourSelectionListener(this);
 	}
 	
-	private final ColourPicker cpOddSingle = new ColourPicker();
-	private final ColourPicker cpOddDouble = new ColourPicker();
-	private final ColourPicker cpOddTreble = new ColourPicker();
-	private final ColourPicker cpEvenSingle = new ColourPicker();
-	private final ColourPicker cpEvenDouble = new ColourPicker();
-	private final ColourPicker cpEvenTreble = new ColourPicker();
+	public final ColourPicker cpOddSingle = new ColourPicker();
+	public final ColourPicker cpOddDouble = new ColourPicker();
+	public final ColourPicker cpOddTreble = new ColourPicker();
+	public final ColourPicker cpEvenSingle = new ColourPicker();
+	public final ColourPicker cpEvenDouble = new ColourPicker();
+	public final ColourPicker cpEvenTreble = new ColourPicker();
 	private final Dartboard dartboardPreview = new Dartboard(200, 200);
 	
 	@Override
