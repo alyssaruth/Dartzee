@@ -4,7 +4,6 @@ import burlton.dartzee.code.bean.PlayerAvatar;
 import burlton.dartzee.code.bean.ScrollTableDartsGame;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.utils.DartsColour;
-import burlton.dartzee.code.utils.DartsRegistry;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 
 import javax.swing.*;
@@ -12,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public abstract class AbstractScorer extends JPanel
- 									 implements DartsRegistry
 {
 	protected boolean human = false;
 	protected int finishPos = -1;

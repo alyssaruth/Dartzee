@@ -9,18 +9,18 @@ import org.junit.Test
 import java.awt.Color
 import java.awt.Point
 
-class TestDartboardUtil : DartsRegistry
+class TestDartboardUtil
 {
 
     @Test
     fun testFactorySegmentKeyForPoint()
     {
-        PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
-        PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
-        PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
-        PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_ODD_SINGLE_COLOUR)
-        PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
-        PreferenceUtil.deleteSetting(DartsRegistry.PREFERENCES_STRING_ODD_TREBLE_COLOUR)
+        PreferenceUtil.deleteSetting(PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
+        PreferenceUtil.deleteSetting(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
+        PreferenceUtil.deleteSetting(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
+        PreferenceUtil.deleteSetting(PREFERENCES_STRING_ODD_SINGLE_COLOUR)
+        PreferenceUtil.deleteSetting(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
+        PreferenceUtil.deleteSetting(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
         resetCachedDartboardValues()
 
@@ -75,7 +75,7 @@ class TestDartboardUtil : DartsRegistry
     {
         resetCachedDartboardValues()
         val pink = Color.pink
-        PreferenceUtil.saveString(DartsRegistry.PREFERENCES_STRING_EVEN_SINGLE_COLOUR, DartsColour.toPrefStr(pink))
+        PreferenceUtil.saveString(PREFERENCES_STRING_EVEN_SINGLE_COLOUR, DartsColour.toPrefStr(pink))
         assertSegment(Point(0, -629), SEGMENT_TYPE_OUTER_SINGLE, 20, 1, pink)
     }
 

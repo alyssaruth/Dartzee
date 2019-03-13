@@ -159,12 +159,12 @@ private fun getColourWrapperFromPrefs(): ColourWrapper
         return colourWrapperFromPrefs!!
     }
 
-    val evenSingleStr = PreferenceUtil.getStringValue(DartsRegistry.PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
-    val evenDoubleStr = PreferenceUtil.getStringValue(DartsRegistry.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
-    val evenTrebleStr = PreferenceUtil.getStringValue(DartsRegistry.PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
-    val oddSingleStr = PreferenceUtil.getStringValue(DartsRegistry.PREFERENCES_STRING_ODD_SINGLE_COLOUR)
-    val oddDoubleStr = PreferenceUtil.getStringValue(DartsRegistry.PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
-    val oddTrebleStr = PreferenceUtil.getStringValue(DartsRegistry.PREFERENCES_STRING_ODD_TREBLE_COLOUR)
+    val evenSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
+    val evenDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
+    val evenTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
+    val oddSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_SINGLE_COLOUR)
+    val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
+    val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
     val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr, DartsColour.DARTBOARD_BLACK)
     val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr, DartsColour.DARTBOARD_RED)

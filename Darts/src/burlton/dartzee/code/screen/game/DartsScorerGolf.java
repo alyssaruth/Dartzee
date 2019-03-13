@@ -11,6 +11,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.Collection;
 
+import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_DOUBLE_BG_BRIGHTNESS;
+import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_DOUBLE_FG_BRIGHTNESS;
+
 public class DartsScorerGolf extends DartsScorer
 {
 	private static final int ROUNDS_HALFWAY = 9;

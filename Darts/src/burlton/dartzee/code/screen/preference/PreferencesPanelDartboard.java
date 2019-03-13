@@ -1,17 +1,16 @@
 package burlton.dartzee.code.screen.preference;
 
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-
-import burlton.desktopcore.code.bean.ColourPicker;
-import burlton.desktopcore.code.bean.ColourSelectionListener;
 import burlton.dartzee.code.object.ColourWrapper;
 import burlton.dartzee.code.screen.Dartboard;
 import burlton.dartzee.code.utils.DartsColour;
 import burlton.dartzee.code.utils.PreferenceUtil;
+import burlton.desktopcore.code.bean.ColourPicker;
+import burlton.desktopcore.code.bean.ColourSelectionListener;
+
+import javax.swing.*;
+import java.awt.*;
+
+import static burlton.dartzee.code.utils.RegistryConstantsKt.*;
 
 public class PreferencesPanelDartboard extends AbstractPreferencesPanel
 								       implements ColourSelectionListener

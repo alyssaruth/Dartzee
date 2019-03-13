@@ -14,7 +14,6 @@ import burlton.dartzee.code.listener.DartboardListener;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.screen.Dartboard;
 import burlton.dartzee.code.stats.PlayerSummaryStats;
-import burlton.dartzee.code.utils.DartsRegistry;
 import burlton.dartzee.code.utils.DatabaseUtil;
 import burlton.dartzee.code.utils.PreferenceUtil;
 import burlton.desktopcore.code.util.DateUtil;
@@ -34,10 +33,11 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_INT_AI_SPEED;
+
 public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithScorers<S>
 														  	implements DartboardListener,
 														  			   ActionListener,
-														  			   DartsRegistry,
 																	   MouseListener
 {
 	protected static final boolean VERBOSE_LOGGING = false;

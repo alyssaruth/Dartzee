@@ -3,7 +3,7 @@ package burlton.dartzee.code.screen.stats.overall
 import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.db.getFilterPanel
-import burlton.dartzee.code.utils.DartsRegistry
+import burlton.dartzee.code.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import java.awt.BorderLayout
@@ -64,7 +64,7 @@ class OverallStatsTabTotalScore(private val gameType: Int) : JPanel(), ActionLis
 
     private fun getTotalScoreSql() : String
     {
-        val leaderboardSize = PreferenceUtil.getIntValue(DartsRegistry.PREFERENCES_INT_LEADERBOARD_SIZE)
+        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
         val gameParams = panelGameParams?.getGameParams() ?: ""
         val playerWhereSql = panelPlayerFilters.whereSql
 

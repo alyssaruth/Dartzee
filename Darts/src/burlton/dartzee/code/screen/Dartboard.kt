@@ -504,7 +504,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private fun doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
     {
-        if (!PreferenceUtil.getBooleanValue(DartsRegistry.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) || simulation)
+        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) || simulation)
         {
             return
         }
@@ -534,6 +534,11 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun playDodgySound(soundName: String)
     {
+        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) || simulation)
+        {
+            return
+        }
+
         try
         {
             if (ResourceCache.isInitialised())

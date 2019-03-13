@@ -1,12 +1,14 @@
 package burlton.dartzee.code.utils;
 
-import java.util.ArrayList;
-import java.util.prefs.Preferences;
-
 import burlton.core.code.util.Debug;
 import burlton.core.code.util.StringUtil;
 
-public class PreferenceUtil implements DartsRegistry
+import java.util.ArrayList;
+import java.util.prefs.Preferences;
+
+import static burlton.dartzee.code.utils.RegistryConstantsKt.NODE_PREFERENCES;
+
+public class PreferenceUtil
 {
 	private static final String PREFERENCE_DELIM_CHAR = ";";
 	
