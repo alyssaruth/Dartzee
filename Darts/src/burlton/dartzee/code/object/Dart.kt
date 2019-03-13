@@ -2,7 +2,7 @@ package burlton.dartzee.code.`object`
 
 import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_TREBLES
-import burlton.dartzee.code.utils.DartsRegistry
+import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE
 import burlton.dartzee.code.utils.PreferenceUtil
 import java.awt.Point
 
@@ -10,7 +10,7 @@ open class Dart @JvmOverloads constructor(
         var score: Int,
         var multiplier: Int,
         var pt: Point? = null,
-        var segmentType: Int = -1) : DartsRegistry
+        var segmentType: Int = -1)
 {
     var ordinal = -1
 
@@ -115,7 +115,7 @@ open class Dart @JvmOverloads constructor(
 
     override fun toString(): String
     {
-        val showTotal = PreferenceUtil.getBooleanValue(DartsRegistry.PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE)
+        val showTotal = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE)
         return if (showTotal)
         {
             "" + getTotal()

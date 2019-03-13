@@ -7,8 +7,8 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.db.getAllGameTypes
 import burlton.dartzee.code.db.getTypeDesc
 import burlton.dartzee.code.screen.EmbeddedScreen
-import burlton.dartzee.code.utils.DartsRegistry
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.TableUtil
@@ -164,7 +164,7 @@ class OverallStatsScreen : EmbeddedScreen()
      */
     fun getTopX01FinishSql(): String
     {
-        val leaderboardSize = PreferenceUtil.getIntValue(DartsRegistry.PREFERENCES_INT_LEADERBOARD_SIZE)
+        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
         val extraWhereSql = playerFilterPanelTopFinishes.whereSql
 
 

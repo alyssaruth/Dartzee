@@ -6,7 +6,9 @@ import burlton.core.code.util.StringUtil;
 import java.awt.*;
 import java.util.ArrayList;
 
-public final class DartsColour implements DartsRegistry
+import static burlton.dartzee.code.utils.RegistryConstantsKt.*;
+
+public final class DartsColour
 {
 	public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 	

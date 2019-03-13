@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES;
+
 /**
  * Simple class housing statics for various image/sound resources
  * So that these can be pre-loaded on start-up, rather than causing lag the first time they're required.
@@ -49,7 +51,7 @@ public class ResourceCache
 	@SuppressWarnings("resource")
 	public static void initialiseResources()
 	{
-		if (!PreferenceUtil.getBooleanValue(DartsRegistry.PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES))
+		if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES))
 		{
 			Debug.append("Not pre-loading WAVs as preference is disabled");
 			return;

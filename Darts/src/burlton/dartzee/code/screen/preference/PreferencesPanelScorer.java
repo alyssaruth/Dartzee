@@ -1,28 +1,18 @@
 package burlton.dartzee.code.screen.preference;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.util.ArrayList;
-
-import javax.swing.Box;
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import burlton.dartzee.code.utils.DartsColour;
 import burlton.dartzee.code.utils.PreferenceUtil;
 import burlton.desktopcore.code.util.ComponentUtil;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.util.ArrayList;
+
+import static burlton.dartzee.code.utils.RegistryConstantsKt.*;
 
 public class PreferencesPanelScorer extends AbstractPreferencesPanel
 									implements ChangeListener

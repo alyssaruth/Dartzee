@@ -1,11 +1,8 @@
 package burlton.dartzee.code.screen.preference;
 
-import javax.swing.JPanel;
-
-import burlton.dartzee.code.utils.DartsRegistry;
+import javax.swing.*;
 
 public abstract class AbstractPreferencesPanel extends JPanel
-											   implements DartsRegistry
 {
 	/**
 	 * Refresh this panel

@@ -4,7 +4,6 @@ import burlton.core.code.util.Debug;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.utils.DartboardUtilKt;
-import burlton.dartzee.code.utils.DartsRegistry;
 import burlton.desktopcore.code.util.ComponentUtil;
 
 import javax.swing.*;
@@ -14,8 +13,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public final class PreferencesDialog extends JDialog
-									 implements ActionListener,
-        										DartsRegistry
+									 implements ActionListener
 {
 	public PreferencesDialog() 
 	{

@@ -1,14 +1,15 @@
 package burlton.dartzee.code.screen.game;
 
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.SwingConstants;
-
-import burlton.desktopcore.code.bean.AbstractTableRenderer;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.object.DartNotThrown;
 import burlton.dartzee.code.utils.PreferenceUtil;
+import burlton.desktopcore.code.bean.AbstractTableRenderer;
+
+import javax.swing.*;
+import java.awt.*;
+
+import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_DOUBLE_BG_BRIGHTNESS;
+import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_DOUBLE_FG_BRIGHTNESS;
 
 public final class DartsScorerRoundTheClock extends DartsScorerPausable
 {

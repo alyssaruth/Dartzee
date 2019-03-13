@@ -5,6 +5,8 @@ import burlton.dartzee.code.utils.PreferenceUtil;
 import burlton.desktopcore.code.util.DateUtil;
 import burlton.core.code.util.Debug;
 
+import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE;
+
 public abstract class GamePanelPausable<S extends DartsScorerPausable> extends DartsGamePanel<S>
 {
 	private Object AI_PAUSE_SYNC_OBJ = new Object();
