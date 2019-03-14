@@ -135,7 +135,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
             val rounds = hmPlayerToDarts[playerName]
             val darts = rounds!!.flattenBatches()
 
-            var avg = calculateThreeDartAverage(darts, nfSetupThreshold.number)
+            var avg = calculateThreeDartAverage(darts, nfSetupThreshold.getNumber())
             if (avg < 0)
             {
                 threeDartAvgs[i + 1] = "N/A"
@@ -249,13 +249,13 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         val rounds = hmPlayerToDarts[playerName]
         rounds ?: return mutableListOf()
 
-        return rounds.filter{r -> r.last().startingScore > nfSetupThreshold.number}.toMutableList()
+        return rounds.filter{r -> r.last().startingScore > nfSetupThreshold.getNumber()}.toMutableList()
     }
 
     private fun getScoringDarts(playerName: String): MutableList<Dart>
     {
         val darts = getFlattenedDarts(playerName)
-        return getScoringDarts(darts, nfSetupThreshold.number)
+        return getScoringDarts(darts, nfSetupThreshold.getNumber())
     }
 
     override fun getRankedRowsHighestWins(): MutableList<String>
