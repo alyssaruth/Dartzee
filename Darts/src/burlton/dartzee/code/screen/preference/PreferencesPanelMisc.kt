@@ -71,7 +71,7 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
         val aiSpd = slider.value
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, aiSpd)
 
-        val leaderboardSize = nfLeaderboardSize.number
+        val leaderboardSize = nfLeaderboardSize.getNumber()
         PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, leaderboardSize)
 
         val aiAuto = chckbxAiAutomaticallyFinish.isSelected
