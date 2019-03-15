@@ -1,16 +1,7 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-
 import burlton.dartzee.code.utils.DartsColour;
+import burlton.desktopcore.code.util.ComponentUtilKt;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -19,7 +10,11 @@ import org.jfree.data.time.MovingAverage;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import burlton.desktopcore.code.util.ComponentUtil;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class MovingAverageChartPanel extends JPanel
 									 implements ActionListener
@@ -58,7 +53,7 @@ public class MovingAverageChartPanel extends JPanel
 	
 	private void adjustTickboxes()
 	{
-		ArrayList<JCheckBox> checkBoxes = ComponentUtil.getAllChildComponentsForType(panelCheckBoxes, JCheckBox.class);
+		List<JCheckBox> checkBoxes = ComponentUtilKt.getAllChildComponentsForType(panelCheckBoxes, JCheckBox.class);
 		
 		//Remove any bad ones
 		for (JCheckBox checkBox : checkBoxes)
@@ -70,7 +65,7 @@ public class MovingAverageChartPanel extends JPanel
 		}
 		
 		//Update this variable
-		checkBoxes = ComponentUtil.getAllChildComponentsForType(panelCheckBoxes, JCheckBox.class);
+		checkBoxes = ComponentUtilKt.getAllChildComponentsForType(panelCheckBoxes, JCheckBox.class);
 		
 		//Go through each series in the graph and ensure it has a checkbox
 		List<XYSeries> allSeries = graphCollection.getSeries();
@@ -101,7 +96,7 @@ public class MovingAverageChartPanel extends JPanel
 			graphCollection.removeSeries(graphSeries);
 		}
 	}
-	private boolean matchingCheckBoxExists(ArrayList<JCheckBox> checkBoxes, String graphKey)
+	private boolean matchingCheckBoxExists(List<JCheckBox> checkBoxes, String graphKey)
 	{
 		for (JCheckBox checkBox : checkBoxes)
 		{

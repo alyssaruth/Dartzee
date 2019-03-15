@@ -4,13 +4,14 @@ import burlton.core.code.util.Debug;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.dartzee.code.utils.DartboardUtilKt;
-import burlton.desktopcore.code.util.ComponentUtil;
+import burlton.desktopcore.code.util.ComponentUtilKt;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class PreferencesDialog extends JDialog
 									 implements ActionListener
@@ -51,7 +52,7 @@ public final class PreferencesDialog extends JDialog
 	
 	public void init()
 	{
-		ArrayList<AbstractPreferencesPanel> panels = getPreferencePanels();
+		List<AbstractPreferencesPanel> panels = getPreferencePanels();
 		for (int i=0; i<panels.size(); i++)
 		{
 			AbstractPreferencesPanel panel = panels.get(i);
@@ -61,7 +62,7 @@ public final class PreferencesDialog extends JDialog
 	
 	private boolean valid()
 	{
-		ArrayList<AbstractPreferencesPanel> panels = getPreferencePanels();
+		List<AbstractPreferencesPanel> panels = getPreferencePanels();
 		for (int i=0; i<panels.size(); i++)
 		{
 			AbstractPreferencesPanel panel = panels.get(i);
@@ -78,7 +79,7 @@ public final class PreferencesDialog extends JDialog
 	private void save()
 	{
 		//Tell all the panels to save
-		ArrayList<AbstractPreferencesPanel> panels = getPreferencePanels();
+		List<AbstractPreferencesPanel> panels = getPreferencePanels();
 		for (int i=0; i<panels.size(); i++)
 		{
 			AbstractPreferencesPanel panel = panels.get(i);
@@ -109,9 +110,9 @@ public final class PreferencesDialog extends JDialog
 		prefPanel.refresh(true);
 	}
 	
-	private ArrayList<AbstractPreferencesPanel> getPreferencePanels()
+	private List<AbstractPreferencesPanel> getPreferencePanels()
 	{
-		return ComponentUtil.getAllChildComponentsForType(this, AbstractPreferencesPanel.class);
+		return ComponentUtilKt.getAllChildComponentsForType(this, AbstractPreferencesPanel.class);
 	}
 	
 	@Override

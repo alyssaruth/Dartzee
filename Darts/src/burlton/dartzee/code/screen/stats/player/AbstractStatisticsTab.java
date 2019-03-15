@@ -1,19 +1,15 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.stats.GameWrapper;
+import burlton.desktopcore.code.util.ComponentUtilKt;
+
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
-
-import javax.swing.JPanel;
-
-import burlton.dartzee.code.stats.GameWrapper;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.desktopcore.code.util.ComponentUtil;
-import burlton.core.code.util.Debug;
 
 public abstract class AbstractStatisticsTab extends JPanel
 											implements PropertyChangeListener
@@ -63,7 +59,7 @@ public abstract class AbstractStatisticsTab extends JPanel
 			container.setLayout(new GridLayout(0, 1, 0, 0));
 			container.remove(otherComponent);
 		}
-		else if (!ComponentUtil.containsComponent(container, otherComponent))
+		else if (!ComponentUtilKt.containsComponent(container, otherComponent))
 		{
 			container.setLayout(new GridLayout(0, 2, 0, 0));
 			container.add(otherComponent);

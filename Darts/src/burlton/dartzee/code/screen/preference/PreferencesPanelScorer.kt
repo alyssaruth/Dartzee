@@ -1,8 +1,8 @@
 package burlton.dartzee.code.screen.preference
 
 import burlton.dartzee.code.utils.*
-import burlton.desktopcore.code.util.ComponentUtil
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.getAllChildComponentsForType
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
@@ -151,7 +151,7 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         val fgBrightness = spinnerFgBrightness.value as Double
         val bgBrightness = spinnerBgBrightness.value as Double
 
-        val scoreLabels = ComponentUtil.getAllChildComponentsForType(panelScorerPreview, JLabel::class.java)
+        val scoreLabels = getAllChildComponentsForType(panelScorerPreview, JLabel::class.java)
         for (i in scoreLabels.indices)
         {
             val scoreLabel = scoreLabels[i]

@@ -14,8 +14,8 @@ import burlton.dartzee.code.screen.PlayerSelectDialog
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.DateFilterPanel
 import burlton.desktopcore.code.bean.RadioButtonPanel
-import burlton.desktopcore.code.util.ComponentUtil
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.createButtonGroup
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -136,8 +136,8 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     private fun createButtonGroupsAndSelectDefaults()
     {
-        ComponentUtil.createButtonGroup(rdbtnDtFinish, rdbtnUnfinished)
-        ComponentUtil.createButtonGroup(rdbtnYes, rdbtnNo)
+        createButtonGroup(rdbtnDtFinish, rdbtnUnfinished)
+        createButtonGroup(rdbtnYes, rdbtnNo)
     }
 
     private fun addListeners()
