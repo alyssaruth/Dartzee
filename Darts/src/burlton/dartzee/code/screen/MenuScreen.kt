@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.screen.reporting.ReportingSetupScreen
 import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
-import burlton.desktopcore.code.util.ComponentUtil
+import burlton.desktopcore.code.util.getAllChildComponentsForType
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -63,7 +63,7 @@ class MenuScreen : EmbeddedScreen()
         panel.add(menuDartboard)
 
         //Add ActionListeners
-        val buttons = ComponentUtil.getAllChildComponentsForType(this, AbstractButton::class.java)
+        val buttons = getAllChildComponentsForType(this, AbstractButton::class.java)
         for (button in buttons)
         {
             button.addActionListener(this)

@@ -5,8 +5,8 @@ import burlton.core.code.util.dumpThreadStacks
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
-import burlton.desktopcore.code.util.ComponentUtil
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.getAllChildComponentsForType
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Font
@@ -42,7 +42,7 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnViewLogs, "cell 0 10,alignx center")
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
 
-        val buttons = ComponentUtil.getAllChildComponentsForType(panel, AbstractButton::class.java)
+        val buttons = getAllChildComponentsForType(panel, AbstractButton::class.java)
         for (button in buttons)
         {
             button.font = Font("Tahoma", Font.PLAIN, 18)

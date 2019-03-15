@@ -6,7 +6,7 @@ import burlton.dartzee.code.db.PlayerImageEntity;
 import burlton.desktopcore.code.bean.FileUploadListener;
 import burlton.desktopcore.code.bean.FileUploader;
 import burlton.desktopcore.code.bean.WrapLayout;
-import burlton.desktopcore.code.util.ComponentUtil;
+import burlton.desktopcore.code.util.ComponentUtilKt;
 import burlton.desktopcore.code.util.DialogUtil;
 
 import javax.imageio.ImageIO;
@@ -17,7 +17,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerImageDialog extends JDialog
@@ -132,7 +131,7 @@ public class PlayerImageDialog extends JDialog
 	{
 		JPanel panel = (JPanel)tabbedPane.getSelectedComponent();
 		
-		ArrayList<PlayerImageRadio> radios = ComponentUtil.getAllChildComponentsForType(panel, PlayerImageRadio.class);
+		List<PlayerImageRadio> radios = ComponentUtilKt.getAllChildComponentsForType(panel, PlayerImageRadio.class);
 		for (int i=0; i<radios.size(); i++)
 		{
 			PlayerImageRadio rad = radios.get(i);

@@ -6,7 +6,7 @@ import burlton.core.code.util.MathsUtil;
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.stats.GameWrapper;
 import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.desktopcore.code.util.ComponentUtil;
+import burlton.desktopcore.code.util.ComponentUtilKt;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -136,7 +136,7 @@ public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 			tablePanel.setLayout(new GridLayout(1, 1, 0, 0));
 			tablePanel.remove(tableFavouriteDoublesOther);
 		}
-		else if (!ComponentUtil.containsComponent(tablePanel, tableFavouriteDoublesOther))
+		else if (!ComponentUtilKt.containsComponent(tablePanel, tableFavouriteDoublesOther))
 		{
 			tablePanel.setLayout(new GridLayout(2, 1, 0, 0));
 			tablePanel.add(tableFavouriteDoublesOther);

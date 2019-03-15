@@ -1,29 +1,24 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-
+import burlton.core.code.obj.HandyArrayList;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.screen.game.DartsScorerGolf;
+import burlton.dartzee.code.stats.GameWrapper;
+import burlton.desktopcore.code.bean.RowSelectionListener;
+import burlton.desktopcore.code.bean.ScrollTable;
+import burlton.desktopcore.code.util.ComponentUtilKt;
+import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
-import burlton.desktopcore.code.bean.RowSelectionListener;
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.screen.game.DartsScorerGolf;
-import burlton.dartzee.code.stats.GameWrapper;
-import burlton.core.code.obj.HandyArrayList;
-import burlton.core.code.obj.SuperHashMap;
-import burlton.desktopcore.code.util.ComponentUtil;
-import burlton.core.code.util.Debug;
-import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.util.ArrayList;
 
 public class StatisticsTabGolfHoleBreakdown extends AbstractStatisticsTab
 										  implements RowSelectionListener
@@ -127,7 +122,7 @@ public class StatisticsTabGolfHoleBreakdown extends AbstractStatisticsTab
 			tablePanel.setLayout(new GridLayout(1, 1, 0, 0));
 			tablePanel.remove(tableHoleBreakdownOther);
 		}
-		else if (!ComponentUtil.containsComponent(tablePanel, tableHoleBreakdownOther))
+		else if (!ComponentUtilKt.containsComponent(tablePanel, tableHoleBreakdownOther))
 		{
 			pieChartPanel.setLayout(new GridLayout(2, 1, 0, 0));
 			pieChartPanel.add(otherPieChartPanel);

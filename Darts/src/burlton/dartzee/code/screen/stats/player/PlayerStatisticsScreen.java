@@ -11,7 +11,7 @@ import burlton.dartzee.code.screen.PlayerSelectDialog;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.stats.GameWrapper;
 import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.desktopcore.code.util.ComponentUtil;
+import burlton.desktopcore.code.util.ComponentUtilKt;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerStatisticsScreen extends EmbeddedScreen
 {
@@ -219,7 +219,7 @@ public class PlayerStatisticsScreen extends EmbeddedScreen
 		filteredGamesOther = populateFilteredGames(hmGameIdToWrapperOther, filterPanelOther);
 		
 		//Update the tabs
-		ArrayList<AbstractStatisticsTab> tabs = ComponentUtil.getAllChildComponentsForType(this, AbstractStatisticsTab.class);
+		List<AbstractStatisticsTab> tabs = ComponentUtilKt.getAllChildComponentsForType(this, AbstractStatisticsTab.class);
 		for (AbstractStatisticsTab tab : tabs)
 		{
 			tab.setFilteredGames(filteredGames, filteredGamesOther);
