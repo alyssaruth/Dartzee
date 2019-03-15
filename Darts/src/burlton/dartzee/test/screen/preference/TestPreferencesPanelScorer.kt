@@ -3,7 +3,7 @@ package burlton.dartzee.test.screen.preference
 import burlton.dartzee.code.screen.preference.PreferencesPanelScorer
 import burlton.dartzee.code.utils.*
 import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.test.util.TestMessageDialogFactory
+import burlton.desktopcore.test.helpers.TestMessageDialogFactory
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
