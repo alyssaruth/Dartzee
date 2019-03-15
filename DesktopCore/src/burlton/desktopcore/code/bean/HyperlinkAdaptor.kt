@@ -9,14 +9,6 @@ class HyperlinkAdaptor(private val listener: HyperlinkListener) : MouseAdapter()
 {
     private val listenerWindow = listener as Component
 
-    init
-    {
-        if (listener !is Component)
-        {
-            throw Exception("Creating HyperlinkAdaptor with non-component: $listener")
-        }
-    }
-
     override fun mouseClicked(arg0: MouseEvent?) = listener.linkClicked(arg0)
 
     override fun mouseMoved(arg0: MouseEvent?)

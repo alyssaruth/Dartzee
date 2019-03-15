@@ -3,7 +3,7 @@ package burlton.desktopcore.test.bean
 import burlton.desktopcore.code.bean.HyperlinkAdaptor
 import burlton.desktopcore.code.bean.HyperlinkListener
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrowAny
+import io.kotlintest.shouldThrow
 import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.Test
@@ -18,7 +18,7 @@ class TestHyperlinkAdaptor
     @Test
     fun `Should not accept a non-component listener`()
     {
-        shouldThrowAny {
+        shouldThrow<ClassCastException> {
             HyperlinkAdaptor(mockk())
         }
     }
