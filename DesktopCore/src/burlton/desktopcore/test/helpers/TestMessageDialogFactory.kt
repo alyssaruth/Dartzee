@@ -1,4 +1,4 @@
-package burlton.desktopcore.test.util
+package burlton.desktopcore.test.helpers
 
 import burlton.desktopcore.code.util.AbstractMessageDialogFactory
 import javax.swing.JOptionPane
