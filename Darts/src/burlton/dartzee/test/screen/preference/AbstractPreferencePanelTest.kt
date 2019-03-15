@@ -2,6 +2,7 @@ package burlton.dartzee.test.screen.preference
 
 import burlton.dartzee.code.screen.preference.AbstractPreferencesPanel
 import burlton.dartzee.test.helper.AbstractRegistryTest
+import io.kotlintest.shouldBe
 import org.junit.Test
 
 abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: AbstractRegistryTest()
@@ -11,6 +12,17 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     abstract fun setUiFieldValuesToNonDefaults(panel: T)
     abstract fun checkPreferencesAreSetToNonDefaults()
     abstract fun factory(): T
+
+    @Test
+    fun `default values should pass validation`()
+    {
+        clearPreferences()
+
+        val panel = factory()
+        panel.refresh(false)
+
+        panel.valid() shouldBe true
+    }
 
     @Test
     fun `should restore defaults appropriately`()

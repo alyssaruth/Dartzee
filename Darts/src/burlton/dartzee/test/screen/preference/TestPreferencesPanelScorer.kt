@@ -2,10 +2,48 @@ package burlton.dartzee.test.screen.preference
 
 import burlton.dartzee.code.screen.preference.PreferencesPanelScorer
 import burlton.dartzee.code.utils.*
+import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.test.util.TestMessageDialogFactory
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
+import org.junit.Before
+import org.junit.Test
 
 class TestPreferencesPanelScorer: AbstractPreferencePanelTest<PreferencesPanelScorer>()
 {
+    val dialogFactory = TestMessageDialogFactory()
+
+    @Before
+    fun mockDialogs()
+    {
+        DialogUtil.init(dialogFactory)
+    }
+
+    @Test
+    fun `Should fail validation if FG and BG hues are the same`()
+    {
+        val panel = PreferencesPanelScorer()
+        panel.spinnerFgBrightness.value = 0.5
+        panel.spinnerBgBrightness.value = 0.5
+
+        panel.valid() shouldBe false
+
+        dialogFactory.errorsShown.shouldContainExactly("BG and FG brightness cannot have the same value.")
+    }
+
+    @Test
+    fun `Should pass validation if FG and BG hues are different`()
+    {
+        val panel = PreferencesPanelScorer()
+        panel.spinnerFgBrightness.value = 0.5
+        panel.spinnerBgBrightness.value = 0.8
+
+        panel.valid() shouldBe true
+
+        dialogFactory.errorsShown.shouldBeEmpty()
+    }
+
     override fun getPreferencesAffected(): MutableList<String>
     {
         return mutableListOf(PREFERENCES_DOUBLE_HUE_FACTOR,

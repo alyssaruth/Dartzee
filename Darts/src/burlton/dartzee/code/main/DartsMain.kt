@@ -10,6 +10,7 @@ import burlton.dartzee.code.utils.DesktopDartsClient
 import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.MessageDialogFactory
 import javax.swing.UIManager
 
 object DartsMain
@@ -19,6 +20,7 @@ object DartsMain
     {
         Debug.initialise(ScreenCache.getDebugConsole())
         AbstractClient.setInstance(DesktopDartsClient())
+        DialogUtil.init(MessageDialogFactory())
 
         setLookAndFeel()
 
