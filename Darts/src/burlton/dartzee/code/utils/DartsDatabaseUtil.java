@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class DartsDatabaseUtil
 {
-	public static final int DATABASE_VERSION = 5;
+	public static final int DATABASE_VERSION = 6;
 	
 	private static final String DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying";
 	
@@ -74,6 +74,13 @@ public class DartsDatabaseUtil
 			version.setVersion(5);
 			version.saveToDatabase();
 		}
+
+		if (versionNumber == 5)
+		{
+			upgradeDatabaseToVersion6();
+			version.setVersion(6);
+			version.saveToDatabase();
+		}
 		
 		initialiseDatabase(version);
 	}
@@ -94,6 +101,15 @@ public class DartsDatabaseUtil
 		
 		Debug.appendBanner("Finished initting database");
 		DialogUtil.dismissLoadingDialog();
+	}
+
+	private static void upgradeDatabaseToVersion6()
+	{
+		Debug.appendBanner("Upgrading to Version 6");
+
+		new DartzeeRuleEntity().createTable();
+
+		Debug.appendBanner("Finished database upgrade");
 	}
 
 	private static void upgradeDatabaseToVersion5()
