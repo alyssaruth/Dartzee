@@ -208,5 +208,5 @@ fun getFilterPanel(gameType: Int): GameParamFilterPanel?
 
 fun getAllGameTypes(): MutableList<Int>
 {
-    return mutableListOf(GAME_TYPE_X01, GAME_TYPE_GOLF, GAME_TYPE_ROUND_THE_CLOCK, GAME_TYPE_DARTZEE)
+    return mutableListOf(GAME_TYPE_X01, GAME_TYPE_GOLF, GAME_TYPE_ROUND_THE_CLOCK)
 }
