@@ -32,4 +32,4 @@ FROM
 
 RENAME TABLE Game TO zzGame;
 RENAME TABLE Game_Tmp TO Game;
-DROP TABLE zzGame;
+DROP TABLE zzGame

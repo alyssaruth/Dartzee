@@ -26,4 +26,4 @@ FROM
 
 RENAME TABLE PlayerImage TO zzPlayerImage;
 RENAME TABLE PlayerImage_Tmp TO PlayerImage;
-DROP TABLE zzPlayerImage;
+DROP TABLE zzPlayerImage
