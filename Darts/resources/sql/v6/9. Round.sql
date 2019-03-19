@@ -24,4 +24,4 @@ FROM
 
 RENAME TABLE Round TO zzRound;
 RENAME TABLE Round_Tmp TO Round;
-DROP TABLE zzRound;
+DROP TABLE zzRound

@@ -111,7 +111,7 @@ public class DatabaseSanityCheck
 	
 	private static void checkForHangingOrUnsetIds()
 	{
-		ArrayList<AbstractEntity<?>> entities = DartsDatabaseUtil.getAllEntities();
+		List<AbstractEntity<?>> entities = DartsDatabaseUtil.getAllEntities();
 		for (AbstractEntity<?> entity : entities)
 		{
 			checkForHangingOrUnsetIds(entity);
@@ -254,7 +254,7 @@ public class DatabaseSanityCheck
 	 */
 	private static void checkForUnexpectedTables()
 	{
-		ArrayList<AbstractEntity<?>> entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion();
+		List<AbstractEntity<?>> entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion();
 		List<String> tableNames = AbstractEntity.makeFromEntityFields(entities, "TableNameUpperCase");
 		String tableInSql = StringUtil.toSqlInStatement(tableNames, false);
 		

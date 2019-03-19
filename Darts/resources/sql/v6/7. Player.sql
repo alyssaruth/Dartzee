@@ -30,4 +30,4 @@ FROM
 
 RENAME TABLE Player TO zzPlayer;
 RENAME TABLE Player_Tmp TO Player;
-DROP TABLE zzPlayer;
+DROP TABLE zzPlayer

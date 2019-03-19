@@ -30,4 +30,4 @@ FROM
 
 RENAME TABLE DartsMatch TO zzDartsMatch;
 RENAME TABLE DartsMatch_Tmp TO DartsMatch;
-DROP TABLE zzDartsMatch;
+DROP TABLE zzDartsMatch

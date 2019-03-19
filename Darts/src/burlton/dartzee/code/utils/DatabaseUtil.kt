@@ -84,11 +84,36 @@ class DatabaseUtil : SqlErrorConstants
             return DriverManager.getConnection(dbName, props)
         }
 
-        @JvmStatic fun executeUpdate(statement: String): Boolean
+        fun executeUpdates(statements: List<String>): Boolean
+        {
+            val sql = getCombinedSqlForLogging(statements)
+            Debug.appendSql(sql, AbstractClient.traceWriteSql)
+
+            statements.forEach{
+                if (!executeUpdate(it, false))
+                {
+                    return false
+                }
+            }
+
+            return true
+        }
+        private fun getCombinedSqlForLogging(batches: List<String>): String
+        {
+            var s = ""
+
+            batches.forEach{
+                s += "\n$it;"
+            }
+
+            return s
+        }
+
+        @JvmStatic @JvmOverloads fun executeUpdate(statement: String, log: Boolean = true): Boolean
         {
             try
             {
-                executeUpdateUncaught(statement)
+                executeUpdateUncaught(statement, log)
             }
             catch (sqle: SQLException)
             {
@@ -100,9 +125,9 @@ class DatabaseUtil : SqlErrorConstants
         }
 
         @Throws(SQLException::class)
-        private fun executeUpdateUncaught(statement: String)
+        private fun executeUpdateUncaught(statement: String, log: Boolean = true)
         {
-            Debug.appendSql(statement, AbstractClient.traceWriteSql)
+            Debug.appendSql(statement, AbstractClient.traceWriteSql && log)
 
             val conn = borrowConnection()
             try

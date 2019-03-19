@@ -1,6 +1,5 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.code.util.StringUtil
@@ -10,7 +9,6 @@ import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.lang.reflect.InvocationTargetException
 import java.sql.*
-import java.util.*
 import java.util.regex.Pattern
 
 abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
@@ -498,9 +496,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         private val hmLastAssignedIdByTableName = mutableMapOf<String, Long>()
 
         @JvmStatic
-        fun <E> makeFromEntityFields(entities: ArrayList<AbstractEntity<*>>, fieldName: String): MutableList<E>
+        fun <E> makeFromEntityFields(entities: List<AbstractEntity<*>>, fieldName: String): MutableList<E>
         {
-            val ret = HandyArrayList<E>()
+            val ret = mutableListOf<E>()
             if (entities.isEmpty())
             {
                 return ret
@@ -531,8 +529,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
             }
 
             return ret
-
-
         }
     }
 }

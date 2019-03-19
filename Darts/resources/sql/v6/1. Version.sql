@@ -22,4 +22,4 @@ FROM
 
 RENAME TABLE Version TO zzVersion;
 RENAME TABLE Version_Tmp TO Version;
-DROP TABLE zzVersion;
+DROP TABLE zzVersion
