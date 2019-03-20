@@ -30,7 +30,7 @@ abstract class AbstractAchievement
     abstract val maxValue : Int
 
     var attainedValue = -1
-    var gameIdEarned = -1L
+    var gameIdEarned = ""
     var dtLatestUpdate = START_OF_TIME
     var player : PlayerEntity? = null
 
@@ -180,7 +180,7 @@ abstract class AbstractAchievement
 
     fun isClickable(): Boolean
     {
-        return gameIdEarned > -1
+        return !gameIdEarned.isEmpty()
           || tmBreakdown != null
     }
 
@@ -254,7 +254,7 @@ abstract class AbstractAchievement
             "Earned on ${dtLatestUpdate.formatAsDate()}"
         }
 
-        if (gameIdEarned > -1)
+        if (!gameIdEarned.isEmpty())
         {
             ret += " in Game #$gameIdEarned"
         }

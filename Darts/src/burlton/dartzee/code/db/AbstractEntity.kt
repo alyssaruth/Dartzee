@@ -9,12 +9,13 @@ import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.lang.reflect.InvocationTargetException
 import java.sql.*
+import java.util.*
 import java.util.regex.Pattern
 
 abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 {
     //DB Fields
-    var rowId: Long = -1
+    var rowId: String = ""
     var dtCreation = getSqlDateNow()
     var dtLastUpdate = DateStatics.END_OF_TIME
 
@@ -52,7 +53,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         return StringUtil.countOccurences(columns, ",") + 1
     }
 
-    private fun getCreateTableColumnSql() = "RowId int PRIMARY KEY, DtCreation Timestamp NOT NULL, DtLastUpdate Timestamp NOT NULL, ${getCreateTableSqlSpecific()}"
+    private fun getCreateTableColumnSql() = "RowId VARCHAR(36) PRIMARY KEY, DtCreation Timestamp NOT NULL, DtLastUpdate Timestamp NOT NULL, ${getCreateTableSqlSpecific()}"
 
     fun getColumns(): MutableList<String>
     {
@@ -67,7 +68,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     fun factoryFromResultSet(rs: ResultSet): E
     {
         val ret = factory()
-        ret!!.rowId = rs.getLong("RowId")
+        ret!!.rowId = rs.getString("RowId")
         ret.dtCreation = rs.getTimestamp("DtCreation")
         ret.dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
@@ -97,18 +98,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
     fun columnCanBeUnset(columnName: String) = getColumnsAllowedToBeUnset().contains(columnName)
 
-    fun assignRowId(): Long
+    fun assignRowId(): String
     {
-        synchronized(UNIQUE_ID_SYNCH_OBJECT)
-        {
-            val tableName = getTableName()
-            val lastAssignedId = hmLastAssignedIdByTableName[tableName] ?: retrieveLastAssignedId(tableName)
-
-            rowId = lastAssignedId + 1
-            hmLastAssignedIdByTableName[tableName] = rowId
-
-            return rowId
-        }
+        rowId = UUID.randomUUID().toString()
+        return rowId
     }
     private fun retrieveLastAssignedId(tableName: String): Long
     {
@@ -181,14 +174,14 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     }
 
     @JvmOverloads
-    fun retrieveForId(rowId: Long, stackTraceIfNotFound: Boolean = true): E?
+    fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E?
     {
-        val entities = retrieveEntities("RowId = $rowId")
+        val entities = retrieveEntities("RowId = '$rowId'")
         if (entities.isEmpty())
         {
             if (stackTraceIfNotFound)
             {
-                Debug.stackTrace("Failed to find ${getTableName()} for ID $rowId")
+                Debug.stackTrace("Failed to find ${getTableName()} for ID [$rowId]")
             }
 
             return null
@@ -196,7 +189,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
         if (entities.size > 1)
         {
-            Debug.stackTrace("Found ${entities.size} ${getTableName()} rows for ID $rowId")
+            Debug.stackTrace("Found ${entities.size} ${getTableName()} rows for ID [$rowId]")
         }
 
         return entities[0]
@@ -234,7 +227,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
                 updateQuery = writeTimestamp(psUpdate, 1, dtCreation, updateQuery)
                 updateQuery = writeTimestamp(psUpdate, 2, dtLastUpdate, updateQuery)
                 updateQuery = writeValuesToStatement(psUpdate, 3, updateQuery)
-                updateQuery = writeLong(psUpdate, getColumnCount(), rowId, updateQuery)
+                updateQuery = writeString(psUpdate, getColumnCount(), rowId, updateQuery)
 
                 Debug.appendSql(updateQuery, AbstractClient.traceWriteSql)
 
@@ -276,7 +269,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         try
         {
             conn.prepareStatement(insertQuery).use { psInsert ->
-                insertQuery = writeLong(psInsert, 1, rowId, insertQuery)
+                insertQuery = writeString(psInsert, 1, rowId, insertQuery)
                 insertQuery = writeTimestamp(psInsert, 2, dtCreation, insertQuery)
                 insertQuery = writeTimestamp(psInsert, 3, dtLastUpdate, insertQuery)
                 insertQuery = writeValuesToStatement(psInsert, 4, insertQuery)
@@ -491,10 +484,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
     companion object
     {
-        //statics
-        private val UNIQUE_ID_SYNCH_OBJECT = Any()
-        private val hmLastAssignedIdByTableName = mutableMapOf<String, Long>()
-
         @JvmStatic
         fun <E> makeFromEntityFields(entities: List<AbstractEntity<*>>, fieldName: String): MutableList<E>
         {

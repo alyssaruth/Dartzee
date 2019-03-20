@@ -20,7 +20,7 @@ public class PlayerAvatar extends JLabel
 	private static final ImageIcon AVATAR_UNSET = new ImageIcon(PlayerAvatar.class.getResource("/avatars/Unset.png"));
 	
 	private PlayerEntity player = null;
-	private long avatarId = -1;
+	private String avatarId = "";
 	private boolean readOnly = false;
 	
 	public PlayerAvatar()
@@ -50,7 +50,7 @@ public class PlayerAvatar extends JLabel
 		}
 		else
 		{
-			avatarId = -1;
+			avatarId = "";
 			setIcon(AVATAR_UNSET);
 		}
 	}
@@ -58,7 +58,7 @@ public class PlayerAvatar extends JLabel
 	/**
 	 * Gets / Sets
 	 */
-	public long getAvatarId()
+	public String getAvatarId()
 	{
 		return avatarId;
 	}
@@ -85,7 +85,7 @@ public class PlayerAvatar extends JLabel
 			dlg.setVisible(true);
 			
 			avatarId = dlg.getPlayerImageIdSelected();
-			if (avatarId > -1)
+			if (!avatarId.isEmpty())
 			{
 				ImageIcon newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId);
 				setIcon(newIcon);

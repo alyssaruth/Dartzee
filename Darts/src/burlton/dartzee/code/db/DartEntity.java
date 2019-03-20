@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DartEntity extends AbstractDartsEntity<DartEntity>
+public class DartEntity extends AbstractEntity<DartEntity>
 {
-	private long roundId = -1;
+	private String roundId = "";
 	private int ordinal = -1;
 	private int score = -1;
 	private int multiplier = -1;
@@ -28,7 +28,7 @@ public class DartEntity extends AbstractDartsEntity<DartEntity>
 	@Override
 	public String getCreateTableSqlSpecific() 
 	{
-		return "RoundId INT NOT NULL, "
+		return "RoundId VARCHAR(36) NOT NULL, "
 		  + "Ordinal INT NOT NULL, "
 		  + "Score INT NOT NULL, "
 		  + "Multiplier INT NOT NULL, "
@@ -41,7 +41,7 @@ public class DartEntity extends AbstractDartsEntity<DartEntity>
 	@Override
 	public void populateFromResultSet(DartEntity dart, ResultSet rs) throws SQLException 
 	{
-		dart.setRoundId(rs.getLong("RoundId"));
+		dart.setRoundId(rs.getString("RoundId"));
 		dart.setOrdinal(rs.getInt("Ordinal"));
 		dart.setScore(rs.getInt("Score"));
 		dart.setMultiplier(rs.getInt("Multiplier"));
@@ -54,7 +54,7 @@ public class DartEntity extends AbstractDartsEntity<DartEntity>
 	@Override
 	public String writeValuesToStatement(PreparedStatement statement, int i, String statementStr) throws SQLException
 	{
-		statementStr = writeLong(statement, i++, roundId, statementStr);
+		statementStr = writeString(statement, i++, roundId, statementStr);
 		statementStr = writeInt(statement, i++, ordinal, statementStr);
 		statementStr = writeInt(statement, i++, score, statementStr);
 		statementStr = writeInt(statement, i++, multiplier, statementStr);
@@ -66,17 +66,7 @@ public class DartEntity extends AbstractDartsEntity<DartEntity>
 		return statementStr;
 	}
 	
-	@Override
-	public long getGameId()
-	{
-		return retrieveRound().retrieveParticipant().getGameId();
-	}
-	public RoundEntity retrieveRound()
-	{
-		return new RoundEntity().retrieveForId(roundId);
-	}
-	
-	public static DartEntity factoryAndSave(Dart dart, long roundId, int ordinal, int startingScore)
+	public static DartEntity factoryAndSave(Dart dart, String roundId, int ordinal, int startingScore)
 	{
 		DartEntity de = new DartEntity();
 		de.assignRowId();
@@ -105,11 +95,11 @@ public class DartEntity extends AbstractDartsEntity<DartEntity>
 	/**
 	 * Gets / sets
 	 */
-	public long getRoundId()
+	public String getRoundId()
 	{
 		return roundId;
 	}
-	public void setRoundId(long roundId)
+	public void setRoundId(String roundId)
 	{
 		this.roundId = roundId;
 	}

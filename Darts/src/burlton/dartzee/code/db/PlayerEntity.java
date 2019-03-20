@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
+public class PlayerEntity extends AbstractEntity<PlayerEntity>
 {
 	private static final ImageIcon ICON_AI = new ImageIcon(PlayerEntity.class.getResource("/flags/aiFlag.png"));
 	private static final ImageIcon ICON_HUMAN = new ImageIcon(PlayerEntity.class.getResource("/flags/humanFlag.png"));
@@ -26,7 +26,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 	private int strategy = -1;
 	private String strategyXml = "";
 	private Timestamp dtDeleted = DateStatics.END_OF_TIME;
-	private long playerImageId = -1;
+	private String playerImageId = "";
 	
 	//Player match stuff
 	private PlayerEntity matchedPlayer = null;
@@ -46,7 +46,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 		player.setStrategy(rs.getInt("Strategy"));
 		player.setStrategyXml(rs.getString("StrategyXml"));
 		player.setDtDeleted(rs.getTimestamp("DtDeleted"));
-		player.setPlayerImageId(rs.getLong("PlayerImageId"));
+		player.setPlayerImageId(rs.getString("PlayerImageId"));
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 		statementStr = writeInt(statement, i++, strategy, statementStr);
 		statementStr = writeString(statement, i++, strategyXml, statementStr);
 		statementStr = writeTimestamp(statement, i++, dtDeleted, statementStr);
-		statementStr = writeLong(statement, i++, playerImageId, statementStr);
+		statementStr = writeString(statement, i++, playerImageId, statementStr);
 		
 		return statementStr;
 	}
@@ -68,7 +68,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 				+ "Strategy int NOT NULL, "
 				+ "StrategyXml varchar(1000) NOT NULL, "
 				+ "DtDeleted timestamp NOT NULL, "
-				+ "PlayerImageId int NOT NULL";
+				+ "PlayerImageId VARCHAR(36) NOT NULL";
 	}
 	
 	@Override
@@ -93,17 +93,11 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 		if (AbstractClient.devMode
 		  && createdTable)
 		{
-			factoryAndSaveHuman("Alex", 1);
-			factoryAndSaveHuman("Chris", 2);
+			factoryAndSaveHuman("Alex", "1");
+			factoryAndSaveHuman("Chris", "2");
 		}
 		
 		return createdTable;
-	}
-	
-	@Override
-	public long getGameId()
-	{
-		return -1;
 	}
 	
 	@Override
@@ -131,7 +125,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 	}
 	public ImageIcon getAvatar()
 	{
-		if (playerImageId == -1)
+		if (playerImageId.isEmpty())
 		{
 			return null;
 		}
@@ -276,7 +270,7 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 		
 		return true;
 	}
-	public static PlayerEntity factoryAndSaveHuman(String name, long avatarId)
+	public static PlayerEntity factoryAndSaveHuman(String name, String avatarId)
 	{
 		PlayerEntity entity = factoryCreate();
 		
@@ -374,11 +368,11 @@ public class PlayerEntity extends AbstractDartsEntity<PlayerEntity>
 	{
 		this.dtDeleted = dtDeleted;
 	}
-	public long getPlayerImageId() 
+	public String getPlayerImageId()
 	{
 		return playerImageId;
 	}
-	public void setPlayerImageId(long playerImageId) 
+	public void setPlayerImageId(String playerImageId)
 	{
 		this.playerImageId = playerImageId;
 	}

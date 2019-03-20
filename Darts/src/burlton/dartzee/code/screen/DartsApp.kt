@@ -3,6 +3,7 @@ package burlton.dartzee.code.screen
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.achievements.convertEmptyAchievements
+import burlton.dartzee.code.db.getGameId
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.utils.DartsDatabaseUtil
@@ -169,8 +170,9 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd.startsWith(CMD_LOAD_GAME))
         {
             val gameIdentifier = cmd.substring(CMD_LOAD_GAME.length)
-            val gameId = Integer.parseInt(gameIdentifier)
-            DartsGameScreen.loadAndDisplayGame(gameId.toLong())
+            val localId = gameIdentifier.toLong()
+            val gameId = getGameId(localId)
+            DartsGameScreen.loadAndDisplayGame(gameId)
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {

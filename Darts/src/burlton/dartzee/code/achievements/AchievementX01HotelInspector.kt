@@ -75,8 +75,8 @@ class AchievementX01HotelInspector : AbstractAchievement()
             rs.use{
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
-                    val gameId = rs.getLong("GameId")
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
                     val method = rs.getString("Method")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 

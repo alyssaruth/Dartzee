@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public final class ScreenCache 
 {
-	private static SuperHashMap<Long, DartsGameScreen> hmGameIdToGameScreen = new SuperHashMap<>();
+	private static SuperHashMap<String, DartsGameScreen> hmGameIdToGameScreen = new SuperHashMap<>();
 	
 	//Embedded screens
 	private static SuperHashMap<Class<? extends EmbeddedScreen>, EmbeddedScreen> hmClassToScreen = new SuperHashMap<>();
@@ -149,13 +149,13 @@ public final class ScreenCache
 	{
 		return hmGameIdToGameScreen.getValuesAsVector(true);
 	}
-	public static DartsGameScreen getDartsGameScreen(long gameId)
+	public static DartsGameScreen getDartsGameScreen(String gameId)
 	{
 		return hmGameIdToGameScreen.get(gameId);
 	}
-	public static void addDartsGameScreen(long gameId, DartsGameScreen scrn)
+	public static void addDartsGameScreen(String gameId, DartsGameScreen scrn)
 	{
-		if (gameId == -1)
+		if (gameId.isEmpty())
 		{
 			Debug.stackTrace("Trying to cache GameScreen with no gameId.");
 			return;
