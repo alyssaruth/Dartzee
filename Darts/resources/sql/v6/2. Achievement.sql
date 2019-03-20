@@ -22,7 +22,10 @@ SELECT
 	DtLastUpdate,
 	CAST(PlayerId AS CHAR(36)),
 	AchievementRef,
-	CAST(GameIdEarned AS CHAR(36)),
+	CASE
+	    WHEN GameIdEarned = -1 THEN ''
+	    ELSE CAST(GameIdEarned AS CHAR(36))
+	END,
 	AchievementCounter,
 	AchievementDetail
 FROM

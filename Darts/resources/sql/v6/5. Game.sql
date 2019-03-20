@@ -25,7 +25,10 @@ SELECT
 	GameType,
 	GameParams,
 	DtFinish,
-	CAST(DartsMatchId AS CHAR(36)),
+	CASE
+	    WHEN DartsMatchId = -1 THEN ''
+	    ELSE CAST(DartsMatchId AS CHAR(36))
+	END,
 	MatchOrdinal
 FROM
 	Game;
