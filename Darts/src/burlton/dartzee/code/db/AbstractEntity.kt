@@ -98,27 +98,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
     fun columnCanBeUnset(columnName: String) = getColumnsAllowedToBeUnset().contains(columnName)
 
-    fun assignRowId(): String
+    open fun assignRowId(): String
     {
         rowId = UUID.randomUUID().toString()
         return rowId
-    }
-    private fun retrieveLastAssignedId(tableName: String): Long
-    {
-        val query = "SELECT MAX(RowId) FROM $tableName"
-
-        return try
-        {
-            DatabaseUtil.executeQuery(query).use { rs ->
-                rs.next()
-                rs.getInt(1).toLong()
-            }
-        }
-        catch (sqle: SQLException)
-        {
-            Debug.logSqlException(query, sqle)
-            -1
-        }
     }
 
     fun retrieveEntity(whereSql: String): E?

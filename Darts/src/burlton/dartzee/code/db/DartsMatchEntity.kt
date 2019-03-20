@@ -19,7 +19,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
     /**
      * DB Fields
      */
-    var localId = -1
+    var localId = -1L
     var games = -1
     var mode = -1
     var dtFinish = DateStatics.END_OF_TIME
@@ -35,6 +35,45 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
     private var currentOrdinal = 0
     private var hmPositionToPoints: MutableMap<Int, Int>? = null
 
+    override fun getTableName() = "DartsMatch"
+
+    override fun getCreateTableSqlSpecific(): String
+    {
+        return "LocalId INT NOT NULL, Games INT NOT NULL, Mode INT NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(255) NOT NULL"
+    }
+
+    @Throws(SQLException::class)
+    override fun populateFromResultSet(entity: DartsMatchEntity, rs: ResultSet)
+    {
+        entity.localId = rs.getLong("LocalId")
+        entity.games = rs.getInt("Games")
+        entity.mode = rs.getInt("Mode")
+        entity.dtFinish = rs.getTimestamp("DtFinish")
+        entity.matchParams = rs.getString("MatchParams")
+    }
+
+    @Throws(SQLException::class)
+    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
+    {
+        var i = startIndex
+        var statementStr = emptyStatement
+        statementStr = writeLong(statement, i++, localId, statementStr)
+        statementStr = writeInt(statement, i++, games, statementStr)
+        statementStr = writeInt(statement, i++, mode, statementStr)
+        statementStr = writeTimestamp(statement, i++, dtFinish, statementStr)
+        statementStr = writeString(statement, i, matchParams, statementStr)
+        return statementStr
+    }
+
+    override fun assignRowId(): String
+    {
+        localId = LocalIdAssigner.generateLocalId(getTableName())
+        return super.assignRowId()
+    }
+
+    /**
+     * Helpers
+     */
     fun isComplete(): Boolean
     {
         return when(mode)
@@ -107,39 +146,6 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         }
     }
 
-    override fun getTableName() = "DartsMatch"
-
-    override fun getCreateTableSqlSpecific(): String
-    {
-        return "LocalId INT NOT NULL, Games INT NOT NULL, Mode INT NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(255) NOT NULL"
-    }
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: DartsMatchEntity, rs: ResultSet)
-    {
-        entity.localId = rs.getInt("LocalId")
-        entity.games = rs.getInt("Games")
-        entity.mode = rs.getInt("Mode")
-        entity.dtFinish = rs.getTimestamp("DtFinish")
-        entity.matchParams = rs.getString("MatchParams")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeInt(statement, i++, localId, statementStr)
-        statementStr = writeInt(statement, i++, games, statementStr)
-        statementStr = writeInt(statement, i++, mode, statementStr)
-        statementStr = writeTimestamp(statement, i++, dtFinish, statementStr)
-        statementStr = writeString(statement, i, matchParams, statementStr)
-        return statementStr
-    }
-
-    /**
-     * Helpers
-     */
     fun getScoreForFinishingPosition(position: Int): Int
     {
         return when(mode)

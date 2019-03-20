@@ -30,7 +30,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     /**
      * DB fields
      */
-    var localId = -1
+    var localId = -1L
     var gameType = -1
     var gameParams = ""
     var dtFinish = DateStatics.END_OF_TIME
@@ -67,7 +67,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     @Throws(SQLException::class)
     override fun populateFromResultSet(entity: GameEntity, rs: ResultSet)
     {
-        entity.localId = rs.getInt("LocalId")
+        entity.localId = rs.getLong("LocalId")
         entity.gameType = rs.getInt("GameType")
         entity.gameParams = rs.getString("GameParams")
         entity.dtFinish = rs.getTimestamp("DtFinish")
@@ -80,7 +80,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     {
         var i = startIndex
         var statementStr = emptyStatement
-        statementStr = writeInt(statement, i++, localId, statementStr)
+        statementStr = writeLong(statement, i++, localId, statementStr)
         statementStr = writeInt(statement, i++, gameType, statementStr)
         statementStr = writeString(statement, i++, gameParams, statementStr)
         statementStr = writeTimestamp(statement, i++, dtFinish, statementStr)
@@ -102,6 +102,12 @@ class GameEntity : AbstractEntity<GameEntity>()
         val ret = ArrayList<String>()
         ret.add("DartsMatchId")
         return ret
+    }
+
+    override fun assignRowId(): String
+    {
+        localId = LocalIdAssigner.generateLocalId(getTableName())
+        return super.assignRowId()
     }
 
     fun getGameId(): String
