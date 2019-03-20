@@ -26,8 +26,7 @@ object DartsDatabaseUtil
                 RoundEntity(),
                 PlayerImageEntity(),
                 DartsMatchEntity(),
-                AchievementEntity(),
-                DartzeeRuleEntity())
+                AchievementEntity())
     }
 
     @JvmStatic fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>

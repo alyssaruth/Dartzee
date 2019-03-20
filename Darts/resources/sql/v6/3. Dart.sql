@@ -36,4 +36,6 @@ FROM
 
 RENAME TABLE Dart TO zzDart;
 RENAME TABLE Dart_Tmp TO Dart;
-DROP TABLE zzDart
+DROP TABLE zzDart;
+
+CREATE INDEX RoundId_Ordinal ON Dart(RoundId, Ordinal)

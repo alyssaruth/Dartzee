@@ -209,7 +209,6 @@ public final class DartsGameScreen extends JFrame
 		}
 	}
 
-	
 	/**
 	 * Static methods
 	 */

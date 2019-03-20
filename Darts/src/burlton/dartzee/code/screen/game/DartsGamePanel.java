@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -147,7 +148,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	/**
 	 * Regular methods
 	 */
-	public void startNewGame(ArrayList<PlayerEntity> players)
+	public void startNewGame(List<PlayerEntity> players)
 	{
 		for (int i=0; i<totalPlayers; i++)
 		{
