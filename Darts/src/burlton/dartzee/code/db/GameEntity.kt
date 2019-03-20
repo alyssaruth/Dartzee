@@ -37,8 +37,6 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     var dartsMatchId: Long = -1
     var matchOrdinal = -1
 
-
-
     /**
      * Helpers
      */
@@ -52,19 +50,10 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
 
         return DatabaseUtil.executeQueryAggregate(sb)
     }
-    fun isFinished(): Boolean
-    {
-        return !isEndOfTime(dtFinish)
-    }
-    fun getTypeDesc(): String
-    {
-        return getTypeDesc(gameType, gameParams)
-    }
 
-    override fun getTableName(): String
-    {
-        return "Game"
-    }
+    fun isFinished() = !isEndOfTime(dtFinish)
+    fun getTypeDesc() = getTypeDesc(gameType, gameParams)
+    override fun getTableName() = "Game"
 
     override fun getCreateTableSqlSpecific(): String
     {

@@ -33,4 +33,6 @@ FROM
 
 RENAME TABLE Achievement TO zzAchievement;
 RENAME TABLE Achievement_Tmp TO Achievement;
-DROP TABLE zzAchievement
+DROP TABLE zzAchievement;
+
+CREATE INDEX PlayerId_AchievementRef ON Achievement(PlayerId, AchievementRef)
