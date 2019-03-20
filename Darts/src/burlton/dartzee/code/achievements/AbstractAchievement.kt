@@ -31,6 +31,7 @@ abstract class AbstractAchievement
 
     var attainedValue = -1
     var gameIdEarned = ""
+    var localGameIdEarned = -1L
     var dtLatestUpdate = START_OF_TIME
     var player : PlayerEntity? = null
 
@@ -78,6 +79,7 @@ abstract class AbstractAchievement
         val achievementRow = achievementRows.first()
         attainedValue = achievementRow.achievementCounter
         gameIdEarned = achievementRow.gameIdEarned
+        localGameIdEarned = achievementRow.localGameIdEarned
         dtLatestUpdate = achievementRow.dtLastUpdate
 
         this.player = player
@@ -256,10 +258,9 @@ abstract class AbstractAchievement
 
         if (!gameIdEarned.isEmpty())
         {
-            ret += " in Game #$gameIdEarned"
+            ret += " in Game #$localGameIdEarned"
         }
 
         return ret
     }
-
 }

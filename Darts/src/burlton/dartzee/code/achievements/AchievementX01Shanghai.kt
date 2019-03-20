@@ -52,7 +52,7 @@ class AchievementX01Shanghai : AbstractAchievement()
             tm.addColumn("Date Achieved")
 
             sortedRows.forEach{
-                tm.addRow(arrayOf(it.gameIdEarned, it.dtLastUpdate))
+                tm.addRow(arrayOf(it.localGameIdEarned, it.dtLastUpdate))
             }
 
             tmBreakdown = tm

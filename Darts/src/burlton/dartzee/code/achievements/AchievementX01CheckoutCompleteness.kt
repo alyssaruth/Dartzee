@@ -96,7 +96,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
             tm.addColumn("Date Achieved")
 
             sortedRows.forEach{
-                tm.addRow(arrayOf(it.achievementCounter, it.gameIdEarned, it.dtLastUpdate))
+                tm.addRow(arrayOf(it.achievementCounter, it.localGameIdEarned, it.dtLastUpdate))
             }
 
             tmBreakdown = tm

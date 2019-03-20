@@ -380,7 +380,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         return count > 0
     }
 
-    private fun getColumnsForSelectStatement(alias: String = ""): String
+    protected fun getColumnsForSelectStatement(alias: String = ""): String
     {
         val sb = StringBuilder()
 

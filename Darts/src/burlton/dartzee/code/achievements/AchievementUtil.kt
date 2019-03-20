@@ -204,7 +204,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
 fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
 {
     val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = $playerId AND AchievementRef = $achievementRef"
+    val whereSql = "PlayerId = '$playerId' AND AchievementRef = $achievementRef"
 
     val achievementRows = AchievementEntity().retrieveEntities(whereSql)
     val hitDoubles = achievementRows.stream().mapToInt{it.achievementCounter}.toList()

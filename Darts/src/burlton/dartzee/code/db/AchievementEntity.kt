@@ -1,6 +1,7 @@
 package burlton.dartzee.code.db
 
 import burlton.core.code.obj.HandyArrayList
+import burlton.core.code.util.Debug
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAchievementForRef
 import burlton.dartzee.code.screen.ScreenCache
@@ -21,9 +22,12 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
     //DB Fields
     var playerId: String = ""
     var achievementRef = -1
-    var gameIdEarned: String = ""
+    var gameIdEarned = ""
     var achievementCounter = -1
     var achievementDetail = ""
+
+    //Other stuff
+    var localGameIdEarned = -1L
 
     override fun getTableName() = "Achievement"
 
@@ -70,6 +74,39 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
 
     companion object
     {
+        fun retrieveAchievements(playerId: String): MutableList<AchievementEntity>
+        {
+            val achievements = mutableListOf<AchievementEntity>()
+            val dao = AchievementEntity()
+
+            val sb = StringBuilder()
+            sb.append("SELECT ${dao.getColumnsForSelectStatement("a")}, ")
+            sb.append(" CASE WHEN g.LocalId IS NULL THEN -1 ELSE g.LocalId END AS LocalGameId")
+            sb.append(" FROM Achievement a")
+            sb.append(" LEFT OUTER JOIN Game g ON (a.GameIdEarned = g.RowId)")
+            sb.append(" WHERE PlayerId = '$playerId'")
+
+            try
+            {
+                DatabaseUtil.executeQuery(sb).use { rs ->
+                    while (rs.next())
+                    {
+                        val entity = dao.factoryFromResultSet(rs)
+                        entity.retrievedFromDb = true
+                        entity.localGameIdEarned = rs.getLong("LocalGameId")
+
+                        achievements.add(entity)
+                    }
+                }
+            }
+            catch (sqle: SQLException)
+            {
+                Debug.logSqlException(sb, sqle)
+            }
+
+            return achievements
+        }
+
 
         @JvmStatic fun retrieveAchievement(achievementRef: Int, playerId: String): AchievementEntity?
         {
