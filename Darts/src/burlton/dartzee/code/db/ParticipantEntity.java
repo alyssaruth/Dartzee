@@ -16,10 +16,10 @@ import java.util.List;
  * Represents the participant of a game. This is a link between a player and a game, with additional information
  * such as play position and finishing position.
  */
-public class ParticipantEntity extends AbstractDartsEntity<ParticipantEntity>
+public class ParticipantEntity extends AbstractEntity<ParticipantEntity>
 {
-	private long gameId = -1;
-	private long playerId = -1;
+	private String gameId = "";
+	private String playerId = "";
 	private int ordinal = -1;
 	private int finishingPosition = -1;
 	private int finalScore = -1;
@@ -48,8 +48,8 @@ public class ParticipantEntity extends AbstractDartsEntity<ParticipantEntity>
 	@Override
 	public void populateFromResultSet(ParticipantEntity pt, ResultSet rs) throws SQLException
 	{
-		pt.setGameId(rs.getInt("GameId"));
-		pt.setPlayerId(rs.getInt("PlayerId"));
+		pt.setGameId(rs.getString("GameId"));
+		pt.setPlayerId(rs.getString("PlayerId"));
 		pt.setOrdinal(rs.getInt("Ordinal"));
 		pt.setFinishingPosition(rs.getInt("FinishingPosition"));
 		pt.setFinalScore(rs.getInt("FinalScore"));
@@ -59,8 +59,8 @@ public class ParticipantEntity extends AbstractDartsEntity<ParticipantEntity>
 	@Override
 	public String writeValuesToStatement(PreparedStatement statement, int i, String statementStr) throws SQLException
 	{
-		statementStr = writeLong(statement, i++, gameId, statementStr);
-		statementStr = writeLong(statement, i++, playerId, statementStr);
+		statementStr = writeString(statement, i++, gameId, statementStr);
+		statementStr = writeString(statement, i++, playerId, statementStr);
 		statementStr = writeInt(statement, i++, ordinal, statementStr);
 		statementStr = writeInt(statement, i++, finishingPosition, statementStr);
 		statementStr = writeInt(statement, i++, finalScore, statementStr);
@@ -69,7 +69,7 @@ public class ParticipantEntity extends AbstractDartsEntity<ParticipantEntity>
 		return statementStr;
 	}
 	
-	public static ParticipantEntity factoryAndSave(long gameId, PlayerEntity player, int ordinal)
+	public static ParticipantEntity factoryAndSave(String gameId, PlayerEntity player, int ordinal)
 	{
 		ParticipantEntity gp = new ParticipantEntity();
 		gp.assignRowId();
@@ -119,20 +119,19 @@ public class ParticipantEntity extends AbstractDartsEntity<ParticipantEntity>
 	/**
 	 * Gets / Sets
 	 */
-	@Override
-	public long getGameId()
+	public String getGameId()
 	{
 		return gameId;
 	}
-	public void setGameId(long gameId)
+	public void setGameId(String gameId)
 	{
 		this.gameId = gameId;
 	}
-	public long getPlayerId()
+	public String getPlayerId()
 	{
 		return playerId;
 	}
-	public void setPlayerId(long playerId)
+	public void setPlayerId(String playerId)
 	{
 		this.playerId = playerId;
 	}

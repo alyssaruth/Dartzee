@@ -121,7 +121,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
     /**
      * Loop through the darts thrown, saving them to the database.
      */
-    override fun saveDartsToDatabase(roundId: Long)
+    override fun saveDartsToDatabase(roundId: String)
     {
         for (i in dartsThrown.indices)
         {
@@ -136,7 +136,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         return currentScore == 0 && lastDart.isDouble()
     }
 
-    override fun updateAchievementsForFinish(playerId: Long, finishingPosition: Int, score: Int)
+    override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
     {
         super.updateAchievementsForFinish(playerId, finishingPosition, score)
 

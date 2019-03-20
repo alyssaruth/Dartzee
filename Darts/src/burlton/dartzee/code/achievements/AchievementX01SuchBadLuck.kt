@@ -67,7 +67,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" GROUP BY PlayerId, GameId")
         sb.append(" ORDER BY COUNT(1) DESC, DtAchieved")
 
-        val playersAlreadyDone = mutableSetOf<Long>()
+        val playersAlreadyDone = mutableSetOf<String>()
 
         try
         {
@@ -75,8 +75,8 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
             rs.use{
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
-                    val gameId = rs.getLong("GameId")
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
                     val total = rs.getInt("GameTotal")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 

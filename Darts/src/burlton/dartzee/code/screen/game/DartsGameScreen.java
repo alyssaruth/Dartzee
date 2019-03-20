@@ -41,7 +41,7 @@ public final class DartsGameScreen extends JFrame
 	
 	private final MatchSummaryPanel matchPanel = new MatchSummaryPanel();
 	private final JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
-	private final SuperHashMap<Long, DartsGamePanel<? extends DartsScorer>> hmGameIdToTab = new SuperHashMap<>();
+	private final SuperHashMap<String, DartsGamePanel<? extends DartsScorer>> hmGameIdToTab = new SuperHashMap<>();
 	
 	/**
 	 * Init
@@ -52,7 +52,7 @@ public final class DartsGameScreen extends JFrame
 		setScreenSize(totalPlayers);
 		
 		//Cache this screen in ScreenCache
-		long gameId = game.getRowId();
+		String gameId = game.getRowId();
 		ScreenCache.addDartsGameScreen(gameId, this);
 		
 		//Initialise some basic properties of the tab, such as visibility of components etc
@@ -85,7 +85,7 @@ public final class DartsGameScreen extends JFrame
 	private DartsGamePanel<? extends DartsScorer> addGameToMatch(GameEntity game)
 	{
 		//Cache this screen in ScreenCache
-		long gameId = game.getRowId();
+		String gameId = game.getRowId();
 		ScreenCache.addDartsGameScreen(gameId, this);
 		
 		//Initialise some basic properties of the tab, such as visibility of components etc
@@ -109,7 +109,7 @@ public final class DartsGameScreen extends JFrame
 	/**
 	 * Update the match panel. Only do this if we're a match screen, otherwise we haven't initted the relevant table model
 	 */
-	public void addParticipant(long gameId, ParticipantEntity participant)
+	public void addParticipant(String gameId, ParticipantEntity participant)
 	{
 		if (match != null)
 		{
@@ -130,8 +130,8 @@ public final class DartsGameScreen extends JFrame
 	}*/
 	public void fireAppearancePreferencesChanged()
 	{
-		HandyArrayList<Long> gameIds = hmGameIdToTab.getKeysAsVector();
-		for (long gameId : gameIds)
+		HandyArrayList<String> gameIds = hmGameIdToTab.getKeysAsVector();
+		for (String gameId : gameIds)
 		{
 			DartsGamePanel<? extends DartsScorer> gameTab = hmGameIdToTab.get(gameId);
 			gameTab.fireAppearancePreferencesChanged();
@@ -152,7 +152,7 @@ public final class DartsGameScreen extends JFrame
 	/**
 	 * Hook for when a GameId has been clicked and the screen is already visible. 
 	 */
-	public void displayGame(long gameId)
+	public void displayGame(String gameId)
 	{
 		toFront();
 		setState(NORMAL);
@@ -196,7 +196,7 @@ public final class DartsGameScreen extends JFrame
 		return match != null;
 	}
 
-	public void achievementUnlocked(long gameId, long playerId, AbstractAchievement achievement)
+	public void achievementUnlocked(String gameId, String playerId, AbstractAchievement achievement)
 	{
 		if (isMatch())
 		{
@@ -234,7 +234,7 @@ public final class DartsGameScreen extends JFrame
 		DartsGamePanel<? extends DartsScorer> panel = scrn.addGameToMatch(game);
 		panel.startNewGame(match.getPlayers());
 	}
-	public static void loadAndDisplayGame(long gameId)
+	public static void loadAndDisplayGame(String gameId)
 	{
 		DartsGameScreen existingScreen = ScreenCache.getDartsGameScreen(gameId);
 		if (existingScreen != null)
@@ -251,8 +251,8 @@ public final class DartsGameScreen extends JFrame
 			return;
 		}
 		
-		long matchId = gameEntity.getDartsMatchId();
-		if (matchId == -1)
+		String matchId = gameEntity.getDartsMatchId();
+		if (matchId.isEmpty())
 		{
 			loadAndDisplaySingleGame(gameEntity);
 		}
@@ -282,7 +282,7 @@ public final class DartsGameScreen extends JFrame
 			ScreenCache.removeDartsGameScreen(scrn);
 		}
 	}
-	private static void loadAndDisplayMatch(long matchId, long originalGameId)
+	private static void loadAndDisplayMatch(String matchId, String originalGameId)
 	{
 		List<GameEntity> allGames = GameEntityKt.retrieveGamesForMatch(matchId);
 		

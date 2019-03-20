@@ -53,11 +53,11 @@ class AchievementGolfPointsRisked : AbstractAchievement()
             DatabaseUtil.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
+                    val playerId = rs.getString("PlayerId")
                     val score = rs.getInt("PointsRisked")
                     val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, -1, score, "", dtLastUpdate)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate)
                 }
             }
         }

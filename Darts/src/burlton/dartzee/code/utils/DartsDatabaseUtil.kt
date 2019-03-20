@@ -4,6 +4,7 @@ import burlton.core.code.util.Debug
 import burlton.core.code.util.FileUtil
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.desktopcore.code.screen.ProgressDialog
 import burlton.desktopcore.code.util.DialogUtil
 import java.io.File
 import javax.swing.JOptionPane
@@ -13,7 +14,7 @@ import javax.swing.JOptionPane
  */
 object DartsDatabaseUtil
 {
-    val DATABASE_VERSION = 6
+    const val DATABASE_VERSION = 6
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
 
@@ -103,13 +104,26 @@ object DartsDatabaseUtil
 
         val resourcePath = "/sql/v$version/"
         val sqlScripts = getResourceList("/sql/v$version/")
-        sqlScripts.forEach{
-            val rsrc = javaClass.getResource("$resourcePath$it").readText()
 
-            val batches = rsrc.split(";")
+        val t = Thread {
+            val dlg = ProgressDialog.factory("Upgrading to V$version", "scripts remaining", sqlScripts.size)
+            dlg.setVisibleLater()
 
-            DatabaseUtil.executeUpdates(batches)
+            sqlScripts.forEach {
+                val rsrc = javaClass.getResource("$resourcePath$it").readText()
+
+                val batches = rsrc.split(";")
+
+                DatabaseUtil.executeUpdates(batches)
+
+                dlg.incrementProgressLater()
+            }
+
+            dlg.disposeLater()
         }
+
+        t.start()
+        t.join()
 
         Debug.appendBanner("Finished upgrading database")
     }

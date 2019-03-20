@@ -103,7 +103,7 @@ class TestPreferencesDialog
 
         Dartboard.dartboardTemplate = mockk(relaxed = true)
         val mockGameScreen = mockk<DartsGameScreen>(relaxed = true)
-        ScreenCache.addDartsGameScreen(1, mockGameScreen)
+        ScreenCache.addDartsGameScreen("1", mockGameScreen)
 
         dialog.init()
         dialog.actionPerformed(actionEvent)

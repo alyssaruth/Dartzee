@@ -14,7 +14,7 @@ import java.sql.SQLException
  * Simple entity to join multiple 'games' together into a 'match'.
  * Table has to be called 'DartsMatch' because 'Match' is a derby keyword!
  */
-class DartsMatchEntity : AbstractDartsEntity<DartsMatchEntity>()
+class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 {
     /**
      * DB Fields
@@ -137,8 +137,6 @@ class DartsMatchEntity : AbstractDartsEntity<DartsMatchEntity>()
         statementStr = writeString(statement, i, matchParams, statementStr)
         return statementStr
     }
-
-    override fun getGameId() = -1L
 
     /**
      * Helpers

@@ -62,7 +62,7 @@ public class DevUtilities
 		return gameIds;
 	}
 	
-	public static void purgeGame(long gameId)
+	public static void purgeGame(String gameId)
 	{
 		DartsGameScreen scrn = ScreenCache.getDartsGameScreen(gameId);
 		if (scrn != null)

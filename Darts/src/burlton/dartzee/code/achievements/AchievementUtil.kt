@@ -182,8 +182,8 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
         DatabaseUtil.executeQuery(sb).use { rs ->
             while (rs.next())
             {
-                val playerId = rs.getLong("PlayerId")
-                val gameId = rs.getLong("GameId")
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
                 val score = rs.getInt("Score")
 
@@ -201,7 +201,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
 }
 
-fun insertForCheckoutCompleteness(playerId: Long, gameId: Long, counter: Int)
+fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
 {
     val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
     val whereSql = "PlayerId = $playerId AND AchievementRef = $achievementRef"

@@ -64,9 +64,9 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         DatabaseUtil.executeQuery(sb).use { rs ->
             while (rs.next())
             {
-                val playerId = rs.getLong("PlayerId")
+                val playerId = rs.getString("PlayerId")
                 val score = rs.getInt("Score")
-                val gameId = rs.getLong("GameId")
+                val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
 
                 AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, playerId, gameId, score, "", dtAchieved)

@@ -107,8 +107,8 @@ class AchievementX01Shanghai : AbstractAchievement()
             DatabaseUtil.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
-                    val gameId = rs.getLong("GameId")
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 
                     AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved)

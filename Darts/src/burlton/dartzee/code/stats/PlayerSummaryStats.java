@@ -1,14 +1,14 @@
 package burlton.dartzee.code.stats;
 
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.db.PlayerEntity;
+import burlton.dartzee.code.utils.DatabaseUtil;
+import burlton.desktopcore.code.util.DateUtil;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-
-import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.dartzee.code.db.PlayerEntity;
-import burlton.core.code.obj.SuperHashMap;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
 
 public class PlayerSummaryStats
 {
@@ -114,7 +114,7 @@ public class PlayerSummaryStats
 		hmPlayerKeyToSummaryStats.put(key, stats);
 		return stats;
 	}
-	public static void resetPlayerStats(long playerId, int gameType)
+	public static void resetPlayerStats(String playerId, int gameType)
 	{
 		String key = playerId + "_" + gameType;
 		hmPlayerKeyToSummaryStats.remove(key);

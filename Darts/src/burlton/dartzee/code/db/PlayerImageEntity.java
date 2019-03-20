@@ -1,5 +1,10 @@
 package burlton.dartzee.code.db;
 
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.FileUtil;
+
+import javax.sql.rowset.serial.SerialBlob;
+import javax.swing.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,19 +14,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import javax.sql.rowset.serial.SerialBlob;
-import javax.swing.ImageIcon;
-
-import burlton.core.code.util.Debug;
-import burlton.core.code.util.FileUtil;
-
-public class PlayerImageEntity extends AbstractDartsEntity<PlayerImageEntity>
+public class PlayerImageEntity extends AbstractEntity<PlayerImageEntity>
 {
 	private static final String[] avatarPresets = {"BaboOne", "BaboTwo", "Dennis", "robot", "wage", "wallace", "yoshi", 
 												   "Bean", "Goomba", "Minion", "Sid", "dibble"};
 	
 	//Image cache, to prevent us hitting the DB too often
-	private static final HashMap<Long, ImageIcon> hmRowIdToImageIcon = new HashMap<>();
+	private static final HashMap<String, ImageIcon> hmRowIdToImageIcon = new HashMap<>();
 	
 	private Blob blobData = null;
 	private String filepath = "";
@@ -66,12 +65,6 @@ public class PlayerImageEntity extends AbstractDartsEntity<PlayerImageEntity>
 		return statementStr;
 	}
 	
-	@Override
-	public long getGameId()
-	{
-		return -1;
-	}
-	
 	public static PlayerImageEntity factoryAndSave(File file, boolean preset)
 	{
 		try
@@ -109,7 +102,7 @@ public class PlayerImageEntity extends AbstractDartsEntity<PlayerImageEntity>
 		}
 	}
 	
-	public static ImageIcon retrieveImageIconForId(long rowId)
+	public static ImageIcon retrieveImageIconForId(String rowId)
 	{
 		ImageIcon cachedIcon = hmRowIdToImageIcon.get(rowId);
 		if (cachedIcon != null)
