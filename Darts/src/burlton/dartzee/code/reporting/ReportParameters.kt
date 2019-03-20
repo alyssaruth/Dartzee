@@ -71,11 +71,11 @@ class ReportParameters
 
         if (partOfMatch == MATCH_FILTER_GAMES_ONLY)
         {
-            sb.append(" AND g.DartsMatchId = -1")
+            sb.append(" AND g.DartsMatchId = ''")
         }
         else if (partOfMatch == MATCH_FILTER_MATCHES_ONLY)
         {
-            sb.append(" AND g.DartsMatchId > -1")
+            sb.append(" AND g.DartsMatchId <> ''")
         }
 
         val it = hmIncludedPlayerToParms.entries.iterator()
@@ -87,8 +87,7 @@ class ReportParameters
 
             sb.append(" AND EXISTS (")
             sb.append(" SELECT 1 FROM Participant z")
-            sb.append(" WHERE z.PlayerId = ")
-            sb.append(player.rowId)
+            sb.append(" WHERE z.PlayerId = '${player.rowId}'")
             sb.append(" AND z.GameId = g.RowId")
 
             val extraSql = parms.generateExtraWhereSql("z")

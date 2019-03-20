@@ -45,8 +45,7 @@ class GameEntity : AbstractEntity<GameEntity>()
         val sb = StringBuilder()
         sb.append("SELECT COUNT(1) FROM ")
         sb.append(ParticipantEntity().getTableName())
-        sb.append(" WHERE GameId = ")
-        sb.append(rowId)
+        sb.append(" WHERE GameId = '$rowId'")
 
         return DatabaseUtil.executeQueryAggregate(sb)
     }

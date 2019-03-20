@@ -55,9 +55,9 @@ public class PlayerSummaryStats
 		sb.append(" WHERE pt.GameId = g.RowId");
 		sb.append(" AND g.GameType = ");
 		sb.append(gameType);
-		sb.append(" AND pt.PlayerId = ");
+		sb.append(" AND pt.PlayerId = '");
 		sb.append(player.getRowId());
-		sb.append(" AND pt.DtFinished <> ");
+		sb.append("' AND pt.DtFinished <> ");
 		sb.append(DateUtil.getEndOfTimeSqlString());
 	}
 	

@@ -77,7 +77,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
         val playerId = player?.rowId
 
-        val achievementRows = AchievementEntity().retrieveEntities("PlayerId = $playerId")
+        val achievementRows = AchievementEntity().retrieveEntities("PlayerId = '$playerId'")
         for (achievement in getAllAchievements())
         {
             addAchievement(achievement, achievementRows)
