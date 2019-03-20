@@ -123,6 +123,7 @@ public class DatabaseSanityCheck
 		for (String column : columns)
 		{
 			if (column.equals("RowId")
+			  || column.equals("LocalId")
 			  || !column.endsWith("Id"))
 			{
 				continue;
@@ -139,17 +140,11 @@ public class DatabaseSanityCheck
 	
 	private static void checkForHangingValues(AbstractEntity<?> entity, String idColumn)
 	{
-		if (idColumn.equals("DartzeeRuleId"))
-		{
-			//Temporary measure until I've created this table!
-			return;
-		}
-		
 		String referencedTable = idColumn.substring(0, idColumn.length() - 2);
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(idColumn);
-		sb.append(" > -1 ");
+		sb.append(" <> '' ");
 		sb.append("AND NOT EXISTS (");
 		sb.append("SELECT 1 FROM ");
 		sb.append(referencedTable);
@@ -168,7 +163,7 @@ public class DatabaseSanityCheck
 	}
 	private static void checkForUnsetValues(AbstractEntity<?> entity, String idColumn)
 	{
-		String whereSql = idColumn + " = -1";
+		String whereSql = idColumn + " = ''";
 		List<? extends AbstractEntity<?>> entities = entity.retrieveEntities(whereSql);
 		
 		int count = entities.size();
@@ -361,7 +356,7 @@ public class DatabaseSanityCheck
 	 */
 	private static void checkFinalScoreX01()
 	{
-		String tempTable1 = DatabaseUtil.createTempTable("ParticipantToRoundCount", "ParticipantId INT, RoundCount INT, FinalRoundNumber INT");
+		String tempTable1 = DatabaseUtil.createTempTable("ParticipantToRoundCount", "ParticipantId VARCHAR(36), RoundCount INT, FinalRoundNumber INT");
 		if (tempTable1 == null)
 		{
 			return;
@@ -386,7 +381,7 @@ public class DatabaseSanityCheck
 			return;
 		}
 		
-		String tempTable2 = DatabaseUtil.createTempTable("ParticipantToX01Score", "ParticipantId INT, FinalScoreCalculated INT");
+		String tempTable2 = DatabaseUtil.createTempTable("ParticipantToX01Score", "ParticipantId VARCHAR(36), FinalScoreCalculated INT");
 		if (tempTable2 == null)
 		{
 			return;
@@ -422,7 +417,7 @@ public class DatabaseSanityCheck
 	 */
 	private static void checkFinalScoreGolf()
 	{
-		String tempTable = DatabaseUtil.createTempTable("ParticipantToGolfScore", "ParticipantId INT, FinalScoreCalculated INT");
+		String tempTable = DatabaseUtil.createTempTable("ParticipantToGolfScore", "ParticipantId VARCHAR(36), FinalScoreCalculated INT");
 		if (tempTable == null)
 		{
 			return;
@@ -456,14 +451,12 @@ public class DatabaseSanityCheck
 		sb.append(" GROUP BY pt.RowID, pt.FinalScore");
 		
 		String sql = sb.toString();
-		
-		
+
 		boolean success	= DatabaseUtil.executeUpdate(sql);
 		if (!success)
 		{
 			DatabaseUtil.dropTable(tempTable);
 			return;
-			
 		}
 		
 		createFinalScoreSanityCheck(tempTable, GameEntityKt.GAME_TYPE_GOLF);
@@ -474,7 +467,7 @@ public class DatabaseSanityCheck
 	 */
 	private static void checkFinalScoreRoundTheClock()
 	{
-		String tempTable = DatabaseUtil.createTempTable("ParticipantToRoundTheClockScore", "ParticipantId INT, FinalScoreCalculated INT");
+		String tempTable = DatabaseUtil.createTempTable("ParticipantToRoundTheClockScore", "ParticipantId VARCHAR(36), FinalScoreCalculated INT");
 		if (tempTable == null)
 		{
 			//Something went wrong

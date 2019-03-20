@@ -30,6 +30,7 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     /**
      * DB fields
      */
+    var localId = -1
     var gameType = -1
     var gameParams = ""
     var dtFinish = DateStatics.END_OF_TIME
@@ -67,7 +68,8 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return ("GameType INT NOT NULL, "
+        return ("LocalId INT NOT NULL, "
+                + "GameType INT NOT NULL, "
                 + "GameParams varchar(255) NOT NULL, "
                 + "DtFinish timestamp NOT NULL, "
                 + "DartsMatchId INT NOT NULL, "
@@ -77,6 +79,7 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     @Throws(SQLException::class)
     override fun populateFromResultSet(entity: GameEntity, rs: ResultSet)
     {
+        entity.localId = rs.getInt("LocalId")
         entity.gameType = rs.getInt("GameType")
         entity.gameParams = rs.getString("GameParams")
         entity.dtFinish = rs.getTimestamp("DtFinish")
@@ -89,6 +92,7 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     {
         var i = startIndex
         var statementStr = emptyStatement
+        statementStr = writeInt(statement, i++, localId, statementStr)
         statementStr = writeInt(statement, i++, gameType, statementStr)
         statementStr = writeString(statement, i++, gameParams, statementStr)
         statementStr = writeTimestamp(statement, i++, dtFinish, statementStr)
