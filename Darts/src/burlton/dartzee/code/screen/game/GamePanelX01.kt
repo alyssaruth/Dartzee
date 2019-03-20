@@ -108,7 +108,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
         val methodStr = getSortedDartStr(dartsThrown)
         val whereSql = "AchievementRef = $ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR " +
-                       "AND PlayerId = $currentPlayerId " +
+                       "AND PlayerId = '$currentPlayerId' " +
                        "AND AchievementDetail = '$methodStr'"
 
         val existingRow = AchievementEntity().retrieveEntity(whereSql)

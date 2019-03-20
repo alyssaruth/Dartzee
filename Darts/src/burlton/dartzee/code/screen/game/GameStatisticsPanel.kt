@@ -94,7 +94,7 @@ abstract class GameStatisticsPanel : JPanel()
             val sbSql = StringBuilder()
             sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, rnd.RoundNumber")
             sbSql.append(" FROM Dart d, Round rnd")
-            sbSql.append(" WHERE rnd.ParticipantId = " + participant.rowId)
+            sbSql.append(" WHERE rnd.ParticipantId = '${participant.rowId}'")
             sbSql.append(" AND d.RoundId = rnd.RowId")
             sbSql.append(" ORDER BY rnd.RoundNumber, d.Ordinal")
 
