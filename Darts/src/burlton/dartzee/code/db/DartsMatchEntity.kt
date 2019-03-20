@@ -53,7 +53,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         val sb = StringBuilder()
         sb.append(" SELECT COUNT(1) AS WinCount")
         sb.append(" FROM Participant p, Game g")
-        sb.append(" WHERE g.DartsMatchId = $rowId")
+        sb.append(" WHERE g.DartsMatchId = '$rowId'")
         sb.append(" AND p.GameId = g.RowId")
         sb.append(" AND p.FinishingPosition = 1")
         sb.append(" GROUP BY p.PlayerId")
@@ -82,8 +82,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         val sb = StringBuilder()
         sb.append(" SELECT COUNT(1)")
         sb.append(" FROM Game")
-        sb.append(" WHERE DartsMatchId = ")
-        sb.append(rowId)
+        sb.append(" WHERE DartsMatchId = '$rowId'")
         sb.append(" AND DtFinish < ")
         sb.append(getEndOfTimeSqlString())
 
@@ -95,7 +94,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     fun getMatchDesc(): String
     {
-        return "Match #$rowId (${getMatchTypeDesc()} - ${getTypeDesc(gameType, gameParams)}, ${getPlayerCount()} players)"
+        return "Match #$localId (${getMatchTypeDesc()} - ${getTypeDesc(gameType, gameParams)}, ${getPlayerCount()} players)"
     }
 
     private fun getMatchTypeDesc(): String

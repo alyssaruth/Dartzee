@@ -1,12 +1,4 @@
 package burlton.dartzee.code.screen.reporting;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import burlton.dartzee.code.bean.ScrollTableDartsGame;
 import burlton.dartzee.code.reporting.ReportParameters;
 import burlton.dartzee.code.reporting.ReportResultWrapper;
@@ -14,6 +6,12 @@ import burlton.dartzee.code.reporting.ReportingSqlUtil;
 import burlton.dartzee.code.screen.EmbeddedScreen;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.desktopcore.code.util.TableUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class ReportingResultsScreen extends EmbeddedScreen
 {
@@ -87,7 +85,7 @@ public class ReportingResultsScreen extends EmbeddedScreen
 	private void stripOutRemovedColumns()
 	{
 		ConfigureReportColumnsDialog dlg = ScreenCache.getConfigureReportColumnsDialog();
-		
+
 		int columns = tableResults.getColumnCount();
 		for (int i=columns-1; i>=0; i--)
 		{
@@ -98,59 +96,6 @@ public class ReportingResultsScreen extends EmbeddedScreen
 			}
 		}
 	}
-	
-	/**
-	 * Re-written, use wrapper class
-	 */
-	/*private ArrayList<Object[]> retrieveGames(String sql)
-	{
-		SuperHashMap<Long, Object[]> hm = new SuperHashMap<>();
-		try (ResultSet rs = DatabaseUtil.executeQuery(sql))
-		{
-			while (rs.next())
-			{
-				Long gameId = rs.getLong(1);
-				int gameType = rs.getInt(2);
-				String gameParams = rs.getString(3);
-				Timestamp dtStart = rs.getTimestamp(4);
-				Timestamp dtFinish = rs.getTimestamp(5);
-				String playerName = rs.getString(6);
-				int finishPos = rs.getInt(7);
-				long matchId = rs.getLong(8);
-				int matchOrdinal = rs.getInt(9);
-				
-				String gameTypeDesc = GameEntity.getTypeDesc(gameType, gameParams);
-				String playerDesc = playerName + " (" + transformFinishPos(finishPos) + ")";
-				
-				String matchDesc = "";
-				if (matchId > -1)
-				{
-					matchDesc = "#" + matchId + " (Game " + (matchOrdinal+1) + ")";
-				}
-				
-				Object[] existingRow = hm.get(gameId);
-				if (existingRow == null)
-				{
-					Object[] row = {gameId, gameTypeDesc, playerDesc, dtStart, dtFinish, matchDesc};
-					hm.put(gameId, row);
-				}
-				else
-				{
-					existingRow[2] = existingRow[2] + ", " + playerDesc;
-				}
-			}
-		}
-		catch (SQLException sqle)
-		{
-			Debug.logSqlException(sql, sqle);
-			DialogUtil.showError("SQL failed for report parameters.");
-			
-			//return an empty hashmap so we show an empty table
-			hm.clear();
-		}
-		
-		return hm.getValuesAsVector();
-	}*/
 	
 	public void setReportParameters(ReportParameters rp)
 	{

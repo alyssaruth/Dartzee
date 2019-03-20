@@ -58,12 +58,12 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
     }
 
 
-    fun addParticipant(gameId: String, participant: ParticipantEntity)
+    fun addParticipant(localId: Long, participant: ParticipantEntity)
     {
         val playerId = participant.playerId
         val scorer = hmPlayerIdToScorer[playerId]!!
 
-        val row = arrayOf(gameId, participant, participant, participant)
+        val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
 
         participants.add(participant)
