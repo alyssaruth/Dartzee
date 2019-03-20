@@ -32,4 +32,6 @@ FROM
 
 RENAME TABLE Participant TO zzParticipant;
 RENAME TABLE Participant_Tmp TO Participant;
-DROP TABLE zzParticipant
+DROP TABLE zzParticipant;
+
+CREATE INDEX PlayerId_GameId ON Participant(PlayerId, GameId)

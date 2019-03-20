@@ -30,4 +30,7 @@ FROM
 
 RENAME TABLE Player TO zzPlayer;
 RENAME TABLE Player_Tmp TO Player;
-DROP TABLE zzPlayer
+DROP TABLE zzPlayer;
+
+CREATE INDEX Name ON Player(Name);
+CREATE INDEX Strategy_DtDeleted ON Player(Strategy, DtDeleted)
