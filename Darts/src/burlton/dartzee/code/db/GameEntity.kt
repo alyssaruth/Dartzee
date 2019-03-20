@@ -106,7 +106,7 @@ class GameEntity : AbstractEntity<GameEntity>()
 
     override fun assignRowId(): String
     {
-        localId = LocalIdAssigner.generateLocalId(getTableName())
+        localId = LocalIdGenerator.generateLocalId(getTableName())
         return super.assignRowId()
     }
 

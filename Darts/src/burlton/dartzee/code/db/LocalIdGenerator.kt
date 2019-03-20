@@ -2,10 +2,10 @@ package burlton.dartzee.code.db
 
 import burlton.dartzee.code.utils.DatabaseUtil
 
-object LocalIdAssigner
+object LocalIdGenerator
 {
     private val UNIQUE_ID_SYNCH_OBJECT = Any()
-    private val hmLastAssignedIdByTableName = mutableMapOf<String, Long>()
+    val hmLastAssignedIdByTableName = mutableMapOf<String, Long>()
 
     fun generateLocalId(tableName: String): Long
     {
