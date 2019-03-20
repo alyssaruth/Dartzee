@@ -157,7 +157,7 @@ public class PlayerStatisticsScreen extends EmbeddedScreen
 		buildTabs();
 	}
 	
-	private SuperHashMap<Long, GameWrapper> retrieveGameData(long playerId)
+	private SuperHashMap<Long, GameWrapper> retrieveGameData(String playerId)
 	{
 		SuperHashMap<Long, GameWrapper> hm = new SuperHashMap<>();
 		
@@ -170,9 +170,9 @@ public class PlayerStatisticsScreen extends EmbeddedScreen
 		sb.append(" WHERE drt.RoundId = rnd.RowId");
 		sb.append(" AND rnd.ParticipantId = gp.RowId");
 		sb.append(" AND gp.GameId = g.RowId");
-		sb.append(" AND gp.PlayerId = ");
+		sb.append(" AND gp.PlayerId = '");
 		sb.append(playerId);
-		sb.append(" AND g.GameType = ");
+		sb.append("' AND g.GameType = ");
 		sb.append(gameType);
 		
 		try (ResultSet rs = DatabaseUtil.executeQuery(sb))

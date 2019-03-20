@@ -96,7 +96,7 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
     {
         var biggestChain = 0
         var currentChain = 0
-        var currentPtId: Long = -1
+        var currentPtId = ""
 
         for (d in darts)
         {
