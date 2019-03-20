@@ -167,15 +167,15 @@ class OverallStatsScreen : EmbeddedScreen()
         val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
         val extraWhereSql = playerFilterPanelTopFinishes.whereSql
 
-
         val sb = StringBuilder()
-        sb.append("SELECT p.Strategy, p.Name, pt.GameId, $TOTAL_ROUND_SCORE_SQL_STR")
-        sb.append(" FROM Dart drtFirst, Dart drtLast, Round rnd, Participant pt, Player p")
+        sb.append("SELECT p.Strategy, p.Name, g.LocalId, $TOTAL_ROUND_SCORE_SQL_STR")
+        sb.append(" FROM Dart drtFirst, Dart drtLast, Round rnd, Participant pt, Player p, Game g")
         sb.append(" WHERE drtFirst.RoundId = rnd.RowId")
         sb.append(" AND drtLast.RoundId = rnd.RowId")
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND rnd.ParticipantId = pt.RowId")
         sb.append(" AND pt.PlayerId = p.RowId")
+        sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND pt.DtFinished < ${getEndOfTimeSqlString()}")
         sb.append("	AND drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0")
         sb.append(" AND drtLast.Multiplier = 2")

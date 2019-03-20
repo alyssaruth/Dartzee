@@ -93,7 +93,7 @@ public final class DartsGameScreen extends JFrame
 		tab.initBasic(game, match.getPlayerCount());
 		
 		//Add the single game tab and set the parent window to be visible
-		tabbedPane.addTab("#" + gameId, tab);
+		tabbedPane.addTab("#" + game.getLocalId(), tab);
 		hmGameIdToTab.put(gameId, tab);
 		setVisible(true);
 		
@@ -109,11 +109,11 @@ public final class DartsGameScreen extends JFrame
 	/**
 	 * Update the match panel. Only do this if we're a match screen, otherwise we haven't initted the relevant table model
 	 */
-	public void addParticipant(String gameId, ParticipantEntity participant)
+	public void addParticipant(long localId, ParticipantEntity participant)
 	{
 		if (match != null)
 		{
-			matchPanel.addParticipant(gameId, participant);
+			matchPanel.addParticipant(localId, participant);
 		}
 	}
 	

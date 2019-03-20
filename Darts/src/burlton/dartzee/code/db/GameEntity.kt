@@ -113,7 +113,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     {
         val ret = mutableListOf<PlayerEntity>()
 
-        val whereSql = "GameId = $rowId ORDER BY Ordinal ASC"
+        val whereSql = "GameId = '$rowId' ORDER BY Ordinal ASC"
         val participants = ParticipantEntity().retrieveEntities(whereSql)
 
         participants.forEach{

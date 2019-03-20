@@ -874,7 +874,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	{
 		hmPlayerNumberToParticipant.put(playerNumber, participant);
 		
-		parentWindow.addParticipant(gameEntity.getRowId(), participant);
+		parentWindow.addParticipant(gameEntity.getLocalId(), participant);
 	}
 	
 	public void closeResources()

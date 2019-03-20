@@ -100,8 +100,7 @@ class ReportParameters
         {
             sb.append(" AND NOT EXISTS (")
             sb.append(" SELECT 1 FROM Participant z")
-            sb.append(" WHERE z.PlayerId = ")
-            sb.append(player.rowId)
+            sb.append(" WHERE z.PlayerId = '${player.rowId}'")
             sb.append(" AND z.GameId = g.RowId)")
         }
 
