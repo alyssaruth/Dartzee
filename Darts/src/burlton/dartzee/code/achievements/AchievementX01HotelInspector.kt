@@ -113,7 +113,7 @@ class AchievementX01HotelInspector : AbstractAchievement()
             tm.addColumn("Date Achieved")
 
             sortedRows.forEach{
-                tm.addRow(arrayOf(it.achievementDetail, it.gameIdEarned, it.dtLastUpdate))
+                tm.addRow(arrayOf(it.achievementDetail, it.localGameIdEarned, it.dtLastUpdate))
             }
 
             tmBreakdown = tm

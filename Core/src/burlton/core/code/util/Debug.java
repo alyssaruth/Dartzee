@@ -293,6 +293,10 @@ public class Debug implements CoreRegistry
 	/**
 	 * SQLException
 	 */
+	public static void logSqlException(StringBuilder query, SQLException sqle)
+	{
+		logSqlException(query.toString(), sqle);
+	}
 	public static void logSqlException(String query, SQLException sqle)
 	{
 		Debug.append("Caught SQLException for query: " + query);
