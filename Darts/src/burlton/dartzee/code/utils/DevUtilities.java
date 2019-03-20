@@ -2,6 +2,7 @@ package burlton.dartzee.code.utils;
 
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.db.DartEntity;
+import burlton.dartzee.code.db.GameEntityKt;
 import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.dartzee.code.db.RoundEntity;
 import burlton.dartzee.code.screen.ScreenCache;
@@ -44,7 +45,7 @@ public class DevUtilities
 		Long[] gameIds = new Long[gameCount];
 		int counter = 0;
 		
-		String gameIdSql = "SELECT RowId FROM Game";
+		String gameIdSql = "SELECT LocalId FROM Game";
 		try (ResultSet rs = DatabaseUtil.executeQuery(gameIdSql))
 		{
 			while (rs.next())
@@ -62,8 +63,9 @@ public class DevUtilities
 		return gameIds;
 	}
 	
-	public static void purgeGame(String gameId)
+	public static void purgeGame(long localId)
 	{
+		String gameId = GameEntityKt.getGameId(localId);
 		DartsGameScreen scrn = ScreenCache.getDartsGameScreen(gameId);
 		if (scrn != null)
 		{
@@ -71,7 +73,7 @@ public class DevUtilities
 			return;
 		}
 		
-		String countSql = "SELECT COUNT(1) FROM Game WHERE RowId = " + gameId;
+		String countSql = "SELECT COUNT(1) FROM Game WHERE RowId = '" + gameId + "'";
 		int gameCount = DatabaseUtil.executeQueryAggregate(countSql);
 		if (gameCount == 0)
 		{
@@ -79,11 +81,11 @@ public class DevUtilities
 			return;
 		}
 		
-		List<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities("GameId = " + gameId);
+		List<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities("GameId = '" + gameId + "'");
 		List<RoundEntity> rounds = new RoundEntity().retrieveEntitiesWithFrom(getRoundFromSql(gameId), "rnd");
 		List<DartEntity> darts = new DartEntity().retrieveEntitiesWithFrom(getDartFromSql(gameId), "d");
 		
-		String question = "Purge all data for Game #" + gameId + "? The following rows will be deleted:"
+		String question = "Purge all data for Game #" + localId + "? The following rows will be deleted:"
 						+ "\n\n Participant: " + participants.size() + " rows"
 						+ "\n Round: " + rounds.size() + " rows"
 						+ "\n Dart: " + darts.size() + " rows";
@@ -107,22 +109,22 @@ public class DevUtilities
 			}
 			
 			
-			String gameDeleteSql = "DELETE FROM Game WHERE RowId = " + gameId;
+			String gameDeleteSql = "DELETE FROM Game WHERE RowId = '" + gameId + "'";
 			DatabaseUtil.executeUpdate(gameDeleteSql);
 			
 			DialogUtil.showInfo("Game #" + gameId + " has been purged.");
 		}
 	}
 	
-	private static String getRoundFromSql(long gameId)
+	private static String getRoundFromSql(String gameId)
 	{
 		return "FROM Round rnd INNER JOIN Participant p ON ("
 				   + "rnd.ParticipantId = p.RowId "
-				   + "AND p.GameId = " + gameId + ")";
+				   + "AND p.GameId = '" + gameId + "')";
 	}
-	private static String getDartFromSql(long gameId)
+	private static String getDartFromSql(String gameId)
 	{
 		return "FROM Dart d INNER JOIN Round rnd ON (d.RoundId = rnd.RowId)"
-			+ "INNER JOIN Participant p ON (rnd.ParticipantId = p.RowId AND p.GameId = " + gameId + ")";
+			+ "INNER JOIN Participant p ON (rnd.ParticipantId = p.RowId AND p.GameId = '" + gameId + "')";
 	}
 }

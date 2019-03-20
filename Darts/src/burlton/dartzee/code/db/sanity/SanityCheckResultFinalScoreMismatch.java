@@ -55,9 +55,9 @@ public final class SanityCheckResultFinalScoreMismatch extends AbstractSanityChe
 		HandyArrayList<ParticipantEntity> pts = hmParticipantToFinalScore.getKeysAsVector();
 		for (ParticipantEntity pt : pts)
 		{
-			long participantId = pt.getRowId();
-			long playerId = pt.getPlayerId();
-			long gameId = pt.getGameId();
+			String participantId = pt.getRowId();
+			String playerId = pt.getPlayerId();
+			String gameId = pt.getGameId();
 			Timestamp dtLastUpdate = pt.getDtLastUpdate();
 			int finalScore = pt.getFinalScore();
 			int finalScoreRaw = hmParticipantToFinalScore.get(pt);

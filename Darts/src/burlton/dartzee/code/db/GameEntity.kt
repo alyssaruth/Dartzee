@@ -61,7 +61,7 @@ class GameEntity : AbstractEntity<GameEntity>()
                 + "GameType INT NOT NULL, "
                 + "GameParams varchar(255) NOT NULL, "
                 + "DtFinish timestamp NOT NULL, "
-                + "DartsMatchId INT NOT NULL, "
+                + "DartsMatchId VARCHAR(36) NOT NULL, "
                 + "MatchOrdinal INT NOT NULL")
     }
 

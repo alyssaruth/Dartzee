@@ -37,8 +37,8 @@ public class ParticipantEntity extends AbstractEntity<ParticipantEntity>
 	@Override
 	public String getCreateTableSqlSpecific()
 	{
-		return "GameId INT NOT NULL, "
-				+ "PlayerId INT NOT NULL, "
+		return "GameId VARCHAR(36) NOT NULL, "
+				+ "PlayerId VARCHAR(36) NOT NULL, "
 				+ "Ordinal INT NOT NULL, "
 				+ "FinishingPosition INT NOT NULL, "
 				+ "FinalScore INT NOT NULL, "

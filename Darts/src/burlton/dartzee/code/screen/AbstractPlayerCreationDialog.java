@@ -1,11 +1,11 @@
 package burlton.dartzee.code.screen;
 
-import javax.swing.JTextField;
-
 import burlton.dartzee.code.bean.PlayerAvatar;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.desktopcore.code.screen.SimpleDialog;
 import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
 
 public abstract class AbstractPlayerCreationDialog extends SimpleDialog
 {
@@ -38,8 +38,8 @@ public abstract class AbstractPlayerCreationDialog extends SimpleDialog
 			return false;
 		}
 		
-		long avatarId = avatar.getAvatarId();
-		if (avatarId == -1)
+		String avatarId = avatar.getAvatarId();
+		if (avatarId.isEmpty())
 		{
 			DialogUtil.showError("You must select an avatar.");
 			return false;
