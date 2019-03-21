@@ -18,17 +18,24 @@ CREATE TABLE Participant_Tmp
 INSERT INTO
 	Participant_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zz.Guid,
 	DtCreation,
 	DtLastUpdate,
-	CAST(GameId AS CHAR(36)),
-	CAST(PlayerId AS CHAR(36)),
+	zzGame.Guid,
+	zzPlayer.Guid,
 	Ordinal,
 	FinishingPosition,
 	FinalScore,
 	DtFinished
 FROM
-	Participant;
+	Participant p,
+	zzParticipantGuids zz,
+	zzGameGuids zzGame,
+	zzPlayerGuids zzPlayer
+WHERE
+    p.RowId = zz.RowId
+    AND p.GameId = zzGame.RowId
+    AND p.PlayerId = zzPlayer.RowId;
 
 RENAME TABLE Participant TO zzParticipant;
 RENAME TABLE Participant_Tmp TO Participant;

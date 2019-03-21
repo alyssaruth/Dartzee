@@ -18,20 +18,23 @@ CREATE TABLE Game_Tmp
 INSERT INTO
 	Game_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zzG.Guid,
 	DtCreation,
 	DtLastUpdate,
-	RowId,
+	g.RowId,
 	GameType,
 	GameParams,
 	DtFinish,
 	CASE
-	    WHEN DartsMatchId = -1 THEN ''
-	    ELSE CAST(DartsMatchId AS CHAR(36))
+	    WHEN zzM.Guid IS NULL THEN ''
+	    ELSE zzM.Guid
 	END,
 	MatchOrdinal
 FROM
-	Game;
+	Game g LEFT OUTER JOIN zzDartsMatchGuids zzM ON (g.DartsMatchId = zzM.RowId),
+	zzGameGuids zzG
+WHERE
+    g.RowId = zzG.RowId;
 
 RENAME TABLE Game TO zzGame;
 RENAME TABLE Game_Tmp TO Game;

@@ -17,19 +17,24 @@ CREATE TABLE Achievement_Tmp
 INSERT INTO
 	Achievement_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zz.Guid,
 	DtCreation,
 	DtLastUpdate,
-	CAST(PlayerId AS CHAR(36)),
+	zzP.Guid,
 	AchievementRef,
 	CASE
-	    WHEN GameIdEarned = -1 THEN ''
-	    ELSE CAST(GameIdEarned AS CHAR(36))
+	    WHEN zzG.Guid IS NULL THEN ''
+	    ELSE zzG.Guid
 	END,
 	AchievementCounter,
 	AchievementDetail
 FROM
-	Achievement;
+	Achievement a LEFT OUTER JOIN zzGameGuids zzG ON (a.GameIdEarned = zzG.RowId),
+	zzPlayerGuids zzP,
+	zzAchievementGuids zz
+WHERE
+    a.PlayerId = zzP.RowId
+    AND a.RowId = zz.RowId;
 
 RENAME TABLE Achievement TO zzAchievement;
 RENAME TABLE Achievement_Tmp TO Achievement;

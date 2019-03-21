@@ -17,16 +17,19 @@ CREATE TABLE DartsMatch_Tmp
 INSERT INTO
 	DartsMatch_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zz.Guid,
 	DtCreation,
 	DtLastUpdate,
-	RowId,
+	d.RowId,
 	Games,
 	Mode,
 	DtFinish,
 	MatchParams
 FROM
-	DartsMatch;
+	DartsMatch d,
+	zzDartsMatchGuids zz
+WHERE
+    d.RowId = zz.RowId;
 
 RENAME TABLE DartsMatch TO zzDartsMatch;
 RENAME TABLE DartsMatch_Tmp TO DartsMatch;
