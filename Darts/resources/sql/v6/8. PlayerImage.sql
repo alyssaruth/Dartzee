@@ -15,14 +15,17 @@ CREATE TABLE PlayerImage_Tmp
 INSERT INTO
 	PlayerImage_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zz.Guid,
 	DtCreation,
 	DtLastUpdate,
 	BlobData,
 	Filepath,
 	Preset
 FROM
-	PlayerImage;
+	PlayerImage pi,
+	zzPlayerImageGuids zz
+WHERE
+    pi.RowId = zz.RowId;
 
 RENAME TABLE PlayerImage TO zzPlayerImage;
 RENAME TABLE PlayerImage_Tmp TO PlayerImage;

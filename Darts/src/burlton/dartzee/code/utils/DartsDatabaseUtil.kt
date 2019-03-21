@@ -1,5 +1,6 @@
 package burlton.dartzee.code.utils
 
+import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.code.util.FileUtil
 import burlton.dartzee.code.db.*
@@ -7,6 +8,7 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.screen.ProgressDialog
 import burlton.desktopcore.code.util.DialogUtil
 import java.io.File
+import java.util.*
 import javax.swing.JOptionPane
 
 /**
@@ -86,13 +88,15 @@ object DartsDatabaseUtil
         }
 
         //From now on, run SQL scripts from resources/sql/v{N+1}
-        if (versionNumber < DATABASE_VERSION)
+        if (versionNumber == 5)
         {
-            val newVersion = versionNumber + 1
-            runSqlScriptsForVersion(newVersion)
+            upgradeDatabaseToVersion6()
 
-            version.version = newVersion
-            version.saveToDatabase()
+            val newVersion = VersionEntity.retrieveCurrentDatabaseVersion()
+            newVersion.version = 6
+            newVersion.saveToDatabase()
+
+            version.version = 6
         }
 
         initialiseDatabase(version)
@@ -151,6 +155,79 @@ object DartsDatabaseUtil
 
         Debug.appendBanner("Finished initting database")
         DialogUtil.dismissLoadingDialog()
+    }
+
+    private fun upgradeDatabaseToVersion6()
+    {
+        Debug.appendBanner("Upgrading to Version 6")
+
+        val traceWriteSql = AbstractClient.traceWriteSql
+        AbstractClient.traceWriteSql = false
+
+        val t = Thread {
+            val entities = getAllEntitiesIncludingVersion()
+            val dlg = ProgressDialog.factory("Preparing upgrade to V6", "tables remaining", entities.size)
+            dlg.setVisibleLater()
+
+            entities.forEach {
+                createGuidTableForEntity(it.getTableName())
+
+                dlg.incrementProgressLater()
+            }
+
+            dlg.disposeLater()
+        }
+
+        t.start()
+        t.join()
+
+        AbstractClient.traceWriteSql = traceWriteSql
+
+        runSqlScriptsForVersion(6)
+    }
+
+    private fun createGuidTableForEntity(tableName: String)
+    {
+        val maxLegacyId = DatabaseUtil.executeQueryAggregate("SELECT MAX(RowId) FROM $tableName")
+
+        val keysTable = "zz${tableName}Guids"
+
+        DatabaseUtil.createTableIfNotExists(keysTable, "RowId INT, Guid VARCHAR(36)")
+
+        val rowIds = (1..maxLegacyId).toList()
+
+        val threads = mutableListOf<Thread>()
+        rowIds.chunked(5000).forEach{
+            val t = getInsertThreadForBatch(keysTable, it)
+            threads.add(t)
+        }
+
+        threads.forEach{ it.start() }
+        threads.forEach{ it.join() }
+
+        DatabaseUtil.executeUpdate("CREATE INDEX ${keysTable}_RowId_Guid ON $keysTable(RowId, Guid)")
+    }
+
+    private fun getInsertThreadForBatch(keysTable: String, batch: List<Int>): Thread
+    {
+        val t = Thread {
+            batch.chunked(50).forEach {
+                var s = "INSERT INTO $keysTable VALUES "
+
+                it.forEachIndexed{index, rowId ->
+                    val guid = UUID.randomUUID().toString()
+                    if (index > 0) {
+                        s += ", "
+                    }
+
+                    s += "($rowId, '$guid')"
+                }
+
+                DatabaseUtil.executeUpdate(s)
+            }
+        }
+
+        return t
     }
 
     private fun upgradeDatabaseToVersion5()

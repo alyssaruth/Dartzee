@@ -20,10 +20,10 @@ CREATE TABLE Dart_Tmp
 INSERT INTO
 	Dart_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zzD.Guid,
 	DtCreation,
 	DtLastUpdate,
-	CAST(RoundId AS CHAR(36)),
+	zzR.Guid,
 	Ordinal,
 	Score,
 	Multiplier,
@@ -32,7 +32,12 @@ SELECT
 	PosY,
 	SegmentType
 FROM
-	Dart;
+	Dart d,
+	zzDartGuids zzD,
+	zzRoundGuids zzR
+WHERE
+    d.RowId = zzD.RowId
+    AND d.RoundId = zzR.RowId;
 
 RENAME TABLE Dart TO zzDart;
 RENAME TABLE Dart_Tmp TO Dart;

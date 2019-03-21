@@ -14,13 +14,18 @@ CREATE TABLE Round_Tmp
 INSERT INTO
 	Round_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zz.Guid,
 	DtCreation,
 	DtLastUpdate,
-	CAST(ParticipantId AS CHAR(36)),
+	zzP.Guid,
 	RoundNumber
 FROM
-	Round;
+	Round r,
+	zzRoundGuids zz,
+	zzParticipantGuids zzP
+WHERE
+    r.RowId = zz.RowId
+    AND r.ParticipantId = zzP.RowId;
 
 RENAME TABLE Round TO zzRound;
 RENAME TABLE Round_Tmp TO Round;

@@ -13,12 +13,16 @@ CREATE TABLE Version_Tmp
 INSERT INTO
     Version_Tmp
 SELECT
-    CAST(RowId AS CHAR(36)),
+    zz.Guid,
     DtCreation,
     DtLastUpdate,
     Version
 FROM
-    Version;
+    Version v,
+    zzVersionGuids zz
+WHERE
+    v.RowId = zz.RowId;
+
 
 RENAME TABLE Version TO zzVersion;
 RENAME TABLE Version_Tmp TO Version;

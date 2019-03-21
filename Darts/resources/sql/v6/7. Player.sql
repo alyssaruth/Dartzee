@@ -17,16 +17,21 @@ CREATE TABLE Player_Tmp
 INSERT INTO
 	Player_Tmp
 SELECT
-	CAST(RowId AS CHAR(36)),
+	zzP.Guid,
 	DtCreation,
 	DtLastUpdate,
 	Name,
 	Strategy,
 	StrategyXml,
 	DtDeleted,
-	CAST(PlayerImageId AS CHAR(36))
+	zzPi.Guid
 FROM
-	Player;
+	Player p,
+	zzPlayerGuids zzP,
+	zzPlayerImageGuids zzPi
+WHERE
+    p.RowId = zzP.RowId
+    AND p.PlayerImageId = zzPi.RowId;
 
 RENAME TABLE Player TO zzPlayer;
 RENAME TABLE Player_Tmp TO Player;
