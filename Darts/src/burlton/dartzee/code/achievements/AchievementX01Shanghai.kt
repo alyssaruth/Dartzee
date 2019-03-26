@@ -63,7 +63,7 @@ class AchievementX01Shanghai : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("Shanghai", "RoundId INT, ParticipantId INT, PlayerId INT, GameId INT")
+        val tempTable = DatabaseUtil.createTempTable("Shanghai", "RoundId VARCHAR(36), ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")

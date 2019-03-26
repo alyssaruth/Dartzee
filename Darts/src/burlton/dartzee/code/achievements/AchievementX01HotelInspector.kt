@@ -27,7 +27,7 @@ class AchievementX01HotelInspector : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("BurltonConstants", "PlayerId INT, GameId INT, Ordinal INT, Score INT, Multiplier INT, RoundId INT, DtCreation TIMESTAMP")
+        val tempTable = DatabaseUtil.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundId VARCHAR(36), DtCreation TIMESTAMP")
         tempTable ?: return
 
         var sb = StringBuilder()

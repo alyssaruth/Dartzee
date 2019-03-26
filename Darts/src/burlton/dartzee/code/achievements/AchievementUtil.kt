@@ -140,7 +140,7 @@ fun getWinAchievementRef(gameType : Int) : Int
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int)
 {
-    val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId INT, GameId INT, DtAchieved TIMESTAMP, Score INT")
+    val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
             ?: return
 
     var sb = StringBuilder()

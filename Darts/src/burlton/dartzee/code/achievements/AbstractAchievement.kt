@@ -1,7 +1,6 @@
 package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
-import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DartsColour
@@ -14,7 +13,6 @@ import java.awt.image.BufferedImage
 import java.net.URL
 import javax.imageio.ImageIO
 import javax.swing.table.DefaultTableModel
-import kotlin.streams.toList
 
 abstract class AbstractAchievement
 {
@@ -39,8 +37,7 @@ abstract class AbstractAchievement
 
     fun runConversion(players : MutableList<PlayerEntity>)
     {
-        val playerIds = players.stream().map{p -> "" + p.rowId}.toList()
-        val keys = StringUtil.toDelims(playerIds, ",")
+        val keys = players.joinToString { p -> "'${p.rowId}'"}
 
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")

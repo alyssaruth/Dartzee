@@ -26,7 +26,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val cols = "PlayerId INT, GameId INT, Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
+        val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
         val tempTable = DatabaseUtil.createTempTable("CheckoutDarts", cols)
 
         tempTable ?: return

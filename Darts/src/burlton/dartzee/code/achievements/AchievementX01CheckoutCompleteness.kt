@@ -28,7 +28,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("PlayerCheckouts", "PlayerId INT, Score INT, GameId INT, DtAchieved TIMESTAMP")
+        val tempTable = DatabaseUtil.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                       ?: return
 
         var sb = StringBuilder()
