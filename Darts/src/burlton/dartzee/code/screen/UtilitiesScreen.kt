@@ -5,7 +5,6 @@ import burlton.core.code.util.dumpThreadStacks
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
-import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -24,7 +23,6 @@ class UtilitiesScreen : EmbeddedScreen()
     private val btnCheckForUpdates = JButton("Check for Updates")
     private val btnViewLogs = JButton("View Logs")
     private val btnThreadStacks = JButton("Thread Stacks")
-    private val btnMerge = JButton("Merge databases")
     private val btnAchievementConversion = JButton("Run Achievement Conversion")
 
     init
@@ -35,7 +33,6 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnDeleteGame, "cell 0 0,alignx center,aligny center")
         panel.add(btnCreateBackup, "cell 0 2,alignx center")
         panel.add(btnRestoreFromBackup, "cell 0 4,alignx center")
-        panel.add(btnMerge, "cell 0 5,alignx center")
         panel.add(btnPerformDatabaseCheck, "cell 0 6,alignx center,aligny center")
         panel.add(btnThreadStacks, "cell 0 7,alignx center")
         panel.add(btnCheckForUpdates, "cell 0 8,alignx center")
@@ -68,7 +65,6 @@ class UtilitiesScreen : EmbeddedScreen()
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()
-            btnMerge -> DialogUtil.showError("This isn't finished!")
             btnAchievementConversion -> runAchievementConversion()
             else -> super.actionPerformed(arg0)
         }
