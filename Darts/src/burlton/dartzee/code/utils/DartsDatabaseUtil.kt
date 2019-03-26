@@ -195,39 +195,11 @@ object DartsDatabaseUtil
         DatabaseUtil.createTableIfNotExists(keysTable, "RowId INT, Guid VARCHAR(36)")
 
         val rowIds = (1..maxLegacyId).toList()
+        val rows = rowIds.map{ id -> "($id, '${UUID.randomUUID()}')"}
 
-        val threads = mutableListOf<Thread>()
-        rowIds.chunked(5000).forEach{
-            val t = getInsertThreadForBatch(keysTable, it)
-            threads.add(t)
-        }
-
-        threads.forEach{ it.start() }
-        threads.forEach{ it.join() }
+        BulkInserter.insert(keysTable, rows, 5000, 50)
 
         DatabaseUtil.executeUpdate("CREATE INDEX ${keysTable}_RowId_Guid ON $keysTable(RowId, Guid)")
-    }
-
-    private fun getInsertThreadForBatch(keysTable: String, batch: List<Int>): Thread
-    {
-        val t = Thread {
-            batch.chunked(50).forEach {
-                var s = "INSERT INTO $keysTable VALUES "
-
-                it.forEachIndexed{index, rowId ->
-                    val guid = UUID.randomUUID().toString()
-                    if (index > 0) {
-                        s += ", "
-                    }
-
-                    s += "($rowId, '$guid')"
-                }
-
-                DatabaseUtil.executeUpdate(s)
-            }
-        }
-
-        return t
     }
 
     private fun upgradeDatabaseToVersion5()
