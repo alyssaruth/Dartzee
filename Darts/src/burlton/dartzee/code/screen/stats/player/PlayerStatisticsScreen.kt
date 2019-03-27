@@ -23,8 +23,8 @@ import javax.swing.SwingConstants
 
 class PlayerStatisticsScreen : EmbeddedScreen()
 {
-    private var hmGameIdToWrapper = mutableMapOf<Long, GameWrapper>()
-    private var hmGameIdToWrapperOther = mutableMapOf<Long, GameWrapper>()
+    private var hmLocalIdToWrapper = mutableMapOf<Long, GameWrapper>()
+    private var hmLocalIdToWrapperOther = mutableMapOf<Long, GameWrapper>()
     private var filteredGames = HandyArrayList<GameWrapper>()
     private var filteredGamesOther = HandyArrayList<GameWrapper>()
 
@@ -75,8 +75,8 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         filterPanelOther.isVisible = false
         btnAdd.isVisible = true
 
-        hmGameIdToWrapper = retrieveGameData(player!!.rowId)
-        hmGameIdToWrapperOther.clear()
+        hmLocalIdToWrapper = retrieveGameData(player!!.rowId)
+        hmLocalIdToWrapperOther.clear()
 
         resetTabs()
         buildTabs()
@@ -92,7 +92,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         btnAdd.isVisible = false
         hideBackButton()
 
-        this.hmGameIdToWrapper = hmGameIdToWrapper
+        this.hmLocalIdToWrapper = hmGameIdToWrapper
 
         resetTabs()
         buildTabs()
@@ -132,7 +132,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         filterPanelOther.isVisible = true
         btnAdd.isVisible = false
 
-        hmGameIdToWrapperOther = retrieveGameData(player.rowId)
+        hmLocalIdToWrapperOther = retrieveGameData(player.rowId)
         buildTabs()
     }
 
@@ -140,7 +140,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     {
         filterPanelOther.isVisible = false
         btnAdd.isVisible = true
-        hmGameIdToWrapperOther = mutableMapOf()
+        hmLocalIdToWrapperOther = mutableMapOf()
 
         buildTabs()
     }
@@ -199,8 +199,8 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 
     fun buildTabs()
     {
-        filteredGames = populateFilteredGames(hmGameIdToWrapper, filterPanel)
-        filteredGamesOther = populateFilteredGames(hmGameIdToWrapperOther, filterPanelOther)
+        filteredGames = populateFilteredGames(hmLocalIdToWrapper, filterPanel)
+        filteredGamesOther = populateFilteredGames(hmLocalIdToWrapperOther, filterPanelOther)
 
         //Update the tabs
         val tabs = getAllChildComponentsForType(this, AbstractStatisticsTab::class.java)

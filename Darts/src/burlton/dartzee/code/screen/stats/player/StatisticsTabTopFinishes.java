@@ -63,7 +63,7 @@ public class StatisticsTabTopFinishes extends AbstractStatisticsTab
 				continue;
 			}
 			
-			long gameId = game.getGameId();
+			long gameId = game.getLocalId();
 			int total = game.getCheckoutTotal();
 			
 			List<Dart> darts = game.getDartsForFinalRound();
