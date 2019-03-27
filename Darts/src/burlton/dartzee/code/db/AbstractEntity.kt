@@ -7,7 +7,6 @@ import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.SqlErrorConstants
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
-import java.lang.reflect.InvocationTargetException
 import java.sql.*
 import java.util.*
 import java.util.regex.Pattern
@@ -463,44 +462,5 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     private fun swapInValue(statementStr: String, value: Any): String
     {
         return statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
-    }
-
-    companion object
-    {
-        @JvmStatic
-        fun <E> makeFromEntityFields(entities: List<AbstractEntity<*>>, fieldName: String): MutableList<E>
-        {
-            val ret = mutableListOf<E>()
-            if (entities.isEmpty())
-            {
-                return ret
-            }
-
-            try
-            {
-                val getMethod = "get$fieldName"
-
-                for (entity in entities)
-                {
-                    val m = entity.javaClass.getMethod(getMethod, *arrayOfNulls(0))
-                    val obj = m.invoke(entity, *arrayOfNulls(0)) as E
-                    ret.add(obj)
-                }
-            }
-            catch (e: NoSuchMethodException)
-            {
-                Debug.stackTrace(e, "Reflection error making field list [$fieldName] for entities: $entities")
-            }
-            catch (e: InvocationTargetException)
-            {
-                Debug.stackTrace(e, "Reflection error making field list [$fieldName] for entities: $entities")
-            }
-            catch (e: IllegalAccessException)
-            {
-                Debug.stackTrace(e, "Reflection error making field list [$fieldName] for entities: $entities")
-            }
-
-            return ret
-        }
     }
 }
