@@ -123,7 +123,7 @@ class GameEntity : AbstractEntity<GameEntity>()
         val participants = ParticipantEntity().retrieveEntities(whereSql)
 
         participants.forEach{
-            ret.add(it.player)
+            ret.add(it.getPlayer())
         }
 
         return ret
