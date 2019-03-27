@@ -56,12 +56,12 @@ private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): ArrayList<Array<
             {
                 val strategy = rs.getInt(1)
                 val playerName = rs.getString(2)
-                val gameId = rs.getLong(3)
+                val localId = rs.getLong(3)
                 val score = rs.getInt(4)
 
                 val playerFlag = PlayerEntity.getPlayerFlag(strategy == -1)
 
-                val row = arrayOf<Any>(playerFlag, playerName, gameId, score)
+                val row = arrayOf<Any>(playerFlag, playerName, localId, score)
                 rows.add(row)
             }
         }

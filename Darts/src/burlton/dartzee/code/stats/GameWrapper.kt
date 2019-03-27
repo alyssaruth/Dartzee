@@ -20,7 +20,7 @@ const val MODE_FULL_18 = 2
 /**
  * Wraps up an entire game of darts from a single player's perspective
  */
-class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timestamp, val dtFinish: Timestamp, val finalScore: Int)
+class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timestamp, val dtFinish: Timestamp, val finalScore: Int)
 {
     private var hmRoundNumberToDarts = HashMapList<Int, Dart>()
     private var totalRounds = 0
@@ -103,7 +103,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
 
         if (isFinished())
         {
-            Debug.stackTrace("Unable to calculate scoring darts for finished game $gameId. Score never went below threshold: $scoreCutOff")
+            Debug.stackTrace("Unable to calculate scoring darts for finished game $localId. Score never went below threshold: $scoreCutOff")
             return null
         }
 
@@ -184,7 +184,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
             }
 
             val dartStr = getSortedDartStr(dartsForRound)
-            wrapper.addDartStr(dartStr, gameId)
+            wrapper.addDartStr(dartStr, localId)
         }
     }
 
@@ -293,7 +293,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
             if (isBetterGolfRound(i, darts, currentDarts))
             {
                 hmHoleToBestDarts[i] = darts
-                hmHoleToBestGameId[i] = gameId
+                hmHoleToBestGameId[i] = localId
             }
         }
     }

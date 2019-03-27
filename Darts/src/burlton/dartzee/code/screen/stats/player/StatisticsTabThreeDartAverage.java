@@ -147,7 +147,7 @@ public class StatisticsTabThreeDartAverage extends AbstractStatisticsTab
 			int ordinal = (i+1);
 			double avg = game.getThreeDartAverage(scoreThreshold);
 			int startValue = game.getGameStartValueX01();
-			long gameId = game.getGameId();
+			long gameId = game.getLocalId();
 			
 			dartsTotal += game.getScoringDarts(scoreThreshold).size();
 			misses += game.getDartsForMultiplierX01(scoreThreshold, 0);

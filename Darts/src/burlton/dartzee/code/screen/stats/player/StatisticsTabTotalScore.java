@@ -305,7 +305,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 				finalScore = g.getAllDarts().size();
 			}
 			
-			Object[] row = {(i+1), finalScore, g.getGameId(), unfinished};
+			Object[] row = {(i+1), finalScore, g.getLocalId(), unfinished};
 			model.addRow(row);
 		}
 		
