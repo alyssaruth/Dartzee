@@ -1,19 +1,7 @@
 package burlton.dartzee.code.screen.ai;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Window;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.SwingUtilities;
-
-import burlton.desktopcore.code.bean.NumberField;
-import burlton.desktopcore.code.bean.RadioButtonPanel;
-import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen;
+import burlton.core.code.obj.SuperHashMap;
+import burlton.core.code.util.Debug;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.ai.AbstractDartsSimulation;
 import burlton.dartzee.code.ai.DartsSimulationGolf;
@@ -21,13 +9,18 @@ import burlton.dartzee.code.ai.DartsSimulationX01;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.Dartboard;
 import burlton.dartzee.code.screen.ScreenCache;
+import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen;
 import burlton.dartzee.code.stats.GameWrapper;
-import net.miginfocom.swing.MigLayout;
-import burlton.core.code.obj.SuperHashMap;
+import burlton.desktopcore.code.bean.NumberField;
+import burlton.desktopcore.code.bean.RadioButtonPanel;
 import burlton.desktopcore.code.screen.ProgressDialog;
 import burlton.desktopcore.code.screen.SimpleDialog;
-import burlton.core.code.util.Debug;
 import burlton.desktopcore.code.util.DialogUtil;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
 
 public final class AISimulationSetup extends SimpleDialog
 {
@@ -121,7 +114,7 @@ public final class AISimulationSetup extends SimpleDialog
 		Thread t = new Thread(simulationRunnable, "Simulation Thread");
 		t.start();
 	}
-	private void runSimulation(AbstractDartsSimulation sim, SuperHashMap<Long, GameWrapper> hmGameIdToWrapper, int numberOfGames)
+	private void runSimulation(AbstractDartsSimulation sim, HashMap<Long, GameWrapper> hmGameIdToWrapper, int numberOfGames)
 	{
 		double startTime = System.currentTimeMillis();
 		ProgressDialog dialog = ProgressDialog.factory("Simulating games...", "games remaining", numberOfGames);
@@ -174,7 +167,7 @@ public final class AISimulationSetup extends SimpleDialog
 			});
 		}
 	}
-	private void simulationFinished(SuperHashMap<Long, GameWrapper> hmGameIdToWrapper, int gameType)
+	private void simulationFinished(HashMap<Long, GameWrapper> hmGameIdToWrapper, int gameType)
 	{
 		String title = "Simulation Results - " + player.getName() + " (" + hmGameIdToWrapper.size() + " games)";
 		Window parentWindow = getParentWindowForResults(title);
