@@ -12,7 +12,7 @@ public class PlayerImageRadio extends RadioImage
 	
 	public PlayerImageRadio(PlayerImageEntity pi)
 	{
-		super(pi.getAsImageIcon());
+		super(pi.asImageIcon());
 		
 		playerImageId = pi.getRowId();
 	}

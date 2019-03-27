@@ -92,7 +92,7 @@ object DartsDatabaseUtil
         {
             upgradeDatabaseToVersion6()
 
-            val newVersion = VersionEntity.retrieveCurrentDatabaseVersion()
+            val newVersion = VersionEntity.retrieveCurrentDatabaseVersion()!!
             newVersion.version = 6
             newVersion.saveToDatabase()
 

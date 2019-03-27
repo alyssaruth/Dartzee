@@ -44,7 +44,7 @@ class OverallStatsTabAchievements : JPanel()
         players.forEach{
 
             val score = getPlayerAchievementScore(achievementRows, it)
-            val row = arrayOf(it.flag, it, score)
+            val row = arrayOf(it.getFlag(), it, score)
 
             model.addRow(row)
         }
