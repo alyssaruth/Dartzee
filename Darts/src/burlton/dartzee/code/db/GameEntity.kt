@@ -56,7 +56,7 @@ class GameEntity : AbstractEntity<GameEntity>()
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return ("LocalId INT NOT NULL, "
+        return ("LocalId INT UNIQUE NOT NULL, "
                 + "GameType INT NOT NULL, "
                 + "GameParams varchar(255) NOT NULL, "
                 + "DtFinish timestamp NOT NULL, "
