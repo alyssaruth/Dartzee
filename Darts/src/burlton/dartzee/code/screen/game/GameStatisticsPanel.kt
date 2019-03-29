@@ -83,7 +83,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         for (participant in participants)
         {
-            val playerName = participant.playerName
+            val playerName = participant.getPlayerName()
 
             //Ensure all the keys are in this map ready for our empty check lower down
             if (!hmPlayerToDarts.containsKey(playerName))
@@ -94,7 +94,7 @@ abstract class GameStatisticsPanel : JPanel()
             val sbSql = StringBuilder()
             sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, rnd.RoundNumber")
             sbSql.append(" FROM Dart d, Round rnd")
-            sbSql.append(" WHERE rnd.ParticipantId = " + participant.rowId)
+            sbSql.append(" WHERE rnd.ParticipantId = '${participant.rowId}'")
             sbSql.append(" AND d.RoundId = rnd.RowId")
             sbSql.append(" ORDER BY rnd.RoundNumber, d.Ordinal")
 
@@ -195,7 +195,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         for (pt in participants!!)
         {
-            val playerName = pt.playerName
+            val playerName = pt.getPlayerName()
             playerNamesOrdered.addUnique(playerName)
         }
 
@@ -266,7 +266,7 @@ abstract class GameStatisticsPanel : JPanel()
 
     private fun getFinishedParticipants(playerName: String): MutableList<ParticipantEntity>
     {
-        return participants!!.filter { pt -> pt.playerName == playerName && pt.finalScore > -1 }.toMutableList()
+        return participants!!.filter { pt -> pt.getPlayerName() == playerName && pt.finalScore > -1 }.toMutableList()
     }
 
     protected abstract fun addRowsToTable()

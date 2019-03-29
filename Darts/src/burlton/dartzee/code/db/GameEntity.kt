@@ -25,18 +25,17 @@ const val CLOCK_TYPE_TREBLES = "Trebles"
 /**
  * Represents a single game of Darts, e.g. X01 or Dartzee.
  */
-class GameEntity : AbstractDartsEntity<GameEntity>()
+class GameEntity : AbstractEntity<GameEntity>()
 {
     /**
      * DB fields
      */
+    var localId = -1L
     var gameType = -1
     var gameParams = ""
     var dtFinish = DateStatics.END_OF_TIME
-    var dartsMatchId: Long = -1
+    var dartsMatchId: String = ""
     var matchOrdinal = -1
-
-
 
     /**
      * Helpers
@@ -46,41 +45,33 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
         val sb = StringBuilder()
         sb.append("SELECT COUNT(1) FROM ")
         sb.append(ParticipantEntity().getTableName())
-        sb.append(" WHERE GameId = ")
-        sb.append(rowId)
+        sb.append(" WHERE GameId = '$rowId'")
 
         return DatabaseUtil.executeQueryAggregate(sb)
     }
-    fun isFinished(): Boolean
-    {
-        return !isEndOfTime(dtFinish)
-    }
-    fun getTypeDesc(): String
-    {
-        return getTypeDesc(gameType, gameParams)
-    }
 
-    override fun getTableName(): String
-    {
-        return "Game"
-    }
+    fun isFinished() = !isEndOfTime(dtFinish)
+    fun getTypeDesc() = getTypeDesc(gameType, gameParams)
+    override fun getTableName() = "Game"
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return ("GameType INT NOT NULL, "
+        return ("LocalId INT UNIQUE NOT NULL, "
+                + "GameType INT NOT NULL, "
                 + "GameParams varchar(255) NOT NULL, "
                 + "DtFinish timestamp NOT NULL, "
-                + "DartsMatchId INT NOT NULL, "
+                + "DartsMatchId VARCHAR(36) NOT NULL, "
                 + "MatchOrdinal INT NOT NULL")
     }
 
     @Throws(SQLException::class)
     override fun populateFromResultSet(entity: GameEntity, rs: ResultSet)
     {
+        entity.localId = rs.getLong("LocalId")
         entity.gameType = rs.getInt("GameType")
         entity.gameParams = rs.getString("GameParams")
         entity.dtFinish = rs.getTimestamp("DtFinish")
-        entity.dartsMatchId = rs.getLong("DartsMatchId")
+        entity.dartsMatchId = rs.getString("DartsMatchId")
         entity.matchOrdinal = rs.getInt("MatchOrdinal")
     }
 
@@ -89,10 +80,11 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     {
         var i = startIndex
         var statementStr = emptyStatement
+        statementStr = writeLong(statement, i++, localId, statementStr)
         statementStr = writeInt(statement, i++, gameType, statementStr)
         statementStr = writeString(statement, i++, gameParams, statementStr)
         statementStr = writeTimestamp(statement, i++, dtFinish, statementStr)
-        statementStr = writeLong(statement, i++, dartsMatchId, statementStr)
+        statementStr = writeString(statement, i++, dartsMatchId, statementStr)
         statementStr = writeInt(statement, i, matchOrdinal, statementStr)
 
         return statementStr
@@ -112,7 +104,13 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
         return ret
     }
 
-    override fun getGameId(): Long
+    override fun assignRowId(): String
+    {
+        localId = LocalIdGenerator.generateLocalId(getTableName())
+        return super.assignRowId()
+    }
+
+    fun getGameId(): String
     {
         return rowId
     }
@@ -121,11 +119,11 @@ class GameEntity : AbstractDartsEntity<GameEntity>()
     {
         val ret = mutableListOf<PlayerEntity>()
 
-        val whereSql = "GameId = $rowId ORDER BY Ordinal ASC"
+        val whereSql = "GameId = '$rowId' ORDER BY Ordinal ASC"
         val participants = ParticipantEntity().retrieveEntities(whereSql)
 
         participants.forEach{
-            ret.add(it.player)
+            ret.add(it.getPlayer())
         }
 
         return ret
@@ -160,14 +158,10 @@ fun factoryAndSave(match: DartsMatchEntity): GameEntity
 /**
  * Ordered by RowId as well because of a bug with loading where the ordinals could get screwed up.
  */
-fun retrieveGamesForMatch(matchId: Long): MutableList<GameEntity>
+fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity>
 {
-    val sb = StringBuilder()
-    sb.append("DartsMatchId = ")
-    sb.append(matchId)
-    sb.append(" ORDER BY MatchOrdinal, RowId")
-
-    return GameEntity().retrieveEntities(sb.toString())
+    val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, RowId"
+    return GameEntity().retrieveEntities(sql)
 }
 
 fun getTypeDesc(gameType: Int, gameParams: String): String
@@ -209,4 +203,10 @@ fun getFilterPanel(gameType: Int): GameParamFilterPanel?
 fun getAllGameTypes(): MutableList<Int>
 {
     return mutableListOf(GAME_TYPE_X01, GAME_TYPE_GOLF, GAME_TYPE_ROUND_THE_CLOCK)
+}
+
+fun getGameId(localId: Long): String?
+{
+    val game = GameEntity().retrieveEntity("LocalId = $localId") ?: return null
+    return game.rowId
 }

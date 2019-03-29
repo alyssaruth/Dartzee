@@ -1,12 +1,9 @@
 package burlton.dartzee.code.screen;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
-
 import burlton.dartzee.code.db.PlayerEntity;
 
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 
 public class HumanCreationDialog extends AbstractPlayerCreationDialog
 {
@@ -41,7 +38,7 @@ public class HumanCreationDialog extends AbstractPlayerCreationDialog
 	protected void savePlayer()
 	{
 		String name = textFieldName.getText();
-		long avatarId = avatar.getAvatarId();
+		String avatarId = avatar.getAvatarId();
 		
 		PlayerEntity.factoryAndSaveHuman(name, avatarId);
 		

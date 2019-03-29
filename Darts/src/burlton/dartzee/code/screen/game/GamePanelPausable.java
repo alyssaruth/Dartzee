@@ -20,7 +20,7 @@ public abstract class GamePanelPausable<S extends DartsScorerPausable> extends D
 	/**
 	 * Abstract methods
 	 */
-	public abstract void saveDartsToDatabase(long roundId);
+	public abstract void saveDartsToDatabase(String roundId);
 	public abstract boolean currentPlayerHasFinished();
 	
 	@Override
@@ -28,7 +28,7 @@ public abstract class GamePanelPausable<S extends DartsScorerPausable> extends D
 	{
 		activeScorer.updatePlayerResult();
 		
-		long roundId = currentRound.getRowId();
+		String roundId = currentRound.getRowId();
 		saveDartsToDatabase(roundId);
 		
 		//This player has finished. The game isn't necessarily over though...

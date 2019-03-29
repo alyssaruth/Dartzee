@@ -21,7 +21,7 @@ open class Dart @JvmOverloads constructor(
 
     //Never set on the DB. Used for in-game stats, and is just set to the round number.
     private var golfHole = -1
-    var participantId: Long = -1
+    var participantId: String = ""
 
     /**
      * Helpers

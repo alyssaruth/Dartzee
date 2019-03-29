@@ -23,7 +23,7 @@ public class PlayerImageDialog extends JDialog
 							   implements ActionListener,
 							   			  FileUploadListener
 {
-	private long playerImageIdSelected = -1;
+	private String playerImageIdSelected = "";
 	
 	public PlayerImageDialog() 
 	{
@@ -119,7 +119,7 @@ public class PlayerImageDialog extends JDialog
 	private void okPressed()
 	{
 		playerImageIdSelected = getPlayerImageIdFromSelection();
-		if (playerImageIdSelected == -1)
+		if (playerImageIdSelected.isEmpty())
 		{
 			DialogUtil.showError("You must select an image.");
 			return;
@@ -127,7 +127,7 @@ public class PlayerImageDialog extends JDialog
 		
 		dispose();
 	}
-	private long getPlayerImageIdFromSelection()
+	private String getPlayerImageIdFromSelection()
 	{
 		JPanel panel = (JPanel)tabbedPane.getSelectedComponent();
 		
@@ -141,15 +141,15 @@ public class PlayerImageDialog extends JDialog
 			}
 		}
 		
-		return -1;
+		return "";
 	}
 	
 	public void reset()
 	{
-		playerImageIdSelected = -1;
+		playerImageIdSelected = "";
 	}
 	
-	public long getPlayerImageIdSelected()
+	public String getPlayerImageIdSelected()
 	{
 		return playerImageIdSelected;
 	}

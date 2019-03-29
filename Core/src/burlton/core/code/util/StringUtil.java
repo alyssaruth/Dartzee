@@ -67,22 +67,6 @@ public class StringUtil
 		
 		return sb.toString();
 	}
-	
-	public static String toSqlInStatement(List<String> list, boolean in)
-	{
-		StringBuilder sb = new StringBuilder();
-		if (!in)
-		{
-			sb.append("NOT ");
-		}
-		sb.append("IN (");
-		
-		String delimList = "'" + toDelims(list, "','") + "'";
-		sb.append(delimList);
-		sb.append(")");
-		
-		return sb.toString();
-	}
 
 	public static String escapeHtml(String plainText)
 	{
@@ -130,33 +114,5 @@ public class StringUtil
 	    {
 	    	return position + suffixes[position%10];
 	    }
-	}
-	
-	public static String reverse(String str)
-	{
-		int length = str.length();
-		StringBuilder sb = new StringBuilder(length);
-		
-		for (int i=length-1; i>=0; i--)
-		{
-			char c = str.charAt(i);
-			sb.append(c);
-		}
-		
-		return sb.toString();
-	}
-	
-	public static boolean containsNumeric(String s)
-	{
-		for (int i=0; i<s.length(); i++)
-		{
-			char c = s.charAt(i);
-			if (Character.isDigit(c))
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }

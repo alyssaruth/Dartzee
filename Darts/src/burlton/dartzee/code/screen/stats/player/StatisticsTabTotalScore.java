@@ -182,7 +182,10 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		//Sort out what the min and max displayed on the graph will be
 		adjustGraphMinAndMax(gamesToGraph, otherGamesToGraph);
 		
-		//Populate the raw data table
+		//Sort the games and populate the raw data table
+
+		gamesToGraph.sort(GameWrapper::compareStartDate);
+		otherGamesToGraph.sort(GameWrapper::compareStartDate);
 		populateTable(gamesToGraph);
 		
 		dataset = new DefaultCategoryDataset();
@@ -291,8 +294,6 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 		model.addColumn("Game");
 		model.addColumn("!Unfinished");
 		
-		gamesToGraph.sort((GameWrapper g1, GameWrapper g2) -> g1.compareStartDate(g2));
-		
 		for (int i=0; i<gamesToGraph.size(); i++)
 		{
 			GameWrapper g = gamesToGraph.get(i);
@@ -305,7 +306,7 @@ public class StatisticsTabTotalScore extends AbstractStatisticsTab
 				finalScore = g.getAllDarts().size();
 			}
 			
-			Object[] row = {(i+1), finalScore, g.getGameId(), unfinished};
+			Object[] row = {(i+1), finalScore, g.getLocalId(), unfinished};
 			model.addRow(row);
 		}
 		

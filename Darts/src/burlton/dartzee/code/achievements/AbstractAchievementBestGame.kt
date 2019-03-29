@@ -44,8 +44,8 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
             DatabaseUtil.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
-                    val gameId = rs.getLong("GameId")
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
                     val dtFinished = rs.getTimestamp("DtFinished")
                     val score = rs.getInt("FinalScore")
 

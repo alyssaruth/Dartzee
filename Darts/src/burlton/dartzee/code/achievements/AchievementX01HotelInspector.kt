@@ -27,7 +27,7 @@ class AchievementX01HotelInspector : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("BurltonConstants", "PlayerId INT, GameId INT, Ordinal INT, Score INT, Multiplier INT, RoundId INT, DtCreation TIMESTAMP")
+        val tempTable = DatabaseUtil.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundId VARCHAR(36), DtCreation TIMESTAMP")
         tempTable ?: return
 
         var sb = StringBuilder()
@@ -75,8 +75,8 @@ class AchievementX01HotelInspector : AbstractAchievement()
             rs.use{
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
-                    val gameId = rs.getLong("GameId")
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
                     val method = rs.getString("Method")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 
@@ -113,7 +113,7 @@ class AchievementX01HotelInspector : AbstractAchievement()
             tm.addColumn("Date Achieved")
 
             sortedRows.forEach{
-                tm.addRow(arrayOf(it.achievementDetail, it.gameIdEarned, it.dtLastUpdate))
+                tm.addRow(arrayOf(it.achievementDetail, it.localGameIdEarned, it.dtLastUpdate))
             }
 
             tmBreakdown = tm

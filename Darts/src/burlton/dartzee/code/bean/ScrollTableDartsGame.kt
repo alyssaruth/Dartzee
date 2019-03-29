@@ -1,5 +1,6 @@
 package burlton.dartzee.code.bean
 
+import burlton.dartzee.code.db.getGameId
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.desktopcore.code.bean.ScrollTableHyperlink
 import burlton.desktopcore.code.util.DialogUtil
@@ -8,9 +9,10 @@ class ScrollTableDartsGame(linkColumnName: String = "Game") : ScrollTableHyperli
 {
     override fun linkClicked(value: Any)
     {
-        val gameId = value as Long
-        if (gameId > 0)
+        val localId = value as Long
+        if (localId > 0)
         {
+            val gameId = getGameId(localId)
             DartsGameScreen.loadAndDisplayGame(gameId)
         }
         else
