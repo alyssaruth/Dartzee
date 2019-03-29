@@ -39,7 +39,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return "LocalId INT NOT NULL, Games INT NOT NULL, Mode INT NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(255) NOT NULL"
+        return "LocalId INT UNIQUE NOT NULL, Games INT NOT NULL, Mode INT NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(255) NOT NULL"
     }
 
     @Throws(SQLException::class)

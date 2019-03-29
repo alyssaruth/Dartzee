@@ -1,6 +1,5 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.code.util.FileUtil
 import burlton.dartzee.code.db.*
@@ -104,8 +103,6 @@ object DartsDatabaseUtil
 
     private fun runSqlScriptsForVersion(version: Int)
     {
-        Debug.appendBanner("Upgrading to Version $version")
-
         val resourcePath = "/sql/v$version/"
         val sqlScripts = getResourceList("/sql/v$version/")
 
@@ -161,8 +158,7 @@ object DartsDatabaseUtil
     {
         Debug.appendBanner("Upgrading to Version 6")
 
-        val traceWriteSql = AbstractClient.traceWriteSql
-        AbstractClient.traceWriteSql = false
+        val hmTableNameToRowCount = mutableMapOf<String, Int>()
 
         val t = Thread {
             val entities = getAllEntitiesIncludingVersion()
@@ -170,7 +166,10 @@ object DartsDatabaseUtil
             dlg.setVisibleLater()
 
             entities.forEach {
-                createGuidTableForEntity(it.getTableName())
+                val name = it.getTableName()
+                hmTableNameToRowCount[name] = DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM $name")
+
+                createGuidTableForEntity(name)
 
                 dlg.incrementProgressLater()
             }
@@ -181,9 +180,24 @@ object DartsDatabaseUtil
         t.start()
         t.join()
 
-        AbstractClient.traceWriteSql = traceWriteSql
-
         runSqlScriptsForVersion(6)
+
+        getAllEntitiesIncludingVersion().forEach {
+            val name = it.getTableName()
+            val newCount = DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM $name")
+
+            if (newCount == hmTableNameToRowCount[name])
+            {
+                Debug.append("$name: $newCount rows migrated successfully")
+                DatabaseUtil.dropTable("zz${name}Guids")
+            }
+            else
+            {
+                Debug.stackTrace("$name counts don't match. Migrated ${hmTableNameToRowCount[name]} -> $newCount")
+            }
+        }
+
+        Debug.appendBanner("Finished DB Upgrade")
     }
 
     private fun createGuidTableForEntity(tableName: String)
