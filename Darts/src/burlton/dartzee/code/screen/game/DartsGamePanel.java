@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -147,13 +148,13 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	/**
 	 * Regular methods
 	 */
-	public void startNewGame(ArrayList<PlayerEntity> players)
+	public void startNewGame(List<PlayerEntity> players)
 	{
 		for (int i=0; i<totalPlayers; i++)
 		{
 			PlayerEntity player = players.get(i);
 	
-			long gameId = gameEntity.getRowId();
+			String gameId = gameEntity.getRowId();
 			ParticipantEntity participant = ParticipantEntity.factoryAndSave(gameId, player, i);
 			addParticipant(i, participant);
 			
@@ -232,7 +233,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		cpuTurn = new Timer("Timer-CpuTurn #" + gameEntity.getRowId());
 		
-		long gameNo = gameEntity.getRowId();
+		long gameNo = gameEntity.getLocalId();
 		String gameDesc = gameEntity.getTypeDesc();
 		gameTitle = "Game #" + gameNo + " (" + gameDesc + ", " + totalPlayers + " players)";
 		
@@ -258,7 +259,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			
 			if (gameEntity != null)
 			{
-				DialogUtil.showError("Failed to load Game #" + gameEntity.getRowId());
+				DialogUtil.showError("Failed to load Game #" + gameEntity.getLocalId());
 			}
 			else
 			{
@@ -273,7 +274,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	 */
 	public void preLoad()
 	{
-		long gameId = gameEntity.getRowId();
+		String gameId = gameEntity.getRowId();
 		loadParticipants(gameId);
 		
 		pendingLoad = true;
@@ -282,7 +283,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	{
 		pendingLoad = false;
 		
-		long gameId = gameEntity.getRowId();
+		String gameId = gameEntity.getRowId();
 		
 		//Get the participants, sorted by Ordinal. Assign their scorers.
 		loadParticipants(gameId);
@@ -343,7 +344,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	/**
 	 * Retrieve the ordered participants and assign their scorers
 	 */
-	private void loadParticipants(long gameId)
+	private void loadParticipants(String gameId)
 	{
 		//We may have already done this in the preLoad
 		if (!hmPlayerNumberToParticipant.isEmpty())
@@ -351,7 +352,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			return;
 		}
 		
-		String whereSql = "GameId = " + gameId + " ORDER BY Ordinal ASC";
+		String whereSql = "GameId = '" + gameId + "' ORDER BY Ordinal ASC";
 		java.util.List<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities(whereSql);
 		
 		for (int i=0; i<participants.size(); i++)
@@ -373,7 +374,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	 *  - Finding how many players have already completed this round, X.
 	 *  - CurrentPlayerNumber = X % totalPlayers
 	 */
-	private void loadScoresAndCurrentPlayer(long gameId) throws SQLException
+	private void loadScoresAndCurrentPlayer(String gameId) throws SQLException
 	{
 		int maxRounds = 0;
 		
@@ -383,8 +384,8 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			String sql = "SELECT rnd.RoundNumber, drt.Score, drt.Multiplier, drt.PosX, drt.PosY, drt.SegmentType, drt.StartingScore"
 					   + " FROM Round rnd, Dart drt"
 					   + " WHERE drt.RoundId = rnd.RowId"
-					   + " AND rnd.ParticipantId = " + pt.getRowId()
-					   + " ORDER BY rnd.RoundNumber, drt.Ordinal";
+					   + " AND rnd.ParticipantId = '" + pt.getRowId()
+					   + "' ORDER BY rnd.RoundNumber, drt.Ordinal";
 			
 			HashMapList<Integer, Dart> hmRoundToDarts = new HashMapList<>();
 			int lastRound = 0;
@@ -429,7 +430,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	 * 1) Get the MAX(Ordinal) of the person who's played the maxRounds, i.e. the last player to have a turn.
 	 * 2) Call into getNextPlayer(), which takes into account inactive players.
 	 */
-	private void setCurrentPlayer(int maxRounds, long gameId)
+	private void setCurrentPlayer(int maxRounds, String gameId)
 	{
 		if (maxRounds == 0)
 		{
@@ -444,9 +445,9 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		sb.append("SELECT MAX(pt.Ordinal) ");
 		sb.append(" FROM Round rnd, Participant pt");
 		sb.append(" WHERE rnd.ParticipantId = pt.RowId");
-		sb.append(" AND pt.GameId = ");
+		sb.append(" AND pt.GameId = '");
 		sb.append(gameId);
-		sb.append(" AND rnd.RoundNumber = ");
+		sb.append("' AND rnd.RoundNumber = ");
 		sb.append(maxRounds);
 		
 		int lastPlayerNumber = DatabaseUtil.executeQueryAggregate(sb);
@@ -479,7 +480,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		ArrayList<ParticipantEntity> participants = hmPlayerNumberToParticipant.getValuesAsVector();
 		for (ParticipantEntity pt : participants)
 		{
-			long playerId = pt.getPlayerId();
+			String playerId = pt.getPlayerId();
 			PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.getGameType());
 		}
 	}
@@ -565,11 +566,11 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		}
 	}
 	
-	public long getGameId()
+	public String getGameId()
 	{
 		if (gameEntity == null)
 		{
-			return -1;
+			return "";
 		}
 		
 		return gameEntity.getRowId();
@@ -587,7 +588,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		participant.setDtFinished(DateUtil.getSqlDateNow());
 		participant.saveToDatabase();
 		
-		long playerId = participant.getPlayerId();
+		String playerId = participant.getPlayerId();
 		PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.getGameType());
 		
 		updateAchievementsForFinish(playerId, finishingPosition, numberOfDarts);
@@ -595,7 +596,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		return finishingPosition;
 	}
 	
-	protected void updateAchievementsForFinish(long playerId, int finishingPosition, int score)
+	protected void updateAchievementsForFinish(String playerId, int finishingPosition, int score)
 	{
 		if (finishingPosition == 1)
 		{
@@ -779,7 +780,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		return participant.getModel();
 	}
 	
-	protected long getCurrentPlayerId()
+	protected String getCurrentPlayerId()
 	{
 		ParticipantEntity pt = hmPlayerNumberToParticipant.get(currentPlayerNumber);
 		return pt.getPlayerId();
@@ -873,7 +874,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	{
 		hmPlayerNumberToParticipant.put(playerNumber, participant);
 		
-		parentWindow.addParticipant(gameEntity.getRowId(), participant);
+		parentWindow.addParticipant(gameEntity.getLocalId(), participant);
 	}
 	
 	public void closeResources()
@@ -881,7 +882,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		cpuTurn.cancel();
 	}
 
-	public void achievementUnlocked(long playerId, AbstractAchievement achievement)
+	public void achievementUnlocked(String playerId, AbstractAchievement achievement)
 	{
 		for (int i=0; i<scorersOrdered.size(); i++)
 		{
@@ -929,7 +930,5 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			AbstractDartsModel model = getCurrentPlayerStrategy();
 			doAiTurn(model);
 		}
-
-
 	}
 }

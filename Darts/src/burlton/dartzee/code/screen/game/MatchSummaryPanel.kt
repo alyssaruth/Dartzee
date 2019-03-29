@@ -14,7 +14,7 @@ import javax.swing.JPanel
  */
 class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
 {
-    private val hmPlayerIdToScorer = mutableMapOf<Long, MatchScorer>()
+    private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
     private val participants = mutableListOf<ParticipantEntity>()
     private var match: DartsMatchEntity? = null
 
@@ -58,12 +58,12 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
     }
 
 
-    fun addParticipant(gameId: Long, participant: ParticipantEntity)
+    fun addParticipant(localId: Long, participant: ParticipantEntity)
     {
         val playerId = participant.playerId
         val scorer = hmPlayerIdToScorer[playerId]!!
 
-        val row = arrayOf(gameId, participant, participant, participant)
+        val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
 
         participants.add(participant)

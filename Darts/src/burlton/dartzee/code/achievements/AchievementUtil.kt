@@ -140,7 +140,7 @@ fun getWinAchievementRef(gameType : Int) : Int
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int)
 {
-    val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId INT, GameId INT, DtAchieved TIMESTAMP, Score INT")
+    val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
             ?: return
 
     var sb = StringBuilder()
@@ -182,8 +182,8 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
         DatabaseUtil.executeQuery(sb).use { rs ->
             while (rs.next())
             {
-                val playerId = rs.getLong("PlayerId")
-                val gameId = rs.getLong("GameId")
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
                 val score = rs.getInt("Score")
 
@@ -201,10 +201,10 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
 }
 
-fun insertForCheckoutCompleteness(playerId: Long, gameId: Long, counter: Int)
+fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
 {
     val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = $playerId AND AchievementRef = $achievementRef"
+    val whereSql = "PlayerId = '$playerId' AND AchievementRef = $achievementRef"
 
     val achievementRows = AchievementEntity().retrieveEntities(whereSql)
     val hitDoubles = achievementRows.stream().mapToInt{it.achievementCounter}.toList()

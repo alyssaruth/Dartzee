@@ -52,7 +52,7 @@ class AchievementX01Shanghai : AbstractAchievement()
             tm.addColumn("Date Achieved")
 
             sortedRows.forEach{
-                tm.addRow(arrayOf(it.gameIdEarned, it.dtLastUpdate))
+                tm.addRow(arrayOf(it.localGameIdEarned, it.dtLastUpdate))
             }
 
             tmBreakdown = tm
@@ -63,7 +63,7 @@ class AchievementX01Shanghai : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("Shanghai", "RoundId INT, ParticipantId INT, PlayerId INT, GameId INT")
+        val tempTable = DatabaseUtil.createTempTable("Shanghai", "RoundId VARCHAR(36), ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
@@ -107,8 +107,8 @@ class AchievementX01Shanghai : AbstractAchievement()
             DatabaseUtil.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
-                    val gameId = rs.getLong("GameId")
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 
                     AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved)

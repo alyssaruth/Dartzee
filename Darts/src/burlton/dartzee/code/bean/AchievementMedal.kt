@@ -129,7 +129,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
 
             ScreenCache.switchScreen(scrn)
         }
-        else if (achievement.gameIdEarned > -1)
+        else if (achievement.gameIdEarned.isNotEmpty())
         {
             DartsGameScreen.loadAndDisplayGame(achievement.gameIdEarned)
         }

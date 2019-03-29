@@ -3,32 +3,26 @@ package burlton.dartzee.code.db
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
-import java.util.*
 
-class RoundEntity : AbstractDartsEntity<RoundEntity>()
+class RoundEntity : AbstractEntity<RoundEntity>()
 {
     /**
      * DB Fields
      */
-    var participantId: Long = -1
-    var dartzeeRuleId: Long = -1
+    var participantId: String = ""
     var roundNumber = -1
 
-    override fun getTableName(): String
-    {
-        return "Round"
-    }
+    override fun getTableName() = "Round"
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return "ParticipantId INT NOT NULL, DartzeeRuleId INT NOT NULL, RoundNumber INT NOT NULL"
+        return "ParticipantId VARCHAR(36) NOT NULL, RoundNumber INT NOT NULL"
     }
 
     @Throws(SQLException::class)
     override fun populateFromResultSet(entity: RoundEntity, rs: ResultSet)
     {
-        entity.participantId = rs.getLong("ParticipantId")
-        entity.dartzeeRuleId = rs.getLong("DartzeeRuleId")
+        entity.participantId = rs.getString("ParticipantId")
         entity.roundNumber = rs.getInt("RoundNumber")
     }
 
@@ -37,23 +31,15 @@ class RoundEntity : AbstractDartsEntity<RoundEntity>()
     {
         var i = startIndex
         var statementStr = emptyStatement
-        statementStr = writeLong(statement, i++, participantId, statementStr)
-        statementStr = writeLong(statement, i++, dartzeeRuleId, statementStr)
+        statementStr = writeString(statement, i++, participantId, statementStr)
         statementStr = writeInt(statement, i, roundNumber, statementStr)
 
         return statementStr
     }
 
-    override fun getColumnsAllowedToBeUnset(): ArrayList<String>
+    fun getGameId(): String
     {
-        val ret = ArrayList<String>()
-        ret.add("DartzeeRuleId")
-        return ret
-    }
-
-    override fun getGameId(): Long
-    {
-        return retrieveParticipant()?.gameId ?: -1
+        return retrieveParticipant()?.gameId ?: ""
     }
 
     fun retrieveParticipant(): ParticipantEntity?

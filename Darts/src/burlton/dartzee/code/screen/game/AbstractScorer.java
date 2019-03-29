@@ -14,7 +14,7 @@ public abstract class AbstractScorer extends JPanel
 {
 	protected boolean human = false;
 	protected int finishPos = -1;
-	private long playerId = -1;
+	private String playerId = "";
 
 	protected DefaultModel model = new DefaultModel();
 	
@@ -162,7 +162,7 @@ public abstract class AbstractScorer extends JPanel
 		return model;
 	}
 
-	public long getPlayerId()
+	public String getPlayerId()
 	{
 		return playerId;
 	}

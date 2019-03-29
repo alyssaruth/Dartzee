@@ -26,7 +26,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val cols = "PlayerId INT, GameId INT, Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
+        val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
         val tempTable = DatabaseUtil.createTempTable("CheckoutDarts", cols)
 
         tempTable ?: return
@@ -67,7 +67,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" GROUP BY PlayerId, GameId")
         sb.append(" ORDER BY COUNT(1) DESC, DtAchieved")
 
-        val playersAlreadyDone = mutableSetOf<Long>()
+        val playersAlreadyDone = mutableSetOf<String>()
 
         try
         {
@@ -75,8 +75,8 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
             rs.use{
                 while (rs.next())
                 {
-                    val playerId = rs.getLong("PlayerId")
-                    val gameId = rs.getLong("GameId")
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
                     val total = rs.getInt("GameTotal")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 

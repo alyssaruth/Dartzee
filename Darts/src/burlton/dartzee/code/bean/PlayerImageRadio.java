@@ -8,22 +8,18 @@ import burlton.dartzee.code.db.PlayerImageEntity;
  */
 public class PlayerImageRadio extends RadioImage
 {
-	private long playerImageId = -1;
+	private String playerImageId = "";
 	
 	public PlayerImageRadio(PlayerImageEntity pi)
 	{
-		super(pi.getAsImageIcon());
+		super(pi.asImageIcon());
 		
 		playerImageId = pi.getRowId();
 	}
 	
 	
-	public long getPlayerImageId()
+	public String getPlayerImageId()
 	{
 		return playerImageId;
-	}
-	public void setPlayerImageId(long playerImageId)
-	{
-		this.playerImageId = playerImageId;
 	}
 }

@@ -111,7 +111,7 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         return !shouldStopAfterDartThrown()
     }
 
-    override fun saveDartsToDatabase(roundId: Long)
+    override fun saveDartsToDatabase(roundId: String)
     {
         for (i in dartsThrown.indices)
         {

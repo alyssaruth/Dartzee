@@ -137,7 +137,7 @@ public class StatisticsTabGolfScorecards extends AbstractStatisticsTab
 		
 		for (GameWrapper game : validGames)
 		{
-			long gameId = game.getGameId();
+			long gameId = game.getLocalId();
 			int score = game.getRoundScore(mode);
 			
 			Object[] row = {gameId, score, game};

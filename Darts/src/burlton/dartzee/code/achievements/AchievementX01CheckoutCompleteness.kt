@@ -28,7 +28,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("PlayerCheckouts", "PlayerId INT, Score INT, GameId INT, DtAchieved TIMESTAMP")
+        val tempTable = DatabaseUtil.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                       ?: return
 
         var sb = StringBuilder()
@@ -64,9 +64,9 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         DatabaseUtil.executeQuery(sb).use { rs ->
             while (rs.next())
             {
-                val playerId = rs.getLong("PlayerId")
+                val playerId = rs.getString("PlayerId")
                 val score = rs.getInt("Score")
-                val gameId = rs.getLong("GameId")
+                val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
 
                 AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, playerId, gameId, score, "", dtAchieved)
@@ -96,7 +96,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
             tm.addColumn("Date Achieved")
 
             sortedRows.forEach{
-                tm.addRow(arrayOf(it.achievementCounter, it.gameIdEarned, it.dtLastUpdate))
+                tm.addRow(arrayOf(it.achievementCounter, it.localGameIdEarned, it.dtLastUpdate))
             }
 
             tmBreakdown = tm

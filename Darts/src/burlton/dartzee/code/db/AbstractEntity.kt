@@ -1,6 +1,5 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.code.util.StringUtil
@@ -8,7 +7,6 @@ import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.SqlErrorConstants
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
-import java.lang.reflect.InvocationTargetException
 import java.sql.*
 import java.util.*
 import java.util.regex.Pattern
@@ -16,7 +14,7 @@ import java.util.regex.Pattern
 abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 {
     //DB Fields
-    var rowId: Long = -1
+    var rowId: String = ""
     var dtCreation = getSqlDateNow()
     var dtLastUpdate = DateStatics.END_OF_TIME
 
@@ -54,7 +52,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         return StringUtil.countOccurences(columns, ",") + 1
     }
 
-    private fun getCreateTableColumnSql() = "RowId int PRIMARY KEY, DtCreation Timestamp NOT NULL, DtLastUpdate Timestamp NOT NULL, ${getCreateTableSqlSpecific()}"
+    private fun getCreateTableColumnSql() = "RowId VARCHAR(36) PRIMARY KEY, DtCreation Timestamp NOT NULL, DtLastUpdate Timestamp NOT NULL, ${getCreateTableSqlSpecific()}"
 
     fun getColumns(): MutableList<String>
     {
@@ -69,7 +67,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     fun factoryFromResultSet(rs: ResultSet): E
     {
         val ret = factory()
-        ret!!.rowId = rs.getLong("RowId")
+        ret!!.rowId = rs.getString("RowId")
         ret.dtCreation = rs.getTimestamp("DtCreation")
         ret.dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
@@ -99,35 +97,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
     fun columnCanBeUnset(columnName: String) = getColumnsAllowedToBeUnset().contains(columnName)
 
-    fun assignRowId(): Long
+    open fun assignRowId(): String
     {
-        synchronized(UNIQUE_ID_SYNCH_OBJECT)
-        {
-            val tableName = getTableName()
-            val lastAssignedId = hmLastAssignedIdByTableName[tableName] ?: retrieveLastAssignedId(tableName)
-
-            rowId = lastAssignedId + 1
-            hmLastAssignedIdByTableName[tableName] = rowId
-
-            return rowId
-        }
-    }
-    private fun retrieveLastAssignedId(tableName: String): Long
-    {
-        val query = "SELECT MAX(RowId) FROM $tableName"
-
-        return try
-        {
-            DatabaseUtil.executeQuery(query).use { rs ->
-                rs.next()
-                rs.getInt(1).toLong()
-            }
-        }
-        catch (sqle: SQLException)
-        {
-            Debug.logSqlException(query, sqle)
-            -1
-        }
+        rowId = UUID.randomUUID().toString()
+        return rowId
     }
 
     fun retrieveEntity(whereSql: String): E?
@@ -183,14 +156,14 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     }
 
     @JvmOverloads
-    fun retrieveForId(rowId: Long, stackTraceIfNotFound: Boolean = true): E?
+    fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E?
     {
-        val entities = retrieveEntities("RowId = $rowId")
+        val entities = retrieveEntities("RowId = '$rowId'")
         if (entities.isEmpty())
         {
             if (stackTraceIfNotFound)
             {
-                Debug.stackTrace("Failed to find ${getTableName()} for ID $rowId")
+                Debug.stackTrace("Failed to find ${getTableName()} for ID [$rowId]")
             }
 
             return null
@@ -198,7 +171,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
         if (entities.size > 1)
         {
-            Debug.stackTrace("Found ${entities.size} ${getTableName()} rows for ID $rowId")
+            Debug.stackTrace("Found ${entities.size} ${getTableName()} rows for ID [$rowId]")
         }
 
         return entities[0]
@@ -236,7 +209,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
                 updateQuery = writeTimestamp(psUpdate, 1, dtCreation, updateQuery)
                 updateQuery = writeTimestamp(psUpdate, 2, dtLastUpdate, updateQuery)
                 updateQuery = writeValuesToStatement(psUpdate, 3, updateQuery)
-                updateQuery = writeLong(psUpdate, getColumnCount(), rowId, updateQuery)
+                updateQuery = writeString(psUpdate, getColumnCount(), rowId, updateQuery)
 
                 Debug.appendSql(updateQuery, AbstractClient.traceWriteSql)
 
@@ -278,7 +251,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         try
         {
             conn.prepareStatement(insertQuery).use { psInsert ->
-                insertQuery = writeLong(psInsert, 1, rowId, insertQuery)
+                insertQuery = writeString(psInsert, 1, rowId, insertQuery)
                 insertQuery = writeTimestamp(psInsert, 2, dtCreation, insertQuery)
                 insertQuery = writeTimestamp(psInsert, 3, dtLastUpdate, insertQuery)
                 insertQuery = writeValuesToStatement(psInsert, 4, insertQuery)
@@ -406,7 +379,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         return count > 0
     }
 
-    private fun getColumnsForSelectStatement(alias: String = ""): String
+    protected fun getColumnsForSelectStatement(alias: String = ""): String
     {
         val sb = StringBuilder()
 
@@ -489,50 +462,5 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     private fun swapInValue(statementStr: String, value: Any): String
     {
         return statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
-    }
-
-    companion object
-    {
-        //statics
-        private val UNIQUE_ID_SYNCH_OBJECT = Any()
-        private val hmLastAssignedIdByTableName = mutableMapOf<String, Long>()
-
-        @JvmStatic
-        fun <E> makeFromEntityFields(entities: ArrayList<AbstractEntity<*>>, fieldName: String): MutableList<E>
-        {
-            val ret = HandyArrayList<E>()
-            if (entities.isEmpty())
-            {
-                return ret
-            }
-
-            try
-            {
-                val getMethod = "get$fieldName"
-
-                for (entity in entities)
-                {
-                    val m = entity.javaClass.getMethod(getMethod, *arrayOfNulls(0))
-                    val obj = m.invoke(entity, *arrayOfNulls(0)) as E
-                    ret.add(obj)
-                }
-            }
-            catch (e: NoSuchMethodException)
-            {
-                Debug.stackTrace(e, "Reflection error making field list [$fieldName] for entities: $entities")
-            }
-            catch (e: InvocationTargetException)
-            {
-                Debug.stackTrace(e, "Reflection error making field list [$fieldName] for entities: $entities")
-            }
-            catch (e: IllegalAccessException)
-            {
-                Debug.stackTrace(e, "Reflection error making field list [$fieldName] for entities: $entities")
-            }
-
-            return ret
-
-
-        }
     }
 }

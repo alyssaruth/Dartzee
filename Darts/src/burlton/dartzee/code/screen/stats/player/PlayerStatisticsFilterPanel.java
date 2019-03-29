@@ -1,29 +1,17 @@
 package burlton.dartzee.code.screen.stats.player;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.border.EtchedBorder;
-
 import burlton.dartzee.code.bean.PlayerAvatar;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.stats.GameWrapper;
+import net.miginfocom.swing.MigLayout;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * Info panel to appear above the statistics detailing the player and the filters that are in use.
@@ -93,7 +81,7 @@ public class PlayerStatisticsFilterPanel extends JPanel
 		dlg.resetFilters();
 	}
 	
-	public void update(ArrayList<GameWrapper> filteredGames)
+	public void update(List<GameWrapper> filteredGames)
 	{
 		lblFilterDesc.setText(dlg.getFiltersDesc());
 		lblDateFilter.setText(dlg.getDateDesc());
