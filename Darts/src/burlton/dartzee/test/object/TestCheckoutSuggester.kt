@@ -4,6 +4,7 @@ import burlton.dartzee.code.`object`.CheckoutSuggester
 import burlton.dartzee.code.`object`.DartHint
 import burlton.dartzee.code.utils.getCheckoutScores
 import burlton.dartzee.code.utils.sumScore
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldHaveAtMostSize
 import io.kotlintest.matchers.collections.shouldHaveSingleElement
@@ -13,7 +14,7 @@ import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.junit.Test
 
-class TestCheckoutSuggester
+class TestCheckoutSuggester: AbstractTest()
 {
     @Test
     fun `should parse checkouts for one, two or three darts`()

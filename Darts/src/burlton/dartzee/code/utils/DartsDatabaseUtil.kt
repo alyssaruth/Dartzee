@@ -16,6 +16,7 @@ import javax.swing.JOptionPane
 object DartsDatabaseUtil
 {
     const val DATABASE_VERSION = 6
+    const val DATABASE_NAME = "jdbc:derby:Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
 

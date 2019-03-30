@@ -18,9 +18,6 @@ class DatabaseUtil : SqlErrorConstants
 {
     companion object
     {
-        private const val DATABASE_NAME = "jdbc:derby:Darts"
-        private const val DATABASE_NAME_WITH_CREATE = "$DATABASE_NAME;create=true"
-
         @JvmField val DATABASE_FILE_PATH = System.getProperty("user.dir") + "\\Databases"
 
         private val hsConnections = mutableListOf<Connection>()
@@ -31,6 +28,7 @@ class DatabaseUtil : SqlErrorConstants
         {
             synchronized(connectionPoolLock)
             {
+                hsConnections.clear()
                 for (i in 0 until initialCount)
                 {
                     val conn = createDatabaseConnection()
@@ -68,7 +66,7 @@ class DatabaseUtil : SqlErrorConstants
             connectionCreateCount++
 
             Debug.appendBanner("CREATED new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
-            return createDatabaseConnection(dbName = DATABASE_NAME_WITH_CREATE)
+            return createDatabaseConnection(dbName = AbstractClient.derbyDbName)
         }
 
         @Throws(SQLException::class)
@@ -281,7 +279,7 @@ class DatabaseUtil : SqlErrorConstants
         {
             try
             {
-                createDatabaseConnection(dbPath, DATABASE_NAME_WITH_CREATE)
+                createDatabaseConnection(dbPath, AbstractClient.derbyDbName)
             }
             catch (t: Throwable)
             {

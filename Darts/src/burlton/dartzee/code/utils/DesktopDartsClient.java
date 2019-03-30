@@ -1,5 +1,6 @@
 package burlton.dartzee.code.utils;
 
+import burlton.core.code.util.AbstractClient;
 import burlton.desktopcore.code.util.AbstractDesktopClient;
 import burlton.core.code.util.Debug;
 import burlton.core.code.util.MessageSender;
@@ -8,6 +9,14 @@ import burlton.desktopcore.code.util.UpdateChecker;
 
 public class DesktopDartsClient extends AbstractDesktopClient
 {
+	@Override
+	public void init()
+	{
+		super.init();
+
+		AbstractClient.derbyDbName = DartsDatabaseUtil.DATABASE_NAME;
+	}
+
 	@Override
 	public String getUsername()
 	{

@@ -2,11 +2,12 @@ package burlton.dartzee.test.`object`
 
 import burlton.dartzee.code.`object`.DartHint
 import burlton.dartzee.code.`object`.factoryDartHintFromString
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test
 
-class TestDartHint
+class TestDartHint: AbstractTest()
 {
     @Test
     fun `should factory doubles`()
