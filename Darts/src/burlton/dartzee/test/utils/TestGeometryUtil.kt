@@ -2,6 +2,7 @@ package burlton.dartzee.test.utils
 
 import burlton.core.code.obj.HandyArrayList
 import burlton.dartzee.code.utils.GeometryUtil
+import burlton.dartzee.test.helper.AbstractTest
 import org.junit.Assert
 import org.junit.Test
 import java.awt.Point
@@ -12,7 +13,7 @@ import java.awt.Point
  * 20/04/2018 - for posterity...
  * 14/01/2019 - Now brought to you with Kotlin!
  * */
-class TestGeometryUtil
+class TestGeometryUtil: AbstractTest()
 {
     @Test
     fun testTranslatePoint()

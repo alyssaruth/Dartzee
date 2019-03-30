@@ -2,23 +2,15 @@ package burlton.dartzee.test.helper
 
 import burlton.dartzee.code.utils.PreferenceUtil
 import org.junit.After
-import org.junit.Before
 
-abstract class AbstractRegistryTest
+abstract class AbstractRegistryTest: AbstractTest()
 {
     private val hmPreferenceToSetting = mutableMapOf<String, String>()
 
     abstract fun getPreferencesAffected(): MutableList<String>
 
-    @Before
-    fun cachePreferenceValues()
+    override fun beforeClass()
     {
-        if (!hmPreferenceToSetting.isEmpty())
-        {
-            //We've already done the caching - no need to bother again
-            return
-        }
-
         getPreferencesAffected().forEach {
             hmPreferenceToSetting[it] = PreferenceUtil.getStringValue(it)
         }

@@ -16,6 +16,7 @@ public abstract class AbstractClient implements OnlineConstants
 	public static String operatingSystem = "";
 	public static boolean justUpdated = false;
 	public static int instanceNumber = 1;
+	public static String derbyDbName = "";
 	
 	public static final int SQL_TOLERANCE_QUERY = 5000; //5 seconds
 	public static final int SQL_TOLERANCE_INSERT = 500; //0.5s

@@ -41,4 +41,13 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         loadingVisible = false
     }
 
+    fun reset()
+    {
+        infosShown.clear()
+        errorsShown.clear()
+        questionsShown.clear()
+        loadingsShown.clear()
+        loadingVisible = false
+    }
+
 }

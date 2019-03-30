@@ -1,29 +1,21 @@
 package burlton.dartzee.test.screen
 
-import burlton.core.code.util.Debug
-import burlton.core.test.TestDebug
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.DartboardSegmentSelector
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Before
 import org.junit.Test
 import java.awt.event.MouseEvent
 
-class TestDartboardSegmentSelector
+class TestDartboardSegmentSelector: AbstractTest()
 {
-    @Before
-    fun setup()
-    {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-    }
-
     @Test
     fun `clicking the same segment should toggle it on and off`()
     {
