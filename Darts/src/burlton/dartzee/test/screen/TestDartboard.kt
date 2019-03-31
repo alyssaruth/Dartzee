@@ -4,7 +4,7 @@ import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
-import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -16,7 +16,7 @@ import java.awt.Color
 import java.awt.Point
 import java.awt.event.MouseEvent
 
-class TestDartboard: AbstractTest()
+class TestDartboard: AbstractDartsTest()
 {
     @Test
     fun `Dartboard listener should be notified if set`()

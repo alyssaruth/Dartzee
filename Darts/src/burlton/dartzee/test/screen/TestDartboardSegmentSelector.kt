@@ -5,7 +5,7 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.DartboardSegmentSelector
-import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
@@ -14,7 +14,7 @@ import io.mockk.mockk
 import org.junit.Test
 import java.awt.event.MouseEvent
 
-class TestDartboardSegmentSelector: AbstractTest()
+class TestDartboardSegmentSelector: AbstractDartsTest()
 {
     @Test
     fun `clicking the same segment should toggle it on and off`()

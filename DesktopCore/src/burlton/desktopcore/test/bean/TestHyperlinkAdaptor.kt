@@ -2,6 +2,7 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.HyperlinkAdaptor
 import burlton.desktopcore.code.bean.HyperlinkListener
+import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.mockk.mockk
@@ -13,7 +14,7 @@ import javax.swing.JPanel
 
 private val MOUSE_EVENT_OVER_HYPERLINK = mockk<MouseEvent>(relaxed = true)
 
-class TestHyperlinkAdaptor
+class TestHyperlinkAdaptor: AbstractDesktopTest()
 {
     @Test
     fun `Should not accept a non-component listener`()

@@ -3,7 +3,7 @@ package burlton.dartzee.test.helper
 import burlton.dartzee.code.utils.PreferenceUtil
 import org.junit.After
 
-abstract class AbstractRegistryTest: AbstractTest()
+abstract class AbstractRegistryTest: AbstractDartsTest()
 {
     private val hmPreferenceToSetting = mutableMapOf<String, String>()
 

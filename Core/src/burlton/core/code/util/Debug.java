@@ -21,7 +21,7 @@ public class Debug implements CoreRegistry
 	private static final long MINIMUM_EMAIL_GAP_MILLIS = 10000;
 
 	private static Object emailSyncObject = new Object();
-	private static long lastErrorMillis = -1;
+	public static long lastErrorMillis = -1;
 	private static long lastEmailMillis = -1;
 
 	private static DebugOutput output = null;

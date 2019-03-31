@@ -1,11 +1,11 @@
 package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.SpinnerSingleSelector
-import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractDartsTest
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class TestSpinnerSingleSelector: AbstractTest()
+class TestSpinnerSingleSelector: AbstractDartsTest()
 {
     @Test
     fun `Should not be able to select 21-24`()

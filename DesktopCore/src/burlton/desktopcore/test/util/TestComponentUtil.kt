@@ -1,28 +1,21 @@
 package burlton.desktopcore.test.util
 
 import burlton.core.code.util.Debug
-import burlton.core.test.TestDebug
 import burlton.desktopcore.code.util.containsComponent
 import burlton.desktopcore.code.util.createButtonGroup
 import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.Before
 import org.junit.Test
 import javax.swing.*
 
-class TestComponentUtil
+class TestComponentUtil: AbstractDesktopTest()
 {
-    @Before
-    fun setup()
-    {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-    }
-
     @Test
     fun `Should return children of the appropriate type`()
     {
