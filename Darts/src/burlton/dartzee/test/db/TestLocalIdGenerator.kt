@@ -1,7 +1,7 @@
 package burlton.dartzee.test.db
 
 import burlton.dartzee.code.db.LocalIdGenerator
-import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertGame
 import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldBeUnique
@@ -9,7 +9,7 @@ import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestLocalIdGenerator: AbstractTest()
+class TestLocalIdGenerator: AbstractDartsTest()
 {
     override fun beforeEachTest()
     {

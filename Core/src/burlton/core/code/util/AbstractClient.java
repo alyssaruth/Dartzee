@@ -10,17 +10,18 @@ import java.util.Locale;
  */
 public abstract class AbstractClient implements OnlineConstants
 {
+	public static final int SQL_TOLERANCE_QUERY = 5000; //5 seconds
+
 	public static boolean devMode = false;
 	public static boolean traceReadSql = true;
 	public static boolean traceWriteSql = true;
+	public static int sqlToleranceQuery = SQL_TOLERANCE_QUERY;
 	public static String operatingSystem = "";
 	public static boolean justUpdated = false;
 	public static int instanceNumber = 1;
 	public static String derbyDbName = "";
 	
-	public static final int SQL_TOLERANCE_QUERY = 5000; //5 seconds
-	public static final int SQL_TOLERANCE_INSERT = 500; //0.5s
-	public static final int SQL_TOLERANCE_UPDATE = 5000; //5 seconds
+
 	
 	//Instance
 	private static AbstractClient client = null;

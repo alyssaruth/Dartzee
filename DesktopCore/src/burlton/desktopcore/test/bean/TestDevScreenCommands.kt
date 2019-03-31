@@ -3,29 +3,22 @@ package burlton.desktopcore.test.bean
 import burlton.core.code.util.Debug
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
-import burlton.desktopcore.code.screen.DebugConsole
+import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.mockk.mockk
-import org.junit.Before
 import org.junit.Test
 import java.awt.event.KeyEvent
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
-class TestDevScreenCommands
+class TestDevScreenCommands: AbstractDesktopTest()
 {
     var commandsEnabled = true
     var toggle = false
-
-    @Before
-    fun setup()
-    {
-        Debug.initialise(DebugConsole())
-    }
 
     @Test
     fun testCommandsDisabled()

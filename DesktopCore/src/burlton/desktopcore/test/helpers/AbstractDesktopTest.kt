@@ -1,26 +1,20 @@
-package burlton.dartzee.test.helper
+package burlton.desktopcore.test.helpers
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.test.TestDebug
-import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.test.helpers.TestMessageDialogFactory
-import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.Before
-import java.sql.DriverManager
 
+private const val DEBUG_MODE = true
+private var doneOneTimeSetup = false
 
-private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
-
-abstract class AbstractTest
+abstract class AbstractDesktopTest
 {
-    private var doneOneTimeSetup = false
     private var doneClassSetup = false
     protected val dialogFactory = TestMessageDialogFactory()
 
     @Before
-    fun beforeAllTests()
+    fun oneTimeSetup()
     {
         if (doneOneTimeSetup)
         {
@@ -28,12 +22,12 @@ abstract class AbstractTest
         }
 
         Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.setLogToSystemOut(false)
+        Debug.setDebugExtension(TestDebugExtension())
+        Debug.setSendingEmails(false)
+        Debug.setLogToSystemOut(DEBUG_MODE)
         DialogUtil.init(dialogFactory)
 
-        AbstractClient.derbyDbName = DATABASE_NAME_TEST
-        DriverManager.registerDriver(EmbeddedDriver())
-        DartsDatabaseUtil.initialiseDatabase()
+        doneOneTimeSetup = true
     }
 
     @Before
@@ -45,7 +39,7 @@ abstract class AbstractTest
         }
 
         Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.setLogToSystemOut(false)
+        Debug.setLogToSystemOut(DEBUG_MODE)
         DialogUtil.init(dialogFactory)
 
         beforeClass()
@@ -59,6 +53,7 @@ abstract class AbstractTest
     @Before
     open fun beforeEachTest()
     {
+        Debug.lastErrorMillis = -1
         dialogFactory.reset()
     }
 }

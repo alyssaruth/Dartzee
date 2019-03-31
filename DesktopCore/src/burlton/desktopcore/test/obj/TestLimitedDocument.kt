@@ -1,10 +1,11 @@
 package burlton.desktopcore.test.obj
 
 import burlton.desktopcore.code.obj.LimitedDocument
+import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestLimitedDocument
+class TestLimitedDocument: AbstractDesktopTest()
 {
     @Test
     fun testLimitedDocument()

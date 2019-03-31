@@ -172,9 +172,9 @@ class DatabaseUtil : SqlErrorConstants
             Debug.appendSql("(" + totalMillis + "ms) " + query, AbstractClient.traceReadSql)
 
             //No query should take longer than 5 seconds really...
-            if (totalMillis > AbstractClient.SQL_TOLERANCE_QUERY)
+            if (totalMillis > AbstractClient.sqlToleranceQuery)
             {
-                Debug.stackTraceNoError("SQL query took longer than " + AbstractClient.SQL_TOLERANCE_QUERY + " millis: " + query)
+                Debug.stackTraceNoError("SQL query took longer than ${AbstractClient.sqlToleranceQuery} millis: $query")
             }
 
             //Return an empty one if something's gone wrong
