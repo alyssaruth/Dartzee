@@ -1,8 +1,6 @@
 package burlton.dartzee.code.`object`
 
 import burlton.core.code.util.Debug
-import burlton.dartzee.code.screen.DartsApp
-import java.io.File
 
 object CheckoutSuggester
 {
@@ -27,9 +25,10 @@ object CheckoutSuggester
     {
         return try
         {
-            val uri = (DartsApp::class.java).getResource("/Checkouts").toURI()
+            val inputStream = javaClass.getResourceAsStream("/Checkouts")
             val checkouts = mutableListOf<String>()
-            File(uri).useLines { lines -> lines.forEach { checkouts.add(it) } }
+
+            inputStream.bufferedReader().useLines { lines -> lines.forEach { checkouts.add(it) } }
 
             parseCheckouts(checkouts)
         }
