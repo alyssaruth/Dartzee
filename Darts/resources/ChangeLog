@@ -1,8 +1,11 @@
-------- UNRELEASED -------
+--------- v3.2.0 ---------
 
 + Checkout suggestions in X01
 = Fixed a bug where screen title wasn't set for new matches
 = Performance improvement: Match stats refresh in the background
+= Performance improvement: Use GUIDs for RowIds to eliminate synchronization
+= 52.3% Kotlin
+= 15.75% test coverage (2245 / 14,248 lines covered by 148 tests)
 
 --------- v3.1.1 ---------
 

@@ -7,7 +7,7 @@ public interface OnlineConstants
 	
 	//Used in the AboutDialog and for sending logs
 	public static final String ENTROPY_VERSION_NUMBER = "v7.0.0";
-	public static final String DARTS_VERSION_NUMBER = "v3.1.1";
+	public static final String DARTS_VERSION_NUMBER = "v3.2.0";
 	
 	//Filenames - for automatic updates
 	public static final String FILE_NAME_DARTS = "Dartzee.jar";
