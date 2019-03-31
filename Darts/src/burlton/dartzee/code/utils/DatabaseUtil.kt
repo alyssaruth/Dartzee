@@ -58,8 +58,6 @@ class DatabaseUtil : SqlErrorConstants
             }
         }
 
-
-
         @Throws(SQLException::class)
         @JvmStatic fun createDatabaseConnection(): Connection
         {
