@@ -601,7 +601,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		if (finishingPosition == 1)
 		{
 			int achievementRef = AchievementUtilKt.getWinAchievementRef(gameEntity.gameType);
-			AchievementEntity.incrementAchievement(achievementRef, playerId, gameEntity.getGameId(), 1);
+			AchievementEntity.incrementAchievement(achievementRef, playerId, gameEntity.getRowId(), 1);
 		}
 
 		//Update the 'best game' achievement
@@ -609,7 +609,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		String gameParams = aa.getGameParams();
 		if (gameParams.equals(gameEntity.gameParams))
 		{
-			AchievementEntity.updateAchievement(aa.getAchievementRef(), playerId, gameEntity.getGameId(), score);
+			AchievementEntity.updateAchievement(aa.getAchievementRef(), playerId, gameEntity.getRowId(), score);
 		}
 	}
 	

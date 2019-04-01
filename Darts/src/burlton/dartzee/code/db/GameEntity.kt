@@ -110,11 +110,6 @@ class GameEntity : AbstractEntity<GameEntity>()
         return super.assignRowId()
     }
 
-    fun getGameId(): String
-    {
-        return rowId
-    }
-
     fun retrievePlayersVector(): MutableList<PlayerEntity>
     {
         val ret = mutableListOf<PlayerEntity>()
@@ -160,7 +155,7 @@ fun factoryAndSave(match: DartsMatchEntity): GameEntity
  */
 fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity>
 {
-    val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, RowId"
+    val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, DtCreation"
     return GameEntity().retrieveEntities(sql)
 }
 
