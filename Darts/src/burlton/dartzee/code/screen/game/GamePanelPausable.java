@@ -99,7 +99,7 @@ public abstract class GamePanelPausable<S extends DartsScorerPausable> extends D
 		loser.setFinishingPosition(totalPlayers);
 		loser.saveToDatabase();
 		
-		gameEntity.setDtFinish(DateUtil.getSqlDateNow());
+		gameEntity.dtFinish  = DateUtil.getSqlDateNow();
 		gameEntity.saveToDatabase();
 		
 		parentWindow.startNextGameIfNecessary();

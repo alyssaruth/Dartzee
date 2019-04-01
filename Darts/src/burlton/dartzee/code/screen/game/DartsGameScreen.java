@@ -56,7 +56,7 @@ public final class DartsGameScreen extends JFrame
 		ScreenCache.addDartsGameScreen(gameId, this);
 		
 		//Initialise some basic properties of the tab, such as visibility of components etc
-		DartsGamePanel<? extends DartsScorer> tab = DartsGamePanel.factory(this, game.getGameType());
+		DartsGamePanel<? extends DartsScorer> tab = DartsGamePanel.factory(this, game.gameType);
 		tab.initBasic(game, totalPlayers);
 		
 		String title = tab.getGameTitle();
@@ -89,11 +89,11 @@ public final class DartsGameScreen extends JFrame
 		ScreenCache.addDartsGameScreen(gameId, this);
 		
 		//Initialise some basic properties of the tab, such as visibility of components etc
-		DartsGamePanel<? extends DartsScorer> tab = DartsGamePanel.factory(this, game.getGameType());
+		DartsGamePanel<? extends DartsScorer> tab = DartsGamePanel.factory(this, game.gameType);
 		tab.initBasic(game, match.getPlayerCount());
 		
 		//Add the single game tab and set the parent window to be visible
-		tabbedPane.addTab("#" + game.getLocalId(), tab);
+		tabbedPane.addTab("#" + game.localId, tab);
 		hmGameIdToTab.put(gameId, tab);
 		setVisible(true);
 		
@@ -251,7 +251,7 @@ public final class DartsGameScreen extends JFrame
 			return;
 		}
 		
-		String matchId = gameEntity.getDartsMatchId();
+		String matchId = gameEntity.dartsMatchId;
 		if (matchId.isEmpty())
 		{
 			loadAndDisplaySingleGame(gameEntity);

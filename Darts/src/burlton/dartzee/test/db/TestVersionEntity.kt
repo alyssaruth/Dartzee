@@ -3,7 +3,7 @@ package burlton.dartzee.test.db
 import burlton.dartzee.code.db.VersionEntity
 import burlton.dartzee.code.db.VersionEntity.Companion.insertVersion
 import burlton.dartzee.code.utils.DartsDatabaseUtil
-import burlton.dartzee.test.helper.exceptionLogged
+import burlton.core.test.helper.exceptionLogged
 import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.shouldBe
 import org.junit.Test
