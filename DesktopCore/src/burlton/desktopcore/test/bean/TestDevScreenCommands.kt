@@ -1,6 +1,6 @@
 package burlton.desktopcore.test.bean
 
-import burlton.core.code.util.Debug
+import burlton.core.test.helper.getLogs
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
@@ -106,11 +106,9 @@ class TestDevScreenCommands: AbstractDesktopTest()
         cheatBar.text = "exception"
         cheatBar.actionPerformed(mockk())
 
-        Debug.waitUntilLoggingFinished()
-
         cheatBar.text.shouldBeEmpty()
         cheatBar.isEnabled.shouldBeFalse()
-        Debug.getLogs().shouldContain("java.lang.Exception: Test")
+        getLogs().shouldContain("java.lang.Exception: Test")
     }
 
 

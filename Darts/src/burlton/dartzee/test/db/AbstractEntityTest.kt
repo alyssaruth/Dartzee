@@ -1,10 +1,10 @@
 package burlton.dartzee.test.db
 
 import burlton.core.code.util.Debug
+import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -22,8 +22,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     fun `Column names should match declared fields`()
     {
         getExpectedClassFields().forEach{
-            val col = it.toLowerCase()
-            dao.javaClass.getDeclaredField(col) shouldNotBe null
+            dao.javaClass.getDeclaredField(it) shouldNotBe null
         }
     }
 
@@ -31,6 +30,8 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     fun `Insert, Retrieve, Update`()
     {
         val entity: AbstractEntity<E> = dao.javaClass.newInstance()
+        val rowId = entity.assignRowId()
+
         val fields = getExpectedClassFields()
 
         Thread.sleep(50)
@@ -41,11 +42,9 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
             fieldToSet.set(entity, getInitialValueForField(fieldToSet))
         }
 
-        val rowId = entity.assignRowId()
         entity.saveToDatabase()
-        Debug.waitUntilLoggingFinished()
 
-        Debug.getLogs().shouldContain("INSERT INTO ${dao.getTableName()} VALUES ('$rowId'")
+        getLogs().shouldContain("INSERT INTO ${dao.getTableName()} VALUES ('$rowId'")
 
         //Retrieve and check all values are as expected
         val retrievedEntity = dao.retrieveForId(rowId)!!
@@ -53,6 +52,8 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
             val fieldToCheck = dao.javaClass.getDeclaredField(it)
 
             val retrievedValue = fieldToCheck.get(entity)
+
+            Debug.append("Comparing $it")
             retrievedValue shouldBe getInitialValueForField(fieldToCheck)
         }
 
@@ -72,8 +73,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
         Thread.sleep(50)
 
         retrievedEntity.saveToDatabase()
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldContain("UPDATE ${dao.getTableName()}")
+        getLogs().shouldContain("UPDATE ${dao.getTableName()}")
 
         //Final retrieve to make sure updated values are set correctly
         val finalEntity = dao.retrieveEntity("RowId = '${entity.rowId}'")!!
@@ -106,8 +106,8 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
         {
             String::class.java -> Pair("foo", "bar")
             Int::class.java -> Pair(100, 20)
-            Long::class.java -> Pair(2000, Long.MAX_VALUE - 1)
-            Timestamp::class.java -> Pair(getSqlDateNow(), DateStatics.END_OF_TIME)
+            Long::class.java -> Pair(2000, Integer.MAX_VALUE - 1)
+            Timestamp::class.java -> Pair(Timestamp.valueOf("2019-04-01 21:29:32"), DateStatics.END_OF_TIME)
             else -> {
                 println(field.type)
                 Pair("Uh oh", "oh dear")

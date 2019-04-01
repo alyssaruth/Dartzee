@@ -2,6 +2,7 @@ package burlton.dartzee.test.utils
 
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.wipeTable
@@ -24,13 +25,11 @@ class TestDatabaseUtil: AbstractDartsTest()
 
         //Should borrow from the pool when non-empty
         val conn = DatabaseUtil.borrowConnection()
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldBeEmpty()
+        getLogs().shouldBeEmpty()
 
         //Should create a new one now that there are none left
         val conn2 = DatabaseUtil.borrowConnection()
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldContain("CREATED new connection")
+        getLogs().shouldContain("CREATED new connection")
 
         DatabaseUtil.returnConnection(conn2)
         DatabaseUtil.returnConnection(conn)
@@ -38,8 +37,7 @@ class TestDatabaseUtil: AbstractDartsTest()
         //Should have returned the connection successfully
         Debug.clearLogs()
         DatabaseUtil.borrowConnection()
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldBeEmpty()
+        getLogs().shouldBeEmpty()
     }
 
     @Test
@@ -48,10 +46,8 @@ class TestDatabaseUtil: AbstractDartsTest()
         val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
 
         DatabaseUtil.executeUpdates(updates) shouldBe true
-
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldContain("CREATE TABLE zzUpdateTest(str VARCHAR(50));")
-        Debug.getLogs().shouldContain("INSERT INTO zzUpdateTest VALUES ('5');")
+        getLogs().shouldContain("CREATE TABLE zzUpdateTest(str VARCHAR(50));")
+        getLogs().shouldContain("INSERT INTO zzUpdateTest VALUES ('5');")
 
         DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM zzUpdateTest") shouldBe 1
 
@@ -75,9 +71,8 @@ class TestDatabaseUtil: AbstractDartsTest()
         val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
         DatabaseUtil.executeUpdate(update) shouldBe false
 
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldContain("Caught SQLException for query: $update")
-        Debug.getLogs().shouldContain("Syntax error: Encountered \"(\"")
+        getLogs().shouldContain("Caught SQLException for query: $update")
+        getLogs().shouldContain("Syntax error: Encountered \"(\"")
     }
 
     @Test
@@ -97,8 +92,7 @@ class TestDatabaseUtil: AbstractDartsTest()
             }
         }
 
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldContain("SELECT * FROM zzQueryTest")
+        getLogs().shouldContain("SELECT * FROM zzQueryTest")
         retrievedValues.shouldContainExactly("RowOne", "RowTwo")
 
         DatabaseUtil.dropTable("zzQueryTest")
@@ -111,10 +105,9 @@ class TestDatabaseUtil: AbstractDartsTest()
 
         val query = "SELECT * FROM zzQueryTest"
         DatabaseUtil.executeQuery(query)
-        Debug.waitUntilLoggingFinished()
 
-        Debug.getLogs().shouldContain("Table/View 'ZZQUERYTEST' does not exist.")
-        Debug.getLogs().shouldContain("Caught SQLException for query: $query")
+        getLogs().shouldContain("Table/View 'ZZQUERYTEST' does not exist.")
+        getLogs().shouldContain("Caught SQLException for query: $query")
 
         dialogFactory.errorsShown.shouldHaveSize(1)
     }
@@ -127,8 +120,7 @@ class TestDatabaseUtil: AbstractDartsTest()
         val query = "SELECT * FROM Game"
         DatabaseUtil.executeQuery(query)
 
-        Debug.waitUntilLoggingFinished()
-        Debug.getLogs().shouldContain("SQL query took longer than ${AbstractClient.sqlToleranceQuery} millis: $query")
+        getLogs().shouldContain("SQL query took longer than ${AbstractClient.sqlToleranceQuery} millis: $query")
         dialogFactory.errorsShown.shouldBeEmpty()
 
         wipeTable("Game")

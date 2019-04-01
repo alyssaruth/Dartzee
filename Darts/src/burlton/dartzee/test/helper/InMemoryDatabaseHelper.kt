@@ -4,6 +4,7 @@ import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.LocalIdGenerator
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
 import burlton.desktopcore.code.util.DateStatics
 import java.sql.Timestamp
 import java.util.*
@@ -31,4 +32,9 @@ fun insertGame(uuid: String = UUID.randomUUID().toString(),
     ge.matchOrdinal = matchOrdinal
 
     ge.saveToDatabase()
+}
+
+fun getCountFromTable(table: String): Int
+{
+    return executeQueryAggregate("SELECT COUNT(1) FROM $table")
 }

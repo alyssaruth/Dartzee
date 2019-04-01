@@ -2,6 +2,7 @@ package burlton.core.test
 
 import burlton.core.code.util.Debug
 import burlton.core.code.util.DebugOutput
+import burlton.core.test.helper.getLogs
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
@@ -41,8 +42,7 @@ class TestDebug
         Debug.appendSql("SELECT * FROM Table", false)
         Debug.appendSql("SELECT * FROM OtherTable", true)
 
-        Debug.waitUntilLoggingFinished()
-        val logs = Debug.getLogs()
+        val logs = getLogs()
 
         logs shouldContain("[SQL] SELECT * FROM OtherTable")
         logs shouldContain(dayAndMonthStr)
@@ -62,8 +62,7 @@ class TestDebug
         Debug.appendWithoutDate("Present")
         Debug.appendTabbed("Tabbed")
 
-        Debug.waitUntilLoggingFinished()
-        val logs = Debug.getLogs()
+        val logs = getLogs()
 
         logs shouldContain("                                      Present")
         logs shouldContain("                                      \tTabbed")
@@ -80,8 +79,7 @@ class TestDebug
         Debug.appendBanner("NoBanner", false)
         Debug.appendBanner("IMPORTANT")
 
-        Debug.waitUntilLoggingFinished()
-        val logs = Debug.getLogs()
+        val logs = getLogs()
 
         logs shouldNotContain("NoBanner")
         logs shouldContain("*************")
@@ -102,9 +100,7 @@ class TestDebug
         Debug.setLogToSystemOut(true)
         Debug.append("ToOut")
 
-        Debug.waitUntilLoggingFinished()
-
-        val debugLogs = Debug.getLogs()
+        val debugLogs = getLogs()
         val systemOutLogs = newOut.toString()
 
         debugLogs shouldContain("NotOut")
@@ -120,9 +116,7 @@ class TestDebug
         Debug.clearLogs()
         Debug.stackTrace("This is a test")
 
-        Debug.waitUntilLoggingFinished()
-
-        val logs = Debug.getLogs()
+        val logs = getLogs()
 
         logs shouldContain("This is a test")
         logs shouldContain("java.lang.Throwable")
@@ -134,9 +128,8 @@ class TestDebug
     {
         Debug.clearLogs()
         Debug.newLine()
-        Debug.waitUntilLoggingFinished()
 
-        val logs = Debug.getLogs()
+        val logs = getLogs()
         logs shouldBe("\n                                      ")
     }
 

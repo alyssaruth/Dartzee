@@ -30,12 +30,12 @@ class GameEntity : AbstractEntity<GameEntity>()
     /**
      * DB fields
      */
-    var localId = -1L
-    var gameType = -1
-    var gameParams = ""
-    var dtFinish = DateStatics.END_OF_TIME
-    var dartsMatchId: String = ""
-    var matchOrdinal = -1
+    @JvmField var localId = -1L
+    @JvmField var gameType = -1
+    @JvmField var gameParams = ""
+    @JvmField var dtFinish = DateStatics.END_OF_TIME
+    @JvmField var dartsMatchId: String = ""
+    @JvmField var matchOrdinal = -1
 
     /**
      * Helpers

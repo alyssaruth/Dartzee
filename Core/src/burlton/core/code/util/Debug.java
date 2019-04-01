@@ -482,7 +482,7 @@ public class Debug implements CoreRegistry
 
 	private static boolean needToSendMoreLogs()
 	{
-		String ta = getLogs();
+		String ta = getCurrentLogs();
 		String m = ta.substring(positionLastEmailed);
 		if (m.contains(SUCCESS_MESSAGE) && m.length() < 100)
 		{
@@ -496,7 +496,7 @@ public class Debug implements CoreRegistry
 	/**
 	 * Expose this statically - it makes sense
 	 */
-	public static String getLogs()
+	public static String getCurrentLogs()
 	{
 		return output.getLogs();
 	}
