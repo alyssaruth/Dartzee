@@ -3,6 +3,7 @@ package burlton.dartzee.code.utils
 import burlton.core.code.util.Debug
 import burlton.core.code.util.FileUtil
 import burlton.dartzee.code.db.*
+import burlton.dartzee.code.db.VersionEntity.Companion.insertVersion
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.screen.ProgressDialog
 import burlton.desktopcore.code.util.DialogUtil
@@ -142,10 +143,7 @@ object DartsDatabaseUtil
         DialogUtil.showLoadingDialog("Initialising database, please wait...")
         Debug.appendBanner("Initting database for the first time")
 
-        val versionEntity = VersionEntity()
-        versionEntity.assignRowId()
-        versionEntity.version = DATABASE_VERSION
-        versionEntity.saveToDatabase()
+        insertVersion()
 
         Debug.append("Saved database version of $DATABASE_VERSION")
 

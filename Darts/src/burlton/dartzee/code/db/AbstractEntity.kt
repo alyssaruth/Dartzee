@@ -441,7 +441,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     fun writeTimestamp(ps: PreparedStatement, ix: Int, value: Timestamp, statementStr: String): String
     {
         ps.setTimestamp(ix, value)
-        return swapInValue(statementStr, value)
+        return swapInValue(statementStr, "'$value'")
     }
 
     @Throws(SQLException::class)
