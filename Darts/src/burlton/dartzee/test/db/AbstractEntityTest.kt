@@ -4,12 +4,14 @@ import burlton.core.code.util.Debug
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.getCountFromTable
+import burlton.dartzee.test.helper.wipeTable
 import burlton.desktopcore.code.util.DateStatics
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
-import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.sql.Timestamp
 
 abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
@@ -22,39 +24,32 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     fun `Column names should match declared fields`()
     {
         getExpectedClassFields().forEach{
-            dao.javaClass.getDeclaredField(it) shouldNotBe null
+            dao.javaClass.getMethod("get$it") shouldNotBe null
         }
     }
 
     @Test
-    fun `Insert, Retrieve, Update`()
+    fun `Insert, Retrieve, Update, Delete`()
     {
+        wipeTable(dao.getTableName())
+
         val entity: AbstractEntity<E> = dao.javaClass.newInstance()
-        val rowId = entity.assignRowId()
-
-        val fields = getExpectedClassFields()
-
-        Thread.sleep(50)
+        entity.assignRowId()
+        val rowId = entity.rowId
 
         //Insert
-        fields.forEach{
-            val fieldToSet = dao.javaClass.getDeclaredField(it)
-            fieldToSet.set(entity, getInitialValueForField(fieldToSet))
-        }
-
-        entity.saveToDatabase()
-
+        setValuesAndSaveToDatabase(entity, true)
         getLogs().shouldContain("INSERT INTO ${dao.getTableName()} VALUES ('$rowId'")
+        Debug.clearLogs()
 
         //Retrieve and check all values are as expected
         val retrievedEntity = dao.retrieveForId(rowId)!!
-        fields.forEach{
-            val fieldToCheck = dao.javaClass.getDeclaredField(it)
 
-            val retrievedValue = fieldToCheck.get(entity)
+        getExpectedClassFields().forEach{
+            val getMethod = dao.javaClass.getMethod("get$it")
 
-            Debug.append("Comparing $it")
-            retrievedValue shouldBe getInitialValueForField(fieldToCheck)
+            val retrievedValue = getMethod.invoke(retrievedEntity)
+            retrievedValue shouldBe getValueForField(getMethod, true)
         }
 
         val dtCreation = entity.dtCreation
@@ -64,28 +59,38 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
         dtFirstUpdate.after(dtCreation) shouldBe true
 
         //Update
-        fields.forEach{
-            val fieldToUpdate = dao.javaClass.getDeclaredField(it)
-            val newValue = getUpdatedValueForField(fieldToUpdate)
-            fieldToUpdate.set(retrievedEntity, newValue)
-        }
-
-        Thread.sleep(50)
-
-        retrievedEntity.saveToDatabase()
+        setValuesAndSaveToDatabase(retrievedEntity, false)
         getLogs().shouldContain("UPDATE ${dao.getTableName()}")
 
         //Final retrieve to make sure updated values are set correctly
-        val finalEntity = dao.retrieveEntity("RowId = '${entity.rowId}'")!!
-        fields.forEach{
-            val fieldToCheck = dao.javaClass.getDeclaredField(it)
-            val finalValue = fieldToCheck.get(finalEntity)
+        val finalEntity = dao.retrieveEntity("RowId = '$rowId'")!!
+        getExpectedClassFields().forEach{
+            val getMethod = dao.javaClass.getMethod("get$it")
 
-            finalValue shouldBe getUpdatedValueForField(fieldToCheck)
+            val retrievedValue = getMethod.invoke(finalEntity)
+            retrievedValue shouldBe getValueForField(getMethod, false)
         }
 
         finalEntity.dtCreation shouldBe entity.dtCreation
         finalEntity.dtLastUpdate.after(dtFirstUpdate) shouldBe true
+
+        //Delete
+        finalEntity.deleteFromDatabase() shouldBe true
+        getCountFromTable(dao.getTableName()) shouldBe 0
+    }
+    private fun setValuesAndSaveToDatabase(entity: AbstractEntity<E>, initial: Boolean)
+    {
+        //Sleep to ensure DtLastUpdate has some time to move
+        Thread.sleep(50)
+
+        getExpectedClassFields().forEach{
+            val getMethod = dao.javaClass.getMethod("get$it")
+            val setMethod = dao.javaClass.getDeclaredMethod("set$it", getMethod.returnType)
+
+            setMethod.invoke(entity, getValueForField(getMethod, initial))
+        }
+
+        entity.saveToDatabase()
     }
 
     private fun getExpectedClassFields(): List<String>
@@ -95,22 +100,20 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
         cols.remove("DtCreation")
         cols.remove("DtLastUpdate")
 
-        return cols.map { it.replaceFirst(it.first(), it.first().toLowerCase(), false)}
+        return cols
     }
 
-    private fun getInitialValueForField(field: Field) = getValuesForField(field).first
-    private fun getUpdatedValueForField(field: Field) = getValuesForField(field).second
-    private fun getValuesForField(field: Field): Pair<Any, Any>
+    private fun getValueForField(getMethod: Method, initial: Boolean): Any
     {
-        return when (field.type)
+        return when (getMethod.returnType)
         {
-            String::class.java -> Pair("foo", "bar")
-            Int::class.java -> Pair(100, 20)
-            Long::class.java -> Pair(2000, Integer.MAX_VALUE - 1)
-            Timestamp::class.java -> Pair(Timestamp.valueOf("2019-04-01 21:29:32"), DateStatics.END_OF_TIME)
+            String::class.java -> if (initial) "foo" else "bar"
+            Int::class.java -> if (initial) 20 else 100
+            Long::class.java -> if (initial) 2000 else Integer.MAX_VALUE - 1
+            Timestamp::class.java -> if (initial) Timestamp.valueOf("2019-04-01 21:29:32") else DateStatics.END_OF_TIME
             else -> {
-                println(field.type)
-                Pair("Uh oh", "oh dear")
+                println(getMethod.returnType)
+                "uh oh"
             }
         }
     }

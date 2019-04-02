@@ -93,7 +93,7 @@ object DatabaseSanityCheck
 
         for (result in sanityErrors)
         {
-            val row = arrayOf(result.description, result.count, "View Results >", "Auto-fix")
+            val row = arrayOf(result.getDescription(), result.getCount(), "View Results >", "Auto-fix")
             model.addRow(row)
         }
 
@@ -102,7 +102,7 @@ object DatabaseSanityCheck
 
     private fun showResultsBreakdown(result: AbstractSanityCheckResult)
     {
-        val dlg = result.resultsDialog
+        val dlg = result.getResultsDialog()
         dlg.setSize(800, 600)
         dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
         dlg.isVisible = true
@@ -322,7 +322,7 @@ object DatabaseSanityCheck
         val count = games.size
         if (count > 0)
         {
-            sanityErrors.add(SanityCheckResultDuplicateMatchOrdinals(games, "Games with duplicate MatchOrdinals"))
+            sanityErrors.add(SanityCheckResultDuplicateMatchOrdinals(games))
         }
     }
 

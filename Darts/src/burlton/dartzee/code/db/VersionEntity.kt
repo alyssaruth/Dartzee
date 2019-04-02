@@ -9,7 +9,7 @@ import java.sql.SQLException
 
 class VersionEntity : AbstractEntity<VersionEntity>()
 {
-    @JvmField var version = DartsDatabaseUtil.DATABASE_VERSION
+    var version = DartsDatabaseUtil.DATABASE_VERSION
 
     override fun getTableName() = "Version"
 

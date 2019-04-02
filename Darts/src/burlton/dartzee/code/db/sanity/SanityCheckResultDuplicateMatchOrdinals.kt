@@ -10,11 +10,11 @@ import javax.swing.JOptionPane
  * Check for Games as part of the same match but with the same ordinal.
  * Originally happened due to a bug where the ordinal reset upon re-loading an incomplete match
  */
-class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>, description: String) : SanityCheckResultEntitiesSimple(entities, description)
+class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>) : AbstractSanityCheckResultEntities(entities)
 {
     override fun autoFix()
     {
-        val tm = resultsModel
+        val tm = getResultsModel()
         val rowCount = tm.rowCount
 
         //Get the distinct matches affected
@@ -46,4 +46,6 @@ class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>,
 
         DialogUtil.showInfo("Auto-fix complete. You should re-run the sanity check and check there are no errors.")
     }
+
+    override fun getDescription() = "Games with duplicate MatchOrdinals"
 }
