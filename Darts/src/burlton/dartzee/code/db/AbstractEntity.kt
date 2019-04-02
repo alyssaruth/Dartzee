@@ -37,11 +37,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
      * Default implementations
      */
     open fun getColumnsAllowedToBeUnset() = mutableListOf<String>()
-    open fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
-    {
-        //Do nothing
-        indexes.size
-    }
+    open fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>) {}
 
     /**
      * Helpers
@@ -179,7 +175,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
     fun deleteFromDatabase(): Boolean
     {
-        val sql = "DELETE FROM ${getTableName()} WHERE RowId = $rowId"
+        val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
         return DatabaseUtil.executeUpdate(sql)
     }
 

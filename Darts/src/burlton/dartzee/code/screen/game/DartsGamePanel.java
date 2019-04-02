@@ -214,7 +214,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	
 	private void assignScorer(PlayerEntity player, int playerNumber)
 	{
-		assignScorer(player, hmPlayerNumberToDartsScorer, playerNumber, gameEntity.gameParams);
+		assignScorer(player, hmPlayerNumberToDartsScorer, playerNumber, gameEntity.getGameParams());
 	}
 	private void initForAi(boolean hasAi)
 	{
@@ -233,18 +233,18 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		cpuTurn = new Timer("Timer-CpuTurn #" + gameEntity.getRowId());
 		
-		long gameNo = gameEntity.localId;
+		long gameNo = gameEntity.getLocalId();
 		String gameDesc = gameEntity.getTypeDesc();
 		gameTitle = "Game #" + gameNo + " (" + gameDesc + ", " + totalPlayers + " players)";
 		
 		if (statsPanel != null)
 		{
-			statsPanel.setGameParams(gameEntity.gameParams);
+			statsPanel.setGameParams(gameEntity.getGameParams());
 		}
 		
 		initScorers(totalPlayers);
 		
-		initImpl(gameEntity.gameParams);
+		initImpl(gameEntity.getGameParams());
 	}
 	
 	public void loadGameInCatch()
@@ -259,7 +259,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			
 			if (gameEntity != null)
 			{
-				DialogUtil.showError("Failed to load Game #" + gameEntity.localId);
+				DialogUtil.showError("Failed to load Game #" + gameEntity.getLocalId());
 			}
 			else
 			{
@@ -293,7 +293,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		dartboard.paintDartboardCached();
 		
 		//If the game is over, do some extra stuff to sort the screen out
-		Timestamp dtFinish = gameEntity.dtFinish;
+		Timestamp dtFinish = gameEntity.getDtFinish();
 		if (!DateUtil.isEndOfTime(dtFinish))
 		{
 			setGameReadOnly();
@@ -481,7 +481,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		for (ParticipantEntity pt : participants)
 		{
 			String playerId = pt.getPlayerId();
-			PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType);
+			PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.getGameType());
 		}
 	}
 	
@@ -589,7 +589,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		participant.saveToDatabase();
 		
 		String playerId = participant.getPlayerId();
-		PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType);
+		PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.getGameType());
 		
 		updateAchievementsForFinish(playerId, finishingPosition, numberOfDarts);
 
@@ -600,14 +600,14 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	{
 		if (finishingPosition == 1)
 		{
-			int achievementRef = AchievementUtilKt.getWinAchievementRef(gameEntity.gameType);
+			int achievementRef = AchievementUtilKt.getWinAchievementRef(gameEntity.getGameType());
 			AchievementEntity.incrementAchievement(achievementRef, playerId, gameEntity.getRowId(), 1);
 		}
 
 		//Update the 'best game' achievement
-		AbstractAchievementBestGame aa = AchievementUtilKt.getBestGameAchievement(gameEntity.gameType);
+		AbstractAchievementBestGame aa = AchievementUtilKt.getBestGameAchievement(gameEntity.getGameType());
 		String gameParams = aa.getGameParams();
-		if (gameParams.equals(gameEntity.gameParams))
+		if (gameParams.equals(gameEntity.getGameParams()))
 		{
 			AchievementEntity.updateAchievement(aa.getAchievementRef(), playerId, gameEntity.getRowId(), score);
 		}
@@ -874,7 +874,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	{
 		hmPlayerNumberToParticipant.put(playerNumber, participant);
 		
-		parentWindow.addParticipant(gameEntity.localId, participant);
+		parentWindow.addParticipant(gameEntity.getLocalId(), participant);
 	}
 	
 	public void closeResources()

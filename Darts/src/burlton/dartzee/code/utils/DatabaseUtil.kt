@@ -310,5 +310,17 @@ class DatabaseUtil : SqlErrorConstants
 
             return false
         }
+
+        fun deleteRowsFromTable(tableName: String, rowIds: List<String>): Boolean
+        {
+            var success = true
+            rowIds.chunked(50).forEach {
+                val idStr = it.joinToString{rowId -> "'$rowId'"}
+                val sql = "DELETE FROM $tableName WHERE RowId IN ($idStr)"
+                success = DatabaseUtil.executeUpdate(sql)
+            }
+
+            return success
+        }
     }
 }

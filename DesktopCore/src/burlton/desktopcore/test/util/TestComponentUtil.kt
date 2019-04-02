@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.util
 
 import burlton.core.code.util.Debug
-import burlton.core.code.util.Debug.getCurrentLogs
+import burlton.core.test.helper.getLogs
 import burlton.desktopcore.code.util.containsComponent
 import burlton.desktopcore.code.util.createButtonGroup
 import burlton.desktopcore.code.util.getAllChildComponentsForType
@@ -76,7 +76,7 @@ class TestComponentUtil: AbstractDesktopTest()
 
         createButtonGroup()
 
-        val logs = getCurrentLogs()
+        val logs = getLogs()
         logs shouldContain("Trying to create empty ButtonGroup")
         logs shouldContain("Debug.stackTrace")
     }
