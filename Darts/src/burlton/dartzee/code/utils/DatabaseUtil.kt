@@ -188,19 +188,9 @@ class DatabaseUtil : SqlErrorConstants
 
         @JvmStatic fun executeQueryAggregate(sql: String): Int
         {
-            try
-            {
-                executeQuery(sql).use { rs ->
-                    rs.next()
-                    return rs.getInt(1)
-                }
+            executeQuery(sql).use { rs ->
+                return if (rs.next()) rs.getInt(1) else -1
             }
-            catch (sqle: SQLException)
-            {
-                Debug.logSqlException(sql, sqle)
-                return -1
-            }
-
         }
 
         @JvmStatic fun doDuplicateInstanceCheck()
