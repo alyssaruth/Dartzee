@@ -125,8 +125,8 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         sb.append(" AND DtFinish < ")
         sb.append(getEndOfTimeSqlString())
 
-        val count = DatabaseUtil.executeQueryAggregate(sb).toLong()
-        return count == games.toLong()
+        val count = DatabaseUtil.executeQueryAggregate(sb)
+        return count == games
     }
 
     fun getPlayerCount(): Int = players.size
