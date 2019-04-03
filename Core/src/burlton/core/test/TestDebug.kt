@@ -21,8 +21,6 @@ class TestDebug
     fun setup()
     {
         System.setOut(PrintStream(newOut))
-
-        Debug.initialise(SimpleDebugOutput())
     }
 
     @After

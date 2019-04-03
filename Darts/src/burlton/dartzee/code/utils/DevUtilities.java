@@ -2,7 +2,7 @@ package burlton.dartzee.code.utils;
 
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.db.DartEntity;
-import burlton.dartzee.code.db.GameEntityKt;
+import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.dartzee.code.db.RoundEntity;
 import burlton.dartzee.code.screen.ScreenCache;
@@ -65,7 +65,7 @@ public class DevUtilities
 	
 	public static void purgeGame(long localId)
 	{
-		String gameId = GameEntityKt.getGameId(localId);
+		String gameId = GameEntity.getGameId(localId);
 		DartsGameScreen scrn = ScreenCache.getDartsGameScreen(gameId);
 		if (scrn != null)
 		{

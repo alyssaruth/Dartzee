@@ -1,6 +1,6 @@
 package burlton.dartzee.code.bean;
 
-import burlton.dartzee.code.db.GameEntityKt;
+import burlton.dartzee.code.db.GameEntity;
 import burlton.desktopcore.code.bean.ComboBoxItem;
 
 import javax.swing.*;
@@ -12,10 +12,10 @@ public class ComboBoxGameType extends JComboBox<ComboBoxItem<Integer>>
 	{
 		DefaultComboBoxModel<ComboBoxItem<Integer>> model = new DefaultComboBoxModel<>();
 		
-		List<Integer> gameTypes = GameEntityKt.getAllGameTypes();
+		List<Integer> gameTypes = GameEntity.getAllGameTypes();
 		for (int gameType : gameTypes)
 		{
-			ComboBoxItem<Integer> item = new ComboBoxItem<>(gameType, GameEntityKt.getTypeDesc(gameType));
+			ComboBoxItem<Integer> item = new ComboBoxItem<>(gameType, GameEntity.getTypeDesc(gameType));
 			model.addElement(item);
 		}
 		

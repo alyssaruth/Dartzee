@@ -1,5 +1,6 @@
 package burlton.desktopcore.test.bean
 
+import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
@@ -108,6 +109,7 @@ class TestDevScreenCommands: AbstractDesktopTest()
 
         cheatBar.text.shouldBeEmpty()
         cheatBar.isEnabled.shouldBeFalse()
+        exceptionLogged() shouldBe true
         getLogs().shouldContain("java.lang.Exception: Test")
     }
 

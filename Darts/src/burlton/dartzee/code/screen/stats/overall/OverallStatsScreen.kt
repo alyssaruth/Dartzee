@@ -3,9 +3,8 @@ package burlton.dartzee.code.screen.stats.overall
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableDartsGame
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.code.db.getAllGameTypes
-import burlton.dartzee.code.db.getTypeDesc
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.PREFERENCES_INT_LEADERBOARD_SIZE
@@ -106,10 +105,10 @@ class OverallStatsScreen : EmbeddedScreen()
      */
     private fun addTotalScoreTabs()
     {
-        val gameTypes = getAllGameTypes()
+        val gameTypes = GameEntity.getAllGameTypes()
         for (gameType in gameTypes)
         {
-            val tabTitle = getTypeDesc(gameType)
+            val tabTitle = GameEntity.getTypeDesc(gameType)
             tabbedPane.addTab(tabTitle, null, OverallStatsTabTotalScore(gameType), null)
         }
     }

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen;
 
-import burlton.dartzee.code.db.GameEntityKt;
+import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen;
 import burlton.dartzee.code.stats.PlayerSummaryStats;
@@ -22,7 +22,7 @@ public class PlayerSummaryPanel extends JPanel
 	{
 		this.gameType = gameType;
 		
-		setBorder(new TitledBorder(null, GameEntityKt.getTypeDesc(gameType), TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 20)));
+		setBorder(new TitledBorder(null, GameEntity.getTypeDesc(gameType), TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 20)));
 		setLayout(new MigLayout("", "[][][][][][][][][grow][]", "[][][]"));
 		
 		add(lblP, "cell 0 0");

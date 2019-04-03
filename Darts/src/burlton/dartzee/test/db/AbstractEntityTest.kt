@@ -1,7 +1,9 @@
 package burlton.dartzee.test.db
 
+import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.AbstractEntity
+import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.getCountFromTable
 import burlton.dartzee.test.helper.wipeTable
@@ -97,6 +99,26 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
         finalEntity.dtCreation shouldBe entity.dtCreation
         finalEntity.dtLastUpdate.after(dtFirstUpdate) shouldBe true
     }
+
+    @Test
+    fun `Columns should not allow NULLs`()
+    {
+        val entity: AbstractEntity<E> = dao.javaClass.newInstance()
+        val rowId = entity.assignRowId()
+
+        //Insert into the DB
+        setValuesAndSaveToDatabase(entity, true)
+
+        //Now go through and try to update each field to NULL
+        getExpectedClassFields().forEach{
+            val sql = "UPDATE ${dao.getTableName()} SET $it = NULL WHERE RowId = '$rowId'"
+            DatabaseUtil.executeUpdate(sql) shouldBe false
+
+            exceptionLogged() shouldBe true
+            getLogs().shouldContain("Column '${it.toUpperCase()}'  cannot accept a NULL value.")
+        }
+    }
+
     private fun setValuesAndSaveToDatabase(entity: AbstractEntity<E>, initial: Boolean)
     {
         //Sleep to ensure DtLastUpdate has some time to move
