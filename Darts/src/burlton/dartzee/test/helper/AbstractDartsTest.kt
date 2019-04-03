@@ -1,6 +1,7 @@
 package burlton.dartzee.test.helper
 
 import burlton.core.code.util.AbstractClient
+import burlton.dartzee.code.db.LocalIdGenerator
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -28,5 +29,12 @@ abstract class AbstractDartsTest: AbstractDesktopTest()
         DartsDatabaseUtil.initialiseDatabase()
 
         doneOneTimeSetup = true
+    }
+
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+
+        LocalIdGenerator.hmLastAssignedIdByTableName.clear()
     }
 }
