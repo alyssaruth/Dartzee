@@ -1,7 +1,7 @@
 package burlton.dartzee.code.reporting;
 
 import burlton.core.code.obj.HandyArrayList;
-import burlton.dartzee.code.db.GameEntityKt;
+import burlton.dartzee.code.db.GameEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +30,7 @@ public class ReportResultWrapper
 	
 	public Object[] getTableRow()
 	{
-		String gameTypeDesc = GameEntityKt.getTypeDesc(gameType, gameParams);
+		String gameTypeDesc = GameEntity.getTypeDesc(gameType, gameParams);
 		String playerDesc = getPlayerDesc();
 		
 		String matchDesc = "";

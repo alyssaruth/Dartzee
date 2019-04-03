@@ -125,85 +125,85 @@ class GameEntity : AbstractEntity<GameEntity>()
 
         return ret
     }
-}
 
-/**
- * Top-level methods
- */
-fun factoryAndSave(gameType: Int, gameParams: String): GameEntity
-{
-    val gameEntity = GameEntity()
-    gameEntity.assignRowId()
-    gameEntity.gameType = gameType
-    gameEntity.gameParams = gameParams
-    gameEntity.saveToDatabase()
-    return gameEntity
-}
-
-fun factoryAndSave(match: DartsMatchEntity): GameEntity
-{
-    val gameEntity = GameEntity()
-    gameEntity.assignRowId()
-    gameEntity.gameType = match.gameType
-    gameEntity.gameParams = match.gameParams
-    gameEntity.dartsMatchId = match.rowId
-    gameEntity.matchOrdinal = match.incrementAndGetCurrentOrdinal()
-    gameEntity.saveToDatabase()
-    return gameEntity
-}
-
-/**
- * Ordered by RowId as well because of a bug with loading where the ordinals could get screwed up.
- */
-fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity>
-{
-    val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, DtCreation"
-    return GameEntity().retrieveEntities(sql)
-}
-
-fun getTypeDesc(gameType: Int, gameParams: String): String
-{
-    return when(gameType)
+    companion object
     {
-        GAME_TYPE_X01 -> gameParams
-        GAME_TYPE_GOLF -> "Golf - $gameParams holes"
-        GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
-        GAME_TYPE_DARTZEE -> "Dartzee"
-        else -> ""
+        @JvmStatic fun factoryAndSave(gameType: Int, gameParams: String): GameEntity
+        {
+            val gameEntity = GameEntity()
+            gameEntity.assignRowId()
+            gameEntity.gameType = gameType
+            gameEntity.gameParams = gameParams
+            gameEntity.saveToDatabase()
+            return gameEntity
+        }
+
+        @JvmStatic fun factoryAndSave(match: DartsMatchEntity): GameEntity
+        {
+            val gameEntity = GameEntity()
+            gameEntity.assignRowId()
+            gameEntity.gameType = match.gameType
+            gameEntity.gameParams = match.gameParams
+            gameEntity.dartsMatchId = match.rowId
+            gameEntity.matchOrdinal = match.incrementAndGetCurrentOrdinal()
+            gameEntity.saveToDatabase()
+            return gameEntity
+        }
+
+        /**
+         * Ordered by RowId as well because of a bug with loading where the ordinals could get screwed up.
+         */
+        @JvmStatic fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity>
+        {
+            val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, DtCreation"
+            return GameEntity().retrieveEntities(sql)
+        }
+
+        @JvmStatic fun getTypeDesc(gameType: Int, gameParams: String): String
+        {
+            return when(gameType)
+            {
+                GAME_TYPE_X01 -> gameParams
+                GAME_TYPE_GOLF -> "Golf - $gameParams holes"
+                GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
+                GAME_TYPE_DARTZEE -> "Dartzee"
+                else -> ""
+            }
+        }
+
+        @JvmStatic fun getTypeDesc(gameType: Int): String
+        {
+            return when (gameType)
+            {
+                GAME_TYPE_X01 -> "X01"
+                GAME_TYPE_GOLF -> "Golf"
+                GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock"
+                GAME_TYPE_DARTZEE -> "Dartzee"
+                else -> "<Game Type>"
+            }
+        }
+
+        @JvmStatic fun getFilterPanel(gameType: Int): GameParamFilterPanel?
+        {
+            return when (gameType)
+            {
+                GAME_TYPE_X01 -> GameParamFilterPanelX01()
+                GAME_TYPE_GOLF -> GameParamFilterPanelGolf()
+                GAME_TYPE_ROUND_THE_CLOCK -> GameParamFilterPanelRoundTheClock()
+                else -> null
+            }
+
+        }
+
+        @JvmStatic fun getAllGameTypes(): MutableList<Int>
+        {
+            return mutableListOf(GAME_TYPE_X01, GAME_TYPE_GOLF, GAME_TYPE_ROUND_THE_CLOCK)
+        }
+
+        @JvmStatic fun getGameId(localId: Long): String?
+        {
+            val game = GameEntity().retrieveEntity("LocalId = $localId") ?: return null
+            return game.rowId
+        }
     }
-}
-
-fun getTypeDesc(gameType: Int): String
-{
-    return when (gameType)
-    {
-        GAME_TYPE_X01 -> "X01"
-        GAME_TYPE_GOLF -> "Golf"
-        GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock"
-        GAME_TYPE_DARTZEE -> "Dartzee"
-        else -> "<Game Type>"
-    }
-}
-
-fun getFilterPanel(gameType: Int): GameParamFilterPanel?
-{
-    return when (gameType)
-    {
-        GAME_TYPE_X01 -> GameParamFilterPanelX01()
-        GAME_TYPE_GOLF -> GameParamFilterPanelGolf()
-        GAME_TYPE_ROUND_THE_CLOCK -> GameParamFilterPanelRoundTheClock()
-        else -> null
-    }
-
-}
-
-fun getAllGameTypes(): MutableList<Int>
-{
-    return mutableListOf(GAME_TYPE_X01, GAME_TYPE_GOLF, GAME_TYPE_ROUND_THE_CLOCK)
-}
-
-fun getGameId(localId: Long): String?
-{
-    val game = GameEntity().retrieveEntity("LocalId = $localId") ?: return null
-    return game.rowId
 }

@@ -14,6 +14,26 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
+fun insertDartsMatch(uuid: String = randomGuid(),
+                     localId: Long = LocalIdGenerator.generateLocalId("DartsMatch"),
+                     games: Int = 3,
+                     mode: Int = DartsMatchEntity.MODE_FIRST_TO,
+                     dtFinish: Timestamp = DateStatics.END_OF_TIME,
+                     matchParams: String = ""): String
+{
+    val m = DartsMatchEntity()
+    m.rowId = uuid
+    m.localId = localId
+    m.games = games
+    m.mode = mode
+    m.dtFinish = dtFinish
+    m.matchParams = matchParams
+
+    m.saveToDatabase()
+    return m.rowId
+}
+
+
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
                  strategy: Int = 1,

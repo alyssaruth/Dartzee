@@ -8,7 +8,7 @@ import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.bean.PlayerSelector
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
-import burlton.dartzee.code.db.getFilterPanel
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import net.miginfocom.swing.MigLayout
@@ -138,7 +138,7 @@ class GameSetupScreen : EmbeddedScreen()
                 panelGameType.remove(gameParamFilterPanel)
             }
 
-            gameParamFilterPanel = getFilterPanel(gameTypeComboBox.gameType)
+            gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.gameType)
 
             //We may not have one, e.g. for Dartzee
             if (gameParamFilterPanel != null)

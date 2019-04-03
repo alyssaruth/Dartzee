@@ -415,7 +415,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         val getter = javaClass.getMethod("get$fieldName")
         return getter.invoke(this)
     }
-    fun setField(fieldName: String, value: Any)
+    fun setField(fieldName: String, value: Any?)
     {
         val getMethod = javaClass.getMethod("get$fieldName")
         val setMethod = javaClass.getDeclaredMethod("set$fieldName", getMethod.returnType)

@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.stats.player
 
 import burlton.dartzee.code.bean.GameParamFilterPanel
-import burlton.dartzee.code.db.getFilterPanel
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.desktopcore.code.bean.DateFilterPanel
@@ -30,7 +30,7 @@ class PlayerStatisticsFilterDialog(gameType:Int):SimpleDialog(), ChangeListener
 
     init
     {
-        filterPanel = getFilterPanel(gameType)
+        filterPanel = GameEntity.getFilterPanel(gameType)
 
         title = "Filters"
         setSize(473, 200)

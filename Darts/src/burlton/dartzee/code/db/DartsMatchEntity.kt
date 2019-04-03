@@ -133,7 +133,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     fun getMatchDesc(): String
     {
-        return "Match #$localId (${getMatchTypeDesc()} - ${getTypeDesc(gameType, gameParams)}, ${getPlayerCount()} players)"
+        return "Match #$localId (${getMatchTypeDesc()} - ${GameEntity.getTypeDesc(gameType, gameParams)}, ${getPlayerCount()} players)"
     }
 
     private fun getMatchTypeDesc(): String

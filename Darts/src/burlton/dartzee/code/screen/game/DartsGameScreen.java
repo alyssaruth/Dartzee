@@ -184,7 +184,7 @@ public final class DartsGameScreen extends JFrame
 		}
 		
 		//Factory and save the next game
-		GameEntity nextGame = GameEntityKt.factoryAndSave(match);
+		GameEntity nextGame = GameEntity.factoryAndSave(match);
 		DartsGamePanel<? extends DartsScorer> panel = addGameToMatch(nextGame);
 
 		match.shufflePlayers();
@@ -215,7 +215,7 @@ public final class DartsGameScreen extends JFrame
 	public static void launchNewGame(ArrayList<PlayerEntity> players, int gameType, String gameParams)
 	{
 		//Create and save a game
-		GameEntity gameEntity = GameEntityKt.factoryAndSave(gameType, gameParams);
+		GameEntity gameEntity = GameEntity.factoryAndSave(gameType, gameParams);
 		
 		//Construct the screen and factory a tab
 		DartsGameScreen scrn = new DartsGameScreen();
@@ -230,7 +230,7 @@ public final class DartsGameScreen extends JFrame
 		DartsGameScreen scrn = new DartsGameScreen();
 		scrn.initMatch(match, match.getPlayers());
 		
-		GameEntity game = GameEntityKt.factoryAndSave(match);
+		GameEntity game = GameEntity.factoryAndSave(match);
 		DartsGamePanel<? extends DartsScorer> panel = scrn.addGameToMatch(game);
 		panel.startNewGame(match.getPlayers());
 	}
@@ -284,7 +284,7 @@ public final class DartsGameScreen extends JFrame
 	}
 	private static void loadAndDisplayMatch(String matchId, String originalGameId)
 	{
-		List<GameEntity> allGames = GameEntityKt.retrieveGamesForMatch(matchId);
+		List<GameEntity> allGames = GameEntity.retrieveGamesForMatch(matchId);
 		
 		GameEntity firstGame = allGames.get(0);
 		GameEntity lastGame = allGames.get(allGames.size() - 1);

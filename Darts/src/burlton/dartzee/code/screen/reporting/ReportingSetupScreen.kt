@@ -5,8 +5,8 @@ import burlton.dartzee.code.bean.ComboBoxGameType
 import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.bean.ScrollTablePlayers
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.code.db.getFilterPanel
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
 import burlton.dartzee.code.reporting.ReportParameters
 import burlton.dartzee.code.screen.EmbeddedScreen
@@ -328,7 +328,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
                     panelGame.remove(panelGameParams!!)
                 }
 
-                panelGameParams = getFilterPanel(comboBox.gameType)
+                panelGameParams = GameEntity.getFilterPanel(comboBox.gameType)
 
                 //Deal with there not being a filter panel, e.g. for Dartzee
                 if (panelGameParams != null)

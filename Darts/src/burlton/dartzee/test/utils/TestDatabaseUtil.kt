@@ -2,6 +2,7 @@ package burlton.dartzee.test.utils
 
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.test.helper.AbstractDartsTest
@@ -60,6 +61,8 @@ class TestDatabaseUtil: AbstractDartsTest()
         val updates = listOf("bollucks", "CREATE TABLE zzUpdateTest(str VARCHAR(50))")
 
         DatabaseUtil.executeUpdates(updates) shouldBe false
+        exceptionLogged() shouldBe true
+
         DatabaseUtil.createTableIfNotExists("zzUpdateTest", "str VARCHAR(50)") shouldBe true
 
         DatabaseUtil.dropTable("zzUpdateTest")
@@ -71,6 +74,7 @@ class TestDatabaseUtil: AbstractDartsTest()
         val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
         DatabaseUtil.executeUpdate(update) shouldBe false
 
+        exceptionLogged() shouldBe true
         getLogs().shouldContain("Caught SQLException for query: $update")
         getLogs().shouldContain("Syntax error: Encountered \"(\"")
     }
@@ -106,6 +110,7 @@ class TestDatabaseUtil: AbstractDartsTest()
         val query = "SELECT * FROM zzQueryTest"
         DatabaseUtil.executeQuery(query)
 
+        exceptionLogged() shouldBe true
         getLogs().shouldContain("Table/View 'ZZQUERYTEST' does not exist.")
         getLogs().shouldContain("Caught SQLException for query: $query")
 
@@ -120,6 +125,7 @@ class TestDatabaseUtil: AbstractDartsTest()
         val query = "SELECT * FROM Game"
         DatabaseUtil.executeQuery(query)
 
+        exceptionLogged() shouldBe true
         getLogs().shouldContain("SQL query took longer than ${AbstractClient.sqlToleranceQuery} millis: $query")
         dialogFactory.errorsShown.shouldBeEmpty()
 
