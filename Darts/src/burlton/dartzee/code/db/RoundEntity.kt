@@ -37,11 +37,6 @@ class RoundEntity : AbstractEntity<RoundEntity>()
         return statementStr
     }
 
-    fun getGameId(): String
-    {
-        return retrieveParticipant()?.gameId ?: ""
-    }
-
     fun retrieveParticipant(): ParticipantEntity?
     {
         return ParticipantEntity().retrieveForId(participantId)

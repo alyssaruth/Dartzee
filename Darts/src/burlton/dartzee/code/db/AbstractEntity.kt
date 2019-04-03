@@ -409,6 +409,25 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         return colSanitised.split(" ")[0]
     }
 
+    fun getField(fieldName: String): Any?
+    {
+        println("${getTableName()} - $fieldName")
+        val getter = javaClass.getMethod("get$fieldName")
+        return getter.invoke(this)
+    }
+    fun setField(fieldName: String, value: Any)
+    {
+        val getMethod = javaClass.getMethod("get$fieldName")
+        val setMethod = javaClass.getDeclaredMethod("set$fieldName", getMethod.returnType)
+
+        setMethod.invoke(this, value)
+    }
+    fun getFieldType(fieldName: String): Class<*>
+    {
+        val getter = javaClass.getMethod("get$fieldName")
+        return getter.returnType
+    }
+
     /**
      * Write to statement methods
      */
