@@ -37,11 +37,6 @@ class RoundEntity : AbstractEntity<RoundEntity>()
         return statementStr
     }
 
-    fun retrieveParticipant(): ParticipantEntity?
-    {
-        return ParticipantEntity().retrieveForId(participantId)
-    }
-
     fun isForParticipant(pt: ParticipantEntity): Boolean
     {
         val ptId = pt.rowId
