@@ -37,21 +37,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     var dartsMatchId: String = ""
     var matchOrdinal = -1
 
-    /**
-     * Helpers
-     */
-    fun getParticipantCount(): Int
-    {
-        val sb = StringBuilder()
-        sb.append("SELECT COUNT(1) FROM ")
-        sb.append(ParticipantEntity().getTableName())
-        sb.append(" WHERE GameId = '$rowId'")
 
-        return DatabaseUtil.executeQueryAggregate(sb)
-    }
-
-    fun isFinished() = !isEndOfTime(dtFinish)
-    fun getTypeDesc() = getTypeDesc(gameType, gameParams)
     override fun getTableName() = "Game"
 
     override fun getCreateTableSqlSpecific(): String
@@ -109,6 +95,22 @@ class GameEntity : AbstractEntity<GameEntity>()
         localId = LocalIdGenerator.generateLocalId(getTableName())
         return super.assignRowId()
     }
+
+    /**
+     * Helpers
+     */
+    fun getParticipantCount(): Int
+    {
+        val sb = StringBuilder()
+        sb.append("SELECT COUNT(1) FROM ")
+        sb.append(ParticipantEntity().getTableName())
+        sb.append(" WHERE GameId = '$rowId'")
+
+        return DatabaseUtil.executeQueryAggregate(sb)
+    }
+
+    fun isFinished() = !isEndOfTime(dtFinish)
+    fun getTypeDesc() = getTypeDesc(gameType, gameParams)
 
     fun retrievePlayersVector(): MutableList<PlayerEntity>
     {

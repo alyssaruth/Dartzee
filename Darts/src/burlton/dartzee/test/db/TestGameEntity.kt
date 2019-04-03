@@ -3,11 +3,10 @@ package burlton.dartzee.test.db
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.*
-import burlton.dartzee.test.helper.getCountFromTable
-import burlton.dartzee.test.helper.insertGame
-import burlton.dartzee.test.helper.insertParticipant
-import burlton.dartzee.test.helper.wipeTable
+import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
@@ -72,6 +71,41 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         insertParticipant(gameId = gameId)
         game.getParticipantCount() shouldBe 1
     }
+
+    @Test
+    fun `Should handle no participants when getting players vector`()
+    {
+        wipeTable("Participant")
+        wipeTable("Game")
+
+        val game = GameEntity()
+        game.saveToDatabase()
+
+        game.retrievePlayersVector().shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should return the player vector correctly`()
+    {
+        wipeTable("Player")
+        wipeTable("Participant")
+        wipeTable("Game")
+
+        //Insert a random player
+        val playerId = insertPlayer(name = "Clive")
+        val game = GameEntity()
+        val gameId = game.assignRowId()
+        game.saveToDatabase()
+
+        insertParticipant(gameId = gameId, playerId = playerId)
+        insertParticipant(gameId = randomGuid(), playerId = playerId)
+
+        val players = game.retrievePlayersVector()
+        players.shouldHaveSize(1)
+
+        players.first().name shouldBe "Clive"
+    }
+
 
     @Test
     fun `Game descriptions`()

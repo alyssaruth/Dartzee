@@ -1,9 +1,6 @@
 package burlton.dartzee.test.helper
 
-import burlton.dartzee.code.db.GAME_TYPE_X01
-import burlton.dartzee.code.db.GameEntity
-import burlton.dartzee.code.db.LocalIdGenerator
-import burlton.dartzee.code.db.ParticipantEntity
+import burlton.dartzee.code.db.*
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
 import burlton.desktopcore.code.util.DateStatics
@@ -17,13 +14,32 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
+fun insertPlayer(uuid: String = randomGuid(),
+                 name: String = "Clive",
+                 strategy: Int = 1,
+                 strategyXml: String = "",
+                 dtDeleted: Timestamp = DateStatics.END_OF_TIME,
+                 playerImageId: String = randomGuid()): String
+{
+    val p = PlayerEntity()
+    p.rowId = uuid
+    p.name = name
+    p.strategy = strategy
+    p.strategyXml = strategyXml
+    p.dtDeleted = dtDeleted
+    p.playerImageId = playerImageId
+
+    p.saveToDatabase()
+    return p.rowId
+}
+
 fun insertParticipant(uuid: String = randomGuid(),
                       gameId: String = randomGuid(),
                       playerId: String = randomGuid(),
                       ordinal: Int = 1,
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
-                      dtFinished: Timestamp = DateStatics.END_OF_TIME)
+                      dtFinished: Timestamp = DateStatics.END_OF_TIME): String
 {
     val pe = ParticipantEntity()
     pe.rowId = uuid
@@ -35,6 +51,8 @@ fun insertParticipant(uuid: String = randomGuid(),
     pe.dtFinished = dtFinished
 
     pe.saveToDatabase()
+
+    return pe.rowId
 }
 
 fun insertGame(uuid: String = randomGuid(),
@@ -43,7 +61,7 @@ fun insertGame(uuid: String = randomGuid(),
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
                dartsMatchId: String = "",
-               matchOrdinal: Int = -1)
+               matchOrdinal: Int = -1): String
 {
     val ge = GameEntity()
     ge.rowId = uuid
@@ -55,6 +73,8 @@ fun insertGame(uuid: String = randomGuid(),
     ge.matchOrdinal = matchOrdinal
 
     ge.saveToDatabase()
+
+    return uuid
 }
 
 fun getCountFromTable(table: String): Int
