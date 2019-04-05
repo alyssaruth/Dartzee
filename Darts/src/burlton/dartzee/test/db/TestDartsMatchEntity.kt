@@ -2,8 +2,7 @@ package burlton.dartzee.test.db
 
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
-import burlton.dartzee.code.db.DartsMatchEntity
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.*
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.string.shouldContain
@@ -122,4 +121,39 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         match.isComplete() shouldBe true
     }
 
+    @Test
+    fun `Should return the number of players in the match`()
+    {
+        val dm = DartsMatchEntity()
+        dm.getPlayerCount() shouldBe 0
+
+        dm.players.add(PlayerEntity())
+        dm.getPlayerCount() shouldBe 1
+    }
+
+    @Test
+    fun `FIRST_TO descriptions`()
+    {
+        val dm = DartsMatchEntity()
+        dm.localId = 1
+        dm.games = 3
+        dm.mode = DartsMatchEntity.MODE_FIRST_TO
+        dm.gameType = GAME_TYPE_X01
+        dm.gameParams = "501"
+
+        dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501, 0 players)"
+    }
+
+    @Test
+    fun `POINTS descriptions`()
+    {
+        val dm = DartsMatchEntity()
+        dm.localId = 1
+        dm.games = 3
+        dm.mode = DartsMatchEntity.MODE_POINTS
+        dm.gameType = GAME_TYPE_GOLF
+        dm.gameParams = "18"
+
+        dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes, 0 players)"
+    }
 }

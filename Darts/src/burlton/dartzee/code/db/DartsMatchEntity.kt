@@ -1,6 +1,5 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.util.Debug
 import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -99,19 +98,12 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         sb.append(" ORDER BY COUNT(1) DESC")
         sb.append(" FETCH FIRST 1 ROWS ONLY")
 
-        try
-        {
-            DatabaseUtil.executeQuery(sb).use { rs ->
-                if (rs.next())
-                {
-                    val count = rs.getInt("WinCount")
-                    return count == games
-                }
+        DatabaseUtil.executeQuery(sb).use { rs ->
+            if (rs.next())
+            {
+                val count = rs.getInt("WinCount")
+                return count == games
             }
-        }
-        catch (sqle: SQLException)
-        {
-            Debug.logSqlException(sb.toString(), sqle)
         }
 
         return false
@@ -195,7 +187,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
     {
         this.gameType = lastGame.gameType
         this.gameParams = lastGame.gameParams
-        this.players = HandyArrayList(lastGame.retrievePlayersVector())
+        this.players = lastGame.retrievePlayersVector()
 
         //Should've been setting this too...
         this.currentOrdinal = lastGame.matchOrdinal
