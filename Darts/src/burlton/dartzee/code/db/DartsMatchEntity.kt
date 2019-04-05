@@ -198,6 +198,20 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         const val MODE_FIRST_TO = 0
         const val MODE_POINTS = 1
 
+        fun constructPointsXml(first: Int, second: Int, third: Int, fourth: Int): String
+        {
+            val doc = XmlUtil.factoryNewDocument()
+            val rootElement = doc!!.createElement("MatchParams")
+            rootElement.setAttribute("First", "$first")
+            rootElement.setAttribute("Second", "$second")
+            rootElement.setAttribute("Third", "$third")
+            rootElement.setAttribute("Fourth", "$fourth")
+
+            doc.appendChild(rootElement)
+            return XmlUtil.getStringFromDocument(doc)
+        }
+
+
         /**
          * Factory methods
          */
