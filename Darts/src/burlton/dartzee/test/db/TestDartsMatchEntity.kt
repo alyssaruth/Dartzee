@@ -3,6 +3,7 @@ package burlton.dartzee.test.db
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.*
+import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.string.shouldContain
@@ -155,5 +156,30 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.gameParams = "18"
 
         dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes, 0 players)"
+    }
+
+    @Test
+    fun `Should only return 1 point for 1st place in FIRST_TO`()
+    {
+        val dm = DartsMatchEntity.factoryFirstTo(3)
+
+        dm.getScoreForFinishingPosition(1) shouldBe 1
+        dm.getScoreForFinishingPosition(2) shouldBe 0
+        dm.getScoreForFinishingPosition(3) shouldBe 0
+        dm.getScoreForFinishingPosition(4) shouldBe 0
+        dm.getScoreForFinishingPosition(-1) shouldBe 0
+    }
+
+    @Test
+    fun `Should only return the correct points per position in POINTS mode`()
+    {
+        val matchParams = constructPointsXml(10, 6, 3, 1)
+        val dm = DartsMatchEntity.factoryPoints(3, matchParams)
+
+        dm.getScoreForFinishingPosition(1) shouldBe 10
+        dm.getScoreForFinishingPosition(2) shouldBe 6
+        dm.getScoreForFinishingPosition(3) shouldBe 3
+        dm.getScoreForFinishingPosition(4) shouldBe 1
+        dm.getScoreForFinishingPosition(-1) shouldBe 0
     }
 }
