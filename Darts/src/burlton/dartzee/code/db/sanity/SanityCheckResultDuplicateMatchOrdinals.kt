@@ -39,7 +39,7 @@ class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>)
             val games = GameEntity().retrieveEntities(gameSql)
 
             games.forEachIndexed { index, gameEntity ->
-                gameEntity.matchOrdinal = index
+                gameEntity.matchOrdinal = index+1
                 gameEntity.saveToDatabase()
             }
         }
