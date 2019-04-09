@@ -14,6 +14,19 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
+fun insertPlayerForGame(name: String, gameId: String)
+{
+    val playerId = insertPlayer(name = name)
+    insertParticipant(playerId = playerId, gameId = gameId)
+}
+
+fun factoryPlayer(name: String): PlayerEntity
+{
+    val p = PlayerEntity()
+    p.name = name
+    return p
+}
+
 fun insertDartsMatch(uuid: String = randomGuid(),
                      localId: Long = LocalIdGenerator.generateLocalId("DartsMatch"),
                      games: Int = 3,

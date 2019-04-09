@@ -92,13 +92,12 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         wipeTable("Game")
 
         //Insert a random player
-        val playerId = insertPlayer(name = "Clive")
         val game = GameEntity()
         val gameId = game.assignRowId()
         game.saveToDatabase()
 
-        insertParticipant(gameId = gameId, playerId = playerId)
-        insertParticipant(gameId = randomGuid(), playerId = playerId)
+        insertPlayerForGame("Clive", gameId)
+        insertPlayerForGame("Bob", randomGuid())
 
         val players = game.retrievePlayersVector()
         players.shouldHaveSize(1)
