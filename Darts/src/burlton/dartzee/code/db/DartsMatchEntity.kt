@@ -150,21 +150,6 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
             }
         }
     }
-
-    fun incrementAndGetCurrentOrdinal() = currentOrdinal++
-
-    fun shufflePlayers()
-    {
-        if (players.size == 2)
-        {
-            players.reverse()
-        }
-        else
-        {
-            players.shuffle()
-        }
-    }
-
     private fun getHmPositionToPoints(): MutableMap<Int, Int>
     {
         if (hmPositionToPoints == null)
@@ -181,6 +166,20 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         }
 
         return hmPositionToPoints!!
+    }
+
+    fun incrementAndGetCurrentOrdinal() = ++currentOrdinal
+
+    fun shufflePlayers()
+    {
+        if (players.size == 2)
+        {
+            players.reverse()
+        }
+        else
+        {
+            players.shuffle()
+        }
     }
 
     fun cacheMetadataFromGame(lastGame: GameEntity)

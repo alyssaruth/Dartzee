@@ -1,11 +1,15 @@
 package burlton.dartzee.test.db
 
+import burlton.core.code.obj.HashMapCount
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotlintest.matchers.numerics.shouldBeBetween
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
@@ -171,7 +175,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should only return the correct points per position in POINTS mode`()
+    fun `Should return the correct points per position in POINTS mode`()
     {
         val matchParams = constructPointsXml(10, 6, 3, 1)
         val dm = DartsMatchEntity.factoryPoints(3, matchParams)
@@ -181,5 +185,91 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.getScoreForFinishingPosition(3) shouldBe 3
         dm.getScoreForFinishingPosition(4) shouldBe 1
         dm.getScoreForFinishingPosition(-1) shouldBe 0
+    }
+
+    @Test
+    fun `Should increment the ordinal in place and return it`()
+    {
+        val match = DartsMatchEntity()
+        match.incrementAndGetCurrentOrdinal() shouldBe 1
+        match.incrementAndGetCurrentOrdinal() shouldBe 2
+        match.incrementAndGetCurrentOrdinal() shouldBe 3
+    }
+
+    @Test
+    fun `Should flip the order if there are only 2 players`()
+    {
+        val match = DartsMatchEntity()
+
+        val bob = factoryPlayer("Bob")
+
+        val amy = factoryPlayer("Amy")
+
+        match.players = mutableListOf(bob, amy)
+
+        for (i in 0..20)
+        {
+            match.shufflePlayers()
+            match.players.shouldContainExactly(amy, bob)
+
+            match.shufflePlayers()
+            match.players.shouldContainExactly(bob, amy)
+        }
+    }
+
+    @Test
+    fun `Should shuffle fairly with more than 2 players`()
+    {
+        val players = mutableListOf(factoryPlayer("Alice"),
+                factoryPlayer("Bob"),
+                factoryPlayer("Clive"),
+                factoryPlayer("Donna"))
+
+        val match = DartsMatchEntity()
+        match.players = players
+
+
+        val hmOrderToCount = HashMapCount<String>()
+        for (i in 1..2400000)
+        {
+            match.shufflePlayers()
+
+            hmOrderToCount.incrementCount("${match.players}")
+        }
+
+        hmOrderToCount.size shouldBe 24 //Should have all permutations at least once
+
+        hmOrderToCount.values.forEach{
+            it.shouldBeBetween(98000, 102000)
+        }
+    }
+
+    @Test
+    fun `Should cache metadata from a game correctly`()
+    {
+        val game501 = GameEntity.factoryAndSave(GAME_TYPE_X01, "501")
+        game501.matchOrdinal = 2
+        val gameGolf = GameEntity.factoryAndSave(GAME_TYPE_GOLF, "18")
+        gameGolf.matchOrdinal = 4
+
+        insertPlayerForGame("BTBF", game501.rowId)
+        insertPlayerForGame("Mooch", game501.rowId)
+
+        insertPlayerForGame("Scat", gameGolf.rowId)
+        insertPlayerForGame("Aggie", gameGolf.rowId)
+
+        val match = DartsMatchEntity()
+
+        match.cacheMetadataFromGame(game501)
+        match.gameType shouldBe game501.gameType
+        match.gameParams shouldBe game501.gameParams
+        match.incrementAndGetCurrentOrdinal() shouldBe game501.matchOrdinal + 1
+        match.players.map{it.name}.shouldContainExactlyInAnyOrder("BTBF", "Mooch")
+
+        match.cacheMetadataFromGame(gameGolf)
+        match.gameType shouldBe gameGolf.gameType
+        match.gameParams shouldBe gameGolf.gameParams
+        match.incrementAndGetCurrentOrdinal() shouldBe gameGolf.matchOrdinal + 1
+        match.players.map{it.name}.shouldContainExactlyInAnyOrder("Scat", "Aggie")
     }
 }
