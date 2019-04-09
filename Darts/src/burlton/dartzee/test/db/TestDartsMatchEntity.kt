@@ -13,6 +13,7 @@ import io.kotlintest.matchers.numerics.shouldBeBetween
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import org.junit.Test
 
 class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
@@ -271,5 +272,29 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         match.gameParams shouldBe gameGolf.gameParams
         match.incrementAndGetCurrentOrdinal() shouldBe gameGolf.matchOrdinal + 1
         match.players.map{it.name}.shouldContainExactlyInAnyOrder("Scat", "Aggie")
+    }
+
+    @Test
+    fun `Should save a first-to match correctly`()
+    {
+        val dm = DartsMatchEntity.factoryFirstTo(3)
+
+        val retrievedDm = dm.retrieveForId(dm.rowId)!!
+        retrievedDm.games shouldBe 3
+        retrievedDm.matchParams shouldBe ""
+        retrievedDm.mode shouldBe DartsMatchEntity.MODE_FIRST_TO
+        retrievedDm.localId shouldNotBe -1
+    }
+
+    @Test
+    fun `Should save a points match correctly`()
+    {
+        val dm = DartsMatchEntity.factoryPoints(3, "foo")
+
+        val retrievedDm = dm.retrieveForId(dm.rowId)!!
+        retrievedDm.games shouldBe 3
+        retrievedDm.matchParams shouldBe "foo"
+        retrievedDm.mode shouldBe DartsMatchEntity.MODE_POINTS
+        retrievedDm.localId shouldNotBe -1
     }
 }

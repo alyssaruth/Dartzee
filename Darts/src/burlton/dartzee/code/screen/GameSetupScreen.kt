@@ -1,12 +1,12 @@
 package burlton.dartzee.code.screen
 
 import burlton.core.code.util.Debug
-import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.bean.ComboBoxGameType
 import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.bean.PlayerSelector
 import burlton.dartzee.code.db.DartsMatchEntity
+import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.game.DartsGameScreen
@@ -248,21 +248,13 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun getPointsXml(): String
     {
-        val doc = XmlUtil.factoryNewDocument()
-        val rootElement = doc!!.createElement("MatchParams")
-        rootElement.setAttribute("First", "" + spinnerPoints1st.value as Int)
-        rootElement.setAttribute("Second", "" + spinnerPoints2nd.value as Int)
-        rootElement.setAttribute("Third", "" + spinnerPoints3rd.value as Int)
-        rootElement.setAttribute("Fourth", "" + spinnerPoints4th.value as Int)
-
-        doc.appendChild(rootElement)
-        return XmlUtil.getStringFromDocument(doc)
+        return constructPointsXml(spinnerPoints1st.value as Int,
+                spinnerPoints2nd.value as Int,
+                spinnerPoints3rd.value as Int,
+                spinnerPoints4th.value as Int)
     }
 
-    override fun getScreenName(): String
-    {
-        return "Game Setup"
-    }
+    override fun getScreenName() = "Game Setup"
 
     override fun nextPressed()
     {
