@@ -9,6 +9,7 @@ import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.test.helper.randomGuid
+import burlton.desktopcore.code.util.DateStatics
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -88,6 +89,9 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
         pt.playerId shouldBe playerId
         pt.ordinal shouldBe 2
         pt.getPlayer() shouldBe player
+        pt.dtFinished shouldBe DateStatics.END_OF_TIME
+        pt.finalScore shouldBe -1
+        pt.finishingPosition shouldBe -1
 
         pt.retrieveForId(rowId) shouldNotBe null
     }
