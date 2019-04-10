@@ -24,7 +24,6 @@ class ParticipantEntity : AbstractEntity<ParticipantEntity>()
     //In memory things
     private var player: PlayerEntity? = null
 
-
     override fun getTableName() = "Participant"
 
     override fun getCreateTableSqlSpecific(): String
@@ -68,8 +67,6 @@ class ParticipantEntity : AbstractEntity<ParticipantEntity>()
         val playerIdGameId = mutableListOf("PlayerId", "GameId")
         indexes.add(playerIdGameId)
     }
-
-    override fun toString() = "Player $ordinal in Game #$gameId [PlayerId $playerId]"
 
     /**
      * Helpers
