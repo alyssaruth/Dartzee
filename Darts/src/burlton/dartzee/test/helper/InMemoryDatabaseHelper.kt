@@ -4,6 +4,7 @@ import burlton.dartzee.code.db.*
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
 import burlton.desktopcore.code.util.DateStatics
+import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.Timestamp
 import java.util.*
 
@@ -94,7 +95,8 @@ fun insertGame(uuid: String = randomGuid(),
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
                dartsMatchId: String = "",
-               matchOrdinal: Int = -1): String
+               matchOrdinal: Int = -1,
+               dtCreation: Timestamp = getSqlDateNow()): String
 {
     val ge = GameEntity()
     ge.rowId = uuid
@@ -104,6 +106,7 @@ fun insertGame(uuid: String = randomGuid(),
     ge.dtFinish = dtFinish
     ge.dartsMatchId = dartsMatchId
     ge.matchOrdinal = matchOrdinal
+    ge.dtCreation = dtCreation
 
     ge.saveToDatabase()
 

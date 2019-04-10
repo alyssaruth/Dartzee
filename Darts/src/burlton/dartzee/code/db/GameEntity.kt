@@ -151,7 +151,7 @@ class GameEntity : AbstractEntity<GameEntity>()
         }
 
         /**
-         * Ordered by RowId as well because of a bug with loading where the ordinals could get screwed up.
+         * Ordered by DtCreation as well because of an historic bug with loading where the ordinals could get screwed up.
          */
         @JvmStatic fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity>
         {
