@@ -359,16 +359,6 @@ public final class DartsGameScreen extends JFrame
 	public void windowClosed(WindowEvent arg0)
 	{
 		ScreenCache.removeDartsGameScreen(this);
-		closeResourcesOnExit();
-	}
-	private void closeResourcesOnExit()
-	{
-		HandyArrayList<DartsGamePanel<? extends DartsScorer>> tabs = hmGameIdToTab.getValuesAsVector();
-		for (int i=0; i<tabs.size(); i++)
-		{
-			DartsGamePanel<? extends DartsScorer> tab = tabs.get(i);
-			tab.closeResources();
-		}
 	}
 	
 	@Override

@@ -860,11 +860,6 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		parentWindow.addParticipant(gameEntity.getLocalId(), participant);
 	}
-	
-	public void closeResources()
-	{
-		cpuThread.interrupt();
-	}
 
 	public void achievementUnlocked(String playerId, AbstractAchievement achievement)
 	{
