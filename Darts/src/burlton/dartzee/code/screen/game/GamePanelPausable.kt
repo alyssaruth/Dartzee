@@ -4,13 +4,9 @@ import burlton.core.code.util.Debug
 import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.desktopcore.code.util.getSqlDateNow
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
 
 abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScreen) : DartsGamePanel<S>(parent)
 {
-    private val aiPauseLock = ReentrantLock()
-    private val aiPauseCondition = aiPauseLock.newCondition()
     private var aiShouldPause = false
 
     /**
@@ -51,14 +47,9 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
             {
                 nextTurn()
             }
-            else
-            {
-                notifyAiPaused()
-            }
         }
         else
         {
-            notifyAiPaused()
             allPlayersFinished()
         }
     }
@@ -76,9 +67,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
         {
             Debug.append("Been told to pause, stopping throwing.")
             aiShouldPause = false
-
-            notifyAiPaused()
-
             return true
         }
 
@@ -112,22 +100,22 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
 
     fun pauseLastPlayer()
     {
-        if (!activeScorer.getHuman())
+        if (!activeScorer.getHuman() && cpuThread != null)
         {
-            aiPauseLock.withLock{
-                aiShouldPause = true
-                aiPauseCondition.await()
-            }
+            aiShouldPause = true
+            cpuThread.join()
         }
 
         //Now the player has definitely stopped, reset the round
         resetRound()
+
         dartboard.stopListening()
     }
 
     fun unpauseLastPlayer()
     {
         //If we've come through game load, we'll have disabled this.
+        aiShouldPause = false
         slider.isEnabled = true
 
         val pt = hmPlayerNumberToParticipant[currentPlayerNumber]!!
@@ -140,22 +128,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
         {
             //Don't do nextTurn() as that will up the round number when we don't want it to be upped
             readyForThrow()
-        }
-    }
-
-    /**
-     * When we click the pause button, the EDT is frozen while we wait for the AI to actually pause.
-     * At this point, one of two things will happen. Both will result in us notifying to wake the EDT back up.
-     *
-     * - The AI will come to begin a throw and find that it should stop.
-     * - The AI was throwing its last dart as pause was pressed, so won't hit the above code.
-     * For this reason, we also notify when the last player totally finishes, *after* the point that the
-     * pause/unpause button has been removed from the screen.
-     */
-    private fun notifyAiPaused()
-    {
-        aiPauseLock.withLock {
-            aiPauseCondition.signalAll()
         }
     }
 }

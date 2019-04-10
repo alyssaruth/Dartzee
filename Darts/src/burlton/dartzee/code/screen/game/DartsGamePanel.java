@@ -31,8 +31,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_INT_AI_SPEED;
 
@@ -63,7 +61,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	protected RoundEntity currentRound = null;
 	
 	//For AI turns
-	private Timer cpuTurn = null;
+	protected Thread cpuThread = null;
 	
 	public DartsGamePanel(DartsGameScreen parent)
 	{
@@ -230,8 +228,6 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	{
 		this.gameEntity = gameEntity;
 		this.totalPlayers = totalPlayers;
-		
-		cpuTurn = new Timer("Timer-CpuTurn #" + gameEntity.getRowId());
 		
 		long gameNo = gameEntity.getLocalId();
 		String gameDesc = gameEntity.getTypeDesc();
@@ -455,22 +451,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		Debug.append("MaxRounds = " + maxRounds + ", CurrentPlayerNumber = " + currentPlayerNumber); 
 	}
-	
-	/**
-	 * AI stuff
-	 */
-	public void scheduleAiTurn(int delay)
-	{
-		try
-		{
-			cpuTurn.schedule(new DelayedOpponentTurn(), delay);
-		}
-		catch (IllegalStateException ise)
-		{
-			//Do nothing - if we're catching this it's because we cancelled the timer, which is because
-			//we closed the game screen down.
-		}
-	}
+
 	public void allPlayersFinished()
 	{
 		Debug.append("All players now finished.", VERBOSE_LOGGING);
@@ -490,7 +471,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	 * 
 	 * Default behaviour for if window has been closed, with extensible hook (e.g. in X01 where an AI can be paused).
 	 */
-	private boolean shouldStopThrowing()
+	private boolean shouldAiStopThrowing()
 	{
 		if (!parentWindow.isVisible())
 		{
@@ -707,10 +688,13 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		}
 		else
 		{
-			//No need to wait for confirmation, the turn is over
 			try {Thread.sleep(slider.getValue());}catch(Throwable t){}
 
-			SwingUtilities.invokeLater(() -> confirmRound());
+			// If we've been told to pause then we're going to do a reset and not save anything
+			if (!shouldAiStopThrowing())
+			{
+				SwingUtilities.invokeLater(() -> confirmRound());
+			}
 		}
 	}
 	private void confirmRound()
@@ -758,9 +742,9 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		{
 			//AI
 			dartboard.stopListening();
-			
-			int sliderValue = slider.getValue();
-			scheduleAiTurn(sliderValue);
+
+			cpuThread = new Thread(new DelayedOpponentTurn(), "Cpu-Thread-" + gameEntity.getLocalId());
+			cpuThread.start();
 		}
 	}
 	protected boolean mustContinueThrowing()
@@ -879,7 +863,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	
 	public void closeResources()
 	{
-		cpuTurn.cancel();
+		cpuThread.interrupt();
 	}
 
 	public void achievementUnlocked(String playerId, AbstractAchievement achievement)
@@ -917,12 +901,14 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	@Override public void mousePressed(MouseEvent e) {}
 	@Override public void mouseReleased(MouseEvent e) {}
 
-	class DelayedOpponentTurn extends TimerTask
+	class DelayedOpponentTurn implements Runnable
 	{
 		@Override
 		public void run()
 		{
-			if (shouldStopThrowing())
+			try {Thread.sleep(slider.getValue());} catch (Throwable t){}
+
+			if (shouldAiStopThrowing())
 			{
 				return;
 			}
