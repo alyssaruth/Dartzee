@@ -24,7 +24,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     @Test
     fun `Should cache the player on first query then use it from then on`()
     {
-        val playerId = insertPlayer(name = "Bob", strategy = -1)
+        val playerId = insertPlayer(name = "Bob", strategy = -1).rowId
 
         val pt = ParticipantEntity()
         pt.playerId = playerId
@@ -44,7 +44,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     {
         val aiId = insertPlayer(name = "Robot",
                 strategy = AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION,
-                strategyXml = DartsModelNormalDistribution().writeXml())
+                strategyXml = DartsModelNormalDistribution().writeXml()).rowId
 
         val pt = ParticipantEntity()
         pt.playerId = aiId

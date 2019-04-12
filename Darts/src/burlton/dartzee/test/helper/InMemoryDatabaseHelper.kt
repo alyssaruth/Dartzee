@@ -17,14 +17,15 @@ fun randomGuid() = UUID.randomUUID().toString()
 
 fun insertPlayerForGame(name: String, gameId: String)
 {
-    val playerId = insertPlayer(name = name)
-    insertParticipant(playerId = playerId, gameId = gameId)
+    val player = insertPlayer(name = name)
+    insertParticipant(playerId = player.rowId, gameId = gameId)
 }
 
 fun factoryPlayer(name: String): PlayerEntity
 {
     val p = PlayerEntity()
     p.name = name
+    p.assignRowId()
     return p
 }
 
@@ -53,7 +54,7 @@ fun insertPlayer(uuid: String = randomGuid(),
                  strategy: Int = 1,
                  strategyXml: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
-                 playerImageId: String = randomGuid()): String
+                 playerImageId: String = randomGuid()): PlayerEntity
 {
     val p = PlayerEntity()
     p.rowId = uuid
@@ -64,7 +65,7 @@ fun insertPlayer(uuid: String = randomGuid(),
     p.playerImageId = playerImageId
 
     p.saveToDatabase()
-    return p.rowId
+    return p
 }
 
 fun insertParticipant(uuid: String = randomGuid(),

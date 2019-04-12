@@ -1,14 +1,21 @@
 package burlton.dartzee.test.db
 
+import burlton.core.code.util.Debug
 import burlton.core.test.helper.exceptionLogged
+import burlton.core.test.helper.getLogLines
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.AbstractEntity
+import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.getCountFromTable
 import burlton.dartzee.test.helper.wipeTable
 import burlton.desktopcore.code.util.DateStatics
+import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -19,6 +26,34 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     private val dao by lazy { factoryDao() }
 
     abstract fun factoryDao(): AbstractEntity<E>
+
+    @Test
+    fun `Should be bulk insertable`()
+    {
+        val tableName = dao.getTableName()
+        wipeTable(tableName)
+
+        val e1: AbstractEntity<E> = dao.javaClass.newInstance()
+        val e2: AbstractEntity<E> = dao.javaClass.newInstance()
+
+        e1.assignRowId()
+        e2.assignRowId()
+
+        Debug.waitUntilLoggingFinished()
+        Debug.clearLogs()
+        BulkInserter.insert(e1, e2)
+
+        getLogLines() shouldHaveSize 1
+        getLogs().shouldNotContain("?")
+        getLogs().shouldContain(e1.rowId)
+        getLogs().shouldContain(e2.rowId)
+        getCountFromTable(tableName) shouldBe 2
+
+        executeQueryAggregate("SELECT COUNT(1) FROM $tableName WHERE DtLastUpdate = ${getEndOfTimeSqlString()}") shouldBe 0
+
+        e1.retrievedFromDb shouldBe true
+        e2.retrievedFromDb shouldBe true
+    }
 
     @Test
     fun `Column names should match declared fields`()

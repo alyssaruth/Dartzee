@@ -57,8 +57,8 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         val gameOne = GameEntity.factoryAndSave(match)
         val gameTwo = GameEntity.factoryAndSave(match)
         val gameThree = GameEntity.factoryAndSave(match)
-        val playerOneId = insertPlayer()
-        val playerTwoId = insertPlayer()
+        val playerOneId = insertPlayer().rowId
+        val playerTwoId = insertPlayer().rowId
 
         insertParticipant(gameId = gameOne.rowId, finishingPosition = 1, playerId = playerOneId)
         insertParticipant(gameId = gameOne.rowId, finishingPosition = 2, playerId = playerTwoId)

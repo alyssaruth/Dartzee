@@ -247,10 +247,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         try
         {
             conn.prepareStatement(insertQuery).use { psInsert ->
-                insertQuery = writeString(psInsert, 1, rowId, insertQuery)
-                insertQuery = writeTimestamp(psInsert, 2, dtCreation, insertQuery)
-                insertQuery = writeTimestamp(psInsert, 3, dtLastUpdate, insertQuery)
-                insertQuery = writeValuesToStatement(psInsert, 4, insertQuery)
+                insertQuery = writeValuesToInsertStatement(insertQuery, psInsert)
 
                 Debug.appendSql(insertQuery, AbstractClient.traceWriteSql)
 
@@ -270,26 +267,22 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         }
     }
 
-    private fun buildInsertQuery(): String
+    fun writeValuesToInsertStatement(emptyStatement: String, psInsert: PreparedStatement, entityNumber: Int = 0): String
     {
-        val sbInsert = StringBuilder()
-        sbInsert.append("INSERT INTO ")
-        sbInsert.append(getTableName())
-        sbInsert.append(" VALUES (")
+        val adjustment = entityNumber * getColumnCount()
 
-        for (i in 0 until getColumnCount())
-        {
-            if (i > 0)
-            {
-                sbInsert.append(", ")
-            }
+        var insertQuery = emptyStatement
+        insertQuery = writeString(psInsert, 1 + adjustment, rowId, insertQuery)
+        insertQuery = writeTimestamp(psInsert, 2 + adjustment, dtCreation, insertQuery)
+        insertQuery = writeTimestamp(psInsert, 3 + adjustment, dtLastUpdate, insertQuery)
+        insertQuery = writeValuesToStatement(psInsert, 4 + adjustment, insertQuery)
 
-            sbInsert.append("?")
-        }
-
-        sbInsert.append(")")
-        return sbInsert.toString()
+        return insertQuery
     }
+
+    private fun buildInsertQuery() = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
+
+    fun getInsertBlockForStatement() = "(${getColumns().joinToString{"?"}})"
 
     open fun createTable(): Boolean
     {

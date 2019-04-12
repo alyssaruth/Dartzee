@@ -3,9 +3,53 @@ package burlton.dartzee.code.db
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.desktopcore.code.util.getSqlDateNow
+import java.sql.SQLException
 
 object BulkInserter
 {
+    fun insert(vararg entities: AbstractEntity<*>)
+    {
+        if (entities.isEmpty())
+        {
+            return
+        }
+
+        if (entities.any{it.retrievedFromDb})
+        {
+            Debug.stackTrace("Attempting to bulk insert entities, but some are already in the database")
+            return
+        }
+
+        val tableName = entities.first().getTableName()
+        var insertQuery = "INSERT INTO $tableName VALUES ${entities.joinToString{it.getInsertBlockForStatement()}}"
+        val conn = DatabaseUtil.borrowConnection()
+
+        try
+        {
+            conn.prepareStatement(insertQuery).use { ps ->
+                entities.forEachIndexed { index, entity ->
+                    entity.dtLastUpdate = getSqlDateNow()
+                    insertQuery = entity.writeValuesToInsertStatement(insertQuery, ps, index)
+                }
+
+                Debug.appendSql(insertQuery, AbstractClient.traceWriteSql)
+
+                ps.executeUpdate()
+            }
+        }
+        catch (sqle: SQLException)
+        {
+            Debug.logSqlException(insertQuery, sqle)
+        }
+        finally
+        {
+            DatabaseUtil.returnConnection(conn)
+        }
+
+        entities.forEach {it.retrievedFromDb = true}
+    }
+
     fun insert(tableName: String, rows: List<String>, rowsPerThread: Int, rowsPerStatement: Int)
     {
         val traceWriteSql = AbstractClient.traceWriteSql
