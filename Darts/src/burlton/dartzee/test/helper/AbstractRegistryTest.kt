@@ -1,7 +1,6 @@
 package burlton.dartzee.test.helper
 
 import burlton.dartzee.code.utils.PreferenceUtil
-import org.junit.After
 
 abstract class AbstractRegistryTest: AbstractDartsTest()
 {
@@ -9,8 +8,10 @@ abstract class AbstractRegistryTest: AbstractDartsTest()
 
     abstract fun getPreferencesAffected(): MutableList<String>
 
-    override fun beforeClass()
+    override fun doClassSetup()
     {
+        super.doClassSetup()
+
         getPreferencesAffected().forEach {
             hmPreferenceToSetting[it] = PreferenceUtil.getStringValue(it)
         }
@@ -23,9 +24,10 @@ abstract class AbstractRegistryTest: AbstractDartsTest()
         }
     }
 
-    @After
-    fun restorePreferenceValues()
+    override fun afterEachTest()
     {
+        super.afterEachTest()
+
         getPreferencesAffected().forEach {
             PreferenceUtil.saveString(it, hmPreferenceToSetting[it])
         }

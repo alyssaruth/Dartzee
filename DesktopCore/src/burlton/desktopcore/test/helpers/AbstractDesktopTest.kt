@@ -20,41 +20,41 @@ abstract class AbstractDesktopTest
     @Before
     fun oneTimeSetup()
     {
-        if (doneOneTimeSetup)
+        if (!doneOneTimeSetup)
         {
-            return
+            doOneTimeSetup()
+            doneOneTimeSetup = true
         }
 
+        doOneTimeDartsSetup()
+
+        if (!doneClassSetup)
+        {
+            doClassSetup()
+            doneClassSetup = true
+        }
+
+        beforeEachTest()
+    }
+
+    open fun doOneTimeDartsSetup() {}
+
+    fun doOneTimeSetup()
+    {
         Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.setDebugExtension(TestDebugExtension())
         Debug.setSendingEmails(false)
         Debug.setLogToSystemOut(DEBUG_MODE)
         DialogUtil.init(dialogFactory)
-
-        doneOneTimeSetup = true
     }
 
-    @Before
-    fun beforeClassGeneric()
+    open fun doClassSetup()
     {
-        if (doneClassSetup)
-        {
-            return
-        }
-
         Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.setLogToSystemOut(DEBUG_MODE)
         DialogUtil.init(dialogFactory)
-
-        beforeClass()
-
-        doneClassSetup = true
     }
 
-    @Before
-    open fun beforeClass() {}
-
-    @Before
     open fun beforeEachTest()
     {
         Debug.lastErrorMillis = -1

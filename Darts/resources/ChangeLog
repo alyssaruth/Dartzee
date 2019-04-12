@@ -2,7 +2,7 @@
 
 = Fixed bugs with deleting games caused by move to GUIDs
 = Fixed a bug where the game could freeze if you paused an AI at the end of their turn
-= Fixed a bug where loaded matches could still cause overlapping MatchOrdinals
+= Fixed a bug where loaded matches could still cause duplicate MatchOrdinals
 
 --------- v3.2.0 ---------
 

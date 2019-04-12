@@ -5,19 +5,14 @@ import burlton.dartzee.code.db.LocalIdGenerator
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import org.apache.derby.jdbc.EmbeddedDriver
-import org.junit.Before
 import java.sql.DriverManager
 
-private const val DEBUG_MODE = true
 private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
 private var doneOneTimeSetup = false
 
 abstract class AbstractDartsTest: AbstractDesktopTest()
 {
-    private var doneClassSetup = false
-
-    @Before
-    fun oneTimeDartsSetup()
+    override fun doOneTimeDartsSetup()
     {
         if (doneOneTimeSetup)
         {
