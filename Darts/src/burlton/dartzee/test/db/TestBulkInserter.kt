@@ -1,16 +1,17 @@
 package burlton.dartzee.test.db
 
 import burlton.core.code.util.Debug.clearLogs
+import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogLines
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.db.BulkInserter
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.getCountFromTable
-import burlton.dartzee.test.helper.wipeTable
+import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldBeSortedWith
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeSortedWith
+import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
@@ -30,6 +31,45 @@ class TestBulkInserter: AbstractDartsTest()
         super.afterEachTest()
 
         DatabaseUtil.dropTable("InsertTest")
+    }
+
+    @Test
+    fun `Should do nothing if passed no entities to insert`()
+    {
+        clearLogs()
+        BulkInserter.insert()
+        getLogs().shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should stack trace and do nothing if any entities are retrievedFromDb`()
+    {
+        wipeTable("Player")
+
+        val playerOne = PlayerEntity()
+        val playerTwo = insertPlayer()
+
+        BulkInserter.insert(playerOne, playerTwo)
+
+        exceptionLogged() shouldBe true
+        getCountFromTable("Player") shouldBe 1
+    }
+
+    @Test
+    fun `Should log SQLExceptions if something goes wrong inserting entities`()
+    {
+        wipeTable("Player")
+
+        val playerOne = factoryPlayer("Pete")
+        val playerTwo = factoryPlayer("Leah")
+
+        playerOne.rowId = playerTwo.rowId
+
+        BulkInserter.insert(playerOne, playerTwo)
+
+        exceptionLogged() shouldBe true
+        getLogs().shouldContain("duplicate key value")
+        getCountFromTable("Player") shouldBe 0
     }
 
     @Test

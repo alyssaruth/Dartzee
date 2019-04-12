@@ -112,7 +112,7 @@ class TestDebug
     fun testStackTraceBasic()
     {
         Debug.clearLogs()
-        Debug.stackTrace("This is a test")
+        Debug.stackTraceNoError("This is a test")
 
         val logs = getLogs()
 
