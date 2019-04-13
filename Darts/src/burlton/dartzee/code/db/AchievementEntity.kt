@@ -7,8 +7,6 @@ import burlton.dartzee.code.achievements.getAchievementForRef
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.getSqlDateNow
-import java.sql.PreparedStatement
-import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Timestamp
 
@@ -38,31 +36,6 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
                 + "GameIdEarned VARCHAR(36) NOT NULL, "
                 + "AchievementCounter INT NOT NULL, "
                 + "AchievementDetail VARCHAR(255) NOT NULL")
-    }
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: AchievementEntity, rs: ResultSet)
-    {
-        entity.playerId = rs.getString("PlayerId")
-        entity.achievementRef = rs.getInt("AchievementRef")
-        entity.gameIdEarned = rs.getString("GameIdEarned")
-        entity.achievementCounter = rs.getInt("AchievementCounter")
-        entity.achievementDetail = rs.getString("AchievementDetail")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-
-        statementStr = writeString(statement, i++, playerId, statementStr)
-        statementStr = writeInt(statement, i++, achievementRef, statementStr)
-        statementStr = writeString(statement, i++, gameIdEarned, statementStr)
-        statementStr = writeInt(statement, i++, achievementCounter, statementStr)
-        statementStr = writeString(statement, i, achievementDetail, statementStr)
-
-        return statementStr
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
