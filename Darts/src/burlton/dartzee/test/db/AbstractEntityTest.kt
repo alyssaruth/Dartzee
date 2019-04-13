@@ -1,6 +1,7 @@
 package burlton.dartzee.test.db
 
 import burlton.core.code.util.Debug
+import burlton.core.code.util.FileUtil
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogLines
 import burlton.core.test.helper.getLogs
@@ -19,13 +20,16 @@ import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
+import java.sql.Blob
 import java.sql.Timestamp
+import javax.sql.rowset.serial.SerialBlob
 
 abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
 {
     private val dao by lazy { factoryDao() }
 
     abstract fun factoryDao(): AbstractEntity<E>
+    open fun setExtraValuesForBulkInsert(e: E) {}
 
     @Test
     fun `Should be bulk insertable`()
@@ -38,6 +42,9 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
 
         e1.assignRowId()
         e2.assignRowId()
+
+        setExtraValuesForBulkInsert(e1 as E)
+        setExtraValuesForBulkInsert(e2 as E)
 
         Debug.waitUntilLoggingFinished()
         Debug.clearLogs()
@@ -185,10 +192,19 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
             Int::class.java -> if (initial) 20 else 100
             Long::class.java -> if (initial) 2000 else Integer.MAX_VALUE - 1
             Timestamp::class.java -> if (initial) Timestamp.valueOf("2019-04-01 21:29:32") else DateStatics.END_OF_TIME
+            Blob::class.java -> if (initial) getBlobValue("BaboOne") else getBlobValue("Goomba")
+            Boolean::class.java -> initial
             else -> {
                 println(fieldType)
                 "uh oh"
             }
         }
+    }
+
+    protected fun getBlobValue(resource: String): Blob
+    {
+        val resourceLocation = "/avatars/$resource.png"
+        val bytes = FileUtil.getByteArrayForResource(resourceLocation)
+        return SerialBlob(bytes)
     }
 }
