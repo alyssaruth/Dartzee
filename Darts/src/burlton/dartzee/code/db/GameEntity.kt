@@ -7,9 +7,6 @@ import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.isEndOfTime
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
 import java.util.*
 
 
@@ -48,32 +45,6 @@ class GameEntity : AbstractEntity<GameEntity>()
                 + "DtFinish timestamp NOT NULL, "
                 + "DartsMatchId VARCHAR(36) NOT NULL, "
                 + "MatchOrdinal INT NOT NULL")
-    }
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: GameEntity, rs: ResultSet)
-    {
-        entity.localId = rs.getLong("LocalId")
-        entity.gameType = rs.getInt("GameType")
-        entity.gameParams = rs.getString("GameParams")
-        entity.dtFinish = rs.getTimestamp("DtFinish")
-        entity.dartsMatchId = rs.getString("DartsMatchId")
-        entity.matchOrdinal = rs.getInt("MatchOrdinal")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeLong(statement, i++, localId, statementStr)
-        statementStr = writeInt(statement, i++, gameType, statementStr)
-        statementStr = writeString(statement, i++, gameParams, statementStr)
-        statementStr = writeTimestamp(statement, i++, dtFinish, statementStr)
-        statementStr = writeString(statement, i++, dartsMatchId, statementStr)
-        statementStr = writeInt(statement, i, matchOrdinal, statementStr)
-
-        return statementStr
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)

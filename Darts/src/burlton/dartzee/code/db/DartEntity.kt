@@ -1,9 +1,6 @@
 package burlton.dartzee.code.db
 
 import burlton.dartzee.code.`object`.Dart
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
 
 class DartEntity : AbstractEntity<DartEntity>()
 {
@@ -31,36 +28,6 @@ class DartEntity : AbstractEntity<DartEntity>()
                 + "PosX INT NOT NULL, "
                 + "PosY INT NOT NULL, "
                 + "SegmentType INT NOT NULL")
-    }
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: DartEntity, rs: ResultSet)
-    {
-        entity.roundId = rs.getString("RoundId")
-        entity.ordinal = rs.getInt("Ordinal")
-        entity.score = rs.getInt("Score")
-        entity.multiplier = rs.getInt("Multiplier")
-        entity.startingScore = rs.getInt("StartingScore")
-        entity.posX = rs.getInt("PosX")
-        entity.posY = rs.getInt("PosY")
-        entity.segmentType = rs.getInt("SegmentType")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeString(statement, i++, roundId, statementStr)
-        statementStr = writeInt(statement, i++, ordinal, statementStr)
-        statementStr = writeInt(statement, i++, score, statementStr)
-        statementStr = writeInt(statement, i++, multiplier, statementStr)
-        statementStr = writeInt(statement, i++, startingScore, statementStr)
-        statementStr = writeInt(statement, i++, posX, statementStr)
-        statementStr = writeInt(statement, i++, posY, statementStr)
-        statementStr = writeInt(statement, i, segmentType, statementStr)
-
-        return statementStr
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)

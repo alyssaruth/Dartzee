@@ -5,8 +5,6 @@ import burlton.core.code.util.FileUtil
 import java.io.File
 import java.nio.file.Files
 import java.sql.Blob
-import java.sql.PreparedStatement
-import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.serial.SerialBlob
@@ -22,8 +20,6 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
     //Will be set when we retrieve from the DB
     var bytes: ByteArray? = null
 
-
-
     override fun getTableName() = "PlayerImage"
 
     override fun getCreateTableSqlSpecific(): String
@@ -31,30 +27,12 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
         return "BlobData Blob NOT NULL, Filepath VARCHAR(1000) NOT NULL, Preset BOOLEAN NOT NULL"
     }
 
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: PlayerImageEntity, rs: ResultSet)
+    override fun cacheValuesWhileResultSetActive()
     {
-        entity.blobData = rs.getBlob("BlobData")
-        entity.filepath = rs.getString("Filepath")
-        entity.preset = rs.getBoolean("Preset")
-
-        //While we have the open connection, go and get the actual bytes
-        val blobData = entity.blobData
-        val length = blobData!!.length().toInt()
+        val blobData = this.blobData!!
+        val length = blobData.length().toInt()
         val bytes = blobData.getBytes(1L, length)
-        entity.bytes = bytes
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeBlob(statement, i++, blobData!!, statementStr)
-        statementStr = writeString(statement, i++, filepath, statementStr)
-        statementStr = writeBoolean(statement, i, preset, statementStr)
-
-        return statementStr
+        this.bytes = bytes
     }
 
     override fun createTable(): Boolean

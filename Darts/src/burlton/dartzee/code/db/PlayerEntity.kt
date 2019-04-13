@@ -5,9 +5,6 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.util.DateStatics.Companion.END_OF_TIME
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.getEndOfTimeSqlString
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
 import javax.swing.ImageIcon
 
 class PlayerEntity:AbstractEntity<PlayerEntity>()
@@ -21,30 +18,6 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
 
 
     override fun getTableName() = "Player"
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: PlayerEntity, rs: ResultSet)
-    {
-        entity.name = rs.getString("Name")
-        entity.strategy = rs.getInt("Strategy")
-        entity.strategyXml = rs.getString("StrategyXml")
-        entity.dtDeleted = rs.getTimestamp("DtDeleted")
-        entity.playerImageId = rs.getString("PlayerImageId")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeString(statement, i++, name, statementStr)
-        statementStr = writeInt(statement, i++, strategy, statementStr)
-        statementStr = writeString(statement, i++, strategyXml, statementStr)
-        statementStr = writeTimestamp(statement, i++, dtDeleted, statementStr)
-        statementStr = writeString(statement, i, playerImageId, statementStr)
-
-        return statementStr
-    }
 
     override fun getCreateTableSqlSpecific(): String
     {

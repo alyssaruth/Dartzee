@@ -27,17 +27,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     abstract fun getTableName(): String
     abstract fun getCreateTableSqlSpecific(): String
 
-    @Throws(SQLException::class)
-    abstract fun populateFromResultSet(entity: E, rs: ResultSet)
-
-    @Throws(SQLException::class)
-    abstract fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-
     /**
      * Default implementations
      */
     open fun getColumnsAllowedToBeUnset() = mutableListOf<String>()
     open fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>) {}
+    open fun cacheValuesWhileResultSetActive() {}
 
     /**
      * Helpers
@@ -58,16 +53,29 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         return cols.map{getColumnNameFromCreateSql(it)}.toMutableList()
     }
 
+    fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String>
+    {
+        val columns = getColumns()
+        columnsToExclude.forEach { columns.remove(it) }
+        return columns
+    }
+
     fun getTableNameUpperCase() = getTableName().toUpperCase()
 
     fun factoryFromResultSet(rs: ResultSet): E
     {
-        val ret = factory()
-        ret!!.rowId = rs.getString("RowId")
+        val ret = factory()!!
+
+        ret.rowId = rs.getString("RowId")
         ret.dtCreation = rs.getTimestamp("DtCreation")
         ret.dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-        populateFromResultSet(ret, rs)
+        getColumnsExcluding("RowId", "DtCreation", "DtLastUpdate").forEach{
+            val rsValue = getFieldFromResultSet(rs, it)
+            ret.setField(it, rsValue)
+        }
+
+        ret.cacheValuesWhileResultSetActive()
 
         return ret
     }
@@ -202,9 +210,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
         try
         {
             conn.prepareStatement(updateQuery).use { psUpdate ->
-                updateQuery = writeTimestamp(psUpdate, 1, dtCreation, updateQuery)
-                updateQuery = writeTimestamp(psUpdate, 2, dtLastUpdate, updateQuery)
-                updateQuery = writeValuesToStatement(psUpdate, 3, updateQuery)
+                updateQuery = writeValuesToStatement(psUpdate, 1, updateQuery)
                 updateQuery = writeString(psUpdate, getColumnCount(), rowId, updateQuery)
 
                 Debug.appendSql(updateQuery, AbstractClient.traceWriteSql)
@@ -241,7 +247,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
     private fun insertIntoDatabase()
     {
-        var insertQuery = buildInsertQuery()
+        var insertQuery = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
 
         val conn = DatabaseUtil.borrowConnection()
         try
@@ -273,14 +279,21 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
         var insertQuery = emptyStatement
         insertQuery = writeString(psInsert, 1 + adjustment, rowId, insertQuery)
-        insertQuery = writeTimestamp(psInsert, 2 + adjustment, dtCreation, insertQuery)
-        insertQuery = writeTimestamp(psInsert, 3 + adjustment, dtLastUpdate, insertQuery)
-        insertQuery = writeValuesToStatement(psInsert, 4 + adjustment, insertQuery)
+        insertQuery = writeValuesToStatement(psInsert, 2 + adjustment, insertQuery)
 
         return insertQuery
     }
 
-    private fun buildInsertQuery() = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
+    fun writeValuesToStatement(ps: PreparedStatement, startIx: Int, emptyStatement: String): String
+    {
+        var ix = startIx
+        var statementStr = emptyStatement
+        getColumnsExcluding("RowId").forEach {
+            statementStr = writeValue(ps, ix++, it, statementStr)
+        }
+
+        return statementStr
+    }
 
     fun getInsertBlockForStatement() = "(${getColumns().joinToString{"?"}})"
 
@@ -404,7 +417,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
 
     fun getField(fieldName: String): Any?
     {
-        println("${getTableName()} - $fieldName")
         val getter = javaClass.getMethod("get$fieldName")
         return getter.invoke(this)
     }
@@ -470,5 +482,46 @@ abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
     private fun swapInValue(statementStr: String, value: Any): String
     {
         return statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
+    }
+
+    private fun writeValue(ps: PreparedStatement, ix: Int, columnName: String, statementStr: String): String
+    {
+        val value = getField(columnName)
+        val type = getFieldType(columnName)
+        return when (type)
+        {
+            String::class.java -> writeString(ps, ix, value as String, statementStr)
+            Long::class.java -> writeLong(ps, ix, value as Long, statementStr)
+            Int::class.java -> writeInt(ps, ix, value as Int, statementStr)
+            Boolean::class.java -> writeBoolean(ps, ix, value as Boolean, statementStr)
+            Timestamp::class.java -> writeTimestamp(ps, ix, value as Timestamp, statementStr)
+            Blob::class.java -> writeBlob(ps, ix, value as Blob, statementStr)
+            else -> writeString(ps, ix, "$value", statementStr)
+        }
+    }
+
+    private fun getFieldFromResultSet(rs: ResultSet, columnName: String): Any?
+    {
+        val type = getFieldType(columnName)
+        return when(type)
+        {
+            String::class.java -> rs.getString(columnName)
+            Long::class.java -> rs.getLong(columnName)
+            Int::class.java -> rs.getInt(columnName)
+            Boolean::class.java -> rs.getBoolean(columnName)
+            Timestamp::class.java -> rs.getTimestamp(columnName)
+            Blob::class.java -> rs.getBlob(columnName)
+            else -> null
+        }
+    }
+
+    private fun getValueForLogging(value: Any): String
+    {
+        return when (value.javaClass)
+        {
+            String::class.java, Timestamp::class.java -> "'$value'"
+            Blob::class.java -> "BLOB:${(value as Blob).length()}"
+            else -> "$value"
+        }
     }
 }

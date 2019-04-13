@@ -3,9 +3,6 @@ package burlton.dartzee.code.db
 import burlton.core.code.util.StringUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.isEndOfTime
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
 
 /**
  * Represents the participant of a game. This is a link between a player and a game, with additional information
@@ -34,32 +31,6 @@ class ParticipantEntity : AbstractEntity<ParticipantEntity>()
                 + "FinishingPosition INT NOT NULL, "
                 + "FinalScore INT NOT NULL, "
                 + "DtFinished TIMESTAMP NOT NULL")
-    }
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: ParticipantEntity, rs: ResultSet)
-    {
-        entity.gameId = rs.getString("GameId")
-        entity.playerId = rs.getString("PlayerId")
-        entity.ordinal = rs.getInt("Ordinal")
-        entity.finishingPosition = rs.getInt("FinishingPosition")
-        entity.finalScore = rs.getInt("FinalScore")
-        entity.dtFinished = rs.getTimestamp("DtFinished")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeString(statement, i++, gameId, statementStr)
-        statementStr = writeString(statement, i++, playerId, statementStr)
-        statementStr = writeInt(statement, i++, ordinal, statementStr)
-        statementStr = writeInt(statement, i++, finishingPosition, statementStr)
-        statementStr = writeInt(statement, i++, finalScore, statementStr)
-        statementStr = writeTimestamp(statement, i, dtFinished, statementStr)
-
-        return statementStr
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)

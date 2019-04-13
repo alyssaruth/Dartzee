@@ -5,9 +5,6 @@ import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getEndOfTimeSqlString
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
 
 /**
  * Simple entity to join multiple 'games' together into a 'match'.
@@ -39,29 +36,6 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
     override fun getCreateTableSqlSpecific(): String
     {
         return "LocalId INT UNIQUE NOT NULL, Games INT NOT NULL, Mode INT NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(255) NOT NULL"
-    }
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: DartsMatchEntity, rs: ResultSet)
-    {
-        entity.localId = rs.getLong("LocalId")
-        entity.games = rs.getInt("Games")
-        entity.mode = rs.getInt("Mode")
-        entity.dtFinish = rs.getTimestamp("DtFinish")
-        entity.matchParams = rs.getString("MatchParams")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeLong(statement, i++, localId, statementStr)
-        statementStr = writeInt(statement, i++, games, statementStr)
-        statementStr = writeInt(statement, i++, mode, statementStr)
-        statementStr = writeTimestamp(statement, i++, dtFinish, statementStr)
-        statementStr = writeString(statement, i, matchParams, statementStr)
-        return statementStr
     }
 
     override fun assignRowId(): String

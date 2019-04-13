@@ -1,9 +1,5 @@
 package burlton.dartzee.code.db
 
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
-
 class RoundEntity : AbstractEntity<RoundEntity>()
 {
     /**
@@ -17,24 +13,6 @@ class RoundEntity : AbstractEntity<RoundEntity>()
     override fun getCreateTableSqlSpecific(): String
     {
         return "ParticipantId VARCHAR(36) NOT NULL, RoundNumber INT NOT NULL"
-    }
-
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: RoundEntity, rs: ResultSet)
-    {
-        entity.participantId = rs.getString("ParticipantId")
-        entity.roundNumber = rs.getInt("RoundNumber")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-        statementStr = writeString(statement, i++, participantId, statementStr)
-        statementStr = writeInt(statement, i, roundNumber, statementStr)
-
-        return statementStr
     }
 
     fun isForParticipant(pt: ParticipantEntity): Boolean
