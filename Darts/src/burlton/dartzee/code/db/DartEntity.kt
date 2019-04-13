@@ -38,7 +38,7 @@ class DartEntity : AbstractEntity<DartEntity>()
 
     companion object
     {
-        fun factoryAndSave(dart: Dart, roundId: String, ordinal: Int, startingScore: Int): DartEntity
+        @JvmStatic fun factory(dart: Dart, roundId: String, ordinal: Int, startingScore: Int): DartEntity
         {
             val de = DartEntity()
             de.assignRowId()
@@ -50,8 +50,6 @@ class DartEntity : AbstractEntity<DartEntity>()
             de.posX = dart.getX()!!
             de.posY = dart.getY()!!
             de.segmentType = dart.segmentType
-
-            de.saveToDatabase()
             return de
         }
     }

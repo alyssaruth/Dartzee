@@ -6,7 +6,6 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.DartEntity
 import burlton.desktopcore.code.util.getSqlDateNow
 
 class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(parent)
@@ -74,12 +73,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
 
     override fun saveDartsAndProceed()
     {
-        val roundId = currentRound.rowId
-        for (i in dartsThrown.indices)
-        {
-            val dart = dartsThrown[i]
-            DartEntity.factoryAndSave(dart, roundId, i+1, -1)
-        }
+        saveDartsToDatabase(currentRound.rowId)
 
         activeScorer.finaliseRoundScore()
 

@@ -708,8 +708,6 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		currentRound.saveToDatabase();
 		
 		saveDartsAndProceed();
-		
-		
 	}
 	protected void resetRound()
 	{
@@ -729,6 +727,21 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		//Might need to re-enable the dartboard for listening if we're a human player
 		boolean human = activeScorer.getHuman();
 		dartboard.listen(human);
+	}
+
+	/**
+	 * Loop through the darts thrown, saving them to the database.
+	 */
+	protected void saveDartsToDatabase(String roundId)
+	{
+		List<DartEntity> darts = new ArrayList<>();
+		for (int i=0; i<dartsThrown.size(); i++)
+		{
+			Dart dart = dartsThrown.get(i);
+			darts.add(DartEntity.factory(dart, roundId, i + 1, dart.getStartingScore()));
+		}
+
+		BulkInserter.insert(darts);
 	}
 	
 	protected void readyForThrow()

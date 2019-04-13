@@ -8,7 +8,6 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.*
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.DartEntity
 import burlton.dartzee.code.utils.*
 
 class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(parent)
@@ -115,18 +114,6 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         if (existingRow == null)
         {
             AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, currentPlayerId, gameId, methodStr)
-        }
-    }
-
-    /**
-     * Loop through the darts thrown, saving them to the database.
-     */
-    override fun saveDartsToDatabase(roundId: String)
-    {
-        for (i in dartsThrown.indices)
-        {
-            val dart = dartsThrown[i]
-            DartEntity.factoryAndSave(dart, roundId, i + 1, dart.startingScore)
         }
     }
 

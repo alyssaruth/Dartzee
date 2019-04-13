@@ -14,12 +14,12 @@ class TestDartEntity: AbstractEntityTest<DartEntity>()
     override fun factoryDao() = DartEntity()
 
     @Test
-    fun `Should factory and save with the correct values`()
+    fun `Should factory with the correct values`()
     {
         val dart = Dart(20, 3, Point(5, 5), SEGMENT_TYPE_TREBLE)
         val roundId = randomGuid()
 
-        val de = DartEntity.factoryAndSave(dart, roundId, 1, 501)
+        val de = DartEntity.factory(dart, roundId, 1, 501)
 
         de.rowId shouldNotBe ""
         de.score shouldBe 20
@@ -30,7 +30,5 @@ class TestDartEntity: AbstractEntityTest<DartEntity>()
         de.ordinal shouldBe 1
         de.startingScore shouldBe 501
         de.segmentType shouldBe SEGMENT_TYPE_TREBLE
-
-        de.retrieveForId(de.rowId) shouldNotBe null
     }
 }
