@@ -5,7 +5,6 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.DartEntity
 
 class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsScorerRoundTheClock>(parent)
 {
@@ -111,20 +110,15 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         return !shouldStopAfterDartThrown()
     }
 
-    override fun saveDartsToDatabase(roundId: String)
+    override fun saveDartsAndProceed()
     {
-        for (i in dartsThrown.indices)
-        {
-            val dart = dartsThrown[i]
-            val target = dart.startingScore
-            DartEntity.factoryAndSave(dart, roundId, i + 1, target)
-        }
-
         if (dartsThrown.size == 4
-          && dartsThrown.last().hitClockTarget(clockType))
+                && dartsThrown.last().hitClockTarget(clockType))
         {
             AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, gameId)
         }
+
+        super.saveDartsAndProceed()
     }
 
     override fun currentPlayerHasFinished(): Boolean

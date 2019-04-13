@@ -12,7 +12,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
     /**
      * Abstract methods
      */
-    abstract fun saveDartsToDatabase(roundId: String)
     abstract fun currentPlayerHasFinished(): Boolean
 
     override fun saveDartsAndProceed()

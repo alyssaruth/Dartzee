@@ -10,6 +10,10 @@ object BulkInserter
 {
     fun insert(vararg entities: AbstractEntity<*>)
     {
+        insert(entities.toList())
+    }
+    @JvmStatic fun insert(entities: List<AbstractEntity<*>>)
+    {
         if (entities.isEmpty())
         {
             return

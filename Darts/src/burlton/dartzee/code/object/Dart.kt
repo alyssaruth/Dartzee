@@ -17,7 +17,7 @@ open class Dart @JvmOverloads constructor(
     //What the player's "score" was before throwing this dart.
     //Means what you'd think for X01
     //For Round the Clock, this'll be what they were to aim for
-    var startingScore = 1
+    var startingScore = -1
 
     //Never set on the DB. Used for in-game stats, and is just set to the round number.
     private var golfHole = -1
