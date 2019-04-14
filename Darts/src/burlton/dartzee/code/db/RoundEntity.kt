@@ -18,7 +18,6 @@ class RoundEntity : AbstractEntity<RoundEntity>()
     override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
     {
         indexes.add(mutableListOf("ParticipantId", "RoundNumber"))
-        indexes.add(mutableListOf("RowId"))
     }
 
     fun isForParticipant(pt: ParticipantEntity): Boolean
