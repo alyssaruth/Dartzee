@@ -3,6 +3,8 @@
 = Fixed bugs with deleting games caused by move to GUIDs
 = Fixed a bug where the game could freeze if you paused an AI at the end of their turn
 = Fixed a bug where loaded matches could still cause duplicate MatchOrdinals
+= Performance improvement: Grouped dart inserts rather than individual
+= Performance improvement: Improved Leaderboard SQL for Top X01 Finishes
 
 --------- v3.2.0 ---------
 
