@@ -107,39 +107,10 @@ class ReportParameters
         return sb.toString()
     }
 
-    /*fun getAsPredicate(): Predicate<ReportResultWrapper>
-    {
-        return {rr: ReportResultWrapper ->
-            (rr.getGameType() == gameType
-                    && (gameParams.isEmpty() || rr.getGameParams() == gameParams)
-                    && (dtStartFrom == null || isOnOrAfter(rr.getDtStart(), dtStartFrom))
-                    && (dtStartTo == null || isOnOrAfter(dtStartTo, rr.getDtStart()))
-                    && (dtFinishFrom == null || isOnOrAfter(rr.getDtFinish(), dtFinishFrom))
-                    && (dtFinishTo == null || isOnOrAfter(dtFinishTo, rr.getDtFinish())))}
-    }*/
-
     override fun toString(): String
     {
         return "[$gameType, $gameParams, $dtStartFrom, $dtStartTo, $dtFinishFrom, $dtFinishTo]"
     }
-
-    /*fun factoryCopy(): ReportParameters
-    {
-        val rp = ReportParameters()
-
-        rp.gameType = gameType
-        rp.gameParams = gameParams
-        rp.unfinishedOnly = unfinishedOnly
-        rp.dtStartFrom = dtStartFrom
-        rp.dtStartTo = dtStartTo
-        rp.dtFinishFrom = dtFinishFrom
-        rp.dtFinishTo = dtFinishTo
-        rp.hmIncludedPlayerToParms = SuperHashMap(hmIncludedPlayerToParms)
-        rp.excludedPlayers = ArrayList(excludedPlayers)
-        rp.partOfMatch = partOfMatch
-
-        return rp
-    }*/
 
     fun setEnforceMatch(matches: Boolean)
     {
