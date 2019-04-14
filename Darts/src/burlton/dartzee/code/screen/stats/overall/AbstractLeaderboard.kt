@@ -14,12 +14,23 @@ import javax.swing.JPanel
 
 abstract class AbstractLeaderboard: JPanel(), ActionListener
 {
+    var builtTable = false
+
     abstract fun buildTable()
     abstract fun getTabName(): String
 
     override fun actionPerformed(e: ActionEvent?)
     {
         buildTable()
+    }
+
+    fun buildTableFirstTime()
+    {
+        if (!builtTable)
+        {
+            buildTable()
+            builtTable = true
+        }
     }
 
     /**
