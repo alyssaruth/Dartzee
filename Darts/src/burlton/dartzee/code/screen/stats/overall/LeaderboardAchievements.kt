@@ -11,7 +11,6 @@ import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
-import javax.swing.JPanel
 import javax.swing.JProgressBar
 import javax.swing.JTable
 import javax.swing.border.CompoundBorder
@@ -20,7 +19,7 @@ import javax.swing.border.MatteBorder
 import javax.swing.plaf.basic.BasicProgressBarUI
 import javax.swing.table.TableCellRenderer
 
-class OverallStatsTabAchievements : JPanel()
+class LeaderboardAchievements : AbstractLeaderboard()
 {
     private val table = ScrollTableAchievements()
 
@@ -31,7 +30,9 @@ class OverallStatsTabAchievements : JPanel()
         add(table)
     }
 
-    fun buildTable()
+    override fun getTabName() = "Achievements"
+
+    override fun buildTable()
     {
         val achievementRows = AchievementEntity().retrieveEntities("")
 

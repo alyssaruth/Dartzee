@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.screen.reporting.ReportingSetupScreen
-import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+import burlton.dartzee.code.screen.stats.overall.LeaderboardsScreen
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import java.awt.BorderLayout
 import java.awt.Font
@@ -115,7 +115,7 @@ class MenuScreen : EmbeddedScreen()
             btnNewGame -> ScreenCache.switchScreen(GameSetupScreen::class.java)
             btnManagePlayers -> ScreenCache.switchScreen(PlayerManagementScreen::class.java)
             btnGameReport -> ScreenCache.switchScreen(ReportingSetupScreen::class.java)
-            btnGameStats -> ScreenCache.switchScreen(OverallStatsScreen::class.java)
+            btnGameStats -> ScreenCache.switchScreen(LeaderboardsScreen::class.java)
             btnUtilities -> ScreenCache.switchScreen(UtilitiesScreen::class.java)
             else -> super.actionPerformed(arg0)
         }

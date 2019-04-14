@@ -16,7 +16,7 @@ import javax.swing.JOptionPane
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 6
+    const val DATABASE_VERSION = 7
     const val DATABASE_NAME = "jdbc:derby:Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -73,23 +73,7 @@ object DartsDatabaseUtil
             Debug.append("Database versions match.")
             return
         }
-
-        if (versionNumber == 3)
-        {
-            upgradeDatabaseToVersion4()
-            version.version = 4
-            version.saveToDatabase()
-        }
-
-        if (versionNumber == 4)
-        {
-            upgradeDatabaseToVersion5()
-            version.version = 5
-            version.saveToDatabase()
-        }
-
-        //From now on, run SQL scripts from resources/sql/v{N+1}
-        if (versionNumber == 5)
+        else if (versionNumber == 5)
         {
             upgradeDatabaseToVersion6()
 
@@ -98,6 +82,14 @@ object DartsDatabaseUtil
             newVersion.saveToDatabase()
 
             version.version = 6
+        }
+        else
+        {
+            val newVersion = versionNumber+1
+            Debug.appendBanner("Upgrading to Version $newVersion")
+            runSqlScriptsForVersion(newVersion)
+            version.version = newVersion
+            version.saveToDatabase()
         }
 
         initialiseDatabase(version)
@@ -213,29 +205,6 @@ object DartsDatabaseUtil
         BulkInserter.insert(keysTable, rows, 5000, 50)
 
         DatabaseUtil.executeUpdate("CREATE INDEX ${keysTable}_RowId_Guid ON $keysTable(RowId, Guid)")
-    }
-
-    private fun upgradeDatabaseToVersion5()
-    {
-        Debug.appendBanner("Upgrading to Version 5")
-
-        AchievementEntity().addStringColumn("AchievementDetail", 255)
-
-        Debug.appendBanner("Finished database upgrade")
-    }
-
-    private fun upgradeDatabaseToVersion4()
-    {
-        Debug.appendBanner("Upgrading to Version 4")
-
-        //Fix default on DartsMatch
-        val sql = "ALTER TABLE DartsMatch ALTER COLUMN MatchParams DROP DEFAULT"
-        DatabaseUtil.executeUpdate(sql)
-
-        //Create Achievement table
-        AchievementEntity().createTable()
-
-        Debug.appendBanner("Finished database upgrade")
     }
 
     private fun createAllTables()
