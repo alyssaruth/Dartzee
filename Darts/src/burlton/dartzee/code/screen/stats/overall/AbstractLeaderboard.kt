@@ -14,7 +14,7 @@ import javax.swing.JPanel
 
 abstract class AbstractLeaderboard: JPanel(), ActionListener
 {
-    var builtTable = false
+    private var builtTable = false
 
     abstract fun buildTable()
     abstract fun getTabName(): String
