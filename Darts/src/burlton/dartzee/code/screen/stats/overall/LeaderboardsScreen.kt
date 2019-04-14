@@ -5,8 +5,10 @@ import burlton.dartzee.code.screen.EmbeddedScreen
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
 
-class LeaderboardsScreen : EmbeddedScreen()
+class LeaderboardsScreen : EmbeddedScreen(), ChangeListener
 {
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val tabs = getTabs()
@@ -18,15 +20,15 @@ class LeaderboardsScreen : EmbeddedScreen()
         tabs.forEach{
             tabbedPane.addTab(it.getTabName(), null, it, null)
         }
+
+        tabbedPane.addChangeListener(this)
     }
 
     override fun getScreenName() = "Leaderboards"
 
     override fun initialise()
     {
-        tabs.forEach{
-            it.buildTable()
-        }
+        tabs.first().buildTableFirstTime()
     }
 
     private fun getTabs(): List<AbstractLeaderboard>
@@ -41,5 +43,13 @@ class LeaderboardsScreen : EmbeddedScreen()
         tabs.add(LeaderboardAchievements())
 
         return tabs
+    }
+
+    override fun stateChanged(e: ChangeEvent)
+    {
+        val index = tabbedPane.selectedIndex
+        val selectedTab = tabs[index]
+
+        selectedTab.buildTableFirstTime()
     }
 }
