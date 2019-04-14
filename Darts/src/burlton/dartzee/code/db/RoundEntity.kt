@@ -15,6 +15,12 @@ class RoundEntity : AbstractEntity<RoundEntity>()
         return "ParticipantId VARCHAR(36) NOT NULL, RoundNumber INT NOT NULL"
     }
 
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
+    {
+        indexes.add(mutableListOf("ParticipantId", "RoundNumber"))
+        indexes.add(mutableListOf("RowId"))
+    }
+
     fun isForParticipant(pt: ParticipantEntity): Boolean
     {
         val ptId = pt.rowId
