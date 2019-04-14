@@ -123,8 +123,7 @@ class DatabaseUtil : SqlErrorConstants
         @Throws(SQLException::class)
         private fun executeUpdateUncaught(statement: String, log: Boolean = true)
         {
-            Debug.appendSql(statement, AbstractClient.traceWriteSql && log)
-
+            val startMillis = System.currentTimeMillis()
             val conn = borrowConnection()
             try
             {
@@ -136,6 +135,9 @@ class DatabaseUtil : SqlErrorConstants
             {
                 returnConnection(conn)
             }
+
+            val totalMillis = System.currentTimeMillis() - startMillis
+            Debug.appendSql("(${totalMillis}ms) $statement", AbstractClient.traceWriteSql && log)
         }
 
         @JvmStatic fun executeQuery(sb: StringBuilder): ResultSet
