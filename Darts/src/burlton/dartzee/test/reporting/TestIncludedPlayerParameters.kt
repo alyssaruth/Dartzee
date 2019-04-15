@@ -3,10 +3,7 @@ package burlton.dartzee.test.reporting
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
 import burlton.dartzee.code.reporting.ReportParameters
 import burlton.dartzee.code.reporting.runReport
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.insertGame
-import burlton.dartzee.test.helper.insertParticipant
-import burlton.dartzee.test.helper.insertPlayer
+import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
@@ -14,6 +11,13 @@ import org.junit.Test
 
 class TestIncludedPlayerParameters: AbstractDartsTest()
 {
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+
+        wipeTable("Game")
+    }
+
     @Test
     fun `Should be blank by default`()
     {
@@ -26,10 +30,10 @@ class TestIncludedPlayerParameters: AbstractDartsTest()
     {
         val player = insertPlayer("Bob")
 
-        val winningGameId = insertGame(localId = 1)
-        val thirdGameId = insertGame(localId = 2)
-        val secondGameId = insertGame(localId = 3)
-        val unfinishedGameId = insertGame(localId = 4)
+        val winningGameId = insertGame(localId = 1).rowId
+        val thirdGameId = insertGame(localId = 2).rowId
+        val secondGameId = insertGame(localId = 3).rowId
+        val unfinishedGameId = insertGame(localId = 4).rowId
 
         insertParticipant(playerId = player.rowId, finishingPosition = 1, gameId = winningGameId)
         insertParticipant(playerId = player.rowId, finishingPosition = 2, gameId = secondGameId)

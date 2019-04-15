@@ -90,6 +90,22 @@ fun insertParticipant(uuid: String = randomGuid(),
     return pe.rowId
 }
 
+fun insertGameForReport(uuid: String = randomGuid(),
+                        localId: Long = LocalIdGenerator.generateLocalId("Game"),
+                        gameType: Int = GAME_TYPE_X01,
+                        gameParams: String = "501",
+                        dtFinish: Timestamp = DateStatics.END_OF_TIME,
+                        dartsMatchId: String = "",
+                        matchOrdinal: Int = -1,
+                        dtCreation: Timestamp = getSqlDateNow()): GameEntity
+{
+    val game = insertGame(uuid, localId, gameType, gameParams, dtFinish, dartsMatchId, matchOrdinal, dtCreation)
+    val player = insertPlayer()
+    insertParticipant(gameId = game.rowId, playerId = player.rowId)
+
+    return game
+}
+
 fun insertGame(uuid: String = randomGuid(),
                localId: Long = LocalIdGenerator.generateLocalId("Game"),
                gameType: Int = GAME_TYPE_X01,
@@ -97,7 +113,7 @@ fun insertGame(uuid: String = randomGuid(),
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
                dartsMatchId: String = "",
                matchOrdinal: Int = -1,
-               dtCreation: Timestamp = getSqlDateNow()): String
+               dtCreation: Timestamp = getSqlDateNow()): GameEntity
 {
     val ge = GameEntity()
     ge.rowId = uuid
@@ -111,7 +127,7 @@ fun insertGame(uuid: String = randomGuid(),
 
     ge.saveToDatabase()
 
-    return uuid
+    return ge
 }
 
 fun getCountFromTable(table: String): Int

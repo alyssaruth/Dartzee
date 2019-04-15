@@ -178,10 +178,10 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         val matchId = randomGuid()
 
         val millis = System.currentTimeMillis()
-        val gameTwoId = insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis))
-        val gameOneId = insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis - 5))
+        val gameTwoId = insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis)).rowId
+        val gameOneId = insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis - 5)).rowId
         insertGame(dartsMatchId = randomGuid())
-        val gameThreeId = insertGame(dartsMatchId = matchId, matchOrdinal = 2, dtCreation = Timestamp(millis - 10))
+        val gameThreeId = insertGame(dartsMatchId = matchId, matchOrdinal = 2, dtCreation = Timestamp(millis - 10)).rowId
 
         val gameIds = GameEntity.retrieveGamesForMatch(matchId).map{it.rowId}.toList()
         gameIds.shouldContainExactly(gameOneId, gameTwoId, gameThreeId)
@@ -210,11 +210,11 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `Should map localId to gameId`()
     {
-        val gameIdOne = insertGame(localId = 1)
-        val gameIdTwo = insertGame(localId = 2)
+        val gameOne = insertGame(localId = 1)
+        val gameTwo = insertGame(localId = 2)
 
-        GameEntity.getGameId(1) shouldBe gameIdOne
-        GameEntity.getGameId(2) shouldBe gameIdTwo
+        GameEntity.getGameId(1) shouldBe gameOne.rowId
+        GameEntity.getGameId(2) shouldBe gameTwo.rowId
         GameEntity.getGameId(3) shouldBe null
     }
 }

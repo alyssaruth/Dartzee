@@ -514,6 +514,7 @@ public class Debug implements CoreRegistry
 
 	public static void clearLogs()
 	{
+		waitUntilLoggingFinished();
 		output.clear();
 	}
 
