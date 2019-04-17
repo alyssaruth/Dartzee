@@ -15,10 +15,11 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
-fun insertPlayerForGame(name: String, gameId: String)
+fun insertPlayerForGame(name: String, gameId: String): PlayerEntity
 {
     val player = insertPlayer(name = name)
     insertParticipant(playerId = player.rowId, gameId = gameId)
+    return player
 }
 
 fun factoryPlayer(name: String): PlayerEntity
