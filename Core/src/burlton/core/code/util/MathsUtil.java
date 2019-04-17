@@ -265,6 +265,11 @@ public final class MathsUtil
 	
 	public static double getPercentage(int count, double total)
 	{
+		if (count == 0)
+		{
+			return 0.0;
+		}
+
 		return (double)Math.round(1000 * count/total)/10;
 	}
 	
