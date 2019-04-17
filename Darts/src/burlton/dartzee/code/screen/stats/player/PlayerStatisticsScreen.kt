@@ -41,7 +41,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     //X01 tabs
     private val tabFinishing = StatisticsTabFinishBreakdown()
     private val tabCheckoutPercent = StatisticsTabX01CheckoutPercent()
-    private val tabTopFinishes = StatisticsTabTopFinishes()
+    private val tabTopFinishes = StatisticsTabX01TopFinishes()
     private val tabThreeDartAverage = StatisticsTabThreeDartAverage()
     private val tabTotalDarts = StatisticsTabTotalScore("Total Darts", 200)
     private val tabThreeDartScores = StatisticsTabThreeDartScores()
