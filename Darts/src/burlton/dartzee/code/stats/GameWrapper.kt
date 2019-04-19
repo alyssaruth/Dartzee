@@ -167,7 +167,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     /**
      * Burlton Constant
      */
-    fun populateThreeDartScoreMap(hmScoreToBreakdownWrapper: HashMap<Int, ThreeDartScoreWrapper>, scoreThreshold: Int)
+    fun populateThreeDartScoreMap(hmScoreToBreakdownWrapper: MutableMap<Int, ThreeDartScoreWrapper>, scoreThreshold: Int)
     {
         val dartsRounds = getScoringDartsGroupedByRound(scoreThreshold)
 
