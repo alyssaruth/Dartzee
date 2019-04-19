@@ -44,7 +44,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     private val tabTopFinishes = StatisticsTabX01TopFinishes()
     private val tabThreeDartAverage = StatisticsTabThreeDartAverage()
     private val tabTotalDarts = StatisticsTabTotalScore("Total Darts", 200)
-    private val tabThreeDartScores = StatisticsTabThreeDartScores()
+    private val tabThreeDartScores = StatisticsTabX01ThreeDartScores()
 
     //Golf tabs
     private val tabHoleBreakdown = StatisticsTabGolfHoleBreakdown()
