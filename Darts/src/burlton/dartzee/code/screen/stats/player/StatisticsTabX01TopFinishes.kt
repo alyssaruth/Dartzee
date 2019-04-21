@@ -56,7 +56,7 @@ class StatisticsTabX01TopFinishes : AbstractStatisticsTab()
             val gameId = game.localId
             val total = game.getCheckoutTotal()
 
-            val dartStr = game.getDartsForFinalRound()!!.joinToString()
+            val dartStr = game.getDartsForFinalRound().joinToString()
 
             val row = arrayOf(total, dartStr, gameId)
             model.addRow(row)

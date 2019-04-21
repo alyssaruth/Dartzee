@@ -20,21 +20,6 @@ class HashMapCount<K>: HashMap<K, Int>
         return ArrayList(keys.toMutableList())
     }
 
-    /*
-    fun getKeyWithHighestCount() : K
-    {
-        return getHighestEntry().key
-    }
-    fun getHighestCount() : Int
-    {
-        return getHighestEntry().value
-    }
-    fun getHighestEntry() : Map.Entry<K, Int>
-    {
-        return entries.sortedBy{it.value}.last()
-    }
-    */
-
     @JvmOverloads
     fun incrementCount(key: K, amount: Int = 1): Int
     {

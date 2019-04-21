@@ -28,47 +28,26 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     /**
      * Helpers
      */
-    fun getAllDarts(): MutableList<Dart>
-    {
-        return hmRoundNumberToDarts.getAllValues()
-    }
+    fun getAllDarts() = hmRoundNumberToDarts.getAllValues()
 
-    fun isFinished(): Boolean
-    {
-        return finalScore > -1
-    }
+    fun isFinished() = finalScore > -1
 
-    private fun getScoreForFinalRound(): Int
-    {
-        return getScoreForRound(totalRounds)
-    }
-
-    fun getDartsForFinalRound(): MutableList<Dart>?
-    {
-        return getDartsForRound(totalRounds)
-    }
+    private fun getScoreForFinalRound() = getScoreForRound(totalRounds)
+    fun getDartsForFinalRound() = getDartsForRound(totalRounds)
 
     /**
      * X01 Helpers
      */
     //For unfinished games, return -1 so they're sorted to the back
-    fun getCheckoutTotal(): Int
-    {
-        return if (finalScore == -1)
-        {
-            -1
-        }
-        else getScoreForFinalRound()
-    }
+    fun getCheckoutTotal() = if (finalScore == -1) -1 else getScoreForFinalRound()
+    fun getGameStartValueX01() = gameParams.toInt()
+
     private fun getAllDartsFlattened(): MutableList<Dart>
     {
         val allDarts = hmRoundNumberToDarts.valuesAsVector
         return allDarts.flatten().toMutableList()
     }
-    fun getGameStartValueX01(): Int
-    {
-        return gameParams.toInt()
-    }
+
     private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<MutableList<Dart>>?
     {
         if (scoreCutOff < 62)
@@ -328,14 +307,6 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         val newSize = dartsNew.size
         val currentSize = dartsCurrent.size
         return newSize < currentSize
-    }
-
-    /**
-     * Generic helpers
-     */
-    fun compareStartDate(other: GameWrapper): Int
-    {
-        return dtStart.compareTo(other.dtStart)
     }
 
     /**
