@@ -54,13 +54,6 @@ public class SuperHashMap<K, V> extends HashMap<K, V>
 		return values;
 	}
 	
-	public SuperHashMap<K, V> factoryCopy()
-	{
-		SuperHashMap<K, V> ret = new SuperHashMap<>();
-		ret.putAll(this);
-		return ret;
-	}
-	
 	public void removeAllWithValue(V value)
 	{
 		HandyArrayList<K> keys = getKeysAsVector();
