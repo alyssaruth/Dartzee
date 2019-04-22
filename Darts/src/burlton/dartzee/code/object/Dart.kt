@@ -168,6 +168,8 @@ open class Dart @JvmOverloads constructor(
     }
 }
 
+class DartNotThrown : Dart(-1, -1)
+
 /**
  * Static methods
  */
