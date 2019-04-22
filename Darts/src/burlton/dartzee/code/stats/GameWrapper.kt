@@ -262,7 +262,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
     }
 
-    fun populateOptimalScorecardMaps(hmHoleToBestDarts: HashMapList<Int, Dart>, hmHoleToBestGameId: HashMap<Int, Long>)
+    fun populateOptimalScorecardMaps(hmHoleToBestDarts: HashMapList<Int, Dart>, hmHoleToBestGameId: MutableMap<Int, Long>)
     {
         for (i in 1..totalRounds)
         {
