@@ -71,8 +71,8 @@ class ReportingResultsScreen : EmbeddedScreen()
 
     private fun setRenderersAndComparators()
     {
-        tableResults.setRenderer(3, TableUtil.TIMESTAMP_RENDERER)
-        tableResults.setRenderer(4, TableUtil.TIMESTAMP_RENDERER)
+        tableResults.setRenderer(3, TableUtil.TimestampRenderer())
+        tableResults.setRenderer(4, TableUtil.TimestampRenderer())
 
         tableResults.setComparator(3) { t1: Timestamp, t2: Timestamp -> t1.compareTo(t2) }
         tableResults.setComparator(3) { t1: Timestamp, t2: Timestamp -> t1.compareTo(t2) }
