@@ -11,10 +11,12 @@ import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.CachedRowSet
 
+const val TABLE_ALREADY_EXISTS = "X0Y32"
+
 /**
  * Generic derby helper methods
  */
-class DatabaseUtil : SqlErrorConstants
+class DatabaseUtil
 {
     companion object
     {
@@ -231,7 +233,7 @@ class DatabaseUtil : SqlErrorConstants
             catch (sqle: SQLException)
             {
                 val state = sqle.sqlState
-                if (state == SqlErrorConstants.TABLE_ALREADY_EXISTS)
+                if (state == TABLE_ALREADY_EXISTS)
                 {
                     Debug.append("$tableName table already exists")
                 }

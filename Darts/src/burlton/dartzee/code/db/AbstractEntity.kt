@@ -4,14 +4,13 @@ import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.code.utils.SqlErrorConstants
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.*
 import java.util.*
 import java.util.regex.Pattern
 
-abstract class AbstractEntity<E : AbstractEntity<E>> : SqlErrorConstants
+abstract class AbstractEntity<E : AbstractEntity<E>>
 {
     //DB Fields
     var rowId: String = ""
