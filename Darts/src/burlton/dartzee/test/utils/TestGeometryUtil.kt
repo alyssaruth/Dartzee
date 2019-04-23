@@ -1,9 +1,11 @@
 package burlton.dartzee.test.utils
 
-import burlton.core.code.obj.HandyArrayList
-import burlton.dartzee.code.utils.GeometryUtil
+import burlton.dartzee.code.utils.*
 import burlton.dartzee.test.helper.AbstractDartsTest
-import org.junit.Assert
+import io.kotlintest.matchers.doubles.shouldBeBetween
+import io.kotlintest.matchers.doubles.shouldBeGreaterThanOrEqual
+import io.kotlintest.matchers.doubles.shouldBeLessThanOrEqual
+import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Point
 
@@ -12,6 +14,7 @@ import java.awt.Point
  *
  * 20/04/2018 - for posterity...
  * 14/01/2019 - Now brought to you with Kotlin!
+ * 23/04/2019 - Class under test is now Kotlin, and this now uses Kotlintest
  * */
 class TestGeometryUtil: AbstractDartsTest()
 {
@@ -36,11 +39,8 @@ class TestGeometryUtil: AbstractDartsTest()
 
     private fun assertPointTranslation(radius: Double, degrees: Double, expected: Point)
     {
-        val pt = Point(0, 0)
-        val result = GeometryUtil.translatePoint(pt, radius, degrees, false)
-
-        val desc = "Translating (0, 0) by $radius at an angle of $degrees degrees"
-        Assert.assertEquals(desc, expected, result)
+        val result = translatePoint(Point(0, 0), radius, degrees, false)
+        result shouldBe expected
     }
 
     @Test
@@ -55,10 +55,8 @@ class TestGeometryUtil: AbstractDartsTest()
 
     private fun assertDistance(ptOne: Point, ptTwo: Point, expected: Double)
     {
-        val debug = "Distance from $ptOne to $ptTwo"
-
-        Assert.assertEquals(debug, expected, GeometryUtil.getDistance(ptTwo, ptOne), 0.001)
-        Assert.assertEquals(debug, expected, GeometryUtil.getDistance(ptOne, ptTwo), 0.001)
+        getDistance(ptTwo, ptOne).shouldBeBetween(expected - 0.001, expected + 0.001, 0.0)
+        getDistance(ptOne, ptTwo).shouldBeBetween(expected - 0.001, expected + 0.001, 0.0)
     }
 
     /**
@@ -98,9 +96,7 @@ class TestGeometryUtil: AbstractDartsTest()
         //We've passed in the intuitive value. Transform it to java in here.
         pt.setLocation(pt.getX(), -pt.getY())
 
-        val result = GeometryUtil.getAngleForPoint(pt, centerPt)
-
-        Assert.assertEquals("Positive angle from $centerPt to $pt", expected, result, 0.01)
+        getAngleForPoint(pt, centerPt).shouldBeBetween(expected - 0.01, expected + 0.01, 0.0)
     }
 
     @Test
@@ -113,9 +109,8 @@ class TestGeometryUtil: AbstractDartsTest()
 
     private fun assertAverage(expected: Point, vararg points: Point)
     {
-        val description = "Average point of $points"
-        val pointsArrayList = HandyArrayList.factoryAdd(*points)
-        Assert.assertEquals(description, GeometryUtil.getAverage(pointsArrayList), expected)
+        val list = points.toList()
+        getAverage(list) shouldBe expected
     }
 
     @Test
@@ -123,9 +118,9 @@ class TestGeometryUtil: AbstractDartsTest()
     {
         for (i in 0..999)
         {
-            val angle = GeometryUtil.generateRandomAngle()
-            Assert.assertTrue("Random angle is >= 0", angle >= 0)
-            Assert.assertTrue("Random angle is <= 360", angle <= 360)
+            val angle = generateRandomAngle()
+            angle.shouldBeGreaterThanOrEqual(0.0)
+            angle.shouldBeLessThanOrEqual(360.0)
         }
     }
 

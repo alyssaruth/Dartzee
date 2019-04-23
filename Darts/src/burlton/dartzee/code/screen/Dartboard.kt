@@ -207,7 +207,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
             //Work out where to place the label
             val points = getPointsForSegment(i, SEGMENT_TYPE_MISS)
-            val avgPoint = GeometryUtil.getAverage(points)
+            val avgPoint = getAverage(points)
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2
             lbl.setLocation(lblX, lblY)

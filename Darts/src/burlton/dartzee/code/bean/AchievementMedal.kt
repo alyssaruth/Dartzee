@@ -6,7 +6,7 @@ import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementBreakdown
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
 import burlton.dartzee.code.utils.DartsColour
-import burlton.dartzee.code.utils.GeometryUtil
+import burlton.dartzee.code.utils.getDistance
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -91,15 +91,15 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
         g.fillArc(0, 0, SIZE, SIZE, 90 - thresholdAngle.toInt(), 3)
     }
 
-    private fun updateForMouseOver(e : MouseEvent?)
+    private fun updateForMouseOver(e : MouseEvent)
     {
         if (!hoveringEnabled)
         {
             return
         }
 
-        val pt = e?.point
-        highlighted = GeometryUtil.getDistance(pt, Point(SIZE/2, SIZE/2)) < SIZE/2
+        val pt = e.point
+        highlighted = getDistance(pt, Point(SIZE/2, SIZE/2)) < SIZE/2
 
         ScreenCache.getScreen(PlayerAchievementsScreen::class.java).toggleAchievementDesc(highlighted, achievement)
 
@@ -136,12 +136,12 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     }
     override fun mousePressed(e: MouseEvent?) {}
 
-    override fun mouseEntered(e: MouseEvent?)
+    override fun mouseEntered(e: MouseEvent)
     {
         updateForMouseOver(e)
     }
 
-    override fun mouseExited(e: MouseEvent?)
+    override fun mouseExited(e: MouseEvent)
     {
         updateForMouseOver(e)
     }
@@ -149,7 +149,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     /**
      * MouseMotionListener
      */
-    override fun mouseMoved(e: MouseEvent?)
+    override fun mouseMoved(e: MouseEvent)
     {
         updateForMouseOver(e)
     }
