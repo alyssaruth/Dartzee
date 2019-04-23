@@ -1,14 +1,13 @@
 package burlton.dartzee.code.ai;
 
-import java.awt.Point;
-
+import burlton.core.code.util.Debug;
+import burlton.core.code.util.XmlUtil;
 import burlton.dartzee.code.screen.Dartboard;
-import burlton.dartzee.code.utils.GeometryUtil;
+import burlton.dartzee.code.utils.GeometryUtilKt;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.w3c.dom.Element;
 
-import burlton.core.code.util.Debug;
-import burlton.core.code.util.XmlUtil;
+import java.awt.*;
 
 public class DartsModelNormalDistribution extends AbstractDartsModel
 {
@@ -70,7 +69,7 @@ public class DartsModelNormalDistribution extends AbstractDartsModel
 	
 		Debug.appendWithoutDate("Radius = " + radius + ", theta = " + theta, LOGGING);
 		
-		return GeometryUtil.translatePoint(pt, radius, theta, LOGGING);
+		return GeometryUtilKt.translatePoint(pt, radius, theta, LOGGING);
 	}
 	private NormalDistribution getDistributionToUse(Point pt, Dartboard dartboard)
 	{
@@ -88,11 +87,11 @@ public class DartsModelNormalDistribution extends AbstractDartsModel
 		  || standardDeviationCentral == 0)
 		{
 			//Just pluck a number from 0-360.
-			return GeometryUtil.generateRandomAngle();
+			return GeometryUtilKt.generateRandomAngle();
 		}
 		
 		//Otherwise, we have a Normal Distribution to use to generate an angle more likely to be into the dartboard (rather than out of it)
-		double angleToAvoid = GeometryUtil.getAngleForPoint(pt, dartboard.getCenterPoint());
+		double angleToAvoid = GeometryUtilKt.getAngleForPoint(pt, dartboard.getCenterPoint());
 		double angleTowardsCenter = (angleToAvoid + 180) % 360;
 		NormalDistribution angleDistribution = new NormalDistribution(angleTowardsCenter, standardDeviationCentral);
 		return angleDistribution.sample();

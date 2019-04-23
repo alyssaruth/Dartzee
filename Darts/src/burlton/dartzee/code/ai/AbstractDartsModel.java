@@ -8,7 +8,7 @@ import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.object.DartKt;
 import burlton.dartzee.code.object.DartboardSegment;
 import burlton.dartzee.code.screen.Dartboard;
-import burlton.dartzee.code.utils.GeometryUtil;
+import burlton.dartzee.code.utils.GeometryUtilKt;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -357,7 +357,7 @@ public abstract class AbstractDartsModel
 		List<Point> points = dartboard.getPointsForSegment(score, type);
 		
 		//Don't get the average point, pick a random one
-		Point avgPoint = GeometryUtil.getAverage(points);
+		Point avgPoint = GeometryUtilKt.getAverage(points);
 		//int size = points.size();
 		//Random rand = new Random();
 		//int ix = rand.nextInt(size);
