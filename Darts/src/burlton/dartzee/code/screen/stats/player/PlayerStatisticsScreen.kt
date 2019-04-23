@@ -71,7 +71,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 
     override fun initialise()
     {
-        filterPanel.init(player, gameType, false)
+        filterPanel.init(player!!, gameType, false)
         filterPanelOther.isVisible = false
         btnAdd.isVisible = true
 
@@ -87,7 +87,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
      */
     fun initFake(hmGameIdToWrapper: MutableMap<Long, GameWrapper>)
     {
-        filterPanel.init(player, gameType, false)
+        filterPanel.init(player!!, gameType, false)
         filterPanelOther.isVisible = false
         btnAdd.isVisible = false
         hideBackButton()
