@@ -24,11 +24,11 @@ class StatisticsTabRoundTheClockHitRate : AbstractStatisticsTab(), RowSelectionL
     private val ranges = mutableListOf(1..1, 2..2, 3..3, 4..6, 7..10, 11..15, 16.until(Int.MAX_VALUE))
 
     private val tableHoleBreakdown = ScrollTable()
-    private val tableHoleBreakdownOther = ScrollTable()
+    val tableHoleBreakdownOther = ScrollTable()
     private val tablePanel = JPanel()
     private val pieChartPanel = JPanel()
     private val myPieChartPanel = ChartPanel(null)
-    private val otherPieChartPanel = ChartPanel(null)
+    val otherPieChartPanel = ChartPanel(null)
 
     init
     {
@@ -127,14 +127,14 @@ class StatisticsTabRoundTheClockHitRate : AbstractStatisticsTab(), RowSelectionL
         panel.chart = pieChart
     }
 
-    public fun getAverageThrowsPerTarget(games: List<GameWrapper>): Map<Int, Double>
+    fun getAverageThrowsPerTarget(games: List<GameWrapper>): Map<Int, Double>
     {
         return games.flatMap{ it.getAllDarts() }
                     .groupBy{ it.startingScore }
                     .mapValues{ it.value.size.toDouble() / games.size }
     }
 
-    public fun getRangeBreakdownPerTarget(games: List<GameWrapper>): Map<Int, HashMapCount<IntRange>>
+    fun getRangeBreakdownPerTarget(games: List<GameWrapper>): Map<Int, HashMapCount<IntRange>>
     {
         val hmRangeBreakdown = mutableMapOf<Int, HashMapCount<IntRange>>()
 

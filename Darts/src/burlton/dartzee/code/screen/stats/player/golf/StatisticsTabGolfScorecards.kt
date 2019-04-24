@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.stats.player.golf
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.screen.game.DartsScorerGolf
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
@@ -116,7 +115,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
     }
 
 
-    private fun populateTable(filteredGames: HandyArrayList<GameWrapper>, scrollTable: ScrollTableDartsGame)
+    private fun populateTable(filteredGames: List<GameWrapper>, scrollTable: ScrollTableDartsGame)
     {
         //Filter out the -1's - these are games that haven't gone on long enough to have all the data
         val validGames = filteredGames.filter { it.getRoundScore(mode) > -1 }

@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.stats.player.x01
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.MathsUtil
 import burlton.dartzee.code.`object`.Dart
@@ -50,7 +49,7 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab()
 
     }
 
-    private fun populateTable(table: ScrollTable, games: HandyArrayList<GameWrapper>)
+    private fun populateTable(table: ScrollTable, games: List<GameWrapper>)
     {
         val hmDoubleToDartsThrown = HashMapList<Int, Dart>()
         for (g in games)
