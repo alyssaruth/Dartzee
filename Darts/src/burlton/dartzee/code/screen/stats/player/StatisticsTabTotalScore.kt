@@ -284,7 +284,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         val selectedItem = comboBox.selectedItem
 
         //Now get what scores should now show
-        val startingScores = distinctGameParams.sorted().toMutableList()
+        val startingScores = getDistinctGameParams().sorted().toMutableList()
 
         //Handle 0 games
         if (startingScores.isEmpty())

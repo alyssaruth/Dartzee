@@ -1,7 +1,6 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.core.code.util.MathsUtil
-import burlton.core.code.util.flattenBatches
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.utils.calculateThreeDartAverage
 import burlton.dartzee.code.utils.getScoringDarts
