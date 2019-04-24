@@ -133,7 +133,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         {
             val playerName = playerNamesOrdered[i]
             val rounds = hmPlayerToDarts[playerName]
-            val darts = rounds!!.flattenBatches()
+            val darts = rounds!!.flatten()
 
             var avg = calculateThreeDartAverage(darts, nfSetupThreshold.getNumber())
             if (avg < 0)

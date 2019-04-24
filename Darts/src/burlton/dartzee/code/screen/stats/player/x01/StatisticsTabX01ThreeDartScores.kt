@@ -1,7 +1,8 @@
-package burlton.dartzee.code.screen.stats.player
+package burlton.dartzee.code.screen.stats.player.x01
 
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.bean.X01ScoreRenderer
+import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.stats.ThreeDartScoreWrapper
 import burlton.desktopcore.code.bean.NumberField

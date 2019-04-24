@@ -92,7 +92,7 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
         return row
     }
 
-    private fun getLongestStreak(darts: MutableList<Dart>): Int
+    private fun getLongestStreak(darts: List<Dart>): Int
     {
         var biggestChain = 0
         var currentChain = 0

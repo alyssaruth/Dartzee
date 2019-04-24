@@ -1,9 +1,11 @@
-package burlton.dartzee.code.screen.stats.player;
+package burlton.dartzee.code.screen.stats.player.golf;
 
 import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.screen.game.DartsScorerGolf;
+import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab;
+import burlton.dartzee.code.screen.stats.player.HoleBreakdownWrapper;
 import burlton.dartzee.code.stats.GameWrapper;
 import burlton.desktopcore.code.bean.RowSelectionListener;
 import burlton.desktopcore.code.bean.ScrollTable;

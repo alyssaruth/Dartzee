@@ -80,7 +80,7 @@ fun isFinishRound(round: MutableList<Dart>): Boolean
 /**
  * Refactored out of GameWrapper for use in game stats panel
  */
-fun getScoringDarts(allDarts: MutableList<Dart>?, scoreCutOff: Int): MutableList<Dart>
+fun getScoringDarts(allDarts: List<Dart>?, scoreCutOff: Int): MutableList<Dart>
 {
     return if (allDarts == null)
     {
@@ -91,7 +91,7 @@ fun getScoringDarts(allDarts: MutableList<Dart>?, scoreCutOff: Int): MutableList
 
 }
 
-fun calculateThreeDartAverage(darts: MutableList<Dart>, scoreCutOff: Int): Double
+fun calculateThreeDartAverage(darts: List<Dart>, scoreCutOff: Int): Double
 {
     val scoringDarts = getScoringDarts(darts, scoreCutOff)
     if (scoringDarts.isEmpty())
