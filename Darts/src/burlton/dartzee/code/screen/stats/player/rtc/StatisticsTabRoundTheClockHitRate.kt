@@ -21,7 +21,7 @@ import javax.swing.border.TitledBorder
 
 class StatisticsTabRoundTheClockHitRate : AbstractStatisticsTab(), RowSelectionListener
 {
-    private val ranges = mutableListOf(1..1, 2..2, 3..3, 4..6, 7..10, 11..15, 16.until(Int.MAX_VALUE))
+    val ranges = mutableListOf(1..1, 2..2, 3..3, 4..6, 7..10, 11..15, 16.until(Int.MAX_VALUE))
 
     private val tableHoleBreakdown = ScrollTable()
     val tableHoleBreakdownOther = ScrollTable()
