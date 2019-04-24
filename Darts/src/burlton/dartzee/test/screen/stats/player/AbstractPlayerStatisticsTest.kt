@@ -3,12 +3,14 @@ package burlton.dartzee.test.screen.stats.player
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.containsComponent
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import org.junit.Test
+import java.awt.Color
 import java.awt.Component
 import java.sql.Timestamp
 
@@ -16,6 +18,18 @@ abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractD
 {
     abstract fun factoryTab(): E
     abstract fun getComponentsForComparison(tab: E): List<Component>
+
+    @Test
+    fun `Components for comparison should have red foregrounds`()
+    {
+        val components = getComponentsForComparison(factoryTab())
+        components.forEach{
+            when(it)
+            {
+                is ScrollTable -> it.tableForeground shouldBe Color.RED
+            }
+        }
+    }
 
     @Test
     fun `Should show or hide comparison components`()
