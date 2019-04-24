@@ -2,7 +2,10 @@ package burlton.dartzee.code.screen.game
 
 import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.*
+import burlton.core.code.util.Debug
+import burlton.core.code.util.MathsUtil
+import burlton.core.code.util.addUnique
+import burlton.core.code.util.runOnEventThread
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.utils.DartsColour
@@ -223,13 +226,13 @@ abstract class GameStatisticsPanel : JPanel()
         tm.addRow(row)
     }
 
-    protected fun getFlattenedDarts(playerName: String): MutableList<Dart>
+    protected fun getFlattenedDarts(playerName: String): List<Dart>
     {
         val rounds = hmPlayerToDarts[playerName]
 
         rounds ?: return mutableListOf()
 
-        return rounds.flattenBatches()
+        return rounds.flatten()
     }
 
     protected fun factoryRow(rowName: String): Array<Any?>

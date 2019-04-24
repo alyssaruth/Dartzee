@@ -290,8 +290,6 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         lastDart = dartsCurrent.last()
         val scoreCurrent = lastDart.getGolfScore(hole)
 
-
-
         //If the new score is strictly less, then it's better
         if (scoreNew < scoreCurrent)
         {
@@ -307,6 +305,16 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         val newSize = dartsNew.size
         val currentSize = dartsCurrent.size
         return newSize < currentSize
+    }
+
+    /**
+     * RTC Helpers
+     */
+    fun getRangeByTarget(ranges: MutableList<IntRange>): Map<Int, IntRange>
+    {
+        return getAllDarts().groupBy{ it.startingScore }
+                            .mapValues{ it.value.size }
+                            .mapValues{ e -> ranges.find{ it.contains(e.value) }!! }
     }
 
     /**

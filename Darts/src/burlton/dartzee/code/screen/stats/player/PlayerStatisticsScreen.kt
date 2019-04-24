@@ -10,6 +10,11 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.PlayerSelectDialog
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.screen.stats.player.golf.StatisticsTabGolfHoleBreakdown
+import burlton.dartzee.code.screen.stats.player.golf.StatisticsTabGolfOptimalScorecard
+import burlton.dartzee.code.screen.stats.player.golf.StatisticsTabGolfScorecards
+import burlton.dartzee.code.screen.stats.player.rtc.StatisticsTabRoundTheClockHitRate
+import burlton.dartzee.code.screen.stats.player.x01.*
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.getAllChildComponentsForType
@@ -54,6 +59,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 
     //Round the Clock tabs
     private val tabTotalClockDarts = StatisticsTabTotalScore("Total Darts", 500)
+    private val tabTargetBreakdown = StatisticsTabRoundTheClockHitRate()
 
     init
     {
@@ -121,6 +127,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         else if (gameType == GAME_TYPE_ROUND_THE_CLOCK)
         {
             tabbedPane.addTab("Total Darts", null, tabTotalClockDarts, null)
+            tabbedPane.addTab("Target Breakdown", null, tabTargetBreakdown, null)
         }
     }
 
