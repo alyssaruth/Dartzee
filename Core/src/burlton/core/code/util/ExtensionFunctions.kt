@@ -8,17 +8,6 @@ fun <E> MutableList<E>.addUnique(element: E)
     }
 }
 
-fun <E> MutableList<MutableList<E>>.flattenBatches(): MutableList<E>
-{
-    val ret = mutableListOf<E>()
-    for (batch in this)
-    {
-        ret.addAll(batch)
-    }
-
-    return ret
-}
-
 fun IntRange.getDescription(): String
 {
     return when
