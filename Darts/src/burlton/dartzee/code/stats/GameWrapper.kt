@@ -10,7 +10,6 @@ import burlton.dartzee.code.utils.getScoringDarts
 import burlton.dartzee.code.utils.getSortedDartStr
 import burlton.dartzee.code.utils.sumScore
 import java.sql.Timestamp
-import java.util.*
 
 
 const val MODE_FRONT_9 = 0
@@ -179,7 +178,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         return scoringDart.getGolfScore(hole)
     }
 
-    fun updateHoleBreakdowns(hm: HashMap<Int, HoleBreakdownWrapper>)
+    fun updateHoleBreakdowns(hm: MutableMap<Int, HoleBreakdownWrapper>)
     {
         var overallBreakdown: HoleBreakdownWrapper? = hm[-1]
         if (overallBreakdown == null)
@@ -310,7 +309,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     /**
      * RTC Helpers
      */
-    fun getRangeByTarget(ranges: MutableList<IntRange>): Map<Int, IntRange>
+    fun getRangeByTarget(ranges: List<IntRange>): Map<Int, IntRange>
     {
         return getAllDarts().groupBy{ it.startingScore }
                             .mapValues{ it.value.size }
