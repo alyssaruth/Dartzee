@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.stats.player.x01;
 
-import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapCount;
 import burlton.core.code.util.MathsUtil;
 import burlton.dartzee.code.object.Dart;
@@ -71,7 +70,7 @@ public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 		pieChartPanel.setChart(pieChart);
 	}
 	
-	private DefaultPieDataset buildFavouriteDoublesData(ScrollTable table, HandyArrayList<GameWrapper> filteredGames)
+	private DefaultPieDataset buildFavouriteDoublesData(ScrollTable table, List<GameWrapper> filteredGames)
 	{
 		DefaultModel model = new DefaultModel();
 		model.addColumn("Double");
@@ -86,7 +85,7 @@ public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 		return dataset;
 	}
 	
-	private DefaultPieDataset populateFavouriteDoubles(DefaultModel model, ArrayList<GameWrapper> filteredGames)
+	private DefaultPieDataset populateFavouriteDoubles(DefaultModel model, List<GameWrapper> filteredGames)
 	{
 		HashMapCount<Integer> hmScoreToCount = new HashMapCount<>();
 		for (int i=0; i<filteredGames.size(); i++)

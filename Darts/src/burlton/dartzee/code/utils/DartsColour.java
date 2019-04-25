@@ -27,7 +27,7 @@ public final class DartsColour
 	public static final Color COLOUR_BRONZE = Color.getHSBColor((float)45/360, (float)0.91, (float)0.49);
 	public static final Color COLOUR_BRONZE_TEXT = COLOUR_BRONZE.darker().darker();
 
-	public static final Color COLOUR_ACHIEVEMENT_ORANGE = new Color(255, 165, 0);
+	public static final Color COLOUR_ACHIEVEMENT_ORANGE = Color.getHSBColor(0.1f, 1, 1);
 
 	public static final Color COLOUR_PASTEL_BLUE = Color.getHSBColor((float)242/360, (float)0.48, (float)0.8);
 
