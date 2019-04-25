@@ -7,11 +7,22 @@ import io.kotlintest.matchers.numerics.shouldBeGreaterThanOrEqual
 import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.matchers.numerics.shouldBeLessThanOrEqual
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import org.junit.Test
+import javax.imageio.ImageIO
 
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTest()
 {
     abstract fun factoryAchievement(): E
+
+    @Test
+    fun `Icon URL should be valid`()
+    {
+        val url = factoryAchievement().getIconURL()
+
+        val bufferedImage = ImageIO.read(url)
+        bufferedImage shouldNotBe null
+    }
 
     @Test
     fun `Unbounded achievements should have MaxValue = PinkThreshold`()

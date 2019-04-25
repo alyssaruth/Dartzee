@@ -1,9 +1,7 @@
 package burlton.dartzee.code.achievements
 
-import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import java.sql.SQLException
 
 abstract class AbstractAchievementBestGame : AbstractAchievement()
 {
@@ -35,23 +33,16 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append("     AND (pt2.FinalScore < pt.FinalScore OR (pt2.FinalScore = pt.FinalScore AND pt2.DtFinished < pt.DtFinished))")
         sb.append(")")
 
-        try
-        {
-            DatabaseUtil.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val gameId = rs.getString("GameId")
-                    val dtFinished = rs.getTimestamp("DtFinished")
-                    val score = rs.getInt("FinalScore")
+        DatabaseUtil.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val dtFinished = rs.getTimestamp("DtFinished")
+                val score = rs.getInt("FinalScore")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtFinished)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtFinished)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            Debug.logSqlException(sb.toString(), sqle)
         }
     }
 
