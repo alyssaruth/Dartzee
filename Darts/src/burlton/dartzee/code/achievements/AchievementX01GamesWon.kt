@@ -11,8 +11,5 @@ class AchievementX01GamesWon : AbstractAchievementGamesWon()
     override val name = "X01 Winner"
     override val desc = "Total number of games won in X01"
 
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_X01_GAMES_WON
-    }
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_X01_GAMES_WON
 }

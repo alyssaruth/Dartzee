@@ -103,10 +103,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         }
     }
 
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
-    }
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
 
     override fun changeIconColor(img : BufferedImage, newColor: Color)
     {

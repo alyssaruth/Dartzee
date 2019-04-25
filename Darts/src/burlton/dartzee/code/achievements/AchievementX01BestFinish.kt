@@ -27,8 +27,5 @@ class AchievementX01BestFinish : AbstractAchievement()
         unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }
 
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_BEST_FINISH
-    }
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH
 }

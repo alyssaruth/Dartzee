@@ -21,6 +21,9 @@ class AchievementGolfPointsRisked : AbstractAchievement()
     override val pinkThreshold = 200
     override val maxValue = 200
 
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_POINTS_RISKED
+    override fun isUnbounded() = true
+
     override fun populateForConversion(playerIds : String)
     {
         val sb = StringBuilder()
@@ -65,15 +68,5 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         {
             Debug.logSqlException(sb.toString(), sqle)
         }
-    }
-
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_POINTS_RISKED
-    }
-
-    override fun isUnbounded(): Boolean
-    {
-        return true
     }
 }
