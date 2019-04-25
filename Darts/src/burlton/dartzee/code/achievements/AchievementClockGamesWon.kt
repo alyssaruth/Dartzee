@@ -11,8 +11,5 @@ class AchievementClockGamesWon : AbstractAchievementGamesWon()
     override val name = "Clock Winner"
     override val desc = "Total number of wins in Round the Clock"
 
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_CLOCK_GAMES_WON
-    }
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CLOCK_GAMES_WON
 }

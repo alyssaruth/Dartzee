@@ -59,8 +59,5 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         }
     }
 
-    override fun isDecreasing(): Boolean
-    {
-        return true
-    }
+    override fun isDecreasing() = true
 }

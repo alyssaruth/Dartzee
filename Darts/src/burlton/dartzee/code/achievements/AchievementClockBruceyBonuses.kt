@@ -21,10 +21,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
     override val pinkThreshold = 100
     override val maxValue = 100
 
-    override fun isUnbounded(): Boolean
-    {
-        return true
-    }
+    override fun isUnbounded() = true
 
     override fun populateForConversion(playerIds: String)
     {
@@ -69,8 +66,5 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
         }
     }
 
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES
-    }
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES
 }

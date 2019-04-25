@@ -56,7 +56,7 @@ abstract class AbstractAchievement
     }
 
     abstract fun populateForConversion(playerIds : String)
-    abstract fun getIconURL() : URL?
+    abstract fun getIconURL() : URL
 
     /**
      * Basic init will be the same for most achievements - get the value from the single row
@@ -186,12 +186,6 @@ abstract class AbstractAchievement
     fun getIcon(highlighted : Boolean) : BufferedImage?
     {
         var iconURL = getIconURL()
-        if (iconURL == null)
-        {
-            Debug.stackTrace("Icon URL is null for achievement [$name]")
-            return null
-        }
-
         if (isLocked())
         {
             iconURL = ResourceCache.URL_ACHIEVEMENT_LOCKED
@@ -216,15 +210,9 @@ abstract class AbstractAchievement
         }
     }
 
-    override fun toString(): String
-    {
-        return name
-    }
+    override fun toString() = name
 
-    open fun isUnbounded() : Boolean
-    {
-        return false
-    }
+    open fun isUnbounded() = false
 
     fun getProgressDesc() : String
     {
@@ -237,10 +225,7 @@ abstract class AbstractAchievement
         return progressStr
     }
 
-    open fun isDecreasing() : Boolean
-    {
-        return false
-    }
+    open fun isDecreasing() = false
 
     fun getExtraDetails() : String
     {

@@ -24,10 +24,7 @@ class AchievementX01Shanghai : AbstractAchievement()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun getIconURL(): URL?
-    {
-        return URL_ACHIEVEMENT_X01_SHANGHAI
-    }
+    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_SHANGHAI
 
     override fun isUnbounded(): Boolean
     {

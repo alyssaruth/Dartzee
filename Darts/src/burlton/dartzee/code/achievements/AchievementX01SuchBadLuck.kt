@@ -5,7 +5,7 @@ import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.code.utils.ResourceCache
+import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
 import burlton.dartzee.code.utils.getAdjacentNumbers
 import burlton.dartzee.code.utils.getCheckoutScores
 import java.net.URL
@@ -101,10 +101,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         }
     }
 
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
-    }
+    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
 
     override fun isUnbounded(): Boolean
     {

@@ -149,10 +149,7 @@ class AchievementX01HotelInspector : AbstractAchievement()
         return "RTRIM(CAST(CASE WHEN $alias.Multiplier = 0 THEN 0 ELSE $alias.Score END AS CHAR(5)))"
     }
 
-    override fun getIconURL(): URL?
-    {
-        return URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
-    }
+    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 
     override fun isUnbounded(): Boolean
     {

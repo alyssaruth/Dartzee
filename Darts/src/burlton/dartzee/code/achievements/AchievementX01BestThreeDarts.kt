@@ -23,8 +23,5 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
         unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", "drtLast.Ordinal = 3", TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }
 
-    override fun getIconURL(): URL?
-    {
-        return ResourceCache.URL_ACHIEVEMENT_BEST_SCORE
-    }
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_SCORE
 }
