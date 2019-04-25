@@ -17,6 +17,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = $gameType")
+        sb.append(" AND g.GameParams = '$gameParams'")
         sb.append(" AND pt.FinalScore > -1")
 
         if (!playerIds.isEmpty())
@@ -24,15 +25,10 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!gameParams.isEmpty())
-        {
-            sb.append(" AND g.GameParams = '$gameParams'")
-        }
-
         sb.append(" AND NOT EXISTS (")
         sb.append("     SELECT 1")
         sb.append("     FROM Participant pt2, Game g2")
-        sb.append("     WHERE pt2.GameId = g2.RowID")
+        sb.append("     WHERE pt2.GameId = g2.RowId")
         sb.append("     AND g2.GameType = g.GameType")
         sb.append("     AND pt2.PlayerId = pt.PlayerId")
         sb.append("     AND pt2.FinalScore > -1")
