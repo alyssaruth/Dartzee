@@ -26,7 +26,6 @@ fun getAchievementMaximum() : Int
     return getAllAchievements().size * 6
 }
 
-
 fun getPlayerAchievementScore(allAchievementRows: MutableList<AchievementEntity>, player: PlayerEntity): Int
 {
     val myAchievementRows = allAchievementRows.filter{it.playerId == player.rowId}
@@ -98,7 +97,8 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
                          AchievementClockBruceyBonuses(),
                          AchievementX01Shanghai(),
                          AchievementX01HotelInspector(),
-                         AchievementX01SuchBadLuck())
+                         AchievementX01SuchBadLuck(),
+                         AchievementX01Btbf())
 }
 
 fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
