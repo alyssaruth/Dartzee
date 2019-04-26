@@ -158,7 +158,7 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
         achievementRow.achievementRef shouldBe 50
     }
 
-    class MockAchievementBestGame: AbstractAchievementBestGame()
+    private class MockAchievementBestGame: AbstractAchievementBestGame()
     {
         override val achievementRef = 50
         override val name = "Test"
