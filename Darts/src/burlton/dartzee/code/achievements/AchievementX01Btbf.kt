@@ -1,9 +1,12 @@
 package burlton.dartzee.code.achievements
 
+import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
+import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES
 import java.net.URL
 
-class AchievementX01Btbf: AbstractAchievement()
+class AchievementX01Btbf: AbstractAchievementRowPerGame()
 {
     override val achievementRef = ACHIEVEMENT_REF_X01_BTBF
     override val name = "BTBF"
@@ -21,6 +24,27 @@ class AchievementX01Btbf: AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val sb = StringBuilder()
+
+        sb.append(" SELECT pt.PlayerId, pt.DtFinished, g.RowId AS GameId")
+        sb.append(" FROM Game g, Participant pt, Round rnd, Dart drt")
+        sb.append(" WHERE g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND pt.GameId = g.RowId")
+        sb.append(" AND CEIL(CAST(pt.FinalScore AS DECIMAL)/3) = rnd.RoundNumber")
+        sb.append(" AND pt.RowId = rnd.ParticipantId")
+        sb.append(" AND drt.RoundId = rnd.RowId")
+        sb.append(" AND (drt.StartingScore - (drt.Score * drt.Multiplier)) = 0")
+        sb.append(" AND drt.Score = 1")
+
+        DatabaseUtil.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val dtAchieved = rs.getTimestamp("DtFinished")
+
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved)
+            }
+        }
     }
 }
