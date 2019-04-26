@@ -1,9 +1,7 @@
 package burlton.dartzee.code.achievements
 
-import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import java.sql.SQLException
 
 abstract class AbstractAchievementGamesWon : AbstractAchievement()
 {
@@ -15,7 +13,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
     override val greenThreshold = 50
     override val blueThreshold = 100
     override val pinkThreshold = 200
-    override val maxValue = pinkThreshold
+    override val maxValue = 200
 
 
     override fun populateForConversion(playerIds: String)
@@ -32,22 +30,15 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
         }
         sb.append(" GROUP BY PlayerId")
 
-        try
-        {
-            DatabaseUtil.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val score = rs.getInt("WinCount")
-                    val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
+        DatabaseUtil.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val score = rs.getInt("WinCount")
+                val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            Debug.logSqlException(sb.toString(), sqle)
         }
     }
 
