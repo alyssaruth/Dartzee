@@ -3,15 +3,13 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
-import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
-import burlton.desktopcore.code.util.TableUtil
 import java.net.URL
 import java.sql.SQLException
 
-class AchievementX01Shanghai : AbstractAchievement()
+class AchievementX01Shanghai : AbstractAchievementRowPerGame()
 {
     override val name = "Shanghai"
     override val desc = "Total number of times player has scored T20, D20, 20 (in any order)"
@@ -25,38 +23,6 @@ class AchievementX01Shanghai : AbstractAchievement()
     override val maxValue = 10
 
     override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_SHANGHAI
-
-    override fun isUnbounded(): Boolean
-    {
-        return true
-    }
-
-    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>, player: PlayerEntity?)
-    {
-        this.player = player
-
-        attainedValue = achievementRows.size
-
-        if (!achievementRows.isEmpty())
-        {
-            val sortedRows = achievementRows.sortedBy {it.dtLastUpdate}
-            val last = sortedRows.last()
-
-            dtLatestUpdate = last.dtLastUpdate
-
-            val tm = TableUtil.DefaultModel()
-            tm.addColumn("Game")
-            tm.addColumn("Date Achieved")
-
-            sortedRows.forEach{
-                tm.addRow(arrayOf(it.localGameIdEarned, it.dtLastUpdate))
-            }
-
-            tmBreakdown = tm
-        }
-    }
-
-
 
     override fun populateForConversion(playerIds: String)
     {
