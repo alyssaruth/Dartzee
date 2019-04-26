@@ -1,5 +1,6 @@
 package burlton.dartzee.test.helper
 
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
@@ -75,7 +76,7 @@ fun insertParticipant(uuid: String = randomGuid(),
                       ordinal: Int = 1,
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
-                      dtFinished: Timestamp = DateStatics.END_OF_TIME): String
+                      dtFinished: Timestamp = DateStatics.END_OF_TIME): ParticipantEntity
 {
     val pe = ParticipantEntity()
     pe.rowId = uuid
@@ -88,7 +89,47 @@ fun insertParticipant(uuid: String = randomGuid(),
 
     pe.saveToDatabase()
 
-    return pe.rowId
+    return pe
+}
+
+fun insertRound(uuid: String = randomGuid(),
+                participantId: String = randomGuid(),
+                roundNumber: Int = 1): RoundEntity
+{
+    val re = RoundEntity()
+    re.rowId = uuid
+    re.participantId = participantId
+    re.roundNumber = roundNumber
+
+    re.saveToDatabase()
+
+    return re
+}
+
+fun insertDart(uuid: String = randomGuid(),
+               roundId: String = randomGuid(),
+               ordinal: Int = 1,
+               startingScore: Int = 501,
+               score: Int = 20,
+               multiplier: Int = 3,
+               posX: Int = 20,
+               posY: Int = 20,
+               segmentType: Int = SEGMENT_TYPE_TREBLE): DartEntity
+{
+    val drt = DartEntity()
+    drt.rowId = uuid
+    drt.roundId = roundId
+    drt.ordinal = ordinal
+    drt.startingScore = startingScore
+    drt.multiplier = multiplier
+    drt.score = score
+    drt.posX = posX
+    drt.posY = posY
+    drt.segmentType = segmentType
+
+    drt.saveToDatabase()
+
+    return drt
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),

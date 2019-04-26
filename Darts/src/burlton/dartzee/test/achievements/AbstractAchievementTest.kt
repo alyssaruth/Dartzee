@@ -2,6 +2,7 @@ package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.numerics.shouldBeGreaterThanOrEqual
 import io.kotlintest.matchers.numerics.shouldBeLessThan
@@ -14,6 +15,16 @@ import javax.imageio.ImageIO
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTest()
 {
     abstract fun factoryAchievement(): E
+
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+
+        wipeTable("Achievement")
+        wipeTable("Game")
+        wipeTable("Player")
+        wipeTable("Participant")
+    }
 
     @Test
     fun `Icon URL should be valid`()
