@@ -6,10 +6,7 @@ import burlton.desktopcore.code.util.TableUtil
 
 abstract class AbstractAchievementRowPerGame: AbstractAchievement()
 {
-    override fun isUnbounded(): Boolean
-    {
-        return true
-    }
+    override fun isUnbounded() = true
 
     override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>, player: PlayerEntity?)
     {

@@ -35,6 +35,10 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
         sb.append(" AND drt.RoundId = rnd.RowId")
         sb.append(" AND (drt.StartingScore - (drt.Score * drt.Multiplier)) = 0")
         sb.append(" AND drt.Score = 1")
+        if (!playerIds.isEmpty())
+        {
+            sb.append(" AND pt.PlayerId IN ($playerIds)")
+        }
 
         DatabaseUtil.executeQuery(sb).use { rs ->
             while (rs.next())
