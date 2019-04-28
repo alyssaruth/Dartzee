@@ -6,7 +6,7 @@ import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementClockBestGame: AbstractAchievementTest<AchievementClockBestGame>()
+class TestAchievementClockBestGame: TestAbstractAchievementBestGame<AchievementClockBestGame>()
 {
     override fun factoryAchievement() = AchievementClockBestGame()
 

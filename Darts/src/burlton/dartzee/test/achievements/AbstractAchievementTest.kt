@@ -1,8 +1,13 @@
 package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.AbstractAchievement
+import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.getCountFromTable
+import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.test.helper.wipeTable
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.numerics.shouldBeGreaterThanOrEqual
 import io.kotlintest.matchers.numerics.shouldBeLessThan
@@ -15,6 +20,7 @@ import javax.imageio.ImageIO
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTest()
 {
     abstract fun factoryAchievement(): E
+    abstract fun setUpAchievementRowForPlayer(p: PlayerEntity)
 
     override fun beforeEachTest()
     {
@@ -24,6 +30,40 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
         wipeTable("Game")
         wipeTable("Player")
         wipeTable("Participant")
+    }
+
+    @Test
+    fun `Should only generate data for specified players`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+
+        setUpAchievementRowForPlayer(alice)
+        setUpAchievementRowForPlayer(bob)
+
+        factoryAchievement().populateForConversion("'${alice.rowId}'")
+
+        getCountFromTable("Achievement") shouldBe 1
+
+        val achievement = AchievementEntity().retrieveEntities("")[0]
+        achievement.playerId shouldBe alice.rowId
+    }
+
+    @Test
+    fun `Should only generate data for all players by default`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+
+        setUpAchievementRowForPlayer(alice)
+        setUpAchievementRowForPlayer(bob)
+
+        factoryAchievement().populateForConversion("")
+
+        getCountFromTable("Achievement") shouldBe 2
+
+        val players = AchievementEntity().retrieveEntities("").map{ it.playerId }
+        players.shouldContainExactlyInAnyOrder(alice.rowId, bob.rowId)
     }
 
     @Test

@@ -2,16 +2,14 @@ package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.AbstractAchievementBestGame
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GAME_TYPE_GOLF
-import burlton.dartzee.code.db.GAME_TYPE_X01
-import burlton.dartzee.code.utils.ResourceCache
+import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
-import java.net.URL
 import java.sql.Timestamp
 
-class TestAbstractAchievementBestGame: AbstractDartsTest()
+abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: AbstractAchievementTest<E>()
 {
     override fun beforeEachTest()
     {
@@ -21,50 +19,27 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
         wipeTable("Participant")
     }
 
-    @Test
-    fun `Should only generate data for specified players`()
+    private fun insertRelevantGame(): GameEntity
     {
-        val alice = insertPlayer(name = "Alice")
-        val bob = insertPlayer(name = "Bob")
-
-        val game = insertGame(gameType = GAME_TYPE_X01, gameParams = "501")
-
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 30)
-        insertParticipant(gameId = game.rowId, playerId = bob.rowId, finalScore = 25)
-
-        MockAchievementBestGame().populateForConversion("'${alice.rowId}'")
-
-        getCountFromTable("Achievement") shouldBe 1
-        val achievementRow = AchievementEntity().retrieveEntities("")[0]
-        achievementRow.playerId shouldBe alice.rowId
-        achievementRow.achievementCounter shouldBe 30
+        return insertGame(gameType = factoryAchievement().gameType, gameParams = factoryAchievement().gameParams)
     }
 
-    @Test
-    fun `Should generate data for all players by default`()
+    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
     {
-        val alice = insertPlayer(name = "Alice")
-        val bob = insertPlayer(name = "Bob")
+        val game = insertRelevantGame()
 
-        val game = insertGame(gameType = GAME_TYPE_X01, gameParams = "501")
-
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 30)
-        insertParticipant(gameId = game.rowId, playerId = bob.rowId, finalScore = 25)
-
-        MockAchievementBestGame().populateForConversion("")
-
-        getCountFromTable("Achievement") shouldBe 2
+        insertParticipant(gameId = game.rowId, playerId = p.rowId, finalScore = 30)
     }
 
     @Test
     fun `Should ignore games that are the wrong type`()
     {
         val alice = insertPlayer(name = "Alice")
-        val game = insertGame(gameType = GAME_TYPE_GOLF, gameParams = "501")
+        val game = insertGame(gameType = 5000, gameParams = factoryAchievement().gameParams)
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 
-        MockAchievementBestGame().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -73,11 +48,11 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
     fun `Should ignore games that are the wrong params`()
     {
         val alice = insertPlayer(name = "Alice")
-        val game = insertGame(gameType = GAME_TYPE_X01, gameParams = "18")
+        val game = insertGame(gameType = factoryAchievement().gameType, gameParams = "blah")
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 
-        MockAchievementBestGame().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -86,16 +61,16 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
     fun `Should ignore games where the finalScore is unset`()
     {
         val alice = insertPlayer(name = "Alice")
-        val game = insertGame(gameType = GAME_TYPE_X01, gameParams = "501")
+        val game = insertRelevantGame()
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = -1)
 
-        MockAchievementBestGame().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 0
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
-        MockAchievementBestGame().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -107,12 +82,12 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
     {
         val alice = insertPlayer(name = "Alice")
 
-        val game = insertGame(gameType = GAME_TYPE_X01, gameParams = "501")
+        val game = insertRelevantGame()
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 15, dtFinished = Timestamp(1000))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
 
-        MockAchievementBestGame().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -124,13 +99,13 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
     {
         val alice = insertPlayer(name = "Alice")
 
-        val game = insertGame(gameType = GAME_TYPE_X01, gameParams = "501")
+        val game = insertRelevantGame()
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1000))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(800))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
 
-        MockAchievementBestGame().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -143,11 +118,11 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
     {
         val alice = insertPlayer(name = "Alice")
 
-        val game = insertGame(gameType = GAME_TYPE_X01, gameParams = "501")
+        val game = insertRelevantGame()
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1000))
 
-        MockAchievementBestGame().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -155,26 +130,6 @@ class TestAbstractAchievementBestGame: AbstractDartsTest()
         achievementRow.dtLastUpdate shouldBe Timestamp(1000)
         achievementRow.playerId shouldBe alice.rowId
         achievementRow.gameIdEarned shouldBe game.rowId
-        achievementRow.achievementRef shouldBe 50
-    }
-
-    private class MockAchievementBestGame: AbstractAchievementBestGame()
-    {
-        override val achievementRef = 50
-        override val name = "Test"
-        override val desc = "foo"
-
-        override val gameType = GAME_TYPE_X01
-        override val gameParams = "501"
-
-        override val redThreshold = 99
-        override val orangeThreshold = 60
-        override val yellowThreshold = 42
-        override val greenThreshold = 30
-        override val blueThreshold = 24
-        override val pinkThreshold = 12
-        override val maxValue = 9
-
-        override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_X01_BEST_GAME
+        achievementRow.achievementRef shouldBe factoryAchievement().achievementRef
     }
 }
