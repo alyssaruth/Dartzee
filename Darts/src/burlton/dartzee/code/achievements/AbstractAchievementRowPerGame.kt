@@ -8,7 +8,7 @@ abstract class AbstractAchievementRowPerGame: AbstractAchievement()
 {
     override fun isUnbounded() = true
 
-    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>, player: PlayerEntity?)
+    override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)
     {
         this.player = player
 

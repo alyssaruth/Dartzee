@@ -76,7 +76,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
         DatabaseUtil.dropTable(tempTable)
     }
 
-    override fun initialiseFromDb(achievementRows: MutableList<AchievementEntity>, player: PlayerEntity?)
+    override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)
     {
         this.player = player
 

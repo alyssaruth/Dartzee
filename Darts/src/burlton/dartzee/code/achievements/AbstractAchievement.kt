@@ -61,9 +61,9 @@ abstract class AbstractAchievement
     /**
      * Basic init will be the same for most achievements - get the value from the single row
      */
-    open fun initialiseFromDb(achievementRows : MutableList<AchievementEntity>, player: PlayerEntity?)
+    open fun initialiseFromDb(achievementRows : List<AchievementEntity>, player: PlayerEntity?)
     {
-        if (achievementRows.size == 0)
+        if (achievementRows.isEmpty())
         {
             return
         }
