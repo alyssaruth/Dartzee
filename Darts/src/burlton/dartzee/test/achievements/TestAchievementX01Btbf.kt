@@ -1,6 +1,7 @@
 package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.AchievementX01Btbf
+import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
@@ -14,16 +15,74 @@ class TestAchievementX01Btbf: AbstractAchievementTest<AchievementX01Btbf>()
 
     override fun setUpAchievementRowForPlayer(p: PlayerEntity)
     {
-        val game = insertGame(gameType = GAME_TYPE_X01)
+        val game = insertRelevantGame()
         insertSuccessfulParticipant(game, p)
+    }
+
+    @Test
+    fun `Should ignore data for the wrong type of game`()
+    {
+        val alice = insertPlayer()
+
+        val game = insertGame(gameType = GAME_TYPE_GOLF)
+        insertSuccessfulParticipant(game, alice)
+
+        factoryAchievement().populateForConversion("")
+
+        getCountFromTable("Achievement") shouldBe 0
+    }
+
+    @Test
+    fun `Should ignore rounds that arent the last one`()
+    {
+        val g = insertRelevantGame()
+        val p = insertPlayer()
+
+        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 6)
+        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
+        insertDart(roundId = rnd.rowId, startingScore = 2, score = 1, multiplier = 2)
+
+        factoryAchievement().populateForConversion("")
+
+        getCountFromTable("Achievement") shouldBe 0
+    }
+
+    @Test
+    fun `Should ignore games that were won on a different double`()
+    {
+        val g = insertRelevantGame()
+        val p = insertPlayer()
+
+        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 3)
+        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
+        insertDart(roundId = rnd.rowId, startingScore = 4, score = 2, multiplier = 2)
+
+        factoryAchievement().populateForConversion("")
+
+        getCountFromTable("Achievement") shouldBe 0
+    }
+
+    @Test
+    fun `Should ignore D1s that did not finish the game`()
+    {
+        val g = insertRelevantGame()
+        val p = insertPlayer()
+
+        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 3)
+        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
+        insertDart(roundId = rnd.rowId, startingScore = 4, score = 1, multiplier = 2)
+
+        factoryAchievement().populateForConversion("")
+
+        getCountFromTable("Achievement") shouldBe 0
     }
 
     @Test
     fun `Should insert a row for each double 1 achieved`()
     {
-        val alice = insertPlayer("Alice")
+        val alice = insertPlayer(name = "Alice")
 
-        val game = insertGame(gameType = GAME_TYPE_X01)
+        val game = insertRelevantGame()
 
         insertSuccessfulParticipant(game, alice)
         insertSuccessfulParticipant(game, alice)
@@ -40,4 +99,6 @@ class TestAchievementX01Btbf: AbstractAchievementTest<AchievementX01Btbf>()
         val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
         insertDart(roundId = rnd.rowId, startingScore = 2, score = 1, multiplier = 2)
     }
+
+    private fun insertRelevantGame() = insertGame(gameType = GAME_TYPE_X01)
 }
