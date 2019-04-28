@@ -73,8 +73,7 @@ class LeaderboardAchievementBreakdown: AbstractLeaderboard()
 
         table.model = model
         table.setColumnWidths("25;200")
-        val achievementComparator = {a1: AbstractAchievement, a2: AbstractAchievement -> a1.attainedValue.compareTo(a2.attainedValue)}
-        table.setComparator(2, achievementComparator)
+        table.setComparator(2, compareBy<AbstractAchievement>{ it.attainedValue })
         table.sortBy(2, !achievement.isDecreasing())
 
         val renderer = AchievementProgressBarRenderer()
