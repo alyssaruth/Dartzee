@@ -8,8 +8,6 @@ import burlton.core.test.helper.getLogs
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
@@ -19,15 +17,16 @@ class TestDebug: AbstractTest()
     private val originalOut = System.out
     private val newOut = ByteArrayOutputStream()
 
-    @Before
-    fun setup()
+    override fun beforeEachTest()
     {
+        super.beforeEachTest()
+
         System.setOut(PrintStream(newOut))
     }
 
-    @After
-    fun restore()
+    override fun afterEachTest()
     {
+        super.afterEachTest()
         System.setOut(originalOut)
     }
 
