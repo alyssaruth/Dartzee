@@ -9,15 +9,6 @@ import burlton.dartzee.code.utils.DartsColour
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Color
-import java.awt.Component
-import java.awt.Font
-import javax.swing.JProgressBar
-import javax.swing.JTable
-import javax.swing.border.CompoundBorder
-import javax.swing.border.EmptyBorder
-import javax.swing.border.MatteBorder
-import javax.swing.plaf.basic.BasicProgressBarUI
-import javax.swing.table.TableCellRenderer
 
 class LeaderboardAchievements : AbstractLeaderboard()
 {
@@ -43,7 +34,6 @@ class LeaderboardAchievements : AbstractLeaderboard()
 
         val players = PlayerEntity.retrievePlayers("", false)
         players.forEach{
-
             val score = getPlayerAchievementScore(achievementRows, it)
             val row = arrayOf(it.getFlag(), it, score)
 
@@ -54,43 +44,18 @@ class LeaderboardAchievements : AbstractLeaderboard()
         table.setColumnWidths("25;200")
         table.sortBy(2, true)
 
-        val renderer = ProgressBarRenderer()
-        renderer.minimum = 0
+        val renderer = OverallAchievementRenderer()
         renderer.maximum = getAchievementMaximum()
-        renderer.isStringPainted = true
-        renderer.font = Font("Tahoma", Font.BOLD, 12)
-        renderer.ui = AchievementProgressUI()
-        val borderMargin = EmptyBorder(1, 1, 1, 1)
-        val lineBorder = MatteBorder(1, 1, 1, 1, Color.BLACK)
-        renderer.border = CompoundBorder(borderMargin, lineBorder)
         table.getColumn(2).cellRenderer = renderer
     }
 
-
-    private inner class ProgressBarRenderer: JProgressBar(), TableCellRenderer
+    class OverallAchievementRenderer: AbstractProgressBarRenderer()
     {
-        override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-        {
-            string = "$value/$maximum"
+        override fun getScoreForValue(value: Any?) = value as Int
 
+        override fun getColorForValue(value: Any?): Color
+        {
             val score = value as Int
-            setValue(score)
-
-            var col = getColorForScore(score, maximum)
-            if (isSelected)
-            {
-                col = col.darker()
-            }
-
-
-            foreground = col.darker()
-            background = col
-
-            return this
-        }
-
-        fun getColorForScore(score: Int, maximum: Int) : Color
-        {
             return when(score)
             {
                 in 5*maximum/6 until Int.MAX_VALUE -> Color.MAGENTA
@@ -101,22 +66,6 @@ class LeaderboardAchievements : AbstractLeaderboard()
                 in 1 until maximum/6 -> Color.RED
                 else -> Color.GRAY
             }
-
-        }
-
-    }
-
-    private class AchievementProgressUI : BasicProgressBarUI()
-    {
-        override fun getSelectionBackground(): Color
-        {
-            return progressBar.foreground
-        }
-
-        override fun getSelectionForeground(): Color
-        {
-            return progressBar.foreground.darker()
         }
     }
-
 }
