@@ -104,7 +104,7 @@ abstract class AbstractAchievement
             when (attainedValue)
             {
                 -1 -> Color.GRAY
-                in redThreshold+1 until Int.MAX_VALUE -> Color.GRAY
+                in redThreshold+1..Int.MAX_VALUE -> Color.GRAY
                 in orangeThreshold+1 until redThreshold+1 -> Color.RED
                 in yellowThreshold+1 until orangeThreshold+1 -> DartsColour.COLOUR_ACHIEVEMENT_ORANGE
                 in greenThreshold+1 until yellowThreshold+1 -> Color.YELLOW
