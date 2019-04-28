@@ -1,15 +1,15 @@
 package burlton.dartzee.test.achievements
 
-import burlton.dartzee.code.achievements.AchievementX01GamesWon
+import burlton.dartzee.code.achievements.AbstractAchievementGamesWon
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GAME_TYPE_GOLF
-import burlton.dartzee.code.db.GAME_TYPE_X01
+import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-class TestAbstractAchievementGamesWon: AbstractDartsTest()
+abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractAchievementTest<E>()
 {
     override fun beforeEachTest()
     {
@@ -19,23 +19,17 @@ class TestAbstractAchievementGamesWon: AbstractDartsTest()
         wipeTable("Player")
     }
 
-    @Test
-    fun `Should only generate data for specified players`()
+    private fun insertRelevantGame(): GameEntity
     {
-        val alice = insertPlayer(name = "Alice")
-        val bob = insertPlayer(name = "Bob")
+        return insertGame(gameType = factoryAchievement().gameType)
+    }
 
-        val game = insertGame(gameType = GAME_TYPE_X01)
 
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1)
-        insertParticipant(gameId = game.rowId, playerId = bob.rowId, finishingPosition = 1)
+    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    {
+        val game = insertRelevantGame()
 
-        getAchievement().populateForConversion("'${alice.rowId}'")
-
-        getCountFromTable("Achievement") shouldBe 1
-        val achievementRow = AchievementEntity().retrieveEntities("")[0]
-        achievementRow.playerId shouldBe alice.rowId
-        achievementRow.achievementCounter shouldBe 1
+        insertParticipant(gameId = game.rowId, playerId = p.rowId, finishingPosition = 1)
     }
 
     @Test
@@ -43,13 +37,13 @@ class TestAbstractAchievementGamesWon: AbstractDartsTest()
     {
         val alice = insertPlayer(name = "Alice")
 
-        val game = insertGame(gameType = GAME_TYPE_X01)
-        val golfGame = insertGame(gameType = GAME_TYPE_GOLF)
+        val game = insertRelevantGame()
+        val golfGame = insertGame(gameType = 500)
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1000))
         insertParticipant(gameId = golfGame.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(2000))
 
-        getAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -62,10 +56,10 @@ class TestAbstractAchievementGamesWon: AbstractDartsTest()
     fun `Should ignore participants who did not come 1st`()
     {
         val alice = insertPlayer(name = "Alice")
-        val game = insertGame(gameType = GAME_TYPE_X01)
+        val game = insertRelevantGame()
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 2)
 
-        getAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -76,7 +70,7 @@ class TestAbstractAchievementGamesWon: AbstractDartsTest()
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
 
-        val game = insertGame(gameType = GAME_TYPE_X01)
+        val game = insertRelevantGame()
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(500))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1500))
@@ -85,7 +79,7 @@ class TestAbstractAchievementGamesWon: AbstractDartsTest()
         insertParticipant(gameId = game.rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(2000))
         insertParticipant(gameId = game.rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(1000))
 
-        getAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion("")
 
         getCountFromTable("Achievement") shouldBe 2
         val achievementRows = AchievementEntity().retrieveEntities("")
@@ -101,6 +95,4 @@ class TestAbstractAchievementGamesWon: AbstractDartsTest()
         bobRow.gameIdEarned shouldBe ""
         bobRow.achievementDetail shouldBe ""
     }
-
-    private fun getAchievement() = AchievementX01GamesWon()
 }

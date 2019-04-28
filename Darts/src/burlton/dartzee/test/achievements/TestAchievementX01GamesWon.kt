@@ -5,7 +5,7 @@ import burlton.dartzee.code.db.GAME_TYPE_X01
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementX01GamesWon: AbstractAchievementTest<AchievementX01GamesWon>()
+class TestAchievementX01GamesWon: TestAbstractAchievementGamesWon<AchievementX01GamesWon>()
 {
     override fun factoryAchievement() = AchievementX01GamesWon()
 

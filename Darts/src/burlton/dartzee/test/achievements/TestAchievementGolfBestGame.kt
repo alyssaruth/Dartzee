@@ -5,7 +5,7 @@ import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementGolfBestGame: AbstractAchievementTest<AchievementGolfBestGame>()
+class TestAchievementGolfBestGame: TestAbstractAchievementBestGame<AchievementGolfBestGame>()
 {
     override fun factoryAchievement() = AchievementGolfBestGame()
 

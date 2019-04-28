@@ -6,7 +6,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 
 
-class TestAchievementGolfGamesWon: AbstractAchievementTest<AchievementGolfGamesWon>()
+class TestAchievementGolfGamesWon: TestAbstractAchievementGamesWon<AchievementGolfGamesWon>()
 {
     override fun factoryAchievement() = AchievementGolfGamesWon()
 

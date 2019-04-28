@@ -1,7 +1,6 @@
 package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.AchievementX01Btbf
-import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
@@ -13,22 +12,26 @@ class TestAchievementX01Btbf: AbstractAchievementTest<AchievementX01Btbf>()
 {
     override fun factoryAchievement() = AchievementX01Btbf()
 
+    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    {
+        val game = insertGame(gameType = GAME_TYPE_X01)
+        insertSuccessfulParticipant(game, p)
+    }
+
     @Test
-    fun `Test conversion`()
+    fun `Should insert a row for each double 1 achieved`()
     {
         val alice = insertPlayer("Alice")
-        val bob = insertPlayer("Bob")
 
         val game = insertGame(gameType = GAME_TYPE_X01)
 
         insertSuccessfulParticipant(game, alice)
-        insertSuccessfulParticipant(game, bob)
+        insertSuccessfulParticipant(game, alice)
+        insertSuccessfulParticipant(game, alice)
 
-        factoryAchievement().populateForConversion("'${alice.rowId}'")
+        factoryAchievement().populateForConversion("")
 
-        getCountFromTable("Achievement") shouldBe 1
-
-        val achievement = AchievementEntity().retrieveEntities("")[0]
+        getCountFromTable("Achievement") shouldBe 3
     }
 
     private fun insertSuccessfulParticipant(game: GameEntity, player: PlayerEntity)
