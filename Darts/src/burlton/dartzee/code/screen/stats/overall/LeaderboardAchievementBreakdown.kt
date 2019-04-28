@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.stats.overall
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAllAchievements
+import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableAchievements
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
@@ -9,15 +10,14 @@ import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Color
 import java.util.*
-import javax.swing.DefaultComboBoxModel
-import javax.swing.JComboBox
-import javax.swing.JPanel
+import javax.swing.*
 
 class LeaderboardAchievementBreakdown: AbstractLeaderboard()
 {
     private val table = ScrollTableAchievements()
     private val panelFilters = JPanel()
     private val comboBox = JComboBox<AbstractAchievement>()
+    private val playerFilterPanel = PlayerTypeFilterPanel()
 
     init
     {
@@ -26,11 +26,15 @@ class LeaderboardAchievementBreakdown: AbstractLeaderboard()
         add(table)
 
         add(panelFilters, BorderLayout.NORTH)
+        val lbl = JLabel("Achievement")
+        panelFilters.add(lbl)
         panelFilters.add(comboBox)
-
-        comboBox.addActionListener(this)
+        panelFilters.add(Box.createHorizontalStrut(20))
+        panelFilters.add(playerFilterPanel)
 
         initComboBox()
+        comboBox.addActionListener(this)
+        playerFilterPanel.addActionListener(this)
     }
 
     private fun initComboBox()
@@ -51,7 +55,7 @@ class LeaderboardAchievementBreakdown: AbstractLeaderboard()
         model.addColumn("Player")
         model.addColumn("Score")
 
-        val players = PlayerEntity.retrievePlayers("", false)
+        val players = PlayerEntity.retrievePlayers(playerFilterPanel.whereSql, false)
         players.forEach{ p ->
             val myRows = achievementRows.filter { it.playerId == p.rowId }
 

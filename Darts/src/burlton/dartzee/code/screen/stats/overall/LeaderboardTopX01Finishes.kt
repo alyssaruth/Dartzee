@@ -63,7 +63,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
         }
 
         DatabaseUtil.executeUpdate(sbPt.toString())
-        DatabaseUtil.executeUpdate("CREATE INDEX zzParticipantIdRoundNumber ON zzFinishedParticipants(ParticipantId, RoundNumber)")
+        DatabaseUtil.executeUpdate("CREATE INDEX zzParticipantIdRoundNumber ON $zzParticipants(ParticipantId, RoundNumber)")
 
         return zzParticipants
     }
