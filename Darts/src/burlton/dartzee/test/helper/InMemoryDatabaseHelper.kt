@@ -172,6 +172,25 @@ fun insertGame(uuid: String = randomGuid(),
     return ge
 }
 
+fun insertAchievement(uuid: String = randomGuid(),
+                      achievementRef: Int = -1,
+                      gameIdEarned: String = "",
+                      achievementCounter: Int = -1,
+                      achievementDetail: String = "",
+                      dtLastUpdate: Timestamp = getSqlDateNow()): AchievementEntity
+{
+    val a = AchievementEntity()
+    a.rowId = uuid
+    a.achievementRef = achievementRef
+    a.gameIdEarned = gameIdEarned
+    a.achievementCounter = achievementCounter
+    a.achievementDetail = achievementDetail
+
+    a.saveToDatabase(dtLastUpdate)
+
+    return a
+}
+
 fun getCountFromTable(table: String): Int
 {
     return executeQueryAggregate("SELECT COUNT(1) FROM $table")

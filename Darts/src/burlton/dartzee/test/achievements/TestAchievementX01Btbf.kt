@@ -9,7 +9,7 @@ import burlton.dartzee.test.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementX01Btbf: AbstractAchievementTest<AchievementX01Btbf>()
+class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Btbf>()
 {
     override fun factoryAchievement() = AchievementX01Btbf()
 
