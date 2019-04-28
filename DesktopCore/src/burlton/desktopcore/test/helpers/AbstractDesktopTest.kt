@@ -1,75 +1,36 @@
 package burlton.desktopcore.test.helpers
 
 import burlton.core.code.util.Debug
-import burlton.core.test.TestDebug
-import burlton.core.test.helper.checkedForExceptions
-import burlton.core.test.helper.exceptionLogged
+import burlton.core.test.helper.AbstractTest
 import burlton.desktopcore.code.util.DialogUtil
-import io.kotlintest.shouldBe
-import org.junit.After
-import org.junit.Before
 
-private const val DEBUG_MODE = true
 private var doneOneTimeSetup = false
 
-abstract class AbstractDesktopTest
+abstract class AbstractDesktopTest: AbstractTest()
 {
     private var doneClassSetup = false
     protected val dialogFactory = TestMessageDialogFactory()
 
-    @Before
-    fun oneTimeSetup()
+    override fun doOneTimeDesktopSetup()
     {
         if (!doneOneTimeSetup)
         {
-            doOneTimeSetup()
-            doneOneTimeSetup = true
+            Debug.setDebugExtension(TestDebugExtension())
+            DialogUtil.init(dialogFactory)
         }
 
-        doOneTimeDartsSetup()
-
-        if (!doneClassSetup)
-        {
-            doClassSetup()
-            doneClassSetup = true
-        }
-
-        beforeEachTest()
+        doneOneTimeSetup = true
     }
 
-    open fun doOneTimeDartsSetup() {}
-
-    fun doOneTimeSetup()
+    override fun doClassSetup()
     {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.setDebugExtension(TestDebugExtension())
-        Debug.setSendingEmails(false)
-        Debug.setLogToSystemOut(DEBUG_MODE)
+        super.doClassSetup()
         DialogUtil.init(dialogFactory)
     }
 
-    open fun doClassSetup()
+    override fun beforeEachTest()
     {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.setLogToSystemOut(DEBUG_MODE)
-        DialogUtil.init(dialogFactory)
-    }
-
-    open fun beforeEachTest()
-    {
-        Debug.lastErrorMillis = -1
-        Debug.initialise(TestDebug.SimpleDebugOutput())
+        super.beforeEachTest()
         dialogFactory.reset()
-    }
-
-    @After
-    open fun afterEachTest()
-    {
-        if (!checkedForExceptions)
-        {
-            exceptionLogged() shouldBe false
-        }
-
-        checkedForExceptions = false
     }
 }
