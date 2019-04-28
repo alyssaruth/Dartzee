@@ -2,6 +2,8 @@ package burlton.core.test
 
 import burlton.core.code.util.Debug
 import burlton.core.code.util.DebugOutput
+import burlton.core.test.helper.AbstractTest
+import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
@@ -12,7 +14,7 @@ import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
-class TestDebug
+class TestDebug: AbstractTest()
 {
     private val originalOut = System.out
     private val newOut = ByteArrayOutputStream()
@@ -119,6 +121,8 @@ class TestDebug
         logs shouldContain("This is a test")
         logs shouldContain("java.lang.Throwable")
         logs shouldContain("TestDebug.testStackTraceBasic(TestDebug.kt:")
+
+        exceptionLogged() shouldBe true
     }
 
     @Test
