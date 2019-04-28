@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.stats.overall
 
 import burlton.dartzee.code.achievements.getAchievementMaximum
 import burlton.dartzee.code.achievements.getPlayerAchievementScore
+import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableAchievements
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
@@ -9,16 +10,24 @@ import burlton.dartzee.code.utils.DartsColour
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Color
+import javax.swing.JPanel
 
 class LeaderboardAchievements : AbstractLeaderboard()
 {
     private val table = ScrollTableAchievements()
+    private val panelFilters = JPanel()
+    private val playerFilterPanel = PlayerTypeFilterPanel()
 
     init
     {
         layout = BorderLayout(0, 0)
         table.setRowHeight(23)
         add(table)
+
+        add(panelFilters, BorderLayout.NORTH)
+        panelFilters.add(playerFilterPanel)
+
+        playerFilterPanel.addActionListener(this)
     }
 
     override fun getTabName() = "Achievements"
@@ -32,7 +41,7 @@ class LeaderboardAchievements : AbstractLeaderboard()
         model.addColumn("Player")
         model.addColumn("Achievements")
 
-        val players = PlayerEntity.retrievePlayers("", false)
+        val players = PlayerEntity.retrievePlayers(playerFilterPanel.whereSql, false)
         players.forEach{
             val score = getPlayerAchievementScore(achievementRows, it)
             val row = arrayOf(it.getFlag(), it, score)
