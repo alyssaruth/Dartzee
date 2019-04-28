@@ -132,6 +132,11 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
         val checkout = dartsThrown.last().score
         insertForCheckoutCompleteness(playerId, gameId, checkout)
+
+        if (checkout == 1)
+        {
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_BTBF, currentPlayerId, gameId)
+        }
     }
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, lastRound: Int)

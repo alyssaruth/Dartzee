@@ -44,7 +44,7 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
         val rnd = insertRound(participantId = pt.rowId)
 
         insertDart(roundId = rnd.rowId, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
-        insertDart(roundId = rnd.rowId, score = 20, multiplier = 1, ordinal = 2, startingScore = 360)
+        insertDart(roundId = rnd.rowId, score = 20, multiplier = 1, ordinal = 2, startingScore = 340)
         insertDart(roundId = rnd.rowId, score = 20, multiplier = 2, ordinal = 3, startingScore = 300)
 
         factoryAchievement().populateForConversion("")
