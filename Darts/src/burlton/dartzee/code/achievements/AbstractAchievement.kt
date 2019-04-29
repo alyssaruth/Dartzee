@@ -245,4 +245,9 @@ abstract class AbstractAchievement
 
         return ret
     }
+
+    open fun retrieveAllRows(): List<AchievementEntity>
+    {
+        return AchievementEntity().retrieveEntities("AchievementRef = $achievementRef")
+    }
 }

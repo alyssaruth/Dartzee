@@ -41,7 +41,6 @@ class LeaderboardsScreen : EmbeddedScreen(), ChangeListener
 
         tabs.add(LeaderboardTopX01Finishes())
         tabs.add(LeaderboardAchievements())
-        tabs.add(LeaderboardAchievementBreakdown())
 
         return tabs
     }

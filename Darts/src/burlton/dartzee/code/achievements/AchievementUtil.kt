@@ -26,7 +26,7 @@ fun getAchievementMaximum() : Int
     return getAllAchievements().size * 6
 }
 
-fun getPlayerAchievementScore(allAchievementRows: MutableList<AchievementEntity>, player: PlayerEntity): Int
+fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
 {
     val myAchievementRows = allAchievementRows.filter{it.playerId == player.rowId}
 
