@@ -1,7 +1,6 @@
 package burlton.dartzee.code.achievements
 
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK
@@ -13,7 +12,7 @@ import java.net.URL
 class AchievementClockBestStreak: AbstractAchievement()
 {
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_BEST_STREAK
-    override val name = ""
+    override val name = "Like Clockwork"
     override val desc = "Longest streak of hits in Round the Clock"
 
     override val redThreshold = 1
@@ -68,8 +67,6 @@ class AchievementClockBestStreak: AbstractAchievement()
         hmPlayerIdToDarts.forEach{ playerId, darts ->
             val streak = getLongestStreak(darts)
             val lastDart = streak.last()
-
-            Debug.append("" + streak)
 
             AchievementEntity.factoryAndSave(achievementRef, playerId, lastDart.gameId, streak.size, "", lastDart.dtThrown)
         }
