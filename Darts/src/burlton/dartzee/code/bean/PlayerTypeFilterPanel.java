@@ -1,9 +1,9 @@
 package burlton.dartzee.code.bean;
 
-import javax.swing.JRadioButton;
-
-import burlton.desktopcore.code.bean.RadioButtonPanel;
 import burlton.core.code.util.Debug;
+import burlton.desktopcore.code.bean.RadioButtonPanel;
+
+import javax.swing.*;
 
 public class PlayerTypeFilterPanel extends RadioButtonPanel
 {
@@ -16,8 +16,8 @@ public class PlayerTypeFilterPanel extends RadioButtonPanel
 	
 	
 	private final JRadioButton rdbtnAll = new JRadioButton("All");
-	private final JRadioButton rdbtnHuman = new JRadioButton("Human");
-	private final JRadioButton rdbtnAi = new JRadioButton("AI");
+	public final JRadioButton rdbtnHuman = new JRadioButton("Human");
+	public final JRadioButton rdbtnAi = new JRadioButton("AI");
 	
 	public String getWhereSql()
 	{

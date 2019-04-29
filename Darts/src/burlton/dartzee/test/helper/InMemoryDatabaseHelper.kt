@@ -173,6 +173,7 @@ fun insertGame(uuid: String = randomGuid(),
 }
 
 fun insertAchievement(uuid: String = randomGuid(),
+                      playerId: String = randomGuid(),
                       achievementRef: Int = -1,
                       gameIdEarned: String = "",
                       achievementCounter: Int = -1,
@@ -181,6 +182,7 @@ fun insertAchievement(uuid: String = randomGuid(),
 {
     val a = AchievementEntity()
     a.rowId = uuid
+    a.playerId = playerId
     a.achievementRef = achievementRef
     a.gameIdEarned = gameIdEarned
     a.achievementCounter = achievementCounter

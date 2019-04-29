@@ -15,12 +15,12 @@ import javax.swing.*
 
 class LeaderboardAchievements: AbstractLeaderboard()
 {
-    private val table = ScrollTableAchievements()
+    val table = ScrollTableAchievements()
     private val panelFilters = JPanel()
 
-    private val cbSpecificAchievement = JCheckBox("Achievement")
-    private val comboBox = JComboBox<AbstractAchievement>()
-    private val playerFilterPanel = PlayerTypeFilterPanel()
+    val cbSpecificAchievement = JCheckBox("Achievement")
+    val comboBox = JComboBox<AbstractAchievement>()
+    val playerFilterPanel = PlayerTypeFilterPanel()
 
     init
     {
