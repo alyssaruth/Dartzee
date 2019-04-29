@@ -4,7 +4,9 @@ import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_TREBLES
 import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE
 import burlton.dartzee.code.utils.PreferenceUtil
+import burlton.desktopcore.code.util.DateStatics
 import java.awt.Point
+import java.sql.Timestamp
 
 open class Dart @JvmOverloads constructor(
         var score: Int,
@@ -22,6 +24,8 @@ open class Dart @JvmOverloads constructor(
     //Never set on the DB. Used for in-game stats, and is just set to the round number.
     private var golfHole = -1
     var participantId: String = ""
+    var gameId: String = ""
+    var dtThrown: Timestamp = DateStatics.END_OF_TIME
 
     /**
      * Helpers
@@ -126,17 +130,12 @@ open class Dart @JvmOverloads constructor(
 
     fun hitClockTarget(clockType: String?): Boolean
     {
-        if (clockType == CLOCK_TYPE_DOUBLES && !isDouble())
+        return when (clockType)
         {
-            return false
+            CLOCK_TYPE_DOUBLES -> score == startingScore && isDouble()
+            CLOCK_TYPE_TREBLES -> score == startingScore && isTriple()
+            else -> score == startingScore && multiplier > 0
         }
-
-        return if (clockType == CLOCK_TYPE_TREBLES && !isTriple())
-        {
-            false
-        }
-        else score == startingScore && multiplier > 0
-
     }
 
     operator fun compareTo(other: Dart): Int
