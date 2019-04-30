@@ -9,7 +9,7 @@ import javax.swing.JTextArea
 class ChangeLog : JFrame() {
 
     private val scrollPane = JScrollPane()
-    private val textArea = JTextArea()
+    val textArea = JTextArea()
 
     init
     {
