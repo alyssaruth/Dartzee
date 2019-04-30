@@ -155,7 +155,8 @@ fun insertGame(uuid: String = randomGuid(),
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
                dartsMatchId: String = "",
                matchOrdinal: Int = -1,
-               dtCreation: Timestamp = getSqlDateNow()): GameEntity
+               dtCreation: Timestamp = getSqlDateNow(),
+               dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
 {
     val ge = GameEntity()
     ge.rowId = uuid
@@ -167,7 +168,7 @@ fun insertGame(uuid: String = randomGuid(),
     ge.matchOrdinal = matchOrdinal
     ge.dtCreation = dtCreation
 
-    ge.saveToDatabase()
+    ge.saveToDatabase(dtLastUpdate)
 
     return ge
 }

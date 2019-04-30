@@ -2,12 +2,13 @@ package burlton.dartzee.test.screen.game
 
 import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.db.CLOCK_TYPE_STANDARD
-import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
+import burlton.dartzee.code.db.*
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.DartsScorerRoundTheClock
 import burlton.dartzee.code.screen.game.GamePanelRoundTheClock
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -44,6 +45,66 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
         panel.hmPlayerNumberToCurrentStreak[0] shouldBe 0
     }
 
+    @Test
+    fun `Should not update the achievement for a completed hit streak of 1`()
+    {
+        val playerId = randomGuid()
+        val panel = TestRoundTheClockGamePanel(playerId)
+
+        val dartsThrown = listOf(factoryClockHit(1), Dart(15, 1), Dart(12, 2))
+        panel.setDartsThrown(dartsThrown)
+        panel.updateBestStreakAchievement()
+
+        AchievementEntity().retrieveEntity("PlayerId = '$playerId'") shouldBe null
+    }
+
+    @Test
+    fun `Should not update the achievement for a partial hit streak of 1`()
+    {
+        val playerId = randomGuid()
+        val panel = TestRoundTheClockGamePanel(playerId)
+
+        val dartsThrown = listOf(Dart(15, 1), Dart(12, 2), factoryClockHit(1))
+        panel.setDartsThrown(dartsThrown)
+        panel.updateBestStreakAchievement()
+
+        AchievementEntity().retrieveEntity("PlayerId = '$playerId'") shouldBe null
+        panel.hmPlayerNumberToCurrentStreak[0] shouldBe 1
+    }
+
+    @Test
+    fun `Should save the best streak even when the player has subsequently missed`()
+    {
+        val playerId = randomGuid()
+        val panel = TestRoundTheClockGamePanel(playerId)
+
+        val dartsThrown = listOf(factoryClockHit(1), factoryClockHit(2), Dart(12, 2))
+        panel.setDartsThrown(dartsThrown)
+        panel.updateBestStreakAchievement()
+
+        val achievement = AchievementEntity().retrieveEntity("PlayerId = '$playerId'")!!
+        achievement.achievementCounter shouldBe 2
+        achievement.achievementRef shouldBe ACHIEVEMENT_REF_CLOCK_BEST_STREAK
+    }
+
+    @Test
+    fun `Should add on to the current streak if one exists`()
+    {
+        val playerId = randomGuid()
+        val panel = TestRoundTheClockGamePanel(playerId)
+        panel.hmPlayerNumberToCurrentStreak[0] = 5
+
+        val dartsThrown = listOf(factoryClockHit(1), factoryClockHit(2), factoryClockHit(3))
+        panel.setDartsThrown(dartsThrown)
+        panel.updateBestStreakAchievement()
+
+        val achievement = AchievementEntity().retrieveEntity("PlayerId = '$playerId'")!!
+        achievement.achievementCounter shouldBe 8
+        achievement.achievementRef shouldBe ACHIEVEMENT_REF_CLOCK_BEST_STREAK
+
+        panel.hmPlayerNumberToCurrentStreak[0] shouldBe 8
+    }
+
     private fun factoryClockHit(clockTarget: Int): Dart
     {
         val dart = Dart(clockTarget, 1)
@@ -51,7 +112,7 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
         return dart
     }
 
-    class TestRoundTheClockGamePanel: GamePanelRoundTheClock(DartsGameScreen())
+    class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid()): GamePanelRoundTheClock(DartsGameScreen())
     {
         init
         {
@@ -61,6 +122,18 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
                 scorer.init(PlayerEntity(), CLOCK_TYPE_STANDARD)
                 hmPlayerNumberToDartsScorer[i] = scorer
             }
+
+            activeScorer = hmPlayerNumberToDartsScorer[0]
+            currentPlayerNumber = 0
+            val pt = ParticipantEntity()
+            pt.playerId = currentPlayerId
+            hmPlayerNumberToParticipant[0] = pt
+            currentRound = RoundEntity.factory(pt, 1)
+        }
+
+        fun setDartsThrown(dartsThrown: List<Dart>)
+        {
+            this.dartsThrown.addAll(dartsThrown)
         }
     }
 }

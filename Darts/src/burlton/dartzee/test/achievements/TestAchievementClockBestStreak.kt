@@ -3,8 +3,10 @@ package burlton.dartzee.test.achievements
 import burlton.dartzee.code.achievements.AchievementClockBestStreak
 import burlton.dartzee.code.db.*
 import burlton.dartzee.test.helper.*
+import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.sql.Timestamp
 
 class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBestStreak>()
 {
@@ -25,8 +27,8 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
     @Test
     fun `Should reset the streak across game boundaries, and should report on the earliest occurrence`()
     {
-        val g = insertRelevantGame()
-        val g2 = insertRelevantGame()
+        val g = insertRelevantGame(Timestamp(500))
+        val g2 = insertRelevantGame(Timestamp(1000))
 
         val p = insertPlayer()
 
@@ -59,5 +61,5 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
     }
 
 
-    private fun insertRelevantGame() = insertGame(gameType = GAME_TYPE_ROUND_THE_CLOCK)
+    private fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()) = insertGame(gameType = GAME_TYPE_ROUND_THE_CLOCK, dtLastUpdate = dtLastUpdate)
 }
