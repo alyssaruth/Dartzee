@@ -36,13 +36,6 @@ public class DartsScorerGolf extends DartsScorer
 	}
 
 	@Override
-	public void clearCurrentRound()
-	{
-		int rowCount = model.getRowCount();
-		model.removeRow(rowCount - 1);
-	}
-
-	@Override
 	public void initImpl(String gameParams)
 	{
 		for (int i=0; i<=SCORE_COLUMN; i++)

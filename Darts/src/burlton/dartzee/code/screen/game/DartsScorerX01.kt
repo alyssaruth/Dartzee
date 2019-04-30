@@ -95,23 +95,6 @@ class DartsScorerX01 : DartsScorerPausable()
 
     override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, SCORE_COLUMN) != null
 
-    override fun clearCurrentRound()
-    {
-        val rowCount = model.rowCount
-        if (rowCount == 0)
-        {
-            return
-        }
-
-        //If we've come into here by clicking 'pause', the latest round might be a completed one.
-        //Only clear the round if it's 'unconfirmed'.
-        val value = model.getValueAt(rowCount - 1, SCORE_COLUMN)
-        if (value == null)
-        {
-            model.removeRow(rowCount - 1)
-        }
-    }
-
     override fun getNumberOfColumns() = SCORE_COLUMN + 1
 
     fun finaliseRoundScore(startingScore: Int, bust: Boolean)

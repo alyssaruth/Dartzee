@@ -33,21 +33,9 @@ class TestDartsScorerX01: AbstractDartsTest()
         scorer.addDart(Dart(20, 1))
         scorer.addDart(Dart(20, 1))
 
-        scorer.clearCurrentRound()
+        scorer.clearRound(2)
 
         scorer.getTotalScore() shouldBe 3
-    }
-
-    @Test
-    fun `should not clear finalised rounds`()
-    {
-        val scorer = getTestScorer()
-        scorer.addDart(Dart(1, 1))
-
-        scorer.finaliseRoundScore(501, false)
-
-        scorer.clearCurrentRound()
-        scorer.getDartsForRow(0).shouldContainExactly(Dart(1, 1))
     }
 
     @Test
@@ -55,7 +43,7 @@ class TestDartsScorerX01: AbstractDartsTest()
     {
         val scorer = getTestScorer()
 
-        scorer.clearCurrentRound()
+        scorer.clearRound(1)
     }
 
     @Test

@@ -100,9 +100,19 @@ abstract class DartsScorer : AbstractScorer() {
     /**
      * Abstract Methods
      */
-    abstract fun clearCurrentRound()
     abstract fun getTotalScore(): Int
     abstract fun rowIsComplete(rowNumber: Int): Boolean
+
+    open fun clearRound(roundNumber: Int)
+    {
+        if (roundNumber > model.rowCount)
+        {
+            return
+        }
+
+        val row = roundNumber - 1
+        model.removeRow(row)
+    }
 
     private inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
     {
