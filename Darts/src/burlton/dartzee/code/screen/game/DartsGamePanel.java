@@ -577,7 +577,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		return finishingPosition;
 	}
 	
-	protected void updateAchievementsForFinish(String playerId, int finishingPosition, int score)
+	public void updateAchievementsForFinish(String playerId, int finishingPosition, int score)
 	{
 		if (finishingPosition == 1)
 		{
