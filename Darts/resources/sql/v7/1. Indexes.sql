@@ -1,1 +1,0 @@
-CREATE INDEX ParticipantId_RoundNumber ON Round(ParticipantId, RoundNumber)
