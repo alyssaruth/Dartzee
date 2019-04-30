@@ -98,9 +98,9 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
         panel.setDartsThrown(dartsThrown)
         panel.updateBestStreakAchievement()
 
-        val achievement = AchievementEntity().retrieveEntity("PlayerId = '$playerId'")!!
+        val achievement = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, playerId)!!
         achievement.achievementCounter shouldBe 8
-        achievement.achievementRef shouldBe ACHIEVEMENT_REF_CLOCK_BEST_STREAK
+        achievement.gameIdEarned shouldBe panel.gameId
 
         panel.hmPlayerNumberToCurrentStreak[0] shouldBe 8
     }
@@ -129,6 +129,8 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
             pt.playerId = currentPlayerId
             hmPlayerNumberToParticipant[0] = pt
             currentRound = RoundEntity.factory(pt, 1)
+
+            gameEntity = GameEntity.factoryAndSave(GAME_TYPE_ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD)
         }
 
         fun setDartsThrown(dartsThrown: List<Dart>)
