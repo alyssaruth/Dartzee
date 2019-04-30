@@ -1,7 +1,7 @@
 package burlton.core.code.obj
 
 
-class HashMapList<K, V> : SuperHashMap<K, MutableList<V>>()
+class HashMapList<K: Comparable<K>, V> : SuperHashMap<K, MutableList<V>>()
 {
     fun getValuesSize(): Int
     {
@@ -26,6 +26,18 @@ class HashMapList<K, V> : SuperHashMap<K, MutableList<V>>()
         v ?: return null
 
         return HandyArrayList(v)
+    }
+
+    fun getFlattenedValuesSortedByKey(): List<V>
+    {
+        val sortedKeys = keys.toList().sorted()
+
+        val values = mutableListOf<V>()
+        sortedKeys.forEach{
+            values.addAll(this[it]!!)
+        }
+
+        return values
     }
 
     fun getAllValues(): MutableList<V>

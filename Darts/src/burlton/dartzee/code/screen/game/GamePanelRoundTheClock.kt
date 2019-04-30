@@ -1,7 +1,10 @@
 package burlton.dartzee.code.screen.game
 
+import burlton.core.code.obj.HashMapCount
 import burlton.core.code.obj.HashMapList
+import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
@@ -9,6 +12,7 @@ import burlton.dartzee.code.db.AchievementEntity
 class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsScorerRoundTheClock>(parent)
 {
     private var clockType = ""
+    private val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
@@ -31,6 +35,26 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         {
             scorer.finalisePlayerResult(finishPos)
         }
+
+        loadCurrentStreak(playerNumber, hmRoundToDarts)
+    }
+
+    private fun loadCurrentStreak(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>)
+    {
+        var currentStreak = 0
+
+        val dartsLatestFirst = hmRoundToDarts.getFlattenedValuesSortedByKey().reversed()
+        Debug.append("" + dartsLatestFirst)
+        for (drt in dartsLatestFirst)
+        {
+            if (!drt.hitClockTarget(clockType)) { break }
+
+            currentStreak++
+        }
+
+        hmPlayerNumberToCurrentStreak[playerNumber] = currentStreak
+
+        Debug.append("Player #$playerNumber: $currentStreak")
     }
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
@@ -118,8 +142,38 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
             AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, gameId)
         }
 
+        updateBestStreakAchievement()
+
         super.saveDartsAndProceed()
     }
+
+    fun updateBestStreakAchievement()
+    {
+        var currentStreak = hmPlayerNumberToCurrentStreak.getCount(currentPlayerNumber)
+        dartsThrown.forEach {
+            if (it.hitClockTarget(clockType))
+            {
+                currentStreak++
+            }
+            else
+            {
+                if (currentStreak > 1)
+                {
+                    AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, currentPlayerId, gameId, currentStreak)
+                }
+
+                currentStreak = 0
+            }
+        }
+
+        if (currentStreak > 1)
+        {
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, currentPlayerId, gameId, currentStreak)
+        }
+
+        hmPlayerNumberToCurrentStreak[currentPlayerNumber] = currentStreak
+    }
+
 
     override fun currentPlayerHasFinished(): Boolean
     {

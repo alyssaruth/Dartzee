@@ -15,7 +15,7 @@ class AchievementClockBestStreak: AbstractAchievement()
     override val name = "Like Clockwork"
     override val desc = "Longest streak of hits in Round the Clock"
 
-    override val redThreshold = 1
+    override val redThreshold = 2
     override val orangeThreshold = 3
     override val yellowThreshold = 5
     override val greenThreshold = 7
