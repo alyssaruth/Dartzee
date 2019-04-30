@@ -8,6 +8,8 @@
 = Fixed a bug where loaded matches could still cause duplicate MatchOrdinals
 = Performance improvement: Grouped dart inserts rather than individual
 = Performance improvement: Improved Leaderboard SQL for Top X01 Finishes
+= 65.7% Kotlin
+= 27.3% test coverage (3816 / 13,976 lines covered by 390 tests)
 
 --------- v3.2.0 ---------
 
