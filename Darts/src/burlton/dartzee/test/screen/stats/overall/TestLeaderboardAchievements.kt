@@ -17,6 +17,7 @@ class TestLeaderboardAchievements: AbstractDartsTest()
         super.beforeEachTest()
 
         wipeTable("Achievement")
+        wipeTable("Player")
     }
 
     @Test
