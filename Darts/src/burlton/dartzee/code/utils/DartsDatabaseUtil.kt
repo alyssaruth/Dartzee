@@ -83,12 +83,11 @@ object DartsDatabaseUtil
 
             version.version = 6
         }
-        else
+        else if (versionNumber == 6)
         {
-            val newVersion = versionNumber+1
-            Debug.appendBanner("Upgrading to Version $newVersion")
-            runSqlScriptsForVersion(newVersion)
-            version.version = newVersion
+            Debug.appendBanner("Upgrading to Version 7")
+            DatabaseUtil.executeUpdate("CREATE INDEX ParticipantId_RoundNumber ON Round(ParticipantId, RoundNumber)")
+            version.version = 7
             version.saveToDatabase()
         }
 
