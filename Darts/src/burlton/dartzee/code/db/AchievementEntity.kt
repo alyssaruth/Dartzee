@@ -167,7 +167,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             {
                 //Hooray we've done a thing!
                 val scrn = ScreenCache.getDartsGameScreen(gameId)
-                scrn.achievementUnlocked(gameId, playerId, achievementTemplate)
+                scrn?.achievementUnlocked(gameId, playerId, achievementTemplate)
             }
         }
 

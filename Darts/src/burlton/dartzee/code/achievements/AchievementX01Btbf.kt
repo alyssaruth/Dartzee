@@ -3,7 +3,7 @@ package burlton.dartzee.code.achievements
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES
+import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
 import java.net.URL
 
 class AchievementX01Btbf: AbstractAchievementRowPerGame()
@@ -20,7 +20,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
     override val pinkThreshold = 100
     override val maxValue = pinkThreshold
 
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES
+    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_BTBF
 
     override fun populateForConversion(playerIds: String)
     {
