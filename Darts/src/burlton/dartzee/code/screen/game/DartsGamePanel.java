@@ -716,7 +716,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		resetRoundVariables();
 
 		dartboard.clearDarts();
-		activeScorer.clearCurrentRound();
+		activeScorer.clearRound(currentRound.getRoundNumber());
 		activeScorer.updatePlayerResult();
 		dartsThrown.clear();
 		

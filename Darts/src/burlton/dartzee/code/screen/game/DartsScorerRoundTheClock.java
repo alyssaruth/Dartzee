@@ -22,20 +22,18 @@ public final class DartsScorerRoundTheClock extends DartsScorerPausable
 	private int currentClockTarget = 1;
 	
 	@Override
-	public void clearCurrentRound()
-	{
-		int rowCount = model.getRowCount();
-		model.removeRow(rowCount - 1);
-		
-		currentClockTarget = clockTarget;
-	}
-	
-	@Override
 	public void confirmCurrentRound()
 	{
 		clockTarget = currentClockTarget;
 	}
-	
+
+	@Override
+	public void clearRound(int roundNumber)
+	{
+		super.clearRound(roundNumber);
+		currentClockTarget = clockTarget;
+	}
+
 	@Override
 	public boolean playerIsFinished()
 	{
