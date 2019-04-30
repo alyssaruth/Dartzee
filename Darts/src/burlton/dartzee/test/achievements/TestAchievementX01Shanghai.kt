@@ -45,7 +45,7 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
 
         insertDart(roundId = rnd.rowId, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
         insertDart(roundId = rnd.rowId, score = 20, multiplier = 1, ordinal = 2, startingScore = 340)
-        insertDart(roundId = rnd.rowId, score = 20, multiplier = 2, ordinal = 3, startingScore = 300)
+        insertDart(roundId = rnd.rowId, score = 20, multiplier = 2, ordinal = 3, startingScore = 320)
 
         factoryAchievement().populateForConversion("")
         getCountFromTable("Achievement") shouldBe 1

@@ -5,7 +5,7 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_HIGHEST_BUST
+import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import burlton.dartzee.code.utils.getLongestStreak
 import java.net.URL
 
@@ -23,7 +23,7 @@ class AchievementClockBestStreak: AbstractAchievement()
     override val pinkThreshold = 12
     override val maxValue = 20
 
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_HIGHEST_BUST
+    override fun getIconURL(): URL = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 
     override fun populateForConversion(playerIds: String)
     {
@@ -38,7 +38,7 @@ class AchievementClockBestStreak: AbstractAchievement()
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
-        sb.append(" ORDER BY pt.RowId, rnd.RoundNumber, drt.Ordinal")
+        sb.append(" ORDER BY g.DtLastUpdate, pt.RowId, rnd.RoundNumber, drt.Ordinal")
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()
         DatabaseUtil.executeQuery(sb).use{ rs ->
