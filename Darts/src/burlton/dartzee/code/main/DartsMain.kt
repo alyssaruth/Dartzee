@@ -3,12 +3,8 @@ package burlton.dartzee.code.main
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.code.util.DebugUncaughtExceptionHandler
-import burlton.core.code.util.OnlineConstants
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.dartzee.code.utils.DartsDebugExtension
-import burlton.dartzee.code.utils.DesktopDartsClient
-import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
-import burlton.dartzee.code.utils.PreferenceUtil
+import burlton.dartzee.code.utils.*
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.MessageDialogFactory
 import javax.swing.UIManager
@@ -25,7 +21,7 @@ object DartsMain
         setLookAndFeel()
 
         Debug.setDebugExtension(DartsDebugExtension())
-        Debug.setProductDesc("Darts " + OnlineConstants.DARTS_VERSION_NUMBER)
+        Debug.setProductDesc("Darts $DARTS_VERSION_NUMBER")
         Debug.setLogToSystemOut(true)
 
         val mainScreen = ScreenCache.getMainScreen()
