@@ -1,5 +1,8 @@
 --------- v3.2.1 ---------
 
++ Granular achievement leaderboards to show who's winning on each achievement
++ 2 Achievements (BTBF, Like Clockwork)
++ Hit rate stats for Round the Clock
 = Fixed bugs with deleting games caused by move to GUIDs
 = Fixed a bug where the game could freeze if you paused an AI at the end of their turn
 = Fixed a bug where loaded matches could still cause duplicate MatchOrdinals
