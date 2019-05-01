@@ -63,7 +63,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
         sb.append("     FROM $tempTable zz2")
         sb.append("     WHERE zz1.PlayerId = zz2.PlayerId")
         sb.append("     AND zz1.Score = zz2.Score")
-        sb.append("     AND (zz2.DtAchieved < zz1.DtAchieved OR (zz1.DtAchieved = zz2.DtAchieved AND zz2.GameId < zz1.GameId))")
+        sb.append("     AND zz2.DtAchieved < zz1.DtAchieved")
         sb.append(")")
 
         DatabaseUtil.executeQuery(sb).use { rs ->
