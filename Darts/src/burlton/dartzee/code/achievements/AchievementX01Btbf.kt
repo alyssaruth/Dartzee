@@ -22,6 +22,9 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
 
     override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_BTBF
 
+    override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
+
     override fun populateForConversion(playerIds: String)
     {
         val sb = StringBuilder()

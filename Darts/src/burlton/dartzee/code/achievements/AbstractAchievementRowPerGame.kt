@@ -22,14 +22,14 @@ abstract class AbstractAchievementRowPerGame: AbstractAchievement()
             dtLatestUpdate = last.dtLastUpdate
 
             val tm = TableUtil.DefaultModel()
-            tm.addColumn("Game")
-            tm.addColumn("Date Achieved")
+            tm.setColumnNames(getBreakdownColumns())
 
-            sortedRows.forEach{
-                tm.addRow(arrayOf(it.localGameIdEarned, it.dtLastUpdate))
-            }
+            tm.addRows(sortedRows.map{ getBreakdownRow(it) })
 
             tmBreakdown = tm
         }
     }
+
+    abstract fun getBreakdownColumns(): List<String>
+    abstract fun getBreakdownRow(a: AchievementEntity): Array<Any>
 }
