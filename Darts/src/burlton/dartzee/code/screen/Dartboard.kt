@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.obj.SuperHashMap
 import burlton.core.code.util.Debug
 import burlton.core.code.util.runOnEventThread
 import burlton.dartzee.code.`object`.ColourWrapper
@@ -717,7 +716,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     {
         private val DARTIMG = ImageIcon(GamePanelX01::class.java.getResource("/dartImage.png"))
 
-        private val hmSoundNameToUrl = SuperHashMap<String, URL>()
+        private val hmSoundNameToUrl = mutableMapOf<String, URL>()
         var dartboardTemplate: DartboardTemplate? = null
 
         @JvmStatic fun appearancePreferenceChanged()
