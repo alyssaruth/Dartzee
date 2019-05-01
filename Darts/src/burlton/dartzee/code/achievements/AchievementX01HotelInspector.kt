@@ -63,14 +63,36 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
             return
         }
 
+        val tempTableTwo = DatabaseUtil.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
+
         sb = StringBuilder()
-        sb.append(" SELECT highestDart.PlayerId, MIN(highestDart.GameId) AS GameId, MIN(highestDart.DtCreation) AS DtAchieved, ${getThreeDartMethodSqlStr()} AS Method")
-        sb.append(" FROM $tempTable highestDart, $tempTable mediumDart, $tempTable lowestDart")
+        sb.append(" INSERT INTO $tempTableTwo")
+        sb.append(" SELECT highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()} AS Method")
+        sb.append(" FROM $tempTable highestDart, $tempTable mediumDart, $tempTable lowestDart, $tempTable earliestExample")
         sb.append(" WHERE highestDart.RoundId = mediumDart.RoundId")
         sb.append(" AND mediumDart.RoundId = lowestDart.RoundId")
         sb.append(" AND (${getDartHigherThanSql("highestDart", "mediumDart")})")
         sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
-        sb.append(" GROUP BY highestDart.PlayerId, ${getThreeDartMethodSqlStr()}")
+        sb.append(" GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}")
+
+        if (!DatabaseUtil.executeUpdate("" + sb))
+        {
+            DatabaseUtil.dropTable(tempTable)
+            DatabaseUtil.dropTable(tempTableTwo)
+            return
+        }
+
+        sb = StringBuilder()
+        sb.append(" SELECT PlayerId, GameId, DtAchieved, Method")
+        sb.append(" FROM $tempTableTwo zz")
+        sb.append(" WHERE NOT EXISTS")
+        sb.append(" (")
+        sb.append("     SELECT 1")
+        sb.append("     FROM $tempTableTwo zz2")
+        sb.append("     WHERE zz.PlayerId = zz2.PlayerId")
+        sb.append("     AND zz.Method = zz2.Method")
+        sb.append("     AND zz2.DtAchieved < zz.DtAchieved")
+        sb.append(" )")
 
         try
         {
