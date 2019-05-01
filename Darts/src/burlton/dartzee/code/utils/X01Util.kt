@@ -1,6 +1,5 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 
@@ -127,8 +126,8 @@ fun isShanghai(darts: MutableList<Dart>): Boolean
  *
  * (5, T20, 1) -> "T20, 5, 1".
  */
-fun getSortedDartStr(darts: MutableList<Dart>): String
+fun getSortedDartStr(darts: List<Dart>): String
 {
     val sortedDarts = darts.sortedWith(compareByDescending<Dart>{it.getTotal()}.thenByDescending{it.multiplier})
-    return StringUtil.toDelims(sortedDarts, ", ")
+    return sortedDarts.joinToString{ it.getRendered() }
 }
