@@ -155,7 +155,7 @@ abstract class GameStatisticsPanel : JPanel()
 
     private fun isSufficientData(): Boolean
     {
-        val playerNames = hmPlayerToDarts.keysAsVector
+        val playerNames = hmPlayerToDarts.keys
 
         return playerNames.stream().allMatch { p -> !getFlattenedDarts(p).isEmpty() }
     }

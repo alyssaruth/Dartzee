@@ -27,7 +27,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     /**
      * Helpers
      */
-    fun getAllDarts() = hmRoundNumberToDarts.getAllValues()
+    fun getAllDarts() = hmRoundNumberToDarts.getFlattenedValuesSortedByKey()
 
     fun isFinished() = finalScore > -1
 
@@ -43,8 +43,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
     private fun getAllDartsFlattened(): MutableList<Dart>
     {
-        val allDarts = hmRoundNumberToDarts.valuesAsVector
-        return allDarts.flatten().toMutableList()
+        return hmRoundNumberToDarts.getAllValues()
     }
 
     private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<MutableList<Dart>>?
