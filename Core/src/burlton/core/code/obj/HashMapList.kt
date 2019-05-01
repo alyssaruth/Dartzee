@@ -1,21 +1,8 @@
 package burlton.core.code.obj
 
 
-class HashMapList<K: Comparable<K>, V> : SuperHashMap<K, MutableList<V>>()
+class HashMapList<K: Comparable<K>, V> : HashMap<K, MutableList<V>>()
 {
-    fun getValuesSize(): Int
-    {
-        var totalSize = 0
-        val valueVectors = valuesAsVector
-        for (valueVector in valueVectors)
-        {
-            totalSize += valueVector.size
-        }
-
-        return totalSize
-
-    }
-
     /**
      * TODO - REMOVE (once fully over to Kotlin)
      */
@@ -42,15 +29,7 @@ class HashMapList<K: Comparable<K>, V> : SuperHashMap<K, MutableList<V>>()
 
     fun getAllValues(): MutableList<V>
     {
-        val ret = mutableListOf<V>()
-
-        val valueVectors = valuesAsVector
-        for (valueVector in valueVectors)
-        {
-            ret.addAll(valueVector)
-        }
-
-        return ret
+        return values.flatten().toMutableList()
     }
 
     fun putInList(key: K, value: V)
