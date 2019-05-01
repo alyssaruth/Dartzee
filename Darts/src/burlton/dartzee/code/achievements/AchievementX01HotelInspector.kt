@@ -3,15 +3,13 @@ package burlton.dartzee.code.achievements
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
-import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
-import burlton.desktopcore.code.util.TableUtil
 import java.net.URL
 import java.sql.SQLException
 
-class AchievementX01HotelInspector : AbstractAchievement()
+class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
 {
     override val name = "Hotel Inspector"
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"
@@ -24,6 +22,11 @@ class AchievementX01HotelInspector : AbstractAchievement()
     override val blueThreshold = 20
     override val pinkThreshold = 26
     override val maxValue = 26
+
+    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
+
+    override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtLastUpdate)
 
     override fun populateForConversion(playerIds: String)
     {
@@ -94,32 +97,6 @@ class AchievementX01HotelInspector : AbstractAchievement()
         }
     }
 
-    override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)
-    {
-        this.player = player
-
-        attainedValue = achievementRows.size
-
-        if (!achievementRows.isEmpty())
-        {
-            val sortedRows = achievementRows.sortedBy {it.dtLastUpdate}
-            val last = sortedRows.last()
-
-            dtLatestUpdate = last.dtLastUpdate
-
-            val tm = TableUtil.DefaultModel()
-            tm.addColumn("Method")
-            tm.addColumn("Game")
-            tm.addColumn("Date Achieved")
-
-            sortedRows.forEach{
-                tm.addRow(arrayOf(it.achievementDetail, it.localGameIdEarned, it.dtLastUpdate))
-            }
-
-            tmBreakdown = tm
-        }
-    }
-
     private fun getDartHigherThanSql(hAlias: String, lAlias: String): String
     {
         val sb = StringBuilder()
@@ -147,12 +124,5 @@ class AchievementX01HotelInspector : AbstractAchievement()
     private fun getDartScoreStrSql(alias: String): String
     {
         return "RTRIM(CAST(CASE WHEN $alias.Multiplier = 0 THEN 0 ELSE $alias.Score END AS CHAR(5)))"
-    }
-
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
-
-    override fun isUnbounded(): Boolean
-    {
-        return true
     }
 }

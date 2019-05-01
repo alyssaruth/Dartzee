@@ -70,6 +70,11 @@ object TableUtil
             else super.getColumnClass(arg0)
         }
 
+        fun setColumnNames(cols: List<String>)
+        {
+            cols.forEach{ addColumn(it) }
+        }
+
         fun addRows(rows: Collection<Array<Any>>)
         {
             rows.forEach { addRow(it) }

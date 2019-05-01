@@ -11,6 +11,17 @@ import java.sql.Timestamp
 
 abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGame>: AbstractAchievementTest<E>()
 {
+    fun getDtAchievedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
+    fun getGameIdEarnedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Game")
+
+    @Test
+    fun `Breakdown column count should match row length`()
+    {
+        val a = factoryAchievement()
+
+        a.getBreakdownColumns().size shouldBe a.getBreakdownRow(AchievementEntity()).size
+    }
+
     @Test
     fun `Should handle 0 achievement rows`()
     {
@@ -49,10 +60,10 @@ abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGam
         a.dtLatestUpdate shouldBe Timestamp(2000)
         a.tmBreakdown shouldNotBe null
 
-        a.tmBreakdown!!.getValueAt(0, 1) shouldBe Timestamp(500)
-        a.tmBreakdown!!.getValueAt(1, 1) shouldBe Timestamp(1000)
-        a.tmBreakdown!!.getValueAt(2, 1) shouldBe Timestamp(1500)
-        a.tmBreakdown!!.getValueAt(3, 1) shouldBe Timestamp(2000)
+        a.tmBreakdown!!.getValueAt(0, getDtAchievedColumnIndex()) shouldBe Timestamp(500)
+        a.tmBreakdown!!.getValueAt(1, getDtAchievedColumnIndex()) shouldBe Timestamp(1000)
+        a.tmBreakdown!!.getValueAt(2, getDtAchievedColumnIndex()) shouldBe Timestamp(1500)
+        a.tmBreakdown!!.getValueAt(3, getDtAchievedColumnIndex()) shouldBe Timestamp(2000)
     }
 
     @Test
@@ -75,6 +86,6 @@ abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGam
 
         a.initialiseFromDb(listOf(dbRow), null)
 
-        a.tmBreakdown!!.getValueAt(0, 0) shouldBe 20
+        a.tmBreakdown!!.getValueAt(0, getGameIdEarnedColumnIndex()) shouldBe 20
     }
 }

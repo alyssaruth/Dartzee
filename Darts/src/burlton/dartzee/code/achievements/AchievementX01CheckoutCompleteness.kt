@@ -5,13 +5,12 @@ import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.util.TableUtil
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL
 import kotlin.streams.toList
 
-class AchievementX01CheckoutCompleteness : AbstractAchievement()
+class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
 {
     override val name = "Completionist"
     override val desc = "Total unique doubles checked out on in X01"
@@ -25,6 +24,12 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
     override val maxValue = 21
 
     var hitDoubles = mutableListOf<Int>()
+
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
+
+    override fun getBreakdownColumns() = listOf("Double", "Game", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementCounter, a.localGameIdEarned, a.dtLastUpdate)
+    override fun isUnbounded() = false
 
     override fun populateForConversion(playerIds: String)
     {
@@ -78,32 +83,10 @@ class AchievementX01CheckoutCompleteness : AbstractAchievement()
 
     override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)
     {
-        this.player = player
-
-        attainedValue = achievementRows.size
+        super.initialiseFromDb(achievementRows, player)
 
         hitDoubles = achievementRows.stream().map{row -> row.achievementCounter}.toList().toMutableList()
-
-        if (!achievementRows.isEmpty())
-        {
-            val sortedRows = achievementRows.sortedBy { it.dtLastUpdate }
-            dtLatestUpdate = sortedRows.last().dtLastUpdate
-
-            val tm = TableUtil.DefaultModel()
-
-            tm.addColumn("Double")
-            tm.addColumn("Game")
-            tm.addColumn("Date Achieved")
-
-            sortedRows.forEach{
-                tm.addRow(arrayOf(it.achievementCounter, it.localGameIdEarned, it.dtLastUpdate))
-            }
-
-            tmBreakdown = tm
-        }
     }
-
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
 
     override fun changeIconColor(img : BufferedImage, newColor: Color)
     {

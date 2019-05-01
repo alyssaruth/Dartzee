@@ -24,6 +24,10 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
 
     override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_SHANGHAI
 
+    override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
+
+
     override fun populateForConversion(playerIds: String)
     {
         val tempTable = DatabaseUtil.createTempTable("Shanghai", "RoundId VARCHAR(36), ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
