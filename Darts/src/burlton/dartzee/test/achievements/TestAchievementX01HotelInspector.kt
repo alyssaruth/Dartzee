@@ -4,7 +4,9 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
 import burlton.dartzee.code.achievements.AchievementX01HotelInspector
 import burlton.dartzee.code.db.*
+import burlton.dartzee.code.utils.getSortedDartStr
 import burlton.dartzee.test.helper.*
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -100,6 +102,28 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
 
         val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, p.rowId)!!
         a.gameIdEarned shouldBe g.rowId
+    }
+
+    @Test
+    fun `Should insert a row for each valid permutation, and should match front end format`()
+    {
+        val p = insertPlayer()
+        val g = insertRelevantGame()
+
+        val validOne = listOf(Dart(5, 1), Dart(20, 1), Dart(1, 1))
+        val validTwo = listOf(Dart(5, 3), Dart(3, 2), Dart(5, 1))
+
+        insertDartsForPlayer(g, p, validOne)
+        insertDartsForPlayer(g, p, validTwo)
+
+        factoryAchievement().populateForConversion("")
+
+        getCountFromTable("Achievement") shouldBe 2
+
+        val achievements = AchievementEntity().retrieveEntities("PlayerId = '${p.rowId}'")
+        val methods = achievements.map{ it.achievementDetail }
+
+        methods.shouldContainExactlyInAnyOrder(getSortedDartStr(validOne), getSortedDartStr(validTwo))
     }
 
     override fun setUpAchievementRowForPlayer(p: PlayerEntity)
