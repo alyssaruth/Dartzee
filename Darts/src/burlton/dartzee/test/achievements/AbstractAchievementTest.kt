@@ -3,10 +3,8 @@ package burlton.dartzee.test.achievements
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.getCountFromTable
-import burlton.dartzee.test.helper.insertPlayer
-import burlton.dartzee.test.helper.wipeTable
+import burlton.dartzee.test.helper.*
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.numerics.shouldBeGreaterThanOrEqual
@@ -33,6 +31,17 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
         wipeTable("Round")
         wipeTable("Dart")
     }
+
+    @Test
+    fun `Should not leave any temp tables lying around`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        setUpAchievementRowForPlayer(alice)
+        factoryAchievement().populateForConversion("")
+
+        dropUnexpectedTables().shouldBeEmpty()
+    }
+
 
     @Test
     fun `Should only generate data for specified players`()

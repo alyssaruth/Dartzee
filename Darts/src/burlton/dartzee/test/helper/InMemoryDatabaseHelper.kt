@@ -2,6 +2,7 @@ package burlton.dartzee.test.helper
 
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.db.*
+import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
 import burlton.desktopcore.code.util.DateStatics
@@ -197,4 +198,28 @@ fun insertAchievement(uuid: String = randomGuid(),
 fun getCountFromTable(table: String): Int
 {
     return executeQueryAggregate("SELECT COUNT(1) FROM $table")
+}
+
+fun dropUnexpectedTables(): List<String>
+{
+    val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
+    val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
+
+    val sb = StringBuilder()
+    sb.append(" SELECT TableName")
+    sb.append(" FROM sys.systables")
+    sb.append(" WHERE TableType = 'T'")
+    sb.append(" AND TableName NOT IN ($tableNameSql)")
+
+    val list = mutableListOf<String>()
+    DatabaseUtil.executeQuery(sb).use{ rs ->
+        while (rs.next())
+        {
+            list.add(rs.getString("TableName"))
+        }
+    }
+
+    list.forEach{ DatabaseUtil.executeUpdate("DROP TABLE $it")}
+
+    return list
 }
