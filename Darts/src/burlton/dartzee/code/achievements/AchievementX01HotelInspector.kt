@@ -116,6 +116,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         finally
         {
             DatabaseUtil.dropTable(tempTable)
+            DatabaseUtil.dropTable(tempTableTwo)
         }
     }
 
