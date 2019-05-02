@@ -1,6 +1,5 @@
 package burlton.dartzee.code.db.sanity
 
-import burlton.core.code.obj.SuperHashMap
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
@@ -19,7 +18,6 @@ import java.awt.event.ActionEvent
 import java.sql.SQLException
 import java.util.*
 import javax.swing.AbstractAction
-import javax.swing.Action
 import javax.swing.table.DefaultTableModel
 
 object DatabaseSanityCheck
@@ -68,11 +66,11 @@ object DatabaseSanityCheck
                 }
             }
 
-            val hmColumnToAction = SuperHashMap<Int, Action>()
-            hmColumnToAction[2] = showResults
-            hmColumnToAction[3] = autoFix
+            val table = ScrollTableButton(tm)
+            table.setButtonColumn(2, showResults)
+            table.setButtonColumn(3, autoFix)
 
-            val dlg = TableModelDialog("Sanity Results", ScrollTableButton(hmColumnToAction, tm))
+            val dlg = TableModelDialog("Sanity Results", table)
             dlg.setColumnWidths("-1;50;150;150")
             dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
             dlg.isVisible = true
