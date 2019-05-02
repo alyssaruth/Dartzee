@@ -3,19 +3,23 @@ package burlton.desktopcore.code.bean
 import javax.swing.Action
 import javax.swing.table.DefaultTableModel
 
-class ScrollTableButton(hmColumnToAction: Map<Int, Action>, tm: DefaultTableModel): ScrollTable()
+class ScrollTableButton(tm: DefaultTableModel): ScrollTable()
 {
-    private var buttonColumns = hmColumnToAction.keys.toList()
+    private var buttonColumns = mutableListOf<Int>()
 
     init
     {
         model = tm
-
-        buttonColumns.forEach{ ButtonColumn(this, hmColumnToAction[it], it)}
     }
 
     override fun isEditable(row: Int, col: Int): Boolean
     {
         return buttonColumns.contains(col)
+    }
+
+    fun setButtonColumn(column: Int, action: Action)
+    {
+        buttonColumns.add(column)
+        ButtonColumn(this, action, column)
     }
 }
