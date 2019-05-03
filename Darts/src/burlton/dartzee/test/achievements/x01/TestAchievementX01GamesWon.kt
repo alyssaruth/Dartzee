@@ -1,7 +1,8 @@
-package burlton.dartzee.test.achievements
+package burlton.dartzee.test.achievements.x01
 
-import burlton.dartzee.code.achievements.AchievementX01GamesWon
+import burlton.dartzee.code.achievements.x01.AchievementX01GamesWon
 import burlton.dartzee.code.db.GAME_TYPE_X01
+import burlton.dartzee.test.achievements.TestAbstractAchievementGamesWon
 import io.kotlintest.shouldBe
 import org.junit.Test
 

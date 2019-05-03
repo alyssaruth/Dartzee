@@ -1,10 +1,14 @@
-package burlton.dartzee.test.achievements
+package burlton.dartzee.test.achievements.x01
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
-import burlton.dartzee.code.achievements.AchievementX01HotelInspector
-import burlton.dartzee.code.db.*
+import burlton.dartzee.code.achievements.x01.AchievementX01HotelInspector
+import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
+import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.getSortedDartStr
+import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
 import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
@@ -12,18 +16,9 @@ import org.junit.Test
 
 class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<AchievementX01HotelInspector>()
 {
+    override val gameType = GAME_TYPE_X01
+
     override fun factoryAchievement() = AchievementX01HotelInspector()
-
-    @Test
-    fun `Should ignore games of the wrong type`()
-    {
-        val g = insertGame(gameType = GAME_TYPE_GOLF)
-        insertStandardBurltonConstant(insertPlayer(), g)
-
-        factoryAchievement().populateForConversion("")
-
-        getCountFromTable("Achievement") shouldBe 0
-    }
 
     @Test
     fun `Should ignore rounds that contain any misses`()
@@ -126,10 +121,8 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
         methods.shouldContainExactlyInAnyOrder(getSortedDartStr(validOne), getSortedDartStr(validTwo))
     }
 
-    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {
-        val g = insertRelevantGame()
-
         insertStandardBurltonConstant(p, g)
     }
 
@@ -150,6 +143,4 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
         }
 
     }
-
-    private fun insertRelevantGame() = insertGame(gameType = GAME_TYPE_X01)
 }

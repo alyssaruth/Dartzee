@@ -1,27 +1,24 @@
-package burlton.dartzee.test.achievements
+package burlton.dartzee.test.achievements.x01
 
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-import burlton.dartzee.code.achievements.AchievementX01CheckoutCompleteness
-import burlton.dartzee.code.db.*
+import burlton.dartzee.code.achievements.x01.AchievementX01CheckoutCompleteness
+import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
+import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
 import burlton.dartzee.test.helper.*
+import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.sql.Timestamp
 
 class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<AchievementX01CheckoutCompleteness>()
 {
+    override val gameType = GAME_TYPE_X01
+
     override fun factoryAchievement() = AchievementX01CheckoutCompleteness()
-
-    @Test
-    fun `Should ignore games of the wrong type`()
-    {
-        val g = insertGame(gameType = GAME_TYPE_GOLF)
-        insertCheckout(insertPlayer(), g, 1)
-
-        factoryAchievement().populateForConversion("")
-
-        getCountFromTable("Achievement") shouldBe 0
-    }
 
     @Test
     fun `Should ignore non-checkout darts`()
@@ -44,13 +41,10 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
     {
         val p = insertPlayer()
         val g = insertRelevantGame()
-
-        insertCheckout(p, g, 5)
-
-        Thread.sleep(200)
+        insertCheckout(p, g, 5, Timestamp(500))
 
         val g2 = insertRelevantGame()
-        insertCheckout(p, g2, 5)
+        insertCheckout(p, g2, 5, Timestamp(1000))
 
         factoryAchievement().populateForConversion("")
 
@@ -66,12 +60,12 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         val p = insertPlayer()
         val g = insertRelevantGame()
 
-        insertCheckout(p, g, 5)
-        insertCheckout(p, g, 1)
-        insertCheckout(p, g, 5)
-        insertCheckout(p, g, 2)
-        insertCheckout(p, g, 5)
-        insertCheckout(p, g, 2)
+        insertCheckout(p, g, 5, Timestamp(500))
+        insertCheckout(p, g, 1, Timestamp(1000))
+        insertCheckout(p, g, 5, Timestamp(1500))
+        insertCheckout(p, g, 2, Timestamp(2000))
+        insertCheckout(p, g, 5, Timestamp(2500))
+        insertCheckout(p, g, 2, Timestamp(3000))
 
         factoryAchievement().populateForConversion("")
 
@@ -81,18 +75,16 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         scores.shouldContainExactlyInAnyOrder(1, 2, 5)
     }
 
-    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {
-        val g = insertRelevantGame()
         insertCheckout(p, g, 1)
     }
 
-    private fun insertRelevantGame() = insertGame(gameType = GAME_TYPE_X01)
-    private fun insertCheckout(p: PlayerEntity, g: GameEntity, score: Int = 1)
+    private fun insertCheckout(p: PlayerEntity, g: GameEntity, score: Int = 1, dtCreation: Timestamp = getSqlDateNow())
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
         val rnd = insertRound(participantId = pt.rowId)
 
-        insertDart(roundId = rnd.rowId, startingScore = score*2, score = score, multiplier = 2)
+        insertDart(roundId = rnd.rowId, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation)
     }
 }

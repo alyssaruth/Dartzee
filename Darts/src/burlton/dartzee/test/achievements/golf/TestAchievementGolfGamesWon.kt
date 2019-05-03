@@ -1,7 +1,8 @@
-package burlton.dartzee.test.achievements
+package burlton.dartzee.test.achievements.golf
 
-import burlton.dartzee.code.achievements.AchievementGolfGamesWon
+import burlton.dartzee.code.achievements.golf.AchievementGolfGamesWon
 import burlton.dartzee.code.db.GAME_TYPE_GOLF
+import burlton.dartzee.test.achievements.TestAbstractAchievementGamesWon
 import io.kotlintest.shouldBe
 import org.junit.Test
 

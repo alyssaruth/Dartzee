@@ -11,6 +11,8 @@ import java.sql.Timestamp
 
 abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: AbstractAchievementTest<E>()
 {
+    override val gameType = factoryAchievement().gameType
+
     override fun beforeEachTest()
     {
         wipeTable("Achievement")
@@ -19,16 +21,14 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         wipeTable("Participant")
     }
 
-    private fun insertRelevantGame(): GameEntity
+    override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
     {
-        return insertGame(gameType = factoryAchievement().gameType, gameParams = factoryAchievement().gameParams)
+        return insertGame(gameType = factoryAchievement().gameType, gameParams = factoryAchievement().gameParams, dtLastUpdate = dtLastUpdate)
     }
 
-    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {
-        val game = insertRelevantGame()
-
-        insertParticipant(gameId = game.rowId, playerId = p.rowId, finalScore = 30)
+        insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 30)
     }
 
     @Test

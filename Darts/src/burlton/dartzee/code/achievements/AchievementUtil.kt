@@ -1,6 +1,14 @@
 package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
+import burlton.dartzee.code.achievements.golf.AchievementGolfGamesWon
+import burlton.dartzee.code.achievements.golf.AchievementGolfPointsRisked
+import burlton.dartzee.code.achievements.rtc.AchievementClockBestGame
+import burlton.dartzee.code.achievements.rtc.AchievementClockBestStreak
+import burlton.dartzee.code.achievements.rtc.AchievementClockBruceyBonuses
+import burlton.dartzee.code.achievements.rtc.AchievementClockGamesWon
+import burlton.dartzee.code.achievements.x01.*
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
@@ -84,22 +92,22 @@ fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
     return mutableListOf(AchievementX01BestFinish(),
-                         AchievementX01BestThreeDarts(),
-                         AchievementX01CheckoutCompleteness(),
-                         AchievementX01HighestBust(),
-                         AchievementGolfPointsRisked(),
-                         AchievementX01GamesWon(),
-                         AchievementGolfGamesWon(),
-                         AchievementClockGamesWon(),
-                         AchievementX01BestGame(),
-                         AchievementGolfBestGame(),
-                         AchievementClockBestGame(),
-                         AchievementClockBruceyBonuses(),
-                         AchievementX01Shanghai(),
-                         AchievementX01HotelInspector(),
-                         AchievementX01SuchBadLuck(),
-                         AchievementX01Btbf(),
-                         AchievementClockBestStreak())
+            AchievementX01BestThreeDarts(),
+            AchievementX01CheckoutCompleteness(),
+            AchievementX01HighestBust(),
+            AchievementGolfPointsRisked(),
+            AchievementX01GamesWon(),
+            AchievementGolfGamesWon(),
+            AchievementClockGamesWon(),
+            AchievementX01BestGame(),
+            AchievementGolfBestGame(),
+            AchievementClockBestGame(),
+            AchievementClockBruceyBonuses(),
+            AchievementX01Shanghai(),
+            AchievementX01HotelInspector(),
+            AchievementX01SuchBadLuck(),
+            AchievementX01Btbf(),
+            AchievementClockBestStreak())
 }
 
 fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?

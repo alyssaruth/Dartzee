@@ -2,8 +2,10 @@ package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.helper.*
+import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
@@ -13,12 +15,15 @@ import io.kotlintest.matchers.numerics.shouldBeLessThanOrEqual
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
+import java.sql.Timestamp
 import javax.imageio.ImageIO
 
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTest()
 {
+    abstract val gameType: Int
+
     abstract fun factoryAchievement(): E
-    abstract fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
 
     override fun beforeEachTest()
     {
@@ -32,6 +37,17 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
         wipeTable("Dart")
     }
 
+    private fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    {
+        val g = insertRelevantGame()
+        setUpAchievementRowForPlayerAndGame(p, g)
+    }
+
+    open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
+    {
+        return insertGame(gameType = gameType, dtLastUpdate = dtLastUpdate)
+    }
+
     @Test
     fun `Should not leave any temp tables lying around`()
     {
@@ -42,6 +58,16 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
         dropUnexpectedTables().shouldBeEmpty()
     }
 
+    @Test
+    fun `Should ignore games of the wrong type`()
+    {
+        val p = insertPlayer()
+        val g = insertGame(gameType = gameType + 1)
+        setUpAchievementRowForPlayerAndGame(p, g)
+
+        factoryAchievement().populateForConversion("")
+        getCountFromTable("Achievement") shouldBe 0
+    }
 
     @Test
     fun `Should only generate data for specified players`()
