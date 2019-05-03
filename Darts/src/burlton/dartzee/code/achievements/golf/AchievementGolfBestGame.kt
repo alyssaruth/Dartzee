@@ -1,5 +1,7 @@
-package burlton.dartzee.code.achievements
+package burlton.dartzee.code.achievements.golf
 
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
+import burlton.dartzee.code.achievements.AbstractAchievementBestGame
 import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.utils.ResourceCache
 import java.net.URL

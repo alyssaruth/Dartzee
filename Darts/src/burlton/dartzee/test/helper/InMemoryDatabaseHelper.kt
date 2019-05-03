@@ -115,9 +115,11 @@ fun insertDart(uuid: String = randomGuid(),
                multiplier: Int = 3,
                posX: Int = 20,
                posY: Int = 20,
-               segmentType: Int = SEGMENT_TYPE_TREBLE): DartEntity
+               segmentType: Int = SEGMENT_TYPE_TREBLE,
+               dtCreation: Timestamp = getSqlDateNow()): DartEntity
 {
     val drt = DartEntity()
+    drt.dtCreation = dtCreation
     drt.rowId = uuid
     drt.roundId = roundId
     drt.ordinal = ordinal

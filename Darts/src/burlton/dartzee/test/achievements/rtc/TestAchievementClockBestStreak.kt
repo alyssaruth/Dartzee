@@ -1,28 +1,23 @@
-package burlton.dartzee.test.achievements
+package burlton.dartzee.test.achievements.rtc
 
-import burlton.dartzee.code.achievements.AchievementClockBestStreak
-import burlton.dartzee.code.db.*
-import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.achievements.rtc.AchievementClockBestStreak
+import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK
+import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.test.achievements.AbstractAchievementTest
+import burlton.dartzee.test.helper.insertDart
+import burlton.dartzee.test.helper.insertParticipant
+import burlton.dartzee.test.helper.insertPlayer
+import burlton.dartzee.test.helper.insertRound
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
 class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBestStreak>()
 {
+    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
     override fun factoryAchievement() = AchievementClockBestStreak()
-
-    @Test
-    fun `Should ignore games of the wrong type`()
-    {
-        val g = insertGame(gameType = GAME_TYPE_X01)
-        val p = insertPlayer()
-        insertOpeningStreak(p, g)
-
-        factoryAchievement().populateForConversion("")
-
-        getCountFromTable("Achievement") shouldBe 0
-    }
 
     @Test
     fun `Should reset the streak across game boundaries, and should report on the earliest occurrence`()
@@ -42,10 +37,8 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
         achievement.gameIdEarned shouldBe g.rowId
     }
 
-    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {
-        val g = insertRelevantGame()
-
         insertOpeningStreak(p, g)
     }
 
@@ -59,7 +52,4 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
         insertDart(roundId = rnd.rowId, ordinal = 2, startingScore = 2, score = 2, multiplier = 1)
         insertDart(roundId = rnd.rowId, ordinal = 3, startingScore = 3, score = 3, multiplier = 1)
     }
-
-
-    private fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()) = insertGame(gameType = GAME_TYPE_ROUND_THE_CLOCK, dtLastUpdate = dtLastUpdate)
 }

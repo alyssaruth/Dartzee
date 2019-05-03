@@ -1,22 +1,24 @@
-package burlton.dartzee.test.achievements
+package burlton.dartzee.test.achievements.x01
 
-import burlton.dartzee.code.achievements.AchievementX01Btbf
+import burlton.dartzee.code.achievements.x01.AchievementX01Btbf
 import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
 import burlton.dartzee.test.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
 
 class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Btbf>()
 {
+    override val gameType = GAME_TYPE_X01
+
     override fun factoryAchievement() = AchievementX01Btbf()
 
-    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {
-        val game = insertRelevantGame()
-        insertSuccessfulParticipant(game, p)
+        insertSuccessfulParticipant(g, p)
     }
 
     @Test
@@ -99,6 +101,4 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
         val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
         insertDart(roundId = rnd.rowId, startingScore = 2, score = 1, multiplier = 2)
     }
-
-    private fun insertRelevantGame() = insertGame(gameType = GAME_TYPE_X01)
 }

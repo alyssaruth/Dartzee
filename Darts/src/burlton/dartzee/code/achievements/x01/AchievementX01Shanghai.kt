@@ -1,6 +1,8 @@
-package burlton.dartzee.code.achievements
+package burlton.dartzee.code.achievements.x01
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
+import burlton.dartzee.code.achievements.AbstractAchievementRowPerGame
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR

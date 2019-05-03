@@ -4,13 +4,18 @@ import burlton.dartzee.code.achievements.AbstractAchievementGamesWon
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.test.helper.*
+import burlton.dartzee.test.helper.getCountFromTable
+import burlton.dartzee.test.helper.insertParticipant
+import burlton.dartzee.test.helper.insertPlayer
+import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
 abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractAchievementTest<E>()
 {
+    override val gameType = factoryAchievement().gameType
+
     override fun beforeEachTest()
     {
         wipeTable("Achievement")
@@ -19,37 +24,9 @@ abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: 
         wipeTable("Player")
     }
 
-    private fun insertRelevantGame(): GameEntity
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {
-        return insertGame(gameType = factoryAchievement().gameType)
-    }
-
-
-    override fun setUpAchievementRowForPlayer(p: PlayerEntity)
-    {
-        val game = insertRelevantGame()
-
-        insertParticipant(gameId = game.rowId, playerId = p.rowId, finishingPosition = 1)
-    }
-
-    @Test
-    fun `Should ignore games of the wrong type`()
-    {
-        val alice = insertPlayer(name = "Alice")
-
-        val game = insertRelevantGame()
-        val golfGame = insertGame(gameType = 500)
-
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1000))
-        insertParticipant(gameId = golfGame.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(2000))
-
-        factoryAchievement().populateForConversion("")
-
-        getCountFromTable("Achievement") shouldBe 1
-        val achievementRow = AchievementEntity().retrieveEntities("")[0]
-        achievementRow.playerId shouldBe alice.rowId
-        achievementRow.achievementCounter shouldBe 1
-        achievementRow.dtLastUpdate shouldBe Timestamp(1000)
+        insertParticipant(gameId = g.rowId, playerId = p.rowId, finishingPosition = 1)
     }
 
     @Test
