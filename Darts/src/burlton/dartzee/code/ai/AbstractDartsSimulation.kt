@@ -2,17 +2,13 @@ package burlton.dartzee.code.ai
 
 import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
+import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.db.BulkInserter
-import burlton.dartzee.code.db.DartEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.code.db.RoundEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.dartzee.test.helper.insertGame
-import burlton.dartzee.test.helper.insertParticipant
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.Timestamp
 
@@ -60,44 +56,16 @@ abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
 
         Debug.appendBanner("Game Over. Rounds: $totalRounds, Score: $totalScore", logging)
 
-        saveEntities()
-
         val wrapper = GameWrapper(gameId, gameParams, dtStart!!, dtFinish!!, totalScore)
         wrapper.setHmRoundNumberToDartsThrown(hmRoundNumberToDarts)
         wrapper.setTotalRounds(totalRounds)
 
-        return wrapper
-    }
-
-    private fun saveEntities()
-    {
-        val game = insertGame(gameType = gameType,
-                gameParams = gameParams,
-                dtCreation = dtStart!!,
-                dtFinish = dtFinish!!)
-
-        val pt = insertParticipant(gameId = game.rowId, playerId = player.rowId, finalScore = getTotalScore(), dtFinished = dtFinish!!, ordinal = 1)
-
-        val roundsToSave = mutableListOf<RoundEntity>()
-        val dartsToSave = mutableListOf<DartEntity>()
-        for (i in 1 until currentRound)
+        if (AbstractClient.devMode)
         {
-            val darts = hmRoundNumberToDarts[i]!!
-
-            val round = RoundEntity()
-            round.assignRowId()
-            round.roundNumber = i
-            round.participantId = pt.rowId
-            roundsToSave.add(round)
-
-            darts.forEachIndexed { ix, drt ->
-
-                dartsToSave.add(DartEntity.factory(drt, round.rowId, ix + 1, drt.startingScore))
-            }
+            wrapper.generateRealEntities(gameType, player)
         }
 
-        BulkInserter.insert(roundsToSave)
-        BulkInserter.insert(dartsToSave)
+        return wrapper
     }
 
     protected open fun resetVariables()

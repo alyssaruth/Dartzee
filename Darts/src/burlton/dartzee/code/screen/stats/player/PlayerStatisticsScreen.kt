@@ -28,7 +28,7 @@ import javax.swing.SwingConstants
 
 class PlayerStatisticsScreen : EmbeddedScreen()
 {
-    private var hmLocalIdToWrapper = mutableMapOf<Long, GameWrapper>()
+    private var hmLocalIdToWrapper = mapOf<Long, GameWrapper>()
     private var hmLocalIdToWrapperOther = mutableMapOf<Long, GameWrapper>()
     private var filteredGames = HandyArrayList<GameWrapper>()
     private var filteredGamesOther = HandyArrayList<GameWrapper>()
@@ -91,7 +91,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     /**
      * Called when popping this up in a dialog after simulating games from the player amendment dialog (for AIs)
      */
-    fun initFake(hmGameIdToWrapper: MutableMap<Long, GameWrapper>)
+    fun initFake(hmGameIdToWrapper: Map<Long, GameWrapper>)
     {
         filterPanel.init(player!!, gameType, false)
         filterPanelOther.isVisible = false
@@ -235,7 +235,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         }
     }
 
-    private fun populateFilteredGames(hmGameIdToWrapper: MutableMap<Long, GameWrapper>,
+    private fun populateFilteredGames(hmGameIdToWrapper: Map<Long, GameWrapper>,
                                       filterPanel: PlayerStatisticsFilterPanel): HandyArrayList<GameWrapper>
     {
         val allGames = HandyArrayList(hmGameIdToWrapper.values)

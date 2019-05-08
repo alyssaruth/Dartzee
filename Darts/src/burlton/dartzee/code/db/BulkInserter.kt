@@ -8,11 +8,14 @@ import java.sql.SQLException
 
 object BulkInserter
 {
+    /**
+     * Entity insert
+     */
     fun insert(vararg entities: AbstractEntity<*>)
     {
         insert(entities.toList())
     }
-    @JvmStatic fun insert(entities: List<AbstractEntity<*>>)
+    @JvmStatic @JvmOverloads fun insert(entities: List<AbstractEntity<*>>, rowsPerThread: Int = 5000, rowsPerStatement: Int = 50)
     {
         if (entities.isEmpty())
         {
@@ -26,54 +29,62 @@ object BulkInserter
         }
 
         val tableName = entities.first().getTableName()
-        var insertQuery = "INSERT INTO $tableName VALUES ${entities.joinToString{it.getInsertBlockForStatement()}}"
-        val conn = DatabaseUtil.borrowConnection()
 
-        try
-        {
-            conn.prepareStatement(insertQuery).use { ps ->
-                entities.forEachIndexed { index, entity ->
-                    entity.dtLastUpdate = getSqlDateNow()
-                    insertQuery = entity.writeValuesToInsertStatement(insertQuery, ps, index)
-                }
+        val threads = mutableListOf<Thread>()
+        val entitiesBatched = entities.chunked(rowsPerThread)
+        entitiesBatched.forEach{
+            val t = getInsertThreadForBatch(it, tableName, rowsPerStatement)
+            threads.add(t)
+        }
 
-                Debug.appendSql(insertQuery, AbstractClient.traceWriteSql)
-
-                ps.executeUpdate()
-            }
-        }
-        catch (sqle: SQLException)
-        {
-            Debug.logSqlException(insertQuery, sqle)
-        }
-        finally
-        {
-            DatabaseUtil.returnConnection(conn)
-        }
+        doBulkInsert(threads, tableName, entities.size, rowsPerStatement)
 
         entities.forEach {it.retrievedFromDb = true}
     }
+    private fun getInsertThreadForBatch(batch: List<AbstractEntity<*>>, tableName: String, rowsPerInsert: Int): Thread
+    {
+        return Thread {
+            batch.chunked(rowsPerInsert).forEach { entities ->
+                var insertQuery = "INSERT INTO $tableName VALUES ${entities.joinToString{it.getInsertBlockForStatement()}}"
+                val conn = DatabaseUtil.borrowConnection()
 
+                try
+                {
+                    conn.prepareStatement(insertQuery).use { ps ->
+                        entities.forEachIndexed { index, entity ->
+                            entity.dtLastUpdate = getSqlDateNow()
+                            insertQuery = entity.writeValuesToInsertStatement(insertQuery, ps, index)
+                        }
+
+                        Debug.appendSql(insertQuery, AbstractClient.traceWriteSql)
+
+                        ps.executeUpdate()
+                    }
+                }
+                catch (sqle: SQLException)
+                {
+                    Debug.logSqlException(insertQuery, sqle)
+                }
+                finally
+                {
+                    DatabaseUtil.returnConnection(conn)
+                }
+            }
+        }
+    }
+
+    /**
+     * Ad-hoc insert
+     */
     fun insert(tableName: String, rows: List<String>, rowsPerThread: Int, rowsPerStatement: Int)
     {
-        val traceWriteSql = AbstractClient.traceWriteSql
-
         val threads = mutableListOf<Thread>()
         rows.chunked(rowsPerThread).forEach{
             val t = getInsertThreadForBatch(tableName, it, rowsPerStatement)
             threads.add(t)
         }
 
-        if (rows.size > 500)
-        {
-            AbstractClient.traceWriteSql = false
-            Debug.append("[SQL] Inserting ${rows.size} rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
-        }
-
-        threads.forEach{ it.start() }
-        threads.forEach{ it.join() }
-
-        AbstractClient.traceWriteSql = traceWriteSql
+        doBulkInsert(threads, tableName, rows.size, rowsPerStatement)
     }
     private fun getInsertThreadForBatch(tableName: String, batch: List<String>, rowsPerStatement: Int): Thread
     {
@@ -92,5 +103,24 @@ object BulkInserter
                 DatabaseUtil.executeUpdate(s)
             }
         }
+    }
+
+    /**
+     * Generic
+     */
+    private fun doBulkInsert(threads: List<Thread>, tableName: String, rowCount: Int, rowsPerStatement: Int)
+    {
+        val traceWriteSql = AbstractClient.traceWriteSql
+
+        if (rowCount > 500)
+        {
+            AbstractClient.traceWriteSql = false
+            Debug.append("[SQL] Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
+        }
+
+        threads.forEach{ it.start() }
+        threads.forEach{ it.join() }
+
+        AbstractClient.traceWriteSql = traceWriteSql
     }
 }
