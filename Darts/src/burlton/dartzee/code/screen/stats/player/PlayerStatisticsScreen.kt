@@ -199,6 +199,10 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         {
             Debug.logSqlException(sb.toString(), sqle)
         }
+        finally
+        {
+            DatabaseUtil.dropTable(zzParticipants)
+        }
 
         return hm
     }
