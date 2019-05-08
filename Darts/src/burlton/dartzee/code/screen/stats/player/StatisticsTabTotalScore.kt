@@ -399,7 +399,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             }
         }
 
-        val hmOutliers = hmNoDartsToCount.filterKeys{it >= outlierLimit}
+        val hmOutliers = hmNoDartsToCount.filterKeys{it > outlierLimit}
         val outlierCount = hmOutliers.map { it.value }.sum()
 
         dataset!!.addValue(outlierCount.toDouble(), legendKey, (outlierLimit + 1).toString() + "+")
