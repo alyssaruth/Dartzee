@@ -79,7 +79,7 @@ public final class AISimulationSetup extends SimpleDialog
 		{
 			model = player.getModel();
 		}
-		
+
 		Dartboard dartboard = new Dartboard(500, 500);
 		dartboard.setSimulation(true); //Don't do animations etc
 		dartboard.paintDartboard();
@@ -92,10 +92,10 @@ public final class AISimulationSetup extends SimpleDialog
 		JRadioButton rdbtn = panel_1.getSelection();
 		if (rdbtn == rdbtn501)
 		{
-			return new DartsSimulationX01(dartboard, model);
+			return new DartsSimulationX01(dartboard, player, model);
 		}
 		
-		return new DartsSimulationGolf(dartboard, model);
+		return new DartsSimulationGolf(dartboard, player, model);
 	}
 	
 	private void runSimulationInSeparateThread(AbstractDartsSimulation sim)
