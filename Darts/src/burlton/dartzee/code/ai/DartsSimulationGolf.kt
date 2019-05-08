@@ -39,7 +39,7 @@ class DartsSimulationGolf(dartboard: Dartboard, player: PlayerEntity, model: Abs
     {
         hmRoundNumberToDarts[currentRound] = dartsThrown
 
-        val drt = dartsThrown.lastElement()
+        val drt = dartsThrown.last()
         val roundScore = drt.getGolfScore(currentRound)
         score += roundScore
 
