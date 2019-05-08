@@ -176,7 +176,7 @@ class DatabaseUtil
             Debug.appendSql("(" + totalMillis + "ms) " + query, AbstractClient.traceReadSql)
 
             //No query should take longer than 5 seconds really...
-            if (totalMillis > AbstractClient.sqlToleranceQuery)
+            if (totalMillis > AbstractClient.sqlToleranceQuery && !AbstractClient.devMode)
             {
                 Debug.stackTraceNoError("SQL query took longer than ${AbstractClient.sqlToleranceQuery} millis: $query")
             }
