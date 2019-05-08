@@ -54,7 +54,7 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Abst
         hmRoundNumberToDarts[currentRound] = dartsThrown
 
         //If we've bust, then reset the current score back
-        if (isBust(currentScore, dartsThrown.lastElement()))
+        if (isBust(currentScore, dartsThrown.last()))
         {
             currentScore = startingScore
         }

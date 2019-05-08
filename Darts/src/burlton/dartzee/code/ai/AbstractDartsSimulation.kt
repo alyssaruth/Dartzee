@@ -1,6 +1,5 @@
 package burlton.dartzee.code.ai
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
@@ -22,7 +21,7 @@ abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
     protected var dtStart: Timestamp? = null
     protected var dtFinish: Timestamp? = null
     protected var currentRound = -1
-    protected var dartsThrown = HandyArrayList<Dart>()
+    protected var dartsThrown = mutableListOf<Dart>()
 
     protected var hmRoundNumberToDarts = HashMapList<Int, Dart>()
 
@@ -70,14 +69,14 @@ abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
 
     protected open fun resetVariables()
     {
-        dartsThrown = HandyArrayList()
+        dartsThrown = mutableListOf()
         hmRoundNumberToDarts = HashMapList()
         currentRound = 1
     }
 
     protected fun resetRound()
     {
-        dartsThrown = HandyArrayList()
+        dartsThrown = mutableListOf()
         dartboard.clearDarts()
     }
 }
