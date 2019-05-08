@@ -146,7 +146,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
         scorer.init(null, game.gameParams)
         if (mode == MODE_BACK_9)
         {
-            scorer.setFudgeFactor(9)
+            scorer.fudgeFactor = 9
         }
 
         game.populateScorer(scorer, mode)

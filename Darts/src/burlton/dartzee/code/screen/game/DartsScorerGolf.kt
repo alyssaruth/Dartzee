@@ -18,8 +18,8 @@ import javax.swing.table.DefaultTableCellRenderer
 class DartsScorerGolf : DartsScorer()
 {
     private var currentScore = 0
-    private var fudgeFactor = 0 //For when we're displaying only a back 9, we need to shift everything up
-    private var showGameId = false
+    var fudgeFactor = 0 //For when we're displaying only a back 9, we need to shift everything up
+    var showGameId = false
 
     override fun clearRound(roundNumber: Int)
     {
@@ -70,6 +70,9 @@ class DartsScorerGolf : DartsScorer()
         lblResult.foreground = color
     }
 
+    /**
+     * Helper to add a full round at a time, for when we're viewing stats or loading a game
+     */
     @JvmOverloads
     fun addDarts(darts: Collection<Dart>, gameId: Long = -1)
     {
@@ -128,16 +131,6 @@ class DartsScorerGolf : DartsScorer()
     override fun getTotalScore(): Int
     {
         return currentScore
-    }
-
-    fun setFudgeFactor(fudgeFactor: Int)
-    {
-        this.fudgeFactor = fudgeFactor
-    }
-
-    fun setShowGameId(showGameId: Boolean)
-    {
-        this.showGameId = showGameId
     }
 
     /**
@@ -274,6 +267,3 @@ class DartsScorerGolf : DartsScorer()
     }
 
 }
-/**
- * Helper to add a full round at a time, for when we're viewing stats or loading a game
- */
