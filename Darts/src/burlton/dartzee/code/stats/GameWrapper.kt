@@ -3,6 +3,7 @@ package burlton.dartzee.code.stats
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.db.*
 import burlton.dartzee.code.screen.game.DartsScorerGolf
 import burlton.dartzee.code.screen.stats.player.HoleBreakdownWrapper
 import burlton.dartzee.code.utils.calculateThreeDartAverage
@@ -327,5 +328,55 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     fun setHmRoundNumberToDartsThrown(hmRoundNumberToDarts: HashMapList<Int, Dart>)
     {
         this.hmRoundNumberToDarts = hmRoundNumberToDarts
+    }
+
+    var gameEntity: GameEntity? = null
+    var participantEntity: ParticipantEntity? = null
+    val roundEntities = mutableListOf<RoundEntity>()
+    val dartEntities = mutableListOf<DartEntity>()
+
+    fun clearEntities()
+    {
+        gameEntity = null
+        participantEntity = null
+        roundEntities.clear()
+        dartEntities.clear()
+    }
+
+    fun generateRealEntities(gameType: Int, player: PlayerEntity)
+    {
+        val game = GameEntity()
+        game.assignRowId()
+        game.gameType = gameType
+        game.gameParams = gameParams
+        game.dtCreation = dtStart
+        game.dtFinish = dtFinish
+
+        gameEntity = game
+
+        val pt = ParticipantEntity()
+        pt.assignRowId()
+        pt.gameId = game.rowId
+        pt.playerId = player.rowId
+        pt.finalScore = finalScore
+        pt.dtFinished = dtFinish
+        pt.ordinal = 1
+
+        participantEntity = pt
+
+        for (i in 1..totalRounds)
+        {
+            val darts = hmRoundNumberToDarts[i]!!
+
+            val round = RoundEntity()
+            round.assignRowId()
+            round.roundNumber = i
+            round.participantId = pt.rowId
+            roundEntities.add(round)
+
+            darts.forEachIndexed { ix, drt ->
+                dartEntities.add(DartEntity.factory(drt, round.rowId, ix + 1, drt.startingScore))
+            }
+        }
     }
 }
