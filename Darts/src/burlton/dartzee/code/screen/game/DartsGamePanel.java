@@ -711,7 +711,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	}
 	protected void resetRound()
 	{
-		Debug.append("Reset pressed.", VERBOSE_LOGGING);
+		Debug.append("Reset pressed.");
 
 		resetRoundVariables();
 

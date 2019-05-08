@@ -9,6 +9,7 @@ import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.dartzee.test.helper.randomGuid
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
 import burlton.desktopcore.code.util.DialogUtil
@@ -25,6 +26,7 @@ private const val CMD_CLEAR_CONSOLE = "cls"
 private const val CMD_TEST = "test"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
 private const val CMD_SANITY = "sanity"
+private const val CMD_GUID = "guid"
 
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
@@ -160,7 +162,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
     override fun processCommand(cmd: String): String
     {
-        val textToShow = ""
+        var textToShow = ""
         if (cmd.startsWith(CMD_PURGE_GAME))
         {
             val gameIdentifier = cmd.substring(CMD_PURGE_GAME.length)
@@ -199,6 +201,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             val dlg = DartzeeRuleCreationDialog()
             dlg.isVisible = true
+        }
+        else if (cmd == CMD_GUID)
+        {
+            textToShow = randomGuid()
         }
 
         return textToShow

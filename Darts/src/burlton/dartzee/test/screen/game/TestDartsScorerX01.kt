@@ -3,53 +3,54 @@ package burlton.dartzee.test.screen.game
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartHint
 import burlton.dartzee.code.screen.game.DartsScorerX01
-import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartsScorerX01: AbstractDartsTest()
+class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
 {
+    override fun getValidGameParams() = "501"
+    override fun factoryScorerImpl() = DartsScorerX01()
+    override fun addRound(scorer: DartsScorerX01, roundNumber: Int)
+    {
+        scorer.addDart(Dart(20, 1))
+        scorer.addDart(Dart(20, 2))
+        scorer.addDart(Dart(20, 1))
+
+        scorer.finaliseRoundScore(501 - (roundNumber - 1) * 60, false)
+    }
+
     @Test
     fun `should have 4 columns`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
         scorer.numberOfColumns shouldBe 4
     }
 
     @Test
     fun `should clear the current round`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
+
+        addRound(scorer, 1)
 
         scorer.addDart(Dart(20, 1))
         scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 1))
 
-        scorer.finaliseRoundScore(501, false)
-
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 1))
+        scorer.getRowCount() shouldBe 2
 
         scorer.clearRound(2)
 
+        scorer.getRowCount() shouldBe 1
         scorer.getTotalScore() shouldBe 3
-    }
-
-    @Test
-    fun `should do nothing if asked to clear when empty`()
-    {
-        val scorer = getTestScorer()
-
-        scorer.clearRound(1)
     }
 
     @Test
     fun `should only report finalised rows as completed`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
 
         scorer.addDart(Dart(20, 1))
         scorer.rowIsComplete(0).shouldBeFalse()
@@ -61,7 +62,7 @@ class TestDartsScorerX01: AbstractDartsTest()
     @Test
     fun `should correctly report when a player is finished`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
 
         scorer.playerIsFinished().shouldBeFalse()
 
@@ -82,7 +83,7 @@ class TestDartsScorerX01: AbstractDartsTest()
     @Test
     fun `should not update the score if bust`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
 
         scorer.addDart(Dart(20, 3))
 
@@ -94,7 +95,7 @@ class TestDartsScorerX01: AbstractDartsTest()
     @Test
     fun `should return the latest score remaining`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
 
         scorer.addDart(Dart(20, 3))
         scorer.addDart(Dart(20, 3))
@@ -115,14 +116,14 @@ class TestDartsScorerX01: AbstractDartsTest()
     @Test
     fun `should return the starting score if no darts thrown`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
         scorer.getLatestScoreRemaining() shouldBe 501
     }
 
     @Test
     fun `should include unthrown darts in the total score`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
 
         scorer.getTotalScore() shouldBe 0
 
@@ -143,7 +144,7 @@ class TestDartsScorerX01: AbstractDartsTest()
     @Test
     fun `should remove hints when score is confirmed`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
         scorer.addDart(Dart(1, 1))
         scorer.addHint(DartHint(1, 2))
 
@@ -156,7 +157,7 @@ class TestDartsScorerX01: AbstractDartsTest()
     @Test
     fun `should not count hints in the dart total`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
 
         scorer.addHint(DartHint(20, 1))
         scorer.addHint(DartHint(10, 2))
@@ -167,7 +168,7 @@ class TestDartsScorerX01: AbstractDartsTest()
     @Test
     fun `should remove hints when a real dart is added`()
     {
-        val scorer = getTestScorer()
+        val scorer = factoryScorer()
 
         scorer.addHint(DartHint(20, 1))
         scorer.addHint(DartHint(10, 2))
@@ -176,12 +177,5 @@ class TestDartsScorerX01: AbstractDartsTest()
 
         val dartCount = scorer.getTotalScore()
         dartCount shouldBe 1
-    }
-
-    private fun getTestScorer(): DartsScorerX01
-    {
-        val scorer = DartsScorerX01()
-        scorer.init(null, "501")
-        return scorer
     }
 }
