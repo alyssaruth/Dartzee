@@ -39,7 +39,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
         val scorer = hmPlayerNumberToDartsScorer[playerNumber]
         for (i in 1..lastRound)
         {
-            val darts = hmRoundToDarts[i]
+            val darts = hmRoundToDarts[i]!!
             scorer?.addDarts(darts)
         }
     }

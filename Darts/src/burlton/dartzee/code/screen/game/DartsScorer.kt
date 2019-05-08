@@ -114,6 +114,9 @@ abstract class DartsScorer : AbstractScorer() {
         model.removeRow(row)
     }
 
+    fun getRowCount() = model.rowCount
+    fun getValueAt(row: Int, col: Int): Any? = model.getValueAt(row, col)
+
     private inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
     {
         private val btnClose = JButton("X")
