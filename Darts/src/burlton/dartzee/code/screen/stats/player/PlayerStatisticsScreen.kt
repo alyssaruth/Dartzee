@@ -156,17 +156,16 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     {
         val hm = mutableMapOf<Long, GameWrapper>()
 
+        val zzParticipants = buildParticipantTable(playerId)
+        zzParticipants ?: return hm
+
         val sb = StringBuilder()
-        sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish,")
-        sb.append(" gp.FinalScore, ")
+        sb.append(" SELECT zz.LocalId, zz.GameParams, zz.DtCreation, zz.DtFinish, zz.FinalScore, ")
         sb.append(" rnd.RoundNumber,")
         sb.append(" drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.SegmentType")
-        sb.append(" FROM Dart drt, Round rnd, Participant gp, Game g")
+        sb.append(" FROM Dart drt, Round rnd, $zzParticipants zz")
         sb.append(" WHERE drt.RoundId = rnd.RowId")
-        sb.append(" AND rnd.ParticipantId = gp.RowId")
-        sb.append(" AND gp.GameId = g.RowId")
-        sb.append(" AND gp.PlayerId = '$playerId'")
-        sb.append(" AND g.GameType = $gameType")
+        sb.append(" AND rnd.ParticipantId = zz.ParticipantId")
 
         try
         {
@@ -202,6 +201,24 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         }
 
         return hm
+    }
+    private fun buildParticipantTable(playerId: String): String?
+    {
+        val tmp = DatabaseUtil.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, ParticipantId VARCHAR(36), FinalScore INT")
+        tmp ?: return null
+
+        val sb = StringBuilder()
+        sb.append(" INSERT INTO $tmp")
+        sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.RowId AS ParticipantId, pt.FinalScore ")
+        sb.append(" FROM Participant pt, Game g")
+        sb.append(" WHERE pt.GameId = g.RowId")
+        sb.append(" AND pt.PlayerId = '$playerId'")
+        sb.append(" AND g.GameType = $gameType")
+
+        DatabaseUtil.executeUpdate("" + sb)
+
+        DatabaseUtil.executeUpdate("CREATE INDEX ${tmp}_ParticipantId ON $tmp(ParticipantId)")
+        return tmp
     }
 
     fun buildTabs()
