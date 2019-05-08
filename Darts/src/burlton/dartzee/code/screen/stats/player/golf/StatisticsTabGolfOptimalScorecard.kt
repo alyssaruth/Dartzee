@@ -66,7 +66,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
             scorer.setTableForeground(Color.RED)
         }
 
-        scorer.setShowGameId(true)
+        scorer.showGameId = true
         scorer.init(null, null)
 
         for (i in 1..18)

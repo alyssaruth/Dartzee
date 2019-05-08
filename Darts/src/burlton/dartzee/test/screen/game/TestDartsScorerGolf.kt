@@ -22,7 +22,7 @@ class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
         val scorer = factoryScorer()
         scorer.numberOfColumns shouldBe 5
 
-        scorer.setShowGameId(true)
+        scorer.showGameId = true
         scorer.numberOfColumns shouldBe 6
     }
 
