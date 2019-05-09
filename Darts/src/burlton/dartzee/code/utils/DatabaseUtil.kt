@@ -74,6 +74,8 @@ class DatabaseUtil
         {
             val p = System.getProperties()
             p.setProperty("derby.system.home", dbFilePath)
+            p.setProperty("derby.language.logStatementText", "${AbstractClient.devMode}")
+            p.setProperty("derby.language.logQueryPlan", "${AbstractClient.devMode}")
 
             val props = Properties()
             props["user"] = "administrator"
@@ -172,7 +174,6 @@ class DatabaseUtil
             }
 
             val totalMillis = System.currentTimeMillis() - startMillis
-
             Debug.appendSql("(" + totalMillis + "ms) " + query, AbstractClient.traceReadSql)
 
             //No query should take longer than 5 seconds really...
