@@ -1,5 +1,8 @@
 --------- v3.2.2 ---------
 
+= Fixed a bug with resetting a round in Golf (introduced in v3.2.1)
+= Fixed a bug which made it possible to select the same player multiple times in reporting setup
+
 --------- v3.2.1 ---------
 
 + Granular achievement leaderboards to show who's winning on each achievement
