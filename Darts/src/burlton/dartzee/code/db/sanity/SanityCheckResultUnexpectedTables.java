@@ -1,18 +1,15 @@
 package burlton.dartzee.code.db.sanity;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
-import burlton.desktopcore.code.bean.ScrollTable;
-import burlton.dartzee.code.utils.DatabaseUtil;
 import burlton.core.code.obj.HandyArrayList;
-import burlton.desktopcore.code.util.DialogUtil;
 import burlton.core.code.util.StringUtil;
+import burlton.dartzee.code.utils.DatabaseUtil;
+import burlton.desktopcore.code.bean.ScrollTable;
+import burlton.desktopcore.code.util.DialogUtil;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
 
 public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSimpleTableModel
 {
@@ -22,7 +19,7 @@ public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSi
 	}
 	
 	@Override
-	public Action getDeleteAction(ScrollTable t)
+	public AbstractAction getDeleteAction(ScrollTable t)
 	{
 		return new AbstractAction()
 		{

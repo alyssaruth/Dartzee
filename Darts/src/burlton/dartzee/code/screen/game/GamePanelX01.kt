@@ -119,7 +119,7 @@ open class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorer
 
     override fun currentPlayerHasFinished(): Boolean
     {
-        val lastDart = dartsThrown.lastElement()
+        val lastDart = dartsThrown.last()
         return currentScore == 0 && lastDart.isDouble()
     }
 

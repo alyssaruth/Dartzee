@@ -4,9 +4,7 @@ import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.screen.TableModelDialog
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.event.KeyEvent
-import javax.swing.Action
-import javax.swing.JComponent
-import javax.swing.KeyStroke
+import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel
 
 abstract class AbstractSanityCheckResult
@@ -21,16 +19,16 @@ abstract class AbstractSanityCheckResult
         t.model = getResultsModel()
 
         val deleteAction = getDeleteAction(t)
+
         if (deleteAction != null)
         {
-            t.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "Delete")
-            t.actionMap.put("Delete", deleteAction)
+            t.addKeyAction(KeyEvent.VK_DELETE, "Delete", deleteAction)
         }
 
         return TableModelDialog(getDescription(), t)
     }
 
-    open fun getDeleteAction(t: ScrollTable): Action?
+    open fun getDeleteAction(t: ScrollTable): AbstractAction?
     {
         return null
     }
