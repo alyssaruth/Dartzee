@@ -17,16 +17,16 @@ import javax.swing.JPanel
 
 class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
 {
-    private val tablePlayersToSelectFrom = ScrollTablePlayers()
-    private val panelMovementOptions = JPanel()
-    private val tablePlayersSelected = ScrollTablePlayers()
-    private val btnSelect = JButton("")
-    private val btnUnselect = JButton("")
+    val tablePlayersToSelectFrom = ScrollTablePlayers()
+    val tablePlayersSelected = ScrollTablePlayers()
+    val btnSelect = JButton("")
+    val btnUnselect = JButton("")
 
     init
     {
         layout = MigLayout("", "[452px][100px][452px]", "[407px]")
 
+        val panelMovementOptions = JPanel()
         add(tablePlayersToSelectFrom, "cell 0 0,alignx left,growy")
         panelMovementOptions.minimumSize = Dimension(50, 10)
         add(panelMovementOptions, "cell 1 0,grow")
@@ -94,15 +94,15 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
         var rowToSelect = source.selectedViewRow
 
         val allPlayers = source.getAllPlayers()
-        allPlayers.removeAll(selectedPlayers)
-        source.initTableModel(allPlayers)
+        val availablePlayers = allPlayers.filter{ p -> selectedPlayers.none{ it.rowId == p.rowId} }
+        source.initTableModel(availablePlayers)
 
-        if (rowToSelect > allPlayers.size - 1)
+        if (rowToSelect > availablePlayers.size - 1)
         {
             rowToSelect = 0
         }
 
-        if (!allPlayers.isEmpty())
+        if (!availablePlayers.isEmpty())
         {
             source.selectRow(rowToSelect)
         }
