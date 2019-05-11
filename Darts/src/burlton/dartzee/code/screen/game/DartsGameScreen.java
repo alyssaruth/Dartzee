@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.game;
 
-import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.achievements.AbstractAchievement;
@@ -18,6 +17,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -132,7 +132,7 @@ public final class DartsGameScreen extends JFrame
 	}*/
 	public void fireAppearancePreferencesChanged()
 	{
-		HandyArrayList<String> gameIds = hmGameIdToTab.getKeysAsVector();
+		ArrayList<String> gameIds = hmGameIdToTab.getKeysAsVector();
 		for (String gameId : gameIds)
 		{
 			DartsGamePanel<? extends DartsScorer> gameTab = hmGameIdToTab.get(gameId);
@@ -147,7 +147,7 @@ public final class DartsGameScreen extends JFrame
 			Debug.stackTrace("Calling getGamePanel when this is a multi-game screen.");
 		}
 		
-		HandyArrayList<DartsGamePanel<? extends DartsScorer>> tabs = hmGameIdToTab.getValuesAsVector();
+		ArrayList<DartsGamePanel<? extends DartsScorer>> tabs = hmGameIdToTab.getValuesAsVector();
 		return tabs.get(0);
 	}
 	

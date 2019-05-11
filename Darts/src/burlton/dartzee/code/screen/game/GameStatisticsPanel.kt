@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.Debug
 import burlton.core.code.util.MathsUtil
@@ -104,7 +103,7 @@ abstract class GameStatisticsPanel : JPanel()
             try
             {
                 DatabaseUtil.executeQuery(sbSql).use { rs ->
-                    var dartsForRound = HandyArrayList<Dart>()
+                    var dartsForRound = mutableListOf<Dart>()
                     var currentRoundNumber = 1
 
                     while (rs.next())
@@ -122,7 +121,7 @@ abstract class GameStatisticsPanel : JPanel()
                         if (roundNumber > currentRoundNumber)
                         {
                             hmPlayerToDarts.putInList(playerName, dartsForRound)
-                            dartsForRound = HandyArrayList()
+                            dartsForRound = mutableListOf()
                             currentRoundNumber = roundNumber
                         }
 

@@ -1,6 +1,7 @@
 package burlton.core.code.obj;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -18,9 +19,9 @@ public class SuperHashMap<K, V> extends HashMap<K, V>
 		putAll(map);
 	}
 	
-	public HandyArrayList<K> getKeysAsVector()
+	public ArrayList<K> getKeysAsVector()
 	{
-		HandyArrayList<K> keys = new HandyArrayList<>();
+		ArrayList<K> keys = new ArrayList<>();
 		
 		Iterator<K> it = keySet().iterator();
 		for (; it.hasNext(); )
@@ -32,13 +33,13 @@ public class SuperHashMap<K, V> extends HashMap<K, V>
 		return keys;
 	}
 	
-	public HandyArrayList<V> getValuesAsVector()
+	public ArrayList<V> getValuesAsVector()
 	{
 		return getValuesAsVector(false);
 	}
-	public HandyArrayList<V> getValuesAsVector(boolean distinct)
+	public ArrayList<V> getValuesAsVector(boolean distinct)
 	{
-		HandyArrayList<V> values = new HandyArrayList<>();
+		ArrayList<V> values = new ArrayList<>();
 		
 		Iterator<V> it = values().iterator();
 		for (; it.hasNext(); )
@@ -56,7 +57,7 @@ public class SuperHashMap<K, V> extends HashMap<K, V>
 	
 	public void removeAllWithValue(V value)
 	{
-		HandyArrayList<K> keys = getKeysAsVector();
+		ArrayList<K> keys = getKeysAsVector();
 		for (K key : keys)
 		{
 			V val = get(key);
