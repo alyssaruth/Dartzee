@@ -62,7 +62,7 @@ class LeaderboardTotalScore(private val gameType: Int) : AbstractLeaderboard(), 
     {
         val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
         val gameParams = panelGameParams?.getGameParams() ?: ""
-        val playerWhereSql = panelPlayerFilters.whereSql
+        val playerWhereSql = panelPlayerFilters.getWhereSql()
 
         val sb = StringBuilder()
         sb.append("SELECT p.Strategy, p.Name, g.LocalId, pt.FinalScore")
