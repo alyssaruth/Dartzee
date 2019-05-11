@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.GAME_TYPE_GOLF
@@ -30,8 +29,8 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 {
     private var hmLocalIdToWrapper = mapOf<Long, GameWrapper>()
     private var hmLocalIdToWrapperOther = mutableMapOf<Long, GameWrapper>()
-    private var filteredGames = HandyArrayList<GameWrapper>()
-    private var filteredGamesOther = HandyArrayList<GameWrapper>()
+    private var filteredGames = listOf<GameWrapper>()
+    private var filteredGamesOther = listOf<GameWrapper>()
 
     private var gameType = -1
     private var player: PlayerEntity? = null
@@ -240,17 +239,17 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     }
 
     private fun populateFilteredGames(hmGameIdToWrapper: Map<Long, GameWrapper>,
-                                      filterPanel: PlayerStatisticsFilterPanel): HandyArrayList<GameWrapper>
+                                      filterPanel: PlayerStatisticsFilterPanel): List<GameWrapper>
     {
-        val allGames = HandyArrayList(hmGameIdToWrapper.values)
+        val allGames = hmGameIdToWrapper.values
         if (!filterPanel.isVisible)
         {
-            return allGames
+            return allGames.toList()
         }
 
         val filteredGames = allGames.filter { g -> filterPanel.includeGame(g) }
         filterPanel.update(filteredGames)
-        return HandyArrayList(filteredGames)
+        return filteredGames
     }
 
     fun setVariables(gameType: Int, player: PlayerEntity)

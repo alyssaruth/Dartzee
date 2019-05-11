@@ -6,13 +6,13 @@ class HashMapList<K: Comparable<K>, V> : HashMap<K, MutableList<V>>()
     /**
      * TODO - REMOVE (once fully over to Kotlin)
      */
-    fun getAsHandyArrayList(key: K): HandyArrayList<V>?
+    fun getAsArrayList(key: K): ArrayList<V>?
     {
         val v = get(key)
 
         v ?: return null
 
-        return HandyArrayList(v)
+        return ArrayList(v)
     }
 
     fun getFlattenedValuesSortedByKey(): List<V>

@@ -1,6 +1,5 @@
 package burlton.dartzee.code.db.sanity;
 
-import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.util.StringUtil;
 import burlton.dartzee.code.utils.DatabaseUtil;
 import burlton.desktopcore.code.bean.ScrollTable;
@@ -10,6 +9,7 @@ import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSimpleTableModel
 {
@@ -32,7 +32,7 @@ public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSi
 					return;
 				}
 				
-				HandyArrayList<String> tableNames = new HandyArrayList<>();
+				ArrayList<String> tableNames = new ArrayList<>();
 				for (int i=0; i<rows.length; i++)
 				{
 					String tableName = (String)t.getValueAt(rows[i], 1);
@@ -53,13 +53,13 @@ public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSi
 		};
 	}
 	
-	private HandyArrayList<String> getTableNames()
+	private ArrayList<String> getTableNames()
 	{
 		DefaultTableModel model = getResultsModel();
 		
 		int rowCount = model.getRowCount();
 		
-		HandyArrayList<String> tableNames = new HandyArrayList<>();
+		ArrayList<String> tableNames = new ArrayList<>();
 		for (int i=0; i<rowCount; i++)
 		{
 			String tableName = (String)model.getValueAt(i, 1);
@@ -69,7 +69,7 @@ public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSi
 		return tableNames;
 	}
 	
-	private boolean deleteSelectedTables(HandyArrayList<String> tableNames)
+	private boolean deleteSelectedTables(ArrayList<String> tableNames)
 	{
 		boolean success = true;
 		for (String tableName : tableNames)
@@ -83,7 +83,7 @@ public final class SanityCheckResultUnexpectedTables extends SanityCheckResultSi
 	@Override
 	public void autoFix()
 	{
-		HandyArrayList<String> tableNames = getTableNames();
+		ArrayList<String> tableNames = getTableNames();
 		
 		int response = DialogUtil.showQuestion("This will drop all " + tableNames.size() + " tables from the database. Are you sure?", false);
 		if (response == JOptionPane.NO_OPTION)

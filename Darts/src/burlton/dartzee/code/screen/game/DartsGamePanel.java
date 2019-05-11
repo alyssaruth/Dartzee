@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.game;
 
-import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.HashMapList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
@@ -57,7 +56,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	//Transitive things
 	protected int currentPlayerNumber = 0;
 	protected S activeScorer = null;
-	protected HandyArrayList<Dart> dartsThrown = new HandyArrayList<>();
+	protected ArrayList<Dart> dartsThrown = new ArrayList<>();
 	protected RoundEntity currentRound = null;
 	
 	//For AI turns
@@ -338,7 +337,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	}
 	protected void updateScorersWithFinishingPositions()
 	{
-		HandyArrayList<Integer> players = hmPlayerNumberToDartsScorer.getKeysAsVector();
+		ArrayList<Integer> players = hmPlayerNumberToDartsScorer.getKeysAsVector();
 		for (int playerNumber : players)
 		{
 			S scorer = hmPlayerNumberToDartsScorer.get(playerNumber);
@@ -873,9 +872,9 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		panelCenter.repaint();
 	}
 	
-	private HandyArrayList<ParticipantEntity> getOrderedParticipants()
+	private ArrayList<ParticipantEntity> getOrderedParticipants()
 	{
-		HandyArrayList<ParticipantEntity> participants = new HandyArrayList<>();
+        ArrayList<ParticipantEntity> participants = new ArrayList<>();
 		
 		for (int i=0; i<4; i++)
 		{
