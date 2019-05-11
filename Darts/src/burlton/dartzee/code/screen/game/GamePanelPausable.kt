@@ -30,7 +30,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
 
         val activePlayers = activeCount
-        if (activePlayers > 1)
+        if (activePlayers > 1 || (activePlayers == 1 && totalPlayers == 1))
         {
             //We always keep going if there's more than 1 active person in play
             nextTurn()

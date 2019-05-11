@@ -406,7 +406,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         private fun getPositionForColour(tm: TableModel, row: Int, col: Int, highestWins: Boolean): Int
         {
-            if (tm.getValueAt(row, col) is String)
+            if (tm.getValueAt(row, col) is String || playerNamesOrdered.size == 1)
             {
                 return -1
             }
