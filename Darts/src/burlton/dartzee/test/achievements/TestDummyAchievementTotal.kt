@@ -3,6 +3,7 @@ package burlton.dartzee.test.achievements
 import burlton.dartzee.code.achievements.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertAchievement
+import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.shouldBe
@@ -22,6 +23,8 @@ class TestDummyAchievementTotal: AbstractDartsTest()
     @Test
     fun `Should retrieve all rows regardless of achievement reference`()
     {
+        wipeTable("Achievement")
+
         val a1 = insertAchievement(achievementRef = ACHIEVEMENT_REF_X01_BTBF)
         val a2 = insertAchievement(achievementRef = ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK)
 

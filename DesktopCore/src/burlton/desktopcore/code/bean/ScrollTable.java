@@ -119,7 +119,7 @@ public class ScrollTable extends JPanel
 	}
 	
 	private final JScrollPane scrollPane = new JScrollPane();
-	protected final JTable table = new JTable()
+	public final JTable table = new JTable()
 	{
 		@Override
 		public boolean isCellEditable(int arg0, int arg1)
