@@ -44,7 +44,7 @@ open class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorer
     override fun saveDartsAndProceed()
     {
         //Finalise the scorer
-        val lastDart = dartsThrown.lastElement()
+        val lastDart = dartsThrown.last()
         val bust = isBust(currentScore, lastDart)
 
         updateNearMisses(dartsThrown, currentPlayerNumber)

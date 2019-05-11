@@ -50,7 +50,7 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         scorerEast.reset()
         scorerEastOuter.reset()
 
-        scorerEast.isVisible = totalPlayers > 1
+        scorerWest.isVisible = totalPlayers > 1
         scorerEastOuter.isVisible = totalPlayers > 2
         scorerWestOuter.isVisible = totalPlayers > 3
     }

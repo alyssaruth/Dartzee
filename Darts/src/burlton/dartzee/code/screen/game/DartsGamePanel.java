@@ -231,7 +231,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		long gameNo = gameEntity.getLocalId();
 		String gameDesc = gameEntity.getTypeDesc();
-		gameTitle = "Game #" + gameNo + " (" + gameDesc + ", " + totalPlayers + " players)";
+		gameTitle = "Game #" + gameNo + " (" + gameDesc + " - " + getPlayersDesc() + ")";
 		
 		if (statsPanel != null)
 		{
@@ -241,6 +241,17 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		initScorers(totalPlayers);
 		
 		initImpl(gameEntity.getGameParams());
+	}
+	private String getPlayersDesc()
+	{
+		if (totalPlayers == 1)
+		{
+			return "practice game";
+		}
+		else
+		{
+			return totalPlayers + " players";
+		}
 	}
 	
 	public void loadGameInCatch()
@@ -455,7 +466,13 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	public void allPlayersFinished()
 	{
 		Debug.append("All players now finished.", VERBOSE_LOGGING);
-		
+
+		if (!gameEntity.isFinished())
+		{
+			gameEntity.setDtFinish(DateUtil.getSqlDateNow());
+			gameEntity.saveToDatabase();
+		}
+
 		dartboard.stopListening();
 		
 		ArrayList<ParticipantEntity> participants = hmPlayerNumberToParticipant.getValuesAsVector();
@@ -596,6 +613,11 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	
 	protected int getFinishingPositionFromPlayersRemaining()
 	{
+		if (totalPlayers == 1)
+		{
+			return -1;
+		}
+
 		int playersLeft = getActiveCount();
 		return totalPlayers - playersLeft + 1;
 	}

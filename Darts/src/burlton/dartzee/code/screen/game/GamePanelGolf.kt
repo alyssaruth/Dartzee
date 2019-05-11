@@ -6,7 +6,6 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.desktopcore.code.util.getSqlDateNow
 
 class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(parent)
 {
@@ -123,6 +122,23 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
     private fun finishGame()
     {
         //Get the participants sorted by score so we can assign finishing positions
+        setFinishingPositions()
+
+        updateScorersWithFinishingPositions()
+
+        parentWindow.startNextGameIfNecessary()
+
+        allPlayersFinished()
+    }
+
+    private fun setFinishingPositions()
+    {
+        //If there's only one player, it's already set to -1 which is correct
+        if (totalPlayers == 1)
+        {
+            return
+        }
+
         val participants = hmPlayerNumberToParticipant.values.sortedBy{it.finalScore}
 
         var previousScore = Integer.MAX_VALUE
@@ -145,18 +161,8 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
                 AchievementEntity.incrementAchievement(achievementRef, pt.playerId, gameId)
             }
 
-
             previousScore = pt.finalScore
         }
-
-        updateScorersWithFinishingPositions()
-
-        gameEntity.dtFinish = getSqlDateNow()
-        gameEntity.saveToDatabase()
-
-        parentWindow.startNextGameIfNecessary()
-
-        allPlayersFinished()
     }
 
     override fun factoryScorer(): DartsScorerGolf
