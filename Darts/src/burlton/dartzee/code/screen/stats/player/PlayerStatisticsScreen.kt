@@ -208,12 +208,12 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     }
     private fun buildParticipantTable(playerId: String): String?
     {
-        val tmp = DatabaseUtil.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, ParticipantId VARCHAR(36), FinalScore INT")
+        val tmp = DatabaseUtil.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT")
         tmp ?: return null
 
         val sb = StringBuilder()
         sb.append(" INSERT INTO $tmp")
-        sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.RowId AS ParticipantId, pt.FinalScore ")
+        sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.PlayerId, pt.RowId AS ParticipantId, pt.FinalScore ")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND pt.PlayerId = '$playerId'")
@@ -221,7 +221,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 
         DatabaseUtil.executeUpdate("" + sb)
 
-        DatabaseUtil.executeUpdate("CREATE INDEX ${tmp}_ParticipantId ON $tmp(ParticipantId)")
+        DatabaseUtil.executeUpdate("CREATE INDEX ${tmp}_PlayerId_ParticipantId ON $tmp(PlayerId, ParticipantId)")
         return tmp
     }
 

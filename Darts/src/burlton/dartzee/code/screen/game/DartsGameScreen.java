@@ -4,7 +4,10 @@ import burlton.core.code.obj.HandyArrayList;
 import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.achievements.AbstractAchievement;
-import burlton.dartzee.code.db.*;
+import burlton.dartzee.code.db.DartsMatchEntity;
+import burlton.dartzee.code.db.GameEntity;
+import burlton.dartzee.code.db.ParticipantEntity;
+import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.desktopcore.code.util.DateUtil;
 import burlton.desktopcore.code.util.DialogUtil;
@@ -15,7 +18,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -212,7 +214,7 @@ public final class DartsGameScreen extends JFrame
 	/**
 	 * Static methods
 	 */
-	public static void launchNewGame(ArrayList<PlayerEntity> players, int gameType, String gameParams)
+	public static void launchNewGame(List<PlayerEntity> players, int gameType, String gameParams)
 	{
 		//Create and save a game
 		GameEntity gameEntity = GameEntity.factoryAndSave(gameType, gameParams);
