@@ -60,14 +60,14 @@ fun convertEmptyAchievements()
     }
 }
 
-fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: MutableList<PlayerEntity>)
+fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val r = Runnable { runConversionsInOtherThread(achievements, players)}
     val t = Thread(r, "Conversion thread")
     t.start()
 }
 
-private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: MutableList<PlayerEntity>)
+private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()

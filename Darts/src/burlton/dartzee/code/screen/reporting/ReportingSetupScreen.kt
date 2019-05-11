@@ -21,7 +21,6 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
-import java.util.*
 import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
@@ -354,8 +353,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     private fun addPlayers(table: ScrollTablePlayers, tableList: MutableList<PlayerEntity>)
     {
-        val allSelected = ArrayList(hmIncludedPlayerToPanel.keys)
-        allSelected.addAll(excludedPlayers)
+        val allSelected = (hmIncludedPlayerToPanel.keys + excludedPlayers).toList()
 
         val players = PlayerSelectDialog.selectPlayers(allSelected)
         if (table === scrollTableIncluded)
@@ -373,7 +371,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     private fun removePlayers(table: ScrollTablePlayers, tableList: MutableList<PlayerEntity>)
     {
-        val playersToRemove = table.selectedPlayers
+        val playersToRemove = table.getSelectedPlayers()
         if (playersToRemove.isEmpty())
         {
             DialogUtil.showError("You must select player(s) to remove.")
@@ -397,7 +395,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
     {
         panelIncludedPlayers.remove(includedPlayerPanel)
 
-        val player = scrollTableIncluded.selectedPlayer
+        val player = scrollTableIncluded.getSelectedPlayer()
         if (player == null)
         {
             includedPlayerPanel = defaultIncludedPlayerPanel

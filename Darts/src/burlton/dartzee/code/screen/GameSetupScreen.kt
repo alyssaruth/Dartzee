@@ -206,13 +206,14 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun launchGame()
     {
-        if (!playerSelector.valid())
+        val match = factoryMatch()
+        if (!playerSelector.valid(match != null))
         {
             return
         }
 
-        val match = factoryMatch()
-        val selectedPlayers = playerSelector.selectedPlayers
+
+        val selectedPlayers = playerSelector.getSelectedPlayers()
 
         if (match == null)
         {
@@ -260,13 +261,13 @@ class GameSetupScreen : EmbeddedScreen()
     {
         if (gameTypeComboBox.gameType == GAME_TYPE_DARTZEE)
         {
-            if (!playerSelector.valid())
+            val match = factoryMatch()
+            if (!playerSelector.valid(match != null))
             {
                 return
             }
 
-            val match = factoryMatch()
-            val selectedPlayers = playerSelector.selectedPlayers
+            val selectedPlayers = playerSelector.getSelectedPlayers()
 
             val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
             scrn.setState(match, selectedPlayers)

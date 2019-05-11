@@ -35,7 +35,7 @@ abstract class AbstractAchievement
 
     var tmBreakdown : DefaultTableModel? = null
 
-    fun runConversion(players : MutableList<PlayerEntity>)
+    fun runConversion(players : List<PlayerEntity>)
     {
         val keys = players.joinToString { p -> "'${p.rowId}'"}
 

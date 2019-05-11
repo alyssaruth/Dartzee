@@ -159,7 +159,7 @@ class DartsScorerGolf : DartsScorer()
      */
     private class DartRenderer(private val showGameId: Boolean) : DefaultTableCellRenderer()
     {
-        override fun getTableCellRendererComponent(table: JTable?, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
+        override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
         {
             val newValue = getReplacementValue(table, value, row)
             val cell = super.getTableCellRendererComponent(table, newValue, isSelected, hasFocus, row, column) as JComponent
