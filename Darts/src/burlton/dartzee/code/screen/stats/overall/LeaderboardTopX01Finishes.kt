@@ -44,7 +44,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
 
     private fun prepareParticipantTempTable(): String
     {
-        val extraWhereSql = playerFilterPanelTopFinishes.whereSql
+        val extraWhereSql = playerFilterPanelTopFinishes.getWhereSql()
 
         val zzParticipants = DatabaseUtil.createTempTable("FinishedParticipants", "Strategy INT, PlayerName VARCHAR(25), LocalGameId INT, ParticipantId VARCHAR(36), RoundNumber INT")
         zzParticipants ?: return ""
