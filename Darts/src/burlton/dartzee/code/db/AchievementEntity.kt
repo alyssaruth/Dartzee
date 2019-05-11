@@ -1,6 +1,5 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAchievementForRef
@@ -40,7 +39,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
     {
-        val ix = HandyArrayList.factoryAdd("PlayerId", "AchievementRef")
+        val ix = mutableListOf("PlayerId", "AchievementRef")
 
         indexes.add(ix)
     }

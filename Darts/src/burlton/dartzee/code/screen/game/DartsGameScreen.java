@@ -148,7 +148,7 @@ public final class DartsGameScreen extends JFrame
 		}
 		
 		HandyArrayList<DartsGamePanel<? extends DartsScorer>> tabs = hmGameIdToTab.getValuesAsVector();
-		return tabs.firstElement();
+		return tabs.get(0);
 	}
 	
 	/**

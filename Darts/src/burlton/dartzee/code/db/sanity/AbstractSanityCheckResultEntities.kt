@@ -7,7 +7,6 @@ import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
-import javax.swing.Action
 import javax.swing.JOptionPane
 
 abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEntity<*>>): AbstractSanityCheckResult()
@@ -15,7 +14,7 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
     val entityName = entities.first().getTableName()
 
     override fun getResultsModel() = TableModelEntity(entities)
-    override fun getDeleteAction(t: ScrollTable): Action?
+    override fun getDeleteAction(t: ScrollTable): AbstractAction?
     {
         return object : AbstractAction()
         {
