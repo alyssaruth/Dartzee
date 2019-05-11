@@ -13,8 +13,7 @@ public class PlayerTypeFilterPanel extends RadioButtonPanel
 		add(rdbtnHuman);
 		add(rdbtnAi);
 	}
-	
-	
+
 	private final JRadioButton rdbtnAll = new JRadioButton("All");
 	public final JRadioButton rdbtnHuman = new JRadioButton("Human");
 	public final JRadioButton rdbtnAi = new JRadioButton("AI");

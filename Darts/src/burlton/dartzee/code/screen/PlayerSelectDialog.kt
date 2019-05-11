@@ -14,8 +14,8 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
     var selectedPlayers = listOf<PlayerEntity>()
     var playersToExclude = listOf<PlayerEntity>()
 
-    private val panelNorth = PlayerTypeFilterPanel()
-    private val tablePlayers = ScrollTablePlayers()
+    val panelNorth = PlayerTypeFilterPanel()
+    val tablePlayers = ScrollTablePlayers()
 
     init
     {
@@ -34,7 +34,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
     {
         if (panelNorth.isEventSource(arg0))
         {
-            init()
+            buildTable()
         }
         else
         {
@@ -42,7 +42,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
         }
     }
 
-    private fun init()
+    fun buildTable()
     {
         val whereSql = panelNorth.whereSql
         val allPlayers = PlayerEntity.retrievePlayers(whereSql, false)
@@ -80,7 +80,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
         {
             val dialog = PlayerSelectDialog(selectionMode)
             dialog.playersToExclude = playersToExclude
-            dialog.init()
+            dialog.buildTable()
             dialog.setLocationRelativeTo(null)
             dialog.isVisible = true
 

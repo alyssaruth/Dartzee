@@ -49,17 +49,10 @@ class ScrollTablePlayers : ScrollTable()
 
     private fun getPlayerEntityForRow(row: Int): PlayerEntity
     {
-        //Apparently we don't need to do this conversion
-        //int internalRow = table.convertRowIndexToModel(row);
         return table.getValueAt(row, 1) as PlayerEntity
     }
 
-    private fun initTableModel()
-    {
-        initTableModel(listOf())
-    }
-
-    fun initTableModel(players: List<PlayerEntity>)
+    fun initTableModel(players: List<PlayerEntity> = listOf())
     {
         val model = TableUtil.DefaultModel()
         model.addColumn("")

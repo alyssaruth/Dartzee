@@ -1,14 +1,11 @@
 package burlton.desktopcore.code.screen;
 
-import java.awt.BorderLayout;
+import burlton.core.code.util.Debug;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-
-import burlton.core.code.util.Debug;
 
 public abstract class SimpleDialog extends JDialog
 						  		   implements ActionListener
@@ -27,7 +24,7 @@ public abstract class SimpleDialog extends JDialog
 	}
 	
 	protected final JPanel panelOkCancel = new JPanel();
-	private final JButton btnOk = new JButton("Ok");
+	public final JButton btnOk = new JButton("Ok");
 	private final JButton btnCancel = new JButton("Cancel");
 	
 	/**
