@@ -140,7 +140,7 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
 
         var currentScore = startingScore
         darts.forEachIndexed { ix, drt ->
-            insertDart(playerId = pt.playerId, participantId = pt.rowId, score = drt.score, multiplier = drt.multiplier, ordinal = ix+1, startingScore = currentScore)
+            insertDart(pt, score = drt.score, multiplier = drt.multiplier, ordinal = ix+1, startingScore = currentScore)
             currentScore -= drt.getTotal()
         }
 

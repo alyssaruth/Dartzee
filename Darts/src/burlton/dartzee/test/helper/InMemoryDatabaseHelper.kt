@@ -93,9 +93,8 @@ fun insertParticipant(uuid: String = randomGuid(),
     return pe
 }
 
-fun insertDart(uuid: String = randomGuid(),
-               playerId: String = randomGuid(),
-               participantId: String = randomGuid(),
+fun insertDart(participant: ParticipantEntity,
+               uuid: String = randomGuid(),
                roundNumber: Int = 1,
                ordinal: Int = 1,
                startingScore: Int = 501,
@@ -109,8 +108,8 @@ fun insertDart(uuid: String = randomGuid(),
     val drt = DartEntity()
     drt.dtCreation = dtCreation
     drt.rowId = uuid
-    drt.playerId = playerId
-    drt.participantId = participantId
+    drt.playerId = participant.playerId
+    drt.participantId = participant.rowId
     drt.roundNumber = roundNumber
     drt.ordinal = ordinal
     drt.startingScore = startingScore
@@ -215,3 +214,10 @@ fun dropUnexpectedTables(): List<String>
 
     return list
 }
+
+/**
+ * Retrieve
+ */
+fun retrieveGame() = GameEntity().retrieveEntities().first()
+fun retrieveDart() = DartEntity().retrieveEntities().first()
+fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()

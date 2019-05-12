@@ -22,9 +22,9 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 2, ordinal = 1, startingScore = 400)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 3, ordinal = 2, startingScore = 360)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 1, ordinal = 3, startingScore = 300)
+        insertDart(pt, score = 20, multiplier = 2, ordinal = 1, startingScore = 400)
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 360)
+        insertDart(pt, score = 20, multiplier = 1, ordinal = 3, startingScore = 300)
     }
 
     @Test
@@ -34,9 +34,9 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
         val g = insertRelevantGame()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 3, ordinal = 2, startingScore = 340)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 0, ordinal = 3, startingScore = 280)
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 340)
+        insertDart(pt, score = 20, multiplier = 0, ordinal = 3, startingScore = 280)
 
         factoryAchievement().populateForConversion("")
         getCountFromTable("Achievement") shouldBe 0
@@ -49,9 +49,9 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
         val g = insertRelevantGame()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 1, ordinal = 2, startingScore = 340)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 2, ordinal = 3, startingScore = 320)
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
+        insertDart(pt, score = 20, multiplier = 1, ordinal = 2, startingScore = 340)
+        insertDart(pt, score = 20, multiplier = 2, ordinal = 3, startingScore = 320)
 
         factoryAchievement().populateForConversion("")
         getCountFromTable("Achievement") shouldBe 1
@@ -64,8 +64,8 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
         val g = insertRelevantGame()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, score = 20, multiplier = 3, ordinal = 2, startingScore = 340)
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 340)
 
         factoryAchievement().populateForConversion("")
         getCountFromTable("Achievement") shouldBe 0

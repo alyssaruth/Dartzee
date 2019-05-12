@@ -20,8 +20,8 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow())
 
 
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 1, startingScore = 60, score = 20, multiplier = 1)
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 2, startingScore = 40, score = 20, multiplier = 2)
+        insertDart(pt, ordinal = 1, startingScore = 60, score = 20, multiplier = 1)
+        insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 2)
     }
 
     //TODO - Finish me
