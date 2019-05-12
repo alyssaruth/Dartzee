@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.stats.overall
 
-import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.PREFERENCES_INT_LEADERBOARD_SIZE
@@ -18,7 +17,6 @@ class LeaderboardTotalScore(private val gameType: Int) : AbstractLeaderboard(), 
 
     private val panelFilters = JPanel()
     private val scrollPane = ScrollTableDartsGame()
-    private val panelPlayerFilters = PlayerTypeFilterPanel()
     private val panelBestOrWorst = RadioButtonPanel()
     private val rdbtnBest = JRadioButton("Best")
     private val rdbtnWorst = JRadioButton("Worst")

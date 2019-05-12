@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.stats.overall
 
-import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -13,8 +12,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
 
 class LeaderboardTopX01Finishes: AbstractLeaderboard()
 {
-    private val tableTopFinishes = ScrollTableDartsGame()
-    private val playerFilterPanelTopFinishes = PlayerTypeFilterPanel()
+    val tableTopFinishes = ScrollTableDartsGame()
     private val panelTopFinishesFilters = JPanel()
 
     init
@@ -24,9 +22,9 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
         add(tableTopFinishes)
         tableTopFinishes.setRowHeight(23)
         add(panelTopFinishesFilters, BorderLayout.NORTH)
-        panelTopFinishesFilters.add(playerFilterPanelTopFinishes)
+        panelTopFinishesFilters.add(panelPlayerFilters)
         tableTopFinishes.setRowName("finish", "finishes")
-        playerFilterPanelTopFinishes.addActionListener(this)
+        panelPlayerFilters.addActionListener(this)
     }
 
     override fun getTabName() = "X01 Finishes"
@@ -44,7 +42,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
 
     private fun prepareParticipantTempTable(): String
     {
-        val extraWhereSql = playerFilterPanelTopFinishes.getWhereSql()
+        val extraWhereSql = panelPlayerFilters.getWhereSql()
 
         val zzParticipants = DatabaseUtil.createTempTable("FinishedParticipants", "PlayerId VARCHAR(36), Strategy INT, PlayerName VARCHAR(25), LocalGameId INT, ParticipantId VARCHAR(36), RoundNumber INT")
         zzParticipants ?: return ""

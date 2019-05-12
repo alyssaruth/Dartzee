@@ -1,6 +1,9 @@
 package burlton.dartzee.test.screen.stats.overall
 
-import burlton.dartzee.code.achievements.*
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
+import burlton.dartzee.code.achievements.DummyAchievementTotal
+import burlton.dartzee.code.achievements.getAllAchievements
 import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
 import burlton.dartzee.code.achievements.x01.AchievementX01BestFinish
 import burlton.dartzee.code.db.PlayerEntity
@@ -101,13 +104,11 @@ class TestLeaderboardAchievements: AbstractDartsTest()
         leaderboard.buildTable()
         leaderboard.table.rowCount shouldBe 2
 
-        leaderboard.playerFilterPanel.rdbtnHuman.isSelected = true
-        leaderboard.actionPerformed(null)
+        leaderboard.panelPlayerFilters.rdbtnHuman.doClick()
         leaderboard.table.rowCount shouldBe 1
         (leaderboard.table.getValueAt(0, 1) as PlayerEntity).rowId shouldBe alice.rowId
 
-        leaderboard.playerFilterPanel.rdbtnAi.isSelected = true
-        leaderboard.actionPerformed(null)
+        leaderboard.panelPlayerFilters.rdbtnAi.doClick()
         leaderboard.table.rowCount shouldBe 1
         (leaderboard.table.getValueAt(0, 1) as PlayerEntity).rowId shouldBe bob.rowId
     }
