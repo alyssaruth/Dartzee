@@ -731,8 +731,6 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	}
 	protected void resetRound()
 	{
-		Debug.append("Reset pressed.");
-
 		resetRoundVariables();
 
 		dartboard.clearDarts();
@@ -825,6 +823,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		
 		if (source == btnReset)
 		{
+			Debug.append("Reset pressed.");
 			resetRound();
 			readyForThrow();
 		}
