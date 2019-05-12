@@ -6,7 +6,7 @@ abstract class AbstractRegistryTest: AbstractDartsTest()
 {
     private val hmPreferenceToSetting = mutableMapOf<String, String>()
 
-    abstract fun getPreferencesAffected(): MutableList<String>
+    abstract fun getPreferencesAffected(): List<String>
 
     override fun doClassSetup()
     {

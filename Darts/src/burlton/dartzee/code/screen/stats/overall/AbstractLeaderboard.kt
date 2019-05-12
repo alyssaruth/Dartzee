@@ -1,28 +1,24 @@
 package burlton.dartzee.code.screen.stats.overall
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.sql.SQLException
-import java.util.*
 import javax.swing.JPanel
 
 abstract class AbstractLeaderboard: JPanel(), ActionListener
 {
+    val panelPlayerFilters = PlayerTypeFilterPanel()
+
     private var builtTable = false
 
     abstract fun buildTable()
     abstract fun getTabName(): String
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
-        buildTable()
-    }
+    override fun actionPerformed(e: ActionEvent?) = buildTable()
 
     fun buildTableFirstTime()
     {
@@ -45,41 +41,30 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
         model.addColumn(scoreColumnName)
 
         val rows = retrieveDatabaseRowsForLeaderboard(sql)
-        for (row in rows)
-        {
-            model.addRow(row)
-        }
+        model.addRows(rows)
 
         table.model = model
         table.setColumnWidths("25")
         table.sortBy(3, desc)
     }
 
-    private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): ArrayList<Array<Any>>
+    private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): List<Array<Any>>
     {
-        val rows = ArrayList<Array<Any>>()
+        val rows = mutableListOf<Array<Any>>()
 
-        try
-        {
-            DatabaseUtil.executeQuery(sqlStr).use { rs ->
-                while (rs.next())
-                {
-                    val strategy = rs.getInt(1)
-                    val playerName = rs.getString(2)
-                    val localId = rs.getLong(3)
-                    val score = rs.getInt(4)
+        DatabaseUtil.executeQuery(sqlStr).use { rs ->
+            while (rs.next())
+            {
+                val strategy = rs.getInt(1)
+                val playerName = rs.getString(2)
+                val localId = rs.getLong(3)
+                val score = rs.getInt(4)
 
-                    val playerFlag = PlayerEntity.getPlayerFlag(strategy == -1)
+                val playerFlag = PlayerEntity.getPlayerFlag(strategy == -1)
 
-                    val row = arrayOf<Any>(playerFlag, playerName, localId, score)
-                    rows.add(row)
-                }
+                val row = arrayOf<Any>(playerFlag, playerName, localId, score)
+                rows.add(row)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            Debug.logSqlException(sqlStr, sqle)
-            DialogUtil.showError("Failed to build finishes leaderboard.")
         }
 
         return rows

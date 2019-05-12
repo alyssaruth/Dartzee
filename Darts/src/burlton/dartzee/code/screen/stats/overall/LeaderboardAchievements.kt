@@ -3,7 +3,6 @@ package burlton.dartzee.code.screen.stats.overall
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.DummyAchievementTotal
 import burlton.dartzee.code.achievements.getAllAchievements
-import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.ScrollTableAchievements
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.util.TableUtil
@@ -20,7 +19,6 @@ class LeaderboardAchievements: AbstractLeaderboard()
 
     val cbSpecificAchievement = JCheckBox("Achievement")
     val comboBox = JComboBox<AbstractAchievement>()
-    val playerFilterPanel = PlayerTypeFilterPanel()
 
     init
     {
@@ -31,13 +29,13 @@ class LeaderboardAchievements: AbstractLeaderboard()
         panelFilters.add(cbSpecificAchievement)
         panelFilters.add(comboBox)
         panelFilters.add(Box.createHorizontalStrut(20))
-        panelFilters.add(playerFilterPanel)
+        panelFilters.add(panelPlayerFilters)
         comboBox.isEnabled = false
 
         initComboBox()
 
         comboBox.addActionListener(this)
-        playerFilterPanel.addActionListener(this)
+        panelPlayerFilters.addActionListener(this)
         cbSpecificAchievement.addActionListener(this)
     }
 
@@ -59,7 +57,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
         model.addColumn("Player")
         model.addColumn("Score")
 
-        val players = PlayerEntity.retrievePlayers(playerFilterPanel.getWhereSql(), false)
+        val players = PlayerEntity.retrievePlayers(panelPlayerFilters.getWhereSql(), false)
         players.forEach{ p ->
             val myRows = achievementRows.filter { it.playerId == p.rowId }
 
