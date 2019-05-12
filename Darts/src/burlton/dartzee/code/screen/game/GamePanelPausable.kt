@@ -107,6 +107,10 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
         //Now the player has definitely stopped, reset the round
         resetRound()
 
+        //Set the current round number back to the previous round
+        currentRoundNumber--
+        hmPlayerNumberToLastRoundNumber[currentPlayerNumber] = currentRoundNumber
+
         dartboard.stopListening()
     }
 
@@ -116,15 +120,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
         aiShouldPause = false
         slider.isEnabled = true
 
-        if (currentRoundNumber == -1 || currentRoundNumber == hmPlayerNumberToLastRoundNumber[currentPlayerNumber])
-        {
-            //We need to up the round number. Either we've come through game load or it's the first time we've pressed unpause.
-            nextTurn()
-        }
-        else
-        {
-            //Don't do nextTurn() as that will up the round number when we don't want it to be upped
-            readyForThrow()
-        }
+        nextTurn()
     }
 }

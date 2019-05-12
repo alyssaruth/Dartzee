@@ -24,11 +24,19 @@ class DartsScorerX01 : DartsScorerPausable()
         val model = tableScores.model
 
         val rowCount = model.rowCount
+        return getLatestScoreRemaining(rowCount)
+    }
+    private fun getLatestScoreRemaining(rowCount: Int): Int
+    {
         return if (rowCount == 0)
         {
             Integer.parseInt(lblStartingScore.text)
         }
-        else model.getValueAt(rowCount - 1, SCORE_COLUMN) as Int
+        else
+        {
+            val currentRow = model.getValueAt(rowCount - 1, SCORE_COLUMN) as Int?
+            currentRow ?: getLatestScoreRemaining(rowCount - 1)
+        }
     }
 
     init
