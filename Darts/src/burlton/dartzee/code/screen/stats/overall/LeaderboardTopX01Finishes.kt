@@ -46,12 +46,12 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
     {
         val extraWhereSql = playerFilterPanelTopFinishes.getWhereSql()
 
-        val zzParticipants = DatabaseUtil.createTempTable("FinishedParticipants", "Strategy INT, PlayerName VARCHAR(25), LocalGameId INT, ParticipantId VARCHAR(36), RoundNumber INT")
+        val zzParticipants = DatabaseUtil.createTempTable("FinishedParticipants", "PlayerId VARCHAR(36), Strategy INT, PlayerName VARCHAR(25), LocalGameId INT, ParticipantId VARCHAR(36), RoundNumber INT")
         zzParticipants ?: return ""
 
         val sbPt = StringBuilder()
         sbPt.append("INSERT INTO $zzParticipants ")
-        sbPt.append(" SELECT p.Strategy, p.Name, g.LocalId, pt.RowId, CEIL(CAST(FinalScore AS DECIMAL)/3)")
+        sbPt.append(" SELECT p.RowId, p.Strategy, p.Name, g.LocalId, pt.RowId, CEIL(CAST(FinalScore AS DECIMAL)/3)")
         sbPt.append(" FROM Player p, Participant pt, Game g")
         sbPt.append(" WHERE pt.GameId = g.RowId")
         sbPt.append(" AND g.GameType = $GAME_TYPE_X01")
@@ -63,7 +63,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
         }
 
         DatabaseUtil.executeUpdate(sbPt.toString())
-        DatabaseUtil.executeUpdate("CREATE INDEX zzParticipantIdRoundNumber ON $zzParticipants(ParticipantId, RoundNumber)")
+        DatabaseUtil.executeUpdate("CREATE INDEX ${zzParticipants}_PlayerId ON $zzParticipants(PlayerId, ParticipantId, RoundNumber)")
 
         return zzParticipants
     }
@@ -80,11 +80,11 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
 
         val sb = StringBuilder()
         sb.append("SELECT zz.Strategy, zz.PlayerName, zz.LocalGameId, drtFirst.StartingScore")
-        sb.append(" FROM Dart drtFirst, Round rnd, $zzFinishedParticipants zz")
-        sb.append(" WHERE drtFirst.RoundId = rnd.RowId")
+        sb.append(" FROM Dart drtFirst, $zzFinishedParticipants zz")
+        sb.append(" WHERE drtFirst.PlayerId = zz.PlayerId")
+        sb.append(" AND drtFirst.ParticipantId = zz.ParticipantId")
+        sb.append(" AND drtFirst.RoundNumber = zz.RoundNumber")
         sb.append(" AND drtFirst.Ordinal = 1")
-        sb.append(" AND rnd.ParticipantId = zz.ParticipantId")
-        sb.append(" AND rnd.RoundNumber = zz.RoundNumber")
         sb.append(" ORDER BY drtFirst.StartingScore DESC")
         sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
 

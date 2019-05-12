@@ -386,11 +386,11 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		for (int i=0; i<totalPlayers; i++)
 		{
 			ParticipantEntity pt = hmPlayerNumberToParticipant.get(i);
-			String sql = "SELECT rnd.RoundNumber, drt.Score, drt.Multiplier, drt.PosX, drt.PosY, drt.SegmentType, drt.StartingScore"
+			String sql = "SELECT drt.RoundNumber, drt.Score, drt.Multiplier, drt.PosX, drt.PosY, drt.SegmentType, drt.StartingScore"
 					   + " FROM Round rnd, Dart drt"
-					   + " WHERE drt.RoundId = rnd.RowId"
-					   + " AND rnd.ParticipantId = '" + pt.getRowId()
-					   + "' ORDER BY rnd.RoundNumber, drt.Ordinal";
+					   + " WHERE drt.ParticipantId = '" + pt.getRowId() + "'"
+					   + " AND drt.PlayerId = '" + pt.getPlayerId() + "'"
+					   + " ORDER BY rnd.RoundNumber, drt.Ordinal";
 			
 			HashMapList<Integer, Dart> hmRoundToDarts = new HashMapList<>();
 			int lastRound = 0;
@@ -399,7 +399,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 			{
 				while (rs.next())
 				{
-					int roundNumber = rs.getInt(1);
+					int roundNumber = rs.getInt("RoundNumber");
 					int score = rs.getInt("Score");
 					int multiplier = rs.getInt("Multiplier");
 					int posX = rs.getInt("PosX");
@@ -448,12 +448,14 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT MAX(pt.Ordinal) ");
-		sb.append(" FROM Round rnd, Participant pt");
-		sb.append(" WHERE rnd.ParticipantId = pt.RowId");
+		sb.append(" FROM Dart drt, Participant pt");
+		sb.append(" WHERE drt.ParticipantId = pt.RowId");
+		sb.append(" AND drt.PlayerId = pt.PlayerId");
+		sb.append(" AND drt.RoundNumber = ");
+		sb.append(maxRounds);
 		sb.append(" AND pt.GameId = '");
 		sb.append(gameId);
-		sb.append("' AND rnd.RoundNumber = ");
-		sb.append(maxRounds);
+		sb.append("'");
 		
 		int lastPlayerNumber = DatabaseUtil.executeQueryAggregate(sb);
 		currentPlayerNumber = getNextPlayerNumber(lastPlayerNumber);
