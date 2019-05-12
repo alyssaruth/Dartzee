@@ -2,6 +2,7 @@ package burlton.dartzee.code.achievements.x01
 
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
 import burlton.dartzee.code.achievements.AbstractAchievement
+import burlton.dartzee.code.achievements.getNotBustSql
 import burlton.dartzee.code.achievements.unlockThreeDartAchievement
 import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.ResourceCache
@@ -23,7 +24,8 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
 
     override fun populateForConversion(playerIds: String)
     {
-        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", "drtLast.Ordinal = 3", TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
+        val dartSql = "${getNotBustSql()} AND drtLast.Ordinal = 3"
+        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", dartSql, TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_SCORE

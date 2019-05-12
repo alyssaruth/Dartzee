@@ -4,6 +4,7 @@ import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -42,6 +43,12 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
         setUpAchievementRowForPlayerAndGame(p, g)
     }
 
+    protected fun getAchievementCount(): Int
+    {
+        val ref = factoryAchievement().achievementRef
+        return DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementRef = $ref")
+    }
+
     open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
     {
         return insertGame(gameType = gameType, dtLastUpdate = dtLastUpdate)
@@ -65,7 +72,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
         setUpAchievementRowForPlayerAndGame(p, g)
 
         factoryAchievement().populateForConversion("")
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -79,14 +86,14 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
 
         factoryAchievement().populateForConversion("'${alice.rowId}'")
 
-        getCountFromTable("Achievement") shouldBe 1
+        getAchievementCount() shouldBe 1
 
         val achievement = AchievementEntity().retrieveEntities("")[0]
         achievement.playerId shouldBe alice.rowId
     }
 
     @Test
-    fun `Should only generate data for all players by default`()
+    fun `Should generate data for all players by default`()
     {
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
@@ -96,7 +103,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
 
         factoryAchievement().populateForConversion("")
 
-        getCountFromTable("Achievement") shouldBe 2
+        getAchievementCount() shouldBe 2
 
         val players = AchievementEntity().retrieveEntities("").map{ it.playerId }
         players.shouldContainExactlyInAnyOrder(alice.rowId, bob.rowId)

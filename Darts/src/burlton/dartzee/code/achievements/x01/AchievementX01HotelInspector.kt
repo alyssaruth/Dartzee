@@ -60,7 +60,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         sb.append(" AND drtSecond.Multiplier > 0")
         sb.append(" AND drtLast.Multiplier > 0")
         sb.append(" AND $TOTAL_ROUND_SCORE_SQL_STR = 26")
-        sb.append(getNotBustSql())
+        sb.append(" AND ${getNotBustSql()}")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")
