@@ -33,12 +33,12 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         val pointsRiskedSql = "5 - (CASE WHEN drtFirst.segmentType = 3 THEN 4 WHEN drtFirst.SegmentType = 4 THEN 3 ELSE drtFirst.SegmentType END)"
 
         sb.append(" SELECT pt.PlayerId, SUM($pointsRiskedSql) AS PointsRisked, MAX(drtFirst.DtCreation) AS DtLastUpdate")
-        sb.append(" FROM Dart drtFirst, Round rnd, Participant pt, Game g")
-        sb.append(" WHERE drtFirst.RoundId = rnd.RowId")
-        sb.append(" AND rnd.ParticipantId = pt.RowId")
+        sb.append(" FROM Dart drtFirst, Participant pt, Game g")
+        sb.append(" WHERE drtFirst.ParticipantId = pt.RowId")
+        sb.append(" AND drtFirst.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND g.GameType = $GAME_TYPE_GOLF")
-        sb.append(" AND rnd.RoundNumber = drtFirst.Score")
+        sb.append(" AND drtFirst.RoundNumber = drtFirst.Score")
         sb.append(" AND drtFirst.Multiplier > 0")
 
         if (!playerIds.isEmpty())
@@ -49,9 +49,11 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         sb.append(" AND EXISTS (")
         sb.append("     SELECT 1")
         sb.append("     FROM Dart drt")
-        sb.append("     WHERE drt.RoundId = drtFirst.RoundId")
+        sb.append("     WHERE drt.ParticipantId = drtFirst.ParticipantId")
+        sb.append("     AND drt.PlayerId = drtFirst.PlayerId")
+        sb.append("     AND drt.RoundNumber = drtFirst.RoundNumber")
         sb.append("     AND drt.Ordinal > drtFirst.Ordinal)")
-        sb.append(" GROUP BY PlayerId")
+        sb.append(" GROUP BY pt.PlayerId")
 
         try
         {

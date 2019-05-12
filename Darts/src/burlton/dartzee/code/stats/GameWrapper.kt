@@ -3,7 +3,10 @@ package burlton.dartzee.code.stats
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.db.*
+import burlton.dartzee.code.db.DartEntity
+import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.ParticipantEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.game.DartsScorerGolf
 import burlton.dartzee.code.screen.stats.player.HoleBreakdownWrapper
 import burlton.dartzee.code.utils.calculateThreeDartAverage
@@ -332,14 +335,12 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
     var gameEntity: GameEntity? = null
     var participantEntity: ParticipantEntity? = null
-    val roundEntities = mutableListOf<RoundEntity>()
     val dartEntities = mutableListOf<DartEntity>()
 
     fun clearEntities()
     {
         gameEntity = null
         participantEntity = null
-        roundEntities.clear()
         dartEntities.clear()
     }
 
@@ -368,14 +369,9 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         {
             val darts = hmRoundNumberToDarts[i]!!
 
-            val round = RoundEntity()
-            round.assignRowId()
-            round.roundNumber = i
-            round.participantId = pt.rowId
-            roundEntities.add(round)
-
             darts.forEachIndexed { ix, drt ->
-                dartEntities.add(DartEntity.factory(drt, round.rowId, ix + 1, drt.startingScore))
+                val de = DartEntity.factory(drt, player.rowId, pt.rowId, i, ix+1, drt.startingScore)
+                dartEntities.add(de)
             }
         }
     }

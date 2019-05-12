@@ -18,8 +18,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
     {
         activeScorer.updatePlayerResult()
 
-        val roundId = currentRound.rowId
-        saveDartsToDatabase(roundId)
+        saveDartsToDatabase()
 
         //This player has finished. The game isn't necessarily over though...
         if (currentPlayerHasFinished())
@@ -117,10 +116,9 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScree
         aiShouldPause = false
         slider.isEnabled = true
 
-        val pt = hmPlayerNumberToParticipant[currentPlayerNumber]!!
-        if (currentRound == null || !currentRound.isForParticipant(pt))
+        if (currentRoundNumber == -1 || currentRoundNumber == hmPlayerNumberToLastRoundNumber[currentPlayerNumber])
         {
-            //We need to create a new Round entity. Either we've come through game load or it's the first time we've pressed unpause.
+            //We need to up the round number. Either we've come through game load or it's the first time we've pressed unpause.
             nextTurn()
         }
         else

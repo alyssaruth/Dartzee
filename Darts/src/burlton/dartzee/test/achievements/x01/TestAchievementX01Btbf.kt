@@ -41,8 +41,7 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
         val p = insertPlayer()
 
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 6)
-        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
-        insertDart(roundId = rnd.rowId, startingScore = 2, score = 1, multiplier = 2)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2)
 
         factoryAchievement().populateForConversion("")
 
@@ -56,8 +55,7 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
         val p = insertPlayer()
 
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 3)
-        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
-        insertDart(roundId = rnd.rowId, startingScore = 4, score = 2, multiplier = 2)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 4, score = 2, multiplier = 2)
 
         factoryAchievement().populateForConversion("")
 
@@ -71,8 +69,7 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
         val p = insertPlayer()
 
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 3)
-        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
-        insertDart(roundId = rnd.rowId, startingScore = 4, score = 1, multiplier = 2)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 4, score = 1, multiplier = 2)
 
         factoryAchievement().populateForConversion("")
 
@@ -98,7 +95,6 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
     private fun insertSuccessfulParticipant(game: GameEntity, player: PlayerEntity)
     {
         val pt = insertParticipant(gameId = game.rowId, playerId = player.rowId, finalScore = 3)
-        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
-        insertDart(roundId = rnd.rowId, startingScore = 2, score = 1, multiplier = 2)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2)
     }
 }

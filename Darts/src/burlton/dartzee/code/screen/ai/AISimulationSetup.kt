@@ -173,14 +173,12 @@ class AISimulationSetup @JvmOverloads constructor(private val player: PlayerEnti
         {
             val games = mutableListOf<GameEntity>()
             val participants = mutableListOf<ParticipantEntity>()
-            val rounds = mutableListOf<RoundEntity>()
             val darts = mutableListOf<DartEntity>()
 
             wrappers.forEach{
                 games.add(it.gameEntity!!)
                 participants.add(it.participantEntity!!)
 
-                rounds += it.roundEntities
                 darts += it.dartEntities
 
                 it.clearEntities()
@@ -188,7 +186,6 @@ class AISimulationSetup @JvmOverloads constructor(private val player: PlayerEnti
 
             BulkInserter.insert(games)
             BulkInserter.insert(participants)
-            BulkInserter.insert(rounds)
             BulkInserter.insert(darts)
         }
     }

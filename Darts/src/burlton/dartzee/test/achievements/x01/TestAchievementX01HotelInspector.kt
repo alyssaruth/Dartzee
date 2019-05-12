@@ -9,7 +9,10 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.getSortedDartStr
 import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
-import burlton.dartzee.test.helper.*
+import burlton.dartzee.test.helper.getCountFromTable
+import burlton.dartzee.test.helper.insertDart
+import burlton.dartzee.test.helper.insertParticipant
+import burlton.dartzee.test.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -134,11 +137,10 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
     private fun insertDartsForPlayer(g: GameEntity, p: PlayerEntity, darts: List<Dart>, startingScore: Int = 501)
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
-        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
 
         var currentScore = startingScore
         darts.forEachIndexed { ix, drt ->
-            insertDart(roundId = rnd.rowId, score = drt.score, multiplier = drt.multiplier, ordinal = ix+1, startingScore = currentScore)
+            insertDart(playerId = pt.playerId, participantId = pt.rowId, score = drt.score, multiplier = drt.multiplier, ordinal = ix+1, startingScore = currentScore)
             currentScore -= drt.getTotal()
         }
 

@@ -9,7 +9,6 @@ import burlton.dartzee.test.achievements.AbstractAchievementTest
 import burlton.dartzee.test.helper.insertDart
 import burlton.dartzee.test.helper.insertParticipant
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.dartzee.test.helper.insertRound
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -46,10 +45,8 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
     {
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId)
 
-        val rnd = insertRound(roundNumber = 1, participantId = pt.rowId)
-
-        insertDart(roundId = rnd.rowId, ordinal = 1, startingScore = 1, score = 1, multiplier = 1)
-        insertDart(roundId = rnd.rowId, ordinal = 2, startingScore = 2, score = 2, multiplier = 1)
-        insertDart(roundId = rnd.rowId, ordinal = 3, startingScore = 3, score = 3, multiplier = 1)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 1, startingScore = 1, score = 1, multiplier = 1)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 2, startingScore = 2, score = 2, multiplier = 1)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 3, startingScore = 3, score = 3, multiplier = 1)
     }
 }

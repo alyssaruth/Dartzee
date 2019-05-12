@@ -82,7 +82,7 @@ class TestGamePanelX01: AbstractDartsTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
             hmPlayerNumberToParticipant[0] = pt
-            currentRound = RoundEntity.factory(pt, 1)
+            currentRoundNumber = 1
 
             gameEntity = GameEntity.factoryAndSave(GAME_TYPE_X01, "501")
         }

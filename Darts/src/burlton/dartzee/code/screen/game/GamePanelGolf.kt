@@ -16,7 +16,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
     {
         val lastDart = dartsThrown.last()
 
-        val targetHole = currentRound.roundNumber
+        val targetHole = currentRoundNumber
         return lastDart.getGolfScore(targetHole)
     }
 
@@ -28,7 +28,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
-        val targetHole = currentRound.roundNumber
+        val targetHole = currentRoundNumber
         val dartNo = dartsThrown.size + 1
         model.throwGolfDart(targetHole, dartNo, dartboard)
     }
@@ -72,13 +72,13 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
 
     override fun saveDartsAndProceed()
     {
-        saveDartsToDatabase(currentRound.rowId)
+        saveDartsToDatabase()
 
         activeScorer.finaliseRoundScore()
 
         unlockAchievements()
 
-        if (currentRound.roundNumber == numberOfRounds)
+        if (currentRoundNumber == numberOfRounds)
         {
             handlePlayerFinish()
         }
@@ -98,7 +98,7 @@ class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(p
     {
         var pointsRisked = 0
         dartsThrown.forEach{
-            val score = it.getGolfScore(currentRound.roundNumber)
+            val score = it.getGolfScore(currentRoundNumber)
             if (score < 5
               && !(dartsThrown.last() === it))
             {

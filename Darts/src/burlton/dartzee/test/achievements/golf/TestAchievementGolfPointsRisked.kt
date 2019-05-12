@@ -14,7 +14,6 @@ import burlton.dartzee.test.achievements.AbstractAchievementTest
 import burlton.dartzee.test.helper.insertDart
 import burlton.dartzee.test.helper.insertParticipant
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.dartzee.test.helper.insertRound
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -51,10 +50,8 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        val rnd = insertRound(participantId = pt.rowId, roundNumber = 1)
-
-        insertDart(roundId = rnd.rowId, ordinal = 1, score = rnd.roundNumber, multiplier = 1, segmentType = segmentType)
-        insertDart(roundId = rnd.rowId, ordinal = 2, score = rnd.roundNumber, multiplier = 2, segmentType = SEGMENT_TYPE_DOUBLE)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 1, score = 1, multiplier = 1, segmentType = segmentType)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 2, score = 1, multiplier = 2, segmentType = SEGMENT_TYPE_DOUBLE)
 
     }
 }

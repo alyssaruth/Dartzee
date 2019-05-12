@@ -31,16 +31,16 @@ class AchievementClockBestStreak: AbstractAchievement()
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate")
-        sb.append(" FROM Game g, Participant pt, Round rnd, Dart drt")
+        sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE g.GameType = $GAME_TYPE_ROUND_THE_CLOCK")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND rnd.ParticipantId = pt.RowId")
-        sb.append(" AND drt.RoundId = rnd.RowId")
+        sb.append(" AND drt.ParticipantId = pt.RowId")
+        sb.append(" AND drt.PlayerId = pt.PlayerId")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
-        sb.append(" ORDER BY g.DtLastUpdate, pt.RowId, rnd.RoundNumber, drt.Ordinal")
+        sb.append(" ORDER BY g.DtLastUpdate, pt.RowId, drt.RoundNumber, drt.Ordinal")
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()
         DatabaseUtil.executeQuery(sb).use{ rs ->

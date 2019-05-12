@@ -128,7 +128,7 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
             hmPlayerNumberToParticipant[0] = pt
-            currentRound = RoundEntity.factory(pt, 1)
+            currentRoundNumber = 1
 
             gameEntity = GameEntity.factoryAndSave(GAME_TYPE_ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD)
         }

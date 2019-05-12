@@ -7,7 +7,10 @@ import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
-import burlton.dartzee.test.helper.*
+import burlton.dartzee.test.helper.getCountFromTable
+import burlton.dartzee.test.helper.insertDart
+import burlton.dartzee.test.helper.insertParticipant
+import burlton.dartzee.test.helper.insertPlayer
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
@@ -26,10 +29,9 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         val g = insertRelevantGame()
         val p = insertPlayer()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
-        val rnd = insertRound(participantId = pt.rowId)
 
-        insertDart(roundId = rnd.rowId, startingScore = 100, score = 1, multiplier = 2)
-        insertDart(roundId = rnd.rowId, startingScore = 2, score = 2, multiplier = 1)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 100, score = 1, multiplier = 2)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 2, score = 2, multiplier = 1)
 
         factoryAchievement().populateForConversion("")
 
@@ -83,8 +85,7 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
     private fun insertCheckout(p: PlayerEntity, g: GameEntity, score: Int = 1, dtCreation: Timestamp = getSqlDateNow())
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
-        val rnd = insertRound(participantId = pt.rowId)
 
-        insertDart(roundId = rnd.rowId, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation)
+        insertDart(playerId = pt.playerId, participantId = pt.rowId, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation)
     }
 }
