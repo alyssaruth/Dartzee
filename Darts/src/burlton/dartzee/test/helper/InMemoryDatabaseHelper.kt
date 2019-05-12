@@ -221,3 +221,4 @@ fun dropUnexpectedTables(): List<String>
 fun retrieveGame() = GameEntity().retrieveEntities().first()
 fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
+fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
