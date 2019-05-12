@@ -20,7 +20,7 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
+        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
     }
 
     override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity

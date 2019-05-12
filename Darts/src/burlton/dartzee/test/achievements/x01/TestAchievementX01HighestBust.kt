@@ -18,9 +18,9 @@ class TestAchievementX01HighestBust: AbstractAchievementTest<AchievementX01Highe
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 1, startingScore = 181, score = 20, multiplier = 3)
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 2, startingScore = 121, score = 20, multiplier = 3)
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 3, startingScore = 61, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 1, startingScore = 181, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 2, startingScore = 121, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 3, startingScore = 61, score = 20, multiplier = 3)
     }
 
     //TODO - finish me

@@ -30,8 +30,8 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         val p = insertPlayer()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 100, score = 1, multiplier = 2)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, startingScore = 2, score = 2, multiplier = 1)
+        insertDart(pt, roundNumber = 1, startingScore = 100, score = 1, multiplier = 2)
+        insertDart(pt, roundNumber = 1, startingScore = 2, score = 2, multiplier = 1)
 
         factoryAchievement().populateForConversion("")
 
@@ -86,6 +86,6 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation)
+        insertDart(pt, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation)
     }
 }

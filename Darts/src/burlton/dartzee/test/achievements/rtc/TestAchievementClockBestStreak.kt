@@ -45,8 +45,8 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
     {
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 1, startingScore = 1, score = 1, multiplier = 1)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 2, startingScore = 2, score = 2, multiplier = 1)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 3, startingScore = 3, score = 3, multiplier = 1)
+        insertDart(pt, roundNumber = 1, ordinal = 1, startingScore = 1, score = 1, multiplier = 1)
+        insertDart(pt, roundNumber = 1, ordinal = 2, startingScore = 2, score = 2, multiplier = 1)
+        insertDart(pt, roundNumber = 1, ordinal = 3, startingScore = 3, score = 3, multiplier = 1)
     }
 }

@@ -50,8 +50,8 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 1, score = 1, multiplier = 1, segmentType = segmentType)
-        insertDart(playerId = pt.playerId, participantId = pt.rowId, roundNumber = 1, ordinal = 2, score = 1, multiplier = 2, segmentType = SEGMENT_TYPE_DOUBLE)
+        insertDart(pt, roundNumber = 1, ordinal = 1, score = 1, multiplier = 1, segmentType = segmentType)
+        insertDart(pt, roundNumber = 1, ordinal = 2, score = 1, multiplier = 2, segmentType = SEGMENT_TYPE_DOUBLE)
 
     }
 }

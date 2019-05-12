@@ -18,9 +18,9 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 3, startingScore = 381, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3)
     }
 
     //TODO - finish me

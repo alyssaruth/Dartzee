@@ -18,7 +18,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(playerId = p.rowId, participantId = pt.rowId, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
+        insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
     }
 
     //TODO - finish me
