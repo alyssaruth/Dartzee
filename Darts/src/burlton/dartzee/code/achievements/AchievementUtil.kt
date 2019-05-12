@@ -20,7 +20,6 @@ import kotlin.streams.toList
 fun getNotBustSql(): String
 {
     val sb = StringBuilder()
-    sb.append(" AND")
     sb.append(" (")
     sb.append("     (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) > 1)")
     sb.append("     OR (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) = 0 AND drtLast.Multiplier = 2)")
