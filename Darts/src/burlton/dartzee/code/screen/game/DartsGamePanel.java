@@ -387,10 +387,10 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		{
 			ParticipantEntity pt = hmPlayerNumberToParticipant.get(i);
 			String sql = "SELECT drt.RoundNumber, drt.Score, drt.Multiplier, drt.PosX, drt.PosY, drt.SegmentType, drt.StartingScore"
-					   + " FROM Round rnd, Dart drt"
+					   + " FROM Dart drt"
 					   + " WHERE drt.ParticipantId = '" + pt.getRowId() + "'"
 					   + " AND drt.PlayerId = '" + pt.getPlayerId() + "'"
-					   + " ORDER BY rnd.RoundNumber, drt.Ordinal";
+					   + " ORDER BY drt.RoundNumber, drt.Ordinal";
 			
 			HashMapList<Integer, Dart> hmRoundToDarts = new HashMapList<>();
 			int lastRound = 0;
