@@ -16,7 +16,7 @@ import javax.swing.JOptionPane
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 7
+    const val DATABASE_VERSION = 8
     const val DATABASE_NAME = "jdbc:derby:Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -27,7 +27,6 @@ object DartsDatabaseUtil
                 DartEntity(),
                 GameEntity(),
                 ParticipantEntity(),
-                RoundEntity(),
                 PlayerImageEntity(),
                 DartsMatchEntity(),
                 AchievementEntity())
@@ -88,6 +87,12 @@ object DartsDatabaseUtil
             Debug.appendBanner("Upgrading to Version 7")
             DatabaseUtil.executeUpdate("CREATE INDEX ParticipantId_RoundNumber ON Round(ParticipantId, RoundNumber)")
             version.version = 7
+            version.saveToDatabase()
+        }
+        else if (versionNumber == 7)
+        {
+            runSqlScriptsForVersion(8)
+            version.version = 8
             version.saveToDatabase()
         }
 

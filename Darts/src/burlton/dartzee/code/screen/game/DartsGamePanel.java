@@ -57,7 +57,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	protected int currentPlayerNumber = 0;
 	protected S activeScorer = null;
 	protected ArrayList<Dart> dartsThrown = new ArrayList<>();
-	protected RoundEntity currentRound = null;
+	protected int currentRoundNumber = -1;
 	
 	//For AI turns
 	protected Thread cpuThread = null;
@@ -171,13 +171,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		dartsThrown.clear();
 		
 		updateVariablesForNewRound();
-		
-		ParticipantEntity participant = hmPlayerNumberToParticipant.get(currentPlayerNumber);
+
 		int lastRoundForThisPlayer = getLastRoundNumber();
 		
 		//Create a new round for this player
 		int newRoundNo = lastRoundForThisPlayer+1;
-		currentRound = RoundEntity.Companion.factory(participant, newRoundNo);
+		currentRoundNumber = newRoundNo;
 		hmPlayerNumberToLastRoundNumber.put(currentPlayerNumber, newRoundNo);
 		
 		Debug.appendBanner(activeScorer.getPlayerName() + ": Round " + newRoundNo, VERBOSE_LOGGING);
@@ -726,8 +725,6 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		dartboard.clearDarts();
 		activeScorer.confirmCurrentRound();
 		
-		currentRound.saveToDatabase();
-		
 		saveDartsAndProceed();
 	}
 	protected void resetRound()
@@ -737,7 +734,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		resetRoundVariables();
 
 		dartboard.clearDarts();
-		activeScorer.clearRound(currentRound.getRoundNumber());
+		activeScorer.clearRound(currentRoundNumber);
 		activeScorer.updatePlayerResult();
 		dartsThrown.clear();
 		
@@ -753,13 +750,14 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	/**
 	 * Loop through the darts thrown, saving them to the database.
 	 */
-	protected void saveDartsToDatabase(String roundId)
+	protected void saveDartsToDatabase()
 	{
+		ParticipantEntity pt = hmPlayerNumberToParticipant.get(currentPlayerNumber);
 		List<DartEntity> darts = new ArrayList<>();
 		for (int i=0; i<dartsThrown.size(); i++)
 		{
 			Dart dart = dartsThrown.get(i);
-			darts.add(DartEntity.factory(dart, roundId, i + 1, dart.getStartingScore()));
+			darts.add(DartEntity.factory(dart, pt.getPlayerId(), pt.getRowId(), currentRoundNumber, i + 1, dart.getStartingScore()));
 		}
 
 		BulkInserter.insert(darts);

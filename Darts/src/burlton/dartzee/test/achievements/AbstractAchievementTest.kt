@@ -33,7 +33,6 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
         wipeTable("Game")
         wipeTable("Player")
         wipeTable("Participant")
-        wipeTable("Round")
         wipeTable("Dart")
     }
 

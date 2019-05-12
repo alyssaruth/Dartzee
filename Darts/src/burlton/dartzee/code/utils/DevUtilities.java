@@ -4,7 +4,6 @@ import burlton.core.code.util.Debug;
 import burlton.dartzee.code.db.DartEntity;
 import burlton.dartzee.code.db.GameEntity;
 import burlton.dartzee.code.db.ParticipantEntity;
-import burlton.dartzee.code.db.RoundEntity;
 import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.screen.game.DartsGameScreen;
 import burlton.desktopcore.code.util.DialogUtil;
@@ -82,12 +81,10 @@ public class DevUtilities
 		}
 		
 		List<ParticipantEntity> participants = new ParticipantEntity().retrieveEntities("GameId = '" + gameId + "'");
-		List<RoundEntity> rounds = new RoundEntity().retrieveEntitiesWithFrom(getRoundFromSql(gameId), "rnd");
 		List<DartEntity> darts = new DartEntity().retrieveEntitiesWithFrom(getDartFromSql(gameId), "d");
 		
 		String question = "Purge all data for Game #" + localId + "? The following rows will be deleted:"
 						+ "\n\n Participant: " + participants.size() + " rows"
-						+ "\n Round: " + rounds.size() + " rows"
 						+ "\n Dart: " + darts.size() + " rows";
 		
 		int answer = DialogUtil.showQuestion(question, false);
@@ -96,11 +93,6 @@ public class DevUtilities
 			for (DartEntity dart : darts)
 			{
 				dart.deleteFromDatabase();
-			}
-			
-			for (RoundEntity rnd : rounds)
-			{
-				rnd.deleteFromDatabase();
 			}
 			
 			for (ParticipantEntity participant : participants)
@@ -115,16 +107,10 @@ public class DevUtilities
 			DialogUtil.showInfo("Game #" + gameId + " has been purged.");
 		}
 	}
-	
-	private static String getRoundFromSql(String gameId)
-	{
-		return "FROM Round rnd INNER JOIN Participant p ON ("
-				   + "rnd.ParticipantId = p.RowId "
-				   + "AND p.GameId = '" + gameId + "')";
-	}
+
 	private static String getDartFromSql(String gameId)
 	{
-		return "FROM Dart d INNER JOIN Round rnd ON (d.RoundId = rnd.RowId)"
-			+ "INNER JOIN Participant p ON (rnd.ParticipantId = p.RowId AND p.GameId = '" + gameId + "')";
+		return "FROM Dart d "
+			+ "INNER JOIN Participant p ON (d.ParticipantId = p.RowId AND d.PlayerId = p.PlayerId AND p.GameId = '" + gameId + "')";
 	}
 }

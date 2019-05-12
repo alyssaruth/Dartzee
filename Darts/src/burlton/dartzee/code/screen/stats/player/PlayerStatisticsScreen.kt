@@ -160,11 +160,11 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 
         val sb = StringBuilder()
         sb.append(" SELECT zz.LocalId, zz.GameParams, zz.DtCreation, zz.DtFinish, zz.FinalScore, ")
-        sb.append(" rnd.RoundNumber,")
+        sb.append(" drt.RoundNumber,")
         sb.append(" drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.SegmentType")
-        sb.append(" FROM Dart drt, Round rnd, $zzParticipants zz")
-        sb.append(" WHERE drt.RoundId = rnd.RowId")
-        sb.append(" AND rnd.ParticipantId = zz.ParticipantId")
+        sb.append(" FROM Dart drt, $zzParticipants zz")
+        sb.append(" WHERE drt.ParticipantId = zz.ParticipantId")
+        sb.append(" AND drt.PlayerId = zz.PlayerId")
 
         try
         {

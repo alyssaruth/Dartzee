@@ -93,22 +93,10 @@ fun insertParticipant(uuid: String = randomGuid(),
     return pe
 }
 
-fun insertRound(uuid: String = randomGuid(),
-                participantId: String = randomGuid(),
-                roundNumber: Int = 1): RoundEntity
-{
-    val re = RoundEntity()
-    re.rowId = uuid
-    re.participantId = participantId
-    re.roundNumber = roundNumber
-
-    re.saveToDatabase()
-
-    return re
-}
-
 fun insertDart(uuid: String = randomGuid(),
-               roundId: String = randomGuid(),
+               playerId: String = randomGuid(),
+               participantId: String = randomGuid(),
+               roundNumber: Int = 1,
                ordinal: Int = 1,
                startingScore: Int = 501,
                score: Int = 20,
@@ -121,7 +109,9 @@ fun insertDart(uuid: String = randomGuid(),
     val drt = DartEntity()
     drt.dtCreation = dtCreation
     drt.rowId = uuid
-    drt.roundId = roundId
+    drt.playerId = playerId
+    drt.participantId = participantId
+    drt.roundNumber = roundNumber
     drt.ordinal = ordinal
     drt.startingScore = startingScore
     drt.multiplier = multiplier
