@@ -142,6 +142,11 @@ class DatabaseUtil
 
             val totalMillis = System.currentTimeMillis() - startMillis
             Debug.appendSql("(${totalMillis}ms) $statement", AbstractClient.traceWriteSql && log)
+
+            if (totalMillis > AbstractClient.sqlToleranceQuery && !AbstractClient.devMode)
+            {
+                Debug.stackTraceNoError("SQL update took longer than ${AbstractClient.sqlToleranceQuery} millis: $statement")
+            }
         }
 
         @JvmStatic fun executeQuery(sb: StringBuilder): ResultSet
