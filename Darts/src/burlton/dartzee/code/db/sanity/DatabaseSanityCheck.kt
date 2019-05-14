@@ -24,7 +24,8 @@ fun getAllSanityChecks(): List<AbstractSanityCheck>
             SanityCheckDuplicateMatchOrdinals(),
             SanityCheckFinalScoreX01(),
             SanityCheckFinalScoreGolf(),
-            SanityCheckFinalScoreRtc())
+            SanityCheckFinalScoreRtc(),
+            SanityCheckPlayerIdMismatch())
 
     //Checks that run on all entities
     DartsDatabaseUtil.getAllEntities().forEach{
