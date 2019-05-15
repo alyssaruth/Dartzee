@@ -26,7 +26,7 @@ class GameParamFilterPanelRoundTheClock : GameParamFilterPanel()
 
     override fun getGameParams(): String
     {
-        return panel.selectionStr
+        return panel.getSelectionStr()
     }
 
     override fun setGameParams(gameParams: String)
