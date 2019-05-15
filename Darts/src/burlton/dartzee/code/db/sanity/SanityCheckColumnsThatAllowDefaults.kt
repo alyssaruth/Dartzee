@@ -31,7 +31,7 @@ class SanityCheckColumnsThatAllowDefaults: AbstractSanityCheck()
 
         if (model.rowCount > 0)
         {
-            listOf(SanityCheckResultSimpleTableModel(model, "Columns that allow defaults"))
+            return listOf(SanityCheckResultSimpleTableModel(model, "Columns that allow defaults"))
         }
 
         return listOf()
