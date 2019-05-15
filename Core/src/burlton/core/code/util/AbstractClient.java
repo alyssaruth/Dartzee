@@ -10,12 +10,12 @@ import java.util.Locale;
  */
 public abstract class AbstractClient implements OnlineConstants
 {
-	public static final int SQL_TOLERANCE_QUERY = 5000; //5 seconds
+	public static final int SQL_MAX_DURATION = 5000; //5 seconds
 
 	public static boolean devMode = false;
 	public static boolean traceReadSql = true;
 	public static boolean traceWriteSql = true;
-	public static int sqlToleranceQuery = SQL_TOLERANCE_QUERY;
+	public static int sqlMaxDuration = SQL_MAX_DURATION;
 	public static String operatingSystem = "";
 	public static boolean justUpdated = false;
 	public static int instanceNumber = 1;
