@@ -120,16 +120,30 @@ class TestDatabaseUtil: AbstractDartsTest()
     @Test
     fun `Should log an exception (but not show an error) for queries that take too long`()
     {
-        AbstractClient.sqlToleranceQuery = -1
+        AbstractClient.sqlMaxDuration = -1
 
         val query = "SELECT * FROM Game"
         DatabaseUtil.executeQuery(query)
 
         exceptionLogged() shouldBe true
-        getLogs().shouldContain("SQL query took longer than ${AbstractClient.sqlToleranceQuery} millis: $query")
+        getLogs().shouldContain("SQL query took longer than ${AbstractClient.sqlMaxDuration} millis: $query")
         dialogFactory.errorsShown.shouldBeEmpty()
 
+        AbstractClient.sqlMaxDuration = AbstractClient.SQL_MAX_DURATION
         wipeTable("Game")
-        AbstractClient.sqlToleranceQuery = AbstractClient.SQL_TOLERANCE_QUERY
+    }
+
+    @Test
+    fun `Should log an exception (but not show an error) for updates that take too long`()
+    {
+        AbstractClient.sqlMaxDuration = -1
+
+        val update = "DELETE FROM Game"
+        DatabaseUtil.executeUpdate(update)
+
+        exceptionLogged() shouldBe true
+        getLogs().shouldContain("SQL update took longer than -1 millis: $update")
+
+        AbstractClient.sqlMaxDuration = AbstractClient.SQL_MAX_DURATION
     }
 }

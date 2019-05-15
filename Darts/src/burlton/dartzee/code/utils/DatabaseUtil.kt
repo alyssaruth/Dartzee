@@ -143,9 +143,9 @@ class DatabaseUtil
             val totalMillis = System.currentTimeMillis() - startMillis
             Debug.appendSql("(${totalMillis}ms) $statement", AbstractClient.traceWriteSql && log)
 
-            if (totalMillis > AbstractClient.sqlToleranceQuery && !AbstractClient.devMode)
+            if (totalMillis > AbstractClient.sqlMaxDuration && !AbstractClient.devMode)
             {
-                Debug.stackTraceNoError("SQL update took longer than ${AbstractClient.sqlToleranceQuery} millis: $statement")
+                Debug.stackTraceNoError("SQL update took longer than ${AbstractClient.sqlMaxDuration} millis: $statement")
             }
         }
 
@@ -182,9 +182,9 @@ class DatabaseUtil
             Debug.appendSql("(" + totalMillis + "ms) " + query, AbstractClient.traceReadSql)
 
             //No query should take longer than 5 seconds really...
-            if (totalMillis > AbstractClient.sqlToleranceQuery && !AbstractClient.devMode)
+            if (totalMillis > AbstractClient.sqlMaxDuration && !AbstractClient.devMode)
             {
-                Debug.stackTraceNoError("SQL query took longer than ${AbstractClient.sqlToleranceQuery} millis: $query")
+                Debug.stackTraceNoError("SQL query took longer than ${AbstractClient.sqlMaxDuration} millis: $query")
             }
 
             //Return an empty one if something's gone wrong
