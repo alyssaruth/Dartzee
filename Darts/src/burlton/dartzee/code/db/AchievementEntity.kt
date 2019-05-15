@@ -1,12 +1,10 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.Debug
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAchievementForRef
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.getSqlDateNow
-import java.sql.SQLException
 import java.sql.Timestamp
 
 /**
@@ -58,22 +56,15 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             sb.append(" LEFT OUTER JOIN Game g ON (a.GameIdEarned = g.RowId)")
             sb.append(" WHERE PlayerId = '$playerId'")
 
-            try
-            {
-                DatabaseUtil.executeQuery(sb).use { rs ->
-                    while (rs.next())
-                    {
-                        val entity = dao.factoryFromResultSet(rs)
-                        entity.retrievedFromDb = true
-                        entity.localGameIdEarned = rs.getLong("LocalGameId")
+            DatabaseUtil.executeQuery(sb).use { rs ->
+                while (rs.next())
+                {
+                    val entity = dao.factoryFromResultSet(rs)
+                    entity.retrievedFromDb = true
+                    entity.localGameIdEarned = rs.getLong("LocalGameId")
 
-                        achievements.add(entity)
-                    }
+                    achievements.add(entity)
                 }
-            }
-            catch (sqle: SQLException)
-            {
-                Debug.logSqlException(sb, sqle)
             }
 
             return achievements

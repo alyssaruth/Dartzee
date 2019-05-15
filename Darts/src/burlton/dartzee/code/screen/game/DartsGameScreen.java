@@ -24,7 +24,7 @@ import java.util.List;
  * DartsGameScreen
  * Simple screen which wraps up either a single game panel, or multiple tabs for a match.
  */
-public final class DartsGameScreen extends JFrame
+public class DartsGameScreen extends JFrame
 									  implements WindowListener, ChangeListener
 {
 	private DartsMatchEntity match = null;
