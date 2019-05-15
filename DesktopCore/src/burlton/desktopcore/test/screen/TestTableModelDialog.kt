@@ -44,7 +44,6 @@ class TestTableModelDialog: AbstractDesktopTest()
         val tmd = TableModelDialog("Test", ScrollTable())
 
         val spy = spyk(tmd)
-
         spy.okPressed()
 
         verify{ spy.dispose() }
