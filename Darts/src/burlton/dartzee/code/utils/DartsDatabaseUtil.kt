@@ -102,7 +102,7 @@ object DartsDatabaseUtil
     private fun runSqlScriptsForVersion(version: Int)
     {
         val resourcePath = "/sql/v$version/"
-        val sqlScripts = getResourceList("/sql/v$version/")
+        val sqlScripts = getScripts(version)
 
         val t = Thread {
             val dlg = ProgressDialog.factory("Upgrading to V$version", "scripts remaining", sqlScripts.size)
@@ -126,12 +126,15 @@ object DartsDatabaseUtil
 
         Debug.appendBanner("Finished upgrading database")
     }
-
-    private fun getResourceList(path: String): List<String>
+    private fun getScripts(version: Int): List<String>
     {
-        val stream = javaClass.getResourceAsStream(path) ?: return listOf()
-
-        return stream.bufferedReader().use { it.readLines() }
+        return when(version)
+        {
+            6 -> listOf("1. Version.sql", "2. Achievement.sql", "3. Dart.sql", "4. DartsMatch.sql", "5. Game.sql",
+                    "6. Participant.sql", "7. Player.sql", "8. PlayerImage.sql", "9. Round.sql")
+            8 -> listOf("1. Dart.sql", "2. Round.sql")
+            else -> listOf()
+        }
     }
 
     private fun initDatabaseFirstTime()
