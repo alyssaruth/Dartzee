@@ -19,7 +19,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
@@ -103,7 +102,7 @@ public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 			hmScoreToCount.incrementCount(score);
 		}
 		
-		ArrayList<Integer> doubles = hmScoreToCount.getKeysAsVector();
+		List<Integer> doubles = hmScoreToCount.getKeysAsVector();
 		for (int i=0; i<doubles.size(); i++)
 		{
 			int score = doubles.get(i);

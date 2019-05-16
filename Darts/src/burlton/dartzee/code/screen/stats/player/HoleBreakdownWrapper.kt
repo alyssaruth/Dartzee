@@ -11,7 +11,7 @@ class HoleBreakdownWrapper
         val totalGamesCounted = hmScoreToCount.getTotalCount().toDouble()
 
         var weightedTotal = 0.0
-        val scores = hmScoreToCount.getKeysAsVector()
+        val scores = hmScoreToCount.keys
         for (score in scores)
         {
             val count = hmScoreToCount.getCount(score)
