@@ -14,5 +14,5 @@ class TestDebugExtension: DebugExtension
     }
 
     override fun unableToEmailLogs(){}
-    override fun sendEmail(title: String?, message: String?){}
+    override fun sendEmail(title: String, message: String){}
 }
