@@ -153,7 +153,7 @@ class TestDebug: AbstractTest()
     {
         val sb = StringBuilder()
 
-        override fun append(text: String?)
+        override fun append(text: String)
         {
             sb.append(text)
         }
