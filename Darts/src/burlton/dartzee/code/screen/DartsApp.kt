@@ -13,6 +13,7 @@ import burlton.dartzee.test.helper.randomGuid
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
 import burlton.desktopcore.code.util.DialogUtil
+import com.mashape.unirest.http.Unirest
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Image
@@ -205,6 +206,12 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == CMD_GUID)
         {
             textToShow = randomGuid()
+        }
+        else if (cmd == "git")
+        {
+            val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
+
+            Debug.append("Response tag: " + response.body.`object`.get("tag_name"))
         }
 
         return textToShow

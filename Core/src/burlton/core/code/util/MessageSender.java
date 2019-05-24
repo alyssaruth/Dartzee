@@ -1,5 +1,8 @@
 package burlton.core.code.util;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -7,9 +10,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public class MessageSender implements Runnable
 {
@@ -67,8 +67,6 @@ public class MessageSender implements Runnable
 		try (Socket socket = new Socket(address, portNumber);
 		  PrintWriter out = new PrintWriter(socket.getOutputStream(), true);)
 		{
-			client.setLastSentMessageMillis(System.currentTimeMillis());
-			
 			int soTimeOut = messageParms.getReadTimeOut();
 			socket.setSoTimeout(soTimeOut);
 			

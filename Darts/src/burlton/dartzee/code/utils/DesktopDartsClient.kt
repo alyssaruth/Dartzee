@@ -1,8 +1,9 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.*
+import burlton.core.code.util.AbstractClient
+import burlton.core.code.util.Debug
+import burlton.core.code.util.MessageSender
 import burlton.desktopcore.code.util.AbstractDesktopClient
-import burlton.desktopcore.code.util.UpdateChecker
 
 class DesktopDartsClient : AbstractDesktopClient()
 {
@@ -25,11 +26,6 @@ class DesktopDartsClient : AbstractDesktopClient()
         return true
     }
 
-    override fun sendAsyncInSingleThread(message: MessageSenderParams)
-    {
-        Debug.stackTrace("Invalid method")
-    }
-
     override fun sendSyncOnDevice(runnable: MessageSender): String?
     {
         return runnable.sendMessage()
@@ -42,7 +38,7 @@ class DesktopDartsClient : AbstractDesktopClient()
 
     override fun checkForUpdates()
     {
-        UpdateChecker.checkForUpdates(FILE_NAME_DARTS, OnlineConstants.SERVER_PORT_NUMBER_DOWNLOAD_DARTS)
+        UpdateChecker.checkForUpdates()
     }
 
     override fun isCommunicatingWithServer() = false
