@@ -31,25 +31,24 @@ object UpdateChecker
         DialogUtil.showLoadingDialog("Checking for updates...")
 
         Debug.append("Checking for updates - my version is $DARTS_VERSION_NUMBER")
-        val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
-        if (response.status != 200)
+
+        val jsonObject = queryLatestReleaseJson()
+        if (jsonObject == null)
         {
-            Debug.append("Received unexpected HTTP response. Status ${response.status} - ${response.statusText}")
-            Debug.append(response.body.toString())
             DialogUtil.showError("Failed to check for updates (unable to connect).")
             return
         }
 
-        DialogUtil.dismissLoadingDialog()
-
-        val jsonObject = response.body.`object`
-        val remoteVersion = jsonObject.getString("tag_name")
+        val remoteVersion = jsonObject.get("tag_name").toString()
         if (remoteVersion == DARTS_VERSION_NUMBER)
         {
             Debug.append("I am up to date")
             return
         }
 
+        DialogUtil.dismissLoadingDialog()
+
+        Debug.append("Newer release available - $remoteVersion")
         val assets = jsonObject.getJSONArray("assets")
         if (assets.length() != 1)
         {
@@ -66,6 +65,28 @@ object UpdateChecker
         }
 
         startUpdate(remoteVersion, assets.getJSONObject(0))
+    }
+
+    private fun queryLatestReleaseJson(): JSONObject?
+    {
+        try
+        {
+            val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
+            if (response.status != 200)
+            {
+                Debug.append("Received unexpected HTTP response. Status ${response.status} - ${response.statusText}")
+                Debug.append(response.body.toString())
+                DialogUtil.showError("Failed to check for updates (unable to connect).")
+                return null
+            }
+
+            return response.body.`object`
+        }
+        catch (t: Throwable)
+        {
+            Debug.stackTraceSilently(t)
+            return null
+        }
     }
 
     private fun startUpdate(remoteVersion: String, asset: JSONObject)
