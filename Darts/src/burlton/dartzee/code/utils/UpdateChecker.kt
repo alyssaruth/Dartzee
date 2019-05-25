@@ -91,7 +91,7 @@ object UpdateChecker
 
     private fun startUpdate(remoteVersion: String, asset: JSONObject)
     {
-        val assetId = asset.getString("id")
+        val assetId = asset.getLong("id")
         val fileName = asset.getString("name")
         val size = asset.getLong("size")
 
