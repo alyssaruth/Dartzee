@@ -71,7 +71,7 @@ object UpdateChecker
     {
         try
         {
-            val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
+            val response = Unirest.get("https://api.github.com/repos/alexburlton/Dartzee/releases/latest").asJson()
             if (response.status != 200)
             {
                 Debug.append("Received unexpected HTTP response. Status ${response.status} - ${response.statusText}")
