@@ -4,7 +4,7 @@ import burlton.core.code.util.dumpThreadStacks
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
-import burlton.dartzee.code.utils.UpdateChecker
+import burlton.dartzee.code.utils.UpdateManager
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -60,7 +60,7 @@ class UtilitiesScreen : EmbeddedScreen()
             btnCreateBackup -> DartsDatabaseUtil.backupCurrentDatabase()
             btnRestoreFromBackup -> DartsDatabaseUtil.restoreDatabase()
             btnPerformDatabaseCheck -> DatabaseSanityCheck.runSanityCheck()
-            btnCheckForUpdates -> UpdateChecker.checkForUpdates()
+            btnCheckForUpdates -> UpdateManager.checkForUpdates()
             btnViewLogs -> {val loggingDialog = ScreenCache.getDebugConsole()
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}

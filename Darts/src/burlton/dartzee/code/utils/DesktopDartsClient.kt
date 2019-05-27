@@ -38,7 +38,7 @@ class DesktopDartsClient : AbstractDesktopClient()
 
     override fun checkForUpdates()
     {
-        UpdateChecker.checkForUpdates()
+        UpdateManager.checkForUpdates()
     }
 
     override fun isCommunicatingWithServer() = false
