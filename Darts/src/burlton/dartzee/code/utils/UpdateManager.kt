@@ -36,16 +36,7 @@ object UpdateManager
             return
         }
 
-        val assets = jsonObject!!.getJSONArray("assets")
-        if (assets.length() != 1)
-        {
-            Debug.append(jsonObject.toString())
-            Debug.stackTrace("Unexpected number of assets ${assets.length()} - aborting update")
-            return
-        }
-
-        val remoteVersion = jsonObject.getString("tag_name")
-        startUpdate(remoteVersion, assets.getJSONObject(0))
+        startUpdate(jsonObject!!)
     }
 
     fun queryLatestReleaseJson(repositoryUrl: String): JSONObject?
@@ -96,8 +87,19 @@ object UpdateManager
         return answer == JOptionPane.YES_OPTION
     }
 
-    private fun startUpdate(remoteVersion: String, asset: JSONObject)
+    private fun startUpdate(responseJson: JSONObject)
     {
+        val assets = responseJson.getJSONArray("assets")
+        if (assets.length() != 1)
+        {
+            Debug.append(responseJson.toString())
+            Debug.stackTrace("Unexpected number of assets ${assets.length()} - aborting update")
+            return
+        }
+
+        val remoteVersion = responseJson.getString("tag_name")
+        val asset = assets.getJSONObject(0)
+
         val assetId = asset.getLong("id")
         val fileName = asset.getString("name")
         val size = asset.getLong("size")
