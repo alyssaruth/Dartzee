@@ -19,6 +19,10 @@ object UpdateChecker
         {
             checkForUpdatesAndDoDownloadIfRequired()
         }
+        catch (t: Throwable)
+        {
+            Debug.stackTrace(t)
+        }
         finally
         {
             DialogUtil.dismissLoadingDialog()
