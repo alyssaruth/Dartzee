@@ -27,19 +27,7 @@ public class MessageSender implements Runnable
 	@Override
 	public void run()
 	{
-		if (messageParms == null)
-		{
-			//We're picking up off the queue, so we should synchronise
-			synchronized (client)
-			{
-				this.messageParms = client.getNextMessageToSend();
-				sendMessage();
-			}
-		}
-		else
-		{
-			sendMessage();
-		}
+		sendMessage();
 	}
 	
 	public String sendMessage()

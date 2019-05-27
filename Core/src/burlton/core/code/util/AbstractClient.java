@@ -2,7 +2,6 @@ package burlton.core.code.util;
 
 import org.w3c.dom.Document;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -22,9 +21,6 @@ public abstract class AbstractClient implements OnlineConstants
 	
 	//Instance
 	private static AbstractClient client = null;
-	
-	//Properties on the instance
-	private ArrayList<MessageSenderParams> pendingMessages = new ArrayList<>();
 	
 	/**
 	 * Abstract methods
@@ -107,11 +103,7 @@ public abstract class AbstractClient implements OnlineConstants
 		AbstractClient.client = client;
 		client.init();
 	}
-	
-	public String sendSync(Document message, boolean encrypt)
-	{
-		return sendSync(message, encrypt, MessageSenderParams.SO_TIMEOUT_MILLIS, false);
-	}
+
 	public String sendSync(Document message, boolean encrypt, int readTimeOut, boolean alwaysRetryOnSoTimeout)
 	{
 		String messageString = XmlUtil.getStringFromDocument(message);
@@ -129,10 +121,5 @@ public abstract class AbstractClient implements OnlineConstants
 		
 		MessageSender sender = new MessageSender(this, wrapper);
 		return sendSyncOnDevice(sender);
-	}
-	
-	public MessageSenderParams getNextMessageToSend()
-	{
-		return pendingMessages.remove(0);
 	}
 }
