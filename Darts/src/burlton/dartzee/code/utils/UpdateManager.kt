@@ -9,7 +9,9 @@ import java.io.IOException
 import javax.swing.JOptionPane
 
 /**
- * Class to check for updates and launch the EntropyUpdater via a batch file if they are available
+ * Automatically check for and download updates using the Github API
+ *
+ * https://developer.github.com/v3/repos/releases/#get-the-latest-release
  */
 object UpdateManager
 {
