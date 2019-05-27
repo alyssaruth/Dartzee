@@ -5,6 +5,7 @@ import org.w3c.dom.Document
 import java.io.File
 import java.nio.charset.StandardCharsets
 
+private const val ROOT_TAG = "ClientMail"
 private const val LOG_FILENAME_PREFIX = "DebugLog"
 private const val SO_TIMEOUT_MILLIS = 60000 //1 minute
 
@@ -51,7 +52,7 @@ object ClientEmailer
     private fun factoryClientMailMessage(subject: String, body: String, obfuscated: Boolean): Document
     {
         val message = XmlUtil.factoryNewDocument()
-        val root = message!!.createElement(XmlConstants.ROOT_TAG_CLIENT_MAIL)
+        val root = message!!.createElement(ROOT_TAG)
 
         val symmetricKey = KeyGeneratorUtil.generateSymmetricKey()
         val symmetricKeyString = EncryptionUtil.convertSecretKeyToString(symmetricKey!!)
