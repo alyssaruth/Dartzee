@@ -2,7 +2,6 @@ package burlton.core.code.util;
 
 import org.w3c.dom.Document;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -18,17 +17,10 @@ public abstract class AbstractClient implements OnlineConstants
 	public static int sqlMaxDuration = SQL_MAX_DURATION;
 	public static String operatingSystem = "";
 	public static boolean justUpdated = false;
-	public static int instanceNumber = 1;
 	public static String derbyDbName = "";
-	
-
 	
 	//Instance
 	private static AbstractClient client = null;
-	
-	//Properties on the instance
-	private long lastSentMessageMillis = -1;
-	private ArrayList<MessageSenderParams> pendingMessages = new ArrayList<>();
 	
 	/**
 	 * Abstract methods
@@ -36,7 +28,6 @@ public abstract class AbstractClient implements OnlineConstants
 	public abstract void init();
 	public abstract String getUsername();
 	public abstract boolean isOnline();
-	public abstract void sendAsyncInSingleThread(MessageSenderParams message);
 	public abstract String sendSyncOnDevice(MessageSender runnable);
 	public abstract void handleResponse(String message, String encryptedResponse) throws Throwable;
 	public abstract void checkForUpdates();
@@ -103,15 +94,6 @@ public abstract class AbstractClient implements OnlineConstants
 		checkForUpdates();
 	}
 	
-	public long getLastSentMessageMillis()
-	{
-		return lastSentMessageMillis;
-	}
-	public void setLastSentMessageMillis(long lastSentMessageMillis)
-	{
-		this.lastSentMessageMillis = lastSentMessageMillis;
-	}
-	
 	public static AbstractClient getInstance()
 	{
 		return client;
@@ -121,11 +103,7 @@ public abstract class AbstractClient implements OnlineConstants
 		AbstractClient.client = client;
 		client.init();
 	}
-	
-	public String sendSync(Document message, boolean encrypt)
-	{
-		return sendSync(message, encrypt, MessageSenderParams.SO_TIMEOUT_MILLIS, false);
-	}
+
 	public String sendSync(Document message, boolean encrypt, int readTimeOut, boolean alwaysRetryOnSoTimeout)
 	{
 		String messageString = XmlUtil.getStringFromDocument(message);
@@ -143,28 +121,5 @@ public abstract class AbstractClient implements OnlineConstants
 		
 		MessageSender sender = new MessageSender(this, wrapper);
 		return sendSyncOnDevice(sender);
-	}
-	
-	public void startNotificationThreads()
-	{
-		startNotificationThread(XmlConstants.SOCKET_NAME_GAME);
-		startNotificationThread(XmlConstants.SOCKET_NAME_CHAT);
-		startNotificationThread(XmlConstants.SOCKET_NAME_LOBBY);
-	}
-	
-	private void startNotificationThread(String socketType)
-	{
-		ClientNotificationRunnable runnable = new ClientNotificationRunnable(this, socketType);
-		Thread notificationThread = new Thread(runnable, socketType + "Thread");
-		notificationThread.start();
-	}
-	
-	public void addToPendingMessages(MessageSenderParams message)
-	{
-		pendingMessages.add(message);
-	}
-	public MessageSenderParams getNextMessageToSend()
-	{
-		return pendingMessages.remove(0);
 	}
 }
