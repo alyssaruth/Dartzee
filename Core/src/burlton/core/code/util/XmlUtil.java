@@ -117,17 +117,6 @@ public class XmlUtil
 			rootElement.setAttribute(attributeName, "" + bool);
 		}
 	}
-
-	public static Document factorySimpleMessage(String username, String rootName)
-	{
-		Document message = factoryNewDocument();
-		
-		Element rootElement = message.createElement(rootName);
-		rootElement.setAttribute("Username", username);
-		
-		message.appendChild(rootElement);
-		return message;
-	}
 	
 	public static SuperHashMap<Integer, Integer> readIntegerHashMap(Element rootElement, String tagName, String keyTag, String valueTag)
 	{

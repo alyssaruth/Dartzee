@@ -8,7 +8,7 @@ import burlton.dartzee.code.screen.preference.PreferencesDialog;
 import burlton.dartzee.code.screen.reporting.ConfigureReportColumnsDialog;
 import burlton.desktopcore.code.bean.CheatBar;
 import burlton.desktopcore.code.screen.BugReportDialog;
-import burlton.desktopcore.code.screen.DebugConsoleAdv;
+import burlton.desktopcore.code.screen.DebugConsole;
 import burlton.desktopcore.code.util.DialogUtil;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ public final class ScreenCache
 	private static ConfigureReportColumnsDialog configureReportColumnsDialog = null;
 	
 	//Other
-	private static DebugConsoleAdv debugConsole = null;
+	private static DebugConsole debugConsole = null;
 	
 	public static <K extends EmbeddedScreen> K getScreen(Class<K> screenClass)
 	{
@@ -106,11 +106,11 @@ public final class ScreenCache
 		return getScreen(PlayerManagementScreen.class);
 	}
 	
-	public static DebugConsoleAdv getDebugConsole()
+	public static DebugConsole getDebugConsole()
 	{
 		if (debugConsole == null)
 		{
-			debugConsole = new DebugConsoleAdv();
+			debugConsole = new DebugConsole();
 		}
 		
 		return debugConsole;
