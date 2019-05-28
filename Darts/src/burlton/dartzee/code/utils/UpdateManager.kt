@@ -5,7 +5,6 @@ import burlton.desktopcore.code.util.DialogUtil
 import com.mashape.unirest.http.Unirest
 import org.json.JSONObject
 import java.io.File
-import java.io.IOException
 import javax.swing.JOptionPane
 
 /**
@@ -17,28 +16,19 @@ object UpdateManager
 {
     fun checkForUpdates()
     {
-        try
-        {
-            checkForUpdatesAndDoDownloadIfRequired()
-        }
-        catch (t: Throwable)
-        {
-            Debug.stackTrace(t)
-        }
-    }
-
-    private fun checkForUpdatesAndDoDownloadIfRequired()
-    {
         //Show this here, checking the CRC can take time
         Debug.append("Checking for updates - my version is $DARTS_VERSION_NUMBER")
 
-        val jsonObject = queryLatestReleaseJson(DARTZEE_REPOSITORY_URL)
-        if (!shouldUpdate(jsonObject))
+        val jsonResponse = queryLatestReleaseJson(DARTZEE_REPOSITORY_URL)
+        jsonResponse ?: return
+
+        val metadata = parseUpdateMetadata(jsonResponse)
+        if (metadata == null || !shouldUpdate(metadata))
         {
             return
         }
 
-        startUpdate(jsonObject!!)
+        startUpdate(metadata.getArgs(), Runtime.getRuntime())
     }
 
     fun queryLatestReleaseJson(repositoryUrl: String): JSONObject?
@@ -52,6 +42,7 @@ object UpdateManager
             {
                 Debug.append("Received non-success HTTP status: ${response.status} - ${response.statusText}")
                 Debug.append(response.body.toString())
+                DialogUtil.showError("Failed to check for updates (unable to connect).")
                 return null
             }
 
@@ -60,6 +51,7 @@ object UpdateManager
         catch (t: Throwable)
         {
             Debug.stackTraceSilently(t)
+            DialogUtil.showError("Failed to check for updates (unable to connect).")
             return null
         }
         finally
@@ -68,65 +60,70 @@ object UpdateManager
         }
     }
 
-    fun shouldUpdate(responseJson: JSONObject?): Boolean
+    fun shouldUpdate(metadata: UpdateMetadata): Boolean
     {
-        if (responseJson == null)
-        {
-            DialogUtil.showError("Failed to check for updates (unable to connect).")
-            return false
-        }
-
-        val remoteVersion = responseJson.getString("tag_name")
-        if (remoteVersion == DARTS_VERSION_NUMBER)
+        if (metadata.version == DARTS_VERSION_NUMBER)
         {
             Debug.append("I am up to date")
             return false
         }
 
         //An update is available
-        Debug.append("Newer release available - $remoteVersion")
-        val answer = DialogUtil.showQuestion("An update is available ($remoteVersion). Would you like to download it now?", false)
+        Debug.append("Newer release available - ${metadata.version}")
+        val answer = DialogUtil.showQuestion("An update is available (${metadata.version}). Would you like to download it now?", false)
         return answer == JOptionPane.YES_OPTION
     }
 
-    private fun startUpdate(responseJson: JSONObject)
+    fun parseUpdateMetadata(responseJson: JSONObject): UpdateMetadata?
     {
-        val assets = responseJson.getJSONArray("assets")
-        if (assets.length() != 1)
+        return try
         {
-            Debug.append(responseJson.toString())
-            Debug.stackTrace("Unexpected number of assets ${assets.length()} - aborting update")
-            return
+            val remoteVersion = responseJson.getString("tag_name")
+            val assets = responseJson.getJSONArray("assets")
+            val asset = assets.getJSONObject(0)
+
+            val assetId = asset.getLong("id")
+            val fileName = asset.getString("name")
+            val size = asset.getLong("size")
+            UpdateMetadata(remoteVersion,  assetId, fileName, size)
         }
+        catch (t: Throwable)
+        {
+            Debug.stackTrace(t, "Error parsing JSON: $responseJson")
+            null
+        }
+    }
 
-        val remoteVersion = responseJson.getString("tag_name")
-        val asset = assets.getJSONObject(0)
-
-        val assetId = asset.getLong("id")
-        val fileName = asset.getString("name")
-        val size = asset.getLong("size")
-
-        val updateFile = File("update.bat")
-
-        //Write the batch file now, overwriting if necessary
-        updateFile.delete()
-        val updateScript = javaClass.getResource("/update/update.bat").readText()
-        updateFile.writeText(updateScript)
-
-        val args = "$size $remoteVersion $fileName $assetId"
+    fun startUpdate(args: String, runtime: Runtime)
+    {
+        prepareBatchFile()
 
         try
         {
-            Runtime.getRuntime().exec("cmd /c start update.bat $args")
+            runtime.exec("cmd /c start update.bat $args")
             System.exit(0)
         }
-        catch (ioe: IOException)
+        catch (t: Throwable)
         {
-            Debug.stackTrace(ioe)
+            Debug.stackTraceNoError(t)
             val manualCommand = "update.bat $args"
 
             val msg = "Failed to launch update.bat - call the following manually to perform the update: \n\n$manualCommand"
             DialogUtil.showError(msg)
         }
     }
+
+    fun prepareBatchFile()
+    {
+        val updateFile = File("update.bat")
+
+        updateFile.delete()
+        val updateScript = javaClass.getResource("/update/update.bat").readText()
+        updateFile.writeText(updateScript)
+    }
+}
+
+data class UpdateMetadata(val version: String, val assetId: Long, val fileName: String, val size: Long)
+{
+    fun getArgs() = "$size $version $fileName $assetId"
 }
