@@ -5,21 +5,28 @@ import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
 import burlton.dartzee.code.utils.DARTZEE_REPOSITORY_URL
 import burlton.dartzee.code.utils.UpdateManager
+import burlton.dartzee.code.utils.UpdateMetadata
 import burlton.dartzee.test.helper.AbstractDartsTest
 import com.mashape.unirest.http.Unirest
-import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith
 import io.kotlintest.matchers.string.shouldStartWith
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.mockk.every
+import io.mockk.mockk
 import org.json.JSONObject
 import org.junit.Test
+import java.io.File
+import java.io.IOException
 import javax.swing.JOptionPane
 
 class TestUpdateManager: AbstractDartsTest()
 {
+    /**
+     * Communication
+     */
     @Test
     fun `Should log out an unexpected HTTP response, along with the full JSON payload`()
     {
@@ -29,7 +36,7 @@ class TestUpdateManager: AbstractDartsTest()
 
         getLogs().shouldContain("Received non-success HTTP status: 404 - Not Found")
         getLogs().shouldContain("{\"message\":\"Not Found\"")
-        dialogFactory.errorsShown.shouldBeEmpty()
+        dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
 
         dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")
         dialogFactory.loadingVisible shouldBe false
@@ -45,7 +52,7 @@ class TestUpdateManager: AbstractDartsTest()
         result shouldBe null
         exceptionLogged() shouldBe true
         getLogs() shouldContain("java.net.SocketTimeoutException: connect timed out")
-        dialogFactory.errorsShown.shouldBeEmpty()
+        dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
 
         dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")
         dialogFactory.loadingVisible shouldBe false
@@ -67,41 +74,113 @@ class TestUpdateManager: AbstractDartsTest()
         asset.getLong("size") shouldNotBe null
     }
 
+    /**
+     * Parsing
+     */
     @Test
-    fun `Should show an error and abort if failed to communicate with the API`()
+    fun `Should parse correctly formed JSON`()
     {
-        UpdateManager.shouldUpdate(null) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
+        val json = """{
+                    "tag_name": "foo",
+                    "assets": [
+                    {
+                        "id": 123456,
+                        "name": "Dartzee_v_foo.jar",
+                        "size": 1
+                    }
+                    ]
+                }"""
+
+        val metadata = UpdateManager.parseUpdateMetadata(JSONObject(json))!!
+        metadata.version shouldBe "foo"
+        metadata.assetId shouldBe 123456
+        metadata.fileName shouldBe "Dartzee_v_foo.jar"
+        metadata.size shouldBe 1
     }
 
     @Test
+    fun `Should log an error if no tag_name is present`()
+    {
+        val json = "{\"other_tag\":\"foo\"}"
+        val metadata = UpdateManager.parseUpdateMetadata(JSONObject(json))
+        metadata shouldBe null
+        exceptionLogged() shouldBe true
+        getLogs() shouldContain json
+        getLogs() shouldContain "org.json.JSONException"
+    }
+
+    @Test
+    fun `Should log an error if no assets are found`()
+    {
+        val json = """{"assets":[],"tag_name":"foo"}"""
+        val metadata = UpdateManager.parseUpdateMetadata(JSONObject(json))
+        metadata shouldBe null
+        exceptionLogged() shouldBe true
+        getLogs() shouldContain json
+        getLogs() shouldContain "org.json.JSONException"
+    }
+
+    /**
+     * Should update?
+     */
+    @Test
     fun `Should not proceed with the update if the versions match`()
     {
-        val json = "{\"tag_name\": \"$DARTS_VERSION_NUMBER\"}"
+        val metadata = UpdateMetadata(DARTS_VERSION_NUMBER, 123456, "Dartzee_x_y.jar", 100)
 
-        UpdateManager.shouldUpdate(JSONObject(json)) shouldBe false
+        UpdateManager.shouldUpdate(metadata) shouldBe false
         getLogs() shouldContain "I am up to date"
     }
 
     @Test
     fun `Should not proceed with the update if user selects 'No'`()
     {
-        val json = "{\"tag_name\": \"foo\"}"
+        val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar", 100)
 
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
-        UpdateManager.shouldUpdate(JSONObject(json)) shouldBe false
+        UpdateManager.shouldUpdate(metadata) shouldBe false
         dialogFactory.questionsShown.shouldContainExactly("An update is available (foo). Would you like to download it now?")
     }
 
     @Test
     fun `Should proceed with the update if user selects 'Yes'`()
     {
-        val json = "{\"tag_name\": \"foo\"}"
+        val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar", 100)
 
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
-        UpdateManager.shouldUpdate(JSONObject(json)) shouldBe true
+        UpdateManager.shouldUpdate(metadata) shouldBe true
         dialogFactory.questionsShown.shouldContainExactly("An update is available (foo). Would you like to download it now?")
+    }
+
+    /**
+     * Prepare batch file
+     */
+    @Test
+    fun `Should overwrite existing batch file with the correct contents`()
+    {
+        val updateFile = File("update.bat")
+        updateFile.writeText("blah")
+
+        UpdateManager.prepareBatchFile()
+
+        updateFile.readText() shouldBe javaClass.getResource("/update/update.bat").readText()
+        updateFile.delete()
+    }
+
+    /**
+     * Run update
+     */
+    @Test
+    fun `Should log an error if batch file goes wrong`()
+    {
+        val runtime = mockk<Runtime>()
+        every {runtime.exec("foo") } throws IOException("Argh")
+        UpdateManager.startUpdate("foo", runtime)
+
+        exceptionLogged() shouldBe true
+
+        dialogFactory.errorsShown.shouldContainExactly("Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo")
     }
 }
