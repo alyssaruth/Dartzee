@@ -128,7 +128,7 @@ class TestUpdateManager: AbstractDartsTest()
     {
         val metadata = UpdateMetadata(DARTS_VERSION_NUMBER, 123456, "Dartzee_x_y.jar", 100)
 
-        UpdateManager.shouldUpdate(metadata) shouldBe false
+        UpdateManager.shouldUpdate(DARTS_VERSION_NUMBER, metadata) shouldBe false
         getLogs() shouldContain "I am up to date"
     }
 
@@ -139,7 +139,7 @@ class TestUpdateManager: AbstractDartsTest()
 
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
-        UpdateManager.shouldUpdate(metadata) shouldBe false
+        UpdateManager.shouldUpdate("bar", metadata) shouldBe false
         dialogFactory.questionsShown.shouldContainExactly("An update is available (foo). Would you like to download it now?")
     }
 
@@ -150,7 +150,7 @@ class TestUpdateManager: AbstractDartsTest()
 
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
-        UpdateManager.shouldUpdate(metadata) shouldBe true
+        UpdateManager.shouldUpdate("bar", metadata) shouldBe true
         dialogFactory.questionsShown.shouldContainExactly("An update is available (foo). Would you like to download it now?")
     }
 
@@ -183,4 +183,15 @@ class TestUpdateManager: AbstractDartsTest()
 
         dialogFactory.errorsShown.shouldContainExactly("Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo")
     }
+
+    /**
+     * E2E - run to actually download+run the latest JAR
+     */
+    /*@Test
+    fun `Should perform the whole download without error`()
+    {
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
+
+        UpdateManager.checkForUpdates("foo")
+    }*/
 }

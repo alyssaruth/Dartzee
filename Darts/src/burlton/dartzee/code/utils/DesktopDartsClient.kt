@@ -38,7 +38,7 @@ class DesktopDartsClient : AbstractDesktopClient()
 
     override fun checkForUpdates()
     {
-        UpdateManager.checkForUpdates()
+        UpdateManager.checkForUpdates(DARTS_VERSION_NUMBER)
     }
 
     override fun isCommunicatingWithServer() = false

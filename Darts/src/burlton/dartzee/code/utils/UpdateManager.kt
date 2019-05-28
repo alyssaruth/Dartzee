@@ -14,16 +14,16 @@ import javax.swing.JOptionPane
  */
 object UpdateManager
 {
-    fun checkForUpdates()
+    fun checkForUpdates(currentVersion: String)
     {
         //Show this here, checking the CRC can take time
-        Debug.append("Checking for updates - my version is $DARTS_VERSION_NUMBER")
+        Debug.append("Checking for updates - my version is $currentVersion")
 
         val jsonResponse = queryLatestReleaseJson(DARTZEE_REPOSITORY_URL)
         jsonResponse ?: return
 
         val metadata = parseUpdateMetadata(jsonResponse)
-        if (metadata == null || !shouldUpdate(metadata))
+        if (metadata == null || !shouldUpdate(currentVersion, metadata))
         {
             return
         }
@@ -60,9 +60,9 @@ object UpdateManager
         }
     }
 
-    fun shouldUpdate(metadata: UpdateMetadata): Boolean
+    fun shouldUpdate(currentVersion: String, metadata: UpdateMetadata): Boolean
     {
-        if (metadata.version == DARTS_VERSION_NUMBER)
+        if (metadata.version == currentVersion)
         {
             Debug.append("I am up to date")
             return false
