@@ -1,65 +1,80 @@
 package burlton.desktopcore.code.screen;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
-
+import burlton.core.code.util.Debug;
 import burlton.core.code.util.DebugOutput;
 
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
+
 public class DebugConsole extends JFrame
-						  implements DebugOutput
+							 implements DebugOutput
 {
-	private boolean scrollLock = false;
-	
 	public DebugConsole()
 	{
+		setTitle("Console");
+		setSize(1000, 600);
+		setLocationRelativeTo(null);
+		
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		getContentPane().add(scrollPane);
 		
 		textArea.setForeground(Color.GREEN);
 		textArea.setBackground(Color.BLACK);
 		textArea.setEditable(false);
-		textArea.setLineWrap(true);
 		scrollPane.setViewportView(textArea);
-		
-		DefaultCaret caret = (DefaultCaret)textArea.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 	}
 	
+	private final DefaultStyledDocument doc = new DefaultStyledDocument();
 	private final JScrollPane scrollPane = new JScrollPane();
-	private final JTextArea textArea = new JTextArea();
+	private final JTextPane textArea = new JTextPane(doc);
 	
-	public void scrollToBottom()
-	{
-		if (!scrollLock)
-		{
-			String allText = textArea.getText();
-			int length = allText.length();
-		
-			textArea.setCaretPosition(length);
-		}
-	}
-	
-	public void setScrollLock(boolean scrollLock)
-	{
-		this.scrollLock = scrollLock;
-	}
-
 	@Override
 	public void append(String text)
 	{
-		textArea.append(text);
-		scrollToBottom();
+		StyleContext cx = new StyleContext();
+		Style style = cx.addStyle(text, null);
+		
+		if (text.contains(Debug.SQL_PREFIX))
+		{
+			if (text.contains("INSERT")
+			  || text.contains("UPDATE"))
+			{
+				StyleConstants.setForeground(style, Color.ORANGE);
+			}
+			else if (text.contains("DELETE"))
+			{
+				StyleConstants.setForeground(style, Color.RED);
+			}
+			else
+			{
+				StyleConstants.setForeground(style, Color.CYAN);
+			}
+		}
+		
+		try
+		{
+			doc.insertString(doc.getLength(), text, style);
+			textArea.select(doc.getLength(), doc.getLength());
+		}
+		catch (BadLocationException ble)
+		{
+			Debug.stackTrace(ble, "BLE trying to append: " + text);
+		}
 	}
 
 	@Override
 	public String getLogs()
 	{
-		return textArea.getText();
+		try
+		{
+			return doc.getText(0, doc.getLength());
+		}
+		catch (Throwable t)
+		{
+			Debug.stackTrace(t);
+			return null;
+		}
 	}
 	
 	@Override
@@ -67,4 +82,5 @@ public class DebugConsole extends JFrame
 	{
 		textArea.setText("");
 	}
+
 }

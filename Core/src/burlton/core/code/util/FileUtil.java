@@ -10,7 +10,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.util.Iterator;
 
 public class FileUtil
@@ -49,26 +48,6 @@ public class FileUtil
 		
 		Debug.append("Successfully created file " + file);
 		return file;
-	}
-	
-	public static String getMd5Crc(String filePath)
-	{
-		String crc = null;
-		
-		try
-		{
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(Files.readAllBytes(Paths.get(filePath)));
-			byte[] digest = md.digest();
-			
-			crc = EncryptionUtil.base64Interface.encode(digest);
-		}
-		catch (Throwable t)
-		{
-			Debug.append("Caught " + t + " trying to get CRC of file");
-		}
-		
-		return crc;
 	}
 	
 	public static boolean deleteFileIfExists(String filePath)
@@ -126,24 +105,6 @@ public class FileUtil
 		return null;
 	}
 	
-	public static String getFileContentsAsString(File file)
-	{
-		String ret = null;
-		
-		try
-		{
-			Path path = file.toPath();
-			byte[] bytes = Files.readAllBytes(path);
-			ret = new String(bytes, "UTF-8");
-		}
-		catch (Throwable t)
-		{
-			Debug.stackTrace(t);
-		}
-		
-		return ret;
-	}
-	
 	public static Dimension getImageDim(String path) 
 	{
 	    Dimension result = null;
@@ -186,12 +147,6 @@ public class FileUtil
 		
 		int dotIndex = path.lastIndexOf('.');
 		return path.substring(dotIndex + 1);
-	}
-	
-	public static String stripFileExtension(String filename)
-	{
-		int ix = filename.indexOf('.');
-		return filename.substring(0, ix);
 	}
 	
 	public static byte[] getByteArrayForResource(String resourcePath)
