@@ -8,9 +8,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 public class MessageSender implements Runnable
 {
 	private MessageSenderParams messageParms = null;
@@ -27,31 +24,10 @@ public class MessageSender implements Runnable
 		this.messageParms = messageWrapper;
 	}
 	
-	/**
-	 * Constructor just containing the client. When this runnable gets kicked off, we'll get the next 
-	 * messageWrapper to send off of the client.
-	 */
-	public MessageSender(AbstractClient client)
-	{
-		this.client = client;
-	}
-	
 	@Override
 	public void run()
 	{
-		if (messageParms == null)
-		{
-			//We're picking up off the queue, so we should synchronise
-			synchronized (client)
-			{
-				this.messageParms = client.getNextMessageToSend();
-				sendMessage();
-			}
-		}
-		else
-		{
-			sendMessage();
-		}
+		sendMessage();
 	}
 	
 	public String sendMessage()
@@ -67,8 +43,6 @@ public class MessageSender implements Runnable
 		try (Socket socket = new Socket(address, portNumber);
 		  PrintWriter out = new PrintWriter(socket.getOutputStream(), true);)
 		{
-			client.setLastSentMessageMillis(System.currentTimeMillis());
-			
 			int soTimeOut = messageParms.getReadTimeOut();
 			socket.setSoTimeout(soTimeOut);
 			
@@ -97,18 +71,9 @@ public class MessageSender implements Runnable
 			
 			return encryptedResponseString;
 		}
-		catch (SocketException t)
+		catch (SocketException | SocketTimeoutException t)
 		{
 			return retryOrStackTrace(t);
-		}
-		catch (SocketTimeoutException ste)
-		{
-			if (!isResponseIgnored(messageString))
-			{
-				return retryOrStackTrace(ste);
-			}
-			
-			return null;
 		}
 		catch (Throwable t)
 		{
@@ -189,23 +154,5 @@ public class MessageSender implements Runnable
 			
 			return null;
 		}
-	}
-	
-	private boolean isResponseIgnored(String xmlStr)
-	{
-		Document document = XmlUtil.getDocumentFromXmlString(xmlStr);
-		if (document == null)
-		{
-			//I've had this be null here on Live. Just return false so we re-send
-			Debug.stackTrace("NULL document when checking if response is ignored for message " + xmlStr);
-			return false;
-		}
-		
-		Element rootElement = document.getDocumentElement();
-		
-		String name = rootElement.getTagName();
-		
-		return name.equals(XmlConstants.ROOT_TAG_NEW_CHAT)
-		    || name.equals(XmlConstants.ROOT_TAG_DISCONNECT_REQUEST);
 	}
 }

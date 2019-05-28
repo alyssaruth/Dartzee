@@ -1,11 +1,10 @@
 package burlton.core.code.util;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
+import burlton.core.code.obj.SuperHashMap;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,13 +13,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
-import burlton.core.code.obj.SuperHashMap;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.Map;
 
 public class XmlUtil 
 {
@@ -41,15 +37,6 @@ public class XmlUtil
 			Debug.stackTrace(t);
 			return null;
 		}
-	}
-	
-	public static Document factorySimpleMessage(String name)
-	{
-		Document response = XmlUtil.factoryNewDocument();
-		Element rootElement = response.createElement(name);
-		
-		response.appendChild(rootElement);
-		return response;
 	}
 	
 	public static String getStringFromDocument(Document xmlDoc)
@@ -86,33 +73,6 @@ public class XmlUtil
 		}
 	}
 	
-	public static int getAttributeIntCompulsory(Element rootElement, String attributeName) throws IOException
-	{
-		String attribute = getCompulsoryAttribute(rootElement, attributeName);
-		int ret = -1;
-		try
-		{
-			ret = Integer.parseInt(attribute);
-		}
-		catch (NumberFormatException nfe)
-		{
-			throw new IOException("Failed to parse " + attribute + " as an integer");
-		}
-		
-		return ret;
-	}
-	
-	public static String getCompulsoryAttribute(Element rootElement, String attributeName) throws IOException
-	{
-		String attribute = rootElement.getAttribute(attributeName);
-		if (attribute.equals(""))
-		{
-			throw new IOException("Missing attribute: " + attributeName);
-		}
-		
-		return attribute;
-	}
-	
 	public static int getAttributeInt(Element rootElement, String attributeName)
 	{	
 		return getAttributeInt(rootElement, attributeName, 0);
@@ -139,17 +99,6 @@ public class XmlUtil
 		return ret;
 	}
 	
-	public static long getAttributeLong(Element rootElement, String attributeName)
-	{
-		String attribute = rootElement.getAttribute(attributeName);
-		if (attribute.equals(""))
-		{
-			return 0;
-		}
-		
-		return Long.parseLong(attribute);
-	}
-	
 	public static double getAttributeDouble(Element rootElement, String attributeName)
 	{
 		String attribute = rootElement.getAttribute(attributeName);
@@ -161,59 +110,12 @@ public class XmlUtil
 		return Double.parseDouble(attribute);
 	}
 	
-	public static boolean getAttributeBoolean(Element rootElement, String attributeName)
-	{
-		String value = rootElement.getAttribute(attributeName);
-		return !value.equals("");
-	}
-	
 	public static void setAttributeBoolean(Element rootElement, String attributeName, boolean bool)
 	{
 		if (bool)
 		{
 			rootElement.setAttribute(attributeName, "" + bool);
 		}
-	}
-	
-	public static ArrayList<String> getListFromElement(Element root, String elementName, String attributePrefix)
-	{
-		ArrayList<String> ret = new ArrayList<>();
-		
-		NodeList elements = root.getElementsByTagName(elementName);
-		if (elements.getLength() == 0)
-		{
-			Debug.append("No such element: " + elementName);
-			return ret;
-		}
-		
-		Element element = (Element)elements.item(0);
-		int i = 0;
-		String card = element.getAttribute(attributePrefix + "-" + i);
-		while (!card.isEmpty())
-		{
-			ret.add(card);
-			i++;
-			card = element.getAttribute(attributePrefix + "-" + i);
-		}
-		
-		return ret;
-	}
-	
-	public static Element getElementIfExists(Element rootElement, String elementName)
-	{
-		NodeList children = rootElement.getElementsByTagName(elementName);
-		int size = children.getLength();
-		if (size == 0)
-		{
-			return null;
-		}
-		
-		if (size > 1)
-		{
-			Debug.stackTrace("Found more than 1 " + elementName + " element. Message: " );
-		}
-		
-		return (Element)children.item(0);
 	}
 
 	public static Document factorySimpleMessage(String username, String rootName)

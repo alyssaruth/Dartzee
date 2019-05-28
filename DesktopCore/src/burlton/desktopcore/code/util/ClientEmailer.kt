@@ -5,6 +5,7 @@ import org.w3c.dom.Document
 import java.io.File
 import java.nio.charset.StandardCharsets
 
+private const val ROOT_TAG = "ClientMail"
 private const val LOG_FILENAME_PREFIX = "DebugLog"
 private const val SO_TIMEOUT_MILLIS = 60000 //1 minute
 
@@ -48,10 +49,10 @@ object ClientEmailer
     /**
      * Write out the XML for a client mail message
      */
-    fun factoryClientMailMessage(subject: String, body: String, obfuscated: Boolean): Document
+    private fun factoryClientMailMessage(subject: String, body: String, obfuscated: Boolean): Document
     {
         val message = XmlUtil.factoryNewDocument()
-        val root = message!!.createElement(XmlConstants.ROOT_TAG_CLIENT_MAIL)
+        val root = message!!.createElement(ROOT_TAG)
 
         val symmetricKey = KeyGeneratorUtil.generateSymmetricKey()
         val symmetricKeyString = EncryptionUtil.convertSecretKeyToString(symmetricKey!!)
@@ -103,11 +104,11 @@ object ClientEmailer
         val responseStr = sendEmailMessage(xml)
         if (responseStr == null)
         {
-            Debug.append("Failed to send " + file.name + ", leaving file for next start-up")
+            Debug.append("Failed to send ${file.name}, leaving file for next start-up")
         }
         else
         {
-            Debug.append("Sent " + file.name + " successfully")
+            Debug.append("Sent ${file.name} successfully")
             FileUtil.deleteFileIfExists(file.absolutePath)
         }
     }
