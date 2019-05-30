@@ -118,11 +118,6 @@ class PlayerImageDialog : SimpleDialog(), FileUploadListener
         dispose()
     }
 
-    fun reset()
-    {
-        playerImageIdSelected = ""
-    }
-
     override fun fileUploaded(file: File)
     {
         validateAndUploadImage(file)
