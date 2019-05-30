@@ -9,8 +9,8 @@ class LoadingDialog : JDialog()
 
     init
     {
-        layout = MigLayout("", "[grow]", "[]")
-        setSize(250, 120)
+        layout = MigLayout("gapy 12px", "[grow]", "[]")
+        setSize(250, 115)
         setLocationRelativeTo(null)
         isResizable = false
         isModal = true

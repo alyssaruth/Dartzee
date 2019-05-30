@@ -1,23 +1,32 @@
-package burlton.desktopcore.code.bean
+package burlton.dartzee.code.bean
 
+import burlton.dartzee.code.db.PlayerImageEntity
 import java.awt.Color
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.*
+import javax.swing.ButtonGroup
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JRadioButton
 import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-open class RadioImage(img: ImageIcon) : JPanel(), ChangeListener, MouseListener
+/**
+ * Wrap up a PlayerImage so we can render the icon, and store its ID to point a PlayerEntity at it
+ */
+class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, MouseListener
 {
+    var playerImageId = ""
     private val rdbtn = JRadioButton()
     private val lblImg = JLabel()
 
     init
     {
         border = EmptyBorder(1, 1, 1, 1)
-        lblImg.icon = img
+        lblImg.icon = pi.asImageIcon()
+        playerImageId = pi.rowId
 
         add(rdbtn)
         add(lblImg)
