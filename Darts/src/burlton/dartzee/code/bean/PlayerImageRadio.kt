@@ -1,7 +1,10 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.PlayerImageEntity
+import com.sun.java.swing.plaf.windows.WindowsBorders
 import java.awt.Color
+import java.awt.event.FocusEvent
+import java.awt.event.FocusListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.ButtonGroup
@@ -16,7 +19,7 @@ import javax.swing.event.ChangeListener
 /**
  * Wrap up a PlayerImage so we can render the icon, and store its ID to point a PlayerEntity at it
  */
-class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, MouseListener
+class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, MouseListener, FocusListener
 {
     var playerImageId = ""
     private val rdbtn = JRadioButton()
@@ -31,6 +34,7 @@ class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, Mouse
         add(rdbtn)
         add(lblImg)
 
+        rdbtn.addFocusListener(this)
         rdbtn.addChangeListener(this)
         lblImg.addMouseListener(this)
     }
@@ -42,11 +46,18 @@ class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, Mouse
         bg.add(rdbtn)
     }
 
-    override fun stateChanged(arg0: ChangeEvent)
+    override fun stateChanged(arg0: ChangeEvent) = updateBorder()
+    override fun focusLost(e: FocusEvent?) = updateBorder()
+    override fun focusGained(e: FocusEvent?) = updateBorder()
+    private fun updateBorder()
     {
         if (rdbtn.isSelected)
         {
             border = LineBorder(Color.BLACK)
+        }
+        else if (rdbtn.hasFocus())
+        {
+            border = WindowsBorders.DashedBorder(Color.GRAY)
         }
         else
         {
