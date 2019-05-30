@@ -1,19 +1,14 @@
 package burlton.dartzee.code.bean;
 
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.border.EtchedBorder;
-
-import burlton.dartzee.code.screen.PlayerImageDialog;
-import burlton.dartzee.code.screen.ScreenCache;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.db.PlayerImageEntity;
+import burlton.dartzee.code.screen.PlayerImageDialog;
+
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PlayerAvatar extends JLabel
 {
@@ -80,8 +75,7 @@ public class PlayerAvatar extends JLabel
 				return;
 			}
 			
-			PlayerImageDialog dlg = ScreenCache.getPlayerImageDialog();
-			dlg.reset();
+			PlayerImageDialog dlg = new PlayerImageDialog();
 			dlg.setVisible(true);
 			
 			avatarId = dlg.getPlayerImageIdSelected();

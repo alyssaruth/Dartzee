@@ -28,7 +28,6 @@ public final class ScreenCache
 	private static AboutDialogDarts aboutDialog = null;
 	private static BugReportDialog bugReportDialog = null;
 	private static PreferencesDialog preferencesDialog = null;
-	private static PlayerImageDialog playerImageDialog = null;
 	private static ConfigureReportColumnsDialog configureReportColumnsDialog = null;
 	
 	//Other
@@ -168,16 +167,6 @@ public final class ScreenCache
 		hmGameIdToGameScreen.removeAllWithValue(scrn);
 	}
 	
-	public static PlayerImageDialog getPlayerImageDialog()
-	{
-		if (playerImageDialog == null)
-		{
-			playerImageDialog = new PlayerImageDialog();
-		}
-		
-		return playerImageDialog;
-	}
-	
 	public static ConfigureReportColumnsDialog getConfigureReportColumnsDialog()
 	{
 		if (configureReportColumnsDialog == null)
@@ -213,7 +202,6 @@ public final class ScreenCache
 		aboutDialog = null;
 		bugReportDialog = null;
 		preferencesDialog = null;
-		playerImageDialog = null;
 		configureReportColumnsDialog = null;
 	}
 }
