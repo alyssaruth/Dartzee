@@ -213,6 +213,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
             Debug.append("Response tag: " + response.body.`object`.get("tag_name"))
         }
+        else if (cmd == "load")
+        {
+            DialogUtil.showLoadingDialog("Testing")
+        }
 
         return textToShow
     }

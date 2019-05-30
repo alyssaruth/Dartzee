@@ -44,7 +44,7 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
             progressBar.minimum = 0
             progressBar.maximum = workToDo
             progressBar.value = 0
-            progressBar.string = workToDo.toString() + " " + message
+            progressBar.string = "$workToDo $message"
         }
     }
 
