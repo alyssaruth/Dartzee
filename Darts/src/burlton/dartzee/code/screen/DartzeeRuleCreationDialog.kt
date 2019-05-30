@@ -52,7 +52,7 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         toggleDartsComponents()
     }
 
-    override fun actionPerformed(arg0: ActionEvent?)
+    override fun actionPerformed(arg0: ActionEvent)
     {
         if (rdbtnPanelDartScoreType.isEventSource(arg0))
         {

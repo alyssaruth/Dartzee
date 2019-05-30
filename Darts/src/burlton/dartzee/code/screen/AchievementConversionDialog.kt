@@ -87,7 +87,7 @@ class AchievementConversionDialog : SimpleDialog()
         return true
     }
 
-    override fun actionPerformed(arg0: ActionEvent?)
+    override fun actionPerformed(arg0: ActionEvent)
     {
         if (panelTop.isEventSource(arg0))
         {
