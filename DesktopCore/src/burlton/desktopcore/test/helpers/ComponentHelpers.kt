@@ -1,4 +1,4 @@
-package burlton.dartzee.test.helper
+package burlton.desktopcore.test.helpers
 
 import burlton.core.code.util.Debug
 import burlton.desktopcore.code.bean.ScrollTable
@@ -7,8 +7,16 @@ import java.awt.Component
 import java.awt.event.MouseEvent
 import java.awt.event.MouseEvent.MOUSE_CLICKED
 import java.awt.event.MouseListener
+import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.KeyStroke
+
+val MOUSE_EVENT_SINGLE_CLICK = MouseEvent(JButton(), MOUSE_CLICKED, System.currentTimeMillis(), -1, 0, 0, 1, false)
+
+fun makeMouseEvent(clickCount: Int = 1, x: Int = 0, y: Int = 0): MouseEvent
+{
+    return MouseEvent(JButton(), MOUSE_CLICKED, System.currentTimeMillis(), -1, x, y, clickCount, false)
+}
 
 /**
  * Test methods

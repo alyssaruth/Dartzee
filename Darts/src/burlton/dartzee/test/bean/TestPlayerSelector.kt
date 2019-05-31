@@ -1,7 +1,11 @@
 package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.PlayerSelector
-import burlton.dartzee.test.helper.*
+import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.insertPlayer
+import burlton.dartzee.test.helper.wipeTable
+import burlton.desktopcore.test.helpers.doubleClick
+import burlton.desktopcore.test.helpers.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainExactly
