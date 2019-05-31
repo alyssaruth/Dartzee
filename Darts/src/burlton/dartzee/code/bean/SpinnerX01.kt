@@ -20,10 +20,10 @@ class SpinnerX01 : JSpinner(), ChangeListener
 
     override fun stateChanged(arg0: ChangeEvent)
     {
-        val value = value as Int
-        if (value % 100 != 1)
+        val intVal = value as Int
+        if (intVal % 100 != 1)
         {
-            setValue(501)
+            value = 501
         }
 
         if (listener != null)
