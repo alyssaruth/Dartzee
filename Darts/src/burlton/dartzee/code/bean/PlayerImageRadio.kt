@@ -22,8 +22,8 @@ import javax.swing.event.ChangeListener
 class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, MouseListener, FocusListener
 {
     var playerImageId = ""
-    private val rdbtn = JRadioButton()
-    private val lblImg = JLabel()
+    val rdbtn = JRadioButton()
+    val lblImg = JLabel()
 
     init
     {
