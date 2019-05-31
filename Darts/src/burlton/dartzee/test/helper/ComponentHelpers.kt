@@ -39,3 +39,11 @@ fun doubleClick(component: Component)
         component.mouseClicked(mouseEvent)
     }
 }
+
+fun singleClick(component: Component)
+{
+    val mouseEvent = MouseEvent(component, MOUSE_CLICKED, System.currentTimeMillis(), -1,
+            0, 0, 1, false)
+
+    component.mouseListeners.forEach { it.mouseClicked(mouseEvent) }
+}

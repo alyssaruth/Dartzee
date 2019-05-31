@@ -200,11 +200,11 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
             }
         }
     }
+}
 
-    protected fun getBlobValue(resource: String): Blob
-    {
-        val resourceLocation = "/avatars/$resource.png"
-        val bytes = FileUtil.getByteArrayForResource(resourceLocation)
-        return SerialBlob(bytes)
-    }
+fun getBlobValue(resource: String): Blob
+{
+    val resourceLocation = "/avatars/$resource.png"
+    val bytes = FileUtil.getByteArrayForResource(resourceLocation)
+    return SerialBlob(bytes)
 }
