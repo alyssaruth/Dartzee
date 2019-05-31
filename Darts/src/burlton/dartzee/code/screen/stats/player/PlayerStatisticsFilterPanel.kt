@@ -53,7 +53,7 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
         lblXGames.font = Font("Tahoma", Font.BOLD, 11)
         lblXGames.horizontalAlignment = SwingConstants.CENTER
         panel.add(lblXGames, "cell 0 5,growx,aligny top")
-        lblAvatar.setReadOnly(true)
+        lblAvatar.readOnly = true
         panelX.preferredSize = Dimension(45, 150)
         add(panelX)
         panelX.add(btnX)
