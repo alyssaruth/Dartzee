@@ -14,6 +14,7 @@ public abstract class AbstractClient implements OnlineConstants
 	public static boolean devMode = false;
 	public static boolean traceReadSql = true;
 	public static boolean traceWriteSql = true;
+	public static String logSecret = "";
 	public static int sqlMaxDuration = SQL_MAX_DURATION;
 	public static String operatingSystem = "";
 	public static boolean justUpdated = false;
@@ -68,6 +69,11 @@ public abstract class AbstractClient implements OnlineConstants
 		else if (arg.equals("traceSql"))
 		{
 			traceWriteSql = true;
+		}
+		else if (arg.startsWith("logSecret="))
+		{
+			logSecret = arg.split("=")[1];
+			Debug.append("Got logSecret: " + logSecret);
 		}
 		else
 		{

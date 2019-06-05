@@ -1,13 +1,19 @@
 package burlton.desktopcore.code.util
 
-import burlton.core.code.util.*
-import org.w3c.dom.Document
+import burlton.core.code.util.AbstractClient
+import burlton.core.code.util.Debug
+import burlton.core.code.util.FileUtil
+import com.sun.mail.smtp.SMTPTransport
 import java.io.File
 import java.nio.charset.StandardCharsets
+import java.util.*
+import javax.mail.Message
+import javax.mail.MessagingException
+import javax.mail.Session
+import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeMessage
 
-private const val ROOT_TAG = "ClientMail"
 private const val LOG_FILENAME_PREFIX = "DebugLog"
-private const val SO_TIMEOUT_MILLIS = 60000 //1 minute
 
 /**
  * Class to handle sending emails from the client, which is all done via the Entropy Server
@@ -16,25 +22,46 @@ object ClientEmailer
 {
     private val TEMP_DIRECTORY = System.getProperty("user.dir") + "\\temp"
 
-    fun sendClientEmail(subject: String, body: String, containsCodeLines: Boolean)
+    fun canSendEmail(): Boolean
     {
-        val xml = factoryClientMailMessage(subject, body, containsCodeLines)
-        val responseStr = sendEmailMessage(xml)
-        if (responseStr == null)
+        if (AbstractClient.logSecret.isEmpty())
         {
-            Debug.append("Failed to send client log, details follow:")
-            Debug.appendWithoutDate("Subject: $subject")
-            Debug.newLine()
+            Debug.append("No logSecret - unable to send logs")
+            return false
+        }
 
-            writeEmailToFile(xml)
+        return true
+    }
 
-            throw Exception("Failed to send email")
+    fun sendClientEmail(subject: String, body: String)
+    {
+        if (!attemptToSendEmail(subject, body))
+        {
+            writeEmailToFile(subject, body)
+        }
+    }
+    private fun attemptToSendEmail(subject: String, body: String): Boolean
+    {
+        if (!canSendEmail())
+        {
+            return false
+        }
+
+        return try
+        {
+            sendEmail(subject, body, "entropydebug@gmail.com", "entropyDebug", AbstractClient.logSecret)
+            true
+        }
+        catch (me: MessagingException)
+        {
+            Debug.stackTraceSilently(me)
+            false
         }
     }
 
-    private fun writeEmailToFile(xmlMessage: Document)
+    private fun writeEmailToFile(subject: String, body: String)
     {
-        val xmlStr = XmlUtil.getStringFromDocument(xmlMessage)
+        val message = "$subject\n$body"
         val tempDir = File(TEMP_DIRECTORY)
         if (!tempDir.isDirectory && !tempDir.mkdirs())
         {
@@ -43,28 +70,7 @@ object ClientEmailer
         }
 
         val fileName = LOG_FILENAME_PREFIX + System.currentTimeMillis() + ".txt"
-        FileUtil.createNewFile(TEMP_DIRECTORY + "\\" + fileName, xmlStr)
-    }
-
-    /**
-     * Write out the XML for a client mail message
-     */
-    private fun factoryClientMailMessage(subject: String, body: String, obfuscated: Boolean): Document
-    {
-        val message = XmlUtil.factoryNewDocument()
-        val root = message!!.createElement(ROOT_TAG)
-
-        val symmetricKey = KeyGeneratorUtil.generateSymmetricKey()
-        val symmetricKeyString = EncryptionUtil.convertSecretKeyToString(symmetricKey!!)
-        val encryptedKey = EncryptionUtil.encrypt(symmetricKeyString, MessageUtil.publicKey, true)
-
-        root.setAttribute("EncryptedKey", encryptedKey)
-        root.setAttribute("Subject", EncryptionUtil.encrypt(subject, symmetricKey))
-        root.setAttribute("Body", EncryptionUtil.encrypt(body, symmetricKey))
-        XmlUtil.setAttributeBoolean(root, "Obfuscated", obfuscated)
-
-        message.appendChild(root)
-        return message
+        File(fileName).writeText(message)
     }
 
     /**
@@ -99,10 +105,13 @@ object ClientEmailer
 
     private fun resendFromDebugFile(file: File)
     {
-        val xmlStr = file.readText(StandardCharsets.UTF_8)
-        val xml = XmlUtil.getDocumentFromXmlString(xmlStr)
-        val responseStr = sendEmailMessage(xml)
-        if (responseStr == null)
+        val logStr = file.readText(StandardCharsets.UTF_8)
+        val lines = logStr.lines().toMutableList()
+        val subject = lines.removeAt(0)
+        val body = lines.joinToString("\n")
+
+        val success = attemptToSendEmail(subject, body)
+        if (!success)
         {
             Debug.append("Failed to send ${file.name}, leaving file for next start-up")
         }
@@ -113,9 +122,37 @@ object ClientEmailer
         }
     }
 
-    private fun sendEmailMessage(xml: Document?): String?
+    fun sendEmail(title: String, message: String, targetEmail: String,
+                  fromUsername: String, fromPassword: String)
     {
-        //Send with a longer timeout as the server may take some time to send the email. Don't retry forever though.
-        return AbstractClient.getInstance().sendSync(xml, false, SO_TIMEOUT_MILLIS, false)
+        if (message.isEmpty())
+        {
+            Debug.append("Not sending email $title as body is empty")
+            return
+        }
+
+        // Get a Properties object
+        val props = System.getProperties()
+        props.setProperty("mail.smtps.host", "smtp.gmail.com")
+        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
+        props.setProperty("mail.smtp.socketFactory.fallback", "false")
+        props.setProperty("mail.smtp.port", "465")
+        props.setProperty("mail.smtp.socketFactory.port", "465")
+        props.setProperty("mail.smtps.auth", "true")
+
+        val session = Session.getInstance(props, null)
+
+        val msg = MimeMessage(session)
+
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(targetEmail, false))
+        msg.subject = title
+        msg.sentDate = Date()
+        msg.setText(message, "utf-8")
+
+        val t = session.getTransport("smtps") as SMTPTransport
+
+        t.connect("smtp.gmail.com", fromUsername, fromPassword)
+        t.sendMessage(msg, msg.allRecipients)
+        t.close()
     }
 }

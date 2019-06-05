@@ -119,9 +119,6 @@ public abstract class AbstractDartsModel
 			this.scoringDart = scoringSingle;
 		}
 		
-		//horizontalBias = XmlUtil.getAttributeDouble(rootElement, ATTRIBUTE_HORIZONTAL_BIAS);
-		//verticalBias = XmlUtil.getAttributeDouble(rootElement, ATTRIBUTE_VERTICAL_BIAS);
-		
 		//X01
 		mercyThreshold = XmlUtil.getAttributeInt(rootElement, ATTRIBUTE_MERCY_RULE, -1);
 		
@@ -454,17 +451,6 @@ public abstract class AbstractDartsModel
 		double doublePercent = 100 * doublesHit/DOUBLE_DARTS_TO_THROW;
 		return new SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount);
 	}
-	/*private HashMap<Integer, Point> getHmOfDoublePoints(Dartboard dartboard)
-	{
-		HashMap<Integer, Point> ret = new HashMap<>();
-		for (int i=1; i<=20; i++)
-		{
-			Point doublePtToAimAt = getPointForScoreAdjustedForBias(i, dartboard, DartboardSegment.SEGMENT_TYPE_DOUBLE);
-			ret.put(i, doublePtToAimAt);
-		}
-		
-		return ret;
-	}*/
 	
 	/**
 	 * Gets / Sets
@@ -485,22 +471,6 @@ public abstract class AbstractDartsModel
 	{
 		this.scoringDart = scoringDart;
 	}
-	/*public double getHorizontalBias()
-	{
-		return horizontalBias;
-	}
-	public void setHorizontalBias(double horizontalBias)
-	{
-		this.horizontalBias = horizontalBias;
-	}
-	public double getVerticalBias()
-	{
-		return verticalBias;
-	}
-	public void setVerticalBias(double verticalBias)
-	{
-		this.verticalBias = verticalBias;
-	}*/
 	public int getMercyThreshold()
 	{
 		return mercyThreshold;
