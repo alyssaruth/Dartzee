@@ -110,14 +110,6 @@ public class XmlUtil
 		return Double.parseDouble(attribute);
 	}
 	
-	public static void setAttributeBoolean(Element rootElement, String attributeName, boolean bool)
-	{
-		if (bool)
-		{
-			rootElement.setAttribute(attributeName, "" + bool);
-		}
-	}
-	
 	public static SuperHashMap<Integer, Integer> readIntegerHashMap(Element rootElement, String tagName, String keyTag, String valueTag)
 	{
 		SuperHashMap<Integer, Integer> hm = new SuperHashMap<>();
