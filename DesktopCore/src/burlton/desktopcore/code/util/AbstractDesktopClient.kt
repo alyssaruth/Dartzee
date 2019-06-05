@@ -34,7 +34,7 @@ abstract class AbstractDesktopClient : AbstractClient()
 
         try
         {
-            ClientEmailer.sendClientEmail("Username notification", "$userName has set their username.", false)
+            ClientEmailer.sendClientEmail("Username notification", "$userName has set their username.")
         }
         catch (t: Throwable)
         {

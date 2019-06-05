@@ -21,6 +21,6 @@ class DartsDebugExtension : DebugExtension
 
     override fun sendEmail(title: String, message: String)
     {
-        ClientEmailer.sendClientEmail(title, message, false)
+        ClientEmailer.sendClientEmail(title, message)
     }
 }

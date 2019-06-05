@@ -217,6 +217,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             DialogUtil.showLoadingDialog("Testing")
         }
+        else if (cmd == "stacktrace")
+        {
+            Debug.stackTraceNoError("Testing")
+        }
 
         return textToShow
     }
