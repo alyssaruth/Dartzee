@@ -69,7 +69,7 @@ object ClientEmailer
             return
         }
 
-        val fileName = LOG_FILENAME_PREFIX + System.currentTimeMillis() + ".txt"
+        val fileName = "$tempDir/${LOG_FILENAME_PREFIX}_${System.currentTimeMillis()}.txt"
         File(fileName).writeText(message)
     }
 

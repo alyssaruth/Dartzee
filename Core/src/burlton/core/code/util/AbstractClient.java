@@ -1,7 +1,5 @@
 package burlton.core.code.util;
 
-import org.w3c.dom.Document;
-
 import java.util.Locale;
 
 /**
@@ -27,9 +25,7 @@ public abstract class AbstractClient implements OnlineConstants
 	 * Abstract methods
 	 */
 	public abstract void init();
-	public abstract String getUsername();
 	public abstract boolean isOnline();
-	public abstract String sendSyncOnDevice(MessageSender runnable);
 	public abstract void handleResponse(String message, String encryptedResponse) throws Throwable;
 	public abstract void checkForUpdates();
 	
@@ -73,7 +69,7 @@ public abstract class AbstractClient implements OnlineConstants
 		else if (arg.startsWith("logSecret="))
 		{
 			logSecret = arg.split("=")[1];
-			Debug.append("Got logSecret: " + logSecret);
+			Debug.append("Got logSecret - will be able to email logs");
 		}
 		else
 		{
@@ -108,24 +104,5 @@ public abstract class AbstractClient implements OnlineConstants
 	{
 		AbstractClient.client = client;
 		client.init();
-	}
-
-	public String sendSync(Document message, boolean encrypt, int readTimeOut, boolean alwaysRetryOnSoTimeout)
-	{
-		String messageString = XmlUtil.getStringFromDocument(message);
-		String encryptedMessageString = messageString;
-		if (encrypt)
-		{
-			encryptedMessageString = EncryptionUtil.encrypt(encryptedMessageString, MessageUtil.symmetricKey);
-		}
-		
-		MessageSenderParams wrapper = new MessageSenderParams(messageString, 0, 5);
-		wrapper.setEncryptedMessageString(encryptedMessageString);
-		wrapper.setIgnoreResponse(true);
-		wrapper.setReadTimeOut(readTimeOut);
-		wrapper.setAlwaysRetryOnSoTimeout(alwaysRetryOnSoTimeout);
-		
-		MessageSender sender = new MessageSender(this, wrapper);
-		return sendSyncOnDevice(sender);
 	}
 }
