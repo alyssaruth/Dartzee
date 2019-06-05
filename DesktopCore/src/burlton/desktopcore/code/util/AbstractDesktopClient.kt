@@ -12,8 +12,6 @@ abstract class AbstractDesktopClient : AbstractClient()
         MessageUtil.generatePublicKey()
 
         checkForUserName()
-
-        ClientEmailer.tryToSendUnsentLogs()
     }
 
     private fun checkForUserName()

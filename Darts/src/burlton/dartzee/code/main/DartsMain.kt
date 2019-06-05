@@ -5,6 +5,7 @@ import burlton.core.code.util.Debug
 import burlton.core.code.util.DebugUncaughtExceptionHandler
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.*
+import burlton.desktopcore.code.util.ClientEmailer
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.MessageDialogFactory
 import javax.swing.UIManager
@@ -30,6 +31,7 @@ object DartsMain
         AbstractClient.parseProgramArguments(args)
 
         Debug.setSendingEmails(!AbstractClient.devMode)
+        ClientEmailer.tryToSendUnsentLogs()
 
         checkForUpdatesIfRequired()
 
