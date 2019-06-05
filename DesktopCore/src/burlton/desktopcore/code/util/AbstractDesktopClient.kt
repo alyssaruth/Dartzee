@@ -1,16 +1,15 @@
 package burlton.desktopcore.code.util
 
-import burlton.core.code.util.*
+import burlton.core.code.util.AbstractClient
+import burlton.core.code.util.CoreRegistry
 import burlton.core.code.util.CoreRegistry.INSTANCE_STRING_USER_NAME
+import burlton.core.code.util.Debug
 import javax.swing.JOptionPane
 
 abstract class AbstractDesktopClient : AbstractClient()
 {
     override fun init()
     {
-        EncryptionUtil.setBase64Interface(Base64Desktop())
-        MessageUtil.generatePublicKey()
-
         checkForUserName()
     }
 

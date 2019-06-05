@@ -5,7 +5,7 @@ import java.util.Locale;
 /**
  * Interface used by Entropy Android & Desktop for anything to do with the online session
  */
-public abstract class AbstractClient implements OnlineConstants
+public abstract class AbstractClient
 {
 	public static final int SQL_MAX_DURATION = 5000; //5 seconds
 
@@ -25,18 +25,7 @@ public abstract class AbstractClient implements OnlineConstants
 	 * Abstract methods
 	 */
 	public abstract void init();
-	public abstract boolean isOnline();
-	public abstract void handleResponse(String message, String encryptedResponse) throws Throwable;
 	public abstract void checkForUpdates();
-	
-	/**
-	 * Use these to show waiting dialogs/info to the user
-	 */
-	public abstract boolean isCommunicatingWithServer();
-	public abstract void finishServerCommunication();
-	public abstract void unableToConnect();
-	public abstract void connectionLost();
-	public abstract void goOffline();
 	
 	/**
 	 * Helpers during startup
