@@ -67,31 +67,6 @@ public class StringUtil
 		
 		return sb.toString();
 	}
-
-	public static String escapeHtml(String plainText)
-	{
-		StringBuffer sb = new StringBuffer();
-		for (int i=0; i<plainText.length(); i++)
-		{
-			char c = plainText.charAt(i);
-			if (c == '&'
-			  || c == '"'
-			  || c == '<'
-			  || c == '>'
-			  || c > 128)
-			{
-				sb.append("&#");
-				sb.append((int)c);
-				sb.append(";");
-			}
-			else
-			{
-				sb.append(c);
-			}
-		}
-		
-		return sb.toString();
-	}
 	
 	public static String convertOrdinalToText(int position)
 	{

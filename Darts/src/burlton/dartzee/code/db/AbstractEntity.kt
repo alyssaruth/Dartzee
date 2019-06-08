@@ -320,8 +320,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
     private fun createIndex(columns: MutableList<String>)
     {
-        val columnList = StringUtil.toDelims(columns, ",")
-        val indexName = columnList.replace(",", "_")
+        val columnList = columns.joinToString()
+        val indexName = columnList.replace(", ", "_")
 
         val statement = "CREATE INDEX $indexName ON ${getTableName()}($columnList)"
         val success = DatabaseUtil.executeUpdate(statement)

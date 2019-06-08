@@ -1,7 +1,6 @@
 package burlton.dartzee.code.achievements.x01
 
 import burlton.core.code.util.Debug
-import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.AchievementEntity
@@ -33,7 +32,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
         tempTable ?: return
 
-        val checkoutsStr = StringUtil.toDelims(getCheckoutScores(), ", ")
+        val checkoutsStr = getCheckoutScores().joinToString()
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
@@ -62,7 +61,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
         for (i in 1..20)
         {
-            val adjacents = StringUtil.toDelims(getAdjacentNumbers(i), ", ")
+            val adjacents = getAdjacentNumbers(i).joinToString()
             sb.append(" OR StartingScore = ${2*i} AND Multiplier = 2 AND Score IN ($adjacents)")
         }
 

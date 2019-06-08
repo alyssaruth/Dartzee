@@ -103,7 +103,8 @@ fun insertDart(participant: ParticipantEntity,
                posX: Int = 20,
                posY: Int = 20,
                segmentType: Int = SEGMENT_TYPE_TREBLE,
-               dtCreation: Timestamp = getSqlDateNow()): DartEntity
+               dtCreation: Timestamp = getSqlDateNow(),
+               dtLastUpdate: Timestamp = getSqlDateNow()): DartEntity
 {
     val drt = DartEntity()
     drt.dtCreation = dtCreation
@@ -119,7 +120,7 @@ fun insertDart(participant: ParticipantEntity,
     drt.posY = posY
     drt.segmentType = segmentType
 
-    drt.saveToDatabase()
+    drt.saveToDatabase(dtLastUpdate)
 
     return drt
 }
