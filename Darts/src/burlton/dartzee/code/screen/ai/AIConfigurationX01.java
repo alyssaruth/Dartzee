@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.ai;
 
-import burlton.core.code.obj.SuperHashMap;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.bean.SpinnerSingleSelector;
 import burlton.dartzee.code.object.Dart;
