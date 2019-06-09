@@ -1,6 +1,5 @@
 package burlton.core.code.obj;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,10 +12,6 @@ public class SuperHashMap<K, V> extends HashMap<K, V>
 	public SuperHashMap()
 	{
 		
-	}
-	public SuperHashMap(AbstractMap<K, V> map)
-	{
-		putAll(map);
 	}
 	
 	public ArrayList<K> getKeysAsVector()

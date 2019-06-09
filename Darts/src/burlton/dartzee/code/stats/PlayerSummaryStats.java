@@ -1,6 +1,5 @@
 package burlton.dartzee.code.stats;
 
-import burlton.core.code.obj.SuperHashMap;
 import burlton.core.code.util.Debug;
 import burlton.dartzee.code.db.PlayerEntity;
 import burlton.dartzee.code.utils.DatabaseUtil;
@@ -9,10 +8,11 @@ import burlton.desktopcore.code.util.DateUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 
 public class PlayerSummaryStats
 {
-	private static SuperHashMap<String, PlayerSummaryStats> hmPlayerKeyToSummaryStats = new SuperHashMap<>();
+	private static HashMap<String, PlayerSummaryStats> hmPlayerKeyToSummaryStats = new HashMap<>();
 	
 	private int gameType = -1;
 	

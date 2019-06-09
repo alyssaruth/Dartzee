@@ -48,7 +48,7 @@ public abstract class AbstractDartsModel
 	private int scoringDart = 20;
 	
 	//X01
-	private SuperHashMap<Integer, Dart> hmScoreToDart = new SuperHashMap<>();
+	private HashMap<Integer, Dart> hmScoreToDart = new HashMap<>();
 	private int mercyThreshold = -1;
 	
 	//Golf
@@ -455,11 +455,11 @@ public abstract class AbstractDartsModel
 	/**
 	 * Gets / Sets
 	 */
-	public SuperHashMap<Integer, Dart> getHmScoreToDart()
+	public HashMap<Integer, Dart> getHmScoreToDart()
 	{
 		return hmScoreToDart;
 	}
-	public void setHmScoreToDart(SuperHashMap<Integer, Dart> hmScoreToDart)
+	public void setHmScoreToDart(HashMap<Integer, Dart> hmScoreToDart)
 	{
 		this.hmScoreToDart = hmScoreToDart;
 	}
