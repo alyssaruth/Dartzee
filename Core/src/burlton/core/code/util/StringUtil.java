@@ -1,7 +1,6 @@
 package burlton.core.code.util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StringUtil 
 {
@@ -42,22 +41,6 @@ public class StringUtil
 		}
 		
 		return list;
-	}
-	
-	public static String toDelims(List<? extends Object> list, String delimChar)
-	{
-		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<list.size(); i++)
-		{
-			if (i > 0)
-			{
-				sb.append(delimChar);
-			}
-			
-			sb.append(list.get(i));
-		}
-		
-		return sb.toString();
 	}
 	
 	public static String convertOrdinalToText(int position)
