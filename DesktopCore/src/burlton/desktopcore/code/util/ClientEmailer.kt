@@ -13,14 +13,14 @@ import javax.mail.Session
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
-private const val LOG_FILENAME_PREFIX = "DebugLog"
+const val LOG_FILENAME_PREFIX = "DebugLog"
 
 /**
  * Class to handle sending emails from the client, which is all done via the Entropy Server
  */
 object ClientEmailer
 {
-    private val TEMP_DIRECTORY = System.getProperty("user.dir") + "\\temp"
+    val TEMP_DIRECTORY = System.getProperty("user.dir") + "\\temp"
 
     fun canSendEmail(): Boolean
     {
