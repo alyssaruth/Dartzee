@@ -1,23 +1,19 @@
 package burlton.dartzee.code.screen.ai;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-
+import burlton.core.code.obj.SuperHashMap;
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.bean.SpinnerSingleSelector;
 import burlton.dartzee.code.object.Dart;
-import burlton.core.code.obj.SuperHashMap;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class AIConfigurationX01 extends AbstractAIConfigurationSubPanel
 								implements ActionListener
 {
-	private SuperHashMap<Integer, Dart> hmScoreToDart = new SuperHashMap<>();
+	private HashMap<Integer, Dart> hmScoreToDart = new HashMap<>();
 	
 	public AIConfigurationX01() 
 	{
