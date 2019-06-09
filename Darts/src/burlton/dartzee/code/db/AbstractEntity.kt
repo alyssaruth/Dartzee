@@ -2,7 +2,6 @@ package burlton.dartzee.code.db
 
 import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
-import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
@@ -36,20 +35,16 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     /**
      * Helpers
      */
-    private fun getColumnCount(): Int
-    {
-        val columns = getColumnsForSelectStatement()
-        return StringUtil.countOccurences(columns, ",") + 1
-    }
+    private fun getColumnCount() = getColumns().size
 
     private fun getCreateTableColumnSql() = "RowId VARCHAR(36) PRIMARY KEY, DtCreation Timestamp NOT NULL, DtLastUpdate Timestamp NOT NULL, ${getCreateTableSqlSpecific()}"
 
     fun getColumns(): MutableList<String>
     {
         val columnCreateSql = getCreateTableColumnSql()
-        val cols = StringUtil.getListFromDelims(columnCreateSql, ",")
+        val cols = columnCreateSql.split(",")
 
-        return cols.map{getColumnNameFromCreateSql(it)}.toMutableList()
+        return cols.map{ getColumnNameFromCreateSql(it) }.toMutableList()
     }
 
     fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String>
@@ -382,26 +377,13 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
     protected fun getColumnsForSelectStatement(alias: String = ""): String
     {
-        val sb = StringBuilder()
-
-        val cols = getColumns()
-        for (i in cols.indices)
+        var cols = getColumns().toList()
+        if (!alias.isEmpty())
         {
-            if (i > 0)
-            {
-                sb.append(", ")
-            }
-
-            var column = cols[i]
-            if (!alias.isEmpty())
-            {
-                column = "$alias.$column"
-            }
-
-            sb.append(column)
+            cols = cols.map{ "$alias.$it" }
         }
 
-        return sb.toString()
+        return cols.joinToString()
     }
 
     private fun getColumnNameFromCreateSql(col: String): String

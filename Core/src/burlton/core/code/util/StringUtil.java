@@ -5,14 +5,6 @@ import java.util.List;
 
 public class StringUtil 
 {
-	public static int countOccurences(String str, String stringToCount)
-	{
-		int length = str.length();
-		String strippedStr = str.replace(stringToCount, "");
-		
-		return length - strippedStr.length();
-	}
-	
 	public static ArrayList<String> getListFromDelims(String delimitedStr, String delimChar)
 	{
 		ArrayList<String> list = new ArrayList<>();
