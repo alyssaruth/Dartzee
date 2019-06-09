@@ -17,14 +17,14 @@ import javax.swing.JRadioButton
 
 class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : SimpleDialog()
 {
-    private val panel = RadioButtonPanel()
+    val panel = RadioButtonPanel()
     private val lblScore = JLabel("Score")
-    private val nfScore = NumberField(4, 501)
+    val nfScore = NumberField(4, 501)
     private val lblAimFor = JLabel("Aim for")
-    private val rdbtnSingle = JRadioButton("Single")
-    private val rdbtnDouble = JRadioButton("Double")
-    private val rdbtnTreble = JRadioButton("Treble")
-    private val spinner = SpinnerSingleSelector()
+    val rdbtnSingle = JRadioButton("Single")
+    val rdbtnDouble = JRadioButton("Double")
+    val rdbtnTreble = JRadioButton("Treble")
+    val spinner = SpinnerSingleSelector()
 
     init
     {
@@ -99,7 +99,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
         }
     }
 
-    private fun valid(): Boolean
+    fun valid(): Boolean
     {
         val scoreStr = nfScore.text
         if (scoreStr.isEmpty())
@@ -133,7 +133,6 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
 
     companion object
     {
-
         fun addNewSetupRule(hmScoreToDart: MutableMap<Int, Dart>)
         {
             val dlg = NewSetupRuleDialog(hmScoreToDart)
