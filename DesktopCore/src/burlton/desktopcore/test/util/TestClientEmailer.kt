@@ -1,11 +1,13 @@
 package burlton.desktopcore.test.util
 
 import burlton.core.code.util.AbstractClient
+import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.desktopcore.code.util.ClientEmailer
 import burlton.desktopcore.code.util.ClientEmailer.TEMP_DIRECTORY
 import burlton.desktopcore.code.util.LOG_FILENAME_PREFIX
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith
 import io.kotlintest.matchers.string.shouldStartWith
@@ -39,15 +41,7 @@ class TestClientEmailer: AbstractDesktopTest()
         AbstractClient.logSecret = ""
         ClientEmailer.sendClientEmail("Title", "Body")
 
-        val files = File(ClientEmailer.TEMP_DIRECTORY).listFiles()
-
-        files.size shouldBe 1
-        val f = files.first()
-        f.name shouldStartWith(LOG_FILENAME_PREFIX)
-        f.name shouldEndWith(".txt")
-
-        val logStr = f.readText(StandardCharsets.UTF_8)
-        logStr shouldBe "Title\nBody"
+        verifyLogFile()
     }
 
     @Test
@@ -84,5 +78,39 @@ class TestClientEmailer: AbstractDesktopTest()
         ClientEmailer.tryToSendUnsentLogs()
 
         getLogs() shouldContain "There are no logs to resend in $TEMP_DIRECTORY"
+    }
+
+    @Test
+    fun `Should send email successfully`()
+    {
+        AbstractClient.logSecret = System.getProperty("logSecret")
+
+        ClientEmailer.sendClientEmail("Unit Test", "This is a test")
+    }
+
+    @Test
+    fun `Should fail with incorrect password`()
+    {
+        AbstractClient.logSecret = "foo"
+
+        ClientEmailer.sendClientEmail("Title", "Body")
+
+        exceptionLogged() shouldBe true
+        getLogs() shouldContain "javax.mail.AuthenticationFailedException"
+        dialogFactory.errorsShown.shouldBeEmpty()
+        verifyLogFile()
+    }
+
+    fun verifyLogFile()
+    {
+        val files = File(ClientEmailer.TEMP_DIRECTORY).listFiles()
+
+        files.size shouldBe 1
+        val f = files.first()
+        f.name shouldStartWith(LOG_FILENAME_PREFIX)
+        f.name shouldEndWith(".txt")
+
+        val logStr = f.readText(StandardCharsets.UTF_8)
+        logStr shouldBe "Title\nBody"
     }
 }
