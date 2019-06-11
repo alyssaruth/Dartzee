@@ -30,7 +30,7 @@ class TestUpdateManager: AbstractDartsTest()
     @Test
     fun `Should log out an unexpected HTTP response, along with the full JSON payload`()
     {
-        Unirest.setTimeouts(1000, 1000)
+        Unirest.setTimeouts(2000, 2000)
         val result = UpdateManager.queryLatestReleaseJson("https://api.github.com/repos/alexburlton/foo")
 
         result shouldBe null
