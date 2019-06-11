@@ -3,7 +3,6 @@ package burlton.dartzee.code.screen.ai
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.bean.SuperTextPane
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.TableUtil
@@ -13,7 +12,11 @@ import java.awt.event.ActionEvent
 import java.util.*
 import javax.swing.JButton
 import javax.swing.JPanel
+import javax.swing.JTextPane
 import javax.swing.SwingConstants
+import javax.swing.text.DefaultStyledDocument
+import javax.swing.text.SimpleAttributeSet
+import javax.swing.text.StyleConstants
 
 /**
  * Dialog to specify setup darts that override defaults. Some examples:
@@ -25,7 +28,7 @@ class AISetupConfigurationDialog : SimpleDialog()
 {
     private var hmScoreToSingle = mutableMapOf<Int, Dart>()
 
-    private val info = SuperTextPane()
+    private val info = JTextPane()
     private val tableScores = ScrollTable()
     private val btnAddRule = JButton("Add Rule...")
     private val btnRemove = JButton("Remove")
@@ -41,6 +44,7 @@ class AISetupConfigurationDialog : SimpleDialog()
         contentPane.add(panel, BorderLayout.NORTH)
         panel.layout = BorderLayout(0, 0)
         info.isEditable = false
+        info.document = DefaultStyledDocument()
         panel.add(info)
 
         val panelCenter = JPanel()
@@ -181,6 +185,16 @@ class AISetupConfigurationDialog : SimpleDialog()
 
             hm[score] = drt
         }
+    }
+
+    private fun JTextPane.append(str: String, bold: Boolean = false, italic: Boolean = false)
+    {
+        val style = SimpleAttributeSet()
+        StyleConstants.setBold(style, bold)
+        StyleConstants.setItalic(style, italic)
+
+        val length = document.length
+        document.insertString(length, str, style)
     }
 
     companion object
