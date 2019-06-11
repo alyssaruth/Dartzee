@@ -127,8 +127,8 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 	private final JLabel lblName = new JLabel("Name");
 	private final JComboBox<String> comboBox = new JComboBox<>();
 	private final JTabbedPane tabbedPaneGameSpecifics = new JTabbedPane();
-	private final AIConfigurationX01 panelX01Config = new AIConfigurationX01();
-	private final AIConfigurationGolf panelGolfConfig = new AIConfigurationGolf();
+	private final AIConfigurationSubPanelX01 panelX01Config = new AIConfigurationSubPanelX01();
+	private final AIConfigurationSubPanelGolf panelGolfConfig = new AIConfigurationSubPanelGolf();
 	private final JPanel panelSouth = new JPanel();
 	private final JPanel panelCalculateStats = new JPanel();
 	private final JTextField textFieldAverageScore = new JTextField();
