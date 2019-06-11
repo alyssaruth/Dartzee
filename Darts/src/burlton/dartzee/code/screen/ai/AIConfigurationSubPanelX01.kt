@@ -10,19 +10,19 @@ import javax.swing.*
 
 class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener
 {
-    private var hmScoreToDart = HashMap<Int, Dart>()
+    var hmScoreToDart = HashMap<Int, Dart>()
 
-    private val lblScoringDart = JLabel("Scoring Dart")
-    private val spinnerScoringDart = SpinnerSingleSelector()
+    val spinnerScoringDart = SpinnerSingleSelector()
     private val btnConfigureSetupDarts = JButton("Configure Setup...")
-    private val chckbxMercyRule = JCheckBox("Mercy Rule")
-    private val lblWhenScoreLess = JLabel("when score less than")
-    private val spinnerMercyThreshold = JSpinner()
+    val chckbxMercyRule = JCheckBox("Mercy Rule")
+    val lblWhenScoreLess = JLabel("when score less than")
+    val spinnerMercyThreshold = JSpinner()
 
     init
     {
         border = null
         layout = null
+        val lblScoringDart = JLabel("Scoring Dart")
         lblScoringDart.setBounds(20, 20, 120, 25)
         add(lblScoringDart)
         spinnerScoringDart.setBounds(140, 20, 50, 25)
