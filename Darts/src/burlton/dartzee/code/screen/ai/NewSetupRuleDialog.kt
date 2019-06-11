@@ -4,6 +4,7 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.utils.isBust
 import burlton.desktopcore.code.bean.NumberField
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
@@ -90,7 +91,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
     {
         if (valid())
         {
-            val score = Integer.parseInt(nfScore.text)
+            val score = nfScore.getNumber()
             val drt = getDartFromSelections()
 
             hmScoreToDart[score] = drt
@@ -101,8 +102,8 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
 
     fun valid(): Boolean
     {
-        val scoreStr = nfScore.text
-        if (scoreStr.isEmpty())
+        val score = nfScore.getNumber()
+        if (score == -1)
         {
             DialogUtil.showError("You must enter a score for this rule to apply to.")
             return false
@@ -115,9 +116,14 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
             return false
         }
 
+        if (isBust(score - drt.getTotal(), drt))
+        {
+            DialogUtil.showError("This target would bust the player")
+            return false
+        }
+
         //If we're specifying a rule for under 60, validate whether what we're setting up is
         //already the default
-        val score = Integer.parseInt(scoreStr)
         if (score <= 60)
         {
             val defaultDart = AbstractDartsModel.getDefaultDartToAimAt(score)

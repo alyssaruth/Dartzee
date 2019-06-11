@@ -7,6 +7,7 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.maps.shouldContain
 import io.kotlintest.shouldBe
+import net.miginfocom.swing.MigLayout
 import org.junit.Test
 
 class TestNewSetupRuleDialog: AbstractDartsTest()
@@ -14,7 +15,18 @@ class TestNewSetupRuleDialog: AbstractDartsTest()
     @Test
     fun `Should move the spinner to the correct cell when radio selection changes`()
     {
+        val dlg = NewSetupRuleDialog(mutableMapOf())
 
+        val layout = dlg.panel.layout as MigLayout
+
+        dlg.rdbtnSingle.doClick()
+        layout.getComponentConstraints(dlg.spinner) shouldBe "cell 2 1"
+
+        dlg.rdbtnDouble.doClick()
+        layout.getComponentConstraints(dlg.spinner) shouldBe "cell 2 2"
+
+        dlg.rdbtnTreble.doClick()
+        layout.getComponentConstraints(dlg.spinner) shouldBe "cell 2 3"
     }
 
     @Test
@@ -42,7 +54,15 @@ class TestNewSetupRuleDialog: AbstractDartsTest()
     @Test
     fun `Should not allow a target that would bust the player`()
     {
+        val dlg = NewSetupRuleDialog(mutableMapOf())
 
+        dlg.nfScore.value = 50
+
+        dlg.spinner.value = 20
+        dlg.rdbtnTreble.doClick()
+
+        dlg.valid() shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("This target would bust the player")
     }
 
     @Test
