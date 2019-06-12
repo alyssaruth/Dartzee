@@ -5,6 +5,7 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -46,7 +47,7 @@ class TestDartboard: AbstractDartsTest()
         dartboard.paintDartboardCached()
 
         Dartboard.dartboardTemplate shouldNotBe null
-        verify(exactly = 0) { dartboard.initialiseFromTemplate() }
+        verifyNotCalled { dartboard.initialiseFromTemplate() }
 
         val dartboard2 = spyk(Dartboard(50, 50))
         dartboard2.paintDartboardCached()
