@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.ai
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.ai.AbstractDartsSimulation
 import burlton.dartzee.code.ai.DartsSimulationGolf
@@ -146,7 +146,7 @@ class AISimulationSetup @JvmOverloads constructor(private val player: PlayerEnti
 
     private fun simulationFinished(hmGameIdToWrapper: Map<Long, GameWrapper>, gameType: Int)
     {
-        if (AbstractClient.devMode)
+        if (DartsClient.devMode)
         {
             val ans = DialogUtil.showQuestion("Save real entities?")
             handleSavingEntities(ans == JOptionPane.YES_OPTION, hmGameIdToWrapper)

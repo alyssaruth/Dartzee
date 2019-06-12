@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.achievements.convertEmptyAchievements
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
@@ -59,7 +59,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         switchScreen(ScreenCache.getScreen(MenuScreen::class.java))
 
         //Pop up the change log if we've just updated
-        if (AbstractClient.justUpdated)
+        if (DartsClient.justUpdated)
         {
             convertEmptyAchievements()
 
@@ -156,10 +156,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
     /**
      * CheatListener
      */
-    override fun commandsEnabled(): Boolean
-    {
-        return AbstractClient.devMode
-    }
+    override fun commandsEnabled() = DartsClient.devMode
 
     override fun processCommand(cmd: String): String
     {

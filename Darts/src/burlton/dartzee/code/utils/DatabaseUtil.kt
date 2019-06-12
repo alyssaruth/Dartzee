@@ -1,7 +1,7 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.desktopcore.code.util.DialogUtil
 import com.sun.rowset.CachedRowSetImpl
 import java.sql.Connection
@@ -66,7 +66,7 @@ class DatabaseUtil
             connectionCreateCount++
 
             Debug.appendBanner("CREATED new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
-            return createDatabaseConnection(dbName = AbstractClient.derbyDbName)
+            return createDatabaseConnection(dbName = DartsClient.derbyDbName)
         }
 
         @Throws(SQLException::class)
@@ -74,8 +74,8 @@ class DatabaseUtil
         {
             val p = System.getProperties()
             p.setProperty("derby.system.home", dbFilePath)
-            p.setProperty("derby.language.logStatementText", "${AbstractClient.devMode}")
-            p.setProperty("derby.language.logQueryPlan", "${AbstractClient.devMode}")
+            p.setProperty("derby.language.logStatementText", "${DartsClient.devMode}")
+            p.setProperty("derby.language.logQueryPlan", "${DartsClient.devMode}")
 
             val props = Properties()
             props["user"] = "administrator"
@@ -87,7 +87,7 @@ class DatabaseUtil
         fun executeUpdates(statements: List<String>): Boolean
         {
             val sql = getCombinedSqlForLogging(statements)
-            Debug.appendSql(sql, AbstractClient.traceWriteSql)
+            Debug.appendSql(sql, DartsClient.traceWriteSql)
 
             statements.forEach{
                 if (!executeUpdate(it, false))
@@ -141,11 +141,11 @@ class DatabaseUtil
             }
 
             val totalMillis = System.currentTimeMillis() - startMillis
-            Debug.appendSql("(${totalMillis}ms) $statement", AbstractClient.traceWriteSql && log)
+            Debug.appendSql("(${totalMillis}ms) $statement", DartsClient.traceWriteSql && log)
 
-            if (totalMillis > AbstractClient.sqlMaxDuration && !AbstractClient.devMode)
+            if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
             {
-                Debug.stackTraceNoError("SQL update took longer than ${AbstractClient.sqlMaxDuration} millis: $statement")
+                Debug.stackTraceNoError("SQL update took longer than ${DartsClient.sqlMaxDuration} millis: $statement")
             }
         }
 
@@ -179,12 +179,12 @@ class DatabaseUtil
             }
 
             val totalMillis = System.currentTimeMillis() - startMillis
-            Debug.appendSql("(" + totalMillis + "ms) " + query, AbstractClient.traceReadSql)
+            Debug.appendSql("(" + totalMillis + "ms) " + query, DartsClient.traceReadSql)
 
             //No query should take longer than 5 seconds really...
-            if (totalMillis > AbstractClient.sqlMaxDuration && !AbstractClient.devMode)
+            if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
             {
-                Debug.stackTraceNoError("SQL query took longer than ${AbstractClient.sqlMaxDuration} millis: $query")
+                Debug.stackTraceNoError("SQL query took longer than ${DartsClient.sqlMaxDuration} millis: $query")
             }
 
             //Return an empty one if something's gone wrong
@@ -277,7 +277,7 @@ class DatabaseUtil
         {
             try
             {
-                createDatabaseConnection(dbPath, AbstractClient.derbyDbName)
+                createDatabaseConnection(dbPath, DartsClient.derbyDbName)
             }
             catch (t: Throwable)
             {

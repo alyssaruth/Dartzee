@@ -1,6 +1,6 @@
 package burlton.dartzee.test.helper
 
-import burlton.core.code.util.AbstractClient
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.LocalIdGenerator
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.desktopcore.code.util.DialogUtil
@@ -25,7 +25,7 @@ abstract class AbstractDartsTest: AbstractDesktopTest()
         DialogUtil.init(dialogFactory)
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-        AbstractClient.derbyDbName = DATABASE_NAME_TEST
+        DartsClient.derbyDbName = DATABASE_NAME_TEST
         DriverManager.registerDriver(EmbeddedDriver())
         DartsDatabaseUtil.initialiseDatabase()
 

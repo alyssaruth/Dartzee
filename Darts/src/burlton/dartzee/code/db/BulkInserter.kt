@@ -1,7 +1,7 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.SQLException
@@ -56,7 +56,7 @@ object BulkInserter
                             insertQuery = entity.writeValuesToInsertStatement(insertQuery, ps, index)
                         }
 
-                        Debug.appendSql(insertQuery, AbstractClient.traceWriteSql)
+                        Debug.appendSql(insertQuery, DartsClient.traceWriteSql)
 
                         ps.executeUpdate()
                     }
@@ -110,17 +110,17 @@ object BulkInserter
      */
     private fun doBulkInsert(threads: List<Thread>, tableName: String, rowCount: Int, rowsPerStatement: Int)
     {
-        val traceWriteSql = AbstractClient.traceWriteSql
+        val traceWriteSql = DartsClient.traceWriteSql
 
         if (rowCount > 500)
         {
-            AbstractClient.traceWriteSql = false
+            DartsClient.traceWriteSql = false
             Debug.append("[SQL] Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
         }
 
         threads.forEach{ it.start() }
         threads.forEach{ it.join() }
 
-        AbstractClient.traceWriteSql = traceWriteSql
+        DartsClient.traceWriteSql = traceWriteSql
     }
 }

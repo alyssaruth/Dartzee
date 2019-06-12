@@ -1,8 +1,8 @@
-package burlton.desktopcore.code.util
+package burlton.dartzee.code.utils
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.code.util.FileUtil
+import burlton.dartzee.code.`object`.DartsClient
 import com.sun.mail.smtp.SMTPTransport
 import java.io.File
 import java.nio.charset.StandardCharsets
@@ -24,7 +24,7 @@ object ClientEmailer
 
     fun canSendEmail(): Boolean
     {
-        if (AbstractClient.logSecret.isEmpty())
+        if (DartsClient.logSecret.isEmpty())
         {
             Debug.append("No logSecret - unable to send logs")
             return false
@@ -49,7 +49,7 @@ object ClientEmailer
 
         return try
         {
-            sendEmail(subject, body, "entropydebug@gmail.com", "entropyDebug", AbstractClient.logSecret)
+            sendEmail(subject, body, "entropydebug@gmail.com", "entropyDebug", DartsClient.logSecret)
             true
         }
         catch (me: MessagingException)

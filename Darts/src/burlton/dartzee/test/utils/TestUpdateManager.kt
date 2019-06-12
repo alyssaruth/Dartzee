@@ -46,13 +46,11 @@ class TestUpdateManager: AbstractDartsTest()
     @Test
     fun `Should catch and log any exceptions communicating over HTTPS`()
     {
-        Unirest.setTimeouts(250, 250)
-
         val result = UpdateManager.queryLatestReleaseJson("https://ww.blargh.zcss.w")
 
         result shouldBe null
         exceptionLogged() shouldBe true
-        getLogs() shouldContain("java.net.SocketTimeoutException: connect timed out")
+        getLogs() shouldContain("java.net.UnknownHostException")
         dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
 
         dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")

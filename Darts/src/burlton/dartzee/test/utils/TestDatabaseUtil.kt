@@ -1,10 +1,11 @@
 package burlton.dartzee.test.utils
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.MAX_SQL_DURATION
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -120,23 +121,23 @@ class TestDatabaseUtil: AbstractDartsTest()
     @Test
     fun `Should log an exception (but not show an error) for queries that take too long`()
     {
-        AbstractClient.sqlMaxDuration = -1
+        DartsClient.sqlMaxDuration = -1
 
         val query = "SELECT * FROM Game"
         DatabaseUtil.executeQuery(query)
 
         exceptionLogged() shouldBe true
-        getLogs().shouldContain("SQL query took longer than ${AbstractClient.sqlMaxDuration} millis: $query")
+        getLogs().shouldContain("SQL query took longer than -1 millis: $query")
         dialogFactory.errorsShown.shouldBeEmpty()
 
-        AbstractClient.sqlMaxDuration = AbstractClient.SQL_MAX_DURATION
+        DartsClient.sqlMaxDuration = MAX_SQL_DURATION
         wipeTable("Game")
     }
 
     @Test
     fun `Should log an exception (but not show an error) for updates that take too long`()
     {
-        AbstractClient.sqlMaxDuration = -1
+        DartsClient.sqlMaxDuration = -1
 
         val update = "DELETE FROM Game"
         DatabaseUtil.executeUpdate(update)
@@ -144,6 +145,6 @@ class TestDatabaseUtil: AbstractDartsTest()
         exceptionLogged() shouldBe true
         getLogs().shouldContain("SQL update took longer than -1 millis: $update")
 
-        AbstractClient.sqlMaxDuration = AbstractClient.SQL_MAX_DURATION
+        DartsClient.sqlMaxDuration = MAX_SQL_DURATION
     }
 }
