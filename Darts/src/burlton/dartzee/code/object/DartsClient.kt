@@ -4,7 +4,6 @@ import burlton.core.code.util.Debug
 import burlton.dartzee.code.utils.*
 import java.util.*
 
-
 object DartsClient
 {
     var derbyDbName = DartsDatabaseUtil.DATABASE_NAME
@@ -16,7 +15,6 @@ object DartsClient
     var operatingSystem = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
     var justUpdated = false
 
-    @JvmStatic
     fun parseProgramArguments(args: Array<String>)
     {
         args.forEach { parseProgramArgument(it) }
@@ -41,10 +39,7 @@ object DartsClient
         }
     }
 
-    fun isAppleOs(): Boolean
-    {
-        return operatingSystem.contains("mac") || operatingSystem.contains("darwin")
-    }
+    fun isAppleOs() = operatingSystem.contains("mac") || operatingSystem.contains("darwin")
 
     fun checkForUpdatesIfRequired()
     {
