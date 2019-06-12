@@ -14,6 +14,7 @@ object DartsClient
     var sqlMaxDuration = MAX_SQL_DURATION
     var operatingSystem = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
     var justUpdated = false
+    var updateManager = UpdateManager
 
     fun parseProgramArguments(args: Array<String>)
     {
@@ -61,6 +62,6 @@ object DartsClient
             return
         }
 
-        UpdateManager.checkForUpdates(DARTS_VERSION_NUMBER)
+        updateManager.checkForUpdates(DARTS_VERSION_NUMBER)
     }
 }
