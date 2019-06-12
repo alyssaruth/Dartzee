@@ -1,7 +1,7 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
@@ -207,7 +207,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
                 updateQuery = writeValuesToStatement(psUpdate, 1, updateQuery)
                 updateQuery = writeString(psUpdate, getColumnCount(), rowId, updateQuery)
 
-                Debug.appendSql(updateQuery, AbstractClient.traceWriteSql)
+                Debug.appendSql(updateQuery, DartsClient.traceWriteSql)
 
                 psUpdate.executeUpdate()
 
@@ -249,7 +249,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             conn.prepareStatement(insertQuery).use { psInsert ->
                 insertQuery = writeValuesToInsertStatement(insertQuery, psInsert)
 
-                Debug.appendSql(insertQuery, AbstractClient.traceWriteSql)
+                Debug.appendSql(insertQuery, DartsClient.traceWriteSql)
 
                 psInsert.executeUpdate()
 

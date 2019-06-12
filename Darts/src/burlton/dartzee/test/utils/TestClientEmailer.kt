@@ -1,11 +1,11 @@
-package burlton.desktopcore.test.util
+package burlton.dartzee.test.utils
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
-import burlton.desktopcore.code.util.ClientEmailer
-import burlton.desktopcore.code.util.ClientEmailer.TEMP_DIRECTORY
-import burlton.desktopcore.code.util.LOG_FILENAME_PREFIX
+import burlton.dartzee.code.`object`.DartsClient
+import burlton.dartzee.code.utils.ClientEmailer
+import burlton.dartzee.code.utils.ClientEmailer.TEMP_DIRECTORY
+import burlton.dartzee.code.utils.LOG_FILENAME_PREFIX
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
@@ -28,17 +28,17 @@ class TestClientEmailer: AbstractDesktopTest()
     @Test
     fun `Should not attempt to send email with no log secret`()
     {
-        AbstractClient.logSecret = ""
+        DartsClient.logSecret = ""
         ClientEmailer.canSendEmail() shouldBe false
 
-        AbstractClient.logSecret = "foo"
+        DartsClient.logSecret = "foo"
         ClientEmailer.canSendEmail() shouldBe true
     }
 
     @Test
     fun `Should write to a file if unable to send email`()
     {
-        AbstractClient.logSecret = ""
+        DartsClient.logSecret = ""
         ClientEmailer.sendClientEmail("Title", "Body")
 
         verifyLogFile()
@@ -83,7 +83,7 @@ class TestClientEmailer: AbstractDesktopTest()
     @Test
     fun `Should send email successfully`()
     {
-        AbstractClient.logSecret = System.getProperty("logSecret")
+        DartsClient.logSecret = System.getProperty("logSecret")
 
         ClientEmailer.sendClientEmail("Unit Test", "This is a test")
     }
@@ -91,7 +91,7 @@ class TestClientEmailer: AbstractDesktopTest()
     @Test
     fun `Should fail with incorrect password`()
     {
-        AbstractClient.logSecret = "foo"
+        DartsClient.logSecret = "foo"
 
         ClientEmailer.sendClientEmail("Title", "Body")
 

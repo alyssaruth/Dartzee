@@ -1,9 +1,9 @@
 package burlton.dartzee.code.ai
 
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
@@ -59,7 +59,7 @@ abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
         wrapper.setHmRoundNumberToDartsThrown(hmRoundNumberToDarts)
         wrapper.setTotalRounds(totalRounds)
 
-        if (AbstractClient.devMode)
+        if (DartsClient.devMode)
         {
             wrapper.generateRealEntities(gameType, player)
         }
