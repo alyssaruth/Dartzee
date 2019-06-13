@@ -109,6 +109,9 @@ class TestDebug: AbstractTest()
         systemOutLogs shouldContain("ToOut")
     }
 
+    /**
+     * Stack traces
+     */
     @Test
     fun testStackTraceBasic()
     {
@@ -133,21 +136,6 @@ class TestDebug: AbstractTest()
         val logs = getLogs()
         logs shouldBe("\n                                      ")
     }
-
-    /*@Test
-    fun testNonBlocking()
-    {
-        whenInvoke(Debug.appendInCurrentThread(anyString(), anyBoolean(), null)).then{
-            Thread.sleep(10000)
-        }
-
-        val currentMillis = System.currentTimeMillis()
-        Debug.append("longTest")
-
-        val afterMillis = System.currentTimeMillis()
-        val diff = afterMillis - currentMillis
-        assertThat(diff, lessThan(1000))
-    }*/
 
     class SimpleDebugOutput: DebugOutput
     {

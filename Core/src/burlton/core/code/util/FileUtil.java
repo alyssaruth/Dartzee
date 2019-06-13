@@ -14,42 +14,6 @@ import java.util.Iterator;
 
 public class FileUtil
 {
-	public static File createNewFile(String filePath, String contents)
-	{
-		File file = new File(filePath);
-		boolean success = false;
-		
-		try
-		{
-			success = file.createNewFile();
-		}
-		catch (IOException ioe)
-		{
-			Debug.append("Caught " + ioe + " creating file " + filePath);
-		}
-		
-		if (!success)
-		{
-			return null;
-		}
-		
-		//We have created the empty file, now fill it
-		try (FileOutputStream fos = new FileOutputStream(filePath))
-		{
-			byte[] bytes = contents.getBytes("UTF-8");
-			fos.write(bytes);
-		}
-		catch (IOException ioe)
-		{
-			Debug.append("Caught " + ioe + " trying to insert bytes into file " + filePath);
-			deleteFileIfExists(filePath);
-			return null;
-		}
-		
-		Debug.append("Successfully created file " + file);
-		return file;
-	}
-	
 	public static boolean deleteFileIfExists(String filePath)
 	{
 		boolean success = false;
