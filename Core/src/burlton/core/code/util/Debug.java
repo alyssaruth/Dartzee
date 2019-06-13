@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -62,7 +61,7 @@ public class Debug implements CoreRegistry
 	{
 		append(text, logging, includeDate, null);
 	}
-	private static void append(final String text, boolean logging, final boolean includeDate, final BooleanWrapper haveStackTraced)
+	private static void append(final String text, boolean logging, final boolean includeDate, final String emailSubject)
 	{
 		if (!logging)
 		{
@@ -74,14 +73,14 @@ public class Debug implements CoreRegistry
 			@Override
 			public void run()
 			{
-				appendInCurrentThread(text, includeDate, haveStackTraced);
+				appendInCurrentThread(text, includeDate, emailSubject);
 			}
 		};
 
 		logService.execute(logRunnable);
 	}
 
-	public static void appendInCurrentThread(String text, boolean includeDate, BooleanWrapper haveStackTraced)
+	private static void appendInCurrentThread(String text, boolean includeDate, String emailSubject)
 	{
 		String time = "";
 		if (includeDate)
@@ -101,9 +100,9 @@ public class Debug implements CoreRegistry
 			System.out.println(time + text);
 		}
 
-		if (haveStackTraced != null)
+		if (emailSubject != null && shouldSendEmail())
 		{
-			haveStackTraced.setValue(true);
+			sendContentsAsEmail(emailSubject, false);
 		}
 	}
 
@@ -143,21 +142,6 @@ public class Debug implements CoreRegistry
 	{
 		appendBanner(text, true);
 	}
-
-	/*public static void appendBannerWithoutDate(String text)
-	{
-		int length = text.length();
-
-		String starStr = "";
-		for (int i=0; i<length + 4; i++)
-		{
-			starStr += "*";
-		}
-
-		appendWithoutDate(starStr);
-		appendWithoutDate(text);
-		appendWithoutDate(starStr);
-	}*/
 
 	public static void appendBanner(String text, boolean logging)
 	{
@@ -232,17 +216,23 @@ public class Debug implements CoreRegistry
 		t.printStackTrace(pw);
 		trace += datetime + sw.toString();
 
-		BooleanWrapper haveAppendedStackTrace = new BooleanWrapper(false);
-		append(trace, true, false, haveAppendedStackTrace);
-
+		append(trace, true, false, makeEmailTitle(t, message));
+	}
+	private static String makeEmailTitle(Throwable t, String message)
+	{
 		String extraDetails = " (" + productDesc + ")";
+		String username = instance.get(INSTANCE_STRING_USER_NAME, "");
+		if (!username.equals(""))
+		{
+			extraDetails += " - " + username;
+		}
 
 		if (message.length() > 50)
 		{
 			message = message.substring(0, 50) + "...";
 		}
 
-		sendContentsAsEmailInSeparateThread(t + " - " + message + extraDetails, false, haveAppendedStackTrace);
+		return t + " - " + message + extraDetails;
 	}
 
 	public static void stackTraceSilently(String message)
@@ -313,31 +303,6 @@ public class Debug implements CoreRegistry
         }
 	}
 
-	public static void dumpList(String name, List<?> list)
-	{
-		String s = name;
-		if (list == null)
-		{
-			s += ": null";
-			appendWithoutDate(s);
-			return;
-		}
-
-		s += "(size: " + list.size() + "): ";
-
-		for (int i=0; i<list.size(); i++)
-		{
-			if (i > 0)
-			{
-				s += "\n";
-			}
-
-			s += list.get(i);
-		}
-
-		appendWithoutDate(s);
-	}
-
 	public static String getCurrentTimeForLogging()
 	{
 		long time = System.currentTimeMillis();
@@ -346,46 +311,11 @@ public class Debug implements CoreRegistry
 		return sdf.format(time) + "   ";
 	}
 
-	public static void sendContentsAsEmailInSeparateThread(final String title, final boolean manual, final BooleanWrapper readyToEmail)
+	private static boolean shouldSendEmail()
 	{
-		boolean shouldSendEmail = debugExtension != null;
-		if (shouldSendEmail
-		  && !manual)
-		{
-			boolean emailsEnabled = instance.getBoolean(INSTANCE_BOOLEAN_ENABLE_EMAILS, true);
-			shouldSendEmail = emailsEnabled && sendingEmails;
-		}
-
-		if (!shouldSendEmail)
-		{
-			return;
-		}
-
-		String fullTitle = title;
-		String username = instance.get(INSTANCE_STRING_USER_NAME, "");
-		if (!username.equals(""))
-		{
-			fullTitle += " - " + username;
-		}
-
-		final String titleToUse = fullTitle;
-
-		Runnable emailRunnable = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				while (readyToEmail != null
-				  && readyToEmail.getValue() == false)
-				{
-					//wait
-				}
-
-				sendContentsAsEmail(titleToUse, manual);
-			}
-		};
-
-		(new Thread(emailRunnable)).start();
+		return debugExtension != null
+				&& instance.getBoolean(INSTANCE_BOOLEAN_ENABLE_EMAILS, true)
+				&& sendingEmails;
 	}
 
 	private static void sendContentsAsEmail(String fullTitle, boolean manual)
