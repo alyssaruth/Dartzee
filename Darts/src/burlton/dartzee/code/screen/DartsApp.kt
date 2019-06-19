@@ -178,10 +178,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             Debug.clearLogs()
         }
-        else if (cmd == CMD_TEST)
-        {
-            switchScreen(TestScreen())
-        }
         else if (cmd == "dim")
         {
             Debug.append("Current screen size: $size")
