@@ -38,6 +38,16 @@ class DartsModelNormalDistribution : AbstractDartsModel()
             return pt
         }
 
+        val (radius, angle) = calculateRadiusAndAngle(pt, dartboard)
+
+        Debug.appendWithoutDate("Radius = $radius, theta = $angle", AbstractDartsModel.LOGGING)
+
+        return translatePoint(pt, radius, angle, AbstractDartsModel.LOGGING)
+    }
+
+    data class DistributionSample(val radius: Double, val theta: Double)
+    fun calculateRadiusAndAngle(pt: Point, dartboard: Dartboard): DistributionSample
+    {
         //Averaging logic
         val radius = sampleRadius(pt, dartboard)
 
@@ -45,9 +55,7 @@ class DartsModelNormalDistribution : AbstractDartsModel()
         val theta = generateAngle(pt, dartboard)
         val sanitisedAngle = sanitiseAngle(theta)
 
-        Debug.appendWithoutDate("Radius = $radius, theta = $sanitisedAngle", AbstractDartsModel.LOGGING)
-
-        return translatePoint(pt, radius, sanitisedAngle, AbstractDartsModel.LOGGING)
+        return DistributionSample(radius, sanitisedAngle)
     }
     private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
     {
