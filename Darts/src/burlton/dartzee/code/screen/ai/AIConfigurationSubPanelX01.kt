@@ -5,12 +5,11 @@ import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.util.*
 import javax.swing.*
 
 class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener
 {
-    var hmScoreToDart = HashMap<Int, Dart>()
+    var hmScoreToDart = mutableMapOf<Int, Dart>()
 
     val spinnerScoringDart = SpinnerSingleSelector()
     private val btnConfigureSetupDarts = JButton("Configure Setup...")

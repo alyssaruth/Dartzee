@@ -29,7 +29,7 @@ class DartsModelNormalDistribution : AbstractDartsModel()
 
     override fun throwDartAtPoint(pt: Point, dartboard: Dartboard): Point
     {
-        Debug.append("Throwing dart at $pt", AbstractDartsModel.LOGGING)
+        Debug.append("Throwing dart at $pt", LOGGING)
         if (standardDeviation == 0.0)
         {
             Debug.stackTrace("Gaussian model with SD of 0 - this shouldn't be possible!")
@@ -38,9 +38,9 @@ class DartsModelNormalDistribution : AbstractDartsModel()
 
         val (radius, angle) = calculateRadiusAndAngle(pt, dartboard)
 
-        Debug.appendWithoutDate("Radius = $radius, theta = $angle", AbstractDartsModel.LOGGING)
+        Debug.appendWithoutDate("Radius = $radius, theta = $angle", LOGGING)
 
-        return translatePoint(pt, radius, angle, AbstractDartsModel.LOGGING)
+        return translatePoint(pt, radius, angle, LOGGING)
     }
 
     data class DistributionSample(val radius: Double, val theta: Double)

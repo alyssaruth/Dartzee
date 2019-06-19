@@ -1,6 +1,5 @@
 package burlton.core.code.util;
 
-import burlton.core.code.obj.SuperHashMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -15,6 +14,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -110,9 +110,9 @@ public class XmlUtil
 		return Double.parseDouble(attribute);
 	}
 	
-	public static SuperHashMap<Integer, Integer> readIntegerHashMap(Element rootElement, String tagName, String keyTag, String valueTag)
+	public static Map<Integer, Integer> readIntegerHashMap(Element rootElement, String tagName, String keyTag, String valueTag)
 	{
-		SuperHashMap<Integer, Integer> hm = new SuperHashMap<>();
+		HashMap<Integer, Integer> hm = new HashMap<>();
 		
 		NodeList children = rootElement.getElementsByTagName(tagName);
 		int size = children.getLength();
@@ -129,7 +129,7 @@ public class XmlUtil
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static void writeHashMap(SuperHashMap hm, Document xmlDoc, Element rootElement, 
+	public static void writeHashMap(Map hm, Document xmlDoc, Element rootElement,
 	  String tagName, String keyTag, String valueTag)
 	{
 		Iterator<Map.Entry> it = hm.entrySet().iterator();
