@@ -18,9 +18,7 @@ const val ATTRIBUTE_RADIUS_AVERAGE_COUNT = "RadiusAverageCount"
 class DartsModelNormalDistribution : AbstractDartsModel()
 {
     private val mean = 0
-    /**
-     * Gets / sets
-     */
+
     var standardDeviation = 50.0
     var standardDeviationDoubles = -1.0
     var standardDeviationCentral = -1.0
