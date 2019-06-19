@@ -10,10 +10,10 @@ import org.apache.commons.math3.distribution.NormalDistribution
 import org.w3c.dom.Element
 import java.awt.Point
 
-private const val ATTRIBUTE_STANDARD_DEVIATION = "StandardDeviation"
-private const val ATTRIBUTE_STANDARD_DEVIATION_DOUBLES = "StandardDeviationDoubles"
-private const val ATTRIBUTE_STANDARD_DEVIATION_CENTRAL = "StandardDeviationCentral"
-private const val ATTRIBUTE_RADIUS_AVERAGE_COUNT = "RadiusAverageCount"
+const val ATTRIBUTE_STANDARD_DEVIATION = "StandardDeviation"
+const val ATTRIBUTE_STANDARD_DEVIATION_DOUBLES = "StandardDeviationDoubles"
+const val ATTRIBUTE_STANDARD_DEVIATION_CENTRAL = "StandardDeviationCentral"
+const val ATTRIBUTE_RADIUS_AVERAGE_COUNT = "RadiusAverageCount"
 
 class DartsModelNormalDistribution : AbstractDartsModel()
 {
@@ -26,8 +26,8 @@ class DartsModelNormalDistribution : AbstractDartsModel()
     var standardDeviationCentral = -1.0
     var radiusAverageCount = 1
 
-    private var distribution: NormalDistribution? = null
-    private var distributionDoubles: NormalDistribution? = null
+    var distribution: NormalDistribution? = null
+    var distributionDoubles: NormalDistribution? = null
 
     override fun throwDartAtPoint(pt: Point, dartboard: Dartboard): Point
     {
