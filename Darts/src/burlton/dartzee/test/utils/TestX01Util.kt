@@ -36,7 +36,7 @@ class TestX01Util: AbstractDartsTest()
     @Test
     fun testShouldStopForMercyRule()
     {
-        val model = AbstractDartsModel.factoryForType(AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION)
+        val model = AbstractDartsModel.factoryForType(AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION)!!
         model.mercyThreshold = 19
 
         shouldStopForMercyRule(model, 19, 16).shouldBeFalse()

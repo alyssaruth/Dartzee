@@ -9,7 +9,6 @@ import burlton.desktopcore.code.util.TableUtil
 import burlton.desktopcore.code.util.TableUtil.SimpleRenderer
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
-import java.util.*
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTextPane
@@ -61,7 +60,7 @@ class AISetupConfigurationDialog : SimpleDialog()
         btnRemove.addActionListener(this)
     }
 
-    private fun init(hmScoreToSingle: HashMap<Int, Dart>)
+    private fun init(hmScoreToSingle: MutableMap<Int, Dart>)
     {
         this.hmScoreToSingle = hmScoreToSingle
 
@@ -199,7 +198,7 @@ class AISetupConfigurationDialog : SimpleDialog()
 
     companion object
     {
-        @JvmStatic fun configureSetups(hmScoreToSingle: HashMap<Int, Dart>)
+        @JvmStatic fun configureSetups(hmScoreToSingle: MutableMap<Int, Dart>)
         {
             val dlg = AISetupConfigurationDialog()
             dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
