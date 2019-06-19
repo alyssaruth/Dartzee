@@ -24,7 +24,6 @@ import javax.swing.*
 private const val CMD_PURGE_GAME = "purge "
 private const val CMD_LOAD_GAME = "load "
 private const val CMD_CLEAR_CONSOLE = "cls"
-private const val CMD_TEST = "test"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
 private const val CMD_SANITY = "sanity"
 private const val CMD_GUID = "guid"
