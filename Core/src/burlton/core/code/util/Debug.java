@@ -314,7 +314,6 @@ public class Debug implements CoreRegistry
 	private static boolean shouldSendEmail()
 	{
 		return debugExtension != null
-				&& instance.getBoolean(INSTANCE_BOOLEAN_ENABLE_EMAILS, true)
 				&& sendingEmails;
 	}
 
