@@ -1,12 +1,21 @@
 package burlton.dartzee.test.ai
 
+import burlton.core.code.obj.HashMapCount
 import burlton.core.code.util.XmlUtil
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.ai.*
+import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.doubles.shouldBeBetween
+import io.kotlintest.matchers.numerics.shouldBeBetween
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.mockk.every
+import io.mockk.mockk
+import org.apache.commons.math3.distribution.NormalDistribution
 import org.junit.Test
+import java.awt.Point
 
 class TestDartsModelNormalDistribution: AbstractDartsTest()
 {
@@ -103,6 +112,9 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
         model.distributionDoubles!!.mean shouldBe 0.0
     }
 
+    /**
+     * Verified against standard Normal Dist z-tables
+     */
     @Test
     fun `Should return the correct density based on the standard deviation`()
     {
@@ -125,5 +137,108 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
     /**
      * Actual sampling behaviour
      */
+    @Test
+    fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`()
+    {
+        val model = DartsModelNormalDistribution()
 
+        val distribution = mockk<NormalDistribution>(relaxed = true)
+        every { distribution.sample() } returns 3.0
+
+        val distributionDoubles = mockk<NormalDistribution>(relaxed = true)
+        every { distributionDoubles.sample() } returns 6.0
+
+        model.standardDeviationCentral = 0.0
+        model.distribution = distribution
+        model.distributionDoubles = distributionDoubles
+
+        //Make a dartboard and two points - one that's a double and one that isn't @_@
+        val dartboard = Dartboard(100, 100)
+        dartboard.paintDartboard()
+
+        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
+        val ptDouble = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
+
+        val (radiusNonDouble) = model.calculateRadiusAndAngle(pt, dartboard)
+        radiusNonDouble shouldBe 3.0
+
+        val (radiusDouble) = model.calculateRadiusAndAngle(ptDouble, dartboard)
+        radiusDouble shouldBe 6.0
+    }
+
+    @Test
+    fun `Should revert to the regular distribution for doubles`()
+    {
+        val model = DartsModelNormalDistribution()
+
+        val distribution = mockk<NormalDistribution>(relaxed = true)
+        every { distribution.sample() } returns 3.0
+
+        model.standardDeviationCentral = 0.0
+        model.distribution = distribution
+        model.distributionDoubles = null
+
+        //Make a dartboard and two points - one that's a double and one that isn't @_@
+        val dartboard = Dartboard(100, 100)
+        dartboard.paintDartboard()
+
+        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
+        val ptDouble = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
+
+        val (radiusNonDouble) = model.calculateRadiusAndAngle(pt, dartboard)
+        radiusNonDouble shouldBe 3.0
+
+        val (radiusDouble) = model.calculateRadiusAndAngle(ptDouble, dartboard)
+        radiusDouble shouldBe 3.0
+    }
+
+    @Test
+    fun `Should sample the specified number of times and take an average`()
+    {
+        val model = DartsModelNormalDistribution()
+
+        val distribution = mockk<NormalDistribution>(relaxed = true)
+
+        var ix = 0
+        val values = listOf(3.0, 10.0, 5.0)
+        every { distribution.sample() } answers { values[ix++] }
+
+        model.standardDeviationCentral = 0.0
+        model.distribution = distribution
+        model.radiusAverageCount = 3
+
+        //Make a dartboard and two points - one that's a double and one that isn't @_@
+        val dartboard = Dartboard(100, 100)
+        dartboard.paintDartboard()
+
+        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
+
+        val (radius) = model.calculateRadiusAndAngle(pt, dartboard)
+        radius shouldBe 6.0
+    }
+
+    @Test
+    fun `Should generate a random angle between 0 - 360 by default`()
+    {
+        val model = DartsModelNormalDistribution()
+        model.populate(3.0, 0.0, 0.0, 1)
+
+        val dartboard = Dartboard(100, 100)
+        dartboard.paintDartboard()
+        val pt = Point(0, 0)
+
+        val hmAngleToCount = HashMapCount<Double>()
+        for (i in 0..1000000)
+        {
+            val (_, theta) = model.calculateRadiusAndAngle(pt, dartboard)
+            theta.shouldBeBetween(0.0, 360.0, 0.0)
+
+            hmAngleToCount.incrementCount(Math.floor(theta))
+        }
+
+        hmAngleToCount.size shouldBe 360
+        hmAngleToCount.values.forEach {
+            it.shouldBeBetween(2500, 3000)
+        }
+    }
 }
