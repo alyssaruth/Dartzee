@@ -361,6 +361,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     open fun dartThrown(pt: Point)
     {
         val dart = convertPointToDart(pt, true)
+        Debug.append("${dart.multiplier} * ${dart.score}")
         if (listener != null)
         {
             addDart(pt)
