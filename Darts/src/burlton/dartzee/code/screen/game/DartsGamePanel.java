@@ -554,10 +554,6 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	
 	public void fireAppearancePreferencesChanged()
 	{
-		//Don't repaint the dartboard because this clears out all of the cached segments etc.
-		//So if an AI is in progress as you change appearance preferences, things fuck up.
-		//dartboard.paintDartboard();
-		
 		for (S scorer : scorersOrdered)
 		{
 			scorer.repaint();
