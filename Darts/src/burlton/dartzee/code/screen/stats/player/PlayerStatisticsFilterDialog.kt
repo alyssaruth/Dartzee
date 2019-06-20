@@ -149,7 +149,7 @@ class PlayerStatisticsFilterDialog(gameType:Int):SimpleDialog(), ChangeListener
             dispose()
 
             val scrn = ScreenCache.getScreen(PlayerStatisticsScreen::class.java)
-            scrn!!.buildTabs()
+            scrn.buildTabs()
         }
     }
 
