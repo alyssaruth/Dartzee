@@ -49,17 +49,4 @@ public class SuperHashMap<K, V> extends HashMap<K, V>
 		
 		return values;
 	}
-	
-	public void removeAllWithValue(V value)
-	{
-		ArrayList<K> keys = getKeysAsVector();
-		for (K key : keys)
-		{
-			V val = get(key);
-			if (val.equals(value))
-			{
-				remove(key);
-			}
-		}
-	}
 }
