@@ -31,7 +31,7 @@ private const val LAYER_SLIDER = 4
 open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 {
     private var hmPointToSegment = mutableMapOf<Point, DartboardSegmentKt>()
-    private var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegmentKt>()
+    protected var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegmentKt>()
 
     private val dartLabels = mutableListOf<JLabel>()
 

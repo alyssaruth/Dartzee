@@ -1,9 +1,6 @@
 package burlton.dartzee.test.ai
 
-import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
+import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_STANDARD
@@ -306,10 +303,27 @@ class TestAbstractDartsModel: AbstractDartsTest()
     @Test
     fun `Should aim at the average point for the relevant segment`()
     {
-        val dartboard = Dartboard(100, 100)
+        val dartboard = FudgedDartboard()
         dartboard.paintDartboard()
 
+        val model = DummyDartsModel()
+        model.getPointForScore(Dart(20, 3), dartboard) shouldBe Point(3, 4)
+    }
 
+    class FudgedDartboard : Dartboard(100, 100)
+    {
+        override fun paintDartboard(colourWrapper: ColourWrapper?, listen: Boolean, cached: Boolean)
+        {
+            super.paintDartboard(colourWrapper, listen, cached)
+
+            val segmentKey = "20_$SEGMENT_TYPE_TREBLE"
+            val segment = DartboardSegmentKt(segmentKey)
+            segment.addPoint(Point(1, 7))
+            segment.addPoint(Point(3, 3))
+            segment.addPoint(Point(5, 2))
+
+            hmSegmentKeyToSegment[segmentKey] = segment
+        }
     }
 
     class DummyDartsModel: AbstractDartsModel()
