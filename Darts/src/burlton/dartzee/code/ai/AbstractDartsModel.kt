@@ -21,8 +21,8 @@ abstract class AbstractDartsModel
     var mercyThreshold = -1
 
     //Golf
-    private var hmDartNoToSegmentType = mutableMapOf<Int, Int>()
-    private var hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
+    var hmDartNoToSegmentType = mutableMapOf<Int, Int>()
+    var hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
 
     private var logging = LIGHT_LOGGING
 
@@ -147,7 +147,7 @@ abstract class AbstractDartsModel
     fun getScoringPoint(dartboard: Dartboard): Point
     {
         val segmentType = if (scoringDart == 25) SEGMENT_TYPE_DOUBLE else SEGMENT_TYPE_TREBLE
-        return getPointForScoreAdjustedForBias(scoringDart, dartboard, segmentType)
+        return getPointForScore(scoringDart, dartboard, segmentType)
     }
 
     private fun getOveriddenDartToAimAt(score: Int) = hmScoreToDart[score]
@@ -158,7 +158,7 @@ abstract class AbstractDartsModel
     fun throwGolfDart(targetHole: Int, dartNo: Int, dartboard: Dartboard)
     {
         val segmentTypeToAimAt = getSegmentTypeForDartNo(dartNo)
-        val ptToAimAt = getPointForScoreAdjustedForBias(targetHole, dartboard, segmentTypeToAimAt)
+        val ptToAimAt = getPointForScore(targetHole, dartboard, segmentTypeToAimAt)
         val pt = throwDartAtPoint(ptToAimAt, dartboard)
         dartboard.dartThrown(pt)
     }
@@ -173,7 +173,7 @@ abstract class AbstractDartsModel
     {
         val segmentType = getSegmentTypeForClockType(clockType)
 
-        val ptToAimAt = getPointForScoreAdjustedForBias(clockTarget, dartboard, segmentType)
+        val ptToAimAt = getPointForScore(clockTarget, dartboard, segmentType)
         val pt = throwDartAtPoint(ptToAimAt, dartboard)
         dartboard.dartThrown(pt)
     }
@@ -191,14 +191,14 @@ abstract class AbstractDartsModel
     /**
      * Given the single/double/treble required, calculate the physical coordinates of the optimal place to aim
      */
-    private fun getPointForScore(drt: Dart, dartboard: Dartboard): Point
+    fun getPointForScore(drt: Dart, dartboard: Dartboard): Point
     {
         val score = drt.score
         val segmentType = drt.getSegmentTypeToAimAt()
-        return getPointForScoreAdjustedForBias(score, dartboard, segmentType)
+        return getPointForScore(score, dartboard, segmentType)
     }
 
-    private fun getPointForScoreAdjustedForBias(score: Int, dartboard: Dartboard, type: Int): Point
+    private fun getPointForScore(score: Int, dartboard: Dartboard, type: Int): Point
     {
         val multiplier = getMultiplier(type)
         Debug.append("Aiming for " + Dart(score, multiplier), logging)
@@ -261,7 +261,7 @@ abstract class AbstractDartsModel
         {
             val doubleToAimAt = rand.nextInt(20) + 1
 
-            val doublePtToAimAt = getPointForScoreAdjustedForBias(doubleToAimAt, dartboard, SEGMENT_TYPE_DOUBLE)
+            val doublePtToAimAt = getPointForScore(doubleToAimAt, dartboard, SEGMENT_TYPE_DOUBLE)
 
             val pt = throwDartAtPoint(doublePtToAimAt, dartboard)
             val dart = dartboard.convertPointToDart(pt, true)
@@ -294,23 +294,23 @@ abstract class AbstractDartsModel
     {
         const val TYPE_NORMAL_DISTRIBUTION = 2
 
-        @JvmField val DARTS_MODEL_NORMAL_DISTRIBUTION = "Simple Gaussian"
+        const val DARTS_MODEL_NORMAL_DISTRIBUTION = "Simple Gaussian"
 
         //Log levels
         const val LOGGING = false
         private const val LIGHT_LOGGING = false
 
-        private const val TAG_SETUP_DART = "SetupDart"
-        private const val TAG_GOLF_AIM = "GolfAim"
-        private const val TAG_GOLF_STOP = "GolfStop"
-        private const val ATTRIBUTE_SCORING_DART = "ScoringDart"
-        private const val ATTRIBUTE_MERCY_RULE = "MercyRule"
-        private const val ATTRIBUTE_SCORE = "Score"
-        private const val ATTRIBUTE_DART_VALUE = "DartValue"
-        private const val ATTRIBUTE_DART_MULTIPLIER = "DartMultiplier"
-        private const val ATTRIBUTE_DART_NUMBER = "DartNumber"
-        private const val ATTRIBUTE_SEGMENT_TYPE = "SegmentType"
-        private const val ATTRIBUTE_STOP_THRESHOLD = "StopThreshold"
+        const val TAG_SETUP_DART = "SetupDart"
+        const val TAG_GOLF_AIM = "GolfAim"
+        const val TAG_GOLF_STOP = "GolfStop"
+        const val ATTRIBUTE_SCORING_DART = "ScoringDart"
+        const val ATTRIBUTE_MERCY_RULE = "MercyRule"
+        const val ATTRIBUTE_SCORE = "Score"
+        const val ATTRIBUTE_DART_VALUE = "DartValue"
+        const val ATTRIBUTE_DART_MULTIPLIER = "DartMultiplier"
+        const val ATTRIBUTE_DART_NUMBER = "DartNumber"
+        const val ATTRIBUTE_SEGMENT_TYPE = "SegmentType"
+        const val ATTRIBUTE_STOP_THRESHOLD = "StopThreshold"
 
         private const val SCORING_DARTS_TO_THROW = 20000
         private const val DOUBLE_DARTS_TO_THROW = 20000
@@ -382,7 +382,7 @@ abstract class AbstractDartsModel
                 i *= 2
             }
 
-            return i
+            return i / 2
         }
     }
 }
