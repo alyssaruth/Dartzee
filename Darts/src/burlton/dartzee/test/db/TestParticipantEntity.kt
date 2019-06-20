@@ -1,7 +1,6 @@
 package burlton.dartzee.test.db
 
 import burlton.core.code.util.Debug.clearLogs
-import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.ai.DartsModelNormalDistribution
@@ -69,8 +68,6 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
         shouldThrow<Exception>{
             pt.getModel()
         }
-
-        exceptionLogged() shouldBe true
     }
 
     @Test
