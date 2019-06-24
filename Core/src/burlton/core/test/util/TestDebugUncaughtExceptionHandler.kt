@@ -15,7 +15,7 @@ import org.junit.Test
 
 class TestDebugUncaughtExceptionHandler: AbstractTest()
 {
-    val ext = Debug.getDebugExtension()
+    private val ext = Debug.getDebugExtension()
 
     override fun afterEachTest()
     {

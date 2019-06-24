@@ -15,7 +15,7 @@ public class Debug implements CoreRegistry
 	public static final String SQL_PREFIX = "[SQL] ";
 	public static final String BUG_REPORT_ADDITONAL_INFO_LINE = "Additional Information:";
 
-	private static final String SUCCESS_MESSAGE = "Email sent successfully";
+	public static final String SUCCESS_MESSAGE = "Email sent successfully";
 	private static final long ERROR_MESSAGE_DELAY_MILLIS = 10000; //10s
 	private static final long MINIMUM_EMAIL_GAP_MILLIS = 10000;
 
@@ -68,6 +68,7 @@ public class Debug implements CoreRegistry
 			return;
 		}
 
+
 		Runnable logRunnable = new Runnable()
 		{
 			@Override
@@ -77,7 +78,15 @@ public class Debug implements CoreRegistry
 			}
 		};
 
-		logService.execute(logRunnable);
+		String threadName = Thread.currentThread().getName();
+		if (!threadName.equals("Logger"))
+		{
+			logService.execute(logRunnable);
+		}
+		else
+		{
+			logRunnable.run();
+		}
 	}
 
 	private static void appendInCurrentThread(String text, boolean includeDate, String emailSubject)
@@ -102,7 +111,7 @@ public class Debug implements CoreRegistry
 
 		if (emailSubject != null && shouldSendEmail())
 		{
-			sendContentsAsEmail(emailSubject, false);
+			sendContentsAsEmail(emailSubject);
 		}
 	}
 
@@ -317,7 +326,7 @@ public class Debug implements CoreRegistry
 				&& sendingEmails;
 	}
 
-	private static void sendContentsAsEmail(String fullTitle, boolean manual)
+	private static void sendContentsAsEmail(String fullTitle)
 	{
 		try
 		{
@@ -331,12 +340,9 @@ public class Debug implements CoreRegistry
 				long timeSinceLastEmail = System.currentTimeMillis() - lastEmailMillis;
 				if (timeSinceLastEmail < MINIMUM_EMAIL_GAP_MILLIS)
 				{
-					if (!manual)
-					{
-						long timeToSleep = MINIMUM_EMAIL_GAP_MILLIS - timeSinceLastEmail;
-						Debug.append("Waiting " + timeToSleep + " millis before sending logs...");
-						Thread.sleep(timeToSleep);
-					}
+					long timeToSleep = MINIMUM_EMAIL_GAP_MILLIS - timeSinceLastEmail;
+					Debug.append("Waiting " + timeToSleep + " millis before sending logs...");
+					Thread.sleep(timeToSleep);
 
 					fullTitle += " (Part " + (emailsSentInSuccession+1) + ")";
 					emailsSentInSuccession++;
@@ -352,7 +358,7 @@ public class Debug implements CoreRegistry
 
 				debugExtension.sendEmail(fullTitle, message);
 
-				Debug.append(SUCCESS_MESSAGE, true);
+				Debug.appendInCurrentThread(SUCCESS_MESSAGE, true, null);
 				positionLastEmailed = positionLastEmailed + message.length();
 				lastEmailMillis = System.currentTimeMillis();
 			}
