@@ -1,19 +1,23 @@
 package burlton.core.test.util
 
 import burlton.core.code.util.Debug
+import burlton.core.code.util.DebugExtension
 import burlton.core.code.util.DebugOutput
 import burlton.core.test.helper.AbstractTest
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
+import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
+import io.mockk.*
 import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
 class TestDebug: AbstractTest()
 {
+    private val ext = Debug.getDebugExtension()
     private val originalOut = System.out
     private val newOut = ByteArrayOutputStream()
 
@@ -28,6 +32,9 @@ class TestDebug: AbstractTest()
     {
         super.afterEachTest()
         System.setOut(originalOut)
+
+        Debug.setDebugExtension(ext)
+        Debug.setSendingEmails(false)
     }
 
     @Test
@@ -125,6 +132,50 @@ class TestDebug: AbstractTest()
         logs shouldContain("TestDebug.testStackTraceBasic(TestDebug.kt:")
 
         exceptionLogged() shouldBe true
+    }
+
+    @Test
+    fun `Should show an error and send an email for a regular stack trace`()
+    {
+        val ext = mockk<DebugExtension>(relaxed = true)
+        Debug.setDebugExtension(ext)
+        Debug.setSendingEmails(true)
+
+        Debug.stackTrace("Foo")
+
+        exceptionLogged() shouldBe true
+        verify { ext.exceptionCaught(true) }
+        verify { ext.sendEmail("java.lang.Throwable - Foo () - Alex", any()) }
+
+        getLogs() shouldContain Debug.SUCCESS_MESSAGE
+    }
+
+    @Test
+    fun `Should disable emailing if an error occurs trying to email a log`()
+    {
+        val ext = mockk<DebugExtension>(relaxed = true)
+        Debug.setDebugExtension(ext)
+        Debug.setSendingEmails(true)
+
+        every { ext.sendEmail(any(), any()) } throws Exception("Not again")
+        Debug.stackTrace("Foo")
+
+        exceptionLogged() shouldBe true
+        verify { ext.exceptionCaught(true) }
+        verify { ext.sendEmail("java.lang.Throwable - Foo () - Alex", any()) }
+        verify { ext.unableToEmailLogs() }
+
+        getLogs() shouldNotContain Debug.SUCCESS_MESSAGE
+        getLogs() shouldContain "Foo"
+        getLogs() shouldContain "Not again"
+
+        confirmVerified(ext)
+        clearMocks(ext)
+
+        Debug.stackTrace("Foo2")
+
+        getLogs() shouldContain "Foo2"
+        verifyNotCalled { ext.sendEmail(any(), any()) }
     }
 
     @Test
