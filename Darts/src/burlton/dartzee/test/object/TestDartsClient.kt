@@ -7,7 +7,7 @@ import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.dartzee.code.utils.UpdateManager
 import burlton.dartzee.test.helper.AbstractRegistryTest
-import burlton.dartzee.test.helper.verifyNotCalled
+import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.string.shouldNotContain

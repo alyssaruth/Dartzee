@@ -5,7 +5,7 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.verifyNotCalled
+import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
