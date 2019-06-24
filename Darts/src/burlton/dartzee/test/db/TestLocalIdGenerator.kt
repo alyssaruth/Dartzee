@@ -11,13 +11,6 @@ import org.junit.Test
 
 class TestLocalIdGenerator: AbstractDartsTest()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        LocalIdGenerator.hmLastAssignedIdByTableName.clear()
-    }
-
     @Test
     fun `It should generate an ID of 1 for an empty table`()
     {

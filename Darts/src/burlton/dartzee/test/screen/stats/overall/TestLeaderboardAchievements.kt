@@ -11,20 +11,11 @@ import burlton.dartzee.code.screen.stats.overall.LeaderboardAchievements
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertAchievement
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.shouldBe
 import org.junit.Test
 
 class TestLeaderboardAchievements: AbstractDartsTest()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        wipeTable("Achievement")
-        wipeTable("Player")
-    }
-
     @Test
     fun `Combo box should be disabled by default`()
     {

@@ -14,13 +14,6 @@ import java.sql.Timestamp
 
 class TestReporting: AbstractDartsTest()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        wipeTable("Game")
-    }
-
     @Test
     fun `Should be able to filter by game type`()
     {

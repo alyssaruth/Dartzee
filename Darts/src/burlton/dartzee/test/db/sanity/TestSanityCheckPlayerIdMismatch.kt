@@ -1,19 +1,16 @@
 package burlton.dartzee.test.db.sanity
 
 import burlton.dartzee.code.db.sanity.SanityCheckPlayerIdMismatch
-import burlton.dartzee.test.helper.*
+import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.insertDart
+import burlton.dartzee.test.helper.insertParticipant
+import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
 
 class TestSanityCheckPlayerIdMismatch: AbstractDartsTest()
 {
-    override fun beforeEachTest()
-    {
-        wipeTable("Dart")
-        wipeTable("Participant")
-    }
-
     @Test
     fun `Should not flag up matching rows`()
     {

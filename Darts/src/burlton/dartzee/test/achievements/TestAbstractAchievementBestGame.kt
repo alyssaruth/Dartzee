@@ -4,7 +4,10 @@ import burlton.dartzee.code.achievements.AbstractAchievementBestGame
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.test.helper.*
+import burlton.dartzee.test.helper.getCountFromTable
+import burlton.dartzee.test.helper.insertGame
+import burlton.dartzee.test.helper.insertParticipant
+import burlton.dartzee.test.helper.insertPlayer
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -12,14 +15,6 @@ import java.sql.Timestamp
 abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: AbstractAchievementTest<E>()
 {
     override val gameType = factoryAchievement().gameType
-
-    override fun beforeEachTest()
-    {
-        wipeTable("Achievement")
-        wipeTable("Player")
-        wipeTable("Game")
-        wipeTable("Participant")
-    }
 
     override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
     {

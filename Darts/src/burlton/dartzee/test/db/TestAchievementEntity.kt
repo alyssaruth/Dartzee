@@ -14,13 +14,6 @@ import org.junit.Test
 
 class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        wipeTable("Achievement")
-    }
-
     override fun factoryDao() = AchievementEntity()
 
     @Test

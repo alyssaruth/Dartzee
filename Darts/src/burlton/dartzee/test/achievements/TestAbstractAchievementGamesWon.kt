@@ -7,7 +7,6 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.helper.getCountFromTable
 import burlton.dartzee.test.helper.insertParticipant
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -15,14 +14,6 @@ import java.sql.Timestamp
 abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractAchievementTest<E>()
 {
     override val gameType = factoryAchievement().gameType
-
-    override fun beforeEachTest()
-    {
-        wipeTable("Achievement")
-        wipeTable("Game")
-        wipeTable("Participant")
-        wipeTable("Player")
-    }
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {

@@ -37,5 +37,7 @@ abstract class AbstractDartsTest: AbstractDesktopTest()
         super.beforeEachTest()
 
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
+
+        DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
     }
 }

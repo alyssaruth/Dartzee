@@ -14,13 +14,6 @@ import org.junit.Test
 
 class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        wipeTable("Dart")
-    }
-
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_LEADERBOARD_SIZE)
 
     @Test
