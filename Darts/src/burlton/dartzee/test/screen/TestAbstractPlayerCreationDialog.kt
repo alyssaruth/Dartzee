@@ -83,9 +83,6 @@ class TestAbstractPlayerCreationDialog: AbstractDartsTest()
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
     }
 
-
-
-
     class DummyPlayerCreationDialog : AbstractPlayerCreationDialog()
     {
         @SpyK
