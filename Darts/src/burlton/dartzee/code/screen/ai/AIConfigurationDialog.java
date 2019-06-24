@@ -267,7 +267,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 			if (playerForSimulation == null)
 			{
 				String name = textFieldName.getText();
-				if (!PlayerEntity.isValidName(name, doExistenceCheck()))
+				if (!isValidName(name, doExistenceCheck()))
 				{
 					return;
 				}

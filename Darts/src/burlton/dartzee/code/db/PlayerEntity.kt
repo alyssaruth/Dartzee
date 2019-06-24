@@ -3,7 +3,6 @@ package burlton.dartzee.code.db
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.util.DateStatics.Companion.END_OF_TIME
-import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.getEndOfTimeSqlString
 import javax.swing.ImageIcon
 
@@ -78,7 +77,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
 
             return PlayerEntity().retrieveEntities(whereSql)
         }
-        private fun retrieveForName(name:String): PlayerEntity?
+        fun retrieveForName(name:String): PlayerEntity?
         {
             val whereSql = "Name = '$name' AND DtDeleted = ${getEndOfTimeSqlString()}"
             val players = PlayerEntity().retrieveEntities(whereSql)
@@ -116,40 +115,6 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
             dialog.isVisible = true
 
             return dialog.createdPlayer
-        }
-
-        @JvmStatic fun isValidName(name: String?, checkForExistence: Boolean): Boolean
-        {
-            if (name == null || name.isEmpty())
-            {
-                DialogUtil.showError("You must enter a name for this player.")
-                return false
-            }
-
-            val length = name.length
-            if (length < 3)
-            {
-                DialogUtil.showError("The player name must be at least 3 characters long.")
-                return false
-            }
-
-            if (length > 25)
-            {
-                DialogUtil.showError("The player name cannot be more than 25 characters long.")
-                return false
-            }
-
-            if (checkForExistence)
-            {
-                val existingPlayer = retrieveForName(name)
-                if (existingPlayer != null)
-                {
-                    DialogUtil.showError("A player with the name $name already exists.")
-                    return false
-                }
-            }
-
-            return true
         }
 
         @JvmStatic fun factoryAndSaveHuman(name: String, avatarId: String): PlayerEntity
