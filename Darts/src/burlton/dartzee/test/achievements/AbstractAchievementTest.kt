@@ -5,7 +5,10 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.test.helper.*
+import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.dropUnexpectedTables
+import burlton.dartzee.test.helper.insertGame
+import burlton.dartzee.test.helper.insertPlayer
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -25,17 +28,6 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
 
     abstract fun factoryAchievement(): E
     abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
-
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        wipeTable("Achievement")
-        wipeTable("Game")
-        wipeTable("Player")
-        wipeTable("Participant")
-        wipeTable("Dart")
-    }
 
     private fun setUpAchievementRowForPlayer(p: PlayerEntity)
     {

@@ -3,7 +3,6 @@ package burlton.dartzee.test.screen
 import burlton.dartzee.code.screen.PlayerSelectDialog
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -13,13 +12,6 @@ import javax.swing.ListSelectionModel
 
 class TestPlayerSelectDialog: AbstractDartsTest()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        wipeTable("Player")
-    }
-
     @Test
     fun `Should not display excluded players`()
     {

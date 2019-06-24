@@ -14,15 +14,6 @@ import javax.swing.JOptionPane
 
 class TestDevUtilities: AbstractDartsTest()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        wipeTable("Game")
-        wipeTable("Participant")
-        wipeTable("Dart")
-    }
-
     @Test
     fun `Should show an error and return out if there are no games in the DB`()
     {
