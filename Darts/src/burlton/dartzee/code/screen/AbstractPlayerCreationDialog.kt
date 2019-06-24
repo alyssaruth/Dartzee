@@ -15,7 +15,7 @@ abstract class AbstractPlayerCreationDialog : SimpleDialog()
     @JvmField val textFieldName = JTextField()
 
     //Abstract methods
-    protected abstract fun savePlayer()
+    abstract fun savePlayer()
 
     override fun okPressed()
     {
@@ -48,7 +48,7 @@ abstract class AbstractPlayerCreationDialog : SimpleDialog()
 
     protected open fun doExistenceCheck() = true
 
-    fun isValidName(name: String?, checkForExistence: Boolean): Boolean
+    protected fun isValidName(name: String?, checkForExistence: Boolean): Boolean
     {
         if (name == null || name.isEmpty())
         {
