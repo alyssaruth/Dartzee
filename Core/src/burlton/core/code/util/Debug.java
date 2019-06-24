@@ -447,6 +447,10 @@ public class Debug implements CoreRegistry
 		output.clear();
 	}
 
+	public static DebugExtension getDebugExtension()
+	{
+		return debugExtension;
+	}
 	public static void setDebugExtension(DebugExtension debugExtension)
 	{
 		Debug.debugExtension = debugExtension;
