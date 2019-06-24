@@ -6,7 +6,7 @@ import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.preference.AbstractPreferencesPanel
 import burlton.dartzee.code.screen.preference.PreferencesDialog
 import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.verifyNotCalled
+import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk

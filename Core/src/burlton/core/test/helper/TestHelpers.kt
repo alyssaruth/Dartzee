@@ -1,4 +1,4 @@
-package burlton.dartzee.test.helper
+package burlton.core.test.helper
 
 import io.mockk.verify
 
