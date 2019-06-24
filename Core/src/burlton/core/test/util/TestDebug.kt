@@ -1,4 +1,4 @@
-package burlton.core.test
+package burlton.core.test.util
 
 import burlton.core.code.util.Debug
 import burlton.core.code.util.DebugOutput

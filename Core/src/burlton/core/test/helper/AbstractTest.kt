@@ -1,7 +1,7 @@
 package burlton.core.test.helper
 
 import burlton.core.code.util.Debug
-import burlton.core.test.TestDebug
+import burlton.core.test.util.TestDebug
 import io.kotlintest.shouldBe
 import org.junit.After
 import org.junit.Before

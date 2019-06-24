@@ -15,6 +15,15 @@ import org.junit.Test
 
 class TestDebugUncaughtExceptionHandler: AbstractTest()
 {
+    val ext = Debug.getDebugExtension()
+
+    override fun afterEachTest()
+    {
+        super.afterEachTest()
+
+        Debug.setDebugExtension(ext)
+    }
+
     @Test
     fun `Should not show an error for suppressed logs`()
     {
