@@ -30,14 +30,13 @@ object ScreenCache
     //Other
     private var debugConsole: DebugConsole? = null
 
-
     @JvmStatic fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)
 
     fun getDartsGameScreens() = hmGameIdToGameScreen.values
 
     @JvmStatic fun <K : EmbeddedScreen> getScreen(screenClass: Class<K>): K
     {
-        var scrn: K? = hmClassToScreen[screenClass] as K
+        var scrn: K? = hmClassToScreen[screenClass] as K?
 
         try
         {
@@ -163,12 +162,8 @@ object ScreenCache
 
     @JvmStatic fun removeDartsGameScreen(scrn: DartsGameScreen)
     {
-        hmGameIdToGameScreen.forEach{ gameId, value ->
-            if (value == scrn)
-            {
-                hmGameIdToGameScreen.remove(gameId)
-            }
-        }
+        val keys = hmGameIdToGameScreen.filter { it.value == scrn }.map { it.key }
+        keys.forEach { hmGameIdToGameScreen.remove(it) }
     }
 
     fun getConfigureReportColumnsDialog(): ConfigureReportColumnsDialog

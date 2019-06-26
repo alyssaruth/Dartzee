@@ -7,8 +7,10 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.listener.DartboardListener
+import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.GamePanelX01
 import burlton.dartzee.code.utils.*
+import burlton.desktopcore.code.util.getParentWindow
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -354,8 +356,16 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     override fun mouseClicked(arg0: MouseEvent)
     {
-        val pt = arg0.point
-        dartThrown(pt)
+        val scrn = getParentWindow() as DartsGameScreen
+        if (scrn.suppressClick)
+        {
+            scrn.suppressClick = false
+        }
+        else
+        {
+            val pt = arg0.point
+            dartThrown(pt)
+        }
     }
 
     open fun dartThrown(pt: Point)
