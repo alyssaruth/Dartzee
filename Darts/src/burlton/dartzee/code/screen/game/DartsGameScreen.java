@@ -28,6 +28,7 @@ public class DartsGameScreen extends JFrame
 									  implements WindowListener, ChangeListener
 {
 	private DartsMatchEntity match = null;
+	public boolean suppressClick = false;
 	
 	public DartsGameScreen()
 	{
@@ -365,10 +366,15 @@ public class DartsGameScreen extends JFrame
 	
 	@Override
 	public void windowActivated(WindowEvent arg0){}
+
 	@Override
 	public void windowClosing(WindowEvent arg0){}
 	@Override
-	public void windowDeactivated(WindowEvent arg0){}
+	public void windowDeactivated(WindowEvent arg0)
+	{
+		suppressClick = true;
+	}
+
 	@Override
 	public void windowDeiconified(WindowEvent arg0){}
 	@Override
