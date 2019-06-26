@@ -51,7 +51,10 @@ class TestUpdateManager: AbstractDartsTest()
 
         result shouldBe null
         exceptionLogged() shouldBe true
-        getLogs() shouldContain("org.apache.http.conn.ConnectTimeoutException")
+
+        val logs = getLogs()
+        val hasExpectedError = logs.contains("java.net.UnknownHostException") || logs.contains("org.apache.http.conn.ConnectTimeoutException")
+        hasExpectedError shouldBe true
         dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
 
         dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")
