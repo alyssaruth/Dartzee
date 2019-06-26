@@ -5,6 +5,7 @@ import burlton.core.test.helper.getLogs
 import burlton.desktopcore.code.util.containsComponent
 import burlton.desktopcore.code.util.createButtonGroup
 import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.desktopcore.code.util.getParentWindow
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
@@ -94,5 +95,25 @@ class TestComponentUtil: AbstractDesktopTest()
         rdbtnTwo.isSelected = true
 
         rdbtnOne.isSelected.shouldBeFalse()
+    }
+
+    @Test
+    fun `Should return null if no parent window`()
+    {
+        val panel = JPanel()
+        panel.getParentWindow() shouldBe null
+    }
+
+    @Test
+    fun `Should recurse up the tree to find the parent window`()
+    {
+        val window = JFrame()
+        val panel = JPanel()
+        val btn = JButton()
+        window.contentPane.add(panel)
+        panel.add(btn)
+
+        btn.getParentWindow() shouldBe window
+        panel.getParentWindow() shouldBe window
     }
 }
