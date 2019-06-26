@@ -356,16 +356,23 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     override fun mouseClicked(arg0: MouseEvent)
     {
-        val scrn = getParentWindow() as DartsGameScreen
-        if (scrn.suppressClick)
-        {
-            scrn.suppressClick = false
-        }
-        else
+        if (!suppressClickForGameWindow())
         {
             val pt = arg0.point
             dartThrown(pt)
         }
+    }
+
+    private fun suppressClickForGameWindow(): Boolean
+    {
+        val scrn = getParentWindow() as? DartsGameScreen ?: return false
+        if (scrn.suppressClick)
+        {
+            scrn.suppressClick = false
+            return true
+        }
+
+        return false
     }
 
     open fun dartThrown(pt: Point)
@@ -691,7 +698,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     override fun mouseMoved(arg0: MouseEvent)
     {
-        highlightDartboard(arg0.point)
+        if (getParentWindow()!!.isFocused)
+        {
+            highlightDartboard(arg0.point)
+        }
     }
 
     override fun mousePressed(arg0: MouseEvent)
