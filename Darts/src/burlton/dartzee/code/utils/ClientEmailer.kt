@@ -3,6 +3,7 @@ package burlton.dartzee.code.utils
 import burlton.core.code.util.Debug
 import burlton.core.code.util.FileUtil
 import burlton.dartzee.code.`object`.DartsClient
+import burlton.desktopcore.code.util.DialogUtil
 import com.sun.mail.smtp.SMTPTransport
 import java.io.File
 import java.nio.charset.StandardCharsets
@@ -26,6 +27,7 @@ object ClientEmailer
     {
         if (DartsClient.logSecret.isEmpty())
         {
+            DialogUtil.showErrorLater("Unable to send logs - password must be entered through Utilities screen")
             Debug.append("No logSecret - unable to send logs")
             return false
         }
@@ -33,12 +35,15 @@ object ClientEmailer
         return true
     }
 
-    fun sendClientEmail(subject: String, body: String)
+    fun sendClientEmail(subject: String, body: String): Boolean
     {
         if (!attemptToSendEmail(subject, body))
         {
             writeEmailToFile(subject, body)
+            return false
         }
+
+        return true
     }
     private fun attemptToSendEmail(subject: String, body: String): Boolean
     {
