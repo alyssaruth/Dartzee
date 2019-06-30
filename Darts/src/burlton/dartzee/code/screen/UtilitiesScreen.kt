@@ -3,9 +3,8 @@ package burlton.dartzee.code.screen
 import burlton.core.code.util.dumpThreadStacks
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
-import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
-import burlton.dartzee.code.utils.DartsDatabaseUtil
-import burlton.dartzee.code.utils.DevUtilities
+import burlton.dartzee.code.utils.*
+import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -13,6 +12,7 @@ import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.AbstractButton
 import javax.swing.JButton
+import javax.swing.JOptionPane
 import javax.swing.JPanel
 
 class UtilitiesScreen : EmbeddedScreen()
@@ -25,6 +25,7 @@ class UtilitiesScreen : EmbeddedScreen()
     private val btnViewLogs = JButton("View Logs")
     private val btnThreadStacks = JButton("Thread Stacks")
     private val btnAchievementConversion = JButton("Run Achievement Conversion")
+    private val btnSetLogSecret = JButton("Enable emailing of logs")
 
     init
     {
@@ -39,6 +40,7 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnCheckForUpdates, "cell 0 8,alignx center")
         panel.add(btnViewLogs, "cell 0 10,alignx center")
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
+        panel.add(btnSetLogSecret, "cell 0 12, alignx center")
 
         val buttons = getAllChildComponentsForType(panel, AbstractButton::class.java)
         for (button in buttons)
@@ -67,7 +69,30 @@ class UtilitiesScreen : EmbeddedScreen()
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()
             btnAchievementConversion -> runAchievementConversion()
+            btnSetLogSecret -> setLogSecret()
             else -> super.actionPerformed(arg0)
+        }
+    }
+
+    private fun setLogSecret()
+    {
+        val pwd = JOptionPane.showInputDialog(null, "Please enter the debugging password.", "Password")
+        if (pwd.isEmpty())
+        {
+            return
+        }
+
+        PreferenceUtil.saveString(PREFERENCES_STRING_LOG_SECRET, pwd)
+        DartsClient.logSecret = pwd
+
+        val success = ClientEmailer.sendClientEmail("Log secret test", "Secret set successfully")
+        if (success)
+        {
+            DialogUtil.showInfo("Test log sent successfully!")
+        }
+        else
+        {
+            DialogUtil.showError("Sending a test log failed. Check you entered the password correctly or let me know!")
         }
     }
 
@@ -78,8 +103,5 @@ class UtilitiesScreen : EmbeddedScreen()
         dlg.isVisible = true
     }
 
-    override fun getScreenName(): String
-    {
-        return "Utilities"
-    }
+    override fun getScreenName() = "Utilities"
 }

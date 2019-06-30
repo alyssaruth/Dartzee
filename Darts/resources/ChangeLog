@@ -1,3 +1,11 @@
+--------- v3.2.3 ---------
+
+= Clicking on an unfocused game window will no longer place a dart
+= New update mechanism through Github API
+= Email logs directly from the client (password must be entered once through Utilities screen)
+= 83.5% Kotlin
+= 39.2% test coverage (5085 / 12,985 lines covered by 699 tests)
+
 --------- v3.2.2 ---------
 
 + Ability to play single games with only 1 player (for practice)

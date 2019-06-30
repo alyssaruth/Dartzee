@@ -10,7 +10,7 @@ object DartsClient
     var devMode = false
     var traceReadSql = true
     var traceWriteSql = true
-    var logSecret = ""
+    var logSecret: String = PreferenceUtil.getStringValue(PREFERENCES_STRING_LOG_SECRET)
     var sqlMaxDuration = MAX_SQL_DURATION
     var operatingSystem = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
     var justUpdated = false
