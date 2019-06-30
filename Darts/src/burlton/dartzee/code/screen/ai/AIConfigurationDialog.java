@@ -314,7 +314,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 	}
 	
 	@Override
-	protected void savePlayer()
+	public void savePlayer()
 	{
 		if (aiPlayer == null)
 		{
