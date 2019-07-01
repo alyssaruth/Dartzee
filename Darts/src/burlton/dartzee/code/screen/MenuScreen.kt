@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.screen.reporting.ReportingSetupScreen
 import burlton.dartzee.code.screen.stats.overall.LeaderboardsScreen
+import burlton.desktopcore.code.screen.BugReportDialog
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import java.awt.BorderLayout
 import java.awt.Font
@@ -93,14 +94,14 @@ class MenuScreen : EmbeddedScreen()
         when (src)
         {
             btnAbout -> {
-                val dialog = ScreenCache.getAboutDialog()
+                val dialog = AboutDialogDarts()
                 dialog.setLocationRelativeTo(this)
                 dialog.isModal = true
                 dialog.isVisible = true
             }
 
             btnBugReport -> {
-                val dialog = ScreenCache.getBugReportDialog()
+                val dialog = BugReportDialog()
                 dialog.setLocationRelativeTo(this)
                 dialog.isVisible = true
             }

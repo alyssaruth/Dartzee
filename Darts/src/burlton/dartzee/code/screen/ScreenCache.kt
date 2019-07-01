@@ -6,7 +6,6 @@ import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.preference.PreferencesDialog
 import burlton.dartzee.code.screen.reporting.ConfigureReportColumnsDialog
 import burlton.desktopcore.code.bean.CheatBar
-import burlton.desktopcore.code.screen.BugReportDialog
 import burlton.desktopcore.code.screen.DebugConsole
 import burlton.desktopcore.code.util.DialogUtil
 import javax.swing.JOptionPane
@@ -22,8 +21,6 @@ object ScreenCache
     //Dialogs
     private var humanCreationDialog: HumanCreationDialog? = null
     private var aiConfigurationDialog: AIConfigurationDialog? = null
-    private var aboutDialog: AboutDialogDarts? = null
-    private var bugReportDialog: BugReportDialog? = null
     private var preferencesDialog: PreferencesDialog? = null
     private var configureReportColumnsDialog: ConfigureReportColumnsDialog? = null
 
@@ -115,24 +112,6 @@ object ScreenCache
         return debugConsole!!
     }
 
-    fun getAboutDialog(): AboutDialogDarts
-    {
-        if (aboutDialog == null)
-        {
-            aboutDialog = AboutDialogDarts()
-        }
-        return aboutDialog!!
-    }
-
-    fun getBugReportDialog(): BugReportDialog
-    {
-        if (bugReportDialog == null)
-        {
-            bugReportDialog = BugReportDialog()
-        }
-        return bugReportDialog!!
-    }
-
     fun getPreferencesDialog(): PreferencesDialog
     {
         if (preferencesDialog == null)
@@ -198,8 +177,6 @@ object ScreenCache
 
         humanCreationDialog = null
         aiConfigurationDialog = null
-        aboutDialog = null
-        bugReportDialog = null
         preferencesDialog = null
         configureReportColumnsDialog = null
     }
