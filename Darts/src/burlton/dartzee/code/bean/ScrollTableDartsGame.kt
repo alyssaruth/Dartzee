@@ -13,7 +13,7 @@ class ScrollTableDartsGame(linkColumnName: String = "Game") : ScrollTableHyperli
         if (localId > 0)
         {
             val gameId = GameEntity.getGameId(localId)
-            DartsGameScreen.loadAndDisplayGame(gameId)
+            gameId?.let{ DartsGameScreen.loadAndDisplayGame(gameId) }
         }
         else
         {
