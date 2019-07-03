@@ -4,9 +4,9 @@ import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import burlton.dartzee.code.db.*
-import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.DartsScorerRoundTheClock
 import burlton.dartzee.code.screen.game.GamePanelRoundTheClock
+import burlton.dartzee.test.db.TestAchievementEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.shouldBe
@@ -112,7 +112,7 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
         return dart
     }
 
-    class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid()): GamePanelRoundTheClock(DartsGameScreen())
+    class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid()): GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen())
     {
         init
         {

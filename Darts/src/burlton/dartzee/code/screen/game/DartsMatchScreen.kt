@@ -13,10 +13,8 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartsMatchScreen: AbstractDartsGameScreen(), ChangeListener
+class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerEntity>): AbstractDartsGameScreen(), ChangeListener
 {
-    private var match: DartsMatchEntity? = null
-
     private val matchPanel = MatchSummaryPanel()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<out DartsScorer>>()
@@ -27,13 +25,6 @@ class DartsMatchScreen: AbstractDartsGameScreen(), ChangeListener
 
         tabbedPane.addTab("Match", matchPanel)
         tabbedPane.addChangeListener(this)
-    }
-
-    override fun getScreenHeight() = 705
-
-    fun initMatch(match: DartsMatchEntity, players: MutableList<PlayerEntity>)
-    {
-        this.match = match
 
         matchPanel.init(match, players)
 
@@ -41,6 +32,8 @@ class DartsMatchScreen: AbstractDartsGameScreen(), ChangeListener
 
         setScreenSize(match.getPlayerCount())
     }
+
+    override fun getScreenHeight() = 705
 
     fun addGameToMatch(game: GameEntity): DartsGamePanel<out DartsScorer>
     {
@@ -50,7 +43,7 @@ class DartsMatchScreen: AbstractDartsGameScreen(), ChangeListener
 
         //Initialise some basic properties of the tab, such as visibility of components etc
         val tab = DartsGamePanel.factory(this, game.gameType)
-        tab.initBasic(game, match!!.getPlayerCount())
+        tab.initBasic(game, match.getPlayerCount())
 
         //Add the single game tab and set the parent window to be visible
         tabbedPane.addTab("#" + game.localId, tab)
@@ -74,19 +67,19 @@ class DartsMatchScreen: AbstractDartsGameScreen(), ChangeListener
     {
         updateTotalScores()
 
-        if (match!!.isComplete())
+        if (match.isComplete())
         {
-            match!!.dtFinish = getSqlDateNow()
-            match!!.saveToDatabase()
+            match.dtFinish = getSqlDateNow()
+            match.saveToDatabase()
             return
         }
 
         //Factory and save the next game
-        val nextGame = GameEntity.factoryAndSave(match!!)
+        val nextGame = GameEntity.factoryAndSave(match)
         val panel = addGameToMatch(nextGame)
 
-        match!!.shufflePlayers()
-        panel.startNewGame(match!!.players)
+        match.shufflePlayers()
+        panel.startNewGame(match.players)
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
@@ -129,7 +122,7 @@ class DartsMatchScreen: AbstractDartsGameScreen(), ChangeListener
         }
         else
         {
-            title = match!!.getMatchDesc()
+            title = match.getMatchDesc()
         }
     }
 
@@ -137,8 +130,7 @@ class DartsMatchScreen: AbstractDartsGameScreen(), ChangeListener
     {
         fun launchNewMatch(match: DartsMatchEntity)
         {
-            val scrn = DartsMatchScreen()
-            scrn.initMatch(match, match.players)
+            val scrn = DartsMatchScreen(match, match.players)
 
             val game = GameEntity.factoryAndSave(match)
             val panel = scrn.addGameToMatch(game)

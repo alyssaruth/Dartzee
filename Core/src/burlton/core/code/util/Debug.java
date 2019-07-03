@@ -26,7 +26,7 @@ public class Debug implements CoreRegistry
 	private static DebugOutput output = null;
 	private static DebugExtension debugExtension = null;
 
-	private static int positionLastEmailed = 0;
+	public static int positionLastEmailed = 0;
 	private static int emailsSentInSuccession = 1;
 	private static boolean sendingEmails = true;
 	private static boolean logToSystemOut = false;

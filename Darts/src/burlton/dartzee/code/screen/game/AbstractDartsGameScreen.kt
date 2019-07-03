@@ -7,10 +7,19 @@ import java.awt.Frame
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
 import javax.swing.JFrame
+import javax.swing.WindowConstants
 
 abstract class AbstractDartsGameScreen: JFrame(), WindowListener
 {
     var haveLostFocus = false
+
+    init
+    {
+        size = Dimension(880, 675)
+
+        defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+        addWindowListener(this)
+    }
 
     open fun getScreenHeight() = 675
     protected fun setScreenSize(playerCount: Int)

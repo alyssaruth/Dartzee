@@ -7,28 +7,16 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.util.DialogUtil
-import javax.swing.WindowConstants
 
 /**
  * DartsGameScreen
  * Simple screen which wraps up either a single game panel, or multiple tabs for a match.
  */
-class DartsGameScreen : AbstractDartsGameScreen()
+class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen()
 {
-    private var gamePanel: DartsGamePanel<out DartsScorer>? = null
+    var gamePanel: DartsGamePanel<out DartsScorer> = DartsGamePanel.factory(this, game.gameType)
 
     init
-    {
-        setSize(880, 675)
-
-        defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-        addWindowListener(this)
-    }
-
-    /**
-     * Init
-     */
-    fun initSingleGame(game: GameEntity, totalPlayers: Int): DartsGamePanel<out DartsScorer>
     {
         //Re-size the screen based on how many players there are
         setScreenSize(totalPlayers)
@@ -47,21 +35,17 @@ class DartsGameScreen : AbstractDartsGameScreen()
         contentPane.add(tab)
         gamePanel = tab
         isVisible = true
-
-        return tab
     }
 
     override fun fireAppearancePreferencesChanged()
     {
-        gamePanel!!.fireAppearancePreferencesChanged()
+        gamePanel.fireAppearancePreferencesChanged()
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
     {
-        gamePanel!!.achievementUnlocked(playerId, achievement)
+        gamePanel.achievementUnlocked(playerId, achievement)
     }
-
-
 
     companion object
     {
@@ -74,9 +58,8 @@ class DartsGameScreen : AbstractDartsGameScreen()
             val gameEntity = GameEntity.factoryAndSave(gameType, gameParams)
 
             //Construct the screen and factory a tab
-            val scrn = DartsGameScreen()
-            val panel = scrn.initSingleGame(gameEntity, players.size)
-            panel.startNewGame(players)
+            val scrn = DartsGameScreen(gameEntity, players.size)
+            scrn.gamePanel.startNewGame(players)
         }
 
         fun loadAndDisplayGame(gameId: String)
@@ -111,13 +94,12 @@ class DartsGameScreen : AbstractDartsGameScreen()
         {
             //We've found a game, so construct a screen and initialise it
             val playerCount = gameEntity.getParticipantCount()
-            val scrn = DartsGameScreen()
-            val panel = scrn.initSingleGame(gameEntity, playerCount)
+            val scrn = DartsGameScreen(gameEntity, playerCount)
 
             //Now try to load the game
             try
             {
-                panel.loadGame()
+                scrn.gamePanel.loadGame()
             }
             catch (t: Throwable)
             {
@@ -139,8 +121,7 @@ class DartsGameScreen : AbstractDartsGameScreen()
             val match = DartsMatchEntity().retrieveForId(matchId)
             match!!.cacheMetadataFromGame(lastGame)
 
-            val scrn = DartsMatchScreen()
-            scrn.initMatch(match, firstGame.retrievePlayersVector())
+            val scrn = DartsMatchScreen(match, firstGame.retrievePlayersVector())
 
             try
             {
