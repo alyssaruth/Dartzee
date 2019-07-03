@@ -1,8 +1,8 @@
 package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.utils.DevUtilities
+import burlton.dartzee.test.db.TestAchievementEntity
 import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -72,7 +72,7 @@ class TestDevUtilities: AbstractDartsTest()
     {
         val game = insertGame(localId = 5)
 
-        ScreenCache.addDartsGameScreen(game.rowId, DartsGameScreen())
+        ScreenCache.addDartsGameScreen(game.rowId, TestAchievementEntity.FakeDartsScreen())
 
         DevUtilities.purgeGame(5)
 

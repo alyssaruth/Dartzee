@@ -57,6 +57,7 @@ class TestBugReportDialog: AbstractDesktopTest()
     {
         val ext = mockk<DebugExtension>(relaxed = true)
 
+        Debug.positionLastEmailed = 0
         Debug.setDebugExtension(ext)
 
         val dlg = BugReportDialog()

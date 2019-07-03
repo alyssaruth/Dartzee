@@ -4,9 +4,9 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BTBF
 import burlton.dartzee.code.db.*
-import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.DartsScorerX01
 import burlton.dartzee.code.screen.game.GamePanelX01
+import burlton.dartzee.test.db.TestAchievementEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.shouldBe
@@ -59,7 +59,7 @@ class TestGamePanelX01: AbstractDartsTest()
         a.gameIdEarned shouldBe panel.gameId
     }
 
-    private class TestGamePanel(currentPlayerId: String = randomGuid()): GamePanelX01(DartsGameScreen())
+    private class TestGamePanel(currentPlayerId: String = randomGuid()): GamePanelX01(TestAchievementEntity.FakeDartsScreen())
     {
         init
         {

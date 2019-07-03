@@ -6,7 +6,7 @@ import burlton.dartzee.code.achievements.x01.AchievementX01BestFinish
 import burlton.dartzee.code.achievements.x01.AchievementX01BestGame
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.dartzee.code.screen.game.DartsGameScreen
+import burlton.dartzee.code.screen.game.AbstractDartsGameScreen
 import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
@@ -378,7 +378,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         scrn.gameId shouldBe gameId
     }
 
-    class FakeDartsScreen: DartsGameScreen()
+    class FakeDartsScreen: AbstractDartsGameScreen()
     {
         var gameId: String? = null
         var playerId: String? = null
@@ -391,6 +391,11 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
             this.playerId = playerId
             this.achievementRef = achievement.achievementRef
             this.attainedValue = achievement.attainedValue
+        }
+
+        override fun fireAppearancePreferencesChanged()
+        {
+
         }
     }
 }
