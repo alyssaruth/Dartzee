@@ -17,7 +17,7 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
 {
     private val matchPanel = MatchSummaryPanel()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    private val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<out DartsScorer>>()
+    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<out DartsScorer>>()
 
     init
     {
