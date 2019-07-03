@@ -171,7 +171,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             val gameIdentifier = cmd.substring(CMD_LOAD_GAME.length)
             val localId = gameIdentifier.toLong()
             val gameId = GameEntity.getGameId(localId)
-            DartsGameScreen.loadAndDisplayGame(gameId)
+            gameId?.let { DartsGameScreen.loadAndDisplayGame(gameId) }
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {

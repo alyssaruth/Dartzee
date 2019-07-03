@@ -366,9 +366,9 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     private fun suppressClickForGameWindow(): Boolean
     {
         val scrn = getParentWindow() as? DartsGameScreen ?: return false
-        if (scrn.suppressClick)
+        if (scrn.haveLostFocus)
         {
-            scrn.suppressClick = false
+            scrn.haveLostFocus = false
             return true
         }
 
