@@ -47,7 +47,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	protected GameEntity gameEntity = null;
 	protected int totalPlayers = -1;
 	
-	protected DartsGameScreen parentWindow = null;
+	protected AbstractDartsGameScreen parentWindow = null;
 	private String gameTitle = "";
 	
 	//If this tab is displaying as part of a loaded match, but this game still needs loading, this will be set.
@@ -62,7 +62,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	//For AI turns
 	protected Thread cpuThread = null;
 	
-	public DartsGamePanel(DartsGameScreen parent)
+	public DartsGamePanel(AbstractDartsGameScreen parent)
 	{
 		super();
 		
@@ -618,7 +618,7 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 		return totalPlayers - playersLeft + 1;
 	}
 	
-	public static DartsGamePanel<? extends DartsScorer> factory(DartsGameScreen parent, int gameType)
+	public static DartsGamePanel<? extends DartsScorer> factory(AbstractDartsGameScreen parent, int gameType)
 	{
 		if (gameType == GameEntityKt.GAME_TYPE_X01)
 		{
@@ -886,8 +886,12 @@ public abstract class DartsGamePanel<S extends DartsScorer> extends PanelWithSco
 	private void addParticipant(int playerNumber, ParticipantEntity participant)
 	{
 		hmPlayerNumberToParticipant.put(playerNumber, participant);
-		
-		parentWindow.addParticipant(gameEntity.getLocalId(), participant);
+
+		if (parentWindow instanceof DartsMatchScreen)
+		{
+			((DartsMatchScreen)parentWindow).addParticipant(gameEntity.getLocalId(), participant);
+		}
+
 	}
 
 	public void achievementUnlocked(String playerId, AbstractAchievement achievement)

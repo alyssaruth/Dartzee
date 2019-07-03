@@ -5,7 +5,7 @@ import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.desktopcore.code.util.getSqlDateNow
 
-abstract class GamePanelPausable<S : DartsScorerPausable>(parent: DartsGameScreen) : DartsGamePanel<S>(parent)
+abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsGameScreen) : DartsGamePanel<S>(parent)
 {
     private var aiShouldPause = false
 

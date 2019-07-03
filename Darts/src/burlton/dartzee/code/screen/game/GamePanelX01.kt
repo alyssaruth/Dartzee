@@ -10,7 +10,7 @@ import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.utils.*
 
-open class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(parent)
+open class GamePanelX01(parent: AbstractDartsGameScreen) : GamePanelPausable<DartsScorerX01>(parent)
 {
     //Transient variables for each round
     private var startingScore = -1

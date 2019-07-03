@@ -7,7 +7,7 @@ import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 
-class GamePanelGolf(parent: DartsGameScreen) : DartsGamePanel<DartsScorerGolf>(parent)
+class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScorerGolf>(parent)
 {
     //Number of rounds - 9 holes or 18?
     private var numberOfRounds = -1
