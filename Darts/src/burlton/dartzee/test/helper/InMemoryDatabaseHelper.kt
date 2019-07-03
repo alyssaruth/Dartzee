@@ -37,7 +37,7 @@ fun insertDartsMatch(uuid: String = randomGuid(),
                      games: Int = 3,
                      mode: Int = DartsMatchEntity.MODE_FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
-                     matchParams: String = ""): String
+                     matchParams: String = ""): DartsMatchEntity
 {
     val m = DartsMatchEntity()
     m.rowId = uuid
@@ -48,7 +48,7 @@ fun insertDartsMatch(uuid: String = randomGuid(),
     m.matchParams = matchParams
 
     m.saveToDatabase()
-    return m.rowId
+    return m
 }
 
 

@@ -111,7 +111,7 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
             return icon
         }
 
-        private fun createPresets()
+        fun createPresets()
         {
             Debug.append("Creating ${avatarPresets.size} avatar presets")
 
