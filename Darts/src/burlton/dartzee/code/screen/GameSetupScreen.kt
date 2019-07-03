@@ -10,6 +10,7 @@ import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.game.DartsGameScreen
+import burlton.dartzee.code.screen.game.DartsMatchScreen
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -225,7 +226,7 @@ class GameSetupScreen : EmbeddedScreen()
             match.gameType = gameTypeComboBox.gameType
             match.gameParams = getGameParams()
 
-            DartsGameScreen.launchNewMatch(match)
+            DartsMatchScreen.launchNewMatch(match)
         }
     }
 

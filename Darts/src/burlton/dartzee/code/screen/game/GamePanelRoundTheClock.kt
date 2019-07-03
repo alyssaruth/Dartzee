@@ -9,7 +9,7 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 
-open class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsScorerRoundTheClock>(parent)
+open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPausable<DartsScorerRoundTheClock>(parent)
 {
     private var clockType = ""
     val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()

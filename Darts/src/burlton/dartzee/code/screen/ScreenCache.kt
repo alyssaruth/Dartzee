@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.screen.ai.AIConfigurationDialog
-import burlton.dartzee.code.screen.game.DartsGameScreen
+import burlton.dartzee.code.screen.game.AbstractDartsGameScreen
 import burlton.dartzee.code.screen.preference.PreferencesDialog
 import burlton.dartzee.code.screen.reporting.ConfigureReportColumnsDialog
 import burlton.desktopcore.code.bean.CheatBar
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane
 
 object ScreenCache
 {
-    private val hmGameIdToGameScreen = mutableMapOf<String, DartsGameScreen>()
+    private val hmGameIdToGameScreen = mutableMapOf<String, AbstractDartsGameScreen>()
 
     //Embedded screens
     private val hmClassToScreen = mutableMapOf<Class<out EmbeddedScreen>, EmbeddedScreen>()
@@ -123,12 +123,12 @@ object ScreenCache
         return preferencesDialog!!
     }
 
-    @JvmStatic fun getDartsGameScreen(gameId: String): DartsGameScreen?
+    @JvmStatic fun getDartsGameScreen(gameId: String): AbstractDartsGameScreen?
     {
         return hmGameIdToGameScreen[gameId]
     }
 
-    @JvmStatic fun addDartsGameScreen(gameId: String, scrn: DartsGameScreen)
+    @JvmStatic fun addDartsGameScreen(gameId: String, scrn: AbstractDartsGameScreen)
     {
         if (gameId.isEmpty())
         {
@@ -139,7 +139,7 @@ object ScreenCache
         hmGameIdToGameScreen[gameId] = scrn
     }
 
-    @JvmStatic fun removeDartsGameScreen(scrn: DartsGameScreen)
+    @JvmStatic fun removeDartsGameScreen(scrn: AbstractDartsGameScreen)
     {
         val keys = hmGameIdToGameScreen.filter { it.value == scrn }.map { it.key }
         keys.forEach { hmGameIdToGameScreen.remove(it) }
