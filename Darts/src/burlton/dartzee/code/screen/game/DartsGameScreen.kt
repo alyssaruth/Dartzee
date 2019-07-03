@@ -12,29 +12,23 @@ import burlton.desktopcore.code.util.DialogUtil
  * DartsGameScreen
  * Simple screen which wraps up either a single game panel, or multiple tabs for a match.
  */
-class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen()
+class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen(totalPlayers)
 {
     var gamePanel: DartsGamePanel<out DartsScorer> = DartsGamePanel.factory(this, game.gameType)
 
     init
     {
-        //Re-size the screen based on how many players there are
-        setScreenSize(totalPlayers)
-
         //Cache this screen in ScreenCache
         val gameId = game.rowId
         ScreenCache.addDartsGameScreen(gameId, this)
 
         //Initialise some basic properties of the tab, such as visibility of components etc
-        val tab = DartsGamePanel.factory(this, game.gameType)
-        tab.initBasic(game, totalPlayers)
+        gamePanel.initBasic(game, totalPlayers)
 
-        title = tab.gameTitle
+        title = gamePanel.gameTitle
 
         //Add the single game tab and set visible
-        contentPane.add(tab)
-        gamePanel = tab
-        isVisible = true
+        contentPane.add(gamePanel)
     }
 
     override fun fireAppearancePreferencesChanged()
@@ -59,6 +53,7 @@ class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameSc
 
             //Construct the screen and factory a tab
             val scrn = DartsGameScreen(gameEntity, players.size)
+            scrn.isVisible = true
             scrn.gamePanel.startNewGame(players)
         }
 
@@ -95,6 +90,7 @@ class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameSc
             //We've found a game, so construct a screen and initialise it
             val playerCount = gameEntity.getParticipantCount()
             val scrn = DartsGameScreen(gameEntity, playerCount)
+            scrn.isVisible = true
 
             //Now try to load the game
             try

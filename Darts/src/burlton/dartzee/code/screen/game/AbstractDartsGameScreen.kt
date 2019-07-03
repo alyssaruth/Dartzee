@@ -9,20 +9,20 @@ import java.awt.event.WindowListener
 import javax.swing.JFrame
 import javax.swing.WindowConstants
 
-abstract class AbstractDartsGameScreen: JFrame(), WindowListener
+abstract class AbstractDartsGameScreen(totalPlayers: Int): JFrame(), WindowListener
 {
     var haveLostFocus = false
 
     init
     {
-        size = Dimension(880, 675)
+        setScreenSize(totalPlayers)
 
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         addWindowListener(this)
     }
 
     open fun getScreenHeight() = 675
-    protected fun setScreenSize(playerCount: Int)
+    private fun setScreenSize(playerCount: Int)
     {
         val newSize = Dimension(520 + (playerCount * SCORER_WIDTH), getScreenHeight())
         size = newSize

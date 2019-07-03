@@ -378,7 +378,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         scrn.gameId shouldBe gameId
     }
 
-    class FakeDartsScreen: AbstractDartsGameScreen()
+    class FakeDartsScreen: AbstractDartsGameScreen(2)
     {
         var gameId: String? = null
         var playerId: String? = null
