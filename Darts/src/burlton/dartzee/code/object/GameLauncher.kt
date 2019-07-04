@@ -44,7 +44,7 @@ object GameLauncher
         val gameEntity = GameEntity().retrieveForId(gameId, false)
         if (gameEntity == null)
         {
-            DialogUtil.showError("Game #$gameId does not exist.")
+            DialogUtil.showError("Game $gameId does not exist.")
             return
         }
 
