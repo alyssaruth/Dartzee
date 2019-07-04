@@ -1,8 +1,8 @@
 package burlton.dartzee.code.bean
 
+import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementBreakdown
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
 import burlton.dartzee.code.utils.DartsColour
@@ -131,7 +131,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
         }
         else if (achievement.gameIdEarned.isNotEmpty())
         {
-            DartsGameScreen.loadAndDisplayGame(achievement.gameIdEarned)
+            GameLauncher.loadAndDisplayGame(achievement.gameIdEarned)
         }
     }
     override fun mousePressed(e: MouseEvent?) {}

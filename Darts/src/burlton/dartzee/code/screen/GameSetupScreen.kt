@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.bean.ComboBoxGameType
 import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.bean.GameParamFilterPanelX01
@@ -9,8 +10,6 @@ import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.GameEntity
-import burlton.dartzee.code.screen.game.DartsGameScreen
-import burlton.dartzee.code.screen.game.DartsMatchScreen
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -218,7 +217,7 @@ class GameSetupScreen : EmbeddedScreen()
 
         if (match == null)
         {
-            DartsGameScreen.launchNewGame(selectedPlayers, gameTypeComboBox.gameType, getGameParams())
+            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.gameType, getGameParams())
         }
         else
         {
@@ -226,7 +225,7 @@ class GameSetupScreen : EmbeddedScreen()
             match.gameType = gameTypeComboBox.gameType
             match.gameParams = getGameParams()
 
-            DartsMatchScreen.launchNewMatch(match)
+            GameLauncher.launchNewMatch(match)
         }
     }
 

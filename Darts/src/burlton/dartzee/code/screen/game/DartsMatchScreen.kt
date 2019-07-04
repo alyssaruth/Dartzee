@@ -123,16 +123,4 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
             title = match.getMatchDesc()
         }
     }
-
-    companion object
-    {
-        fun launchNewMatch(match: DartsMatchEntity)
-        {
-            val scrn = DartsMatchScreen(match, match.players)
-
-            val game = GameEntity.factoryAndSave(match)
-            val panel = scrn.addGameToMatch(game)
-            panel.startNewGame(match.players)
-        }
-    }
 }
