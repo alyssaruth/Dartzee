@@ -100,7 +100,7 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
 
         val achievement = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, playerId)!!
         achievement.achievementCounter shouldBe 8
-        achievement.gameIdEarned shouldBe panel.gameId
+        achievement.gameIdEarned shouldBe panel.getGameId()
 
         panel.hmPlayerNumberToCurrentStreak[0] shouldBe 8
     }

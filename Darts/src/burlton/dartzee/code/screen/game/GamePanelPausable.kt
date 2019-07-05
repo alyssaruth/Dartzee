@@ -16,7 +16,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
 
     override fun saveDartsAndProceed()
     {
-        activeScorer.updatePlayerResult()
+        activeScorer!!.updatePlayerResult()
 
         saveDartsToDatabase()
 
@@ -28,7 +28,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
 
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
 
-        val activePlayers = activeCount
+        val activePlayers = getActiveCount()
         if (activePlayers > 1 || (activePlayers == 1 && totalPlayers == 1))
         {
             //We always keep going if there's more than 1 active person in play
@@ -41,7 +41,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
             //Finish the game and set the last player's finishing position if we haven't already
             finishGameIfNecessary()
 
-            if (!activeScorer.paused)
+            if (!activeScorer!!.paused)
             {
                 nextTurn()
             }
@@ -55,7 +55,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
     override fun handlePlayerFinish(): Int
     {
         val finishPos = super.handlePlayerFinish()
-        activeScorer.finalisePlayerResult(finishPos)
+        activeScorer!!.finalisePlayerResult(finishPos)
         return finishPos
     }
 
@@ -73,7 +73,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
 
     private fun finishGameIfNecessary()
     {
-        if (gameEntity.isFinished())
+        if (gameEntity!!.isFinished())
         {
             return
         }
@@ -82,26 +82,26 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
         loser.finishingPosition = totalPlayers
         loser.saveToDatabase()
 
-        gameEntity.dtFinish = getSqlDateNow()
-        gameEntity.saveToDatabase()
+        gameEntity!!.dtFinish = getSqlDateNow()
+        gameEntity!!.saveToDatabase()
 
-        parentWindow.startNextGameIfNecessary()
+        parentWindow?.startNextGameIfNecessary()
 
         //Display this player's result. If they're an AI and we have the preference, then
         //automatically play on.
-        activeScorer.finalisePlayerResult(totalPlayers)
+        activeScorer?.finalisePlayerResult(totalPlayers)
         if (loser.isAi() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
         {
-            activeScorer.toggleResume()
+            activeScorer?.toggleResume()
         }
     }
 
     fun pauseLastPlayer()
     {
-        if (!activeScorer.getHuman() && cpuThread != null)
+        if (!activeScorer!!.getHuman() && cpuThread != null)
         {
             aiShouldPause = true
-            cpuThread.join()
+            cpuThread!!.join()
         }
 
         //Now the player has definitely stopped, reset the round
