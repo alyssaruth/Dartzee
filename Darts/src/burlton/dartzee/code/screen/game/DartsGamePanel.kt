@@ -1,7 +1,6 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.obj.SuperHashMap
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.AbstractAchievement
@@ -37,8 +36,8 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
         MouseListener
 {
 
-    protected var hmPlayerNumberToParticipant = SuperHashMap<Int, ParticipantEntity>()
-    protected var hmPlayerNumberToDartsScorer = SuperHashMap<Int, S>()
+    protected var hmPlayerNumberToParticipant = mutableMapOf<Int, ParticipantEntity>()
+    protected var hmPlayerNumberToDartsScorer = mutableMapOf<Int, S>()
     protected var hmPlayerNumberToLastRoundNumber = HashMap<Int, Int>()
 
     protected var gameEntity: GameEntity? = null
@@ -486,7 +485,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
 
         dartboard.stopListening()
 
-        val participants = hmPlayerNumberToParticipant.valuesAsVector
+        val participants = hmPlayerNumberToParticipant.values
         for (pt in participants)
         {
             val playerId = pt.playerId
