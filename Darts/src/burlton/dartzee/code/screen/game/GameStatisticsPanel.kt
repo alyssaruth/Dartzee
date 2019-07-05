@@ -34,7 +34,7 @@ import javax.swing.text.StyleConstants
 abstract class GameStatisticsPanel : JPanel()
 {
     protected var playerNamesOrdered = mutableListOf<String>()
-    protected var participants: MutableList<ParticipantEntity>? = null
+    protected var participants: List<ParticipantEntity>? = null
     protected var hmPlayerToDarts = HashMapList<String, MutableList<Dart>>()
     var gameParams: String? = null
 
@@ -77,7 +77,7 @@ abstract class GameStatisticsPanel : JPanel()
         table.setShowRowCount(false)
     }
 
-    fun showStats(participants: MutableList<ParticipantEntity>)
+    fun showStats(participants: List<ParticipantEntity>)
     {
         this.participants = participants
 

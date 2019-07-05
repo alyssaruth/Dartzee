@@ -16,14 +16,14 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
-        val currentTarget = activeScorer.currentClockTarget
+        val currentTarget = activeScorer!!.currentClockTarget
         model.throwClockDart(currentTarget, clockType, dartboard)
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, lastRound: Int)
+    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
         val scorer = hmPlayerNumberToDartsScorer[playerNumber]!!
-        for (i in 1..lastRound)
+        for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
             addDartsToScorer(darts, scorer)
@@ -88,12 +88,12 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
-        val currentClockTarget = activeScorer.currentClockTarget
+        val currentClockTarget = activeScorer!!.currentClockTarget
         dart.startingScore = currentClockTarget
 
         if (dart.hitClockTarget(clockType))
         {
-            activeScorer.incrementCurrentClockTarget()
+            activeScorer!!.incrementCurrentClockTarget()
 
             if (dartsThrown.size == 4)
             {
@@ -102,7 +102,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
         }
         else if (dartsThrown.size != 4)
         {
-            activeScorer.disableBrucey()
+            activeScorer!!.disableBrucey()
         }
     }
 
@@ -113,7 +113,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
             return true
         }
 
-        if (activeScorer.currentClockTarget > 20)
+        if (activeScorer!!.currentClockTarget > 20)
         {
             //Finished.
             return true
@@ -139,7 +139,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
         if (dartsThrown.size == 4
                 && dartsThrown.last().hitClockTarget(clockType))
         {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, gameId)
+            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId())
         }
 
         updateBestStreakAchievement()
@@ -159,7 +159,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
             {
                 if (currentStreak > 1)
                 {
-                    AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, currentPlayerId, gameId, currentStreak)
+                    AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), currentStreak)
                 }
 
                 currentStreak = 0
@@ -168,7 +168,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
 
         if (currentStreak > 1)
         {
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, currentPlayerId, gameId, currentStreak)
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), currentStreak)
         }
 
         hmPlayerNumberToCurrentStreak[currentPlayerNumber] = currentStreak
@@ -177,7 +177,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPa
 
     override fun currentPlayerHasFinished(): Boolean
     {
-        return activeScorer.currentClockTarget > 20
+        return activeScorer!!.currentClockTarget > 20
     }
 
     override fun initImpl(gameParams: String)

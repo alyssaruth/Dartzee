@@ -26,7 +26,7 @@ class TestGamePanelX01: AbstractDartsTest()
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
         val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_BTBF, playerId)!!
-        a.gameIdEarned shouldBe panel.gameId
+        a.gameIdEarned shouldBe panel.getGameId()
     }
 
     @Test
@@ -56,7 +56,7 @@ class TestGamePanelX01: AbstractDartsTest()
 
         val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId)!!
         a.achievementCounter shouldBe 100
-        a.gameIdEarned shouldBe panel.gameId
+        a.gameIdEarned shouldBe panel.getGameId()
     }
 
     private class TestGamePanel(currentPlayerId: String = randomGuid()): GamePanelX01(TestAchievementEntity.FakeDartsScreen())

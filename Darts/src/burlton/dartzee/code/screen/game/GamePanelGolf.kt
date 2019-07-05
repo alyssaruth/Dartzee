@@ -33,10 +33,10 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
         model.throwGolfDart(targetHole, dartNo, dartboard)
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, lastRound: Int)
+    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
         val scorer = hmPlayerNumberToDartsScorer[playerNumber]
-        for (i in 1..lastRound)
+        for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
             scorer?.addDarts(darts)
@@ -55,7 +55,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
         }
 
         val score = getScoreForMostRecentDart()
-        if (activeScorer.getHuman())
+        if (activeScorer!!.getHuman())
         {
             return score == 1
         }
@@ -63,7 +63,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
         {
             val noDarts = dartsThrown.size
 
-            val model = currentPlayerStrategy
+            val model = getCurrentPlayerStrategy()
             val stopThreshold = model!!.getStopThresholdForDartNo(noDarts)
 
             return score <= stopThreshold
@@ -74,7 +74,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
     {
         saveDartsToDatabase()
 
-        activeScorer.finaliseRoundScore()
+        activeScorer?.finaliseRoundScore()
 
         unlockAchievements()
 
@@ -84,7 +84,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
         }
 
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
-        if (activeCount > 0)
+        if (getActiveCount() > 0)
         {
             nextTurn()
         }
@@ -108,7 +108,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
 
         if (pointsRisked > 0)
         {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, currentPlayerId, gameEntity.rowId, pointsRisked)
+            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity!!.rowId, pointsRisked)
         }
     }
 
@@ -126,7 +126,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
 
         updateScorersWithFinishingPositions()
 
-        parentWindow.startNextGameIfNecessary()
+        parentWindow?.startNextGameIfNecessary()
 
         allPlayersFinished()
     }
@@ -157,23 +157,17 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
 
             if (finishPos == 1)
             {
-                val achievementRef = getWinAchievementRef(gameEntity.gameType)
-                AchievementEntity.incrementAchievement(achievementRef, pt.playerId, gameId)
+                val achievementRef = getWinAchievementRef(gameEntity!!.gameType)
+                AchievementEntity.incrementAchievement(achievementRef, pt.playerId, getGameId())
             }
 
             previousScore = pt.finalScore
         }
     }
 
-    override fun factoryScorer(): DartsScorerGolf
-    {
-        return DartsScorerGolf()
-    }
+    override fun factoryScorer() = DartsScorerGolf()
 
-    override fun shouldAIStop(): Boolean
-    {
-        return false
-    }
+    override fun shouldAIStop() = false
 
     override fun doMissAnimation()
     {
