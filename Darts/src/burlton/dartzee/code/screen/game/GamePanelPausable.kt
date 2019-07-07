@@ -1,11 +1,12 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.desktopcore.code.util.getSqlDateNow
 
-abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsGameScreen) : DartsGamePanel<S>(parent)
+abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<S>(parent, game)
 {
     private var aiShouldPause = false
 
@@ -73,7 +74,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
 
     private fun finishGameIfNecessary()
     {
-        if (gameEntity!!.isFinished())
+        if (gameEntity.isFinished())
         {
             return
         }
@@ -82,8 +83,8 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
         loser.finishingPosition = totalPlayers
         loser.saveToDatabase()
 
-        gameEntity!!.dtFinish = getSqlDateNow()
-        gameEntity!!.saveToDatabase()
+        gameEntity.dtFinish = getSqlDateNow()
+        gameEntity.saveToDatabase()
 
         parentWindow?.startNextGameIfNecessary()
 

@@ -8,8 +8,9 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GameEntity
 
-open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen) : GamePanelPausable<DartsScorerRoundTheClock>(parent)
+open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game)
 {
     private var clockType = ""
     val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()

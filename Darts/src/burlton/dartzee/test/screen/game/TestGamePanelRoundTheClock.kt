@@ -112,7 +112,8 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
         return dart
     }
 
-    class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid()): GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen())
+    class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid())
+        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GAME_TYPE_ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD))
     {
         init
         {
@@ -129,8 +130,6 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
             pt.playerId = currentPlayerId
             hmPlayerNumberToParticipant[0] = pt
             currentRoundNumber = 1
-
-            gameEntity = GameEntity.factoryAndSave(GAME_TYPE_ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD)
         }
 
         fun setDartsThrown(dartsThrown: List<Dart>)

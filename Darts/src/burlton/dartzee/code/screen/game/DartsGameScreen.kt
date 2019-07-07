@@ -10,7 +10,7 @@ import burlton.dartzee.code.screen.ScreenCache
  */
 class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen(totalPlayers)
 {
-    var gamePanel: DartsGamePanel<out DartsScorer> = DartsGamePanel.factory(this, game.gameType)
+    var gamePanel: DartsGamePanel<out DartsScorer> = DartsGamePanel.factory(this, game)
 
     init
     {
@@ -19,7 +19,7 @@ class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameSc
         ScreenCache.addDartsGameScreen(gameId, this)
 
         //Initialise some basic properties of the tab, such as visibility of components etc
-        gamePanel.initBasic(game, totalPlayers)
+        gamePanel.initBasic(totalPlayers)
 
         title = gamePanel.gameTitle
 

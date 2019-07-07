@@ -59,7 +59,8 @@ class TestGamePanelX01: AbstractDartsTest()
         a.gameIdEarned shouldBe panel.getGameId()
     }
 
-    private class TestGamePanel(currentPlayerId: String = randomGuid()): GamePanelX01(TestAchievementEntity.FakeDartsScreen())
+    private class TestGamePanel(currentPlayerId: String = randomGuid())
+        : GamePanelX01(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GAME_TYPE_X01, "501"))
     {
         init
         {
@@ -76,8 +77,6 @@ class TestGamePanelX01: AbstractDartsTest()
             pt.playerId = currentPlayerId
             hmPlayerNumberToParticipant[0] = pt
             currentRoundNumber = 1
-
-            gameEntity = GameEntity.factoryAndSave(GAME_TYPE_X01, "501")
         }
 
         fun setDartsThrown(dartsThrown: List<Dart>)
