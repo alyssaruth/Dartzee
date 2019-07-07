@@ -6,8 +6,9 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GameEntity
 
-class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScorerGolf>(parent)
+class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerGolf>(parent, game)
 {
     //Number of rounds - 9 holes or 18?
     private var numberOfRounds = -1
@@ -108,7 +109,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
 
         if (pointsRisked > 0)
         {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity!!.rowId, pointsRisked)
+            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, pointsRisked)
         }
     }
 
@@ -157,7 +158,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen) : DartsGamePanel<DartsScore
 
             if (finishPos == 1)
             {
-                val achievementRef = getWinAchievementRef(gameEntity!!.gameType)
+                val achievementRef = getWinAchievementRef(gameEntity.gameType)
                 AchievementEntity.incrementAchievement(achievementRef, pt.playerId, getGameId())
             }
 

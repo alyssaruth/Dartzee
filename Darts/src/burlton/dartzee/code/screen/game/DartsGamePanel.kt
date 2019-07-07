@@ -29,7 +29,7 @@ import java.sql.SQLException
 import java.util.*
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) :
+abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, val gameEntity: GameEntity) :
         PanelWithScorers<S>(),
         DartboardListener,
         ActionListener,
@@ -40,7 +40,6 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     protected var hmPlayerNumberToDartsScorer = mutableMapOf<Int, S>()
     protected var hmPlayerNumberToLastRoundNumber = HashMap<Int, Int>()
 
-    protected var gameEntity: GameEntity? = null
     protected var totalPlayers = -1
 
     protected var parentWindow: AbstractDartsGameScreen? = null
@@ -76,7 +75,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     private fun getPlayersDesc() = if (totalPlayers == 1) "practice game" else "$totalPlayers players"
     protected fun getActiveCount() = hmPlayerNumberToParticipant.values.count{ it.isActive() }
 
-    fun getGameId() = gameEntity?.rowId ?: ""
+    fun getGameId() = gameEntity.rowId
 
     open fun getFinishingPositionFromPlayersRemaining(): Int
     {
@@ -176,7 +175,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     fun startNewGame(players: List<PlayerEntity>)
     {
         players.forEachIndexed { ix, player ->
-            val gameId = gameEntity!!.rowId
+            val gameId = gameEntity.rowId
             val participant = ParticipantEntity.factoryAndSave(gameId, player, ix)
             addParticipant(ix, participant)
 
@@ -227,7 +226,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
 
     private fun assignScorer(player: PlayerEntity, playerNumber: Int)
     {
-        assignScorer(player, hmPlayerNumberToDartsScorer, playerNumber, gameEntity!!.gameParams)
+        assignScorer(player, hmPlayerNumberToDartsScorer, playerNumber, gameEntity.gameParams)
     }
 
     private fun initForAi(hasAi: Boolean)
@@ -240,9 +239,8 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     }
 
 
-    fun initBasic(gameEntity: GameEntity, totalPlayers: Int)
+    fun initBasic(totalPlayers: Int)
     {
-        this.gameEntity = gameEntity
         this.totalPlayers = totalPlayers
 
         val gameNo = gameEntity.localId
@@ -268,16 +266,8 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
         catch (t: Throwable)
         {
             Debug.stackTrace(t)
-
-            if (gameEntity != null)
-            {
-                DialogUtil.showError("Failed to load Game #" + gameEntity!!.localId)
-            } else
-            {
-                DialogUtil.showError("Failed to load game.")
-            }
+            DialogUtil.showError("Failed to load Game #${gameEntity.localId}")
         }
-
     }
 
     /**
@@ -286,7 +276,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
      */
     fun preLoad()
     {
-        val gameId = gameEntity!!.rowId
+        val gameId = gameEntity.rowId
         loadParticipants(gameId)
 
         pendingLoad = true
@@ -296,7 +286,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     {
         pendingLoad = false
 
-        val gameId = gameEntity!!.rowId
+        val gameId = gameEntity.rowId
 
         //Get the participants, sorted by Ordinal. Assign their scorers.
         loadParticipants(gameId)
@@ -306,7 +296,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
         dartboard.paintDartboardCached()
 
         //If the game is over, do some extra stuff to sort the screen out
-        val dtFinish = gameEntity!!.dtFinish
+        val dtFinish = gameEntity.dtFinish
         if (!isEndOfTime(dtFinish))
         {
             setGameReadOnly()
@@ -477,10 +467,10 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     {
         Debug.append("All players now finished.", VERBOSE_LOGGING)
 
-        if (!gameEntity!!.isFinished())
+        if (!gameEntity.isFinished())
         {
-            gameEntity!!.dtFinish = getSqlDateNow()
-            gameEntity!!.saveToDatabase()
+            gameEntity.dtFinish = getSqlDateNow()
+            gameEntity.saveToDatabase()
         }
 
         dartboard.stopListening()
@@ -489,7 +479,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
         for (pt in participants)
         {
             val playerId = pt.playerId
-            PlayerSummaryStats.resetPlayerStats(playerId, gameEntity!!.gameType)
+            PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType)
         }
     }
 
@@ -554,7 +544,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
         participant.saveToDatabase()
 
         val playerId = participant.playerId
-        PlayerSummaryStats.resetPlayerStats(playerId, gameEntity!!.gameType)
+        PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType)
 
         updateAchievementsForFinish(playerId, finishingPosition, numberOfDarts)
 
@@ -565,16 +555,16 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     {
         if (finishingPosition == 1)
         {
-            val achievementRef = getWinAchievementRef(gameEntity!!.gameType)
-            AchievementEntity.incrementAchievement(achievementRef, playerId, gameEntity!!.rowId, 1)
+            val achievementRef = getWinAchievementRef(gameEntity.gameType)
+            AchievementEntity.incrementAchievement(achievementRef, playerId, gameEntity.rowId, 1)
         }
 
         //Update the 'best game' achievement
-        val aa = getBestGameAchievement(gameEntity!!.gameType)
+        val aa = getBestGameAchievement(gameEntity.gameType)
         val gameParams = aa!!.gameParams
-        if (gameParams == gameEntity!!.gameParams)
+        if (gameParams == gameEntity.gameParams)
         {
-            AchievementEntity.updateAchievement(aa.achievementRef, playerId, gameEntity!!.rowId, score)
+            AchievementEntity.updateAchievement(aa.achievementRef, playerId, gameEntity.rowId, score)
         }
     }
 
@@ -615,7 +605,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
         }
     }
 
-    protected fun doAnimations(dart: Dart)
+    private fun doAnimations(dart: Dart)
     {
         if (dart.multiplier == 0 && shouldAnimateMiss(dart))
         {
@@ -713,7 +703,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
             //AI
             dartboard.stopListening()
 
-            cpuThread = Thread(DelayedOpponentTurn(), "Cpu-Thread-" + gameEntity!!.localId)
+            cpuThread = Thread(DelayedOpponentTurn(), "Cpu-Thread-" + gameEntity.localId)
             cpuThread!!.start()
         }
     }
@@ -761,7 +751,8 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
             panelCenter.add(statsPanel, BorderLayout.CENTER)
 
             statsPanel!!.showStats(getOrderedParticipants())
-        } else
+        }
+        else
         {
             panelCenter.remove(statsPanel)
             panelCenter.add(dartboard, BorderLayout.CENTER)
@@ -777,7 +768,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
 
         if (parentWindow is DartsMatchScreen)
         {
-            (parentWindow as DartsMatchScreen).addParticipant(gameEntity!!.localId, participant)
+            (parentWindow as DartsMatchScreen).addParticipant(gameEntity.localId, participant)
         }
 
     }
@@ -828,14 +819,14 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen) 
     {
         const val VERBOSE_LOGGING = false
 
-        fun factory(parent: AbstractDartsGameScreen, gameType: Int): DartsGamePanel<out DartsScorer>
+        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<out DartsScorer>
         {
-            return when (gameType)
+            return when (game.gameType)
             {
-                GAME_TYPE_X01 -> GamePanelX01(parent)
-                GAME_TYPE_GOLF -> GamePanelGolf(parent)
-                GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent)
-                else -> GamePanelX01(parent)
+                GAME_TYPE_X01 -> GamePanelX01(parent, game)
+                GAME_TYPE_GOLF -> GamePanelGolf(parent, game)
+                GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
+                else -> GamePanelX01(parent, game)
             }
         }
     }

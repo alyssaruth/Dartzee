@@ -40,8 +40,8 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
         ScreenCache.addDartsGameScreen(gameId, this)
 
         //Initialise some basic properties of the tab, such as visibility of components etc
-        val tab = DartsGamePanel.factory(this, game.gameType)
-        tab.initBasic(game, match.getPlayerCount())
+        val tab = DartsGamePanel.factory(this, game)
+        tab.initBasic(match.getPlayerCount())
 
         //Add the single game tab and set the parent window to be visible
         tabbedPane.addTab("#" + game.localId, tab)
