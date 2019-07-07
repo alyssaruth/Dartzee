@@ -216,7 +216,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
         if (checkBoxGameType.isSelected)
         {
-            val gameType = comboBox.gameType
+            val gameType = comboBox.getGameType()
             rp.gameType = gameType
         }
 
@@ -327,7 +327,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
                     panelGame.remove(panelGameParams!!)
                 }
 
-                panelGameParams = GameEntity.getFilterPanel(comboBox.gameType)
+                panelGameParams = GameEntity.getFilterPanel(comboBox.getGameType())
 
                 //Deal with there not being a filter panel, e.g. for Dartzee
                 if (panelGameParams != null)

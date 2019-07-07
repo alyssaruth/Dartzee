@@ -157,13 +157,12 @@ class DartsScorerX01 : DartsScorerPausable()
      */
     private class DartRenderer : AbstractTableRenderer<Dart>()
     {
-        override fun getReplacementValue(drt: Dart?): Any
+        override fun getReplacementValue(value: Dart): Any
         {
-            return when(drt)
+            return when(value)
             {
-                null -> ""
-                is DartHint -> "($drt)"
-                else -> "$drt"
+                is DartHint -> "($value)"
+                else -> "$value"
             }
         }
 
