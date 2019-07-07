@@ -13,4 +13,4 @@ fun <K> JComboBox<K>.items(): List<K>
     return list
 }
 
-fun <K> JComboBox<K>.selectedItemTyped() = getItemAt(selectedIndex)
+fun <K> JComboBox<K>.selectedItemTyped(): K = getItemAt(selectedIndex)

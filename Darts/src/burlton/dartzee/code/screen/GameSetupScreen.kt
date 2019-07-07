@@ -138,7 +138,7 @@ class GameSetupScreen : EmbeddedScreen()
                 panelGameType.remove(gameParamFilterPanel)
             }
 
-            gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.gameType)
+            gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.getGameType())
 
             //We may not have one, e.g. for Dartzee
             if (gameParamFilterPanel != null)
@@ -190,7 +190,7 @@ class GameSetupScreen : EmbeddedScreen()
             panel.remove(panelPointBreakdown)
         }
 
-        val dartzee = gameTypeComboBox.gameType == GAME_TYPE_DARTZEE
+        val dartzee = gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE
         btnLaunch.isVisible = !dartzee
         toggleNextVisibility(dartzee)
 
@@ -217,12 +217,12 @@ class GameSetupScreen : EmbeddedScreen()
 
         if (match == null)
         {
-            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.gameType, getGameParams())
+            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams())
         }
         else
         {
             match.players = selectedPlayers
-            match.gameType = gameTypeComboBox.gameType
+            match.gameType = gameTypeComboBox.getGameType()
             match.gameParams = getGameParams()
 
             GameLauncher.launchNewMatch(match)
@@ -259,7 +259,7 @@ class GameSetupScreen : EmbeddedScreen()
 
     override fun nextPressed()
     {
-        if (gameTypeComboBox.gameType == GAME_TYPE_DARTZEE)
+        if (gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE)
         {
             val match = factoryMatch()
             if (!playerSelector.valid(match != null))
@@ -275,7 +275,7 @@ class GameSetupScreen : EmbeddedScreen()
         }
         else
         {
-            Debug.stackTrace("Unexpected screen state. GameType = ${gameTypeComboBox.gameType}")
+            Debug.stackTrace("Unexpected screen state. GameType = ${gameTypeComboBox.getGameType()}")
         }
     }
 }
