@@ -97,14 +97,15 @@ class TestAchievementX01NoMercy: TestAbstractAchievementRowPerGame<AchievementX0
     }
 
     @Test
-    fun `Should set the counter on the achievement row to be the finish that was attained`()
+    fun `Should set the detail on the achievement row to be the finish that was attained`()
     {
         val p = insertPlayer()
         setUpFinishForPlayer(p, 5)
 
         factoryAchievement().populateForConversion("")
 
-        retrieveAchievement().achievementCounter shouldBe 5
+        retrieveAchievement().achievementCounter shouldBe -1
+        retrieveAchievement().achievementDetail shouldBe "5"
     }
 
     private fun setUpFinishForPlayer(p: PlayerEntity, finish: Int)
