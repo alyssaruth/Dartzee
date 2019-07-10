@@ -229,7 +229,7 @@ abstract class AbstractAchievement
 
     fun getExtraDetails() : String
     {
-        var ret = if (isUnbounded())
+        var ret = if (this is AbstractAchievementRowPerGame)
         {
             "Last updated on ${dtLatestUpdate.formatAsDate()}"
         }

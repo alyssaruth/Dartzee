@@ -18,9 +18,9 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
     override val redThreshold = 1
     override val orangeThreshold = 2
     override val yellowThreshold = 3
-    override val greenThreshold = 4
-    override val blueThreshold = 5
-    override val pinkThreshold = 7
+    override val greenThreshold = 5
+    override val blueThreshold = 7
+    override val pinkThreshold = 10
     override val maxValue = 10
 
     override fun populateForConversion(playerIds: String)
