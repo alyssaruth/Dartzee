@@ -44,6 +44,7 @@ public class ResourceCache
 	public static final URL URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK = ResourceCache.class.getResource("/achievements/suchBadLuck.png");
 	public static final URL URL_ACHIEVEMENT_X01_BTBF = ResourceCache.class.getResource("/achievements/BTBF.png");
 	public static final URL URL_ACHIEVEMENT_CLOCK_BEST_STREAK = ResourceCache.class.getResource("/achievements/likeClockwork.png");
+	public static final URL URL_ACHIEVEMENT_X01_NO_MERCY = ResourceCache.class.getResource("/achievements/noMercy.png");
 
 	private static final Object wavPoolLock = new Object();
 	private static final HashMapList<String, AudioInputStream> hmWavToInputStreams = new HashMapList<>();
