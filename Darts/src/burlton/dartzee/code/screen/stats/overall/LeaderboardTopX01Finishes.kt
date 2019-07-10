@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.stats.overall
 
+import burlton.dartzee.code.achievements.LAST_ROUND_FROM_PARTICIPANT
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -49,7 +50,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
 
         val sbPt = StringBuilder()
         sbPt.append("INSERT INTO $zzParticipants ")
-        sbPt.append(" SELECT p.RowId, p.Strategy, p.Name, g.LocalId, pt.RowId, CEIL(CAST(FinalScore AS DECIMAL)/3)")
+        sbPt.append(" SELECT p.RowId, p.Strategy, p.Name, g.LocalId, pt.RowId, $LAST_ROUND_FROM_PARTICIPANT")
         sbPt.append(" FROM Player p, Participant pt, Game g")
         sbPt.append(" WHERE pt.GameId = g.RowId")
         sbPt.append(" AND g.GameType = $GAME_TYPE_X01")
