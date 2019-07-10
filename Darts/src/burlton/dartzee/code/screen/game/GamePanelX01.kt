@@ -134,6 +134,11 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
         val checkout = dartsThrown.last().score
         insertForCheckoutCompleteness(playerId, getGameId(), checkout)
 
+        if (sum in listOf(3, 5, 7, 9))
+        {
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, getGameId(), "$sum")
+        }
+
         if (checkout == 1)
         {
             AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_BTBF, getCurrentPlayerId(), getGameId())

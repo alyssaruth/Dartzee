@@ -49,13 +49,13 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
                 val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtFinished")
 
-                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, gameId, score, "", dtAchieved)
+                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, gameId, -1, "$score", dtAchieved)
             }
         }
     }
 
     override fun getBreakdownColumns() = listOf("Checkout", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementCounter, a.localGameIdEarned, a.dtLastUpdate)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtLastUpdate)
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_X01_NO_MERCY
 }
