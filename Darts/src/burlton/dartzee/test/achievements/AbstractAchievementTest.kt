@@ -29,7 +29,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
     abstract fun factoryAchievement(): E
     abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
 
-    private fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    protected fun setUpAchievementRowForPlayer(p: PlayerEntity)
     {
         val g = insertRelevantGame()
         setUpAchievementRowForPlayerAndGame(p, g)
