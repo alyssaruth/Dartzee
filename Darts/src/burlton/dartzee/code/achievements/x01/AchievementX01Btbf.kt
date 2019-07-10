@@ -2,6 +2,7 @@ package burlton.dartzee.code.achievements.x01
 
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BTBF
 import burlton.dartzee.code.achievements.AbstractAchievementRowPerGame
+import burlton.dartzee.code.achievements.LAST_ROUND_FROM_PARTICIPANT
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -35,7 +36,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
         sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE g.GameType = $GAME_TYPE_X01")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND CEIL(CAST(pt.FinalScore AS DECIMAL)/3) = drt.RoundNumber")
+        sb.append(" AND $LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber")
         sb.append(" AND pt.RowId = drt.ParticipantId")
         sb.append(" AND pt.PlayerId = drt.PlayerId")
         sb.append(" AND (drt.StartingScore - (drt.Score * drt.Multiplier)) = 0")

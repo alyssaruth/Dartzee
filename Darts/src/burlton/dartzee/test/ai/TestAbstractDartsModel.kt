@@ -127,10 +127,12 @@ class TestAbstractDartsModel: AbstractDartsTest()
         val model = DummyDartsModel()
         model.scoringDart = 25
 
+        val dartboard = Dartboard(100, 100)
+        dartboard.paintDartboard()
+
         for (i in 41..60)
         {
-            val dartboard = Dartboard(100, 100)
-            dartboard.paintDartboard()
+            dartboard.clearDarts()
 
             val listener = mockk<DartboardListener>(relaxed = true)
             dartboard.addDartboardListener(listener)
