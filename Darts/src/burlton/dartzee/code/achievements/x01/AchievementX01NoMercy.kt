@@ -26,7 +26,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
     override fun populateForConversion(playerIds: String)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinish")
+        sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished")
         sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = $GAME_TYPE_X01")
@@ -47,7 +47,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
                 val playerId = rs.getString("PlayerId")
                 val score = rs.getInt("StartingScore")
                 val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtFinish")
+                val dtAchieved = rs.getTimestamp("DtFinished")
 
                 AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, gameId, score, "", dtAchieved)
             }

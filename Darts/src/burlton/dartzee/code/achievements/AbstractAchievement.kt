@@ -202,7 +202,7 @@ abstract class AbstractAchievement
         {
             for (y in 0 until img.height)
             {
-                if (Color(img.getRGB(x, y)) == Color.BLACK)
+                if (Color(img.getRGB(x, y), true) == Color.BLACK)
                 {
                     img.setRGB(x, y, newColor.rgb)
                 }
