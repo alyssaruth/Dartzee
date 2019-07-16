@@ -22,7 +22,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
     override val pinkThreshold = 18
     override val maxValue = 18
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
+    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
 
     override fun getBreakdownColumns() = listOf("Hole", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtLastUpdate)
