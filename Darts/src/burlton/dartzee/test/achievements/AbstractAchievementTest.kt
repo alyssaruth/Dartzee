@@ -3,12 +3,10 @@ package burlton.dartzee.test.achievements
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.dropUnexpectedTables
-import burlton.dartzee.test.helper.insertGame
-import burlton.dartzee.test.helper.insertPlayer
+import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -44,6 +42,14 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
     open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
     {
         return insertGame(gameType = gameType, dtLastUpdate = dtLastUpdate)
+    }
+
+    fun insertRelevantParticipant(): ParticipantEntity
+    {
+        val p = insertPlayer()
+        val g = insertRelevantGame()
+
+        return insertParticipant(playerId = p.rowId, gameId = g.rowId)
     }
 
     @Test
