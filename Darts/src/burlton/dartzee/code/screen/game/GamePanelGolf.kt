@@ -2,8 +2,10 @@ package burlton.dartzee.code.screen.game
 
 import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.achievements.getWinAchievementRef
+import burlton.dartzee.code.achievements.retrieveAchievementForDetail
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
@@ -110,6 +112,13 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGa
         if (pointsRisked > 0)
         {
             AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, pointsRisked)
+        }
+
+        val lastDart = dartsThrown.last()
+        if (lastDart.getGolfScore(currentRoundNumber) == 1
+         && retrieveAchievementForDetail(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, getCurrentPlayerId(), "$currentRoundNumber") == null)
+        {
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
         }
     }
 

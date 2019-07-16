@@ -107,11 +107,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
         }
 
         val methodStr = getSortedDartStr(dartsThrown)
-        val whereSql = "AchievementRef = $ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR " +
-                       "AND PlayerId = '${getCurrentPlayerId()}' " +
-                       "AND AchievementDetail = '$methodStr'"
-
-        val existingRow = AchievementEntity().retrieveEntity(whereSql)
+        val existingRow = retrieveAchievementForDetail(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, getCurrentPlayerId(), methodStr)
         if (existingRow == null)
         {
             AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, getCurrentPlayerId(), getGameId(), methodStr)
