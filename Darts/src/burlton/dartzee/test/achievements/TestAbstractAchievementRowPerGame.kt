@@ -1,9 +1,9 @@
 package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.AbstractAchievementRowPerGame
-import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.test.helper.insertAchievement
 import burlton.dartzee.test.helper.insertPlayer
+import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -14,12 +14,14 @@ abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGam
     fun getDtAchievedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
     fun getGameIdEarnedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Game")
 
+    open fun insertAchievementRow(dtLastUpdate: Timestamp = getSqlDateNow()) = insertAchievement(dtLastUpdate = dtLastUpdate)
+
     @Test
     fun `Breakdown column count should match row length`()
     {
         val a = factoryAchievement()
 
-        a.getBreakdownColumns().size shouldBe a.getBreakdownRow(AchievementEntity()).size
+        a.getBreakdownColumns().size shouldBe a.getBreakdownRow(insertAchievementRow()).size
     }
 
     @Test
@@ -39,20 +41,20 @@ abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGam
     {
         val a = factoryAchievement()
 
-        a.initialiseFromDb(listOf(AchievementEntity(), AchievementEntity(), AchievementEntity()), null)
+        a.initialiseFromDb(listOf(insertAchievementRow(), insertAchievementRow(), insertAchievementRow()), null)
         a.attainedValue shouldBe 3
 
-        a.initialiseFromDb(listOf(AchievementEntity()), null)
+        a.initialiseFromDb(listOf(insertAchievementRow()), null)
         a.attainedValue shouldBe 1
     }
 
     @Test
     fun `Should sort the rows by dtLastUpdate`()
     {
-        val achievementOne = insertAchievement(dtLastUpdate = Timestamp(500))
-        val achievementTwo = insertAchievement(dtLastUpdate = Timestamp(1000))
-        val achievementThree = insertAchievement(dtLastUpdate = Timestamp(1500))
-        val achievementFour = insertAchievement(dtLastUpdate = Timestamp(2000))
+        val achievementOne = insertAchievementRow(dtLastUpdate = Timestamp(500))
+        val achievementTwo = insertAchievementRow(dtLastUpdate = Timestamp(1000))
+        val achievementThree = insertAchievementRow(dtLastUpdate = Timestamp(1500))
+        val achievementFour = insertAchievementRow(dtLastUpdate = Timestamp(2000))
 
         val a = factoryAchievement()
         a.initialiseFromDb(listOf(achievementTwo, achievementFour, achievementThree, achievementOne), null)
@@ -81,7 +83,7 @@ abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGam
     {
         val a = factoryAchievement()
 
-        val dbRow = insertAchievement()
+        val dbRow = insertAchievementRow()
         dbRow.localGameIdEarned = 20
 
         a.initialiseFromDb(listOf(dbRow), null)
