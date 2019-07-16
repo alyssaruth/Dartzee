@@ -10,7 +10,7 @@ import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 
-class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerGolf>(parent, game)
+open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerGolf>(parent, game)
 {
     //Number of rounds - 9 holes or 18?
     private var numberOfRounds = -1
@@ -97,17 +97,10 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGa
         }
     }
 
-    private fun unlockAchievements()
+    fun unlockAchievements()
     {
-        var pointsRisked = 0
-        dartsThrown.forEach{
-            val score = it.getGolfScore(currentRoundNumber)
-            if (score < 5
-              && !(dartsThrown.last() === it))
-            {
-                pointsRisked += 5 - score
-            }
-        }
+        val dartsRisked = dartsThrown - dartsThrown.last()
+        val pointsRisked = dartsRisked.map{ 5 - it.getGolfScore(currentRoundNumber) }.sum()
 
         if (pointsRisked > 0)
         {
