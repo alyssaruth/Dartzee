@@ -233,3 +233,9 @@ fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int
         AchievementEntity.triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, template, playerId, gameId)
     }
 }
+
+fun retrieveAchievementForDetail(achievementRef: Int, playerId: String, achievementDetail: String): AchievementEntity?
+{
+    val whereSql = "AchievementRef = $achievementRef AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
+    return AchievementEntity().retrieveEntity(whereSql)
+}
