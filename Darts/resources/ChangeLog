@@ -1,3 +1,9 @@
+--------- v3.2.4 ---------
+
++ 2 Achievements (Course Master, No Mercy)
+= 88.5% Kotlin
+= 41.4% test coverage (5377 / 12,983 lines covered by 755 tests)
+
 --------- v3.2.3 ---------
 
 = Clicking on an unfocused game window will no longer place a dart
