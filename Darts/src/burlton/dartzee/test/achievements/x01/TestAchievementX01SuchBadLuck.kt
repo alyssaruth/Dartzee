@@ -3,7 +3,6 @@ package burlton.dartzee.test.achievements.x01
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import burlton.dartzee.code.achievements.x01.AchievementX01SuchBadLuck
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.AbstractAchievementTest
@@ -16,8 +15,6 @@ import java.sql.Timestamp
 
 class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchBadLuck>()
 {
-    override val gameType = GAME_TYPE_X01
-
     override fun factoryAchievement() = AchievementX01SuchBadLuck()
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)

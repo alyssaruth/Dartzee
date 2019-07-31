@@ -2,7 +2,6 @@ package burlton.dartzee.test.achievements.x01
 
 import burlton.dartzee.code.achievements.x01.AchievementX01Btbf
 import burlton.dartzee.code.db.GAME_TYPE_GOLF
-import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
@@ -12,8 +11,6 @@ import org.junit.Test
 
 class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Btbf>()
 {
-    override val gameType = GAME_TYPE_X01
-
     override fun factoryAchievement() = AchievementX01Btbf()
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)

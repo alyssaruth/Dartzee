@@ -14,6 +14,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
     override val achievementRef = ACHIEVEMENT_REF_X01_BTBF
     override val name = "BTBF"
     override val desc = "Number of games of X01 finished on D1"
+    override val gameType = GAME_TYPE_X01
 
     override val redThreshold = 1
     override val orangeThreshold = 5

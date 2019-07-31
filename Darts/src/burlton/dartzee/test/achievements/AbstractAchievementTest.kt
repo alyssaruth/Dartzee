@@ -22,8 +22,6 @@ import javax.imageio.ImageIO
 
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTest()
 {
-    abstract val gameType: Int
-
     abstract fun factoryAchievement(): E
     abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
 
@@ -41,7 +39,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
 
     open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
     {
-        return insertGame(gameType = gameType, dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType, dtLastUpdate = dtLastUpdate)
     }
 
     fun insertRelevantParticipant(): ParticipantEntity
@@ -66,7 +64,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTes
     fun `Should ignore games of the wrong type`()
     {
         val p = insertPlayer()
-        val g = insertGame(gameType = gameType + 1)
+        val g = insertGame(gameType = factoryAchievement().gameType + 1)
         setUpAchievementRowForPlayerAndGame(p, g)
 
         factoryAchievement().populateForConversion("")

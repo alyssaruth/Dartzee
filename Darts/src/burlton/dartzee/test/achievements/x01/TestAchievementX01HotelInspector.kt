@@ -19,8 +19,6 @@ import org.junit.Test
 
 class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<AchievementX01HotelInspector>()
 {
-    override val gameType = GAME_TYPE_X01
-
     override fun factoryAchievement() = AchievementX01HotelInspector()
 
     @Test

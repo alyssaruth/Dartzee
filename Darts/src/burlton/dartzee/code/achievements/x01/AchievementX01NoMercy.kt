@@ -14,6 +14,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
     override val name = "No Mercy"
     override val desc = "Finishes from 3, 5, 7 or 9 in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_NO_MERCY
+    override val gameType = GAME_TYPE_X01
 
     override val redThreshold = 1
     override val orangeThreshold = 2

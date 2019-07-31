@@ -3,7 +3,6 @@ package burlton.dartzee.test.achievements.x01
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
 import burlton.dartzee.code.achievements.x01.AchievementX01CheckoutCompleteness
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
@@ -19,8 +18,6 @@ import java.sql.Timestamp
 
 class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<AchievementX01CheckoutCompleteness>()
 {
-    override val gameType = GAME_TYPE_X01
-
     override fun factoryAchievement() = AchievementX01CheckoutCompleteness()
 
     @Test

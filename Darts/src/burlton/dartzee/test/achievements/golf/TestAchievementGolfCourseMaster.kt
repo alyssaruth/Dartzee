@@ -19,7 +19,6 @@ import java.sql.Timestamp
 
 class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<AchievementGolfCourseMaster>()
 {
-    override val gameType = GAME_TYPE_GOLF
     override fun factoryAchievement() = AchievementGolfCourseMaster()
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {

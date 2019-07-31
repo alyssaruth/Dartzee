@@ -23,7 +23,8 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     private var player: PlayerEntity? = null
     private var progressDesc = ""
 
-    private val panelGeneral = JPanel()
+
+    private val panelX01 = JPanel()
     private val panelAchievementDesc = JPanel()
     private val lblAchievementName = JLabel()
     private val lblAchievementDesc = JLabel()
@@ -41,7 +42,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         fl.vgap = 25
         fl.hgap = 20
         fl.alignment = FlowLayout.LEFT
-        panelGeneral.layout = fl
+        panelX01.layout = fl
 
         centerPanel.add(panelAchievementDesc, BorderLayout.SOUTH)
         panelAchievementDesc.preferredSize = Dimension(200, 100)
@@ -60,7 +61,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
         panelAchievementDesc.border = EmptyBorder(5, 5, 5, 5)
 
-        sp.setViewportView(panelGeneral)
+        sp.setViewportView(panelX01)
         sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         sp.verticalScrollBar.unitIncrement = 16
     }
@@ -73,7 +74,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     override fun initialise()
     {
-        panelGeneral.removeAll()
+        panelX01.removeAll()
 
         val playerId = player?.rowId!!
 
@@ -95,7 +96,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         aa.initialiseFromDb(achievementRowsFiltered, player)
 
         val medal = AchievementMedal(aa)
-        panelGeneral.add(medal)
+        panelX01.add(medal)
     }
 
     fun toggleAchievementDesc(hovered: Boolean, achievement : AbstractAchievement)

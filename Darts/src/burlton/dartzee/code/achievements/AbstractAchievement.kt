@@ -26,6 +26,7 @@ abstract class AbstractAchievement
     abstract val blueThreshold : Int
     abstract val pinkThreshold : Int
     abstract val maxValue : Int
+    abstract val gameType: Int
 
     var attainedValue = -1
     var gameIdEarned = ""

@@ -14,8 +14,6 @@ import java.sql.Timestamp
 
 abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: AbstractAchievementTest<E>()
 {
-    override val gameType = factoryAchievement().gameType
-
     override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
     {
         return insertGame(gameType = factoryAchievement().gameType, gameParams = factoryAchievement().gameParams, dtLastUpdate = dtLastUpdate)
