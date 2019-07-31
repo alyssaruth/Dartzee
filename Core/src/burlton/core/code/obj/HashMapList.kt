@@ -3,18 +3,6 @@ package burlton.core.code.obj
 
 class HashMapList<K: Comparable<K>, V> : HashMap<K, MutableList<V>>()
 {
-    /**
-     * TODO - REMOVE (once fully over to Kotlin)
-     */
-    fun getAsArrayList(key: K): ArrayList<V>?
-    {
-        val v = get(key)
-
-        v ?: return null
-
-        return ArrayList(v)
-    }
-
     fun getFlattenedValuesSortedByKey(): List<V>
     {
         val sortedKeys = keys.toList().sorted()

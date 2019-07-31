@@ -100,9 +100,9 @@ object ResourceCache
         synchronized(wavPoolLock)
         {
             val wavFile = "$wavName.wav"
-            val streams = hmWavToInputStreams.getAsArrayList(wavFile)
-                    ?: //If the wav file doesn't exist
-                    return null
+
+            //Return if the wav file doesn't exist
+            val streams = hmWavToInputStreams[wavFile] ?: return null
 
             if (streams.isEmpty())
             {
