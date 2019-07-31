@@ -92,17 +92,17 @@ fun getAchievementsForGameType(gameType: Int) = getAllAchievements().filter{ it.
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
-    return mutableListOf(AchievementX01BestFinish(),
-            AchievementX01BestThreeDarts(),
-            AchievementX01CheckoutCompleteness(),
-            AchievementX01HighestBust(),
-            AchievementGolfPointsRisked(),
-            AchievementX01GamesWon(),
+    return mutableListOf(AchievementX01GamesWon(),
             AchievementGolfGamesWon(),
             AchievementClockGamesWon(),
             AchievementX01BestGame(),
             AchievementGolfBestGame(),
             AchievementClockBestGame(),
+            AchievementX01BestFinish(),
+            AchievementX01BestThreeDarts(),
+            AchievementX01CheckoutCompleteness(),
+            AchievementX01HighestBust(),
+            AchievementGolfPointsRisked(),
             AchievementClockBruceyBonuses(),
             AchievementX01Shanghai(),
             AchievementX01HotelInspector(),
