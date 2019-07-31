@@ -557,7 +557,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
         try
         {
-            if (ResourceCache.isInitialised())
+            if (ResourceCache.isInitialised)
             {
                 playDodgySoundCached(soundName)
             }
@@ -630,9 +630,9 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
                 myClip.stop()
                 myClip.close()
 
-                if (ResourceCache.isInitialised())
+                if (ResourceCache.isInitialised)
                 {
-                    ResourceCache.returnInputStream(soundName, stream)
+                    ResourceCache.returnInputStream(soundName!!, stream!!)
                 }
 
                 //See whether there's currently any later clip still running. If there isn't, also dismiss our dodgyLabel
