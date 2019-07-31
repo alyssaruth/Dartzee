@@ -72,7 +72,7 @@ object ResourceCache
 
             for (wavFile in wavFiles)
             {
-                for (i in 0..3)
+                for (i in 0..2)
                 {
                     val ais = getAudioInputStream(wavFile)
                     ais.mark(Integer.MAX_VALUE)
@@ -82,7 +82,6 @@ object ResourceCache
             }
 
             Debug.append("Finished pre-loading")
-
             isInitialised = true
         }
         catch (e: Exception)
@@ -130,17 +129,15 @@ object ResourceCache
 
     fun returnInputStream(wavName: String, stream: AudioInputStream)
     {
-        try
+        synchronized (wavPoolLock)
         {
-            synchronized(wavPoolLock)
-            {
-                hmWavToInputStreams.putInList("$wavName.wav", stream)
-            }
+            hmWavToInputStreams.putInList("$wavName.wav", stream)
         }
-        catch (e: Exception)
-        {
-            Debug.stackTrace(e, "Failed to return WAV stream to resource pool [$wavName]")
-        }
+    }
 
+    fun resetCache()
+    {
+        isInitialised = false
+        hmWavToInputStreams.clear()
     }
 }
