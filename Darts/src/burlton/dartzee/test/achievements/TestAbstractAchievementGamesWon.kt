@@ -13,8 +13,6 @@ import java.sql.Timestamp
 
 abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractAchievementTest<E>()
 {
-    override val gameType = factoryAchievement().gameType
-
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
     {
         insertParticipant(gameId = g.rowId, playerId = p.rowId, finishingPosition = 1)

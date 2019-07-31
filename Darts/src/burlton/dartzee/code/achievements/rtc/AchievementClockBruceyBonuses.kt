@@ -14,6 +14,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
     override val name = "Didn't he do well!?"
     override val desc = "Total number of 'Brucey Bonuses' executed in Round the Clock"
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
+    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
 
     override val redThreshold = 1
     override val orangeThreshold = 5

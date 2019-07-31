@@ -1,7 +1,6 @@
 package burlton.dartzee.test.achievements.x01
 
 import burlton.dartzee.code.achievements.x01.AchievementX01NoMercy
-import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.TestAbstractAchievementRowPerGame
@@ -14,8 +13,6 @@ import org.junit.Test
 
 class TestAchievementX01NoMercy: TestAbstractAchievementRowPerGame<AchievementX01NoMercy>()
 {
-    override val gameType = GAME_TYPE_X01
-
     override fun factoryAchievement() = AchievementX01NoMercy()
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)

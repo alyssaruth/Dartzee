@@ -2,7 +2,6 @@ package burlton.dartzee.test.achievements.rtc
 
 import burlton.dartzee.code.achievements.rtc.AchievementClockBestStreak
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.AbstractAchievementTest
@@ -15,7 +14,6 @@ import java.sql.Timestamp
 
 class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBestStreak>()
 {
-    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
     override fun factoryAchievement() = AchievementClockBestStreak()
 
     @Test

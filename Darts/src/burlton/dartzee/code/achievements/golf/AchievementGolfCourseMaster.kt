@@ -21,6 +21,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
     override val blueThreshold = 14
     override val pinkThreshold = 18
     override val maxValue = 18
+    override val gameType = GAME_TYPE_GOLF
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
 

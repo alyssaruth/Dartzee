@@ -17,6 +17,8 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override val name = "Such Bad Luck"
     override val desc = "Most adjacent doubles hit when on a checkout in a game of X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
+    override val gameType = GAME_TYPE_X01
+
     override val redThreshold = 1
     override val orangeThreshold = 2
     override val yellowThreshold = 3

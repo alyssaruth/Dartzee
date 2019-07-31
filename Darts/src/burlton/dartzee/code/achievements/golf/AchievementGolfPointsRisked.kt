@@ -14,6 +14,8 @@ class AchievementGolfPointsRisked : AbstractAchievement()
 {
     override val name = "Gambler"
     override val desc = "Total number of points risked (by continuing to throw) in Golf"
+    override val gameType = GAME_TYPE_GOLF
+
     override val achievementRef = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
     override val redThreshold = 5
     override val orangeThreshold = 10

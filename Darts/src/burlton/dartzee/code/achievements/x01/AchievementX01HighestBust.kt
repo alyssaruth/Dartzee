@@ -3,6 +3,7 @@ package burlton.dartzee.code.achievements.x01
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_HIGHEST_BUST
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.unlockThreeDartAchievement
+import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.ResourceCache
 import java.net.URL
 
@@ -11,6 +12,8 @@ class AchievementX01HighestBust : AbstractAchievement()
     override val name = "Bognor"
     override val desc = "Highest number busted from in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_HIGHEST_BUST
+    override val gameType = GAME_TYPE_X01
+
     override val redThreshold = 2
     override val orangeThreshold = 20
     override val yellowThreshold = 40

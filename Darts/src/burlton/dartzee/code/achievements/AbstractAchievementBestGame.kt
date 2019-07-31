@@ -5,7 +5,6 @@ import burlton.dartzee.code.utils.DatabaseUtil
 
 abstract class AbstractAchievementBestGame : AbstractAchievement()
 {
-    abstract val gameType: Int
     abstract val gameParams: String
 
     override fun populateForConversion(playerIds: String)

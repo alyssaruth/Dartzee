@@ -1,7 +1,6 @@
 package burlton.dartzee.test.achievements.x01
 
 import burlton.dartzee.code.achievements.x01.AchievementX01BestFinish
-import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.AbstractAchievementTest
@@ -14,8 +13,6 @@ import java.sql.Timestamp
 
 class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFinish>()
 {
-    override val gameType = GAME_TYPE_X01
-
     override fun factoryAchievement() = AchievementX01BestFinish()
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)

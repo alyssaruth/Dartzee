@@ -10,7 +10,6 @@ import java.sql.Timestamp
 
 class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementClockBruceyBonuses>()
 {
-    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
     override fun factoryAchievement() = AchievementClockBruceyBonuses()
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
@@ -22,7 +21,7 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
 
     override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
     {
-        return insertGame(gameType = gameType, gameParams = CLOCK_TYPE_STANDARD, dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType, gameParams = CLOCK_TYPE_STANDARD, dtLastUpdate = dtLastUpdate)
     }
 
     @Test

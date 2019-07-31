@@ -7,7 +7,6 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.achievements.golf.AchievementGolfPointsRisked
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.AbstractAchievementTest
@@ -19,8 +18,6 @@ import org.junit.Test
 
 class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPointsRisked>()
 {
-    override val gameType = GAME_TYPE_GOLF
-
     override fun factoryAchievement() = AchievementGolfPointsRisked()
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity) = insertRiskedDart(p, g)
 

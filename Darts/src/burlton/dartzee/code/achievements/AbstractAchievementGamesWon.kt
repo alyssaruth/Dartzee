@@ -5,8 +5,6 @@ import burlton.dartzee.code.utils.DatabaseUtil
 
 abstract class AbstractAchievementGamesWon : AbstractAchievement()
 {
-    abstract val gameType : Int
-
     override val redThreshold = 1
     override val orangeThreshold = 10
     override val yellowThreshold = 25
@@ -14,7 +12,6 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
     override val blueThreshold = 100
     override val pinkThreshold = 200
     override val maxValue = 200
-
 
     override fun populateForConversion(playerIds: String)
     {

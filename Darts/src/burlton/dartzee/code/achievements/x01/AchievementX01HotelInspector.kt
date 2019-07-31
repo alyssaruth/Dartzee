@@ -17,6 +17,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
     override val name = "Hotel Inspector"
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"
     override val achievementRef = ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
+    override val gameType = GAME_TYPE_X01
 
     override val redThreshold = 1
     override val orangeThreshold = 5

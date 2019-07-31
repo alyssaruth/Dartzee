@@ -17,6 +17,8 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
     override val name = "Completionist"
     override val desc = "Total unique doubles checked out on in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
+    override val gameType = GAME_TYPE_X01
+
     override val redThreshold = 1
     override val orangeThreshold = 5
     override val yellowThreshold = 10
