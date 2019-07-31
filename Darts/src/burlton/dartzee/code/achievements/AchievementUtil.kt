@@ -88,6 +88,7 @@ fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
     return count > 0
 }
 
+fun getAchievementsForGameType(gameType: Int) = getAllAchievements().filter{ it.gameType == gameType }
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
