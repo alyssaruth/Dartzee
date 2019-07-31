@@ -160,6 +160,6 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     override fun getDesiredSize(): Dimension?
     {
-        return Dimension(1240, 830)
+        return Dimension(1240, 700)
     }
 }
