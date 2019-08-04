@@ -4,7 +4,7 @@ import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
 
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
-    var gameId = -1L
+    var gameId = ""
     var dart1Rule : AbstractDartzeeDartRule? = null
     var dart2Rule : AbstractDartzeeDartRule? = null
     var dart3Rule : AbstractDartzeeDartRule? = null
@@ -23,7 +23,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return ("GameId INT NOT NULL, "
+        return ("GameId VARCHAR(36) NOT NULL, "
                 + "Dart1Rule VARCHAR(255) NOT NULL, "
                 + "Dart2Rule VARCHAR(255) NOT NULL, "
                 + "Dart3Rule VARCHAR(255) NOT NULL, "
