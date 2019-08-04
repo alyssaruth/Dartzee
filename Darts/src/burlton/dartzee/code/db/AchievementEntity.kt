@@ -1,14 +1,10 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAchievementForRef
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.getSqlDateNow
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
 import java.sql.Timestamp
 
 /**
@@ -19,70 +15,71 @@ import java.sql.Timestamp
 class AchievementEntity : AbstractEntity<AchievementEntity>()
 {
     //DB Fields
-    var playerId: Long = -1
+    var playerId: String = ""
     var achievementRef = -1
-    var gameIdEarned: Long = -1
+    var gameIdEarned = ""
     var achievementCounter = -1
     var achievementDetail = ""
 
-    override fun getTableName(): String
-    {
-        return "Achievement"
-    }
+    //Other stuff
+    var localGameIdEarned = -1L
+
+    override fun getTableName() = "Achievement"
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return ("PlayerId INT NOT NULL, "
+        return ("PlayerId VARCHAR(36) NOT NULL, "
                 + "AchievementRef INT NOT NULL, "
-                + "GameIdEarned INT NOT NULL, "
+                + "GameIdEarned VARCHAR(36) NOT NULL, "
                 + "AchievementCounter INT NOT NULL, "
                 + "AchievementDetail VARCHAR(255) NOT NULL")
     }
 
-    @Throws(SQLException::class)
-    override fun populateFromResultSet(entity: AchievementEntity, rs: ResultSet)
-    {
-        entity.playerId = rs.getLong("PlayerId")
-        entity.achievementRef = rs.getInt("AchievementRef")
-        entity.gameIdEarned = rs.getLong("GameIdEarned")
-        entity.achievementCounter = rs.getInt("AchievementCounter")
-        entity.achievementDetail = rs.getString("AchievementDetail")
-    }
-
-    @Throws(SQLException::class)
-    override fun writeValuesToStatement(statement: PreparedStatement, startIndex: Int, emptyStatement: String): String
-    {
-        var i = startIndex
-        var statementStr = emptyStatement
-
-        statementStr = writeLong(statement, i++, playerId, statementStr)
-        statementStr = writeInt(statement, i++, achievementRef, statementStr)
-        statementStr = writeLong(statement, i++, gameIdEarned, statementStr)
-        statementStr = writeInt(statement, i++, achievementCounter, statementStr)
-        statementStr = writeString(statement, i, achievementDetail, statementStr)
-
-        return statementStr
-    }
-
     override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
     {
-        val ix = HandyArrayList.factoryAdd("PlayerId", "AchievementRef")
+        val ix = mutableListOf("PlayerId", "AchievementRef")
 
         indexes.add(ix)
     }
 
     companion object
     {
-
-        @JvmStatic fun retrieveAchievement(achievementRef: Int, playerId: Long): AchievementEntity?
+        fun retrieveAchievements(playerId: String): MutableList<AchievementEntity>
         {
-            return AchievementEntity().retrieveEntity("PlayerId = $playerId AND AchievementRef = $achievementRef")
+            val achievements = mutableListOf<AchievementEntity>()
+            val dao = AchievementEntity()
+
+            val sb = StringBuilder()
+            sb.append("SELECT ${dao.getColumnsForSelectStatement("a")}, ")
+            sb.append(" CASE WHEN g.LocalId IS NULL THEN -1 ELSE g.LocalId END AS LocalGameId")
+            sb.append(" FROM Achievement a")
+            sb.append(" LEFT OUTER JOIN Game g ON (a.GameIdEarned = g.RowId)")
+            sb.append(" WHERE PlayerId = '$playerId'")
+
+            DatabaseUtil.executeQuery(sb).use { rs ->
+                while (rs.next())
+                {
+                    val entity = dao.factoryFromResultSet(rs)
+                    entity.retrievedFromDb = true
+                    entity.localGameIdEarned = rs.getLong("LocalGameId")
+
+                    achievements.add(entity)
+                }
+            }
+
+            return achievements
+        }
+
+
+        @JvmStatic fun retrieveAchievement(achievementRef: Int, playerId: String): AchievementEntity?
+        {
+            return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND AchievementRef = $achievementRef")
         }
 
         /**
          * Methods for gameplay logic to update achievements
          */
-        @JvmStatic fun updateAchievement(achievementRef: Int, playerId: Long, gameId: Long, counter: Int)
+        @JvmStatic fun updateAchievement(achievementRef: Int, playerId: String, gameId: String, counter: Int)
         {
             val existingAchievement = retrieveAchievement(achievementRef, playerId)
 
@@ -111,13 +108,13 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             }
         }
 
-        @JvmStatic fun incrementAchievement(achievementRef: Int, playerId: Long, gameId: Long, amountBy: Int = 1)
+        @JvmStatic fun incrementAchievement(achievementRef: Int, playerId: String, gameId: String, amountBy: Int = 1)
         {
             val existingAchievement = retrieveAchievement(achievementRef, playerId)
 
             if (existingAchievement == null)
             {
-                AchievementEntity.factoryAndSave(achievementRef, playerId, -1, amountBy)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, "", amountBy)
 
                 triggerAchievementUnlock(-1, amountBy, achievementRef, playerId, gameId)
             }
@@ -131,22 +128,22 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             }
         }
 
-        fun insertAchievement(achievementRef: Int, playerId: Long, gameId: Long, detail: String = "")
+        fun insertAchievement(achievementRef: Int, playerId: String, gameId: String, detail: String = "")
         {
-            val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = $playerId AND AchievementRef = $achievementRef"
+            val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementRef = $achievementRef"
             val count = DatabaseUtil.executeQueryAggregate(sql)
 
             factoryAndSave(achievementRef, playerId, gameId, -1, detail)
             triggerAchievementUnlock(count, count + 1, achievementRef, playerId, gameId)
         }
 
-        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementRef: Int, playerId: Long, gameId: Long)
+        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementRef: Int, playerId: String, gameId: String)
         {
             val achievementTemplate = getAchievementForRef(achievementRef)
             triggerAchievementUnlock(oldValue, newValue, achievementTemplate!!, playerId, gameId)
         }
 
-        fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementTemplate: AbstractAchievement, playerId: Long, gameId: Long)
+        fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementTemplate: AbstractAchievement, playerId: String, gameId: String)
         {
             //Work out if the threshold has changed
             achievementTemplate.attainedValue = oldValue
@@ -160,12 +157,12 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             {
                 //Hooray we've done a thing!
                 val scrn = ScreenCache.getDartsGameScreen(gameId)
-                scrn.achievementUnlocked(gameId, playerId, achievementTemplate)
+                scrn?.achievementUnlocked(gameId, playerId, achievementTemplate)
             }
         }
 
         @JvmOverloads
-        @JvmStatic fun factoryAndSave(achievementRef: Int, playerId: Long, gameId: Long, counter: Int,
+        @JvmStatic fun factoryAndSave(achievementRef: Int, playerId: String, gameId: String, counter: Int,
                            achievementDetail: String = "", dtLastUpdate: Timestamp = getSqlDateNow()): AchievementEntity
         {
             val ae = AchievementEntity()

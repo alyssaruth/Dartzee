@@ -1,12 +1,13 @@
 package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.NumberField
+import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test
 import java.text.ParseException
 
-class TestNumberField
+class TestNumberField: AbstractDesktopTest()
 {
     @Test
     fun `Should return -1 when value unset`()

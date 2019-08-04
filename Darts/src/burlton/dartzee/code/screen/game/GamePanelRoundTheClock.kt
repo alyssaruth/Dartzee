@@ -1,26 +1,30 @@
 package burlton.dartzee.code.screen.game
 
+import burlton.core.code.obj.HashMapCount
 import burlton.core.code.obj.HashMapList
+import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.DartEntity
+import burlton.dartzee.code.db.GameEntity
 
-class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsScorerRoundTheClock>(parent)
+open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game)
 {
     private var clockType = ""
+    val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
-        val currentTarget = activeScorer.currentClockTarget
+        val currentTarget = activeScorer!!.currentClockTarget
         model.throwClockDart(currentTarget, clockType, dartboard)
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, lastRound: Int)
+    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
         val scorer = hmPlayerNumberToDartsScorer[playerNumber]!!
-        for (i in 1..lastRound)
+        for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
             addDartsToScorer(darts, scorer)
@@ -32,6 +36,26 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         {
             scorer.finalisePlayerResult(finishPos)
         }
+
+        loadCurrentStreak(playerNumber, hmRoundToDarts)
+    }
+
+    private fun loadCurrentStreak(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>)
+    {
+        var currentStreak = 0
+
+        val dartsLatestFirst = hmRoundToDarts.getFlattenedValuesSortedByKey().reversed()
+        Debug.append("" + dartsLatestFirst)
+        for (drt in dartsLatestFirst)
+        {
+            if (!drt.hitClockTarget(clockType)) { break }
+
+            currentStreak++
+        }
+
+        hmPlayerNumberToCurrentStreak[playerNumber] = currentStreak
+
+        Debug.append("Player #$playerNumber: $currentStreak")
     }
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
@@ -65,12 +89,12 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
-        val currentClockTarget = activeScorer.currentClockTarget
+        val currentClockTarget = activeScorer!!.currentClockTarget
         dart.startingScore = currentClockTarget
 
         if (dart.hitClockTarget(clockType))
         {
-            activeScorer.incrementCurrentClockTarget()
+            activeScorer!!.incrementCurrentClockTarget()
 
             if (dartsThrown.size == 4)
             {
@@ -79,7 +103,7 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         }
         else if (dartsThrown.size != 4)
         {
-            activeScorer.disableBrucey()
+            activeScorer!!.disableBrucey()
         }
     }
 
@@ -90,7 +114,7 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
             return true
         }
 
-        if (activeScorer.currentClockTarget > 20)
+        if (activeScorer!!.currentClockTarget > 20)
         {
             //Finished.
             return true
@@ -111,25 +135,50 @@ class GamePanelRoundTheClock(parent: DartsGameScreen) : GamePanelPausable<DartsS
         return !shouldStopAfterDartThrown()
     }
 
-    override fun saveDartsToDatabase(roundId: Long)
+    override fun saveDartsAndProceed()
     {
-        for (i in dartsThrown.indices)
+        if (dartsThrown.size == 4
+                && dartsThrown.last().hitClockTarget(clockType))
         {
-            val dart = dartsThrown[i]
-            val target = dart.startingScore
-            DartEntity.factoryAndSave(dart, roundId, i + 1, target)
+            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId())
         }
 
-        if (dartsThrown.size == 4
-          && dartsThrown.last().hitClockTarget(clockType))
-        {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, currentPlayerId, gameId)
-        }
+        updateBestStreakAchievement()
+
+        super.saveDartsAndProceed()
     }
+
+    fun updateBestStreakAchievement()
+    {
+        var currentStreak = hmPlayerNumberToCurrentStreak.getCount(currentPlayerNumber)
+        dartsThrown.forEach {
+            if (it.hitClockTarget(clockType))
+            {
+                currentStreak++
+            }
+            else
+            {
+                if (currentStreak > 1)
+                {
+                    AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), currentStreak)
+                }
+
+                currentStreak = 0
+            }
+        }
+
+        if (currentStreak > 1)
+        {
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), currentStreak)
+        }
+
+        hmPlayerNumberToCurrentStreak[currentPlayerNumber] = currentStreak
+    }
+
 
     override fun currentPlayerHasFinished(): Boolean
     {
-        return activeScorer.currentClockTarget > 20
+        return activeScorer!!.currentClockTarget > 20
     }
 
     override fun initImpl(gameParams: String)

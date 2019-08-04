@@ -1,6 +1,5 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 
@@ -80,7 +79,7 @@ fun isFinishRound(round: MutableList<Dart>): Boolean
 /**
  * Refactored out of GameWrapper for use in game stats panel
  */
-fun getScoringDarts(allDarts: MutableList<Dart>?, scoreCutOff: Int): MutableList<Dart>
+fun getScoringDarts(allDarts: List<Dart>?, scoreCutOff: Int): MutableList<Dart>
 {
     return if (allDarts == null)
     {
@@ -91,7 +90,7 @@ fun getScoringDarts(allDarts: MutableList<Dart>?, scoreCutOff: Int): MutableList
 
 }
 
-fun calculateThreeDartAverage(darts: MutableList<Dart>, scoreCutOff: Int): Double
+fun calculateThreeDartAverage(darts: List<Dart>, scoreCutOff: Int): Double
 {
     val scoringDarts = getScoringDarts(darts, scoreCutOff)
     if (scoringDarts.isEmpty())
@@ -127,8 +126,8 @@ fun isShanghai(darts: MutableList<Dart>): Boolean
  *
  * (5, T20, 1) -> "T20, 5, 1".
  */
-fun getSortedDartStr(darts: MutableList<Dart>): String
+fun getSortedDartStr(darts: List<Dart>): String
 {
     val sortedDarts = darts.sortedWith(compareByDescending<Dart>{it.getTotal()}.thenByDescending{it.multiplier})
-    return StringUtil.toDelims(sortedDarts, ", ")
+    return sortedDarts.joinToString{ it.getRendered() }
 }

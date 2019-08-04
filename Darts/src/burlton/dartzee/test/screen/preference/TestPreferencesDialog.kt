@@ -1,29 +1,26 @@
 package burlton.dartzee.test.screen.preference
 
-import burlton.core.code.util.Debug
-import burlton.core.test.TestDebug
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.preference.AbstractPreferencesPanel
 import burlton.dartzee.code.screen.preference.PreferencesDialog
+import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Before
 import org.junit.Test
-import java.awt.event.ActionEvent
 
-class TestPreferencesDialog
+class TestPreferencesDialog: AbstractDartsTest()
 {
-    var dialog = PreferencesDialog()
-    var mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
+    private var dialog = PreferencesDialog()
+    private var mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
 
-    @Before
-    fun setup()
+    override fun beforeEachTest()
     {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
+        super.beforeEachTest()
 
         dialog = PreferencesDialog()
         mockPanel = mockk(relaxed = true)
@@ -44,13 +41,10 @@ class TestPreferencesDialog
     {
         every { mockPanel.valid() } returns false
 
-        val actionEvent = mockk<ActionEvent>(relaxed = true)
-        every {actionEvent.source } returns dialog.btnOk
-
-        dialog.actionPerformed(actionEvent)
+        dialog.btnOk.doClick()
 
         verify { mockPanel.valid() }
-        verify(exactly = 0) { mockPanel.save() }
+        verifyNotCalled { mockPanel.save() }
 
         dialog.tabbedPane.selectedComponent shouldBe mockPanel
     }
@@ -60,11 +54,8 @@ class TestPreferencesDialog
     {
         every { mockPanel.valid() } returns true
 
-        val actionEvent = mockk<ActionEvent>(relaxed = true)
-        every {actionEvent.source } returns dialog.btnOk
-
         dialog.init()
-        dialog.actionPerformed(actionEvent)
+        dialog.btnOk.doClick()
 
         verify { mockPanel.valid() }
         verify { mockPanel.save() }
@@ -73,22 +64,16 @@ class TestPreferencesDialog
     @Test
     fun `Should not reset unselected panels when restore defaults is pressed`()
     {
-        val actionEvent = mockk<ActionEvent>(relaxed = true)
-        every {actionEvent.source } returns dialog.btnRestoreDefaults
+        dialog.btnRestoreDefaults.doClick()
 
-        dialog.actionPerformed(actionEvent)
-
-        verify(exactly = 0) { mockPanel.refresh(true) }
+        verifyNotCalled { mockPanel.refresh(true) }
     }
 
     @Test
     fun `Should reset the selected panel when restore defaults is pressed`()
     {
-        val actionEvent = mockk<ActionEvent>(relaxed = true)
-        every {actionEvent.source } returns dialog.btnRestoreDefaults
-
         dialog.tabbedPane.selectedComponent = mockPanel
-        dialog.actionPerformed(actionEvent)
+        dialog.btnRestoreDefaults.doClick()
 
         verify { mockPanel.refresh(true) }
     }
@@ -98,15 +83,12 @@ class TestPreferencesDialog
     {
         every { mockPanel.valid() } returns true
 
-        val actionEvent = mockk<ActionEvent>(relaxed = true)
-        every {actionEvent.source } returns dialog.btnOk
-
         Dartboard.dartboardTemplate = mockk(relaxed = true)
         val mockGameScreen = mockk<DartsGameScreen>(relaxed = true)
-        ScreenCache.addDartsGameScreen(1, mockGameScreen)
+        ScreenCache.addDartsGameScreen("1", mockGameScreen)
 
         dialog.init()
-        dialog.actionPerformed(actionEvent)
+        dialog.btnOk.doClick()
 
         Dartboard.dartboardTemplate shouldBe null
         verify { mockGameScreen.fireAppearancePreferencesChanged() }
@@ -115,12 +97,9 @@ class TestPreferencesDialog
     @Test
     fun `Should not call valid or save when cancelled`()
     {
-        val actionEvent = mockk<ActionEvent>(relaxed = true)
-        every {actionEvent.source } returns dialog.btnCancel
+        dialog.btnCancel.doClick()
 
-        dialog.actionPerformed(actionEvent)
-
-        verify(exactly = 0) { mockPanel.valid() }
-        verify(exactly = 0) { mockPanel.save() }
+        verifyNotCalled { mockPanel.valid() }
+        verifyNotCalled { mockPanel.save() }
     }
 }

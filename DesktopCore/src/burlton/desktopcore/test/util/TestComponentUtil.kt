@@ -1,28 +1,23 @@
 package burlton.desktopcore.test.util
 
-import burlton.core.code.util.Debug
-import burlton.core.test.TestDebug
+import burlton.core.test.helper.exceptionLogged
+import burlton.core.test.helper.getLogs
 import burlton.desktopcore.code.util.containsComponent
 import burlton.desktopcore.code.util.createButtonGroup
 import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.desktopcore.code.util.getParentWindow
+import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.Before
 import org.junit.Test
 import javax.swing.*
 
-class TestComponentUtil
+class TestComponentUtil: AbstractDesktopTest()
 {
-    @Before
-    fun setup()
-    {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-    }
-
     @Test
     fun `Should return children of the appropriate type`()
     {
@@ -78,13 +73,10 @@ class TestComponentUtil
     @Test
     fun `Should not create an empty ButtonGroup`()
     {
-        Debug.clearLogs()
-
         createButtonGroup()
 
-        Debug.waitUntilLoggingFinished()
-
-        val logs = Debug.getLogs()
+        val logs = getLogs()
+        exceptionLogged() shouldBe true
         logs shouldContain("Trying to create empty ButtonGroup")
         logs shouldContain("Debug.stackTrace")
     }
@@ -103,5 +95,25 @@ class TestComponentUtil
         rdbtnTwo.isSelected = true
 
         rdbtnOne.isSelected.shouldBeFalse()
+    }
+
+    @Test
+    fun `Should return null if no parent window`()
+    {
+        val panel = JPanel()
+        panel.getParentWindow() shouldBe null
+    }
+
+    @Test
+    fun `Should recurse up the tree to find the parent window`()
+    {
+        val window = JFrame()
+        val panel = JPanel()
+        val btn = JButton()
+        window.contentPane.add(panel)
+        panel.add(btn)
+
+        btn.getParentWindow() shouldBe window
+        panel.getParentWindow() shouldBe window
     }
 }

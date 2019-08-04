@@ -1,7 +1,6 @@
 package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
-import burlton.core.code.util.StringUtil
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DartsColour
@@ -14,7 +13,6 @@ import java.awt.image.BufferedImage
 import java.net.URL
 import javax.imageio.ImageIO
 import javax.swing.table.DefaultTableModel
-import kotlin.streams.toList
 
 abstract class AbstractAchievement
 {
@@ -28,18 +26,19 @@ abstract class AbstractAchievement
     abstract val blueThreshold : Int
     abstract val pinkThreshold : Int
     abstract val maxValue : Int
+    abstract val gameType: Int
 
     var attainedValue = -1
-    var gameIdEarned = -1L
+    var gameIdEarned = ""
+    var localGameIdEarned = -1L
     var dtLatestUpdate = START_OF_TIME
     var player : PlayerEntity? = null
 
     var tmBreakdown : DefaultTableModel? = null
 
-    fun runConversion(players : MutableList<PlayerEntity>)
+    fun runConversion(players : List<PlayerEntity>)
     {
-        val playerIds = players.stream().map{p -> "" + p.rowId}.toList()
-        val keys = StringUtil.toDelims(playerIds, ",")
+        val keys = players.joinToString { p -> "'${p.rowId}'"}
 
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")
@@ -58,14 +57,14 @@ abstract class AbstractAchievement
     }
 
     abstract fun populateForConversion(playerIds : String)
-    abstract fun getIconURL() : URL?
+    abstract fun getIconURL() : URL
 
     /**
      * Basic init will be the same for most achievements - get the value from the single row
      */
-    open fun initialiseFromDb(achievementRows : MutableList<AchievementEntity>, player: PlayerEntity?)
+    open fun initialiseFromDb(achievementRows : List<AchievementEntity>, player: PlayerEntity?)
     {
-        if (achievementRows.size == 0)
+        if (achievementRows.isEmpty())
         {
             return
         }
@@ -78,6 +77,7 @@ abstract class AbstractAchievement
         val achievementRow = achievementRows.first()
         attainedValue = achievementRow.achievementCounter
         gameIdEarned = achievementRow.gameIdEarned
+        localGameIdEarned = achievementRow.localGameIdEarned
         dtLatestUpdate = achievementRow.dtLastUpdate
 
         this.player = player
@@ -105,7 +105,7 @@ abstract class AbstractAchievement
             when (attainedValue)
             {
                 -1 -> Color.GRAY
-                in redThreshold+1 until Int.MAX_VALUE -> Color.GRAY
+                in redThreshold+1..Int.MAX_VALUE -> Color.GRAY
                 in orangeThreshold+1 until redThreshold+1 -> Color.RED
                 in yellowThreshold+1 until orangeThreshold+1 -> DartsColour.COLOUR_ACHIEVEMENT_ORANGE
                 in greenThreshold+1 until yellowThreshold+1 -> Color.YELLOW
@@ -180,19 +180,13 @@ abstract class AbstractAchievement
 
     fun isClickable(): Boolean
     {
-        return gameIdEarned > -1
+        return !gameIdEarned.isEmpty()
           || tmBreakdown != null
     }
 
     fun getIcon(highlighted : Boolean) : BufferedImage?
     {
         var iconURL = getIconURL()
-        if (iconURL == null)
-        {
-            Debug.stackTrace("Icon URL is null for achievement [$name]")
-            return null
-        }
-
         if (isLocked())
         {
             iconURL = ResourceCache.URL_ACHIEVEMENT_LOCKED
@@ -209,7 +203,7 @@ abstract class AbstractAchievement
         {
             for (y in 0 until img.height)
             {
-                if (Color(img.getRGB(x, y)) == Color.BLACK)
+                if (Color(img.getRGB(x, y), true) == Color.BLACK)
                 {
                     img.setRGB(x, y, newColor.rgb)
                 }
@@ -217,15 +211,9 @@ abstract class AbstractAchievement
         }
     }
 
-    override fun toString(): String
-    {
-        return name
-    }
+    override fun toString() = name
 
-    open fun isUnbounded() : Boolean
-    {
-        return false
-    }
+    open fun isUnbounded() = false
 
     fun getProgressDesc() : String
     {
@@ -238,14 +226,11 @@ abstract class AbstractAchievement
         return progressStr
     }
 
-    open fun isDecreasing() : Boolean
-    {
-        return false
-    }
+    open fun isDecreasing() = false
 
     fun getExtraDetails() : String
     {
-        var ret = if (isUnbounded())
+        var ret = if (this is AbstractAchievementRowPerGame)
         {
             "Last updated on ${dtLatestUpdate.formatAsDate()}"
         }
@@ -254,12 +239,16 @@ abstract class AbstractAchievement
             "Earned on ${dtLatestUpdate.formatAsDate()}"
         }
 
-        if (gameIdEarned > -1)
+        if (!gameIdEarned.isEmpty())
         {
-            ret += " in Game #$gameIdEarned"
+            ret += " in Game #$localGameIdEarned"
         }
 
         return ret
     }
 
+    open fun retrieveAllRows(): List<AchievementEntity>
+    {
+        return AchievementEntity().retrieveEntities("AchievementRef = $achievementRef")
+    }
 }

@@ -1,6 +1,15 @@
 package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
+import burlton.dartzee.code.achievements.golf.AchievementGolfCourseMaster
+import burlton.dartzee.code.achievements.golf.AchievementGolfGamesWon
+import burlton.dartzee.code.achievements.golf.AchievementGolfPointsRisked
+import burlton.dartzee.code.achievements.rtc.AchievementClockBestGame
+import burlton.dartzee.code.achievements.rtc.AchievementClockBestStreak
+import burlton.dartzee.code.achievements.rtc.AchievementClockBruceyBonuses
+import burlton.dartzee.code.achievements.rtc.AchievementClockGamesWon
+import burlton.dartzee.code.achievements.x01.*
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
@@ -12,7 +21,6 @@ import kotlin.streams.toList
 fun getNotBustSql(): String
 {
     val sb = StringBuilder()
-    sb.append(" AND")
     sb.append(" (")
     sb.append("     (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) > 1)")
     sb.append("     OR (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) = 0 AND drtLast.Multiplier = 2)")
@@ -26,8 +34,7 @@ fun getAchievementMaximum() : Int
     return getAllAchievements().size * 6
 }
 
-
-fun getPlayerAchievementScore(allAchievementRows: MutableList<AchievementEntity>, player: PlayerEntity): Int
+fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
 {
     val myAchievementRows = allAchievementRows.filter{it.playerId == player.rowId}
 
@@ -53,14 +60,14 @@ fun convertEmptyAchievements()
     }
 }
 
-fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: MutableList<PlayerEntity>)
+fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val r = Runnable { runConversionsInOtherThread(achievements, players)}
     val t = Thread(r, "Conversion thread")
     t.start()
 }
 
-private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: MutableList<PlayerEntity>)
+private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()
@@ -81,24 +88,29 @@ fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
     return count > 0
 }
 
+fun getAchievementsForGameType(gameType: Int) = getAllAchievements().filter{ it.gameType == gameType }
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
-    return mutableListOf(AchievementX01BestFinish(),
-                         AchievementX01BestThreeDarts(),
-                         AchievementX01CheckoutCompleteness(),
-                         AchievementX01HighestBust(),
-                         AchievementGolfPointsRisked(),
-                         AchievementX01GamesWon(),
-                         AchievementGolfGamesWon(),
-                         AchievementClockGamesWon(),
-                         AchievementX01BestGame(),
-                         AchievementGolfBestGame(),
-                         AchievementClockBestGame(),
-                         AchievementClockBruceyBonuses(),
-                         AchievementX01Shanghai(),
-                         AchievementX01HotelInspector(),
-                         AchievementX01SuchBadLuck())
+    return mutableListOf(AchievementX01GamesWon(),
+            AchievementGolfGamesWon(),
+            AchievementClockGamesWon(),
+            AchievementX01BestGame(),
+            AchievementGolfBestGame(),
+            AchievementClockBestGame(),
+            AchievementX01BestFinish(),
+            AchievementX01BestThreeDarts(),
+            AchievementX01CheckoutCompleteness(),
+            AchievementX01HighestBust(),
+            AchievementGolfPointsRisked(),
+            AchievementClockBruceyBonuses(),
+            AchievementX01Shanghai(),
+            AchievementX01HotelInspector(),
+            AchievementX01SuchBadLuck(),
+            AchievementX01Btbf(),
+            AchievementClockBestStreak(),
+            AchievementX01NoMercy(),
+            AchievementGolfCourseMaster())
 }
 
 fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
@@ -140,18 +152,19 @@ fun getWinAchievementRef(gameType : Int) : Int
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int)
 {
-    val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId INT, GameId INT, DtAchieved TIMESTAMP, Score INT")
+    val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
             ?: return
 
     var sb = StringBuilder()
     sb.append("INSERT INTO $tempTable")
-    sb.append(" SELECT p.RowId, pt.GameId, $dtColumn, $achievementScoreSql")
-    sb.append(" FROM Dart drtFirst, Dart drtLast, Round rnd, Participant pt, Player p, Game g")
-    sb.append(" WHERE drtFirst.RoundId = rnd.RowId")
-    sb.append(" AND drtLast.RoundId = rnd.RowId")
+    sb.append(" SELECT pt.PlayerId, pt.GameId, $dtColumn, $achievementScoreSql")
+    sb.append(" FROM Dart drtFirst, Dart drtLast, Participant pt, Game g")
+    sb.append(" WHERE drtFirst.ParticipantId = pt.RowId")
+    sb.append(" AND drtFirst.PlayerId = pt.PlayerId")
+    sb.append(" AND drtLast.ParticipantId = pt.RowId")
+    sb.append(" AND drtLast.PlayerId = pt.PlayerId")
+    sb.append(" AND drtFirst.RoundNumber = drtLast.RoundNumber")
     sb.append(" AND drtFirst.Ordinal = 1")
-    sb.append(" AND rnd.ParticipantId = pt.RowId")
-    sb.append(" AND pt.PlayerId = p.RowId")
     if (!playerSql.isEmpty())
     {
         sb.append(" AND pt.PlayerId IN ($playerSql)")
@@ -182,8 +195,8 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
         DatabaseUtil.executeQuery(sb).use { rs ->
             while (rs.next())
             {
-                val playerId = rs.getLong("PlayerId")
-                val gameId = rs.getLong("GameId")
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
                 val score = rs.getInt("Score")
 
@@ -201,10 +214,10 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
 }
 
-fun insertForCheckoutCompleteness(playerId: Long, gameId: Long, counter: Int)
+fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
 {
     val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = $playerId AND AchievementRef = $achievementRef"
+    val whereSql = "PlayerId = '$playerId' AND AchievementRef = $achievementRef"
 
     val achievementRows = AchievementEntity().retrieveEntities(whereSql)
     val hitDoubles = achievementRows.stream().mapToInt{it.achievementCounter}.toList()
@@ -220,4 +233,10 @@ fun insertForCheckoutCompleteness(playerId: Long, gameId: Long, counter: Int)
 
         AchievementEntity.triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, template, playerId, gameId)
     }
+}
+
+fun retrieveAchievementForDetail(achievementRef: Int, playerId: String, achievementDetail: String): AchievementEntity?
+{
+    val whereSql = "AchievementRef = $achievementRef AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
+    return AchievementEntity().retrieveEntity(whereSql)
 }

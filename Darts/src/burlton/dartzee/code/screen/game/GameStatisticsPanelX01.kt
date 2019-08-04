@@ -1,7 +1,6 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.core.code.util.MathsUtil
-import burlton.core.code.util.flattenBatches
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.utils.calculateThreeDartAverage
 import burlton.dartzee.code.utils.getScoringDarts
@@ -133,7 +132,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         {
             val playerName = playerNamesOrdered[i]
             val rounds = hmPlayerToDarts[playerName]
-            val darts = rounds!!.flattenBatches()
+            val darts = rounds!!.flatten()
 
             var avg = calculateThreeDartAverage(darts, nfSetupThreshold.getNumber())
             if (avg < 0)

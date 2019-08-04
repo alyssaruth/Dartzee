@@ -7,88 +7,13 @@ import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.util.Iterator;
 
 public class FileUtil
 {
-	public static File createNewFile(String filePath, String contents)
-	{
-		File file = new File(filePath);
-		boolean success = false;
-		
-		try
-		{
-			success = file.createNewFile();
-		}
-		catch (IOException ioe)
-		{
-			Debug.append("Caught " + ioe + " creating file " + filePath);
-		}
-		
-		if (!success)
-		{
-			return null;
-		}
-		
-		//We have created the empty file, now fill it
-		try (FileOutputStream fos = new FileOutputStream(filePath))
-		{
-			byte[] bytes = contents.getBytes("UTF-8");
-			fos.write(bytes);
-		}
-		catch (IOException ioe)
-		{
-			Debug.append("Caught " + ioe + " trying to insert bytes into file " + filePath);
-			deleteFileIfExists(filePath);
-			return null;
-		}
-		
-		Debug.append("Successfully created file " + file);
-		return file;
-	}
-	
-	public static String getMd5Crc(String filePath)
-	{
-		String crc = null;
-		
-		try
-		{
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(Files.readAllBytes(Paths.get(filePath)));
-			byte[] digest = md.digest();
-			
-			crc = EncryptionUtil.base64Interface.encode(digest);
-		}
-		catch (Throwable t)
-		{
-			Debug.append("Caught " + t + " trying to get CRC of file");
-		}
-		
-		return crc;
-	}
-	
-	public static long getFileSize(String filePath)
-	{
-		long fileSize = -1;
-		File f = new File(filePath);
-		
-		try (FileInputStream fis = new FileInputStream(f))
-		{
-			fileSize = fis.getChannel().size();
-		}
-		catch (Throwable t)
-		{
-			Debug.stackTrace(t, "Couldn't obtain file size for path " + filePath);
-		}
-		
-		return fileSize;
-	}
-	
 	public static boolean deleteFileIfExists(String filePath)
 	{
 		boolean success = false;
@@ -144,65 +69,6 @@ public class FileUtil
 		return null;
 	}
 	
-	public static void saveTextToFile(String text, Path destinationPath)
-	{
-		Charset charset = Charset.forName("US-ASCII");
-		try (BufferedWriter writer = Files.newBufferedWriter(destinationPath, charset)) 
-		{
-			String[] values = text.split("\n");
-		    for (String word : values) 
-		    {
-		        writer.write(word);
-		        writer.newLine();
-		    }
-		}
-		catch (IOException x) 
-		{
-			Debug.stackTrace(x);
-		}
-	}
-	
-	public static String getFileContentsAsString(File file)
-	{
-		String ret = null;
-		
-		try
-		{
-			Path path = file.toPath();
-			byte[] bytes = Files.readAllBytes(path);
-			ret = new String(bytes, "UTF-8");
-		}
-		catch (Throwable t)
-		{
-			Debug.stackTrace(t);
-		}
-		
-		return ret;
-	}
-	
-	public static String getBase64DecodedFileContentsAsString(File file)
-	{
-		try
-		{
-			Path filePath = file.toPath();
-			byte[] bytes = Files.readAllBytes(filePath);
-			byte[] decodedBytes = EncryptionUtil.base64Interface.decode(bytes);
-			
-			return new String(decodedBytes, "UTF-8");
-		}
-		catch (Throwable t)
-		{
-			Debug.stackTrace(t, "Failed to decode contents of file " + file);
-			return null;
-		}
-	}
-
-	public static void encodeAndSaveToFile(Path destinationPath, String stringToWrite)
-	{
-		String encodedStringToWrite = EncryptionUtil.base64Interface.encode(stringToWrite.getBytes());
-		saveTextToFile(encodedStringToWrite, destinationPath);
-	}
-	
 	public static Dimension getImageDim(String path) 
 	{
 	    Dimension result = null;
@@ -245,31 +111,6 @@ public class FileUtil
 		
 		int dotIndex = path.lastIndexOf('.');
 		return path.substring(dotIndex + 1);
-	}
-	
-	/**
-	 * Helper to create a file object for a URL, e.g. from a classpath resource.
-	 * No longer used
-	 */
-	/*public static File getForURL(URL url)
-	{
-		try
-		{
-			URI uri = url.toURI();
-			return new File(uri);
-		}
-		catch (Throwable t)
-		{
-			Debug.append("Failed to construct file for URL: " + url);
-			Debug.stackTrace(t);
-			return null;
-		}
-	}*/
-	
-	public static String stripFileExtension(String filename)
-	{
-		int ix = filename.indexOf('.');
-		return filename.substring(0, ix);
 	}
 	
 	public static byte[] getByteArrayForResource(String resourcePath)

@@ -3,6 +3,10 @@ package burlton.dartzee.code.stats
 import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.db.DartEntity
+import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.ParticipantEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.game.DartsScorerGolf
 import burlton.dartzee.code.screen.stats.player.HoleBreakdownWrapper
 import burlton.dartzee.code.utils.calculateThreeDartAverage
@@ -10,7 +14,6 @@ import burlton.dartzee.code.utils.getScoringDarts
 import burlton.dartzee.code.utils.getSortedDartStr
 import burlton.dartzee.code.utils.sumScore
 import java.sql.Timestamp
-import java.util.*
 
 
 const val MODE_FRONT_9 = 0
@@ -20,7 +23,7 @@ const val MODE_FULL_18 = 2
 /**
  * Wraps up an entire game of darts from a single player's perspective
  */
-class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timestamp, val dtFinish: Timestamp, val finalScore: Int)
+class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timestamp, val dtFinish: Timestamp, val finalScore: Int)
 {
     private var hmRoundNumberToDarts = HashMapList<Int, Dart>()
     private var totalRounds = 0
@@ -28,47 +31,25 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
     /**
      * Helpers
      */
-    fun getAllDarts(): MutableList<Dart>
-    {
-        return hmRoundNumberToDarts.getAllValues()
-    }
+    fun getAllDarts() = hmRoundNumberToDarts.getFlattenedValuesSortedByKey()
 
-    fun isFinished(): Boolean
-    {
-        return finalScore > -1
-    }
+    fun isFinished() = finalScore > -1
 
-    private fun getScoreForFinalRound(): Int
-    {
-        return getScoreForRound(totalRounds)
-    }
-
-    fun getDartsForFinalRound(): MutableList<Dart>?
-    {
-        return getDartsForRound(totalRounds)
-    }
+    private fun getScoreForFinalRound() = getScoreForRound(totalRounds)
+    fun getDartsForFinalRound() = getDartsForRound(totalRounds)
 
     /**
      * X01 Helpers
      */
     //For unfinished games, return -1 so they're sorted to the back
-    fun getCheckoutTotal(): Int
-    {
-        return if (finalScore == -1)
-        {
-            -1
-        }
-        else getScoreForFinalRound()
-    }
+    fun getCheckoutTotal() = if (finalScore == -1) -1 else getScoreForFinalRound()
+    fun getGameStartValueX01() = gameParams.toInt()
+
     private fun getAllDartsFlattened(): MutableList<Dart>
     {
-        val allDarts = hmRoundNumberToDarts.valuesAsVector
-        return allDarts.flatten().toMutableList()
+        return hmRoundNumberToDarts.getAllValues()
     }
-    fun getGameStartValueX01(): Int
-    {
-        return gameParams.toInt()
-    }
+
     private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<MutableList<Dart>>?
     {
         if (scoreCutOff < 62)
@@ -103,7 +84,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
 
         if (isFinished())
         {
-            Debug.stackTrace("Unable to calculate scoring darts for finished game $gameId. Score never went below threshold: $scoreCutOff")
+            Debug.stackTrace("Unable to calculate scoring darts for finished game $localId. Score never went below threshold: $scoreCutOff")
             return null
         }
 
@@ -167,7 +148,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
     /**
      * Burlton Constant
      */
-    fun populateThreeDartScoreMap(hmScoreToBreakdownWrapper: HashMap<Int, ThreeDartScoreWrapper>, scoreThreshold: Int)
+    fun populateThreeDartScoreMap(hmScoreToBreakdownWrapper: MutableMap<Int, ThreeDartScoreWrapper>, scoreThreshold: Int)
     {
         val dartsRounds = getScoringDartsGroupedByRound(scoreThreshold)
 
@@ -184,7 +165,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
             }
 
             val dartStr = getSortedDartStr(dartsForRound)
-            wrapper.addDartStr(dartStr, gameId)
+            wrapper.addDartStr(dartStr, localId)
         }
     }
 
@@ -200,7 +181,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
         return scoringDart.getGolfScore(hole)
     }
 
-    fun updateHoleBreakdowns(hm: HashMap<Int, HoleBreakdownWrapper>)
+    fun updateHoleBreakdowns(hm: MutableMap<Int, HoleBreakdownWrapper>)
     {
         var overallBreakdown: HoleBreakdownWrapper? = hm[-1]
         if (overallBreakdown == null)
@@ -283,7 +264,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
 
     }
 
-    fun populateOptimalScorecardMaps(hmHoleToBestDarts: HashMapList<Int, Dart>, hmHoleToBestGameId: HashMap<Int, Long>)
+    fun populateOptimalScorecardMaps(hmHoleToBestDarts: HashMapList<Int, Dart>, hmHoleToBestGameId: MutableMap<Int, Long>)
     {
         for (i in 1..totalRounds)
         {
@@ -293,7 +274,7 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
             if (isBetterGolfRound(i, darts, currentDarts))
             {
                 hmHoleToBestDarts[i] = darts
-                hmHoleToBestGameId[i] = gameId
+                hmHoleToBestGameId[i] = localId
             }
         }
     }
@@ -310,8 +291,6 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
 
         lastDart = dartsCurrent.last()
         val scoreCurrent = lastDart.getGolfScore(hole)
-
-
 
         //If the new score is strictly less, then it's better
         if (scoreNew < scoreCurrent)
@@ -331,11 +310,13 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
     }
 
     /**
-     * Generic helpers
+     * RTC Helpers
      */
-    fun compareStartDate(other: GameWrapper): Int
+    fun getRangeByTarget(ranges: List<IntRange>): Map<Int, IntRange>
     {
-        return dtStart.compareTo(other.dtStart)
+        return getAllDarts().groupBy{ it.startingScore }
+                            .mapValues{ it.value.size }
+                            .mapValues{ e -> ranges.find{ it.contains(e.value) }!! }
     }
 
     /**
@@ -350,5 +331,48 @@ class GameWrapper(val gameId: Long, val gameParams: String, val dtStart: Timesta
     fun setHmRoundNumberToDartsThrown(hmRoundNumberToDarts: HashMapList<Int, Dart>)
     {
         this.hmRoundNumberToDarts = hmRoundNumberToDarts
+    }
+
+    var gameEntity: GameEntity? = null
+    var participantEntity: ParticipantEntity? = null
+    val dartEntities = mutableListOf<DartEntity>()
+
+    fun clearEntities()
+    {
+        gameEntity = null
+        participantEntity = null
+        dartEntities.clear()
+    }
+
+    fun generateRealEntities(gameType: Int, player: PlayerEntity)
+    {
+        val game = GameEntity()
+        game.assignRowId()
+        game.gameType = gameType
+        game.gameParams = gameParams
+        game.dtCreation = dtStart
+        game.dtFinish = dtFinish
+
+        gameEntity = game
+
+        val pt = ParticipantEntity()
+        pt.assignRowId()
+        pt.gameId = game.rowId
+        pt.playerId = player.rowId
+        pt.finalScore = finalScore
+        pt.dtFinished = dtFinish
+        pt.ordinal = 1
+
+        participantEntity = pt
+
+        for (i in 1..totalRounds)
+        {
+            val darts = hmRoundNumberToDarts[i]!!
+
+            darts.forEachIndexed { ix, drt ->
+                val de = DartEntity.factory(drt, player.rowId, pt.rowId, i, ix+1, drt.startingScore)
+                dartEntities.add(de)
+            }
+        }
     }
 }

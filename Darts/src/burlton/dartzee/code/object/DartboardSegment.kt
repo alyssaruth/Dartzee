@@ -2,7 +2,6 @@
 package burlton.dartzee.code.`object`
 
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.StringUtil
 import java.awt.Point
 import java.util.*
 
@@ -48,7 +47,7 @@ class DartboardSegmentKt(val scoreAndType : String)
 
     init
     {
-        val toks = StringUtil.getListFromDelims(scoreAndType, "_")
+        val toks = scoreAndType.split("_")
 
         this.score = toks[0].toInt()
         this.type = toks[1].toInt()

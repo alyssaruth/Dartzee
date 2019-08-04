@@ -1,15 +1,15 @@
 package burlton.dartzee.code.screen
 
 import burlton.core.code.util.Debug
-import burlton.core.code.util.XmlUtil
+import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.bean.ComboBoxGameType
 import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.bean.PlayerSelector
 import burlton.dartzee.code.db.DartsMatchEntity
+import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
-import burlton.dartzee.code.db.getFilterPanel
-import burlton.dartzee.code.screen.game.DartsGameScreen
+import burlton.dartzee.code.db.GameEntity
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -138,7 +138,7 @@ class GameSetupScreen : EmbeddedScreen()
                 panelGameType.remove(gameParamFilterPanel)
             }
 
-            gameParamFilterPanel = getFilterPanel(gameTypeComboBox.gameType)
+            gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.getGameType())
 
             //We may not have one, e.g. for Dartzee
             if (gameParamFilterPanel != null)
@@ -190,7 +190,7 @@ class GameSetupScreen : EmbeddedScreen()
             panel.remove(panelPointBreakdown)
         }
 
-        val dartzee = gameTypeComboBox.gameType == GAME_TYPE_DARTZEE
+        val dartzee = gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE
         btnLaunch.isVisible = !dartzee
         toggleNextVisibility(dartzee)
 
@@ -206,25 +206,26 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun launchGame()
     {
-        if (!playerSelector.valid())
+        val match = factoryMatch()
+        if (!playerSelector.valid(match != null))
         {
             return
         }
 
-        val match = factoryMatch()
-        val selectedPlayers = playerSelector.selectedPlayers
+
+        val selectedPlayers = playerSelector.getSelectedPlayers()
 
         if (match == null)
         {
-            DartsGameScreen.launchNewGame(selectedPlayers, gameTypeComboBox.gameType, getGameParams())
+            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams())
         }
         else
         {
             match.players = selectedPlayers
-            match.gameType = gameTypeComboBox.gameType
+            match.gameType = gameTypeComboBox.getGameType()
             match.gameParams = getGameParams()
 
-            DartsGameScreen.launchNewMatch(match)
+            GameLauncher.launchNewMatch(match)
         }
     }
 
@@ -248,33 +249,25 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun getPointsXml(): String
     {
-        val doc = XmlUtil.factoryNewDocument()
-        val rootElement = doc!!.createElement("MatchParams")
-        rootElement.setAttribute("First", "" + spinnerPoints1st.value as Int)
-        rootElement.setAttribute("Second", "" + spinnerPoints2nd.value as Int)
-        rootElement.setAttribute("Third", "" + spinnerPoints3rd.value as Int)
-        rootElement.setAttribute("Fourth", "" + spinnerPoints4th.value as Int)
-
-        doc.appendChild(rootElement)
-        return XmlUtil.getStringFromDocument(doc)
+        return constructPointsXml(spinnerPoints1st.value as Int,
+                spinnerPoints2nd.value as Int,
+                spinnerPoints3rd.value as Int,
+                spinnerPoints4th.value as Int)
     }
 
-    override fun getScreenName(): String
-    {
-        return "Game Setup"
-    }
+    override fun getScreenName() = "Game Setup"
 
     override fun nextPressed()
     {
-        if (gameTypeComboBox.gameType == GAME_TYPE_DARTZEE)
+        if (gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE)
         {
-            if (!playerSelector.valid())
+            val match = factoryMatch()
+            if (!playerSelector.valid(match != null))
             {
                 return
             }
 
-            val match = factoryMatch()
-            val selectedPlayers = playerSelector.selectedPlayers
+            val selectedPlayers = playerSelector.getSelectedPlayers()
 
             val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
             scrn.setState(match, selectedPlayers)
@@ -282,7 +275,7 @@ class GameSetupScreen : EmbeddedScreen()
         }
         else
         {
-            Debug.stackTrace("Unexpected screen state. GameType = ${gameTypeComboBox.gameType}")
+            Debug.stackTrace("Unexpected screen state. GameType = ${gameTypeComboBox.getGameType()}")
         }
     }
 }

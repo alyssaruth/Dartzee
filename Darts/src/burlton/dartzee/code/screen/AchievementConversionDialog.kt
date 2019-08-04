@@ -63,14 +63,14 @@ class AchievementConversionDialog : SimpleDialog()
         if (rdbtnAll.isSelected)
         {
             val achievements = getAllAchievements()
-            runConversionsWithProgressBar(achievements, playerSelector.selectedPlayers)
+            runConversionsWithProgressBar(achievements, playerSelector.getSelectedPlayers())
         }
         else
         {
             val ix = cbConversionType.selectedIndex
             val achievement = cbConversionType.getItemAt(ix)
 
-            runConversionsWithProgressBar(mutableListOf(achievement), playerSelector.selectedPlayers)
+            runConversionsWithProgressBar(mutableListOf(achievement), playerSelector.getSelectedPlayers())
         }
 
         dispose()
@@ -78,7 +78,7 @@ class AchievementConversionDialog : SimpleDialog()
 
     private fun valid() : Boolean
     {
-        if (playerSelector.selectedPlayers.isEmpty())
+        if (playerSelector.getSelectedPlayers().isEmpty())
         {
             val ans = DialogUtil.showQuestion("This will run the conversion(s) for ALL players. Proceed?", false)
             return ans == JOptionPane.YES_OPTION
@@ -87,7 +87,7 @@ class AchievementConversionDialog : SimpleDialog()
         return true
     }
 
-    override fun actionPerformed(arg0: ActionEvent?)
+    override fun actionPerformed(arg0: ActionEvent)
     {
         if (panelTop.isEventSource(arg0))
         {

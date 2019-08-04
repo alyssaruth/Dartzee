@@ -3,12 +3,13 @@ package burlton.dartzee.test.dartzee
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.*
+import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.collections.shouldHaveSize
 import org.junit.Test
 import javax.swing.JCheckBox
 import kotlin.test.*
 
-class TestDartzeeRules
+class TestDartzeeRules: AbstractDartsTest()
 {
     private val bullseye = DartboardSegmentKt("25_$SEGMENT_TYPE_DOUBLE")
     private val outerBull = DartboardSegmentKt("25_$SEGMENT_TYPE_OUTER_SINGLE")

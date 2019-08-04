@@ -1,27 +1,5 @@
 package burlton.dartzee.code.screen.ai;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.util.HashMap;
-import java.util.Vector;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.TitledBorder;
-
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.ai.SimulationWrapper;
 import burlton.dartzee.code.db.PlayerEntity;
@@ -29,6 +7,16 @@ import burlton.dartzee.code.screen.AbstractPlayerCreationDialog;
 import burlton.dartzee.code.screen.Dartboard;
 import burlton.dartzee.code.screen.ScreenCache;
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Vector;
 
 public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 {
@@ -139,8 +127,8 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 	private final JLabel lblName = new JLabel("Name");
 	private final JComboBox<String> comboBox = new JComboBox<>();
 	private final JTabbedPane tabbedPaneGameSpecifics = new JTabbedPane();
-	private final AIConfigurationX01 panelX01Config = new AIConfigurationX01();
-	private final AIConfigurationGolf panelGolfConfig = new AIConfigurationGolf();
+	private final AIConfigurationSubPanelX01 panelX01Config = new AIConfigurationSubPanelX01();
+	private final AIConfigurationSubPanelGolf panelGolfConfig = new AIConfigurationSubPanelGolf();
 	private final JPanel panelSouth = new JPanel();
 	private final JPanel panelCalculateStats = new JPanel();
 	private final JTextField textFieldAverageScore = new JTextField();
@@ -279,7 +267,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 			if (playerForSimulation == null)
 			{
 				String name = textFieldName.getText();
-				if (!PlayerEntity.isValidName(name, doExistenceCheck()))
+				if (!isValidName(name, doExistenceCheck()))
 				{
 					return;
 				}
@@ -326,7 +314,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 	}
 	
 	@Override
-	protected void savePlayer()
+	public void savePlayer()
 	{
 		if (aiPlayer == null)
 		{
@@ -343,7 +331,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 		aiPlayer.setStrategy(type);
 		aiPlayer.setStrategyXml(xmlStr);
 		
-		long avatarId = avatar.getAvatarId();
+		String avatarId = avatar.getAvatarId();
 		aiPlayer.setPlayerImageId(avatarId);
 		
 		aiPlayer.saveToDatabase();

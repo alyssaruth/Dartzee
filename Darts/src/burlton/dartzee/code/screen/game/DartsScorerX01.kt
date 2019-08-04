@@ -24,11 +24,19 @@ class DartsScorerX01 : DartsScorerPausable()
         val model = tableScores.model
 
         val rowCount = model.rowCount
+        return getLatestScoreRemaining(rowCount)
+    }
+    private fun getLatestScoreRemaining(rowCount: Int): Int
+    {
         return if (rowCount == 0)
         {
             Integer.parseInt(lblStartingScore.text)
         }
-        else model.getValueAt(rowCount - 1, SCORE_COLUMN) as Int
+        else
+        {
+            val currentRow = model.getValueAt(rowCount - 1, SCORE_COLUMN) as Int?
+            currentRow ?: getLatestScoreRemaining(rowCount - 1)
+        }
     }
 
     init
@@ -95,23 +103,6 @@ class DartsScorerX01 : DartsScorerPausable()
 
     override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, SCORE_COLUMN) != null
 
-    override fun clearCurrentRound()
-    {
-        val rowCount = model.rowCount
-        if (rowCount == 0)
-        {
-            return
-        }
-
-        //If we've come into here by clicking 'pause', the latest round might be a completed one.
-        //Only clear the round if it's 'unconfirmed'.
-        val value = model.getValueAt(rowCount - 1, SCORE_COLUMN)
-        if (value == null)
-        {
-            model.removeRow(rowCount - 1)
-        }
-    }
-
     override fun getNumberOfColumns() = SCORE_COLUMN + 1
 
     fun finaliseRoundScore(startingScore: Int, bust: Boolean)
@@ -166,13 +157,12 @@ class DartsScorerX01 : DartsScorerPausable()
      */
     private class DartRenderer : AbstractTableRenderer<Dart>()
     {
-        override fun getReplacementValue(drt: Dart?): Any
+        override fun getReplacementValue(value: Dart): Any
         {
-            return when(drt)
+            return when(value)
             {
-                null -> ""
-                is DartHint -> "($drt)"
-                else -> "$drt"
+                is DartHint -> "($value)"
+                else -> "$value"
             }
         }
 
