@@ -8,10 +8,10 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.*
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.DartEntity
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.*
 
-class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(parent)
+open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerX01>(parent, game)
 {
     //Transient variables for each round
     private var startingScore = -1
@@ -26,7 +26,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
     override fun updateVariablesForNewRound()
     {
-        startingScore = activeScorer.getLatestScoreRemaining()
+        startingScore = activeScorer!!.getLatestScoreRemaining()
         resetRoundVariables()
     }
 
@@ -45,7 +45,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
     override fun saveDartsAndProceed()
     {
         //Finalise the scorer
-        val lastDart = dartsThrown.lastElement()
+        val lastDart = dartsThrown.last()
         val bust = isBust(currentScore, lastDart)
 
         updateNearMisses(dartsThrown, currentPlayerNumber)
@@ -53,7 +53,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         val count = hmPlayerNumberToBadLuckCount.getCount(currentPlayerNumber)
         if (count > 0)
         {
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, currentPlayerId, gameId, count)
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
         }
 
         if (!bust)
@@ -68,21 +68,21 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
 
             if (isShanghai(dartsThrown))
             {
-                AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_SHANGHAI, currentPlayerId, gameId)
+                AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_SHANGHAI, getCurrentPlayerId(), getGameId())
             }
 
             dartboard.playDodgySound("" + totalScore)
 
             val total = sumScore(dartsThrown)
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, currentPlayerId, gameId, total)
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total)
         }
         else
         {
             val total = startingScore
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, currentPlayerId, gameId, total)
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), total)
         }
 
-        activeScorer.finaliseRoundScore(startingScore, bust)
+        activeScorer!!.finaliseRoundScore(startingScore, bust)
 
         super.saveDartsAndProceed()
     }
@@ -107,50 +107,44 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         }
 
         val methodStr = getSortedDartStr(dartsThrown)
-        val whereSql = "AchievementRef = $ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR " +
-                       "AND PlayerId = $currentPlayerId " +
-                       "AND AchievementDetail = '$methodStr'"
-
-        val existingRow = AchievementEntity().retrieveEntity(whereSql)
+        val existingRow = retrieveAchievementForDetail(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, getCurrentPlayerId(), methodStr)
         if (existingRow == null)
         {
-            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, currentPlayerId, gameId, methodStr)
-        }
-    }
-
-    /**
-     * Loop through the darts thrown, saving them to the database.
-     */
-    override fun saveDartsToDatabase(roundId: Long)
-    {
-        for (i in dartsThrown.indices)
-        {
-            val dart = dartsThrown[i]
-            DartEntity.factoryAndSave(dart, roundId, i + 1, dart.startingScore)
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, getCurrentPlayerId(), getGameId(), methodStr)
         }
     }
 
     override fun currentPlayerHasFinished(): Boolean
     {
-        val lastDart = dartsThrown.lastElement()
+        val lastDart = dartsThrown.last()
         return currentScore == 0 && lastDart.isDouble()
     }
 
-    override fun updateAchievementsForFinish(playerId: Long, finishingPosition: Int, score: Int)
+    override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
     {
         super.updateAchievementsForFinish(playerId, finishingPosition, score)
 
         val sum = sumScore(dartsThrown)
-        AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, gameId, sum)
+        AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, getGameId(), sum)
 
         val checkout = dartsThrown.last().score
-        insertForCheckoutCompleteness(playerId, gameId, checkout)
+        insertForCheckoutCompleteness(playerId, getGameId(), checkout)
+
+        if (sum in listOf(3, 5, 7, 9))
+        {
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, getGameId(), "$sum")
+        }
+
+        if (checkout == 1)
+        {
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_BTBF, getCurrentPlayerId(), getGameId())
+        }
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, lastRound: Int)
+    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
         val scorer = hmPlayerNumberToDartsScorer[playerNumber]
-        for (i in 1..lastRound)
+        for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
             addDartsToScorer(darts, scorer)
@@ -204,7 +198,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
 
         checkout.forEach {
-            activeScorer.addHint(it)
+            activeScorer!!.addHint(it)
         }
     }
 
@@ -222,7 +216,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
     {
         if (shouldStopForMercyRule(model, startingScore, currentScore))
         {
-            Debug.append("MERCY RULE", DartsGamePanel.VERBOSE_LOGGING)
+            Debug.append("MERCY RULE", VERBOSE_LOGGING)
             stopThrowing()
         }
         else
@@ -242,7 +236,7 @@ class GamePanelX01(parent: DartsGameScreen) : GamePanelPausable<DartsScorerX01>(
         return GameStatisticsPanelX01()
     }
 
-    override fun shouldAnimateMiss(drt: Dart): Boolean
+    override fun shouldAnimateMiss(dart: Dart): Boolean
     {
         return !isCheckoutScore(currentScore)
     }

@@ -2,19 +2,17 @@ package burlton.dartzee.code.screen.stats.player
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAchievementMaximum
-import burlton.dartzee.code.achievements.getAllAchievements
+import burlton.dartzee.code.achievements.getAchievementsForGameType
 import burlton.dartzee.code.achievements.getPlayerAchievementScore
 import burlton.dartzee.code.bean.AchievementMedal
 import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.WrapLayout
 import java.awt.*
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JScrollPane
-import javax.swing.ScrollPaneConstants
+import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 class PlayerAchievementsScreen : EmbeddedScreen()
@@ -23,7 +21,8 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     private var player: PlayerEntity? = null
     private var progressDesc = ""
 
-    private val panelGeneral = JPanel()
+    private val centerPanel = JPanel()
+    private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val panelAchievementDesc = JPanel()
     private val lblAchievementName = JLabel()
     private val lblAchievementDesc = JLabel()
@@ -31,17 +30,10 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     init
     {
-        val centerPanel = JPanel()
         add(centerPanel, BorderLayout.CENTER)
-        centerPanel.layout = BorderLayout()
-        val sp = JScrollPane()
-        centerPanel.add(sp, BorderLayout.CENTER)
 
-        val fl = WrapLayout()
-        fl.vgap = 25
-        fl.hgap = 20
-        fl.alignment = FlowLayout.LEFT
-        panelGeneral.layout = fl
+        centerPanel.layout = BorderLayout()
+        centerPanel.add(tabbedPane, BorderLayout.CENTER)
 
         centerPanel.add(panelAchievementDesc, BorderLayout.SOUTH)
         panelAchievementDesc.preferredSize = Dimension(200, 100)
@@ -59,10 +51,6 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         panelAchievementDesc.add(lblAchievementExtraDetails, BorderLayout.SOUTH)
 
         panelAchievementDesc.border = EmptyBorder(5, 5, 5, 5)
-
-        sp.setViewportView(panelGeneral)
-        sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-        sp.verticalScrollBar.unitIncrement = 16
     }
 
     override fun getScreenName() : String
@@ -73,21 +61,42 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     override fun initialise()
     {
-        panelGeneral.removeAll()
+        tabbedPane.removeAll()
 
-        val playerId = player?.rowId
+        val playerId = player?.rowId!!
 
-        val achievementRows = AchievementEntity().retrieveEntities("PlayerId = $playerId")
-        for (achievement in getAllAchievements())
-        {
-            addAchievement(achievement, achievementRows)
+        val achievementRows = AchievementEntity.retrieveAchievements(playerId)
+        GameEntity.getAllGameTypes().forEach {
+            addAchievementTab(it, achievementRows)
         }
 
         val score = getPlayerAchievementScore(achievementRows, player!!)
         progressDesc = "$score/${getAchievementMaximum()}"
     }
 
-    private fun addAchievement(aa: AbstractAchievement, achievementRows: MutableList<AchievementEntity>)
+    private fun addAchievementTab(gameType: Int, achievementRows: List<AchievementEntity>)
+    {
+        val panel = JPanel()
+
+        val fl = WrapLayout()
+        fl.vgap = 25
+        fl.hgap = 20
+        fl.alignment = FlowLayout.LEFT
+        panel.layout = fl
+
+        val sp = JScrollPane()
+        sp.setViewportView(panel)
+        sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        sp.verticalScrollBar.unitIncrement = 16
+
+        tabbedPane.addTab(GameEntity.getTypeDesc(gameType), sp)
+
+        getAchievementsForGameType(gameType).forEach {
+            addAchievement(it, achievementRows, panel)
+        }
+    }
+
+    private fun addAchievement(aa: AbstractAchievement, achievementRows: List<AchievementEntity>, panel: JPanel)
     {
         val ref = aa.achievementRef
         val achievementRowsFiltered = achievementRows.filter { a -> a.achievementRef == ref }.toMutableList()
@@ -95,7 +104,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         aa.initialiseFromDb(achievementRowsFiltered, player)
 
         val medal = AchievementMedal(aa)
-        panelGeneral.add(medal)
+        panel.add(medal)
     }
 
     fun toggleAchievementDesc(hovered: Boolean, achievement : AbstractAchievement)
@@ -151,6 +160,6 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     override fun getDesiredSize(): Dimension?
     {
-        return Dimension(1240, 830)
+        return Dimension(1240, 700)
     }
 }

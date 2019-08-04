@@ -1,16 +1,20 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.DartsClient
+import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.achievements.convertEmptyAchievements
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.dartzee.test.helper.randomGuid
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
 import burlton.desktopcore.code.util.DialogUtil
+import com.mashape.unirest.http.Unirest
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Image
@@ -21,9 +25,9 @@ import javax.swing.*
 private const val CMD_PURGE_GAME = "purge "
 private const val CMD_LOAD_GAME = "load "
 private const val CMD_CLEAR_CONSOLE = "cls"
-private const val CMD_TEST = "test"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
 private const val CMD_SANITY = "sanity"
+private const val CMD_GUID = "guid"
 
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
@@ -55,7 +59,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         switchScreen(ScreenCache.getScreen(MenuScreen::class.java))
 
         //Pop up the change log if we've just updated
-        if (AbstractClient.justUpdated)
+        if (DartsClient.justUpdated)
         {
             convertEmptyAchievements()
 
@@ -152,14 +156,11 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
     /**
      * CheatListener
      */
-    override fun commandsEnabled(): Boolean
-    {
-        return AbstractClient.devMode
-    }
+    override fun commandsEnabled() = DartsClient.devMode
 
     override fun processCommand(cmd: String): String
     {
-        val textToShow = ""
+        var textToShow = ""
         if (cmd.startsWith(CMD_PURGE_GAME))
         {
             val gameIdentifier = cmd.substring(CMD_PURGE_GAME.length)
@@ -169,16 +170,13 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd.startsWith(CMD_LOAD_GAME))
         {
             val gameIdentifier = cmd.substring(CMD_LOAD_GAME.length)
-            val gameId = Integer.parseInt(gameIdentifier)
-            DartsGameScreen.loadAndDisplayGame(gameId.toLong())
+            val localId = gameIdentifier.toLong()
+            val gameId = GameEntity.getGameId(localId)
+            gameId?.let { GameLauncher.loadAndDisplayGame(gameId) }
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {
             Debug.clearLogs()
-        }
-        else if (cmd == CMD_TEST)
-        {
-            switchScreen(TestScreen())
         }
         else if (cmd == "dim")
         {
@@ -197,6 +195,26 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             val dlg = DartzeeRuleCreationDialog()
             dlg.isVisible = true
+        }
+        else if (cmd == CMD_GUID)
+        {
+            textToShow = randomGuid()
+        }
+        else if (cmd == "git")
+        {
+            val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
+
+            Debug.append("Response tag: " + response.body.`object`.get("tag_name"))
+        }
+        else if (cmd == "load")
+        {
+            DialogUtil.showLoadingDialog("Testing")
+        }
+        else if (cmd == "stacktrace")
+        {
+            Debug.setSendingEmails(true)
+            Debug.stackTraceNoError("Testing")
+            Debug.setSendingEmails(false)
         }
 
         return textToShow

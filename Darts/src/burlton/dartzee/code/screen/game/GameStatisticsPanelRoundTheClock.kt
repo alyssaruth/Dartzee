@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.game
 
 import burlton.core.code.util.MathsUtil
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.utils.getLongestStreak
 import java.util.stream.IntStream
 
 open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
@@ -39,7 +40,7 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             val playerName = playerNamesOrdered[i]
 
             val darts = getFlattenedDarts(playerName)
-            row[i + 1] = getLongestStreak(darts)
+            row[i + 1] = getLongestStreak(darts, gameParams!!).size
         }
 
         return row
@@ -90,37 +91,6 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
         }
 
         return row
-    }
-
-    private fun getLongestStreak(darts: MutableList<Dart>): Int
-    {
-        var biggestChain = 0
-        var currentChain = 0
-        var currentPtId: Long = -1
-
-        for (d in darts)
-        {
-            if (!d.hitClockTarget(gameParams))
-            {
-                currentChain = 0
-                continue
-            }
-
-            if (d.participantId != currentPtId)
-            {
-                currentChain = 0
-                currentPtId = d.participantId
-            }
-
-            //It's a hit and we've reset for a new game if necessary. Just increment.
-            currentChain++
-            if (currentChain > biggestChain)
-            {
-                biggestChain = currentChain
-            }
-        }
-
-        return biggestChain
     }
 
     private fun getDartsPerNumber(min: Int, max: Int, desc: String = "$min - $max"): Array<Any?>

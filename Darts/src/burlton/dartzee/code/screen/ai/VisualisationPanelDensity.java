@@ -1,18 +1,14 @@
 package burlton.dartzee.code.screen.ai;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-
 import burlton.dartzee.code.ai.AbstractDartsModel;
 import burlton.dartzee.code.object.ColourWrapper;
 import burlton.dartzee.code.utils.DartsColour;
-import burlton.dartzee.code.utils.GeometryUtil;
+import burlton.dartzee.code.utils.GeometryUtilKt;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 public class VisualisationPanelDensity extends AbstractVisualisationPanel
 {
@@ -50,7 +46,7 @@ public class VisualisationPanelDensity extends AbstractVisualisationPanel
 		{
 			for (int x=0; x<width; x++)
 			{
-		    	double radius = GeometryUtil.getDistance(new Point(x, y), centerPt);
+		    	double radius = GeometryUtilKt.getDistance(new Point(x, y), centerPt);
 		    	double probability = model.getProbabilityWithinRadius(radius);
 		    	
 		    	Color c = getColorForProbability(probability);

@@ -1,23 +1,16 @@
 package burlton.dartzee.test.helper
 
 import burlton.dartzee.code.utils.PreferenceUtil
-import org.junit.After
-import org.junit.Before
 
-abstract class AbstractRegistryTest
+abstract class AbstractRegistryTest: AbstractDartsTest()
 {
     private val hmPreferenceToSetting = mutableMapOf<String, String>()
 
-    abstract fun getPreferencesAffected(): MutableList<String>
+    abstract fun getPreferencesAffected(): List<String>
 
-    @Before
-    fun cachePreferenceValues()
+    override fun doClassSetup()
     {
-        if (!hmPreferenceToSetting.isEmpty())
-        {
-            //We've already done the caching - no need to bother again
-            return
-        }
+        super.doClassSetup()
 
         getPreferencesAffected().forEach {
             hmPreferenceToSetting[it] = PreferenceUtil.getStringValue(it)
@@ -31,9 +24,10 @@ abstract class AbstractRegistryTest
         }
     }
 
-    @After
-    fun restorePreferenceValues()
+    override fun afterEachTest()
     {
+        super.afterEachTest()
+
         getPreferencesAffected().forEach {
             PreferenceUtil.saveString(it, hmPreferenceToSetting[it])
         }

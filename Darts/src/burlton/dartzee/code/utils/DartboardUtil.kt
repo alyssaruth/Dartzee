@@ -42,7 +42,7 @@ fun getAdjacentNumbers(number: Int): MutableList<Int>
 
 fun factorySegmentKeyForPoint(dartPt: Point, centerPt: Point, diameter: Double): String
 {
-    val radius = GeometryUtil.getDistance(dartPt, centerPt)
+    val radius = getDistance(dartPt, centerPt)
     val ratio = 2 * radius / diameter
 
     if (ratio < RATIO_INNER_BULL)
@@ -55,7 +55,7 @@ fun factorySegmentKeyForPoint(dartPt: Point, centerPt: Point, diameter: Double):
     }
 
     //We've not hit the bullseye, so do other calculations to work out score/multiplier
-    val angle = GeometryUtil.getAngleForPoint(dartPt, centerPt)
+    val angle = getAngleForPoint(dartPt, centerPt)
     val score = getScoreForAngle(angle)
     val type = calculateTypeForRatioNonBullseye(ratio)
 

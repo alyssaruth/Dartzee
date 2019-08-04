@@ -5,35 +5,22 @@ import java.util.ArrayList
 import java.util.HashMap
 import kotlin.Comparator
 
-class HashMapCount<K>: HashMap<K, Int>
-{
-    constructor() : super()
-    constructor(hm: HashMapCount<K>) : super(hm)
 
+
+class HashMapCount<K>: HashMap<K, Int>()
+{
     fun getTotalCount() : Int
     {
         return values.stream().mapToInt{v -> v}.sum()
     }
 
-    fun getKeysAsVector() : ArrayList<K>
+    /**
+     * TODO - Remove once 100% kotlin
+     */
+    fun getKeysAsVector() : List<K>
     {
-        return ArrayList(keys.toMutableList())
+        return keys.toList()
     }
-
-    /*
-    fun getKeyWithHighestCount() : K
-    {
-        return getHighestEntry().key
-    }
-    fun getHighestCount() : Int
-    {
-        return getHighestEntry().value
-    }
-    fun getHighestEntry() : Map.Entry<K, Int>
-    {
-        return entries.sortedBy{it.value}.last()
-    }
-    */
 
     @JvmOverloads
     fun incrementCount(key: K, amount: Int = 1): Int
@@ -67,7 +54,7 @@ class HashMapCount<K>: HashMap<K, Int>
     /**
      * Returns {1, 1, 1, 1, 1, 2, 2} from {1 -> 5, 2 -> 2}
      */
-    fun getFlattenedOrderedList(comparator: Comparator<K>?): ArrayList<K>
+    fun getFlattenedOrderedList(comparator: Comparator<K>?): List<K>
     {
         val ret = mutableListOf<K>()
 
@@ -85,6 +72,6 @@ class HashMapCount<K>: HashMap<K, Int>
             }
         }
 
-        return ArrayList(ret)
+        return ret
     }
 }

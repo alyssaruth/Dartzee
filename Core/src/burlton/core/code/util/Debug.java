@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -16,18 +15,18 @@ public class Debug implements CoreRegistry
 	public static final String SQL_PREFIX = "[SQL] ";
 	public static final String BUG_REPORT_ADDITONAL_INFO_LINE = "Additional Information:";
 
-	private static final String SUCCESS_MESSAGE = "Email sent successfully";
+	public static final String SUCCESS_MESSAGE = "Email sent successfully";
 	private static final long ERROR_MESSAGE_DELAY_MILLIS = 10000; //10s
 	private static final long MINIMUM_EMAIL_GAP_MILLIS = 10000;
 
 	private static Object emailSyncObject = new Object();
-	private static long lastErrorMillis = -1;
+	public static long lastErrorMillis = -1;
 	private static long lastEmailMillis = -1;
 
 	private static DebugOutput output = null;
 	private static DebugExtension debugExtension = null;
 
-	private static int positionLastEmailed = 0;
+	public static int positionLastEmailed = 0;
 	private static int emailsSentInSuccession = 1;
 	private static boolean sendingEmails = true;
 	private static boolean logToSystemOut = false;
@@ -62,26 +61,35 @@ public class Debug implements CoreRegistry
 	{
 		append(text, logging, includeDate, null);
 	}
-	private static void append(final String text, boolean logging, final boolean includeDate, final BooleanWrapper haveStackTraced)
+	private static void append(final String text, boolean logging, final boolean includeDate, final String emailSubject)
 	{
 		if (!logging)
 		{
 			return;
 		}
 
+
 		Runnable logRunnable = new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				appendInCurrentThread(text, includeDate, haveStackTraced);
+				appendInCurrentThread(text, includeDate, emailSubject);
 			}
 		};
 
-		logService.execute(logRunnable);
+		String threadName = Thread.currentThread().getName();
+		if (!threadName.equals("Logger"))
+		{
+			logService.execute(logRunnable);
+		}
+		else
+		{
+			logRunnable.run();
+		}
 	}
 
-	public static void appendInCurrentThread(String text, boolean includeDate, BooleanWrapper haveStackTraced)
+	private static void appendInCurrentThread(String text, boolean includeDate, String emailSubject)
 	{
 		String time = "";
 		if (includeDate)
@@ -101,9 +109,9 @@ public class Debug implements CoreRegistry
 			System.out.println(time + text);
 		}
 
-		if (haveStackTraced != null)
+		if (emailSubject != null && shouldSendEmail())
 		{
-			haveStackTraced.setValue(true);
+			sendContentsAsEmail(emailSubject);
 		}
 	}
 
@@ -143,21 +151,6 @@ public class Debug implements CoreRegistry
 	{
 		appendBanner(text, true);
 	}
-
-	/*public static void appendBannerWithoutDate(String text)
-	{
-		int length = text.length();
-
-		String starStr = "";
-		for (int i=0; i<length + 4; i++)
-		{
-			starStr += "*";
-		}
-
-		appendWithoutDate(starStr);
-		appendWithoutDate(text);
-		appendWithoutDate(starStr);
-	}*/
 
 	public static void appendBanner(String text, boolean logging)
 	{
@@ -232,17 +225,23 @@ public class Debug implements CoreRegistry
 		t.printStackTrace(pw);
 		trace += datetime + sw.toString();
 
-		BooleanWrapper haveAppendedStackTrace = new BooleanWrapper(false);
-		append(trace, true, false, haveAppendedStackTrace);
-
+		append(trace, true, false, makeEmailTitle(t, message));
+	}
+	private static String makeEmailTitle(Throwable t, String message)
+	{
 		String extraDetails = " (" + productDesc + ")";
+		String username = instance.get(INSTANCE_STRING_USER_NAME, "");
+		if (!username.equals(""))
+		{
+			extraDetails += " - " + username;
+		}
 
 		if (message.length() > 50)
 		{
 			message = message.substring(0, 50) + "...";
 		}
 
-		sendContentsAsEmailInSeparateThread(t + " - " + message + extraDetails, false, haveAppendedStackTrace);
+		return t + " - " + message + extraDetails;
 	}
 
 	public static void stackTraceSilently(String message)
@@ -293,6 +292,10 @@ public class Debug implements CoreRegistry
 	/**
 	 * SQLException
 	 */
+	public static void logSqlException(StringBuilder query, SQLException sqle)
+	{
+		logSqlException(query.toString(), sqle);
+	}
 	public static void logSqlException(String query, SQLException sqle)
 	{
 		Debug.append("Caught SQLException for query: " + query);
@@ -309,31 +312,6 @@ public class Debug implements CoreRegistry
         }
 	}
 
-	public static void dumpList(String name, List<?> list)
-	{
-		String s = name;
-		if (list == null)
-		{
-			s += ": null";
-			appendWithoutDate(s);
-			return;
-		}
-
-		s += "(size: " + list.size() + "): ";
-
-		for (int i=0; i<list.size(); i++)
-		{
-			if (i > 0)
-			{
-				s += "\n";
-			}
-
-			s += list.get(i);
-		}
-
-		appendWithoutDate(s);
-	}
-
 	public static String getCurrentTimeForLogging()
 	{
 		long time = System.currentTimeMillis();
@@ -342,49 +320,13 @@ public class Debug implements CoreRegistry
 		return sdf.format(time) + "   ";
 	}
 
-	public static void sendContentsAsEmailInSeparateThread(final String title, final boolean manual, final BooleanWrapper readyToEmail)
+	private static boolean shouldSendEmail()
 	{
-		boolean shouldSendEmail = debugExtension != null;
-		if (shouldSendEmail
-		  && !manual)
-		{
-			boolean emailsEnabled = instance.getBoolean(INSTANCE_BOOLEAN_ENABLE_EMAILS, true);
-			shouldSendEmail = emailsEnabled && sendingEmails;
-		}
-
-		if (!shouldSendEmail)
-		{
-			return;
-		}
-
-		String fullTitle = title;
-		String username = instance.get(INSTANCE_STRING_USER_NAME, "");
-		if (!username.equals(""))
-		{
-			fullTitle += " - " + username;
-		}
-
-		final String titleToUse = fullTitle;
-
-		Runnable emailRunnable = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				while (readyToEmail != null
-				  && readyToEmail.getValue() == false)
-				{
-					//wait
-				}
-
-				sendContentsAsEmail(titleToUse, manual);
-			}
-		};
-
-		(new Thread(emailRunnable)).start();
+		return debugExtension != null
+				&& sendingEmails;
 	}
 
-	private static void sendContentsAsEmail(String fullTitle, boolean manual)
+	private static void sendContentsAsEmail(String fullTitle)
 	{
 		try
 		{
@@ -398,12 +340,9 @@ public class Debug implements CoreRegistry
 				long timeSinceLastEmail = System.currentTimeMillis() - lastEmailMillis;
 				if (timeSinceLastEmail < MINIMUM_EMAIL_GAP_MILLIS)
 				{
-					if (!manual)
-					{
-						long timeToSleep = MINIMUM_EMAIL_GAP_MILLIS - timeSinceLastEmail;
-						Debug.append("Waiting " + timeToSleep + " millis before sending logs...");
-						Thread.sleep(timeToSleep);
-					}
+					long timeToSleep = MINIMUM_EMAIL_GAP_MILLIS - timeSinceLastEmail;
+					Debug.append("Waiting " + timeToSleep + " millis before sending logs...");
+					Thread.sleep(timeToSleep);
 
 					fullTitle += " (Part " + (emailsSentInSuccession+1) + ")";
 					emailsSentInSuccession++;
@@ -419,7 +358,7 @@ public class Debug implements CoreRegistry
 
 				debugExtension.sendEmail(fullTitle, message);
 
-				Debug.append(SUCCESS_MESSAGE, true);
+				Debug.appendInCurrentThread(SUCCESS_MESSAGE, true, null);
 				positionLastEmailed = positionLastEmailed + message.length();
 				lastEmailMillis = System.currentTimeMillis();
 			}
@@ -478,7 +417,7 @@ public class Debug implements CoreRegistry
 
 	private static boolean needToSendMoreLogs()
 	{
-		String ta = getLogs();
+		String ta = getCurrentLogs();
 		String m = ta.substring(positionLastEmailed);
 		if (m.contains(SUCCESS_MESSAGE) && m.length() < 100)
 		{
@@ -492,7 +431,7 @@ public class Debug implements CoreRegistry
 	/**
 	 * Expose this statically - it makes sense
 	 */
-	public static String getLogs()
+	public static String getCurrentLogs()
 	{
 		return output.getLogs();
 	}
@@ -510,9 +449,14 @@ public class Debug implements CoreRegistry
 
 	public static void clearLogs()
 	{
+		waitUntilLoggingFinished();
 		output.clear();
 	}
 
+	public static DebugExtension getDebugExtension()
+	{
+		return debugExtension;
+	}
 	public static void setDebugExtension(DebugExtension debugExtension)
 	{
 		Debug.debugExtension = debugExtension;

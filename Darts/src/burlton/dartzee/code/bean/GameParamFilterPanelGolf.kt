@@ -23,7 +23,7 @@ class GameParamFilterPanelGolf : GameParamFilterPanel()
 
     override fun getGameParams(): String
     {
-        val selection = panel.selectionStr
+        val selection = panel.getSelectionStr()
         return selection.replace(" holes", "")
     }
 
@@ -41,7 +41,7 @@ class GameParamFilterPanelGolf : GameParamFilterPanel()
 
     override fun getFilterDesc(): String
     {
-        return "games of ${panel.selectionStr}"
+        return "games of ${panel.getSelectionStr()}"
     }
 
     override fun enableChildren(enabled: Boolean)

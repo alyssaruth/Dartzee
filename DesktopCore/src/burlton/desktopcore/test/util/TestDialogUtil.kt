@@ -1,13 +1,14 @@
 package burlton.desktopcore.test.util
 
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import burlton.desktopcore.test.helpers.TestMessageDialogFactory
 import io.kotlintest.shouldThrow
 import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.Test
 
-class TestDialogUtil
+class TestDialogUtil: AbstractDesktopTest()
 {
     var factoryMock = mockk<TestMessageDialogFactory>(relaxed = true)
 

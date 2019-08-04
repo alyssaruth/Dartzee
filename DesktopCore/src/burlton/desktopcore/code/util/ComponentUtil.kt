@@ -3,6 +3,7 @@ package burlton.desktopcore.code.util
 import burlton.core.code.util.Debug
 import java.awt.Component
 import java.awt.Container
+import java.awt.Window
 import javax.swing.AbstractButton
 import javax.swing.ButtonGroup
 
@@ -57,4 +58,11 @@ fun createButtonGroup(vararg buttons: AbstractButton)
 
     //Enable the first button passed in by default
     buttons[0].isSelected = true
+}
+
+fun Container.getParentWindow(): Window?
+{
+    val myParent = parent ?: return null
+
+    return if (myParent is Window) myParent else myParent.getParentWindow()
 }

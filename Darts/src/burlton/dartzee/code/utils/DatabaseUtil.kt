@@ -1,7 +1,7 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.AbstractClient
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.desktopcore.code.util.DialogUtil
 import com.sun.rowset.CachedRowSetImpl
 import java.sql.Connection
@@ -11,16 +11,15 @@ import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.CachedRowSet
 
+const val TABLE_ALREADY_EXISTS = "X0Y32"
+
 /**
  * Generic derby helper methods
  */
-class DatabaseUtil : SqlErrorConstants
+class DatabaseUtil
 {
     companion object
     {
-        private const val DATABASE_NAME = "jdbc:derby:Darts"
-        private const val DATABASE_NAME_WITH_CREATE = "$DATABASE_NAME;create=true"
-
         @JvmField val DATABASE_FILE_PATH = System.getProperty("user.dir") + "\\Databases"
 
         private val hsConnections = mutableListOf<Connection>()
@@ -31,6 +30,7 @@ class DatabaseUtil : SqlErrorConstants
         {
             synchronized(connectionPoolLock)
             {
+                hsConnections.clear()
                 for (i in 0 until initialCount)
                 {
                     val conn = createDatabaseConnection()
@@ -60,15 +60,13 @@ class DatabaseUtil : SqlErrorConstants
             }
         }
 
-
-
         @Throws(SQLException::class)
         @JvmStatic fun createDatabaseConnection(): Connection
         {
             connectionCreateCount++
 
             Debug.appendBanner("CREATED new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
-            return createDatabaseConnection(dbName = DATABASE_NAME_WITH_CREATE)
+            return createDatabaseConnection(dbName = DartsClient.derbyDbName)
         }
 
         @Throws(SQLException::class)
@@ -76,6 +74,8 @@ class DatabaseUtil : SqlErrorConstants
         {
             val p = System.getProperties()
             p.setProperty("derby.system.home", dbFilePath)
+            p.setProperty("derby.language.logStatementText", "${DartsClient.devMode}")
+            p.setProperty("derby.language.logQueryPlan", "${DartsClient.devMode}")
 
             val props = Properties()
             props["user"] = "administrator"
@@ -84,11 +84,36 @@ class DatabaseUtil : SqlErrorConstants
             return DriverManager.getConnection(dbName, props)
         }
 
-        @JvmStatic fun executeUpdate(statement: String): Boolean
+        fun executeUpdates(statements: List<String>): Boolean
+        {
+            val sql = getCombinedSqlForLogging(statements)
+            Debug.appendSql(sql, DartsClient.traceWriteSql)
+
+            statements.forEach{
+                if (!executeUpdate(it, false))
+                {
+                    return false
+                }
+            }
+
+            return true
+        }
+        private fun getCombinedSqlForLogging(batches: List<String>): String
+        {
+            var s = ""
+
+            batches.forEach{
+                s += "\n$it;"
+            }
+
+            return s
+        }
+
+        @JvmStatic @JvmOverloads fun executeUpdate(statement: String, log: Boolean = true): Boolean
         {
             try
             {
-                executeUpdateUncaught(statement)
+                executeUpdateUncaught(statement, log)
             }
             catch (sqle: SQLException)
             {
@@ -100,10 +125,9 @@ class DatabaseUtil : SqlErrorConstants
         }
 
         @Throws(SQLException::class)
-        private fun executeUpdateUncaught(statement: String)
+        private fun executeUpdateUncaught(statement: String, log: Boolean = true)
         {
-            Debug.appendSql(statement, AbstractClient.traceWriteSql)
-
+            val startMillis = System.currentTimeMillis()
             val conn = borrowConnection()
             try
             {
@@ -114,6 +138,14 @@ class DatabaseUtil : SqlErrorConstants
             finally
             {
                 returnConnection(conn)
+            }
+
+            val totalMillis = System.currentTimeMillis() - startMillis
+            Debug.appendSql("(${totalMillis}ms) $statement", DartsClient.traceWriteSql && log)
+
+            if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
+            {
+                Debug.stackTraceNoError("SQL update took longer than ${DartsClient.sqlMaxDuration} millis: $statement")
             }
         }
 
@@ -147,13 +179,12 @@ class DatabaseUtil : SqlErrorConstants
             }
 
             val totalMillis = System.currentTimeMillis() - startMillis
-
-            Debug.appendSql("(" + totalMillis + "ms) " + query, AbstractClient.traceReadSql)
+            Debug.appendSql("(" + totalMillis + "ms) " + query, DartsClient.traceReadSql)
 
             //No query should take longer than 5 seconds really...
-            if (totalMillis > AbstractClient.SQL_TOLERANCE_QUERY)
+            if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
             {
-                Debug.stackTraceNoError("SQL query took longer than " + AbstractClient.SQL_TOLERANCE_QUERY + " millis: " + query)
+                Debug.stackTraceNoError("SQL query took longer than ${DartsClient.sqlMaxDuration} millis: $query")
             }
 
             //Return an empty one if something's gone wrong
@@ -167,19 +198,9 @@ class DatabaseUtil : SqlErrorConstants
 
         @JvmStatic fun executeQueryAggregate(sql: String): Int
         {
-            try
-            {
-                executeQuery(sql).use { rs ->
-                    rs.next()
-                    return rs.getInt(1)
-                }
+            executeQuery(sql).use { rs ->
+                return if (rs.next()) rs.getInt(1) else -1
             }
-            catch (sqle: SQLException)
-            {
-                Debug.logSqlException(sql, sqle)
-                return -1
-            }
-
         }
 
         @JvmStatic fun doDuplicateInstanceCheck()
@@ -218,7 +239,7 @@ class DatabaseUtil : SqlErrorConstants
             catch (sqle: SQLException)
             {
                 val state = sqle.sqlState
-                if (state == SqlErrorConstants.TABLE_ALREADY_EXISTS)
+                if (state == TABLE_ALREADY_EXISTS)
                 {
                     Debug.append("$tableName table already exists")
                 }
@@ -256,7 +277,7 @@ class DatabaseUtil : SqlErrorConstants
         {
             try
             {
-                createDatabaseConnection(dbPath, DATABASE_NAME_WITH_CREATE)
+                createDatabaseConnection(dbPath, DartsClient.derbyDbName)
             }
             catch (t: Throwable)
             {
@@ -288,6 +309,18 @@ class DatabaseUtil : SqlErrorConstants
             }
 
             return false
+        }
+
+        fun deleteRowsFromTable(tableName: String, rowIds: List<String>): Boolean
+        {
+            var success = true
+            rowIds.chunked(50).forEach {
+                val idStr = it.joinToString{rowId -> "'$rowId'"}
+                val sql = "DELETE FROM $tableName WHERE RowId IN ($idStr)"
+                success = DatabaseUtil.executeUpdate(sql)
+            }
+
+            return success
         }
     }
 }

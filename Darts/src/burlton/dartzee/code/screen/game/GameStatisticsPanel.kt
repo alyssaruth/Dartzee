@@ -1,8 +1,10 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.obj.HandyArrayList
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.*
+import burlton.core.code.util.Debug
+import burlton.core.code.util.MathsUtil
+import burlton.core.code.util.addUnique
+import burlton.core.code.util.runOnEventThread
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.utils.DartsColour
@@ -32,7 +34,7 @@ import javax.swing.text.StyleConstants
 abstract class GameStatisticsPanel : JPanel()
 {
     protected var playerNamesOrdered = mutableListOf<String>()
-    protected var participants: MutableList<ParticipantEntity>? = null
+    protected var participants: List<ParticipantEntity>? = null
     protected var hmPlayerToDarts = HashMapList<String, MutableList<Dart>>()
     var gameParams: String? = null
 
@@ -75,7 +77,7 @@ abstract class GameStatisticsPanel : JPanel()
         table.setShowRowCount(false)
     }
 
-    fun showStats(participants: MutableList<ParticipantEntity>)
+    fun showStats(participants: List<ParticipantEntity>)
     {
         this.participants = participants
 
@@ -83,7 +85,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         for (participant in participants)
         {
-            val playerName = participant.playerName
+            val playerName = participant.getPlayerName()
 
             //Ensure all the keys are in this map ready for our empty check lower down
             if (!hmPlayerToDarts.containsKey(playerName))
@@ -92,16 +94,16 @@ abstract class GameStatisticsPanel : JPanel()
             }
 
             val sbSql = StringBuilder()
-            sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, rnd.RoundNumber")
-            sbSql.append(" FROM Dart d, Round rnd")
-            sbSql.append(" WHERE rnd.ParticipantId = " + participant.rowId)
-            sbSql.append(" AND d.RoundId = rnd.RowId")
-            sbSql.append(" ORDER BY rnd.RoundNumber, d.Ordinal")
+            sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, d.RoundNumber")
+            sbSql.append(" FROM Dart d")
+            sbSql.append(" WHERE d.ParticipantId = '${participant.rowId}'")
+            sbSql.append(" AND d.PlayerId = '${participant.playerId}'")
+            sbSql.append(" ORDER BY d.RoundNumber, d.Ordinal")
 
             try
             {
                 DatabaseUtil.executeQuery(sbSql).use { rs ->
-                    var dartsForRound = HandyArrayList<Dart>()
+                    var dartsForRound = mutableListOf<Dart>()
                     var currentRoundNumber = 1
 
                     while (rs.next())
@@ -119,7 +121,7 @@ abstract class GameStatisticsPanel : JPanel()
                         if (roundNumber > currentRoundNumber)
                         {
                             hmPlayerToDarts.putInList(playerName, dartsForRound)
-                            dartsForRound = HandyArrayList()
+                            dartsForRound = mutableListOf()
                             currentRoundNumber = roundNumber
                         }
 
@@ -152,7 +154,7 @@ abstract class GameStatisticsPanel : JPanel()
 
     private fun isSufficientData(): Boolean
     {
-        val playerNames = hmPlayerToDarts.keysAsVector
+        val playerNames = hmPlayerToDarts.keys
 
         return playerNames.stream().allMatch { p -> !getFlattenedDarts(p).isEmpty() }
     }
@@ -195,7 +197,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         for (pt in participants!!)
         {
-            val playerName = pt.playerName
+            val playerName = pt.getPlayerName()
             playerNamesOrdered.addUnique(playerName)
         }
 
@@ -223,13 +225,13 @@ abstract class GameStatisticsPanel : JPanel()
         tm.addRow(row)
     }
 
-    protected fun getFlattenedDarts(playerName: String): MutableList<Dart>
+    protected fun getFlattenedDarts(playerName: String): List<Dart>
     {
         val rounds = hmPlayerToDarts[playerName]
 
         rounds ?: return mutableListOf()
 
-        return rounds.flattenBatches()
+        return rounds.flatten()
     }
 
     protected fun factoryRow(rowName: String): Array<Any?>
@@ -266,7 +268,7 @@ abstract class GameStatisticsPanel : JPanel()
 
     private fun getFinishedParticipants(playerName: String): MutableList<ParticipantEntity>
     {
-        return participants!!.filter { pt -> pt.playerName == playerName && pt.finalScore > -1 }.toMutableList()
+        return participants!!.filter { pt -> pt.getPlayerName() == playerName && pt.finalScore > -1 }.toMutableList()
     }
 
     protected abstract fun addRowsToTable()
@@ -403,7 +405,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         private fun getPositionForColour(tm: TableModel, row: Int, col: Int, highestWins: Boolean): Int
         {
-            if (tm.getValueAt(row, col) is String)
+            if (tm.getValueAt(row, col) is String || playerNamesOrdered.size == 1)
             {
                 return -1
             }

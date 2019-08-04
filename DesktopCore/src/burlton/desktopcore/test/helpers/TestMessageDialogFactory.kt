@@ -1,18 +1,42 @@
 package burlton.desktopcore.test.helpers
 
+import burlton.core.code.util.Debug
 import burlton.desktopcore.code.util.AbstractMessageDialogFactory
 import javax.swing.JOptionPane
 
 class TestMessageDialogFactory: AbstractMessageDialogFactory()
 {
+    //Inputs
+    var inputSelection: Any? = null
+    var inputOptionsPresented: Array<*> = arrayOf<Any>()
+    val inputsShown = mutableListOf<String>()
+
+    //Questions
     var questionOption = JOptionPane.NO_OPTION
+    val questionsShown = mutableListOf<String>()
+
     var loadingVisible = false
 
     val infosShown = mutableListOf<String>()
     val errorsShown = mutableListOf<String>()
-    val questionsShown = mutableListOf<String>()
 
     val loadingsShown = mutableListOf<String>()
+
+    override fun showInput(title: String, message: String, options: Array<*>, defaultOption: Any?): Any?
+    {
+        inputsShown.add(title)
+        inputOptionsPresented = options
+
+        inputSelection ?: return null
+
+        if (options.contains(inputSelection))
+        {
+            return inputSelection
+        }
+
+        Debug.stackTrace("Running a test where $inputSelection was to be returned, but wasn't a valid selection in the dialog shown.")
+        return null
+    }
 
     override fun showInfo(text: String)
     {
@@ -38,6 +62,17 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
 
     override fun dismissLoading()
     {
+        loadingVisible = false
+    }
+
+    fun reset()
+    {
+        inputsShown.clear()
+        inputOptionsPresented = arrayOf<Any>()
+        infosShown.clear()
+        errorsShown.clear()
+        questionsShown.clear()
+        loadingsShown.clear()
         loadingVisible = false
     }
 

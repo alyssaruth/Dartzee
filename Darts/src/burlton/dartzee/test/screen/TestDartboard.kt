@@ -1,31 +1,24 @@
 package burlton.dartzee.test.screen
 
-import burlton.core.code.util.Debug
-import burlton.core.test.TestDebug
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.Before
 import org.junit.Test
 import java.awt.Color
 import java.awt.Point
 import java.awt.event.MouseEvent
 
-class TestDartboard
+class TestDartboard: AbstractDartsTest()
 {
-    @Before
-    fun setup()
-    {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-    }
-
     @Test
     fun `Dartboard listener should be notified if set`()
     {
@@ -54,7 +47,7 @@ class TestDartboard
         dartboard.paintDartboardCached()
 
         Dartboard.dartboardTemplate shouldNotBe null
-        verify(exactly = 0) { dartboard.initialiseFromTemplate() }
+        verifyNotCalled { dartboard.initialiseFromTemplate() }
 
         val dartboard2 = spyk(Dartboard(50, 50))
         dartboard2.paintDartboardCached()

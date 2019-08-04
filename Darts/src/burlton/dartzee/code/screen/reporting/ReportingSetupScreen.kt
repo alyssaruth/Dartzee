@@ -5,8 +5,8 @@ import burlton.dartzee.code.bean.ComboBoxGameType
 import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.bean.ScrollTablePlayers
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.code.db.getFilterPanel
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
 import burlton.dartzee.code.reporting.ReportParameters
 import burlton.dartzee.code.screen.EmbeddedScreen
@@ -21,7 +21,6 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
-import java.util.*
 import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
@@ -206,7 +205,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         val scrn = ScreenCache.getScreen(ReportingResultsScreen::class.java)
 
         val rp = generateReportParams()
-        scrn?.setReportParameters(rp)
+        scrn.setReportParameters(rp)
 
         ScreenCache.switchScreen(scrn)
     }
@@ -217,7 +216,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
         if (checkBoxGameType.isSelected)
         {
-            val gameType = comboBox.gameType
+            val gameType = comboBox.getGameType()
             rp.gameType = gameType
         }
 
@@ -328,7 +327,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
                     panelGame.remove(panelGameParams!!)
                 }
 
-                panelGameParams = getFilterPanel(comboBox.gameType)
+                panelGameParams = GameEntity.getFilterPanel(comboBox.getGameType())
 
                 //Deal with there not being a filter panel, e.g. for Dartzee
                 if (panelGameParams != null)
@@ -354,8 +353,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     private fun addPlayers(table: ScrollTablePlayers, tableList: MutableList<PlayerEntity>)
     {
-        val allSelected = ArrayList(hmIncludedPlayerToPanel.keys)
-        allSelected.addAll(excludedPlayers)
+        val allSelected = (hmIncludedPlayerToPanel.keys + excludedPlayers).toList()
 
         val players = PlayerSelectDialog.selectPlayers(allSelected)
         if (table === scrollTableIncluded)
@@ -373,7 +371,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     private fun removePlayers(table: ScrollTablePlayers, tableList: MutableList<PlayerEntity>)
     {
-        val playersToRemove = table.selectedPlayers
+        val playersToRemove = table.getSelectedPlayers()
         if (playersToRemove.isEmpty())
         {
             DialogUtil.showError("You must select player(s) to remove.")
@@ -397,7 +395,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
     {
         panelIncludedPlayers.remove(includedPlayerPanel)
 
-        val player = scrollTableIncluded.selectedPlayer
+        val player = scrollTableIncluded.getSelectedPlayer()
         if (player == null)
         {
             includedPlayerPanel = defaultIncludedPlayerPanel

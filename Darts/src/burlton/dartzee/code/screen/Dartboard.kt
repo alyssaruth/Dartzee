@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.obj.SuperHashMap
 import burlton.core.code.util.Debug
 import burlton.core.code.util.runOnEventThread
 import burlton.dartzee.code.`object`.ColourWrapper
@@ -8,8 +7,10 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.listener.DartboardListener
+import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.GamePanelX01
 import burlton.dartzee.code.utils.*
+import burlton.desktopcore.code.util.getParentWindow
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -32,7 +33,7 @@ private const val LAYER_SLIDER = 4
 open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 {
     private var hmPointToSegment = mutableMapOf<Point, DartboardSegmentKt>()
-    private var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegmentKt>()
+    protected var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegmentKt>()
 
     private val dartLabels = mutableListOf<JLabel>()
 
@@ -207,7 +208,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
             //Work out where to place the label
             val points = getPointsForSegment(i, SEGMENT_TYPE_MISS)
-            val avgPoint = GeometryUtil.getAverage(points)
+            val avgPoint = getAverage(points)
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2
             lbl.setLocation(lblX, lblY)
@@ -355,8 +356,23 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     override fun mouseClicked(arg0: MouseEvent)
     {
-        val pt = arg0.point
-        dartThrown(pt)
+        if (!suppressClickForGameWindow())
+        {
+            val pt = arg0.point
+            dartThrown(pt)
+        }
+    }
+
+    private fun suppressClickForGameWindow(): Boolean
+    {
+        val scrn = getParentWindow() as? DartsGameScreen ?: return false
+        if (scrn.haveLostFocus)
+        {
+            scrn.haveLostFocus = false
+            return true
+        }
+
+        return false
     }
 
     open fun dartThrown(pt: Point)
@@ -541,7 +557,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
         try
         {
-            if (ResourceCache.isInitialised())
+            if (ResourceCache.isInitialised)
             {
                 playDodgySoundCached(soundName)
             }
@@ -614,9 +630,9 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
                 myClip.stop()
                 myClip.close()
 
-                if (ResourceCache.isInitialised())
+                if (ResourceCache.isInitialised)
                 {
-                    ResourceCache.returnInputStream(soundName, stream)
+                    ResourceCache.returnInputStream(soundName!!, stream!!)
                 }
 
                 //See whether there's currently any later clip still running. If there isn't, also dismiss our dodgyLabel
@@ -682,7 +698,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     override fun mouseMoved(arg0: MouseEvent)
     {
-        highlightDartboard(arg0.point)
+        if (getParentWindow()!!.isFocused)
+        {
+            highlightDartboard(arg0.point)
+        }
     }
 
     override fun mousePressed(arg0: MouseEvent)
@@ -717,7 +736,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     {
         private val DARTIMG = ImageIcon(GamePanelX01::class.java.getResource("/dartImage.png"))
 
-        private val hmSoundNameToUrl = SuperHashMap<String, URL>()
+        private val hmSoundNameToUrl = mutableMapOf<String, URL>()
         var dartboardTemplate: DartboardTemplate? = null
 
         @JvmStatic fun appearancePreferenceChanged()

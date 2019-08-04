@@ -1,18 +1,18 @@
 package burlton.dartzee.code.stats;
 
+import burlton.core.code.util.Debug;
+import burlton.dartzee.code.db.PlayerEntity;
+import burlton.dartzee.code.utils.DatabaseUtil;
+import burlton.desktopcore.code.util.DateUtil;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-
-import burlton.dartzee.code.utils.DatabaseUtil;
-import burlton.dartzee.code.db.PlayerEntity;
-import burlton.core.code.obj.SuperHashMap;
-import burlton.desktopcore.code.util.DateUtil;
-import burlton.core.code.util.Debug;
+import java.util.HashMap;
 
 public class PlayerSummaryStats
 {
-	private static SuperHashMap<String, PlayerSummaryStats> hmPlayerKeyToSummaryStats = new SuperHashMap<>();
+	private static HashMap<String, PlayerSummaryStats> hmPlayerKeyToSummaryStats = new HashMap<>();
 	
 	private int gameType = -1;
 	
@@ -55,9 +55,9 @@ public class PlayerSummaryStats
 		sb.append(" WHERE pt.GameId = g.RowId");
 		sb.append(" AND g.GameType = ");
 		sb.append(gameType);
-		sb.append(" AND pt.PlayerId = ");
+		sb.append(" AND pt.PlayerId = '");
 		sb.append(player.getRowId());
-		sb.append(" AND pt.DtFinished <> ");
+		sb.append("' AND pt.DtFinished <> ");
 		sb.append(DateUtil.getEndOfTimeSqlString());
 	}
 	
@@ -114,7 +114,7 @@ public class PlayerSummaryStats
 		hmPlayerKeyToSummaryStats.put(key, stats);
 		return stats;
 	}
-	public static void resetPlayerStats(long playerId, int gameType)
+	public static void resetPlayerStats(String playerId, int gameType)
 	{
 		String key = playerId + "_" + gameType;
 		hmPlayerKeyToSummaryStats.remove(key);

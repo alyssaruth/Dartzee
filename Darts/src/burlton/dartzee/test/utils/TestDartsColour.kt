@@ -1,12 +1,13 @@
 package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.utils.DartsColour
+import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 import javax.swing.JLabel
 
-class TestDartsColour
+class TestDartsColour: AbstractDartsTest()
 {
     @Test
     fun testGetDarkenedColor()

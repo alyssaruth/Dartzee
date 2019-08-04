@@ -1,44 +1,23 @@
 package burlton.core.code.obj
 
 
-class HashMapList<K, V> : SuperHashMap<K, MutableList<V>>()
+class HashMapList<K: Comparable<K>, V> : HashMap<K, MutableList<V>>()
 {
-    fun getValuesSize(): Int
+    fun getFlattenedValuesSortedByKey(): List<V>
     {
-        var totalSize = 0
-        val valueVectors = valuesAsVector
-        for (valueVector in valueVectors)
-        {
-            totalSize += valueVector.size
+        val sortedKeys = keys.toList().sorted()
+
+        val values = mutableListOf<V>()
+        sortedKeys.forEach{
+            values.addAll(this[it]!!)
         }
 
-        return totalSize
-
-    }
-
-    /**
-     * TODO - REMOVE (once fully over to Kotlin)
-     */
-    fun getAsHandyArrayList(key: K): HandyArrayList<V>?
-    {
-        val v = get(key)
-
-        v ?: return null
-
-        return HandyArrayList(v)
+        return values
     }
 
     fun getAllValues(): MutableList<V>
     {
-        val ret = mutableListOf<V>()
-
-        val valueVectors = valuesAsVector
-        for (valueVector in valueVectors)
-        {
-            ret.addAll(valueVector)
-        }
-
-        return ret
+        return values.flatten().toMutableList()
     }
 
     fun putInList(key: K, value: V)

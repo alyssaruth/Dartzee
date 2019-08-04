@@ -1,16 +1,16 @@
 package burlton.dartzee.code.main
 
-import burlton.core.code.util.AbstractClient
+import burlton.core.code.util.CoreRegistry
 import burlton.core.code.util.Debug
 import burlton.core.code.util.DebugUncaughtExceptionHandler
-import burlton.core.code.util.OnlineConstants
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.utils.ClientEmailer
+import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
 import burlton.dartzee.code.utils.DartsDebugExtension
-import burlton.dartzee.code.utils.DesktopDartsClient
-import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
-import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.MessageDialogFactory
+import javax.swing.JOptionPane
 import javax.swing.UIManager
 
 object DartsMain
@@ -19,33 +19,60 @@ object DartsMain
     fun main(args: Array<String>)
     {
         Debug.initialise(ScreenCache.getDebugConsole())
-        AbstractClient.setInstance(DesktopDartsClient())
+        checkForUserName()
         DialogUtil.init(MessageDialogFactory())
 
         setLookAndFeel()
 
         Debug.setDebugExtension(DartsDebugExtension())
-        Debug.setProductDesc("Darts " + OnlineConstants.DARTS_VERSION_NUMBER)
+        Debug.setProductDesc("Darts $DARTS_VERSION_NUMBER")
         Debug.setLogToSystemOut(true)
 
         val mainScreen = ScreenCache.getMainScreen()
         Thread.setDefaultUncaughtExceptionHandler(DebugUncaughtExceptionHandler())
 
-        AbstractClient.parseProgramArguments(args)
+        DartsClient.parseProgramArguments(args)
 
-        Debug.setSendingEmails(!AbstractClient.devMode)
+        Debug.setSendingEmails(!DartsClient.devMode)
+        ClientEmailer.tryToSendUnsentLogs()
 
-        checkForUpdatesIfRequired()
+        DartsClient.checkForUpdatesIfRequired()
 
         mainScreen.isVisible = true
         mainScreen.init()
     }
 
+    private fun checkForUserName()
+    {
+        var userName: String? = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, "")
+        if (!userName!!.isEmpty())
+        {
+            return
+        }
+
+        Debug.append("Username isn't specified - will prompt for one now")
+        while (userName == null || userName.isEmpty())
+        {
+            userName = JOptionPane.showInputDialog(null, "Please enter your name (for debugging purposes).\nThis will only be asked for once.", "Enter your name")
+        }
+
+        CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_USER_NAME, userName)
+
+        try
+        {
+            ClientEmailer.sendClientEmail("Username notification", "$userName has set their username.")
+        }
+        catch (t: Throwable)
+        {
+            //If there's no internet connection or Google does something dumb, just log a line
+            Debug.append("Caught $t trying to send username notification.")
+        }
+    }
+
     private fun setLookAndFeel()
     {
-        AbstractClient.setOs()
-        Debug.append("Initialising Look & Feel - Operating System: " + AbstractClient.operatingSystem)
-        if (AbstractClient.isAppleOs())
+        Debug.append("Initialising Look & Feel - Operating System: ${DartsClient.operatingSystem}")
+        if (DartsClient.isAppleOs())
         {
             setLookAndFeel("javax.swing.plaf.metal")
         }
@@ -67,22 +94,5 @@ object DartsMain
             DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")
         }
 
-    }
-
-    private fun checkForUpdatesIfRequired()
-    {
-        if (AbstractClient.devMode)
-        {
-            Debug.append("Not checking for updates as I'm in dev mode")
-            return
-        }
-
-        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES))
-        {
-            Debug.append("Not checking for updates as preference is disabled")
-            return
-        }
-
-        AbstractClient.getInstance().checkForUpdatesIfRequired()
     }
 }

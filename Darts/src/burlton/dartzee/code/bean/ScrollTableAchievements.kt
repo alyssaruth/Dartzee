@@ -2,7 +2,7 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.dartzee.code.screen.stats.overall.OverallStatsScreen
+import burlton.dartzee.code.screen.stats.overall.LeaderboardsScreen
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
 import burlton.desktopcore.code.bean.ScrollTableHyperlink
 
@@ -14,7 +14,7 @@ class ScrollTableAchievements : ScrollTableHyperlink("Player")
 
         val scrn = ScreenCache.getScreen(PlayerAchievementsScreen::class.java)!!
         scrn.setPlayer(player)
-        scrn.previousScrn = ScreenCache.getScreen(OverallStatsScreen::class.java)
+        scrn.previousScrn = ScreenCache.getScreen(LeaderboardsScreen::class.java)
 
         ScreenCache.switchScreen(scrn)
     }

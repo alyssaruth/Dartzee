@@ -1,8 +1,48 @@
-------- UNRELEASED -------
+--------- v3.2.4 ---------
+
++ 2 Achievements (Course Master, No Mercy)
+= 89.2% Kotlin
+= 41.9% test coverage (5428 / 12,956 lines covered by 762 tests)
+
+--------- v3.2.3 ---------
+
+= Clicking on an unfocused game window will no longer place a dart
+= New update mechanism through Github API
+= Email logs directly from the client (password must be entered once through Utilities screen)
+= 83.5% Kotlin
+= 39.2% test coverage (5085 / 12,985 lines covered by 699 tests)
+
+--------- v3.2.2 ---------
+
++ Ability to play single games with only 1 player (for practice)
+= Performance improvement: Remove Round to speed up loading player stats (and other bits of SQL)
+= Fixed a bug with resetting a round in Golf (introduced in v3.2.1)
+= Fixed a bug which made it possible to select the same player multiple times in reporting setup
+= 72.5% Kotlin
+= 33.5% test coverage (4620 / 13,765 lines covered by 592 tests)
+
+--------- v3.2.1 ---------
+
++ Granular achievement leaderboards to show who's winning on each achievement
++ 2 Achievements (BTBF, Like Clockwork)
++ Hit rate stats for Round the Clock
+= Fixed bugs with deleting games caused by move to GUIDs
+= Fixed a bug where the game could freeze if you paused an AI at the end of their turn
+= Fixed a bug where loaded matches could still cause duplicate MatchOrdinals
+= Performance improvement: Grouped dart inserts rather than individual
+= Performance improvement: Improved Leaderboard SQL for Top X01 Finishes
+= Performance improvement: New index on Round table
+= 65.7% Kotlin
+= 27.3% test coverage (3816 / 13,976 lines covered by 390 tests)
+
+--------- v3.2.0 ---------
 
 + Checkout suggestions in X01
 = Fixed a bug where screen title wasn't set for new matches
 = Performance improvement: Match stats refresh in the background
+= Performance improvement: Use GUIDs for RowIds to eliminate synchronization
+= 52.3% Kotlin
+= 15.75% test coverage (2245 / 14,248 lines covered by 148 tests)
 
 --------- v3.1.1 ---------
 
