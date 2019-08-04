@@ -35,6 +35,16 @@ abstract class AbstractDartzeeDartRule
         xmlDoc.appendChild(rootElement)
         return XmlUtil.getStringFromDocument(xmlDoc)
     }
+
+    override fun equals(other: Any?): Boolean
+    {
+        if (other !is AbstractDartzeeDartRule)
+        {
+            return false
+        }
+
+        return other.toDbString() == this.toDbString()
+    }
 }
 
 fun getAllDartRules(): MutableList<AbstractDartzeeDartRule>
@@ -50,6 +60,11 @@ fun getAllDartRules(): MutableList<AbstractDartzeeDartRule>
 
 fun parseDartzeeRule(xmlStr: String): AbstractDartzeeDartRule?
 {
+    if (xmlStr.isEmpty())
+    {
+        return null
+    }
+
     val xmlDoc = XmlUtil.getDocumentFromXmlString(xmlStr)
     xmlDoc ?: return null
 
@@ -62,3 +77,5 @@ fun parseDartzeeRule(xmlStr: String): AbstractDartzeeDartRule?
 
     return rule
 }
+
+fun getDartzeeRuleStr(rule: AbstractDartzeeDartRule?) =  rule?.toDbString() ?: ""

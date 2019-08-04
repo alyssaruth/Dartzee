@@ -2,6 +2,9 @@ package burlton.dartzee.code.db
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
+import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
+import burlton.dartzee.code.dartzee.getDartzeeRuleStr
+import burlton.dartzee.code.dartzee.parseDartzeeRule
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
@@ -477,6 +480,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Boolean::class.java -> writeBoolean(ps, ix, value as Boolean, statementStr)
             Timestamp::class.java -> writeTimestamp(ps, ix, value as Timestamp, statementStr)
             Blob::class.java -> writeBlob(ps, ix, value as Blob, statementStr)
+            AbstractDartzeeDartRule::class.java -> writeString(ps, ix, getDartzeeRuleStr(value as AbstractDartzeeDartRule?), statementStr)
             else -> writeString(ps, ix, "$value", statementStr)
         }
     }
@@ -492,6 +496,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Boolean::class.java -> rs.getBoolean(columnName)
             Timestamp::class.java -> rs.getTimestamp(columnName)
             Blob::class.java -> rs.getBlob(columnName)
+            AbstractDartzeeDartRule::class.java -> parseDartzeeRule(rs.getString(columnName))
             else -> null
         }
     }
