@@ -7,7 +7,9 @@ import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
+import java.awt.Dimension
 import java.awt.event.ActionEvent
+import javax.swing.ImageIcon
 import javax.swing.JButton
 
 class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
@@ -15,7 +17,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     private val tm = TableUtil.DefaultModel()
 
     private val tableRules = ScrollTable()
-    private val btnAddRule = JButton("+")
+    private val btnAddRule = JButton()
     private val btnAmendRule = JButton("#")
     private val btnCalculateOrder = JButton("Calc")
 
@@ -31,6 +33,9 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         tableRules.setRowName("rule")
 
         tableRules.addRowSelectionListener(this)
+
+        btnAddRule.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
+        btnAddRule.preferredSize = Dimension(40, 40)
 
         btnAddRule.addActionListener(this)
         btnAmendRule.addActionListener(this)
