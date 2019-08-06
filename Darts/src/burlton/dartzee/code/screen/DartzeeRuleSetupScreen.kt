@@ -18,7 +18,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
     private val tableRules = ScrollTable()
     private val btnAddRule = JButton()
-    private val btnAmendRule = JButton("#")
+    private val btnAmendRule = JButton()
     private val btnCalculateOrder = JButton("Calc")
 
     init
@@ -36,6 +36,9 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
         btnAddRule.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
         btnAddRule.preferredSize = Dimension(40, 40)
+
+        btnAmendRule.icon = ImageIcon(javaClass.getResource("/buttons/amend.png"))
+        btnAmendRule.preferredSize = Dimension(40, 40)
 
         btnAddRule.addActionListener(this)
         btnAmendRule.addActionListener(this)
