@@ -2,6 +2,7 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.getAllDartRules
+import burlton.desktopcore.code.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
@@ -13,8 +14,8 @@ import javax.swing.JPanel
 
 class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
 {
-    private val lblDesc = JLabel(desc)
-    private val comboBoxRuleType = JComboBox<AbstractDartzeeDartRule>()
+    val lblDesc = JLabel(desc)
+    val comboBoxRuleType = JComboBox<AbstractDartzeeDartRule>()
 
     init
     {
@@ -41,11 +42,7 @@ class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
         comboBoxRuleType.model = model
     }
 
-    fun getSelection(): AbstractDartzeeDartRule
-    {
-        val ix = comboBoxRuleType.selectedIndex
-        return comboBoxRuleType.getItemAt(ix)
-    }
+    fun getSelection() = comboBoxRuleType.selectedItemTyped()
 
     fun valid(): Boolean
     {
