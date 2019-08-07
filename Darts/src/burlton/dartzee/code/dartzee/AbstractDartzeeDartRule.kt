@@ -4,7 +4,6 @@ import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import org.w3c.dom.Document
 import org.w3c.dom.Element
-import javax.swing.JPanel
 
 abstract class AbstractDartzeeDartRule
 {
@@ -19,11 +18,6 @@ abstract class AbstractDartzeeDartRule
 
     override fun toString() = getRuleIdentifier()
 
-    open fun getConfigPanel(): JPanel?
-    {
-        return null
-    }
-
     fun toDbString(): String
     {
         val xmlDoc = XmlUtil.factoryNewDocument()
@@ -34,16 +28,6 @@ abstract class AbstractDartzeeDartRule
 
         xmlDoc.appendChild(rootElement)
         return XmlUtil.getStringFromDocument(xmlDoc)
-    }
-
-    override fun equals(other: Any?): Boolean
-    {
-        if (other !is AbstractDartzeeDartRule)
-        {
-            return false
-        }
-
-        return other.toDbString() == this.toDbString()
     }
 }
 
@@ -77,5 +61,3 @@ fun parseDartzeeRule(xmlStr: String): AbstractDartzeeDartRule?
 
     return rule
 }
-
-fun getDartzeeRuleStr(rule: AbstractDartzeeDartRule?) =  rule?.toDbString() ?: ""

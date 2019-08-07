@@ -1,13 +1,11 @@
 package burlton.dartzee.code.db
 
-import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
-
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
     var gameId = ""
-    var dart1Rule : AbstractDartzeeDartRule? = null
-    var dart2Rule : AbstractDartzeeDartRule? = null
-    var dart3Rule : AbstractDartzeeDartRule? = null
+    var dart1Rule = ""
+    var dart2Rule = ""
+    var dart3Rule = ""
     var totalRule = ""
     var inOrder = false
     var allowMisses = false
@@ -16,10 +14,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     var textualDescription = "" //Allow textual rules
     var ordinal = -1
 
-    override fun getTableName(): String
-    {
-        return "DartzeeRule"
-    }
+    override fun getTableName() = "DartzeeRule"
 
     override fun getCreateTableSqlSpecific(): String
     {

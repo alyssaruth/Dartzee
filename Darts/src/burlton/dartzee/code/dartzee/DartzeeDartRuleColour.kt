@@ -10,16 +10,14 @@ import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JCheckBox
-import javax.swing.JPanel
 
-class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
+class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListener
 {
     var black = false
     var white = false
     var green = false
     var red = false
 
-    private val configPanel = JPanel()
     private val cbBlack = JCheckBox("Black")
     private val cbWhite = JCheckBox("White")
     private val cbGreen = JCheckBox("Green")
@@ -87,7 +85,6 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRule(), ActionListener
         green = rootElement.getAttribute("Green")?.toBoolean() ?: false
     }
 
-    override fun getConfigPanel() = configPanel
     override fun actionPerformed(e: ActionEvent?)
     {
         black = cbBlack.isSelected

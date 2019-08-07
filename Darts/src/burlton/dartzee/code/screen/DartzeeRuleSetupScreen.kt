@@ -70,7 +70,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         when (arg0.source)
         {
             btnAddRule -> addRule()
-            btnAmendRule -> ""
+            btnAmendRule -> amendRule()
             btnCalculateOrder -> ""
             else -> super.actionPerformed(arg0)
         }
@@ -87,9 +87,17 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
             addRuleToTable(rule)
         }
     }
+    private fun amendRule()
+    {
+        val selection = tm.getValueAt(tableRules.selectedModelRow, 0) as DartzeeRuleEntity
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.populate(selection)
+        dlg.isVisible = true
+    }
+
     private fun addRuleToTable(rule: DartzeeRuleEntity)
     {
-        tm.addRow(arrayOf(rule.dart1Rule?.toDbString(), rule.dart2Rule?.toDbString()))
+        tm.addRow(arrayOf(rule, rule.dart2Rule))
     }
 
 

@@ -258,14 +258,6 @@ class TestDartzeeRules: AbstractDartsTest()
     }
 
     @Test
-    fun `test null configPanel default`()
-    {
-        val rule = DartzeeDartRuleOuter()
-
-        assertNull(rule.getConfigPanel())
-    }
-
-    @Test
     fun `invalid XML should return null rule`()
     {
         val rule = parseDartzeeRule("BAD")
@@ -361,7 +353,7 @@ class TestDartzeeRules: AbstractDartsTest()
     fun `colour config panel updates rule correctly`()
     {
         val rule = DartzeeDartRuleColour()
-        val panel = rule.getConfigPanel()
+        val panel = rule.configPanel
 
         val checkBoxes: List<JCheckBox> = panel.components.filterIsInstance(JCheckBox::class.java)
 
@@ -396,7 +388,7 @@ class TestDartzeeRules: AbstractDartsTest()
     {
         val rule = DartzeeDartRuleScore()
 
-        val panel = rule.getConfigPanel()
+        val panel = rule.configPanel
 
         val spinner = panel.components.filterIsInstance(SpinnerSingleSelector::class.java).first()
 

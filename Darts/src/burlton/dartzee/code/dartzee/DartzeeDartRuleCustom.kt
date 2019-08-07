@@ -8,13 +8,11 @@ import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
-import javax.swing.JPanel
 
-class DartzeeDartRuleCustom: AbstractDartzeeDartRule(), ActionListener
+class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListener
 {
     var segments = hashSetOf<DartboardSegmentKt>()
 
-    private val configPanel = JPanel()
     private val btnConfigure = JButton("Configure")
 
     init
@@ -64,7 +62,6 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRule(), ActionListener
         return ""
     }
 
-    override fun getConfigPanel() = configPanel
     override fun actionPerformed(e: ActionEvent?)
     {
         val dlg = DartboardSegmentSelectDialog(segments)

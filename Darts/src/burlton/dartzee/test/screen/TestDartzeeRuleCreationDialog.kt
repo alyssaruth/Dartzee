@@ -1,11 +1,12 @@
 package burlton.dartzee.test.screen
 
 import burlton.dartzee.code.bean.DartzeeRuleSelector
-import burlton.dartzee.code.dartzee.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.DartzeeDartRuleInner
+import burlton.dartzee.code.dartzee.DartzeeDartRuleOdd
 import burlton.dartzee.code.dartzee.DartzeeDartRuleOuter
 import burlton.dartzee.code.screen.DartzeeRuleCreationDialog
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.desktopcore.code.bean.selectByClass
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -43,14 +44,14 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     {
         val dlg = DartzeeRuleCreationDialog()
         dlg.rdbtnAtLeastOne.doClick()
-        dlg.targetSelector.comboBoxRuleType.selectedItem = DartzeeDartRuleOuter()
+        dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
         dlg.btnOk.doClick()
 
         val rule = dlg.dartzeeRule!!
 
-        rule.dart1Rule shouldBe DartzeeDartRuleOuter()
-        rule.dart2Rule shouldBe null
-        rule.dart3Rule shouldBe null
+        rule.dart1Rule shouldBe DartzeeDartRuleOdd().toDbString()
+        rule.dart2Rule shouldBe ""
+        rule.dart3Rule shouldBe ""
         rule.inOrder shouldBe false
     }
 
@@ -59,16 +60,17 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     {
         val dlg = DartzeeRuleCreationDialog()
         dlg.rdbtnAllDarts.doClick()
-        dlg.dartOneSelector.comboBoxRuleType.selectedItem = DartzeeDartRuleOuter()
-        dlg.dartTwoSelector.comboBoxRuleType.selectedItem = DartzeeDartRuleInner()
-        dlg.dartThreeSelector.comboBoxRuleType.selectedItem = DartzeeDartRuleEven()
+
+        dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleInner>()
+        dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOuter>()
+        dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
         dlg.btnOk.doClick()
 
         val rule = dlg.dartzeeRule!!
 
-        rule.dart1Rule shouldBe DartzeeDartRuleOuter()
-        rule.dart2Rule shouldBe DartzeeDartRuleInner()
-        rule.dart3Rule shouldBe DartzeeDartRuleEven()
+        rule.dart1Rule shouldBe DartzeeDartRuleInner().toDbString()
+        rule.dart2Rule shouldBe DartzeeDartRuleOuter().toDbString()
+        rule.dart3Rule shouldBe DartzeeDartRuleOdd().toDbString()
         rule.inOrder shouldBe false
     }
 
