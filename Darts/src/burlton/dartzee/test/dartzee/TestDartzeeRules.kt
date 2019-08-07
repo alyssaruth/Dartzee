@@ -5,9 +5,13 @@ import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.collections.shouldHaveSize
+import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JCheckBox
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class TestDartzeeRules: AbstractDartsTest()
 {
@@ -244,7 +248,7 @@ class TestDartzeeRules: AbstractDartsTest()
     {
         val rules = getAllDartRules()
 
-        val nameCount = rules.stream().map{it.getRuleIdentifier()}.distinct().count().toInt()
+        val nameCount = rules.map{ it.getRuleIdentifier() }.distinct().count()
 
         assertEquals(nameCount, rules.size)
     }
@@ -254,21 +258,21 @@ class TestDartzeeRules: AbstractDartsTest()
     {
         val rule = DartzeeDartRuleOuter()
 
-        assertEquals("$rule", rule.getRuleIdentifier())
+        rule.getRuleIdentifier() shouldBe "$rule"
     }
 
     @Test
     fun `invalid XML should return null rule`()
     {
         val rule = parseDartzeeRule("BAD")
-        assertNull(rule)
+        rule shouldBe null
     }
 
     @Test
     fun `invalid identifier in XML should return null rule`()
     {
         val rule = parseDartzeeRule("<Broken/>")
-        assertNull(rule)
+        rule shouldBe null
     }
 
     @Test
@@ -279,9 +283,8 @@ class TestDartzeeRules: AbstractDartsTest()
             val identifier = it.getRuleIdentifier()
             val tag = "<$identifier/>"
 
-            val rule = parseDartzeeRule(tag)
-            assertNotNull(rule)
-            assertEquals(rule.getRuleIdentifier(), identifier)
+            val rule = parseDartzeeRule(tag)!!
+            rule.getRuleIdentifier() shouldBe identifier
         }
     }
 
@@ -297,13 +300,11 @@ class TestDartzeeRules: AbstractDartsTest()
 
             val xml = it.toDbString()
 
-            val rule = parseDartzeeRule(xml)
-
-            assertTrue(rule is DartzeeDartRuleColour)
-            assertEquals(rule.red, red)
-            assertEquals(rule.green, green)
-            assertEquals(rule.black, black)
-            assertEquals(rule.white, white)
+            val rule = parseDartzeeRule(xml) as DartzeeDartRuleColour
+            rule.red shouldBe red
+            rule.green shouldBe green
+            rule.black shouldBe black
+            rule.white shouldBe white
         }
     }
 
@@ -314,10 +315,9 @@ class TestDartzeeRules: AbstractDartsTest()
         rule.score = 20
 
         val xml = rule.toDbString()
-        val parsedRule = parseDartzeeRule(xml)
+        val parsedRule = parseDartzeeRule(xml) as DartzeeDartRuleScore
 
-        assertTrue(parsedRule is DartzeeDartRuleScore)
-        assertEquals(parsedRule.score, 20)
+        parsedRule.score shouldBe 20
     }
 
     @Test
