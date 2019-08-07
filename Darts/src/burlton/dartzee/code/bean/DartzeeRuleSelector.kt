@@ -1,7 +1,10 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
+import burlton.dartzee.code.dartzee.AbstractDartzeeDartRuleConfigurable
 import burlton.dartzee.code.dartzee.getAllDartRules
+import burlton.dartzee.code.dartzee.parseDartzeeRule
+import burlton.desktopcore.code.bean.findByConcreteClass
 import burlton.desktopcore.code.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.FlowLayout
@@ -44,6 +47,19 @@ class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
 
     fun getSelection() = comboBoxRuleType.selectedItemTyped()
 
+    fun populate(ruleStr: String)
+    {
+        val rule = parseDartzeeRule(ruleStr)!!
+
+        val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)
+        comboBoxRuleType.selectedItem = item
+
+        if (item is AbstractDartzeeDartRuleConfigurable && rule is AbstractDartzeeDartRuleConfigurable)
+        {
+            item.configPanel = rule.configPanel
+        }
+    }
+
     fun valid(): Boolean
     {
         val errorStr = getSelection().validate()
@@ -59,15 +75,14 @@ class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
     override fun actionPerformed(e: ActionEvent?)
     {
         val rule = getSelection()
-        val configPanel = rule.getConfigPanel()
 
         removeAll()
         add(lblDesc)
         add(comboBoxRuleType)
 
-        if (configPanel != null)
+        if (rule is AbstractDartzeeDartRuleConfigurable)
         {
-            add(configPanel)
+            add(rule.configPanel)
         }
 
         revalidate()

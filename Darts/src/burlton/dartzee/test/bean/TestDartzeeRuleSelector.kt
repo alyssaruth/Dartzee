@@ -6,6 +6,7 @@ import burlton.dartzee.code.dartzee.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.DartzeeDartRuleScore
 import burlton.dartzee.code.dartzee.getAllDartRules
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.desktopcore.code.bean.findByClass
 import burlton.desktopcore.code.bean.items
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
@@ -27,8 +28,8 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
         val selector = DartzeeRuleSelector("foo")
 
         val items = selector.comboBoxRuleType.items()
-        getAllDartRules().forEach {
-            items.shouldContain(it)
+        getAllDartRules().forEach { rule ->
+            items.find { rule.javaClass.isInstance(it) }
         }
     }
 
@@ -36,7 +37,7 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
     fun `Should show an error if the rule is invalid`()
     {
         val selector = DartzeeRuleSelector("foo")
-        selector.comboBoxRuleType.selectedItem = DartzeeDartRuleColour()
+        selector.populate(DartzeeDartRuleColour().toDbString())
 
         selector.valid() shouldBe false
         dialogFactory.errorsShown shouldContain "foo: You must select at least one colour."
@@ -46,7 +47,7 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
     fun `Should pass validation if the rule is valid`()
     {
         val selector = DartzeeRuleSelector("foo")
-        selector.comboBoxRuleType.selectedItem = DartzeeDartRuleEven()
+        selector.populate(DartzeeDartRuleEven().toDbString())
 
         selector.valid() shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
@@ -56,12 +57,16 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
     fun `Should swap in and out the configPanel based on the selected rule`()
     {
         val selector = DartzeeRuleSelector("foo")
+        val comboBox = selector.comboBoxRuleType
 
-        selector.comboBoxRuleType.selectedItem = DartzeeDartRuleScore()
-        val configPanel = selector.getSelection().getConfigPanel()!!
+        val item = comboBox.findByClass<DartzeeDartRuleScore>()!!
+        comboBox.selectedItem = item
+
+        val configPanel = item.configPanel
         configPanel.parent shouldBe selector
 
-        selector.comboBoxRuleType.selectedItem = DartzeeDartRuleEven()
+        val otherItem = comboBox.findByClass<DartzeeDartRuleEven>()!!
+        comboBox.selectedItem = otherItem
         configPanel.parent shouldBe null
     }
 }

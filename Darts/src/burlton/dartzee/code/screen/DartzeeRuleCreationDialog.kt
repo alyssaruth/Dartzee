@@ -52,6 +52,30 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         toggleDartsComponents()
     }
 
+    fun populate(rule: DartzeeRuleEntity)
+    {
+        this.dartzeeRule = rule
+        title = "Amend Dartzee Rule"
+
+        if (rule.dart2Rule == null)
+        {
+            rdbtnAtLeastOne.isSelected = true
+
+            targetSelector.populate(rule.dart1Rule!!)
+        }
+        else
+        {
+            cbInOrder.isSelected = rule.inOrder
+
+            dartOneSelector.populate(rule.dart1Rule!!)
+            dartTwoSelector.populate(rule.dart2Rule!!)
+            dartThreeSelector.populate(rule.dart3Rule!!)
+        }
+
+        toggleDartsComponents()
+        repaint()
+    }
+
     override fun actionPerformed(arg0: ActionEvent)
     {
         if (rdbtnPanelDartScoreType.isEventSource(arg0))
@@ -71,17 +95,19 @@ class DartzeeRuleCreationDialog : SimpleDialog()
             return
         }
 
-        val rule = DartzeeRuleEntity()
+        val rule = dartzeeRule ?: DartzeeRuleEntity()
 
         if (rdbtnAtLeastOne.isSelected)
         {
-            rule.dart1Rule = targetSelector.getSelection()
+            rule.dart1Rule = targetSelector.getSelection().toDbString()
+            rule.dart2Rule = ""
+            rule.dart3Rule = ""
         }
         else
         {
-            rule.dart1Rule = dartOneSelector.getSelection()
-            rule.dart2Rule = dartTwoSelector.getSelection()
-            rule.dart3Rule = dartThreeSelector.getSelection()
+            rule.dart1Rule = dartOneSelector.getSelection().toDbString()
+            rule.dart2Rule = dartTwoSelector.getSelection().toDbString()
+            rule.dart3Rule = dartThreeSelector.getSelection().toDbString()
             rule.inOrder = cbInOrder.isSelected
         }
 
