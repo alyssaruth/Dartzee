@@ -39,6 +39,7 @@ class DartzeeDartRuleScore: AbstractDartzeeDartRuleConfigurable(), ChangeListene
     override fun populate(rootElement: Element)
     {
         score = XmlUtil.getAttributeInt(rootElement, "Target")
+        spinner.value = score
     }
 
     override fun stateChanged(e: ChangeEvent?)

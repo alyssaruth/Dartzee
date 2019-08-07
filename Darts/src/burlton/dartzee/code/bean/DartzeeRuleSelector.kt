@@ -51,13 +51,10 @@ class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
     {
         val rule = parseDartzeeRule(ruleStr)!!
 
-        val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)
+        val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)!!
         comboBoxRuleType.selectedItem = item
 
-        if (item is AbstractDartzeeDartRuleConfigurable && rule is AbstractDartzeeDartRuleConfigurable)
-        {
-            item.configPanel = rule.configPanel
-        }
+        item.populate(ruleStr)
     }
 
     fun valid(): Boolean
