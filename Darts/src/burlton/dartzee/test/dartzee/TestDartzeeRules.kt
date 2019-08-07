@@ -5,6 +5,7 @@ import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.collections.shouldHaveSize
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JCheckBox
@@ -334,9 +335,8 @@ class TestDartzeeRules: AbstractDartsTest()
 
         parsedRule.segments shouldHaveSize(3)
 
-        assertTrue(parsedRule.isValidSegment(doubleTwenty))
-        assertFalse(parsedRule.isValidSegment(singleTwenty))
-
+        parsedRule.isValidSegment(doubleTwenty) shouldBe true
+        parsedRule.isValidSegment(singleTwenty) shouldBe false
     }
 
     @Test
@@ -344,9 +344,9 @@ class TestDartzeeRules: AbstractDartsTest()
     {
         val rule = DartzeeDartRuleEven()
         val xml = rule.toDbString()
-        val parsedRule = parseDartzeeRule(xml)
+        val parsedRule = parseDartzeeRule(xml)!!
 
-        assertTrue(parsedRule is DartzeeDartRuleEven)
+        parsedRule.shouldBeInstanceOf<DartzeeDartRuleEven>()
     }
 
     @Test
