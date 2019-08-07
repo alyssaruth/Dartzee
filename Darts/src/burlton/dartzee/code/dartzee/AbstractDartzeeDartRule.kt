@@ -12,6 +12,15 @@ abstract class AbstractDartzeeDartRule
     abstract fun getRuleIdentifier(): String
 
     open fun writeXmlAttributes(doc: Document, rootElement: Element) {}
+
+    fun populate(xmlStr: String)
+    {
+        val xmlDoc = XmlUtil.getDocumentFromXmlString(xmlStr)
+        xmlDoc ?: return
+
+        populate(xmlDoc.documentElement)
+    }
+
     open fun populate(rootElement: Element) {}
 
     open fun validate(): String = ""

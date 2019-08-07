@@ -93,23 +93,21 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         val dlg = DartzeeRuleCreationDialog()
         dlg.populate(selection)
         dlg.isVisible = true
+
+        tableRules.repaint()
     }
 
     private fun addRuleToTable(rule: DartzeeRuleEntity)
     {
-        tm.addRow(arrayOf(rule, rule.dart2Rule))
+        tm.addRow(arrayOf(rule, rule.dart1Rule))
     }
-
 
     override fun selectionChanged(src: ScrollTable)
     {
         btnAmendRule.isEnabled = src.selectedModelRow != -1
     }
 
-    override fun getScreenName(): String
-    {
-        return "Dartzee Setup"
-    }
+    override fun getScreenName() = "Dartzee Setup"
 
     override fun getBackTarget(): EmbeddedScreen
     {
