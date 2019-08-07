@@ -1,15 +1,13 @@
 package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.DartzeeRuleSelector
-import burlton.dartzee.code.dartzee.DartzeeDartRuleColour
-import burlton.dartzee.code.dartzee.DartzeeDartRuleEven
-import burlton.dartzee.code.dartzee.DartzeeDartRuleScore
-import burlton.dartzee.code.dartzee.getAllDartRules
+import burlton.dartzee.code.dartzee.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.bean.findByClass
 import burlton.desktopcore.code.bean.items
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -68,5 +66,30 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
         val otherItem = comboBox.findByClass<DartzeeDartRuleEven>()!!
         comboBox.selectedItem = otherItem
         configPanel.parent shouldBe null
+    }
+
+    @Test
+    fun `Should populate from an existing rule successfully`()
+    {
+        val selector = DartzeeRuleSelector("foo")
+        selector.populate("<Inner/>")
+        selector.getSelection().shouldBeInstanceOf<DartzeeDartRuleInner>()
+    }
+
+    @Test
+    fun `Should populate from the colour rule successully`()
+    {
+        val selector = DartzeeRuleSelector("foo")
+        val rule = DartzeeDartRuleColour()
+        rule.black = true
+        rule.red = true
+
+        selector.populate(rule.toDbString())
+
+        val populatedRule = selector.getSelection() as DartzeeDartRuleColour
+        populatedRule.black shouldBe true
+        populatedRule.red shouldBe true
+        populatedRule.white shouldBe false
+        populatedRule.black shouldBe false
     }
 }
