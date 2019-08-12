@@ -20,6 +20,13 @@ fun <T> getAllChildComponentsForType(parent: Container, desiredClazz: Class<T>):
     return ret
 }
 
+fun Container.enableChildren(enable: Boolean)
+{
+    getAllChildComponentsForType(this, Component::class.java).forEach{
+        it.isEnabled = enable
+    }
+}
+
 private fun <T> addComponents(ret: MutableList<T>, components: Array<Component>, desiredClazz: Class<T>)
 {
     for (comp in components)

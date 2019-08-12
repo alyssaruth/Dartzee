@@ -53,6 +53,7 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         panelTotal.add(cbTotal)
         panelTotal.add(totalSelector)
 
+        cbTotal.addActionListener(this)
         rdbtnPanelDartScoreType.addActionListener(this)
 
         toggleDartsComponents()
@@ -84,7 +85,7 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        if (rdbtnPanelDartScoreType.isEventSource(arg0))
+        if (rdbtnPanelDartScoreType.isEventSource(arg0) || arg0.source == cbTotal)
         {
             toggleDartsComponents()
         }

@@ -4,6 +4,7 @@ import burlton.dartzee.code.dartzee.*
 import burlton.desktopcore.code.bean.findByConcreteClass
 import burlton.desktopcore.code.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.enableChildren
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -65,6 +66,13 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         }
 
         return true
+    }
+
+    override fun setEnabled(enabled: Boolean)
+    {
+        super.setEnabled(enabled)
+
+        enableChildren(enabled)
     }
 
     override fun actionPerformed(e: ActionEvent?)
