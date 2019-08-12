@@ -55,7 +55,6 @@ fun getAllTotalRules(): MutableList<AbstractDartzeeRule>
     return mutableListOf(DartzeeTotalRuleLessThan(),
             DartzeeTotalRuleGreaterThan(),
             DartzeeTotalRuleEqualTo(),
-            DartzeeTotalRuleEqualTo(),
             DartzeeTotalRuleEven(),
             DartzeeTotalRuleOdd(),
             DartzeeTotalRulePrime())
