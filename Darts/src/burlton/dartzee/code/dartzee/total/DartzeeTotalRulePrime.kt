@@ -5,7 +5,7 @@ import org.apache.commons.math3.primes.Primes
 
 class DartzeeTotalRulePrime: AbstractDartzeeRule(), IDartzeeTotalRule
 {
-    override fun getRuleIdentifier() = "Even"
+    override fun getRuleIdentifier() = "Prime"
 
     override fun isValidTotal(total: Int) = Primes.isPrime(total)
 }

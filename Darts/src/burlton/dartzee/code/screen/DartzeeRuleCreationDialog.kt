@@ -27,6 +27,8 @@ class DartzeeRuleCreationDialog : SimpleDialog()
     val targetSelector = DartzeeRuleSelector("Target")
     val rdbtnAtLeastOne = JRadioButton("At least one dart")
     private val panelTotal = JPanel()
+    val cbTotal = JCheckBox("")
+    val totalSelector = DartzeeRuleSelector("Total", true)
 
     init
     {
@@ -48,6 +50,8 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
         panelTotal.border = TitledBorder("")
         panelCenter.add(panelTotal, "cell 0 1,grow")
+        panelTotal.add(cbTotal)
+        panelTotal.add(totalSelector)
 
         rdbtnPanelDartScoreType.addActionListener(this)
 
@@ -148,6 +152,8 @@ class DartzeeRuleCreationDialog : SimpleDialog()
             panelDarts.add(dartThreeSelector, "cell 0 3")
             panelDarts.add(cbInOrder, "cell 0 4")
         }
+
+        totalSelector.isEnabled = cbTotal.isSelected
 
         repaint()
     }
