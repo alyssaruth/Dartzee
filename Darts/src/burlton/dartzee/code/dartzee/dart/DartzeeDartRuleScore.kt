@@ -1,15 +1,16 @@
-package burlton.dartzee.code.dartzee
+package burlton.dartzee.code.dartzee.dart
 
 import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.`object`.DartboardSegmentKt
 import burlton.dartzee.code.bean.SpinnerSingleSelector
+import burlton.dartzee.code.dartzee.AbstractDartzeeRuleConfigurable
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.FlowLayout
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartzeeDartRuleScore: AbstractDartzeeDartRuleConfigurable(), ChangeListener
+class DartzeeDartRuleScore: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule, ChangeListener
 {
     var score = 20
 

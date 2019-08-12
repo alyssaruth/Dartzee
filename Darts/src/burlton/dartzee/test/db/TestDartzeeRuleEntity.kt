@@ -1,6 +1,6 @@
 package burlton.dartzee.test.db
 
-import burlton.dartzee.code.dartzee.DartzeeDartRuleEven
+import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import io.kotlintest.shouldBe
 import org.junit.Test

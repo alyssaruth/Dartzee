@@ -3,6 +3,7 @@ package burlton.dartzee.test.dartzee
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.*
+import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.types.shouldBeInstanceOf

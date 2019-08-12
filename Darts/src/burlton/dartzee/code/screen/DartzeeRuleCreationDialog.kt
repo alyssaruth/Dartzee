@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent
 import javax.swing.JCheckBox
 import javax.swing.JPanel
 import javax.swing.JRadioButton
+import javax.swing.border.TitledBorder
 
 class DartzeeRuleCreationDialog : SimpleDialog()
 {
@@ -30,7 +31,7 @@ class DartzeeRuleCreationDialog : SimpleDialog()
     init
     {
         title = "Add Dartzee Rule"
-        setSize(400, 600)
+        setSize(450, 600)
         setLocationRelativeTo(ScreenCache.getMainScreen())
         isModal = true
 
@@ -39,12 +40,13 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
 
         panelCenter.add(panelDarts, "cell 0 0,grow")
-
+        panelDarts.border = TitledBorder("")
         panelDarts.layout = MigLayout("", "[][]", "[][][][]")
         rdbtnPanelDartScoreType.add(rdbtnAllDarts)
         rdbtnPanelDartScoreType.add(rdbtnAtLeastOne)
         panelDarts.add(rdbtnPanelDartScoreType, "spanx")
 
+        panelTotal.border = TitledBorder("")
         panelCenter.add(panelTotal, "cell 0 1,grow")
 
         rdbtnPanelDartScoreType.addActionListener(this)

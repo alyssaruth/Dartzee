@@ -1,6 +1,7 @@
-package burlton.dartzee.code.dartzee
+package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.dartzee.AbstractDartzeeRuleConfigurable
 import burlton.dartzee.code.screen.DartboardSegmentSelectDialog
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -9,7 +10,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 
-class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListener
+class DartzeeDartRuleCustom: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule, ActionListener
 {
     var segments = hashSetOf<DartboardSegmentKt>()
 

@@ -1,7 +1,7 @@
 package burlton.dartzee.code.bean
 
-import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
-import burlton.dartzee.code.dartzee.AbstractDartzeeDartRuleConfigurable
+import burlton.dartzee.code.dartzee.AbstractDartzeeRule
+import burlton.dartzee.code.dartzee.AbstractDartzeeRuleConfigurable
 import burlton.dartzee.code.dartzee.getAllDartRules
 import burlton.dartzee.code.dartzee.parseDartzeeRule
 import burlton.desktopcore.code.bean.findByConcreteClass
@@ -18,7 +18,7 @@ import javax.swing.JPanel
 class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
 {
     val lblDesc = JLabel(desc)
-    val comboBoxRuleType = JComboBox<AbstractDartzeeDartRule>()
+    val comboBoxRuleType = JComboBox<AbstractDartzeeRule>()
 
     init
     {
@@ -36,7 +36,7 @@ class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
     {
         val rules = getAllDartRules()
 
-        val model = DefaultComboBoxModel<AbstractDartzeeDartRule>()
+        val model = DefaultComboBoxModel<AbstractDartzeeRule>()
 
         rules.forEach{
             model.addElement(it)
@@ -77,7 +77,7 @@ class DartzeeRuleSelector(desc: String): JPanel(), ActionListener
         add(lblDesc)
         add(comboBoxRuleType)
 
-        if (rule is AbstractDartzeeDartRuleConfigurable)
+        if (rule is AbstractDartzeeRuleConfigurable)
         {
             add(rule.configPanel)
         }
