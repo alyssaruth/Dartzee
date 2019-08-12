@@ -1,7 +1,8 @@
-package burlton.dartzee.code.dartzee
+package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.dartzee.AbstractDartzeeRuleConfigurable
 import burlton.dartzee.code.utils.getColourForPointAndSegment
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -11,7 +12,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JCheckBox
 
-class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListener
+class DartzeeDartRuleColour: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule, ActionListener
 {
     var black = false
     var white = false

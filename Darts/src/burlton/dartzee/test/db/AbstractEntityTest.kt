@@ -5,9 +5,9 @@ import burlton.core.code.util.FileUtil
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogLines
 import burlton.core.test.helper.getLogs
-import burlton.dartzee.code.dartzee.AbstractDartzeeDartRule
-import burlton.dartzee.code.dartzee.DartzeeDartRuleEven
-import burlton.dartzee.code.dartzee.DartzeeDartRuleOdd
+import burlton.dartzee.code.dartzee.AbstractDartzeeRule
+import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
+import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -197,7 +197,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
             Timestamp::class.java -> if (initial) Timestamp.valueOf("2019-04-01 21:29:32") else DateStatics.END_OF_TIME
             Blob::class.java -> if (initial) getBlobValue("BaboOne") else getBlobValue("Goomba")
             Boolean::class.java -> initial
-            AbstractDartzeeDartRule::class.java -> getDartzeeRuleValue(initial)
+            AbstractDartzeeRule::class.java -> getDartzeeRuleValue(initial)
             else -> {
                 println(fieldType)
                 "uh oh"
@@ -206,7 +206,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     }
 }
 
-fun getDartzeeRuleValue(initial: Boolean): AbstractDartzeeDartRule
+fun getDartzeeRuleValue(initial: Boolean): AbstractDartzeeRule
 {
     if (initial)
     {
