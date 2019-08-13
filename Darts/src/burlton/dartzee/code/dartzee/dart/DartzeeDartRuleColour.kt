@@ -78,7 +78,7 @@ class DartzeeDartRuleColour: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule
         if (black) colourList.add("B")
         if (white) colourList.add("W")
 
-        return colourList.joinToString()
+        return colourList.joinToString("/")
     }
 
     override fun writeXmlAttributes(doc: Document, rootElement: Element)

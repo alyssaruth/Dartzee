@@ -3,11 +3,13 @@ package burlton.dartzee.code.screen
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.desktopcore.code.bean.AbstractTableRenderer
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
@@ -33,7 +35,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         tableRules.addButtonToOrderingPanel(btnCalculateOrder, 6)
 
         tableRules.setRowName("rule")
-
+        tableRules.setRowHeight(40)
         tableRules.addRowSelectionListener(this)
 
         btnAddRule.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
@@ -65,6 +67,8 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         tm.addColumn("Description")
 
         tableRules.model = tm
+
+        tableRules.setRenderer(0, DartzeeRuleRenderer(0))
 
         selectionChanged(tableRules)
     }
@@ -115,7 +119,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
     private fun addRuleToTable(rule: DartzeeRuleEntity)
     {
-        tm.addRow(arrayOf(rule, rule.dart1Rule))
+        tm.addRow(arrayOf(rule, rule))
     }
 
     override fun selectionChanged(src: ScrollTable)
@@ -129,5 +133,21 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     override fun getBackTarget(): EmbeddedScreen
     {
         return ScreenCache.getScreen(GameSetupScreen::class.java)
+    }
+
+    /**
+     * Inner classes
+     */
+    private inner class DartzeeRuleRenderer(private val colNo: Int) : AbstractTableRenderer<DartzeeRuleEntity>()
+    {
+        override fun getReplacementValue(value: DartzeeRuleEntity): Any
+        {
+            return if (colNo == 0) value.getRuleDescription() else value
+        }
+
+        override fun setCellColours(typedValue: DartzeeRuleEntity?, isSelected: Boolean)
+        {
+            font = Font(font.name, Font.PLAIN, 20)
+        }
     }
 }
