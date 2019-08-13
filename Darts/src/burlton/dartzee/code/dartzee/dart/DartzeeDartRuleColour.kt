@@ -70,6 +70,17 @@ class DartzeeDartRuleColour: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule
         return ""
     }
 
+    override fun getDescription(): String
+    {
+        val colourList = mutableListOf<String>()
+        if (red) colourList.add("R")
+        if (green) colourList.add("G")
+        if (black) colourList.add("B")
+        if (white) colourList.add("W")
+
+        return colourList.joinToString()
+    }
+
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
         rootElement.setAttribute("Black", black.toString())

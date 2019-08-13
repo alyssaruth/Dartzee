@@ -26,6 +26,8 @@ abstract class AbstractDartzeeRule
 
     override fun toString() = getRuleIdentifier()
 
+    open fun getDescription() = toString()
+
     fun toDbString(): String
     {
         val xmlDoc = XmlUtil.factoryNewDocument()
@@ -39,7 +41,7 @@ abstract class AbstractDartzeeRule
     }
 }
 
-fun getAllDartRules(): MutableList<AbstractDartzeeRule>
+fun getAllDartRules(): List<AbstractDartzeeRule>
 {
     return mutableListOf(DartzeeDartRuleEven(),
             DartzeeDartRuleOdd(),
@@ -50,7 +52,7 @@ fun getAllDartRules(): MutableList<AbstractDartzeeRule>
             DartzeeDartRuleCustom())
 }
 
-fun getAllTotalRules(): MutableList<AbstractDartzeeRule>
+fun getAllTotalRules(): List<AbstractDartzeeRule>
 {
     return mutableListOf(DartzeeTotalRuleLessThan(),
             DartzeeTotalRuleGreaterThan(),
@@ -59,7 +61,9 @@ fun getAllTotalRules(): MutableList<AbstractDartzeeRule>
             DartzeeTotalRuleOdd(),
             DartzeeTotalRulePrime())
 }
-fun parseDartzeeRule(xmlStr: String): AbstractDartzeeRule?
+fun parseDartRule(xmlStr: String) = parseRule(xmlStr, getAllDartRules())
+fun parseTotalRule(xmlStr: String) = parseRule(xmlStr, getAllTotalRules())
+private fun parseRule(xmlStr: String, ruleTemplates: List<AbstractDartzeeRule>): AbstractDartzeeRule?
 {
     if (xmlStr.isEmpty())
     {
@@ -71,7 +75,7 @@ fun parseDartzeeRule(xmlStr: String): AbstractDartzeeRule?
 
     val rootElement = xmlDoc.documentElement
 
-    val rule = getAllDartRules().find{it.getRuleIdentifier() == rootElement.tagName}
+    val rule = ruleTemplates.find{it.getRuleIdentifier() == rootElement.tagName}
     rule ?: return null
 
     rule.populate(rootElement)

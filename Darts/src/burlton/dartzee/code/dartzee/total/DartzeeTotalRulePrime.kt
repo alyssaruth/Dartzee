@@ -8,4 +8,5 @@ class DartzeeTotalRulePrime: AbstractDartzeeRule(), IDartzeeTotalRule
     override fun getRuleIdentifier() = "Prime"
 
     override fun isValidTotal(total: Int) = Primes.isPrime(total)
+    override fun getDescription() = "is prime"
 }

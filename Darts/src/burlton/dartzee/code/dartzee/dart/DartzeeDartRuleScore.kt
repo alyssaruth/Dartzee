@@ -31,6 +31,7 @@ class DartzeeDartRuleScore: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule,
     }
 
     override fun getRuleIdentifier() = "Score"
+    override fun getDescription() = "$score"
 
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
