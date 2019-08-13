@@ -266,14 +266,14 @@ class TestDartzeeRules: AbstractDartsTest()
     @Test
     fun `invalid XML should return null rule`()
     {
-        val rule = parseDartzeeRule("BAD")
+        val rule = parseDartRule("BAD")
         rule shouldBe null
     }
 
     @Test
     fun `invalid identifier in XML should return null rule`()
     {
-        val rule = parseDartzeeRule("<Broken/>")
+        val rule = parseDartRule("<Broken/>")
         rule shouldBe null
     }
 
@@ -285,7 +285,7 @@ class TestDartzeeRules: AbstractDartsTest()
             val identifier = it.getRuleIdentifier()
             val tag = "<$identifier/>"
 
-            val rule = parseDartzeeRule(tag)!!
+            val rule = parseDartRule(tag)!!
             rule.getRuleIdentifier() shouldBe identifier
         }
     }
@@ -302,7 +302,7 @@ class TestDartzeeRules: AbstractDartsTest()
 
             val xml = it.toDbString()
 
-            val rule = parseDartzeeRule(xml) as DartzeeDartRuleColour
+            val rule = parseDartRule(xml) as DartzeeDartRuleColour
             rule.red shouldBe red
             rule.green shouldBe green
             rule.black shouldBe black
@@ -317,7 +317,7 @@ class TestDartzeeRules: AbstractDartsTest()
         rule.score = 20
 
         val xml = rule.toDbString()
-        val parsedRule = parseDartzeeRule(xml) as DartzeeDartRuleScore
+        val parsedRule = parseDartRule(xml) as DartzeeDartRuleScore
 
         parsedRule.score shouldBe 20
     }
@@ -330,7 +330,7 @@ class TestDartzeeRules: AbstractDartsTest()
         rule.segments = hashSetOf(doubleTwenty, outerBull, trebleNineteen)
 
         val xml = rule.toDbString()
-        val parsedRule = parseDartzeeRule(xml)
+        val parsedRule = parseDartRule(xml)
 
         assertTrue(parsedRule is DartzeeDartRuleCustom)
 
@@ -345,7 +345,7 @@ class TestDartzeeRules: AbstractDartsTest()
     {
         val rule = DartzeeDartRuleEven()
         val xml = rule.toDbString()
-        val parsedRule = parseDartzeeRule(xml)!!
+        val parsedRule = parseDartRule(xml)!!
 
         parsedRule.shouldBeInstanceOf<DartzeeDartRuleEven>()
     }
