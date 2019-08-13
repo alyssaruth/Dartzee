@@ -32,10 +32,16 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "Ordinal INT NOT NULL")
     }
 
-    fun getRuleDescription()
+    fun getRuleDescription(): String
     {
         val dartsDesc = getDartsDescription()
         val totalDesc = getTotalDescription()
+
+        val ruleParts = mutableListOf<String>()
+        if (!dartsDesc.isEmpty()) ruleParts.add(dartsDesc)
+        if (!totalDesc.isEmpty()) ruleParts.add(totalDesc)
+
+        return ruleParts.joinToString()
     }
     private fun getTotalDescription(): String
     {
@@ -68,7 +74,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 
         return if (inOrder)
         {
-            "$dart1Desc -> $dart2Desc -> $dart3Desc"
+            "$dart1Desc → $dart2Desc → $dart3Desc"
         }
         else
         {
