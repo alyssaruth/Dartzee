@@ -4,8 +4,10 @@ import burlton.dartzee.code.bean.DartzeeRuleSelector
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
+import burlton.desktopcore.code.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
+import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.JCheckBox
 import javax.swing.JPanel
@@ -26,6 +28,7 @@ class DartzeeRuleCreationDialog : SimpleDialog()
     val cbInOrder = JCheckBox("In Order")
     val targetSelector = DartzeeRuleSelector("Target")
     val rdbtnAtLeastOne = JRadioButton("At least one dart")
+    val rdbtnNoDarts = JRadioButton("No darts")
     private val panelTotal = JPanel()
     val cbTotal = JCheckBox("")
     val totalSelector = DartzeeRuleSelector("Total", true)
@@ -41,12 +44,15 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
 
+        panelDarts.size = Dimension(500, 200)
         panelCenter.add(panelDarts, "cell 0 0,grow")
         panelDarts.border = TitledBorder("")
         panelDarts.layout = MigLayout("", "[][]", "[][][][]")
         rdbtnPanelDartScoreType.add(rdbtnAllDarts)
         rdbtnPanelDartScoreType.add(rdbtnAtLeastOne)
+        rdbtnPanelDartScoreType.add(rdbtnNoDarts)
         panelDarts.add(rdbtnPanelDartScoreType, "spanx")
+        panelDarts.validate()
 
         panelTotal.layout = MigLayout("", "[][]", "[][][][]")
         panelTotal.border = TitledBorder("")
@@ -105,18 +111,18 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
         val rule = dartzeeRule ?: DartzeeRuleEntity()
 
-        if (rdbtnAtLeastOne.isSelected)
-        {
-            rule.dart1Rule = targetSelector.getSelection().toDbString()
-            rule.dart2Rule = ""
-            rule.dart3Rule = ""
-        }
-        else
+        if (rdbtnAllDarts.isSelected)
         {
             rule.dart1Rule = dartOneSelector.getSelection().toDbString()
             rule.dart2Rule = dartTwoSelector.getSelection().toDbString()
             rule.dart3Rule = dartThreeSelector.getSelection().toDbString()
             rule.inOrder = cbInOrder.isSelected
+        }
+        else
+        {
+            rule.dart1Rule = if (rdbtnAtLeastOne.isSelected) targetSelector.getSelection().toDbString() else ""
+            rule.dart2Rule = ""
+            rule.dart3Rule = ""
         }
 
         if (cbTotal.isSelected)
@@ -131,6 +137,12 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
     private fun valid(): Boolean
     {
+        if (rdbtnNoDarts.isSelected && !cbTotal.isSelected)
+        {
+            DialogUtil.showError("You cannot create an empty rule")
+            return false
+        }
+
         if (rdbtnAtLeastOne.isSelected)
         {
             return targetSelector.valid()
@@ -143,21 +155,29 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
     private fun toggleDartsComponents()
     {
-        if (rdbtnAtLeastOne.isSelected)
-        {
-            panelDarts.add(targetSelector, "cell 0 1")
-            panelDarts.remove(dartOneSelector)
-            panelDarts.remove(dartTwoSelector)
-            panelDarts.remove(dartThreeSelector)
-            panelDarts.remove(cbInOrder)
-        }
-        else
+        if (rdbtnAllDarts.isSelected)
         {
             panelDarts.remove(targetSelector)
             panelDarts.add(dartOneSelector, "cell 0 1")
             panelDarts.add(dartTwoSelector, "cell 0 2")
             panelDarts.add(dartThreeSelector, "cell 0 3")
             panelDarts.add(cbInOrder, "cell 0 4")
+        }
+        else
+        {
+            panelDarts.remove(dartOneSelector)
+            panelDarts.remove(dartTwoSelector)
+            panelDarts.remove(dartThreeSelector)
+            panelDarts.remove(cbInOrder)
+
+            if (rdbtnAtLeastOne.isSelected)
+            {
+                panelDarts.add(targetSelector, "cell 0 1")
+            }
+            else
+            {
+                panelDarts.remove(targetSelector)
+            }
         }
 
         totalSelector.isEnabled = cbTotal.isSelected

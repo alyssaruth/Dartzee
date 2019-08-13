@@ -19,6 +19,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     private val tableRules = ScrollTable()
     private val btnAddRule = JButton()
     private val btnAmendRule = JButton()
+    private val btnRemoveRule = JButton()
     private val btnCalculateOrder = JButton("Calc")
 
     init
@@ -28,7 +29,8 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
         tableRules.addButtonToOrderingPanel(btnAddRule, 0)
         tableRules.addButtonToOrderingPanel(btnAmendRule, 1)
-        tableRules.addButtonToOrderingPanel(btnCalculateOrder, 5)
+        tableRules.addButtonToOrderingPanel(btnRemoveRule, 2)
+        tableRules.addButtonToOrderingPanel(btnCalculateOrder, 6)
 
         tableRules.setRowName("rule")
 
@@ -40,8 +42,12 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         btnAmendRule.icon = ImageIcon(javaClass.getResource("/buttons/amend.png"))
         btnAmendRule.preferredSize = Dimension(40, 40)
 
+        btnRemoveRule.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
+        btnRemoveRule.preferredSize = Dimension(40, 40)
+
         btnAddRule.addActionListener(this)
         btnAmendRule.addActionListener(this)
+        btnRemoveRule.addActionListener(this)
         btnCalculateOrder.addActionListener(this)
     }
 
@@ -57,7 +63,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
         tableRules.model = tm
 
-        btnAmendRule.isEnabled = false
+        selectionChanged(tableRules)
     }
 
     fun setState(match: DartsMatchEntity?, players: MutableList<PlayerEntity>)
@@ -71,6 +77,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         {
             btnAddRule -> addRule()
             btnAmendRule -> amendRule()
+            btnRemoveRule -> removeRule()
             btnCalculateOrder -> ""
             else -> super.actionPerformed(arg0)
         }
@@ -96,6 +103,12 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
         tableRules.repaint()
     }
+    private fun removeRule()
+    {
+        tm.removeRow(tableRules.selectedModelRow)
+
+        tableRules.repaint()
+    }
 
     private fun addRuleToTable(rule: DartzeeRuleEntity)
     {
@@ -105,6 +118,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     override fun selectionChanged(src: ScrollTable)
     {
         btnAmendRule.isEnabled = src.selectedModelRow != -1
+        btnRemoveRule.isEnabled = src.selectedModelRow != -1
     }
 
     override fun getScreenName() = "Dartzee Setup"
