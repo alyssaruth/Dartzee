@@ -41,14 +41,17 @@ public class ScrollTable extends JPanel
 		panelOrdering.setLayout(new MigLayout("al center center, wrap, gapy 20"));
 		btnMoveUp.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/upArrow.png")));
 		btnMoveUp.setPreferredSize(new Dimension(40, 40));
+		btnMoveUp.setToolTipText("Move row up");
 		
 		panelOrdering.add(btnMoveUp, "cell 0 3");
 		btnMoveDown.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/downArrow.png")));
 		btnMoveDown.setPreferredSize(new Dimension(40, 40));
+		btnMoveDown.setToolTipText("Move row down");
 		
 		panelOrdering.add(btnMoveDown, "cell 0 4");
 		btnRandomize.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/dice.png")));
 		btnRandomize.setPreferredSize(new Dimension(40, 40));
+		btnRandomize.setToolTipText("Randomise row order");
 		
 		panelOrdering.add(btnRandomize, "cell 0 5");
 		panelOrdering.setVisible(false);

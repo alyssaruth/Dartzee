@@ -37,12 +37,15 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         tableRules.addRowSelectionListener(this)
 
         btnAddRule.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
+        btnAddRule.toolTipText = "Add rule"
         btnAddRule.preferredSize = Dimension(40, 40)
 
         btnAmendRule.icon = ImageIcon(javaClass.getResource("/buttons/amend.png"))
+        btnAmendRule.toolTipText = "Edit rule"
         btnAmendRule.preferredSize = Dimension(40, 40)
 
         btnRemoveRule.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
+        btnRemoveRule.toolTipText = "Remove rule"
         btnRemoveRule.preferredSize = Dimension(40, 40)
 
         btnAddRule.addActionListener(this)
