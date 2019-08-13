@@ -9,7 +9,6 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     var totalRule = ""
     var inOrder = false
     var allowMisses = false
-    var scoreMode = -1
     var textualName = ""
     var textualDescription = "" //Allow textual rules
     var ordinal = -1
@@ -25,7 +24,6 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "TotalRule VARCHAR(255) NOT NULL, "
                 + "InOrder BOOLEAN NOT NULL, "
                 + "AllowMisses BOOLEAN NOT NULL, "
-                + "ScoreMode INT NOT NULL, "
                 + "TextualName VARCHAR(255) NOT NULL, "
                 + "TextualDescription VARCHAR(2500) NOT NULL, "
                 + "Ordinal INT NOT NULL")

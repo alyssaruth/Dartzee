@@ -26,8 +26,7 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
 
         comboBoxRuleType.addActionListener(this)
 
-        add(lblDesc)
-        add(comboBoxRuleType)
+        updateComponents()
     }
 
     private fun populateComboBox()
@@ -76,6 +75,11 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
     }
 
     override fun actionPerformed(e: ActionEvent?)
+    {
+        updateComponents()
+    }
+
+    private fun updateComponents()
     {
         val rule = getSelection()
 

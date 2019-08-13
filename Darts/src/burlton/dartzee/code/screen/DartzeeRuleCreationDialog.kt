@@ -48,10 +48,11 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         rdbtnPanelDartScoreType.add(rdbtnAtLeastOne)
         panelDarts.add(rdbtnPanelDartScoreType, "spanx")
 
+        panelTotal.layout = MigLayout("", "[][]", "[][][][]")
         panelTotal.border = TitledBorder("")
         panelCenter.add(panelTotal, "cell 0 1,grow")
-        panelTotal.add(cbTotal)
-        panelTotal.add(totalSelector)
+        panelTotal.add(cbTotal, "cell 0 1")
+        panelTotal.add(totalSelector, "cell 1 1")
 
         cbTotal.addActionListener(this)
         rdbtnPanelDartScoreType.addActionListener(this)
@@ -116,6 +117,11 @@ class DartzeeRuleCreationDialog : SimpleDialog()
             rule.dart2Rule = dartTwoSelector.getSelection().toDbString()
             rule.dart3Rule = dartThreeSelector.getSelection().toDbString()
             rule.inOrder = cbInOrder.isSelected
+        }
+
+        if (cbTotal.isSelected)
+        {
+            rule.totalRule = totalSelector.getSelection().toDbString()
         }
 
         dartzeeRule = rule

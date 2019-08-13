@@ -8,7 +8,10 @@ import burlton.dartzee.code.screen.DartzeeRuleCreationDialog
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.bean.selectByClass
 import burlton.desktopcore.code.util.getAllChildComponentsForType
-import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContain
+import io.kotlintest.matchers.collections.shouldContainAll
+import io.kotlintest.matchers.collections.shouldNotContain
+import io.kotlintest.matchers.collections.shouldNotContainAll
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -28,15 +31,18 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
         val dlg = DartzeeRuleCreationDialog()
 
         var children = getAllChildComponentsForType(dlg, DartzeeRuleSelector::class.java)
-        children.shouldContainExactly(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
+        children.shouldContainAll(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
+        children.shouldNotContain(dlg.targetSelector)
 
         dlg.rdbtnAtLeastOne.doClick()
         children = getAllChildComponentsForType(dlg, DartzeeRuleSelector::class.java)
-        children.shouldContainExactly(dlg.targetSelector)
+        children.shouldContain(dlg.targetSelector)
+        children.shouldNotContainAll(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
 
         dlg.rdbtnAllDarts.doClick()
         children = getAllChildComponentsForType(dlg, DartzeeRuleSelector::class.java)
-        children.shouldContainExactly(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
+        children.shouldContainAll(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
+        children.shouldNotContain(dlg.targetSelector)
     }
 
     @Test

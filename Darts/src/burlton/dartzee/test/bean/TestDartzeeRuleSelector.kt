@@ -1,11 +1,11 @@
 package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.DartzeeRuleSelector
-import burlton.dartzee.code.dartzee.*
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleColour
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleInner
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleScore
+import burlton.dartzee.code.dartzee.getAllDartRules
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.bean.findByClass
 import burlton.desktopcore.code.bean.items
@@ -94,6 +94,6 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
         populatedRule.black shouldBe true
         populatedRule.red shouldBe true
         populatedRule.white shouldBe false
-        populatedRule.black shouldBe false
+        populatedRule.green shouldBe false
     }
 }
