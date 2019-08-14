@@ -4,8 +4,11 @@ import burlton.core.code.util.Debug
 import java.awt.Component
 import java.awt.Container
 import java.awt.Window
+import java.awt.event.ActionListener
+import java.lang.reflect.Method
 import javax.swing.AbstractButton
 import javax.swing.ButtonGroup
+import javax.swing.JComponent
 
 /**
  * Recurses through all child components, returning an ArrayList of all children of the appropriate type
@@ -18,6 +21,27 @@ fun <T> getAllChildComponentsForType(parent: Container, desiredClazz: Class<T>):
     addComponents(ret, components, desiredClazz)
 
     return ret
+}
+
+fun Container.addActionListenerToAllChildren(listener: ActionListener)
+{
+    val children = getAllChildComponentsForType(this, JComponent::class.java)
+    children.forEach {
+        //Check for an `addActionListener` method and call it if it exists
+        val removeMethod = it.javaClass.findMethod("removeActionListener", ActionListener::class.java)
+        val method = it.javaClass.findMethod("addActionListener", ActionListener::class.java)
+        removeMethod?.invoke(it, listener)
+        method?.invoke(it, listener)
+    }
+}
+
+fun Class<*>.findMethod(name: String, vararg parameterTypes: Class<*>): Method?
+{
+    return try
+    {
+        getMethod(name, parameterTypes[0])
+    }
+    catch (e: Exception) { null }
 }
 
 fun Container.enableChildren(enable: Boolean)

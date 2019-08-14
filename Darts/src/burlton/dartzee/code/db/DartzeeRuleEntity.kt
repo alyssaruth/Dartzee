@@ -32,7 +32,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "Ordinal INT NOT NULL")
     }
 
-    fun getRuleDescription(): String
+    fun generateRuleDescription(): String
     {
         val dartsDesc = getDartsDescription()
         val totalDesc = getTotalDescription()

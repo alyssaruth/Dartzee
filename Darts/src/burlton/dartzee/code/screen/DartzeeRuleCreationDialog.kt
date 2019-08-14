@@ -9,9 +9,7 @@ import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
-import javax.swing.JCheckBox
-import javax.swing.JPanel
-import javax.swing.JRadioButton
+import javax.swing.*
 import javax.swing.border.TitledBorder
 
 class DartzeeRuleCreationDialog : SimpleDialog()
@@ -32,6 +30,9 @@ class DartzeeRuleCreationDialog : SimpleDialog()
     private val panelTotal = JPanel()
     val cbTotal = JCheckBox("")
     val totalSelector = DartzeeRuleSelector("Total", true)
+    private val panelRuleName = JPanel()
+    val tfName = JTextField()
+    val btnGenerateName = JButton()
 
     init
     {
@@ -43,9 +44,10 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         add(panelCenter, BorderLayout.CENTER)
 
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
+        panelCenter.add(panelRuleName, "cell 0 0, growx")
+        panelCenter.add(panelDarts, "cell 0 1, growx")
+        panelCenter.add(panelTotal, "cell 0 2, growx")
 
-        panelDarts.size = Dimension(500, 200)
-        panelCenter.add(panelDarts, "cell 0 0,grow")
         panelDarts.border = TitledBorder("")
         panelDarts.layout = MigLayout("", "[][]", "[][][][]")
         rdbtnPanelDartScoreType.add(rdbtnAllDarts)
@@ -54,16 +56,29 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         panelDarts.add(rdbtnPanelDartScoreType, "spanx")
         panelDarts.validate()
 
-        panelTotal.layout = MigLayout("", "[][]", "[][][][]")
+        panelTotal.layout = MigLayout("", "[]", "[]")
         panelTotal.border = TitledBorder("")
-        panelCenter.add(panelTotal, "cell 0 1,grow")
-        panelTotal.add(cbTotal, "cell 0 1")
-        panelTotal.add(totalSelector, "cell 1 1")
+
+        panelTotal.add(cbTotal, "cell 0 0")
+        panelTotal.add(totalSelector, "cell 1 0")
+
+        panelRuleName.layout = BorderLayout(0, 0)
+        panelRuleName.border = TitledBorder("")
+        panelRuleName.add(tfName, BorderLayout.CENTER)
+        panelRuleName.add(btnGenerateName, BorderLayout.EAST)
+        tfName.preferredSize = Dimension(30, 40)
+        btnGenerateName.preferredSize = Dimension(40, 40)
 
         cbTotal.addActionListener(this)
         rdbtnPanelDartScoreType.addActionListener(this)
+        dartOneSelector.addActionListener(this)
+        dartTwoSelector.addActionListener(this)
+        dartThreeSelector.addActionListener(this)
+        targetSelector.addActionListener(this)
+        totalSelector.addActionListener(this)
+        cbInOrder.addActionListener(this)
 
-        toggleDartsComponents()
+        updateComponents()
     }
 
     fun populate(rule: DartzeeRuleEntity)
@@ -96,15 +111,15 @@ class DartzeeRuleCreationDialog : SimpleDialog()
             totalSelector.populate(rule.totalRule)
         }
 
-        toggleDartsComponents()
+        updateComponents()
         repaint()
     }
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        if (rdbtnPanelDartScoreType.isEventSource(arg0) || arg0.source == cbTotal)
+        if (arg0.source !in listOf(btnOk, btnCancel))
         {
-            toggleDartsComponents()
+            updateComponents()
         }
         else
         {
@@ -121,6 +136,15 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
         val rule = dartzeeRule ?: DartzeeRuleEntity()
 
+        populateRuleFromComponents(rule)
+
+        dartzeeRule = rule
+
+        dispose()
+    }
+
+    private fun populateRuleFromComponents(rule: DartzeeRuleEntity)
+    {
         if (rdbtnAllDarts.isSelected)
         {
             rule.dart1Rule = dartOneSelector.getSelection().toDbString()
@@ -139,10 +163,6 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         {
             rule.totalRule = totalSelector.getSelection().toDbString()
         }
-
-        dartzeeRule = rule
-
-        dispose()
     }
 
     private fun valid(): Boolean
@@ -163,7 +183,7 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         }
     }
 
-    private fun toggleDartsComponents()
+    private fun updateComponents()
     {
         if (rdbtnAllDarts.isSelected)
         {
@@ -193,6 +213,13 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         totalSelector.isEnabled = cbTotal.isSelected
 
         repaint()
+        panelDarts.revalidate()
+
+        SwingUtilities.invokeLater{
+            val rule = DartzeeRuleEntity().also { populateRuleFromComponents(it) }
+            val ruleName = rule.generateRuleDescription()
+            tfName.text = ruleName
+        }
     }
 
 }
