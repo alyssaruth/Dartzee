@@ -1,10 +1,12 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.dartzee.*
+import burlton.dartzee.code.screen.DartzeeRuleCreationDialog
 import burlton.desktopcore.code.bean.findByConcreteClass
 import burlton.desktopcore.code.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.addActionListenerToAllChildren
+import burlton.desktopcore.code.util.addChangeListenerToAllChildren
 import burlton.desktopcore.code.util.enableChildren
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
@@ -18,7 +20,7 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
 {
     val lblDesc = JLabel(desc)
     val comboBoxRuleType = JComboBox<AbstractDartzeeRule>()
-    var listener: ActionListener? = null
+    var listener: DartzeeRuleCreationDialog? = null
 
     init
     {
@@ -81,10 +83,11 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         updateComponents()
     }
 
-    fun addActionListener(listener: ActionListener)
+    fun addActionListener(listener: DartzeeRuleCreationDialog)
     {
         this.listener = listener
         addActionListenerToAllChildren(listener)
+        addChangeListenerToAllChildren(listener)
     }
 
     private fun updateComponents()
@@ -100,7 +103,10 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
             add(rule.configPanel)
         }
 
-        listener?.let { this.addActionListenerToAllChildren(it) }
+        listener?.let {
+            addActionListenerToAllChildren(it)
+            addChangeListenerToAllChildren(it)
+        }
 
         revalidate()
     }

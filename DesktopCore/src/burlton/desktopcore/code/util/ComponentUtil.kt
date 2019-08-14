@@ -6,9 +6,8 @@ import java.awt.Container
 import java.awt.Window
 import java.awt.event.ActionListener
 import java.lang.reflect.Method
-import javax.swing.AbstractButton
-import javax.swing.ButtonGroup
-import javax.swing.JComponent
+import javax.swing.*
+import javax.swing.event.ChangeListener
 
 /**
  * Recurses through all child components, returning an ArrayList of all children of the appropriate type
@@ -27,11 +26,35 @@ fun Container.addActionListenerToAllChildren(listener: ActionListener)
 {
     val children = getAllChildComponentsForType(this, JComponent::class.java)
     children.forEach {
-        //Check for an `addActionListener` method and call it if it exists
-        val removeMethod = it.javaClass.findMethod("removeActionListener", ActionListener::class.java)
-        val method = it.javaClass.findMethod("addActionListener", ActionListener::class.java)
-        removeMethod?.invoke(it, listener)
-        method?.invoke(it, listener)
+        if (it is JComboBox<*>)
+        {
+            if (!it.actionListeners.contains(listener))
+            {
+                it.addActionListener(listener)
+            }
+        }
+
+        if (it is AbstractButton)
+        {
+            if (!it.actionListeners.contains(listener))
+            {
+                it.addActionListener(listener)
+            }
+        }
+    }
+}
+
+fun Container.addChangeListenerToAllChildren(listener: ChangeListener)
+{
+    val children = getAllChildComponentsForType(this, JComponent::class.java)
+    children.forEach {
+        if (it is JSpinner)
+        {
+            if (!it.changeListeners.contains(listener))
+            {
+                it.addChangeListener(listener)
+            }
+        }
     }
 }
 

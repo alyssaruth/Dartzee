@@ -11,8 +11,10 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.*
 import javax.swing.border.TitledBorder
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
 
-class DartzeeRuleCreationDialog : SimpleDialog()
+class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 {
     var dartzeeRule: DartzeeRuleEntity? = null
 
@@ -113,6 +115,11 @@ class DartzeeRuleCreationDialog : SimpleDialog()
 
         updateComponents()
         repaint()
+    }
+
+    override fun stateChanged(e: ChangeEvent?)
+    {
+        updateComponents()
     }
 
     override fun actionPerformed(arg0: ActionEvent)
