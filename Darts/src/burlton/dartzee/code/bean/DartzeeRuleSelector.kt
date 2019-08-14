@@ -4,6 +4,7 @@ import burlton.dartzee.code.dartzee.*
 import burlton.desktopcore.code.bean.findByConcreteClass
 import burlton.desktopcore.code.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.addActionListenerToAllChildren
 import burlton.desktopcore.code.util.enableChildren
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
@@ -17,6 +18,7 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
 {
     val lblDesc = JLabel(desc)
     val comboBoxRuleType = JComboBox<AbstractDartzeeRule>()
+    var listener: ActionListener? = null
 
     init
     {
@@ -79,6 +81,12 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         updateComponents()
     }
 
+    fun addActionListener(listener: ActionListener)
+    {
+        this.listener = listener
+        addActionListenerToAllChildren(listener)
+    }
+
     private fun updateComponents()
     {
         val rule = getSelection()
@@ -91,6 +99,8 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         {
             add(rule.configPanel)
         }
+
+        listener?.let { this.addActionListenerToAllChildren(it) }
 
         revalidate()
     }

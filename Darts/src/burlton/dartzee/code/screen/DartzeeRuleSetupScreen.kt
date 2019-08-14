@@ -142,7 +142,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     {
         override fun getReplacementValue(value: DartzeeRuleEntity): Any
         {
-            return if (colNo == 0) value.getRuleDescription() else value
+            return if (colNo == 0) value.generateRuleDescription() else value
         }
 
         override fun setCellColours(typedValue: DartzeeRuleEntity?, isSelected: Boolean)
