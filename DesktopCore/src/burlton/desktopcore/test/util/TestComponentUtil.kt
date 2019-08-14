@@ -2,19 +2,20 @@ package burlton.desktopcore.test.util
 
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
-import burlton.desktopcore.code.util.containsComponent
-import burlton.desktopcore.code.util.createButtonGroup
-import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.code.util.getParentWindow
+import burlton.desktopcore.code.util.*
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
+import io.mockk.mockk
 import org.junit.Test
+import java.awt.event.ActionListener
 import javax.swing.*
+import javax.swing.event.ChangeListener
 
 class TestComponentUtil: AbstractDesktopTest()
 {
@@ -115,5 +116,115 @@ class TestComponentUtil: AbstractDesktopTest()
 
         btn.getParentWindow() shouldBe window
         panel.getParentWindow() shouldBe window
+    }
+
+    @Test
+    fun `Should enable and disable all nested components`()
+    {
+        val window = JFrame()
+        val panel = JPanel()
+        val btn = JButton()
+        val subPanel = JPanel()
+        val subBtn = JButton()
+
+        window.contentPane.add(panel)
+        panel.add(btn)
+        panel.add(subPanel)
+        subPanel.add(subBtn)
+
+        window.enableChildren(false)
+        btn.isEnabled shouldBe false
+        subBtn.isEnabled shouldBe false
+
+        window.enableChildren(true)
+        btn.isEnabled shouldBe true
+        subBtn.isEnabled shouldBe true
+    }
+
+    @Test
+    fun `Should add actionListeners to all applicable children`()
+    {
+        val window = JFrame()
+        val panel = JPanel()
+        val btn = JButton()
+        val subPanel = JPanel()
+        val subBtn = JRadioButton()
+        val subCombo = JComboBox<String>()
+
+        window.contentPane.add(panel)
+        panel.add(btn)
+        panel.add(subPanel)
+        subPanel.add(subBtn)
+        subPanel.add(subCombo)
+
+        val actionListener = mockk<ActionListener>()
+        window.addActionListenerToAllChildren(actionListener)
+
+        btn.actionListeners.toList().shouldContainExactly(actionListener)
+        subBtn.actionListeners.toList().shouldContainExactly(actionListener)
+        subCombo.actionListeners.toList().shouldContainExactly(actionListener)
+    }
+
+    @Test
+    fun `Should not add the same actionListener twice`()
+    {
+        val panel = JPanel()
+        val btn = JButton()
+
+        panel.add(btn)
+
+        val listenerOne = mockk<ActionListener>()
+        val listenerTwo = mockk<ActionListener>()
+
+        panel.addActionListenerToAllChildren(listenerOne)
+        btn.actionListeners.toList().shouldContainExactly(listenerOne)
+
+        panel.addActionListenerToAllChildren(listenerOne)
+        btn.actionListeners.toList().shouldContainExactly(listenerOne)
+
+        panel.addActionListenerToAllChildren(listenerTwo)
+        btn.actionListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, listenerTwo)
+    }
+
+    @Test
+    fun `Should add changeListeners to all applicable children`()
+    {
+        val window = JFrame()
+        val panel = JPanel()
+        val spinner = JSpinner()
+        val subPanel = JPanel()
+        val subSpinner = JSpinner()
+
+        window.contentPane.add(panel)
+        panel.add(spinner)
+        panel.add(subPanel)
+        subPanel.add(subSpinner)
+
+        val changeListener = mockk<ChangeListener>()
+        window.addChangeListenerToAllChildren(changeListener)
+
+        spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(changeListener, spinner.editor)
+        subSpinner.changeListeners.toList().shouldContainExactlyInAnyOrder(changeListener, subSpinner.editor)
+    }
+
+    @Test
+    fun `Should not add the same changeListener twice`()
+    {
+        val panel = JPanel()
+        val spinner = JSpinner()
+
+        panel.add(spinner)
+
+        val listenerOne = mockk<ChangeListener>()
+        val listenerTwo = mockk<ChangeListener>()
+
+        panel.addChangeListenerToAllChildren(listenerOne)
+        spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, spinner.editor)
+
+        panel.addChangeListenerToAllChildren(listenerOne)
+        spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, spinner.editor)
+
+        panel.addChangeListenerToAllChildren(listenerTwo)
+        spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, listenerTwo, spinner.editor)
     }
 }

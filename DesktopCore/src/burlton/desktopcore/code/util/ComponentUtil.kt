@@ -5,7 +5,6 @@ import java.awt.Component
 import java.awt.Container
 import java.awt.Window
 import java.awt.event.ActionListener
-import java.lang.reflect.Method
 import javax.swing.*
 import javax.swing.event.ChangeListener
 
@@ -56,15 +55,6 @@ fun Container.addChangeListenerToAllChildren(listener: ChangeListener)
             }
         }
     }
-}
-
-fun Class<*>.findMethod(name: String, vararg parameterTypes: Class<*>): Method?
-{
-    return try
-    {
-        getMethod(name, parameterTypes[0])
-    }
-    catch (e: Exception) { null }
 }
 
 fun Container.enableChildren(enable: Boolean)
