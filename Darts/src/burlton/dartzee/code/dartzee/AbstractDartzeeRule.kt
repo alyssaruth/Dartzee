@@ -63,7 +63,7 @@ fun getAllTotalRules(): List<AbstractDartzeeRule>
 }
 fun parseDartRule(xmlStr: String) = parseRule(xmlStr, getAllDartRules())
 fun parseTotalRule(xmlStr: String) = parseRule(xmlStr, getAllTotalRules())
-private fun parseRule(xmlStr: String, ruleTemplates: List<AbstractDartzeeRule>): AbstractDartzeeRule?
+fun parseRule(xmlStr: String, ruleTemplates: List<AbstractDartzeeRule>): AbstractDartzeeRule?
 {
     if (xmlStr.isEmpty())
     {

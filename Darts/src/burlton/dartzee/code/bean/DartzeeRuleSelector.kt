@@ -47,7 +47,7 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
 
     fun populate(ruleStr: String)
     {
-        val rule = parseDartRule(ruleStr)!!
+        val rule = parseRule(ruleStr, getRules())!!
 
         val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)!!
         comboBoxRuleType.selectedItem = item

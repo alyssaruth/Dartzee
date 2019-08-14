@@ -71,7 +71,11 @@ class DartzeeRuleCreationDialog : SimpleDialog()
         this.dartzeeRule = rule
         title = "Amend Dartzee Rule"
 
-        if (rule.dart2Rule.isEmpty())
+        if (rule.dart1Rule.isEmpty())
+        {
+            rdbtnNoDarts.isSelected = true
+        }
+        else if (rule.dart2Rule.isEmpty())
         {
             rdbtnAtLeastOne.isSelected = true
 
@@ -84,6 +88,12 @@ class DartzeeRuleCreationDialog : SimpleDialog()
             dartOneSelector.populate(rule.dart1Rule)
             dartTwoSelector.populate(rule.dart2Rule)
             dartThreeSelector.populate(rule.dart3Rule)
+        }
+
+        if (!rule.totalRule.isEmpty())
+        {
+            cbTotal.isSelected = true
+            totalSelector.populate(rule.totalRule)
         }
 
         toggleDartsComponents()
