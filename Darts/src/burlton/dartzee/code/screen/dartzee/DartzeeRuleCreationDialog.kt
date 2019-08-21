@@ -233,6 +233,8 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
             val rule = DartzeeRuleEntity().also { populateRuleFromComponents(it) }
             val ruleName = rule.generateRuleDescription()
             tfName.text = ruleName
+
+            verificationPanel.updateRule(rule)
         }
     }
 }
