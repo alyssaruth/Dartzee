@@ -1,12 +1,12 @@
 package burlton.dartzee.code.screen
 
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.utils.DartsColour
 import burlton.desktopcore.code.screen.SimpleDialog
 import java.awt.BorderLayout
 import javax.swing.JPanel
 
-class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegmentKt>): SimpleDialog()
+class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegment>): SimpleDialog()
 {
     private val dartboard = DartboardSegmentSelector()
 
@@ -32,7 +32,7 @@ class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegmen
         dartboard.initState(segments)
     }
 
-    fun getSelection(): HashSet<DartboardSegmentKt>
+    fun getSelection(): HashSet<DartboardSegment>
     {
         return dartboard.selectedSegments
     }

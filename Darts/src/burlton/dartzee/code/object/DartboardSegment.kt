@@ -35,7 +35,7 @@ fun getMultiplier(type: Int): Int
     }
 }
 
-class DartboardSegmentKt(val scoreAndType : String)
+class DartboardSegment(val scoreAndType : String)
 {
     var type : Int
     var score : Int
@@ -57,18 +57,10 @@ class DartboardSegmentKt(val scoreAndType : String)
     /**
      * Helpers
      */
-    fun isMiss() : Boolean
-    {
-        return type == SEGMENT_TYPE_MISS || type == SEGMENT_TYPE_MISSED_BOARD
-    }
-    fun isDoubleExcludingBull() : Boolean
-    {
-        return type == SEGMENT_TYPE_DOUBLE && score != 25
-    }
-    fun getMultiplier() : Int
-    {
-        return getMultiplier(type)
-    }
+    fun isMiss() = type == SEGMENT_TYPE_MISS || type == SEGMENT_TYPE_MISSED_BOARD
+    fun isDoubleExcludingBull() = type == SEGMENT_TYPE_DOUBLE && score != 25
+    fun getMultiplier() = getMultiplier(type)
+    fun getTotal(): Int = score * getMultiplier()
 
     fun addPoint(pt: Point)
     {
@@ -78,10 +70,7 @@ class DartboardSegmentKt(val scoreAndType : String)
         hmYCoordToPoints.putInList(pt.y, pt)
     }
 
-    override fun toString(): String
-    {
-        return "$score ($type)"
-    }
+    override fun toString() = "$score ($type)"
 
     fun isEdgePoint(pt: Point?): Boolean
     {

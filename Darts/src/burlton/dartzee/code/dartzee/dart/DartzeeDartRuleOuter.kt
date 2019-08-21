@@ -1,13 +1,13 @@
 package burlton.dartzee.code.dartzee.dart
 
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.dartzee.AbstractDartzeeRule
 
 class DartzeeDartRuleOuter : AbstractDartzeeRule(), IDartzeeDartRule
 {
-    override fun isValidSegment(segment: DartboardSegmentKt): Boolean
+    override fun isValidSegment(segment: DartboardSegment): Boolean
     {
         if (segment.score == 25)
         {

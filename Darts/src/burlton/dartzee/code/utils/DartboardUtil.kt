@@ -22,7 +22,7 @@ private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 private const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
 
-fun getDartForSegment(pt: Point, segment: DartboardSegmentKt): Dart
+fun getDartForSegment(pt: Point, segment: DartboardSegment): Dart
 {
     val score = segment.score
     val multiplier = segment.getMultiplier()
@@ -105,7 +105,7 @@ private fun getScoreForAngle(angle: Double): Int
     return numberOrder[index]
 }
 
-fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegmentKt, highlighted: Boolean,
+fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlighted: Boolean,
                                 colourWrapper: ColourWrapper?): Color?
 {
     val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
@@ -127,7 +127,7 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegmentKt, highlig
 
 }
 
-private fun getColourFromHashMap(segment: DartboardSegmentKt, colourWrapper: ColourWrapper): Color?
+private fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color?
 {
     val type = segment.type
     if (type == SEGMENT_TYPE_MISS)
