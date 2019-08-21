@@ -1,9 +1,8 @@
 package burlton.dartzee.code.dartzee.total
 
-import burlton.dartzee.code.dartzee.AbstractDartzeeRule
 import org.apache.commons.math3.primes.Primes
 
-class DartzeeTotalRulePrime: AbstractDartzeeRule(), IDartzeeTotalRule
+class DartzeeTotalRulePrime: AbstractDartzeeTotalRule()
 {
     override fun getRuleIdentifier() = "Prime"
 

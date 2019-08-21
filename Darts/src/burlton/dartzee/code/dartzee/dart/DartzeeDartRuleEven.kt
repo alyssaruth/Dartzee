@@ -1,9 +1,8 @@
 package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DartboardSegment
-import burlton.dartzee.code.dartzee.AbstractDartzeeRule
 
-class DartzeeDartRuleEven : AbstractDartzeeRule(), IDartzeeDartRule
+class DartzeeDartRuleEven : AbstractDartzeeDartRule()
 {
     override fun isValidSegment(segment: DartboardSegment): Boolean
     {

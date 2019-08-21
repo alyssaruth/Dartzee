@@ -3,9 +3,8 @@ package burlton.dartzee.code.dartzee.dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
-import burlton.dartzee.code.dartzee.AbstractDartzeeRule
 
-class DartzeeDartRuleInner : AbstractDartzeeRule(), IDartzeeDartRule
+class DartzeeDartRuleInner : AbstractDartzeeDartRule()
 {
     override fun isValidSegment(segment: DartboardSegment): Boolean
     {
