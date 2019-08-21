@@ -11,13 +11,11 @@ import burlton.desktopcore.code.util.enableChildren
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.DefaultComboBoxModel
-import javax.swing.JComboBox
-import javax.swing.JLabel
-import javax.swing.JPanel
+import javax.swing.*
 
-class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), ActionListener
+class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional: Boolean = false): JPanel(), ActionListener
 {
+    val cbDesc = JCheckBox(desc)
     val lblDesc = JLabel(desc)
     val comboBoxRuleType = JComboBox<AbstractDartzeeRule>()
     var listener: DartzeeRuleCreationDialog? = null
@@ -29,6 +27,7 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         populateComboBox()
 
         comboBoxRuleType.addActionListener(this)
+        cbDesc.addActionListener(this)
 
         updateComponents()
     }
@@ -56,7 +55,13 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)!!
         comboBoxRuleType.selectedItem = item
 
+        if (optional)
+        {
+            cbDesc.isSelected = true
+        }
+
         item.populate(ruleStr)
+        updateComponents()
     }
 
     fun valid(): Boolean
@@ -76,6 +81,7 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         super.setEnabled(enabled)
 
         enableChildren(enabled)
+        cbDesc.isEnabled = true
     }
 
     override fun actionPerformed(e: ActionEvent?)
@@ -95,7 +101,8 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
         val rule = getSelection()
 
         removeAll()
-        add(lblDesc)
+
+        if (optional) add(cbDesc) else add(lblDesc)
         add(comboBoxRuleType)
 
         if (rule is AbstractDartzeeRuleConfigurable)
@@ -107,6 +114,8 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false): JPanel(), A
             addActionListenerToAllChildren(it)
             addChangeListenerToAllChildren(it)
         }
+
+        this.isEnabled = !optional || cbDesc.isSelected
 
         revalidate()
     }

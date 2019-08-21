@@ -24,5 +24,4 @@ class DartzeeDartResult: JPanel()
         label.text = dart.getRendered()
         repaint()
     }
-
 }

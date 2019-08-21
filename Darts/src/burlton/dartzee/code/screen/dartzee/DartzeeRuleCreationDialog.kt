@@ -33,8 +33,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
     val rdbtnAtLeastOne = JRadioButton("At least one dart")
     val rdbtnNoDarts = JRadioButton("No darts")
     private val panelTotal = JPanel()
-    val cbTotal = JCheckBox("")
-    val totalSelector = DartzeeRuleSelector("Total", true)
+    val totalSelector = DartzeeRuleSelector("Total", true, true)
     private val panelRuleName = JPanel()
     val tfName = JTextField()
     val btnGenerateName = JButton()
@@ -65,8 +64,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         panelTotal.layout = MigLayout("", "[]", "[]")
         panelTotal.border = TitledBorder("")
 
-        panelTotal.add(cbTotal, "cell 0 0")
-        panelTotal.add(totalSelector, "cell 1 0")
+        panelTotal.add(totalSelector, "cell 0 0")
 
         panelRuleName.layout = BorderLayout(0, 0)
         panelRuleName.border = TitledBorder("")
@@ -77,8 +75,8 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 
         tfName.horizontalAlignment = JTextField.CENTER
         tfName.font = Font(tfName.font.name, tfName.font.style, 24)
+        tfName.isEditable = false
 
-        cbTotal.addActionListener(this)
         rdbtnPanelDartScoreType.addActionListener(this)
         dartOneSelector.addActionListener(this)
         dartTwoSelector.addActionListener(this)
@@ -116,7 +114,6 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 
         if (!rule.totalRule.isEmpty())
         {
-            cbTotal.isSelected = true
             totalSelector.populate(rule.totalRule)
         }
 
@@ -173,15 +170,19 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
             rule.dart3Rule = ""
         }
 
-        if (cbTotal.isSelected)
+        if (totalSelector.isEnabled)
         {
             rule.totalRule = totalSelector.getSelection().toDbString()
+        }
+        else
+        {
+            rule.totalRule = ""
         }
     }
 
     private fun valid(): Boolean
     {
-        if (rdbtnNoDarts.isSelected && !cbTotal.isSelected)
+        if (rdbtnNoDarts.isSelected && !totalSelector.isEnabled)
         {
             DialogUtil.showError("You cannot create an empty rule")
             return false
@@ -223,8 +224,6 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
                 panelDarts.remove(targetSelector)
             }
         }
-
-        totalSelector.isEnabled = cbTotal.isSelected
 
         repaint()
         panelDarts.revalidate()
