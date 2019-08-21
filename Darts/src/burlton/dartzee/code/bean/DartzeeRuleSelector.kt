@@ -1,6 +1,11 @@
 package burlton.dartzee.code.bean
 
-import burlton.dartzee.code.dartzee.*
+import burlton.dartzee.code.dartzee.AbstractDartzeeRule
+import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRuleConfigurable
+import burlton.dartzee.code.dartzee.getAllDartRules
+import burlton.dartzee.code.dartzee.getAllTotalRules
+import burlton.dartzee.code.dartzee.parseRule
+import burlton.dartzee.code.dartzee.total.AbstractDartzeeRuleTotalSize
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.desktopcore.code.bean.findByConcreteClass
 import burlton.desktopcore.code.bean.selectedItemTyped
@@ -105,7 +110,13 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional
         if (optional) add(cbDesc) else add(lblDesc)
         add(comboBoxRuleType)
 
-        if (rule is AbstractDartzeeRuleConfigurable)
+        //TODO - Figure out a nicer way
+        if (rule is AbstractDartzeeDartRuleConfigurable)
+        {
+            add(rule.configPanel)
+        }
+
+        if (rule is AbstractDartzeeRuleTotalSize)
         {
             add(rule.configPanel)
         }

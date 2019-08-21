@@ -1,8 +1,6 @@
 package burlton.dartzee.code.dartzee
 
 import burlton.core.code.util.XmlUtil
-import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.*
 import org.w3c.dom.Document
@@ -11,7 +9,6 @@ import org.w3c.dom.Element
 abstract class AbstractDartzeeRule
 {
     abstract fun getRuleIdentifier(): String
-    abstract fun isValidSegment(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
 
     open fun writeXmlAttributes(doc: Document, rootElement: Element) {}
 
@@ -44,7 +41,7 @@ abstract class AbstractDartzeeRule
     }
 }
 
-fun getAllDartRules(): List<AbstractDartzeeRule>
+fun getAllDartRules(): List<AbstractDartzeeDartRule>
 {
     return mutableListOf(DartzeeDartRuleEven(),
             DartzeeDartRuleOdd(),
@@ -55,7 +52,7 @@ fun getAllDartRules(): List<AbstractDartzeeRule>
             DartzeeDartRuleCustom())
 }
 
-fun getAllTotalRules(): List<AbstractDartzeeRule>
+fun getAllTotalRules(): List<AbstractDartzeeTotalRule>
 {
     return mutableListOf(DartzeeTotalRuleLessThan(),
             DartzeeTotalRuleGreaterThan(),
@@ -66,7 +63,7 @@ fun getAllTotalRules(): List<AbstractDartzeeRule>
 }
 fun parseDartRule(xmlStr: String) = parseRule(xmlStr, getAllDartRules())
 fun parseTotalRule(xmlStr: String) = parseRule(xmlStr, getAllTotalRules())
-fun parseRule(xmlStr: String, ruleTemplates: List<AbstractDartzeeRule>): AbstractDartzeeRule?
+fun <K: AbstractDartzeeRule> parseRule(xmlStr: String, ruleTemplates: List<K>): K?
 {
     if (xmlStr.isEmpty())
     {

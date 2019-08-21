@@ -96,8 +96,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     }
     fun isValidSegment(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
     {
+        val exampleDart = Dart(segment.score, segment.getMultiplier())
         return isValidSegmentForDartsRules(segment, dartsSoFar)
-                && isValidSegmentForTotalRule(segment, dartsSoFar)
+                && isValidDartForTotalRule(exampleDart, dartsSoFar)
     }
     fun isValidSegmentForDartsRules(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
     {
@@ -106,12 +107,36 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
             return true
         }
 
+        val parsedRule1 = parseDartRule(dart1Rule)!!
+
+        //This is an "at least one" rule, so just need any of the previous darts or this one to be valid
         if (dart2Rule == "")
         {
-            dartsSoFar.map { it.}
+            val exampleDart = Dart(segment.score, segment.getMultiplier())
+            val allDarts = dartsSoFar + exampleDart
+            return allDarts.any { parsedRule1.isValidSegment(segment) }
+        }
+
+        val parsedRule2 = parseDartRule(dart2Rule)!!
+        val parsedRule3 = parseDartRule(dart3Rule)!!
+
+        if (inOrder)
+        {
+            //Work out which one
+            return when (dartsSoFar.size)
+            {
+                0 -> parsedRule1.isValidSegment(segment)
+                1 -> parsedRule2.isValidSegment(segment)
+                else -> parsedRule3.isValidSegment(segment)
+            }
+        }
+        else
+        {
+            //Ugh
+            return false
         }
     }
-    fun isValidSegmentForTotalRule(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
+    fun isValidDartForTotalRule(dart: Dart, dartsSoFar: List<Dart>): Boolean
     {
         if (totalRule == "")
         {
@@ -119,6 +144,6 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         }
 
         val rule = parseTotalRule(totalRule)!!
-        return rule.isValidSegment(segment, dartsSoFar)
+        return rule.isValidDart(dart, dartsSoFar)
     }
 }

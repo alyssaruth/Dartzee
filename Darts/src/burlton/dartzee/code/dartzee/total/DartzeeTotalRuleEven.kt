@@ -1,8 +1,6 @@
 package burlton.dartzee.code.dartzee.total
 
-import burlton.dartzee.code.dartzee.AbstractDartzeeRule
-
-class DartzeeTotalRuleEven: AbstractDartzeeRule(), IDartzeeTotalRule
+class DartzeeTotalRuleEven: AbstractDartzeeTotalRule()
 {
     override fun getRuleIdentifier() = "Even"
 

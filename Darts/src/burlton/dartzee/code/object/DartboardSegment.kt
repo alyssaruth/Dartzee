@@ -1,4 +1,3 @@
-@file:JvmName("DartboardSegment")
 package burlton.dartzee.code.`object`
 
 import burlton.core.code.obj.HashMapList
