@@ -1,7 +1,7 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.dartzee.*
-import burlton.dartzee.code.screen.DartzeeRuleCreationDialog
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.desktopcore.code.bean.findByConcreteClass
 import burlton.desktopcore.code.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil

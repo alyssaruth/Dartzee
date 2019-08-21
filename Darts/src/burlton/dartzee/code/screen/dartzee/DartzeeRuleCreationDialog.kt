@@ -1,13 +1,15 @@
-package burlton.dartzee.code.screen
+package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.bean.DartzeeRuleSelector
 import burlton.dartzee.code.db.DartzeeRuleEntity
+import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.*
 import javax.swing.border.TitledBorder
@@ -18,6 +20,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 {
     var dartzeeRule: DartzeeRuleEntity? = null
 
+    private val verificationPanel = DartzeeRuleVerificationPanel()
     private val panelCenter = JPanel()
     private val panelDarts = JPanel()
     private val rdbtnPanelDartScoreType = RadioButtonPanel()
@@ -39,14 +42,15 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
     init
     {
         title = "Add Dartzee Rule"
-        setSize(450, 600)
+        setSize(750, 600)
         setLocationRelativeTo(ScreenCache.getMainScreen())
         isModal = true
 
+        add(panelRuleName, BorderLayout.NORTH)
         add(panelCenter, BorderLayout.CENTER)
+        add(verificationPanel, BorderLayout.EAST)
 
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
-        panelCenter.add(panelRuleName, "cell 0 0, growx")
         panelCenter.add(panelDarts, "cell 0 1, growx")
         panelCenter.add(panelTotal, "cell 0 2, growx")
 
@@ -68,8 +72,11 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         panelRuleName.border = TitledBorder("")
         panelRuleName.add(tfName, BorderLayout.CENTER)
         panelRuleName.add(btnGenerateName, BorderLayout.EAST)
-        tfName.preferredSize = Dimension(30, 40)
-        btnGenerateName.preferredSize = Dimension(40, 40)
+        tfName.preferredSize = Dimension(30, 50)
+        btnGenerateName.preferredSize = Dimension(40, 50)
+
+        tfName.horizontalAlignment = JTextField.CENTER
+        tfName.font = Font(tfName.font.name, tfName.font.style, 24)
 
         cbTotal.addActionListener(this)
         rdbtnPanelDartScoreType.addActionListener(this)
@@ -228,5 +235,4 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
             tfName.text = ruleName
         }
     }
-
 }

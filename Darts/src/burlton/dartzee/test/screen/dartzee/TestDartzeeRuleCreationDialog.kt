@@ -1,10 +1,10 @@
-package burlton.dartzee.test.screen
+package burlton.dartzee.test.screen.dartzee
 
 import burlton.dartzee.code.bean.DartzeeRuleSelector
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleInner
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
-import burlton.dartzee.code.screen.DartzeeRuleCreationDialog
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.bean.selectByClass
 import burlton.desktopcore.code.util.getAllChildComponentsForType
