@@ -100,29 +100,24 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         return isValidSegmentForDartsRules(segment, dartsSoFar)
                 && isValidDartForTotalRule(exampleDart, dartsSoFar)
     }
-    fun isValidSegmentForDartsRules(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
+    private fun isValidSegmentForDartsRules(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
     {
-        if (dart1Rule == "")
-        {
-            return true
-        }
-
-        val parsedRule1 = parseDartRule(dart1Rule)!!
+        val parsedRule1 = parseDartRule(dart1Rule) ?: return true
+        val parsedRule2 = parseDartRule(dart2Rule)
 
         //This is an "at least one" rule, so just need any of the previous darts or this one to be valid
-        if (dart2Rule == "")
+        if (parsedRule2 == null)
         {
             val exampleDart = Dart(segment.score, segment.getMultiplier())
             val allDarts = dartsSoFar + exampleDart
             return allDarts.any { parsedRule1.isValidSegment(segment) }
         }
 
-        val parsedRule2 = parseDartRule(dart2Rule)!!
         val parsedRule3 = parseDartRule(dart3Rule)!!
 
         if (inOrder)
         {
-            //Work out which one
+            //Need to compare to the precise rule for this dart
             return when (dartsSoFar.size)
             {
                 0 -> parsedRule1.isValidSegment(segment)
@@ -132,11 +127,11 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         }
         else
         {
-            //Ugh
+            //Hmm. Interesting code goes here.
             return false
         }
     }
-    fun isValidDartForTotalRule(dart: Dart, dartsSoFar: List<Dart>): Boolean
+    private fun isValidDartForTotalRule(dart: Dart, dartsSoFar: List<Dart>): Boolean
     {
         if (totalRule == "")
         {
