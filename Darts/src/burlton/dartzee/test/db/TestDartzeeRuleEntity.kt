@@ -1,9 +1,6 @@
 package burlton.dartzee.test.db
 
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleInner
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
+import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
 import burlton.dartzee.code.db.DartzeeRuleEntity
@@ -71,5 +68,27 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         entity.inOrder = false
 
         entity.generateRuleDescription() shouldBe "{ 2x Outer, 1x Inner }"
+    }
+
+    @Test
+    fun `Should describe 'score' dart rules`()
+    {
+        val entity = DartzeeRuleEntity()
+        val rule = DartzeeDartRuleScore()
+        rule.score = 15
+
+        entity.dart1Rule = rule.toDbString()
+
+        entity.generateRuleDescription() shouldBe "Score 15"
+    }
+
+    @Test
+    fun `Dart and total rules should be concatenated if both are present`()
+    {
+        val entity = DartzeeRuleEntity()
+        entity.dart1Rule = DartzeeDartRuleEven().toDbString()
+        entity.totalRule = DartzeeTotalRuleGreaterThan().toDbString()
+
+        entity.generateRuleDescription() shouldBe "Score Even, Total > 20"
     }
 }
