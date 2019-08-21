@@ -4,7 +4,7 @@ import burlton.core.code.util.Debug
 import burlton.core.code.util.runOnEventThread
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.game.DartsGameScreen
@@ -32,8 +32,8 @@ private const val LAYER_SLIDER = 4
 
 open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 {
-    private var hmPointToSegment = mutableMapOf<Point, DartboardSegmentKt>()
-    protected var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegmentKt>()
+    private var hmPointToSegment = mutableMapOf<Point, DartboardSegment>()
+    protected var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegment>()
 
     private val dartLabels = mutableListOf<JLabel>()
 
@@ -50,7 +50,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     private var simulation = false
 
     //Cached things
-    private var lastHoveredSegment: DartboardSegmentKt? = null
+    private var lastHoveredSegment: DartboardSegment? = null
     private var colourWrapper: ColourWrapper? = null
     private var latestClip: Clip? = null
 
@@ -271,7 +271,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         colourSegment(lastHoveredSegment!!, true)
     }
 
-    private fun colourSegment(segment: DartboardSegmentKt, highlight: Boolean)
+    private fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
         if (segment.isMiss())
         {
@@ -304,7 +304,9 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    protected fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): DartboardSegmentKt
+    fun getAllSegments() = hmSegmentKeyToSegment.values.toList()
+
+    protected fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): DartboardSegment
     {
         val segment = hmPointToSegment[pt]
         if (segment != null)
@@ -321,13 +323,13 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         return factoryAndCacheSegmentForPoint(pt)
     }
 
-    private fun factoryAndCacheSegmentForPoint(pt: Point): DartboardSegmentKt
+    private fun factoryAndCacheSegmentForPoint(pt: Point): DartboardSegment
     {
         val segmentKey = factorySegmentKeyForPoint(pt, centerPoint, diameter)
         var segment = hmSegmentKeyToSegment[segmentKey]
         if (segment == null)
         {
-            segment = DartboardSegmentKt(segmentKey)
+            segment = DartboardSegment(segmentKey)
             hmSegmentKeyToSegment[segmentKey] = segment
         }
 
@@ -346,7 +348,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         val segment = hmSegmentKeyToSegment[segmentKey]
         return segment?.points ?: mutableListOf()
     }
-    fun getSegment(score: Int, type: Int): DartboardSegmentKt? = hmSegmentKeyToSegment["${score}_$type"]
+    fun getSegment(score: Int, type: Int): DartboardSegment? = hmSegmentKeyToSegment["${score}_$type"]
 
     fun isDouble(pt: Point): Boolean
     {
@@ -751,12 +753,12 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         private val hmPointToSegment = dartboard.hmPointToSegment
         private val hmSegmentKeyToSegment = dartboard.hmSegmentKeyToSegment
 
-        fun getPointToSegmentMap(): MutableMap<Point, DartboardSegmentKt>
+        fun getPointToSegmentMap(): MutableMap<Point, DartboardSegment>
         {
             return hmPointToSegment.toMutableMap()
         }
 
-        fun getSegmentKeyToSegmentMap(): MutableMap<String, DartboardSegmentKt>
+        fun getSegmentKeyToSegmentMap(): MutableMap<String, DartboardSegment>
         {
             return hmSegmentKeyToSegment.toMutableMap()
         }

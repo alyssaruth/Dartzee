@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen
 
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.screen.Dartboard
@@ -80,7 +80,7 @@ class TestDartboardSegmentSelector: AbstractDartsTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val segment = DartboardSegmentKt("10_$SEGMENT_TYPE_OUTER_SINGLE")
+        val segment = DartboardSegment("10_$SEGMENT_TYPE_OUTER_SINGLE")
         dartboard.initState(hashSetOf(segment))
 
         //Check state has initialised properly

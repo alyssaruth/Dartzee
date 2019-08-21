@@ -1,7 +1,10 @@
 package burlton.dartzee.code.db
 
+import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.parseDartRule
 import burlton.dartzee.code.dartzee.parseTotalRule
+import burlton.dartzee.code.screen.Dartboard
 
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
@@ -84,5 +87,38 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
             val sortedGroupedRules = mapEntries.sortedByDescending { it.value.size }.map { "${it.value.size}x ${it.key}" }
             "{ ${sortedGroupedRules.joinToString()} }"
         }
+    }
+
+    fun getValidSegments(dartboard: Dartboard, dartsSoFar: List<Dart>): List<DartboardSegment>
+    {
+        val segments = dartboard.getAllSegments()
+        return segments.filter { isValidSegment(it, dartsSoFar) }
+    }
+    fun isValidSegment(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
+    {
+        return isValidSegmentForDartsRules(segment, dartsSoFar)
+                && isValidSegmentForTotalRule(segment, dartsSoFar)
+    }
+    fun isValidSegmentForDartsRules(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
+    {
+        if (dart1Rule == "")
+        {
+            return true
+        }
+
+        if (dart2Rule == "")
+        {
+            dartsSoFar.map { it.}
+        }
+    }
+    fun isValidSegmentForTotalRule(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
+    {
+        if (totalRule == "")
+        {
+            return true
+        }
+
+        val rule = parseTotalRule(totalRule)!!
+        return rule.isValidSegment(segment, dartsSoFar)
     }
 }

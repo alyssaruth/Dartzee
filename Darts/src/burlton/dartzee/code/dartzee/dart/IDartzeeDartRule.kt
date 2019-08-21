@@ -1,8 +1,8 @@
 package burlton.dartzee.code.dartzee.dart
 
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 
 interface IDartzeeDartRule
 {
-    fun isValidSegment(segment: DartboardSegmentKt): Boolean
+    fun isValidSegment(segment: DartboardSegment): Boolean
 }

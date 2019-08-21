@@ -1,7 +1,7 @@
 package burlton.dartzee.code.dartzee.dart
 
 import burlton.core.code.util.XmlUtil
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import burlton.dartzee.code.dartzee.AbstractDartzeeRuleConfigurable
 import org.w3c.dom.Document
@@ -25,7 +25,7 @@ class DartzeeDartRuleScore: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule,
         spinner.value = score
     }
 
-    override fun isValidSegment(segment: DartboardSegmentKt): Boolean
+    override fun isValidSegment(segment: DartboardSegment): Boolean
     {
         return segment.score == score && !segment.isMiss()
     }

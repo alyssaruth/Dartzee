@@ -319,7 +319,7 @@ class TestAbstractDartsModel: AbstractDartsTest()
             super.paintDartboard(colourWrapper, listen, cached)
 
             val segmentKey = "20_$SEGMENT_TYPE_TREBLE"
-            val segment = DartboardSegmentKt(segmentKey)
+            val segment = DartboardSegment(segmentKey)
             segment.addPoint(Point(1, 7))
             segment.addPoint(Point(3, 3))
             segment.addPoint(Point(5, 2))

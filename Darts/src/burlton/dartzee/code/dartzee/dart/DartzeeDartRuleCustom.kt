@@ -1,6 +1,6 @@
 package burlton.dartzee.code.dartzee.dart
 
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.AbstractDartzeeRuleConfigurable
 import burlton.dartzee.code.screen.DartboardSegmentSelectDialog
 import org.w3c.dom.Document
@@ -12,7 +12,7 @@ import javax.swing.JButton
 
 class DartzeeDartRuleCustom: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule, ActionListener
 {
-    var segments = hashSetOf<DartboardSegmentKt>()
+    var segments = hashSetOf<DartboardSegment>()
 
     private val btnConfigure = JButton("Configure")
 
@@ -24,7 +24,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule
         btnConfigure.addActionListener(this)
     }
 
-    override fun isValidSegment(segment: DartboardSegmentKt): Boolean
+    override fun isValidSegment(segment: DartboardSegment): Boolean
     {
         return segments.find{it.score == segment.score && it.type == segment.type} != null
     }
@@ -47,7 +47,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule
         for (i in 0 until list.length)
         {
             val node = list.item(i) as Element
-            val segment = DartboardSegmentKt(node.getAttribute("Value"))
+            val segment = DartboardSegment(node.getAttribute("Value"))
 
             segments.add(segment)
         }

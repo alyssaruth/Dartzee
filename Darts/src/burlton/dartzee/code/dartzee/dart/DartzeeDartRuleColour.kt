@@ -1,7 +1,7 @@
 package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.AbstractDartzeeRuleConfigurable
 import burlton.dartzee.code.utils.getColourForPointAndSegment
 import org.w3c.dom.Document
@@ -44,7 +44,7 @@ class DartzeeDartRuleColour: AbstractDartzeeRuleConfigurable(), IDartzeeDartRule
         cbRed.addActionListener(this)
     }
 
-    override fun isValidSegment(segment: DartboardSegmentKt): Boolean
+    override fun isValidSegment(segment: DartboardSegment): Boolean
     {
         if (segment.isMiss())
         {
