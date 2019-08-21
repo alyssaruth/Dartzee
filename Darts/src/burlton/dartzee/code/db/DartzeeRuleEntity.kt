@@ -78,7 +78,10 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         }
         else
         {
-            "{ $dart1Desc, $dart2Desc, $dart3Desc }"
+            //Try to condense the descriptions
+            val rules = listOf(dart1Desc, dart2Desc, dart3Desc)
+            val rulesGrouped = rules.groupBy { it }.map { "${it.value.size}x ${it.key}"}
+            "{ ${rulesGrouped.joinToString()} }"
         }
     }
 }
