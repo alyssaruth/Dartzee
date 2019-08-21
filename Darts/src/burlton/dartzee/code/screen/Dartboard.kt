@@ -271,7 +271,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         colourSegment(lastHoveredSegment!!, true)
     }
 
-    private fun colourSegment(segment: DartboardSegment, highlight: Boolean)
+    fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
         if (segment.isMiss())
         {
@@ -280,11 +280,19 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
 
         val hoveredColour = getColourForPointAndSegment(null, segment, highlight, colourWrapper)!!
+        colourSegment(segment, hoveredColour)
+    }
+
+    fun colourSegment(segment: DartboardSegment, col: Color)
+    {
         val pointsForCurrentSegment = segment.points
         for (i in pointsForCurrentSegment.indices)
         {
             val pt = pointsForCurrentSegment[i]
-            colourPoint(pt, hoveredColour)
+            if (!segment.isEdgePoint(pt) || colourWrapper?.edgeColour == null)
+            {
+                colourPoint(pt, col)
+            }
         }
 
         dartboardLabel.repaint()
