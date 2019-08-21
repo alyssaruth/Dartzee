@@ -69,21 +69,6 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
         }
     }
 
-    private fun colourSegment(segment: DartboardSegment, col: Color)
-    {
-        val pointsForCurrentSegment = segment.points
-        for (i in pointsForCurrentSegment.indices)
-        {
-            val pt = pointsForCurrentSegment[i]
-            if (!segment.isEdgePoint(pt))
-            {
-                colourPoint(pt, col)
-            }
-        }
-
-        dartboardLabel.repaint()
-    }
-
     override fun mouseMoved(arg0: MouseEvent)
     {
         //Do nothing

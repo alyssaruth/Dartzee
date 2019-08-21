@@ -2,6 +2,7 @@ package burlton.dartzee.code.db
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
+import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.parseDartRule
 import burlton.dartzee.code.dartzee.parseTotalRule
 import burlton.dartzee.code.screen.Dartboard
@@ -114,22 +115,46 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         }
 
         val parsedRule3 = parseDartRule(dart3Rule)!!
-
+        val allRules = listOf(parsedRule1, parsedRule2, parsedRule3)
         if (inOrder)
         {
             //Need to compare to the precise rule for this dart
-            return when (dartsSoFar.size)
-            {
-                0 -> parsedRule1.isValidSegment(segment)
-                1 -> parsedRule2.isValidSegment(segment)
-                else -> parsedRule3.isValidSegment(segment)
-            }
+            return isValidDartForOrderedDartRule(segment, dartsSoFar, allRules)
         }
         else
         {
-            //Hmm. Interesting code goes here.
-            return false
+            return isValidDartForAnyOrderDartsRule(segment, dartsSoFar, allRules)
         }
+    }
+    private fun isValidDartForOrderedDartRule(segment: DartboardSegment, dartsSoFar: List<Dart>, rules: List<AbstractDartzeeDartRule>): Boolean
+    {
+        var valid = true
+        val exampleDart = Dart(segment.score, segment.getMultiplier())
+        val allDarts = dartsSoFar + exampleDart
+
+        allDarts.forEachIndexed{ i, drt ->
+            valid = valid && rules[i].isValidDart(drt)
+        }
+
+        return valid
+    }
+    private fun isValidDartForAnyOrderDartsRule(segment: DartboardSegment, dartsSoFar: List<Dart>, rules: List<AbstractDartzeeDartRule>): Boolean
+    {
+        return when (dartsSoFar.size)
+        {
+            0 -> rules.any { it.isValidSegment(segment) }
+            1 -> false
+            else -> getAllRulePermutations(rules).any { isValidDartForOrderedDartRule(segment, dartsSoFar, it) }
+        }
+    }
+    private fun getAllRulePermutations(rules: List<AbstractDartzeeDartRule>): List<List<AbstractDartzeeDartRule>>
+    {
+        return listOf(rules,
+                listOf(rules[0], rules[2], rules[1]),
+                listOf(rules[1], rules[0], rules[2]),
+                listOf(rules[1], rules[2], rules[0]),
+                listOf(rules[2], rules[0], rules[1]),
+                listOf(rules[2], rules[1], rules[0]))
     }
     private fun isValidDartForTotalRule(dart: Dart, dartsSoFar: List<Dart>): Boolean
     {

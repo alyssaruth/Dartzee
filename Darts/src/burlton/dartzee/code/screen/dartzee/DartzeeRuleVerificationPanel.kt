@@ -7,6 +7,7 @@ import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -61,6 +62,8 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
     fun updateRule(rule: DartzeeRuleEntity)
     {
         this.dartzeeRule = rule
+
+        repaintDartboard()
     }
 
 
@@ -84,6 +87,32 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         {
             dartboard.stopListening()
         }
+
+        repaintDartboard()
+    }
+
+    private fun repaintDartboard()
+    {
+        if (dartsThrown.size == 3)
+        {
+            dartboard.getAllSegments().forEach{
+                dartboard.colourSegment(it, Color.GRAY)
+            }
+        }
+        else
+        {
+            val validSegments = dartzeeRule.getValidSegments(dartboard, dartsThrown)
+            dartboard.getAllSegments().forEach{
+                if (validSegments.contains(it))
+                {
+                    dartboard.colourSegment(it, false)
+                }
+                else
+                {
+                    dartboard.colourSegment(it, Color.GRAY)
+                }
+            }
+        }
     }
 
     override fun actionPerformed(e: ActionEvent?)
@@ -95,5 +124,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         panelDartOne.reset()
         panelDartTwo.reset()
         panelDartThree.reset()
+
+        repaintDartboard()
     }
 }
