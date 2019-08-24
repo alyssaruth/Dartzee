@@ -4,7 +4,6 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.bean.DartzeeDartResult
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.listener.DartboardListener
-import burlton.dartzee.code.screen.Dartboard
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Color
@@ -18,7 +17,7 @@ import javax.swing.border.TitledBorder
 
 class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
-    private val dartboard = Dartboard(300, 300)
+    private val dartboard = DartboardRuleVerifier(300, 300)
     private val dartsThrown = mutableListOf<Dart>()
     private val btnReset = JButton()
     private val panelSouth = JPanel()
@@ -102,16 +101,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         else
         {
             val validSegments = dartzeeRule.getValidSegments(dartboard, dartsThrown)
-            dartboard.getAllSegments().forEach{
-                if (validSegments.contains(it))
-                {
-                    dartboard.colourSegment(it, false)
-                }
-                else
-                {
-                    dartboard.colourSegment(it, Color.GRAY)
-                }
-            }
+            dartboard.refreshValidSegments(validSegments)
         }
     }
 

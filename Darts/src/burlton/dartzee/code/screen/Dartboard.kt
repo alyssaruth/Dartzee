@@ -283,7 +283,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         colourSegment(segment, hoveredColour)
     }
 
-    fun colourSegment(segment: DartboardSegment, col: Color)
+    open fun colourSegment(segment: DartboardSegment, col: Color)
     {
         val pointsForCurrentSegment = segment.points
         for (i in pointsForCurrentSegment.indices)

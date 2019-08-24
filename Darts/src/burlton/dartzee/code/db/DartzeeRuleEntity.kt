@@ -97,7 +97,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     }
     fun isValidSegment(segment: DartboardSegment, dartsSoFar: List<Dart>): Boolean
     {
-        val exampleDart = Dart(segment.score, segment.getMultiplier())
+        val exampleDart = segment.getExampleDart()
         return isValidSegmentForDartsRules(segment, dartsSoFar)
                 && isValidDartForTotalRule(exampleDart, dartsSoFar)
     }
@@ -109,7 +109,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         //This is an "at least one" rule, so just need any of the previous darts or this one to be valid
         if (parsedRule2 == null)
         {
-            val exampleDart = Dart(segment.score, segment.getMultiplier())
+            val exampleDart = segment.getExampleDart()
             val allDarts = dartsSoFar + exampleDart
             return allDarts.any { parsedRule1.isValidSegment(segment) }
         }
@@ -129,7 +129,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     private fun isValidDartForOrderedDartRule(segment: DartboardSegment, dartsSoFar: List<Dart>, rules: List<AbstractDartzeeDartRule>): Boolean
     {
         var valid = true
-        val exampleDart = Dart(segment.score, segment.getMultiplier())
+        val exampleDart = segment.getExampleDart()
         val allDarts = dartsSoFar + exampleDart
 
         allDarts.forEachIndexed{ i, drt ->

@@ -2,6 +2,7 @@ package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.screen.DartboardSegmentSelectDialog
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.FlowLayout
@@ -68,6 +69,9 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
         dlg.isVisible = true
 
         segments = dlg.getSelection()
+
+        //Need to fire off something to tell the other screen to update. Shit.
+        btnConfigure.actionListeners.find { it is DartzeeRuleCreationDialog }!!.actionPerformed(e)
     }
 
 }

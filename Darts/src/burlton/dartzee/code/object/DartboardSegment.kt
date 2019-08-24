@@ -110,4 +110,11 @@ class DartboardSegment(val scoreAndType : String)
 
         return canBeYMax || canBeYMin || canBeXMax || canBeXMin
     }
+
+    fun getExampleDart(): Dart
+    {
+        val drt = Dart(score, getMultiplier())
+        drt.segmentType = type
+        return drt
+    }
 }
