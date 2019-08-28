@@ -18,7 +18,7 @@ class TestDartzeeDartRuleOdd: AbstractDartzeeRuleTest<DartzeeDartRuleOdd>()
         rule.isValidSegment(doubleNineteen) shouldBe true
         rule.isValidSegment(trebleTwenty) shouldBe false
         rule.isValidSegment(singleNineteen) shouldBe true
-        rule.isValidSegment(miss) shouldBe false
+        rule.isValidSegment(missTwenty) shouldBe false
         rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(outerBull) shouldBe true
     }

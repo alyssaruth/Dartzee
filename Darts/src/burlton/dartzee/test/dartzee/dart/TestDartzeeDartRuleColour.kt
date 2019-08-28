@@ -3,7 +3,7 @@ package burlton.dartzee.test.dartzee.dart
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleColour
 import burlton.dartzee.code.dartzee.parseDartRule
 import burlton.dartzee.test.*
-import burlton.dartzee.test.dartzee.AbstractConfigurableDartzeeRuleTest
+import burlton.dartzee.test.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -11,8 +11,10 @@ import javax.swing.JCheckBox
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class TestDartzeeDartRuleColour: AbstractConfigurableDartzeeRuleTest<DartzeeDartRuleColour>()
+class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>()
 {
+    override val emptyIsValid = false
+
     override fun factory() = DartzeeDartRuleColour()
 
     @Test
@@ -27,7 +29,7 @@ class TestDartzeeDartRuleColour: AbstractConfigurableDartzeeRuleTest<DartzeeDart
         rule.isValidSegment(singleNineteen) shouldBe false
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
-        rule.isValidSegment(miss) shouldBe false
+        rule.isValidSegment(missTwenty) shouldBe false
         rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe false
@@ -45,7 +47,7 @@ class TestDartzeeDartRuleColour: AbstractConfigurableDartzeeRuleTest<DartzeeDart
         rule.isValidSegment(singleNineteen) shouldBe true
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
-        rule.isValidSegment(miss) shouldBe false
+        rule.isValidSegment(missTwenty) shouldBe false
         rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe false
@@ -63,7 +65,7 @@ class TestDartzeeDartRuleColour: AbstractConfigurableDartzeeRuleTest<DartzeeDart
         rule.isValidSegment(singleNineteen) shouldBe false
         rule.isValidSegment(doubleNineteen) shouldBe true
         rule.isValidSegment(trebleNineteen) shouldBe true
-        rule.isValidSegment(miss) shouldBe false
+        rule.isValidSegment(missTwenty) shouldBe false
         rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe true
@@ -81,7 +83,7 @@ class TestDartzeeDartRuleColour: AbstractConfigurableDartzeeRuleTest<DartzeeDart
         rule.isValidSegment(singleNineteen) shouldBe false
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
-        rule.isValidSegment(miss) shouldBe false
+        rule.isValidSegment(missTwenty) shouldBe false
         rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe true
         rule.isValidSegment(outerBull) shouldBe false

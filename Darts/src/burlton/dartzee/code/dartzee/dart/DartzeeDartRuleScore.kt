@@ -13,7 +13,7 @@ class DartzeeDartRuleScore: AbstractDartzeeDartRuleConfigurable(), ChangeListene
 {
     var score = 20
 
-    private val spinner = SpinnerSingleSelector()
+    val spinner = SpinnerSingleSelector()
 
     init
     {
