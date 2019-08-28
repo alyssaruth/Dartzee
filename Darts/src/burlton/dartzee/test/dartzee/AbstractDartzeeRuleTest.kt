@@ -3,6 +3,7 @@ package burlton.dartzee.test.dartzee
 import burlton.dartzee.code.dartzee.AbstractDartzeeRule
 import burlton.dartzee.code.dartzee.parseDartRule
 import burlton.dartzee.test.helper.AbstractDartsTest
+import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
 
 abstract class AbstractDartzeeRuleTest<E: AbstractDartzeeRule>: AbstractDartsTest()
@@ -16,5 +17,11 @@ abstract class AbstractDartzeeRuleTest<E: AbstractDartzeeRule>: AbstractDartsTes
 
         val parsedRule = parseDartRule(tag)!!
         parsedRule.getRuleIdentifier() shouldBe rule.getRuleIdentifier()
+    }
+
+    fun `Should be valid by default`()
+    {
+        val rule = factory()
+        rule.validate().shouldBeEmpty()
     }
 }

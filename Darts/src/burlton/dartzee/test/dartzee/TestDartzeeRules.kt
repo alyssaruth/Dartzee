@@ -19,21 +19,6 @@ import kotlin.test.assertTrue
 class TestDartzeeRules: AbstractDartsTest()
 {
     @Test
-    fun `segment validation for inner rule`()
-    {
-        val rule = DartzeeDartRuleInner()
-
-        assertTrue(rule.isValidSegment(bullseye))
-        assertTrue(rule.isValidSegment(outerBull))
-        assertTrue(rule.isValidSegment(innerSingle))
-        assertTrue(rule.isValidSegment(trebleNineteen))
-        assertFalse(rule.isValidSegment(outerSingle))
-        assertFalse(rule.isValidSegment(doubleTwenty))
-        assertFalse(rule.isValidSegment(miss))
-        assertFalse(rule.isValidSegment(missedBoard))
-    }
-
-    @Test
     fun `segment validation for outer rule`()
     {
         val rule = DartzeeDartRuleOuter()
@@ -46,14 +31,6 @@ class TestDartzeeRules: AbstractDartsTest()
         assertTrue(rule.isValidSegment(doubleTwenty))
         assertFalse(rule.isValidSegment(miss))
         assertFalse(rule.isValidSegment(missedBoard))
-    }
-
-    @Test
-    fun `simple rules are always valid`()
-    {
-        val rule = DartzeeDartRuleOdd()
-
-        assertTrue(rule.validate().isEmpty())
     }
 
     @Test
