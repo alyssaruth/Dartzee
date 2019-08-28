@@ -3,23 +3,31 @@ package burlton.dartzee.test.dartzee
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
 import burlton.dartzee.code.dartzee.getAllDartRules
+import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.parseDartRule
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
-import kotlin.test.assertEquals
 
 class TestDartzeeRules: AbstractDartsTest()
 {
     @Test
-    fun `no rules should have overlapping identifiers`()
+    fun `no dart rules should have overlapping identifiers`()
     {
         val rules = getAllDartRules()
 
         val nameCount = rules.map{ it.getRuleIdentifier() }.distinct().count()
+        nameCount shouldBe rules.size
+    }
 
-        assertEquals(nameCount, rules.size)
+    @Test
+    fun `no total rules should have overlapping identifiers`()
+    {
+        val rules = getAllTotalRules()
+
+        val nameCount = rules.map{ it.getRuleIdentifier() }.distinct().count()
+        nameCount shouldBe rules.size
     }
 
     @Test
