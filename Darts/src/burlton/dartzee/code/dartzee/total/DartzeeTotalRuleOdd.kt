@@ -6,4 +6,6 @@ class DartzeeTotalRuleOdd: AbstractDartzeeTotalRule()
 
     override fun isValidTotal(total: Int) = (total % 2) != 0
     override fun getDescription() = "is odd"
+
+    override fun isPotentiallyValidTotal(total: Int, dartsRemaining: Int) = true
 }
