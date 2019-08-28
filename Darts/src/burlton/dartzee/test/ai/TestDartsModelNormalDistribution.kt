@@ -5,7 +5,7 @@ import burlton.core.code.util.XmlUtil
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.ai.*
-import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.test.borrowTestDartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.numerics.shouldBeBetween
@@ -152,9 +152,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
         model.distribution = distribution
         model.distributionDoubles = distributionDoubles
 
-        //Make a dartboard and two points - one that's a double and one that isn't @_@
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val dartboard = borrowTestDartboard()
 
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
         val ptDouble = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
@@ -178,9 +176,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
         model.distribution = distribution
         model.distributionDoubles = null
 
-        //Make a dartboard and two points - one that's a double and one that isn't @_@
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val dartboard = borrowTestDartboard()
 
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
         val ptDouble = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
@@ -207,9 +203,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
         model.distribution = distribution
         model.radiusAverageCount = 3
 
-        //Make a dartboard and two points - one that's a double and one that isn't @_@
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val dartboard = borrowTestDartboard()
 
         val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
 
@@ -223,8 +217,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
         val model = DartsModelNormalDistribution()
         model.populate(3.0, 0.0, 0.0, 1)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val dartboard = borrowTestDartboard()
         val pt = Point(0, 0)
 
         val hmAngleToCount = HashMapCount<Double>()
