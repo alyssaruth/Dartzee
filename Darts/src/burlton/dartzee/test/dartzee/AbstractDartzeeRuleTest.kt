@@ -19,7 +19,7 @@ abstract class AbstractDartzeeRuleTest<E: AbstractDartzeeRule>: AbstractDartsTes
         parsedRule.getRuleIdentifier() shouldBe rule.getRuleIdentifier()
     }
 
-    fun `Should be valid by default`()
+    open fun `Validate empty rule`()
     {
         val rule = factory()
         rule.validate().shouldBeEmpty()

@@ -19,21 +19,6 @@ import kotlin.test.assertTrue
 class TestDartzeeRules: AbstractDartsTest()
 {
     @Test
-    fun `segment validation for outer rule`()
-    {
-        val rule = DartzeeDartRuleOuter()
-
-        assertFalse(rule.isValidSegment(bullseye))
-        assertFalse(rule.isValidSegment(outerBull))
-        assertFalse(rule.isValidSegment(innerSingle))
-        assertFalse(rule.isValidSegment(trebleNineteen))
-        assertTrue(rule.isValidSegment(outerSingle))
-        assertTrue(rule.isValidSegment(doubleTwenty))
-        assertFalse(rule.isValidSegment(miss))
-        assertFalse(rule.isValidSegment(missedBoard))
-    }
-
-    @Test
     fun `can't create empty colour rule`()
     {
         val rule = DartzeeDartRuleColour()
