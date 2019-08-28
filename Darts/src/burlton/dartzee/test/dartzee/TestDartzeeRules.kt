@@ -1,9 +1,10 @@
 package burlton.dartzee.test.dartzee
 
-import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.bean.SpinnerSingleSelector
-import burlton.dartzee.code.dartzee.*
 import burlton.dartzee.code.dartzee.dart.*
+import burlton.dartzee.code.dartzee.getAllDartRules
+import burlton.dartzee.code.dartzee.parseDartRule
+import burlton.dartzee.test.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -17,20 +18,6 @@ import kotlin.test.assertTrue
 
 class TestDartzeeRules: AbstractDartsTest()
 {
-    private val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
-    private val outerBull = DartboardSegment("25_$SEGMENT_TYPE_OUTER_SINGLE")
-    private val innerSingle = DartboardSegment("20_$SEGMENT_TYPE_INNER_SINGLE")
-    private val outerSingle = DartboardSegment("15_$SEGMENT_TYPE_OUTER_SINGLE")
-    private val miss = DartboardSegment("20_$SEGMENT_TYPE_MISS")
-    private val missedBoard = DartboardSegment("15_$SEGMENT_TYPE_MISSED_BOARD")
-
-    private val singleTwenty = DartboardSegment("20_$SEGMENT_TYPE_INNER_SINGLE")
-    private val doubleTwenty = DartboardSegment("20_$SEGMENT_TYPE_DOUBLE")
-    private val trebleTwenty = DartboardSegment("20_$SEGMENT_TYPE_TREBLE")
-    private val singleNineteen = DartboardSegment("19_$SEGMENT_TYPE_OUTER_SINGLE")
-    private val doubleNineteen = DartboardSegment("19_$SEGMENT_TYPE_DOUBLE")
-    private val trebleNineteen = DartboardSegment("19_$SEGMENT_TYPE_TREBLE")
-
     @Test
     fun `segment validation for inner rule`()
     {
@@ -59,44 +46,6 @@ class TestDartzeeRules: AbstractDartsTest()
         assertTrue(rule.isValidSegment(doubleTwenty))
         assertFalse(rule.isValidSegment(miss))
         assertFalse(rule.isValidSegment(missedBoard))
-    }
-
-    @Test
-    fun `segment validation for even rule`()
-    {
-        val rule = DartzeeDartRuleEven()
-
-        val doubleNineteen = DartboardSegment("19_$SEGMENT_TYPE_DOUBLE")
-        val trebleTwenty = DartboardSegment("20_$SEGMENT_TYPE_TREBLE")
-        val singleNineteen = DartboardSegment("19_$SEGMENT_TYPE_OUTER_SINGLE")
-        val miss = DartboardSegment("20_$SEGMENT_TYPE_MISS")
-        val missedBoard = DartboardSegment("16_$SEGMENT_TYPE_MISSED_BOARD")
-
-        assertFalse(rule.isValidSegment(doubleNineteen))
-        assertTrue(rule.isValidSegment(trebleTwenty))
-        assertFalse(rule.isValidSegment(outerBull))
-        assertFalse(rule.isValidSegment(singleNineteen))
-        assertFalse(rule.isValidSegment(miss))
-        assertFalse(rule.isValidSegment(missedBoard))
-    }
-
-    @Test
-    fun `segment validation for odd rule`()
-    {
-        val rule = DartzeeDartRuleOdd()
-
-        val doubleNineteen = DartboardSegment("19_$SEGMENT_TYPE_DOUBLE")
-        val trebleTwenty = DartboardSegment("20_$SEGMENT_TYPE_TREBLE")
-        val singleNineteen = DartboardSegment("19_$SEGMENT_TYPE_OUTER_SINGLE")
-        val miss = DartboardSegment("19_$SEGMENT_TYPE_MISS")
-        val missedBoard = DartboardSegment("13_$SEGMENT_TYPE_MISSED_BOARD")
-
-        assertTrue(rule.isValidSegment(doubleNineteen))
-        assertFalse(rule.isValidSegment(trebleTwenty))
-        assertTrue(rule.isValidSegment(singleNineteen))
-        assertFalse(rule.isValidSegment(miss))
-        assertFalse(rule.isValidSegment(missedBoard))
-        assertTrue(rule.isValidSegment(outerBull))
     }
 
     @Test
@@ -275,19 +224,6 @@ class TestDartzeeRules: AbstractDartsTest()
     {
         val rule = parseDartRule("<Broken/>")
         rule shouldBe null
-    }
-
-    @Test
-    fun `parse all rules from atomic tags`()
-    {
-        val rules = getAllDartRules()
-        rules.forEach{
-            val identifier = it.getRuleIdentifier()
-            val tag = "<$identifier/>"
-
-            val rule = parseDartRule(tag)!!
-            rule.getRuleIdentifier() shouldBe identifier
-        }
     }
 
     @Test
