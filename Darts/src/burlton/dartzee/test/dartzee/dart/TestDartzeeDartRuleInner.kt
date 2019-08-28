@@ -11,7 +11,7 @@ class TestDartzeeDartRuleInner: AbstractDartzeeRuleTest<DartzeeDartRuleInner>()
     override fun factory() = DartzeeDartRuleInner()
 
     @Test
-    fun `segment validation for inner rule`()
+    fun `segment validation`()
     {
         val rule = DartzeeDartRuleInner()
 

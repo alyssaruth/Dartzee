@@ -11,7 +11,7 @@ class TestDartzeeDartRuleOdd: AbstractDartzeeRuleTest<DartzeeDartRuleOdd>()
     override fun factory() = DartzeeDartRuleOdd()
 
     @Test
-    fun `segment validation for odd rule`()
+    fun `segment validation`()
     {
         val rule = DartzeeDartRuleOdd()
 
