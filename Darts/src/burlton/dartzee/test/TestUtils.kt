@@ -7,7 +7,7 @@ val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
 val outerBull = DartboardSegment("25_$SEGMENT_TYPE_OUTER_SINGLE")
 val innerSingle = DartboardSegment("20_$SEGMENT_TYPE_INNER_SINGLE")
 val outerSingle = DartboardSegment("15_$SEGMENT_TYPE_OUTER_SINGLE")
-val miss = DartboardSegment("20_$SEGMENT_TYPE_MISS")
+val missTwenty = DartboardSegment("20_$SEGMENT_TYPE_MISS")
 val missedBoard = DartboardSegment("15_$SEGMENT_TYPE_MISSED_BOARD")
 
 val singleTwenty = DartboardSegment("20_$SEGMENT_TYPE_INNER_SINGLE")
