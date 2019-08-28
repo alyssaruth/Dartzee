@@ -3,9 +3,8 @@ package burlton.dartzee.test.dartzee.dart
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.test.*
 import burlton.dartzee.test.dartzee.AbstractDartzeeRuleTest
+import io.kotlintest.shouldBe
 import org.junit.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class TestDartzeeDartRuleEven: AbstractDartzeeRuleTest<DartzeeDartRuleEven>()
 {
@@ -16,11 +15,11 @@ class TestDartzeeDartRuleEven: AbstractDartzeeRuleTest<DartzeeDartRuleEven>()
     {
         val rule = DartzeeDartRuleEven()
 
-        assertFalse(rule.isValidSegment(doubleNineteen))
-        assertTrue(rule.isValidSegment(trebleTwenty))
-        assertFalse(rule.isValidSegment(outerBull))
-        assertFalse(rule.isValidSegment(singleNineteen))
-        assertFalse(rule.isValidSegment(miss))
-        assertFalse(rule.isValidSegment(missedBoard))
+        rule.isValidSegment(doubleNineteen) shouldBe false
+        rule.isValidSegment(trebleTwenty) shouldBe true
+        rule.isValidSegment(outerBull) shouldBe false
+        rule.isValidSegment(singleNineteen) shouldBe false
+        rule.isValidSegment(miss) shouldBe false
+        rule.isValidSegment(missedBoard) shouldBe false
     }
 }
