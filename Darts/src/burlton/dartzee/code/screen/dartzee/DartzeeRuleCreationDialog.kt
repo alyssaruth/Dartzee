@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.bean.DartzeeRuleSelector
+import burlton.dartzee.code.dartzee.generateRuleDescription
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.RadioButtonPanel
