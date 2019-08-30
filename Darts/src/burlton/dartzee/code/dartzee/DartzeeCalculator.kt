@@ -2,10 +2,14 @@ package burlton.dartzee.code.dartzee
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.screen.Dartboard
 
+/**
+ * Rule Descriptions
+ */
 fun DartzeeRuleEntity.generateRuleDescription(): String
 {
     val dartsDesc = getDartsDescription()
@@ -58,6 +62,74 @@ private fun DartzeeRuleEntity.getDartsDescription(): String
         "{ ${sortedGroupedRules.joinToString()} }"
     }
 }
+
+/**
+ * Validation
+ */
+fun DartzeeRuleEntity.getValidSegmentsNewwWayTest(dartboard: Dartboard, dartsSoFar: List<Dart>): List<DartboardSegment>
+{
+    val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, allowMisses)
+
+    val validCombinations = allPossibilities.filter{ isValidCombination(it) }
+
+}
+fun DartzeeRuleEntity.isValidCombination(combination: List<DartboardSegment>): Boolean
+{
+    return isValidCombinationForTotalRule(combination)
+            && isValidCombinationForDartRule(combination)
+}
+private fun DartzeeRuleEntity.isValidCombinationForTotalRule(combination: List<DartboardSegment>): Boolean
+{
+    if (totalRule == "")
+    {
+        return true
+    }
+
+    val total = combination.map { it.score * it.getMultiplier() }.sum()
+    val rule = parseTotalRule(totalRule)!!
+    return rule.isValidTotal(total)
+}
+private fun DartzeeRuleEntity.isValidCombinationForDartRule(combination: List<DartboardSegment>): Boolean
+{
+    val parsedRule1 = parseDartRule(dart1Rule) ?: return true
+    val parsedRule2 = parseDartRule(dart2Rule) ?: return combination.any { parsedRule1.isValidSegment(it) }
+
+    val parsedRule3 = parseDartRule(dart3Rule)!!
+
+
+}
+
+fun generateAllPossibilities(dartboard: Dartboard, dartsSoFar: List<Dart>, allowMisses: Boolean): List<List<DartboardSegment>>
+{
+    val segments = dartboard.getAllSegments().filter { !it.isMiss() }.toMutableList()
+    if (allowMisses)
+    {
+        segments.add(DartboardSegment("20_$SEGMENT_TYPE_MISS"))
+    }
+
+    val segmentsSoFar = dartsSoFar.map { dartboard.getSegment(it.score, it.segmentType)!! }
+
+    var allPossibilities: List<List<DartboardSegment>> = segments.map { segmentsSoFar + it }
+    while (allPossibilities.first().size < 3)
+    {
+        allPossibilities = addAnotherLayer(allPossibilities, segments)
+    }
+
+    return allPossibilities
+}
+private fun addAnotherLayer(allPossibilities: List<List<DartboardSegment>>, segments: List<DartboardSegment>): List<List<DartboardSegment>>
+{
+    val ret = mutableListOf<List<DartboardSegment>>()
+    for (possibility in allPossibilities)
+    {
+        segments.forEach {
+            ret.add(possibility + it)
+        }
+    }
+
+    return ret
+}
+
 
 fun DartzeeRuleEntity.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Dart>): List<DartboardSegment>
 {
