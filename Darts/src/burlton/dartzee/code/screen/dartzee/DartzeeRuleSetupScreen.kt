@@ -68,11 +68,12 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     private fun setTableModel()
     {
         tm.addColumn("Rule")
-        tm.addColumn("Description")
+        tm.addColumn("Combinations (~difficulty)")
 
         tableRules.model = tm
 
         tableRules.setRenderer(0, DartzeeRuleRenderer(0))
+        tableRules.setRenderer(1, DartzeeRuleRenderer(1))
 
         selectionChanged(tableRules)
     }
@@ -146,7 +147,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     {
         override fun getReplacementValue(value: DartzeeRuleEntity): Any
         {
-            return if (colNo == 0) value.generateRuleDescription() else value
+            return if (colNo == 0) value.generateRuleDescription() else value.getStrengthDesc()
         }
 
         override fun setCellColours(typedValue: DartzeeRuleEntity?, isSelected: Boolean)

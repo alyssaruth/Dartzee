@@ -21,7 +21,6 @@ import javax.swing.event.ChangeListener
 class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 {
     var dartzeeRule: DartzeeRuleEntity? = null
-    var calculationResult: ValidSegmentCalculationResult? = null
 
     val lblCombinations = JLabel()
     private val verificationPanel = DartzeeRuleVerificationPanel(this)
@@ -55,7 +54,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         add(panelCenter, BorderLayout.CENTER)
         add(verificationPanel, BorderLayout.EAST)
 
-        lblCombinations.setFontSize(20)
+        lblCombinations.setFontSize(24)
         panelRuleStrength.add(lblCombinations)
 
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
@@ -162,6 +161,14 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 
         populateRuleFromComponents(rule)
 
+        val calculationResult = rule.runStrengthCalculation(verificationPanel.dartboard)
+        val combinations = calculationResult.validCombinations
+        if (combinations == 0)
+        {
+            DialogUtil.showError("This rule is impossible!")
+            return
+        }
+
         dartzeeRule = rule
 
         dispose()
@@ -209,21 +216,12 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
             return false
         }
 
-        val combinations = calculationResult?.totalCombinations ?: 0
-        if (combinations == 0)
-        {
-            DialogUtil.showError("This rule is impossible!")
-            return false
-        }
-
         return true
     }
 
     fun updateRuleStrength(calculationResult: ValidSegmentCalculationResult)
     {
-        this.calculationResult = calculationResult
-
-        lblCombinations.text = "${calculationResult.validCombinations} combinations (${calculationResult.percentage}%)"
+        lblCombinations.text = calculationResult.getCombinationsDesc()
         lblCombinations.repaint()
     }
 
