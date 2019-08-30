@@ -70,6 +70,8 @@ data class ValidSegmentCalculationResult(val validSegments: List<DartboardSegmen
                                          val totalCombinations: Int)
 {
     val percentage = MathsUtil.getPercentage(validCombinations, totalCombinations.toDouble())
+
+    fun getCombinationsDesc() = "$validCombinations combinations ($percentage%)"
 }
 
 /**

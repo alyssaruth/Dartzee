@@ -1,7 +1,10 @@
 package burlton.dartzee.code.db
 
+import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
+import burlton.dartzee.code.dartzee.getValidSegments
 import burlton.dartzee.code.dartzee.parseDartRule
+import burlton.dartzee.code.screen.Dartboard
 
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
@@ -15,6 +18,8 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     var textualName = ""
     var textualDescription = "" //Allow textual rules
     var ordinal = -1
+
+    private var calculationResult: ValidSegmentCalculationResult? = null
 
     override fun getTableName() = "DartzeeRule"
 
@@ -40,4 +45,15 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 
         return listOf(parsedRule1, parsedRule2, parsedRule3)
     }
+
+    fun runStrengthCalculation(dartboard: Dartboard): ValidSegmentCalculationResult
+    {
+        val calculationResult = getValidSegments(dartboard, listOf())
+
+        this.calculationResult = calculationResult
+
+        return calculationResult
+    }
+
+    fun getStrengthDesc() = calculationResult?.getCombinationsDesc() ?: ""
 }

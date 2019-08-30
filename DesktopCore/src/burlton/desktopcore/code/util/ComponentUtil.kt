@@ -114,5 +114,5 @@ fun Container.getParentWindow(): Window?
 
 fun Component.setFontSize(size: Int)
 {
-    font = Font(font.name, font.style, 24)
+    font = Font(font.name, font.style, size)
 }
