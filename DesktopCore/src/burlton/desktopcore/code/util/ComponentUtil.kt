@@ -3,6 +3,7 @@ package burlton.desktopcore.code.util
 import burlton.core.code.util.Debug
 import java.awt.Component
 import java.awt.Container
+import java.awt.Font
 import java.awt.Window
 import java.awt.event.ActionListener
 import javax.swing.*
@@ -109,4 +110,9 @@ fun Container.getParentWindow(): Window?
     val myParent = parent ?: return null
 
     return if (myParent is Window) myParent else myParent.getParentWindow()
+}
+
+fun Component.setFontSize(size: Int)
+{
+    font = Font(font.name, font.style, 24)
 }

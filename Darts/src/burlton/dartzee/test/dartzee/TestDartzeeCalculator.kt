@@ -159,7 +159,7 @@ class TestValidSegments: AbstractDartsTest()
 
         val dartboard = borrowTestDartboard()
 
-        val segments = rule.getValidSegments(dartboard, listOf())
+        val segments = rule.getValidSegments(dartboard, listOf()).validSegments
 
         segments.find { it.score == 20 } shouldNotBe null
         segments.find { it.score == 19 } shouldBe null

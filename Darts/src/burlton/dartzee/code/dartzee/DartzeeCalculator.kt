@@ -1,5 +1,6 @@
 package burlton.dartzee.code.dartzee
 
+import burlton.core.code.util.MathsUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
@@ -64,10 +65,17 @@ private fun DartzeeRuleEntity.getDartsDescription(): String
     }
 }
 
+data class ValidSegmentCalculationResult(val validSegments: List<DartboardSegment>,
+                                         val validCombinations: Int,
+                                         val totalCombinations: Int)
+{
+    val percentage = MathsUtil.getPercentage(validCombinations, totalCombinations.toDouble())
+}
+
 /**
  * Validation
  */
-fun DartzeeRuleEntity.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Dart>): List<DartboardSegment>
+fun DartzeeRuleEntity.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Dart>): ValidSegmentCalculationResult
 {
     val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, allowMisses)
 
@@ -75,8 +83,8 @@ fun DartzeeRuleEntity.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Da
     val totalRule = parseTotalRule(totalRule)
 
     val validCombinations = allPossibilities.filter { isValidCombination(it, dartRules, totalRule) }
-
-    return validCombinations.map { it[dartsSoFar.size] }.distinct()
+    val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
+    return ValidSegmentCalculationResult(validSegments, validCombinations.size, allPossibilities.size)
 }
 fun DartzeeRuleEntity.isValidCombination(combination: List<DartboardSegment>,
                                          dartRules: List<AbstractDartzeeDartRule>?,

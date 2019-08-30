@@ -13,10 +13,11 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.ImageIcon
 import javax.swing.JButton
+import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.border.TitledBorder
 
-class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
+class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog): JPanel(), DartboardListener, ActionListener
 {
     private val dartboard = DartboardRuleVerifier(300, 300)
     private val dartsThrown = mutableListOf<Dart>()
@@ -101,8 +102,10 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         }
         else
         {
-            val validSegments = dartzeeRule.getValidSegments(dartboard, dartsThrown)
-            dartboard.refreshValidSegments(validSegments)
+            val calculationResult = dartzeeRule.getValidSegments(dartboard, dartsThrown)
+
+            dartboard.refreshValidSegments(calculationResult.validSegments)
+            parent.updateRuleStrength(calculationResult)
         }
     }
 

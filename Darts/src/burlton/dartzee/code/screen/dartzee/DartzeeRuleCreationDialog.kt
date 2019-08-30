@@ -1,16 +1,17 @@
 package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.bean.DartzeeRuleSelector
+import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
 import burlton.dartzee.code.dartzee.generateRuleDescription
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.setFontSize
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
-import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.*
 import javax.swing.border.TitledBorder
@@ -20,8 +21,10 @@ import javax.swing.event.ChangeListener
 class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 {
     var dartzeeRule: DartzeeRuleEntity? = null
+    var calculationResult: ValidSegmentCalculationResult? = null
 
-    private val verificationPanel = DartzeeRuleVerificationPanel()
+    val lblCombinations = JLabel()
+    private val verificationPanel = DartzeeRuleVerificationPanel(this)
     private val panelCenter = JPanel()
     private val panelRuleStrength = JPanel()
     private val panelDarts = JPanel()
@@ -38,6 +41,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
     val totalSelector = DartzeeRuleSelector("Total", true, true)
     private val panelRuleName = JPanel()
     val tfName = JTextField()
+
     val btnGenerateName = JButton()
 
     init
@@ -51,11 +55,15 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         add(panelCenter, BorderLayout.CENTER)
         add(verificationPanel, BorderLayout.EAST)
 
+        lblCombinations.setFontSize(20)
+        panelRuleStrength.add(lblCombinations)
+
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
         panelCenter.add(panelRuleStrength, "cell 0 1, growx")
         panelCenter.add(panelDarts, "cell 0 2, growx")
         panelCenter.add(panelTotal, "cell 0 3, growx")
 
+        panelRuleStrength.border = TitledBorder("")
         panelDarts.border = TitledBorder("")
         panelDarts.layout = MigLayout("", "[][]", "[][][][]")
         rdbtnPanelDartScoreType.add(rdbtnAllDarts)
@@ -77,7 +85,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         btnGenerateName.preferredSize = Dimension(40, 50)
 
         tfName.horizontalAlignment = JTextField.CENTER
-        tfName.font = Font(tfName.font.name, tfName.font.style, 24)
+        tfName.setFontSize(24)
         tfName.isEditable = false
 
         rdbtnPanelDartScoreType.addActionListener(this)
@@ -187,20 +195,36 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 
     private fun valid(): Boolean
     {
-        if (rdbtnNoDarts.isSelected && !totalSelector.isEnabled)
+        val valid = if (rdbtnAtLeastOne.isSelected)
         {
-            DialogUtil.showError("You cannot create an empty rule")
-            return false
-        }
-
-        if (rdbtnAtLeastOne.isSelected)
-        {
-            return targetSelector.valid()
+            targetSelector.valid()
         }
         else
         {
-            return dartOneSelector.valid() && dartTwoSelector.valid() && dartThreeSelector.valid()
+            dartOneSelector.valid() && dartTwoSelector.valid() && dartThreeSelector.valid()
         }
+
+        if (!valid)
+        {
+            return false
+        }
+
+        val combinations = calculationResult?.totalCombinations ?: 0
+        if (combinations == 0)
+        {
+            DialogUtil.showError("This rule is impossible!")
+            return false
+        }
+
+        return true
+    }
+
+    fun updateRuleStrength(calculationResult: ValidSegmentCalculationResult)
+    {
+        this.calculationResult = calculationResult
+
+        lblCombinations.text = "${calculationResult.validCombinations} combinations (${calculationResult.percentage}%)"
+        lblCombinations.repaint()
     }
 
     private fun updateComponents()
