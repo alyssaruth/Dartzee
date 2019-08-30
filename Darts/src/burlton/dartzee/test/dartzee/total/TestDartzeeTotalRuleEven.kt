@@ -17,13 +17,4 @@ class TestDartzeeTotalRuleEven: AbstractDartzeeRuleTest<DartzeeTotalRuleEven>()
         rule.isValidTotal(20) shouldBe true
         rule.isValidTotal(21) shouldBe false
     }
-
-    @Test
-    fun `Partial total validation`()
-    {
-        val rule = DartzeeTotalRuleEven()
-
-        rule.isPotentiallyValidTotal(20, 2) shouldBe true
-        rule.isPotentiallyValidTotal(21, 2) shouldBe true
-    }
 }

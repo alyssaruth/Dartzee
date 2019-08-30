@@ -8,7 +8,4 @@ class DartzeeTotalRulePrime: AbstractDartzeeTotalRule()
 
     override fun isValidTotal(total: Int) = Primes.isPrime(total)
     override fun getDescription() = "is prime"
-
-    //Can always get to a prime from whatever score
-    override fun isPotentiallyValidTotal(total: Int, dartsRemaining: Int) = true
 }

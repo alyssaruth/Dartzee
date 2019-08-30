@@ -66,6 +66,7 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     {
         val dlg = DartzeeRuleCreationDialog()
         dlg.rdbtnAllDarts.doClick()
+        dlg.cbInOrder.doClick()
 
         dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleInner>()
         dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOuter>()
@@ -84,7 +85,6 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     fun `Should populate in order correctly when checked`()
     {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.cbInOrder.doClick()
         dlg.btnOk.doClick()
 
         val rule = dlg.dartzeeRule!!
