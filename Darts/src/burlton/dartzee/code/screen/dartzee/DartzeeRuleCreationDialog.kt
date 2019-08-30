@@ -23,6 +23,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 
     private val verificationPanel = DartzeeRuleVerificationPanel()
     private val panelCenter = JPanel()
+    private val panelRuleStrength = JPanel()
     private val panelDarts = JPanel()
     private val rdbtnPanelDartScoreType = RadioButtonPanel()
     val rdbtnAllDarts = JRadioButton("All Darts")
@@ -51,8 +52,9 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         add(verificationPanel, BorderLayout.EAST)
 
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
-        panelCenter.add(panelDarts, "cell 0 1, growx")
-        panelCenter.add(panelTotal, "cell 0 2, growx")
+        panelCenter.add(panelRuleStrength, "cell 0 1, growx")
+        panelCenter.add(panelDarts, "cell 0 2, growx")
+        panelCenter.add(panelTotal, "cell 0 3, growx")
 
         panelDarts.border = TitledBorder("")
         panelDarts.layout = MigLayout("", "[][]", "[][][][]")

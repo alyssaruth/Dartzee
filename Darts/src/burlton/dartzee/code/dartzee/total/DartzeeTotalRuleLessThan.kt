@@ -9,9 +9,4 @@ class DartzeeTotalRuleLessThan: AbstractDartzeeRuleTotalSize()
     override fun toString() = "Less than"
 
     override fun getDescription() = "< $target"
-
-    override fun isPotentiallyValidTotal(total: Int, dartsRemaining: Int): Boolean
-    {
-        return total + dartsRemaining < target
-    }
 }

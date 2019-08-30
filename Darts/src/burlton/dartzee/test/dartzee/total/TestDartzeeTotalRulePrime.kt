@@ -10,12 +10,6 @@ class TestDartzeeTotalRulePrime: AbstractDartzeeRuleTest<DartzeeTotalRulePrime>(
     override fun factory() = DartzeeTotalRulePrime()
 
     @Test
-    fun `Should always return true for potentially valid`()
-    {
-        DartzeeTotalRulePrime().isPotentiallyValidTotal(100, 0) shouldBe true
-    }
-
-    @Test
     fun `Total validation`()
     {
         val rule = DartzeeTotalRulePrime()

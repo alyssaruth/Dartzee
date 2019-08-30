@@ -43,7 +43,8 @@ abstract class AbstractDartzeeRule
 
 fun getAllDartRules(): List<AbstractDartzeeDartRule>
 {
-    return mutableListOf(DartzeeDartRuleEven(),
+    return mutableListOf(DartzeeDartRuleAny(),
+            DartzeeDartRuleEven(),
             DartzeeDartRuleOdd(),
             DartzeeDartRuleInner(),
             DartzeeDartRuleOuter(),
