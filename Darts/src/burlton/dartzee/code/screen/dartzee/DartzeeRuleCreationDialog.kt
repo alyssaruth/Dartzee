@@ -86,6 +86,8 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         totalSelector.addActionListener(this)
         cbInOrder.addActionListener(this)
 
+        cbInOrder.isSelected = true
+
         updateComponents()
     }
 

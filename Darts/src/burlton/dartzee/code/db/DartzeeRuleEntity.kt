@@ -1,5 +1,8 @@
 package burlton.dartzee.code.db
 
+import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
+import burlton.dartzee.code.dartzee.parseDartRule
+
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
     var gameId = ""
@@ -27,5 +30,14 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "TextualName VARCHAR(255) NOT NULL, "
                 + "TextualDescription VARCHAR(2500) NOT NULL, "
                 + "Ordinal INT NOT NULL")
+    }
+
+    fun getParsedDartRules(): List<AbstractDartzeeDartRule>?
+    {
+        val parsedRule1 = parseDartRule(dart1Rule) ?: return null
+        val parsedRule2 = parseDartRule(dart2Rule) ?: return listOf(parsedRule1)
+        val parsedRule3 = parseDartRule(dart3Rule)!!
+
+        return listOf(parsedRule1, parsedRule2, parsedRule3)
     }
 }
