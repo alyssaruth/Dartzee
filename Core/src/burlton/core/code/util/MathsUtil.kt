@@ -18,8 +18,7 @@ class MathsUtil
             return if (count == 0)
             {
                 0.0
-            } else round(100 * count / total, 1)
-
+            } else round(100 * count.toDouble() / total, 1)
         }
     }
 }
