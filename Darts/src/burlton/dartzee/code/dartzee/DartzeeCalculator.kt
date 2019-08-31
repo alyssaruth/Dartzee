@@ -67,9 +67,11 @@ private fun DartzeeRuleEntity.getDartsDescription(): String
 
 data class ValidSegmentCalculationResult(val validSegments: List<DartboardSegment>,
                                          val validCombinations: Int,
-                                         val totalCombinations: Int)
+                                         val allCombinations: Int,
+                                         val validPixelCombinations: Int,
+                                         val allPixelCombinations: Int)
 {
-    val percentage = MathsUtil.getPercentage(validCombinations, totalCombinations.toDouble())
+    private val percentage = MathsUtil.getPercentage(validCombinations, allCombinations.toDouble())
 
     fun getCombinationsDesc() = "$validCombinations combinations ($percentage%)"
 }
@@ -86,7 +88,11 @@ fun DartzeeRuleEntity.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Da
 
     val validCombinations = allPossibilities.filter { isValidCombination(it, dartRules, totalRule) }
     val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
-    return ValidSegmentCalculationResult(validSegments, validCombinations.size, allPossibilities.size)
+
+    val allPixelPossibilities = allPossibilities.map { mapCombinationToPixels(it, dartboard) }.sum()
+    val validPixelPossibilities = validCombinations.map { mapCombinationToPixels(it, dartboard) }.sum()
+
+    return ValidSegmentCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibilities, allPixelPossibilities)
 }
 fun DartzeeRuleEntity.isValidCombination(combination: List<DartboardSegment>,
                                          dartRules: List<AbstractDartzeeDartRule>?,
@@ -130,6 +136,11 @@ private fun DartzeeRuleEntity.isValidCombinationForDartRule(combination: List<Da
 private fun isValidCombinationForOrderedDartRule(rules: List<AbstractDartzeeDartRule>, combination: List<DartboardSegment>): Boolean
 {
     return rules.mapIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }.all { it }
+}
+
+private fun mapCombinationToPixels(combination: List<DartboardSegment>, dartboard: Dartboard): Int
+{
+    return combination.map { dartboard.getPointsForSegment(it.score, it.type).size }.sum()
 }
 
 fun generateAllPossibilities(dartboard: Dartboard, dartsSoFar: List<Dart>, allowMisses: Boolean): List<List<DartboardSegment>>

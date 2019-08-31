@@ -34,6 +34,15 @@ class TestMathsUtil: AbstractTest()
     }
 
     @Test
+    fun `Percentages should still work for large numbers`()
+    {
+        val total = 123456788.0
+
+        MathsUtil.getPercentage(123456788, total) shouldBe 100.0
+        MathsUtil.getPercentage(61728394, total) shouldBe 50.0
+    }
+
+    @Test
     fun `Percentage for thirds`()
     {
         val total = 3.0
