@@ -124,7 +124,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
     private fun addRuleToTable(rule: DartzeeRuleEntity)
     {
-        tm.addRow(arrayOf(rule, rule))
+        tableRules.addRow(arrayOf(rule, rule))
     }
 
     override fun selectionChanged(src: ScrollTable)
