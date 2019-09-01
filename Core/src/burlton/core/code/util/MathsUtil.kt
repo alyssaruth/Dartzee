@@ -15,10 +15,14 @@ class MathsUtil
 
         @JvmStatic fun getPercentage(count: Int, total: Double): Double
         {
-            return if (count == 0)
+            return getPercentage(count.toDouble(), total)
+        }
+        fun getPercentage(count: Double, total: Double): Double
+        {
+            return if (count == 0.0)
             {
                 0.0
-            } else round(100 * count.toDouble() / total, 1)
+            } else round(100 * count / total, 1)
         }
     }
 }

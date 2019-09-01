@@ -134,11 +134,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     }
 
     override fun getScreenName() = "Dartzee Setup"
-
-    override fun getBackTarget(): EmbeddedScreen
-    {
-        return ScreenCache.getScreen(GameSetupScreen::class.java)
-    }
+    override fun getBackTarget() = ScreenCache.getScreen(GameSetupScreen::class.java)
 
     /**
      * Inner classes
