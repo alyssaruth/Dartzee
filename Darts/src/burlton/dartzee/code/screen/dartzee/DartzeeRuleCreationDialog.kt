@@ -37,6 +37,8 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
     val rdbtnAtLeastOne = JRadioButton("At least one dart")
     val rdbtnNoDarts = JRadioButton("No darts")
     private val panelTotal = JPanel()
+    private val panelAllowMisses = JPanel()
+    val cbAllowMisses = JCheckBox("Allow misses")
     val totalSelector = DartzeeRuleSelector("Total", true, true)
     private val panelRuleName = JPanel()
     val tfName = JTextField()
@@ -61,6 +63,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         panelCenter.add(panelRuleStrength, "cell 0 1, growx")
         panelCenter.add(panelDarts, "cell 0 2, growx")
         panelCenter.add(panelTotal, "cell 0 3, growx")
+        panelCenter.add(panelAllowMisses, "cell 0 4, growx")
 
         panelRuleStrength.border = TitledBorder("")
         panelDarts.border = TitledBorder("")
@@ -75,6 +78,10 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         panelTotal.border = TitledBorder("")
 
         panelTotal.add(totalSelector, "cell 0 0")
+
+        panelAllowMisses.layout = MigLayout("", "[]", "[]")
+        panelAllowMisses.border = TitledBorder("")
+        panelAllowMisses.add(cbAllowMisses, "cell 0 0")
 
         panelRuleName.layout = BorderLayout(0, 0)
         panelRuleName.border = TitledBorder("")
@@ -94,6 +101,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         targetSelector.addActionListener(this)
         totalSelector.addActionListener(this)
         cbInOrder.addActionListener(this)
+        cbAllowMisses.addActionListener(this)
 
         cbInOrder.isSelected = true
 
@@ -128,6 +136,8 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         {
             totalSelector.populate(rule.totalRule)
         }
+
+        cbAllowMisses.isSelected = rule.allowMisses
 
         updateComponents()
         repaint()
@@ -198,6 +208,8 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         {
             rule.totalRule = ""
         }
+
+        rule.allowMisses = cbAllowMisses.isSelected
     }
 
     private fun valid(): Boolean
