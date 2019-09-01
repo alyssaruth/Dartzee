@@ -58,7 +58,7 @@ private fun DartzeeRuleEntity.getDartsDescription(): String
     else
     {
         //Try to condense the descriptions
-        val rules = listOf(dart1Desc, dart2Desc, dart3Desc)
+        val rules = listOf(dart1Desc, dart2Desc, dart3Desc).filter { it != "Any"}
         val mapEntries = rules.groupBy { it }.map { it }
         val sortedGroupedRules = mapEntries.sortedByDescending { it.value.size }.map { "${it.value.size}x ${it.key}" }
         "{ ${sortedGroupedRules.joinToString()} }"
