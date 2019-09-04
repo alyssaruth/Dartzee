@@ -91,8 +91,11 @@ class TestDartboardUtil : AbstractRegistryTest()
         val wrapper = DEFAULT_COLOUR_WRAPPER
         val segment = DartboardSegment("20_4")
 
-        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.BLACK, false)
-        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.BLACK.darker().darker(), true)
+        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, DartsColour.DARTBOARD_BLACK, false)
+        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.DARK_GRAY, true)
+
+        assertColourForPointAndSegment(Point(0, 0), DartboardSegment("19_1"), wrapper, Color.GREEN, false)
+        assertColourForPointAndSegment(Point(0, 0), DartboardSegment("19_1"), wrapper, Color.GREEN.darker().darker(), true)
     }
 
     @Test
