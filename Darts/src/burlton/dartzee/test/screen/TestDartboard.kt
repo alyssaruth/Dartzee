@@ -1,11 +1,12 @@
 package burlton.dartzee.test.screen
 
+import burlton.core.test.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -88,7 +89,7 @@ class TestDartboard: AbstractDartsTest()
         Color(singleSix) shouldBe Color.WHITE
         Color(trebleNineteen) shouldBe Color.GREEN
         Color(doubleTwenty) shouldBe Color.RED
-        Color(miss) shouldBe Color.BLACK
+        Color(miss) shouldBe DartsColour.DARTBOARD_BLACK
         Color(missBoard) shouldBe Color.BLACK
     }
 }

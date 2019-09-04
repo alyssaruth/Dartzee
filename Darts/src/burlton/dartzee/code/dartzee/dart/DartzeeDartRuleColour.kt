@@ -2,6 +2,7 @@ package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.DartboardSegment
+import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.getColourForPointAndSegment
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -52,7 +53,7 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
         val color = getColourForPointAndSegment(null, segment, false, DEFAULT_COLOUR_WRAPPER)
 
-        return (color == Color.BLACK && black)
+        return (color == DartsColour.DARTBOARD_BLACK && black)
                 || (color == Color.WHITE && white)
                 || (color == Color.GREEN && green)
                 || (color == Color.RED && red)

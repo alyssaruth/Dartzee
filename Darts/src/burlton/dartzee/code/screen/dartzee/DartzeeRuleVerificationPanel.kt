@@ -15,9 +15,8 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.border.TitledBorder
 
-class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog): JPanel(), DartboardListener, ActionListener
+class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog, val dartboard: DartboardRuleVerifier): JPanel(), DartboardListener, ActionListener
 {
-    val dartboard = DartboardRuleVerifier(400, 400)
     private val dartsThrown = mutableListOf<Dart>()
     private val btnReset = JButton()
     private val panelSouth = JPanel()

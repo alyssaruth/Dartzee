@@ -19,13 +19,6 @@ import org.junit.Test
 class TestDartzeeRuleDescriptions: AbstractDartsTest()
 {
     @Test
-    fun `Should describe an empty rule`()
-    {
-        val entity = DartzeeRuleEntity()
-        entity.generateRuleDescription() shouldBe ""
-    }
-
-    @Test
     fun `Should describe total rules correctly`()
     {
         val entity = DartzeeRuleEntity()
@@ -60,6 +53,40 @@ class TestDartzeeRuleDescriptions: AbstractDartsTest()
         entity.inOrder = false
 
         entity.generateRuleDescription() shouldBe "{ 2x Outer, 1x Inner }"
+    }
+
+    @Test
+    fun `Should ignore Any rules if order isn't required`()
+    {
+        val entity = DartzeeRuleEntity()
+        entity.dart1Rule = DartzeeDartRuleInner().toDbString()
+        entity.dart2Rule = DartzeeDartRuleOuter().toDbString()
+        entity.dart3Rule = DartzeeDartRuleAny().toDbString()
+        entity.inOrder = false
+
+        entity.generateRuleDescription() shouldBe "{ 1x Inner, 1x Outer }"
+    }
+
+    @Test
+    fun `Should return Anything for a totally empty rule`()
+    {
+        val entity = DartzeeRuleEntity()
+        entity.generateRuleDescription() shouldBe "Anything"
+    }
+
+    @Test
+    fun `Should return Anything for a rule with Any dart rules`()
+    {
+        val entity = DartzeeRuleEntity()
+        entity.dart1Rule = DartzeeDartRuleAny().toDbString()
+        entity.dart2Rule = DartzeeDartRuleAny().toDbString()
+        entity.dart3Rule = DartzeeDartRuleAny().toDbString()
+
+        entity.inOrder = false
+        entity.generateRuleDescription() shouldBe "Anything"
+
+        entity.inOrder = true
+        entity.generateRuleDescription() shouldBe "Anything"
     }
 
     @Test

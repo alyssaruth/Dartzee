@@ -221,7 +221,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
         val pt = Point(0, 0)
 
         val hmAngleToCount = HashMapCount<Double>()
-        for (i in 0..1000000)
+        for (i in 0..100000)
         {
             val (_, theta) = model.calculateRadiusAndAngle(pt, dartboard)
             theta.shouldBeBetween(0.0, 360.0, 0.0)
@@ -231,7 +231,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
 
         hmAngleToCount.size shouldBe 360
         hmAngleToCount.values.forEach {
-            it.shouldBeBetween(2500, 3000)
+            it.shouldBeBetween(200, 350)
         }
     }
 }
