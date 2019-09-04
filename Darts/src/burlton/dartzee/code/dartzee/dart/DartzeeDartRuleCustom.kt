@@ -18,7 +18,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
     var name = ""
 
     private val btnConfigure = JButton("Configure")
-    private val tfName = JTextField()
+    val tfName = JTextField()
 
     init
     {
@@ -90,7 +90,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
         name = tfName.text
 
         //Need to fire off something to tell the other screen to update. Shit.
-        btnConfigure.actionListeners.find { it is DartzeeRuleCreationDialog }!!.actionPerformed(e)
+        btnConfigure.actionListeners.find { it is DartzeeRuleCreationDialog }?.actionPerformed(e)
     }
 
 }
