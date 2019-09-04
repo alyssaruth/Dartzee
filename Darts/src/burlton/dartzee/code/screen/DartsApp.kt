@@ -6,7 +6,6 @@ import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.achievements.convertEmptyAchievements
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
-import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupScreen
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
@@ -196,11 +195,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == CMD_SANITY)
         {
             DatabaseSanityCheck.runSanityCheck()
-        }
-        else if (cmd == "dartzee")
-        {
-            val dlg = DartzeeRuleCreationDialog()
-            dlg.isVisible = true
         }
         else if (cmd == CMD_GUID)
         {

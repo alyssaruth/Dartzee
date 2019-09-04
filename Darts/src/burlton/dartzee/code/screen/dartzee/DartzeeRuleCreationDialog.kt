@@ -18,12 +18,12 @@ import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
+class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDialog(), ChangeListener
 {
     var dartzeeRule: DartzeeRuleEntity? = null
 
     val lblCombinations = JLabel()
-    private val verificationPanel = DartzeeRuleVerificationPanel(this)
+    private val verificationPanel = DartzeeRuleVerificationPanel(this, dartboard)
     private val panelCenter = JPanel()
     private val panelRuleStrength = JPanel()
     private val panelDarts = JPanel()

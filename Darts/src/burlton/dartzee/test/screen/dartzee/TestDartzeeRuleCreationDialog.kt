@@ -4,6 +4,7 @@ import burlton.dartzee.code.bean.DartzeeRuleSelector
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleInner
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
+import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.bean.selectByClass
@@ -20,7 +21,7 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     @Test
     fun `Should not return a rule when cancelled`()
     {
-        val dlg = DartzeeRuleCreationDialog()
+        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier(50, 50))
         dlg.btnCancel.doClick()
         dlg.dartzeeRule shouldBe null
     }
@@ -28,7 +29,7 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     @Test
     fun `Should toggle the rule selectors based on radio selection`()
     {
-        val dlg = DartzeeRuleCreationDialog()
+        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier(50, 50))
 
         var children = getAllChildComponentsForType(dlg, DartzeeRuleSelector::class.java)
         children.shouldContainAll(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
@@ -48,7 +49,7 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     @Test
     fun `Should populate an 'at least one' rule correctly`()
     {
-        val dlg = DartzeeRuleCreationDialog()
+        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier(50, 50))
         dlg.rdbtnAtLeastOne.doClick()
         dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
         dlg.btnOk.doClick()
@@ -64,7 +65,7 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     @Test
     fun `Should populate an 'all darts' rule correctly`()
     {
-        val dlg = DartzeeRuleCreationDialog()
+        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier(50, 50))
         dlg.rdbtnAllDarts.doClick()
         dlg.cbInOrder.doClick()
 
@@ -84,7 +85,7 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
     @Test
     fun `Should populate in order correctly when checked`()
     {
-        val dlg = DartzeeRuleCreationDialog()
+        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier(50, 50))
         dlg.btnOk.doClick()
 
         val rule = dlg.dartzeeRule!!

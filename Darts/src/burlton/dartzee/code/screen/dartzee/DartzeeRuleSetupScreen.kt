@@ -97,7 +97,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
     private fun addRule()
     {
-        val dlg = DartzeeRuleCreationDialog()
+        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier())
         dlg.isVisible = true
 
         val rule = dlg.dartzeeRule
@@ -109,7 +109,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     private fun amendRule()
     {
         val selection = tm.getValueAt(tableRules.selectedModelRow, 0) as DartzeeRuleEntity
-        val dlg = DartzeeRuleCreationDialog()
+        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier())
         dlg.populate(selection)
         dlg.isVisible = true
 
