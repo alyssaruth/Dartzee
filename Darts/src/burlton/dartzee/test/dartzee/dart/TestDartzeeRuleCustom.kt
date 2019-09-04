@@ -26,6 +26,26 @@ class TestDartzeeRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
     }
 
     @Test
+    fun `description should return Custom or the specified name`()
+    {
+        val rule = factory()
+        rule.getDescription() shouldBe "Custom"
+
+        rule.name = "Foo"
+        rule.getDescription() shouldBe "Foo"
+    }
+
+    @Test
+    fun `Should update the name variable when a new one is typed in`()
+    {
+        val rule = factory()
+        rule.tfName.text = "Foo"
+
+        rule.actionPerformed(null)
+        rule.name shouldBe "Foo"
+    }
+
+    @Test
     fun `segment validation`()
     {
         val rule = DartzeeDartRuleCustom()
@@ -42,6 +62,7 @@ class TestDartzeeRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
         val rule = DartzeeDartRuleCustom()
 
         rule.segments = hashSetOf(doubleTwenty, outerBull, trebleNineteen)
+        rule.name = "Foo"
 
         val xml = rule.toDbString()
         val parsedRule = parseDartRule(xml)
@@ -52,5 +73,7 @@ class TestDartzeeRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
 
         parsedRule.isValidSegment(doubleTwenty) shouldBe true
         parsedRule.isValidSegment(singleTwenty) shouldBe false
+        parsedRule.name shouldBe "Foo"
+        parsedRule.tfName.text shouldBe "Foo"
     }
 }
