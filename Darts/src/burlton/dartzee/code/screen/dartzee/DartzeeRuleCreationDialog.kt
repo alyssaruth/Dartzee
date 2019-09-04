@@ -43,12 +43,10 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
     private val panelRuleName = JPanel()
     val tfName = JTextField()
 
-    val btnGenerateName = JButton()
-
     init
     {
         title = "Add Dartzee Rule"
-        setSize(750, 600)
+        setSize(900, 700)
         setLocationRelativeTo(ScreenCache.getMainScreen())
         isModal = true
 
@@ -86,9 +84,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         panelRuleName.layout = BorderLayout(0, 0)
         panelRuleName.border = TitledBorder("")
         panelRuleName.add(tfName, BorderLayout.CENTER)
-        panelRuleName.add(btnGenerateName, BorderLayout.EAST)
         tfName.preferredSize = Dimension(30, 50)
-        btnGenerateName.preferredSize = Dimension(40, 50)
 
         tfName.horizontalAlignment = JTextField.CENTER
         tfName.setFontSize(24)

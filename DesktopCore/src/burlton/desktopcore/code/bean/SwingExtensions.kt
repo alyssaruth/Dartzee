@@ -1,6 +1,12 @@
 package burlton.desktopcore.code.bean
 
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.FocusEvent
+import java.awt.event.FocusListener
 import javax.swing.JComboBox
+import javax.swing.JTextField
+
 
 fun <K> JComboBox<K>.items(): List<K>
 {
@@ -21,4 +27,17 @@ inline fun <reified T> JComboBox<*>.findByClass(): T? = items().find { it is T }
 inline fun <reified T> JComboBox<*>.selectByClass()
 {
     findByClass<T>()?.let { selectedItem = it }
+}
+
+fun JTextField.addUpdateListener(actionListener: ActionListener)
+{
+    addFocusListener(object: FocusListener
+    {
+        override fun focusLost(e: FocusEvent?)
+        {
+            val event = ActionEvent(this, -1, "")
+            actionListener.actionPerformed(event)
+        }
+        override fun focusGained(e: FocusEvent?){}
+    })
 }

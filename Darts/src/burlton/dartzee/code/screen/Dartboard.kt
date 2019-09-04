@@ -52,7 +52,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     //Cached things
     private var lastHoveredSegment: DartboardSegment? = null
-    private var colourWrapper: ColourWrapper? = null
+    protected var colourWrapper: ColourWrapper? = null
     private var latestClip: Clip? = null
 
     private var dartboardImage: BufferedImage? = null
@@ -272,7 +272,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         colourSegment(lastHoveredSegment!!, true)
     }
 
-    fun colourSegment(segment: DartboardSegment, highlight: Boolean)
+    open fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
         if (segment.isMiss())
         {

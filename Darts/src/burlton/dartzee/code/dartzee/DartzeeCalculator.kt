@@ -21,7 +21,8 @@ fun DartzeeRuleEntity.generateRuleDescription(): String
     if (!dartsDesc.isEmpty()) ruleParts.add(dartsDesc)
     if (!totalDesc.isEmpty()) ruleParts.add(totalDesc)
 
-    return ruleParts.joinToString()
+    val result = ruleParts.joinToString()
+    return if (result.isEmpty()) "Anything" else result
 }
 private fun DartzeeRuleEntity.getTotalDescription(): String
 {
@@ -51,6 +52,12 @@ private fun DartzeeRuleEntity.getDartsDescription(): String
     val dart2Desc = parseDartRule(dart2Rule)!!.getDescription()
     val dart3Desc = parseDartRule(dart3Rule)!!.getDescription()
 
+    val rules = listOf(dart1Desc, dart2Desc, dart3Desc)
+    if (rules.all { it == "Any"} )
+    {
+        return ""
+    }
+
     return if (inOrder)
     {
         "$dart1Desc → $dart2Desc → $dart3Desc"
@@ -58,8 +65,9 @@ private fun DartzeeRuleEntity.getDartsDescription(): String
     else
     {
         //Try to condense the descriptions
-        val rules = listOf(dart1Desc, dart2Desc, dart3Desc).filter { it != "Any"}
-        val mapEntries = rules.groupBy { it }.map { it }
+        val interestingRules = rules.filter { it != "Any" }
+
+        val mapEntries = interestingRules.groupBy { it }.map { it }
         val sortedGroupedRules = mapEntries.sortedByDescending { it.value.size }.map { "${it.value.size}x ${it.key}" }
         "{ ${sortedGroupedRules.joinToString()} }"
     }
