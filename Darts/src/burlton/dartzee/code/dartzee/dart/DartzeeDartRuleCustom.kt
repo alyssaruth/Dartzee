@@ -3,24 +3,32 @@ package burlton.dartzee.code.dartzee.dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.screen.DartboardSegmentSelectDialog
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
+import burlton.desktopcore.code.bean.addUpdateListener
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
+import javax.swing.JTextField
 
 class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListener
 {
     var segments = hashSetOf<DartboardSegment>()
+    var name = ""
 
     private val btnConfigure = JButton("Configure")
+    private val tfName = JTextField()
 
     init
     {
         configPanel.layout = FlowLayout()
         configPanel.add(btnConfigure)
+        configPanel.add(tfName)
 
+        tfName.columns = 15
+        tfName.addActionListener(this)
+        tfName.addUpdateListener(this)
         btnConfigure.addActionListener(this)
     }
 
@@ -31,6 +39,8 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
     override fun getRuleIdentifier() = "Custom"
 
+    override fun getDescription() = if (name.isEmpty()) "Custom" else name
+
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
         segments.forEach{
@@ -39,6 +49,8 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
             rootElement.appendChild(element)
         }
+
+        rootElement.setAttribute("Name", name)
     }
 
     override fun populate(rootElement: Element)
@@ -51,6 +63,9 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
             segments.add(segment)
         }
+
+        name = rootElement.getAttribute("Name")
+        tfName.text = name
     }
 
     override fun validate(): String
@@ -65,10 +80,14 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
     override fun actionPerformed(e: ActionEvent?)
     {
-        val dlg = DartboardSegmentSelectDialog(segments)
-        dlg.isVisible = true
+        if (e?.source == btnConfigure)
+        {
+            val dlg = DartboardSegmentSelectDialog(segments)
+            dlg.isVisible = true
+            segments = dlg.getSelection()
+        }
 
-        segments = dlg.getSelection()
+        name = tfName.text
 
         //Need to fire off something to tell the other screen to update. Shit.
         btnConfigure.actionListeners.find { it is DartzeeRuleCreationDialog }!!.actionPerformed(e)

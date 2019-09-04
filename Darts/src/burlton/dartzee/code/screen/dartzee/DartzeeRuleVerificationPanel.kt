@@ -7,7 +7,6 @@ import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.listener.DartboardListener
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -18,7 +17,7 @@ import javax.swing.border.TitledBorder
 
 class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog): JPanel(), DartboardListener, ActionListener
 {
-    val dartboard = DartboardRuleVerifier(300, 300)
+    val dartboard = DartboardRuleVerifier(400, 400)
     private val dartsThrown = mutableListOf<Dart>()
     private val btnReset = JButton()
     private val panelSouth = JPanel()
@@ -32,7 +31,7 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
     init
     {
         layout = BorderLayout(0, 0)
-        preferredSize = Dimension(330, 300)
+        preferredSize = Dimension(430, 400)
         border = TitledBorder("Test Rule")
 
         dartboard.renderScoreLabels = true
@@ -93,13 +92,7 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
 
     private fun repaintDartboard()
     {
-        if (dartsThrown.size == 3)
-        {
-            dartboard.getAllSegments().forEach{
-                dartboard.colourSegment(it, Color.GRAY)
-            }
-        }
-        else
+        if (dartsThrown.size < 3)
         {
             val calculationResult = dartzeeRule.getValidSegments(dartboard, dartsThrown)
 
