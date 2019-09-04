@@ -52,7 +52,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     //Cached things
     private var lastHoveredSegment: DartboardSegment? = null
-    protected var colourWrapper: ColourWrapper? = null
+    private var colourWrapper: ColourWrapper? = null
     private var latestClip: Clip? = null
 
     private var dartboardImage: BufferedImage? = null
@@ -272,17 +272,15 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         colourSegment(lastHoveredSegment!!, true)
     }
 
-    open fun colourSegment(segment: DartboardSegment, highlight: Boolean)
+    fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
-        if (segment.isMiss())
-        {
-            //Don't do any highlighting for missing the board
-            return
-        }
+        val actuallyHighlight = highlight && !segment.isMiss() && shouldActuallyHighlight(segment)
 
-        val hoveredColour = getColourForPointAndSegment(null, segment, highlight, colourWrapper)!!
+        val hoveredColour = getColourForPointAndSegment(null, segment, actuallyHighlight, colourWrapper) ?: return
         colourSegment(segment, hoveredColour)
     }
+
+    open fun shouldActuallyHighlight(segment: DartboardSegment) = true
 
     open fun colourSegment(segment: DartboardSegment, col: Color)
     {
