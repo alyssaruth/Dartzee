@@ -85,11 +85,11 @@ class TestDartboard: AbstractDartsTest()
         val miss = img.getRGB(25, 7)
         val missBoard = img.getRGB(0, 0)
 
-        Color(singleTwenty) shouldBe Color.BLACK
+        Color(singleTwenty) shouldBe DartsColour.DARTBOARD_BLACK
         Color(singleSix) shouldBe Color.WHITE
         Color(trebleNineteen) shouldBe Color.GREEN
         Color(doubleTwenty) shouldBe Color.RED
-        Color(miss) shouldBe DartsColour.DARTBOARD_BLACK
+        Color(miss) shouldBe Color.BLACK
         Color(missBoard) shouldBe Color.BLACK
     }
 }
