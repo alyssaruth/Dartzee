@@ -2,6 +2,7 @@ package burlton.dartzee.code.utils
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_BLACK
 import java.awt.Color
 import java.awt.Point
 
@@ -121,7 +122,14 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlight
     val colour = getColourFromHashMap(segment, colourWrapperToUse)
     return if (highlighted)
     {
-        DartsColour.getDarkenedColour(colour)
+        if (colour == DARTBOARD_BLACK)
+        {
+            Color.DARK_GRAY
+        }
+        else
+        {
+            DartsColour.getDarkenedColour(colour)
+        }
     }
     else colour
 
