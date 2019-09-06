@@ -6,7 +6,7 @@ import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
 import burlton.dartzee.code.screen.Dartboard
 
-class TestDartzeeCalculator: AbstractDartzeeCalculator()
+class FakeDartzeeCalculator: AbstractDartzeeCalculator()
 {
     override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): ValidSegmentCalculationResult
     {
