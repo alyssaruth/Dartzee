@@ -1,9 +1,10 @@
 package burlton.dartzee.code.screen.dartzee
 
-import burlton.dartzee.code.bean.DartzeeRuleSelector
+import burlton.dartzee.code.bean.DartzeeDartRuleSelector
+import burlton.dartzee.code.bean.DartzeeTotalRuleSelector
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
 import burlton.dartzee.code.dartzee.generateRuleDescription
-import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
@@ -18,28 +19,28 @@ import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDialog(), ChangeListener
+class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
 {
-    var dartzeeRule: DartzeeRuleEntity? = null
+    var dartzeeRule: DartzeeRuleDto? = null
 
+    private val verificationPanel = DartzeeRuleVerificationPanel(this)
     val lblCombinations = JLabel()
-    private val verificationPanel = DartzeeRuleVerificationPanel(this, dartboard)
     private val panelCenter = JPanel()
     private val panelRuleStrength = JPanel()
     private val panelDarts = JPanel()
     private val rdbtnPanelDartScoreType = RadioButtonPanel()
     val rdbtnAllDarts = JRadioButton("All Darts")
-    val dartOneSelector = DartzeeRuleSelector("Dart 1")
-    val dartTwoSelector = DartzeeRuleSelector("Dart 2")
-    val dartThreeSelector = DartzeeRuleSelector("Dart 3")
+    val dartOneSelector = DartzeeDartRuleSelector("Dart 1")
+    val dartTwoSelector = DartzeeDartRuleSelector("Dart 2")
+    val dartThreeSelector = DartzeeDartRuleSelector("Dart 3")
     val cbInOrder = JCheckBox("In Order")
-    val targetSelector = DartzeeRuleSelector("Target")
+    val targetSelector = DartzeeDartRuleSelector("Target")
     val rdbtnAtLeastOne = JRadioButton("At least one dart")
     val rdbtnNoDarts = JRadioButton("No darts")
     private val panelTotal = JPanel()
     private val panelAllowMisses = JPanel()
     val cbAllowMisses = JCheckBox("Allow misses")
-    val totalSelector = DartzeeRuleSelector("Total", true, true)
+    val totalSelector = DartzeeTotalRuleSelector("Total")
     private val panelRuleName = JPanel()
     val tfName = JTextField()
 
@@ -104,16 +105,16 @@ class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDi
         updateComponents()
     }
 
-    fun populate(rule: DartzeeRuleEntity)
+    fun populate(rule: DartzeeRuleDto)
     {
         this.dartzeeRule = rule
         title = "Amend Dartzee Rule"
 
-        if (rule.dart1Rule.isEmpty())
+        if (rule.dart1Rule == null)
         {
             rdbtnNoDarts.isSelected = true
         }
-        else if (rule.dart2Rule.isEmpty())
+        else if (rule.dart2Rule == null)
         {
             rdbtnAtLeastOne.isSelected = true
 
@@ -125,13 +126,10 @@ class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDi
 
             dartOneSelector.populate(rule.dart1Rule)
             dartTwoSelector.populate(rule.dart2Rule)
-            dartThreeSelector.populate(rule.dart3Rule)
+            dartThreeSelector.populate(rule.dart3Rule!!)
         }
 
-        if (!rule.totalRule.isEmpty())
-        {
-            totalSelector.populate(rule.totalRule)
-        }
+        rule.totalRule?.let { totalSelector.populate(rule.totalRule) }
 
         cbAllowMisses.isSelected = rule.allowMisses
 
@@ -163,9 +161,7 @@ class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDi
             return
         }
 
-        val rule = dartzeeRule ?: DartzeeRuleEntity()
-
-        populateRuleFromComponents(rule)
+        val rule = constructRuleFromComponents()
 
         val calculationResult = rule.runStrengthCalculation(verificationPanel.dartboard)
         val combinations = calculationResult.validCombinations
@@ -180,37 +176,25 @@ class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDi
         dispose()
     }
 
-    private fun populateRuleFromComponents(rule: DartzeeRuleEntity)
+    private fun constructRuleFromComponents(): DartzeeRuleDto
     {
-        if (rdbtnAllDarts.isSelected)
+        val totalRule = if (totalSelector.isEnabled) totalSelector.getSelection() else null
+
+        return if (rdbtnAllDarts.isSelected)
         {
-            rule.dart1Rule = dartOneSelector.getSelection().toDbString()
-            rule.dart2Rule = dartTwoSelector.getSelection().toDbString()
-            rule.dart3Rule = dartThreeSelector.getSelection().toDbString()
-            rule.inOrder = cbInOrder.isSelected
+            DartzeeRuleDto(dartOneSelector.getSelection(),
+                    dartTwoSelector.getSelection(), dartThreeSelector.getSelection(), totalRule, cbInOrder.isSelected, cbAllowMisses.isSelected)
         }
         else
         {
-            rule.dart1Rule = if (rdbtnAtLeastOne.isSelected) targetSelector.getSelection().toDbString() else ""
-            rule.dart2Rule = ""
-            rule.dart3Rule = ""
+            val dart1Rule = if (rdbtnAtLeastOne.isSelected) targetSelector.getSelection() else null
+            DartzeeRuleDto(dart1Rule, null, null, totalRule, false, cbAllowMisses.isSelected)
         }
-
-        if (totalSelector.isEnabled)
-        {
-            rule.totalRule = totalSelector.getSelection().toDbString()
-        }
-        else
-        {
-            rule.totalRule = ""
-        }
-
-        rule.allowMisses = cbAllowMisses.isSelected
     }
 
     private fun valid(): Boolean
     {
-        val valid = if (rdbtnAtLeastOne.isSelected)
+        return if (rdbtnAtLeastOne.isSelected)
         {
             targetSelector.valid()
         }
@@ -218,13 +202,6 @@ class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDi
         {
             dartOneSelector.valid() && dartTwoSelector.valid() && dartThreeSelector.valid()
         }
-
-        if (!valid)
-        {
-            return false
-        }
-
-        return true
     }
 
     fun updateRuleStrength(calculationResult: ValidSegmentCalculationResult)
@@ -264,7 +241,7 @@ class DartzeeRuleCreationDialog(val dartboard: DartboardRuleVerifier) : SimpleDi
         panelDarts.revalidate()
 
         SwingUtilities.invokeLater{
-            val rule = DartzeeRuleEntity().also { populateRuleFromComponents(it) }
+            val rule = constructRuleFromComponents()
             val ruleName = rule.generateRuleDescription()
             tfName.text = ruleName
 

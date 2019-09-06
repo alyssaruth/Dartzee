@@ -1,28 +1,24 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.dartzee.AbstractDartzeeRule
-import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRuleConfigurable
-import burlton.dartzee.code.dartzee.getAllDartRules
-import burlton.dartzee.code.dartzee.getAllTotalRules
-import burlton.dartzee.code.dartzee.parseRule
-import burlton.dartzee.code.dartzee.total.AbstractDartzeeRuleTotalSize
+import burlton.dartzee.code.dartzee.IDartzeeRuleConfigurable
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.desktopcore.code.bean.findByConcreteClass
 import burlton.desktopcore.code.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.addActionListenerToAllChildren
 import burlton.desktopcore.code.util.addChangeListenerToAllChildren
-import burlton.desktopcore.code.util.enableChildren
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.*
 
-class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional: Boolean = false): JPanel(), ActionListener
+abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(val desc: String): JPanel(), ActionListener
 {
-    val cbDesc = JCheckBox(desc)
     val lblDesc = JLabel(desc)
-    val comboBoxRuleType = JComboBox<AbstractDartzeeRule>()
+    val cbDesc = JCheckBox(desc)
+
+    val comboBoxRuleType = JComboBox<BaseRuleType>()
     var listener: DartzeeRuleCreationDialog? = null
 
     init
@@ -37,11 +33,14 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional
         updateComponents()
     }
 
+    abstract fun getRules(): List<BaseRuleType>
+    open fun isOptional() = false
+
     private fun populateComboBox()
     {
         val rules = getRules()
 
-        val model = DefaultComboBoxModel<AbstractDartzeeRule>()
+        val model = DefaultComboBoxModel<BaseRuleType>()
 
         rules.forEach{
             model.addElement(it)
@@ -49,23 +48,17 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional
 
         comboBoxRuleType.model = model
     }
-    private fun getRules() = if (total) getAllTotalRules() else getAllDartRules()
 
     fun getSelection() = comboBoxRuleType.selectedItemTyped()
 
-    fun populate(ruleStr: String)
+    open fun populate(rule: BaseRuleType)
     {
-        val rule = parseRule(ruleStr, getRules())!!
-
         val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)!!
+        item.populate(rule.toDbString())
+
         comboBoxRuleType.selectedItem = item
+        cbDesc.isSelected = true
 
-        if (optional)
-        {
-            cbDesc.isSelected = true
-        }
-
-        item.populate(ruleStr)
         updateComponents()
     }
 
@@ -74,19 +67,11 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional
         val errorStr = getSelection().validate()
         if (!errorStr.isEmpty())
         {
-            DialogUtil.showError("${lblDesc.text}: $errorStr")
+            DialogUtil.showError("$desc: $errorStr")
             return false
         }
 
         return true
-    }
-
-    override fun setEnabled(enabled: Boolean)
-    {
-        super.setEnabled(enabled)
-
-        enableChildren(enabled)
-        cbDesc.isEnabled = true
     }
 
     override fun actionPerformed(e: ActionEvent?)
@@ -101,22 +86,19 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional
         addChangeListenerToAllChildren(listener)
     }
 
+    open fun shouldBeEnabled() = true
+
     private fun updateComponents()
     {
         val rule = getSelection()
 
         removeAll()
 
-        if (optional) add(cbDesc) else add(lblDesc)
+        if (isOptional()) add(cbDesc) else add(lblDesc)
+
         add(comboBoxRuleType)
 
-        //TODO - Figure out a nicer way
-        if (rule is AbstractDartzeeDartRuleConfigurable)
-        {
-            add(rule.configPanel)
-        }
-
-        if (rule is AbstractDartzeeRuleTotalSize)
+        if (rule is IDartzeeRuleConfigurable)
         {
             add(rule.configPanel)
         }
@@ -126,7 +108,7 @@ class DartzeeRuleSelector(desc: String, val total: Boolean = false, val optional
             addChangeListenerToAllChildren(it)
         }
 
-        this.isEnabled = !optional || cbDesc.isSelected
+        this.isEnabled = shouldBeEnabled()
 
         revalidate()
     }

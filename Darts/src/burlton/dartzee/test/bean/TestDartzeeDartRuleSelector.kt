@@ -1,6 +1,6 @@
 package burlton.dartzee.test.bean
 
-import burlton.dartzee.code.bean.DartzeeRuleSelector
+import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleColour
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleInner
@@ -15,19 +15,19 @@ import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeRuleSelector : AbstractDartsTest()
+class TestDartzeeDartRuleSelector : AbstractDartsTest()
 {
     @Test
     fun `Should render the description passed to it`()
     {
-        val selector = DartzeeRuleSelector("foo")
+        val selector = DartzeeDartRuleSelector("foo")
         selector.lblDesc.text shouldBe "foo"
     }
 
     @Test
     fun `Should initialise with all valid options`()
     {
-        val selector = DartzeeRuleSelector("foo")
+        val selector = DartzeeDartRuleSelector("foo")
 
         val items = selector.comboBoxRuleType.items()
         getAllDartRules().forEach { rule ->
@@ -38,8 +38,8 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
     @Test
     fun `Should show an error if the rule is invalid`()
     {
-        val selector = DartzeeRuleSelector("foo")
-        selector.populate(DartzeeDartRuleColour().toDbString())
+        val selector = DartzeeDartRuleSelector("foo")
+        selector.populate(DartzeeDartRuleColour())
 
         selector.valid() shouldBe false
         dialogFactory.errorsShown shouldContain "foo: You must select at least one colour."
@@ -48,8 +48,8 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
     @Test
     fun `Should pass validation if the rule is valid`()
     {
-        val selector = DartzeeRuleSelector("foo")
-        selector.populate(DartzeeDartRuleEven().toDbString())
+        val selector = DartzeeDartRuleSelector("foo")
+        selector.populate(DartzeeDartRuleEven())
 
         selector.valid() shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
@@ -58,7 +58,7 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
     @Test
     fun `Should swap in and out the configPanel based on the selected rule`()
     {
-        val selector = DartzeeRuleSelector("foo")
+        val selector = DartzeeDartRuleSelector("foo")
         val comboBox = selector.comboBoxRuleType
 
         val item = comboBox.findByClass<DartzeeDartRuleScore>()!!
@@ -75,20 +75,20 @@ class TestDartzeeRuleSelector : AbstractDartsTest()
     @Test
     fun `Should populate from an existing rule successfully`()
     {
-        val selector = DartzeeRuleSelector("foo")
-        selector.populate("<Inner/>")
+        val selector = DartzeeDartRuleSelector("foo")
+        selector.populate(DartzeeDartRuleInner())
         selector.getSelection().shouldBeInstanceOf<DartzeeDartRuleInner>()
     }
 
     @Test
     fun `Should populate from the colour rule successully`()
     {
-        val selector = DartzeeRuleSelector("foo")
+        val selector = DartzeeDartRuleSelector("foo")
         val rule = DartzeeDartRuleColour()
         rule.black = true
         rule.red = true
 
-        selector.populate(rule.toDbString())
+        selector.populate(rule)
 
         val populatedRule = selector.getSelection() as DartzeeDartRuleColour
         populatedRule.black shouldBe true

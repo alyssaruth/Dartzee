@@ -1,11 +1,5 @@
 package burlton.dartzee.code.db
 
-import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
-import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
-import burlton.dartzee.code.dartzee.getValidSegments
-import burlton.dartzee.code.dartzee.parseDartRule
-import burlton.dartzee.code.screen.Dartboard
-
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
     var gameId = ""
@@ -18,8 +12,6 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     var textualName = ""
     var textualDescription = "" //Allow textual rules
     var ordinal = -1
-
-    private var calculationResult: ValidSegmentCalculationResult? = null
 
     override fun getTableName() = "DartzeeRule"
 
@@ -36,24 +28,4 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "TextualDescription VARCHAR(2500) NOT NULL, "
                 + "Ordinal INT NOT NULL")
     }
-
-    fun getParsedDartRules(): List<AbstractDartzeeDartRule>?
-    {
-        val parsedRule1 = parseDartRule(dart1Rule) ?: return null
-        val parsedRule2 = parseDartRule(dart2Rule) ?: return listOf(parsedRule1)
-        val parsedRule3 = parseDartRule(dart3Rule)!!
-
-        return listOf(parsedRule1, parsedRule2, parsedRule3)
-    }
-
-    fun runStrengthCalculation(dartboard: Dartboard): ValidSegmentCalculationResult
-    {
-        val calculationResult = getValidSegments(dartboard, listOf())
-
-        this.calculationResult = calculationResult
-
-        return calculationResult
-    }
-
-    fun getStrengthDesc() = calculationResult?.getCombinationsDesc() ?: ""
 }

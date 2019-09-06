@@ -6,13 +6,12 @@ import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
-import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.screen.Dartboard
 
 /**
  * Rule Descriptions
  */
-fun DartzeeRuleEntity.generateRuleDescription(): String
+fun DartzeeRuleDto.generateRuleDescription(): String
 {
     val dartsDesc = getDartsDescription()
     val totalDesc = getTotalDescription()
@@ -24,33 +23,21 @@ fun DartzeeRuleEntity.generateRuleDescription(): String
     val result = ruleParts.joinToString()
     return if (result.isEmpty()) "Anything" else result
 }
-private fun DartzeeRuleEntity.getTotalDescription(): String
+private fun DartzeeRuleDto.getTotalDescription(): String
 {
-    if (totalRule == "")
-    {
-        return ""
-    }
+    totalRule ?: return ""
 
-    val desc = parseTotalRule(totalRule)!!.getDescription()
-
-    return "Total $desc"
+    return "Total ${totalRule.getDescription()}"
 }
-private fun DartzeeRuleEntity.getDartsDescription(): String
+private fun DartzeeRuleDto.getDartsDescription(): String
 {
-    if (dart1Rule == "")
-    {
-        return ""
-    }
-
-    if (dart2Rule == "")
-    {
-        return "Score ${parseDartRule(dart1Rule)!!.getDescription()}"
-    }
+    dart1Rule ?: return ""
+    dart2Rule ?: return "Score ${dart1Rule.getDescription()}"
 
     //It's a 3 dart rule
-    val dart1Desc = parseDartRule(dart1Rule)!!.getDescription()
-    val dart2Desc = parseDartRule(dart2Rule)!!.getDescription()
-    val dart3Desc = parseDartRule(dart3Rule)!!.getDescription()
+    val dart1Desc = dart1Rule.getDescription()
+    val dart2Desc = dart2Rule.getDescription()
+    val dart3Desc = dart3Rule!!.getDescription()
 
     val rules = listOf(dart1Desc, dart2Desc, dart3Desc)
     if (rules.all { it == "Any"} )
@@ -87,14 +74,14 @@ data class ValidSegmentCalculationResult(val validSegments: List<DartboardSegmen
 /**
  * Validation
  */
-fun DartzeeRuleEntity.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Dart>): ValidSegmentCalculationResult
+fun DartzeeRuleDto.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Dart>): ValidSegmentCalculationResult
 {
     val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, true)
 
-    val dartRules = getParsedDartRules()
-    val totalRule = parseTotalRule(totalRule)
+    val dartRules = getDartRuleList()
+    val totalRule = totalRule
 
-    val validCombinations = allPossibilities.filter { isValidCombination(it, dartRules, totalRule) }
+    val validCombinations = allPossibilities.filter { isValidCombination(it, dartRules, totalRule, inOrder) }
             .filter { it.all { segment -> !segment.isMiss() || allowMisses }}
     val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
 
@@ -103,12 +90,13 @@ fun DartzeeRuleEntity.getValidSegments(dartboard: Dartboard, dartsSoFar: List<Da
 
     return ValidSegmentCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
 }
-fun DartzeeRuleEntity.isValidCombination(combination: List<DartboardSegment>,
+fun isValidCombination(combination: List<DartboardSegment>,
                                          dartRules: List<AbstractDartzeeDartRule>?,
-                                         totalRule: AbstractDartzeeTotalRule?): Boolean
+                                         totalRule: AbstractDartzeeTotalRule?,
+                       inOrder: Boolean): Boolean
 {
     return isValidCombinationForTotalRule(combination, totalRule)
-            && isValidCombinationForDartRule(combination, dartRules)
+            && isValidCombinationForDartRule(combination, dartRules, inOrder)
 }
 private fun isValidCombinationForTotalRule(combination: List<DartboardSegment>, totalRule: AbstractDartzeeTotalRule?): Boolean
 {
@@ -120,7 +108,7 @@ private fun isValidCombinationForTotalRule(combination: List<DartboardSegment>, 
     val total = combination.map { it.score * it.getMultiplier() }.sum()
     return totalRule.isValidTotal(total)
 }
-private fun DartzeeRuleEntity.isValidCombinationForDartRule(combination: List<DartboardSegment>, dartRules: List<AbstractDartzeeDartRule>?): Boolean
+private fun isValidCombinationForDartRule(combination: List<DartboardSegment>, dartRules: List<AbstractDartzeeDartRule>?, inOrder: Boolean): Boolean
 {
     if (dartRules == null)
     {
