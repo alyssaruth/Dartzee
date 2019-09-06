@@ -1,0 +1,105 @@
+package burlton.dartzee.test.dartzee
+
+import burlton.dartzee.code.dartzee.dart.*
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
+import burlton.dartzee.test.helper.AbstractDartsTest
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.shouldBe
+import org.junit.Test
+
+class TestDartzeeRuleDto: AbstractDartsTest()
+{
+    @Test
+    fun `Dart rule list should return all 3 rules when set`()
+    {
+        val dartRule1 = DartzeeDartRuleInner()
+        val dartRule2 = DartzeeDartRuleEven()
+        val dartRule3 = DartzeeDartRuleOdd()
+        val rule = makeDartzeeRuleDto(dartRule1, dartRule2, dartRule3)
+
+        rule.getDartRuleList().shouldContainExactly(dartRule1, dartRule2, dartRule3)
+    }
+
+    @Test
+    fun `Dart rule list should just contain the first rule if the others arent set`()
+    {
+        val dartRule1 = DartzeeDartRuleOuter()
+        val rule = makeDartzeeRuleDto(dartRule1)
+
+        rule.getDartRuleList().shouldContainExactly(dartRule1)
+    }
+
+    @Test
+    fun `Dart rule list should be null if no dart rules have been set`()
+    {
+        val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+
+        rule.getDartRuleList() shouldBe null
+    }
+
+    @Test
+    fun `Should describe total rules correctly`()
+    {
+        val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+        rule.generateRuleDescription() shouldBe "Total is prime"
+
+        val rule2 = makeDartzeeRuleDto(totalRule = DartzeeTotalRuleGreaterThan())
+        rule2.generateRuleDescription() shouldBe "Total > 20"
+    }
+
+    @Test
+    fun `Should describe in-order dart rules`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven(), inOrder = true)
+        rule.generateRuleDescription() shouldBe "Even → Odd → Even"
+    }
+
+    @Test
+    fun `Should condense the same rules if order isn't required`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleOuter(), inOrder = false)
+        rule.generateRuleDescription() shouldBe "{ 2x Outer, 1x Inner }"
+    }
+
+    @Test
+    fun `Should ignore Any rules if order isn't required`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleAny(), inOrder = false)
+        rule.generateRuleDescription() shouldBe "{ 1x Inner, 1x Outer }"
+    }
+
+    @Test
+    fun `Should return Anything for a totally empty rule`()
+    {
+        val rule = makeDartzeeRuleDto()
+        rule.generateRuleDescription() shouldBe "Anything"
+    }
+
+    @Test
+    fun `Should return Anything for a rule with Any dart rules`()
+    {
+        val unorderedRule = makeDartzeeRuleDto(DartzeeDartRuleAny(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = false)
+        val orderedRule = makeDartzeeRuleDto(DartzeeDartRuleAny(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = false)
+
+        unorderedRule.generateRuleDescription() shouldBe "Anything"
+        orderedRule.generateRuleDescription() shouldBe "Anything"
+    }
+
+    @Test
+    fun `Should describe 'score' dart rules`()
+    {
+        val scoreRule = DartzeeDartRuleScore()
+        scoreRule.score = 15
+
+        val rule = makeDartzeeRuleDto(scoreRule)
+        rule.generateRuleDescription() shouldBe "Score 15"
+    }
+
+    @Test
+    fun `Dart and total rules should be concatenated if both are present`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), totalRule = DartzeeTotalRuleGreaterThan())
+        rule.generateRuleDescription() shouldBe "Score Even, Total > 20"
+    }
+}
