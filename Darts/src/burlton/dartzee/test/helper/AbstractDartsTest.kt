@@ -26,6 +26,7 @@ abstract class AbstractDartsTest: AbstractDesktopTest()
         DialogUtil.init(dialogFactory)
 
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
+        InjectedThings.verificationDartboardSize = 50
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
         DartsClient.derbyDbName = DATABASE_NAME_TEST
