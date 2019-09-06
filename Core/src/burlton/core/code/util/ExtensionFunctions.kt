@@ -17,3 +17,24 @@ fun IntRange.getDescription(): String
         else -> "${this.first} - ${this.last}"
     }
 }
+
+fun <E> List<E>.getAllPermutations(): List<List<E>>
+{
+    if (isEmpty())
+    {
+        return listOf(this)
+    }
+
+    val allPermutations = mutableListOf<List<E>>()
+    forEachIndexed { ix, obj ->
+        val subList = this.toMutableList()
+        subList.removeAt(ix)
+
+        for (permutation in subList.getAllPermutations())
+        {
+            allPermutations.add(listOf(obj) + permutation)
+        }
+    }
+
+    return allPermutations
+}

@@ -3,6 +3,7 @@ package burlton.dartzee.test.helper
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.LocalIdGenerator
 import burlton.dartzee.code.utils.DartsDatabaseUtil
+import burlton.dartzee.code.utils.InjectedThings
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -23,6 +24,8 @@ abstract class AbstractDartsTest: AbstractDesktopTest()
 
         //This is actually needed, annoyingly...
         DialogUtil.init(dialogFactory)
+
+        InjectedThings.dartzeeCalculator = TestDartzeeCalculator()
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
         DartsClient.derbyDbName = DATABASE_NAME_TEST

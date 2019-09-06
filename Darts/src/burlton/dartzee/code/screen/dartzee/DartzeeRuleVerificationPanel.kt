@@ -3,8 +3,8 @@ package burlton.dartzee.code.screen.dartzee
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.bean.DartzeeDartResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.dartzee.getValidSegments
 import burlton.dartzee.code.listener.DartboardListener
+import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -94,7 +94,7 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
     {
         if (dartsThrown.size < 3)
         {
-            val calculationResult = dartzeeRule.getValidSegments(dartboard, dartsThrown)
+            val calculationResult = dartzeeCalculator.getValidSegments(dartzeeRule, dartboard, dartsThrown)
 
             dartboard.refreshValidSegments(calculationResult.validSegments)
             parent.updateRuleStrength(calculationResult)

@@ -3,6 +3,7 @@ package burlton.dartzee.code.dartzee
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
 import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
 
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,
                           val totalRule: AbstractDartzeeTotalRule?, val inOrder: Boolean, val allowMisses: Boolean)
@@ -19,7 +20,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
 
     fun runStrengthCalculation(dartboard: Dartboard): ValidSegmentCalculationResult
     {
-        val calculationResult = getValidSegments(dartboard, listOf())
+        val calculationResult = dartzeeCalculator.getValidSegments(this, dartboard, listOf())
 
         this.calculationResult = calculationResult
 
