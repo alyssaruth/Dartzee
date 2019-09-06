@@ -4,7 +4,6 @@ import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.bean.DartzeeTotalRuleSelector
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
-import burlton.dartzee.code.dartzee.generateRuleDescription
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
