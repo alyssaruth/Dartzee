@@ -9,7 +9,6 @@ import burlton.dartzee.code.dartzee.generateRuleDescription
 import burlton.dartzee.code.dartzee.getValidSegments
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
-import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.test.borrowTestDartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.shouldBe
@@ -21,94 +20,66 @@ class TestDartzeeRuleDescriptions: AbstractDartsTest()
     @Test
     fun `Should describe total rules correctly`()
     {
-        val entity = DartzeeRuleEntity()
-        val totalRule = DartzeeTotalRulePrime()
-        entity.totalRule = totalRule.toDbString()
+        val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+        rule.generateRuleDescription() shouldBe "Total is prime"
 
-        entity.generateRuleDescription() shouldBe "Total is prime"
-
-        entity.totalRule = DartzeeTotalRuleGreaterThan().toDbString()
-        entity.generateRuleDescription() shouldBe "Total > 20"
+        val rule2 = makeDartzeeRuleDto(totalRule = DartzeeTotalRuleGreaterThan())
+        rule2.generateRuleDescription() shouldBe "Total > 20"
     }
 
     @Test
     fun `Should describe in-order dart rules`()
     {
-        val entity = DartzeeRuleEntity()
-        entity.dart1Rule = DartzeeDartRuleEven().toDbString()
-        entity.dart2Rule = DartzeeDartRuleOdd().toDbString()
-        entity.dart3Rule = DartzeeDartRuleEven().toDbString()
-        entity.inOrder = true
-
-        entity.generateRuleDescription() shouldBe "Even → Odd → Even"
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven(), inOrder = true)
+        rule.generateRuleDescription() shouldBe "Even → Odd → Even"
     }
 
     @Test
     fun `Should condense the same rules if order isn't required`()
     {
-        val entity = DartzeeRuleEntity()
-        entity.dart1Rule = DartzeeDartRuleInner().toDbString()
-        entity.dart2Rule = DartzeeDartRuleOuter().toDbString()
-        entity.dart3Rule = DartzeeDartRuleOuter().toDbString()
-        entity.inOrder = false
-
-        entity.generateRuleDescription() shouldBe "{ 2x Outer, 1x Inner }"
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleOuter(), inOrder = false)
+        rule.generateRuleDescription() shouldBe "{ 2x Outer, 1x Inner }"
     }
 
     @Test
     fun `Should ignore Any rules if order isn't required`()
     {
-        val entity = DartzeeRuleEntity()
-        entity.dart1Rule = DartzeeDartRuleInner().toDbString()
-        entity.dart2Rule = DartzeeDartRuleOuter().toDbString()
-        entity.dart3Rule = DartzeeDartRuleAny().toDbString()
-        entity.inOrder = false
-
-        entity.generateRuleDescription() shouldBe "{ 1x Inner, 1x Outer }"
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleAny(), inOrder = false)
+        rule.generateRuleDescription() shouldBe "{ 1x Inner, 1x Outer }"
     }
 
     @Test
     fun `Should return Anything for a totally empty rule`()
     {
-        val entity = DartzeeRuleEntity()
-        entity.generateRuleDescription() shouldBe "Anything"
+        val rule = makeDartzeeRuleDto()
+        rule.generateRuleDescription() shouldBe "Anything"
     }
 
     @Test
     fun `Should return Anything for a rule with Any dart rules`()
     {
-        val entity = DartzeeRuleEntity()
-        entity.dart1Rule = DartzeeDartRuleAny().toDbString()
-        entity.dart2Rule = DartzeeDartRuleAny().toDbString()
-        entity.dart3Rule = DartzeeDartRuleAny().toDbString()
+        val unorderedRule = makeDartzeeRuleDto(DartzeeDartRuleAny(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = false)
+        val orderedRule = makeDartzeeRuleDto(DartzeeDartRuleAny(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = false)
 
-        entity.inOrder = false
-        entity.generateRuleDescription() shouldBe "Anything"
-
-        entity.inOrder = true
-        entity.generateRuleDescription() shouldBe "Anything"
+        unorderedRule.generateRuleDescription() shouldBe "Anything"
+        orderedRule.generateRuleDescription() shouldBe "Anything"
     }
 
     @Test
     fun `Should describe 'score' dart rules`()
     {
-        val entity = DartzeeRuleEntity()
-        val rule = DartzeeDartRuleScore()
-        rule.score = 15
+        val scoreRule = DartzeeDartRuleScore()
+        scoreRule.score = 15
 
-        entity.dart1Rule = rule.toDbString()
-
-        entity.generateRuleDescription() shouldBe "Score 15"
+        val rule = makeDartzeeRuleDto(scoreRule)
+        rule.generateRuleDescription() shouldBe "Score 15"
     }
 
     @Test
     fun `Dart and total rules should be concatenated if both are present`()
     {
-        val entity = DartzeeRuleEntity()
-        entity.dart1Rule = DartzeeDartRuleEven().toDbString()
-        entity.totalRule = DartzeeTotalRuleGreaterThan().toDbString()
-
-        entity.generateRuleDescription() shouldBe "Score Even, Total > 20"
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), totalRule = DartzeeTotalRuleGreaterThan())
+        rule.generateRuleDescription() shouldBe "Score Even, Total > 20"
     }
 }
 
@@ -178,11 +149,7 @@ class TestValidSegments: AbstractDartsTest()
     @Test
     fun `getValidSegments should just filter by the ones that are valid`()
     {
-        val rule = DartzeeRuleEntity()
-        rule.dart1Rule = DartzeeDartRuleEven().toDbString()
-        rule.dart2Rule = DartzeeDartRuleOdd().toDbString()
-        rule.dart3Rule = DartzeeDartRuleEven().toDbString()
-        rule.inOrder = true
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven(), inOrder = true)
 
         val dartboard = borrowTestDartboard()
 

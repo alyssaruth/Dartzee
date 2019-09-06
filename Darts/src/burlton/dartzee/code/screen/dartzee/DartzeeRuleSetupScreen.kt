@@ -1,8 +1,8 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.generateRuleDescription
 import burlton.dartzee.code.db.DartsMatchEntity
-import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.GameSetupScreen
@@ -97,7 +97,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
     private fun addRule()
     {
-        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier())
+        val dlg = DartzeeRuleCreationDialog()
         dlg.isVisible = true
 
         val rule = dlg.dartzeeRule
@@ -108,8 +108,8 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     }
     private fun amendRule()
     {
-        val selection = tm.getValueAt(tableRules.selectedModelRow, 0) as DartzeeRuleEntity
-        val dlg = DartzeeRuleCreationDialog(DartboardRuleVerifier())
+        val selection = tm.getValueAt(tableRules.selectedModelRow, 0) as DartzeeRuleDto
+        val dlg = DartzeeRuleCreationDialog()
         dlg.populate(selection)
         dlg.isVisible = true
 
@@ -122,7 +122,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         tableRules.repaint()
     }
 
-    private fun addRuleToTable(rule: DartzeeRuleEntity)
+    private fun addRuleToTable(rule: DartzeeRuleDto)
     {
         tableRules.addRow(arrayOf(rule, rule))
     }
@@ -139,14 +139,14 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     /**
      * Inner classes
      */
-    private inner class DartzeeRuleRenderer(private val colNo: Int) : AbstractTableRenderer<DartzeeRuleEntity>()
+    private inner class DartzeeRuleRenderer(private val colNo: Int) : AbstractTableRenderer<DartzeeRuleDto>()
     {
-        override fun getReplacementValue(value: DartzeeRuleEntity): Any
+        override fun getReplacementValue(value: DartzeeRuleDto): Any
         {
             return if (colNo == 0) value.generateRuleDescription() else value.getStrengthDesc()
         }
 
-        override fun setCellColours(typedValue: DartzeeRuleEntity?, isSelected: Boolean)
+        override fun setCellColours(typedValue: DartzeeRuleDto?, isSelected: Boolean)
         {
             font = Font(font.name, Font.PLAIN, 20)
         }

@@ -1,6 +1,7 @@
 package burlton.dartzee.code.dartzee.total
 
 import burlton.core.code.util.XmlUtil
+import burlton.dartzee.code.dartzee.IDartzeeRuleConfigurable
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.FlowLayout
@@ -10,11 +11,11 @@ import javax.swing.SpinnerNumberModel
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-abstract class AbstractDartzeeRuleTotalSize: AbstractDartzeeTotalRule(), ChangeListener
+abstract class AbstractDartzeeRuleTotalSize: AbstractDartzeeTotalRule(), ChangeListener, IDartzeeRuleConfigurable
 {
     var target = 20
 
-    val configPanel = JPanel()
+    override val configPanel = JPanel()
     val spinner = JSpinner()
 
     init
@@ -36,6 +37,7 @@ abstract class AbstractDartzeeRuleTotalSize: AbstractDartzeeTotalRule(), ChangeL
     override fun populate(rootElement: Element)
     {
         target = XmlUtil.getAttributeInt(rootElement, "Target")
+        spinner.value = target
     }
 
     override fun stateChanged(e: ChangeEvent?)

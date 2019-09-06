@@ -2,8 +2,8 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.bean.DartzeeDartResult
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.getValidSegments
-import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.listener.DartboardListener
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -15,8 +15,9 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.border.TitledBorder
 
-class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog, val dartboard: DartboardRuleVerifier): JPanel(), DartboardListener, ActionListener
+class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog) : JPanel(), DartboardListener, ActionListener
 {
+    val dartboard = DartboardRuleVerifier(400, 400)
     private val dartsThrown = mutableListOf<Dart>()
     private val btnReset = JButton()
     private val panelSouth = JPanel()
@@ -25,7 +26,7 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
     private val panelDartTwo = DartzeeDartResult()
     private val panelDartThree = DartzeeDartResult()
 
-    private var dartzeeRule = DartzeeRuleEntity()
+    private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false)
 
     init
     {
@@ -57,7 +58,7 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
         btnReset.addActionListener(this)
     }
 
-    fun updateRule(rule: DartzeeRuleEntity)
+    fun updateRule(rule: DartzeeRuleDto)
     {
         this.dartzeeRule = rule
 

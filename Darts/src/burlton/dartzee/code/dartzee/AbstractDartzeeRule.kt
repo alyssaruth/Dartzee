@@ -52,7 +52,6 @@ fun getAllDartRules(): List<AbstractDartzeeDartRule>
             DartzeeDartRuleScore(),
             DartzeeDartRuleCustom())
 }
-
 fun getAllTotalRules(): List<AbstractDartzeeTotalRule>
 {
     return mutableListOf(DartzeeTotalRuleLessThan(),
