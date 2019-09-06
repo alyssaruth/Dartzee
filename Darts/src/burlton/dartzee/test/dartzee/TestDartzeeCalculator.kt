@@ -3,10 +3,9 @@ package burlton.dartzee.test.dartzee
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
+import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
-import burlton.dartzee.code.dartzee.generateAllPossibilities
-import burlton.dartzee.code.dartzee.getValidSegments
 import burlton.dartzee.test.borrowTestDartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.shouldBe
@@ -20,12 +19,12 @@ class TestAllPossibilities: AbstractDartsTest()
     {
         val dartboard = borrowTestDartboard()
 
-        val possibilities = generateAllPossibilities(dartboard, listOf(), false)
+        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(), false)
         possibilities.size shouldBe 82 * 82 * 82
         possibilities.distinct().size shouldBe 82 * 82 * 82
         possibilities.all { it.size == 3 } shouldBe true
 
-        val possibilitiesWithMisses = generateAllPossibilities(dartboard, listOf(), true)
+        val possibilitiesWithMisses = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(), true)
         possibilitiesWithMisses.size shouldBe 83 * 83 * 83
         possibilities.all { it.size == 3 } shouldBe true
     }
@@ -38,12 +37,12 @@ class TestAllPossibilities: AbstractDartsTest()
         val dart = Dart(20, 3)
         dart.segmentType = SEGMENT_TYPE_TREBLE
 
-        var possibilities = generateAllPossibilities(dartboard, listOf(dart), false)
+        var possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dart), false)
         possibilities.size shouldBe 82 * 82
         possibilities.all { it.size == 3} shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
 
-        possibilities = generateAllPossibilities(dartboard, listOf(dart), true)
+        possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dart), true)
         possibilities.size shouldBe 83 * 83
         possibilities.all { it.size == 3} shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
@@ -60,13 +59,13 @@ class TestAllPossibilities: AbstractDartsTest()
         val dartTwo = Dart(19, 2)
         dartTwo.segmentType = SEGMENT_TYPE_DOUBLE
 
-        var possibilities = generateAllPossibilities(dartboard, listOf(dartOne, dartTwo), false)
+        var possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dartOne, dartTwo), false)
         possibilities.size shouldBe 82
         possibilities.all { it.size == 3 } shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
         possibilities.all { it[1].scoreAndType == "19_$SEGMENT_TYPE_DOUBLE" } shouldBe true
 
-        possibilities = generateAllPossibilities(dartboard, listOf(dartOne, dartTwo), true)
+        possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dartOne, dartTwo), true)
         possibilities.size shouldBe 83
         possibilities.all { it.size == 3 } shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
@@ -83,7 +82,7 @@ class TestValidSegments: AbstractDartsTest()
 
         val dartboard = borrowTestDartboard()
 
-        val segments = rule.getValidSegments(dartboard, listOf()).validSegments
+        val segments = DartzeeCalculator().getValidSegments(rule, dartboard, listOf()).validSegments
 
         segments.find { it.score == 20 } shouldNotBe null
         segments.find { it.score == 19 } shouldBe null

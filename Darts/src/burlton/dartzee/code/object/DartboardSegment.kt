@@ -83,38 +83,31 @@ class DartboardSegment(val scoreAndType : String)
         val otherXPts = hmXCoordToPoints.getOrDefault(pt.x, mutableListOf())
         for (otherPt in otherXPts)
         {
-            if (otherPt.getY() < pt.getY())
+            if (otherPt.y < pt.y)
             {
                 canBeYMin = false
             }
 
-            if (otherPt.getY() > pt.getY())
+            if (otherPt.y > pt.y)
             {
                 canBeYMax = false
             }
         }
 
-        val otherYPts = hmYCoordToPoints.getOrDefault(pt.y, mutableListOf<Point>())
+        val otherYPts = hmYCoordToPoints.getOrDefault(pt.y, mutableListOf())
         for (otherPt in otherYPts)
         {
-            if (otherPt.getX() < pt.getX())
+            if (otherPt.x < pt.x)
             {
                 canBeXMin = false
             }
 
-            if (otherPt.getX() > pt.getX())
+            if (otherPt.x > pt.x)
             {
                 canBeXMax = false
             }
         }
 
         return canBeYMax || canBeYMin || canBeXMax || canBeXMin
-    }
-
-    fun getExampleDart(): Dart
-    {
-        val drt = Dart(score, getMultiplier())
-        drt.segmentType = type
-        return drt
     }
 }
