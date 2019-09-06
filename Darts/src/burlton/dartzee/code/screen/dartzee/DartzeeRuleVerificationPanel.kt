@@ -5,6 +5,7 @@ import burlton.dartzee.code.bean.DartzeeDartResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
+import burlton.dartzee.code.utils.InjectedThings.verificationDartboardSize
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -17,7 +18,7 @@ import javax.swing.border.TitledBorder
 
 class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog) : JPanel(), DartboardListener, ActionListener
 {
-    val dartboard = DartboardRuleVerifier(400, 400)
+    val dartboard = DartboardRuleVerifier(verificationDartboardSize, verificationDartboardSize)
     private val dartsThrown = mutableListOf<Dart>()
     private val btnReset = JButton()
     private val panelSouth = JPanel()
