@@ -106,7 +106,7 @@ public class StatisticsTabFinishBreakdown extends AbstractStatisticsTab
 		for (int i=0; i<doubles.size(); i++)
 		{
 			int score = doubles.get(i);
-			int count = hmScoreToCount.get(score);
+			int count = hmScoreToCount.getCount(score);
 			
 			double total = hmScoreToCount.getTotalCount();
 			double percent = MathsUtil.getPercentage(count, total);	
