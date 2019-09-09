@@ -1,16 +1,12 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.PlayerImageEntity
-import com.sun.java.swing.plaf.windows.WindowsBorders
 import java.awt.Color
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.ButtonGroup
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JRadioButton
+import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
 import javax.swing.event.ChangeEvent
@@ -57,7 +53,7 @@ class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, Mouse
         }
         else if (rdbtn.hasFocus())
         {
-            border = WindowsBorders.DashedBorder(Color.GRAY)
+            border = BorderFactory.createDashedBorder(Color.GRAY)
         }
         else
         {
