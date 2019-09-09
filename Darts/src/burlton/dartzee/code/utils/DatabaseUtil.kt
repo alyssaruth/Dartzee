@@ -3,13 +3,13 @@ package burlton.dartzee.code.utils
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.desktopcore.code.util.DialogUtil
-import com.sun.rowset.CachedRowSetImpl
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.CachedRowSet
+import javax.sql.rowset.RowSetProvider
 
 const val TABLE_ALREADY_EXISTS = "X0Y32"
 
@@ -164,7 +164,7 @@ class DatabaseUtil
             {
                 conn.createStatement().use { s ->
                     s.executeQuery(query).use { rs ->
-                        crs = CachedRowSetImpl()
+                        crs = RowSetProvider.newFactory().createCachedRowSet()
                         crs!!.populate(rs)
                     }
                 }
@@ -188,7 +188,7 @@ class DatabaseUtil
             }
 
             //Return an empty one if something's gone wrong
-            return crs ?: CachedRowSetImpl()
+            return crs ?: RowSetProvider.newFactory().createCachedRowSet()
         }
 
         @JvmStatic fun executeQueryAggregate(sb: StringBuilder): Int
