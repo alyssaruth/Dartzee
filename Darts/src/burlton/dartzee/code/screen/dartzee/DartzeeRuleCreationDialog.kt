@@ -81,10 +81,10 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         panelAllowMisses.border = TitledBorder("")
         panelAllowMisses.add(cbAllowMisses, "cell 0 0")
 
-        panelRuleName.layout = BorderLayout(0, 0)
+        panelRuleName.layout = BorderLayout(0,0)
         panelRuleName.border = TitledBorder("")
         panelRuleName.add(tfName, BorderLayout.CENTER)
-        tfName.preferredSize = Dimension(30, 50)
+        tfName.preferredSize = Dimension(900, 50)
 
         tfName.horizontalAlignment = JTextField.CENTER
         tfName.setFontSize(24)
@@ -203,7 +203,7 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         }
     }
 
-    fun updateRuleStrength(calculationResult: ValidSegmentCalculationResult)
+    fun updateResults(calculationResult: ValidSegmentCalculationResult)
     {
         lblCombinations.text = calculationResult.getCombinationsDesc()
         lblCombinations.repaint()
