@@ -1,19 +1,22 @@
 package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.bean.DartzeeDartResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.listener.DartboardListener
+import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
 import burlton.dartzee.code.utils.InjectedThings.verificationDartboardSize
-import net.miginfocom.swing.MigLayout
+import burlton.desktopcore.code.util.setFontSize
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.Dimension
+import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
+import javax.swing.JTextField
 import javax.swing.border.TitledBorder
 
 class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog) : JPanel(), DartboardListener, ActionListener
@@ -22,10 +25,8 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
     private val dartsThrown = mutableListOf<Dart>()
     private val btnReset = JButton()
     private val panelSouth = JPanel()
-    private val panelDartSummary = JPanel()
-    private val panelDartOne = DartzeeDartResult()
-    private val panelDartTwo = DartzeeDartResult()
-    private val panelDartThree = DartzeeDartResult()
+
+    val tfResult = JTextField()
 
     private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false)
 
@@ -38,25 +39,27 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
         dartboard.renderScoreLabels = true
         dartboard.paintDartboard()
         dartboard.addDartboardListener(this)
+        add(tfResult, BorderLayout.NORTH)
         add(dartboard, BorderLayout.CENTER)
         add(panelSouth, BorderLayout.SOUTH)
 
-        panelSouth.layout = BorderLayout(0, 0)
+        val layout = FlowLayout()
+        layout.alignment = FlowLayout.CENTER
+        panelSouth.layout = layout
 
-        panelSouth.add(btnReset, BorderLayout.WEST)
+        panelSouth.add(btnReset)
 
-        panelDartSummary.layout = MigLayout("", "[]", "[]")
-        panelSouth.add(panelDartSummary, BorderLayout.CENTER)
-
-        panelDartSummary.add(panelDartOne, "cell 0 0")
-        panelDartSummary.add(panelDartTwo, "cell 0 1")
-        panelDartSummary.add(panelDartThree, "cell 0 2")
+        tfResult.preferredSize = Dimension(900, 50)
+        tfResult.horizontalAlignment = JTextField.CENTER
+        tfResult.setFontSize(24)
+        tfResult.isEditable = false
 
         btnReset.preferredSize = Dimension(80, 80)
         btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
         btnReset.toolTipText = "Reset darts"
 
         btnReset.addActionListener(this)
+        btnReset.isEnabled = false
     }
 
     fun updateRule(rule: DartzeeRuleDto)
@@ -71,18 +74,6 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
     {
         dartsThrown.add(dart)
 
-        panelDartOne.update(dartsThrown[0])
-
-        if (dartsThrown.size > 1)
-        {
-            panelDartTwo.update(dartsThrown[1])
-        }
-
-        if (dartsThrown.size > 2)
-        {
-            panelDartThree.update(dartsThrown[2])
-        }
-
         if (dartsThrown.size == 3)
         {
             dartboard.stopListening()
@@ -93,12 +84,40 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
 
     private fun repaintDartboard()
     {
+        btnReset.isEnabled = dartsThrown.isNotEmpty()
+
+        val calculationResult = dartzeeCalculator.getValidSegments(dartzeeRule, dartboard, dartsThrown)
         if (dartsThrown.size < 3)
         {
-            val calculationResult = dartzeeCalculator.getValidSegments(dartzeeRule, dartboard, dartsThrown)
-
             dartboard.refreshValidSegments(calculationResult.validSegments)
-            parent.updateRuleStrength(calculationResult)
+        }
+
+        parent.updateResults(calculationResult)
+
+        val dartStrs = dartsThrown.map { it.toString() }.toMutableList()
+        while (dartStrs.size < 3) {
+            dartStrs.add("?")
+        }
+
+        val dartsStr = dartStrs.joinToString(" → ")
+        val totalStr = "Total: ${dartsThrown.map { it.getTotal() }.sum()}"
+
+        tfResult.text = "$dartsStr, $totalStr"
+
+        if (calculationResult.validCombinations == 0)
+        {
+            tfResult.background = DartsColour.getDarkenedColour(Color.RED)
+            tfResult.foreground = Color.RED
+        }
+        else if (dartsThrown.size == 3)
+        {
+            tfResult.background = DartsColour.getDarkenedColour(Color.GREEN)
+            tfResult.foreground = Color.GREEN
+        }
+        else
+        {
+            tfResult.background = DartsColour.getDarkenedColour(Color.CYAN)
+            tfResult.foreground = Color.CYAN
         }
     }
 
@@ -107,10 +126,6 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
         dartsThrown.clear()
         dartboard.clearDarts()
         dartboard.ensureListening()
-
-        panelDartOne.reset()
-        panelDartTwo.reset()
-        panelDartThree.reset()
 
         repaintDartboard()
     }

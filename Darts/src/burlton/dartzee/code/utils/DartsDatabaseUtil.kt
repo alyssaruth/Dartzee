@@ -98,7 +98,7 @@ object DartsDatabaseUtil
         }
         else if (versionNumber == 8)
         {
-            Debug.appendBanner("Upgrading to Version 8")
+            Debug.appendBanner("Upgrading to Version 9")
             DartzeeRuleEntity().createTable()
             version.version = 9
             version.saveToDatabase()
