@@ -3,6 +3,9 @@ package burlton.dartzee.code.utils
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.DartsColour.DARTBOARD_BLACK
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_GREEN
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_RED
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_WHITE
 import java.awt.Color
 import java.awt.Point
 
@@ -120,6 +123,8 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlight
     }
 
     val colour = getColourFromHashMap(segment, colourWrapperToUse)
+    colour ?: return null
+
     return if (highlighted)
     {
         if (colour == DARTBOARD_BLACK)
@@ -174,13 +179,13 @@ private fun getColourWrapperFromPrefs(): ColourWrapper
     val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
     val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
-    val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr, DartsColour.DARTBOARD_BLACK)
-    val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr, DartsColour.DARTBOARD_RED)
-    val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr, DartsColour.DARTBOARD_RED)
+    val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr, DARTBOARD_BLACK)
+    val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr, DARTBOARD_RED)
+    val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr, DARTBOARD_RED)
 
-    val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr, DartsColour.DARTBOARD_WHITE)
-    val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr, DartsColour.DARTBOARD_GREEN)
-    val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr, DartsColour.DARTBOARD_GREEN)
+    val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr, DARTBOARD_WHITE)
+    val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr, DARTBOARD_GREEN)
+    val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr, DARTBOARD_GREEN)
 
     colourWrapperFromPrefs = ColourWrapper(evenSingle, evenDouble, evenTreble,
             oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)

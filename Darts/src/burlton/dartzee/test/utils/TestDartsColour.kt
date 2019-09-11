@@ -13,15 +13,11 @@ class TestDartsColour: AbstractDartsTest()
     fun testGetDarkenedColor()
     {
         val c1 = Color(100, 100, 100)
-        val c2 = null
 
         val c1Result = DartsColour.getDarkenedColour(c1)
-        val c2Result = DartsColour.getDarkenedColour(c2)
 
         c1Result.red shouldBe 49
         c1Result.alpha shouldBe c1.alpha
-
-        c2Result shouldBe null
     }
 
     @Test

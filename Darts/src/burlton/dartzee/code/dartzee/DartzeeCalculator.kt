@@ -23,6 +23,7 @@ data class ValidSegmentCalculationResult(val validSegments: List<DartboardSegmen
 abstract class AbstractDartzeeCalculator
 {
     abstract fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): ValidSegmentCalculationResult
+    abstract fun isValidCombination(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
 }
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
@@ -31,9 +32,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
     {
         val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, true)
 
-        val dartRules = rule.getDartRuleList()
-
-        val validCombinations = allPossibilities.filter { isValidCombination(it, dartRules, rule.totalRule, rule.inOrder) }
+        val validCombinations = allPossibilities.filter { isValidCombination(it, rule) }
                 .filter { it.all { segment -> !segment.isMiss() || rule.allowMisses }}
 
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
@@ -43,13 +42,11 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
 
         return ValidSegmentCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
     }
-    fun isValidCombination(combination: List<DartboardSegment>,
-                           dartRules: List<AbstractDartzeeDartRule>?,
-                           totalRule: AbstractDartzeeTotalRule?,
-                           inOrder: Boolean): Boolean
+    override fun isValidCombination(combination: List<DartboardSegment>,
+                           rule: DartzeeRuleDto): Boolean
     {
-        return isValidCombinationForTotalRule(combination, totalRule)
-                && isValidCombinationForDartRule(combination, dartRules, inOrder)
+        return isValidCombinationForTotalRule(combination, rule.totalRule)
+                && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder)
     }
     private fun isValidCombinationForTotalRule(combination: List<DartboardSegment>, totalRule: AbstractDartzeeTotalRule?): Boolean
     {
