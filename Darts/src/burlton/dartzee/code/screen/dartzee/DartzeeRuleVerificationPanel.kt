@@ -10,21 +10,23 @@ import burlton.desktopcore.code.util.setFontSize
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
-import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTextField
-import javax.swing.border.TitledBorder
+import javax.swing.border.EmptyBorder
+
 
 class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog) : JPanel(), DartboardListener, ActionListener
 {
+    private val bgColor = DartsColour.COLOUR_PASTEL_BLUE
+
     val dartboard = DartboardRuleVerifier(verificationDartboardSize, verificationDartboardSize)
     private val dartsThrown = mutableListOf<Dart>()
     private val btnReset = JButton()
-    private val panelSouth = JPanel()
+    private val panelNorth = JPanel()
 
     val tfResult = JTextField()
 
@@ -33,33 +35,35 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
     init
     {
         layout = BorderLayout(0, 0)
-        preferredSize = Dimension(430, 400)
-        border = TitledBorder("Test Rule")
+        preferredSize = Dimension(400, 400)
+        background = bgColor
+        panelNorth.background = bgColor
+        dartboard.background = bgColor
 
         dartboard.renderScoreLabels = true
         dartboard.paintDartboard()
         dartboard.addDartboardListener(this)
-        add(tfResult, BorderLayout.NORTH)
+        add(panelNorth, BorderLayout.NORTH)
         add(dartboard, BorderLayout.CENTER)
-        add(panelSouth, BorderLayout.SOUTH)
 
-        val layout = FlowLayout()
-        layout.alignment = FlowLayout.CENTER
-        panelSouth.layout = layout
+        btnReset.background = DartsColour.getDarkenedColour(bgColor)
 
-        panelSouth.add(btnReset)
+        panelNorth.border = EmptyBorder(4, 4, 4, 4)
+        panelNorth.layout = BorderLayout(0, 0)
+        panelNorth.add(tfResult, BorderLayout.CENTER)
+        panelNorth.add(btnReset, BorderLayout.EAST)
 
-        tfResult.preferredSize = Dimension(900, 50)
+        tfResult.border = null
+        tfResult.preferredSize = Dimension(900, 60)
         tfResult.horizontalAlignment = JTextField.CENTER
         tfResult.setFontSize(24)
         tfResult.isEditable = false
 
-        btnReset.preferredSize = Dimension(80, 80)
+        btnReset.preferredSize = Dimension(60, 60)
         btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
         btnReset.toolTipText = "Reset darts"
 
         btnReset.addActionListener(this)
-        btnReset.isEnabled = false
     }
 
     fun updateRule(rule: DartzeeRuleDto)
@@ -84,8 +88,6 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
 
     private fun repaintDartboard()
     {
-        btnReset.isEnabled = dartsThrown.isNotEmpty()
-
         val calculationResult = dartzeeCalculator.getValidSegments(dartzeeRule, dartboard, dartsThrown)
         if (dartsThrown.size < 3)
         {
@@ -104,29 +106,55 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
 
         tfResult.text = "$dartsStr, $totalStr"
 
-        if (calculationResult.validCombinations == 0)
+        if (dartsThrown.size < 3)
         {
-            tfResult.background = DartsColour.getDarkenedColour(Color.RED)
-            tfResult.foreground = Color.RED
-        }
-        else if (dartsThrown.size == 3)
-        {
-            tfResult.background = DartsColour.getDarkenedColour(Color.GREEN)
-            tfResult.foreground = Color.GREEN
+            if (calculationResult.validCombinations == 0)
+            {
+                //We've already borked it
+                setAllBackgrounds(DartsColour.getDarkenedColour(Color.RED))
+                tfResult.foreground = Color.RED
+            }
+            else
+            {
+                setAllBackgrounds(bgColor)
+                tfResult.foreground = Color.WHITE
+            }
         }
         else
         {
-            tfResult.background = DartsColour.getDarkenedColour(Color.CYAN)
-            tfResult.foreground = Color.CYAN
+            //We've thrown three darts, so just check validity
+            val combination = dartsThrown.map { dartboard.getSegment(it.score, it.segmentType)!! }
+            if (dartzeeCalculator.isValidCombination(combination, dartzeeRule))
+            {
+                setAllBackgrounds(DartsColour.getDarkenedColour(Color.GREEN))
+                tfResult.foreground = Color.GREEN
+            }
+            else
+            {
+                setAllBackgrounds(DartsColour.getDarkenedColour(Color.RED))
+                tfResult.foreground = Color.RED
+            }
         }
+    }
+
+    private fun setAllBackgrounds(bg: Color)
+    {
+        tfResult.background = bg
+        btnReset.background = DartsColour.getDarkenedColour(bg)
+        btnReset.border = null
+        panelNorth.background = bg
+        background = bg
     }
 
     override fun actionPerformed(e: ActionEvent?)
     {
-        dartsThrown.clear()
-        dartboard.clearDarts()
-        dartboard.ensureListening()
+        if (dartsThrown.isNotEmpty())
+        {
+            dartsThrown.clear()
+            dartboard.clearDarts()
+            dartboard.ensureListening()
 
-        repaintDartboard()
+            repaintDartboard()
+        }
     }
 }
