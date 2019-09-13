@@ -8,7 +8,7 @@ import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,
                           val totalRule: AbstractDartzeeTotalRule?, val inOrder: Boolean, val allowMisses: Boolean)
 {
-    private var calculationResult: ValidSegmentCalculationResult? = null
+    var calculationResult: ValidSegmentCalculationResult? = null
 
     fun getDartRuleList(): List<AbstractDartzeeDartRule>?
     {

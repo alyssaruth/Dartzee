@@ -3,7 +3,6 @@ package burlton.dartzee.code.screen.dartzee
 import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.bean.DartzeeTotalRuleSelector
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
@@ -18,11 +17,11 @@ import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
+class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
 {
     var dartzeeRule: DartzeeRuleDto? = null
 
-    private val verificationPanel = DartzeeRuleVerificationPanel(this)
+    private val verificationPanel = DartzeeRuleVerificationPanel()
     val lblCombinations = JLabel()
     private val panelCenter = JPanel()
     private val panelRuleStrength = JPanel()
@@ -203,12 +202,6 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
         }
     }
 
-    fun updateResults(calculationResult: ValidSegmentCalculationResult)
-    {
-        lblCombinations.text = calculationResult.getCombinationsDesc()
-        lblCombinations.repaint()
-    }
-
     private fun updateComponents()
     {
         if (rdbtnAllDarts.isSelected)
@@ -243,6 +236,9 @@ class DartzeeRuleCreationDialog : SimpleDialog(), ChangeListener
             val rule = constructRuleFromComponents()
             val ruleName = rule.generateRuleDescription()
             tfName.text = ruleName
+
+            val calculationResult = rule.runStrengthCalculation(verificationPanel.dartboard)
+            lblCombinations.text = calculationResult.getCombinationsDesc()
 
             verificationPanel.updateRule(rule)
         }
