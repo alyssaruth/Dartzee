@@ -10,7 +10,7 @@ import javax.swing.JLabel
 class TestDartsColour: AbstractDartsTest()
 {
     @Test
-    fun testGetDarkenedColor()
+    fun `Should return a darker version of the supplied colour`()
     {
         val c1 = Color(100, 100, 100)
 
@@ -21,39 +21,33 @@ class TestDartsColour: AbstractDartsTest()
     }
 
     @Test
-    fun testSetFgAndBgColoursForPosition()
+    fun `Should set the right fg and bg colours based on finishing position`()
     {
-        val componentFirst = JLabel()
-        val componentSecond = JLabel()
-        val componentThird = JLabel()
-        val componentFourth = JLabel()
-        val componentUnfinishedWithDefault = JLabel()
-        val componentUnfinished = JLabel()
+        val component = JLabel()
 
-        DartsColour.setFgAndBgColoursForPosition(componentFirst, 1)
-        DartsColour.setFgAndBgColoursForPosition(componentSecond, 2)
-        DartsColour.setFgAndBgColoursForPosition(componentThird, 3)
-        DartsColour.setFgAndBgColoursForPosition(componentFourth, 4)
-        DartsColour.setFgAndBgColoursForPosition(componentUnfinishedWithDefault, -1, Color.MAGENTA)
-        DartsColour.setFgAndBgColoursForPosition(componentUnfinished, -1)
+        DartsColour.setFgAndBgColoursForPosition(component, 1)
+        component.foreground shouldBe DartsColour.COLOUR_GOLD_TEXT
+        component.background shouldBe Color.YELLOW
 
-        componentFirst.foreground shouldBe DartsColour.COLOUR_GOLD_TEXT
-        componentFirst.background shouldBe Color.YELLOW
+        DartsColour.setFgAndBgColoursForPosition(component, 2)
+        component.foreground shouldBe DartsColour.COLOUR_SILVER_TEXT
+        component.background shouldBe Color.GRAY
 
-        componentSecond.foreground shouldBe DartsColour.COLOUR_SILVER_TEXT
-        componentSecond.background shouldBe Color.GRAY
+        DartsColour.setFgAndBgColoursForPosition(component, 3)
+        component.foreground shouldBe DartsColour.COLOUR_BRONZE_TEXT
+        component.background shouldBe DartsColour.COLOUR_BRONZE
 
-        componentThird.foreground shouldBe DartsColour.COLOUR_BRONZE_TEXT
-        componentThird.background shouldBe DartsColour.COLOUR_BRONZE
+        DartsColour.setFgAndBgColoursForPosition(component, 4)
+        component.foreground shouldBe DartsColour.COLOUR_BRONZE
+        component.background shouldBe Color.BLACK
 
-        componentFourth.foreground shouldBe DartsColour.COLOUR_BRONZE
-        componentFourth.background shouldBe Color.BLACK
+        DartsColour.setFgAndBgColoursForPosition(component, -1, Color.MAGENTA)
+        component.foreground shouldBe null
+        component.background shouldBe Color.MAGENTA
 
-        componentUnfinishedWithDefault.foreground shouldBe null
-        componentUnfinishedWithDefault.background shouldBe Color.MAGENTA
-
-        componentUnfinished.foreground shouldBe null
-        componentUnfinished.background shouldBe null
+        DartsColour.setFgAndBgColoursForPosition(component, -1)
+        component.foreground shouldBe null
+        component.background shouldBe null
     }
 }
 
