@@ -1,6 +1,7 @@
 package burlton.dartzee.test
 
 import burlton.dartzee.code.`object`.*
+import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.screen.Dartboard
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")

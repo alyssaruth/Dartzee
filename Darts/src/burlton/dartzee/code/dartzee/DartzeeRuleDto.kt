@@ -8,7 +8,7 @@ import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,
                           val totalRule: AbstractDartzeeTotalRule?, val inOrder: Boolean, val allowMisses: Boolean)
 {
-    var calculationResult: ValidSegmentCalculationResult? = null
+    var calculationResult: DartzeeRuleCalculationResult? = null
 
     fun getDartRuleList(): List<AbstractDartzeeDartRule>?
     {
@@ -18,7 +18,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         return listOf(dart1Rule, dart2Rule, dart3Rule!!)
     }
 
-    fun runStrengthCalculation(dartboard: Dartboard): ValidSegmentCalculationResult
+    fun runStrengthCalculation(dartboard: Dartboard): DartzeeRuleCalculationResult
     {
         val calculationResult = dartzeeCalculator.getValidSegments(this, dartboard, listOf())
 

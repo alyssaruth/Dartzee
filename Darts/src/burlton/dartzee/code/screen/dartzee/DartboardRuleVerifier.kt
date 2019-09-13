@@ -6,7 +6,7 @@ import java.awt.Color
 
 class DartboardRuleVerifier(width: Int = 400, height: Int = 400): Dartboard(width, height)
 {
-    private var validSegments = listOf<DartboardSegment>()
+    var validSegments = listOf<DartboardSegment>()
 
     fun refreshValidSegments(segments: List<DartboardSegment>)
     {
