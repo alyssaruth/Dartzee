@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
+import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
@@ -26,7 +26,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 
     val dartboard = DartboardRuleVerifier(verificationDartboardSize, verificationDartboardSize)
     private val dartsThrown = mutableListOf<Dart>()
-    private val btnReset = JButton()
+    val btnReset = JButton()
     private val panelNorth = JPanel()
 
     val tfResult = JTextField()
@@ -136,7 +136,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
             }
         }
     }
-    private fun runCalculationIfNecessary(): ValidSegmentCalculationResult
+    private fun runCalculationIfNecessary(): DartzeeRuleCalculationResult
     {
         return if (dartsThrown.isEmpty())
         {

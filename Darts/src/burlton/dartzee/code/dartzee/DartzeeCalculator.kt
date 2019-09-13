@@ -9,11 +9,11 @@ import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
 import burlton.dartzee.code.screen.Dartboard
 
-data class ValidSegmentCalculationResult(val validSegments: List<DartboardSegment>,
-                                         val validCombinations: Int,
-                                         val allCombinations: Int,
-                                         val validCombinationProbability: Double,
-                                         val allCombinationsProbability: Double)
+data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment>,
+                                        val validCombinations: Int,
+                                        val allCombinations: Int,
+                                        val validCombinationProbability: Double,
+                                        val allCombinationsProbability: Double)
 {
     private val percentage = MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)
 
@@ -22,13 +22,13 @@ data class ValidSegmentCalculationResult(val validSegments: List<DartboardSegmen
 
 abstract class AbstractDartzeeCalculator
 {
-    abstract fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): ValidSegmentCalculationResult
+    abstract fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     abstract fun isValidCombination(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
 }
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
 {
-    override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): ValidSegmentCalculationResult
+    override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     {
         val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, true)
 
@@ -40,7 +40,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         val validPixelPossibility = validCombinations.map { mapCombinationToProbability(it, dartboard) }.sum()
         val allProbabilities = allPossibilities.map { mapCombinationToProbability(it, dartboard) }.sum()
 
-        return ValidSegmentCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
+        return DartzeeRuleCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
     }
     override fun isValidCombination(combination: List<DartboardSegment>,
                            rule: DartzeeRuleDto): Boolean

@@ -8,6 +8,7 @@ import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.test.borrowTestDartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -78,7 +79,12 @@ class TestValidSegments: AbstractDartsTest()
     @Test
     fun `getValidSegments should just filter by the ones that are valid`()
     {
-        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven(), inOrder = true)
+        val rule = makeDartzeeRuleDto(
+            DartzeeDartRuleEven(),
+            DartzeeDartRuleOdd(),
+            DartzeeDartRuleEven(),
+            inOrder = true
+        )
 
         val dartboard = borrowTestDartboard()
 
