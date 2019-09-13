@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
+import burlton.dartzee.code.dartzee.ValidSegmentCalculationResult
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
@@ -19,7 +20,7 @@ import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 
 
-class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog) : JPanel(), DartboardListener, ActionListener
+class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
     private val bgColor = DartsColour.COLOUR_PASTEL_BLUE
 
@@ -88,13 +89,12 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
 
     private fun repaintDartboard()
     {
-        val calculationResult = dartzeeCalculator.getValidSegments(dartzeeRule, dartboard, dartsThrown)
+        val calculationResult = runCalculationIfNecessary()
+
         if (dartsThrown.size < 3)
         {
             dartboard.refreshValidSegments(calculationResult.validSegments)
         }
-
-        parent.updateResults(calculationResult)
 
         val dartStrs = dartsThrown.map { it.toString() }.toMutableList()
         while (dartStrs.size < 3) {
@@ -134,6 +134,17 @@ class DartzeeRuleVerificationPanel(private val parent: DartzeeRuleCreationDialog
                 setAllBackgrounds(DartsColour.getDarkenedColour(Color.RED))
                 tfResult.foreground = Color.RED
             }
+        }
+    }
+    private fun runCalculationIfNecessary(): ValidSegmentCalculationResult
+    {
+        return if (dartsThrown.isEmpty())
+        {
+            dartzeeRule.calculationResult!!
+        }
+        else
+        {
+            dartzeeCalculator.getValidSegments(dartzeeRule, dartboard, dartsThrown)
         }
     }
 
