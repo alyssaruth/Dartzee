@@ -120,7 +120,22 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         panel.shouldBeBlue()
     }
 
+    @Test
+    fun `Should reset color when darts are cleared`()
+    {
+        val panel = DartzeeRuleVerificationPanel()
 
+        val rule = makeDartzeeRuleDto()
+        rule.runStrengthCalculation(panel.dartboard)
+
+        panel.updateRule(rule)
+
+        panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
+        panel.shouldBeRed()
+
+        panel.btnReset.doClick()
+        panel.shouldBeBlue()
+    }
 
     private fun DartzeeRuleVerificationPanel.shouldBeBlue()
     {
