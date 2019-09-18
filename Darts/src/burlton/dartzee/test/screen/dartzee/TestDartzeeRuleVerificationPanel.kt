@@ -75,20 +75,16 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         rule.runStrengthCalculation(panel.dartboard)
 
         panel.updateRule(rule)
-        panel.tfResult.foreground shouldBe Color.WHITE
-        panel.background shouldBe DartsColour.COLOUR_PASTEL_BLUE
+        panel.shouldBeBlue()
 
         panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
-        panel.tfResult.foreground shouldBe Color.WHITE
-        panel.background shouldBe DartsColour.COLOUR_PASTEL_BLUE
+        panel.shouldBeBlue()
 
         panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
-        panel.tfResult.foreground shouldBe Color.WHITE
-        panel.background shouldBe DartsColour.COLOUR_PASTEL_BLUE
+        panel.shouldBeBlue()
 
         panel.dartThrown(makeDart(3, 1, SEGMENT_TYPE_INNER_SINGLE))
-        panel.tfResult.foreground shouldBe Color.GREEN
-        panel.background shouldBe DartsColour.getDarkenedColour(Color.GREEN)
+        panel.shouldBeGreen()
     }
 
     @Test
@@ -102,7 +98,43 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         panel.updateRule(rule)
 
         panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
-        panel.tfResult.foreground shouldBe Color.RED
-        panel.background shouldBe DartsColour.getDarkenedColour(Color.RED)
+        panel.shouldBeRed()
+    }
+
+    @Test
+    fun `Should update dartboard colour when the rule changes`()
+    {
+        val panel = DartzeeRuleVerificationPanel()
+
+        val rule = makeDartzeeRuleDto()
+        rule.runStrengthCalculation(panel.dartboard)
+
+        panel.updateRule(rule)
+
+        panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
+        panel.shouldBeRed()
+
+        val updatedRule = makeDartzeeRuleDto(allowMisses = true)
+        panel.updateRule(updatedRule)
+
+        panel.shouldBeBlue()
+    }
+
+
+
+    private fun DartzeeRuleVerificationPanel.shouldBeBlue()
+    {
+        tfResult.foreground shouldBe Color.WHITE
+        background shouldBe DartsColour.COLOUR_PASTEL_BLUE
+    }
+    private fun DartzeeRuleVerificationPanel.shouldBeRed()
+    {
+        tfResult.foreground shouldBe Color.RED
+        background shouldBe DartsColour.getDarkenedColour(Color.RED)
+    }
+    private fun DartzeeRuleVerificationPanel.shouldBeGreen()
+    {
+        tfResult.foreground shouldBe Color.GREEN
+        background shouldBe DartsColour.getDarkenedColour(Color.GREEN)
     }
 }
