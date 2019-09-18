@@ -18,6 +18,8 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
     private val percentage = MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)
 
     fun getCombinationsDesc() = "$validCombinations combinations (success%: $percentage%)"
+
+    fun getDifficultyDesc() = "Insane"
 }
 
 abstract class AbstractDartzeeCalculator

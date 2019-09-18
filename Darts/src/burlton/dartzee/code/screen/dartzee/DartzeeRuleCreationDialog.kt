@@ -23,7 +23,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
     var dartzeeRule: DartzeeRuleDto? = null
 
     private val verificationPanel = DartzeeRuleVerificationPanel()
-    val lblCombinations = JLabel()
+    val lblDifficulty = JLabel()
     private val panelCenter = JPanel()
     private val panelRuleStrength = JPanel()
     private val panelDarts = JPanel()
@@ -55,8 +55,8 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         add(panelCenter, BorderLayout.CENTER)
         add(verificationPanel, BorderLayout.EAST)
 
-        lblCombinations.setFontSize(24)
-        panelRuleStrength.add(lblCombinations)
+        lblDifficulty.setFontSize(24)
+        panelRuleStrength.add(lblDifficulty)
 
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
         panelCenter.add(panelRuleStrength, "cell 0 1, growx")
@@ -255,7 +255,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
             tfName.text = ruleName
 
             val calculationResult = rule.runStrengthCalculation(verificationPanel.dartboard)
-            lblCombinations.text = calculationResult.getCombinationsDesc()
+            lblDifficulty.text = calculationResult.getDifficultyDesc()
 
             verificationPanel.updateRule(rule)
         }
