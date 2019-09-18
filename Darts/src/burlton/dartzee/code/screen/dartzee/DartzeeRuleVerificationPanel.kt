@@ -1,8 +1,8 @@
 package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
@@ -23,7 +23,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
     private val dartsThrown = mutableListOf<Dart>()
     val btnReset = JButton()
     private val panelNorth = JPanel()
-    private val lblCombinations = JLabel()
+    val lblCombinations = JLabel()
 
     val tfResult = JTextField()
 
