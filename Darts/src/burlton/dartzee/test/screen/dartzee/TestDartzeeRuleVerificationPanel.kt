@@ -137,6 +137,20 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         panel.shouldBeBlue()
     }
 
+    @Test
+    fun `Should update combinations text when darts are thrown`()
+    {
+        val panel  = DartzeeRuleVerificationPanel()
+        val rule = makeDartzeeRuleDto()
+        rule.runStrengthCalculation(panel.dartboard)
+
+        panel.updateRule(rule)
+        panel.lblCombinations.text shouldBe "1 combinations (success%: 10.0%)"
+
+        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.lblCombinations.text shouldBe "1 combinations (success%: 20.0%)"
+    }
+
     private fun DartzeeRuleVerificationPanel.shouldBeBlue()
     {
         tfResult.foreground shouldBe Color.WHITE

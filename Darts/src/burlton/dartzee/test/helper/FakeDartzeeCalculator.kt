@@ -4,10 +4,9 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.dartzee.AbstractDartzeeCalculator
-import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.screen.Dartboard
-import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
 
 /**
  * Fast calculator for tests which assumes that the rule is always:
@@ -30,7 +29,7 @@ class FakeDartzeeCalculator: AbstractDartzeeCalculator()
             segments.add(DartboardSegment("20_0"))
         }
 
-        return DartzeeRuleCalculationResult(segments, segments.size, 10, 1.0, 1.0)
+        return DartzeeRuleCalculationResult(segments, segments.size, 10, 1.0 + dartsSoFar.size, 10.0)
     }
 
     override fun isValidCombination(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean {
