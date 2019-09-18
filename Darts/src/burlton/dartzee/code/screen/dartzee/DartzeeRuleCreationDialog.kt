@@ -86,6 +86,9 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         panelRuleName.border = TitledBorder("")
         panelRuleName.add(tfName, BorderLayout.CENTER)
         panelRuleName.add(btnRandom, BorderLayout.EAST)
+        btnRandom.preferredSize = Dimension(50, 50)
+        btnRandom.icon = ImageIcon(javaClass.getResource("/buttons/dice.png"))
+        btnRandom.toolTipText = "Generate random rule"
         tfName.preferredSize = Dimension(900, 50)
 
         tfName.horizontalAlignment = JTextField.CENTER
