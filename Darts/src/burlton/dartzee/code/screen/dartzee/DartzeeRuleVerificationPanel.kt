@@ -91,23 +91,12 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
     {
         val calculationResult = runCalculationIfNecessary()
 
+        updateDartDesc()
+
         if (dartsThrown.size < 3)
         {
             dartboard.refreshValidSegments(calculationResult.validSegments)
-        }
 
-        val dartStrs = dartsThrown.map { it.toString() }.toMutableList()
-        while (dartStrs.size < 3) {
-            dartStrs.add("?")
-        }
-
-        val dartsStr = dartStrs.joinToString(" → ")
-        val totalStr = "Total: ${dartsThrown.map { it.getTotal() }.sum()}"
-
-        tfResult.text = "$dartsStr, $totalStr"
-
-        if (dartsThrown.size < 3)
-        {
             if (calculationResult.validCombinations == 0)
             {
                 //We've already borked it
@@ -136,6 +125,19 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
             }
         }
     }
+    private fun updateDartDesc()
+    {
+        val dartStrs = dartsThrown.map { it.toString() }.toMutableList()
+        while (dartStrs.size < 3) {
+            dartStrs.add("?")
+        }
+
+        val dartsStr = dartStrs.joinToString(" → ")
+        val totalStr = "Total: ${dartsThrown.map { it.getTotal() }.sum()}"
+
+        tfResult.text = "$dartsStr, $totalStr"
+    }
+
     private fun runCalculationIfNecessary(): DartzeeRuleCalculationResult
     {
         return if (dartsThrown.isEmpty())
