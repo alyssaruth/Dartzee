@@ -19,8 +19,6 @@ import javax.swing.border.EmptyBorder
 
 class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
-    private val bgColor = DartsColour.COLOUR_PASTEL_BLUE
-
     val dartboard = DartboardRuleVerifier(verificationDartboardSize, verificationDartboardSize)
     private val dartsThrown = mutableListOf<Dart>()
     val btnReset = JButton()
@@ -35,9 +33,6 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
     {
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(400, 400)
-        background = bgColor
-        panelNorth.background = bgColor
-        dartboard.background = bgColor
 
         dartboard.renderScoreLabels = true
         dartboard.paintDartboard()
@@ -47,8 +42,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         add(lblCombinations, BorderLayout.SOUTH)
 
         lblCombinations.horizontalAlignment = JLabel.CENTER
-
-        btnReset.background = DartsColour.getDarkenedColour(bgColor)
+        lblCombinations.border = EmptyBorder(0, 0, 5, 0)
 
         panelNorth.border = EmptyBorder(4, 4, 4, 4)
         panelNorth.layout = BorderLayout(0, 0)
@@ -107,7 +101,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
             }
             else
             {
-                setAllColours(Color.WHITE, bgColor)
+                setAllColours(Color.WHITE, DartsColour.COLOUR_PASTEL_BLUE)
             }
         }
         else
