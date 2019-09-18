@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.bean.DartzeeTotalRuleSelector
+import burlton.dartzee.code.dartzee.DartzeeRandomiser
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.RadioButtonPanel
@@ -41,6 +42,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
     val totalSelector = DartzeeTotalRuleSelector("Total")
     private val panelRuleName = JPanel()
     val tfName = JTextField()
+    val btnRandom = JButton()
 
     init
     {
@@ -83,6 +85,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         panelRuleName.layout = BorderLayout(0,0)
         panelRuleName.border = TitledBorder("")
         panelRuleName.add(tfName, BorderLayout.CENTER)
+        panelRuleName.add(btnRandom, BorderLayout.EAST)
         tfName.preferredSize = Dimension(900, 50)
 
         tfName.horizontalAlignment = JTextField.CENTER
@@ -97,17 +100,23 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         totalSelector.addActionListener(this)
         cbInOrder.addActionListener(this)
         cbAllowMisses.addActionListener(this)
+        btnRandom.addActionListener(this)
 
         cbInOrder.isSelected = true
 
         updateComponents()
     }
 
+    fun amendRule(rule: DartzeeRuleDto)
+    {
+        title = "Amend Dartzee Rule"
+        this.dartzeeRule = rule
+
+        populate(rule)
+    }
+
     fun populate(rule: DartzeeRuleDto)
     {
-        this.dartzeeRule = rule
-        title = "Amend Dartzee Rule"
-
         if (rule.dart1Rule == null)
         {
             rdbtnNoDarts.isSelected = true
@@ -120,6 +129,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         }
         else
         {
+            rdbtnAllDarts.isSelected = true
             cbInOrder.isSelected = rule.inOrder
 
             dartOneSelector.populate(rule.dart1Rule)
@@ -127,7 +137,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
             dartThreeSelector.populate(rule.dart3Rule!!)
         }
 
-        rule.totalRule?.let { totalSelector.populate(rule.totalRule) }
+        totalSelector.populate(rule.totalRule)
 
         cbAllowMisses.isSelected = rule.allowMisses
 
@@ -142,7 +152,11 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        if (arg0.source !in listOf(btnOk, btnCancel))
+        if (arg0.source == btnRandom)
+        {
+            populate(DartzeeRandomiser.generateRandomRule())
+        }
+        else if (arg0.source !in listOf(btnOk, btnCancel))
         {
             updateComponents()
         }

@@ -28,6 +28,8 @@ abstract class AbstractDartzeeRule
 
     open fun getDescription() = toString()
 
+    open fun randomise() {}
+
     fun toDbString(): String
     {
         val xmlDoc = XmlUtil.factoryNewDocument()
