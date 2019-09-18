@@ -11,6 +11,7 @@ import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JCheckBox
+import kotlin.random.Random
 
 class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListener
 {
@@ -110,6 +111,18 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListen
         white = cbWhite.isSelected
         green = cbGreen.isSelected
         red = cbRed.isSelected
+    }
+
+    override fun randomise()
+    {
+        val result = Random.nextInt(14) + 1
+
+        cbBlack.isSelected = (result and 1) > 0
+        cbWhite.isSelected = (result and 2) > 0
+        cbRed.isSelected = (result and 4) > 0
+        cbGreen.isSelected = (result and 8) > 0
+
+        updateFromUi()
     }
 
 }

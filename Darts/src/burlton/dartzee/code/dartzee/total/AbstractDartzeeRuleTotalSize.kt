@@ -10,6 +10,7 @@ import javax.swing.JSpinner
 import javax.swing.SpinnerNumberModel
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
+import kotlin.random.Random
 
 abstract class AbstractDartzeeRuleTotalSize: AbstractDartzeeTotalRule(), ChangeListener, IDartzeeRuleConfigurable
 {
@@ -43,5 +44,11 @@ abstract class AbstractDartzeeRuleTotalSize: AbstractDartzeeTotalRule(), ChangeL
     override fun stateChanged(e: ChangeEvent?)
     {
         target = spinner.value as Int
+    }
+
+    override fun randomise()
+    {
+        target = Random.nextInt(178) + 3
+        spinner.value = target
     }
 }

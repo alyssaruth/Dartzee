@@ -47,4 +47,13 @@ class DartzeeDartRuleScore: AbstractDartzeeDartRuleConfigurable(), ChangeListene
     {
         score = spinner.value as Int
     }
+
+    override fun randomise()
+    {
+        val list = mutableListOf(25)
+        for (i in 1..20) { list.add(i) }
+
+        score = list.random()
+        spinner.value = score
+    }
 }

@@ -109,7 +109,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     {
         val selection = tm.getValueAt(tableRules.selectedModelRow, 0) as DartzeeRuleDto
         val dlg = DartzeeRuleCreationDialog()
-        dlg.populate(selection)
+        dlg.amendRule(selection)
         dlg.isVisible = true
 
         tableRules.repaint()
