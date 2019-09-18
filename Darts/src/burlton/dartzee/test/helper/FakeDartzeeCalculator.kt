@@ -25,6 +25,11 @@ class FakeDartzeeCalculator: AbstractDartzeeCalculator()
             segments.add(nextSegment)
         }
 
+        if (rule.allowMisses)
+        {
+            segments.add(DartboardSegment("20_0"))
+        }
+
         return DartzeeRuleCalculationResult(segments, segments.size, 10, 1.0, 1.0)
     }
 
