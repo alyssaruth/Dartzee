@@ -1,14 +1,16 @@
 package burlton.dartzee.test.dartzee
 
+import burlton.core.code.util.getAllPermutations
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
-import burlton.dartzee.test.borrowTestDartboard
+import burlton.dartzee.test.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
+import burlton.dartzee.test.helper.makeScoreRule
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -92,5 +94,42 @@ class TestValidSegments: AbstractDartsTest()
 
         segments.find { it.score == 20 } shouldNotBe null
         segments.find { it.score == 19 } shouldBe null
+    }
+}
+
+class TestValidCombinations: AbstractDartsTest()
+{
+    @Test
+    fun `should correctly identify all permutations as valid if no ordering required`()
+    {
+        val rule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = false)
+
+        val segments = listOf(doubleNineteen, singleTwenty, singleEighteen)
+
+        val permutations = segments.getAllPermutations()
+
+        permutations.forEach {
+            DartzeeCalculator().isValidCombination(it, rule) shouldBe true
+        }
+    }
+
+    @Test
+    fun `should enforce ordering correctly`()
+    {
+        val rule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = true)
+
+        val orderedSegments = listOf(singleTwenty, singleNineteen, singleEighteen)
+
+        val permutations = orderedSegments.getAllPermutations()
+
+        permutations.forEach {
+            DartzeeCalculator().isValidCombination(it, rule) shouldBe (it == orderedSegments)
+        }
+    }
+
+    @Test
+    fun `should combine total and darts rules correctly`()
+    {
+
     }
 }

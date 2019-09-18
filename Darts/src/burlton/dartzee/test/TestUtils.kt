@@ -17,6 +17,7 @@ val trebleTwenty = DartboardSegment("20_$SEGMENT_TYPE_TREBLE")
 val singleNineteen = DartboardSegment("19_$SEGMENT_TYPE_OUTER_SINGLE")
 val doubleNineteen = DartboardSegment("19_$SEGMENT_TYPE_DOUBLE")
 val trebleNineteen = DartboardSegment("19_$SEGMENT_TYPE_TREBLE")
+val singleEighteen = DartboardSegment("18_$SEGMENT_TYPE_OUTER_SINGLE")
 
 private var dartboard: Dartboard? = null
 

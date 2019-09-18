@@ -4,6 +4,7 @@ import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
+import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleScore
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
 
 fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
@@ -27,3 +28,5 @@ fun makeDartzeeRuleCalculationResult(validSegments: List<DartboardSegment> = lis
 {
     return DartzeeRuleCalculationResult(validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
 }
+
+fun makeScoreRule(score: Int) = DartzeeDartRuleScore().also { it.score = score }
