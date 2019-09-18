@@ -13,10 +13,7 @@ import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.ImageIcon
-import javax.swing.JButton
-import javax.swing.JPanel
-import javax.swing.JTextField
+import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 
@@ -28,6 +25,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
     private val dartsThrown = mutableListOf<Dart>()
     val btnReset = JButton()
     private val panelNorth = JPanel()
+    private val lblCombinations = JLabel()
 
     val tfResult = JTextField()
 
@@ -46,6 +44,9 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         dartboard.addDartboardListener(this)
         add(panelNorth, BorderLayout.NORTH)
         add(dartboard, BorderLayout.CENTER)
+        add(lblCombinations, BorderLayout.SOUTH)
+
+        lblCombinations.horizontalAlignment = JLabel.CENTER
 
         btnReset.background = DartsColour.getDarkenedColour(bgColor)
 
@@ -95,33 +96,33 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 
         if (dartsThrown.size < 3)
         {
+            lblCombinations.text = calculationResult.getCombinationsDesc()
             dartboard.refreshValidSegments(calculationResult.validSegments)
 
             if (calculationResult.validCombinations == 0)
             {
                 //We've already borked it
-                setAllBackgrounds(DartsColour.getDarkenedColour(Color.RED))
-                tfResult.foreground = Color.RED
+                setAllColours(Color.RED)
+
             }
             else
             {
-                setAllBackgrounds(bgColor)
-                tfResult.foreground = Color.WHITE
+                setAllColours(Color.WHITE, bgColor)
             }
         }
         else
         {
             //We've thrown three darts, so just check validity
+            lblCombinations.text = ""
+
             val combination = dartsThrown.map { dartboard.getSegment(it.score, it.segmentType)!! }
             if (dartzeeCalculator.isValidCombination(combination, dartzeeRule))
             {
-                setAllBackgrounds(DartsColour.getDarkenedColour(Color.GREEN))
-                tfResult.foreground = Color.GREEN
+                setAllColours(Color.GREEN)
             }
             else
             {
-                setAllBackgrounds(DartsColour.getDarkenedColour(Color.RED))
-                tfResult.foreground = Color.RED
+                setAllColours(Color.RED)
             }
         }
     }
@@ -150,13 +151,17 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         }
     }
 
-    private fun setAllBackgrounds(bg: Color)
+    private fun setAllColours(fg: Color, bg: Color = DartsColour.getDarkenedColour(fg))
     {
+        tfResult.foreground = fg
+        lblCombinations.foreground = fg
+
         tfResult.background = bg
         btnReset.background = DartsColour.getDarkenedColour(bg)
         btnReset.border = null
         panelNorth.background = bg
         background = bg
+        lblCombinations.background = bg
     }
 
     override fun actionPerformed(e: ActionEvent?)
