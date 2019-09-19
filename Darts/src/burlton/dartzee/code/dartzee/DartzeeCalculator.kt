@@ -1,6 +1,5 @@
 package burlton.dartzee.code.dartzee
 
-import burlton.core.code.util.MathsUtil
 import burlton.core.code.util.getAllPermutations
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
@@ -66,8 +65,19 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         }
         else
         {
-            dartRules.getAllPermutations().any { isValidCombinationForOrderedDartRule(it, combination) }
+            if (dartRules.any { canNeverBeValid(it, combination) })
+            {
+                return false
+            }
+            else
+            {
+                combination.getAllPermutations().any { isValidCombinationForOrderedDartRule(dartRules, it) }
+            }
         }
+    }
+    private fun canNeverBeValid(rule: AbstractDartzeeDartRule, combination: List<DartboardSegment>): Boolean
+    {
+        return combination.none { rule.isValidSegment(it) }
     }
     private fun isValidCombinationForOrderedDartRule(rules: List<AbstractDartzeeDartRule>, combination: List<DartboardSegment>): Boolean
     {

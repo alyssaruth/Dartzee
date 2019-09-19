@@ -3,12 +3,13 @@ package burlton.core.test.util
 import burlton.core.code.util.addUnique
 import burlton.core.code.util.getAllPermutations
 import burlton.core.code.util.getDescription
+import burlton.core.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestExtensionFunctions
+class TestExtensionFunctions: AbstractTest()
 {
     @Test
     fun `IntRange descriptions`()
@@ -47,5 +48,13 @@ class TestExtensionFunctions
         val list = listOf(1, 2, 3)
 
         list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 2, 3), listOf(1, 3, 2), listOf(2, 1, 3), listOf(2, 3, 1), listOf(3, 1, 2), listOf(3, 2, 1))
+    }
+
+    @Test
+    fun `Should not return duplicate permutations`()
+    {
+        val list = listOf(1, 1, 2)
+
+        list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 1, 2), listOf(1, 2, 1), listOf(2, 1, 1))
     }
 }
