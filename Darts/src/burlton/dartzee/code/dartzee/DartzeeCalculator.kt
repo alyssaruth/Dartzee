@@ -9,19 +9,6 @@ import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
 import burlton.dartzee.code.screen.Dartboard
 
-data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment>,
-                                        val validCombinations: Int,
-                                        val allCombinations: Int,
-                                        val validCombinationProbability: Double,
-                                        val allCombinationsProbability: Double)
-{
-    private val percentage = MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)
-
-    fun getCombinationsDesc() = "$validCombinations combinations (success%: $percentage%)"
-
-    fun getDifficultyDesc() = "Insane"
-}
-
 abstract class AbstractDartzeeCalculator
 {
     abstract fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
