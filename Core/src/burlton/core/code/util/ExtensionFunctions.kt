@@ -20,7 +20,7 @@ fun IntRange.getDescription(): String
 
 fun <E> List<E>.getAllPermutations(): List<List<E>>
 {
-    if (isEmpty())
+    if (size < 2)
     {
         return listOf(this)
     }
@@ -37,4 +37,12 @@ fun <E> List<E>.getAllPermutations(): List<List<E>>
     }
 
     return allPermutations
+}
+
+inline fun <T> Iterable<T>.allIndexed(predicate: (index: Int, T) -> Boolean): Boolean {
+    if (this is Collection && isEmpty()) return true
+
+    this.forEachIndexed { ix, it -> if (!predicate(ix, it)) return false }
+
+    return true
 }

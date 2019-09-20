@@ -1,6 +1,7 @@
 package burlton.dartzee.code.dartzee
 
 import burlton.core.code.util.MathsUtil
+import burlton.core.code.util.allIndexed
 import burlton.core.code.util.getAllPermutations
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
@@ -30,8 +31,12 @@ abstract class AbstractDartzeeCalculator
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
 {
+    private val combinationsAlreadySampled = mutableMapOf<List<DartboardSegment>, Boolean>()
+
     override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     {
+        combinationsAlreadySampled.clear()
+
         val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, true)
 
         val validCombinations = allPossibilities.filter { isValidCombination(it, rule) }
@@ -79,12 +84,25 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         }
         else
         {
-            dartRules.getAllPermutations().any { isValidCombinationForOrderedDartRule(it, combination) }
+            if (combinationsAlreadySampled.containsKey(combination))
+            {
+                combinationsAlreadySampled[combination]!!
+            }
+            else
+            {
+                val permutations = combination.getAllPermutations()
+
+                val valid = permutations.any { isValidCombinationForOrderedDartRule(dartRules, it) }
+
+                permutations.forEach { combinationsAlreadySampled[it] = valid }
+
+                valid
+            }
         }
     }
     private fun isValidCombinationForOrderedDartRule(rules: List<AbstractDartzeeDartRule>, combination: List<DartboardSegment>): Boolean
     {
-        return rules.mapIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }.all { it }
+        return rules.allIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }
     }
 
     private fun mapCombinationToProbability(combination: List<DartboardSegment>, dartboard: Dartboard): Double
