@@ -110,6 +110,22 @@ class TestValidSegments: AbstractDartsTest()
 
         segments.find { it.score == 16 } shouldBe null
     }
+
+    @Test
+    fun `should not cache results between calculations`()
+    {
+        val ruleOne = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = false)
+        val ruleTwo = makeDartzeeRuleDto(makeScoreRule(1), makeScoreRule(2), makeScoreRule(3), inOrder = false)
+
+        val calculator = DartzeeCalculator()
+        val dartboard = borrowTestDartboard()
+
+        val firstSegments = calculator.getValidSegments(ruleOne, dartboard, listOf()).validSegments
+        val secondSegments = calculator.getValidSegments(ruleTwo, dartboard, listOf()).validSegments
+
+        firstSegments.any { it.score == 20 } shouldBe true
+        secondSegments.any { it.score == 20 } shouldBe false
+    }
 }
 
 class TestValidCombinations: AbstractDartsTest()
