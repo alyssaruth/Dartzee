@@ -34,7 +34,7 @@ fun getMultiplier(type: Int): Int
     }
 }
 
-data class DartboardSegment(val scoreAndType : String)
+class DartboardSegment(val scoreAndType : String)
 {
     var type : Int
     var score : Int
