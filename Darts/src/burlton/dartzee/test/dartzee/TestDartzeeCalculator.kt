@@ -7,10 +7,13 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEven
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleLessThan
 import burlton.dartzee.test.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import burlton.dartzee.test.helper.makeScoreRule
+import burlton.dartzee.test.helper.makeTotalScoreRule
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -95,6 +98,18 @@ class TestValidSegments: AbstractDartsTest()
         segments.find { it.score == 20 } shouldNotBe null
         segments.find { it.score == 19 } shouldBe null
     }
+
+    @Test
+    fun `should combine total and darts rules correctly`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleEven(), DartzeeDartRuleEven(), makeTotalScoreRule<DartzeeTotalRuleLessThan>(20))
+
+        val dartboard = borrowTestDartboard()
+
+        val segments = DartzeeCalculator().getValidSegments(rule, dartboard, listOf()).validSegments
+
+        segments.find { it.score == 16 } shouldBe null
+    }
 }
 
 class TestValidCombinations: AbstractDartsTest()
@@ -128,8 +143,12 @@ class TestValidCombinations: AbstractDartsTest()
     }
 
     @Test
-    fun `should combine total and darts rules correctly`()
+    fun `should test for both total and dart rules`()
     {
+        val rule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), DartzeeTotalRuleEven(), true)
 
+        DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleNineteen, singleEighteen), rule) shouldBe false
+        DartzeeCalculator().isValidCombination(listOf(singleEighteen, singleEighteen, singleEighteen), rule) shouldBe false
+        DartzeeCalculator().isValidCombination(listOf(singleTwenty, doubleNineteen, singleEighteen), rule) shouldBe true
     }
 }
