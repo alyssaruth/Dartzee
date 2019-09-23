@@ -1,8 +1,8 @@
 package burlton.dartzee.test
 
 import burlton.dartzee.code.`object`.*
-import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.screen.Dartboard
+import javax.swing.SwingUtilities
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
 val outerBull = DartboardSegment("25_$SEGMENT_TYPE_OUTER_SINGLE")
@@ -30,4 +30,13 @@ fun borrowTestDartboard(): Dartboard
     }
 
     return dartboard!!
+}
+
+/**
+ * Flush the Event Dispatch Thread by invoking an empty fn onto the back of the queue and waiting for it
+ */
+fun flushEdt()
+{
+    val lambda = {}
+    SwingUtilities.invokeAndWait(lambda)
 }
