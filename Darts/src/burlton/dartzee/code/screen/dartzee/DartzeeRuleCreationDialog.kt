@@ -47,7 +47,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
     init
     {
         title = "Add Dartzee Rule"
-        setSize(850, 640)
+        setSize(900, 640)
         setLocationRelativeTo(ScreenCache.getMainScreen())
         isModal = true
 

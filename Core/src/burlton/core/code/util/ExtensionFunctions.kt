@@ -43,3 +43,11 @@ fun <E> List<E>.getAllPermutations(): List<List<E>>
 
     return allPermutations.toList()
 }
+
+inline fun <T> Iterable<T>.allIndexed(predicate: (index: Int, T) -> Boolean): Boolean {
+    if (this is Collection && isEmpty()) return true
+
+    this.forEachIndexed { ix, it -> if (!predicate(ix, it)) return false }
+
+    return true
+}
