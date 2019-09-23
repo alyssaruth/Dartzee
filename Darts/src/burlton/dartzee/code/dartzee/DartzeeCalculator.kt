@@ -40,7 +40,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
 
         return DartzeeRuleCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
     }
-    fun isValidCombinationCached(combination: List<DartboardSegment>,
+    private fun isValidCombinationCached(combination: List<DartboardSegment>,
                                  rule: DartzeeRuleDto,
                                  cachedResults: MutableMap<List<DartboardSegment>, Boolean>): Boolean
     {
