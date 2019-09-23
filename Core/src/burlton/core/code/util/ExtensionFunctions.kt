@@ -25,7 +25,12 @@ fun <E> List<E>.getAllPermutations(): List<List<E>>
         return listOf(this)
     }
 
-    val allPermutations = mutableListOf<List<E>>()
+    if (size == 2)
+    {
+        return listOf(this, this.reversed())
+    }
+
+    val allPermutations = hashSetOf<List<E>>()
     forEachIndexed { ix, obj ->
         val subList = this.toMutableList()
         subList.removeAt(ix)
@@ -36,7 +41,7 @@ fun <E> List<E>.getAllPermutations(): List<List<E>>
         }
     }
 
-    return allPermutations
+    return allPermutations.toList()
 }
 
 inline fun <T> Iterable<T>.allIndexed(predicate: (index: Int, T) -> Boolean): Boolean {
