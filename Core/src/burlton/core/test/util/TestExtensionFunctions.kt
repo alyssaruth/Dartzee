@@ -1,13 +1,14 @@
 package burlton.core.test.util
 
-import burlton.core.code.util.*
+import burlton.core.code.util.addUnique
+import burlton.core.code.util.allIndexed
+import burlton.core.code.util.getAllPermutations
+import burlton.core.code.util.getDescription
 import burlton.core.test.helper.AbstractTest
 import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.should
 import io.kotlintest.shouldBe
-import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
@@ -51,8 +52,14 @@ class TestExtensionFunctions: AbstractTest()
         val list = listOf(1, 2, 3)
 
         list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 2, 3), listOf(1, 3, 2), listOf(2, 1, 3), listOf(2, 3, 1), listOf(3, 1, 2), listOf(3, 2, 1))
+    }
 
-        Debug.waitUntilLoggingFinished()
+    @Test
+    fun `Should not return duplicate permutations`()
+    {
+        val list = listOf(1, 1, 2)
+
+        list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 1, 2), listOf(1, 2, 1), listOf(2, 1, 1))
     }
 
     class AlwaysValid
@@ -68,9 +75,9 @@ class TestExtensionFunctions: AbstractTest()
 
         list.allIndexed { index, value -> mockValidator.isValid(value, index) }
 
-        verify{ mockValidator.isValid("one", 0) }
-        verify{ mockValidator.isValid("two", 1) }
-        verify{ mockValidator.isValid("three", 2) }
+        verify { mockValidator.isValid("one", 0) }
+        verify { mockValidator.isValid("two", 1) }
+        verify { mockValidator.isValid("three", 2) }
     }
 
     class ElementValidator
@@ -107,4 +114,6 @@ class TestExtensionFunctions: AbstractTest()
         invalidList.allIndexed { index, value -> validator.isValid(value, index) } shouldBe false
         validList.allIndexed { index, value -> validator.isValid(value, index) } shouldBe true
     }
+
+
 }
