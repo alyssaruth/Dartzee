@@ -1,5 +1,6 @@
 package burlton.dartzee.code.dartzee
 
+import burlton.core.code.util.allIndexed
 import burlton.core.code.util.getAllPermutations
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
@@ -16,11 +17,20 @@ abstract class AbstractDartzeeCalculator
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
 {
+    override fun isValidCombination(combination: List<DartboardSegment>,
+                                    rule: DartzeeRuleDto): Boolean
+    {
+        return isValidCombinationForTotalRule(combination, rule.totalRule)
+                && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder)
+    }
+
     override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     {
+        val cachedCombinationResults = mutableMapOf<List<DartboardSegment>, Boolean>()
+
         val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, true)
 
-        val validCombinations = allPossibilities.filter { isValidCombination(it, rule) }
+        val validCombinations = allPossibilities.filter { isValidCombinationCached(it, rule, cachedCombinationResults) }
                 .filter { it.all { segment -> !segment.isMiss() || rule.allowMisses }}
 
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
@@ -30,12 +40,15 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
 
         return DartzeeRuleCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
     }
-    override fun isValidCombination(combination: List<DartboardSegment>,
-                           rule: DartzeeRuleDto): Boolean
+    private fun isValidCombinationCached(combination: List<DartboardSegment>,
+                                 rule: DartzeeRuleDto,
+                                 cachedResults: MutableMap<List<DartboardSegment>, Boolean>): Boolean
     {
         return isValidCombinationForTotalRule(combination, rule.totalRule)
-                && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder)
+                && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder, cachedResults)
     }
+
+
     private fun isValidCombinationForTotalRule(combination: List<DartboardSegment>, totalRule: AbstractDartzeeTotalRule?): Boolean
     {
         if (totalRule == null)
@@ -46,7 +59,10 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         val total = combination.map { it.score * it.getMultiplier() }.sum()
         return totalRule.isValidTotal(total)
     }
-    private fun isValidCombinationForDartRule(combination: List<DartboardSegment>, dartRules: List<AbstractDartzeeDartRule>?, inOrder: Boolean): Boolean
+    private fun isValidCombinationForDartRule(combination: List<DartboardSegment>,
+                                              dartRules: List<AbstractDartzeeDartRule>?,
+                                              inOrder: Boolean,
+                                              cachedResults: MutableMap<List<DartboardSegment>, Boolean> = mutableMapOf()): Boolean
     {
         if (dartRules == null)
         {
@@ -65,23 +81,25 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         }
         else
         {
-            if (dartRules.any { canNeverBeValid(it, combination) })
+            if (cachedResults.containsKey(combination))
             {
-                return false
+                cachedResults[combination]!!
             }
             else
             {
-                combination.getAllPermutations().any { isValidCombinationForOrderedDartRule(dartRules, it) }
+                val permutations = combination.getAllPermutations()
+
+                val valid = permutations.any { isValidCombinationForOrderedDartRule(dartRules, it) }
+
+                permutations.forEach { cachedResults[it] = valid }
+
+                valid
             }
         }
     }
-    private fun canNeverBeValid(rule: AbstractDartzeeDartRule, combination: List<DartboardSegment>): Boolean
-    {
-        return combination.none { rule.isValidSegment(it) }
-    }
     private fun isValidCombinationForOrderedDartRule(rules: List<AbstractDartzeeDartRule>, combination: List<DartboardSegment>): Boolean
     {
-        return rules.mapIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }.all { it }
+        return rules.allIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }
     }
 
     private fun mapCombinationToProbability(combination: List<DartboardSegment>, dartboard: Dartboard): Double

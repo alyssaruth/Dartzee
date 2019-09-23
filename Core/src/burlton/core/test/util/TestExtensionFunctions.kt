@@ -1,12 +1,16 @@
 package burlton.core.test.util
 
 import burlton.core.code.util.addUnique
+import burlton.core.code.util.allIndexed
 import burlton.core.code.util.getAllPermutations
 import burlton.core.code.util.getDescription
 import burlton.core.test.helper.AbstractTest
+import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
+import io.mockk.spyk
+import io.mockk.verify
 import org.junit.Test
 
 class TestExtensionFunctions: AbstractTest()
@@ -57,4 +61,59 @@ class TestExtensionFunctions: AbstractTest()
 
         list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 1, 2), listOf(1, 2, 1), listOf(2, 1, 1))
     }
+
+    class AlwaysValid
+    {
+        fun isValid(text: String, index: Int) = true
+    }
+    @Test
+    fun `Should pass the element & index to the predicate correctly`()
+    {
+        val mockValidator = spyk<AlwaysValid>()
+
+        val list = listOf("one", "two", "three", "four")
+
+        list.allIndexed { index, value -> mockValidator.isValid(value, index) }
+
+        verify { mockValidator.isValid("one", 0) }
+        verify { mockValidator.isValid("two", 1) }
+        verify { mockValidator.isValid("three", 2) }
+    }
+
+    class ElementValidator
+    {
+        fun isValid(text: String, index: Int): Boolean
+        {
+            return text == index.toString()
+        }
+    }
+
+    @Test
+    fun `Should stop as soon as an element is found to be invalid`()
+    {
+        val validator = spyk<ElementValidator>()
+
+        val list = listOf("foo", "bar", "baz")
+
+        val result = list.allIndexed { index, value -> validator.isValid(value, index) }
+
+        result shouldBe false
+        verify { validator.isValid("foo", 0) }
+        verifyNotCalled { validator.isValid("bar", 1) }
+        verifyNotCalled { validator.isValid("baz", 2) }
+    }
+
+    @Test
+    fun `Should return the correct result based on whether the contents were all valid`()
+    {
+        val validator = ElementValidator()
+
+        val invalidList = listOf("0", "1", "2", "4")
+        val validList = listOf("0", "1", "2", "3")
+
+        invalidList.allIndexed { index, value -> validator.isValid(value, index) } shouldBe false
+        validList.allIndexed { index, value -> validator.isValid(value, index) } shouldBe true
+    }
+
+
 }
