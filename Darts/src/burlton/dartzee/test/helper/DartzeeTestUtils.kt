@@ -4,6 +4,7 @@ import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
+import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleColour
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleScore
 import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeRuleTotalSize
@@ -32,5 +33,14 @@ fun makeDartzeeRuleCalculationResult(validSegments: List<DartboardSegment> = lis
 }
 
 fun makeScoreRule(score: Int) = DartzeeDartRuleScore().also { it.score = score }
+fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean = false, white: Boolean = false): DartzeeDartRuleColour
+{
+    val rule = DartzeeDartRuleColour()
+    rule.black = black
+    rule.white = white
+    rule.red = red
+    rule.green = green
+    return rule
+}
 
 inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllTotalRules().find { it is T }.also { (it as T).target = score }

@@ -20,10 +20,10 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListen
     var green = false
     var red = false
 
-    private val cbBlack = JCheckBox("Black")
-    private val cbWhite = JCheckBox("White")
-    private val cbGreen = JCheckBox("Green")
-    private val cbRed = JCheckBox("Red")
+    val cbBlack = JCheckBox("Black")
+    val cbWhite = JCheckBox("White")
+    val cbGreen = JCheckBox("Green")
+    val cbRed = JCheckBox("Red")
 
     init
     {
@@ -78,6 +78,11 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListen
         if (green) colourList.add("G")
         if (black) colourList.add("B")
         if (white) colourList.add("W")
+
+        if (colourList.size == 4)
+        {
+            return "Any"
+        }
 
         return colourList.joinToString("/")
     }
