@@ -4,6 +4,7 @@ import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleColour
 import burlton.dartzee.code.dartzee.parseDartRule
 import burlton.dartzee.test.*
 import burlton.dartzee.test.dartzee.AbstractDartzeeRuleTest
+import burlton.dartzee.test.helper.makeColourRule
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -140,6 +141,11 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
             rule.green shouldBe green
             rule.black shouldBe black
             rule.white shouldBe white
+
+            rule.cbRed.isSelected shouldBe red
+            rule.cbGreen.isSelected shouldBe green
+            rule.cbBlack.isSelected shouldBe black
+            rule.cbWhite.isSelected shouldBe white
         }
     }
 
@@ -168,5 +174,36 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         }
 
         return list
+    }
+
+    @Test
+    fun `rule description`()
+    {
+        val rule = makeColourRule(red = true, black = true)
+        rule.getDescription() shouldBe "R/B"
+
+        rule.white = true
+        rule.green = true
+        rule.getDescription() shouldBe "Any"
+
+        rule.red = false
+        rule.getDescription() shouldBe "G/B/W"
+    }
+
+    @Test
+    fun `should update from UI interaction`()
+    {
+        val rule = makeColourRule()
+        rule.cbBlack.doClick()
+        rule.black shouldBe true
+
+        rule.cbWhite.doClick()
+        rule.white shouldBe true
+
+        rule.cbRed.doClick()
+        rule.red shouldBe true
+
+        rule.cbGreen.doClick()
+        rule.green shouldBe true
     }
 }

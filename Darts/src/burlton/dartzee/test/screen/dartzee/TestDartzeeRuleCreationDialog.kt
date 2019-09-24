@@ -3,21 +3,126 @@ package burlton.dartzee.test.screen.dartzee
 import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.*
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEqualTo
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleOdd
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.flushEdt
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.FakeDartzeeCalculator
+import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.bean.selectByClass
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldNotContain
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
+
+class TestDartzeeRuleAmendment: AbstractDartsTest()
+{
+    @Test
+    fun `Should adjust the dialog title appropriately`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(makeDartzeeRuleDto())
+
+        dlg.title shouldBe "Amend Dartzee Rule"
+    }
+
+    @Test
+    fun `Should populate from a 'no darts' rule correctly`()
+    {
+        val rule = makeDartzeeRuleDto()
+
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(rule)
+
+
+        dlg.rdbtnNoDarts.isSelected shouldBe true
+    }
+
+    @Test
+    fun `Should populate from an 'at least one' rule correctly`()
+    {
+        val rule = makeDartzeeRuleDto(makeScoreRule(12))
+
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(rule)
+
+        dlg.rdbtnAtLeastOne.isSelected shouldBe true
+        val dartRule = dlg.targetSelector.getSelection()
+
+        val totalRule = dartRule as DartzeeDartRuleScore
+        totalRule.score shouldBe 12
+    }
+
+    @Test
+    fun `Should populate from a 'three darts' rule correctly`()
+    {
+        val rule = makeDartzeeRuleDto(makeScoreRule(13), makeColourRule(red = true, green = true), DartzeeDartRuleOdd(), inOrder = false)
+
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(rule)
+
+        dlg.rdbtnAllDarts.isSelected shouldBe true
+        dlg.cbInOrder.isSelected shouldBe false
+
+        val scoreRule = dlg.dartOneSelector.getSelection() as DartzeeDartRuleScore
+        scoreRule.score shouldBe 13
+
+        val colourRule = dlg.dartTwoSelector.getSelection() as DartzeeDartRuleColour
+        colourRule.red shouldBe true
+        colourRule.green shouldBe true
+
+        val thirdRule = dlg.dartThreeSelector.getSelection()
+        thirdRule.shouldBeInstanceOf<DartzeeDartRuleOdd>()
+    }
+
+    @Test
+    fun `Should populate an in order rule correctly`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven(), inOrder = true)
+
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(rule)
+
+        dlg.rdbtnAllDarts.isSelected shouldBe true
+        dlg.cbInOrder.isSelected shouldBe true
+    }
+
+    @Test
+    fun `Should populate no total rule correctly`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(makeDartzeeRuleDto())
+
+        dlg.totalSelector.cbDesc.isSelected shouldBe false
+    }
+
+    @Test
+    fun `Should populate a total rule correctly`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(48)))
+
+        dlg.totalSelector.cbDesc.isSelected shouldBe true
+        val totalRule = dlg.totalSelector.getSelection() as DartzeeTotalRuleEqualTo
+        totalRule.target shouldBe 48
+    }
+
+    @Test
+    fun `Should update the rule description`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(makeDartzeeRuleDto(DartzeeDartRuleOuter()))
+
+        flushEdt()
+
+        dlg.tfName.text shouldBe "Score Outer"
+    }
+}
 
 class TestDartzeeRuleCreationDialog : AbstractDartsTest()
 {
