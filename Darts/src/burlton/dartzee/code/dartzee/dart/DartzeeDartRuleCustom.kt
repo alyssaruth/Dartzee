@@ -17,7 +17,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
     var segments = hashSetOf<DartboardSegment>()
     var name = ""
 
-    private val btnConfigure = JButton("Configure")
+    val btnConfigure = JButton("Configure")
     val tfName = JTextField()
 
     init
@@ -89,8 +89,8 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
         name = tfName.text
 
-        //Need to fire off something to tell the other screen to update. Shit.
-        btnConfigure.actionListeners.find { it is DartzeeRuleCreationDialog }?.actionPerformed(e)
+        //Propagate an action event to any other listeners
+        btnConfigure.actionListeners.find { it != this }?.actionPerformed(e)
     }
 
 }

@@ -7,7 +7,10 @@ import burlton.dartzee.test.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Test
+import java.awt.event.ActionListener
 import kotlin.test.assertTrue
 
 class TestDartzeeRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
@@ -75,5 +78,18 @@ class TestDartzeeRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
         parsedRule.isValidSegment(singleTwenty) shouldBe false
         parsedRule.name shouldBe "Foo"
         parsedRule.tfName.text shouldBe "Foo"
+    }
+
+    @Test
+    fun `Should propagate action events to other listeners`()
+    {
+        val rule = DartzeeDartRuleCustom()
+        val listener = mockk<ActionListener>(relaxed = true)
+
+        rule.btnConfigure.addActionListener(listener)
+
+        rule.actionPerformed(null)
+
+        verify { listener.actionPerformed(null) }
     }
 }
