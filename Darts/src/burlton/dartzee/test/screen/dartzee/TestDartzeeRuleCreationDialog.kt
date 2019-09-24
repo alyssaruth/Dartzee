@@ -122,6 +122,21 @@ class TestDartzeeRuleAmendment: AbstractDartsTest()
 
         dlg.tfName.text shouldBe "Score Outer"
     }
+
+    @Test
+    fun `Should populate allow misses correctly`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        val allowMisses = makeDartzeeRuleDto(allowMisses = true)
+        val disallowMisses = makeDartzeeRuleDto(allowMisses = false)
+
+
+        dlg.amendRule(allowMisses)
+        dlg.cbAllowMisses.isSelected shouldBe true
+
+        dlg.amendRule(disallowMisses)
+        dlg.cbAllowMisses.isSelected shouldBe false
+    }
 }
 
 class TestDartzeeRuleCreationDialog : AbstractDartsTest()
@@ -208,6 +223,18 @@ class TestDartzeeRuleCreationDialog : AbstractDartsTest()
 
         val rule = dlg.dartzeeRule!!
         rule.inOrder shouldBe true
+    }
+
+    @Test
+    fun `Should populate allowMisses correctly when checked`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.cbAllowMisses.isSelected = true
+
+        dlg.btnOk.doClick()
+
+        val rule = dlg.dartzeeRule!!
+        rule.allowMisses shouldBe true
     }
 
     @Test
