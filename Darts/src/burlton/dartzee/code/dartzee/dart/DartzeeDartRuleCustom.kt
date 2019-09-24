@@ -2,7 +2,6 @@ package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.screen.DartboardSegmentSelectDialog
-import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.desktopcore.code.bean.addUpdateListener
 import org.w3c.dom.Document
 import org.w3c.dom.Element
