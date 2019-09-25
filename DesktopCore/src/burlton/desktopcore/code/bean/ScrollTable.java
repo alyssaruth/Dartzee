@@ -548,12 +548,22 @@ public class ScrollTable extends JPanel
 	{
 		ArrayList<Object[]> allRows = getAllRows();
 		Collections.shuffle(allRows);
-		
+
+		setNewOrder(allRows);
+	}
+	public void reorderRows(Comparator<Object[]> newOrder)
+	{
+		ArrayList<Object[]> allRows = getAllRows();
+		allRows.sort(newOrder);
+
+		setNewOrder(allRows);
+	}
+	private void setNewOrder(ArrayList<Object[]> orderedRows)
+	{
 		removeAllRows();
-		
-		for (int i=0; i<allRows.size(); i++)
+
+		for (Object[] row : orderedRows)
 		{
-			Object[] row = allRows.get(i);
 			addRow(row);
 		}
 	}

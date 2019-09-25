@@ -67,7 +67,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     private fun setTableModel()
     {
         tm.addColumn("Rule")
-        tm.addColumn("Combinations (~difficulty)")
+        tm.addColumn("Difficulty")
 
         tableRules.model = tm
 
@@ -89,7 +89,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
             btnAddRule -> addRule()
             btnAmendRule -> amendRule()
             btnRemoveRule -> removeRule()
-            btnCalculateOrder -> ""
+            btnCalculateOrder -> sortRulesByDifficulty()
             else -> super.actionPerformed(arg0)
         }
     }
@@ -120,6 +120,11 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 
         tableRules.repaint()
     }
+    private fun sortRulesByDifficulty()
+    {
+        val comparator = compareBy<Array<Any>> { -(it[0] as DartzeeRuleDto).getDifficulty() }
+        tableRules.reorderRows(comparator)
+    }
 
     private fun addRuleToTable(rule: DartzeeRuleDto)
     {
@@ -142,7 +147,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     {
         override fun getReplacementValue(value: DartzeeRuleDto): Any
         {
-            return if (colNo == 0) value.generateRuleDescription() else value.getStrengthDesc()
+            return if (colNo == 0) value.generateRuleDescription() else value.getDifficultyDesc()
         }
 
         override fun setCellColours(typedValue: DartzeeRuleDto?, isSelected: Boolean)
