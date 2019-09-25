@@ -18,6 +18,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import org.junit.Test
 
 class TestDartzeeRuleAmendment: AbstractDartsTest()
@@ -136,6 +137,39 @@ class TestDartzeeRuleAmendment: AbstractDartsTest()
 
         dlg.amendRule(disallowMisses)
         dlg.cbAllowMisses.isSelected shouldBe false
+    }
+
+    @Test
+    fun `Should replace the darzeeRule with new values if Ok is pressed`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+
+        val rule = makeDartzeeRuleDto()
+        dlg.amendRule(rule)
+
+        dlg.rdbtnAtLeastOne.doClick()
+        dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
+        dlg.btnOk.doClick()
+
+        val updatedRule = dlg.dartzeeRule!!
+        updatedRule shouldNotBe rule
+        updatedRule.dart1Rule.shouldBeInstanceOf<DartzeeDartRuleOdd>()
+    }
+
+    @Test
+    fun `Should leave the old dartzeeRule alone if cancelled`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+
+        val rule = makeDartzeeRuleDto()
+        dlg.amendRule(rule)
+
+        dlg.rdbtnAtLeastOne.doClick()
+        dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
+        dlg.btnCancel.doClick()
+
+        val updatedRule = dlg.dartzeeRule!!
+        updatedRule shouldBe rule
     }
 }
 
