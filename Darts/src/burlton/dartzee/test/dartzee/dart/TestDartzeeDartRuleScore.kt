@@ -36,7 +36,6 @@ class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
         for (i in 1..25)
         {
             rule.spinner.value = i
-            rule.stateChanged(null)
 
             rule.spinner.value shouldBe rule.score
             rule.score shouldNotBeInRange(21..24)
@@ -54,5 +53,15 @@ class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
 
         parsedRule.score shouldBe 18
         parsedRule.spinner.value shouldBe 18
+    }
+
+    @Test
+    fun `rule description`()
+    {
+        val rule = DartzeeDartRuleScore()
+        rule.getDescription() shouldBe "20"
+
+        rule.score = 15
+        rule.getDescription() shouldBe "15"
     }
 }
