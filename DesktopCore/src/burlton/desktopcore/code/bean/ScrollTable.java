@@ -176,6 +176,12 @@ public class ScrollTable extends JPanel
 		
 		refreshRowCount();
 	}
+	public void insertRow(Object[] row, int index)
+	{
+		DefaultTableModel model = getModel();
+		model.insertRow(index, row);
+		refreshRowCount();
+	}
 	public void addColumn(String columnName)
 	{
 		DefaultTableModel model = getModel();
