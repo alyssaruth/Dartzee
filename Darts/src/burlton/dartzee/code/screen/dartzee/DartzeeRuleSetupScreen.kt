@@ -1,11 +1,16 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
+import burlton.dartzee.code.dartzee.dart.*
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleLessThan
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.GameSetupScreen
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.test.borrowTestDartboard
+import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import burlton.desktopcore.code.bean.AbstractTableRenderer
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
@@ -75,6 +80,21 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         tableRules.setRenderer(1, DartzeeRuleRenderer(1))
 
         selectionChanged(tableRules)
+
+        if (DartsClient.devMode)
+        {
+            val rules = listOf(makeDartzeeRuleDto(),
+                makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = true),
+                makeDartzeeRuleDto(DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeDartRuleOuter(), inOrder = true),
+                makeDartzeeRuleDto(DartzeeDartRuleScore(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = true),
+                makeDartzeeRuleDto(totalRule = DartzeeTotalRuleLessThan()),
+                makeDartzeeRuleDto(DartzeeDartRuleScore(), DartzeeDartRuleScore(), DartzeeDartRuleScore(), inOrder = true))
+
+            rules.forEach {
+                it.runStrengthCalculation(borrowTestDartboard())
+                addRuleToTable(it)
+            }
+        }
     }
 
     fun setState(match: DartsMatchEntity?, players: MutableList<PlayerEntity>)
@@ -107,10 +127,18 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     }
     private fun amendRule()
     {
-        val selection = tm.getValueAt(tableRules.selectedModelRow, 0) as DartzeeRuleDto
+        val rowIndex = tableRules.selectedModelRow
+
+        val selection = tm.getValueAt(rowIndex, 0) as DartzeeRuleDto
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(selection)
         dlg.isVisible = true
+
+        removeRule()
+
+        val newRule = dlg.dartzeeRule!!
+        tableRules.insertRow(arrayOf(newRule, newRule), rowIndex)
+        tableRules.selectRow(rowIndex)
 
         tableRules.repaint()
     }
@@ -153,6 +181,9 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
         override fun setCellColours(typedValue: DartzeeRuleDto?, isSelected: Boolean)
         {
             font = Font(font.name, Font.PLAIN, 20)
+
+            foreground = typedValue?.calculationResult?.getForeground()
+            background = typedValue?.calculationResult?.getBackground()
         }
     }
 }
