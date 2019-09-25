@@ -9,7 +9,7 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
                                         val validCombinationProbability: Double,
                                         val allCombinationsProbability: Double)
 {
-    private val percentage = MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)
+    val percentage = MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)
 
     fun getCombinationsDesc() = "$validCombinations combinations (success%: $percentage%)"
 
