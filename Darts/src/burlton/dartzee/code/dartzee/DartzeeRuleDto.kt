@@ -27,7 +27,8 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         return calculationResult
     }
 
-    fun getStrengthDesc() = calculationResult?.getCombinationsDesc() ?: ""
+    fun getDifficulty() = calculationResult?.percentage ?: 0.0
+    fun getDifficultyDesc() = calculationResult?.getDifficultyDesc() ?: ""
 
     fun generateRuleDescription(): String
     {

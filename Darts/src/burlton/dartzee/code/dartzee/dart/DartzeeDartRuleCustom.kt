@@ -2,7 +2,6 @@ package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.screen.DartboardSegmentSelectDialog
-import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
 import burlton.desktopcore.code.bean.addUpdateListener
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -17,7 +16,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
     var segments = hashSetOf<DartboardSegment>()
     var name = ""
 
-    private val btnConfigure = JButton("Configure")
+    val btnConfigure = JButton("Configure")
     val tfName = JTextField()
 
     init
@@ -89,8 +88,8 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
         name = tfName.text
 
-        //Need to fire off something to tell the other screen to update. Shit.
-        btnConfigure.actionListeners.find { it is DartzeeRuleCreationDialog }?.actionPerformed(e)
+        //Propagate an action event to any other listeners
+        btnConfigure.actionListeners.find { it != this }?.actionPerformed(e)
     }
 
 }

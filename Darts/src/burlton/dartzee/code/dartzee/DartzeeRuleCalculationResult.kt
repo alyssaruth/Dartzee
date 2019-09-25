@@ -2,6 +2,19 @@ package burlton.dartzee.code.dartzee
 
 import burlton.core.code.util.MathsUtil
 import burlton.dartzee.code.`object`.DartboardSegment
+import burlton.dartzee.code.utils.DartsColour
+import java.awt.Color
+
+enum class DartzeeRuleDifficulty(val desc: String, val color: Color)
+{
+    IMPOSSIBLE("Impossible", Color.BLACK),
+    INSANE("Insane", DartsColour.getDarkenedColour(Color.RED)),
+    VERY_HARD("Very Hard", Color.RED),
+    HARD("Hard", DartsColour.COLOUR_ACHIEVEMENT_ORANGE),
+    MODERATE("Moderate", Color.YELLOW.darker()),
+    EASY("Easy", Color.GREEN),
+    VERY_EASY("Very Easy", DartsColour.getDarkenedColour(Color.GREEN))
+}
 
 data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment>,
                                         val validCombinations: Int,
@@ -9,18 +22,23 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
                                         val validCombinationProbability: Double,
                                         val allCombinationsProbability: Double)
 {
-    private val percentage = MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)
+    val percentage = MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)
 
     fun getCombinationsDesc() = "$validCombinations combinations (success%: $percentage%)"
 
-    fun getDifficultyDesc() = when
+    fun getDifficultyDesc() = getDifficulty().desc
+
+    fun getForeground() = Color.WHITE
+    fun getBackground() = getDifficulty().color
+
+    fun getDifficulty() = when
     {
-        percentage == 0.0 -> "Impossible"
-        percentage > 40 -> "Very Easy"
-        percentage > 25 -> "Easy"
-        percentage > 10 -> "Moderate"
-        percentage > 5 -> "Hard"
-        percentage > 1 -> "Very Hard"
-        else -> "Insane"
+        validCombinations == 0 -> DartzeeRuleDifficulty.IMPOSSIBLE
+        percentage > 40 -> DartzeeRuleDifficulty.VERY_EASY
+        percentage > 25 -> DartzeeRuleDifficulty.EASY
+        percentage > 10 -> DartzeeRuleDifficulty.MODERATE
+        percentage > 5 -> DartzeeRuleDifficulty.HARD
+        percentage > 1 -> DartzeeRuleDifficulty.VERY_HARD
+        else -> DartzeeRuleDifficulty.INSANE
     }
 }
