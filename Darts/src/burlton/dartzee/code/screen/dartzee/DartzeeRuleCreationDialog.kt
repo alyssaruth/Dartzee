@@ -55,6 +55,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         add(panelCenter, BorderLayout.CENTER)
         add(verificationPanel, BorderLayout.EAST)
 
+        lblDifficulty.isOpaque = true
         lblDifficulty.setFontSize(24)
         panelRuleStrength.add(lblDifficulty)
 
@@ -64,8 +65,6 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         panelCenter.add(panelTotal, "cell 0 3, growx")
         panelCenter.add(panelAllowMisses, "cell 0 4, growx")
 
-        panelRuleStrength.border = TitledBorder("")
-        panelDarts.border = TitledBorder("")
         panelDarts.layout = MigLayout("", "[][]", "[][][][]")
         rdbtnPanelDartScoreType.add(rdbtnAllDarts)
         rdbtnPanelDartScoreType.add(rdbtnAtLeastOne)
@@ -74,12 +73,10 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         panelDarts.validate()
 
         panelTotal.layout = MigLayout("", "[]", "[]")
-        panelTotal.border = TitledBorder("")
 
         panelTotal.add(totalSelector, "cell 0 0")
 
         panelAllowMisses.layout = MigLayout("", "[]", "[]")
-        panelAllowMisses.border = TitledBorder("")
         panelAllowMisses.add(cbAllowMisses, "cell 0 0")
 
         panelRuleName.layout = BorderLayout(0,0)
@@ -256,6 +253,9 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
 
             val calculationResult = rule.runStrengthCalculation(verificationPanel.dartboard)
             lblDifficulty.text = calculationResult.getDifficultyDesc()
+            lblDifficulty.foreground = calculationResult.getForeground()
+            lblDifficulty.background = calculationResult.getBackground()
+            panelRuleStrength.background = calculationResult.getBackground()
 
             verificationPanel.updateRule(rule)
         }
