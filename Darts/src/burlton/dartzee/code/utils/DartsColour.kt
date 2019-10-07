@@ -96,7 +96,12 @@ object DartsColour
 
     fun getScorerColour(totalScore: Double, multiplier: Double, brightness: Double): Color
     {
-        val hue = (totalScore * multiplier).toFloat() / 180
+        return getProportionalColour(totalScore, 180, multiplier, brightness)
+    }
+
+    fun getProportionalColour(value: Double, total: Int, multiplier: Double, brightness: Double): Color
+    {
+        val hue = (value * multiplier).toFloat() / total
         return Color.getHSBColor(hue, 1f, brightness.toFloat())
     }
 }
