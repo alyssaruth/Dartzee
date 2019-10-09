@@ -22,38 +22,6 @@ object XmlUtil
         val builder = factory.newDocumentBuilder()
         return builder.newDocument()
     }
-
-    fun getStringFromDocument(xmlDoc: Document): String
-    {
-        try
-        {
-            val transformer = tf.newTransformer()
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
-            val writer = StringWriter()
-            transformer.transform(DOMSource(xmlDoc), StreamResult(writer))
-
-            val sb = writer.buffer
-            return sb.toString().replace("\n|\r".toRegex(), "")
-        }
-        catch (t: Throwable)
-        {
-            Debug.stackTrace(t)
-            return ""
-        }
-
-    }
-
-    fun getDocumentFromXmlString(xmlStr: String) =
-        try
-        {
-            val builder = factory.newDocumentBuilder()
-            builder.setErrorHandler(null)
-            builder.parse(InputSource(StringReader(xmlStr)))
-        }
-        catch (t: Throwable)
-        {
-            null
-        }
 }
 
 /**
@@ -71,7 +39,7 @@ fun Element.getAttributeDouble(attributeName: String): Double
     return if (attribute == "") 0.0 else attribute.toDouble()
 }
 
-fun Element.readIntegerHashMap(tagName: String, keyTag: String, valueTag: String): MutableMap<Int, Int>
+fun Element.readIntegerHashMap(tagName: String): MutableMap<Int, Int>
 {
     val hm = mutableMapOf<Int, Int>()
 
@@ -80,8 +48,8 @@ fun Element.readIntegerHashMap(tagName: String, keyTag: String, valueTag: String
     for (i in 0 until size)
     {
         val child = children.item(i) as Element
-        val key = child.getAttributeInt(keyTag)
-        val value = child.getAttributeInt(valueTag)
+        val key = child.getAttributeInt("Key")
+        val value = child.getAttributeInt("Value")
 
         hm[key] = value
     }
@@ -89,16 +57,45 @@ fun Element.readIntegerHashMap(tagName: String, keyTag: String, valueTag: String
     return hm
 }
 
-fun Element.writeHashMap(hm: Map<*, *>, tagName: String, keyTag: String, valueTag: String)
+fun Element.writeHashMap(hm: Map<*, *>, tagName: String)
 {
     hm.forEach { key, value ->
         val child = ownerDocument.createElement(tagName)
-        child.setAttribute(keyTag, "$key")
-        child.setAttribute(valueTag, "$value")
+        child.setAttribute("Key", "$key")
+        child.setAttribute("Value", "$value")
         appendChild(child)
     }
 }
 
-fun Element.setAttribute(key: String, value: Any) = setAttribute(key, "$value")
+fun Element.setAttributeAny(key: String, value: Any) = setAttribute(key, "$value")
 
-fun Document.createRootElement(name: String) = createElement(name).also { appendChild(it) }
+fun Document.createRootElement(name: String): Element = createElement(name).also { appendChild(it) }
+
+fun Document.toXmlString(): String =
+    try
+    {
+        val transformer = tf.newTransformer()
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+        val writer = StringWriter()
+        transformer.transform(DOMSource(this), StreamResult(writer))
+
+        val sb = writer.buffer
+        sb.toString().replace("\n|\r".toRegex(), "")
+    }
+    catch (t: Throwable)
+    {
+        Debug.stackTrace(t)
+        ""
+    }
+
+fun String.toXmlDoc() =
+    try
+    {
+        val builder = factory.newDocumentBuilder()
+        builder.setErrorHandler(null)
+        builder.parse(InputSource(StringReader(this)))
+    }
+    catch (t: Throwable)
+    {
+        null
+    }
