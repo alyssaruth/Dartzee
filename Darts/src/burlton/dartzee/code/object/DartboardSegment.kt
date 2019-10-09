@@ -34,6 +34,9 @@ fun getMultiplier(type: Int): Int
     }
 }
 
+/**
+ * Data class so that equivalent segments are treated as equal (e.g. DartzeeRuleCalculationResult externalisation)
+ */
 data class DartboardSegment(val scoreAndType : String)
 {
     var type : Int
