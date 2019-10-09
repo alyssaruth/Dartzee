@@ -93,7 +93,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         entity.inOrder = inOrder
         entity.gameId = gameId
         entity.ordinal = ordinal
-        entity.validSegments = calculationResult!!.toDbString()
+        entity.calculationResult = calculationResult!!.toDbString()
 
         return entity
     }
