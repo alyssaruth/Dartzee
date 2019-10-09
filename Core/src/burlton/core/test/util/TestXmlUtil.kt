@@ -2,6 +2,7 @@ package burlton.core.test.util
 
 import burlton.core.code.util.*
 import burlton.core.test.helper.AbstractTest
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -131,5 +132,19 @@ class TestXmlUtil: AbstractTest()
         newMap[0] shouldBe 10
         newMap[1] shouldBe 20
         newMap[5] shouldBe -5
+    }
+
+    @Test
+    fun `Should read and write lists`()
+    {
+        val list = listOf("Foo", "Bar", "Baz")
+
+        val doc = XmlUtil.factoryNewDocument()
+        val root = doc.createRootElement("Root")
+
+        root.writeList(list, "SomeList")
+
+        val newList = root.readList("SomeList")
+        newList.shouldContainExactlyInAnyOrder("Foo", "Bar", "Baz")
     }
 }

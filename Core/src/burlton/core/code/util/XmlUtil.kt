@@ -67,6 +67,35 @@ fun Element.writeHashMap(hm: Map<*, *>, tagName: String)
     }
 }
 
+fun Element.writeList(list: List<*>, tagName: String)
+{
+    val listElement = ownerDocument.createElement(tagName)
+    appendChild(listElement)
+
+    list.forEach {
+        val itemElement = ownerDocument.createElement("ListItem")
+        itemElement.nodeValue = "$it"
+        listElement.appendChild(itemElement)
+    }
+}
+
+fun Element.readList(tagName: String): List<String>
+{
+    val list = mutableListOf<String>()
+
+    val listElement = getElementsByTagName(tagName).item(0) as Element
+    val items = listElement.getElementsByTagName("ListItem")
+
+    val size = items.length
+    for (i in 0 until size)
+    {
+        val child = items.item(i)
+        list.add(child.nodeValue)
+    }
+
+    return list
+}
+
 fun Element.setAttributeAny(key: String, value: Any) = setAttribute(key, "$value")
 
 fun Document.createRootElement(name: String): Element = createElement(name).also { appendChild(it) }
