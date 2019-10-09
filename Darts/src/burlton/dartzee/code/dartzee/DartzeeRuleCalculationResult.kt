@@ -3,17 +3,17 @@ package burlton.dartzee.code.dartzee
 import burlton.core.code.util.*
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.utils.DartsColour
-import java.awt.Color
+import kotlin.math.sqrt
 
-enum class DartzeeRuleDifficulty(val desc: String, val color: Color)
+enum class DartzeeRuleDifficulty(val desc: String)
 {
-    IMPOSSIBLE("Impossible", Color.BLACK),
-    INSANE("Insane", DartsColour.getDarkenedColour(Color.RED)),
-    VERY_HARD("Very Hard", Color.RED),
-    HARD("Hard", DartsColour.COLOUR_ACHIEVEMENT_ORANGE),
-    MODERATE("Moderate", Color.YELLOW.darker()),
-    EASY("Easy", Color.GREEN),
-    VERY_EASY("Very Easy", DartsColour.getDarkenedColour(Color.GREEN))
+    IMPOSSIBLE("Impossible"),
+    INSANE("Insane"),
+    VERY_HARD("Very Hard"),
+    HARD("Hard"),
+    MODERATE("Moderate"),
+    EASY("Easy"),
+    VERY_EASY("Very Easy")
 }
 
 data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment>,
@@ -28,10 +28,10 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
 
     fun getDifficultyDesc() = getDifficulty().desc
 
-    fun getForeground() = DartsColour.getProportionalColour(Math.sqrt(percentage), 10, 0.4, 1.0)
-    fun getBackground() = DartsColour.getProportionalColour(Math.sqrt(percentage), 10, 0.4, 0.5)
+    fun getForeground() = DartsColour.getProportionalColour(sqrt(percentage), 10, 0.4, 1.0)
+    fun getBackground() = DartsColour.getProportionalColour(sqrt(percentage), 10, 0.4, 0.5)
 
-    fun getDifficulty() = when
+    private fun getDifficulty() = when
     {
         validCombinations == 0 -> DartzeeRuleDifficulty.IMPOSSIBLE
         percentage > 40 -> DartzeeRuleDifficulty.VERY_EASY
@@ -51,7 +51,25 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
         root.setAttributeAny("AllCombinations", allCombinations)
         root.setAttributeAny("ValidCombinationProbability", validCombinationProbability)
         root.setAttributeAny("AllCombinationsProbability", allCombinationsProbability)
+        root.writeList(validSegments.map { it.scoreAndType }, "ValidSegments")
 
         return doc.toXmlString()
+    }
+
+    companion object
+    {
+        fun fromDbString(dbString: String): DartzeeRuleCalculationResult
+        {
+            val doc = dbString.toXmlDoc()!!
+            val root = doc.documentElement
+
+            val validCombinations = root.getAttributeInt("ValidCombinations")
+            val allCombinations = root.getAttributeInt("AllCombinations")
+            val validCombinationProbability = root.getAttributeDouble("ValidCombinationProbability")
+            val allCombinationsProbability = root.getAttributeDouble("AllCombinationsProbability")
+            val validSegments = root.readList("ValidSegments").map{ DartboardSegment(it) }
+
+            return DartzeeRuleCalculationResult(validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
+        }
     }
 }
