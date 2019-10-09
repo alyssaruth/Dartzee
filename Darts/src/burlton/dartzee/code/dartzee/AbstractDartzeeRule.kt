@@ -1,6 +1,7 @@
 package burlton.dartzee.code.dartzee
 
 import burlton.core.code.util.XmlUtil
+import burlton.core.code.util.createRootElement
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.*
 import org.w3c.dom.Document
@@ -33,12 +34,10 @@ abstract class AbstractDartzeeRule
     fun toDbString(): String
     {
         val xmlDoc = XmlUtil.factoryNewDocument()
-        xmlDoc ?: return "<NULL>"
 
-        val rootElement = xmlDoc.createElement(getRuleIdentifier())
+        val rootElement = xmlDoc.createRootElement(getRuleIdentifier())
         writeXmlAttributes(xmlDoc, rootElement)
 
-        xmlDoc.appendChild(rootElement)
         return XmlUtil.getStringFromDocument(xmlDoc)
     }
 }

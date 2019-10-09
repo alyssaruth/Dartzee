@@ -2,6 +2,7 @@ package burlton.dartzee.code.dartzee
 
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
+import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
 
@@ -77,5 +78,23 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
             val sortedGroupedRules = mapEntries.sortedByDescending { it.value.size }.map { "${it.value.size}x ${it.key}" }
             "{ ${sortedGroupedRules.joinToString()} }"
         }
+    }
+
+    fun toEntity(gameId: String, ordinal: Int): DartzeeRuleEntity
+    {
+        val entity = DartzeeRuleEntity()
+        entity.assignRowId()
+
+        entity.dart1Rule = dart1Rule?.toDbString() ?: ""
+        entity.dart2Rule = dart2Rule?.toDbString() ?: ""
+        entity.dart3Rule = dart3Rule?.toDbString() ?: ""
+        entity.totalRule = totalRule?.toDbString() ?: ""
+        entity.allowMisses = allowMisses
+        entity.inOrder = inOrder
+        entity.gameId = gameId
+        entity.ordinal = ordinal
+        entity.validSegments = calculationResult!!.toDbString()
+
+        return entity
     }
 }

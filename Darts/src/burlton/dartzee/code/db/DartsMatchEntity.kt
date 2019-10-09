@@ -2,6 +2,8 @@ package burlton.dartzee.code.db
 
 import burlton.core.code.util.Debug
 import burlton.core.code.util.XmlUtil
+import burlton.core.code.util.createRootElement
+import burlton.core.code.util.getAttributeInt
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getEndOfTimeSqlString
@@ -133,10 +135,10 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
             val doc = XmlUtil.getDocumentFromXmlString(matchParams)
             val root = doc!!.documentElement
 
-            hmPositionToPoints!![1] = XmlUtil.getAttributeInt(root, "First")
-            hmPositionToPoints!![2] = XmlUtil.getAttributeInt(root, "Second")
-            hmPositionToPoints!![3] = XmlUtil.getAttributeInt(root, "Third")
-            hmPositionToPoints!![4] = XmlUtil.getAttributeInt(root, "Fourth")
+            hmPositionToPoints!![1] = root.getAttributeInt("First")
+            hmPositionToPoints!![2] = root.getAttributeInt("Second")
+            hmPositionToPoints!![3] = root.getAttributeInt("Third")
+            hmPositionToPoints!![4] = root.getAttributeInt("Fourth")
         }
 
         return hmPositionToPoints!!
@@ -174,13 +176,12 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         fun constructPointsXml(first: Int, second: Int, third: Int, fourth: Int): String
         {
             val doc = XmlUtil.factoryNewDocument()
-            val rootElement = doc!!.createElement("MatchParams")
+            val rootElement = doc.createRootElement("MatchParams")
             rootElement.setAttribute("First", "$first")
             rootElement.setAttribute("Second", "$second")
             rootElement.setAttribute("Third", "$third")
             rootElement.setAttribute("Fourth", "$fourth")
 
-            doc.appendChild(rootElement)
             return XmlUtil.getStringFromDocument(doc)
         }
 

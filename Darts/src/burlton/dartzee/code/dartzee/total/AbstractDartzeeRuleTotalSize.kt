@@ -1,6 +1,6 @@
 package burlton.dartzee.code.dartzee.total
 
-import burlton.core.code.util.XmlUtil
+import burlton.core.code.util.getAttributeInt
 import burlton.dartzee.code.dartzee.IDartzeeRuleConfigurable
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -37,7 +37,7 @@ abstract class AbstractDartzeeRuleTotalSize: AbstractDartzeeTotalRule(), ChangeL
 
     override fun populate(rootElement: Element)
     {
-        target = XmlUtil.getAttributeInt(rootElement, "Target")
+        target = rootElement.getAttributeInt("Target")
         spinner.value = target
     }
 
