@@ -1,6 +1,6 @@
 package burlton.dartzee.code.dartzee.dart
 
-import burlton.core.code.util.XmlUtil
+import burlton.core.code.util.getAttributeInt
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import org.w3c.dom.Document
@@ -39,7 +39,7 @@ class DartzeeDartRuleScore: AbstractDartzeeDartRuleConfigurable(), ChangeListene
 
     override fun populate(rootElement: Element)
     {
-        score = XmlUtil.getAttributeInt(rootElement, "Target")
+        score = rootElement.getAttributeInt("Target")
         spinner.value = score
     }
 

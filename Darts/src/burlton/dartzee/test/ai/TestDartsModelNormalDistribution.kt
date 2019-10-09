@@ -25,7 +25,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
     @Test
     fun `Should not write optional values that are unset`()
     {
-        val xmlDoc = XmlUtil.factoryNewDocument()!!
+        val xmlDoc = XmlUtil.factoryNewDocument()
         val rootElement = xmlDoc.createElement("Test")
 
         val model = DartsModelNormalDistribution()
@@ -43,7 +43,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
     @Test
     fun `Should write optional values that have been set`()
     {
-        val xmlDoc = XmlUtil.factoryNewDocument()!!
+        val xmlDoc = XmlUtil.factoryNewDocument()
         val rootElement = xmlDoc.createElement("Test")
 
         val model = DartsModelNormalDistribution()
@@ -63,7 +63,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
     @Test
     fun `Should handle optional values not being present in XML`()
     {
-        val xmlDoc = XmlUtil.factoryNewDocument()!!
+        val xmlDoc = XmlUtil.factoryNewDocument()
         val rootElement = xmlDoc.createElement("Test")
 
         rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "100.4")
@@ -87,7 +87,7 @@ class TestDartsModelNormalDistribution: AbstractDartsTest()
     @Test
     fun `Should read optional values if present in XML`()
     {
-        val xmlDoc = XmlUtil.factoryNewDocument()!!
+        val xmlDoc = XmlUtil.factoryNewDocument()
         val rootElement = xmlDoc.createElement("Test")
 
         rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "100.4")

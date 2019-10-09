@@ -1,8 +1,7 @@
 package burlton.dartzee.code.ai
 
 import burlton.core.code.obj.HashMapCount
-import burlton.core.code.util.Debug
-import burlton.core.code.util.XmlUtil
+import burlton.core.code.util.*
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_STANDARD
@@ -44,30 +43,30 @@ abstract class AbstractDartsModel
         val xmlDoc = XmlUtil.getDocumentFromXmlString(xmlStr)
         val rootElement = xmlDoc!!.documentElement
 
-        val scoringSingle = XmlUtil.getAttributeInt(rootElement, ATTRIBUTE_SCORING_DART)
+        val scoringSingle = rootElement.getAttributeInt(ATTRIBUTE_SCORING_DART)
         if (scoringSingle > 0)
         {
             this.scoringDart = scoringSingle
         }
 
         //X01
-        mercyThreshold = XmlUtil.getAttributeInt(rootElement, ATTRIBUTE_MERCY_RULE, -1)
+        mercyThreshold = rootElement.getAttributeInt(ATTRIBUTE_MERCY_RULE, -1)
 
         hmScoreToDart = mutableMapOf()
         val setupDarts = rootElement.getElementsByTagName(TAG_SETUP_DART)
         for (i in 0 until setupDarts.length)
         {
             val setupDart = setupDarts.item(i) as Element
-            val score = XmlUtil.getAttributeInt(setupDart, ATTRIBUTE_SCORE)
-            val value = XmlUtil.getAttributeInt(setupDart, ATTRIBUTE_DART_VALUE)
-            val multiplier = XmlUtil.getAttributeInt(setupDart, ATTRIBUTE_DART_MULTIPLIER)
+            val score = setupDart.getAttributeInt(ATTRIBUTE_SCORE)
+            val value = setupDart.getAttributeInt(ATTRIBUTE_DART_VALUE)
+            val multiplier = setupDart.getAttributeInt(ATTRIBUTE_DART_MULTIPLIER)
 
             hmScoreToDart[score] = Dart(value, multiplier)
         }
 
         //Golf
-        hmDartNoToSegmentType = XmlUtil.readIntegerHashMap(rootElement, TAG_GOLF_AIM, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_SEGMENT_TYPE)
-        hmDartNoToStopThreshold = XmlUtil.readIntegerHashMap(rootElement, TAG_GOLF_STOP, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_STOP_THRESHOLD)
+        hmDartNoToSegmentType = rootElement.readIntegerHashMap(TAG_GOLF_AIM, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_SEGMENT_TYPE)
+        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_STOP_THRESHOLD)
 
         readXmlSpecific(rootElement)
     }
@@ -75,7 +74,7 @@ abstract class AbstractDartsModel
     fun writeXml(): String
     {
         val xmlDoc = XmlUtil.factoryNewDocument()
-        val rootElement = xmlDoc!!.createElement(getModelName())
+        val rootElement = xmlDoc.createRootElement(getModelName())
 
         if (scoringDart != 20)
         {
@@ -90,8 +89,8 @@ abstract class AbstractDartsModel
             rootElement.appendChild(child)
         }
 
-        XmlUtil.writeHashMap(hmDartNoToSegmentType, xmlDoc, rootElement, TAG_GOLF_AIM, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_SEGMENT_TYPE)
-        XmlUtil.writeHashMap(hmDartNoToStopThreshold, xmlDoc, rootElement, TAG_GOLF_STOP, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_STOP_THRESHOLD)
+        rootElement.writeHashMap(hmDartNoToSegmentType, TAG_GOLF_AIM, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_SEGMENT_TYPE)
+        rootElement.writeHashMap(hmDartNoToStopThreshold, TAG_GOLF_STOP, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_STOP_THRESHOLD)
 
         if (mercyThreshold > -1)
         {
@@ -99,7 +98,6 @@ abstract class AbstractDartsModel
         }
 
         writeXmlSpecific(rootElement)
-        xmlDoc.appendChild(rootElement)
 
         return XmlUtil.getStringFromDocument(xmlDoc)
     }
