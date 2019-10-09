@@ -67,14 +67,15 @@ fun Element.writeHashMap(hm: Map<*, *>, tagName: String)
     }
 }
 
-fun Element.writeList(list: List<*>, tagName: String)
+fun Element.writeList(list: List<Any>, tagName: String)
 {
     val listElement = ownerDocument.createElement(tagName)
     appendChild(listElement)
 
-    list.forEach {
+    list.forEachIndexed { ix, value ->
         val itemElement = ownerDocument.createElement("ListItem")
-        itemElement.nodeValue = "$it"
+        itemElement.setAttributeAny("Value", value)
+        itemElement.setAttributeAny("Index", ix)
         listElement.appendChild(itemElement)
     }
 }
@@ -89,8 +90,10 @@ fun Element.readList(tagName: String): List<String>
     val size = items.length
     for (i in 0 until size)
     {
-        val child = items.item(i)
-        list.add(child.nodeValue)
+        val child = items.item(i) as Element
+        val ix = child.getAttributeInt("Index")
+        val value = child.getAttribute("Value")
+        list.add(ix, value)
     }
 
     return list
@@ -109,7 +112,7 @@ fun Document.toXmlString(): String =
         transformer.transform(DOMSource(this), StreamResult(writer))
 
         val sb = writer.buffer
-        sb.toString().replace("\n|\r".toRegex(), "")
+        sb.toString().replace("[\n\r]".toRegex(), "")
     }
     catch (t: Throwable)
     {
