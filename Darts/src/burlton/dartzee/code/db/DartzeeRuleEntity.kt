@@ -10,7 +10,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     var inOrder = false
     var allowMisses = false
     var ordinal = -1
-    var validSegments = ""
+    var calculationResult = ""
 
     override fun getTableName() = "DartzeeRule"
 
@@ -24,6 +24,6 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "InOrder BOOLEAN NOT NULL, "
                 + "AllowMisses BOOLEAN NOT NULL, "
                 + "Ordinal INT NOT NULL, "
-                + "ValidSegments VARCHAR(32000) NOT NULL")
+                + "CalculationResult VARCHAR(32000) NOT NULL")
     }
 }
