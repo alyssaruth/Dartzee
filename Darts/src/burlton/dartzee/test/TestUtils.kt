@@ -18,6 +18,8 @@ val singleNineteen = DartboardSegment("19_$SEGMENT_TYPE_OUTER_SINGLE")
 val doubleNineteen = DartboardSegment("19_$SEGMENT_TYPE_DOUBLE")
 val trebleNineteen = DartboardSegment("19_$SEGMENT_TYPE_TREBLE")
 val singleEighteen = DartboardSegment("18_$SEGMENT_TYPE_OUTER_SINGLE")
+val singleTen = DartboardSegment("10_$SEGMENT_TYPE_INNER_SINGLE")
+val singleFive = DartboardSegment("5_$SEGMENT_TYPE_INNER_SINGLE")
 
 private var dartboard: Dartboard? = null
 
