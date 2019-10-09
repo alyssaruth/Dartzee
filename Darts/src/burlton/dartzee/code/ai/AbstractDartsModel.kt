@@ -40,7 +40,7 @@ abstract class AbstractDartsModel
      */
     fun readXml(xmlStr: String)
     {
-        val xmlDoc = XmlUtil.getDocumentFromXmlString(xmlStr)
+        val xmlDoc = xmlStr.toXmlDoc()
         val rootElement = xmlDoc!!.documentElement
 
         val scoringSingle = rootElement.getAttributeInt(ATTRIBUTE_SCORING_DART)
@@ -65,8 +65,8 @@ abstract class AbstractDartsModel
         }
 
         //Golf
-        hmDartNoToSegmentType = rootElement.readIntegerHashMap(TAG_GOLF_AIM, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_SEGMENT_TYPE)
-        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_STOP_THRESHOLD)
+        hmDartNoToSegmentType = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
+        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP)
 
         readXmlSpecific(rootElement)
     }
@@ -89,8 +89,8 @@ abstract class AbstractDartsModel
             rootElement.appendChild(child)
         }
 
-        rootElement.writeHashMap(hmDartNoToSegmentType, TAG_GOLF_AIM, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_SEGMENT_TYPE)
-        rootElement.writeHashMap(hmDartNoToStopThreshold, TAG_GOLF_STOP, ATTRIBUTE_DART_NUMBER, ATTRIBUTE_STOP_THRESHOLD)
+        rootElement.writeHashMap(hmDartNoToSegmentType, TAG_GOLF_AIM)
+        rootElement.writeHashMap(hmDartNoToStopThreshold, TAG_GOLF_STOP)
 
         if (mercyThreshold > -1)
         {
@@ -99,7 +99,7 @@ abstract class AbstractDartsModel
 
         writeXmlSpecific(rootElement)
 
-        return XmlUtil.getStringFromDocument(xmlDoc)
+        return xmlDoc.toXmlString()
     }
 
     /**
@@ -306,9 +306,6 @@ abstract class AbstractDartsModel
         const val ATTRIBUTE_SCORE = "Score"
         const val ATTRIBUTE_DART_VALUE = "DartValue"
         const val ATTRIBUTE_DART_MULTIPLIER = "DartMultiplier"
-        const val ATTRIBUTE_DART_NUMBER = "DartNumber"
-        const val ATTRIBUTE_SEGMENT_TYPE = "SegmentType"
-        const val ATTRIBUTE_STOP_THRESHOLD = "StopThreshold"
 
         private const val SCORING_DARTS_TO_THROW = 20000
         private const val DOUBLE_DARTS_TO_THROW = 20000

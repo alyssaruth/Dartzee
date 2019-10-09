@@ -1,9 +1,6 @@
 package burlton.dartzee.code.dartzee
 
-import burlton.core.code.util.MathsUtil
-import burlton.core.code.util.XmlUtil
-import burlton.core.code.util.createRootElement
-import burlton.core.code.util.setAttribute
+import burlton.core.code.util.*
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.utils.DartsColour
 import java.awt.Color
@@ -50,11 +47,11 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
         val doc = XmlUtil.factoryNewDocument()
         val root = doc.createRootElement("CalculationResult")
 
-        root.setAttribute("ValidCombinations", validCombinations)
-        root.setAttribute("AllCombinations", allCombinations)
-        root.setAttribute("ValidCombinationProbability", validCombinationProbability)
-        root.setAttribute("AllCombinationsProbability", allCombinationsProbability)
+        root.setAttributeAny("ValidCombinations", validCombinations)
+        root.setAttributeAny("AllCombinations", allCombinations)
+        root.setAttributeAny("ValidCombinationProbability", validCombinationProbability)
+        root.setAttributeAny("AllCombinationsProbability", allCombinationsProbability)
 
-        return XmlUtil.getStringFromDocument(doc)
+        return doc.toXmlString()
     }
 }

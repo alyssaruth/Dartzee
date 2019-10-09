@@ -1,7 +1,9 @@
 package burlton.dartzee.code.dartzee
 
 import burlton.core.code.util.XmlUtil
+import burlton.core.code.util.toXmlString
 import burlton.core.code.util.createRootElement
+import burlton.core.code.util.toXmlDoc
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.*
 import org.w3c.dom.Document
@@ -15,7 +17,7 @@ abstract class AbstractDartzeeRule
 
     fun populate(xmlStr: String)
     {
-        val xmlDoc = XmlUtil.getDocumentFromXmlString(xmlStr)
+        val xmlDoc = xmlStr.toXmlDoc()
         xmlDoc ?: return
 
         populate(xmlDoc.documentElement)
@@ -38,7 +40,7 @@ abstract class AbstractDartzeeRule
         val rootElement = xmlDoc.createRootElement(getRuleIdentifier())
         writeXmlAttributes(xmlDoc, rootElement)
 
-        return XmlUtil.getStringFromDocument(xmlDoc)
+        return xmlDoc.toXmlString()
     }
 }
 
@@ -71,7 +73,7 @@ fun <K: AbstractDartzeeRule> parseRule(xmlStr: String, ruleTemplates: List<K>): 
         return null
     }
 
-    val xmlDoc = XmlUtil.getDocumentFromXmlString(xmlStr)
+    val xmlDoc = xmlStr.toXmlDoc()
     xmlDoc ?: return null
 
     val rootElement = xmlDoc.documentElement
