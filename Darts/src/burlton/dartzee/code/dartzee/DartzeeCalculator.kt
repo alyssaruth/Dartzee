@@ -21,6 +21,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
                                     rule: DartzeeRuleDto): Boolean
     {
         return isValidCombinationForTotalRule(combination, rule.totalRule)
+                && isValidFromMisses(combination, rule)
                 && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder)
     }
 
@@ -28,10 +29,9 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
     {
         val cachedCombinationResults = mutableMapOf<List<DartboardSegment>, Boolean>()
 
-        val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar, true)
+        val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar)
 
         val validCombinations = allPossibilities.filter { isValidCombinationCached(it, rule, cachedCombinationResults) }
-                .filter { it.all { segment -> !segment.isMiss() || rule.allowMisses }}
 
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
 
@@ -45,9 +45,13 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
                                  cachedResults: MutableMap<List<DartboardSegment>, Boolean>): Boolean
     {
         return isValidCombinationForTotalRule(combination, rule.totalRule)
+                && isValidFromMisses(combination, rule)
                 && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder, cachedResults)
     }
-
+    private fun isValidFromMisses(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
+    {
+        return rule.allowMisses || combination.all { !it.isMiss() }
+    }
 
     private fun isValidCombinationForTotalRule(combination: List<DartboardSegment>, totalRule: AbstractDartzeeTotalRule?): Boolean
     {
@@ -114,13 +118,10 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return dartboard.getPointsForSegment(segment.score, segment.type).size.toDouble() / allPointsCount
     }
 
-    fun generateAllPossibilities(dartboard: Dartboard, dartsSoFar: List<Dart>, allowMisses: Boolean): List<List<DartboardSegment>>
+    fun generateAllPossibilities(dartboard: Dartboard, dartsSoFar: List<Dart>): List<List<DartboardSegment>>
     {
         val segments = dartboard.getAllSegments().filter { !it.isMiss() }.toMutableList()
-        if (allowMisses)
-        {
-            segments.add(DartboardSegment("20_$SEGMENT_TYPE_MISS"))
-        }
+        segments.add(DartboardSegment("20_$SEGMENT_TYPE_MISS"))
 
         val segmentsSoFar = dartsSoFar.map { dartboard.getSegment(it.score, it.segmentType)!! }
 

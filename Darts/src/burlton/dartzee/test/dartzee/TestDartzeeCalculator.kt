@@ -7,6 +7,7 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEqualTo
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEven
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleLessThan
 import burlton.dartzee.test.*
@@ -25,13 +26,8 @@ class TestAllPossibilities: AbstractDartsTest()
     {
         val dartboard = borrowTestDartboard()
 
-        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(), false)
-        possibilities.size shouldBe 82 * 82 * 82
-        possibilities.distinct().size shouldBe 82 * 82 * 82
-        possibilities.all { it.size == 3 } shouldBe true
-
-        val possibilitiesWithMisses = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(), true)
-        possibilitiesWithMisses.size shouldBe 83 * 83 * 83
+        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf())
+        possibilities.size shouldBe 83 * 83 * 83
         possibilities.all { it.size == 3 } shouldBe true
     }
 
@@ -43,12 +39,7 @@ class TestAllPossibilities: AbstractDartsTest()
         val dart = Dart(20, 3)
         dart.segmentType = SEGMENT_TYPE_TREBLE
 
-        var possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dart), false)
-        possibilities.size shouldBe 82 * 82
-        possibilities.all { it.size == 3} shouldBe true
-        possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
-
-        possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dart), true)
+        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dart))
         possibilities.size shouldBe 83 * 83
         possibilities.all { it.size == 3} shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
@@ -65,13 +56,7 @@ class TestAllPossibilities: AbstractDartsTest()
         val dartTwo = Dart(19, 2)
         dartTwo.segmentType = SEGMENT_TYPE_DOUBLE
 
-        var possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dartOne, dartTwo), false)
-        possibilities.size shouldBe 82
-        possibilities.all { it.size == 3 } shouldBe true
-        possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
-        possibilities.all { it[1].scoreAndType == "19_$SEGMENT_TYPE_DOUBLE" } shouldBe true
-
-        possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dartOne, dartTwo), true)
+        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dartOne, dartTwo))
         possibilities.size shouldBe 83
         possibilities.all { it.size == 3 } shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
@@ -166,5 +151,37 @@ class TestValidCombinations: AbstractDartsTest()
         DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleNineteen, singleEighteen), rule) shouldBe false
         DartzeeCalculator().isValidCombination(listOf(singleEighteen, singleEighteen, singleEighteen), rule) shouldBe false
         DartzeeCalculator().isValidCombination(listOf(singleTwenty, doubleNineteen, singleEighteen), rule) shouldBe true
+    }
+
+    @Test
+    fun `Should test for just a single dart rule`()
+    {
+        val rule = makeDartzeeRuleDto(makeScoreRule(20))
+
+        DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleTwenty, singleTwenty), rule) shouldBe true
+        DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleTwenty, singleNineteen), rule) shouldBe true
+        DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleNineteen, singleNineteen), rule) shouldBe true
+        DartzeeCalculator().isValidCombination(listOf(singleNineteen, singleNineteen, singleNineteen), rule) shouldBe false
+    }
+
+    @Test
+    fun `should test for just total rules`()
+    {
+        val rule = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50))
+
+        DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleTwenty, singleTen), rule) shouldBe true
+        DartzeeCalculator().isValidCombination(listOf(outerBull, singleTwenty, singleFive), rule) shouldBe true
+        DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleTwenty, singleTwenty), rule) shouldBe false
+    }
+
+    @Test
+    fun `should validate misses correctly`()
+    {
+        val rule = makeDartzeeRuleDto(allowMisses = false)
+        val ruleWithMisses = makeDartzeeRuleDto(allowMisses = true)
+
+        val combination = listOf(singleTwenty, missTwenty, singleTwenty)
+        DartzeeCalculator().isValidCombination(combination, rule) shouldBe false
+        DartzeeCalculator().isValidCombination(combination, ruleWithMisses) shouldBe true
     }
 }
