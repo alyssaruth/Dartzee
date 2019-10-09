@@ -2,6 +2,7 @@ package burlton.core.test.util
 
 import burlton.core.code.util.*
 import burlton.core.test.helper.AbstractTest
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -145,6 +146,6 @@ class TestXmlUtil: AbstractTest()
         root.writeList(list, "SomeList")
 
         val newList = root.readList("SomeList")
-        newList.shouldContainExactlyInAnyOrder("Foo", "Bar", "Baz")
+        newList.shouldContainExactly("Foo", "Bar", "Baz")
     }
 }
