@@ -1,5 +1,10 @@
 package burlton.dartzee.code.db
 
+import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
+import burlton.dartzee.code.dartzee.parseDartRule
+import burlton.dartzee.code.dartzee.parseTotalRule
+
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
     var gameId = ""
@@ -25,5 +30,18 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "AllowMisses BOOLEAN NOT NULL, "
                 + "Ordinal INT NOT NULL, "
                 + "CalculationResult VARCHAR(32000) NOT NULL")
+    }
+
+    fun toDto(): DartzeeRuleDto
+    {
+        val rule1 = parseDartRule(dart1Rule)
+        val rule2 = parseDartRule(dart2Rule)
+        val rule3 = parseDartRule(dart3Rule)
+        val total = parseTotalRule(totalRule)
+        val calculationResult = DartzeeRuleCalculationResult.fromDbString(calculationResult)
+
+        val dto = DartzeeRuleDto(rule1, rule2, rule3, total, inOrder, allowMisses)
+        dto.calculationResult = calculationResult
+        return dto
     }
 }
