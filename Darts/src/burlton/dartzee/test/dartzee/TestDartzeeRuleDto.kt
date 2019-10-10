@@ -1,11 +1,14 @@
 package burlton.dartzee.test.dartzee
 
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
+import burlton.dartzee.test.borrowTestDartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -130,5 +133,25 @@ class TestDartzeeRuleDto: AbstractDartsTest()
             totalRule = DartzeeTotalRuleGreaterThan()
         )
         rule.generateRuleDescription() shouldBe "Score Even, Total > 20"
+    }
+
+    @Test
+    fun `Should convert to an entity correctly`()
+    {
+        val rule = DartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeTotalRulePrime(), true, false)
+        rule.runStrengthCalculation(borrowTestDartboard())
+
+        val dao = rule.toEntity("foo", 5)
+
+        dao.rowId.shouldNotBeEmpty()
+        dao.gameId shouldBe "foo"
+        dao.ordinal shouldBe 5
+        dao.calculationResult shouldBe rule.calculationResult!!.toDbString()
+        dao.inOrder shouldBe true
+        dao.allowMisses shouldBe false
+        dao.dart1Rule shouldBe DartzeeDartRuleEven().toDbString()
+        dao.dart2Rule shouldBe DartzeeDartRuleOdd().toDbString()
+        dao.dart3Rule shouldBe DartzeeDartRuleInner().toDbString()
+        dao.totalRule shouldBe DartzeeTotalRulePrime().toDbString()
     }
 }
