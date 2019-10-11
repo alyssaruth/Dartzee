@@ -34,6 +34,8 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "CalculationResult VARCHAR(32000) NOT NULL")
     }
 
+    override fun getColumnsAllowedToBeUnset() = listOf("GameId", "TemplateId")
+
     fun toDto(): DartzeeRuleDto
     {
         val rule1 = parseDartRule(dart1Rule)
