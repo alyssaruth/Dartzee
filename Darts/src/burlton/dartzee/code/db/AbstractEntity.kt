@@ -28,7 +28,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     /**
      * Default implementations
      */
-    open fun getColumnsAllowedToBeUnset() = mutableListOf<String>()
+    open fun getColumnsAllowedToBeUnset() = listOf<String>()
     open fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>) {}
     open fun cacheValuesWhileResultSetActive() {}
 
