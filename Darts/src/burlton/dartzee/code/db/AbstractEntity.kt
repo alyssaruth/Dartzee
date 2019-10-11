@@ -431,6 +431,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return swapInValue(statementStr, value)
     }
 
+    fun writeDouble(ps: PreparedStatement, ix: Int, value: Double, statementStr: String): String
+    {
+        ps.setDouble(ix, value)
+        return swapInValue(statementStr, value)
+    }
+
     @Throws(SQLException::class)
     fun writeString(ps: PreparedStatement, ix: Int, value: String, statementStr: String): String
     {
@@ -477,6 +483,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Boolean::class.java -> writeBoolean(ps, ix, value as Boolean, statementStr)
             Timestamp::class.java -> writeTimestamp(ps, ix, value as Timestamp, statementStr)
             Blob::class.java -> writeBlob(ps, ix, value as Blob, statementStr)
+            Double::class.java -> writeDouble(ps, ix, value as Double, statementStr)
             else -> writeString(ps, ix, "$value", statementStr)
         }
     }
@@ -492,6 +499,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Boolean::class.java -> rs.getBoolean(columnName)
             Timestamp::class.java -> rs.getTimestamp(columnName)
             Blob::class.java -> rs.getBlob(columnName)
+            Double::class.java -> rs.getDouble(columnName)
             else -> null
         }
     }

@@ -5,9 +5,6 @@ import burlton.core.code.util.FileUtil
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogLines
 import burlton.core.test.helper.getLogs
-import burlton.dartzee.code.dartzee.AbstractDartzeeRule
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -40,8 +37,8 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
         val tableName = dao.getTableName()
         wipeTable(tableName)
 
-        val e1: AbstractEntity<E> = dao.javaClass.newInstance()
-        val e2: AbstractEntity<E> = dao.javaClass.newInstance()
+        val e1: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
+        val e2: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
 
         e1.assignRowId()
         e2.assignRowId()
@@ -78,7 +75,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     {
         wipeTable(dao.getTableName())
 
-        val entity: AbstractEntity<E> = dao.javaClass.newInstance()
+        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         entity.assignRowId()
         setValuesAndSaveToDatabase(entity, true)
         getCountFromTable(dao.getTableName()) shouldBe 1
@@ -92,7 +89,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     {
         wipeTable(dao.getTableName())
 
-        val entity: AbstractEntity<E> = dao.javaClass.newInstance()
+        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         entity.assignRowId()
         val rowId = entity.rowId
 
@@ -118,7 +115,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     {
         wipeTable(dao.getTableName())
 
-        val entity: AbstractEntity<E> = dao.javaClass.newInstance()
+        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         entity.assignRowId()
         val rowId = entity.rowId
 
@@ -148,7 +145,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
     @Test
     fun `Columns should not allow NULLs`()
     {
-        val entity: AbstractEntity<E> = dao.javaClass.newInstance()
+        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         val rowId = entity.assignRowId()
 
         //Insert into the DB
@@ -197,24 +194,12 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
             Timestamp::class.java -> if (initial) Timestamp.valueOf("2019-04-01 21:29:32") else DateStatics.END_OF_TIME
             Blob::class.java -> if (initial) getBlobValue("BaboOne") else getBlobValue("Goomba")
             Boolean::class.java -> initial
-            AbstractDartzeeRule::class.java -> getDartzeeRuleValue(initial)
+            Double::class.java -> if (initial) 5.0 else 10.0
             else -> {
                 println(fieldType)
                 "uh oh"
             }
         }
-    }
-}
-
-fun getDartzeeRuleValue(initial: Boolean): AbstractDartzeeRule
-{
-    if (initial)
-    {
-        return DartzeeDartRuleEven()
-    }
-    else
-    {
-        return DartzeeDartRuleOdd()
     }
 }
 
