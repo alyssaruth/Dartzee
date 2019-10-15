@@ -166,6 +166,23 @@ fun insertGame(uuid: String = randomGuid(),
     return ge
 }
 
+fun insertDartzeeRule(uuid: String = randomGuid(),
+                      entityName: String = "",
+                      entityId: String = "",
+                      dtCreation: Timestamp = getSqlDateNow(),
+                      dtLastUpdate: Timestamp = getSqlDateNow()): DartzeeRuleEntity
+{
+    val de = DartzeeRuleEntity()
+    de.rowId = uuid
+    de.dtCreation = dtCreation
+    de.entityId = entityId
+    de.entityName = entityName
+
+    de.saveToDatabase(dtLastUpdate)
+
+    return de
+}
+
 fun insertAchievement(uuid: String = randomGuid(),
                       playerId: String = randomGuid(),
                       achievementRef: Int = -1,

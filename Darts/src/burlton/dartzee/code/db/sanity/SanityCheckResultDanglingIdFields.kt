@@ -5,9 +5,11 @@ import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DialogUtil
 import javax.swing.JOptionPane
 
-class SanityCheckResultHangingEntities(private val idColumn: String, entities: List<AbstractEntity<*>>) : AbstractSanityCheckResultEntities(entities)
+class SanityCheckResultDanglingIdFields(private val idColumn: String,
+                                        private val referencedEntity: String,
+                                        entities: List<AbstractEntity<*>>) : AbstractSanityCheckResultEntities(entities)
 {
-    override fun getDescription() = "$entityName rows where the $idColumn points at a non-existent row"
+    override fun getDescription() = "$entityName rows where the $idColumn points at a non-existent $referencedEntity"
 
     override fun autoFix()
     {
