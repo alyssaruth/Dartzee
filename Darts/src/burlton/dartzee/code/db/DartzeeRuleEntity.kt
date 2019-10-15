@@ -7,8 +7,8 @@ import burlton.dartzee.code.dartzee.parseTotalRule
 
 class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 {
-    var gameId = ""
-    var templateId = ""
+    var entityName = ""
+    var entityId = ""
     var dart1Rule = ""
     var dart2Rule = ""
     var dart3Rule = ""
@@ -22,8 +22,8 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return ("GameId VARCHAR(36) NOT NULL, "
-                + "TemplateId VARCHAR(36) NOT NULL, "
+        return ("EntityName VARCHAR(255) NOT NULL, "
+                + "EntityId VARCHAR(36) NOT NULL, "
                 + "Dart1Rule VARCHAR(255) NOT NULL, "
                 + "Dart2Rule VARCHAR(255) NOT NULL, "
                 + "Dart3Rule VARCHAR(255) NOT NULL, "
@@ -33,8 +33,6 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "Ordinal INT NOT NULL, "
                 + "CalculationResult VARCHAR(32000) NOT NULL")
     }
-
-    override fun getColumnsAllowedToBeUnset() = listOf("GameId", "TemplateId")
 
     fun toDto(): DartzeeRuleDto
     {
