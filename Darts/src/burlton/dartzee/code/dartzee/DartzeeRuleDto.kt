@@ -80,7 +80,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         }
     }
 
-    fun toEntity(ordinal: Int, gameId: String = "", templateId: String = ""): DartzeeRuleEntity
+    fun toEntity(ordinal: Int, entityName: String = "", entityId: String = ""): DartzeeRuleEntity
     {
         val entity = DartzeeRuleEntity()
         entity.assignRowId()
@@ -91,8 +91,8 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         entity.totalRule = totalRule?.toDbString() ?: ""
         entity.allowMisses = allowMisses
         entity.inOrder = inOrder
-        entity.gameId = gameId
-        entity.templateId = templateId
+        entity.entityName = entityName
+        entity.entityId = entityId
         entity.ordinal = ordinal
         entity.calculationResult = calculationResult!!.toDbString()
 
