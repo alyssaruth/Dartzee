@@ -1,7 +1,6 @@
 package burlton.dartzee.code.db.sanity
 
 import burlton.dartzee.code.db.AbstractEntity
-import burlton.dartzee.code.utils.DartsDatabaseUtil
 
 class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>): AbstractSanityCheck()
 {
@@ -9,9 +8,7 @@ class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>): AbstractSanityChe
 
     override fun runCheck(): List<AbstractSanityCheckResult>
     {
-        val columns = entity.getColumns()
-        val potentialIdColumns = DartsDatabaseUtil.getAllEntities().map { "${it.getTableName()}Id" }
-        val idColumns = columns.filter{ potentialIdColumns.contains(it) }
+        val idColumns = getIdColumns(entity)
 
         idColumns.forEach{
             if (!entity.columnCanBeUnset(it))

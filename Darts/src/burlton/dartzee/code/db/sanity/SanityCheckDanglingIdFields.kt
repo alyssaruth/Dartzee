@@ -9,15 +9,13 @@ class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanity
 
     override fun runCheck(): List<AbstractSanityCheckResult>
     {
-        val columns = entity.getColumns()
-        val potentialIdColumns = DartsDatabaseUtil.getAllEntities().map { "${it.getTableName()}Id" }
-        val idColumns = columns.filter{ potentialIdColumns.contains(it) }
+        val idColumns = getIdColumns(entity)
 
         idColumns.forEach{
             checkForHangingValues(entity, it)
         }
 
-        if (columns.contains("EntityId"))
+        if (entity.getColumns().contains("EntityId"))
         {
             DartsDatabaseUtil.getAllEntities().forEach {
                 checkForHangingEntityId(entity, it.getTableName())
