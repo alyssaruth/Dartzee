@@ -141,11 +141,11 @@ class TestDartzeeRuleDto: AbstractDartsTest()
         val rule = DartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeTotalRulePrime(), true, false)
         rule.runStrengthCalculation(borrowTestDartboard())
 
-        val dao = rule.toEntity(5, "gameId", "templateId")
+        val dao = rule.toEntity(5, "Game", "foo")
 
         dao.rowId.shouldNotBeEmpty()
-        dao.gameId shouldBe "gameId"
-        dao.templateId shouldBe "templateId"
+        dao.entityName shouldBe "Game"
+        dao.entityId shouldBe "foo"
         dao.ordinal shouldBe 5
         dao.calculationResult shouldBe rule.calculationResult!!.toDbString()
         dao.inOrder shouldBe true
