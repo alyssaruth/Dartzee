@@ -13,9 +13,9 @@ import javax.swing.ListSelectionModel
 class ScrollTableOrdered : ScrollTable(), ActionListener
 {
     private val panelOrdering = JPanel()
-    private val btnMoveUp = JButton("")
-    private val btnMoveDown = JButton("")
-    private val btnRandomize = JButton("")
+    val btnMoveUp = JButton("")
+    val btnMoveDown = JButton("")
+    val btnRandomize = JButton("")
 
     init
     {
@@ -103,9 +103,11 @@ class ScrollTableOrdered : ScrollTable(), ActionListener
     {
         val rows = getAllRows()
         rows.sortBy(selector)
+
+        setNewOrder(rows)
     }
 
-    private fun setNewOrder(orderedRows: List<Array<Any?>>)
+    fun setNewOrder(orderedRows: List<Array<Any?>>)
     {
         removeAllRows()
 
