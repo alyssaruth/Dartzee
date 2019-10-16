@@ -55,8 +55,8 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
 
     companion object
     {
-        private val ICON_AI = ImageIcon(PlayerEntity::class.java.getResource("/flags/aiFlag.png"))
-        private val ICON_HUMAN = ImageIcon(PlayerEntity::class.java.getResource("/flags/humanFlag.png"))
+        val ICON_AI = ImageIcon(PlayerEntity::class.java.getResource("/flags/aiFlag.png"))
+        val ICON_HUMAN = ImageIcon(PlayerEntity::class.java.getResource("/flags/humanFlag.png"))
 
         fun getPlayerFlag(human:Boolean) = if (human) ICON_HUMAN else ICON_AI
 
