@@ -1,6 +1,8 @@
 package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.PlayerSelector
+import burlton.dartzee.code.bean.getAllPlayers
+import burlton.dartzee.code.bean.getSelectedPlayer
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.desktopcore.test.helpers.doubleClick

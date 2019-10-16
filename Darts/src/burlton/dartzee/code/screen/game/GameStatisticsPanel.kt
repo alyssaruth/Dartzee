@@ -9,7 +9,7 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.desktopcore.code.bean.ScrollTableOrdered
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
@@ -40,7 +40,7 @@ abstract class GameStatisticsPanel : JPanel()
 
     private var tm = DefaultTableModel()
 
-    protected val table = ScrollTable()
+    protected val table = ScrollTableOrdered()
 
     protected abstract fun getRankedRowsHighestWins(): MutableList<String>
     protected abstract fun getRankedRowsLowestWins(): MutableList<String>
@@ -208,7 +208,6 @@ abstract class GameStatisticsPanel : JPanel()
 
         table.setRowHeight(20)
         table.model = tm
-        table.disableSorting()
 
         addRowsToTable()
 

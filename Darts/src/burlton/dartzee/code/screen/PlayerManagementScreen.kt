@@ -1,7 +1,9 @@
 package burlton.dartzee.code.screen
 
-import burlton.dartzee.code.bean.ScrollTablePlayers
+import burlton.dartzee.code.bean.getSelectedPlayer
+import burlton.dartzee.code.bean.initTableModel
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.desktopcore.code.bean.ScrollTable
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -17,7 +19,7 @@ import javax.swing.event.ListSelectionListener
 
 class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 {
-    private val tablePlayers = ScrollTablePlayers()
+    private val tablePlayers = ScrollTable()
     private val panel = PlayerManagementPanel()
     private val btnNewPlayer = JButton("")
     private val panelNorth = JPanel()
