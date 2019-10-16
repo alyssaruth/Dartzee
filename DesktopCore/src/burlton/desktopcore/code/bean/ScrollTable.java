@@ -1,6 +1,5 @@
 package burlton.desktopcore.code.bean;
 
-import net.miginfocom.swing.MigLayout;
 import burlton.core.code.util.StringUtil;
 import burlton.desktopcore.code.util.TableUtil.DefaultModel;
 
@@ -10,13 +9,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class ScrollTable extends JPanel
-						 implements ActionListener, TableColumnModelListener, ListSelectionListener, MouseListener
+						 implements TableColumnModelListener, ListSelectionListener, MouseListener
 {
 	private static final int TABLE_ROW_FOOTER = -2;
 	private static final String COL_WIDTH_STRING_DT = "DT";
@@ -36,29 +37,6 @@ public class ScrollTable extends JPanel
 	public ScrollTable() 
 	{
 		setLayout(new BorderLayout(0, 0));
-		
-		add(panelOrdering, BorderLayout.EAST);
-		panelOrdering.setLayout(new MigLayout("al center center, wrap, gapy 20"));
-		btnMoveUp.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/upArrow.png")));
-		btnMoveUp.setPreferredSize(new Dimension(40, 40));
-		btnMoveUp.setToolTipText("Move row up");
-		
-		panelOrdering.add(btnMoveUp, "cell 0 3");
-		btnMoveDown.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/downArrow.png")));
-		btnMoveDown.setPreferredSize(new Dimension(40, 40));
-		btnMoveDown.setToolTipText("Move row down");
-		
-		panelOrdering.add(btnMoveDown, "cell 0 4");
-		btnRandomize.setIcon(new ImageIcon(ScrollTable.class.getResource("/buttons/dice.png")));
-		btnRandomize.setPreferredSize(new Dimension(40, 40));
-		btnRandomize.setToolTipText("Randomise row order");
-		
-		panelOrdering.add(btnRandomize, "cell 0 5");
-		panelOrdering.setVisible(false);
-		
-		btnMoveUp.addActionListener(this);
-		btnMoveDown.addActionListener(this);
-		btnRandomize.addActionListener(this);
 		
 		getColumnModel().addColumnModelListener(this);
 		
@@ -138,10 +116,6 @@ public class ScrollTable extends JPanel
 		@Override
 		public boolean isCellEditable(int row, int column) { return false; }
 	};
-	private final JPanel panelOrdering = new JPanel();
-	private final JButton btnMoveUp = new JButton("");
-	private final JButton btnMoveDown = new JButton("");
-	private final JButton btnRandomize = new JButton("");
 	private final JPanel panelCenter = new JPanel();
 	
 	public DefaultTableModel getModel()
@@ -191,7 +165,7 @@ public class ScrollTable extends JPanel
 		footerModel.addColumn(columnName);
 	}
 	
-	public void refreshRowCount()
+	private void refreshRowCount()
 	{
 		int rows = table.getRowCount();
 		String rowCountDesc = getRowCountDesc(rows);
@@ -372,6 +346,11 @@ public class ScrollTable extends JPanel
 		
 		return Integer.parseInt(colWidthStr);
 	}
+	public void disableSorting()
+    {
+        table.setRowSorter(null);
+        sortingEnabled = false;
+    }
 	
 	public void removeColumn(int colIx)
 	{
@@ -451,28 +430,6 @@ public class ScrollTable extends JPanel
 			table.scrollRectToVisible(new Rectangle(table.getCellRect(row, 0, true)));
 		}
 	}
-	private ArrayList<Object[]> getAllRows()
-	{
-		ArrayList<Object[]> rows = new ArrayList<>();
-		for (int i=0; i<getRowCount(); i++)
-		{
-			Object[] row = getRow(i);
-			rows.add(row);
-		}
-		
-		return rows;
-	}
-	private Object[] getRow(int rowIx)
-	{
-		int columnCount = getColumnCount();
-		Object[] row = new Object[columnCount];
-		for (int i=0; i<getColumnCount(); i++)
-		{
-			row[i] = getValueAt(rowIx, i);
-		}
-		
-		return row;
-	}
 	
 	public void addFooterRow(Object[] row)
 	{
@@ -502,97 +459,6 @@ public class ScrollTable extends JPanel
 				vertical.setValue( vertical.getMaximum() );
 			}
 		});
-	}
-	
-	/**
-	 * Manual Sorting - the buttons at the side that let you move rows up/down etc
-	 */
-	public void disableSorting()
-	{
-		table.setRowSorter(null);
-		
-		sortingEnabled = false;
-	}
-	public void enableManualReordering()
-	{
-		disableSorting();
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		panelOrdering.setVisible(true);
-	}
-	public void addButtonToOrderingPanel(JButton btn, int row)
-	{
-		btn.setPreferredSize(new Dimension(40, 40));
-		panelOrdering.add(btn, "cell 0 " + row);
-	}
-
-	private void moveSelectedRowUp()
-	{
-		int row = getSelectedModelRow();
-		if (row <= 0)
-		{
-			//Nothing to do
-			return;
-		}
-		
-		getModel().moveRow(row, row, row-1);
-		selectRow(row-1);
-	}
-	private void moveSelectedRowDown()
-	{
-		int row = getSelectedModelRow();
-		if (row == (getRowCount() - 1)
-		  || row == -1)
-		{
-			//Nothing to do
-			return;
-		}
-		
-		getModel().moveRow(row, row, row+1);
-		selectRow(row+1);
-	}
-	private void scrambleOrder()
-	{
-		ArrayList<Object[]> allRows = getAllRows();
-		Collections.shuffle(allRows);
-
-		setNewOrder(allRows);
-	}
-	public void reorderRows(Comparator<Object[]> newOrder)
-	{
-		ArrayList<Object[]> allRows = getAllRows();
-		allRows.sort(newOrder);
-
-		setNewOrder(allRows);
-	}
-	private void setNewOrder(ArrayList<Object[]> orderedRows)
-	{
-		removeAllRows();
-
-		for (Object[] row : orderedRows)
-		{
-			addRow(row);
-		}
-	}
-	
-	
-	/**
-	 * ActionListener
-	 */
-	@Override
-	public void actionPerformed(ActionEvent arg0)
-	{
-		if (arg0.getSource() == btnMoveUp)
-		{
-			moveSelectedRowUp();
-		}
-		else if (arg0.getSource() == btnMoveDown)
-		{
-			moveSelectedRowDown();
-		}
-		else if (arg0.getSource() == btnRandomize)
-		{
-			scrambleOrder();
-		}
 	}
 	
 	/**

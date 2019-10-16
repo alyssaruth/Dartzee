@@ -1,8 +1,10 @@
 package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.bean.PlayerTypeFilterPanel
-import burlton.dartzee.code.bean.ScrollTablePlayers
+import burlton.dartzee.code.bean.getSelectedPlayers
+import burlton.dartzee.code.bean.initTableModel
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.BorderLayout
@@ -15,7 +17,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
     var playersToExclude = listOf<PlayerEntity>()
 
     val panelNorth = PlayerTypeFilterPanel()
-    val tablePlayers = ScrollTablePlayers()
+    val tablePlayers = ScrollTable()
 
     init
     {

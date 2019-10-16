@@ -14,6 +14,7 @@ import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import burlton.desktopcore.code.bean.AbstractTableRenderer
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
+import burlton.desktopcore.code.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -26,7 +27,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
 {
     private val tm = TableUtil.DefaultModel()
 
-    private val tableRules = ScrollTable()
+    private val tableRules = ScrollTableOrdered()
     private val btnAddRule = JButton()
     private val btnAmendRule = JButton()
     private val btnRemoveRule = JButton()
@@ -35,7 +36,6 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     init
     {
         add(tableRules, BorderLayout.CENTER)
-        tableRules.enableManualReordering()
 
         tableRules.addButtonToOrderingPanel(btnAddRule, 0)
         tableRules.addButtonToOrderingPanel(btnAmendRule, 1)
@@ -150,8 +150,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen(), RowSelectionListener
     }
     private fun sortRulesByDifficulty()
     {
-        val comparator = compareBy<Array<Any>> { -(it[0] as DartzeeRuleDto).getDifficulty() }
-        tableRules.reorderRows(comparator)
+        tableRules.reorderRows { -(it[0] as DartzeeRuleDto).getDifficulty() }
     }
 
     private fun addRuleToTable(rule: DartzeeRuleDto)

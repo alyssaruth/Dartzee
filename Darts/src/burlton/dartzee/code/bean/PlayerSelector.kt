@@ -3,6 +3,7 @@ package burlton.dartzee.code.bean
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.bean.DoubleClickListener
 import burlton.desktopcore.code.bean.ScrollTable
+import burlton.desktopcore.code.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
@@ -17,8 +18,8 @@ import javax.swing.JPanel
 
 class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
 {
-    val tablePlayersToSelectFrom = ScrollTablePlayers()
-    val tablePlayersSelected = ScrollTablePlayers()
+    val tablePlayersToSelectFrom = ScrollTable()
+    val tablePlayersSelected = ScrollTableOrdered()
     val btnSelect = JButton("")
     val btnUnselect = JButton("")
 
@@ -38,10 +39,12 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
         btnUnselect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnUnselect, "cell 0 1,alignx left,aligny top")
         add(tablePlayersSelected, "cell 2 0,alignx left,growy")
-        tablePlayersSelected.enableManualReordering()
 
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)
+
+        tablePlayersSelected.setRowName("player")
+        tablePlayersToSelectFrom.setRowName("player")
 
         btnSelect.addActionListener(this)
         btnUnselect.addActionListener(this)
@@ -76,7 +79,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
         })
     }
 
-    private fun moveRows(source: ScrollTablePlayers, destination: ScrollTablePlayers)
+    private fun moveRows(source: ScrollTable, destination: ScrollTable)
     {
         val selectedPlayers = source.getSelectedPlayers()
         if (selectedPlayers.isEmpty())
@@ -87,7 +90,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
 
         moveRows(source, destination, selectedPlayers)
     }
-    private fun moveRows(source: ScrollTablePlayers, destination: ScrollTablePlayers, selectedPlayers: List<PlayerEntity>)
+    private fun moveRows(source: ScrollTable, destination: ScrollTable, selectedPlayers: List<PlayerEntity>)
     {
         destination.addPlayers(selectedPlayers)
 
