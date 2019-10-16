@@ -43,9 +43,6 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)
 
-        tablePlayersSelected.setRowName("player")
-        tablePlayersToSelectFrom.setRowName("player")
-
         btnSelect.addActionListener(this)
         btnUnselect.addActionListener(this)
 

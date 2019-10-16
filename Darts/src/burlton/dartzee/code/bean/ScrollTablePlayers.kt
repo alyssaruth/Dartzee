@@ -56,6 +56,7 @@ fun ScrollTable.initTableModel(players: List<PlayerEntity> = listOf())
 
     addPlayers(players)
 
+    setRowName("player")
     sortBy(1, false)
 }
 
