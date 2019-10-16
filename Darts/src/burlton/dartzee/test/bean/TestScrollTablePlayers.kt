@@ -1,0 +1,126 @@
+package burlton.dartzee.test.bean
+
+import burlton.dartzee.code.bean.*
+import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.insertPlayer
+import burlton.desktopcore.code.bean.ScrollTable
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.shouldBe
+import org.intellij.lang.annotations.JdkConstants
+import org.junit.Test
+import java.awt.Rectangle
+import javax.swing.ListSelectionModel
+
+class TestScrollTablePlayers: AbstractDartsTest()
+{
+    @Test
+    fun `Should initialise correctly`()
+    {
+        val table = ScrollTable()
+
+        val players = listOf(insertPlayer(name = "Bob", strategy = -1), insertPlayer(name = "Robot", strategy = 1))
+        table.initTableModel(players)
+
+
+        table.getColumnName(0) shouldBe ""
+        table.getColumnName(1) shouldBe "Player"
+        table.rowCount shouldBe 2
+
+        table.getValueAt(0, 0) shouldBe PlayerEntity.ICON_HUMAN
+        table.getValueAt(0, 1) shouldBe "Bob"
+
+        table.getValueAt(1, 0) shouldBe PlayerEntity.ICON_AI
+        table.getValueAt(1, 1) shouldBe "Robot"
+    }
+
+    @Test
+    fun `Should return all players correctly`()
+    {
+        val table = ScrollTable()
+
+        val players = listOf(insertPlayer(name = "Bob", strategy = -1), insertPlayer(name = "Robot", strategy = 1))
+        table.initTableModel(players)
+
+        table.getAllPlayers() shouldBe players
+    }
+
+    @Test
+    fun `Should return null and empty list if no selection`()
+    {
+        val table = ScrollTable()
+
+        val players = listOf(insertPlayer(name = "Bob", strategy = -1), insertPlayer(name = "Robot", strategy = 1))
+        table.initTableModel(players)
+
+        table.getSelectedPlayer() shouldBe null
+        table.getSelectedPlayers().shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should return the selected player`()
+    {
+        val table = ScrollTable()
+
+        val playerTwo = insertPlayer(name = "Robot", strategy = 1)
+        val players = listOf(insertPlayer(name = "Bob", strategy = -1), playerTwo)
+        table.initTableModel(players)
+
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+        table.selectRow(1)
+
+        table.getSelectedPlayer() shouldBe playerTwo
+        table.getSelectedPlayers() shouldBe listOf(playerTwo)
+    }
+
+    @Test
+    fun `Should return all the selected players`()
+    {
+        val table = ScrollTable()
+
+        val playerOne = insertPlayer(name = "Alice")
+        val playerTwo = insertPlayer(name = "Bob")
+        val playerThree = insertPlayer(name = "Clive")
+
+        table.initTableModel(listOf(playerOne, playerTwo, playerThree))
+
+        table.selectRows(0, 1)
+
+        table.getSelectedPlayers() shouldBe listOf(playerOne, playerTwo)
+    }
+
+    @Test
+    fun `Should sort by name by default`()
+    {
+        val table = ScrollTable()
+
+        val playerOne = insertPlayer(name = "Alice")
+        val playerTwo = insertPlayer(name = "Bob")
+        val playerThree = insertPlayer(name = "Clive")
+
+        table.initTableModel(listOf(playerThree, playerOne, playerTwo))
+
+        table.getAllPlayers() shouldBe listOf(playerOne, playerTwo, playerThree)
+    }
+
+    @Test
+    fun `Should be able to add players dynamically`()
+    {
+        val table = ScrollTable()
+
+        val playerOne = insertPlayer(name = "Alice")
+        val playerTwo = insertPlayer(name = "Bob")
+        val playerThree = insertPlayer(name = "Clive")
+
+        table.initTableModel(listOf(playerOne))
+        table.addPlayers(listOf(playerTwo, playerThree))
+
+        table.getAllPlayers() shouldBe listOf(playerOne, playerTwo, playerThree)
+    }
+
+    private fun ScrollTable.selectRows(first: Int, last: Int)
+    {
+        table.setRowSelectionInterval(first, last)
+    }
+
+}
