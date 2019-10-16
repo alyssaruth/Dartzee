@@ -7,9 +7,7 @@ import burlton.dartzee.test.helper.insertPlayer
 import burlton.desktopcore.code.bean.ScrollTable
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
-import org.intellij.lang.annotations.JdkConstants
 import org.junit.Test
-import java.awt.Rectangle
 import javax.swing.ListSelectionModel
 
 class TestScrollTablePlayers: AbstractDartsTest()
@@ -19,7 +17,9 @@ class TestScrollTablePlayers: AbstractDartsTest()
     {
         val table = ScrollTable()
 
-        val players = listOf(insertPlayer(name = "Bob", strategy = -1), insertPlayer(name = "Robot", strategy = 1))
+        val bob = insertPlayer(name = "Bob", strategy = -1)
+        val robot = insertPlayer(name = "Robot", strategy = 1)
+        val players = listOf(bob, robot)
         table.initTableModel(players)
 
 
@@ -28,10 +28,10 @@ class TestScrollTablePlayers: AbstractDartsTest()
         table.rowCount shouldBe 2
 
         table.getValueAt(0, 0) shouldBe PlayerEntity.ICON_HUMAN
-        table.getValueAt(0, 1) shouldBe "Bob"
+        table.getValueAt(0, 1) shouldBe bob
 
         table.getValueAt(1, 0) shouldBe PlayerEntity.ICON_AI
-        table.getValueAt(1, 1) shouldBe "Robot"
+        table.getValueAt(1, 1) shouldBe robot
     }
 
     @Test
