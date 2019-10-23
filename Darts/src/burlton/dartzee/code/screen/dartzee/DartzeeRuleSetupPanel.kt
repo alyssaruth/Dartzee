@@ -30,6 +30,7 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
 
     init
     {
+        layout = BorderLayout(0, 0)
         add(tableRules, BorderLayout.CENTER)
 
         tableRules.addButtonToOrderingPanel(btnAddRule, 0)
