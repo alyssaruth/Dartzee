@@ -738,13 +738,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     {
     }
 
-    fun factoryOverlay(): BufferedImage
-    {
-        val width = width
-        val height = height
-        Debug.append("Overlay Dimensions: [$width, $height]")
-        return BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)
-    }
+    fun factoryOverlay() = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 
     companion object
     {
