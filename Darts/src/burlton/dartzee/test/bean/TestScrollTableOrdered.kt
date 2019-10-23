@@ -1,18 +1,26 @@
 package burlton.dartzee.test.bean
 
+import burlton.core.code.util.CollectionShuffler
+import burlton.core.code.util.IShuffler
+import burlton.core.code.util.InjectedCore
+import burlton.core.test.helper.FakeCollectionShuffler
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.TableUtil
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.mockk.every
-import io.mockk.mockkStatic
-import io.mockk.slot
+import io.mockk.*
 import org.junit.Test
 import java.util.*
 import java.util.Collections.shuffle
 
 class TestScrollTableOrdered: AbstractDartsTest()
 {
+    override fun beforeEachTest() {
+        super.beforeEachTest()
+
+        InjectedCore.collectionShuffler = CollectionShuffler()
+    }
+
     @Test
     fun `should move rows up`()
     {
@@ -113,14 +121,14 @@ class TestScrollTableOrdered: AbstractDartsTest()
     @Test
     fun `Should scramble the row order`()
     {
-        mockkStatic(Collections::class)
+        val mockShuffler = spyk<FakeCollectionShuffler>()
 
-        val slot = slot<MutableList<*>>()
-        every { shuffle(capture(slot)) } answers { slot.captured.reverse() }
+        InjectedCore.collectionShuffler = mockShuffler
 
         val table = setupTable()
         table.btnRandomize.doClick()
 
+        verify { mockShuffler.shuffleCollection(any()) }
         table.getRowValues().shouldContainExactly("C", "B", "A")
     }
 

@@ -1,5 +1,6 @@
 package burlton.desktopcore.code.bean
 
+import burlton.core.code.util.InjectedCore
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -94,7 +95,7 @@ class ScrollTableOrdered : ScrollTable(), ActionListener
     private fun scrambleOrder()
     {
         val allRows = getAllRows()
-        allRows.shuffle()
+        InjectedCore.collectionShuffler.shuffleCollection(allRows)
 
         setNewOrder(allRows)
     }
