@@ -6,7 +6,6 @@ import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.achievements.convertEmptyAchievements
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
-import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupScreen
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
 import burlton.dartzee.code.utils.ResourceCache
@@ -57,11 +56,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
         addConsoleShortcut()
         switchScreen(ScreenCache.getScreen(MenuScreen::class.java))
-
-        if (DartsClient.devMode)
-        {
-            switchScreen(ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java))
-        }
 
         //Pop up the change log if we've just updated
         if (DartsClient.justUpdated)
