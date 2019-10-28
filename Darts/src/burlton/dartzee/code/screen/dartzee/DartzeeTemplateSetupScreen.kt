@@ -12,7 +12,7 @@ import javax.swing.JPanel
 
 class DartzeeTemplateSetupScreen: EmbeddedScreen()
 {
-    private val scrollTable = ScrollTable()
+    val scrollTable = ScrollTable()
     private val panelEast = JPanel()
 
     init
