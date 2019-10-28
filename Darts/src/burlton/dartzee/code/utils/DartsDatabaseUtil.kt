@@ -101,6 +101,8 @@ object DartsDatabaseUtil
         {
             Debug.appendBanner("Upgrading to Version 9")
             DartzeeRuleEntity().createTable()
+            DartzeeTemplateEntity().createTable()
+
             version.version = 9
             version.saveToDatabase()
         }
