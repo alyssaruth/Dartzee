@@ -290,6 +290,11 @@ public class ScrollTable extends JPanel
 	 */
 	public void sortBy(int columnIndex, boolean desc)
 	{
+		if (sorter == null)
+		{
+			return;
+		}
+
 		sorter.toggleSortOrder(columnIndex);
 		
 		if (desc)

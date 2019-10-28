@@ -54,7 +54,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
     {
         val allPlayers = PlayerEntity.retrievePlayers("", false)
         tablePlayersToSelectFrom.initTableModel(allPlayers)
-        tablePlayersSelected.removeAllRows()
+        tablePlayersSelected.initTableModel()
     }
 
     fun init(selectedPlayers: List<PlayerEntity>)
