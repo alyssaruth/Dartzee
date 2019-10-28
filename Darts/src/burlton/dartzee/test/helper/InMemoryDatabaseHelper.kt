@@ -183,6 +183,25 @@ fun insertDartzeeRule(uuid: String = randomGuid(),
     return de
 }
 
+fun insertDartzeeTemplate(uuid: String = randomGuid(),
+                      name: String = "Template",
+                      ruleCount: Int = 5,
+                      difficulty: Double = 0.8,
+                      dtCreation: Timestamp = getSqlDateNow(),
+                      dtLastUpdate: Timestamp = getSqlDateNow()): DartzeeTemplateEntity
+{
+    val de = DartzeeTemplateEntity()
+    de.rowId = uuid
+    de.dtCreation = dtCreation
+    de.name = name
+    de.ruleCount = ruleCount
+    de.difficulty = difficulty
+
+    de.saveToDatabase(dtLastUpdate)
+
+    return de
+}
+
 fun insertAchievement(uuid: String = randomGuid(),
                       playerId: String = randomGuid(),
                       achievementRef: Int = -1,
