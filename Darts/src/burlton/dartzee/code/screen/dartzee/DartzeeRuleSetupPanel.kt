@@ -1,11 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
-import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.dartzee.dart.*
-import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleLessThan
-import burlton.dartzee.test.borrowTestDartboard
-import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import burlton.desktopcore.code.bean.AbstractTableRenderer
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
@@ -74,23 +69,6 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         tableRules.setRenderer(1, DartzeeRuleRenderer(1))
 
         selectionChanged(tableRules)
-
-        if (DartsClient.devMode)
-        {
-            val rules = listOf(
-                makeDartzeeRuleDto(),
-                makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = true),
-                makeDartzeeRuleDto(DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeDartRuleOuter(), inOrder = true),
-                makeDartzeeRuleDto(DartzeeDartRuleScore(), DartzeeDartRuleAny(), DartzeeDartRuleAny(), inOrder = true),
-                makeDartzeeRuleDto(totalRule = DartzeeTotalRuleLessThan()),
-                makeDartzeeRuleDto(DartzeeDartRuleScore(), DartzeeDartRuleScore(), DartzeeDartRuleScore(), inOrder = true)
-            )
-
-            rules.forEach {
-                it.runStrengthCalculation(borrowTestDartboard())
-                addRuleToTable(it)
-            }
-        }
     }
 
     override fun actionPerformed(arg0: ActionEvent)
