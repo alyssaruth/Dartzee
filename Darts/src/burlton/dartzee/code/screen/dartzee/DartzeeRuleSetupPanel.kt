@@ -123,6 +123,10 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         tableRules.reorderRows { -(it[0] as DartzeeRuleDto).getDifficulty() }
     }
 
+    fun addRulesToTable(rules: List<DartzeeRuleDto>)
+    {
+        rules.forEach { addRuleToTable(it) }
+    }
     private fun addRuleToTable(rule: DartzeeRuleDto)
     {
         tableRules.addRow(arrayOf(rule, rule))

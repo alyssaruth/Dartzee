@@ -375,7 +375,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return count > 0
     }
 
-    protected fun getColumnsForSelectStatement(alias: String = ""): String
+    fun getColumnsForSelectStatement(alias: String = ""): String
     {
         var cols = getColumns().toList()
         if (!alias.isEmpty())
