@@ -22,17 +22,17 @@ class ScrollTableOrdered : ScrollTable(), ActionListener
     {
         add(panelOrdering, BorderLayout.EAST)
         panelOrdering.layout = MigLayout("al center center, wrap, gapy 20")
-        btnMoveUp.icon = ImageIcon(ScrollTable::class.java.getResource("/buttons/upArrow.png"))
+        btnMoveUp.icon = ImageIcon(javaClass.getResource("/buttons/upArrow.png"))
         btnMoveUp.preferredSize = Dimension(40, 40)
         btnMoveUp.toolTipText = "Move row up"
 
         panelOrdering.add(btnMoveUp, "cell 0 3")
-        btnMoveDown.icon = ImageIcon(ScrollTable::class.java.getResource("/buttons/downArrow.png"))
+        btnMoveDown.icon = ImageIcon(javaClass.getResource("/buttons/downArrow.png"))
         btnMoveDown.preferredSize = Dimension(40, 40)
         btnMoveDown.toolTipText = "Move row down"
 
         panelOrdering.add(btnMoveDown, "cell 0 4")
-        btnRandomize.icon = ImageIcon(ScrollTable::class.java.getResource("/buttons/dice.png"))
+        btnRandomize.icon = ImageIcon(javaClass.getResource("/buttons/dice.png"))
         btnRandomize.preferredSize = Dimension(40, 40)
         btnRandomize.toolTipText = "Randomise row order"
 

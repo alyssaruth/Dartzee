@@ -16,11 +16,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
         add(dartzeeRulePanel, BorderLayout.CENTER)
     }
 
-    override fun initialise()
-    {
-        dartzeeRulePanel.setTableModel()
-    }
-
+    override fun initialise() { }
 
     fun setState(match: DartsMatchEntity?, players: MutableList<PlayerEntity>)
     {
