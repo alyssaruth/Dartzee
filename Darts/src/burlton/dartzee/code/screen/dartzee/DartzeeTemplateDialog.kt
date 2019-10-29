@@ -1,5 +1,7 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.dartzee.code.db.DARTZEE_TEMPLATE
+import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.screen.SimpleDialog
@@ -44,7 +46,7 @@ class DartzeeTemplateDialog : SimpleDialog()
         val template = DartzeeTemplateEntity.factoryAndSave(tfName.text, rules.size, difficulty)
 
         rules.forEachIndexed { ix, rule ->
-            val entity = rule.toEntity(ix + 1, DartzeeTemplateEntity().getTableName(), template.rowId)
+            val entity = rule.toEntity(ix + 1, DARTZEE_TEMPLATE, template.rowId)
             entity.saveToDatabase()
         }
 
@@ -74,7 +76,13 @@ class DartzeeTemplateDialog : SimpleDialog()
 
     fun copy(templateToCopy: DartzeeTemplateEntity)
     {
+        tfName.text = "${templateToCopy.name} - Copy"
 
+        val whereSql = "EntityName = '$DARTZEE_TEMPLATE' AND EntityId = '${templateToCopy.rowId}'"
+        val rules = DartzeeRuleEntity().retrieveEntities(whereSql)
+
+        val dtos = rules.sortedBy{ it.ordinal }.map { it.toDto() }
+        rulePanel.addRulesToTable(dtos)
     }
 
     companion object
