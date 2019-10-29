@@ -7,22 +7,34 @@ import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.TableUtil
+import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
+import java.awt.Dimension
+import java.awt.event.ActionEvent
+import javax.swing.ImageIcon
+import javax.swing.JButton
 import javax.swing.JPanel
 
 class DartzeeTemplateSetupScreen: EmbeddedScreen()
 {
     val scrollTable = ScrollTable()
     private val panelEast = JPanel()
+    val btnAdd = JButton()
 
-    init
-    {
+    init {
         add(scrollTable)
         add(panelEast, BorderLayout.EAST)
+
+        panelEast.layout = MigLayout("al center center, wrap, gapy 20")
+        panelEast.add(btnAdd)
+
+        btnAdd.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
+        btnAdd.preferredSize = Dimension(40, 40)
+
+        btnAdd.addActionListener(this)
     }
 
-    override fun initialise()
-    {
+    override fun initialise() {
         populateTable()
     }
 
@@ -49,8 +61,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen()
         sb.append(" GROUP BY t.RowId, t.Name, t.RuleCount, t.Difficulty")
 
         DatabaseUtil.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 val name = rs.getString("Name")
                 val ruleCount = rs.getInt("RuleCount")
                 val difficulty = rs.getDouble("Difficulty")
@@ -61,6 +72,23 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen()
         }
     }
 
+    private fun addTemplate()
+    {
+        val template = DartzeeTemplateDialog.createTemplate()
+        if (template != null)
+        {
+            scrollTable.addRow(arrayOf(template.name, template.ruleCount, template.difficulty, 0))
+        }
+    }
+
+    override fun actionPerformed(arg0: ActionEvent)
+    {
+        when (arg0.source)
+        {
+            btnAdd -> addTemplate()
+            else -> super.actionPerformed(arg0)
+        }
+    }
 
     override fun getScreenName() = "Dartzee Templates"
 

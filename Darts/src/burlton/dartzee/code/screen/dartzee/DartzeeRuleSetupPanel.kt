@@ -54,13 +54,15 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         btnRemoveRule.toolTipText = "Remove rule"
         btnRemoveRule.preferredSize = Dimension(40, 40)
 
+        setTableModel()
+
         btnAddRule.addActionListener(this)
         btnAmendRule.addActionListener(this)
         btnRemoveRule.addActionListener(this)
         btnCalculateOrder.addActionListener(this)
     }
 
-    fun setTableModel()
+    private fun setTableModel()
     {
         val tm = TableUtil.DefaultModel()
         tm.addColumn("Rule")
@@ -153,6 +155,8 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         btnAmendRule.isEnabled = src.selectedModelRow != -1
         btnRemoveRule.isEnabled = src.selectedModelRow != -1
     }
+
+    fun getRules() = tableRules.getAllRows().map { it[0] as DartzeeRuleDto }
 
     /**
      * Inner classes
