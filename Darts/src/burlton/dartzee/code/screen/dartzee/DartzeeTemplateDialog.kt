@@ -44,7 +44,7 @@ class DartzeeTemplateDialog : SimpleDialog()
         val template = DartzeeTemplateEntity.factoryAndSave(tfName.text, rules.size, difficulty)
 
         rules.forEachIndexed { ix, rule ->
-            val entity = rule.toEntity(ix + 1, "DartzeeTemplate", template.rowId)
+            val entity = rule.toEntity(ix + 1, DartzeeTemplateEntity().getTableName(), template.rowId)
             entity.saveToDatabase()
         }
 

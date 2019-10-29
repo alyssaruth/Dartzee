@@ -21,7 +21,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen()
     private val panelEast = JPanel()
     val btnAdd = JButton()
 
-    init {
+    init
+    {
         add(scrollTable)
         add(panelEast, BorderLayout.EAST)
 
@@ -34,7 +35,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen()
         btnAdd.addActionListener(this)
     }
 
-    override fun initialise() {
+    override fun initialise()
+    {
         populateTable()
     }
 
@@ -50,6 +52,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen()
         populateModel(tm)
 
         scrollTable.model = tm
+        scrollTable.setRowName("template")
+        scrollTable.setRowHeight(40)
     }
 
     private fun populateModel(tm: TableUtil.DefaultModel)
