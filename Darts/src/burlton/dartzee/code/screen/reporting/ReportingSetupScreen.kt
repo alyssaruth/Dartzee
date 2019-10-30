@@ -34,7 +34,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     //Game tab
     private val panelGame = JPanel()
-    private var panelGameParams: GameParamFilterPanel? = GameParamFilterPanelX01()
+    private var panelGameParams: GameParamFilterPanel = GameParamFilterPanelX01()
     private val comboBox = ComboBoxGameType()
     private val cbStartDate = JCheckBox("Start Date")
     private val dateFilterPanelStart = DateFilterPanel()
@@ -79,7 +79,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         panelGame.add(checkBoxGameType, "flowx,cell 0 0")
         panelGame.add(horizontalStrut, "cell 1 0")
         panelGame.add(cbType, "cell 0 1")
-        panelGame.add(panelGameParams!!, "cell 2 1")
+        panelGame.add(panelGameParams, "cell 2 1")
         panelGame.add(verticalStrut, "cell 0 2")
         panelGame.add(cbStartDate, "cell 0 3,aligny center")
         val fl_panelDtStart = dateFilterPanelStart.layout as FlowLayout
@@ -220,7 +220,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
         if (cbType.isSelected)
         {
-            rp.gameParams = panelGameParams!!.getGameParams()
+            rp.gameParams = panelGameParams.getGameParams()
         }
 
         if (cbPartOfMatch.isSelected)
@@ -284,7 +284,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         when (src)
         {
             checkBoxGameType -> comboBox.isEnabled = enabled
-            cbType -> panelGameParams?.isEnabled = enabled
+            cbType -> panelGameParams.isEnabled = enabled
             cbStartDate -> dateFilterPanelStart.enableComponents(enabled)
             cbFinishDate -> toggleDtFinishFilters(enabled)
             rdbtnUnfinished -> lblUnfinished.isEnabled = enabled
@@ -315,32 +315,20 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        val src = arg0.source
-        when (src)
+        when (arg0.source)
         {
             comboBox ->
             {
-                if (panelGameParams != null)
-                {
-                    panelGame.remove(panelGameParams!!)
-                }
+                panelGame.remove(panelGameParams)
 
                 panelGameParams = GameEntity.getFilterPanel(comboBox.getGameType())
 
-                //Deal with there not being a filter panel, e.g. for Dartzee
-                if (panelGameParams != null)
-                {
-                    cbType.isEnabled = true
-                    panelGameParams!!.isEnabled = cbType.isSelected
-                    panelGame.add(panelGameParams!!, "cell 2 1")
-                } else
-                {
-                    cbType.isSelected = false
-                    cbType.isEnabled = false
-                }
+                panelGameParams.isEnabled = cbType.isSelected
+                panelGame.add(panelGameParams, "cell 2 1")
 
                 panelGame.revalidate()
             }
+
             btnAddIncluded -> addPlayers(scrollTableIncluded, hmIncludedPlayerToPanel.keys.toMutableList())
             btnAddExcluded -> addPlayers(scrollTableExcluded, excludedPlayers)
             btnRemoveIncluded -> removePlayers(scrollTableIncluded, hmIncludedPlayerToPanel.keys.toMutableList())

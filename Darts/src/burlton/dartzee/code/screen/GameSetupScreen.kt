@@ -29,7 +29,7 @@ class GameSetupScreen : EmbeddedScreen()
     private val playerSelector = PlayerSelector()
     private val gameTypeComboBox = ComboBoxGameType()
     private val panelGameTypeCb = JPanel()
-    private var gameParamFilterPanel: GameParamFilterPanel? = GameParamFilterPanelX01()
+    private var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
 
     private val panel = RadioButtonPanel()
     private val rdbtnSingleGame = JRadioButton("Single Game")
@@ -134,18 +134,11 @@ class GameSetupScreen : EmbeddedScreen()
         }
         else if (arg0.source === gameTypeComboBox)
         {
-            //Remove what's already there, if applicable
-            gameParamFilterPanel?.let{
-                panelGameType.remove(gameParamFilterPanel)
-            }
+            //Remove what's already there
+            panelGameType.remove(gameParamFilterPanel)
 
             gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.getGameType())
-
-            //We may not have one, e.g. for Dartzee
-            if (gameParamFilterPanel != null)
-            {
-                panelGameType.add(gameParamFilterPanel)
-            }
+            panelGameType.add(gameParamFilterPanel)
 
             panelGameType.revalidate()
 
@@ -200,10 +193,7 @@ class GameSetupScreen : EmbeddedScreen()
         validate()
     }
 
-    private fun getGameParams(): String
-    {
-        return gameParamFilterPanel?.getGameParams() ?: ""
-    }
+    private fun getGameParams() = gameParamFilterPanel.getGameParams()
 
     private fun launchGame()
     {

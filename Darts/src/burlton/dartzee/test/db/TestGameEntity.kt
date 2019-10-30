@@ -2,6 +2,10 @@ package burlton.dartzee.test.db
 
 import burlton.core.test.helper.exceptionLogged
 import burlton.core.test.helper.getLogs
+import burlton.dartzee.code.bean.GameParamFilterPanelDartzee
+import burlton.dartzee.code.bean.GameParamFilterPanelGolf
+import burlton.dartzee.code.bean.GameParamFilterPanelRoundTheClock
+import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.code.db.*
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.DateStatics
@@ -12,6 +16,7 @@ import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -200,11 +205,10 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `Filter panel mappings`()
     {
-        GameEntity.getFilterPanel(GAME_TYPE_X01) shouldNotBe null
-        GameEntity.getFilterPanel(GAME_TYPE_GOLF) shouldNotBe null
-        GameEntity.getFilterPanel(GAME_TYPE_ROUND_THE_CLOCK) shouldNotBe null
-        GameEntity.getFilterPanel(GAME_TYPE_DARTZEE) shouldBe null
-        GameEntity.getFilterPanel(-1) shouldBe null
+        GameEntity.getFilterPanel(GAME_TYPE_X01).shouldBeInstanceOf<GameParamFilterPanelX01>()
+        GameEntity.getFilterPanel(GAME_TYPE_GOLF).shouldBeInstanceOf<GameParamFilterPanelGolf>()
+        GameEntity.getFilterPanel(GAME_TYPE_ROUND_THE_CLOCK).shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
+        GameEntity.getFilterPanel(GAME_TYPE_DARTZEE).shouldBeInstanceOf<GameParamFilterPanelDartzee>()
     }
 
     @Test

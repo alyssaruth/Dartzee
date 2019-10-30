@@ -25,15 +25,11 @@ class LeaderboardTotalScore(private val gameType: Int) : AbstractLeaderboard(), 
     {
         layout = BorderLayout(0, 0)
 
-        panelGameParams?.addActionListener(this)
+        panelGameParams.addActionListener(this)
         panelPlayerFilters.addActionListener(this)
         scrollPane.setRowHeight(23)
         add(panelFilters, BorderLayout.NORTH)
-
-        if (panelGameParams != null)
-        {
-            panelFilters.add(panelGameParams)
-        }
+        panelFilters.add(panelGameParams)
 
         val horizontalStrut = Box.createHorizontalStrut(20)
         panelFilters.add(horizontalStrut)
@@ -59,7 +55,7 @@ class LeaderboardTotalScore(private val gameType: Int) : AbstractLeaderboard(), 
     private fun getTotalScoreSql() : String
     {
         val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
-        val gameParams = panelGameParams?.getGameParams() ?: ""
+        val gameParams = panelGameParams.getGameParams()
         val playerWhereSql = panelPlayerFilters.getWhereSql()
 
         val sb = StringBuilder()
