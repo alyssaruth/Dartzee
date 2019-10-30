@@ -41,4 +41,9 @@ class GameParamFilterPanelX01 : GameParamFilterPanel()
         spinner.addActionListener(listener)
     }
 
+    override fun removeActionListener(listener: ActionListener)
+    {
+        spinner.removeActionListener()
+    }
+
 }

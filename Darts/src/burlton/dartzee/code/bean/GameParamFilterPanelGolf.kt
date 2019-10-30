@@ -54,4 +54,9 @@ class GameParamFilterPanelGolf : GameParamFilterPanel()
     {
         panel.addActionListener(listener)
     }
+
+    override fun removeActionListener(listener: ActionListener)
+    {
+        panel.removeActionListener(listener)
+    }
 }

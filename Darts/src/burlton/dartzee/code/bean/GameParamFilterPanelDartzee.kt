@@ -7,14 +7,17 @@ import burlton.desktopcore.code.bean.selectedItemTyped
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
 import javax.swing.JComboBox
+import javax.swing.JPanel
 
 class GameParamFilterPanelDartzee: GameParamFilterPanel()
 {
+    private val panel = JPanel()
     private val comboBox = JComboBox<ComboBoxItem<DartzeeTemplateEntity?>>()
 
     init
     {
-        add(comboBox, BorderLayout.CENTER)
+        add(panel, BorderLayout.CENTER)
+        panel.add(comboBox)
 
         populateComboBox()
     }
@@ -72,6 +75,11 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
     override fun addActionListener(listener: ActionListener)
     {
         comboBox.addActionListener(listener)
+    }
+
+    override fun removeActionListener(listener: ActionListener)
+    {
+        comboBox.removeActionListener(listener)
     }
 
 }
