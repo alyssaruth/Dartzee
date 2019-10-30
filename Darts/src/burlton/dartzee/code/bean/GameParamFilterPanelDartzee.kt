@@ -27,11 +27,12 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
         divider.isEnabled = false
 
         comboBox.addItem(ComboBoxItem(null, "Custom"))
-        comboBox.addItem(divider)
-        templates.forEach { comboBox.addItem(ComboBoxItem(it, it.name)) }
+        if (!templates.isEmpty())
+        {
+            comboBox.addItem(divider)
+            templates.forEach { comboBox.addItem(ComboBoxItem(it, it.name)) }
+        }
     }
-
-
 
     override fun setGameParams(gameParams: String)
     {
