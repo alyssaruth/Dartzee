@@ -17,6 +17,7 @@ abstract class GameParamFilterPanel : JPanel()
     abstract fun getFilterDesc(): String
     abstract fun enableChildren(enabled: Boolean)
     abstract fun addActionListener(listener: ActionListener)
+    abstract fun removeActionListener(listener: ActionListener)
 
     override fun setEnabled(enabled: Boolean)
     {

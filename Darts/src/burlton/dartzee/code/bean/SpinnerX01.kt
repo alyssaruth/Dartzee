@@ -36,4 +36,9 @@ class SpinnerX01 : JSpinner(), ChangeListener
     {
         this.listener = listener
     }
+
+    fun removeActionListener()
+    {
+        this.listener = null
+    }
 }
