@@ -181,6 +181,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return DatabaseUtil.executeUpdate(sql)
     }
 
+    fun deleteWhere(whereSql: String): Boolean
+    {
+        val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
+        return DatabaseUtil.executeUpdate(sql)
+    }
+
     @JvmOverloads
     fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
     {
