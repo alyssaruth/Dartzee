@@ -27,12 +27,18 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
         divider.isEnabled = false
 
         comboBox.addItem(ComboBoxItem(null, "Custom"))
-        if (!templates.isEmpty())
+        comboBox.addItem(divider)
+        templates.forEach { comboBox.addItem(ComboBoxItem(it, it.name)) }
+
+        if (templates.isEmpty())
         {
-            comboBox.addItem(divider)
-            templates.forEach { comboBox.addItem(ComboBoxItem(it, it.name)) }
+            val noTemplates = ComboBoxItem<DartzeeTemplateEntity?>(null, "No templates configured")
+            noTemplates.isEnabled = false
+            comboBox.addItem(noTemplates)
         }
     }
+
+
 
     override fun setGameParams(gameParams: String)
     {
