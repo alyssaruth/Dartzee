@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.screen.EmbeddedScreen
@@ -124,6 +125,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         }
 
         selection.deleteFromDatabase()
+        DartzeeRuleEntity().deleteForTemplate(selection.rowId)
+
         initialise()
     }
 

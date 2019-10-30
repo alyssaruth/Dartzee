@@ -46,4 +46,10 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         dto.calculationResult = calculationResult
         return dto
     }
+
+    fun retrieveForTemplate(templateId: String) = retrieveEntities(getTemplateWhere(templateId))
+    fun deleteForTemplate(templateId: String) = deleteWhere(getTemplateWhere(templateId))
+
+
+    fun getTemplateWhere(templateId: String) = "EntityName = '$DARTZEE_TEMPLATE' AND EntityId = '$templateId'"
 }

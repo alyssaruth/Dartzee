@@ -10,6 +10,7 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JPanel
 import javax.swing.JTextField
+import javax.swing.border.BevelBorder
 import javax.swing.border.TitledBorder
 
 class DartzeeTemplateDialog : SimpleDialog()
@@ -29,7 +30,7 @@ class DartzeeTemplateDialog : SimpleDialog()
         add(rulePanel, BorderLayout.CENTER)
 
         namePanel.layout = BorderLayout(0, 0)
-        namePanel.border = TitledBorder("Name")
+        namePanel.border = BevelBorder(BevelBorder.LOWERED)
         namePanel.add(tfName)
     }
 
@@ -78,8 +79,7 @@ class DartzeeTemplateDialog : SimpleDialog()
     {
         tfName.text = "${templateToCopy.name} - Copy"
 
-        val whereSql = "EntityName = '$DARTZEE_TEMPLATE' AND EntityId = '${templateToCopy.rowId}'"
-        val rules = DartzeeRuleEntity().retrieveEntities(whereSql)
+        val rules = DartzeeRuleEntity().retrieveForTemplate(templateToCopy.rowId)
 
         val dtos = rules.sortedBy{ it.ordinal }.map { it.toDto() }
         rulePanel.addRulesToTable(dtos)
