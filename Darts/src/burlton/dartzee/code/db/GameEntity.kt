@@ -1,9 +1,6 @@
 package burlton.dartzee.code.db
 
-import burlton.dartzee.code.bean.GameParamFilterPanel
-import burlton.dartzee.code.bean.GameParamFilterPanelGolf
-import burlton.dartzee.code.bean.GameParamFilterPanelRoundTheClock
-import burlton.dartzee.code.bean.GameParamFilterPanelX01
+import burlton.dartzee.code.bean.*
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.isEndOfTime
@@ -154,14 +151,14 @@ class GameEntity : AbstractEntity<GameEntity>()
             }
         }
 
-        @JvmStatic fun getFilterPanel(gameType: Int): GameParamFilterPanel?
+        @JvmStatic fun getFilterPanel(gameType: Int): GameParamFilterPanel
         {
             return when (gameType)
             {
                 GAME_TYPE_X01 -> GameParamFilterPanelX01()
                 GAME_TYPE_GOLF -> GameParamFilterPanelGolf()
                 GAME_TYPE_ROUND_THE_CLOCK -> GameParamFilterPanelRoundTheClock()
-                else -> null
+                else -> GameParamFilterPanelDartzee()
             }
 
         }
