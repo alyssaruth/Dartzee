@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
+import burlton.dartzee.code.utils.InjectedThings
 import burlton.desktopcore.code.bean.AbstractTableRenderer
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
@@ -17,11 +18,11 @@ import javax.swing.JPanel
 
 class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
 {
-    private val tableRules = ScrollTableOrdered()
-    private val btnAddRule = JButton()
-    private val btnAmendRule = JButton()
-    private val btnRemoveRule = JButton()
-    private val btnCalculateOrder = JButton("Calc")
+    val tableRules = ScrollTableOrdered()
+    val btnAddRule = JButton()
+    val btnAmendRule = JButton()
+    val btnRemoveRule = JButton()
+    val btnCalculateOrder = JButton("Calc")
 
     init
     {
@@ -84,10 +85,7 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
 
     private fun addRule()
     {
-        val dlg = DartzeeRuleCreationDialog()
-        dlg.isVisible = true
-
-        val rule = dlg.dartzeeRule
+        val rule = InjectedThings.dartzeeRuleFactory.newRule()
         if (rule != null)
         {
             addRuleToTable(rule)
@@ -99,13 +97,11 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
 
         val tm = tableRules.model
         val selection = tm.getValueAt(rowIndex, 0) as DartzeeRuleDto
-        val dlg = DartzeeRuleCreationDialog()
-        dlg.amendRule(selection)
-        dlg.isVisible = true
+
+        val newRule = InjectedThings.dartzeeRuleFactory.amendRule(selection)
 
         removeRule()
 
-        val newRule = dlg.dartzeeRule!!
         tableRules.insertRow(arrayOf(newRule, newRule), rowIndex)
         tableRules.selectRow(rowIndex)
 
