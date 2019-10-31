@@ -32,6 +32,11 @@ fun makeDartzeeRuleCalculationResult(validSegments: List<DartboardSegment> = lis
     return DartzeeRuleCalculationResult(validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
 }
 
+fun makeDartzeeRuleCalculationResult(percentage: Int): DartzeeRuleCalculationResult
+{
+    return DartzeeRuleCalculationResult(listOf(), 10, 50, percentage.toDouble(), 100.toDouble())
+}
+
 fun makeScoreRule(score: Int) = DartzeeDartRuleScore().also { it.score = score }
 fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean = false, white: Boolean = false): DartzeeDartRuleColour
 {
