@@ -8,8 +8,8 @@ import javax.swing.JRadioButton
 class GameParamFilterPanelGolf : GameParamFilterPanel()
 {
     private val panel = RadioButtonPanel()
-    private val rdbtn9 = JRadioButton("9 holes")
-    private val rdbtn18 = JRadioButton("18 holes")
+    val rdbtn9 = JRadioButton("9 holes")
+    val rdbtn18 = JRadioButton("18 holes")
 
     init
     {
