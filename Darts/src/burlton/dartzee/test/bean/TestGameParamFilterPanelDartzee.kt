@@ -35,12 +35,15 @@ class TestGameParamFilterPanelDartzee: AbstractDartsTest()
 
         panel.comboBox.selectedIndex = 0
         panel.getGameParams() shouldBe ""
+        panel.getFilterDesc() shouldBe "custom games"
 
         panel.comboBox.selectedIndex = 1
         panel.getGameParams() shouldBe ""
+        panel.getFilterDesc() shouldBe "custom games"
 
         panel.comboBox.selectedIndex = 2
         panel.getGameParams() shouldBe ""
+        panel.getFilterDesc() shouldBe "custom games"
     }
 
     @Test
@@ -67,6 +70,7 @@ class TestGameParamFilterPanelDartzee: AbstractDartsTest()
         panel.comboBox.selectedIndex = 2
 
         panel.getGameParams() shouldBe templateId
+        panel.getFilterDesc() shouldBe "games for template 'Template A'"
     }
 
     @Test

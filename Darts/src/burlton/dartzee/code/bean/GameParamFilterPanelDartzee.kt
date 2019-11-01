@@ -55,7 +55,7 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
 
         return if (template != null)
         {
-            "games for templates '${template.name}"
+            "games for template '${template.name}'"
         }
         else
         {
