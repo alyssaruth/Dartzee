@@ -8,7 +8,7 @@ import javax.swing.JPanel
 class GameParamFilterPanelX01 : GameParamFilterPanel()
 {
     private val panel = JPanel()
-    private val spinner = SpinnerX01()
+    val spinner = SpinnerX01()
 
     init
     {
