@@ -11,7 +11,7 @@ import javax.swing.JTextField
 fun <K> JComboBox<K>.items(): List<K>
 {
     val list = mutableListOf<K>()
-    for (i in 0..model.size)
+    for (i in 0 until model.size)
     {
         list.add(model.getElementAt(i))
     }
