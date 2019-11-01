@@ -19,9 +19,11 @@ class TestGameParamFilterPanelX01: AbstractDartsTest()
 
         panel.spinner.value = 701
         panel.getGameParams() shouldBe "701"
+        panel.getFilterDesc() shouldBe "games of 701"
 
         panel.spinner.value = 301
         panel.getGameParams() shouldBe "301"
+        panel.getFilterDesc() shouldBe "games of 301"
     }
 
     @Test

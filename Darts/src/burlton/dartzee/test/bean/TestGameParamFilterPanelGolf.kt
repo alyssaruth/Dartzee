@@ -27,9 +27,11 @@ class TestGameParamFilterPanelGolf: AbstractDartsTest()
 
         panel.rdbtn9.doClick()
         panel.getGameParams() shouldBe "9"
+        panel.getFilterDesc() shouldBe "games of 9 holes"
 
         panel.rdbtn18.doClick()
         panel.getGameParams() shouldBe "18"
+        panel.getFilterDesc() shouldBe "games of 18 holes"
     }
 
     @Test
