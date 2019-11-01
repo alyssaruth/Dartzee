@@ -51,6 +51,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         btnDelete.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
         btnDelete.preferredSize = Dimension(40, 40)
 
+        scrollTable.addRowSelectionListener(this)
+
         btnAdd.addActionListener(this)
         btnCopy.addActionListener(this)
         btnDelete.addActionListener(this)
@@ -74,6 +76,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         scrollTable.setRenderer(0, DartzeeTemplateRenderer(0))
         scrollTable.setRenderer(1, DartzeeTemplateRenderer(1))
         scrollTable.setRenderer(2, DartzeeTemplateRenderer(2))
+
+        selectionChanged(scrollTable)
     }
 
     private fun populateTable()
