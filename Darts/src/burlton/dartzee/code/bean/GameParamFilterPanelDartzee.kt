@@ -12,7 +12,7 @@ import javax.swing.JPanel
 class GameParamFilterPanelDartzee: GameParamFilterPanel()
 {
     private val panel = JPanel()
-    private val comboBox = JComboBox<ComboBoxItem<DartzeeTemplateEntity?>>()
+    val comboBox = JComboBox<ComboBoxItem<DartzeeTemplateEntity?>>()
 
     init
     {
@@ -26,8 +26,7 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
     {
         val templates = DartzeeTemplateEntity().retrieveEntities()
 
-        val divider = ComboBoxItem<DartzeeTemplateEntity?>(null, "-----")
-        divider.isEnabled = false
+        val divider = ComboBoxItem<DartzeeTemplateEntity?>(null, "-----", false)
 
         comboBox.addItem(ComboBoxItem(null, "Custom"))
         comboBox.addItem(divider)
@@ -35,13 +34,10 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
 
         if (templates.isEmpty())
         {
-            val noTemplates = ComboBoxItem<DartzeeTemplateEntity?>(null, "No templates configured")
-            noTemplates.isEnabled = false
+            val noTemplates = ComboBoxItem<DartzeeTemplateEntity?>(null, "No templates configured", false)
             comboBox.addItem(noTemplates)
         }
     }
-
-
 
     override fun setGameParams(gameParams: String)
     {
