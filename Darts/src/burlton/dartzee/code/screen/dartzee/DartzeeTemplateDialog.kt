@@ -11,15 +11,14 @@ import java.awt.Dimension
 import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.border.BevelBorder
-import javax.swing.border.TitledBorder
 
 class DartzeeTemplateDialog : SimpleDialog()
 {
-    private var dartzeeTemplate: DartzeeTemplateEntity? = null
+    var dartzeeTemplate: DartzeeTemplateEntity? = null
 
     private val namePanel = JPanel()
-    private val tfName = JTextField()
-    private val rulePanel = DartzeeRuleSetupPanel()
+    val tfName = JTextField()
+    val rulePanel = DartzeeRuleSetupPanel()
 
     init
     {
