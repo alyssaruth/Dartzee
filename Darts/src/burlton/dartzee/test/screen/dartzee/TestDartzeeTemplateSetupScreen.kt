@@ -1,12 +1,12 @@
 package burlton.dartzee.test.screen.dartzee
 
+import burlton.dartzee.code.dartzee.DartzeeTemplateFactory
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
+import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.dartzee.test.helper.getCountFromTable
-import burlton.dartzee.test.helper.insertDartzeeTemplate
-import burlton.dartzee.test.helper.insertGame
+import burlton.dartzee.code.utils.InjectedThings
+import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -14,6 +14,13 @@ import javax.swing.JOptionPane
 
 class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 {
+    override fun afterEachTest()
+    {
+        super.afterEachTest()
+
+        InjectedThings.dartzeeTemplateFactory = DartzeeTemplateFactory()
+    }
+
     @Test
     fun `Should pull through a game count of 0 for templates where no games have been played`()
     {
@@ -92,6 +99,69 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 
         scrn.scrollTable.rowCount shouldBe 0
         getCountFromTable(DARTZEE_TEMPLATE) shouldBe 0
+    }
+
+    @Test
+    fun `Should not add a template if cancelled`()
+    {
+        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(null)
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+        scrn.btnAdd.doClick()
+
+        scrn.scrollTable.rowCount shouldBe 0
+    }
+
+    @Test
+    fun `Should add a template to the table upon creation`()
+    {
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        val template = insertDartzeeTemplate(name = "My Template")
+        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(template)
+
+        scrn.scrollTable.rowCount shouldBe 0
+        scrn.btnAdd.doClick()
+        scrn.scrollTable.rowCount shouldBe 1
+        scrn.getTemplate(0).rowId shouldBe template.rowId
+    }
+
+    @Test
+    fun `Should do nothing if template copying is cancelled`()
+    {
+        insertDartzeeTemplate(name = "ABC")
+        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = true)
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        scrn.scrollTable.selectRow(0)
+        scrn.btnCopy.doClick()
+
+        scrn.scrollTable.rowCount shouldBe 1
+    }
+
+    @Test
+    fun `Should copy a template and add it to the table`()
+    {
+        insertDartzeeTemplate(name = "ABC")
+        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = false)
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        scrn.scrollTable.selectRow(0)
+        scrn.btnCopy.doClick()
+
+        scrn.scrollTable.rowCount shouldBe 2
+        scrn.getTemplate(1).name shouldBe "ABC - Copy"
+    }
+
+    private fun DartzeeTemplateSetupScreen.getTemplate(row: Int): DartzeeTemplateEntity
+    {
+        return scrollTable.getValueAt(row, 0) as DartzeeTemplateEntity
     }
 
     private fun DartzeeTemplateSetupScreen.getGameCount(row: Int): Int
