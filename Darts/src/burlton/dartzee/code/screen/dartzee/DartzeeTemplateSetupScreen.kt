@@ -8,6 +8,7 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.InjectedThings
 import burlton.desktopcore.code.bean.AbstractTableRenderer
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
@@ -106,7 +107,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 
     private fun addTemplate()
     {
-        val template = DartzeeTemplateDialog.createTemplate()
+        val template = InjectedThings.dartzeeTemplateFactory.newTemplate()
         addTemplateToTable(template, 0)
     }
 
@@ -114,7 +115,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     {
         val selection = getSelectedTemplate()
 
-        val template = DartzeeTemplateDialog.createTemplate(selection)
+        val template = InjectedThings.dartzeeTemplateFactory.copyTemplate(selection)
         addTemplateToTable(template, 0)
     }
 
