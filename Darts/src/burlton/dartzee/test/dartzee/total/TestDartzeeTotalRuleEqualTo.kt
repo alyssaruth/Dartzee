@@ -19,4 +19,13 @@ class TestDartzeeTotalRuleEqualTo: AbstractDartzeeRuleTest<DartzeeTotalRuleEqual
         rule.isValidTotal(55) shouldBe true
         rule.isValidTotal(56) shouldBe false
     }
+
+    @Test
+    fun `Rule description`()
+    {
+        val rule = DartzeeTotalRuleEqualTo()
+        rule.target = 25
+
+        rule.getDescription() shouldBe "= 25"
+    }
 }

@@ -17,7 +17,8 @@ class DartzeeRuleFactory: AbstractDartzeeRuleFactory()
         return dlg.dartzeeRule
     }
 
-    override fun amendRule(rule: DartzeeRuleDto): DartzeeRuleDto {
+    override fun amendRule(rule: DartzeeRuleDto): DartzeeRuleDto
+    {
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(rule)
         dlg.isVisible = true

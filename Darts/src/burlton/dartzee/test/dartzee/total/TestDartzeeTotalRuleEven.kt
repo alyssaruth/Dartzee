@@ -17,4 +17,11 @@ class TestDartzeeTotalRuleEven: AbstractDartzeeRuleTest<DartzeeTotalRuleEven>()
         rule.isValidTotal(20) shouldBe true
         rule.isValidTotal(21) shouldBe false
     }
+
+    @Test
+    fun `Rule description`()
+    {
+        val rule = DartzeeTotalRuleEven()
+        rule.getDescription() shouldBe "is even"
+    }
 }

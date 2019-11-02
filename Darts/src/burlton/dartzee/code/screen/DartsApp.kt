@@ -30,7 +30,7 @@ private const val CMD_GUID = "guid"
 
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
-    private var currentScreen: EmbeddedScreen? = null
+    var currentScreen: EmbeddedScreen? = null
 
     init
     {

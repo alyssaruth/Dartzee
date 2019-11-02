@@ -4,10 +4,13 @@ import burlton.dartzee.code.dartzee.DartzeeTemplateFactory
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
+import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JOptionPane
@@ -157,6 +160,17 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 
         scrn.scrollTable.rowCount shouldBe 2
         scrn.getTemplate(1).name shouldBe "ABC - Copy"
+    }
+
+    @Test
+    fun `Pressing back should take you to the Utilities screen`()
+    {
+        val scrn = DartzeeTemplateSetupScreen()
+
+        scrn.btnNext.isVisible shouldBe false
+        scrn.btnBack.doClick()
+
+        ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
     }
 
     private fun DartzeeTemplateSetupScreen.getTemplate(row: Int): DartzeeTemplateEntity
