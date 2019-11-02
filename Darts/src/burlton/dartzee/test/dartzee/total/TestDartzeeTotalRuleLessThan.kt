@@ -19,4 +19,13 @@ class TestDartzeeTotalRuleLessThan: AbstractDartzeeRuleTest<DartzeeTotalRuleLess
         rule.isValidTotal(55) shouldBe false
         rule.isValidTotal(56) shouldBe false
     }
+
+    @Test
+    fun `Rule description`()
+    {
+        val rule = DartzeeTotalRuleLessThan()
+        rule.target = 25
+
+        rule.getDescription() shouldBe "< 25"
+    }
 }
