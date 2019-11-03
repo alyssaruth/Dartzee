@@ -1,6 +1,5 @@
 package burlton.dartzee.test.dartzee.total
 
-import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEven
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleOdd
 import burlton.dartzee.test.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.shouldBe
@@ -22,7 +21,7 @@ class TestDartzeeTotalRuleOdd: AbstractDartzeeRuleTest<DartzeeTotalRuleOdd>()
     @Test
     fun `Rule description`()
     {
-        val rule = DartzeeTotalRuleEven()
+        val rule = DartzeeTotalRuleOdd()
         rule.getDescription() shouldBe "is odd"
     }
 }
