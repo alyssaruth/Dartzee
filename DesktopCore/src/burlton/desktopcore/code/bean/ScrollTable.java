@@ -284,7 +284,16 @@ public class ScrollTable extends JPanel
 	{
 		return table.convertRowIndexToModel(viewRowIndex);
 	}
-	
+
+	@Override
+	public void setFont(Font font) {
+		super.setFont(font);
+		if (table != null)
+		{
+			table.setFont(font);
+		}
+	}
+
 	/**
 	 * Helpers
 	 */
