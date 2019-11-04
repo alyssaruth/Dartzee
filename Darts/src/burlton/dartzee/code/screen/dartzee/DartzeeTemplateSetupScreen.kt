@@ -110,7 +110,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     private fun addTemplate()
     {
         val template = InjectedThings.dartzeeTemplateFactory.newTemplate()
-        template?.let { populateTable() }
+        template?.let { initialise() }
     }
 
     private fun copySelectedTemplate()
@@ -118,7 +118,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         val selection = getSelectedTemplate()
 
         val template = InjectedThings.dartzeeTemplateFactory.copyTemplate(selection)
-        template?.let { populateTable() }
+        template?.let { initialise() }
     }
 
     private fun deleteTemplate()

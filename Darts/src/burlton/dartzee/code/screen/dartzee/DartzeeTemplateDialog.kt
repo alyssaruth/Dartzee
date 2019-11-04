@@ -22,6 +22,7 @@ class DartzeeTemplateDialog : SimpleDialog()
 
     init
     {
+        title = "New Dartzee Template"
         size = Dimension(800, 600)
         isModal = true
 
