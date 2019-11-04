@@ -74,9 +74,7 @@ class TestDartzeeTemplateDialog: AbstractDartsTest()
 
         //Template should be set on the dialog, and should have been saved to the DB
         val template = assertNotNull(dialog.dartzeeTemplate)
-        template.difficulty shouldBe 15.0
         template.name shouldBe "ABC"
-        template.ruleCount shouldBe 2
         template.retrievedFromDb shouldBe true
 
         val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).sortedBy { it.ordinal }

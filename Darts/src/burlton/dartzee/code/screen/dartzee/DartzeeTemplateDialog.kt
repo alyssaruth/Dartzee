@@ -40,11 +40,9 @@ class DartzeeTemplateDialog : SimpleDialog()
             return
         }
 
+        val template = DartzeeTemplateEntity.factoryAndSave(tfName.text)
+
         val rules = rulePanel.getRules()
-        val difficulty = rules.map { it.calculationResult!!.percentage }.average()
-
-        val template = DartzeeTemplateEntity.factoryAndSave(tfName.text, rules.size, difficulty)
-
         rules.forEachIndexed { ix, rule ->
             val entity = rule.toEntity(ix + 1, DARTZEE_TEMPLATE, template.rowId)
             entity.saveToDatabase()
