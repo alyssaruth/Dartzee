@@ -95,7 +95,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
                 val template = DartzeeTemplateEntity().factoryFromResultSet(rs)
                 val gameCount = rs.getInt("GameCount")
 
-                val rules = hmTemplateIdToRules[template.rowId]!!
+                val rules = hmTemplateIdToRules[template.rowId] ?: listOf()
 
                 addTemplateToTable(template, rules, gameCount)
             }
@@ -105,8 +105,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     {
         val dtos = rules.sortedBy { it.ordinal }.map { it.toDto() }
         val ii = getRulesImage(dtos)
-
-
+        
         template?.let { scrollTable.addRow(arrayOf(it, ii, gameCount))}
     }
 

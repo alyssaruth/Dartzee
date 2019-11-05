@@ -17,9 +17,7 @@ class FakeDartzeeTemplateFactory(private val newTemplate: DartzeeTemplateEntity?
             if (cancelCopy)
                 null
             else {
-                val copiedTemplate = DartzeeTemplateEntity()
-                copiedTemplate.name = template.name + " - Copy"
-                copiedTemplate
+                insertTemplateAndRule(name = template.name + " - Copy")
             }
 
 }

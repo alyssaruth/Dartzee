@@ -1,6 +1,7 @@
 package burlton.dartzee.test.helper
 
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
+import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -169,6 +170,7 @@ fun insertGame(uuid: String = randomGuid(),
 fun insertDartzeeRule(uuid: String = randomGuid(),
                       entityName: String = "",
                       entityId: String = "",
+                      calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
                       dtCreation: Timestamp = getSqlDateNow(),
                       dtLastUpdate: Timestamp = getSqlDateNow()): DartzeeRuleEntity
 {
@@ -177,6 +179,7 @@ fun insertDartzeeRule(uuid: String = randomGuid(),
     de.dtCreation = dtCreation
     de.entityId = entityId
     de.entityName = entityName
+    de.calculationResult = calculationResult.toDbString()
 
     de.saveToDatabase(dtLastUpdate)
 
@@ -196,6 +199,13 @@ fun insertDartzeeTemplate(uuid: String = randomGuid(),
     de.saveToDatabase(dtLastUpdate)
 
     return de
+}
+
+fun insertTemplateAndRule(name: String = "Template"): DartzeeTemplateEntity
+{
+    val template = insertDartzeeTemplate(name = name)
+    insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = template.rowId)
+    return template
 }
 
 fun insertAchievement(uuid: String = randomGuid(),
