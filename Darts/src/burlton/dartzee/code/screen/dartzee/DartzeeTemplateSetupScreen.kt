@@ -65,11 +65,12 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 
         tm.addColumn("Template")
         tm.addColumn("Rules")
-        tm.addColumn("Game Count")
+        tm.addColumn("Games")
 
         scrollTable.model = tm
         scrollTable.setRowName("template")
         scrollTable.setRowHeight(40)
+        scrollTable.setColumnWidths("200;-1;100")
 
         populateTable()
 
@@ -135,7 +136,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     private fun addTemplate()
     {
         val template = InjectedThings.dartzeeTemplateFactory.newTemplate()
-        template?.let { populateTable() }
+        template?.let { initialise() }
     }
 
     private fun copySelectedTemplate()
@@ -143,7 +144,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         val selection = getSelectedTemplate()
 
         val template = InjectedThings.dartzeeTemplateFactory.copyTemplate(selection)
-        template?.let { populateTable() }
+        template?.let { initialise() }
     }
 
     private fun deleteTemplate()
