@@ -10,6 +10,7 @@ import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -27,7 +28,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     @Test
     fun `Should pull through a game count of 0 for templates where no games have been played`()
     {
-        insertDartzeeTemplate()
+        insertTemplateAndRule()
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
@@ -38,7 +39,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     @Test
     fun `Should pull through the right game count of for templates where games have been played`()
     {
-        val templateId = insertDartzeeTemplate().rowId
+        val templateId = insertTemplateAndRule().rowId
 
         insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
         insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
@@ -52,7 +53,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     @Test
     fun `Should toggle copy & remove buttons based on whether a row is selected`()
     {
-        insertDartzeeTemplate()
+        insertTemplateAndRule()
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
@@ -72,7 +73,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     @Test
     fun `Should leave template alone if delete is cancelled`()
     {
-        insertDartzeeTemplate(name = "ABC")
+        insertTemplateAndRule(name = "ABC")
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -87,9 +88,9 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     }
 
     @Test
-    fun `Should delete a template on confirmation`()
+    fun `Should delete a template and associated rules on confirmation`()
     {
-        insertDartzeeTemplate(name = "ABC")
+        insertTemplateAndRule(name = "ABC")
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -102,6 +103,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 
         scrn.scrollTable.rowCount shouldBe 0
         getCountFromTable(DARTZEE_TEMPLATE) shouldBe 0
+        getCountFromTable("DartzeeRule") shouldBe 0
     }
 
     @Test
@@ -122,7 +124,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        val template = insertDartzeeTemplate(name = "My Template")
+        val template = insertTemplateAndRule(name = "My Template")
         InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(template)
 
         scrn.scrollTable.rowCount shouldBe 0
@@ -134,7 +136,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     @Test
     fun `Should do nothing if template copying is cancelled`()
     {
-        insertDartzeeTemplate(name = "ABC")
+        insertTemplateAndRule(name = "ABC")
         InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = true)
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -149,7 +151,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     @Test
     fun `Should copy a template and add it to the table`()
     {
-        insertDartzeeTemplate(name = "ABC")
+        insertTemplateAndRule(name = "ABC")
         InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = false)
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -159,7 +161,8 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
         scrn.btnCopy.doClick()
 
         scrn.scrollTable.rowCount shouldBe 2
-        scrn.getTemplate(1).name shouldBe "ABC - Copy"
+        val templates = listOf(scrn.getTemplate(0), scrn.getTemplate(1)).map { it.name }
+        templates.shouldContainExactlyInAnyOrder("ABC - Copy", "ABC")
     }
 
     @Test
@@ -180,6 +183,6 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 
     private fun DartzeeTemplateSetupScreen.getGameCount(row: Int): Int
     {
-        return scrollTable.getValueAt(row, 3) as Int
+        return scrollTable.getValueAt(row, 2) as Int
     }
 }
