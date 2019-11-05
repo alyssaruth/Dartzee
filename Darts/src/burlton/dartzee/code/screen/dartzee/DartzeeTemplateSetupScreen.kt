@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.DartzeeTemplateEntity
@@ -14,10 +15,10 @@ import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.TableUtil
 import net.miginfocom.swing.MigLayout
-import java.awt.BorderLayout
-import java.awt.Dimension
-import java.awt.Font
+import java.awt.*
 import java.awt.event.ActionEvent
+import java.awt.image.BufferedImage
+import java.awt.image.BufferedImage.TYPE_INT_ARGB
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JOptionPane
@@ -64,7 +65,6 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 
         tm.addColumn("Template")
         tm.addColumn("Rules")
-        tm.addColumn("Difficulty")
         tm.addColumn("Game Count")
 
         scrollTable.model = tm
@@ -103,8 +103,33 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     private fun addTemplateToTable(template: DartzeeTemplateEntity?, rules: List<DartzeeRuleEntity>, gameCount: Int)
     {
         val dtos = rules.sortedBy { it.ordinal }.map { it.toDto() }
-        val difficulty = dtos.map { it.calculationResult!!.percentage }.average()
-        template?.let { scrollTable.addRow(arrayOf(it, dtos.size, difficulty, gameCount))}
+        val ii = getRulesImage(dtos)
+
+
+        template?.let { scrollTable.addRow(arrayOf(it, ii, gameCount))}
+    }
+
+    private fun getRulesImage(dtos: List<DartzeeRuleDto>): ImageIcon
+    {
+        val width = (20 * dtos.size) + (5 * (dtos.size - 1))
+
+        val bi = BufferedImage(width + 2, 22, TYPE_INT_ARGB)
+        val g = bi.createGraphics()
+
+        dtos.forEachIndexed { ix, dto ->
+            val x = (ix * 25)
+
+            //Fill
+            g.color = dto.calculationResult!!.getForeground()
+            g.fill(Rectangle(x, 0, 20, 20))
+
+            //Border
+            g.color = Color.BLACK
+            g.drawRect(x, 0, 20, 20)
+        }
+
+        g.dispose()
+        return ImageIcon(bi)
     }
 
     private fun addTemplate()
