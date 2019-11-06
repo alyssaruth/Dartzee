@@ -15,6 +15,7 @@ import java.awt.event.ActionListener
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
+import javax.swing.border.EmptyBorder
 
 class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
 {
@@ -28,6 +29,8 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
     {
         layout = BorderLayout(0, 0)
         add(tableRules, BorderLayout.CENTER)
+
+        tableRules.border = EmptyBorder(5, 5, 0, 0)
 
         tableRules.addButtonToOrderingPanel(btnAddRule, 0)
         tableRules.addButtonToOrderingPanel(btnAmendRule, 1)

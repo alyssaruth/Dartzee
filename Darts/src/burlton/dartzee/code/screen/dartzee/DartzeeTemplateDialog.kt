@@ -7,11 +7,12 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.desktopcore.code.bean.addGhostText
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
+import burlton.desktopcore.code.util.setFontSize
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JPanel
 import javax.swing.JTextField
-import javax.swing.border.BevelBorder
+import javax.swing.border.EmptyBorder
 
 class DartzeeTemplateDialog : SimpleDialog()
 {
@@ -30,10 +31,11 @@ class DartzeeTemplateDialog : SimpleDialog()
         add(namePanel, BorderLayout.NORTH)
         add(rulePanel, BorderLayout.CENTER)
 
+        tfName.setFontSize(20)
         tfName.addGhostText("Template Name")
 
         namePanel.layout = BorderLayout(0, 0)
-        namePanel.border = BevelBorder(BevelBorder.LOWERED)
+        namePanel.border = EmptyBorder(10, 5, 5, 67)
         namePanel.add(tfName)
     }
 
