@@ -10,10 +10,12 @@ import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.FakeDartzeeRuleFactory
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
+import burlton.desktopcore.test.helpers.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.awt.event.KeyEvent
 
 class TestDartzeeRuleSetupPanel: AbstractDartsTest()
 {
@@ -88,6 +90,35 @@ class TestDartzeeRuleSetupPanel: AbstractDartsTest()
     }
 
     @Test
+    fun `Should remove the selected rule when delete key pressed`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven())
+        val ruleTwo = makeDartzeeRuleDto(DartzeeDartRuleOdd())
+
+        val panel = DartzeeRuleSetupPanel()
+        panel.addRulesToTable(listOf(rule, ruleTwo))
+
+        panel.tableRules.selectRow(0)
+        panel.tableRules.processKeyPress(KeyEvent.VK_DELETE)
+
+        panel.getRules() shouldBe listOf(ruleTwo)
+    }
+
+    @Test
+    fun `Should do nothing if delete is pressed with no row selected`()
+    {
+        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven())
+        val ruleTwo = makeDartzeeRuleDto(DartzeeDartRuleOdd())
+
+        val panel = DartzeeRuleSetupPanel()
+        panel.addRulesToTable(listOf(rule, ruleTwo))
+
+        panel.tableRules.processKeyPress(KeyEvent.VK_DELETE)
+
+        panel.getRules() shouldBe listOf(rule, ruleTwo)
+    }
+
+    @Test
     fun `Should support creation of rules`()
     {
         val newRule = makeDartzeeRuleDto()
@@ -128,4 +159,38 @@ class TestDartzeeRuleSetupPanel: AbstractDartsTest()
         panel.tableRules.rowCount shouldBe 1
         panel.getRules() shouldBe listOf(newRule)
     }
+
+    @Test
+    fun `Should amend a rule when Enter pressed`()
+    {
+        val originalRule = makeDartzeeRuleDto(DartzeeDartRuleEven())
+        val newRule = makeDartzeeRuleDto(DartzeeDartRuleOdd())
+
+        InjectedThings.dartzeeRuleFactory = FakeDartzeeRuleFactory(newRule)
+
+        val panel = DartzeeRuleSetupPanel()
+        panel.addRulesToTable(listOf(originalRule))
+        panel.tableRules.selectRow(0)
+        panel.tableRules.processKeyPress(KeyEvent.VK_ENTER)
+
+        panel.tableRules.rowCount shouldBe 1
+        panel.getRules() shouldBe listOf(newRule)
+    }
+
+    @Test
+    fun `Should do nothing if Enter pressed with no row selected`()
+    {
+        val originalRule = makeDartzeeRuleDto(DartzeeDartRuleEven())
+        val newRule = makeDartzeeRuleDto(DartzeeDartRuleOdd())
+
+        InjectedThings.dartzeeRuleFactory = FakeDartzeeRuleFactory(newRule)
+
+        val panel = DartzeeRuleSetupPanel()
+        panel.addRulesToTable(listOf(originalRule))
+        panel.tableRules.processKeyPress(KeyEvent.VK_ENTER)
+
+        panel.tableRules.rowCount shouldBe 1
+        panel.getRules() shouldBe listOf(originalRule)
+    }
+
 }
