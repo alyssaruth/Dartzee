@@ -81,7 +81,7 @@ class UtilitiesScreen : EmbeddedScreen()
     private fun setLogSecret()
     {
         val pwd = JOptionPane.showInputDialog(null, "Please enter the debugging password.", "Password")
-        if (pwd.isEmpty())
+        if (pwd.isNullOrEmpty())
         {
             return
         }

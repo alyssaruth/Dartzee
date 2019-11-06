@@ -1,6 +1,9 @@
 package burlton.dartzee.test.screen.dartzee
 
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.DartzeeTemplateFactory
+import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
@@ -9,11 +12,13 @@ import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.helper.*
+import burlton.desktopcore.test.helpers.processKeyPress
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.awt.event.KeyEvent
 import javax.swing.JOptionPane
 
 class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
@@ -37,7 +42,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     }
 
     @Test
-    fun `Should pull through the right game count of for templates where games have been played`()
+    fun `Should pull through the right game count for templates where games have been played`()
     {
         val templateId = insertTemplateAndRule().rowId
 
@@ -98,6 +103,25 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 
         scrn.scrollTable.selectRow(0)
         scrn.btnDelete.doClick()
+
+        dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
+
+        scrn.scrollTable.rowCount shouldBe 0
+        getCountFromTable(DARTZEE_TEMPLATE) shouldBe 0
+        getCountFromTable("DartzeeRule") shouldBe 0
+    }
+
+    @Test
+    fun `Should support deleting by using the keyboard shortcut`()
+    {
+        insertTemplateAndRule(name = "ABC")
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        scrn.scrollTable.selectRow(0)
+        scrn.scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
 
@@ -174,6 +198,27 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
         scrn.btnBack.doClick()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
+    }
+
+    @Test
+    fun `Should render the rules associated to the template`()
+    {
+        val template = insertDartzeeTemplate()
+
+        val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven())
+        val ruleTwo = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+
+
+        ruleOne.toEntity(1, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
+        ruleTwo.toEntity(2, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        val rules = scrn.scrollTable.getValueAt(0, 1) as List<DartzeeRuleDto>
+
+        rules.map { it.generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
+
     }
 
     private fun DartzeeTemplateSetupScreen.getTemplate(row: Int): DartzeeTemplateEntity

@@ -573,6 +573,11 @@ public class ScrollTable extends JPanel
 	{
 		table.setBackground(bg);
 	}
+
+	public void setHeaderFont(Font font)
+	{
+		table.getTableHeader().setFont(font);
+	}
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0)

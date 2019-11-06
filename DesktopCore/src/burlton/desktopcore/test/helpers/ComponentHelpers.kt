@@ -21,18 +21,18 @@ fun makeMouseEvent(clickCount: Int = 1, x: Int = 0, y: Int = 0): MouseEvent
 /**
  * Test methods
  */
-fun processKeyPress(component: JComponent, key: Int)
+fun JComponent.processKeyPress(key: Int)
 {
-    if (component is ScrollTable)
+    if (this is ScrollTable)
     {
-        processKeyPress(component.table, key)
+        this.table.processKeyPress(key)
         return
     }
 
-    val actionName = component.inputMap[KeyStroke.getKeyStroke(key, JComponent.WHEN_FOCUSED)]
+    val actionName = inputMap[KeyStroke.getKeyStroke(key, JComponent.WHEN_FOCUSED)]
 
     Debug.append("" + actionName)
-    val action = component.actionMap[actionName]
+    val action = actionMap[actionName]
 
     action.actionPerformed(mockk(relaxed = true))
 }
