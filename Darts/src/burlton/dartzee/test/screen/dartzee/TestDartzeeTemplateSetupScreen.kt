@@ -13,6 +13,7 @@ import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.test.helpers.processKeyPress
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -128,6 +129,23 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
         scrn.scrollTable.rowCount shouldBe 0
         getCountFromTable(DARTZEE_TEMPLATE) shouldBe 0
         getCountFromTable("DartzeeRule") shouldBe 0
+    }
+
+    @Test
+    fun `Pressing delete with no row selected should do nothing`()
+    {
+        insertTemplateAndRule(name = "ABC")
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        scrn.scrollTable.selectRow(-1)
+        scrn.scrollTable.processKeyPress(KeyEvent.VK_DELETE)
+
+        dialogFactory.questionsShown.shouldBeEmpty()
+
+        scrn.scrollTable.rowCount shouldBe 1
     }
 
     @Test

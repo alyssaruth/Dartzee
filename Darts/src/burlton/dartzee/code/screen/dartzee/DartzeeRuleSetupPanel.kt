@@ -2,16 +2,14 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.utils.InjectedThings
-import burlton.desktopcore.code.bean.AbstractTableRenderer
-import burlton.desktopcore.code.bean.RowSelectionListener
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.bean.ScrollTableOrdered
+import burlton.desktopcore.code.bean.*
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.KeyEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -40,6 +38,9 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         tableRules.setRowName("rule")
         tableRules.setRowHeight(40)
         tableRules.addRowSelectionListener(this)
+
+        tableRules.addKeyAction(KeyEvent.VK_DELETE) { if (btnRemoveRule.isEnabled) removeRule() }
+        tableRules.addKeyAction(KeyEvent.VK_ENTER) { if (btnAmendRule.isEnabled) amendRule() }
 
         btnAddRule.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
         btnAddRule.toolTipText = "Add rule"
