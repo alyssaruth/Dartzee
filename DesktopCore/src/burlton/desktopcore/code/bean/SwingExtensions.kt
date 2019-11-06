@@ -1,5 +1,6 @@
 package burlton.desktopcore.code.bean
 
+import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusEvent
@@ -7,6 +8,7 @@ import java.awt.event.FocusListener
 import javax.swing.AbstractAction
 import javax.swing.JComboBox
 import javax.swing.JTextField
+import javax.swing.text.JTextComponent
 
 
 fun <K> JComboBox<K>.items(): List<K>
@@ -49,4 +51,10 @@ fun ScrollTable.addKeyAction(key: Int, fn: () -> Unit)
     }
 
     addKeyAction(key, "ACTION_$key", action)
+}
+
+fun JTextComponent.addGhostText(text: String)
+{
+    this.layout = BorderLayout()
+    this.add(GhostText(text, this))
 }

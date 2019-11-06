@@ -4,6 +4,7 @@ import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.desktopcore.code.bean.addGhostText
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.BorderLayout
@@ -28,6 +29,8 @@ class DartzeeTemplateDialog : SimpleDialog()
 
         add(namePanel, BorderLayout.NORTH)
         add(rulePanel, BorderLayout.CENTER)
+
+        tfName.addGhostText("Template Name")
 
         namePanel.layout = BorderLayout(0, 0)
         namePanel.border = BevelBorder(BevelBorder.LOWERED)
