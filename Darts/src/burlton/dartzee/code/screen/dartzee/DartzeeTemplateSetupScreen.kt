@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen.dartzee
 
-import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.DartzeeTemplateEntity
@@ -12,13 +11,15 @@ import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
+import burlton.desktopcore.code.bean.addKeyAction
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.TableUtil
 import net.miginfocom.swing.MigLayout
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Dimension
+import java.awt.Font
 import java.awt.event.ActionEvent
-import java.awt.image.BufferedImage
-import java.awt.image.BufferedImage.TYPE_INT_ARGB
+import java.awt.event.KeyEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JOptionPane
@@ -51,8 +52,11 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         btnDelete.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
         btnDelete.preferredSize = Dimension(40, 40)
 
-        scrollTable.font = Font(font.name, Font.PLAIN, 20)
+        scrollTable.font = Font(font.name, Font.PLAIN, 18)
         scrollTable.addRowSelectionListener(this)
+
+        scrollTable.addKeyAction(KeyEvent.VK_DELETE) { deleteTemplate() }
+        scrollTable.setHeaderFont(Font(font.name, Font.PLAIN, 20))
 
         btnAdd.addActionListener(this)
         btnCopy.addActionListener(this)
@@ -71,6 +75,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         scrollTable.setRowName("template")
         scrollTable.setRowHeight(40)
         scrollTable.setColumnWidths("200;-1;100")
+
+        scrollTable.setRenderer(1, DartzeeTemplateRuleRenderer())
 
         populateTable()
 
@@ -104,32 +110,8 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     private fun addTemplateToTable(template: DartzeeTemplateEntity?, rules: List<DartzeeRuleEntity>, gameCount: Int)
     {
         val dtos = rules.sortedBy { it.ordinal }.map { it.toDto() }
-        val ii = getRulesImage(dtos)
         
-        template?.let { scrollTable.addRow(arrayOf(it, ii, gameCount))}
-    }
-
-    private fun getRulesImage(dtos: List<DartzeeRuleDto>): ImageIcon
-    {
-        val width = (20 * dtos.size) + (5 * (dtos.size - 1))
-
-        val bi = BufferedImage(width + 2, 22, TYPE_INT_ARGB)
-        val g = bi.createGraphics()
-
-        dtos.forEachIndexed { ix, dto ->
-            val x = (ix * 25)
-
-            //Fill
-            g.color = dto.calculationResult!!.getForeground()
-            g.fill(Rectangle(x, 0, 20, 20))
-
-            //Border
-            g.color = Color.BLACK
-            g.drawRect(x, 0, 20, 20)
-        }
-
-        g.dispose()
-        return ImageIcon(bi)
+        template?.let { scrollTable.addRow(arrayOf(it, dtos, gameCount))}
     }
 
     private fun addTemplate()

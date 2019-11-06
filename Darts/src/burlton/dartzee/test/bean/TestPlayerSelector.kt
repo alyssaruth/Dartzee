@@ -150,11 +150,11 @@ class TestPlayerSelector: AbstractDartsTest()
         val selector = PlayerSelector()
         selector.init()
 
-        processKeyPress(selector.tablePlayersToSelectFrom, KeyEvent.VK_ENTER)
+        selector.tablePlayersToSelectFrom.processKeyPress(KeyEvent.VK_ENTER)
         selector.getSelectedPlayers().size shouldBe 0
 
         selector.tablePlayersToSelectFrom.selectRow(0)
-        processKeyPress(selector.tablePlayersToSelectFrom, KeyEvent.VK_ENTER)
+        selector.tablePlayersToSelectFrom.processKeyPress(KeyEvent.VK_ENTER)
         selector.getSelectedPlayers().size shouldBe 1
     }
 
@@ -166,11 +166,11 @@ class TestPlayerSelector: AbstractDartsTest()
         val selector = PlayerSelector()
         selector.init(listOf(alex))
 
-        processKeyPress(selector.tablePlayersSelected, KeyEvent.VK_ENTER)
+        selector.tablePlayersSelected.processKeyPress(KeyEvent.VK_ENTER)
         selector.tablePlayersToSelectFrom.rowCount shouldBe 0
 
         selector.tablePlayersSelected.selectRow(0)
-        processKeyPress(selector.tablePlayersSelected, KeyEvent.VK_ENTER)
+        selector.tablePlayersSelected.processKeyPress(KeyEvent.VK_ENTER)
         selector.tablePlayersToSelectFrom.rowCount shouldBe 1
     }
 

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
+import javax.swing.AbstractAction
 import javax.swing.JComboBox
 import javax.swing.JTextField
 
@@ -37,4 +38,15 @@ fun JTextField.addUpdateListener(actionListener: ActionListener)
         }
         override fun focusGained(e: FocusEvent?){}
     })
+}
+
+fun ScrollTable.addKeyAction(key: Int, fn: () -> Unit)
+{
+    val action = object : AbstractAction() {
+        override fun actionPerformed(e: ActionEvent?) {
+            fn()
+        }
+    }
+
+    addKeyAction(key, "ACTION_$key", action)
 }
