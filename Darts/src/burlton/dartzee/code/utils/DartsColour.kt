@@ -66,11 +66,11 @@ object DartsColour
     {
         when (finishPos)
         {
+            -1 -> setColors(c, defaultBg, null)
             1 -> setColors(c, Color.YELLOW, COLOUR_GOLD_TEXT)
             2 -> setColors(c, Color.GRAY, COLOUR_SILVER_TEXT)
             3 -> setColors(c, COLOUR_BRONZE, COLOUR_BRONZE_TEXT)
-            4 -> setColors(c, Color.BLACK, COLOUR_BRONZE)
-            else -> setColors(c, defaultBg, null)
+            else -> setColors(c, Color.BLACK, COLOUR_BRONZE)
         }
     }
     private fun setColors(c: Component, background: Color?, foreground: Color?)
