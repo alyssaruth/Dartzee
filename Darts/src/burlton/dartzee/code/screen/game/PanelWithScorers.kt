@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.game
 
 import burlton.dartzee.code.db.PlayerEntity
 import java.awt.BorderLayout
+import java.awt.FlowLayout
 import javax.swing.JPanel
 import kotlin.math.ceil
 
@@ -23,10 +24,15 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         layout = BorderLayout(0, 0)
         panelCenter.layout = BorderLayout(0, 0)
 
+        panelEast.layout = makeFlowLayout()
+        panelWest.layout = makeFlowLayout()
+
         add(panelCenter, BorderLayout.CENTER)
         add(panelEast, BorderLayout.EAST)
         add(panelWest, BorderLayout.WEST)
     }
+
+    private fun makeFlowLayout() = FlowLayout().also { it.hgap = 0 }
 
     /**
      * Abstract methods
