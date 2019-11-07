@@ -46,8 +46,6 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         addRow(getMultiplePercent("Miss %", 0))
         addRow(getMultiplePercent("Treble %", 3))
 
-        //addRow(arrayOfNulls(getRowWidth()))
-
         addRow(getScoresBetween(180, 181, "180"))
         addRow(getScoresBetween(140, 180, "140 - 179"))
         addRow(getScoresBetween(100, 140, "100 - 139"))
@@ -57,9 +55,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         addRow(getScoresBetween(20, 40, "20 - 39"))
         addRow(getScoresBetween(0, 20, "0 - 19"))
 
-        //addRow(arrayOfNulls(getRowWidth()))
         addTopDartsRows()
-        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getCheckoutPercentRow())
 
@@ -117,7 +113,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         else
         {
             val entry = sortedEntries.removeAt(0)
-            val percent = MathsUtil.round((100*entry.value.size.toDouble()) / totalDarts, 1)
+            val percent = MathsUtil.round((100*entry.value.size.toDouble()) / totalDarts, 0).toInt()
 
             row[i+1] = "${entry.key} [$percent%]"
         }
