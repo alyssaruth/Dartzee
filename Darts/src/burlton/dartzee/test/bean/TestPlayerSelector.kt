@@ -246,13 +246,13 @@ class TestPlayerSelector: AbstractDartsTest()
     }
 
     @Test
-    fun `Should always be valid for 2, 3 or 4 players`()
+    fun `Should always be valid for up to 6 players`()
     {
         val p1 = insertPlayer()
         val p2 = insertPlayer()
 
         val players = mutableListOf(p1, p2)
-        while (players.size <= 4)
+        while (players.size <= 6)
         {
             val selector = PlayerSelector()
             selector.init(players)
@@ -267,23 +267,24 @@ class TestPlayerSelector: AbstractDartsTest()
     }
 
     @Test
-    fun `Should not allow more than 4 players for X01, Golf or RTC`()
+    fun `Should not allow more than 6 players for X01, Golf or RTC`()
     {
-        val players = listOf(insertPlayer(), insertPlayer(), insertPlayer(), insertPlayer(), insertPlayer())
+        val players = mutableListOf<PlayerEntity>()
+        while (players.size <= 7) { players.add(insertPlayer()) }
 
         val selector = PlayerSelector()
         selector.init(players)
 
         selector.valid(true, GAME_TYPE_X01) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("The maximum number of players for X01 is 4.")
+        dialogFactory.errorsShown.shouldContainExactly("The maximum number of players for X01 is 6.")
 
         dialogFactory.errorsShown.clear()
         selector.valid(false, GAME_TYPE_GOLF) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("The maximum number of players for Golf is 4.")
+        dialogFactory.errorsShown.shouldContainExactly("The maximum number of players for Golf is 6.")
 
         dialogFactory.errorsShown.clear()
         selector.valid(false, GAME_TYPE_ROUND_THE_CLOCK) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("The maximum number of players for Round the Clock is 4.")
+        dialogFactory.errorsShown.shouldContainExactly("The maximum number of players for Round the Clock is 6.")
     }
 
     @Test

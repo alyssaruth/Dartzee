@@ -129,9 +129,9 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
             return false
         }
 
-        if (rowCount > 4 && gameType != GAME_TYPE_DARTZEE)
+        if (rowCount > 6 && gameType != GAME_TYPE_DARTZEE)
         {
-            DialogUtil.showError("The maximum number of players for ${getTypeDesc(gameType)} is 4.")
+            DialogUtil.showError("The maximum number of players for ${getTypeDesc(gameType)} is 6.")
             return false
         }
 
