@@ -200,7 +200,7 @@ class GameSetupScreen : EmbeddedScreen()
     private fun launchGame()
     {
         val match = factoryMatch()
-        if (!playerSelector.valid(match != null))
+        if (!playerSelector.valid(match != null, gameTypeComboBox.getGameType()))
         {
             return
         }
@@ -255,7 +255,7 @@ class GameSetupScreen : EmbeddedScreen()
         if (gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE)
         {
             val match = factoryMatch()
-            if (!playerSelector.valid(match != null))
+            if (!playerSelector.valid(match != null, GAME_TYPE_DARTZEE))
             {
                 return
             }

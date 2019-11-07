@@ -1,5 +1,7 @@
 package burlton.dartzee.code.bean
 
+import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
+import burlton.dartzee.code.db.GameEntity.Companion.getTypeDesc
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.bean.DoubleClickListener
 import burlton.desktopcore.code.bean.ScrollTable
@@ -111,7 +113,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
     /**
      * Is this selection valid for a game/match?
      */
-    fun valid(match: Boolean): Boolean
+    fun valid(match: Boolean, gameType: Int): Boolean
     {
         val selectedPlayers = getSelectedPlayers()
         val rowCount = selectedPlayers.size
@@ -127,9 +129,15 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
             return false
         }
 
-        if (rowCount > 4)
+        if (rowCount > 4 && gameType != GAME_TYPE_DARTZEE)
         {
-            DialogUtil.showError("You cannot have more than 4 players.")
+            DialogUtil.showError("The maximum number of players for ${getTypeDesc(gameType)} is 4.")
+            return false
+        }
+
+        if (rowCount > 8)
+        {
+            DialogUtil.showError("The maximum number of players for Dartzee is 8.")
             return false
         }
 
