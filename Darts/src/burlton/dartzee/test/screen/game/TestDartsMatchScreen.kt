@@ -53,9 +53,8 @@ class TestDartsMatchScreen: AbstractDartsTest()
     private fun setUpMatchScreen(): DartsMatchScreen
     {
         PlayerImageEntity.createPresets()
-        val imgId = PlayerImageEntity().retrieveEntity("FilePath =  'rsrc:/avatars/BaboOne.png'")!!.rowId
 
         val match = insertDartsMatch()
-        return DartsMatchScreen(match, mutableListOf(insertPlayer(playerImageId = imgId), insertPlayer(playerImageId = imgId)))
+        return DartsMatchScreen(match, mutableListOf(insertPlayer(), insertPlayer()))
     }
 }
