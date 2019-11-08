@@ -12,8 +12,8 @@ import kotlin.math.ceil
 abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 {
     private val innerPanel = JPanel()
-    private val panelEast = JPanel()
-    private val panelWest = JPanel()
+    val panelEast = JPanel()
+    val panelWest = JPanel()
 
     @JvmField protected val panelCenter = JPanel()
 

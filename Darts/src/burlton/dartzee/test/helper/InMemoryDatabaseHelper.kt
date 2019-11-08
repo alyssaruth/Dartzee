@@ -1,5 +1,6 @@
 package burlton.dartzee.test.helper
 
+import burlton.core.code.util.FileUtil
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.db.*
@@ -10,6 +11,7 @@ import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.Timestamp
 import java.util.*
+import javax.sql.rowset.serial.SerialBlob
 
 fun wipeTable(tableName: String)
 {
@@ -57,9 +59,11 @@ fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
                  strategy: Int = 1,
                  strategyXml: String = "",
-                 dtDeleted: Timestamp = DateStatics.END_OF_TIME,
-                 playerImageId: String = randomGuid()): PlayerEntity
+                 dtDeleted: Timestamp = DateStatics.END_OF_TIME): PlayerEntity
 {
+
+    val playerImageId = insertPlayerImage().rowId
+
     val p = PlayerEntity()
     p.rowId = uuid
     p.name = name
@@ -228,6 +232,27 @@ fun insertAchievement(uuid: String = randomGuid(),
 
     return a
 }
+
+private val fileBytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
+private val serialBlob = SerialBlob(fileBytes)
+private fun makeSerialBlob(): SerialBlob
+{
+    val bytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
+    return SerialBlob(bytes)
+}
+fun insertPlayerImage(): PlayerImageEntity
+{
+    val pi = PlayerImageEntity()
+    pi.assignRowId()
+    pi.blobData = serialBlob
+    pi.filepath = "rsrc:/avatars/BaboOne.png"
+    pi.bytes = fileBytes
+    pi.preset = false
+
+    pi.saveToDatabase()
+    return pi
+}
+
 
 fun getCountFromTable(table: String): Int
 {
