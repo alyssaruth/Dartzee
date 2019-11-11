@@ -84,7 +84,7 @@ class DartzeeTemplateDialog : SimpleDialog()
 
         val rules = DartzeeRuleEntity().retrieveForTemplate(templateToCopy.rowId)
 
-        val dtos = rules.sortedBy{ it.ordinal }.map { it.toDto() }
+        val dtos = rules.map { it.toDto() }
         rulePanel.addRulesToTable(dtos)
     }
 

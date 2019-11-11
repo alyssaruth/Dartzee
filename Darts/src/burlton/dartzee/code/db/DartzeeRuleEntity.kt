@@ -47,7 +47,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
         return dto
     }
 
-    fun retrieveForTemplate(templateId: String) = retrieveEntities(getTemplateWhere(templateId))
+    fun retrieveForTemplate(templateId: String) = retrieveEntities(getTemplateWhere(templateId)).sortedBy { it.ordinal }
     fun deleteForTemplate(templateId: String) = deleteWhere(getTemplateWhere(templateId))
 
 

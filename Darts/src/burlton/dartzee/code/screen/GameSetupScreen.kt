@@ -2,12 +2,11 @@ package burlton.dartzee.code.screen
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.GameLauncher
-import burlton.dartzee.code.bean.ComboBoxGameType
-import burlton.dartzee.code.bean.GameParamFilterPanel
-import burlton.dartzee.code.bean.GameParamFilterPanelX01
-import burlton.dartzee.code.bean.PlayerSelector
+import burlton.dartzee.code.bean.*
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
+import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupScreen
@@ -205,12 +204,12 @@ class GameSetupScreen : EmbeddedScreen()
             return
         }
 
-
         val selectedPlayers = playerSelector.getSelectedPlayers()
+        val rules = retrieveDartzeeRules()
 
         if (match == null)
         {
-            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams())
+            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
         }
         else
         {
@@ -218,8 +217,20 @@ class GameSetupScreen : EmbeddedScreen()
             match.gameType = gameTypeComboBox.getGameType()
             match.gameParams = getGameParams()
 
-            GameLauncher.launchNewMatch(match)
+            GameLauncher.launchNewMatch(match, rules)
         }
+    }
+
+    private fun retrieveDartzeeRules(): List<DartzeeRuleDto>?
+    {
+        if (gameTypeComboBox.getGameType() != GAME_TYPE_DARTZEE)
+        {
+            return null
+        }
+
+        val dartzeeTemplate = (gameParamFilterPanel as GameParamFilterPanelDartzee).getSelectedTemplate()!!
+        val rules = DartzeeRuleEntity().retrieveForTemplate(dartzeeTemplate.rowId)
+        return rules.map { it.toDto() }
     }
 
     private fun factoryMatch(): DartsMatchEntity?
