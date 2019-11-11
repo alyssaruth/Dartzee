@@ -1,4 +1,4 @@
-package burlton.dartzee.test.screen.game
+package burlton.dartzee.test.screen.game.scorer
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.game.scorer.DartsScorer
