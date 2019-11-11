@@ -1,6 +1,7 @@
 package burlton.dartzee.code.`object`
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
@@ -11,24 +12,39 @@ import burlton.desktopcore.code.util.DialogUtil
 
 object GameLauncher
 {
-    fun launchNewMatch(match: DartsMatchEntity)
+    fun launchNewMatch(match: DartsMatchEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
     {
         val scrn = DartsMatchScreen(match, match.players)
 
         val game = GameEntity.factoryAndSave(match)
+
+        insertDartzeeRules(game, dartzeeDtos)
+
         val panel = scrn.addGameToMatch(game)
         panel.startNewGame(match.players)
     }
 
-    fun launchNewGame(players: List<PlayerEntity>, gameType: Int, gameParams: String)
+    fun launchNewGame(players: List<PlayerEntity>, gameType: Int, gameParams: String, dartzeeDtos: List<DartzeeRuleDto>? = null)
     {
         //Create and save a game
         val gameEntity = GameEntity.factoryAndSave(gameType, gameParams)
+
+        insertDartzeeRules(gameEntity, dartzeeDtos)
 
         //Construct the screen and factory a tab
         val scrn = DartsGameScreen(gameEntity, players.size)
         scrn.isVisible = true
         scrn.gamePanel.startNewGame(players)
+    }
+
+    private fun insertDartzeeRules(game: GameEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
+    {
+        dartzeeDtos ?: return
+
+        dartzeeDtos.forEachIndexed { ix, dto ->
+            val dao = dto.toEntity(ix + 1, "Game", game.rowId)
+            dao.saveToDatabase()
+        }
     }
 
     fun loadAndDisplayGame(gameId: String)
