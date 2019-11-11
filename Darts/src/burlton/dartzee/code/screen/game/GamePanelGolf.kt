@@ -24,10 +24,10 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Da
         return lastDart.getGolfScore(targetHole)
     }
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl(game: GameEntity)
     {
         //The params tell us how many holes
-        numberOfRounds = Integer.parseInt(gameParams)
+        numberOfRounds = Integer.parseInt(game.gameParams)
     }
 
     override fun doAiTurn(model: AbstractDartsModel)

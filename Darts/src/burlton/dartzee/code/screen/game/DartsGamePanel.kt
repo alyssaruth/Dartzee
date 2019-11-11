@@ -167,7 +167,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
     abstract fun saveDartsAndProceed()
-    abstract fun initImpl(gameParams: String)
+    abstract fun initImpl(game: GameEntity)
     abstract fun factoryStatsPanel(): GameStatisticsPanel?
 
     /**
@@ -253,9 +253,9 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
             statsPanel.gameParams = gameEntity.gameParams
         }
 
-        initScorers(totalPlayers)
+        initImpl(gameEntity)
 
-        initImpl(gameEntity.gameParams)
+        initScorers(totalPlayers)
     }
 
     fun loadGameInCatch()
@@ -827,6 +827,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
                 GAME_TYPE_X01 -> GamePanelX01(parent, game)
                 GAME_TYPE_GOLF -> GamePanelGolf(parent, game)
                 GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
+                GAME_TYPE_DARTZEE -> GamePanelDartzee(parent, game)
                 else -> GamePanelX01(parent, game)
             }
         }

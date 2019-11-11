@@ -182,9 +182,9 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         return activeScorer!!.currentClockTarget > 20
     }
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl(game: GameEntity)
     {
-        this.clockType = gameParams
+        this.clockType = game.gameParams
     }
 
     override fun factoryScorer(): DartsScorerRoundTheClock
