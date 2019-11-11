@@ -1,4 +1,4 @@
-package burlton.dartzee.code.screen.game;
+package burlton.dartzee.code.screen.game.scorer;
 
 import burlton.dartzee.code.bean.PlayerAvatar;
 import burlton.dartzee.code.bean.ScrollTableDartsGame;

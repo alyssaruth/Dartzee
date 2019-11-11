@@ -9,6 +9,7 @@ import burlton.dartzee.code.achievements.*
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.game.scorer.DartsScorerX01
 import burlton.dartzee.code.utils.*
 
 open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerX01>(parent, game)

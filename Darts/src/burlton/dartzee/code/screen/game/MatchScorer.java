@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.game;
 
+import burlton.dartzee.code.screen.game.scorer.AbstractScorer;
 import burlton.desktopcore.code.bean.AbstractTableRenderer;
 import burlton.dartzee.code.db.DartsMatchEntity;
 import burlton.dartzee.code.db.ParticipantEntity;

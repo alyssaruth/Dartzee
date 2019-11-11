@@ -11,6 +11,7 @@ import burlton.dartzee.code.bean.SliderAiSpeed
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.code.screen.game.scorer.DartsScorer
 import burlton.dartzee.code.stats.PlayerSummaryStats
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.PREFERENCES_INT_AI_SPEED

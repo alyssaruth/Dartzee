@@ -1,7 +1,7 @@
 package burlton.dartzee.test.screen.game
 
 import burlton.dartzee.code.`object`.*
-import burlton.dartzee.code.screen.game.DartsScorerGolf
+import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 import io.kotlintest.shouldBe
 import org.junit.Test
 

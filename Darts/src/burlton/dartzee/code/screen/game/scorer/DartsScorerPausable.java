@@ -1,4 +1,6 @@
-package burlton.dartzee.code.screen.game;
+package burlton.dartzee.code.screen.game.scorer;
+
+import burlton.dartzee.code.screen.game.GamePanelPausable;
 
 import javax.swing.*;
 import java.awt.*;

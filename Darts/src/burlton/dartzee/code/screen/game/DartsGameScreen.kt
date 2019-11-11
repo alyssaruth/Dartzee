@@ -3,6 +3,7 @@ package burlton.dartzee.code.screen.game
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.screen.game.scorer.DartsScorer
 
 /**
  * DartsGameScreen
