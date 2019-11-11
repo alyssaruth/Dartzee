@@ -40,7 +40,10 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) : Dart
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun initImpl(gameParams: String) { }
+    override fun initImpl(game: GameEntity)
+    {
+
+    }
 
     override fun factoryStatsPanel() = null
     override fun factoryScorer() = DartsScorerDartzee()

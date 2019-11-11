@@ -20,7 +20,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
 
     private val hmPlayerNumberToBadLuckCount = HashMapCount<Int>()
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl(game: GameEntity)
     {
         //Do nothing
     }
