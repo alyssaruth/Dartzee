@@ -1,15 +1,13 @@
-package burlton.dartzee.code.screen.game;
+package burlton.dartzee.code.screen.game.scorer;
 
 import burlton.dartzee.code.object.Dart;
 import burlton.dartzee.code.object.DartNotThrown;
 import burlton.dartzee.code.utils.PreferenceUtil;
+import burlton.dartzee.code.utils.RegistryConstantsKt;
 import burlton.desktopcore.code.bean.AbstractTableRenderer;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_DOUBLE_BG_BRIGHTNESS;
-import static burlton.dartzee.code.utils.RegistryConstantsKt.PREFERENCES_DOUBLE_FG_BRIGHTNESS;
 
 public final class DartsScorerRoundTheClock extends DartsScorerPausable
 {
@@ -132,8 +130,8 @@ public final class DartsScorerRoundTheClock extends DartsScorerPausable
 			}
 			else
 			{
-				double bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS);
-        		double fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS);
+				double bgBrightness = PreferenceUtil.getDoubleValue(RegistryConstantsKt.PREFERENCES_DOUBLE_BG_BRIGHTNESS);
+        		double fgBrightness = PreferenceUtil.getDoubleValue(RegistryConstantsKt.PREFERENCES_DOUBLE_FG_BRIGHTNESS);
         		
         		float hue = 0; //Red
         		if (typedValue.hitClockTarget(clockType))

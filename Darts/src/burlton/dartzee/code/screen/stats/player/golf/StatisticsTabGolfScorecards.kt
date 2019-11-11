@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.stats.player.golf
 
 import burlton.dartzee.code.bean.ScrollTableDartsGame
-import burlton.dartzee.code.screen.game.DartsScorerGolf
+import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.stats.MODE_BACK_9

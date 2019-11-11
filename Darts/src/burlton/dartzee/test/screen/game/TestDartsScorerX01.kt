@@ -2,7 +2,7 @@ package burlton.dartzee.test.screen.game
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartHint
-import burlton.dartzee.code.screen.game.DartsScorerX01
+import burlton.dartzee.code.screen.game.scorer.DartsScorerX01
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldContainExactly

@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.game
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.screen.game.scorer.SCORER_WIDTH
 import java.awt.Dimension
 import java.awt.Frame
 import java.awt.event.WindowEvent

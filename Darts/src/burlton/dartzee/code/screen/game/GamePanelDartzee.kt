@@ -4,6 +4,7 @@ import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerDartzee>(parent, game)
 {

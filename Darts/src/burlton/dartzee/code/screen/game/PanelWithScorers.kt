@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.screen.game.scorer.AbstractScorer
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import javax.swing.JPanel

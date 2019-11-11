@@ -4,7 +4,7 @@ import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import burlton.dartzee.code.db.*
-import burlton.dartzee.code.screen.game.DartsScorerRoundTheClock
+import burlton.dartzee.code.screen.game.scorer.DartsScorerRoundTheClock
 import burlton.dartzee.code.screen.game.GamePanelRoundTheClock
 import burlton.dartzee.test.db.TestAchievementEntity
 import burlton.dartzee.test.helper.AbstractDartsTest

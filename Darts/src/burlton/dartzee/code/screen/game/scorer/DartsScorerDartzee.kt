@@ -1,4 +1,4 @@
-package burlton.dartzee.code.screen.game
+package burlton.dartzee.code.screen.game.scorer
 
 class DartsScorerDartzee: DartsScorer()
 {
@@ -6,7 +6,7 @@ class DartsScorerDartzee: DartsScorer()
 
     override fun rowIsComplete(rowNumber: Int) = true
 
-    override fun getNumberOfColumns() = 4
+    override fun getNumberOfColumns() = 5
 
     override fun initImpl(gameParams: String?)
     {

@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.game
 
-import burlton.dartzee.code.screen.game.AbstractScorer
+import burlton.dartzee.code.screen.game.scorer.AbstractScorer
 import burlton.dartzee.code.screen.game.PanelWithScorers
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertPlayer

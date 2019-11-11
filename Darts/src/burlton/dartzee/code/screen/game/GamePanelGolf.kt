@@ -9,6 +9,7 @@ import burlton.dartzee.code.achievements.retrieveAchievementForDetail
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 
 open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerGolf>(parent, game)
 {
