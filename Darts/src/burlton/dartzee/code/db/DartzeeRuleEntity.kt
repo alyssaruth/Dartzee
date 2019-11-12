@@ -50,6 +50,7 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     fun retrieveForTemplate(templateId: String) = retrieveEntities(getTemplateWhere(templateId)).sortedBy { it.ordinal }
     fun deleteForTemplate(templateId: String) = deleteWhere(getTemplateWhere(templateId))
 
+    fun retrieveForGame(gameId: String) = retrieveEntities("EntityName = 'Game' AND EntityId = '$gameId'").sortedBy { it.ordinal }
 
-    fun getTemplateWhere(templateId: String) = "EntityName = '$DARTZEE_TEMPLATE' AND EntityId = '$templateId'"
+    private fun getTemplateWhere(templateId: String) = "EntityName = '$DARTZEE_TEMPLATE' AND EntityId = '$templateId'"
 }
