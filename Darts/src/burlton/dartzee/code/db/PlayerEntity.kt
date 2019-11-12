@@ -27,10 +27,10 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
                 + "PlayerImageId VARCHAR(36) NOT NULL")
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
-        val nameIndex = mutableListOf("Name")
-        val strategyDtDeletedIndex = mutableListOf("Strategy", "DtDeleted")
+        val nameIndex = listOf("Name")
+        val strategyDtDeletedIndex = listOf("Strategy", "DtDeleted")
 
         indexes.add(nameIndex)
         indexes.add(strategyDtDeletedIndex)
