@@ -17,4 +17,8 @@ class RoundDetailEntity: AbstractEntity<RoundDetailEntity>()
                 + "Detail VARCHAR(5000) NOT NULL")
     }
 
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
+    {
+        indexes.add(listOf("PlayerId", "ParticipantId", "RoundNumber"))
+    }
 }
