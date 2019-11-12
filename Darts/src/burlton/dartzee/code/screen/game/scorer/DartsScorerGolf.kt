@@ -74,18 +74,18 @@ class DartsScorerGolf : DartsScorer()
      * Helper to add a full round at a time, for when we're viewing stats or loading a game
      */
     @JvmOverloads
-    fun addDarts(darts: Collection<Dart>, gameId: Long = -1)
+    fun addDarts(darts: Collection<Dart>, localGameId: Long = -1)
     {
         for (dart in darts)
         {
             addDart(dart)
         }
 
-        if (gameId > -1)
+        if (localGameId > -1)
         {
             val row = tableScores.rowCount - 1
             val column = tableScores.columnCount - 1
-            model.setValueAt(gameId, row, column)
+            model.setValueAt(localGameId, row, column)
         }
 
         finaliseRoundScore()

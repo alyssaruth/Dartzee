@@ -174,6 +174,7 @@ fun insertGame(uuid: String = randomGuid(),
 fun insertDartzeeRule(uuid: String = randomGuid(),
                       entityName: String = "",
                       entityId: String = "",
+                      ordinal: Int = 1,
                       calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
                       dtCreation: Timestamp = getSqlDateNow(),
                       dtLastUpdate: Timestamp = getSqlDateNow()): DartzeeRuleEntity
@@ -184,6 +185,7 @@ fun insertDartzeeRule(uuid: String = randomGuid(),
     de.entityId = entityId
     de.entityName = entityName
     de.calculationResult = calculationResult.toDbString()
+    de.ordinal = ordinal
 
     de.saveToDatabase(dtLastUpdate)
 

@@ -61,8 +61,8 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
     /**
      * Screen stuff
      */
-    protected val dartboard = Dartboard()
-    protected val statsPanel = factoryStatsPanel()
+    protected val dartboard = factoryDartboard()
+    protected val statsPanel: GameStatisticsPanel? = factoryStatsPanel()
 
     private val panelSouth = JPanel()
     protected val slider = SliderAiSpeed(true)
@@ -77,6 +77,8 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
     protected fun getActiveCount() = hmPlayerNumberToParticipant.values.count{ it.isActive() }
 
     fun getGameId() = gameEntity.rowId
+
+    open fun factoryDartboard(): Dartboard = Dartboard()
 
     open fun getFinishingPositionFromPlayersRemaining(): Int
     {
