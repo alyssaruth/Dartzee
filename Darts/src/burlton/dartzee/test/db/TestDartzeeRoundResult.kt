@@ -1,12 +1,12 @@
 package burlton.dartzee.test.db
 
-import burlton.dartzee.code.db.RoundDetailEntity
+import burlton.dartzee.code.db.DartzeeRoundResult
 import io.kotlintest.matchers.collections.shouldContainExactly
 import org.junit.Test
 
-class TestRoundDetailEntity: AbstractEntityTest<RoundDetailEntity>()
+class TestDartzeeRoundResult: AbstractEntityTest<DartzeeRoundResult>()
 {
-    override fun factoryDao() = RoundDetailEntity()
+    override fun factoryDao() = DartzeeRoundResult()
 
     @Test
     fun `Should be indexed on PlayerId_ParticipantId_RoundNumber`()
@@ -14,6 +14,6 @@ class TestRoundDetailEntity: AbstractEntityTest<RoundDetailEntity>()
         val indexes = mutableListOf<List<String>>()
         factoryDao().addListsOfColumnsForIndexes(indexes)
 
-        indexes.shouldContainExactly(listOf("PlayerId", "ParticipantId", "RoundNumber"))
+        indexes.first().shouldContainExactly("PlayerId", "ParticipantId", "RoundNumber")
     }
 }
