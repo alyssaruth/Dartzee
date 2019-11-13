@@ -47,7 +47,14 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
         }
         else if (result == null)
         {
-            isEnabled = getValidSegments(dartboard, darts).isNotEmpty()
+            if (darts.size < 3)
+            {
+                isEnabled = getValidSegments(dartboard, darts).isNotEmpty()
+            }
+            else
+            {
+                isEnabled = InjectedThings.dartzeeCalculator.isValidDartCombination(darts, dto)
+            }
         }
     }
 

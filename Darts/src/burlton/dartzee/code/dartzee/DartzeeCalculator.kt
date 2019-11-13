@@ -13,6 +13,12 @@ abstract class AbstractDartzeeCalculator
 {
     abstract fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     abstract fun isValidCombination(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
+
+    fun isValidDartCombination(darts: List<Dart>, rule: DartzeeRuleDto): Boolean
+    {
+        val segments = darts.map{ DartboardSegment("${it.score}_${it.segmentType}")}
+        return isValidCombination(segments, rule)
+    }
 }
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
