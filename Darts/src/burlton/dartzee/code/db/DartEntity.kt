@@ -34,10 +34,9 @@ class DartEntity : AbstractEntity<DartEntity>()
                 + "SegmentType INT NOT NULL")
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
-        val roundIdIndex = mutableListOf("PlayerId", "ParticipantId", "RoundNumber", "Ordinal")
-        indexes.add(roundIdIndex)
+        indexes.add(listOf("PlayerId", "ParticipantId", "RoundNumber", "Ordinal"))
     }
 
     companion object

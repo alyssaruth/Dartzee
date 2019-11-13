@@ -35,11 +35,9 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
                 + "AchievementDetail VARCHAR(255) NOT NULL")
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
-        val ix = mutableListOf("PlayerId", "AchievementRef")
-
-        indexes.add(ix)
+        indexes.add(listOf("PlayerId", "AchievementRef"))
     }
 
     companion object

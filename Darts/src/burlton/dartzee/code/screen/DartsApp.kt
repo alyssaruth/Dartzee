@@ -56,6 +56,11 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         addConsoleShortcut()
         switchScreen(ScreenCache.getScreen(MenuScreen::class.java))
 
+        if (DartsClient.devMode)
+        {
+            switchScreen(ScreenCache.getScreen(TestScreen::class.java))
+        }
+
         //Pop up the change log if we've just updated
         if (DartsClient.justUpdated)
         {
@@ -208,6 +213,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             Debug.setSendingEmails(true)
             Debug.stackTraceNoError("Testing")
             Debug.setSendingEmails(false)
+        }
+        else if (cmd == "testscrn")
+        {
+            ScreenCache.switchScreen(TestScreen::class.java)
         }
 
         return textToShow
