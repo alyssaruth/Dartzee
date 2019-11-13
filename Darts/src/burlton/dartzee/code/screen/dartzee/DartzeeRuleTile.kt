@@ -1,14 +1,20 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
+import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.DartsColour
+import burlton.dartzee.code.utils.InjectedThings
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.DefaultButtonModel
 import javax.swing.JButton
 
-class DartzeeRuleTile(dto: DartzeeRuleDto, ruleNumber: Int): JButton()
+class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
 {
+    var result: Boolean? = null
+
     init
     {
         preferredSize = Dimension(150, 80)
@@ -17,6 +23,7 @@ class DartzeeRuleTile(dto: DartzeeRuleDto, ruleNumber: Int): JButton()
 
     fun setResult(success: Boolean)
     {
+        result = success
         model = SoftDisableButtonModel()
         isFocusable = false
 
@@ -32,6 +39,28 @@ class DartzeeRuleTile(dto: DartzeeRuleDto, ruleNumber: Int): JButton()
         }
     }
 
+    fun updateForDartsThrown(dartboard: Dartboard, darts: List<Dart>)
+    {
+        if (darts.isEmpty())
+        {
+            isEnabled = true
+        }
+        else if (result == null)
+        {
+            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, dartboard, darts)
+            isEnabled = result.validSegments.isNotEmpty()
+        }
+    }
+
+    fun getValidSegments(): List<DartboardSegment>
+    {
+        if (result != null)
+        {
+            return listOf()
+        }
+
+        return dto.calculationResult!!.validSegments
+    }
 
     class SoftDisableButtonModel : DefaultButtonModel()
     {

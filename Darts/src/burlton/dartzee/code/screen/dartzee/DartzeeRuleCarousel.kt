@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResult
 import java.awt.BorderLayout
@@ -34,5 +35,15 @@ class DartzeeRuleCarousel(dtos: List<DartzeeRuleDto>): JPanel()
             val tile = tiles[it.ruleNumber - 1]
             tile.setResult(it.success)
         }
+    }
+
+    fun getValidSegments(): List<DartboardSegment>
+    {
+        val validSegments = HashSet<DartboardSegment>()
+        tiles.forEach {
+            validSegments.addAll(it.getValidSegments())
+        }
+
+        return validSegments.toList()
     }
 }
