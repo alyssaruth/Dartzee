@@ -44,11 +44,9 @@ class GameEntity : AbstractEntity<GameEntity>()
                 + "MatchOrdinal INT NOT NULL")
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
-        val gameTypeIndex = mutableListOf<String>()
-        gameTypeIndex.add("GameType")
-        indexes.add(gameTypeIndex)
+        indexes.add(listOf("GameType"))
     }
 
     override fun getColumnsAllowedToBeUnset(): ArrayList<String>

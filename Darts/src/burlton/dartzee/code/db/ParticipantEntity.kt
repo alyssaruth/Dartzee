@@ -33,10 +33,9 @@ class ParticipantEntity : AbstractEntity<ParticipantEntity>()
                 + "DtFinished TIMESTAMP NOT NULL")
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
-        val playerIdGameId = mutableListOf("PlayerId", "GameId")
-        indexes.add(playerIdGameId)
+        indexes.add(listOf("PlayerId", "GameId"))
     }
 
     /**

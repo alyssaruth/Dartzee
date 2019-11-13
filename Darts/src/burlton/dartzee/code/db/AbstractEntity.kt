@@ -29,7 +29,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
      * Default implementations
      */
     open fun getColumnsAllowedToBeUnset() = listOf<String>()
-    open fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>) {}
+    open fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>) {}
     open fun cacheValuesWhileResultSetActive() {}
 
     /**
@@ -311,7 +311,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     fun createIndexes()
     {
         //Also create the indexes
-        val indexes = mutableListOf<MutableList<String>>()
+        val indexes = mutableListOf<List<String>>()
         addListsOfColumnsForIndexes(indexes)
 
         indexes.forEach{
@@ -319,7 +319,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
     }
 
-    private fun createIndex(columns: MutableList<String>)
+    private fun createIndex(columns: List<String>)
     {
         val columnList = columns.joinToString()
         val indexName = columnList.replace(", ", "_")
