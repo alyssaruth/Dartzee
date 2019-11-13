@@ -209,6 +209,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             Debug.stackTraceNoError("Testing")
             Debug.setSendingEmails(false)
         }
+        else if (cmd == "testscrn")
+        {
+            ScreenCache.switchScreen(TestScreen::class.java)
+        }
 
         return textToShow
     }
