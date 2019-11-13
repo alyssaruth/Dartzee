@@ -75,7 +75,11 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         panelNorth.add(carousel, BorderLayout.CENTER)
         carousel.update(makeResults(), dartboard, dartsThrown)
 
-        dartboard.refreshValidSegments(carousel.getValidSegments(dartboard, dartsThrown))
+        if (dartsThrown.size < 3)
+        {
+            dartboard.refreshValidSegments(carousel.getValidSegments(dartboard, dartsThrown))
+        }
+
 
         ScreenCache.getMainScreen().pack()
         panelNorth.repaint()
