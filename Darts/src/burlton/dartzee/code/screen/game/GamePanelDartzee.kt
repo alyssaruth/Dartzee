@@ -9,12 +9,18 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
+import java.awt.BorderLayout
 
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerDartzee>(parent, game)
 {
     val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
 
     val carousel = DartzeeRuleCarousel(dtos)
+
+    init
+    {
+        add(carousel, BorderLayout.NORTH)
+    }
 
     override fun factoryDartboard() = DartboardRuleVerifier()
 
