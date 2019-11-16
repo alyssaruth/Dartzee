@@ -33,6 +33,12 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
 
     override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     {
+        if (dartsSoFar.size == 3)
+        {
+            val valid = isValidDartCombination(dartsSoFar, rule)
+            return if (valid) getValidSegments(rule, dartboard, listOf(dartsSoFar[0], dartsSoFar[1])) else INVALID_CALCULATION_RESULT
+        }
+
         val cachedCombinationResults = mutableMapOf<List<DartboardSegment>, Boolean>()
 
         val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar)

@@ -47,14 +47,7 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
         }
         else if (result == null)
         {
-            if (darts.size < 3)
-            {
-                isEnabled = getValidSegments(dartboard, darts).isNotEmpty()
-            }
-            else
-            {
-                isEnabled = InjectedThings.dartzeeCalculator.isValidDartCombination(darts, dto)
-            }
+            isEnabled = getValidSegments(dartboard, darts).isNotEmpty()
         }
     }
 
@@ -74,7 +67,6 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
             val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, dartboard, darts)
             return result.validSegments
         }
-
     }
 
     class SoftDisableButtonModel : DefaultButtonModel()
