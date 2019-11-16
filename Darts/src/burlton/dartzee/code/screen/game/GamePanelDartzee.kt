@@ -2,20 +2,24 @@ package burlton.dartzee.code.screen.game
 
 import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
+import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import java.awt.BorderLayout
 
-class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerDartzee>(parent, game)
+class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
+        DartsGamePanel<DartsScorerDartzee>(parent, game),
+        IDartzeeCarouselHoverListener
 {
     val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
 
-    val carousel = DartzeeRuleCarousel(dtos)
+    val carousel = DartzeeRuleCarousel(this, dtos)
 
     init
     {
@@ -69,4 +73,8 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) : Dart
     override fun factoryStatsPanel(): GameStatisticsPanel? = null
     override fun factoryScorer() = DartsScorerDartzee()
 
+    override fun hoverChanged(validSegments: List<DartboardSegment>)
+    {
+
+    }
 }
