@@ -8,16 +8,20 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants
 
-class DartzeeRuleCarousel(dtos: List<DartzeeRuleDto>): JPanel(), ActionListener
+class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
     private val scrollPane = JScrollPane()
     private val tiles = dtos.mapIndexed { ix, rule -> DartzeeRuleTile(rule, ix + 1) }
+    private val dartsThrown = mutableListOf<Dart>()
 
     private var tileListener: IDartzeeTileListener? = null
+    private var hoveredTile: DartzeeRuleTile? = null
 
     init
     {
@@ -33,10 +37,14 @@ class DartzeeRuleCarousel(dtos: List<DartzeeRuleDto>): JPanel(), ActionListener
 
         tiles.forEach { tilePanel.add(it) }
         tiles.forEach { it.addActionListener(this) }
+        tiles.forEach { it.addMouseListener(this) }
     }
 
     fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>)
     {
+        dartsThrown.clear()
+        dartsThrown.addAll(darts)
+
         tiles.forEach { it.clearPendingResult() }
 
         results.forEach {
@@ -86,8 +94,14 @@ class DartzeeRuleCarousel(dtos: List<DartzeeRuleDto>): JPanel(), ActionListener
         return RoundResult(rule.ruleNumber, rule.pendingResult!!)
     }
 
-    fun getValidSegments(dartsThrown: List<Dart>): List<DartboardSegment>
+    fun getValidSegments(): List<DartboardSegment>
     {
+        val tile = hoveredTile
+        if (tile != null)
+        {
+            return tile.getValidSegments(dartsThrown)
+        }
+
         val validSegments = HashSet<DartboardSegment>()
         tiles.forEach {
             validSegments.addAll(it.getValidSegments(dartsThrown))
@@ -114,4 +128,26 @@ class DartzeeRuleCarousel(dtos: List<DartzeeRuleDto>): JPanel(), ActionListener
             listener.tilePressed(src.ruleNumber, true)
         }
     }
+
+    override fun mouseEntered(e: MouseEvent?)
+    {
+        val src = e?.source
+        if (src is DartzeeRuleTile)
+        {
+            hoveredTile = src
+        }
+
+        parent.hoverChanged(getValidSegments())
+    }
+
+    override fun mouseExited(e: MouseEvent?)
+    {
+        hoveredTile = null
+
+        parent.hoverChanged(getValidSegments())
+    }
+
+    override fun mousePressed(e: MouseEvent?) {}
+    override fun mouseClicked(e: MouseEvent?) {}
+    override fun mouseReleased(e: MouseEvent?) {}
 }

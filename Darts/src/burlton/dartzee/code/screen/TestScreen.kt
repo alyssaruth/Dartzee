@@ -1,12 +1,14 @@
 package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.`object`.Dart
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.bean.GameParamFilterPanelDartzee
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
+import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
 import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -15,9 +17,9 @@ import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener
+class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDartzeeCarouselHoverListener
 {
-    var carousel: DartzeeRuleCarousel = DartzeeRuleCarousel(listOf())
+    var carousel: DartzeeRuleCarousel = DartzeeRuleCarousel(this, listOf())
     val dartzeeSelector = GameParamFilterPanelDartzee()
     val panelNorth = JPanel()
     val panelCenter = JPanel()
@@ -81,14 +83,14 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener
         val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
         ruleResults.clear()
 
-        carousel = DartzeeRuleCarousel(rules)
+        carousel = DartzeeRuleCarousel(this, rules)
         panelNorth.removeAll()
         panelNorth.add(carousel, BorderLayout.CENTER)
         carousel.update(ruleResults, dartsThrown)
 
         if (dartsThrown.size < 3)
         {
-            dartboard.refreshValidSegments(carousel.getValidSegments(dartsThrown))
+            dartboard.refreshValidSegments(carousel.getValidSegments())
         }
 
         ScreenCache.getMainScreen().pack()
@@ -109,7 +111,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener
 
         dartboard.clearDarts()
         dartboard.ensureListening()
-        dartboard.refreshValidSegments(carousel.getValidSegments(dartsThrown))
+        dartboard.refreshValidSegments(carousel.getValidSegments())
     }
 
     private fun confirmDarts()
@@ -145,7 +147,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener
 
         carousel.update(ruleResults, dartsThrown)
 
-        val validSegments = carousel.getValidSegments(dartsThrown)
+        val validSegments = carousel.getValidSegments()
         if (validSegments.isEmpty() || dartsThrown.size == 3)
         {
             dartboard.stopListening()
@@ -160,5 +162,10 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener
         carousel.clearTileListener()
 
         completeRound(ruleNumber, success)
+    }
+
+    override fun hoverChanged(validSegments: List<DartboardSegment>)
+    {
+        dartboard.refreshValidSegments(validSegments)
     }
 }
