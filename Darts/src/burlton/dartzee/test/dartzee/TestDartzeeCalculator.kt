@@ -24,9 +24,7 @@ class TestAllPossibilities: AbstractDartsTest()
     @Test
     fun `Should generate the right number of possibilities if given no darts`()
     {
-        val dartboard = borrowTestDartboard()
-
-        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf())
+        val possibilities = DartzeeCalculator().generateAllPossibilities(listOf())
         possibilities.size shouldBe 83 * 83 * 83
         possibilities.all { it.size == 3 } shouldBe true
     }
@@ -34,12 +32,10 @@ class TestAllPossibilities: AbstractDartsTest()
     @Test
     fun `Should generate the right number of possibilities if given 1 starting dart`()
     {
-        val dartboard = borrowTestDartboard()
-
         val dart = Dart(20, 3)
         dart.segmentType = SEGMENT_TYPE_TREBLE
 
-        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dart))
+        val possibilities = DartzeeCalculator().generateAllPossibilities(listOf(dart))
         possibilities.size shouldBe 83 * 83
         possibilities.all { it.size == 3} shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
@@ -48,15 +44,13 @@ class TestAllPossibilities: AbstractDartsTest()
     @Test
     fun `Should generate the right number of possibilities if given 2 starting darts`()
     {
-        val dartboard = borrowTestDartboard()
-
         val dartOne = Dart(20, 3)
         dartOne.segmentType = SEGMENT_TYPE_TREBLE
 
         val dartTwo = Dart(19, 2)
         dartTwo.segmentType = SEGMENT_TYPE_DOUBLE
 
-        val possibilities = DartzeeCalculator().generateAllPossibilities(dartboard, listOf(dartOne, dartTwo))
+        val possibilities = DartzeeCalculator().generateAllPossibilities(listOf(dartOne, dartTwo))
         possibilities.size shouldBe 83
         possibilities.all { it.size == 3 } shouldBe true
         possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
@@ -76,9 +70,7 @@ class TestValidSegments: AbstractDartsTest()
             inOrder = true
         )
 
-        val dartboard = borrowTestDartboard()
-
-        val segments = DartzeeCalculator().getValidSegments(rule, dartboard, listOf()).validSegments
+        val segments = DartzeeCalculator().getValidSegments(rule, listOf()).validSegments
 
         segments.find { it.score == 20 } shouldNotBe null
         segments.find { it.score == 19 } shouldBe null
@@ -89,9 +81,7 @@ class TestValidSegments: AbstractDartsTest()
     {
         val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleEven(), DartzeeDartRuleEven(), makeTotalScoreRule<DartzeeTotalRuleLessThan>(20))
 
-        val dartboard = borrowTestDartboard()
-
-        val segments = DartzeeCalculator().getValidSegments(rule, dartboard, listOf()).validSegments
+        val segments = DartzeeCalculator().getValidSegments(rule, listOf()).validSegments
 
         segments.find { it.score == 16 } shouldBe null
     }
@@ -105,8 +95,8 @@ class TestValidSegments: AbstractDartsTest()
         val calculator = DartzeeCalculator()
         val dartboard = borrowTestDartboard()
 
-        val firstSegments = calculator.getValidSegments(ruleOne, dartboard, listOf()).validSegments
-        val secondSegments = calculator.getValidSegments(ruleTwo, dartboard, listOf()).validSegments
+        val firstSegments = calculator.getValidSegments(ruleOne, listOf()).validSegments
+        val secondSegments = calculator.getValidSegments(ruleTwo, listOf()).validSegments
 
         firstSegments.any { it.score == 20 } shouldBe true
         secondSegments.any { it.score == 20 } shouldBe false

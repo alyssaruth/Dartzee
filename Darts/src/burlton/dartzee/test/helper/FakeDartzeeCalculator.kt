@@ -6,7 +6,6 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.dartzee.AbstractDartzeeCalculator
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.screen.Dartboard
 
 /**
  * Fast calculator for tests which assumes that the rule is always:
@@ -15,12 +14,12 @@ import burlton.dartzee.code.screen.Dartboard
  */
 class FakeDartzeeCalculator: AbstractDartzeeCalculator()
 {
-    override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
+    override fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     {
         val segments = mutableListOf<DartboardSegment>()
         if (isValidSoFar(dartsSoFar))
         {
-            val nextSegment = dartboard.getFakeValidSegment(dartsSoFar.size)
+            val nextSegment = getFakeValidSegment(dartsSoFar.size)
             segments.add(nextSegment)
         }
 
@@ -51,8 +50,8 @@ class FakeDartzeeCalculator: AbstractDartzeeCalculator()
     }
 }
 
-fun Dartboard.getFakeValidSegment(dartsThrown: Int) = when (dartsThrown) {
-    0 -> getSegment(1, SEGMENT_TYPE_INNER_SINGLE)!!
-    1 -> getSegment(2, SEGMENT_TYPE_INNER_SINGLE)!!
-    else -> getSegment(3, SEGMENT_TYPE_INNER_SINGLE)!!
+fun getFakeValidSegment(dartsThrown: Int) = when (dartsThrown) {
+    0 -> DartboardSegment("1_$SEGMENT_TYPE_INNER_SINGLE")
+    1 -> DartboardSegment("2_$SEGMENT_TYPE_INNER_SINGLE")
+    else -> DartboardSegment("3_$SEGMENT_TYPE_INNER_SINGLE")
 }

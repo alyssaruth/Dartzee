@@ -4,7 +4,6 @@ import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
-import burlton.dartzee.test.borrowTestDartboard
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -139,7 +138,7 @@ class TestDartzeeRuleDto: AbstractDartsTest()
     fun `Should convert to an entity correctly`()
     {
         val rule = DartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeTotalRulePrime(), true, false)
-        rule.runStrengthCalculation(borrowTestDartboard())
+        rule.runStrengthCalculation()
 
         val dao = rule.toEntity(5, "Game", "foo")
 
