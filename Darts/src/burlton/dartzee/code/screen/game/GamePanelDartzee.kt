@@ -3,7 +3,7 @@ package burlton.dartzee.code.screen.game
 import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
-import burlton.dartzee.code.db.DartzeeRoundResult
+import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
@@ -34,7 +34,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) : Dart
     {
         val pt = hmPlayerNumberToParticipant[playerNumber]!!
 
-        val roundResults = DartzeeRoundResult().retrieveEntities("PlayerId = ${pt.playerId} AND ParticipantId = ${pt.rowId}")
+        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = ${pt.playerId} AND ParticipantId = ${pt.rowId}")
     }
 
     override fun updateVariablesForNewRound() {

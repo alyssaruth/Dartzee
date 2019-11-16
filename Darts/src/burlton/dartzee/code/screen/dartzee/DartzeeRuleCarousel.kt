@@ -3,7 +3,7 @@ package burlton.dartzee.code.screen.dartzee
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.db.DartzeeRoundResult
+import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.screen.Dartboard
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -31,7 +31,7 @@ class DartzeeRuleCarousel(dtos: List<DartzeeRuleDto>): JPanel()
         tiles.forEach { tilePanel.add(it) }
     }
 
-    fun update(results: List<DartzeeRoundResult>, dartboard: Dartboard, darts: List<Dart>)
+    fun update(results: List<DartzeeRoundResultEntity>, dartboard: Dartboard, darts: List<Dart>)
     {
         results.forEach {
             val tile = tiles[it.ruleNumber - 1]

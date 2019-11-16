@@ -1,6 +1,6 @@
 package burlton.dartzee.code.db
 
-class DartzeeRoundResult: AbstractEntity<DartzeeRoundResult>()
+class DartzeeRoundResultEntity: AbstractEntity<DartzeeRoundResultEntity>()
 {
     var playerId: String = ""
     var participantId: String = ""

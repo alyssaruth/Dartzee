@@ -32,7 +32,7 @@ object DartsDatabaseUtil
                 AchievementEntity(),
                 DartzeeRuleEntity(),
                 DartzeeTemplateEntity(),
-                DartzeeRoundResult())
+                DartzeeRoundResultEntity())
     }
 
     @JvmStatic fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
@@ -103,7 +103,7 @@ object DartsDatabaseUtil
             Debug.appendBanner("Upgrading to Version 9")
             DartzeeRuleEntity().createTable()
             DartzeeTemplateEntity().createTable()
-            DartzeeRoundResult().createTable()
+            DartzeeRoundResultEntity().createTable()
 
             version.version = 9
             version.saveToDatabase()

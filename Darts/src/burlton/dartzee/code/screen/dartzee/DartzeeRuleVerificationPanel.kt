@@ -109,8 +109,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
             //We've thrown three darts, so just check validity
             lblCombinations.text = ""
 
-            val combination = dartsThrown.map { dartboard.getSegment(it.score, it.segmentType)!! }
-            if (dartzeeCalculator.isValidCombination(combination, dartzeeRule))
+            if (dartzeeCalculator.isValidDartCombination(dartsThrown, dartzeeRule))
             {
                 setAllColours(Color.GREEN)
             }

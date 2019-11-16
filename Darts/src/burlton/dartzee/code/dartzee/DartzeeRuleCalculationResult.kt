@@ -16,6 +16,8 @@ enum class DartzeeRuleDifficulty(val desc: String)
     VERY_EASY("Very Easy")
 }
 
+val INVALID_CALCULATION_RESULT = DartzeeRuleCalculationResult(listOf(), 0, 0, 0.0, 1.0)
+
 data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment>,
                                         val validCombinations: Int,
                                         val allCombinations: Int,

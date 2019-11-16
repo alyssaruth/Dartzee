@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.bean.GameParamFilterPanelDartzee
-import burlton.dartzee.code.db.DartzeeRoundResult
+import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
@@ -20,10 +20,12 @@ class TestScreen: EmbeddedScreen(), DartboardListener
     val dartzeeSelector = GameParamFilterPanelDartzee()
     val panelNorth = JPanel()
     val panelCenter = JPanel()
-    val btnReset = JButton()
+    private val btnReset = JButton()
+    private val btnConfirm = JButton()
     val dartboard = DartboardRuleVerifier()
 
     val dartsThrown = mutableListOf<Dart>()
+    val ruleResults = mutableListOf<DartzeeRoundResultEntity>()
 
     init
     {
@@ -41,12 +43,18 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         val btnPanel = JPanel()
         panelCenter.add(btnPanel, BorderLayout.SOUTH)
         btnPanel.add(btnReset)
+        btnPanel.add(btnConfirm)
 
         btnReset.preferredSize = Dimension(60, 60)
         btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
         btnReset.toolTipText = "Reset darts"
+        btnConfirm.isEnabled = false
+        btnConfirm.preferredSize = Dimension(60, 60)
+        btnConfirm.icon = ImageIcon(javaClass.getResource("/buttons/Confirm.png"))
+        btnConfirm.toolTipText = "Confirm round"
 
         btnReset.addActionListener(this)
+        btnConfirm.addActionListener(this)
 
         dartboard.paintDartboard()
 
@@ -59,6 +67,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         {
             btnNext, btnBack -> super.actionPerformed(arg0)
             btnReset -> clearDarts()
+            btnConfirm -> confirmDarts()
             else -> updateCarousel()
         }
 
@@ -86,13 +95,13 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         repaint()
     }
 
-    private fun makeResults(): List<DartzeeRoundResult>
+    private fun makeResults(): List<DartzeeRoundResultEntity>
     {
-        val result1 = DartzeeRoundResult()
+        val result1 = DartzeeRoundResultEntity()
         result1.ruleNumber = 1
         result1.success = false
 
-        val result2 = DartzeeRoundResult()
+        val result2 = DartzeeRoundResultEntity()
         result2.ruleNumber = 3
         result2.success = true
 
@@ -107,6 +116,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener
     {
         dartsThrown.clear()
 
+        btnConfirm.isEnabled = false
         carousel.update(makeResults(), dartboard, dartsThrown)
 
         dartboard.clearDarts()
@@ -114,18 +124,24 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         dartboard.refreshValidSegments(carousel.getValidSegments(dartboard, dartsThrown))
     }
 
+    private fun confirmDarts()
+    {
+
+    }
+
     override fun dartThrown(dart: Dart)
     {
         dartsThrown.add(dart)
 
-        if (dartsThrown.size == 3)
-        {
-            dartboard.stopListening()
-        }
-
         carousel.update(makeResults(), dartboard, dartsThrown)
 
-        dartboard.refreshValidSegments(carousel.getValidSegments(dartboard, dartsThrown))
-    }
+        val validSegments = carousel.getValidSegments(dartboard, dartsThrown)
+        if (validSegments.isEmpty() || dartsThrown.size == 3)
+        {
+            dartboard.stopListening()
+            btnConfirm.isEnabled = true
+        }
 
+        dartboard.refreshValidSegments(validSegments)
+    }
 }
