@@ -3,22 +3,41 @@ package burlton.dartzee.code.screen.dartzee
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.InjectedThings
+import org.jfree.chart.imagemap.ImageMapUtilities
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.DefaultButtonModel
 import javax.swing.JButton
 
-class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
+class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton()
 {
     var result: Boolean? = null
+    var pendingResult: Boolean? = null
 
     init
     {
+        val ruleDesc = ImageMapUtilities.htmlEscape(dto.generateRuleDescription())
         preferredSize = Dimension(150, 80)
-        text = "<html><center><b>#$ruleNumber <br /><br /> ${dto.generateRuleDescription()}</b></center></html>"
+        text = "<html><center><b>#$ruleNumber <br /><br /> $ruleDesc</b></center></html>"
+    }
+
+    fun clearPendingResult()
+    {
+        pendingResult = null
+        isFocusable = true
+
+        background = null
+        foreground = null
+    }
+
+    fun setPendingResult(success: Boolean)
+    {
+        pendingResult = success
+        isFocusable = false
+
+        setColoursForResult(success)
     }
 
     fun setResult(success: Boolean)
@@ -27,6 +46,11 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
         model = SoftDisableButtonModel()
         isFocusable = false
 
+        setColoursForResult(success)
+    }
+
+    private fun setColoursForResult(success: Boolean)
+    {
         if (success)
         {
             background = Color.GREEN
@@ -39,16 +63,9 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
         }
     }
 
-    fun updateState(dartboard: Dartboard, darts: List<Dart>)
+    fun updateState(darts: List<Dart>)
     {
-        if (darts.isEmpty())
-        {
-            isEnabled = true
-        }
-        else if (result == null)
-        {
-            isEnabled = getValidSegments(darts).isNotEmpty()
-        }
+        isVisible = getValidSegments(darts).isNotEmpty()
     }
 
     fun getValidSegments(darts: List<Dart>): List<DartboardSegment>

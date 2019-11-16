@@ -7,6 +7,7 @@ import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
+import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -14,7 +15,7 @@ import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class TestScreen: EmbeddedScreen(), DartboardListener
+class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener
 {
     var carousel: DartzeeRuleCarousel = DartzeeRuleCarousel(listOf())
     val dartzeeSelector = GameParamFilterPanelDartzee()
@@ -78,34 +79,21 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         val template = dartzeeSelector.getSelectedTemplate() ?: return
 
         val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
+        ruleResults.clear()
 
         carousel = DartzeeRuleCarousel(rules)
         panelNorth.removeAll()
         panelNorth.add(carousel, BorderLayout.CENTER)
-        carousel.update(makeResults(), dartboard, dartsThrown)
+        carousel.update(ruleResults, dartsThrown)
 
         if (dartsThrown.size < 3)
         {
             dartboard.refreshValidSegments(carousel.getValidSegments(dartsThrown))
         }
 
-
         ScreenCache.getMainScreen().pack()
         panelNorth.repaint()
         repaint()
-    }
-
-    private fun makeResults(): List<DartzeeRoundResultEntity>
-    {
-        val result1 = DartzeeRoundResultEntity()
-        result1.ruleNumber = 1
-        result1.success = false
-
-        val result2 = DartzeeRoundResultEntity()
-        result2.ruleNumber = 3
-        result2.success = true
-
-        return listOf(result1, result2)
     }
 
     override fun initialise() { }
@@ -117,7 +105,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         dartsThrown.clear()
 
         btnConfirm.isEnabled = false
-        carousel.update(makeResults(), dartboard, dartsThrown)
+        carousel.update(ruleResults, dartsThrown)
 
         dartboard.clearDarts()
         dartboard.ensureListening()
@@ -126,14 +114,36 @@ class TestScreen: EmbeddedScreen(), DartboardListener
 
     private fun confirmDarts()
     {
+        val result = carousel.getRoundResult()
+        if (!result.userInputNeeded)
+        {
+            completeRound(result.ruleNumber, result.success)
+        }
+        else
+        {
+            btnConfirm.isEnabled = false
+            btnReset.isEnabled = false
+            carousel.addTileListener(this)
+        }
+    }
 
+    private fun completeRound(ruleNumber: Int, success: Boolean)
+    {
+        val entity = DartzeeRoundResultEntity()
+        entity.ruleNumber = ruleNumber
+        entity.success = success
+
+        ruleResults.add(entity)
+
+        clearDarts()
     }
 
     override fun dartThrown(dart: Dart)
     {
         dartsThrown.add(dart)
+        btnReset.isEnabled = true
 
-        carousel.update(makeResults(), dartboard, dartsThrown)
+        carousel.update(ruleResults, dartsThrown)
 
         val validSegments = carousel.getValidSegments(dartsThrown)
         if (validSegments.isEmpty() || dartsThrown.size == 3)
@@ -143,5 +153,12 @@ class TestScreen: EmbeddedScreen(), DartboardListener
         }
 
         dartboard.refreshValidSegments(validSegments)
+    }
+
+    override fun tilePressed(ruleNumber: Int, success: Boolean)
+    {
+        carousel.clearTileListener()
+
+        completeRound(ruleNumber, success)
     }
 }
