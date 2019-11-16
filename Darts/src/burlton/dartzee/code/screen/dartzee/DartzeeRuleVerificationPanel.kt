@@ -140,7 +140,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         }
         else
         {
-            dartzeeCalculator.getValidSegments(dartzeeRule, dartboard, dartsThrown)
+            dartzeeCalculator.getValidSegments(dartzeeRule, dartsThrown)
         }
     }
 

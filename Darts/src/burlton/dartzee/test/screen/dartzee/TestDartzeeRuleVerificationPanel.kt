@@ -48,21 +48,21 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         val dartboard = panel.dartboard
 
         val rule = makeDartzeeRuleDto()
-        rule.runStrengthCalculation(panel.dartboard)
+        rule.runStrengthCalculation()
 
         panel.updateRule(rule)
 
-        dartboard.validSegments.shouldContainExactly(dartboard.getFakeValidSegment(0))
+        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(0))
         panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
 
-        dartboard.validSegments.shouldContainExactly(dartboard.getFakeValidSegment(1))
+        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(1))
         panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
 
-        dartboard.validSegments.shouldContainExactly(dartboard.getFakeValidSegment(2))
+        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(2))
         panel.dartThrown(makeDart(20, 2, SEGMENT_TYPE_DOUBLE))
 
         //Shouldn't update on the last dart thrown
-        dartboard.validSegments.shouldContainExactly(dartboard.getFakeValidSegment(2))
+        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(2))
     }
 
 
@@ -72,7 +72,7 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         val panel = DartzeeRuleVerificationPanel()
 
         val rule = makeDartzeeRuleDto()
-        rule.runStrengthCalculation(panel.dartboard)
+        rule.runStrengthCalculation()
 
         panel.updateRule(rule)
         panel.shouldBeBlue()
@@ -93,7 +93,7 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         val panel = DartzeeRuleVerificationPanel()
 
         val rule = makeDartzeeRuleDto()
-        rule.runStrengthCalculation(panel.dartboard)
+        rule.runStrengthCalculation()
 
         panel.updateRule(rule)
 
@@ -107,7 +107,7 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         val panel = DartzeeRuleVerificationPanel()
 
         val rule = makeDartzeeRuleDto()
-        rule.runStrengthCalculation(panel.dartboard)
+        rule.runStrengthCalculation()
 
         panel.updateRule(rule)
 
@@ -126,7 +126,7 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         val panel = DartzeeRuleVerificationPanel()
 
         val rule = makeDartzeeRuleDto()
-        rule.runStrengthCalculation(panel.dartboard)
+        rule.runStrengthCalculation()
 
         panel.updateRule(rule)
 
@@ -142,7 +142,7 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
     {
         val panel  = DartzeeRuleVerificationPanel()
         val rule = makeDartzeeRuleDto()
-        rule.runStrengthCalculation(panel.dartboard)
+        rule.runStrengthCalculation()
 
         panel.updateRule(rule)
         panel.lblCombinations.text shouldBe "1 combinations (success%: 10.0%)"

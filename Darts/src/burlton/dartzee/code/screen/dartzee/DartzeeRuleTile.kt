@@ -47,11 +47,11 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
         }
         else if (result == null)
         {
-            isEnabled = getValidSegments(dartboard, darts).isNotEmpty()
+            isEnabled = getValidSegments(darts).isNotEmpty()
         }
     }
 
-    fun getValidSegments(dartboard: Dartboard, darts: List<Dart>): List<DartboardSegment>
+    fun getValidSegments(darts: List<Dart>): List<DartboardSegment>
     {
         if (result != null)
         {
@@ -64,7 +64,7 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, ruleNumber: Int): JButton()
         }
         else
         {
-            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, dartboard, darts)
+            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
             return result.validSegments
         }
     }

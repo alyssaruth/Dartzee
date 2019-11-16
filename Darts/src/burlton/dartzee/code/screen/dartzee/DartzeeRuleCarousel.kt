@@ -43,11 +43,11 @@ class DartzeeRuleCarousel(dtos: List<DartzeeRuleDto>): JPanel()
         }
     }
 
-    fun getValidSegments(dartboard: Dartboard, dartsThrown: List<Dart>): List<DartboardSegment>
+    fun getValidSegments(dartsThrown: List<Dart>): List<DartboardSegment>
     {
         val validSegments = HashSet<DartboardSegment>()
         tiles.forEach {
-            validSegments.addAll(it.getValidSegments(dartboard, dartsThrown))
+            validSegments.addAll(it.getValidSegments(dartsThrown))
         }
 
         return validSegments.toList()

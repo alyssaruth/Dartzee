@@ -11,7 +11,7 @@ import burlton.dartzee.code.screen.Dartboard
 
 abstract class AbstractDartzeeCalculator
 {
-    abstract fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
+    abstract fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     abstract fun isValidCombination(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
 
     fun isValidDartCombination(darts: List<Dart>, rule: DartzeeRuleDto): Boolean
@@ -23,6 +23,13 @@ abstract class AbstractDartzeeCalculator
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
 {
+    val dartboard = Dartboard(100, 100)
+
+    init
+    {
+        dartboard.paintDartboard()
+    }
+
     override fun isValidCombination(combination: List<DartboardSegment>,
                                     rule: DartzeeRuleDto): Boolean
     {
@@ -31,24 +38,24 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
                 && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder)
     }
 
-    override fun getValidSegments(rule: DartzeeRuleDto, dartboard: Dartboard, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
+    override fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     {
         if (dartsSoFar.size == 3)
         {
             val valid = isValidDartCombination(dartsSoFar, rule)
-            return if (valid) getValidSegments(rule, dartboard, listOf(dartsSoFar[0], dartsSoFar[1])) else INVALID_CALCULATION_RESULT
+            return if (valid) getValidSegments(rule, listOf(dartsSoFar[0], dartsSoFar[1])) else INVALID_CALCULATION_RESULT
         }
 
         val cachedCombinationResults = mutableMapOf<List<DartboardSegment>, Boolean>()
 
-        val allPossibilities = generateAllPossibilities(dartboard, dartsSoFar)
+        val allPossibilities = generateAllPossibilities(dartsSoFar)
 
         val validCombinations = allPossibilities.filter { isValidCombinationCached(it, rule, cachedCombinationResults) }
 
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
 
-        val validPixelPossibility = validCombinations.map { mapCombinationToProbability(it, dartboard) }.sum()
-        val allProbabilities = allPossibilities.map { mapCombinationToProbability(it, dartboard) }.sum()
+        val validPixelPossibility = validCombinations.map { mapCombinationToProbability(it) }.sum()
+        val allProbabilities = allPossibilities.map { mapCombinationToProbability(it) }.sum()
 
         return DartzeeRuleCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
     }
@@ -118,19 +125,19 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return rules.allIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }
     }
 
-    private fun mapCombinationToProbability(combination: List<DartboardSegment>, dartboard: Dartboard): Double
+    private fun mapCombinationToProbability(combination: List<DartboardSegment>): Double
     {
-        val probabilities = combination.map { getProbabilityOfSegment(dartboard, it) }
+        val probabilities = combination.map { getProbabilityOfSegment(it) }
         return probabilities.reduce { acc, i -> acc * i }
     }
 
-    private fun getProbabilityOfSegment(dartboard: Dartboard, segment: DartboardSegment): Double
+    private fun getProbabilityOfSegment(segment: DartboardSegment): Double
     {
         val allPointsCount = dartboard.scoringPoints.size.toDouble()
         return dartboard.getPointsForSegment(segment.score, segment.type).size.toDouble() / allPointsCount
     }
 
-    fun generateAllPossibilities(dartboard: Dartboard, dartsSoFar: List<Dart>): List<List<DartboardSegment>>
+    fun generateAllPossibilities(dartsSoFar: List<Dart>): List<List<DartboardSegment>>
     {
         val segments = dartboard.getAllSegments().filter { !it.isMiss() }.toMutableList()
         segments.add(DartboardSegment("20_$SEGMENT_TYPE_MISS"))

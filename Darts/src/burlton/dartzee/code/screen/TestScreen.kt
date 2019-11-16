@@ -86,7 +86,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener
 
         if (dartsThrown.size < 3)
         {
-            dartboard.refreshValidSegments(carousel.getValidSegments(dartboard, dartsThrown))
+            dartboard.refreshValidSegments(carousel.getValidSegments(dartsThrown))
         }
 
 
@@ -121,7 +121,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener
 
         dartboard.clearDarts()
         dartboard.ensureListening()
-        dartboard.refreshValidSegments(carousel.getValidSegments(dartboard, dartsThrown))
+        dartboard.refreshValidSegments(carousel.getValidSegments(dartsThrown))
     }
 
     private fun confirmDarts()
@@ -135,7 +135,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener
 
         carousel.update(makeResults(), dartboard, dartsThrown)
 
-        val validSegments = carousel.getValidSegments(dartboard, dartsThrown)
+        val validSegments = carousel.getValidSegments(dartsThrown)
         if (validSegments.isEmpty() || dartsThrown.size == 3)
         {
             dartboard.stopListening()

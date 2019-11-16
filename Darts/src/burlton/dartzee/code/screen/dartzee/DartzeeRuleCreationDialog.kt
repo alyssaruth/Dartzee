@@ -175,7 +175,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
 
         val rule = constructRuleFromComponents()
 
-        val calculationResult = rule.runStrengthCalculation(verificationPanel.dartboard)
+        val calculationResult = rule.runStrengthCalculation()
         val combinations = calculationResult.validCombinations
         if (combinations == 0)
         {
@@ -251,7 +251,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
             val ruleName = rule.generateRuleDescription()
             tfName.text = ruleName
 
-            val calculationResult = rule.runStrengthCalculation(verificationPanel.dartboard)
+            val calculationResult = rule.runStrengthCalculation()
             lblDifficulty.text = calculationResult.getDifficultyDesc()
             lblDifficulty.foreground = calculationResult.getForeground()
             lblDifficulty.background = calculationResult.getBackground()
