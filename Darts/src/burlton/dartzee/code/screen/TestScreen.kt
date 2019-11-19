@@ -1,6 +1,5 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.Debug
 import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
@@ -154,8 +153,6 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         {
             currentScore = currentScore.ceilDiv(2)
         }
-
-        Debug.append("Current score = $currentScore")
 
         scorer.setResult(result, currentScore)
 
