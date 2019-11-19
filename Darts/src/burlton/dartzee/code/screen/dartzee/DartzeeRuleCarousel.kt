@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
+import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.utils.getAllPossibleSegments
@@ -15,8 +16,6 @@ import java.awt.event.MouseListener
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants
-
-data class DartzeeRoundResult(val ruleNumber: Int, val success: Boolean, val userInputNeeded: Boolean = false, val successScore: Int = -1)
 
 class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
