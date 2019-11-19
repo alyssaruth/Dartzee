@@ -9,7 +9,10 @@ import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.listener.DartboardListener
-import burlton.dartzee.code.screen.dartzee.*
+import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
+import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
+import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -65,6 +68,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         btnReset.addActionListener(this)
         btnConfirm.addActionListener(this)
 
+        dartboard.renderScoreLabels = true
         dartboard.paintDartboard()
 
         dartboard.addDartboardListener(this)
