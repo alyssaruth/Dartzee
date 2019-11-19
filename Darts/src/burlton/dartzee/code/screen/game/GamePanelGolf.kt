@@ -130,9 +130,9 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Da
 
         updateScorersWithFinishingPositions()
 
-        parentWindow?.startNextGameIfNecessary()
-
         allPlayersFinished()
+
+        parentWindow?.startNextGameIfNecessary()
     }
 
     private fun setFinishingPositions()
