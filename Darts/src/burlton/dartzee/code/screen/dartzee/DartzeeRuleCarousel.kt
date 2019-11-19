@@ -14,7 +14,7 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants
 
-data class DartzeeRoundResult(val ruleNumber: Int, val success: Boolean, val userInputNeeded: Boolean = false)
+data class DartzeeRoundResult(val ruleNumber: Int, val success: Boolean, val userInputNeeded: Boolean = false, val successScore: Int = -1)
 
 class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
@@ -92,7 +92,9 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
         }
 
         val rule = tiles.first()
-        return DartzeeRoundResult(rule.ruleNumber, rule.pendingResult!!)
+        val success = rule.pendingResult!!
+
+        return DartzeeRoundResult(rule.ruleNumber, success, successScore = rule.dto.getSuccessTotal(dartsThrown))
     }
 
     fun getValidSegments(): List<DartboardSegment>

@@ -1,11 +1,11 @@
 package burlton.dartzee.code.screen.game
 
+import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.game.scorer.AbstractScorer
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import javax.swing.JPanel
-import kotlin.math.ceil
 
 /**
  * Represents a panel that has scorers on it, centralising the logic for laying them out and assigning players to them etc.
@@ -51,7 +51,7 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 
         for (i in 0 until totalPlayers) { scorersOrdered.add(factoryScorer()) }
 
-        val chunkSize = ceil(scorersOrdered.size.toDouble() / 2).toInt()
+        val chunkSize = scorersOrdered.size.ceilDiv(2)
         val eastAndWestScorers = scorersOrdered.chunked(chunkSize)
         val eastScorers = eastAndWestScorers[1]
         val westScorers = eastAndWestScorers[0]
