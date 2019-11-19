@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen
 
+import burlton.core.code.util.Debug
 import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
@@ -10,7 +11,6 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.dartzee.*
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
-import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -88,8 +88,9 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         roundNumber = 1
         currentScore = 0
 
-        val rule = makeDartzeeRuleDto(allowMisses = true)
-        carousel = DartzeeRuleCarousel(this, listOf(rule))
+        val template = dartzeeSelector.getSelectedTemplate() ?: return
+        val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
+        carousel = DartzeeRuleCarousel(this, rules)
         panelNorth.removeAll()
         panelNorth.add(carousel, BorderLayout.CENTER)
 
@@ -154,6 +155,8 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
             currentScore = currentScore.ceilDiv(2)
         }
 
+        Debug.append("Current score = $currentScore")
+
         scorer.setResult(result, currentScore)
 
         ruleResults.add(entity)
@@ -163,13 +166,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
 
         if (roundNumber == 2)
         {
-            val template = dartzeeSelector.getSelectedTemplate()!!
-            val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
-            carousel = DartzeeRuleCarousel(this, rules)
-            panelNorth.removeAll()
-            panelNorth.add(carousel, BorderLayout.CENTER)
-
-            dartboard.refreshValidSegments(carousel.getValidSegments())
+            carousel.highScoreRoundComplete()
         }
     }
 
