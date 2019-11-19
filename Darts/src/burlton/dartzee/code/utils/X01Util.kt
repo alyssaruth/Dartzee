@@ -81,13 +81,9 @@ fun isFinishRound(round: MutableList<Dart>): Boolean
  */
 fun getScoringDarts(allDarts: List<Dart>?, scoreCutOff: Int): MutableList<Dart>
 {
-    return if (allDarts == null)
-    {
-        mutableListOf()
-    }
-    else
-        allDarts.filter { d -> d.startingScore > scoreCutOff }.toMutableList()
+    allDarts ?: return mutableListOf()
 
+    return allDarts.filter { it.startingScore > scoreCutOff }.toMutableList()
 }
 
 fun calculateThreeDartAverage(darts: List<Dart>, scoreCutOff: Int): Double
@@ -105,7 +101,7 @@ fun calculateThreeDartAverage(darts: List<Dart>, scoreCutOff: Int): Double
 
 fun sumScore(darts: List<Dart>): Int
 {
-    return darts.stream().mapToInt { d -> d.getTotal() }.sum()
+    return darts.map { it.getTotal() }.sum()
 }
 
 /**
