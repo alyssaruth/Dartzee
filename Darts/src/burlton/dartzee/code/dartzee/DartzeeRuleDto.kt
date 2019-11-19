@@ -51,7 +51,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
     private fun getDartsDescription(): String
     {
         dart1Rule ?: return ""
-        dart2Rule ?: return "Score ${dart1Rule.getDescription()}"
+        dart2Rule ?: return "Score ${dart1Rule.getDescription()}s"
 
         //It's a 3 dart rule
         val dart1Desc = dart1Rule.getDescription()
