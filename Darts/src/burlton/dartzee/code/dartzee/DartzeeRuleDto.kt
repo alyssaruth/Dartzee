@@ -1,5 +1,6 @@
 package burlton.dartzee.code.dartzee
 
+import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
 import burlton.dartzee.code.db.DartzeeRuleEntity
@@ -26,6 +27,21 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
 
         return calculationResult
     }
+
+    fun getSuccessTotal(darts: List<Dart>): Int
+    {
+        dart1Rule ?: return darts.map { it.getTotal() }.sum()
+
+        if (dart2Rule != null)
+        {
+            return darts.map { it.getTotal() }.sum()
+        }
+        else
+        {
+            return darts.filter { dart1Rule.isValidDart(it) }.map { it.getTotal() }.sum()
+        }
+    }
+
 
     fun getDifficulty() = calculationResult?.percentage ?: 0.0
     fun getDifficultyDesc() = calculationResult?.getDifficultyDesc() ?: ""
