@@ -1,5 +1,6 @@
 package burlton.dartzee.test.dartzee
 
+import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
@@ -153,5 +154,33 @@ class TestDartzeeRuleDto: AbstractDartsTest()
         dao.dart2Rule shouldBe DartzeeDartRuleOdd().toDbString()
         dao.dart3Rule shouldBe DartzeeDartRuleInner().toDbString()
         dao.totalRule shouldBe DartzeeTotalRulePrime().toDbString()
+    }
+
+    val dartsForTotal = listOf(Dart(20, 1), Dart(20, 1), Dart(5, 2))
+    @Test
+    fun `Should just sum the darts if there are no dart rules`()
+    {
+        val dto = makeDartzeeRuleDto()
+        dto.getSuccessTotal(dartsForTotal) shouldBe 50
+    }
+
+    @Test
+    fun `Should just sum the darts if there are three dart rules`()
+    {
+        val dto = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleEven(), DartzeeDartRuleOdd())
+        dto.getSuccessTotal(dartsForTotal) shouldBe 50
+    }
+
+    @Test
+    fun `Should only sum the valid darts when there is only one dart rule`()
+    {
+        val dto = makeDartzeeRuleDto(DartzeeDartRuleScore())
+        dto.getSuccessTotal(dartsForTotal) shouldBe 40
+
+        val otherScoreRule = DartzeeDartRuleScore()
+        otherScoreRule.score = 5
+
+        val otherDto = makeDartzeeRuleDto(otherScoreRule)
+        otherDto.getSuccessTotal(dartsForTotal) shouldBe 10
     }
 }
