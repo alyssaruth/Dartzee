@@ -121,7 +121,7 @@ class TestDartzeeRuleDto: AbstractDartsTest()
         scoreRule.score = 15
 
         val rule = makeDartzeeRuleDto(scoreRule)
-        rule.generateRuleDescription() shouldBe "Score 15"
+        rule.generateRuleDescription() shouldBe "Score 15s"
     }
 
     @Test
@@ -131,7 +131,7 @@ class TestDartzeeRuleDto: AbstractDartsTest()
             DartzeeDartRuleEven(),
             totalRule = DartzeeTotalRuleGreaterThan()
         )
-        rule.generateRuleDescription() shouldBe "Score Even, Total > 20"
+        rule.generateRuleDescription() shouldBe "Score Evens, Total > 20"
     }
 
     @Test
