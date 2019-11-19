@@ -3,10 +3,9 @@ package burlton.dartzee.code.screen.dartzee
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.InjectedThings
+import burlton.dartzee.code.utils.setColoursForDartzeeResult
 import org.jfree.chart.imagemap.ImageMapUtilities
-import java.awt.Color
 import java.awt.Dimension
 import javax.swing.DefaultButtonModel
 import javax.swing.JButton
@@ -37,7 +36,7 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton()
         pendingResult = success
         isFocusable = false
 
-        setColoursForResult(success)
+        setColoursForDartzeeResult(success)
     }
 
     fun setResult(success: Boolean)
@@ -46,21 +45,7 @@ class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton()
         model = SoftDisableButtonModel()
         isFocusable = false
 
-        setColoursForResult(success)
-    }
-
-    private fun setColoursForResult(success: Boolean)
-    {
-        if (success)
-        {
-            background = Color.GREEN
-            foreground = DartsColour.getProportionalColour(1.0, 1, 0.4, 0.5)
-        }
-        else
-        {
-            background = Color.RED
-            foreground = DartsColour.getProportionalColour(0.0, 1, 0.4, 0.5)
-        }
+        setColoursForDartzeeResult(success)
     }
 
     fun updateState(darts: List<Dart>)

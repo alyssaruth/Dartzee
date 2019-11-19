@@ -5,11 +5,10 @@ import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.bean.GameParamFilterPanelDartzee
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
+import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.listener.DartboardListener
-import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
-import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
-import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
-import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
+import burlton.dartzee.code.screen.dartzee.*
+import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -26,9 +25,12 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
     private val btnReset = JButton()
     private val btnConfirm = JButton()
     val dartboard = DartboardRuleVerifier()
+    val scorer = DartsScorerDartzee()
 
+    //Transient stuff
     val dartsThrown = mutableListOf<Dart>()
     val ruleResults = mutableListOf<DartzeeRoundResultEntity>()
+    var roundNumber = 1
 
     init
     {
@@ -37,6 +39,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         add(dartzeeSelector, BorderLayout.SOUTH)
         add(panelCenter, BorderLayout.CENTER)
         add(panelNorth, BorderLayout.NORTH)
+        add(scorer, BorderLayout.WEST)
 
         panelNorth.layout = BorderLayout(0, 0)
 
@@ -82,6 +85,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
 
         val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
         ruleResults.clear()
+        roundNumber = 1
 
         carousel = DartzeeRuleCarousel(this, rules)
         panelNorth.removeAll()
@@ -98,13 +102,19 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         repaint()
     }
 
-    override fun initialise() { }
+    override fun initialise()
+    {
+        val player = PlayerEntity().retrieveEntities().first()
+        scorer.init(player, "")
+    }
 
     override fun getScreenName() = "Test Screen"
 
     private fun clearDarts()
     {
         dartsThrown.clear()
+
+        scorer.clearRound(roundNumber)
 
         btnConfirm.isEnabled = false
         carousel.update(ruleResults, dartsThrown)
@@ -117,9 +127,11 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
     private fun confirmDarts()
     {
         val result = carousel.getRoundResult()
+        scorer.setResult(result)
+
         if (!result.userInputNeeded)
         {
-            completeRound(result.ruleNumber, result.success)
+            completeRound(result)
         }
         else
         {
@@ -129,13 +141,16 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         }
     }
 
-    private fun completeRound(ruleNumber: Int, success: Boolean)
+    private fun completeRound(result: DartzeeRoundResult)
     {
         val entity = DartzeeRoundResultEntity()
-        entity.ruleNumber = ruleNumber
-        entity.success = success
+        entity.ruleNumber = result.ruleNumber
+        entity.success = result.success
+
+        scorer.setResult(result)
 
         ruleResults.add(entity)
+        roundNumber++
 
         clearDarts()
     }
@@ -154,14 +169,16 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
             btnConfirm.isEnabled = true
         }
 
+        scorer.addDart(dart)
+
         dartboard.refreshValidSegments(validSegments)
     }
 
-    override fun tilePressed(ruleNumber: Int, success: Boolean)
+    override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)
     {
         carousel.clearTileListener()
 
-        completeRound(ruleNumber, success)
+        completeRound(dartzeeRoundResult)
     }
 
     override fun hoverChanged(validSegments: List<DartboardSegment>)

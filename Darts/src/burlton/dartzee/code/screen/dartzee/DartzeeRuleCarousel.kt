@@ -14,6 +14,8 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants
 
+data class DartzeeRoundResult(val ruleNumber: Int, val success: Boolean, val userInputNeeded: Boolean = false)
+
 class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
     private val scrollPane = JScrollPane()
@@ -81,17 +83,16 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
     }
     private fun getFirstIncompleteRule(): DartzeeRuleTile? = tiles.firstOrNull { it.result == null }
 
-    data class RoundResult(val ruleNumber: Int, val success: Boolean, val userInputNeeded: Boolean = false)
-    fun getRoundResult(): RoundResult
+    fun getRoundResult(): DartzeeRoundResult
     {
         val tiles = tiles.filter { it.isVisible }
         if (tiles.size > 1)
         {
-            return RoundResult(-1, false, true)
+            return DartzeeRoundResult(-1, false, true)
         }
 
         val rule = tiles.first()
-        return RoundResult(rule.ruleNumber, rule.pendingResult!!)
+        return DartzeeRoundResult(rule.ruleNumber, rule.pendingResult!!)
     }
 
     fun getValidSegments(): List<DartboardSegment>
@@ -125,7 +126,8 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
         val listener = tileListener ?: return
         if (src is DartzeeRuleTile)
         {
-            listener.tilePressed(src.ruleNumber, true)
+            val result = DartzeeRoundResult(src.ruleNumber, true)
+            listener.tilePressed(result)
         }
     }
 
