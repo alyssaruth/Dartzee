@@ -1,6 +1,7 @@
 package burlton.core.test.util
 
 import burlton.core.code.util.MathsUtil
+import burlton.core.code.util.ceilDiv
 import burlton.core.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -50,5 +51,14 @@ class TestMathsUtil: AbstractTest()
         MathsUtil.getPercentage(0, total) shouldBe 0.0
         MathsUtil.getPercentage(1, total) shouldBe 33.3
         MathsUtil.getPercentage(2, total) shouldBe 66.7
+    }
+
+    @Test
+    fun `Test ceiling divide`()
+    {
+        4.ceilDiv(2) shouldBe 2
+        7.ceilDiv(3) shouldBe 3
+        5.ceilDiv(2) shouldBe 3
+        5.ceilDiv(5) shouldBe 1
     }
 }

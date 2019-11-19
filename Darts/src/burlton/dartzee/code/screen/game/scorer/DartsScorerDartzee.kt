@@ -35,6 +35,7 @@ class DartsScorerDartzee: DartsScorer()
     fun setResult(dartzeeRoundResult: DartzeeRoundResult, score: Int? = null)
     {
         model.setValueAt(dartzeeRoundResult, model.rowCount - 1, RULE_COLUMN)
+
         model.setValueAt(score, model.rowCount - 1, SCORE_COLUMN)
     }
 }

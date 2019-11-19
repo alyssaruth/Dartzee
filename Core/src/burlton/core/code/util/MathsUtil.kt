@@ -1,5 +1,13 @@
 package burlton.core.code.util
 
+import kotlin.math.ceil
+
+
+fun Int.ceilDiv(other: Int): Int
+{
+    return ceil(this.toDouble() / other).toInt()
+}
+
 class MathsUtil
 {
     companion object

@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen
 
+import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.bean.GameParamFilterPanelDartzee
@@ -9,6 +10,7 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.dartzee.*
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
+import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -31,6 +33,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
     val dartsThrown = mutableListOf<Dart>()
     val ruleResults = mutableListOf<DartzeeRoundResultEntity>()
     var roundNumber = 1
+    var currentScore = 0
 
     init
     {
@@ -74,28 +77,23 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
             btnNext, btnBack -> super.actionPerformed(arg0)
             btnReset -> clearDarts()
             btnConfirm -> confirmDarts()
-            else -> updateCarousel()
+            else -> startNewGame()
         }
 
     }
 
-    private fun updateCarousel()
+    private fun startNewGame()
     {
-        val template = dartzeeSelector.getSelectedTemplate() ?: return
-
-        val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
         ruleResults.clear()
         roundNumber = 1
+        currentScore = 0
 
-        carousel = DartzeeRuleCarousel(this, rules)
+        val rule = makeDartzeeRuleDto(allowMisses = true)
+        carousel = DartzeeRuleCarousel(this, listOf(rule))
         panelNorth.removeAll()
         panelNorth.add(carousel, BorderLayout.CENTER)
-        carousel.update(ruleResults, dartsThrown)
 
-        if (dartsThrown.size < 3)
-        {
-            dartboard.refreshValidSegments(carousel.getValidSegments())
-        }
+        dartboard.refreshValidSegments(carousel.getValidSegments())
 
         ScreenCache.getMainScreen().pack()
         panelNorth.repaint()
@@ -147,12 +145,32 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         entity.ruleNumber = result.ruleNumber
         entity.success = result.success
 
-        scorer.setResult(result)
+        if (result.success)
+        {
+            currentScore += result.successScore
+        }
+        else
+        {
+            currentScore = currentScore.ceilDiv(2)
+        }
+
+        scorer.setResult(result, currentScore)
 
         ruleResults.add(entity)
         roundNumber++
 
         clearDarts()
+
+        if (roundNumber == 2)
+        {
+            val template = dartzeeSelector.getSelectedTemplate()!!
+            val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
+            carousel = DartzeeRuleCarousel(this, rules)
+            panelNorth.removeAll()
+            panelNorth.add(carousel, BorderLayout.CENTER)
+
+            dartboard.refreshValidSegments(carousel.getValidSegments())
+        }
     }
 
     override fun dartThrown(dart: Dart)
@@ -183,6 +201,9 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
 
     override fun hoverChanged(validSegments: List<DartboardSegment>)
     {
-        dartboard.refreshValidSegments(validSegments)
+        if (dartsThrown.size < 3)
+        {
+            dartboard.refreshValidSegments(validSegments)
+        }
     }
 }
