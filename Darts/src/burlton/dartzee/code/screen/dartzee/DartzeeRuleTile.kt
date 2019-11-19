@@ -10,7 +10,7 @@ import java.awt.Dimension
 import javax.swing.DefaultButtonModel
 import javax.swing.JButton
 
-class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton()
+open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton()
 {
     var result: Boolean? = null
     var pendingResult: Boolean? = null

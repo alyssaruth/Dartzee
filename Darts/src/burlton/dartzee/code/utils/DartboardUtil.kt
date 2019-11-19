@@ -212,3 +212,22 @@ fun resetCachedDartboardValues()
 
     Dartboard.appearancePreferenceChanged()
 }
+
+fun getAllPossibleSegments(): List<DartboardSegment>
+{
+    val segments = mutableListOf<DartboardSegment>()
+    for (i in 1..20)
+    {
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_DOUBLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_TREBLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_OUTER_SINGLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_INNER_SINGLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_MISS}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_MISSED_BOARD}"))
+    }
+
+    segments.add(DartboardSegment("25_${SEGMENT_TYPE_OUTER_SINGLE}"))
+    segments.add(DartboardSegment("25_${SEGMENT_TYPE_DOUBLE}"))
+
+    return segments.toList()
+}
