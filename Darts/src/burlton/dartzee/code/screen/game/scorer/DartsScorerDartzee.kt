@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game.scorer
 
-import burlton.dartzee.code.screen.dartzee.DartzeeRoundResult
+import burlton.dartzee.code.dartzee.DartzeeRoundResult
 
 private const val RULE_COLUMN = 3
 private const val SCORE_COLUMN = 4

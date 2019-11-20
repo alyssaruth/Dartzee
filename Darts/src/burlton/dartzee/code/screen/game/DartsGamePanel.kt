@@ -36,7 +36,6 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
         ActionListener,
         MouseListener
 {
-
     protected var hmPlayerNumberToParticipant = mutableMapOf<Int, ParticipantEntity>()
     protected var hmPlayerNumberToDartsScorer = mutableMapOf<Int, S>()
     protected var hmPlayerNumberToLastRoundNumber = HashMap<Int, Int>()
