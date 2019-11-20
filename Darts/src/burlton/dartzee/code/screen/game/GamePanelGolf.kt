@@ -9,12 +9,15 @@ import burlton.dartzee.code.achievements.retrieveAchievementForDetail
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 
-open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerGolf>(parent, game)
+open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerGolf, Dartboard>(parent, game)
 {
     //Number of rounds - 9 holes or 18?
     private var numberOfRounds = -1
+
+    override fun factoryDartboard() = Dartboard()
 
     private fun getScoreForMostRecentDart() : Int
     {
@@ -59,7 +62,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Da
         }
 
         val score = getScoreForMostRecentDart()
-        if (activeScorer!!.getHuman())
+        if (activeScorer.human)
         {
             return score == 1
         }
@@ -78,7 +81,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Da
     {
         saveDartsToDatabase()
 
-        activeScorer?.finaliseRoundScore()
+        activeScorer.finaliseRoundScore()
 
         unlockAchievements()
 

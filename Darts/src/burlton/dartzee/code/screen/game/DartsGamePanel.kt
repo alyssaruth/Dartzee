@@ -30,7 +30,7 @@ import java.sql.SQLException
 import java.util.*
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, val gameEntity: GameEntity) :
+abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDartsGameScreen, val gameEntity: GameEntity) :
         PanelWithScorers<S>(),
         DartboardListener,
         ActionListener,
@@ -50,7 +50,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
 
     //Transitive things
     protected var currentPlayerNumber = 0
-    protected var activeScorer: S? = null
+    protected var activeScorer: S = factoryScorer()
     protected var dartsThrown = ArrayList<Dart>()
     protected var currentRoundNumber = -1
 
@@ -76,8 +76,6 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
     protected fun getActiveCount() = hmPlayerNumberToParticipant.values.count{ it.isActive() }
 
     fun getGameId() = gameEntity.rowId
-
-    open fun factoryDartboard(): Dartboard = Dartboard()
 
     open fun getFinishingPositionFromPlayersRemaining(): Int
     {
@@ -170,6 +168,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
     abstract fun saveDartsAndProceed()
     abstract fun initImpl(game: GameEntity)
     abstract fun factoryStatsPanel(): GameStatisticsPanel?
+    abstract fun factoryDartboard(): D
 
     /**
      * Regular methods
@@ -192,7 +191,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
 
     protected fun nextTurn()
     {
-        activeScorer = hmPlayerNumberToDartsScorer[currentPlayerNumber]
+        activeScorer = hmPlayerNumberToDartsScorer[currentPlayerNumber]!!
         selectScorer(activeScorer)
 
         dartsThrown.clear()
@@ -654,7 +653,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
         btnReset.isEnabled = false
 
         dartboard.clearDarts()
-        activeScorer!!.confirmCurrentRound()
+        activeScorer.confirmCurrentRound()
 
         saveDartsAndProceed()
     }
@@ -664,8 +663,8 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
         resetRoundVariables()
 
         dartboard.clearDarts()
-        activeScorer!!.clearRound(currentRoundNumber)
-        activeScorer!!.updatePlayerResult()
+        activeScorer.clearRound(currentRoundNumber)
+        activeScorer.updatePlayerResult()
         dartsThrown.clear()
 
         //If we're resetting, disable the buttons
@@ -673,7 +672,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
         btnReset.isEnabled = false
 
         //Might need to re-enable the dartboard for listening if we're a human player
-        val human = activeScorer!!.getHuman()
+        val human = activeScorer.human
         dartboard.listen(human)
     }
 
@@ -695,7 +694,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
 
     protected open fun readyForThrow()
     {
-        if (activeScorer!!.getHuman())
+        if (activeScorer.human)
         {
             //Human player
             dartboard.ensureListening()
@@ -786,6 +785,12 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
         toggleSlider()
     }
 
+    fun disableInputButtons()
+    {
+        btnConfirm.isEnabled = false
+        btnReset.isEnabled = false
+    }
+
     /**
      * MouseListener
      */
@@ -821,7 +826,7 @@ abstract class DartsGamePanel<S : DartsScorer>(parent: AbstractDartsGameScreen, 
     {
         const val VERBOSE_LOGGING = false
 
-        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<out DartsScorer>
+        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<out DartsScorer, out Dartboard>
         {
             return when (game.gameType)
             {
