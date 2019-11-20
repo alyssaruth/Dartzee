@@ -4,7 +4,6 @@ import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
-import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.achievements.retrieveAchievementForDetail
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
@@ -12,10 +11,10 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 
-open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<DartsScorerGolf, Dartboard>(parent, game)
+open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelFixedLength<DartsScorerGolf, Dartboard>(parent, game)
 {
     //Number of rounds - 9 holes or 18?
-    private var numberOfRounds = -1
+    override val totalRounds = Integer.parseInt(game.gameParams)
 
     override fun factoryDartboard() = Dartboard()
 
@@ -27,11 +26,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Da
         return lastDart.getGolfScore(targetHole)
     }
 
-    override fun initImpl(game: GameEntity)
-    {
-        //The params tell us how many holes
-        numberOfRounds = Integer.parseInt(game.gameParams)
-    }
+    override fun initImpl(game: GameEntity) {}
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
@@ -85,20 +80,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Da
 
         unlockAchievements()
 
-        if (currentRoundNumber == numberOfRounds)
-        {
-            handlePlayerFinish()
-        }
-
-        currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
-        if (getActiveCount() > 0)
-        {
-            nextTurn()
-        }
-        else
-        {
-            finishGame()
-        }
+        finishRound()
     }
 
     fun unlockAchievements()
@@ -124,52 +106,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Da
     {
         //Finishing positions are determined at the end
         return -1
-    }
-
-    private fun finishGame()
-    {
-        //Get the participants sorted by score so we can assign finishing positions
-        setFinishingPositions()
-
-        updateScorersWithFinishingPositions()
-
-        allPlayersFinished()
-
-        parentWindow?.startNextGameIfNecessary()
-    }
-
-    private fun setFinishingPositions()
-    {
-        //If there's only one player, it's already set to -1 which is correct
-        if (totalPlayers == 1)
-        {
-            return
-        }
-
-        val participants = hmPlayerNumberToParticipant.values.sortedBy{it.finalScore}
-
-        var previousScore = Integer.MAX_VALUE
-        var finishPos = 1
-        for (i in participants.indices)
-        {
-            val pt = participants[i]
-            val ptScore = pt.finalScore
-            if (ptScore > previousScore)
-            {
-                finishPos++
-            }
-
-            pt.finishingPosition = finishPos
-            pt.saveToDatabase()
-
-            if (finishPos == 1)
-            {
-                val achievementRef = getWinAchievementRef(gameEntity.gameType)
-                AchievementEntity.incrementAchievement(achievementRef, pt.playerId, getGameId())
-            }
-
-            previousScore = pt.finalScore
-        }
     }
 
     override fun factoryScorer() = DartsScorerGolf()

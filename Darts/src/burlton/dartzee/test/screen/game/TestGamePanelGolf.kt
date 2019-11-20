@@ -154,7 +154,7 @@ class TestGamePanelGolf: AbstractDartsTest()
                 hmPlayerNumberToDartsScorer[i] = scorer
             }
 
-            activeScorer = hmPlayerNumberToDartsScorer[0]
+            activeScorer = hmPlayerNumberToDartsScorer[0]!!
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
