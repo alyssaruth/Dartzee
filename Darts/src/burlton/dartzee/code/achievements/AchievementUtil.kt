@@ -1,6 +1,7 @@
 package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.achievements.dartzee.AchievementDartzeeGamesWon
 import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
 import burlton.dartzee.code.achievements.golf.AchievementGolfCourseMaster
 import burlton.dartzee.code.achievements.golf.AchievementGolfGamesWon
@@ -110,7 +111,8 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
             AchievementX01Btbf(),
             AchievementClockBestStreak(),
             AchievementX01NoMercy(),
-            AchievementGolfCourseMaster())
+            AchievementGolfCourseMaster(),
+            AchievementDartzeeGamesWon())
 }
 
 fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?

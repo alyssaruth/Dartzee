@@ -71,9 +71,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
-        val ruleResults = hmPlayerNumberToRoundResults[currentPlayerNumber]!!
-        carousel.update(ruleResults, dartsThrown)
-        dartboard.refreshValidSegments(carousel.getValidSegments())
+        updateCarouselAndDartboard()
     }
 
     override fun shouldStopAfterDartThrown(): Boolean
@@ -83,6 +81,20 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     }
 
     override fun shouldAIStop() = false
+
+    override fun readyForThrow()
+    {
+        super.readyForThrow()
+
+        updateCarouselAndDartboard()
+    }
+
+    private fun updateCarouselAndDartboard()
+    {
+        val ruleResults = hmPlayerNumberToRoundResults.getOrDefault(currentPlayerNumber, mutableListOf())
+        carousel.update(ruleResults, dartsThrown)
+        dartboard.refreshValidSegments(carousel.getValidSegments())
+    }
 
     override fun saveDartsAndProceed()
     {
