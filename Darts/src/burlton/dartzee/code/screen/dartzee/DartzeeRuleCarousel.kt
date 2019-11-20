@@ -5,6 +5,7 @@ import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
+import burlton.dartzee.code.utils.factoryHighScoreResult
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.code.utils.sumScore
 import java.awt.BorderLayout
@@ -96,7 +97,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
     {
         if (highScoreTile.isVisible)
         {
-            return DartzeeRoundResult(0, true, false, sumScore(dartsThrown))
+            return factoryHighScoreResult(dartsThrown)
         }
 
         val tiles = tiles.filter { it.isVisible }
