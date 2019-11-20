@@ -122,11 +122,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         finishRound()
     }
 
-    override fun initImpl(game: GameEntity)
-    {
-
-    }
-
     override fun factoryStatsPanel(): GameStatisticsPanel? = null
     override fun factoryScorer() = DartsScorerDartzee()
 

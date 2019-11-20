@@ -166,7 +166,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
     abstract fun saveDartsAndProceed()
-    abstract fun initImpl(game: GameEntity)
     abstract fun factoryStatsPanel(): GameStatisticsPanel?
     abstract fun factoryDartboard(): D
 
