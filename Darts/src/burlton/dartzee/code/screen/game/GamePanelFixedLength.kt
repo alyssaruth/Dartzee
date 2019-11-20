@@ -74,4 +74,10 @@ abstract class GamePanelFixedLength<S : DartsScorer, D: Dartboard>(parent: Abstr
             previousScore = pt.finalScore
         }
     }
+
+    override fun getFinishingPositionFromPlayersRemaining(): Int
+    {
+        //Finishing positions are determined at the end
+        return -1
+    }
 }

@@ -99,13 +99,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Ga
         }
     }
 
-
-    override fun getFinishingPositionFromPlayersRemaining(): Int
-    {
-        //Finishing positions are determined at the end
-        return -1
-    }
-
     override fun factoryScorer() = DartsScorerGolf()
 
     override fun shouldAIStop() = false

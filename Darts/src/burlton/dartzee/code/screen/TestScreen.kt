@@ -120,7 +120,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         scorer.clearRound(roundNumber)
 
         btnConfirm.isEnabled = false
-        carousel.update(ruleResults, dartsThrown)
+        carousel.update(ruleResults, dartsThrown, roundNumber)
 
         dartboard.clearDarts()
         dartboard.ensureListening()
@@ -164,10 +164,6 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         {
             ruleResults.add(entity)
         }
-        else
-        {
-            carousel.highScoreRoundComplete()
-        }
 
         roundNumber++
 
@@ -179,7 +175,7 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
         dartsThrown.add(dart)
         btnReset.isEnabled = true
 
-        carousel.update(ruleResults, dartsThrown)
+        carousel.update(ruleResults, dartsThrown, roundNumber)
 
         val validSegments = carousel.getValidSegments()
         if (validSegments.isEmpty() || dartsThrown.size == 3)
