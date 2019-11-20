@@ -7,7 +7,6 @@ import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.utils.factoryHighScoreResult
 import burlton.dartzee.code.utils.getAllPossibleSegments
-import burlton.dartzee.code.utils.sumScore
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -45,17 +44,22 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
         tiles.forEach { it.addMouseListener(this) }
     }
 
-    fun highScoreRoundComplete()
-    {
-        highScoreTile.isVisible = false
-        tilePanel.remove(highScoreTile)
-        tiles.forEach { tilePanel.add(it) }
-    }
-
-    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>)
+    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, roundNumber: Int)
     {
         dartsThrown.clear()
         dartsThrown.addAll(darts)
+
+        tilePanel.removeAll()
+        if (roundNumber == 1)
+        {
+            highScoreTile.isVisible = true
+            tilePanel.add(highScoreTile)
+        }
+        else
+        {
+            highScoreTile.isVisible = false
+            tiles.forEach { tilePanel.add(it) }
+        }
 
         tiles.forEach { it.clearPendingResult() }
 

@@ -22,10 +22,10 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         IDartzeeCarouselHoverListener,
         IDartzeeTileListener
 {
-    val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
+    private val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
     override val totalRounds = dtos.size + 1
 
-    val carousel = DartzeeRuleCarousel(this, dtos)
+    private val carousel = DartzeeRuleCarousel(this, dtos)
 
     //Transient things
     private var lastRoundScore = -1
@@ -42,7 +42,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
@@ -92,7 +91,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     private fun updateCarouselAndDartboard()
     {
         val ruleResults = hmPlayerNumberToRoundResults.getOrDefault(currentPlayerNumber, mutableListOf())
-        carousel.update(ruleResults, dartsThrown)
+        carousel.update(ruleResults, dartsThrown, currentRoundNumber)
         dartboard.refreshValidSegments(carousel.getValidSegments())
     }
 
@@ -123,10 +122,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         {
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
             hmPlayerNumberToRoundResults.putInList(currentPlayerNumber, entity)
-        }
-        else
-        {
-            carousel.highScoreRoundComplete()
         }
 
         saveDartsToDatabase()
