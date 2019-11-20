@@ -35,7 +35,6 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
 
         preferredSize = Dimension(150, 120)
 
-
         scrollPane.setViewportView(tilePanel)
         scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
         scrollPane.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
@@ -60,11 +59,8 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
         tiles.forEach { it.clearPendingResult() }
 
         results.forEach {
-            if (it.ruleNumber > 0)
-            {
-                val tile = tiles[it.ruleNumber - 1]
-                tile.setResult(it.success)
-            }
+            val tile = tiles[it.ruleNumber - 1]
+            tile.setResult(it.success)
         }
 
         tiles.forEach {

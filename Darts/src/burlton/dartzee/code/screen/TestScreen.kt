@@ -146,10 +146,6 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
 
     private fun completeRound(result: DartzeeRoundResult)
     {
-        val entity = DartzeeRoundResultEntity()
-        entity.ruleNumber = result.ruleNumber
-        entity.success = result.success
-
         if (result.success)
         {
             currentScore += result.successScore
@@ -159,17 +155,23 @@ class TestScreen: EmbeddedScreen(), DartboardListener, IDartzeeTileListener, IDa
             currentScore = currentScore.ceilDiv(2)
         }
 
+        val entity = DartzeeRoundResultEntity()
+        entity.ruleNumber = result.ruleNumber
+        entity.success = result.success
+
         scorer.setResult(result, currentScore)
-
-        ruleResults.add(entity)
-        roundNumber++
-
-        clearDarts()
-
-        if (roundNumber == 2)
+        if (roundNumber > 1)
+        {
+            ruleResults.add(entity)
+        }
+        else
         {
             carousel.highScoreRoundComplete()
         }
+
+        roundNumber++
+
+        clearDarts()
     }
 
     override fun dartThrown(dart: Dart)
