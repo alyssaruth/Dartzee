@@ -26,8 +26,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Ga
         return lastDart.getGolfScore(targetHole)
     }
 
-    override fun initImpl(game: GameEntity) {}
-
     override fun doAiTurn(model: AbstractDartsModel)
     {
         val targetHole = currentRoundNumber

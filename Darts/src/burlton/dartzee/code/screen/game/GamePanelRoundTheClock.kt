@@ -13,12 +13,12 @@ import burlton.dartzee.code.screen.game.scorer.DartsScorerRoundTheClock
 
 open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game)
 {
-    private var clockType = ""
+    private val clockType = game.gameParams
     val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
-        val currentTarget = activeScorer!!.currentClockTarget
+        val currentTarget = activeScorer.currentClockTarget
         model.throwClockDart(currentTarget, clockType, dartboard)
     }
 
@@ -90,12 +90,12 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
-        val currentClockTarget = activeScorer!!.currentClockTarget
+        val currentClockTarget = activeScorer.currentClockTarget
         dart.startingScore = currentClockTarget
 
         if (dart.hitClockTarget(clockType))
         {
-            activeScorer!!.incrementCurrentClockTarget()
+            activeScorer.incrementCurrentClockTarget()
 
             if (dartsThrown.size == 4)
             {
@@ -104,7 +104,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         }
         else if (dartsThrown.size != 4)
         {
-            activeScorer!!.disableBrucey()
+            activeScorer.disableBrucey()
         }
     }
 
@@ -115,7 +115,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        if (activeScorer!!.currentClockTarget > 20)
+        if (activeScorer.currentClockTarget > 20)
         {
             //Finished.
             return true
@@ -179,12 +179,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun currentPlayerHasFinished(): Boolean
     {
-        return activeScorer!!.currentClockTarget > 20
-    }
-
-    override fun initImpl(game: GameEntity)
-    {
-        this.clockType = game.gameParams
+        return activeScorer.currentClockTarget > 20
     }
 
     override fun factoryScorer(): DartsScorerRoundTheClock
