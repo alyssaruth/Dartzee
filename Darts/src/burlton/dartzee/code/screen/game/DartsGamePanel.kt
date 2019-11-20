@@ -252,8 +252,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             statsPanel.gameParams = gameEntity.gameParams
         }
 
-        initImpl(gameEntity)
-
         initScorers(totalPlayers)
     }
 
