@@ -4,10 +4,8 @@ import burlton.core.code.obj.HashMapList
 import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
-import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
-import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
@@ -17,16 +15,15 @@ import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
 import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import burlton.dartzee.code.utils.factoryHighScoreResult
-import burlton.dartzee.code.utils.sumScore
 import java.awt.BorderLayout
 
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
-        DartsGamePanel<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
+        GamePanelFixedLength<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
         IDartzeeCarouselHoverListener,
         IDartzeeTileListener
 {
     val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
-    val totalRounds = dtos.size + 1
+    override val totalRounds = dtos.size + 1
 
     val carousel = DartzeeRuleCarousel(this, dtos)
 
@@ -122,66 +119,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
         saveDartsToDatabase()
 
-        if (currentRoundNumber == totalRounds)
-        {
-            handlePlayerFinish()
-        }
-
-        currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
-        if (getActiveCount() > 0)
-        {
-            nextTurn()
-        }
-        else
-        {
-            finishGame()
-        }
-    }
-
-    private fun finishGame()
-    {
-        //Get the participants sorted by score so we can assign finishing positions
-        setFinishingPositions()
-
-        updateScorersWithFinishingPositions()
-
-        allPlayersFinished()
-
-        parentWindow?.startNextGameIfNecessary()
-    }
-
-    private fun setFinishingPositions()
-    {
-        //If there's only one player, it's already set to -1 which is correct
-        if (totalPlayers == 1)
-        {
-            return
-        }
-
-        val participants = hmPlayerNumberToParticipant.values.sortedBy{ it.finalScore }
-
-        var previousScore = Integer.MAX_VALUE
-        var finishPos = 1
-        for (i in participants.indices)
-        {
-            val pt = participants[i]
-            val ptScore = pt.finalScore
-            if (ptScore > previousScore)
-            {
-                finishPos++
-            }
-
-            pt.finishingPosition = finishPos
-            pt.saveToDatabase()
-
-            if (finishPos == 1)
-            {
-                val achievementRef = getWinAchievementRef(gameEntity.gameType)
-                AchievementEntity.incrementAchievement(achievementRef, pt.playerId, getGameId())
-            }
-
-            previousScore = pt.finalScore
-        }
+        finishRound()
     }
 
     override fun initImpl(game: GameEntity)

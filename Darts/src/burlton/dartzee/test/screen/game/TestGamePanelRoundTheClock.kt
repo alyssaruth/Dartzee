@@ -4,8 +4,8 @@ import burlton.core.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import burlton.dartzee.code.db.*
-import burlton.dartzee.code.screen.game.scorer.DartsScorerRoundTheClock
 import burlton.dartzee.code.screen.game.GamePanelRoundTheClock
+import burlton.dartzee.code.screen.game.scorer.DartsScorerRoundTheClock
 import burlton.dartzee.test.db.TestAchievementEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.randomGuid
@@ -124,7 +124,7 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
                 hmPlayerNumberToDartsScorer[i] = scorer
             }
 
-            activeScorer = hmPlayerNumberToDartsScorer[0]
+            activeScorer = hmPlayerNumberToDartsScorer[0]!!
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId

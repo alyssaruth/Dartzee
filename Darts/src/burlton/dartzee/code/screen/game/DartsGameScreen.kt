@@ -2,6 +2,7 @@ package burlton.dartzee.code.screen.game
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.scorer.DartsScorer
 
@@ -11,7 +12,7 @@ import burlton.dartzee.code.screen.game.scorer.DartsScorer
  */
 class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen(totalPlayers)
 {
-    var gamePanel: DartsGamePanel<out DartsScorer> = DartsGamePanel.factory(this, game)
+    var gamePanel: DartsGamePanel<out DartsScorer, out Dartboard> = DartsGamePanel.factory(this, game)
 
     init
     {

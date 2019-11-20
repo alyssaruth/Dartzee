@@ -6,7 +6,6 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.dartzee.code.screen.game.scorer.DartsScorer
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
@@ -18,7 +17,7 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
 {
     private val matchPanel = MatchSummaryPanel()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<out DartsScorer>>()
+    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *>>()
 
     init
     {
@@ -34,7 +33,7 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
 
     override fun getScreenHeight() = 705
 
-    fun addGameToMatch(game: GameEntity): DartsGamePanel<out DartsScorer>
+    fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *>
     {
         //Cache this screen in ScreenCache
         val gameId = game.rowId
@@ -109,7 +108,7 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
     {
         val sourceTabbedPane = e.source as JTabbedPane
         val selectedTab = sourceTabbedPane.selectedComponent
-        if (selectedTab is DartsGamePanel<*>)
+        if (selectedTab is DartsGamePanel<*, *>)
         {
             val title = selectedTab.gameTitle
             setTitle(title)

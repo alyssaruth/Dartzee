@@ -205,7 +205,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         currentRoundNumber = newRoundNo
         hmPlayerNumberToLastRoundNumber[currentPlayerNumber] = newRoundNo
 
-        Debug.appendBanner(activeScorer!!.playerName + ": Round " + newRoundNo, VERBOSE_LOGGING)
+        Debug.appendBanner(activeScorer.playerName + ": Round " + newRoundNo, VERBOSE_LOGGING)
 
         btnReset.isEnabled = false
         btnConfirm.isEnabled = false
@@ -537,7 +537,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         val participant = hmPlayerNumberToParticipant[currentPlayerNumber]!!
 
         val finishingPosition = getFinishingPositionFromPlayersRemaining()
-        val numberOfDarts = activeScorer!!.getTotalScore()
+        val numberOfDarts = activeScorer.getTotalScore()
 
         participant.finishingPosition = finishingPosition
         participant.finalScore = numberOfDarts
@@ -574,10 +574,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         Debug.append("Hit $dart", VERBOSE_LOGGING)
 
         dartsThrown.add(dart)
-        activeScorer!!.addDart(dart)
+        activeScorer.addDart(dart)
 
         //We've clicked on the dartboard, so dismiss the slider
-        if (activeScorer!!.getHuman())
+        if (activeScorer.getHuman())
         {
             dismissSlider()
         }
@@ -588,10 +588,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         doAnimations(dart)
 
         //Enable both of these
-        btnReset.isEnabled = activeScorer!!.getHuman()
+        btnReset.isEnabled = activeScorer.getHuman()
         if (!mustContinueThrowing())
         {
-            btnConfirm.isEnabled = activeScorer!!.getHuman()
+            btnConfirm.isEnabled = activeScorer.getHuman()
         }
 
         //If we've thrown three or should stop for other reasons (bust in X01), then stop throwing
@@ -631,7 +631,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
 
     protected fun stopThrowing()
     {
-        if (activeScorer!!.getHuman())
+        if (activeScorer.human)
         {
             dartboard.stopListening()
         }
