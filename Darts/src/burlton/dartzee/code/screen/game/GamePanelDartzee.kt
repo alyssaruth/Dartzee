@@ -16,6 +16,7 @@ import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
 import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
+import burlton.dartzee.code.utils.factoryHighScoreResult
 import burlton.dartzee.code.utils.sumScore
 import java.awt.BorderLayout
 
@@ -59,7 +60,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
             val darts = hmRoundToDarts[i]!!
             darts.forEach { scorer.addDart(it) }
 
-            val result = if (i == 1) DartzeeRoundResult(0, true, false, sumScore(darts)) else roundResults.find { it.roundNumber == i }!!.toDto()
+            val result = if (i == 1) factoryHighScoreResult(darts) else roundResults.find { it.roundNumber == i }!!.toDto()
             scorer.setResult(result)
         }
     }
@@ -111,7 +112,8 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         activeScorer.setResult(result, roundScore)
         if (currentRoundNumber > 1)
         {
-            DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
+            val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
+            hmPlayerNumberToRoundResults.putInList(currentPlayerNumber, entity)
         }
         else
         {
