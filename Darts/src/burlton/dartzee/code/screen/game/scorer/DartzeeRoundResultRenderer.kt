@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game.scorer
 
-import burlton.dartzee.code.screen.dartzee.DartzeeRoundResult
+import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.utils.setColoursForDartzeeResult
 import burlton.desktopcore.code.bean.AbstractTableRenderer
 import java.awt.Color
