@@ -41,6 +41,7 @@ object ResourceCache
     val URL_ACHIEVEMENT_CLOCK_BEST_STREAK: URL = javaClass.getResource("/achievements/likeClockwork.png")
     val URL_ACHIEVEMENT_X01_NO_MERCY: URL = javaClass.getResource("/achievements/noMercy.png")
     val URL_ACHIEVEMENT_GOLF_COURSE_MASTER: URL = javaClass.getResource("/achievements/courseMaster.png")
+    val URL_ACHIEVEMENT_DARTZEE_GAMES_WON: URL = javaClass.getResource("/achievements/trophyDartzee.png")
 
     private val wavPoolLock = Any()
     private val hmWavToInputStreams = HashMapList<String, AudioInputStream>()
