@@ -8,6 +8,10 @@ fun <E> MutableList<E>.addUnique(element: E)
     }
 }
 
+inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(descending: Boolean, crossinline selector: (T) -> R?): List<T> {
+    return if (descending) this.sortedByDescending(selector) else this.sortedBy(selector)
+}
+
 fun IntRange.getDescription(): String
 {
     return when

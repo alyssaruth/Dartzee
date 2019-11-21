@@ -37,5 +37,11 @@ class DartsScorerDartzee: DartsScorer()
         model.setValueAt(dartzeeRoundResult, model.rowCount - 1, RULE_COLUMN)
 
         model.setValueAt(score, model.rowCount - 1, SCORE_COLUMN)
+
+        if (score != null)
+        {
+            lblResult.text = "$score"
+            lblResult.isVisible = true
+        }
     }
 }
