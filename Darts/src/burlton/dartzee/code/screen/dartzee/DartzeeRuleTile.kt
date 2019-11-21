@@ -22,8 +22,9 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
         text = "<html><center><b>#$ruleNumber <br /><br /> $ruleDesc</b></center></html>"
     }
 
-    fun clearPendingResult()
+    fun reset()
     {
+        result = null
         pendingResult = null
         isFocusable = true
 

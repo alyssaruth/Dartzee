@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.stats.overall
 
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.EmbeddedScreen
+import burlton.dartzee.code.utils.getAllGameTypes
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
@@ -35,7 +35,7 @@ class LeaderboardsScreen : EmbeddedScreen(), ChangeListener
     {
         val tabs = mutableListOf<AbstractLeaderboard>()
 
-        GameEntity.getAllGameTypes().forEach{
+        getAllGameTypes().forEach{
             tabs.add(LeaderboardTotalScore(it))
         }
 

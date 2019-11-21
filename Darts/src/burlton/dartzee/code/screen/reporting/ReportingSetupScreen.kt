@@ -2,13 +2,13 @@ package burlton.dartzee.code.screen.reporting
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.bean.*
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
 import burlton.dartzee.code.reporting.ReportParameters
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.PlayerSelectDialog
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.utils.getFilterPanel
 import burlton.desktopcore.code.bean.DateFilterPanel
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.bean.ScrollTable
@@ -321,7 +321,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
             {
                 panelGame.remove(panelGameParams)
 
-                panelGameParams = GameEntity.getFilterPanel(comboBox.getGameType())
+                panelGameParams = getFilterPanel(comboBox.getGameType())
 
                 panelGameParams.isEnabled = cbType.isSelected
                 panelGame.add(panelGameParams, "cell 2 1")

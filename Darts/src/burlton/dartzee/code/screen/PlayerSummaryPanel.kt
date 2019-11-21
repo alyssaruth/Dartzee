@@ -1,9 +1,9 @@
 package burlton.dartzee.code.screen
 
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen
 import burlton.dartzee.code.stats.PlayerSummaryStats
+import burlton.dartzee.code.utils.getTypeDesc
 import net.miginfocom.swing.MigLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -25,7 +25,7 @@ class PlayerSummaryPanel(private val gameType: Int) : JPanel(), ActionListener
 
     init
     {
-        border = TitledBorder(null, GameEntity.getTypeDesc(gameType), TitledBorder.LEADING, TitledBorder.TOP, Font("Tahoma", Font.PLAIN, 20))
+        border = TitledBorder(null, getTypeDesc(gameType), TitledBorder.LEADING, TitledBorder.TOP, Font("Tahoma", Font.PLAIN, 20))
         layout = MigLayout("", "[][][][][][][][][grow][]", "[][][]")
 
         add(lblP, "cell 0 0")

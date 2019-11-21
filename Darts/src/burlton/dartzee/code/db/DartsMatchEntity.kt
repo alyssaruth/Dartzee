@@ -2,6 +2,7 @@ package burlton.dartzee.code.db
 
 import burlton.core.code.util.*
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.getGameDesc
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getEndOfTimeSqlString
 
@@ -98,7 +99,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     fun getMatchDesc(): String
     {
-        return "Match #$localId (${getMatchTypeDesc()} - ${GameEntity.getTypeDesc(gameType, gameParams)}, ${getPlayerCount()} players)"
+        return "Match #$localId (${getMatchTypeDesc()} - ${getGameDesc(gameType, gameParams)}, ${getPlayerCount()} players)"
     }
 
     private fun getMatchTypeDesc(): String

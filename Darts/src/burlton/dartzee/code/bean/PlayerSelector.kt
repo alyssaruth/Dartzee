@@ -1,8 +1,8 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
-import burlton.dartzee.code.db.GameEntity.Companion.getTypeDesc
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.utils.getTypeDesc
 import burlton.desktopcore.code.bean.DoubleClickListener
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.bean.ScrollTableOrdered

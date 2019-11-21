@@ -132,12 +132,7 @@ fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
 fun getBestGameAchievement(gameType : Int) : AbstractAchievementBestGame?
 {
     val ref = getAllAchievements().find {it is AbstractAchievementBestGame && it.gameType == gameType}
-    if (ref == null)
-    {
-        Debug.stackTrace("No best game achievement found for GameType [$gameType]")
-    }
-
-    return ref as AbstractAchievementBestGame
+    return ref as AbstractAchievementBestGame?
 }
 
 fun getWinAchievementRef(gameType : Int) : Int

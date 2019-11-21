@@ -2,6 +2,7 @@ package burlton.dartzee.code.achievements
 
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.utils.DatabaseUtil
+import burlton.dartzee.code.utils.doesHighestWin
 
 abstract class AbstractAchievementBestGame : AbstractAchievement()
 {
@@ -45,5 +46,5 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         }
     }
 
-    override fun isDecreasing() = true
+    override fun isDecreasing() = !doesHighestWin(gameType)
 }

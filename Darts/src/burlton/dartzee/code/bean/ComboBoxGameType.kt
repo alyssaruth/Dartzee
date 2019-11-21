@@ -1,6 +1,7 @@
 package burlton.dartzee.code.bean
 
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.utils.getAllGameTypes
+import burlton.dartzee.code.utils.getTypeDesc
 import burlton.desktopcore.code.bean.ComboBoxItem
 import burlton.desktopcore.code.bean.selectedItemTyped
 import javax.swing.DefaultComboBoxModel
@@ -12,10 +13,10 @@ class ComboBoxGameType : JComboBox<ComboBoxItem<Int>>()
     {
         val model = DefaultComboBoxModel<ComboBoxItem<Int>>()
 
-        val gameTypes = GameEntity.getAllGameTypes()
+        val gameTypes = getAllGameTypes()
         for (gameType in gameTypes)
         {
-            val item = ComboBoxItem(gameType, GameEntity.getTypeDesc(gameType))
+            val item = ComboBoxItem(gameType, getTypeDesc(gameType))
             model.addElement(item)
         }
 
