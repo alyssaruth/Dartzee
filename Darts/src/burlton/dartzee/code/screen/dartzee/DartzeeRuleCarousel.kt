@@ -61,7 +61,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, dtos: List<
             tiles.forEach { tilePanel.add(it) }
         }
 
-        tiles.forEach { it.clearPendingResult() }
+        tiles.forEach { it.reset() }
 
         results.forEach {
             val tile = tiles[it.ruleNumber - 1]

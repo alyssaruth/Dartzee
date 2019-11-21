@@ -1,14 +1,14 @@
 package burlton.dartzee.code.db.sanity
 
 import burlton.dartzee.code.bean.ScrollTableDartsGame
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.ParticipantEntity
+import burlton.dartzee.code.utils.getTypeDesc
 import burlton.desktopcore.code.util.TableUtil.DefaultModel
 import javax.swing.table.DefaultTableModel
 
 class SanityCheckResultFinalScoreMismatch(private val gameType: Int, private val hmParticipantToFinalScore: MutableMap<ParticipantEntity, Int>) : AbstractSanityCheckResult()
 {
-    override fun getDescription() = "FinalScores that don't match the raw data (${GameEntity.getTypeDesc(gameType)})"
+    override fun getDescription() = "FinalScores that don't match the raw data (${getTypeDesc(gameType)})"
 
     override fun getScrollTable() = ScrollTableDartsGame("GameId")
 

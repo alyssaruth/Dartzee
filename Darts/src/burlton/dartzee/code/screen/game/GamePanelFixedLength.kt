@@ -5,11 +5,13 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.game.scorer.DartsScorer
+import burlton.dartzee.code.utils.doesHighestWin
 
 abstract class GamePanelFixedLength<S : DartsScorer, D: Dartboard>(parent: AbstractDartsGameScreen, game: GameEntity):
         DartsGamePanel<S, D>(parent, game)
 {
     abstract val totalRounds: Int
+    val highestWins = doesHighestWin(game.gameType)
 
     fun finishRound()
     {
@@ -49,7 +51,7 @@ abstract class GamePanelFixedLength<S : DartsScorer, D: Dartboard>(parent: Abstr
             return
         }
 
-        val participants = hmPlayerNumberToParticipant.values.sortedBy { it.finalScore }
+        val participants = hmPlayerNumberToParticipant.values.sortedBy { if (highestWins) -it.finalScore else it.finalScore }
 
         var previousScore = Integer.MAX_VALUE
         var finishPos = 1

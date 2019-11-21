@@ -558,8 +558,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
 
         //Update the 'best game' achievement
-        val aa = getBestGameAchievement(gameEntity.gameType)
-        val gameParams = aa!!.gameParams
+        val aa = getBestGameAchievement(gameEntity.gameType) ?: return
+        val gameParams = aa.gameParams
         if (gameParams == gameEntity.gameParams)
         {
             AchievementEntity.updateAchievement(aa.achievementRef, playerId, gameEntity.rowId, score)

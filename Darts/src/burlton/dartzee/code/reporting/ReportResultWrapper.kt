@@ -1,6 +1,6 @@
 package burlton.dartzee.code.reporting
 
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.utils.getGameDesc
 import java.sql.ResultSet
 import java.sql.Timestamp
 
@@ -18,7 +18,7 @@ class ReportResultWrapper
 
     fun getTableRow(): Array<Any?>
     {
-        val gameTypeDesc = GameEntity.getTypeDesc(gameType, gameParams!!)
+        val gameTypeDesc = getGameDesc(gameType, gameParams!!)
         val playerDesc = getPlayerDesc()
 
         var matchDesc = ""

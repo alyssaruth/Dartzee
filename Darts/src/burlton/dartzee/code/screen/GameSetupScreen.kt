@@ -8,8 +8,8 @@ import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupScreen
+import burlton.dartzee.code.utils.getFilterPanel
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -133,7 +133,7 @@ class GameSetupScreen : EmbeddedScreen()
             gameParamFilterPanel.removeActionListener(this)
             panelGameType.remove(gameParamFilterPanel)
 
-            gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.getGameType())
+            gameParamFilterPanel = getFilterPanel(gameTypeComboBox.getGameType())
             panelGameType.add(gameParamFilterPanel)
             gameParamFilterPanel.addActionListener(this)
 

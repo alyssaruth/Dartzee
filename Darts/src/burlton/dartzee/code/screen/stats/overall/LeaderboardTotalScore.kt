@@ -1,9 +1,10 @@
 package burlton.dartzee.code.screen.stats.overall
 
 import burlton.dartzee.code.bean.ScrollTableDartsGame
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import burlton.dartzee.code.utils.PreferenceUtil
+import burlton.dartzee.code.utils.getFilterPanel
+import burlton.dartzee.code.utils.getTypeDesc
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
@@ -13,7 +14,7 @@ import javax.swing.JRadioButton
 
 class LeaderboardTotalScore(private val gameType: Int) : AbstractLeaderboard(), ActionListener
 {
-    private val panelGameParams = GameEntity.getFilterPanel(gameType)
+    private val panelGameParams = getFilterPanel(gameType)
 
     private val panelFilters = JPanel()
     private val scrollPane = ScrollTableDartsGame()
@@ -44,7 +45,7 @@ class LeaderboardTotalScore(private val gameType: Int) : AbstractLeaderboard(), 
         panelBestOrWorst.addActionListener(this)
     }
 
-    override fun getTabName() = GameEntity.getTypeDesc(gameType)
+    override fun getTabName() = getTypeDesc(gameType)
 
     override fun buildTable()
     {

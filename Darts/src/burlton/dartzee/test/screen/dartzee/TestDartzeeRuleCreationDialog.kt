@@ -121,7 +121,7 @@ class TestDartzeeRuleAmendment: AbstractDartsTest()
 
         flushEdt()
 
-        dlg.tfName.text shouldBe "Score Outer"
+        dlg.tfName.text shouldBe "Score Outers"
     }
 
     @Test
