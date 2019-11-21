@@ -13,7 +13,8 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerEntity>): AbstractDartsGameScreen(match.getPlayerCount()), ChangeListener
+class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerEntity>):
+        AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
     private val matchPanel = MatchSummaryPanel()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
@@ -31,7 +32,7 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
         title = match.getMatchDesc()
     }
 
-    override fun getScreenHeight() = 705
+    override fun getScreenHeight() = super.getScreenHeight() + 30
 
     fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *>
     {

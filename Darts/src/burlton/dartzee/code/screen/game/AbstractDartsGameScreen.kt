@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.dartzee.code.achievements.AbstractAchievement
+import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.scorer.SCORER_WIDTH
 import java.awt.Dimension
@@ -10,7 +11,7 @@ import java.awt.event.WindowListener
 import javax.swing.JFrame
 import javax.swing.WindowConstants
 
-abstract class AbstractDartsGameScreen(totalPlayers: Int): JFrame(), WindowListener
+abstract class AbstractDartsGameScreen(totalPlayers: Int, val gameType: Int): JFrame(), WindowListener
 {
     var haveLostFocus = false
 
@@ -22,15 +23,13 @@ abstract class AbstractDartsGameScreen(totalPlayers: Int): JFrame(), WindowListe
         addWindowListener(this)
     }
 
-    open fun getScreenHeight() = 675
+    open fun getScreenHeight() = if (gameType == GAME_TYPE_DARTZEE) 795 else 675
     private fun setScreenSize(playerCount: Int)
     {
         val newSize = Dimension(520 + (playerCount * SCORER_WIDTH), getScreenHeight())
         size = newSize
         isResizable = false
     }
-
-    //TODO - test me
 
     /**
      * Abstract fns

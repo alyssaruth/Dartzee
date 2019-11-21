@@ -1,11 +1,10 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.dartzee.code.achievements.getWinAchievementRef
-import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.game.scorer.DartsScorer
 import burlton.dartzee.code.utils.doesHighestWin
+import burlton.dartzee.code.utils.setFinishingPositions
 
 abstract class GamePanelFixedLength<S : DartsScorer, D: Dartboard>(parent: AbstractDartsGameScreen, game: GameEntity):
         DartsGamePanel<S, D>(parent, game)
@@ -34,47 +33,13 @@ abstract class GamePanelFixedLength<S : DartsScorer, D: Dartboard>(parent: Abstr
     private fun finishGame()
     {
         //Get the participants sorted by score so we can assign finishing positions
-        setFinishingPositions()
+        setFinishingPositions(hmPlayerNumberToParticipant.values.toList(), gameEntity)
 
         updateScorersWithFinishingPositions()
 
         allPlayersFinished()
 
         parentWindow?.startNextGameIfNecessary()
-    }
-
-    private fun setFinishingPositions()
-    {
-        //If there's only one player, it's already set to -1 which is correct
-        if (totalPlayers == 1)
-        {
-            return
-        }
-
-        val participants = hmPlayerNumberToParticipant.values.sortedBy { if (highestWins) -it.finalScore else it.finalScore }
-
-        var previousScore = Integer.MAX_VALUE
-        var finishPos = 1
-        for (i in participants.indices)
-        {
-            val pt = participants[i]
-            val ptScore = pt.finalScore
-            if (ptScore > previousScore)
-            {
-                finishPos++
-            }
-
-            pt.finishingPosition = finishPos
-            pt.saveToDatabase()
-
-            if (finishPos == 1)
-            {
-                val achievementRef = getWinAchievementRef(gameEntity.gameType)
-                AchievementEntity.incrementAchievement(achievementRef, pt.playerId, getGameId())
-            }
-
-            previousScore = pt.finalScore
-        }
     }
 
     override fun getFinishingPositionFromPlayersRemaining(): Int

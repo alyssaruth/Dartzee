@@ -237,11 +237,6 @@ fun insertAchievement(uuid: String = randomGuid(),
 
 private val fileBytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
 private val serialBlob = SerialBlob(fileBytes)
-private fun makeSerialBlob(): SerialBlob
-{
-    val bytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
-    return SerialBlob(bytes)
-}
 fun insertPlayerImage(): PlayerImageEntity
 {
     val pi = PlayerImageEntity()
