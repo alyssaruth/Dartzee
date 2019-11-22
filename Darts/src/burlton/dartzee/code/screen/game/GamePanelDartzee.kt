@@ -47,7 +47,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     {
         val pt = hmPlayerNumberToParticipant[playerNumber]!!
 
-        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = ${pt.playerId} AND ParticipantId = ${pt.rowId}")
+        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '${pt.playerId}' AND ParticipantId = '${pt.rowId}'")
         hmPlayerNumberToRoundResults[playerNumber] = roundResults
 
         val scorer = hmPlayerNumberToDartsScorer[playerNumber]!!

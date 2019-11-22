@@ -7,7 +7,6 @@ import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.code.utils.setColoursForDartzeeResult
 import org.jfree.chart.imagemap.ImageMapUtilities
 import java.awt.Dimension
-import javax.swing.DefaultButtonModel
 import javax.swing.JButton
 
 open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton()
@@ -43,7 +42,7 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
     fun setResult(success: Boolean)
     {
         result = success
-        model = SoftDisableButtonModel()
+        //model = SoftDisableButtonModel()
         isFocusable = false
 
         setColoursForDartzeeResult(success)
@@ -72,9 +71,9 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
         }
     }
 
-    class SoftDisableButtonModel : DefaultButtonModel()
-    {
-        override fun isPressed() = false
-        override fun isRollover() = false
-    }
+//    class SoftDisableButtonModel : DefaultButtonModel()
+//    {
+//        override fun isPressed() = false
+//        override fun isRollover() = false
+//    }
 }
