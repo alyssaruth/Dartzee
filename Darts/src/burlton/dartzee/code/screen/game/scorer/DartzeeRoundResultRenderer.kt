@@ -9,13 +9,11 @@ class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
 {
     override fun getReplacementValue(value: DartzeeRoundResult): Any
     {
-        return if (value.userInputNeeded)
+        return when
         {
-            "?"
-        }
-        else
-        {
-            "#${value.ruleNumber}"
+            value.userInputNeeded -> "?"
+            value.ruleNumber == -1 -> "-"
+            else -> "#${value.ruleNumber}"
         }
     }
 

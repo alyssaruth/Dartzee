@@ -29,6 +29,14 @@ class TestDartzeeRoundResultRenderer: AbstractDartsTest()
     }
 
     @Test
+    fun `Should display a hyphen if ruleNumber is not set`()
+    {
+        val result = DartzeeRoundResult(-1, true)
+        val renderer = DartzeeRoundResultRenderer()
+        renderer.getReplacementValue(result) shouldBe "-"
+    }
+
+    @Test
     fun `Should render the rule number in green for success`()
     {
         val result = DartzeeRoundResult(5, true)

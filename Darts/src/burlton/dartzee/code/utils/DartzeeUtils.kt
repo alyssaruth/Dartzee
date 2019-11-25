@@ -21,5 +21,5 @@ fun Component.setColoursForDartzeeResult(success: Boolean)
 
 fun factoryHighScoreResult(darts: List<Dart>): DartzeeRoundResult
 {
-    return DartzeeRoundResult(0, success = true, userInputNeeded = false, successScore = sumScore(darts))
+    return DartzeeRoundResult(-1, success = true, userInputNeeded = false, successScore = sumScore(darts))
 }
