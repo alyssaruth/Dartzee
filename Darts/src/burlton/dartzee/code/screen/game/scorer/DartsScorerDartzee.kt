@@ -9,13 +9,10 @@ class DartsScorerDartzee: DartsScorer()
 {
     override fun getTotalScore(): Int
     {
-        val rowCount = model.rowCount
-        if (rowCount == 0)
-        {
-            return 0
-        }
+        val scores = model.getColumnValues(SCORE_COLUMN)
 
-        return model.getValueAt(rowCount - 1, SCORE_COLUMN) as Int
+        val lastScore = scores.findLast { it != null } ?: 0
+        return lastScore as Int
     }
 
     override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, RULE_COLUMN) != null
@@ -36,11 +33,11 @@ class DartsScorerDartzee: DartsScorer()
     {
         model.setValueAt(dartzeeRoundResult, model.rowCount - 1, RULE_COLUMN)
 
-        model.setValueAt(score, model.rowCount - 1, SCORE_COLUMN)
-
         if (score != null)
         {
-            lblResult.text = "$score"
+            val newScore = score + getTotalScore()
+            model.setValueAt(newScore, model.rowCount - 1, SCORE_COLUMN)
+            lblResult.text = "$newScore"
             lblResult.isVisible = true
         }
     }

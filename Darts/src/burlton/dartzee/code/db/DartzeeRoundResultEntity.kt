@@ -9,7 +9,7 @@ class DartzeeRoundResultEntity: AbstractEntity<DartzeeRoundResultEntity>()
     var roundNumber: Int = -1
     var ruleNumber: Int = -1
     var success: Boolean = false
-    var successScore: Int = -1
+    var score: Int = -1
 
     override fun getTableName() = "DartzeeRoundResult"
 
@@ -20,7 +20,7 @@ class DartzeeRoundResultEntity: AbstractEntity<DartzeeRoundResultEntity>()
                 + "RoundNumber INT NOT NULL, "
                 + "RuleNumber INT NOT NULL, "
                 + "Success BOOLEAN NOT NULL, "
-                + "SuccessScore INT NOT NULL")
+                + "Score INT NOT NULL")
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
@@ -28,11 +28,11 @@ class DartzeeRoundResultEntity: AbstractEntity<DartzeeRoundResultEntity>()
         indexes.add(listOf("PlayerId", "ParticipantId", "RoundNumber"))
     }
 
-    fun toDto(): DartzeeRoundResult = DartzeeRoundResult(ruleNumber, success, false, successScore)
+    fun toDto(): DartzeeRoundResult = DartzeeRoundResult(ruleNumber, success, false, score)
 
     companion object
     {
-        fun factoryAndSave(dto: DartzeeRoundResult, pt: ParticipantEntity, roundNumber: Int): DartzeeRoundResultEntity
+        fun factoryAndSave(dto: DartzeeRoundResult, pt: ParticipantEntity, roundNumber: Int, score: Int): DartzeeRoundResultEntity
         {
             val entity = DartzeeRoundResultEntity()
             entity.assignRowId()
@@ -41,7 +41,7 @@ class DartzeeRoundResultEntity: AbstractEntity<DartzeeRoundResultEntity>()
             entity.playerId = pt.playerId
             entity.participantId = pt.rowId
             entity.roundNumber = roundNumber
-            entity.successScore = dto.successScore
+            entity.score = score
 
             entity.saveToDatabase()
             return entity

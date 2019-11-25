@@ -70,6 +70,17 @@ object TableUtil
             else super.getColumnClass(arg0)
         }
 
+        fun getColumnValues(column: Int): List<Any?>
+        {
+            val list = mutableListOf<Any?>()
+            for (i in 0 until rowCount)
+            {
+                list.add(getValueAt(i, column))
+            }
+
+            return list
+        }
+
         fun setColumnNames(cols: List<String>)
         {
             cols.forEach{ addColumn(it) }
