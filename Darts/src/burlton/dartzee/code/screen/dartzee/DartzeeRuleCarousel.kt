@@ -13,14 +13,21 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import javax.swing.ButtonGroup
 import javax.swing.JPanel
+import javax.swing.JToggleButton
+import javax.swing.border.EmptyBorder
 
 class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
+    private val panelCenter = JPanel()
     private val pendingTileScroller = DartzeeTileScroller()
     private val completeTileScroller = DartzeeTileScroller()
     private val dartsThrown = mutableListOf<Dart>()
     private val highScoreTile = DartzeeRuleTileHighScore()
+    private val toggleButtonPanel = JPanel()
+    private val toggleButtonPending = JToggleButton()
+    private val toggleButtonComplete = JToggleButton()
 
     private var tileListener: IDartzeeTileListener? = null
     private var hoveredTile: DartzeeRuleTile? = null
@@ -28,7 +35,29 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
     init
     {
         layout = BorderLayout(0, 0)
-        add(pendingTileScroller, BorderLayout.CENTER)
+        add(panelCenter, BorderLayout.CENTER)
+        panelCenter.layout = BorderLayout(0, 0)
+        panelCenter.add(pendingTileScroller)
+        add(toggleButtonPanel, BorderLayout.EAST)
+
+        val bg = ButtonGroup()
+        bg.add(toggleButtonPending)
+        bg.add(toggleButtonComplete)
+
+        toggleButtonPending.isSelected = true
+        toggleButtonPending.toolTipText = "Show available rules"
+        toggleButtonComplete.toolTipText = "Show completed rules"
+
+        toggleButtonPending.addActionListener(this)
+        toggleButtonComplete.addActionListener(this)
+
+        toggleButtonPanel.border = EmptyBorder(5, 5, 5, 5)
+        toggleButtonPending.preferredSize = Dimension(50, 50)
+        toggleButtonComplete.preferredSize = Dimension(50, 50)
+
+        toggleButtonPanel.layout = BorderLayout()
+        toggleButtonPanel.add(toggleButtonPending, BorderLayout.NORTH)
+        toggleButtonPanel.add(toggleButtonComplete, BorderLayout.SOUTH)
 
         preferredSize = Dimension(150, 120)
     }
@@ -37,7 +66,6 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
     {
         dartsThrown.clear()
         dartsThrown.addAll(darts)
-
 
         if (roundNumber == 1)
         {
@@ -53,14 +81,14 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
     {
         highScoreTile.isVisible = false
 
-
         val completeRuleTiles = mutableListOf<DartzeeRuleTileComplete>()
-        results.forEach { result ->
+        results.sortedBy { it.roundNumber }.forEach { result ->
             val dto = dtos[result.ruleNumber - 1]
             val completeRule = DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success)
             completeRuleTiles.add(completeRule)
         }
         completeTileScroller.setTiles(completeRuleTiles)
+        toggleButtonComplete.isEnabled = completeRuleTiles.isNotEmpty()
 
         val incompleteRules = dtos.filterIndexed { ix, _ -> results.none { it.ruleNumber == ix + 1 }}
         val pendingTiles = incompleteRules.map { rule -> DartzeeRuleTile(rule, getRuleNumber(rule)) }
@@ -144,15 +172,29 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         this.tileListener = null
     }
 
+    private fun toggleRuleScroller(scrollerToShow: DartzeeTileScroller)
+    {
+        panelCenter.removeAll()
+        panelCenter.add(scrollerToShow)
+        panelCenter.repaint()
+    }
+
     override fun actionPerformed(e: ActionEvent?)
     {
         val src = e?.source
-        val listener = tileListener ?: return
-        if (src is DartzeeRuleTile)
+        when (src)
         {
-            val result = DartzeeRoundResult(src.ruleNumber, true, false, src.dto.getSuccessTotal(dartsThrown))
-            listener.tilePressed(result)
+            toggleButtonPending -> toggleRuleScroller(pendingTileScroller)
+            toggleButtonComplete -> toggleRuleScroller(completeTileScroller)
+            is DartzeeRuleTile -> tilePressed(src)
         }
+    }
+
+    private fun tilePressed(tile: DartzeeRuleTile)
+    {
+        val listener = tileListener ?: return
+        val result = DartzeeRoundResult(tile.ruleNumber, true, false, tile.dto.getSuccessTotal(dartsThrown))
+        listener.tilePressed(result)
     }
 
     override fun mouseEntered(e: MouseEvent?)
