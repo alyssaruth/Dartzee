@@ -11,7 +11,6 @@ import javax.swing.JButton
 
 open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton()
 {
-    var result: Boolean? = null
     var pendingResult: Boolean? = null
 
     init
@@ -21,28 +20,9 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
         text = "<html><center><b>#$ruleNumber <br /><br /> $ruleDesc</b></center></html>"
     }
 
-    fun reset()
-    {
-        result = null
-        pendingResult = null
-        isFocusable = true
-
-        background = null
-        foreground = null
-    }
-
     fun setPendingResult(success: Boolean)
     {
         pendingResult = success
-        isFocusable = false
-
-        setColoursForDartzeeResult(success)
-    }
-
-    fun setResult(success: Boolean)
-    {
-        result = success
-        //model = SoftDisableButtonModel()
         isFocusable = false
 
         setColoursForDartzeeResult(success)
@@ -55,11 +35,6 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
 
     fun getValidSegments(darts: List<Dart>): List<DartboardSegment>
     {
-        if (result != null)
-        {
-            return listOf()
-        }
-
         if (darts.isEmpty())
         {
             return dto.calculationResult!!.validSegments
@@ -70,10 +45,4 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
             return result.validSegments
         }
     }
-
-//    class SoftDisableButtonModel : DefaultButtonModel()
-//    {
-//        override fun isPressed() = false
-//        override fun isRollover() = false
-//    }
 }
