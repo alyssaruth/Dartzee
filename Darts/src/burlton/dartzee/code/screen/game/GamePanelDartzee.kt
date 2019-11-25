@@ -113,11 +113,11 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
     private fun completeRound(result: DartzeeRoundResult)
     {
-        val roundScore = if (result.success) lastRoundScore + result.successScore else lastRoundScore.ceilDiv(2)
+        val newScore = if (result.success) lastRoundScore + result.successScore else lastRoundScore.ceilDiv(2)
 
         val pt = hmPlayerNumberToParticipant[currentPlayerNumber]!!
 
-        activeScorer.setResult(result, roundScore)
+        activeScorer.setResult(result, newScore)
         if (currentRoundNumber > 1)
         {
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
