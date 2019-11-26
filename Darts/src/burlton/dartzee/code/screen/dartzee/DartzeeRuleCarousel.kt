@@ -90,7 +90,6 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         results.sortedBy { it.roundNumber }.forEach { result ->
             val dto = dtos[result.ruleNumber - 1]
             val completeRule = DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success)
-            completeRule.isVisible = true
             completeTiles.add(completeRule)
         }
         toggleButtonComplete.isEnabled = completeTiles.isNotEmpty()
@@ -189,6 +188,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
     {
         tilePanel.removeAll()
         tiles.forEach { tilePanel.add(it) }
+        tilePanel.validate()
         tilePanel.repaint()
     }
 
