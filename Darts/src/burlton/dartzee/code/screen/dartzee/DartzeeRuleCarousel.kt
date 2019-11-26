@@ -13,21 +13,21 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.ButtonGroup
-import javax.swing.JPanel
-import javax.swing.JToggleButton
+import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
-    private val panelCenter = JPanel()
-    private val pendingTileScroller = DartzeeTileScroller()
-    private val completeTileScroller = DartzeeTileScroller()
-    private val dartsThrown = mutableListOf<Dart>()
+    private val tilePanel = JPanel()
+    private val tileScroller = JScrollPane()
     private val highScoreTile = DartzeeRuleTileHighScore()
     private val toggleButtonPanel = JPanel()
     private val toggleButtonPending = JToggleButton()
     private val toggleButtonComplete = JToggleButton()
+
+    private val dartsThrown = mutableListOf<Dart>()
+    private val pendingTiles = mutableListOf<DartzeeRuleTile>()
+    private val completeTiles = mutableListOf<DartzeeRuleTile>()
 
     private var tileListener: IDartzeeTileListener? = null
     private var hoveredTile: DartzeeRuleTile? = null
@@ -35,10 +35,12 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
     init
     {
         layout = BorderLayout(0, 0)
-        add(panelCenter, BorderLayout.CENTER)
-        panelCenter.layout = BorderLayout(0, 0)
-        panelCenter.add(pendingTileScroller)
+        add(tileScroller, BorderLayout.CENTER)
         add(toggleButtonPanel, BorderLayout.EAST)
+
+        tileScroller.setViewportView(tilePanel)
+        tileScroller.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+        tileScroller.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
 
         val bg = ButtonGroup()
         bg.add(toggleButtonPending)
@@ -64,13 +66,14 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
 
     fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, roundNumber: Int)
     {
+        hoveredTile = null
         dartsThrown.clear()
         dartsThrown.addAll(darts)
 
         if (roundNumber == 1)
         {
             highScoreTile.isVisible = true
-            pendingTileScroller.setTiles(listOf(highScoreTile))
+            displayTiles(listOf(highScoreTile))
         }
         else
         {
@@ -81,23 +84,24 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
     {
         highScoreTile.isVisible = false
 
-        val completeRuleTiles = mutableListOf<DartzeeRuleTileComplete>()
+        completeTiles.clear()
+        pendingTiles.clear()
+
         results.sortedBy { it.roundNumber }.forEach { result ->
             val dto = dtos[result.ruleNumber - 1]
             val completeRule = DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success)
-            completeRuleTiles.add(completeRule)
+            completeRule.isVisible = true
+            completeTiles.add(completeRule)
         }
-        completeTileScroller.setTiles(completeRuleTiles)
-        toggleButtonComplete.isEnabled = completeRuleTiles.isNotEmpty()
+        toggleButtonComplete.isEnabled = completeTiles.isNotEmpty()
 
         val incompleteRules = dtos.filterIndexed { ix, _ -> results.none { it.ruleNumber == ix + 1 }}
-        val pendingTiles = incompleteRules.map { rule -> DartzeeRuleTile(rule, getRuleNumber(rule)) }
+        pendingTiles.addAll(incompleteRules.map { rule -> DartzeeRuleTile(rule, getRuleNumber(rule)) })
         pendingTiles.forEach {
             it.addActionListener(this)
             it.addMouseListener(this)
             it.updateState(darts)
         }
-        pendingTileScroller.setTiles(pendingTiles)
 
         if (darts.size == 3)
         {
@@ -117,11 +121,20 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
                 ruleToFail.setPendingResult(false)
             }
         }
+
+        if (toggleButtonComplete.isSelected)
+        {
+            displayTiles(completeTiles)
+        }
+        else
+        {
+            displayTiles(pendingTiles)
+        }
     }
 
     private fun getRuleNumber(dto: DartzeeRuleDto) = dtos.indexOf(dto) + 1
 
-    private fun getFirstIncompleteRule(): DartzeeRuleTile? = pendingTileScroller.getTiles().firstOrNull()
+    private fun getFirstIncompleteRule(): DartzeeRuleTile? = pendingTiles.firstOrNull()
 
     fun getRoundResult(): DartzeeRoundResult
     {
@@ -130,7 +143,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
             return factoryHighScoreResult(dartsThrown)
         }
 
-        val tiles = pendingTileScroller.getTiles().filter { it.isVisible }
+        val tiles = pendingTiles.filter { it.isVisible }
         if (tiles.size > 1)
         {
             return DartzeeRoundResult(-1, false, true)
@@ -156,7 +169,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         }
 
         val validSegments = HashSet<DartboardSegment>()
-        pendingTileScroller.getTiles().forEach {
+        pendingTiles.forEach {
             validSegments.addAll(it.getValidSegments(dartsThrown))
         }
 
@@ -172,11 +185,11 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         this.tileListener = null
     }
 
-    private fun toggleRuleScroller(scrollerToShow: DartzeeTileScroller)
+    private fun displayTiles(tiles: List<DartzeeRuleTile>)
     {
-        panelCenter.removeAll()
-        panelCenter.add(scrollerToShow)
-        panelCenter.repaint()
+        tilePanel.removeAll()
+        tiles.forEach { tilePanel.add(it) }
+        tilePanel.repaint()
     }
 
     override fun actionPerformed(e: ActionEvent?)
@@ -184,8 +197,8 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         val src = e?.source
         when (src)
         {
-            toggleButtonPending -> toggleRuleScroller(pendingTileScroller)
-            toggleButtonComplete -> toggleRuleScroller(completeTileScroller)
+            toggleButtonPending -> displayTiles(pendingTiles)
+            toggleButtonComplete -> displayTiles(completeTiles)
             is DartzeeRuleTile -> tilePressed(src)
         }
     }
