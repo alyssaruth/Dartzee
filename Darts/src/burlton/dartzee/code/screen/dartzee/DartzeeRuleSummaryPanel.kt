@@ -31,7 +31,7 @@ class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselHoverListener, dtos: List<
         add(panelHighScore)
     }
 
-    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, roundNumber: Int)
+    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, currentScore: Int, roundNumber: Int)
     {
         if (roundNumber == 1)
         {
@@ -40,7 +40,7 @@ class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselHoverListener, dtos: List<
         else
         {
             swapInComponentIfNecessary(carousel)
-            carousel.update(results, darts)
+            carousel.update(results, darts, currentScore)
         }
     }
 
