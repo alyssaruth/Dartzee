@@ -1,7 +1,6 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.ai.AbstractDartsModel
@@ -9,11 +8,20 @@ import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
-import burlton.dartzee.code.screen.dartzee.*
+import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
+import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
+import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import burlton.dartzee.code.utils.factoryHighScoreResult
 import java.awt.BorderLayout
 
+
+/**
+ * TODO list
+ *  - Make it so that when a game finishes, the toggle buttons disappear and it just shows results (for someone, but then make it so you can select a player)
+ *  - Remove 'Confirm' button below dartboard, use rules buttons instead (after HS round). See how this feels (probably better, certainly less clicks)
+ */
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         GamePanelFixedLength<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
         IDartzeeCarouselHoverListener,
@@ -56,7 +64,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
             if (i == 1)
             {
                 val result = factoryHighScoreResult(darts)
-                scorer.setResult(result, result.successScore)
+                scorer.setResult(result, result.score)
             }
             else
             {
@@ -96,7 +104,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     private fun updateCarouselAndDartboard()
     {
         val ruleResults = hmPlayerNumberToRoundResults.getOrDefault(currentPlayerNumber, mutableListOf())
-        summaryPanel.update(ruleResults, dartsThrown, currentRoundNumber)
+        summaryPanel.update(ruleResults, dartsThrown, lastRoundScore, currentRoundNumber)
         dartboard.refreshValidSegments(summaryPanel.getValidSegments())
     }
 
@@ -118,15 +126,12 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
     private fun completeRound(result: DartzeeRoundResult)
     {
-        val newScore = if (result.success) lastRoundScore + result.successScore else lastRoundScore.ceilDiv(2)
-        val thisRoundScore = newScore - lastRoundScore
-
         val pt = hmPlayerNumberToParticipant[currentPlayerNumber]!!
 
-        activeScorer.setResult(result, thisRoundScore)
+        activeScorer.setResult(result, result.score)
         if (currentRoundNumber > 1)
         {
-            val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber, thisRoundScore)
+            val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
             hmPlayerNumberToRoundResults.putInList(currentPlayerNumber, entity)
         }
 

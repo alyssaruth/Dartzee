@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
@@ -59,15 +60,15 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         toggleButtonPanel.add(toggleButtonComplete, BorderLayout.SOUTH)
     }
 
-    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>)
+    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, currentScore: Int)
     {
         hoveredTile = null
         dartsThrown.clear()
         dartsThrown.addAll(darts)
 
-        initialiseTiles(results)
+        initialiseTiles(results, currentScore)
     }
-    private fun initialiseTiles(results: List<DartzeeRoundResultEntity>)
+    private fun initialiseTiles(results: List<DartzeeRoundResultEntity>, currentScore: Int)
     {
         completeTiles.clear()
         pendingTiles.clear()
@@ -90,10 +91,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         if (dartsThrown.size == 3)
         {
             val successfulRules = pendingTiles.filter { it.isVisible }
-            if (successfulRules.size == 1)
-            {
-                successfulRules.first().setPendingResult(true)
-            }
+            successfulRules.forEach { it.setPendingResult(true, it.dto.getSuccessTotal(dartsThrown)) }
         }
 
         if (pendingTiles.none { it.isVisible })
@@ -101,8 +99,9 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
             val ruleToFail = getFirstIncompleteRule()
             if (ruleToFail != null)
             {
+                val score = currentScore.ceilDiv(2) - currentScore
                 ruleToFail.isVisible = true
-                ruleToFail.setPendingResult(false)
+                ruleToFail.setPendingResult(false, score)
             }
         }
 
@@ -125,13 +124,14 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         val tiles = pendingTiles.filter { it.isVisible }
         if (tiles.size > 1)
         {
-            return DartzeeRoundResult(-1, false, true)
+            return DartzeeRoundResult(-1, true, true)
         }
 
         val rule = tiles.first()
         val success = rule.pendingResult!!
+        val score = rule.pendingScore!!
 
-        return DartzeeRoundResult(rule.ruleNumber, success, successScore = rule.dto.getSuccessTotal(dartsThrown))
+        return DartzeeRoundResult(rule.ruleNumber, success, false, score)
     }
 
     fun getValidSegments(): List<DartboardSegment>
@@ -183,7 +183,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
     private fun tilePressed(tile: DartzeeRuleTile)
     {
         val listener = tileListener ?: return
-        val result = DartzeeRoundResult(tile.ruleNumber, true, false, tile.dto.getSuccessTotal(dartsThrown))
+        val result = DartzeeRoundResult(tile.ruleNumber, true, false, tile.pendingScore!!)
         listener.tilePressed(result)
     }
 
