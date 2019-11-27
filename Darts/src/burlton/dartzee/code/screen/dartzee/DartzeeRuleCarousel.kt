@@ -57,8 +57,6 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselHoverListener, val dtos: L
         toggleButtonPanel.layout = BorderLayout()
         toggleButtonPanel.add(toggleButtonPending, BorderLayout.NORTH)
         toggleButtonPanel.add(toggleButtonComplete, BorderLayout.SOUTH)
-
-        preferredSize = Dimension(150, 120)
     }
 
     fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>)

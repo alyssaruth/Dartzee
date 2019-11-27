@@ -7,8 +7,10 @@ import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.utils.factoryHighScoreResult
 import burlton.dartzee.code.utils.getAllPossibleSegments
+import burlton.desktopcore.code.util.setFontSize
 import java.awt.BorderLayout
 import java.awt.Component
+import java.awt.Dimension
 import javax.swing.JLabel
 import javax.swing.JPanel
 
@@ -21,6 +23,9 @@ class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselHoverListener, dtos: List<
     init
     {
         layout = BorderLayout(0, 0)
+        preferredSize = Dimension(150, 120)
+
+        lblHighScore.setFontSize(36)
 
         panelHighScore.add(lblHighScore)
         add(panelHighScore)
