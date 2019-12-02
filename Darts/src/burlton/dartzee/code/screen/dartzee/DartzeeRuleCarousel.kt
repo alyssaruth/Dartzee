@@ -144,6 +144,13 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
         tileScroller.repaint()
     }
 
+    fun gameFinished()
+    {
+        toggleButtonComplete.isSelected = true
+        displayTiles(completeTiles)
+        toggleButtonPanel.isVisible = false
+    }
+
     override fun actionPerformed(e: ActionEvent?)
     {
         val src = e?.source
