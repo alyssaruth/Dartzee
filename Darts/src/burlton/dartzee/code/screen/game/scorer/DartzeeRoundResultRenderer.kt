@@ -11,7 +11,6 @@ class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
     {
         return when
         {
-            value.userInputNeeded -> "?"
             value.ruleNumber == -1 -> "-"
             else -> "#${value.ruleNumber}"
         }
@@ -26,15 +25,7 @@ class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
             return
         }
 
-        if (typedValue.userInputNeeded)
-        {
-            background = Color.CYAN
-            foreground = Color.BLUE
-        }
-        else
-        {
-            setColoursForDartzeeResult(typedValue.success)
-        }
+        setColoursForDartzeeResult(typedValue.success)
     }
 
     override fun allowNulls(): Boolean

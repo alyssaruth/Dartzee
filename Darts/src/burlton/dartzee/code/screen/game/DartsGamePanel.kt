@@ -66,7 +66,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     private val panelSouth = JPanel()
     protected val slider = SliderAiSpeed(true)
     private val panelButtons = JPanel()
-    private val btnConfirm = JButton("")
+    protected val btnConfirm = JButton("")
     private val btnReset = JButton("")
     private val btnStats = JToggleButton("")
     private val btnSlider = JToggleButton("")

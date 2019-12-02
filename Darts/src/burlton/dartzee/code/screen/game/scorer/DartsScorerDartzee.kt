@@ -29,16 +29,13 @@ class DartsScorerDartzee: DartsScorer()
         tableScores.getColumn(RULE_COLUMN).cellRenderer = DartzeeRoundResultRenderer()
     }
 
-    fun setResult(dartzeeRoundResult: DartzeeRoundResult, score: Int? = null)
+    fun setResult(dartzeeRoundResult: DartzeeRoundResult, score: Int)
     {
         model.setValueAt(dartzeeRoundResult, model.rowCount - 1, RULE_COLUMN)
 
-        if (score != null)
-        {
-            val newScore = score + getTotalScore()
-            model.setValueAt(newScore, model.rowCount - 1, SCORE_COLUMN)
-            lblResult.text = "$newScore"
-            lblResult.isVisible = true
-        }
+        val newScore = score + getTotalScore()
+        model.setValueAt(newScore, model.rowCount - 1, SCORE_COLUMN)
+        lblResult.text = "$newScore"
+        lblResult.isVisible = true
     }
 }

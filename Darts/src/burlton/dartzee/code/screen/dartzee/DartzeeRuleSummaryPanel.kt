@@ -1,5 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
+import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
@@ -14,7 +15,7 @@ import java.awt.Dimension
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselHoverListener, dtos: List<DartzeeRuleDto>): JPanel()
+class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselListener, dtos: List<DartzeeRuleDto>): JPanel()
 {
     val carousel = DartzeeRuleCarousel(parent, dtos)
     val lblHighScore = JLabel("High Score")
@@ -58,26 +59,10 @@ class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselHoverListener, dtos: List<
         repaint()
     }
 
-    fun getRoundResult(dartsThrown: List<Dart>): DartzeeRoundResult =
-        when
-        {
-            components.contains(panelHighScore) -> factoryHighScoreResult(dartsThrown)
-            else -> carousel.getRoundResult()
-        }
-
     fun getValidSegments(): List<DartboardSegment> =
         when
         {
             components.contains(panelHighScore) -> getAllPossibleSegments()
             else -> carousel.getValidSegments()
         }
-
-    fun addTileListener(listener: IDartzeeTileListener)
-    {
-        carousel.addTileListener(listener)
-    }
-    fun clearTileListener()
-    {
-        carousel.clearTileListener()
-    }
 }
