@@ -28,7 +28,7 @@ class DartzeeRoundResultEntity: AbstractEntity<DartzeeRoundResultEntity>()
         indexes.add(listOf("PlayerId", "ParticipantId", "RoundNumber"))
     }
 
-    fun toDto(): DartzeeRoundResult = DartzeeRoundResult(ruleNumber, success, false, score)
+    fun toDto(): DartzeeRoundResult = DartzeeRoundResult(ruleNumber, success, score)
 
     companion object
     {

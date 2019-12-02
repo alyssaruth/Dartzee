@@ -10,12 +10,10 @@ import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
-import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselHoverListener
-import burlton.dartzee.code.screen.dartzee.IDartzeeTileListener
+import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import burlton.dartzee.code.utils.factoryHighScoreResult
 import java.awt.BorderLayout
-
 
 /**
  * TODO list
@@ -24,8 +22,7 @@ import java.awt.BorderLayout
  */
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         GamePanelFixedLength<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
-        IDartzeeCarouselHoverListener,
-        IDartzeeTileListener
+        IDartzeeCarouselListener
 {
     private val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
     override val totalRounds = dtos.size + 1
@@ -99,6 +96,11 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         super.readyForThrow()
 
         updateCarouselAndDartboard()
+
+        if (currentRoundNumber > 1)
+        {
+            btnConfirm.isVisible = false
+        }
     }
 
     private fun updateCarouselAndDartboard()
@@ -108,20 +110,12 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         dartboard.refreshValidSegments(summaryPanel.getValidSegments())
     }
 
+    /**
+     * Hook called from the confirm button, which is only available for the initial high score round
+     */
     override fun saveDartsAndProceed()
     {
-        val result = summaryPanel.getRoundResult(dartsThrown)
-        activeScorer.setResult(result)
-
-        if (!result.userInputNeeded)
-        {
-            completeRound(result)
-        }
-        else
-        {
-            disableInputButtons()
-            summaryPanel.addTileListener(this)
-        }
+        completeRound(factoryHighScoreResult(dartsThrown))
     }
 
     private fun completeRound(result: DartzeeRoundResult)
@@ -134,6 +128,9 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
             hmPlayerNumberToRoundResults.putInList(currentPlayerNumber, entity)
         }
+
+        disableInputButtons()
+        dartboard.clearDarts()
 
         saveDartsToDatabase()
 
@@ -153,7 +150,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
     override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)
     {
-        summaryPanel.clearTileListener()
         completeRound(dartzeeRoundResult)
     }
 }

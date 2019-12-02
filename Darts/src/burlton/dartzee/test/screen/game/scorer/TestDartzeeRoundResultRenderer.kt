@@ -16,19 +16,6 @@ class TestDartzeeRoundResultRenderer: AbstractDartsTest()
     }
 
     @Test
-    fun `Should display a question mark if user input is needed`()
-    {
-        val result = DartzeeRoundResult(-1, false, true)
-
-        val renderer = DartzeeRoundResultRenderer()
-        renderer.getReplacementValue(result) shouldBe "?"
-
-        renderer.setCellColours(result, false)
-        renderer.background shouldBe Color.CYAN
-        renderer.foreground shouldBe Color.BLUE
-    }
-
-    @Test
     fun `Should display a hyphen if ruleNumber is not set`()
     {
         val result = DartzeeRoundResult(-1, true)
