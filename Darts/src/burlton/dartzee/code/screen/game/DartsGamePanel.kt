@@ -305,7 +305,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
     }
 
-    private fun setGameReadOnly()
+    protected open fun setGameReadOnly()
     {
         dartboard.stopListening()
 

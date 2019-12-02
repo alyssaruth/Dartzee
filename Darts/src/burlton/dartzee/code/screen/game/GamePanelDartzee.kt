@@ -18,7 +18,6 @@ import java.awt.BorderLayout
 /**
  * TODO list
  *  - Make it so that when a game finishes, the toggle buttons disappear and it just shows results (for someone, but then make it so you can select a player)
- *  - Remove 'Confirm' button below dartboard, use rules buttons instead (after HS round). See how this feels (probably better, certainly less clicks)
  */
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         GamePanelFixedLength<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
@@ -43,6 +42,12 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     override fun doAiTurn(model: AbstractDartsModel)
     {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setGameReadOnly() {
+        super.setGameReadOnly()
+
+        summaryPanel.gameFinished()
     }
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
@@ -135,6 +140,10 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         saveDartsToDatabase()
 
         finishRound()
+
+        if (gameEntity.isFinished()) {
+            summaryPanel.gameFinished()
+        }
     }
 
     override fun factoryStatsPanel(): GameStatisticsPanel? = null

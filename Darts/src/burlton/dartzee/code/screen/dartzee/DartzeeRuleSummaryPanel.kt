@@ -65,4 +65,9 @@ class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselListener, dtos: List<Dartz
             components.contains(panelHighScore) -> getAllPossibleSegments()
             else -> carousel.getValidSegments()
         }
+
+    fun gameFinished()
+    {
+        carousel.gameFinished()
+    }
 }
