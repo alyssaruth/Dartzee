@@ -1,12 +1,9 @@
 package burlton.dartzee.code.screen.dartzee
 
-import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
-import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
-import burlton.dartzee.code.utils.factoryHighScoreResult
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.desktopcore.code.util.setFontSize
 import java.awt.BorderLayout
@@ -68,6 +65,7 @@ class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselListener, dtos: List<Dartz
 
     fun gameFinished()
     {
+        swapInComponentIfNecessary(carousel)
         carousel.gameFinished()
     }
 }
