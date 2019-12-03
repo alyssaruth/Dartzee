@@ -104,4 +104,6 @@ object DartsColour
         val hue = (value * multiplier).toFloat() / total
         return Color.getHSBColor(hue, 1f, brightness.toFloat())
     }
+
+    fun getProportionalColourRedToGreen(value: Double, total: Int, brightness: Double) = getProportionalColour(value, total, 0.4, brightness)
 }

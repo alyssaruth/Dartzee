@@ -13,11 +13,13 @@ import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import burlton.dartzee.code.utils.factoryHighScoreResult
+import burlton.dartzee.code.utils.getAllPossibleSegments
 import java.awt.BorderLayout
 
 /**
  * TODO list
  *  - Make it so that when a game finishes, the toggle buttons disappear and it just shows results (for someone, but then make it so you can select a player)
+ *  - Implement AI strategy
  */
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         GamePanelFixedLength<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
@@ -141,8 +143,10 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
         finishRound()
 
-        if (gameEntity.isFinished()) {
+        if (gameEntity.isFinished())
+        {
             summaryPanel.gameFinished()
+            dartboard.refreshValidSegments(getAllPossibleSegments())
         }
     }
 

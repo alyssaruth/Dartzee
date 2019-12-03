@@ -37,5 +37,11 @@ class DartsScorerDartzee: DartsScorer()
         model.setValueAt(newScore, model.rowCount - 1, SCORE_COLUMN)
         lblResult.text = "$newScore"
         lblResult.isVisible = true
+
+        val maxScore = getMaxScoreSoFar() ?: score
+        tableScores.getColumn(SCORE_COLUMN).cellRenderer = DartzeeScoreRenderer(maxScore)
+        tableScores.repaint()
     }
+
+    private fun getMaxScoreSoFar() = model.getColumnValues(SCORE_COLUMN).filterIsInstance<Int>().max()
 }
