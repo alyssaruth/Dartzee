@@ -30,8 +30,8 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
 
     fun getDifficultyDesc() = getDifficulty().desc
 
-    fun getForeground() = DartsColour.getProportionalColour(sqrt(percentage), 10, 0.4, 1.0)
-    fun getBackground() = DartsColour.getProportionalColour(sqrt(percentage), 10, 0.4, 0.5)
+    fun getForeground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 1.0)
+    fun getBackground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 0.5)
 
     private fun getDifficulty() = when
     {

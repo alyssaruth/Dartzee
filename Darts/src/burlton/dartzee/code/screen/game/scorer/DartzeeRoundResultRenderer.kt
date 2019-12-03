@@ -3,7 +3,8 @@ package burlton.dartzee.code.screen.game.scorer
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.utils.setColoursForDartzeeResult
 import burlton.desktopcore.code.bean.AbstractTableRenderer
-import java.awt.Color
+import java.awt.Font
+import javax.swing.SwingConstants
 
 class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
 {
@@ -26,6 +27,12 @@ class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
         }
 
         setColoursForDartzeeResult(typedValue.success)
+    }
+
+    override fun setFontsAndAlignment()
+    {
+        horizontalAlignment = SwingConstants.CENTER
+        font = Font(font.name, Font.BOLD, 12)
     }
 
     override fun allowNulls(): Boolean
