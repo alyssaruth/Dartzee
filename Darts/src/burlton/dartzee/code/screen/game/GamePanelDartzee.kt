@@ -50,6 +50,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         super.setGameReadOnly()
 
         summaryPanel.gameFinished()
+        scorerSelected(scorersOrdered.first())
     }
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
@@ -112,9 +113,13 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
     private fun updateCarouselAndDartboard()
     {
+        updateCarousel()
+        dartboard.refreshValidSegments(summaryPanel.getValidSegments())
+    }
+    private fun updateCarousel()
+    {
         val ruleResults = hmPlayerNumberToRoundResults.getOrDefault(currentPlayerNumber, mutableListOf())
         summaryPanel.update(ruleResults, dartsThrown, lastRoundScore, currentRoundNumber)
-        dartboard.refreshValidSegments(summaryPanel.getValidSegments())
     }
 
     /**
@@ -145,13 +150,20 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
 
         if (gameEntity.isFinished())
         {
-            summaryPanel.gameFinished()
-            dartboard.refreshValidSegments(getAllPossibleSegments())
+            gameFinished()
         }
     }
 
+    private fun gameFinished()
+    {
+        summaryPanel.gameFinished()
+        dartboard.refreshValidSegments(getAllPossibleSegments())
+
+        updateCarousel()
+    }
+
     override fun factoryStatsPanel(): GameStatisticsPanel? = null
-    override fun factoryScorer() = DartsScorerDartzee()
+    override fun factoryScorer() = DartsScorerDartzee(this)
 
     override fun hoverChanged(validSegments: List<DartboardSegment>)
     {
@@ -164,5 +176,14 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)
     {
         completeRound(dartzeeRoundResult)
+    }
+
+    fun scorerSelected(scorer: DartsScorerDartzee)
+    {
+        scorersOrdered.forEach { it.setSelected(false) }
+        scorer.setSelected(true)
+
+        currentPlayerNumber = hmPlayerNumberToDartsScorer.filter { it.value == scorer }.keys.first()
+        updateCarousel()
     }
 }
