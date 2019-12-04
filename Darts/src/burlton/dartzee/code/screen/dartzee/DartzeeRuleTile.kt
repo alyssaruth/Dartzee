@@ -13,11 +13,8 @@ import java.awt.event.MouseListener
 import javax.swing.JButton
 import kotlin.math.abs
 
-open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton(), MouseListener
+abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton(), MouseListener
 {
-    var pendingResult: Boolean? = null
-    var pendingScore: Int? = null
-
     init
     {
         preferredSize = Dimension(150, 80)
@@ -26,19 +23,9 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
         addMouseListener(this)
     }
 
-    fun setPendingResult(success: Boolean, score: Int)
-    {
-        pendingResult = success
-        pendingScore = score
+    abstract fun getScore(): Int?
 
-        text = getButtonText()
-
-        repaint()
-
-        setColoursForDartzeeResult(success)
-    }
-
-    private fun getButtonText(hovered: Boolean = false) =
+    protected fun getButtonText(hovered: Boolean = false) =
         if (hovered) "<html><center><b>${getScoreText()}</b></center></html>"
         else
         {
@@ -48,38 +35,19 @@ open class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButto
 
     private fun getScoreText(): String
     {
-        val score = pendingScore ?: return ""
+        val score = getScore() ?: return ""
 
-        val prefix = if (pendingResult == true) "+" else "-"
+        val prefix = if (score > 0) "+" else "-"
 
         return "$prefix ${abs(score)}"
     }
 
-    fun updateState(darts: List<Dart>)
-    {
-        isVisible = getValidSegments(darts).isNotEmpty()
-    }
-
-    fun getValidSegments(darts: List<Dart>): List<DartboardSegment>
-    {
-        if (darts.isEmpty())
-        {
-            return dto.calculationResult!!.validSegments
-        }
-        else
-        {
-            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
-            return result.validSegments
-        }
-    }
-
     override fun mouseEntered(e: MouseEvent?)
     {
-        if (pendingScore != null) {
+        if (getScore() != null) {
             text = getButtonText(true)
             setFontSize(24)
         }
-
     }
 
     override fun mouseExited(e: MouseEvent?)

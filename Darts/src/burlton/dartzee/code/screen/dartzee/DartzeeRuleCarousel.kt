@@ -24,10 +24,10 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
     private val toggleButtonComplete = JToggleButton()
 
     private val dartsThrown = mutableListOf<Dart>()
-    private val pendingTiles = mutableListOf<DartzeeRuleTile>()
+    private val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
     private val completeTiles = mutableListOf<DartzeeRuleTile>()
 
-    private var hoveredTile: DartzeeRuleTile? = null
+    private var hoveredTile: DartzeeRuleTilePending? = null
 
     init
     {
@@ -74,13 +74,13 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
 
         results.sortedBy { it.roundNumber }.forEach { result ->
             val dto = dtos[result.ruleNumber - 1]
-            val completeRule = DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success)
+            val completeRule = DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success, result.score)
             completeTiles.add(completeRule)
         }
         toggleButtonComplete.isEnabled = completeTiles.isNotEmpty()
 
         val incompleteRules = dtos.filterIndexed { ix, _ -> results.none { it.ruleNumber == ix + 1 }}
-        pendingTiles.addAll(incompleteRules.map { rule -> DartzeeRuleTile(rule, getRuleNumber(rule)) })
+        pendingTiles.addAll(incompleteRules.map { rule -> DartzeeRuleTilePending(rule, getRuleNumber(rule)) })
         pendingTiles.forEach {
             it.addActionListener(this)
             it.addMouseListener(this)
@@ -116,7 +116,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
 
     private fun getRuleNumber(dto: DartzeeRuleDto) = dtos.indexOf(dto) + 1
 
-    private fun getFirstIncompleteRule(): DartzeeRuleTile? = pendingTiles.firstOrNull()
+    private fun getFirstIncompleteRule(): DartzeeRuleTilePending? = pendingTiles.firstOrNull()
 
     fun getValidSegments(): List<DartboardSegment>
     {
@@ -164,7 +164,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
 
     private fun tilePressed(tile: DartzeeRuleTile)
     {
-        if (tile.pendingResult != null) {
+        if (tile is DartzeeRuleTilePending && tile.pendingResult != null) {
             val result = DartzeeRoundResult(tile.ruleNumber, tile.pendingResult!!, tile.pendingScore!!)
             parent.tilePressed(result)
         }
@@ -173,7 +173,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
     override fun mouseEntered(e: MouseEvent?)
     {
         val src = e?.source
-        if (src is DartzeeRuleTile)
+        if (src is DartzeeRuleTilePending)
         {
             hoveredTile = src
         }
