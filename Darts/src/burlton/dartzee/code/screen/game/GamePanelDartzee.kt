@@ -18,8 +18,8 @@ import java.awt.BorderLayout
 
 /**
  * TODO list
- *  - Make it so that when a game finishes, the toggle buttons disappear and it just shows results (for someone, but then make it so you can select a player)
  *  - Implement AI strategy
+ *  - Implement in-game stats
  */
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         GamePanelFixedLength<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
