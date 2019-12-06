@@ -8,7 +8,7 @@ import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
-import burlton.dartzee.code.screen.dartzee.DartboardRuleVerifier
+import burlton.dartzee.code.screen.dartzee.DartzeeDartboard
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
@@ -20,9 +20,11 @@ import java.awt.BorderLayout
  * TODO list
  *  - Implement AI strategy
  *  - Implement in-game stats
+ *  - Icons
+ *  - Review + tests
  */
 class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
-        GamePanelFixedLength<DartsScorerDartzee, DartboardRuleVerifier>(parent, game),
+        GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard>(parent, game),
         IDartzeeCarouselListener
 {
     private val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
@@ -39,7 +41,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         add(summaryPanel, BorderLayout.NORTH)
     }
 
-    override fun factoryDartboard() = DartboardRuleVerifier()
+    override fun factoryDartboard() = DartzeeDartboard()
 
     override fun doAiTurn(model: AbstractDartsModel)
     {

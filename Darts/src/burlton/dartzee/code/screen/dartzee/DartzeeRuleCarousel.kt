@@ -120,12 +120,6 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
 
     fun getValidSegments(): List<DartboardSegment>
     {
-        val tile = hoveredTile
-        if (tile != null)
-        {
-            return tile.getValidSegments(dartsThrown)
-        }
-
         val validSegments = HashSet<DartboardSegment>()
         pendingTiles.forEach {
             validSegments.addAll(it.getValidSegments(dartsThrown))

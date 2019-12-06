@@ -19,7 +19,7 @@ import javax.swing.border.EmptyBorder
 
 class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
-    val dartboard = DartboardRuleVerifier(verificationDartboardSize, verificationDartboardSize)
+    val dartboard = DartzeeDartboard(verificationDartboardSize, verificationDartboardSize)
     private val dartsThrown = mutableListOf<Dart>()
     val btnReset = JButton()
     private val panelNorth = JPanel()

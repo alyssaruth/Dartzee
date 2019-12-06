@@ -4,7 +4,7 @@ import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.screen.Dartboard
 import java.awt.Color
 
-class DartboardRuleVerifier(width: Int = 400, height: Int = 400): Dartboard(width, height)
+class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, height)
 {
     var validSegments = listOf<DartboardSegment>()
 
