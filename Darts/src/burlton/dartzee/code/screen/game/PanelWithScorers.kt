@@ -3,8 +3,8 @@ package burlton.dartzee.code.screen.game
 import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.game.scorer.AbstractScorer
+import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
-import java.awt.FlowLayout
 import javax.swing.JPanel
 
 /**
@@ -25,15 +25,10 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         layout = BorderLayout(0, 0)
         panelCenter.layout = BorderLayout(0, 0)
 
-        panelEast.layout = makeFlowLayout()
-        panelWest.layout = makeFlowLayout()
-
         add(panelCenter, BorderLayout.CENTER)
         add(panelEast, BorderLayout.EAST)
         add(panelWest, BorderLayout.WEST)
     }
-
-    private fun makeFlowLayout() = FlowLayout().also { it.hgap = 0 }
 
     /**
      * Abstract methods
@@ -53,11 +48,16 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 
         val chunkSize = scorersOrdered.size.ceilDiv(2)
         val eastAndWestScorers = scorersOrdered.chunked(chunkSize)
-        val eastScorers = eastAndWestScorers[1]
         val westScorers = eastAndWestScorers[0]
+        val eastScorers = eastAndWestScorers.getOrNull(1)
 
-        eastScorers.forEach { panelEast.add(it) }
-        westScorers.forEach { panelWest.add(it) }
+        panelEast.border = null
+        panelWest.border = null
+        panelEast.layout = MigLayout("insets 0, gapx 0", "[]", "[grow]")
+        panelWest.layout = MigLayout("insets 0, gapx 0", "[]", "[grow]")
+
+        eastScorers?.forEach { panelEast.add(it, "growy") }
+        westScorers.forEach { panelWest.add(it, "growy") }
     }
 
     fun <K> assignScorer(player: PlayerEntity, hmKeyToScorer: MutableMap<K, S>, key: K, gameParams: String): S

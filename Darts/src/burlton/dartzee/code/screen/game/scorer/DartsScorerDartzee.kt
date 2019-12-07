@@ -2,11 +2,8 @@ package burlton.dartzee.code.screen.game.scorer
 
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.screen.game.GamePanelDartzee
-import burlton.dartzee.code.utils.DartsColour
-import java.awt.Color
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.border.LineBorder
 
 private const val RULE_COLUMN = 3
 private const val SCORE_COLUMN = 4
@@ -15,7 +12,7 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
 {
     init
     {
-        addMouseListener(this)
+        lblAvatar.addMouseListener(this)
     }
 
     override fun getTotalScore(): Int
@@ -56,13 +53,8 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
 
     private fun getMaxScoreSoFar() = model.getColumnValues(SCORE_COLUMN).filterIsInstance<Int>().max()
 
-    override fun setSelected(selected: Boolean) {
-        super.setSelected(selected)
-
-        border = if (selected) LineBorder(Color.BLACK, 2) else LineBorder(DartsColour.TRANSPARENT, 2)
-    }
-
-    override fun mouseReleased(e: MouseEvent?) {
+    override fun mouseReleased(e: MouseEvent?)
+    {
         if (parent.gameEntity.isFinished()) {
             parent.scorerSelected(this)
         }

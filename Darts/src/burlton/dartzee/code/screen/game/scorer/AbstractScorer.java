@@ -58,7 +58,7 @@ public abstract class AbstractScorer extends JPanel
 	protected final JLabel lblResult = new JLabel("X Darts (D20)");
 	protected final JPanel panelNorth = new JPanel();
 	private final JPanel panel_1 = new JPanel();
-	private final PlayerAvatar lblAvatar = new PlayerAvatar();
+	protected final PlayerAvatar lblAvatar = new PlayerAvatar();
 	protected final JPanel panel_2 = new JPanel();
 	protected final JPanel panelSouth = new JPanel();
 	
@@ -139,8 +139,8 @@ public abstract class AbstractScorer extends JPanel
 	
 	public void setSelected(boolean selected)
 	{
-		Color color = selected?Color.RED:Color.BLACK;
-		lblName.setForeground(color);
+		lblName.setForeground(selected ? Color.RED : Color.BLACK);
+		lblAvatar.setSelected(selected);
 	}
 	
 	public void updateResultColourForPosition(int pos)

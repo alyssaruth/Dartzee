@@ -3,6 +3,7 @@ package burlton.dartzee.code.bean
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.db.PlayerImageEntity
 import burlton.dartzee.code.screen.PlayerImageDialog
+import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.event.MouseAdapter
@@ -11,6 +12,7 @@ import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
+import javax.swing.border.LineBorder
 
 class PlayerAvatar : JLabel(AVATAR_UNSET)
 {
@@ -26,6 +28,11 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
         horizontalAlignment = SwingConstants.CENTER
 
         addMouseListener(AvatarClickListener())
+    }
+
+    fun setSelected(selected: Boolean)
+    {
+        border = if (selected) LineBorder(Color.RED, 4) else EtchedBorder(EtchedBorder.RAISED, null, null)
     }
 
     fun init(player: PlayerEntity?, saveChanges: Boolean)

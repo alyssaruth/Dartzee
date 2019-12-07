@@ -5,17 +5,19 @@ import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.utils.getAllPossibleSegments
-import burlton.desktopcore.code.util.setFontSize
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.Component
 import java.awt.Dimension
+import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.SwingConstants
 
 class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselListener, dtos: List<DartzeeRuleDto>): JPanel()
 {
     val carousel = DartzeeRuleCarousel(parent, dtos)
-    val lblHighScore = JLabel("High Score")
+    val lblHighScore = JLabel()
     val panelHighScore = JPanel()
 
     init
@@ -23,7 +25,10 @@ class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselListener, dtos: List<Dartz
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(150, 120)
 
-        lblHighScore.setFontSize(36)
+        lblHighScore.icon = ImageIcon(javaClass.getResource("/icons/dartzeeScoringRound.png"))
+        lblHighScore.background = Color.BLACK
+        lblHighScore.horizontalAlignment = SwingConstants.CENTER
+        lblHighScore.verticalAlignment = SwingConstants.CENTER
 
         panelHighScore.add(lblHighScore)
         add(panelHighScore)
