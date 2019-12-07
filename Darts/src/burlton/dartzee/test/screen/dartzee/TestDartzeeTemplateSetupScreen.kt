@@ -208,6 +208,42 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     }
 
     @Test
+    fun `Should support renaming a template`()
+    {
+        val id = insertTemplateAndRule(name = "Old").rowId
+
+        dialogFactory.inputSelection = "New"
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        scrn.scrollTable.selectRow(0)
+        scrn.btnRename.doClick()
+
+        dialogFactory.inputsShown.shouldContainExactly("Rename Template")
+        scrn.getTemplate(0).name shouldBe "New"
+
+        val newEntity = DartzeeTemplateEntity().retrieveForId(id)
+        newEntity!!.name shouldBe "New"
+    }
+
+    @Test
+    fun `Should do nothing if rename is cancelled`()
+    {
+        insertTemplateAndRule(name = "ABC")
+        dialogFactory.inputSelection = null
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        scrn.scrollTable.selectRow(0)
+        scrn.btnRename.doClick()
+
+        dialogFactory.inputsShown.shouldContainExactly("Rename Template")
+        scrn.getTemplate(0).name shouldBe "ABC"
+    }
+
+    @Test
     fun `Pressing back should take you to the Utilities screen`()
     {
         val scrn = DartzeeTemplateSetupScreen()
