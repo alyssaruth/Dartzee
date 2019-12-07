@@ -1,9 +1,6 @@
 package burlton.core.test.util
 
-import burlton.core.code.util.addUnique
-import burlton.core.code.util.allIndexed
-import burlton.core.code.util.getAllPermutations
-import burlton.core.code.util.getDescription
+import burlton.core.code.util.*
 import burlton.core.test.helper.AbstractTest
 import burlton.core.test.helper.verifyNotCalled
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -115,5 +112,15 @@ class TestExtensionFunctions: AbstractTest()
         validList.allIndexed { index, value -> validator.isValid(value, index) } shouldBe true
     }
 
+    @Test
+    fun `Should sort in the correct order`()
+    {
+        val list = listOf(1, 3, 2, 5, 4)
 
+        val ascending = list.sortedBy(false) { it }
+        val descending = list.sortedBy(true) { it }
+
+        ascending.shouldContainExactly(1, 2, 3, 4, 5)
+        descending.shouldContainExactly(5, 4, 3, 2, 1)
+    }
 }
