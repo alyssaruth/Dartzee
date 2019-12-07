@@ -63,6 +63,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         ret.rowId = rs.getString("RowId")
         ret.dtCreation = rs.getTimestamp("DtCreation")
         ret.dtLastUpdate = rs.getTimestamp("DtLastUpdate")
+        ret.retrievedFromDb = true
 
         getColumnsExcluding("RowId", "DtCreation", "DtLastUpdate").forEach{
             val rsValue = getFieldFromResultSet(rs, it)
@@ -140,7 +141,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
                 while (rs.next())
                 {
                     val entity = factoryFromResultSet(rs)
-                    entity.retrievedFromDb = true
                     ret.add(entity)
                 }
             }

@@ -32,7 +32,7 @@ class TestDevUtilities: AbstractDartsTest()
         DevUtilities.purgeGame()
 
         dialogFactory.inputsShown.shouldContainExactly("Delete Game")
-        dialogFactory.inputOptionsPresented.size shouldBe 1
+        dialogFactory.inputOptionsPresented?.size shouldBe 1
 
         getCountFromTable("Game") shouldBe 1
     }
@@ -49,7 +49,7 @@ class TestDevUtilities: AbstractDartsTest()
         DevUtilities.purgeGame()
 
         dialogFactory.inputsShown.shouldContainExactly("Delete Game")
-        dialogFactory.inputOptionsPresented.size shouldBe 2
+        dialogFactory.inputOptionsPresented?.size shouldBe 2
 
         getCountFromTable("Game") shouldBe 1
         retrieveGame().localId shouldBe 1

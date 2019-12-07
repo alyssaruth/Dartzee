@@ -12,9 +12,9 @@ class MessageDialogFactory: AbstractMessageDialogFactory()
         JOptionPane.showMessageDialog(null, text, "Information", JOptionPane.INFORMATION_MESSAGE)
     }
 
-    override fun showInput(title: String, message: String, options: Array<*>, defaultOption: Any?): Any?
+    override fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K?): K?
     {
-        return JOptionPane.showInputDialog(null, message,  title, JOptionPane.PLAIN_MESSAGE, null, options, defaultOption)
+        return JOptionPane.showInputDialog(null, message,  title, JOptionPane.PLAIN_MESSAGE, null, options, defaultOption) as K?
     }
 
     override fun showError(text: String)

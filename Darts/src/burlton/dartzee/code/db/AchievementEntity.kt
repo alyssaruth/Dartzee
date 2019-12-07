@@ -58,7 +58,6 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
                 while (rs.next())
                 {
                     val entity = dao.factoryFromResultSet(rs)
-                    entity.retrievedFromDb = true
                     entity.localGameIdEarned = rs.getLong("LocalGameId")
 
                     achievements.add(entity)
