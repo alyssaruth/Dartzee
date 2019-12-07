@@ -1,5 +1,6 @@
 package burlton.dartzee.code.bean
 
+import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.bean.DoubleClickListener
 import burlton.desktopcore.code.bean.ScrollTable
@@ -111,7 +112,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
     /**
      * Is this selection valid for a game/match?
      */
-    fun valid(match: Boolean): Boolean
+    fun valid(match: Boolean, gameType: Int): Boolean
     {
         val selectedPlayers = getSelectedPlayers()
         val rowCount = selectedPlayers.size
@@ -130,6 +131,13 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
         if (rowCount > 6)
         {
             DialogUtil.showError("You cannot select more than 6 players.")
+            return false
+        }
+
+        //Temporary measure until https://trello.com/c/T89Kqmxj is implemented
+        if (gameType == GAME_TYPE_DARTZEE && selectedPlayers.any { it.isAi() })
+        {
+            DialogUtil.showError("You cannot select AI opponents for Dartzee.")
             return false
         }
 

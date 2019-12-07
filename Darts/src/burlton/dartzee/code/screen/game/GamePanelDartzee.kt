@@ -18,8 +18,6 @@ import java.awt.BorderLayout
 
 /**
  * TODO list
- *  - Implement AI strategy
- *  - Implement in-game stats
  *  - Icons
  *  - Review + tests
  */
