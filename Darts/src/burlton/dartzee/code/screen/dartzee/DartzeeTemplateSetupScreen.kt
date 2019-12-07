@@ -30,6 +30,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     val scrollTable = ScrollTable()
     private val panelEast = JPanel()
     val btnAdd = JButton()
+    val btnRename = JButton()
     val btnCopy = JButton()
     val btnDelete = JButton()
 
@@ -40,16 +41,24 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 
         panelEast.layout = MigLayout("al center center, wrap, gapy 20")
         panelEast.add(btnAdd)
+        panelEast.add(btnRename)
         panelEast.add(btnCopy)
         panelEast.add(btnDelete)
 
         btnAdd.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
+        btnAdd.toolTipText = "New Template"
         btnAdd.preferredSize = Dimension(40, 40)
 
+        btnRename.icon = ImageIcon(javaClass.getResource("/buttons/rename.png"))
+        btnRename.toolTipText = "Rename Template"
+        btnRename.preferredSize = Dimension(40, 40)
+
         btnCopy.icon = ImageIcon(javaClass.getResource("/buttons/copy.png"))
+        btnCopy.toolTipText = "Copy Template"
         btnCopy.preferredSize = Dimension(40, 40)
 
         btnDelete.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
+        btnDelete.toolTipText = "Delete Template"
         btnDelete.preferredSize = Dimension(40, 40)
 
         scrollTable.font = Font(font.name, Font.PLAIN, 18)
@@ -59,6 +68,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         scrollTable.setHeaderFont(Font(font.name, Font.PLAIN, 20))
 
         btnAdd.addActionListener(this)
+        btnRename.addActionListener(this)
         btnCopy.addActionListener(this)
         btnDelete.addActionListener(this)
     }
@@ -120,6 +130,19 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         template?.let { initialise() }
     }
 
+    private fun renameTemplate()
+    {
+        val selection = getSelectedTemplate()
+
+        val result = DialogUtil.showInput("Rename Template", "Name", null, selection.name) ?: return
+        if (result.isNotEmpty())
+        {
+            selection.name = result
+            selection.saveToDatabase()
+            scrollTable.repaint()
+        }
+    }
+
     private fun copySelectedTemplate()
     {
         val selection = getSelectedTemplate()
@@ -147,17 +170,15 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     private fun getSelectedTemplate(): DartzeeTemplateEntity
     {
         val rowIndex = scrollTable.selectedModelRow
-
-        val tm = scrollTable.model
-        return tm.getValueAt(rowIndex, 0) as DartzeeTemplateEntity
+        return scrollTable.model.getValueAt(rowIndex, 0) as DartzeeTemplateEntity
     }
-
 
     override fun actionPerformed(arg0: ActionEvent)
     {
         when (arg0.source)
         {
             btnAdd -> addTemplate()
+            btnRename -> renameTemplate()
             btnCopy -> copySelectedTemplate()
             btnDelete -> deleteTemplate()
             else -> super.actionPerformed(arg0)
@@ -166,6 +187,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 
     override fun selectionChanged(src: ScrollTable)
     {
+        btnRename.isEnabled = src.selectedModelRow != -1
         btnCopy.isEnabled = src.selectedModelRow != -1
         btnDelete.isEnabled = src.selectedModelRow != -1
     }

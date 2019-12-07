@@ -15,5 +15,5 @@ object DialogUtil
     @JvmStatic fun showQuestion(message: String, allowCancel: Boolean = false) = dialogFactory!!.showQuestion(message, allowCancel)
     @JvmStatic fun showLoadingDialog(text: String) = dialogFactory!!.showLoading(text)
     @JvmStatic fun dismissLoadingDialog() = dialogFactory!!.dismissLoading()
-    @JvmStatic fun showInput(title: String, message: String, options: Array<*>, defaultOption: Any? = null) = dialogFactory!!.showInput(title, message, options, defaultOption)
+    fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K? = null) = dialogFactory!!.showInput(title, message, options, defaultOption)
 }

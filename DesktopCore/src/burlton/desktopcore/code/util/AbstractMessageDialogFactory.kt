@@ -8,7 +8,7 @@ abstract class AbstractMessageDialogFactory
     abstract fun showError(text: String)
     abstract fun showQuestion(text: String, allowCancel: Boolean = false): Int
     abstract fun showLoading(text: String)
-    abstract fun showInput(title: String, message: String, options: Array<*>, defaultOption: Any?): Any?
+    abstract fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K?): K?
     abstract fun dismissLoading()
 
     fun showErrorLater(text: String)

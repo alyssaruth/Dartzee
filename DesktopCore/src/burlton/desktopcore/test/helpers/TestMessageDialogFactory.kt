@@ -8,7 +8,7 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
 {
     //Inputs
     var inputSelection: Any? = null
-    var inputOptionsPresented: Array<*> = arrayOf<Any>()
+    var inputOptionsPresented: Array<*>? = null
     val inputsShown = mutableListOf<String>()
 
     //Questions
@@ -22,16 +22,16 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
 
     val loadingsShown = mutableListOf<String>()
 
-    override fun showInput(title: String, message: String, options: Array<*>, defaultOption: Any?): Any?
+    override fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K?): K?
     {
         inputsShown.add(title)
         inputOptionsPresented = options
 
         inputSelection ?: return null
 
-        if (options.contains(inputSelection))
+        if (options == null || options.contains(inputSelection))
         {
-            return inputSelection
+            return inputSelection as K
         }
 
         Debug.stackTrace("Running a test where $inputSelection was to be returned, but wasn't a valid selection in the dialog shown.")
