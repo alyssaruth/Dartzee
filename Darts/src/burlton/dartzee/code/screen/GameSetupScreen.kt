@@ -51,66 +51,47 @@ class GameSetupScreen : EmbeddedScreen()
     init
     {
         panelSetup.layout = BorderLayout(0, 0)
-
         panelGameType.border = TitledBorder(null, "Game Type", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panelSetup.add(panelGameType, BorderLayout.NORTH)
         panelGameType.layout = GridLayout(0, 1, 0, 0)
-
         add(panelSetup, BorderLayout.NORTH)
-
         panelGameType.add(panelGameTypeCb)
         panelGameTypeCb.add(gameTypeComboBox)
-
         panelGameType.add(gameParamFilterPanel)
-
         panelPlayers.border = TitledBorder(null, "Players", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         add(panelPlayers, BorderLayout.CENTER)
         panelPlayers.layout = BorderLayout(0, 0)
         panelPlayers.add(launchPanel, BorderLayout.SOUTH)
         launchPanel.add(btnLaunch)
         panelPlayers.add(playerSelector, BorderLayout.CENTER)
-
         panelSetup.add(matchConfigPanel, BorderLayout.CENTER)
-
         matchConfigPanel.border = TitledBorder(null, "Match Setup", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         matchConfigPanel.layout = MigLayout("", "[80px][101px][grow][45px][][][]", "[][]")
-
         matchConfigPanel.add(rdbtnSingleGame, "flowy,cell 0 0,alignx left,aligny top")
         matchConfigPanel.add(rdbtnFirstTo, "flowy,cell 0 1,alignx left,aligny top")
-
         matchConfigPanel.add(spinnerWins, "flowx,cell 1 1,alignx left,aligny center")
         spinnerWins.model = SpinnerNumberModel(2, 2, 15, 1)
         matchConfigPanel.add(rdbtnPoints, "cell 0 2,alignx left,aligny top")
         spinnerGames.model = SpinnerNumberModel(4, 2, 15, 1)
-
         matchConfigPanel.add(spinnerGames, "flowx,cell 1 2,alignx left,aligny top")
-
         matchConfigPanel.add(lblWins, "cell 1 1")
-
         matchConfigPanel.add(lblGames, "cell 1 2,alignx left,aligny top")
-
-
         panelPointBreakdown.layout = MigLayout("", "[]", "[]")
-
         panelPointBreakdown.add(lblst, "flowy,cell 0 0,alignx center")
         spinnerPoints1st.model = SpinnerNumberModel(4, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints1st, "cell 0 0,alignx center")
-
         panelPointBreakdown.add(lb2nd, "flowy,cell 1 0,alignx center")
         spinnerPoints2nd.model = SpinnerNumberModel(3, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints2nd, "cell 1 0,alignx center")
-
         panelPointBreakdown.add(lb3rd, "flowy,cell 2 0,alignx center")
         spinnerPoints3rd.model = SpinnerNumberModel(2, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints3rd, "cell 2 0,alignx center")
-
         panelPointBreakdown.add(lb4th, "flowy,cell 3 0,alignx center")
         spinnerPoints4th.model = SpinnerNumberModel(1, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints4th, "cell 3 0,alignx center")
 
         matchConfigPanel.addActionListener(this)
         gameTypeComboBox.addActionListener(this)
-
         btnLaunch.addActionListener(this)
     }
 
@@ -199,7 +180,7 @@ class GameSetupScreen : EmbeddedScreen()
     private fun launchGame()
     {
         val match = factoryMatch()
-        if (!playerSelector.valid(match != null))
+        if (!playerSelector.valid(match != null, gameTypeComboBox.getGameType()))
         {
             return
         }
@@ -235,19 +216,12 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun factoryMatch(): DartsMatchEntity?
     {
-        if (rdbtnFirstTo.isSelected)
+        val games = spinnerWins.value as Int
+        return when
         {
-            val games = spinnerWins.value as Int
-            return DartsMatchEntity.factoryFirstTo(games)
-        }
-        else if (rdbtnPoints.isSelected)
-        {
-            val games = spinnerGames.value as Int
-            return DartsMatchEntity.factoryPoints(games, getPointsXml())
-        }
-        else
-        {
-            return null
+            rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(games)
+            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(games, getPointsXml())
+            else -> null
         }
     }
 
@@ -266,7 +240,7 @@ class GameSetupScreen : EmbeddedScreen()
         if (gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE)
         {
             val match = factoryMatch()
-            if (!playerSelector.valid(match != null))
+            if (!playerSelector.valid(match != null, GAME_TYPE_DARTZEE))
             {
                 return
             }
