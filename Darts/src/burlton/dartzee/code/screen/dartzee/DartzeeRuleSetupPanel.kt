@@ -21,7 +21,7 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
     val btnAddRule = JButton()
     val btnAmendRule = JButton()
     val btnRemoveRule = JButton()
-    val btnCalculateOrder = JButton("Calc")
+    val btnCalculateOrder = JButton()
 
     init
     {
@@ -53,6 +53,10 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         btnRemoveRule.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
         btnRemoveRule.toolTipText = "Remove rule"
         btnRemoveRule.preferredSize = Dimension(40, 40)
+
+        btnCalculateOrder.icon = ImageIcon(javaClass.getResource("/buttons/calculator.png"))
+        btnCalculateOrder.toolTipText = "Order by calculated difficulty"
+        btnCalculateOrder.preferredSize = Dimension(40, 40)
 
         setTableModel()
 
