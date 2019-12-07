@@ -1,9 +1,10 @@
 package burlton.dartzee.test.screen.game
 
-import burlton.dartzee.code.screen.game.scorer.AbstractScorer
 import burlton.dartzee.code.screen.game.PanelWithScorers
+import burlton.dartzee.code.screen.game.scorer.AbstractScorer
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertPlayer
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowExactly
@@ -26,6 +27,18 @@ class TestPanelWithScorers: AbstractDartsTest()
         scrn.scorerCount() shouldBe 4
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1))
         scrn.getEastScorers().shouldContainExactly(scrn.getScorer(2), scrn.getScorer(3))
+    }
+
+    @Test
+    fun `Should handle just a single scorer`()
+    {
+        val scrn = FakeDartsScreen()
+
+        scrn.initScorers(1)
+
+        scrn.scorerCount() shouldBe 1
+        scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0))
+        scrn.getEastScorers().shouldBeEmpty()
     }
 
     @Test

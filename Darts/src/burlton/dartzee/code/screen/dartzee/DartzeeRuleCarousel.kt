@@ -170,9 +170,8 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<D
         if (src is DartzeeRuleTilePending)
         {
             hoveredTile = src
+            parent.hoverChanged(src.getValidSegments(dartsThrown))
         }
-
-        parent.hoverChanged(getValidSegments())
     }
 
     override fun mouseExited(e: MouseEvent?)

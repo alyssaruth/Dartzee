@@ -26,7 +26,7 @@ abstract class AbstractDartsGameScreen(totalPlayers: Int, val gameType: Int): JF
     open fun getScreenHeight() = if (gameType == GAME_TYPE_DARTZEE) 795 else 675
     private fun setScreenSize(playerCount: Int)
     {
-        val newSize = Dimension(520 + (playerCount * SCORER_WIDTH), getScreenHeight())
+        val newSize = Dimension(520 + (playerCount * (SCORER_WIDTH + 4)), getScreenHeight())
         size = newSize
         isResizable = false
     }
