@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.bean.getSelectedPlayer
-import burlton.dartzee.code.bean.initTableModel
+import burlton.dartzee.code.bean.initPlayerTableModel
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.bean.ScrollTable
 import java.awt.BorderLayout
@@ -65,7 +65,7 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
     override fun initialise()
     {
         val players = PlayerEntity.retrievePlayers("", false)
-        tablePlayers.initTableModel(players)
+        tablePlayers.initPlayerTableModel(players)
         showNoSelectionPanel()
     }
 

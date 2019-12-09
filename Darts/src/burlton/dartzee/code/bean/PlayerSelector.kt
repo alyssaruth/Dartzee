@@ -54,8 +54,8 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
     fun init()
     {
         val allPlayers = PlayerEntity.retrievePlayers("", false)
-        tablePlayersToSelectFrom.initTableModel(allPlayers)
-        tablePlayersSelected.initTableModel()
+        tablePlayersToSelectFrom.initPlayerTableModel(allPlayers)
+        tablePlayersSelected.initPlayerTableModel()
     }
 
     fun init(selectedPlayers: List<PlayerEntity>)
@@ -96,7 +96,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
 
         val allPlayers = source.getAllPlayers()
         val availablePlayers = allPlayers.filter{ p -> selectedPlayers.none{ it.rowId == p.rowId} }
-        source.initTableModel(availablePlayers)
+        source.initPlayerTableModel(availablePlayers)
 
         if (rowToSelect > availablePlayers.size - 1)
         {
