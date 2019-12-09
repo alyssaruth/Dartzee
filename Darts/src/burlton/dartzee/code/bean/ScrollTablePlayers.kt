@@ -43,7 +43,7 @@ private fun ScrollTable.getPlayerEntityForRow(row: Int): PlayerEntity
     return table.getValueAt(row, 1) as PlayerEntity
 }
 
-fun ScrollTable.initTableModel(players: List<PlayerEntity> = listOf())
+fun ScrollTable.initPlayerTableModel(players: List<PlayerEntity> = listOf())
 {
     val model = TableUtil.DefaultModel()
     model.addColumn("")

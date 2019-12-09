@@ -15,6 +15,5 @@ class DartzeeTotalRuleSelector(desc: String): AbstractDartzeeRuleSelector<Abstra
         super.setEnabled(enabled)
 
         enableChildren(enabled)
-        cbDesc.isEnabled = true
     }
 }
