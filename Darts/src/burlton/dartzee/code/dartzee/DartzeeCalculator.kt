@@ -12,13 +12,6 @@ import burlton.dartzee.code.screen.Dartboard
 abstract class AbstractDartzeeCalculator
 {
     abstract fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
-    abstract fun isValidCombination(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
-
-    fun isValidDartCombination(darts: List<Dart>, rule: DartzeeRuleDto): Boolean
-    {
-        val segments = darts.map{ DartboardSegment("${it.score}_${it.segmentType}")}
-        return isValidCombination(segments, rule)
-    }
 }
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
@@ -30,7 +23,10 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         dartboard.paintDartboard()
     }
 
-    override fun isValidCombination(combination: List<DartboardSegment>,
+    private fun isValidDartCombination(darts: List<Dart>, rule: DartzeeRuleDto) =
+            isValidCombination(darts.map{ DartboardSegment("${it.score}_${it.segmentType}")}, rule)
+
+    fun isValidCombination(combination: List<DartboardSegment>,
                                     rule: DartzeeRuleDto): Boolean
     {
         return isValidCombinationForTotalRule(combination, rule.totalRule)

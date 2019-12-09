@@ -43,7 +43,7 @@ class TestDartzeeTotalRuleSelector : AbstractDartsTest()
         val populatedRule = selector.getSelection() as DartzeeTotalRuleEqualTo
 
         selector.isEnabled = false
-        selector.cbDesc.isEnabled shouldBe false
+        selector.cbDesc.isEnabled shouldBe true
         selector.comboBoxRuleType.isEnabled shouldBe false
         populatedRule.configPanel.isEnabled shouldBe false
         populatedRule.spinner.isEnabled shouldBe false
