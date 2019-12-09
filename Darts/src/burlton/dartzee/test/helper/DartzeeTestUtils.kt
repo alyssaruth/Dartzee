@@ -1,6 +1,8 @@
 package burlton.dartzee.test.helper
 
 import burlton.dartzee.code.`object`.DartboardSegment
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
@@ -9,6 +11,7 @@ import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleScore
 import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeRuleTotalSize
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
+import burlton.dartzee.code.utils.getAllPossibleSegments
 
 fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
                        dart2Rule: AbstractDartzeeDartRule? = null,
@@ -49,3 +52,5 @@ fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean 
 }
 
 inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllTotalRules().find { it is T }.also { (it as T).target = score }
+
+fun getOuterSegments() = getAllPossibleSegments().filter { it.type == SEGMENT_TYPE_DOUBLE || it.type == SEGMENT_TYPE_OUTER_SINGLE }.filter { it.score != 25 }
