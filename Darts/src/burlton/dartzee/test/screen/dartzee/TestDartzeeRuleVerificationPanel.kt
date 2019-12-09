@@ -1,6 +1,5 @@
 package burlton.dartzee.test.screen.dartzee
 
-import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
@@ -12,7 +11,8 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 
-class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
+class TestDartzeeRuleVerificationPanel: AbstractDartsTest()
+{
     @Test
     fun `Should not re-run rule calculation if 0 darts thrown`()
     {
@@ -33,12 +33,23 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
         val panel = DartzeeRuleVerificationPanel()
         panel.updateRule(makeDartzeeRuleDto())
 
-        panel.dartThrown(Dart(20, 1))
-        panel.dartThrown(Dart(10, 1))
-        panel.tfResult.text shouldBe "20 → 10 → ?, Total: 30"
+        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.tfResult.text shouldBe "1 → 2 → ?, Total: 3"
 
         panel.btnReset.doClick()
         panel.tfResult.text shouldBe "? → ? → ?, Total: 0"
+    }
+
+    @Test
+    fun `Should calculate the total based on the rule`()
+    {
+        val panel = DartzeeRuleVerificationPanel()
+        panel.updateRule(makeDartzeeRuleDto(dart1Rule = makeScoreRule(2)))
+
+        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.tfResult.text shouldBe "1 → 2 → ?, Total: 2"
     }
 
     @Test
@@ -88,7 +99,7 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
     }
 
     @Test
-    fun `Should go red as soon as an invalid dart is thrown`()
+    fun `Should go red and invalidate the total as soon as an invalid dart is thrown`()
     {
         val panel = DartzeeRuleVerificationPanel()
 
@@ -99,6 +110,8 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest() {
 
         panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
         panel.shouldBeRed()
+
+        panel.tfResult.text shouldBe "0 → ? → ?, Total: N/A"
     }
 
     @Test

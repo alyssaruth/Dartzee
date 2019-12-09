@@ -85,41 +85,28 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
     private fun repaintDartboard()
     {
         val calculationResult = runCalculationIfNecessary()
-
-        updateDartDesc()
+        val failed = calculationResult.validCombinations == 0
 
         if (dartsThrown.size < 3)
         {
             lblCombinations.text = calculationResult.getCombinationsDesc()
             dartboard.refreshValidSegments(calculationResult.validSegments)
-
-            if (calculationResult.validCombinations == 0)
-            {
-                //We've already borked it
-                setAllColours(Color.RED)
-
-            }
-            else
-            {
-                setAllColours(Color.WHITE, DartsColour.COLOUR_PASTEL_BLUE)
-            }
         }
         else
         {
-            //We've thrown three darts, so just check validity
             lblCombinations.text = ""
-
-            if (dartzeeCalculator.isValidDartCombination(dartsThrown, dartzeeRule))
-            {
-                setAllColours(Color.GREEN)
-            }
-            else
-            {
-                setAllColours(Color.RED)
-            }
         }
+
+        when
+        {
+            failed -> setAllColours(Color.RED)
+            dartsThrown.size == 3 -> setAllColours(Color.GREEN)
+            else -> setAllColours(Color.WHITE, DartsColour.COLOUR_PASTEL_BLUE)
+        }
+
+        updateDartDesc(failed)
     }
-    private fun updateDartDesc()
+    private fun updateDartDesc(failed: Boolean)
     {
         val dartStrs = dartsThrown.map { it.toString() }.toMutableList()
         while (dartStrs.size < 3) {
@@ -127,9 +114,9 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         }
 
         val dartsStr = dartStrs.joinToString(" → ")
-        val totalStr = "Total: ${dartsThrown.map { it.getTotal() }.sum()}"
+        val total = if (failed) "Total: N/A" else "Total: ${dartzeeRule.getSuccessTotal(dartsThrown)}"
 
-        tfResult.text = "$dartsStr, $totalStr"
+        tfResult.text = "$dartsStr, $total"
     }
 
     private fun runCalculationIfNecessary(): DartzeeRuleCalculationResult
