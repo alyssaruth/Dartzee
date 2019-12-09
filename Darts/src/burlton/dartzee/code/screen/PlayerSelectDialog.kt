@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.bean.getSelectedPlayers
-import burlton.dartzee.code.bean.initTableModel
+import burlton.dartzee.code.bean.initPlayerTableModel
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.screen.SimpleDialog
@@ -50,7 +50,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
         val allPlayers = PlayerEntity.retrievePlayers(whereSql, false)
 
         val players = allPlayers.filter{ p -> playersToExclude.none{ it.rowId == p.rowId} }
-        tablePlayers.initTableModel(players)
+        tablePlayers.initPlayerTableModel(players)
     }
 
     override fun okPressed()

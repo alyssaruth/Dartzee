@@ -20,7 +20,7 @@ class TestScrollTablePlayers: AbstractDartsTest()
         val bob = insertPlayer(name = "Bob", strategy = -1)
         val robot = insertPlayer(name = "Robot", strategy = 1)
         val players = listOf(bob, robot)
-        table.initTableModel(players)
+        table.initPlayerTableModel(players)
 
 
         table.getColumnName(0) shouldBe ""
@@ -40,7 +40,7 @@ class TestScrollTablePlayers: AbstractDartsTest()
         val table = ScrollTable()
 
         val players = listOf(insertPlayer(name = "Bob", strategy = -1), insertPlayer(name = "Robot", strategy = 1))
-        table.initTableModel(players)
+        table.initPlayerTableModel(players)
 
         table.getAllPlayers() shouldBe players
     }
@@ -51,7 +51,7 @@ class TestScrollTablePlayers: AbstractDartsTest()
         val table = ScrollTable()
 
         val players = listOf(insertPlayer(name = "Bob", strategy = -1), insertPlayer(name = "Robot", strategy = 1))
-        table.initTableModel(players)
+        table.initPlayerTableModel(players)
 
         table.getSelectedPlayer() shouldBe null
         table.getSelectedPlayers().shouldBeEmpty()
@@ -64,7 +64,7 @@ class TestScrollTablePlayers: AbstractDartsTest()
 
         val playerTwo = insertPlayer(name = "Robot", strategy = 1)
         val players = listOf(insertPlayer(name = "Bob", strategy = -1), playerTwo)
-        table.initTableModel(players)
+        table.initPlayerTableModel(players)
 
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
         table.selectRow(1)
@@ -82,7 +82,7 @@ class TestScrollTablePlayers: AbstractDartsTest()
         val playerTwo = insertPlayer(name = "Bob")
         val playerThree = insertPlayer(name = "Clive")
 
-        table.initTableModel(listOf(playerOne, playerTwo, playerThree))
+        table.initPlayerTableModel(listOf(playerOne, playerTwo, playerThree))
 
         table.selectRows(0, 1)
 
@@ -98,7 +98,7 @@ class TestScrollTablePlayers: AbstractDartsTest()
         val playerTwo = insertPlayer(name = "Bob")
         val playerThree = insertPlayer(name = "Clive")
 
-        table.initTableModel(listOf(playerThree, playerOne, playerTwo))
+        table.initPlayerTableModel(listOf(playerThree, playerOne, playerTwo))
 
         table.getAllPlayers() shouldBe listOf(playerOne, playerTwo, playerThree)
     }
@@ -112,7 +112,7 @@ class TestScrollTablePlayers: AbstractDartsTest()
         val playerTwo = insertPlayer(name = "Bob")
         val playerThree = insertPlayer(name = "Clive")
 
-        table.initTableModel(listOf(playerOne))
+        table.initPlayerTableModel(listOf(playerOne))
         table.addPlayers(listOf(playerTwo, playerThree))
 
         table.getAllPlayers() shouldBe listOf(playerOne, playerTwo, playerThree)
