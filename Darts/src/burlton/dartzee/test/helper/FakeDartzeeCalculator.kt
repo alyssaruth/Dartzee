@@ -31,12 +31,6 @@ class FakeDartzeeCalculator: AbstractDartzeeCalculator()
         return DartzeeRuleCalculationResult(segments, segments.size, 10, 1.0 + dartsSoFar.size, 10.0)
     }
 
-    override fun isValidCombination(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean {
-        return combination[0].scoreAndType == "1_$SEGMENT_TYPE_INNER_SINGLE"
-                && combination[1].scoreAndType == "2_$SEGMENT_TYPE_INNER_SINGLE"
-                && combination[2].scoreAndType == "3_$SEGMENT_TYPE_INNER_SINGLE"
-    }
-
     private fun isValidSoFar(dartsSoFar: List<Dart>): Boolean
     {
         dartsSoFar.forEachIndexed { ix, drt ->
