@@ -351,7 +351,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         }
 
         tableList.addAll(players)
-        table.initTableModel(tableList)
+        table.initPlayerTableModel(tableList)
         table.selectFirstRow()
     }
 
@@ -365,7 +365,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         }
 
         tableList.removeAll(playersToRemove)
-        table.initTableModel(tableList)
+        table.initPlayerTableModel(tableList)
 
         //Bleh
         if (table === scrollTableIncluded)
