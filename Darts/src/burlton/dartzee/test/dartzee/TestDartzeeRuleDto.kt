@@ -6,11 +6,14 @@ import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
 import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.getFakeValidSegment
+import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
+import kotlin.test.assertNotNull
 
 class TestDartzeeRuleDto: AbstractDartsTest()
 {
@@ -40,6 +43,27 @@ class TestDartzeeRuleDto: AbstractDartsTest()
         val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
 
         rule.getDartRuleList() shouldBe null
+    }
+
+    @Test
+    fun `Should run a calculation and cache the result`()
+    {
+        val dto = makeDartzeeRuleDto()
+        dto.runStrengthCalculation()
+
+        val result = dto.calculationResult
+        assertNotNull(result)
+        result.validSegments.shouldContainExactly(getFakeValidSegment(0))
+    }
+
+    @Test
+    fun `Should return the difficulty + difficulty desc of its calculation result`()
+    {
+        val dto = makeDartzeeRuleDto()
+        dto.calculationResult = makeDartzeeRuleCalculationResult(50)
+
+        dto.getDifficulty() shouldBe 50.0
+        dto.getDifficultyDesc() shouldBe "Very Easy"
     }
 
     @Test
