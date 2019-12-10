@@ -2,8 +2,13 @@ package burlton.dartzee.test.dartzee.dart
 
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleCustom
 import burlton.dartzee.code.dartzee.parseDartRule
+import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.*
 import burlton.dartzee.test.dartzee.AbstractDartzeeRuleTest
+import burlton.dartzee.test.helper.FakeDartzeeSegmentFactory
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
@@ -13,7 +18,7 @@ import org.junit.Test
 import java.awt.event.ActionListener
 import kotlin.test.assertTrue
 
-class TestDartzeeRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
+class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
 {
     override val emptyIsValid = false
 
@@ -91,5 +96,25 @@ class TestDartzeeRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
         rule.actionPerformed(null)
 
         verify { listener.actionPerformed(null) }
+    }
+
+    @Test
+    fun `Should pop up segment selector and update accordingly`()
+    {
+        val fakeFactory = FakeDartzeeSegmentFactory(hashSetOf(trebleTwenty, trebleNineteen))
+        InjectedThings.dartzeeSegmentFactory = fakeFactory
+
+        val rule = DartzeeDartRuleCustom()
+        rule.btnConfigure.doClick()
+
+        fakeFactory.segmentsPassedIn.shouldBeEmpty()
+        rule.segments.shouldContainExactlyInAnyOrder(trebleTwenty, trebleNineteen)
+
+        val fakeFactoryTwo = FakeDartzeeSegmentFactory(hashSetOf(singleTwenty))
+        InjectedThings.dartzeeSegmentFactory = fakeFactoryTwo
+
+        rule.btnConfigure.doClick()
+        rule.segments.shouldContainExactly(singleTwenty)
+        fakeFactoryTwo.segmentsPassedIn.shouldContainExactlyInAnyOrder(trebleTwenty, trebleNineteen)
     }
 }
