@@ -1,7 +1,7 @@
 package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DartboardSegment
-import burlton.dartzee.code.screen.DartboardSegmentSelectDialog
+import burlton.dartzee.code.utils.InjectedThings
 import burlton.desktopcore.code.bean.addUpdateListener
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -81,9 +81,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
     {
         if (e?.source == btnConfigure)
         {
-            val dlg = DartboardSegmentSelectDialog(segments)
-            dlg.isVisible = true
-            segments = dlg.getSelection()
+            segments = InjectedThings.dartzeeSegmentFactory.selectSegments(segments)
         }
 
         name = tfName.text
