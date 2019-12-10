@@ -1,7 +1,7 @@
 package burlton.dartzee.test.dartzee.dart
 
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleAny
-import burlton.dartzee.test.*
+import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -15,11 +15,8 @@ class TestDartzeeDartRuleAny: AbstractDartzeeRuleTest<DartzeeDartRuleAny>()
     {
         val rule = DartzeeDartRuleAny()
 
-        rule.isValidSegment(doubleNineteen) shouldBe true
-        rule.isValidSegment(trebleTwenty) shouldBe true
-        rule.isValidSegment(outerBull) shouldBe true
-        rule.isValidSegment(singleNineteen) shouldBe true
-        rule.isValidSegment(missTwenty) shouldBe true
-        rule.isValidSegment(missedBoard) shouldBe true
+        getAllPossibleSegments().forEach {
+            rule.isValidSegment(it) shouldBe true
+        }
     }
 }
