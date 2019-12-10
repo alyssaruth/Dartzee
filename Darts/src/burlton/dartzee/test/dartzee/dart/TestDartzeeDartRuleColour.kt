@@ -91,6 +91,25 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
     }
 
     @Test
+    fun `segment validation - combination`()
+    {
+        val rule = DartzeeDartRuleColour()
+        rule.red = true
+        rule.black = true
+
+        rule.isValidSegment(singleTwenty) shouldBe true
+        rule.isValidSegment(doubleTwenty) shouldBe true
+        rule.isValidSegment(trebleTwenty) shouldBe true
+        rule.isValidSegment(singleNineteen) shouldBe false
+        rule.isValidSegment(doubleNineteen) shouldBe false
+        rule.isValidSegment(trebleNineteen) shouldBe false
+        rule.isValidSegment(missTwenty) shouldBe false
+        rule.isValidSegment(missedBoard) shouldBe false
+        rule.isValidSegment(bullseye) shouldBe true
+        rule.isValidSegment(outerBull) shouldBe false
+    }
+
+    @Test
     fun `colour config panel updates rule correctly`()
     {
         val rule = DartzeeDartRuleColour()
