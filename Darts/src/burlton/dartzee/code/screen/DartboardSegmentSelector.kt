@@ -23,8 +23,9 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
 
     fun initState(initialSelection: HashSet<DartboardSegment>)
     {
-        initialSelection.forEach{
+        initialSelection.forEach {
             val mySegment = getSegment(it.score, it.type) ?: return
+
             selectedSegments.add(mySegment)
 
             val col = getColourForPointAndSegment(null, mySegment, false, DEFAULT_COLOUR_WRAPPER)!!
