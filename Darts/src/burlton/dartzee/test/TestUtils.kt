@@ -2,6 +2,8 @@ package burlton.dartzee.test
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.Dartboard
+import java.awt.Color
+import java.awt.Point
 import javax.swing.SwingUtilities
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
@@ -42,3 +44,6 @@ fun flushEdt()
     val lambda = {}
     SwingUtilities.invokeAndWait(lambda)
 }
+
+
+fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)

@@ -254,7 +254,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         return Canvas().getFontMetrics(font)
     }
 
-    private fun highlightDartboard(hoveredPoint: Point)
+    fun highlightDartboard(hoveredPoint: Point)
     {
         val hoveredSegment = getSegmentForPoint(hoveredPoint)
         if (hoveredSegment == lastHoveredSegment)

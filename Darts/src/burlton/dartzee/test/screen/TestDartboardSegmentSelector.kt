@@ -8,6 +8,7 @@ import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.DartboardSegmentSelector
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.test.doubleNineteen
+import burlton.dartzee.test.getColor
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.test.helpers.makeMouseEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -132,11 +133,11 @@ class TestDartboardSegmentSelector: AbstractDartsTest()
         val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)
 
         edgePoints.forEach {
-            dartboard.getColor(it.x, it.y) shouldBe Color.BLACK
+            dartboard.getColor(it) shouldBe Color.BLACK
         }
 
         innerPoints.forEach {
-            dartboard.getColor(it.x, it.y) shouldBe DartsColour.TRANSPARENT
+            dartboard.getColor(it) shouldBe DartsColour.TRANSPARENT
         }
     }
 
@@ -155,11 +156,11 @@ class TestDartboardSegmentSelector: AbstractDartsTest()
         val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)
 
         edgePoints.forEach {
-            dartboard.getColor(it.x, it.y) shouldBe Color.BLACK
+            dartboard.getColor(it) shouldBe Color.BLACK
         }
 
         innerPoints.forEach {
-            dartboard.getColor(it.x, it.y) shouldBe Color.GREEN
+            dartboard.getColor(it) shouldBe Color.GREEN
         }
     }
 
@@ -169,6 +170,4 @@ class TestDartboardSegmentSelector: AbstractDartsTest()
 
         return makeMouseEvent(x = pt.x, y = pt.y)
     }
-
-    private fun Dartboard.getColor(x: Int, y: Int) = Color(dartboardImage!!.getRGB(x, y))
 }
