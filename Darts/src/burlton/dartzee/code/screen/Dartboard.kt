@@ -55,7 +55,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     private var colourWrapper: ColourWrapper? = null
     private var latestClip: Clip? = null
 
-    private var dartboardImage: BufferedImage? = null
+    var dartboardImage: BufferedImage? = null
     protected val dartboardLabel = JLabel()
     private val dodgyLabel = JLabel() //You know what this is...
 
