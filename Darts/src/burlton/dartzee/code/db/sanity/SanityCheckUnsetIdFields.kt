@@ -31,6 +31,4 @@ class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>): AbstractSanityChe
             sanityErrors.add(SanityCheckResultUnsetColumns(idColumn, entities))
         }
     }
-
-
 }
