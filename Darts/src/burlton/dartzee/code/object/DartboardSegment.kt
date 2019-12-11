@@ -1,8 +1,6 @@
 package burlton.dartzee.code.`object`
 
-import burlton.core.code.obj.HashMapList
 import java.awt.Point
-import java.util.*
 
 const val SEGMENT_TYPE_DOUBLE = 1
 const val SEGMENT_TYPE_TREBLE = 2
@@ -43,9 +41,7 @@ data class DartboardSegment(val scoreAndType : String)
     var score : Int
 
     //The Points this segment contains
-    val points = ArrayList<Point>()
-    private val hmXCoordToPoints = HashMapList<Int, Point>()
-    private val hmYCoordToPoints = HashMapList<Int, Point>()
+    val points = mutableListOf<Point>()
 
     init
     {
@@ -67,9 +63,6 @@ data class DartboardSegment(val scoreAndType : String)
     fun addPoint(pt: Point)
     {
         points.add(pt)
-
-        hmXCoordToPoints.putInList(pt.x, pt)
-        hmYCoordToPoints.putInList(pt.y, pt)
     }
 
     override fun toString() = "$score ($type)"
@@ -78,39 +71,11 @@ data class DartboardSegment(val scoreAndType : String)
     {
         pt ?: return false
 
-        var canBeYMax = true
-        var canBeYMin = true
-        var canBeXMax = true
-        var canBeXMin = true
+        val xMax = points.map { it.x }.max()
+        val xMin = points.map { it.x }.min()
+        val yMax = points.map { it.y }.max()
+        val yMin = points.map { it.y }.min()
 
-        val otherXPts = hmXCoordToPoints.getOrDefault(pt.x, mutableListOf())
-        for (otherPt in otherXPts)
-        {
-            if (otherPt.y < pt.y)
-            {
-                canBeYMin = false
-            }
-
-            if (otherPt.y > pt.y)
-            {
-                canBeYMax = false
-            }
-        }
-
-        val otherYPts = hmYCoordToPoints.getOrDefault(pt.y, mutableListOf())
-        for (otherPt in otherYPts)
-        {
-            if (otherPt.x < pt.x)
-            {
-                canBeXMin = false
-            }
-
-            if (otherPt.x > pt.x)
-            {
-                canBeXMax = false
-            }
-        }
-
-        return canBeYMax || canBeYMin || canBeXMax || canBeXMin
+        return pt.x == xMax || pt.x == xMin || pt.y == yMax || pt.y == yMin
     }
 }
