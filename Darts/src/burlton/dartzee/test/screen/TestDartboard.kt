@@ -6,7 +6,10 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.DartsColour
+import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.helper.AbstractDartsTest
+import io.kotlintest.matchers.collections.shouldContain
+import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -91,6 +94,25 @@ class TestDartboard: AbstractDartsTest()
         Color(doubleTwenty) shouldBe Color.RED
         Color(miss) shouldBe Color.BLACK
         Color(missBoard) shouldBe Color.BLACK
+    }
+
+    @Test
+    fun `Should correctly cache scoring points`()
+    {
+        val dartboard = Dartboard(50, 50)
+        dartboard.paintDartboard()
+
+        getAllPossibleSegments().forEach {
+            val pts = dartboard.getPointsForSegment(it.score, it.type)
+            if (it.isMiss())
+            {
+                pts.forEach { dartboard.scoringPoints.shouldNotContain(it) }
+            }
+            else
+            {
+                pts.forEach { dartboard.scoringPoints.shouldContain(it) }
+            }
+        }
     }
 }
 
