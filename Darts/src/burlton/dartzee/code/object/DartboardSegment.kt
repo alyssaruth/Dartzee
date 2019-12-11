@@ -1,5 +1,6 @@
 package burlton.dartzee.code.`object`
 
+import burlton.core.code.obj.HashMapList
 import java.awt.Point
 
 const val SEGMENT_TYPE_DOUBLE = 1
@@ -43,6 +44,10 @@ data class DartboardSegment(val scoreAndType : String)
     //The Points this segment contains
     val points = mutableListOf<Point>()
 
+    //For tracking edge points
+    private val hmXCoordToPoints = HashMapList<Int, Point>()
+    private val hmYCoordToPoints = HashMapList<Int, Point>()
+
     init
     {
         val toks = scoreAndType.split("_")
@@ -63,6 +68,9 @@ data class DartboardSegment(val scoreAndType : String)
     fun addPoint(pt: Point)
     {
         points.add(pt)
+
+        hmXCoordToPoints.putInList(pt.x, pt)
+        hmYCoordToPoints.putInList(pt.y, pt)
     }
 
     override fun toString() = "$score ($type)"
@@ -71,10 +79,13 @@ data class DartboardSegment(val scoreAndType : String)
     {
         pt ?: return false
 
-        val xMax = points.map { it.x }.max()
-        val xMin = points.map { it.x }.min()
-        val yMax = points.map { it.y }.max()
-        val yMin = points.map { it.y }.min()
+        val otherXPts = hmXCoordToPoints.getOrDefault(pt.x, mutableListOf())
+        val otherYPts = hmYCoordToPoints.getOrDefault(pt.y, mutableListOf())
+
+        val yMin = otherXPts.map { it.y }.min() ?: return true
+        val yMax = otherXPts.map { it.y }.max() ?: return true
+        val xMin = otherYPts.map { it.x }.min() ?: return true
+        val xMax = otherYPts.map { it.x }.max() ?: return true
 
         return pt.x == xMax || pt.x == xMin || pt.y == yMax || pt.y == yMin
     }

@@ -288,7 +288,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         for (i in pointsForCurrentSegment.indices)
         {
             val pt = pointsForCurrentSegment[i]
-            if (!segment.isEdgePoint(pt) || colourWrapper?.edgeColour == null)
+            if (colourWrapper?.edgeColour == null || !segment.isEdgePoint(pt))
             {
                 colourPoint(pt, col)
             }
