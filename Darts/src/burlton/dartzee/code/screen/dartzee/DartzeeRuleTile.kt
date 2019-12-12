@@ -1,10 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
-import burlton.dartzee.code.`object`.Dart
-import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.utils.InjectedThings
-import burlton.dartzee.code.utils.setColoursForDartzeeResult
 import burlton.desktopcore.code.util.setFontSize
 import org.jfree.chart.imagemap.ImageMapUtilities
 import java.awt.Dimension

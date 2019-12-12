@@ -15,17 +15,17 @@ import java.awt.event.MouseListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
+class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
-    private val tilePanel = JPanel()
+    val tilePanel = JPanel()
     private val tileScroller = JScrollPane()
     private val toggleButtonPanel = JPanel()
-    private val toggleButtonPending = JToggleButton()
-    private val toggleButtonComplete = JToggleButton()
+    val toggleButtonPending = JToggleButton()
+    val toggleButtonComplete = JToggleButton()
 
-    private val dartsThrown = mutableListOf<Dart>()
-    private val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
-    private val completeTiles = mutableListOf<DartzeeRuleTile>()
+    val dartsThrown = mutableListOf<Dart>()
+    val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
+    val completeTiles = mutableListOf<DartzeeRuleTile>()
 
     private var hoveredTile: DartzeeRuleTilePending? = null
 
