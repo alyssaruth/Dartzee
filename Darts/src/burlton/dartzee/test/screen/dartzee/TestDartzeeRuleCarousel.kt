@@ -1,5 +1,6 @@
 package burlton.dartzee.test.screen.dartzee
 
+import burlton.core.test.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
@@ -21,6 +22,7 @@ import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Test
 import java.awt.Color
 
@@ -30,13 +32,16 @@ class TestDartzeeRuleCarousel: AbstractDartsTest()
             inOrder = false,
             calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.getMultiplier() == 1 }))
 
-    val scoreEighteens = makeDartzeeRuleDto(makeScoreRule(18), calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+    val scoreEighteens = makeDartzeeRuleDto(makeScoreRule(18),
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
 
     val innerOuterInner = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleInner(),
             inOrder = true,
             calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
 
-    val totalIsFifty = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50), calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+    val totalIsFifty = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+
     val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeScoreRule(20),
             inOrder = true,
             calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.score == 20 && !it.isMiss() }))
@@ -189,6 +194,60 @@ class TestDartzeeRuleCarousel: AbstractDartsTest()
 
         carousel.toggleButtonPending.doClick()
         carousel.getDisplayedRules().shouldContainExactly(scoreEighteens, totalIsFifty, allTwenties)
+    }
+
+    @Test
+    fun `Should hide pending tiles and toggle buttons on gameFinished`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val carousel = makeCarousel()
+
+        val results = makeRoundResultEntities(DartzeeRoundResult(3, true, 36), DartzeeRoundResult(1, false, -38))
+        carousel.update(results, emptyList(), 38)
+
+        carousel.gameFinished()
+
+        carousel.toggleButtonComplete.isSelected shouldBe true
+        carousel.toggleButtonPanel.isVisible shouldBe false
+        carousel.getDisplayedRules().shouldContainExactly(innerOuterInner, twoBlackOneWhite)
+    }
+
+    @Test
+    fun `Clicking a tile with no pending result should have no effect`()
+    {
+        val listener = mockk<IDartzeeCarouselListener>(relaxed = true)
+        val carousel = makeCarousel(listener)
+
+        carousel.update(emptyList(), emptyList(), 50)
+
+        carousel.pendingTiles.forEach {
+            it.doClick()
+        }
+
+        verifyNotCalled { listener.tilePressed(any()) }
+    }
+
+    @Test
+    fun `Clicking a tile with a pendingResult should notify the listener`()
+    {
+        val listener = mockk<IDartzeeCarouselListener>(relaxed = true)
+        val carousel = makeCarousel(listener)
+        carousel.update(emptyList(), listOf(makeDart(20, 0, SEGMENT_TYPE_MISS)), 20)
+
+        val pendingTiles = carousel.pendingTiles.filter { it.isVisible }
+        pendingTiles.size shouldBe 1
+
+        val pendingTile = pendingTiles.first()
+        pendingTile.doClick()
+
+        verify { listener.tilePressed(DartzeeRoundResult(1, false, -10)) }
+    }
+
+    @Test
+    fun `Hovering over a pending tile should notify the listener of that rule's valid segments`()
+    {
+
     }
 
     private fun DartzeeRuleCarousel.getDisplayedRules() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).map { it.dto }
