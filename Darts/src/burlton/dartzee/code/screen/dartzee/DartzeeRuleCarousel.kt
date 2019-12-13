@@ -19,7 +19,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
 {
     val tilePanel = JPanel()
     private val tileScroller = JScrollPane()
-    private val toggleButtonPanel = JPanel()
+    val toggleButtonPanel = JPanel()
     val toggleButtonPending = JToggleButton()
     val toggleButtonComplete = JToggleButton()
 
@@ -152,13 +152,13 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
         {
             toggleButtonPending -> displayTiles(pendingTiles)
             toggleButtonComplete -> displayTiles(completeTiles)
-            is DartzeeRuleTile -> tilePressed(src)
+            is DartzeeRuleTilePending -> tilePressed(src)
         }
     }
 
-    private fun tilePressed(tile: DartzeeRuleTile)
+    private fun tilePressed(tile: DartzeeRuleTilePending)
     {
-        if (tile is DartzeeRuleTilePending && tile.pendingResult != null) {
+        if (tile.pendingResult != null) {
             val result = DartzeeRoundResult(tile.ruleNumber, tile.pendingResult!!, tile.pendingScore!!)
             parent.tilePressed(result)
         }
