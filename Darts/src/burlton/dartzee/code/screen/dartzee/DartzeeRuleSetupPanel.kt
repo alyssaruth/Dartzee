@@ -2,11 +2,13 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.utils.InjectedThings
-import burlton.desktopcore.code.bean.*
+import burlton.desktopcore.code.bean.RowSelectionListener
+import burlton.desktopcore.code.bean.ScrollTable
+import burlton.desktopcore.code.bean.ScrollTableOrdered
+import burlton.desktopcore.code.bean.addKeyAction
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
-import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
@@ -143,23 +145,4 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
     }
 
     fun getRules() = tableRules.getAllRows().map { it[0] as DartzeeRuleDto }
-
-    /**
-     * Inner classes
-     */
-    private inner class DartzeeRuleRenderer(private val colNo: Int) : AbstractTableRenderer<DartzeeRuleDto>()
-    {
-        override fun getReplacementValue(value: DartzeeRuleDto): Any
-        {
-            return if (colNo == 0) value.generateRuleDescription() else value.getDifficultyDesc()
-        }
-
-        override fun setCellColours(typedValue: DartzeeRuleDto?, isSelected: Boolean)
-        {
-            font = Font(font.name, Font.PLAIN, 20)
-
-            foreground = typedValue?.calculationResult?.getForeground()
-            background = typedValue?.calculationResult?.getBackground()
-        }
-    }
 }
