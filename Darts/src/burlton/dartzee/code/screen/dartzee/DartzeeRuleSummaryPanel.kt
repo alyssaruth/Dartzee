@@ -2,7 +2,6 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
-import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import java.awt.BorderLayout
@@ -14,10 +13,9 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 
-class DartzeeRuleSummaryPanel(parent: IDartzeeCarouselListener, dtos: List<DartzeeRuleDto>): JPanel()
+class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel()
 {
-    val carousel = DartzeeRuleCarousel(parent, dtos)
-    val lblHighScore = JLabel()
+    private val lblHighScore = JLabel()
     val panelHighScore = JPanel()
 
     init

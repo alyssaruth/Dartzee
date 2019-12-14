@@ -3,15 +3,34 @@ package burlton.dartzee.test.helper
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleColour
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleScore
+import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeRuleTotalSize
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
+import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEqualTo
+import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.utils.getAllPossibleSegments
+
+val twoBlackOneWhite = makeDartzeeRuleDto(makeColourRule(black = true), makeColourRule(black = true), makeColourRule(white = true),
+        inOrder = false,
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.getMultiplier() == 1 }))
+
+val scoreEighteens = makeDartzeeRuleDto(makeScoreRule(18),
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+
+val innerOuterInner = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleInner(),
+        inOrder = true,
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+
+val totalIsFifty = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+
+val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeScoreRule(20),
+        inOrder = true,
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.score == 20 && !it.isMiss() }))
 
 fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
                        dart2Rule: AbstractDartzeeDartRule? = null,
@@ -54,3 +73,8 @@ fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean 
 inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllTotalRules().find { it is T }.also { (it as T).target = score }
 
 fun getOuterSegments() = getAllPossibleSegments().filter { it.type == SEGMENT_TYPE_DOUBLE || it.type == SEGMENT_TYPE_OUTER_SINGLE }.filter { it.score != 25 }
+
+fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<DartzeeRoundResultEntity> {
+    val pt = insertParticipant()
+    return roundResult.mapIndexed { index, result -> DartzeeRoundResultEntity.factoryAndSave(result, pt, index + 1) }
+}
