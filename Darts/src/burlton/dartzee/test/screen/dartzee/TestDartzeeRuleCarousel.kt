@@ -1,6 +1,7 @@
 package burlton.dartzee.test.screen.dartzee
 
 import burlton.core.test.helper.verifyNotCalled
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
@@ -17,9 +18,11 @@ import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.desktopcore.test.helpers.makeMouseEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -247,10 +250,54 @@ class TestDartzeeRuleCarousel: AbstractDartsTest()
     @Test
     fun `Hovering over a pending tile should notify the listener of that rule's valid segments`()
     {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val dartOne = makeDart(19, 1, SEGMENT_TYPE_OUTER_SINGLE)
+        val dartTwo = makeDart(19, 1, SEGMENT_TYPE_OUTER_SINGLE)
+
+        val listener = TrackingCarouselListener()
+        val carousel = makeCarousel(listener)
+        carousel.update(emptyList(), listOf(dartOne, dartTwo), 20)
+
+        carousel.getDisplayedRules().shouldContainExactly(scoreEighteens, totalIsFifty)
+
+        val allSegments = getAllPossibleSegments()
+        val eighteens = allSegments.filter { it.score == 18 && !it.isMiss() }
+        val allTwelves = allSegments.filter { it.getTotal() == 12 }
+
+        val eighteensTile = carousel.getDisplayedTiles().find { it.dto == scoreEighteens }!!
+        val me = makeMouseEvent(component = eighteensTile)
+        carousel.mouseEntered(me)
+        listener.validSegments.shouldContainExactlyInAnyOrder(eighteens)
+
+        val totalFiftyTile = carousel.getDisplayedTiles().find { it.dto == totalIsFifty }!!
+        val meTotalFifty = makeMouseEvent(component = totalFiftyTile)
+        carousel.mouseEntered(meTotalFifty)
+        listener.validSegments.shouldContainExactlyInAnyOrder(allTwelves)
+
+        carousel.mouseExited(makeMouseEvent())
+        listener.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
+    }
+
+    private class TrackingCarouselListener: IDartzeeCarouselListener
+    {
+        val validSegments = mutableListOf<DartboardSegment>()
+
+        override fun hoverChanged(validSegments: List<DartboardSegment>)
+        {
+            this.validSegments.clear()
+            this.validSegments.addAll(validSegments)
+        }
+
+        override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)
+        {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
 
     }
 
-    private fun DartzeeRuleCarousel.getDisplayedRules() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).map { it.dto }
+    private fun DartzeeRuleCarousel.getDisplayedTiles() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).filter { it.isVisible }
+    private fun DartzeeRuleCarousel.getDisplayedRules() = getDisplayedTiles().map { it.dto }
     private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(listener, dtos)
     private fun DartzeeRuleCarousel.getPendingRules() = pendingTiles.filter { it.isVisible }.map { it.dto }
     private fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<DartzeeRoundResultEntity> {

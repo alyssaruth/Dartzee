@@ -13,9 +13,9 @@ import javax.swing.KeyStroke
 
 val MOUSE_EVENT_SINGLE_CLICK = MouseEvent(JButton(), MOUSE_CLICKED, System.currentTimeMillis(), -1, 0, 0, 1, false)
 
-fun makeMouseEvent(clickCount: Int = 1, x: Int = 0, y: Int = 0): MouseEvent
+fun makeMouseEvent(clickCount: Int = 1, x: Int = 0, y: Int = 0, component: Component = JButton()): MouseEvent
 {
-    return MouseEvent(JButton(), MOUSE_CLICKED, System.currentTimeMillis(), -1, x, y, clickCount, false)
+    return MouseEvent(component, MOUSE_CLICKED, System.currentTimeMillis(), -1, x, y, clickCount, false)
 }
 
 /**
