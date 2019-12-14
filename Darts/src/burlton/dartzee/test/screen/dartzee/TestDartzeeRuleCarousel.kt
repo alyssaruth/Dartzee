@@ -82,11 +82,11 @@ class TestDartzeeRuleCarousel: AbstractDartsTest()
         completeTiles.size shouldBe 2
 
         completeTiles[0].dto shouldBe innerOuterInner
-        completeTiles[0].getScore() shouldBe 36
+        completeTiles[0].getScoreForHover() shouldBe 36
         completeTiles[0].background shouldBe Color.GREEN
 
         completeTiles[1].dto shouldBe twoBlackOneWhite
-        completeTiles[1].getScore() shouldBe -38
+        completeTiles[1].getScoreForHover() shouldBe -38
         completeTiles[1].background shouldBe Color.RED
     }
 

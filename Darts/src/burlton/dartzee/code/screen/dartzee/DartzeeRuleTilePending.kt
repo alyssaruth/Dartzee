@@ -41,5 +41,5 @@ open class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): Dartzee
         }
     }
 
-    override fun getScore() = pendingScore
+    override fun getScoreForHover() = pendingScore
 }
