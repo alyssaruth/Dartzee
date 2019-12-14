@@ -19,7 +19,7 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
         addMouseListener(this)
     }
 
-    abstract fun getScore(): Int?
+    abstract fun getScoreForHover(): Int?
 
     protected fun getButtonText(hovered: Boolean = false) =
         if (hovered) "<html><center><b>${getScoreText()}</b></center></html>"
@@ -31,7 +31,7 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
 
     private fun getScoreText(): String
     {
-        val score = getScore() ?: return ""
+        val score = getScoreForHover() ?: return ""
 
         val prefix = if (score > 0) "+" else "-"
 
@@ -40,7 +40,7 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
 
     override fun mouseEntered(e: MouseEvent?)
     {
-        if (getScore() != null) {
+        if (getScoreForHover() != null) {
             text = getButtonText(true)
             setFontSize(24)
         }
