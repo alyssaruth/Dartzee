@@ -7,10 +7,6 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleInner
-import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
-import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEqualTo
-import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleTile
 import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselListener
@@ -31,25 +27,7 @@ import java.awt.Color
 
 class TestDartzeeRuleCarousel: AbstractDartsTest()
 {
-    val twoBlackOneWhite = makeDartzeeRuleDto(makeColourRule(black = true), makeColourRule(black = true), makeColourRule(white = true),
-            inOrder = false,
-            calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.getMultiplier() == 1 }))
-
-    val scoreEighteens = makeDartzeeRuleDto(makeScoreRule(18),
-        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
-
-    val innerOuterInner = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleInner(),
-            inOrder = true,
-            calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
-
-    val totalIsFifty = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
-        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
-
-    val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeScoreRule(20),
-            inOrder = true,
-            calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.score == 20 && !it.isMiss() }))
-
-    val dtos = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
+    private val dtos = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
 
     override fun afterEachTest()
     {
@@ -291,17 +269,12 @@ class TestDartzeeRuleCarousel: AbstractDartsTest()
 
         override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)
         {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //do nothing
         }
-
     }
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).filter { it.isVisible }
     private fun DartzeeRuleCarousel.getDisplayedRules() = getDisplayedTiles().map { it.dto }
     private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(listener, dtos)
     private fun DartzeeRuleCarousel.getPendingRules() = pendingTiles.filter { it.isVisible }.map { it.dto }
-    private fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<DartzeeRoundResultEntity> {
-        val pt = insertParticipant()
-        return roundResult.mapIndexed { index, result -> DartzeeRoundResultEntity.factoryAndSave(result, pt, index + 1) }
-    }
 }

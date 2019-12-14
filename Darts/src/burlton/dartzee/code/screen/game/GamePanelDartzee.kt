@@ -9,6 +9,7 @@ import burlton.dartzee.code.db.DartzeeRoundResultEntity
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartzeeDartboard
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
@@ -28,7 +29,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     private val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
     override val totalRounds = dtos.size + 1
 
-    private val summaryPanel = DartzeeRuleSummaryPanel(this, dtos)
+    private val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(this, dtos))
 
     //Transient things
     private var lastRoundScore = -1
