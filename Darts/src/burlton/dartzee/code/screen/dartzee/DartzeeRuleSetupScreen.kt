@@ -9,7 +9,8 @@ import burlton.dartzee.code.screen.GameSetupScreen
 import burlton.dartzee.code.screen.ScreenCache
 import java.awt.BorderLayout
 
-class DartzeeRuleSetupScreen : EmbeddedScreen() {
+class DartzeeRuleSetupScreen : EmbeddedScreen()
+{
     private val dartzeeRulePanel = DartzeeRuleSetupPanel()
 
     private var match: DartsMatchEntity? = null
@@ -22,10 +23,12 @@ class DartzeeRuleSetupScreen : EmbeddedScreen() {
 
     override fun initialise() {}
 
-    fun setState(match: DartsMatchEntity?, players: MutableList<PlayerEntity>)
+    fun setState(match: DartsMatchEntity?, players: List<PlayerEntity>)
     {
         this.match = match
         this.players = players
+
+        btnNext.text = getNextText() + " >"
     }
 
     override fun nextPressed()
@@ -42,8 +45,8 @@ class DartzeeRuleSetupScreen : EmbeddedScreen() {
         }
     }
 
-    override fun getScreenName() = "Dartzee Setup"
+    override fun getScreenName() = "Dartzee - Custom Setup"
     override fun getBackTarget() = ScreenCache.getScreen(GameSetupScreen::class.java)
     override fun showNextButton() = true
-    override fun getNextText() = "Launch Game"
+    override fun getNextText() = if (match != null) "Launch Match" else "Launch Game"
 }
