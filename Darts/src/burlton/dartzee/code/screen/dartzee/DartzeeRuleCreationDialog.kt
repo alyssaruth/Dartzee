@@ -18,11 +18,10 @@ import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
+class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerificationPanel = DartzeeRuleVerificationPanel()): SimpleDialog(), ChangeListener
 {
     var dartzeeRule: DartzeeRuleDto? = null
 
-    private val verificationPanel = DartzeeRuleVerificationPanel()
     val lblDifficulty = JLabel()
     private val panelCenter = JPanel()
     private val panelRuleStrength = JPanel()
@@ -188,7 +187,7 @@ class DartzeeRuleCreationDialog: SimpleDialog(), ChangeListener
         dispose()
     }
 
-    private fun constructRuleFromComponents(): DartzeeRuleDto
+    fun constructRuleFromComponents(): DartzeeRuleDto
     {
         val totalRule = if (totalSelector.isEnabled) totalSelector.getSelection() else null
 
