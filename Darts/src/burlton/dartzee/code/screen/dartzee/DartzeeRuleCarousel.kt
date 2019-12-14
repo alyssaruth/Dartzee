@@ -66,19 +66,36 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
         dartsThrown.addAll(darts)
 
         initialiseTiles(results, currentScore)
+
+        when
+        {
+            toggleButtonComplete.isSelected -> displayTiles(completeTiles)
+            else -> displayTiles(pendingTiles)
+        }
     }
     private fun initialiseTiles(results: List<DartzeeRoundResultEntity>, currentScore: Int)
     {
         completeTiles.clear()
         pendingTiles.clear()
 
+        populateCompleteTiles(results)
+        populateIncompleteTiles(results)
+
+        updateIncompleteTilesBasedOnDarts(currentScore)
+    }
+
+    private fun populateCompleteTiles(results: List<DartzeeRoundResultEntity>)
+    {
         results.sortedBy { it.roundNumber }.forEach { result ->
             val dto = dtos[result.ruleNumber - 1]
             val completeRule = DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success, result.score)
             completeTiles.add(completeRule)
         }
         toggleButtonComplete.isEnabled = completeTiles.isNotEmpty()
+    }
 
+    private fun populateIncompleteTiles(results: List<DartzeeRoundResultEntity>)
+    {
         val incompleteRules = dtos.filterIndexed { ix, _ -> results.none { it.ruleNumber == ix + 1 }}
         pendingTiles.addAll(incompleteRules.map { rule -> DartzeeRuleTilePending(rule, getRuleNumber(rule)) })
         pendingTiles.forEach {
@@ -86,7 +103,10 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
             it.addMouseListener(this)
             it.updateState(dartsThrown)
         }
+    }
 
+    private fun updateIncompleteTilesBasedOnDarts(currentScore: Int)
+    {
         if (dartsThrown.size == 3)
         {
             val successfulRules = pendingTiles.filter { it.isVisible }
@@ -102,15 +122,6 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
                 ruleToFail.isVisible = true
                 ruleToFail.setPendingResult(false, score)
             }
-        }
-
-        if (toggleButtonComplete.isSelected)
-        {
-            displayTiles(completeTiles)
-        }
-        else
-        {
-            displayTiles(pendingTiles)
         }
     }
 
