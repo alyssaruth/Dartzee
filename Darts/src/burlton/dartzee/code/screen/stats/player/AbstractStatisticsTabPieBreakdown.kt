@@ -4,7 +4,6 @@ import burlton.core.code.util.getDescription
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.TableUtil
 import burlton.desktopcore.code.util.containsComponent
 import org.jfree.chart.ChartFactory
@@ -22,8 +21,8 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
 {
     abstract val ranges: List<IntRange>
 
-    private val tableHoleBreakdown = ScrollTableOrdered()
-    val tableHoleBreakdownOther = ScrollTableOrdered()
+    private val tableHoleBreakdown = ScrollTable()
+    val tableHoleBreakdownOther = ScrollTable()
     private val tablePanel = JPanel()
     private val pieChartPanel = JPanel()
     private val myPieChartPanel = ChartPanel(null)
@@ -65,7 +64,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
             populateHoleBreakdown(tableHoleBreakdownOther, otherPieChartPanel, filteredGamesOther)
         }
     }
-    private fun populateHoleBreakdown(table: ScrollTableOrdered, chartPanel: ChartPanel, filteredGames: List<GameWrapper>)
+    private fun populateHoleBreakdown(table: ScrollTable, chartPanel: ChartPanel, filteredGames: List<GameWrapper>)
     {
         val model = TableUtil.DefaultModel()
         model.addColumn("Target")
@@ -81,6 +80,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         populateModel(table, finishedGames)
 
         table.sortBy(0, false)
+        table.disableSorting()
         table.selectFirstRow()
 
         updatePieChart(table, chartPanel)
