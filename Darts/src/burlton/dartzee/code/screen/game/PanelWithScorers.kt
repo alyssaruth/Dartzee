@@ -15,10 +15,9 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
     private val innerPanel = JPanel()
     val panelEast = JPanel()
     val panelWest = JPanel()
+    protected val panelCenter = JPanel()
 
-    @JvmField protected val panelCenter = JPanel()
-
-    @JvmField protected val scorersOrdered = mutableListOf<S>()
+    protected val scorersOrdered = mutableListOf<S>()
 
     init
     {
