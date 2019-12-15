@@ -1,10 +1,9 @@
-package burlton.dartzee.code.screen.game;
+package burlton.dartzee.code.screen.game.scorer;
 
-import burlton.dartzee.code.screen.game.scorer.AbstractScorer;
-import burlton.desktopcore.code.bean.AbstractTableRenderer;
 import burlton.dartzee.code.db.DartsMatchEntity;
 import burlton.dartzee.code.db.ParticipantEntity;
 import burlton.dartzee.code.utils.DartsColour;
+import burlton.desktopcore.code.bean.AbstractTableRenderer;
 
 /**
  * For the 'Match Summary' tab.
