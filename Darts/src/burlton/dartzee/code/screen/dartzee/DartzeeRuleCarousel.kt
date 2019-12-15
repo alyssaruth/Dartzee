@@ -44,15 +44,17 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
         bg.add(toggleButtonComplete)
 
         toggleButtonPending.isSelected = true
-        toggleButtonPending.toolTipText = "Show available rules"
-        toggleButtonComplete.toolTipText = "Show completed rules"
+        toggleButtonPending.toolTipText = "In progress"
+        toggleButtonComplete.toolTipText = "Completed"
 
         toggleButtonPending.addActionListener(this)
         toggleButtonComplete.addActionListener(this)
 
         toggleButtonPanel.border = EmptyBorder(5, 5, 5, 5)
         toggleButtonPending.preferredSize = Dimension(50, 50)
+        toggleButtonPending.icon = ImageIcon(javaClass.getResource("/buttons/inProgress.png"))
         toggleButtonComplete.preferredSize = Dimension(50, 50)
+        toggleButtonComplete.icon = ImageIcon(javaClass.getResource("/buttons/completed.png"))
 
         toggleButtonPanel.layout = BorderLayout()
         toggleButtonPanel.add(toggleButtonPending, BorderLayout.NORTH)
