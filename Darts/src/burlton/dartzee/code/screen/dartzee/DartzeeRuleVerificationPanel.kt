@@ -21,13 +21,12 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
     val dartboard = DartzeeDartboard(verificationDartboardSize, verificationDartboardSize)
     private val dartsThrown = mutableListOf<Dart>()
+    private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false)
+
     val btnReset = JButton()
     private val panelNorth = JPanel()
     val lblCombinations = JLabel()
-
     val tfResult = JTextField()
-
-    private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false)
 
     init
     {
@@ -68,7 +67,6 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 
         repaintDartboard()
     }
-
 
     override fun dartThrown(dart: Dart)
     {
