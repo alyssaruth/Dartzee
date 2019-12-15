@@ -6,7 +6,7 @@ import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.code.utils.setColoursForDartzeeResult
 
-open class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): DartzeeRuleTile(dto, ruleNumber)
+class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): DartzeeRuleTile(dto, ruleNumber)
 {
     var pendingResult: Boolean? = null
     var pendingScore: Int? = null
@@ -15,8 +15,6 @@ open class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): Dartzee
     {
         pendingResult = success
         pendingScore = score
-
-        text = getButtonText()
 
         repaint()
 
