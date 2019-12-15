@@ -12,7 +12,12 @@ class TestDartzeeRoundResultRenderer: AbstractDartsTest()
     @Test
     fun `Should allow nulls`()
     {
-        DartzeeRoundResultRenderer().allowNulls() shouldBe true
+        val renderer = DartzeeRoundResultRenderer()
+        renderer.allowNulls() shouldBe true
+
+        renderer.setCellColours(null, false)
+        renderer.foreground shouldBe null
+        renderer.background shouldBe null
     }
 
     @Test
