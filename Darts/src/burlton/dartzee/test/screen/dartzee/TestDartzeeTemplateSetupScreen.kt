@@ -7,6 +7,7 @@ import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
+import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
@@ -57,7 +58,7 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
     }
 
     @Test
-    fun `Should toggle copy & remove buttons based on whether a row is selected`()
+    fun `Should toggle copy, remove and rename buttons based on whether a row is selected`()
     {
         insertTemplateAndRule()
 
@@ -66,14 +67,17 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 
         scrn.btnCopy.isEnabled shouldBe false
         scrn.btnDelete.isEnabled shouldBe false
+        scrn.btnRename.isEnabled shouldBe false
 
         scrn.scrollTable.selectRow(0)
         scrn.btnCopy.isEnabled shouldBe true
         scrn.btnDelete.isEnabled shouldBe true
+        scrn.btnRename.isEnabled shouldBe true
 
         scrn.scrollTable.selectRow(-1)
         scrn.btnCopy.isEnabled shouldBe false
         scrn.btnDelete.isEnabled shouldBe false
+        scrn.btnRename.isEnabled shouldBe false
     }
 
     @Test
@@ -146,6 +150,28 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
         dialogFactory.questionsShown.shouldBeEmpty()
 
         scrn.scrollTable.rowCount shouldBe 1
+    }
+
+    @Test
+    fun `Should revert games to Custom on deletion and show a different confirmation message`()
+    {
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
+
+        val templateId = insertTemplateAndRule(name = "ABC").rowId
+
+        insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
+        insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
+
+        val scrn = DartzeeTemplateSetupScreen()
+        scrn.initialise()
+
+        scrn.scrollTable.selectRow(0)
+        scrn.btnDelete.doClick()
+
+        dialogFactory.questionsShown.shouldContainExactly("You have played 2 games using the ABC Template." +
+                "\n\nThese will become custom games if you delete it. Are you sure you want to continue?")
+
+        GameEntity().retrieveEntities().forEach { it.gameParams shouldBe "" }
     }
 
     @Test
@@ -261,7 +287,6 @@ class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
 
         val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
-
 
         ruleOne.toEntity(1, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
         ruleTwo.toEntity(2, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()

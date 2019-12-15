@@ -155,7 +155,14 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     {
         val selection = getSelectedTemplate()
 
-        val ans = DialogUtil.showQuestion("Are you sure you want to delete the ${selection.name} Template?")
+        val message = when (val gameCount = scrollTable.model.getValueAt(scrollTable.selectedModelRow, 2) as Int)
+        {
+            0 -> "Are you sure you want to delete the ${selection.name} Template?"
+            else -> "You have played $gameCount games using the ${selection.name} Template." +
+                    "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
+        }
+
+        val ans = DialogUtil.showQuestion(message)
         if (ans != JOptionPane.YES_OPTION)
         {
             return
@@ -163,6 +170,9 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 
         selection.deleteFromDatabase()
         DartzeeRuleEntity().deleteForTemplate(selection.rowId)
+
+        val gameSql = "UPDATE Game SET GameParams = '' WHERE GameType = $GAME_TYPE_DARTZEE AND GameParams = '${selection.rowId}'"
+        DatabaseUtil.executeUpdate(gameSql)
 
         initialise()
     }
