@@ -170,4 +170,10 @@ class TestDartboardUtil : AbstractRegistryTest()
         adjacentTo11.shouldContainAll(14, 8)
     }
 
+    @Test
+    fun `Should return the right number of segments`()
+    {
+        getAllPossibleSegments().size shouldBe (20 * 6) + 2
+    }
+
 }
