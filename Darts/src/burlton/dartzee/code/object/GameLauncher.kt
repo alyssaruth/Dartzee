@@ -8,6 +8,7 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.DartsMatchScreen
+import burlton.dartzee.code.utils.insertDartzeeRules
 import burlton.desktopcore.code.util.DialogUtil
 
 object GameLauncher
@@ -35,16 +36,6 @@ object GameLauncher
         val scrn = DartsGameScreen(gameEntity, players.size)
         scrn.isVisible = true
         scrn.gamePanel.startNewGame(players)
-    }
-
-    private fun insertDartzeeRules(game: GameEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
-    {
-        dartzeeDtos ?: return
-
-        dartzeeDtos.forEachIndexed { ix, dto ->
-            val dao = dto.toEntity(ix + 1, "Game", game.rowId)
-            dao.saveToDatabase()
-        }
     }
 
     fun loadAndDisplayGame(gameId: String)
