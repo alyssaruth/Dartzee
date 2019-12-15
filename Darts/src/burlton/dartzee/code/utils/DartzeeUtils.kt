@@ -2,6 +2,8 @@ package burlton.dartzee.code.utils
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
+import burlton.dartzee.code.db.GameEntity
 import java.awt.Color
 import java.awt.Component
 
@@ -22,4 +24,14 @@ fun Component.setColoursForDartzeeResult(success: Boolean)
 fun factoryHighScoreResult(darts: List<Dart>): DartzeeRoundResult
 {
     return DartzeeRoundResult(-1, success = true, score = sumScore(darts))
+}
+
+fun insertDartzeeRules(game: GameEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
+{
+    dartzeeDtos ?: return
+
+    dartzeeDtos.forEachIndexed { ix, dto ->
+        val dao = dto.toEntity(ix + 1, "Game", game.rowId)
+        dao.saveToDatabase()
+    }
 }

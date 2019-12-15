@@ -6,6 +6,7 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.utils.insertDartzeeRules
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
@@ -13,7 +14,7 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerEntity>):
+class DartsMatchScreen(val match: DartsMatchEntity, players: MutableList<PlayerEntity>):
         AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
     private val matchPanel = MatchSummaryPanel()
@@ -75,6 +76,14 @@ class DartsMatchScreen(var match: DartsMatchEntity, players: MutableList<PlayerE
 
         //Factory and save the next game
         val nextGame = GameEntity.factoryAndSave(match)
+
+        //Insert dartzee rules if applicable
+        val priorGamePanel = hmGameIdToTab.values.first()
+        if (priorGamePanel is GamePanelDartzee)
+        {
+            insertDartzeeRules(nextGame, priorGamePanel.dtos)
+        }
+
         val panel = addGameToMatch(nextGame)
 
         match.shufflePlayers()

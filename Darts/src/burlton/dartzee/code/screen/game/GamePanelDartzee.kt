@@ -26,7 +26,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
         GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard>(parent, game),
         IDartzeeCarouselListener
 {
-    private val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
+    val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
     override val totalRounds = dtos.size + 1
 
     private val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(this, dtos))
