@@ -68,8 +68,7 @@ class TestDartzeeRuleTile: AbstractDartsTest()
         tile.score = -10
         tile.mouseEntered(makeMouseEvent())
 
-
-        tile.text shouldBe "<html><center><b>- 5</b></center></html>"
+        tile.text shouldBe "<html><center><b>- 10</b></center></html>"
     }
 
     private class FakeDartzeeRuleTile(dto: DartzeeRuleDto, ruleNumber: Int): DartzeeRuleTile(dto, ruleNumber)
