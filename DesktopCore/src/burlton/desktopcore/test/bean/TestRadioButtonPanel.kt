@@ -2,6 +2,7 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -124,6 +125,26 @@ class TestRadioButtonPanel: AbstractDesktopTest()
         rdbtn2.doClick()
 
         listener.sources.shouldContainExactly(rdbtn1, rdbtn2)
+    }
+
+    @Test
+    fun `Should remove action listeners from all radio buttons`()
+    {
+        val panel = RadioButtonPanel()
+
+        val rdbtn1 = JRadioButton()
+        val rdbtn2 = JRadioButton()
+        panel.add(rdbtn1)
+        panel.add(rdbtn2)
+
+        val listener = SourceActionListener()
+        panel.addActionListener(listener)
+        panel.removeActionListener(listener)
+
+        rdbtn1.doClick()
+        rdbtn2.doClick()
+
+        listener.sources.shouldBeEmpty()
     }
 
     class SourceActionListener: ActionListener
