@@ -34,7 +34,7 @@ class TestGhostText: AbstractDesktopTest()
     }
 
     @Test
-    fun `Should not be visible when text is entered`()
+    fun `Should not be visible when text is entered, and should return when field is cleared`()
     {
         val tf = JTextField()
 
@@ -42,5 +42,8 @@ class TestGhostText: AbstractDesktopTest()
         tf.document.insertString(0, "some text", null)
 
         ghostText.isVisible shouldBe false
+
+        tf.document.remove(0, tf.document.length)
+        ghostText.isVisible shouldBe true
     }
 }
