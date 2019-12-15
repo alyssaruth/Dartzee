@@ -2,6 +2,7 @@ package burlton.dartzee.test
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.Dartboard
+import burlton.desktopcore.test.helpers.makeMouseEvent
 import java.awt.Color
 import java.awt.Point
 import javax.swing.SwingUtilities
@@ -47,3 +48,12 @@ fun flushEdt()
 
 
 fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)
+
+fun Dartboard.doClick(x: Int, y: Int)
+{
+    val me = makeMouseEvent(x = x, y = y)
+
+    dartboardLabel.mouseListeners.forEach {
+        it.mouseClicked(me)
+    }
+}

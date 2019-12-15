@@ -3,9 +3,14 @@ package burlton.dartzee.test.screen.dartzee
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
+import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleVerificationPanel
 import burlton.dartzee.code.utils.DartsColour
+import burlton.dartzee.code.utils.InjectedThings
+import burlton.dartzee.code.utils.getAllPossibleSegments
+import burlton.dartzee.test.doClick
 import burlton.dartzee.test.helper.*
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -13,6 +18,13 @@ import java.awt.Color
 
 class TestDartzeeRuleVerificationPanel: AbstractDartsTest()
 {
+    override fun afterEachTest()
+    {
+        super.afterEachTest()
+
+        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
+    }
+
     @Test
     fun `Should not re-run rule calculation if 0 darts thrown`()
     {
@@ -161,6 +173,31 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest()
 
         panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
         panel.lblCombinations.text shouldBe "1 combinations (success%: 20.0%)"
+    }
+
+    @Test
+    fun `Should stop listening for clicks once three darts have been thrown, and listen again when reset is pressed`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val panel  = DartzeeRuleVerificationPanel()
+        val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments()))
+        panel.updateRule(rule)
+
+        panel.dartboard.doClick(20, 30)
+        panel.dartboard.doClick(30, 20)
+        panel.dartboard.doClick(40, 10)
+
+        panel.dartsThrown.size shouldBe 3
+
+        panel.dartboard.doClick(20, 30)
+        panel.dartsThrown.size shouldBe 3
+
+        panel.btnReset.doClick()
+        panel.dartsThrown.shouldBeEmpty()
+
+        panel.dartboard.doClick(20, y = 30)
+        panel.dartsThrown.size shouldBe 1
     }
 
     private fun DartzeeRuleVerificationPanel.shouldBeBlue()
