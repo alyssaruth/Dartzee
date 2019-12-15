@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
-class TestDarteeTemplateRuleRenderer: AbstractDartsTest()
+class TestDartzeeTemplateRuleRenderer: AbstractDartsTest()
 {
     @Test
     fun `Should render squares of the right colour based on rule difficulty`()
