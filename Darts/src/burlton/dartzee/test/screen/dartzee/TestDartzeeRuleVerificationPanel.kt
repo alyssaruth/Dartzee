@@ -76,7 +76,6 @@ class TestDartzeeRuleVerificationPanel: AbstractDartsTest()
         dartboard.validSegments.shouldContainExactly(getFakeValidSegment(2))
     }
 
-
     @Test
     fun `Should stay blue while the rule is still possible, and go green when 3 valid darts are thrown`()
     {
