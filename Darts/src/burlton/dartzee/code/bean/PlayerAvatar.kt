@@ -32,7 +32,7 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
 
     fun setSelected(selected: Boolean)
     {
-        border = if (selected) LineBorder(Color.RED, 4) else EtchedBorder(EtchedBorder.RAISED, null, null)
+        border = if (selected) LineBorder(Color.RED, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
     }
 
     fun init(player: PlayerEntity?, saveChanges: Boolean)
