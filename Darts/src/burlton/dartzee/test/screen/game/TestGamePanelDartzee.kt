@@ -8,9 +8,11 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.screen.game.GamePanelDartzee
+import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.shouldBe
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
@@ -73,6 +75,19 @@ class TestGamePanelDartzee: AbstractDartsTest()
         tiles[1].dto shouldBe scoreEighteens
         tiles[1].ruleNumber shouldBe 1
         tiles[1].getScoreForHover() shouldBe -115
+    }
+
+    @Test
+    fun `Should set lastScore to be the total score on the scorer when starting a new round`()
+    {
+        val panel = makeGamePanel(rules)
+
+        val scorer = mockk<DartsScorerDartzee>()
+        every { scorer.getTotalScore() } returns 35
+
+        panel.activeScorer = scorer
+        panel.updateVariablesForNewRound()
+        panel.lastRoundScore shouldBe 35
     }
 
     private fun setUpDartzeeGameOnDatabase(): GameEntity
