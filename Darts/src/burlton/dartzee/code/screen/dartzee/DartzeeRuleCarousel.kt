@@ -15,7 +15,7 @@ import java.awt.event.MouseListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
+class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
     val tilePanel = JPanel()
     private val tileScroller = JScrollPane()
@@ -26,6 +26,8 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
     val dartsThrown = mutableListOf<Dart>()
     val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
     val completeTiles = mutableListOf<DartzeeRuleTile>()
+
+    var listener: IDartzeeCarouselListener? = null
 
     private var hoveredTile: DartzeeRuleTilePending? = null
 
@@ -173,7 +175,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
     {
         if (tile.pendingResult != null) {
             val result = DartzeeRoundResult(tile.ruleNumber, tile.pendingResult!!, tile.pendingScore!!)
-            parent.tilePressed(result)
+            listener?.tilePressed(result)
         }
     }
 
@@ -183,7 +185,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
         if (src is DartzeeRuleTilePending)
         {
             hoveredTile = src
-            parent.hoverChanged(src.getValidSegments(dartsThrown))
+            listener?.hoverChanged(src.getValidSegments(dartsThrown))
         }
     }
 
@@ -191,7 +193,7 @@ class DartzeeRuleCarousel(val parent: IDartzeeCarouselListener, private val dtos
     {
         hoveredTile = null
 
-        parent.hoverChanged(getValidSegments())
+        listener?.hoverChanged(getValidSegments())
     }
 
     override fun mousePressed(e: MouseEvent?) {}

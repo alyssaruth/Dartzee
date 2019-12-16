@@ -1,9 +1,6 @@
 package burlton.dartzee.test.screen.dartzee
 
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
+import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.dartzee.DartzeeDartboard
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.test.*
@@ -18,7 +15,7 @@ class TestDartzeeDartboard: AbstractDartsTest()
     fun `It should fade out invalid segments, but leave valid segments opaque`()
     {
         val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
 
         val validSegments = listOf(trebleNineteen, bullseye)
         dartboard.refreshValidSegments(validSegments)
@@ -37,7 +34,7 @@ class TestDartzeeDartboard: AbstractDartsTest()
     fun `Should fade out miss segments if valid segments doesn't contain a miss`()
     {
         val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.refreshValidSegments(listOf(trebleNineteen))
 
         val missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
@@ -48,7 +45,7 @@ class TestDartzeeDartboard: AbstractDartsTest()
     fun `Should not fade out miss segments if valid segments contains a miss`()
     {
         val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.refreshValidSegments(listOf(trebleNineteen, missTwenty))
 
         val missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
@@ -59,7 +56,7 @@ class TestDartzeeDartboard: AbstractDartsTest()
     fun `Should not highlight invalid segments on hover`()
     {
         val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.refreshValidSegments(listOf(trebleNineteen))
 
         dartboard.ensureListening()
