@@ -24,7 +24,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override val totalRounds = dtos.size + 1
 
     //Transient things
-    private var lastRoundScore = -1
+    var lastRoundScore = -1
     private val hmPlayerNumberToRoundResults = HashMapList<Int, DartzeeRoundResultEntity>()
 
     init

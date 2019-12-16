@@ -52,7 +52,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
 
     //Transitive things
     var currentPlayerNumber = 0
-    protected var activeScorer: S = factoryScorer()
+    var activeScorer: S = factoryScorer()
     protected var dartsThrown = ArrayList<Dart>()
     protected var currentRoundNumber = -1
 
