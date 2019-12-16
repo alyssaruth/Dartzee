@@ -86,7 +86,7 @@ fun insertParticipant(uuid: String = randomGuid(),
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
                       dtFinished: Timestamp = DateStatics.END_OF_TIME,
-                      insertPlayer: Boolean = true): ParticipantEntity
+                      insertPlayer: Boolean = false): ParticipantEntity
 {
     val pe = ParticipantEntity()
     pe.rowId = uuid
