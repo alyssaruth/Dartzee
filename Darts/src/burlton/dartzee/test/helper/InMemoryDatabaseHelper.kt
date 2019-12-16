@@ -1,6 +1,9 @@
 package burlton.dartzee.test.helper
 
 import burlton.core.code.util.FileUtil
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.db.*
@@ -82,7 +85,8 @@ fun insertParticipant(uuid: String = randomGuid(),
                       ordinal: Int = 1,
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
-                      dtFinished: Timestamp = DateStatics.END_OF_TIME): ParticipantEntity
+                      dtFinished: Timestamp = DateStatics.END_OF_TIME,
+                      insertPlayer: Boolean = true): ParticipantEntity
 {
     val pe = ParticipantEntity()
     pe.rowId = uuid
@@ -92,6 +96,11 @@ fun insertParticipant(uuid: String = randomGuid(),
     pe.finishingPosition = finishingPosition
     pe.finalScore = finalScore
     pe.dtFinished = dtFinished
+
+    if (insertPlayer)
+    {
+        pe.playerId = insertPlayer().rowId
+    }
 
     pe.saveToDatabase()
 
@@ -107,7 +116,7 @@ fun insertDart(participant: ParticipantEntity,
                multiplier: Int = 3,
                posX: Int = 20,
                posY: Int = 20,
-               segmentType: Int = SEGMENT_TYPE_TREBLE,
+               segmentType: Int = getSegmentTypeForMultiplier(multiplier),
                dtCreation: Timestamp = getSqlDateNow(),
                dtLastUpdate: Timestamp = getSqlDateNow()): DartEntity
 {
@@ -128,6 +137,13 @@ fun insertDart(participant: ParticipantEntity,
     drt.saveToDatabase(dtLastUpdate)
 
     return drt
+}
+private fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
+{
+    1 -> SEGMENT_TYPE_OUTER_SINGLE
+    2 -> SEGMENT_TYPE_DOUBLE
+    3 -> SEGMENT_TYPE_TREBLE
+    else -> SEGMENT_TYPE_MISS
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),

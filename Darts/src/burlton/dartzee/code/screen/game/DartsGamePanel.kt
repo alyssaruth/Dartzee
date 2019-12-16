@@ -51,7 +51,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     var pendingLoad = false
 
     //Transitive things
-    protected var currentPlayerNumber = 0
+    var currentPlayerNumber = 0
     protected var activeScorer: S = factoryScorer()
     protected var dartsThrown = ArrayList<Dart>()
     protected var currentRoundNumber = -1
