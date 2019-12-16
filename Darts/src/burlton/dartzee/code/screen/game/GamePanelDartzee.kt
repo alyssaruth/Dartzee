@@ -16,11 +16,6 @@ import burlton.dartzee.code.utils.factoryHighScoreResult
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import java.awt.BorderLayout
 
-/**
- * TODO list
- *  - Icons
- *  - Review + tests
- */
 class GamePanelDartzee(parent: AbstractDartsGameScreen,
                        game: GameEntity,
                        val dtos: List<DartzeeRuleDto>,
@@ -45,7 +40,8 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun setGameReadOnly() {
+    override fun setGameReadOnly()
+    {
         super.setGameReadOnly()
 
         summaryPanel.gameFinished()

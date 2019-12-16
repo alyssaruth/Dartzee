@@ -503,7 +503,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     {
         if (getActiveCount() == 0)
         {
-            return -1
+            return currentPlayerNumber
         }
 
         var candidate = (currentPlayerNumber + 1) % totalPlayers
