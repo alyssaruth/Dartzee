@@ -178,7 +178,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         scorersOrdered.forEach { it.setSelected(false) }
         scorer.setSelected(true)
 
-        currentPlayerNumber = hmPlayerNumberToDartsScorer.filter { it.value == scorer }.keys.first()
+        currentPlayerNumber = 0
         updateCarousel()
     }
 }

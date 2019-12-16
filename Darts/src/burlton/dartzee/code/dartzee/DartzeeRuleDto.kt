@@ -97,7 +97,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         }
     }
 
-    fun toEntity(ordinal: Int, entityName: String = "", entityId: String = ""): DartzeeRuleEntity
+    fun toEntity(ordinal: Int, entityName: String, entityId: String): DartzeeRuleEntity
     {
         val entity = DartzeeRuleEntity()
         entity.assignRowId()

@@ -17,7 +17,7 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
     val panelWest = JPanel()
     protected val panelCenter = JPanel()
 
-    protected val scorersOrdered = mutableListOf<S>()
+    val scorersOrdered = mutableListOf<S>()
 
     init
     {
