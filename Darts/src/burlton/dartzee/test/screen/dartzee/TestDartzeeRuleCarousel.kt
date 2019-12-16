@@ -275,6 +275,6 @@ class TestDartzeeRuleCarousel: AbstractDartsTest()
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).filter { it.isVisible }
     private fun DartzeeRuleCarousel.getDisplayedRules() = getDisplayedTiles().map { it.dto }
-    private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(listener, dtos)
+    private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(dtos).also { it.listener = listener }
     private fun DartzeeRuleCarousel.getPendingRules() = pendingTiles.filter { it.isVisible }.map { it.dto }
 }

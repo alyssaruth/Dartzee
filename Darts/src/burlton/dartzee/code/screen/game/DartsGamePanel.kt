@@ -11,6 +11,8 @@ import burlton.dartzee.code.bean.SliderAiSpeed
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.screen.game.scorer.DartsScorer
 import burlton.dartzee.code.stats.PlayerSummaryStats
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -830,9 +832,17 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
                 GAME_TYPE_X01 -> GamePanelX01(parent, game)
                 GAME_TYPE_GOLF -> GamePanelGolf(parent, game)
                 GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
-                GAME_TYPE_DARTZEE -> GamePanelDartzee(parent, game)
+                GAME_TYPE_DARTZEE -> constructGamePanelDartzee(parent, game)
                 else -> GamePanelX01(parent, game)
             }
+        }
+
+        private fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
+        {
+            val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
+            val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(dtos))
+
+            return GamePanelDartzee(parent, game, dtos, summaryPanel)
         }
     }
 }

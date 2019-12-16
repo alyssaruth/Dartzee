@@ -5,11 +5,10 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartzeeRoundResultEntity
-import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.dartzee.DartzeeDartboard
-import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.screen.dartzee.IDartzeeCarouselListener
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
@@ -22,14 +21,12 @@ import java.awt.BorderLayout
  *  - Icons
  *  - Review + tests
  */
-class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
-        GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard>(parent, game),
-        IDartzeeCarouselListener
+class GamePanelDartzee(parent: AbstractDartsGameScreen,
+                       game: GameEntity,
+                       val dtos: List<DartzeeRuleDto>,
+                       val summaryPanel: DartzeeRuleSummaryPanel) : GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard>(parent, game), IDartzeeCarouselListener
 {
-    val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
     override val totalRounds = dtos.size + 1
-
-    private val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(this, dtos))
 
     //Transient things
     private var lastRoundScore = -1
@@ -38,6 +35,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity) :
     init
     {
         add(summaryPanel, BorderLayout.NORTH)
+        summaryPanel.setCarouselListener(this)
     }
 
     override fun factoryDartboard() = DartzeeDartboard()

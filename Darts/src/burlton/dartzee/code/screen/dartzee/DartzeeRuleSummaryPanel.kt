@@ -71,4 +71,8 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
         swapInComponentIfNecessary(carousel)
         carousel.gameFinished()
     }
+
+    fun setCarouselListener(listener: IDartzeeCarouselListener) {
+        carousel.listener = listener
+    }
 }
