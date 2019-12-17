@@ -45,20 +45,21 @@ class TestDartzeeUtils: AbstractDartsTest()
     fun `Should insert dartzee rules for a game`()
     {
         val dtos = listOf(innerOuterInner, twoBlackOneWhite)
+        val dtoDescs = dtos.map { it.generateRuleDescription() }
 
         val game = insertGame()
         insertDartzeeRules(game, dtos)
 
         val entities = DartzeeRuleEntity().retrieveEntities("")
 
-        entities.map { it.toDto() }.shouldContainExactlyInAnyOrder(*dtos.toTypedArray())
+        entities.map { it.toDto().generateRuleDescription() }.shouldContainExactlyInAnyOrder(*dtoDescs.toTypedArray())
         entities.forEach {
             it.entityName shouldBe "Game"
             it.entityId shouldBe game.rowId
         }
 
-        entities.filter { it.ordinal == 1 }.map { it.toDto() }.shouldContainExactly(innerOuterInner)
-        entities.filter { it.ordinal == 2 }.map { it.toDto() }.shouldContainExactly(twoBlackOneWhite)
+        entities.filter { it.ordinal == 1 }.map { it.toDto().generateRuleDescription() }.shouldContainExactly(innerOuterInner.generateRuleDescription())
+        entities.filter { it.ordinal == 2 }.map { it.toDto().generateRuleDescription() }.shouldContainExactly(twoBlackOneWhite.generateRuleDescription())
     }
 
     @Test
