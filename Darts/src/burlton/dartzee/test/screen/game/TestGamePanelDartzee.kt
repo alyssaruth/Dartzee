@@ -9,8 +9,10 @@ import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.screen.game.GamePanelDartzee
 import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
+import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getSqlDateNow
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -19,7 +21,7 @@ import org.junit.Test
 
 class TestGamePanelDartzee: AbstractDartsTest()
 {
-    private val rules = listOf(scoreEighteens, totalIsFifty)
+    private val rules = listOf(twoBlackOneWhite, innerOuterInner)
     private val ruleResults = listOf(DartzeeRoundResult(2, true, 50), DartzeeRoundResult(1, false, -115))
 
     @Test
@@ -42,7 +44,7 @@ class TestGamePanelDartzee: AbstractDartsTest()
     @Test
     fun `Should tell the summaryPanel to finish and select the first player when loading a finished game`()
     {
-        val game = setUpDartzeeGameOnDatabase()
+        val game = setUpDartzeeGameOnDatabase(3)
 
         val summaryPanel = mockk<DartzeeRuleSummaryPanel>(relaxed = true)
 
@@ -57,7 +59,7 @@ class TestGamePanelDartzee: AbstractDartsTest()
     @Test
     fun `Should load scores and results correctly`()
     {
-        val game = setUpDartzeeGameOnDatabase()
+        val game = setUpDartzeeGameOnDatabase(3)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
@@ -68,11 +70,11 @@ class TestGamePanelDartzee: AbstractDartsTest()
         gamePanel.scorersOrdered.first().getTotalScore() shouldBe 115
 
         val tiles = carousel.completeTiles
-        tiles[0].dto shouldBe totalIsFifty
+        tiles[0].dto shouldBe innerOuterInner
         tiles[0].ruleNumber shouldBe 2
         tiles[0].getScoreForHover() shouldBe 50
 
-        tiles[1].dto shouldBe scoreEighteens
+        tiles[1].dto shouldBe twoBlackOneWhite
         tiles[1].ruleNumber shouldBe 1
         tiles[1].getScoreForHover() shouldBe -115
     }
@@ -90,7 +92,23 @@ class TestGamePanelDartzee: AbstractDartsTest()
         panel.lastRoundScore shouldBe 35
     }
 
-    private fun setUpDartzeeGameOnDatabase(): GameEntity
+    @Test
+    fun `Should update the carousel and dartboard on readyForThrow and each time a dart is thrown`()
+    {
+        val game = setUpDartzeeGameOnDatabase(1)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.initBasic(1)
+        panel.loadGame()
+
+        val expectedSegments = getAllPossibleSegments().filter { it.getMultiplier() == 1 || it.getMultiplier() == 3 }.filterNot { it.score == 25 }
+        panel.dartboard.validSegments.size shouldBe expectedSegments.size
+        panel.dartboard.validSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+
+    }
+
+    private fun setUpDartzeeGameOnDatabase(rounds: Int): GameEntity
     {
         val game = insertGame(gameType = GAME_TYPE_DARTZEE, dtFinish = getSqlDateNow())
 
@@ -105,14 +123,19 @@ class TestGamePanelDartzee: AbstractDartsTest()
         insertDart(participant = participant, roundNumber = 1, ordinal = 2)
         insertDart(participant = participant, roundNumber = 1, ordinal = 3)
 
-        insertDart(participant = participant, roundNumber = 2, ordinal = 1, score = 18, multiplier = 1)
-        insertDart(participant = participant, roundNumber = 2, ordinal = 2, score = 12, multiplier = 1)
-        insertDart(participant = participant, roundNumber = 2, ordinal = 3, score = 20, multiplier = 1)
+        if (rounds > 1)
+        {
+            insertDart(participant = participant, roundNumber = 2, ordinal = 1, score = 18, multiplier = 1)
+            insertDart(participant = participant, roundNumber = 2, ordinal = 2, score = 12, multiplier = 1)
+            insertDart(participant = participant, roundNumber = 2, ordinal = 3, score = 20, multiplier = 1)
 
-        insertDart(participant = participant, roundNumber = 3, ordinal = 1, score = 20, multiplier = 0)
+            DartzeeRoundResultEntity.factoryAndSave(ruleResults[0], participant, 2)
+        }
 
-        ruleResults.forEachIndexed { ix, it ->
-            DartzeeRoundResultEntity.factoryAndSave(it, participant, ix + 2)
+        if (rounds > 2)
+        {
+            insertDart(participant = participant, roundNumber = 3, ordinal = 1, score = 20, multiplier = 0)
+            DartzeeRoundResultEntity.factoryAndSave(ruleResults[1], participant, 3)
         }
 
         return game
