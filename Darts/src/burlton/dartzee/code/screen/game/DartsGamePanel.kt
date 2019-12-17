@@ -62,7 +62,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     /**
      * Screen stuff
      */
-    protected val dartboard = factoryDartboard()
+    val dartboard = factoryDartboard()
     protected val statsPanel: GameStatisticsPanel? = factoryStatsPanel()
 
     private val panelSouth = JPanel()
@@ -691,7 +691,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         BulkInserter.insert(darts)
     }
 
-    protected open fun readyForThrow()
+    open fun readyForThrow()
     {
         if (activeScorer.human)
         {
