@@ -31,11 +31,12 @@ inline fun <reified T> JComboBox<*>.selectByClass() = findByClass<T>()?.also { s
 
 fun JTextField.addUpdateListener(actionListener: ActionListener)
 {
+    val tf = this
     addFocusListener(object: FocusListener
     {
         override fun focusLost(e: FocusEvent?)
         {
-            val event = ActionEvent(this, -1, "")
+            val event = ActionEvent(tf, -1, "")
             actionListener.actionPerformed(event)
         }
         override fun focusGained(e: FocusEvent?){}
