@@ -3,6 +3,7 @@ package burlton.dartzee.test
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.Dartboard
 import burlton.desktopcore.test.helpers.makeMouseEvent
+import io.kotlintest.matchers.doubles.shouldBeBetween
 import java.awt.Color
 import java.awt.Point
 import javax.swing.SwingUtilities
@@ -56,4 +57,8 @@ fun Dartboard.doClick(x: Int, y: Int)
     dartboardLabel.mouseListeners.forEach {
         it.mouseClicked(me)
     }
+}
+
+fun Float.shouldBeBetween(a: Double, b: Double) {
+    return toDouble().shouldBeBetween(a, b, 0.0)
 }
