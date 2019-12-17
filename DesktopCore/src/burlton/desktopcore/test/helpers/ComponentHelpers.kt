@@ -5,6 +5,7 @@ import burlton.desktopcore.code.bean.ScrollTable
 import io.mockk.mockk
 import java.awt.Component
 import java.awt.event.ActionEvent
+import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseEvent.MOUSE_CLICKED
 import java.awt.event.MouseListener
@@ -24,6 +25,11 @@ fun makeActionEvent(component: Component): ActionEvent
     return ActionEvent(component, 0, null)
 }
 
+fun JComponent.simulateLoseFocus()
+{
+    focusListeners.forEach { it.focusLost(FocusEvent(this, FocusEvent.FOCUS_LOST)) }
+}
+
 /**
  * Test methods
  */
@@ -36,6 +42,9 @@ fun JComponent.processKeyPress(key: Int)
     }
 
     val actionName = inputMap[KeyStroke.getKeyStroke(key, JComponent.WHEN_FOCUSED)]
+    if (!actionMap.keys().contains(actionName)) {
+        return
+    }
 
     Debug.append("" + actionName)
     val action = actionMap[actionName]
