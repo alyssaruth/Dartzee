@@ -1,6 +1,9 @@
 --------- v4.0.0 ---------
 
-+ X01, Golf and Round the Clock can now be played with up to 6 players
++ Dartzee game mode
++ Dartzee Templates, to make Dartzee setup faster and to allow for leaderboards
++ All game modes can now be played with up to 6 players (increased from 4)
+= 92.1% Kotlin
 = 46.6% test coverage (6375 / 13,686 lines covered by 1009 tests)
 
 --------- v3.2.4 ---------
