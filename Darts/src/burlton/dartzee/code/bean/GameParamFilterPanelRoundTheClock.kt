@@ -11,13 +11,12 @@ import javax.swing.JRadioButton
 class GameParamFilterPanelRoundTheClock : GameParamFilterPanel()
 {
     private val panel = RadioButtonPanel()
-    private val rdbtnStandard = JRadioButton(CLOCK_TYPE_STANDARD)
-    private val rdbtnDoubles = JRadioButton(CLOCK_TYPE_DOUBLES)
-    private val rdbtnTrebles = JRadioButton(CLOCK_TYPE_TREBLES)
+    val rdbtnStandard = JRadioButton(CLOCK_TYPE_STANDARD)
+    val rdbtnDoubles = JRadioButton(CLOCK_TYPE_DOUBLES)
+    val rdbtnTrebles = JRadioButton(CLOCK_TYPE_TREBLES)
 
     init
     {
-
         add(panel, BorderLayout.CENTER)
         panel.add(rdbtnStandard)
         panel.add(rdbtnDoubles)
@@ -41,13 +40,18 @@ class GameParamFilterPanelRoundTheClock : GameParamFilterPanel()
 
     override fun enableChildren(enabled: Boolean)
     {
-        rdbtnStandard.setEnabled(enabled)
-        rdbtnDoubles.setEnabled(enabled)
-        rdbtnTrebles.setEnabled(enabled)
+        rdbtnStandard.isEnabled = enabled
+        rdbtnDoubles.isEnabled = enabled
+        rdbtnTrebles.isEnabled = enabled
     }
 
     override fun addActionListener(listener: ActionListener)
     {
         panel.addActionListener(listener)
+    }
+
+    override fun removeActionListener(listener: ActionListener)
+    {
+        panel.removeActionListener(listener)
     }
 }

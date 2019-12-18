@@ -67,6 +67,8 @@ object ScreenCache
         return mainScreen!!
     }
 
+    fun currentScreen() = getMainScreen().currentScreen
+
     fun <K : EmbeddedScreen> switchScreen(screenClass: Class<K>)
     {
         val screen = getScreen(screenClass)

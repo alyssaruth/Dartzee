@@ -188,26 +188,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Sensible descriptions when no params`()
-    {
-        GameEntity.getTypeDesc(GAME_TYPE_X01) shouldBe "X01"
-        GameEntity.getTypeDesc(GAME_TYPE_GOLF) shouldBe "Golf"
-        GameEntity.getTypeDesc(GAME_TYPE_ROUND_THE_CLOCK) shouldBe "Round the Clock"
-        GameEntity.getTypeDesc(GAME_TYPE_DARTZEE) shouldBe "Dartzee"
-        GameEntity.getTypeDesc(-1) shouldBe "<Game Type>"
-    }
-
-    @Test
-    fun `Filter panel mappings`()
-    {
-        GameEntity.getFilterPanel(GAME_TYPE_X01) shouldNotBe null
-        GameEntity.getFilterPanel(GAME_TYPE_GOLF) shouldNotBe null
-        GameEntity.getFilterPanel(GAME_TYPE_ROUND_THE_CLOCK) shouldNotBe null
-        GameEntity.getFilterPanel(GAME_TYPE_DARTZEE) shouldBe null
-        GameEntity.getFilterPanel(-1) shouldBe null
-    }
-
-    @Test
     fun `Should map localId to gameId`()
     {
         val gameOne = insertGame(localId = 1)

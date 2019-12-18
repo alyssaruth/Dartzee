@@ -6,7 +6,6 @@ import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.achievements.convertEmptyAchievements
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
-import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
 import burlton.dartzee.code.utils.ResourceCache
@@ -32,7 +31,6 @@ private const val CMD_GUID = "guid"
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
     var currentScreen: EmbeddedScreen? = null
-        private set
 
     init
     {
@@ -87,7 +85,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
     private fun addConsoleShortcut()
     {
-        val triggerStroke = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK)
+        val triggerStroke = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK)
         val content = contentPane as JPanel
 
         val inputMap = content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
@@ -190,11 +188,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == CMD_SANITY)
         {
             DatabaseSanityCheck.runSanityCheck()
-        }
-        else if (cmd == "dartzee")
-        {
-            val dlg = DartzeeRuleCreationDialog()
-            dlg.isVisible = true
         }
         else if (cmd == CMD_GUID)
         {

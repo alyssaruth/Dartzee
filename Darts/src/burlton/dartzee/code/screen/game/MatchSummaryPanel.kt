@@ -1,6 +1,7 @@
 package burlton.dartzee.code.screen.game
 
 import burlton.dartzee.code.db.*
+import burlton.dartzee.code.screen.game.scorer.MatchScorer
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -55,7 +56,7 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
         {
             val playerId = player.rowId
             val scorer = assignScorer(player, hmPlayerIdToScorer, playerId, "")
-            scorer!!.setMatch(match)
+            scorer.setMatch(match)
         }
     }
 

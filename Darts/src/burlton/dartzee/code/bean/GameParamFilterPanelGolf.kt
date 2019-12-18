@@ -8,8 +8,8 @@ import javax.swing.JRadioButton
 class GameParamFilterPanelGolf : GameParamFilterPanel()
 {
     private val panel = RadioButtonPanel()
-    private val rdbtn9 = JRadioButton("9 holes")
-    private val rdbtn18 = JRadioButton("18 holes")
+    val rdbtn9 = JRadioButton("9 holes")
+    val rdbtn18 = JRadioButton("18 holes")
 
     init
     {
@@ -53,5 +53,10 @@ class GameParamFilterPanelGolf : GameParamFilterPanel()
     override fun addActionListener(listener: ActionListener)
     {
         panel.addActionListener(listener)
+    }
+
+    override fun removeActionListener(listener: ActionListener)
+    {
+        panel.removeActionListener(listener)
     }
 }

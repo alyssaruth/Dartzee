@@ -2,6 +2,10 @@ package burlton.dartzee.code.utils
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.Dartboard
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_BLACK
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_GREEN
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_RED
+import burlton.dartzee.code.utils.DartsColour.DARTBOARD_WHITE
 import java.awt.Color
 import java.awt.Point
 
@@ -22,7 +26,7 @@ private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 private const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
 
-fun getDartForSegment(pt: Point, segment: DartboardSegmentKt): Dart
+fun getDartForSegment(pt: Point, segment: DartboardSegment): Dart
 {
     val score = segment.score
     val multiplier = segment.getMultiplier()
@@ -105,7 +109,7 @@ private fun getScoreForAngle(angle: Double): Int
     return numberOrder[index]
 }
 
-fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegmentKt, highlighted: Boolean,
+fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlighted: Boolean,
                                 colourWrapper: ColourWrapper?): Color?
 {
     val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
@@ -119,15 +123,24 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegmentKt, highlig
     }
 
     val colour = getColourFromHashMap(segment, colourWrapperToUse)
+    colour ?: return null
+
     return if (highlighted)
     {
-        DartsColour.getDarkenedColour(colour)
+        if (colour == DARTBOARD_BLACK)
+        {
+            Color.DARK_GRAY
+        }
+        else
+        {
+            DartsColour.getDarkenedColour(colour)
+        }
     }
     else colour
 
 }
 
-private fun getColourFromHashMap(segment: DartboardSegmentKt, colourWrapper: ColourWrapper): Color?
+private fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color?
 {
     val type = segment.type
     if (type == SEGMENT_TYPE_MISS)
@@ -166,13 +179,13 @@ private fun getColourWrapperFromPrefs(): ColourWrapper
     val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
     val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
-    val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr, DartsColour.DARTBOARD_BLACK)
-    val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr, DartsColour.DARTBOARD_RED)
-    val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr, DartsColour.DARTBOARD_RED)
+    val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr, DARTBOARD_BLACK)
+    val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr, DARTBOARD_RED)
+    val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr, DARTBOARD_RED)
 
-    val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr, DartsColour.DARTBOARD_WHITE)
-    val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr, DartsColour.DARTBOARD_GREEN)
-    val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr, DartsColour.DARTBOARD_GREEN)
+    val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr, DARTBOARD_WHITE)
+    val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr, DARTBOARD_GREEN)
+    val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr, DARTBOARD_GREEN)
 
     colourWrapperFromPrefs = ColourWrapper(evenSingle, evenDouble, evenTreble,
             oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)
@@ -198,4 +211,23 @@ fun resetCachedDartboardValues()
     colourWrapperFromPrefs = null
 
     Dartboard.appearancePreferenceChanged()
+}
+
+fun getAllPossibleSegments(): List<DartboardSegment>
+{
+    val segments = mutableListOf<DartboardSegment>()
+    for (i in 1..20)
+    {
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_DOUBLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_TREBLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_OUTER_SINGLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_INNER_SINGLE}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_MISS}"))
+        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_MISSED_BOARD}"))
+    }
+
+    segments.add(DartboardSegment("25_${SEGMENT_TYPE_OUTER_SINGLE}"))
+    segments.add(DartboardSegment("25_${SEGMENT_TYPE_DOUBLE}"))
+
+    return segments.toList()
 }

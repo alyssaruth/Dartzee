@@ -2,6 +2,8 @@ package burlton.dartzee.code.ai
 
 import burlton.core.code.util.Debug
 import burlton.core.code.util.XmlUtil
+import burlton.core.code.util.getAttributeDouble
+import burlton.core.code.util.getAttributeInt
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.generateRandomAngle
 import burlton.dartzee.code.utils.getAngleForPoint
@@ -118,10 +120,10 @@ class DartsModelNormalDistribution : AbstractDartsModel()
 
     override fun readXmlSpecific(root: Element)
     {
-        val sd = XmlUtil.getAttributeDouble(root, ATTRIBUTE_STANDARD_DEVIATION)
-        val sdDoubles = XmlUtil.getAttributeDouble(root, ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
-        val sdCentral = XmlUtil.getAttributeDouble(root, ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
-        val radiusAverageCount = XmlUtil.getAttributeInt(root, ATTRIBUTE_RADIUS_AVERAGE_COUNT, 1)
+        val sd = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION)
+        val sdDoubles = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
+        val sdCentral = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
+        val radiusAverageCount = root.getAttributeInt(ATTRIBUTE_RADIUS_AVERAGE_COUNT, 1)
 
         populate(sd, sdDoubles, sdCentral, radiusAverageCount)
     }

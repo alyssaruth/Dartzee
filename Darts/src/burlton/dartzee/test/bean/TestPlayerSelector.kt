@@ -1,6 +1,9 @@
 package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.PlayerSelector
+import burlton.dartzee.code.bean.getAllPlayers
+import burlton.dartzee.code.bean.getSelectedPlayer
+import burlton.dartzee.code.db.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.desktopcore.test.helpers.doubleClick
@@ -148,11 +151,11 @@ class TestPlayerSelector: AbstractDartsTest()
         val selector = PlayerSelector()
         selector.init()
 
-        processKeyPress(selector.tablePlayersToSelectFrom, KeyEvent.VK_ENTER)
+        selector.tablePlayersToSelectFrom.processKeyPress(KeyEvent.VK_ENTER)
         selector.getSelectedPlayers().size shouldBe 0
 
         selector.tablePlayersToSelectFrom.selectRow(0)
-        processKeyPress(selector.tablePlayersToSelectFrom, KeyEvent.VK_ENTER)
+        selector.tablePlayersToSelectFrom.processKeyPress(KeyEvent.VK_ENTER)
         selector.getSelectedPlayers().size shouldBe 1
     }
 
@@ -164,11 +167,11 @@ class TestPlayerSelector: AbstractDartsTest()
         val selector = PlayerSelector()
         selector.init(listOf(alex))
 
-        processKeyPress(selector.tablePlayersSelected, KeyEvent.VK_ENTER)
+        selector.tablePlayersSelected.processKeyPress(KeyEvent.VK_ENTER)
         selector.tablePlayersToSelectFrom.rowCount shouldBe 0
 
         selector.tablePlayersSelected.selectRow(0)
-        processKeyPress(selector.tablePlayersSelected, KeyEvent.VK_ENTER)
+        selector.tablePlayersSelected.processKeyPress(KeyEvent.VK_ENTER)
         selector.tablePlayersToSelectFrom.rowCount shouldBe 1
     }
 
@@ -212,8 +215,8 @@ class TestPlayerSelector: AbstractDartsTest()
         val selector = PlayerSelector()
         selector.init()
 
-        selector.valid(false) shouldBe false
-        selector.valid(true) shouldBe false
+        selector.valid(false, GAME_TYPE_X01) shouldBe false
+        selector.valid(true, GAME_TYPE_X01) shouldBe false
 
         dialogFactory.errorsShown.shouldContain("You must select at least 1 player.")
     }
@@ -226,7 +229,7 @@ class TestPlayerSelector: AbstractDartsTest()
         val selector = PlayerSelector()
         selector.init(listOf(alex))
 
-        selector.valid(false) shouldBe true
+        selector.valid(false, GAME_TYPE_X01) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
     }
 
@@ -238,24 +241,24 @@ class TestPlayerSelector: AbstractDartsTest()
         val selector = PlayerSelector()
         selector.init(listOf(alex))
 
-        selector.valid(true) shouldBe false
+        selector.valid(true, GAME_TYPE_X01) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You must select at least 2 players for a match.")
     }
 
     @Test
-    fun `Should always be valid for 2, 3 or 4 players`()
+    fun `Should always be valid for up to 6 players`()
     {
         val p1 = insertPlayer()
         val p2 = insertPlayer()
 
         val players = mutableListOf(p1, p2)
-        while (players.size < 4)
+        while (players.size <= 6)
         {
             val selector = PlayerSelector()
             selector.init(players)
 
-            selector.valid(true) shouldBe true
-            selector.valid(false) shouldBe true
+            selector.valid(true, GAME_TYPE_X01) shouldBe true
+            selector.valid(false, GAME_TYPE_X01) shouldBe true
             dialogFactory.errorsShown.shouldBeEmpty()
 
             val p = insertPlayer()
@@ -264,18 +267,48 @@ class TestPlayerSelector: AbstractDartsTest()
     }
 
     @Test
-    fun `Should always be invalid for 5 players`()
+    fun `Should not allow more than 6 players`()
     {
-        val players = listOf(insertPlayer(), insertPlayer(), insertPlayer(), insertPlayer(), insertPlayer())
+        val players = mutableListOf<PlayerEntity>()
+        while (players.size <= 7) { players.add(insertPlayer()) }
 
         val selector = PlayerSelector()
         selector.init(players)
 
-        selector.valid(true) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You cannot have more than 4 players.")
+        selector.valid(true, GAME_TYPE_X01) shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 players.")
 
         dialogFactory.errorsShown.clear()
-        selector.valid(false) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You cannot have more than 4 players.")
+        selector.valid(false, GAME_TYPE_X01) shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 players.")
+    }
+
+    @Test
+    fun `Should not allow AI for Dartzee mode`()
+    {
+        val ai = insertPlayer(strategy = 1)
+        val players = listOf(ai)
+
+        val selector = PlayerSelector()
+        selector.init(players)
+
+        selector.valid(false, GAME_TYPE_DARTZEE) shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You cannot select AI opponents for Dartzee.")
+    }
+
+    @Test
+    fun `Should allow AI for other modes`()
+    {
+        val ai = insertPlayer(strategy = 1)
+        val players = listOf(ai)
+
+        val selector = PlayerSelector()
+        selector.init(players)
+
+        selector.valid(false, GAME_TYPE_X01) shouldBe true
+        selector.valid(false, GAME_TYPE_GOLF) shouldBe true
+        selector.valid(false, GAME_TYPE_ROUND_THE_CLOCK) shouldBe true
+
+        dialogFactory.errorsShown.shouldBeEmpty()
     }
 }

@@ -5,6 +5,7 @@ import burlton.dartzee.code.achievements.golf.AchievementGolfPointsRisked
 import burlton.dartzee.code.achievements.x01.AchievementX01BestFinish
 import burlton.dartzee.code.achievements.x01.AchievementX01BestGame
 import burlton.dartzee.code.db.AchievementEntity
+import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.AbstractDartsGameScreen
 import burlton.dartzee.test.helper.*
@@ -378,7 +379,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         scrn.gameId shouldBe gameId
     }
 
-    class FakeDartsScreen: AbstractDartsGameScreen(2)
+    class FakeDartsScreen: AbstractDartsGameScreen(2, GAME_TYPE_X01)
     {
         var gameId: String? = null
         var playerId: String? = null

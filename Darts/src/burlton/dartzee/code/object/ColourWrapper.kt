@@ -1,8 +1,9 @@
 package burlton.dartzee.code.`object`
 
+import burlton.dartzee.code.utils.DartsColour
 import java.awt.Color
 
-val DEFAULT_COLOUR_WRAPPER = ColourWrapper(Color.BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
+val DEFAULT_COLOUR_WRAPPER = ColourWrapper(DartsColour.DARTBOARD_BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
 
 class ColourWrapper @JvmOverloads constructor(private var evenSingleColour : Color?, private var evenDoubleColour : Color?,
                                               private var evenTrebleColour : Color?, private var oddSingleColour : Color?,

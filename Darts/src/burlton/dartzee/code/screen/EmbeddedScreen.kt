@@ -13,8 +13,8 @@ import javax.swing.JPanel
 
 abstract class EmbeddedScreen : JPanel(), ActionListener
 {
-    private val btnBack = JButton(" < Back")
-    private val btnNext = JButton(getNextText() + " > ")
+    val btnBack = JButton(" < Back")
+    val btnNext = JButton(getNextText() + " > ")
 
     protected val panelNavigation = JPanel()
     protected val panelNext = JPanel()

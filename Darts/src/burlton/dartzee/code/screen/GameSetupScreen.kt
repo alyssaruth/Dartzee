@@ -2,14 +2,14 @@ package burlton.dartzee.code.screen
 
 import burlton.core.code.util.Debug
 import burlton.dartzee.code.`object`.GameLauncher
-import burlton.dartzee.code.bean.ComboBoxGameType
-import burlton.dartzee.code.bean.GameParamFilterPanel
-import burlton.dartzee.code.bean.GameParamFilterPanelX01
-import burlton.dartzee.code.bean.PlayerSelector
+import burlton.dartzee.code.bean.*
+import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
+import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupScreen
+import burlton.dartzee.code.utils.getFilterPanel
 import burlton.desktopcore.code.bean.RadioButtonPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -28,9 +28,9 @@ class GameSetupScreen : EmbeddedScreen()
     private val playerSelector = PlayerSelector()
     private val gameTypeComboBox = ComboBoxGameType()
     private val panelGameTypeCb = JPanel()
-    private var gameParamFilterPanel: GameParamFilterPanel? = GameParamFilterPanelX01()
+    private var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
 
-    private val panel = RadioButtonPanel()
+    private val matchConfigPanel = RadioButtonPanel()
     private val rdbtnSingleGame = JRadioButton("Single Game")
     private val rdbtnFirstTo = JRadioButton("First to")
     private val rdbtnPoints = JRadioButton("Points-based")
@@ -51,66 +51,47 @@ class GameSetupScreen : EmbeddedScreen()
     init
     {
         panelSetup.layout = BorderLayout(0, 0)
-
         panelGameType.border = TitledBorder(null, "Game Type", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panelSetup.add(panelGameType, BorderLayout.NORTH)
         panelGameType.layout = GridLayout(0, 1, 0, 0)
-
         add(panelSetup, BorderLayout.NORTH)
-
         panelGameType.add(panelGameTypeCb)
         panelGameTypeCb.add(gameTypeComboBox)
-
         panelGameType.add(gameParamFilterPanel)
-
         panelPlayers.border = TitledBorder(null, "Players", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         add(panelPlayers, BorderLayout.CENTER)
         panelPlayers.layout = BorderLayout(0, 0)
         panelPlayers.add(launchPanel, BorderLayout.SOUTH)
         launchPanel.add(btnLaunch)
         panelPlayers.add(playerSelector, BorderLayout.CENTER)
-
-        panelSetup.add(panel, BorderLayout.CENTER)
-
-        panel.border = TitledBorder(null, "Match Setup", TitledBorder.LEADING, TitledBorder.TOP, null, null)
-        panel.layout = MigLayout("", "[80px][101px][grow][45px][][][]", "[][]")
-
-        panel.add(rdbtnSingleGame, "flowy,cell 0 0,alignx left,aligny top")
-        panel.add(rdbtnFirstTo, "flowy,cell 0 1,alignx left,aligny top")
-
-        panel.add(spinnerWins, "flowx,cell 1 1,alignx left,aligny center")
+        panelSetup.add(matchConfigPanel, BorderLayout.CENTER)
+        matchConfigPanel.border = TitledBorder(null, "Match Setup", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        matchConfigPanel.layout = MigLayout("", "[80px][101px][grow][45px][][][]", "[][]")
+        matchConfigPanel.add(rdbtnSingleGame, "flowy,cell 0 0,alignx left,aligny top")
+        matchConfigPanel.add(rdbtnFirstTo, "flowy,cell 0 1,alignx left,aligny top")
+        matchConfigPanel.add(spinnerWins, "flowx,cell 1 1,alignx left,aligny center")
         spinnerWins.model = SpinnerNumberModel(2, 2, 15, 1)
-        panel.add(rdbtnPoints, "cell 0 2,alignx left,aligny top")
+        matchConfigPanel.add(rdbtnPoints, "cell 0 2,alignx left,aligny top")
         spinnerGames.model = SpinnerNumberModel(4, 2, 15, 1)
-
-        panel.add(spinnerGames, "flowx,cell 1 2,alignx left,aligny top")
-
-        panel.add(lblWins, "cell 1 1")
-
-        panel.add(lblGames, "cell 1 2,alignx left,aligny top")
-
-
+        matchConfigPanel.add(spinnerGames, "flowx,cell 1 2,alignx left,aligny top")
+        matchConfigPanel.add(lblWins, "cell 1 1")
+        matchConfigPanel.add(lblGames, "cell 1 2,alignx left,aligny top")
         panelPointBreakdown.layout = MigLayout("", "[]", "[]")
-
         panelPointBreakdown.add(lblst, "flowy,cell 0 0,alignx center")
         spinnerPoints1st.model = SpinnerNumberModel(4, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints1st, "cell 0 0,alignx center")
-
         panelPointBreakdown.add(lb2nd, "flowy,cell 1 0,alignx center")
         spinnerPoints2nd.model = SpinnerNumberModel(3, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints2nd, "cell 1 0,alignx center")
-
         panelPointBreakdown.add(lb3rd, "flowy,cell 2 0,alignx center")
         spinnerPoints3rd.model = SpinnerNumberModel(2, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints3rd, "cell 2 0,alignx center")
-
         panelPointBreakdown.add(lb4th, "flowy,cell 3 0,alignx center")
         spinnerPoints4th.model = SpinnerNumberModel(1, 0, 20, 1)
         panelPointBreakdown.add(spinnerPoints4th, "cell 3 0,alignx center")
 
-        panel.addActionListener(this)
+        matchConfigPanel.addActionListener(this)
         gameTypeComboBox.addActionListener(this)
-
         btnLaunch.addActionListener(this)
     }
 
@@ -127,27 +108,22 @@ class GameSetupScreen : EmbeddedScreen()
         {
             launchGame()
         }
-        else if (panel.isEventSource(arg0))
-        {
-            toggleComponents()
-        }
         else if (arg0.source === gameTypeComboBox)
         {
-            //Remove what's already there, if applicable
-            gameParamFilterPanel?.let{
-                panelGameType.remove(gameParamFilterPanel)
-            }
+            //Remove what's already there
+            gameParamFilterPanel.removeActionListener(this)
+            panelGameType.remove(gameParamFilterPanel)
 
-            gameParamFilterPanel = GameEntity.getFilterPanel(gameTypeComboBox.getGameType())
-
-            //We may not have one, e.g. for Dartzee
-            if (gameParamFilterPanel != null)
-            {
-                panelGameType.add(gameParamFilterPanel)
-            }
+            gameParamFilterPanel = getFilterPanel(gameTypeComboBox.getGameType())
+            panelGameType.add(gameParamFilterPanel)
+            gameParamFilterPanel.addActionListener(this)
 
             panelGameType.revalidate()
 
+            toggleComponents()
+        }
+        else if (arg0.source != btnNext && arg0.source != btnBack)
+        {
             toggleComponents()
         }
         else
@@ -183,41 +159,38 @@ class GameSetupScreen : EmbeddedScreen()
 
         if (rdbtnPoints.isSelected)
         {
-            panel.add(panelPointBreakdown, "cell 0 3,span")
+            matchConfigPanel.add(panelPointBreakdown, "cell 0 3,span")
         }
         else
         {
-            panel.remove(panelPointBreakdown)
+            matchConfigPanel.remove(panelPointBreakdown)
         }
 
-        val dartzee = gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE
-        btnLaunch.isVisible = !dartzee
-        toggleNextVisibility(dartzee)
+        val customDartzee = gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE && gameParamFilterPanel.getGameParams() == ""
+        btnLaunch.isVisible = !customDartzee
+        toggleNextVisibility(customDartzee)
 
         invalidate()
         revalidate()
         validate()
     }
 
-    private fun getGameParams(): String
-    {
-        return gameParamFilterPanel?.getGameParams() ?: ""
-    }
+    private fun getGameParams() = gameParamFilterPanel.getGameParams()
 
     private fun launchGame()
     {
         val match = factoryMatch()
-        if (!playerSelector.valid(match != null))
+        if (!playerSelector.valid(match != null, gameTypeComboBox.getGameType()))
         {
             return
         }
 
-
         val selectedPlayers = playerSelector.getSelectedPlayers()
+        val rules = retrieveDartzeeRules()
 
         if (match == null)
         {
-            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams())
+            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
         }
         else
         {
@@ -225,25 +198,30 @@ class GameSetupScreen : EmbeddedScreen()
             match.gameType = gameTypeComboBox.getGameType()
             match.gameParams = getGameParams()
 
-            GameLauncher.launchNewMatch(match)
+            GameLauncher.launchNewMatch(match, rules)
         }
+    }
+
+    private fun retrieveDartzeeRules(): List<DartzeeRuleDto>?
+    {
+        if (gameTypeComboBox.getGameType() != GAME_TYPE_DARTZEE)
+        {
+            return null
+        }
+
+        val dartzeeTemplate = (gameParamFilterPanel as GameParamFilterPanelDartzee).getSelectedTemplate()!!
+        val rules = DartzeeRuleEntity().retrieveForTemplate(dartzeeTemplate.rowId)
+        return rules.map { it.toDto() }
     }
 
     private fun factoryMatch(): DartsMatchEntity?
     {
-        if (rdbtnFirstTo.isSelected)
+        val games = spinnerWins.value as Int
+        return when
         {
-            val games = spinnerWins.value as Int
-            return DartsMatchEntity.factoryFirstTo(games)
-        }
-        else if (rdbtnPoints.isSelected)
-        {
-            val games = spinnerGames.value as Int
-            return DartsMatchEntity.factoryPoints(games, getPointsXml())
-        }
-        else
-        {
-            return null
+            rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(games)
+            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(games, getPointsXml())
+            else -> null
         }
     }
 
@@ -262,7 +240,7 @@ class GameSetupScreen : EmbeddedScreen()
         if (gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE)
         {
             val match = factoryMatch()
-            if (!playerSelector.valid(match != null))
+            if (!playerSelector.valid(match != null, GAME_TYPE_DARTZEE))
             {
                 return
             }

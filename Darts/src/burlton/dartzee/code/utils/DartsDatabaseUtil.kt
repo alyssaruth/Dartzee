@@ -16,7 +16,7 @@ import javax.swing.JOptionPane
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 8
+    const val DATABASE_VERSION = 9
     const val DATABASE_NAME = "jdbc:derby:Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -29,7 +29,10 @@ object DartsDatabaseUtil
                 ParticipantEntity(),
                 PlayerImageEntity(),
                 DartsMatchEntity(),
-                AchievementEntity())
+                AchievementEntity(),
+                DartzeeRuleEntity(),
+                DartzeeTemplateEntity(),
+                DartzeeRoundResultEntity())
     }
 
     @JvmStatic fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
@@ -93,6 +96,16 @@ object DartsDatabaseUtil
         {
             runSqlScriptsForVersion(8)
             version.version = 8
+            version.saveToDatabase()
+        }
+        else if (versionNumber == 8)
+        {
+            Debug.appendBanner("Upgrading to Version 9")
+            DartzeeRuleEntity().createTable()
+            DartzeeTemplateEntity().createTable()
+            DartzeeRoundResultEntity().createTable()
+
+            version.version = 9
             version.saveToDatabase()
         }
 

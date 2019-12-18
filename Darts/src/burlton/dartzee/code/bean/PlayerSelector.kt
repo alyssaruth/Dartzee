@@ -1,8 +1,10 @@
 package burlton.dartzee.code.bean
 
+import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.desktopcore.code.bean.DoubleClickListener
 import burlton.desktopcore.code.bean.ScrollTable
+import burlton.desktopcore.code.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
@@ -17,8 +19,8 @@ import javax.swing.JPanel
 
 class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
 {
-    val tablePlayersToSelectFrom = ScrollTablePlayers()
-    val tablePlayersSelected = ScrollTablePlayers()
+    val tablePlayersToSelectFrom = ScrollTable()
+    val tablePlayersSelected = ScrollTableOrdered()
     val btnSelect = JButton("")
     val btnUnselect = JButton("")
 
@@ -38,7 +40,6 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
         btnUnselect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnUnselect, "cell 0 1,alignx left,aligny top")
         add(tablePlayersSelected, "cell 2 0,alignx left,growy")
-        tablePlayersSelected.enableManualReordering()
 
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)
@@ -53,8 +54,8 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
     fun init()
     {
         val allPlayers = PlayerEntity.retrievePlayers("", false)
-        tablePlayersToSelectFrom.initTableModel(allPlayers)
-        tablePlayersSelected.removeAllRows()
+        tablePlayersToSelectFrom.initPlayerTableModel(allPlayers)
+        tablePlayersSelected.initPlayerTableModel()
     }
 
     fun init(selectedPlayers: List<PlayerEntity>)
@@ -76,7 +77,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
         })
     }
 
-    private fun moveRows(source: ScrollTablePlayers, destination: ScrollTablePlayers)
+    private fun moveRows(source: ScrollTable, destination: ScrollTable)
     {
         val selectedPlayers = source.getSelectedPlayers()
         if (selectedPlayers.isEmpty())
@@ -87,7 +88,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
 
         moveRows(source, destination, selectedPlayers)
     }
-    private fun moveRows(source: ScrollTablePlayers, destination: ScrollTablePlayers, selectedPlayers: List<PlayerEntity>)
+    private fun moveRows(source: ScrollTable, destination: ScrollTable, selectedPlayers: List<PlayerEntity>)
     {
         destination.addPlayers(selectedPlayers)
 
@@ -95,7 +96,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
 
         val allPlayers = source.getAllPlayers()
         val availablePlayers = allPlayers.filter{ p -> selectedPlayers.none{ it.rowId == p.rowId} }
-        source.initTableModel(availablePlayers)
+        source.initPlayerTableModel(availablePlayers)
 
         if (rowToSelect > availablePlayers.size - 1)
         {
@@ -111,7 +112,7 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
     /**
      * Is this selection valid for a game/match?
      */
-    fun valid(match: Boolean): Boolean
+    fun valid(match: Boolean, gameType: Int): Boolean
     {
         val selectedPlayers = getSelectedPlayers()
         val rowCount = selectedPlayers.size
@@ -127,9 +128,16 @@ class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
             return false
         }
 
-        if (rowCount > 4)
+        if (rowCount > 6)
         {
-            DialogUtil.showError("You cannot have more than 4 players.")
+            DialogUtil.showError("You cannot select more than 6 players.")
+            return false
+        }
+
+        //Temporary measure until https://trello.com/c/T89Kqmxj is implemented
+        if (gameType == GAME_TYPE_DARTZEE && selectedPlayers.any { it.isAi() })
+        {
+            DialogUtil.showError("You cannot select AI opponents for Dartzee.")
             return false
         }
 

@@ -7,7 +7,7 @@ import burlton.dartzee.code.db.DartEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.code.screen.game.DartsScorerGolf
+import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 import burlton.dartzee.code.screen.stats.player.HoleBreakdownWrapper
 import burlton.dartzee.code.utils.calculateThreeDartAverage
 import burlton.dartzee.code.utils.getScoringDarts

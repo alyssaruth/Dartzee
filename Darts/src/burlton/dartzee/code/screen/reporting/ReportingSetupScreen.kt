@@ -1,19 +1,17 @@
 package burlton.dartzee.code.screen.reporting
 
 import burlton.core.code.util.Debug
-import burlton.dartzee.code.bean.ComboBoxGameType
-import burlton.dartzee.code.bean.GameParamFilterPanel
-import burlton.dartzee.code.bean.GameParamFilterPanelX01
-import burlton.dartzee.code.bean.ScrollTablePlayers
-import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.bean.*
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
 import burlton.dartzee.code.reporting.ReportParameters
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.PlayerSelectDialog
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.utils.getFilterPanel
 import burlton.desktopcore.code.bean.DateFilterPanel
 import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.createButtonGroup
 import net.miginfocom.swing.MigLayout
@@ -36,7 +34,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     //Game tab
     private val panelGame = JPanel()
-    private var panelGameParams: GameParamFilterPanel? = GameParamFilterPanelX01()
+    private var panelGameParams: GameParamFilterPanel = GameParamFilterPanelX01()
     private val comboBox = ComboBoxGameType()
     private val cbStartDate = JCheckBox("Start Date")
     private val dateFilterPanelStart = DateFilterPanel()
@@ -54,9 +52,9 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
     private val panelIncludedPlayers = JPanel()
     private val panelExcludedPlayers = JPanel()
     private val panel_2 = JPanel()
-    private val scrollTableExcluded = ScrollTablePlayers()
+    private val scrollTableExcluded = ScrollTable()
     private val panel_3 = JPanel()
-    private val scrollTableIncluded = ScrollTablePlayers()
+    private val scrollTableIncluded = ScrollTable()
     private val btnAddIncluded = JButton("")
     private val btnRemoveIncluded = JButton("")
     private val btnAddExcluded = JButton("")
@@ -81,7 +79,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         panelGame.add(checkBoxGameType, "flowx,cell 0 0")
         panelGame.add(horizontalStrut, "cell 1 0")
         panelGame.add(cbType, "cell 0 1")
-        panelGame.add(panelGameParams!!, "cell 2 1")
+        panelGame.add(panelGameParams, "cell 2 1")
         panelGame.add(verticalStrut, "cell 0 2")
         panelGame.add(cbStartDate, "cell 0 3,aligny center")
         val fl_panelDtStart = dateFilterPanelStart.layout as FlowLayout
@@ -222,7 +220,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
         if (cbType.isSelected)
         {
-            rp.gameParams = panelGameParams!!.getGameParams()
+            rp.gameParams = panelGameParams.getGameParams()
         }
 
         if (cbPartOfMatch.isSelected)
@@ -286,7 +284,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         when (src)
         {
             checkBoxGameType -> comboBox.isEnabled = enabled
-            cbType -> panelGameParams?.isEnabled = enabled
+            cbType -> panelGameParams.isEnabled = enabled
             cbStartDate -> dateFilterPanelStart.enableComponents(enabled)
             cbFinishDate -> toggleDtFinishFilters(enabled)
             rdbtnUnfinished -> lblUnfinished.isEnabled = enabled
@@ -317,32 +315,20 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        val src = arg0.source
-        when (src)
+        when (arg0.source)
         {
             comboBox ->
             {
-                if (panelGameParams != null)
-                {
-                    panelGame.remove(panelGameParams!!)
-                }
+                panelGame.remove(panelGameParams)
 
-                panelGameParams = GameEntity.getFilterPanel(comboBox.getGameType())
+                panelGameParams = getFilterPanel(comboBox.getGameType())
 
-                //Deal with there not being a filter panel, e.g. for Dartzee
-                if (panelGameParams != null)
-                {
-                    cbType.isEnabled = true
-                    panelGameParams!!.isEnabled = cbType.isSelected
-                    panelGame.add(panelGameParams!!, "cell 2 1")
-                } else
-                {
-                    cbType.isSelected = false
-                    cbType.isEnabled = false
-                }
+                panelGameParams.isEnabled = cbType.isSelected
+                panelGame.add(panelGameParams, "cell 2 1")
 
                 panelGame.revalidate()
             }
+
             btnAddIncluded -> addPlayers(scrollTableIncluded, hmIncludedPlayerToPanel.keys.toMutableList())
             btnAddExcluded -> addPlayers(scrollTableExcluded, excludedPlayers)
             btnRemoveIncluded -> removePlayers(scrollTableIncluded, hmIncludedPlayerToPanel.keys.toMutableList())
@@ -351,7 +337,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         }
     }
 
-    private fun addPlayers(table: ScrollTablePlayers, tableList: MutableList<PlayerEntity>)
+    private fun addPlayers(table: ScrollTable, tableList: MutableList<PlayerEntity>)
     {
         val allSelected = (hmIncludedPlayerToPanel.keys + excludedPlayers).toList()
 
@@ -365,11 +351,11 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         }
 
         tableList.addAll(players)
-        table.initTableModel(tableList)
+        table.initPlayerTableModel(tableList)
         table.selectFirstRow()
     }
 
-    private fun removePlayers(table: ScrollTablePlayers, tableList: MutableList<PlayerEntity>)
+    private fun removePlayers(table: ScrollTable, tableList: MutableList<PlayerEntity>)
     {
         val playersToRemove = table.getSelectedPlayers()
         if (playersToRemove.isEmpty())
@@ -379,7 +365,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         }
 
         tableList.removeAll(playersToRemove)
-        table.initTableModel(tableList)
+        table.initPlayerTableModel(tableList)
 
         //Bleh
         if (table === scrollTableIncluded)
