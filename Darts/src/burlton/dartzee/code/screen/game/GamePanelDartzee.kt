@@ -64,12 +64,12 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
             if (i == 1)
             {
                 val result = factoryHighScoreResult(darts)
-                scorer.setResult(result, result.score)
+                scorer.setResult(result)
             }
             else
             {
                 val result = roundResults.find { it.roundNumber == i }!!
-                scorer.setResult(result.toDto(), result.score)
+                scorer.setResult(result.toDto())
             }
         }
     }
@@ -129,7 +129,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     {
         val pt = hmPlayerNumberToParticipant[currentPlayerNumber]!!
 
-        activeScorer.setResult(result, result.score)
+        activeScorer.setResult(result)
         if (currentRoundNumber > 1)
         {
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
