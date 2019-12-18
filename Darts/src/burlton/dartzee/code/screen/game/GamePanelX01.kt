@@ -9,6 +9,7 @@ import burlton.dartzee.code.achievements.*
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.game.scorer.DartsScorerX01
 import burlton.dartzee.code.utils.*
 
 open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerX01>(parent, game)
@@ -19,14 +20,9 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
 
     private val hmPlayerNumberToBadLuckCount = HashMapCount<Int>()
 
-    override fun initImpl(gameParams: String)
-    {
-        //Do nothing
-    }
-
     override fun updateVariablesForNewRound()
     {
-        startingScore = activeScorer!!.getLatestScoreRemaining()
+        startingScore = activeScorer.getLatestScoreRemaining()
         resetRoundVariables()
     }
 
@@ -82,7 +78,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), total)
         }
 
-        activeScorer!!.finaliseRoundScore(startingScore, bust)
+        activeScorer.finaliseRoundScore(startingScore, bust)
 
         super.saveDartsAndProceed()
     }
@@ -198,7 +194,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
         val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
 
         checkout.forEach {
-            activeScorer!!.addHint(it)
+            activeScorer.addHint(it)
         }
     }
 

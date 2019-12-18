@@ -1,9 +1,6 @@
 package burlton.dartzee.code.db
 
-import burlton.dartzee.code.bean.GameParamFilterPanel
-import burlton.dartzee.code.bean.GameParamFilterPanelGolf
-import burlton.dartzee.code.bean.GameParamFilterPanelRoundTheClock
-import burlton.dartzee.code.bean.GameParamFilterPanelX01
+import burlton.dartzee.code.utils.getGameDesc
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.isEndOfTime
@@ -47,11 +44,9 @@ class GameEntity : AbstractEntity<GameEntity>()
                 + "MatchOrdinal INT NOT NULL")
     }
 
-    override fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>)
+    override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
-        val gameTypeIndex = mutableListOf<String>()
-        gameTypeIndex.add("GameType")
-        indexes.add(gameTypeIndex)
+        indexes.add(listOf("GameType"))
     }
 
     override fun getColumnsAllowedToBeUnset(): ArrayList<String>
@@ -81,7 +76,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     }
 
     fun isFinished() = !isEndOfTime(dtFinish)
-    fun getTypeDesc() = getTypeDesc(gameType, gameParams)
+    fun getTypeDesc() = getGameDesc(gameType, gameParams)
 
     fun retrievePlayersVector(): MutableList<PlayerEntity>
     {
@@ -128,47 +123,6 @@ class GameEntity : AbstractEntity<GameEntity>()
         {
             val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, DtCreation"
             return GameEntity().retrieveEntities(sql)
-        }
-
-        @JvmStatic fun getTypeDesc(gameType: Int, gameParams: String): String
-        {
-            return when(gameType)
-            {
-                GAME_TYPE_X01 -> gameParams
-                GAME_TYPE_GOLF -> "Golf - $gameParams holes"
-                GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
-                GAME_TYPE_DARTZEE -> "Dartzee"
-                else -> ""
-            }
-        }
-
-        @JvmStatic fun getTypeDesc(gameType: Int): String
-        {
-            return when (gameType)
-            {
-                GAME_TYPE_X01 -> "X01"
-                GAME_TYPE_GOLF -> "Golf"
-                GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock"
-                GAME_TYPE_DARTZEE -> "Dartzee"
-                else -> "<Game Type>"
-            }
-        }
-
-        @JvmStatic fun getFilterPanel(gameType: Int): GameParamFilterPanel?
-        {
-            return when (gameType)
-            {
-                GAME_TYPE_X01 -> GameParamFilterPanelX01()
-                GAME_TYPE_GOLF -> GameParamFilterPanelGolf()
-                GAME_TYPE_ROUND_THE_CLOCK -> GameParamFilterPanelRoundTheClock()
-                else -> null
-            }
-
-        }
-
-        @JvmStatic fun getAllGameTypes(): MutableList<Int>
-        {
-            return mutableListOf(GAME_TYPE_X01, GAME_TYPE_GOLF, GAME_TYPE_ROUND_THE_CLOCK)
         }
 
         @JvmStatic fun getGameId(localId: Long): String?

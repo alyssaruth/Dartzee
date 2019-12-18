@@ -2,15 +2,17 @@ package burlton.dartzee.code.screen.game
 
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.screen.game.scorer.DartsScorer
 
 /**
  * DartsGameScreen
  * Simple screen which wraps up either a single game panel, or multiple tabs for a match.
  */
-class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen(totalPlayers)
+class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen(totalPlayers, game.gameType)
 {
-    var gamePanel: DartsGamePanel<out DartsScorer> = DartsGamePanel.factory(this, game)
+    var gamePanel: DartsGamePanel<out DartsScorer, out Dartboard> = DartsGamePanel.factory(this, game)
 
     init
     {

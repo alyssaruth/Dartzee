@@ -74,6 +74,16 @@ open class RadioButtonPanel : JPanel(), ChangeListener
         }
     }
 
+    fun removeActionListener(listener: ActionListener)
+    {
+        val buttons = bg.elements
+        while (buttons.hasMoreElements())
+        {
+            val button = buttons.nextElement()
+            button.removeActionListener(listener)
+        }
+    }
+
     fun isEventSource(evt: ActionEvent?): Boolean
     {
         evt ?: return false

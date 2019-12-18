@@ -1,6 +1,11 @@
 package burlton.dartzee.test.helper
 
+import burlton.core.code.util.FileUtil
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
+import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -9,6 +14,7 @@ import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.getSqlDateNow
 import java.sql.Timestamp
 import java.util.*
+import javax.sql.rowset.serial.SerialBlob
 
 fun wipeTable(tableName: String)
 {
@@ -56,9 +62,11 @@ fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
                  strategy: Int = 1,
                  strategyXml: String = "",
-                 dtDeleted: Timestamp = DateStatics.END_OF_TIME,
-                 playerImageId: String = randomGuid()): PlayerEntity
+                 dtDeleted: Timestamp = DateStatics.END_OF_TIME): PlayerEntity
 {
+
+    val playerImageId = insertPlayerImage().rowId
+
     val p = PlayerEntity()
     p.rowId = uuid
     p.name = name
@@ -77,7 +85,8 @@ fun insertParticipant(uuid: String = randomGuid(),
                       ordinal: Int = 1,
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
-                      dtFinished: Timestamp = DateStatics.END_OF_TIME): ParticipantEntity
+                      dtFinished: Timestamp = DateStatics.END_OF_TIME,
+                      insertPlayer: Boolean = false): ParticipantEntity
 {
     val pe = ParticipantEntity()
     pe.rowId = uuid
@@ -87,6 +96,11 @@ fun insertParticipant(uuid: String = randomGuid(),
     pe.finishingPosition = finishingPosition
     pe.finalScore = finalScore
     pe.dtFinished = dtFinished
+
+    if (insertPlayer)
+    {
+        pe.playerId = insertPlayer().rowId
+    }
 
     pe.saveToDatabase()
 
@@ -102,7 +116,7 @@ fun insertDart(participant: ParticipantEntity,
                multiplier: Int = 3,
                posX: Int = 20,
                posY: Int = 20,
-               segmentType: Int = SEGMENT_TYPE_TREBLE,
+               segmentType: Int = getSegmentTypeForMultiplier(multiplier),
                dtCreation: Timestamp = getSqlDateNow(),
                dtLastUpdate: Timestamp = getSqlDateNow()): DartEntity
 {
@@ -123,6 +137,13 @@ fun insertDart(participant: ParticipantEntity,
     drt.saveToDatabase(dtLastUpdate)
 
     return drt
+}
+private fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
+{
+    1 -> SEGMENT_TYPE_OUTER_SINGLE
+    2 -> SEGMENT_TYPE_DOUBLE
+    3 -> SEGMENT_TYPE_TREBLE
+    else -> SEGMENT_TYPE_MISS
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),
@@ -166,6 +187,49 @@ fun insertGame(uuid: String = randomGuid(),
     return ge
 }
 
+fun insertDartzeeRule(uuid: String = randomGuid(),
+                      entityName: String = "",
+                      entityId: String = "",
+                      ordinal: Int = 1,
+                      calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
+                      dtCreation: Timestamp = getSqlDateNow(),
+                      dtLastUpdate: Timestamp = getSqlDateNow()): DartzeeRuleEntity
+{
+    val de = DartzeeRuleEntity()
+    de.rowId = uuid
+    de.dtCreation = dtCreation
+    de.entityId = entityId
+    de.entityName = entityName
+    de.calculationResult = calculationResult.toDbString()
+    de.ordinal = ordinal
+
+    de.saveToDatabase(dtLastUpdate)
+
+    return de
+}
+
+fun insertDartzeeTemplate(uuid: String = randomGuid(),
+                      name: String = "Template",
+                      dtCreation: Timestamp = getSqlDateNow(),
+                      dtLastUpdate: Timestamp = getSqlDateNow()): DartzeeTemplateEntity
+{
+    val de = DartzeeTemplateEntity()
+    de.rowId = uuid
+    de.dtCreation = dtCreation
+    de.name = name
+
+    de.saveToDatabase(dtLastUpdate)
+
+    return de
+}
+
+fun insertTemplateAndRule(name: String = "Template"): DartzeeTemplateEntity
+{
+    val template = insertDartzeeTemplate(name = name)
+    insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = template.rowId)
+    return template
+}
+
 fun insertAchievement(uuid: String = randomGuid(),
                       playerId: String = randomGuid(),
                       achievementRef: Int = -1,
@@ -186,6 +250,22 @@ fun insertAchievement(uuid: String = randomGuid(),
 
     return a
 }
+
+private val fileBytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
+private val serialBlob = SerialBlob(fileBytes)
+fun insertPlayerImage(): PlayerImageEntity
+{
+    val pi = PlayerImageEntity()
+    pi.assignRowId()
+    pi.blobData = serialBlob
+    pi.filepath = "rsrc:/avatars/BaboOne.png"
+    pi.bytes = fileBytes
+    pi.preset = false
+
+    pi.saveToDatabase()
+    return pi
+}
+
 
 fun getCountFromTable(table: String): Int
 {

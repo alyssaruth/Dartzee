@@ -6,10 +6,11 @@ import burlton.dartzee.code.achievements.getAchievementsForGameType
 import burlton.dartzee.code.achievements.getPlayerAchievementScore
 import burlton.dartzee.code.bean.AchievementMedal
 import burlton.dartzee.code.db.AchievementEntity
-import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.ScreenCache
+import burlton.dartzee.code.utils.getAllGameTypes
+import burlton.dartzee.code.utils.getTypeDesc
 import burlton.desktopcore.code.bean.WrapLayout
 import java.awt.*
 import javax.swing.*
@@ -66,7 +67,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         val playerId = player?.rowId!!
 
         val achievementRows = AchievementEntity.retrieveAchievements(playerId)
-        GameEntity.getAllGameTypes().forEach {
+        getAllGameTypes().forEach {
             addAchievementTab(it, achievementRows)
         }
 
@@ -89,7 +90,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         sp.verticalScrollBar.unitIncrement = 16
 
-        tabbedPane.addTab(GameEntity.getTypeDesc(gameType), sp)
+        tabbedPane.addTab(getTypeDesc(gameType), sp)
 
         getAchievementsForGameType(gameType).forEach {
             addAchievement(it, achievementRows, panel)

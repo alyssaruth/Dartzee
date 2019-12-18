@@ -28,8 +28,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     /**
      * Default implementations
      */
-    open fun getColumnsAllowedToBeUnset() = mutableListOf<String>()
-    open fun addListsOfColumnsForIndexes(indexes: MutableList<MutableList<String>>) {}
+    open fun getColumnsAllowedToBeUnset() = listOf<String>()
+    open fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>) {}
     open fun cacheValuesWhileResultSetActive() {}
 
     /**
@@ -63,6 +63,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         ret.rowId = rs.getString("RowId")
         ret.dtCreation = rs.getTimestamp("DtCreation")
         ret.dtLastUpdate = rs.getTimestamp("DtLastUpdate")
+        ret.retrievedFromDb = true
 
         getColumnsExcluding("RowId", "DtCreation", "DtLastUpdate").forEach{
             val rsValue = getFieldFromResultSet(rs, it)
@@ -140,7 +141,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
                 while (rs.next())
                 {
                     val entity = factoryFromResultSet(rs)
-                    entity.retrievedFromDb = true
                     ret.add(entity)
                 }
             }
@@ -178,6 +178,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     fun deleteFromDatabase(): Boolean
     {
         val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
+        return DatabaseUtil.executeUpdate(sql)
+    }
+
+    fun deleteWhere(whereSql: String): Boolean
+    {
+        val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
         return DatabaseUtil.executeUpdate(sql)
     }
 
@@ -305,7 +311,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     fun createIndexes()
     {
         //Also create the indexes
-        val indexes = mutableListOf<MutableList<String>>()
+        val indexes = mutableListOf<List<String>>()
         addListsOfColumnsForIndexes(indexes)
 
         indexes.forEach{
@@ -313,7 +319,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
     }
 
-    private fun createIndex(columns: MutableList<String>)
+    private fun createIndex(columns: List<String>)
     {
         val columnList = columns.joinToString()
         val indexName = columnList.replace(", ", "_")
@@ -375,7 +381,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return count > 0
     }
 
-    protected fun getColumnsForSelectStatement(alias: String = ""): String
+    fun getColumnsForSelectStatement(alias: String = ""): String
     {
         var cols = getColumns().toList()
         if (!alias.isEmpty())
@@ -431,6 +437,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return swapInValue(statementStr, value)
     }
 
+    fun writeDouble(ps: PreparedStatement, ix: Int, value: Double, statementStr: String): String
+    {
+        ps.setDouble(ix, value)
+        return swapInValue(statementStr, value)
+    }
+
     @Throws(SQLException::class)
     fun writeString(ps: PreparedStatement, ix: Int, value: String, statementStr: String): String
     {
@@ -477,6 +489,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Boolean::class.java -> writeBoolean(ps, ix, value as Boolean, statementStr)
             Timestamp::class.java -> writeTimestamp(ps, ix, value as Timestamp, statementStr)
             Blob::class.java -> writeBlob(ps, ix, value as Blob, statementStr)
+            Double::class.java -> writeDouble(ps, ix, value as Double, statementStr)
             else -> writeString(ps, ix, "$value", statementStr)
         }
     }
@@ -492,6 +505,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Boolean::class.java -> rs.getBoolean(columnName)
             Timestamp::class.java -> rs.getTimestamp(columnName)
             Blob::class.java -> rs.getBlob(columnName)
+            Double::class.java -> rs.getDouble(columnName)
             else -> null
         }
     }

@@ -61,7 +61,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         val key = factorySegmentKeyForPoint(pt, Point(0, 0), 2000.0)
         key shouldBe score.toString() + "_" + segmentType
 
-        val segment = DartboardSegmentKt(key)
+        val segment = DartboardSegment(key)
 
         val segmentStr = "" + segment
         segmentStr shouldBe "$score ($segmentType)"
@@ -89,10 +89,13 @@ class TestDartboardUtil : AbstractRegistryTest()
     fun testHighlights()
     {
         val wrapper = DEFAULT_COLOUR_WRAPPER
-        val segment = DartboardSegmentKt("20_4")
+        val segment = DartboardSegment("20_4")
 
-        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.BLACK, false)
-        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.BLACK.darker().darker(), true)
+        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, DartsColour.DARTBOARD_BLACK, false)
+        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.DARK_GRAY, true)
+
+        assertColourForPointAndSegment(Point(0, 0), DartboardSegment("19_1"), wrapper, Color.GREEN, false)
+        assertColourForPointAndSegment(Point(0, 0), DartboardSegment("19_1"), wrapper, Color.GREEN.darker().darker(), true)
     }
 
     @Test
@@ -101,7 +104,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         val wrapper = ColourWrapper(DartsColour.TRANSPARENT)
         wrapper.edgeColour = Color.YELLOW
 
-        val fakeSegment = DartboardSegmentKt("20_1")
+        val fakeSegment = DartboardSegment("20_1")
         for (x in 0..200)
         {
             for (y in 0..200)
@@ -137,7 +140,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertColourForPointAndSegment(Point(1, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
     }
 
-    private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegmentKt, wrapper: ColourWrapper?, expected: Color?, highlight: Boolean)
+    private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegment, wrapper: ColourWrapper?, expected: Color?, highlight: Boolean)
     {
         val color = getColourForPointAndSegment(pt, segment, highlight, wrapper)
         color shouldBe expected
@@ -165,6 +168,12 @@ class TestDartboardUtil : AbstractRegistryTest()
         adjacentTo3.shouldContainAll(19, 17)
         adjacentTo6.shouldContainAll(10, 13)
         adjacentTo11.shouldContainAll(14, 8)
+    }
+
+    @Test
+    fun `Should return the right number of segments`()
+    {
+        getAllPossibleSegments().size shouldBe (20 * 6) + 2
     }
 
 }

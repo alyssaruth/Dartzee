@@ -4,7 +4,7 @@ import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.db.*
-import burlton.dartzee.code.screen.game.DartsScorerGolf
+import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 import burlton.dartzee.code.screen.game.GamePanelGolf
 import burlton.dartzee.test.db.TestAchievementEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
@@ -154,7 +154,7 @@ class TestGamePanelGolf: AbstractDartsTest()
                 hmPlayerNumberToDartsScorer[i] = scorer
             }
 
-            activeScorer = hmPlayerNumberToDartsScorer[0]
+            activeScorer = hmPlayerNumberToDartsScorer[0]!!
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId

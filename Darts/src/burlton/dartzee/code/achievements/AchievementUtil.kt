@@ -1,6 +1,7 @@
 package burlton.dartzee.code.achievements
 
 import burlton.core.code.util.Debug
+import burlton.dartzee.code.achievements.dartzee.AchievementDartzeeGamesWon
 import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
 import burlton.dartzee.code.achievements.golf.AchievementGolfCourseMaster
 import burlton.dartzee.code.achievements.golf.AchievementGolfGamesWon
@@ -110,7 +111,8 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
             AchievementX01Btbf(),
             AchievementClockBestStreak(),
             AchievementX01NoMercy(),
-            AchievementGolfCourseMaster())
+            AchievementGolfCourseMaster(),
+            AchievementDartzeeGamesWon())
 }
 
 fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
@@ -130,12 +132,7 @@ fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
 fun getBestGameAchievement(gameType : Int) : AbstractAchievementBestGame?
 {
     val ref = getAllAchievements().find {it is AbstractAchievementBestGame && it.gameType == gameType}
-    if (ref == null)
-    {
-        Debug.stackTrace("No best game achievement found for GameType [$gameType]")
-    }
-
-    return ref as AbstractAchievementBestGame
+    return ref as AbstractAchievementBestGame?
 }
 
 fun getWinAchievementRef(gameType : Int) : Int

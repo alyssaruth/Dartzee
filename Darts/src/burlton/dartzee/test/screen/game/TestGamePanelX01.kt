@@ -6,8 +6,8 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BTBF
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import burlton.dartzee.code.db.*
-import burlton.dartzee.code.screen.game.DartsScorerX01
 import burlton.dartzee.code.screen.game.GamePanelX01
+import burlton.dartzee.code.screen.game.scorer.DartsScorerX01
 import burlton.dartzee.test.db.TestAchievementEntity
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.randomGuid
@@ -123,7 +123,7 @@ class TestGamePanelX01: AbstractDartsTest()
                 hmPlayerNumberToDartsScorer[i] = scorer
             }
 
-            activeScorer = hmPlayerNumberToDartsScorer[0]
+            activeScorer = hmPlayerNumberToDartsScorer[0]!!
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId

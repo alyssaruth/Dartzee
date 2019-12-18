@@ -1,7 +1,9 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.util.Debug
+import burlton.core.code.util.ceilDiv
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.screen.game.scorer.AbstractScorer
+import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import javax.swing.JPanel
 
@@ -11,27 +13,20 @@ import javax.swing.JPanel
 abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 {
     private val innerPanel = JPanel()
-    protected val scorerWest = factoryScorer()
-    protected val scorerEast = factoryScorer()
-    protected val scorerEastOuter = factoryScorer()
-    protected val scorerWestOuter = factoryScorer()
-    @JvmField protected val panelCenter = JPanel()
+    val panelEast = JPanel()
+    val panelWest = JPanel()
+    protected val panelCenter = JPanel()
 
-    @JvmField protected val scorersOrdered = mutableListOf(scorerWestOuter, scorerWest, scorerEast, scorerEastOuter)
+    val scorersOrdered = mutableListOf<S>()
 
     init
     {
         layout = BorderLayout(0, 0)
-
-        add(scorerEastOuter, BorderLayout.EAST)
-        add(scorerWestOuter, BorderLayout.WEST)
-        add(innerPanel, BorderLayout.CENTER)
-        innerPanel.layout = BorderLayout(0, 0)
-        innerPanel.add(scorerEast, BorderLayout.EAST)
-        innerPanel.add(scorerWest, BorderLayout.WEST)
-
         panelCenter.layout = BorderLayout(0, 0)
-        innerPanel.add(panelCenter, BorderLayout.CENTER)
+
+        add(panelCenter, BorderLayout.CENTER)
+        add(panelEast, BorderLayout.EAST)
+        add(panelWest, BorderLayout.WEST)
     }
 
     /**
@@ -44,29 +39,32 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
      */
     fun initScorers(totalPlayers: Int)
     {
-        //Reset scorers and set their visibility
-        scorerWestOuter.reset()
-        scorerWest.reset()
-        scorerEast.reset()
-        scorerEastOuter.reset()
+        scorersOrdered.clear()
+        panelEast.removeAll()
+        panelWest.removeAll()
 
-        scorerWest.isVisible = totalPlayers > 1
-        scorerEastOuter.isVisible = totalPlayers > 2
-        scorerWestOuter.isVisible = totalPlayers > 3
+        for (i in 0 until totalPlayers) { scorersOrdered.add(factoryScorer()) }
+
+        val chunkSize = scorersOrdered.size.ceilDiv(2)
+        val eastAndWestScorers = scorersOrdered.chunked(chunkSize)
+        val westScorers = eastAndWestScorers[0]
+        val eastScorers = eastAndWestScorers.getOrNull(1)
+
+        panelEast.border = null
+        panelWest.border = null
+        panelEast.layout = MigLayout("insets 0, gapx 0", "[]", "[grow]")
+        panelWest.layout = MigLayout("insets 0, gapx 0", "[]", "[grow]")
+
+        eastScorers?.forEach { panelEast.add(it, "growy") }
+        westScorers.forEach { panelWest.add(it, "growy") }
     }
 
-    fun <K> assignScorer(player: PlayerEntity, hmKeyToScorer: MutableMap<K, S>, key: K, gameParams: String): S?
+    fun <K> assignScorer(player: PlayerEntity, hmKeyToScorer: MutableMap<K, S>, key: K, gameParams: String): S
     {
-        scorersOrdered.forEach {
-            if (it.canBeAssigned())
-            {
-                hmKeyToScorer[key] = it
-                it.init(player, gameParams)
-                return it
-            }
-        }
+        val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player and key $key")
 
-        Debug.stackTrace("Unable to assign scorer for player $player and key $key")
-        return null
+        hmKeyToScorer[key] = scorer
+        scorer.init(player, gameParams)
+        return scorer
     }
 }

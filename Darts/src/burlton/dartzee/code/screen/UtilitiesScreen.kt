@@ -3,6 +3,7 @@ package burlton.dartzee.code.screen
 import burlton.core.code.util.dumpThreadStacks
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
+import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.*
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.getAllChildComponentsForType
@@ -26,6 +27,7 @@ class UtilitiesScreen : EmbeddedScreen()
     private val btnThreadStacks = JButton("Thread Stacks")
     private val btnAchievementConversion = JButton("Run Achievement Conversion")
     private val btnSetLogSecret = JButton("Enable emailing of logs")
+    private val btnDartzeeTemplates = JButton("Dartzee Templates")
 
     init
     {
@@ -41,6 +43,7 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnViewLogs, "cell 0 10,alignx center")
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
         panel.add(btnSetLogSecret, "cell 0 12, alignx center")
+        panel.add(btnDartzeeTemplates, "cell 0 13, alignx center")
 
         val buttons = getAllChildComponentsForType(panel, AbstractButton::class.java)
         for (button in buttons)
@@ -70,6 +73,7 @@ class UtilitiesScreen : EmbeddedScreen()
             btnThreadStacks -> dumpThreadStacks()
             btnAchievementConversion -> runAchievementConversion()
             btnSetLogSecret -> setLogSecret()
+            btnDartzeeTemplates -> ScreenCache.switchScreen(DartzeeTemplateSetupScreen::class.java)
             else -> super.actionPerformed(arg0)
         }
     }
@@ -77,7 +81,7 @@ class UtilitiesScreen : EmbeddedScreen()
     private fun setLogSecret()
     {
         val pwd = JOptionPane.showInputDialog(null, "Please enter the debugging password.", "Password")
-        if (pwd.isEmpty())
+        if (pwd.isNullOrEmpty())
         {
             return
         }

@@ -1,17 +1,24 @@
 package burlton.dartzee.test.screen
 
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
+import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.DartboardSegmentSelector
+import burlton.dartzee.code.utils.DartsColour
+import burlton.dartzee.test.doubleNineteen
+import burlton.dartzee.test.getColor
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.test.helpers.makeMouseEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
+import io.kotlintest.matchers.collections.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.awt.Color
 import java.awt.event.MouseEvent
+import kotlin.test.assertNotNull
 
 class TestDartboardSegmentSelector: AbstractDartsTest()
 {
@@ -80,7 +87,7 @@ class TestDartboardSegmentSelector: AbstractDartsTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val segment = DartboardSegmentKt("10_$SEGMENT_TYPE_OUTER_SINGLE")
+        val segment = DartboardSegment("10_$SEGMENT_TYPE_OUTER_SINGLE")
         dartboard.initState(hashSetOf(segment))
 
         //Check state has initialised properly
@@ -97,11 +104,70 @@ class TestDartboardSegmentSelector: AbstractDartsTest()
         dartboard.selectedSegments.shouldBeEmpty()
     }
 
+    @Test
+    fun `Should populate selected segments by finding its own copies`()
+    {
+        val dartboard = DartboardSegmentSelector(100, 100)
+        dartboard.paintDartboard()
+
+        dartboard.initState(hashSetOf(doubleNineteen))
+
+        val selectedSegment = dartboard.selectedSegments.first()
+        assertNotNull(selectedSegment)
+
+        selectedSegment.points.shouldNotBeEmpty()
+        selectedSegment.score shouldBe 19
+        selectedSegment.type shouldBe SEGMENT_TYPE_DOUBLE
+    }
+
+    @Test
+    fun `An unselected segment should have an outline and transparent fill`()
+    {
+        val dartboard = DartboardSegmentSelector(100, 100)
+        dartboard.paintDartboard()
+
+        val doubleNineteenSegment = dartboard.getSegment(19, SEGMENT_TYPE_DOUBLE)
+        assertNotNull(doubleNineteenSegment)
+
+        val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
+        val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)
+
+        edgePoints.forEach {
+            dartboard.getColor(it) shouldBe Color.BLACK
+        }
+
+        innerPoints.forEach {
+            dartboard.getColor(it) shouldBe DartsColour.TRANSPARENT
+        }
+    }
+
+    @Test
+    fun `A selected segment should have an outline and the appropriate colour fill`()
+    {
+        val dartboard = DartboardSegmentSelector(100, 100)
+        dartboard.paintDartboard()
+
+        dartboard.initState(hashSetOf(doubleNineteen))
+
+        val doubleNineteenSegment = dartboard.getSegment(19, SEGMENT_TYPE_DOUBLE)
+        assertNotNull(doubleNineteenSegment)
+
+        val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
+        val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)
+
+        edgePoints.forEach {
+            dartboard.getColor(it) shouldBe Color.BLACK
+        }
+
+        innerPoints.forEach {
+            dartboard.getColor(it) shouldBe Color.GREEN
+        }
+    }
+
     private fun generateMouseEvent(dartboard: Dartboard, score: Int, segmentType: Int): MouseEvent
     {
         val pt = dartboard.getPointsForSegment(score, segmentType).first()
 
         return makeMouseEvent(x = pt.x, y = pt.y)
     }
-
 }

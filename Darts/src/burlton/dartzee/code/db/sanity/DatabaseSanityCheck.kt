@@ -29,7 +29,8 @@ fun getAllSanityChecks(): List<AbstractSanityCheck>
 
     //Checks that run on all entities
     DartsDatabaseUtil.getAllEntities().forEach{
-        checks.add(SanityCheckUnsetOrHangingFields(it))
+        checks.add(SanityCheckDanglingIdFields(it))
+        checks.add(SanityCheckUnsetIdFields(it))
     }
 
     //Do this last in case we leave temp tables lying around from other checks

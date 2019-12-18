@@ -8,7 +8,7 @@ import javax.swing.JPanel
 class GameParamFilterPanelX01 : GameParamFilterPanel()
 {
     private val panel = JPanel()
-    private val spinner = SpinnerX01()
+    val spinner = SpinnerX01()
 
     init
     {
@@ -39,6 +39,11 @@ class GameParamFilterPanelX01 : GameParamFilterPanel()
     override fun addActionListener(listener: ActionListener)
     {
         spinner.addActionListener(listener)
+    }
+
+    override fun removeActionListener(listener: ActionListener)
+    {
+        spinner.removeActionListener()
     }
 
 }

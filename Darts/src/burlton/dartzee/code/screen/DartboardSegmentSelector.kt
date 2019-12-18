@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
-import burlton.dartzee.code.`object`.DartboardSegmentKt
+import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.getColourForPointAndSegment
 import java.awt.Color
@@ -11,9 +11,9 @@ import java.awt.event.MouseEvent
 
 class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(width, height)
 {
-    var selectedSegments = hashSetOf<DartboardSegmentKt>()
+    var selectedSegments = hashSetOf<DartboardSegment>()
 
-    private var lastDraggedSegment: DartboardSegmentKt? = null
+    private var lastDraggedSegment: DartboardSegment? = null
 
     init
     {
@@ -21,14 +21,15 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
         renderScoreLabels = true
     }
 
-    fun initState(initialSelection: HashSet<DartboardSegmentKt>)
+    fun initState(initialSelection: HashSet<DartboardSegment>)
     {
-        initialSelection.forEach{
+        initialSelection.forEach {
             val mySegment = getSegment(it.score, it.type) ?: return
+
             selectedSegments.add(mySegment)
 
-            val col = getColourForPointAndSegment(null, it, false, DEFAULT_COLOUR_WRAPPER)!!
-            colourSegment(it, col)
+            val col = getColourForPointAndSegment(null, mySegment, false, DEFAULT_COLOUR_WRAPPER)!!
+            colourSegment(mySegment, col)
         }
     }
 
@@ -46,7 +47,7 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
         toggleSegment(segment)
     }
 
-    private fun toggleSegment(segment: DartboardSegmentKt)
+    private fun toggleSegment(segment: DartboardSegment)
     {
         lastDraggedSegment = segment
         if (segment.isMiss())
@@ -67,21 +68,6 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
             val col = getColourForPointAndSegment(null, segment, false, DEFAULT_COLOUR_WRAPPER)!!
             colourSegment(segment, col)
         }
-    }
-
-    private fun colourSegment(segment: DartboardSegmentKt, col: Color)
-    {
-        val pointsForCurrentSegment = segment.points
-        for (i in pointsForCurrentSegment.indices)
-        {
-            val pt = pointsForCurrentSegment[i]
-            if (!segment.isEdgePoint(pt))
-            {
-                colourPoint(pt, col)
-            }
-        }
-
-        dartboardLabel.repaint()
     }
 
     override fun mouseMoved(arg0: MouseEvent)
