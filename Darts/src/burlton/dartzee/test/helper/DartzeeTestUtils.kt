@@ -1,8 +1,6 @@
 package burlton.dartzee.test.helper
 
-import burlton.dartzee.code.`object`.DartboardSegment
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
-import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
@@ -16,14 +14,14 @@ import burlton.dartzee.code.utils.getAllPossibleSegments
 
 val twoBlackOneWhite = makeDartzeeRuleDto(makeColourRule(black = true), makeColourRule(black = true), makeColourRule(white = true),
         inOrder = false,
-        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.getMultiplier() == 1 }))
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.getMultiplier() == 1 && it.score != 25 }))
 
 val scoreEighteens = makeDartzeeRuleDto(makeScoreRule(18),
         calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
 
 val innerOuterInner = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleInner(),
         inOrder = true,
-        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+        calculationResult = makeDartzeeRuleCalculationResult(getInnerSegments()))
 
 val totalIsFifty = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
         calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
@@ -73,6 +71,7 @@ fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean 
 inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllTotalRules().find { it is T }.also { (it as T).target = score }
 
 fun getOuterSegments() = getAllPossibleSegments().filter { it.type == SEGMENT_TYPE_DOUBLE || it.type == SEGMENT_TYPE_OUTER_SINGLE }.filter { it.score != 25 }
+fun getInnerSegments() = getAllPossibleSegments().filter { (it.score == 25 && !it.isMiss()) || it.type == SEGMENT_TYPE_TREBLE || it.type == SEGMENT_TYPE_INNER_SINGLE }
 
 fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<DartzeeRoundResultEntity> {
     val pt = insertParticipant()
