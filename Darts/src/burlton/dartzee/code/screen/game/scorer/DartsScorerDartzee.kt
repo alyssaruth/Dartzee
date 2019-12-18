@@ -37,16 +37,15 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
         tableScores.getColumn(RULE_COLUMN).cellRenderer = DartzeeRoundResultRenderer()
     }
 
-    fun setResult(dartzeeRoundResult: DartzeeRoundResult, score: Int)
+    fun setResult(dartzeeRoundResult: DartzeeRoundResult)
     {
         model.setValueAt(dartzeeRoundResult, model.rowCount - 1, RULE_COLUMN)
 
-        val newScore = score + getTotalScore()
+        val newScore = dartzeeRoundResult.score + getTotalScore()
         model.setValueAt(newScore, model.rowCount - 1, SCORE_COLUMN)
         lblResult.text = "$newScore"
-        lblResult.isVisible = true
 
-        val maxScore = getMaxScoreSoFar() ?: score
+        val maxScore = getMaxScoreSoFar() ?: dartzeeRoundResult.score
         tableScores.getColumn(SCORE_COLUMN).cellRenderer = DartzeeScoreRenderer(maxScore)
         tableScores.repaint()
     }

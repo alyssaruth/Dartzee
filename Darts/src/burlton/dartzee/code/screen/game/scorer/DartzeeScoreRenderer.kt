@@ -5,7 +5,7 @@ import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants
 
-class DartzeeScoreRenderer(private val maxScore: Int): AbstractTableRenderer<Int>()
+class DartzeeScoreRenderer(val maxScore: Int): AbstractTableRenderer<Int>()
 {
     override fun getReplacementValue(value: Int) = value
 
