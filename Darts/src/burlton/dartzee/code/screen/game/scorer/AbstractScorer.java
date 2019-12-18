@@ -58,7 +58,7 @@ public abstract class AbstractScorer extends JPanel
 	protected final JLabel lblResult = new JLabel("X Darts (D20)");
 	protected final JPanel panelNorth = new JPanel();
 	private final JPanel panel_1 = new JPanel();
-	protected final PlayerAvatar lblAvatar = new PlayerAvatar();
+	public final PlayerAvatar lblAvatar = new PlayerAvatar();
 	protected final JPanel panel_2 = new JPanel();
 	protected final JPanel panelSouth = new JPanel();
 	
