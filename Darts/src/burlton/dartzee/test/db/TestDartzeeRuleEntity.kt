@@ -1,17 +1,20 @@
 package burlton.dartzee.test.db
 
+import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleCustom
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEven
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeRuleEntity
+import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.doubleNineteen
 import burlton.dartzee.test.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotThrowAny
 import org.junit.Test
 
 class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
@@ -31,6 +34,30 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         val reretrievedEntity = DartzeeRuleEntity().retrieveForId(rowId)!!
         reretrievedEntity.dart1Rule shouldBe DartzeeDartRuleEven().toDbString()
         reretrievedEntity.dart2Rule shouldBe ""
+    }
+
+    @Test
+    fun `Should support large custom rules in all the dart rule fields`()
+    {
+        val entity = DartzeeRuleEntity()
+        val rowId = entity.assignRowId()
+
+        val customRule = DartzeeDartRuleCustom()
+        customRule.segments = getAllPossibleSegments().toHashSet()
+
+        entity.dart1Rule = customRule.toDbString()
+        entity.dart2Rule = customRule.toDbString()
+        entity.dart3Rule = customRule.toDbString()
+
+        shouldNotThrowAny {
+            entity.saveToDatabase()
+        }
+
+        //Re-retrieve to make sure no silent truncation has happened
+        val reretrievedEntity = DartzeeRuleEntity().retrieveForId(rowId)!!
+        reretrievedEntity.dart1Rule shouldBe customRule.toDbString()
+        reretrievedEntity.dart2Rule shouldBe customRule.toDbString()
+        reretrievedEntity.dart3Rule shouldBe customRule.toDbString()
     }
 
     @Test
