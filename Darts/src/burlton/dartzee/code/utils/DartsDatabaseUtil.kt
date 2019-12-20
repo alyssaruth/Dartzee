@@ -16,7 +16,7 @@ import javax.swing.JOptionPane
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 9
+    const val DATABASE_VERSION = 10
     const val DATABASE_NAME = "jdbc:derby:Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -108,6 +108,12 @@ object DartsDatabaseUtil
             version.version = 9
             version.saveToDatabase()
         }
+        else if (versionNumber == 9)
+        {
+            runSqlScriptsForVersion(10)
+            version.version = 10
+            version.saveToDatabase()
+        }
 
         initialiseDatabase(version)
     }
@@ -146,6 +152,7 @@ object DartsDatabaseUtil
             6 -> listOf("1. Version.sql", "2. Achievement.sql", "3. Dart.sql", "4. DartsMatch.sql", "5. Game.sql",
                     "6. Participant.sql", "7. Player.sql", "8. PlayerImage.sql", "9. Round.sql")
             8 -> listOf("1. Dart.sql", "2. Round.sql")
+            10 -> listOf("1. DartzeeRule.sql")
             else -> listOf()
         }
     }

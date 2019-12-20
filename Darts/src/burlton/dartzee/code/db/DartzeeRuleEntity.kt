@@ -24,9 +24,9 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
     {
         return ("EntityName VARCHAR(255) NOT NULL, "
                 + "EntityId VARCHAR(36) NOT NULL, "
-                + "Dart1Rule VARCHAR(255) NOT NULL, "
-                + "Dart2Rule VARCHAR(255) NOT NULL, "
-                + "Dart3Rule VARCHAR(255) NOT NULL, "
+                + "Dart1Rule VARCHAR(32000) NOT NULL, "
+                + "Dart2Rule VARCHAR(32000) NOT NULL, "
+                + "Dart3Rule VARCHAR(32000) NOT NULL, "
                 + "TotalRule VARCHAR(255) NOT NULL, "
                 + "InOrder BOOLEAN NOT NULL, "
                 + "AllowMisses BOOLEAN NOT NULL, "
