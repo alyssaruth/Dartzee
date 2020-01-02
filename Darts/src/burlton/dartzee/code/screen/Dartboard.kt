@@ -368,27 +368,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         return seg.isDoubleExcludingBull()
     }
 
-    override fun mouseClicked(arg0: MouseEvent)
-    {
-        if (!suppressClickForGameWindow())
-        {
-            val pt = arg0.point
-            dartThrown(pt)
-        }
-    }
-
-    private fun suppressClickForGameWindow(): Boolean
-    {
-        val scrn = getParentWindow() as? DartsGameScreen ?: return false
-        if (scrn.haveLostFocus)
-        {
-            scrn.haveLostFocus = false
-            return true
-        }
-
-        return false
-    }
-
     open fun dartThrown(pt: Point)
     {
         val dart = convertPointToDart(pt, true)
@@ -718,25 +697,31 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    override fun mousePressed(arg0: MouseEvent)
-    {
-    }
-
     override fun mouseReleased(arg0: MouseEvent)
     {
+        if (!suppressClickForGameWindow())
+        {
+            val pt = arg0.point
+            dartThrown(pt)
+        }
+    }
+    private fun suppressClickForGameWindow(): Boolean
+    {
+        val scrn = getParentWindow() as? DartsGameScreen ?: return false
+        if (scrn.haveLostFocus)
+        {
+            scrn.haveLostFocus = false
+            return true
+        }
+
+        return false
     }
 
-    override fun mouseDragged(arg0: MouseEvent)
-    {
-    }
-
-    override fun mouseEntered(arg0: MouseEvent)
-    {
-    }
-
-    override fun mouseExited(arg0: MouseEvent)
-    {
-    }
+    override fun mouseClicked(arg0: MouseEvent) {}
+    override fun mousePressed(arg0: MouseEvent) {}
+    override fun mouseDragged(arg0: MouseEvent) {}
+    override fun mouseEntered(arg0: MouseEvent) {}
+    override fun mouseExited(arg0: MouseEvent) {}
 
     fun factoryOverlay() = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 

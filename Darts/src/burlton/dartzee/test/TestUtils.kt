@@ -56,7 +56,7 @@ fun Dartboard.doClick(x: Int, y: Int)
     val me = makeMouseEvent(x = x, y = y)
 
     dartboardLabel.mouseListeners.forEach {
-        it.mouseClicked(me)
+        it.mouseReleased(me)
     }
 }
 
