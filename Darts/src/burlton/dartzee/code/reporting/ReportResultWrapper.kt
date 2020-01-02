@@ -24,7 +24,7 @@ class ReportResultWrapper
         var matchDesc = ""
         if (localMatchId > -1)
         {
-            matchDesc = "#" + localMatchId + " (Game " + (matchOrdinal + 1) + ")"
+            matchDesc = "#$localMatchId (Game $matchOrdinal)"
         }
 
         return arrayOf(localId, gameTypeDesc, playerDesc, dtStart, dtFinish, matchDesc)
