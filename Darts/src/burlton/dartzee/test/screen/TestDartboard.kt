@@ -7,6 +7,7 @@ import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.getAllPossibleSegments
+import burlton.dartzee.test.doClick
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
@@ -33,11 +34,7 @@ class TestDartboard: AbstractDartsTest()
 
         dartboard.addDartboardListener(listener)
 
-        val me = mockk<MouseEvent>()
-
-        every { me.point } returns Point(25, 10)
-
-        dartboard.mouseClicked(me)
+        dartboard.doClick(25, 10)
 
         verify { listener.dartThrown(Dart(20, 1))}
     }
