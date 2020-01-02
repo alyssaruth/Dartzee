@@ -116,7 +116,7 @@ class MenuScreen : EmbeddedScreen()
             btnNewGame -> ScreenCache.switchScreen(GameSetupScreen::class.java)
             btnManagePlayers -> ScreenCache.switchScreen(PlayerManagementScreen::class.java)
             btnGameReport -> ScreenCache.switchScreen(ReportingSetupScreen::class.java)
-            btnGameStats -> ScreenCache.switchScreen(LeaderboardsScreen::class.java)
+            btnGameStats -> ScreenCache.switchScreen(LeaderboardsScreen())
             btnUtilities -> ScreenCache.switchScreen(UtilitiesScreen::class.java)
             else -> super.actionPerformed(arg0)
         }
