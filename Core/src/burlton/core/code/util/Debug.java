@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-public class Debug implements CoreRegistry
+public class Debug
 {
 	public static final String SQL_PREFIX = "[SQL] ";
 	public static final String BUG_REPORT_ADDITONAL_INFO_LINE = "Additional Information:";
@@ -230,7 +230,7 @@ public class Debug implements CoreRegistry
 	private static String makeEmailTitle(Throwable t, String message)
 	{
 		String extraDetails = " (" + productDesc + ")";
-		String username = instance.get(INSTANCE_STRING_USER_NAME, "");
+		String username = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, "");
 		if (!username.equals(""))
 		{
 			extraDetails += " - " + username;
@@ -379,7 +379,7 @@ public class Debug implements CoreRegistry
 	{
 		try
 		{
-			String username = instance.get(INSTANCE_STRING_USER_NAME, "");
+			String username = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, "");
 			if (!username.equals(""))
 			{
 				description += " - " + username;
