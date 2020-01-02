@@ -152,7 +152,7 @@ object DartsDatabaseUtil
             6 -> listOf("1. Version.sql", "2. Achievement.sql", "3. Dart.sql", "4. DartsMatch.sql", "5. Game.sql",
                     "6. Participant.sql", "7. Player.sql", "8. PlayerImage.sql", "9. Round.sql")
             8 -> listOf("1. Dart.sql", "2. Round.sql")
-            10 -> listOf("1. DartzeeRule.sql")
+            10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
             else -> listOf()
         }
     }
