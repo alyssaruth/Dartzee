@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.bean
 
-import burlton.desktopcore.code.screen.ColourChooserDialog
+import burlton.desktopcore.code.util.InjectedDesktopCore
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.event.MouseEvent
@@ -50,15 +50,10 @@ class ColourPicker : JLabel(), MouseListener
 
     override fun mouseClicked(arg0: MouseEvent)
     {
-        dlg.setInitialColour(selectedColour)
-        dlg.setLocationRelativeTo(null)
-        dlg.isModal = true
-        dlg.isVisible = true
+        val newColour = InjectedDesktopCore.colourSelector.selectColour(selectedColour)
+        updateSelectedColor(newColour)
 
-        val colour = dlg.selectedColour
-        updateSelectedColor(colour)
-
-        listener?.colourSelected(colour)
+        listener?.colourSelected(newColour)
     }
 
     override fun mouseEntered(arg0: MouseEvent)
@@ -73,12 +68,4 @@ class ColourPicker : JLabel(), MouseListener
 
     override fun mousePressed(arg0: MouseEvent) {}
     override fun mouseReleased(arg0: MouseEvent) {}
-
-    companion object
-    {
-        //Static so that 'recent colours' get remembered across different ColourPicker beans
-        private val dlg = ColourChooserDialog()
-    }
-
-
 }
