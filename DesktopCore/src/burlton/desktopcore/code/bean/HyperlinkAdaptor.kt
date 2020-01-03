@@ -5,13 +5,13 @@ import java.awt.Cursor
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 
-class HyperlinkAdaptor(private val listener: HyperlinkListener) : MouseAdapter()
+class HyperlinkAdaptor(private val listener: IHyperlinkListener) : MouseAdapter()
 {
     private val listenerWindow = listener as Component
 
-    override fun mouseClicked(arg0: MouseEvent?) = listener.linkClicked(arg0)
+    override fun mouseClicked(arg0: MouseEvent) = listener.linkClicked(arg0)
 
-    override fun mouseMoved(arg0: MouseEvent?)
+    override fun mouseMoved(arg0: MouseEvent)
     {
         if (listener.isOverHyperlink(arg0))
         {

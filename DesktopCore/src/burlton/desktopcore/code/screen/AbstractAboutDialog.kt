@@ -1,7 +1,7 @@
 package burlton.desktopcore.code.screen
 
 import burlton.desktopcore.code.bean.HyperlinkAdaptor
-import burlton.desktopcore.code.bean.HyperlinkListener
+import burlton.desktopcore.code.bean.IHyperlinkListener
 import java.awt.Color
 import java.awt.Font
 import java.awt.Insets
@@ -14,7 +14,7 @@ import javax.swing.JDialog
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 
-abstract class AbstractAboutDialog : JDialog(), HyperlinkListener, ActionListener
+abstract class AbstractAboutDialog : JDialog(), IHyperlinkListener, ActionListener
 {
     private val lblProductDesc = JLabel(getProductDesc())
     private val lblViewChangelog = JLabel("<html><u>Change Log</u></html>")
