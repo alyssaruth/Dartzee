@@ -2,6 +2,7 @@ package burlton.desktopcore.code.bean
 
 import burlton.desktopcore.code.screen.ColourChooserDialog
 import java.awt.Color
+import java.awt.Cursor
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.image.BufferedImage
@@ -60,8 +61,16 @@ class ColourPicker : JLabel(), MouseListener
         listener?.colourSelected(colour)
     }
 
-    override fun mouseEntered(arg0: MouseEvent) {}
-    override fun mouseExited(arg0: MouseEvent) {}
+    override fun mouseEntered(arg0: MouseEvent)
+    {
+        cursor = Cursor(Cursor.HAND_CURSOR)
+    }
+
+    override fun mouseExited(arg0: MouseEvent)
+    {
+        cursor = Cursor(Cursor.DEFAULT_CURSOR)
+    }
+
     override fun mousePressed(arg0: MouseEvent) {}
     override fun mouseReleased(arg0: MouseEvent) {}
 
