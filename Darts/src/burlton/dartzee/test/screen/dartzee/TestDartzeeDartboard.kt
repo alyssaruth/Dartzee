@@ -71,7 +71,7 @@ class TestDartzeeDartboard: AbstractDartsTest()
     fun `Should highlight valid segments on hover`()
     {
         val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.refreshValidSegments(listOf(doubleTwenty))
 
         dartboard.ensureListening()

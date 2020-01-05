@@ -9,9 +9,8 @@ import java.awt.event.FocusEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseEvent.MOUSE_CLICKED
 import java.awt.event.MouseListener
-import javax.swing.JButton
-import javax.swing.JComponent
-import javax.swing.KeyStroke
+import java.awt.image.BufferedImage
+import javax.swing.*
 
 val MOUSE_EVENT_SINGLE_CLICK = MouseEvent(JButton(), MOUSE_CLICKED, System.currentTimeMillis(), -1, 0, 0, 1, false)
 
@@ -70,3 +69,5 @@ fun singleClick(component: Component)
 
     component.mouseListeners.forEach { it.mouseClicked(mouseEvent) }
 }
+
+fun JLabel.getIconImage(): BufferedImage = (icon as ImageIcon).image as BufferedImage

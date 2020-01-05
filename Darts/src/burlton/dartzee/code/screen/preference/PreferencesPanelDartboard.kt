@@ -12,7 +12,6 @@ import javax.swing.SwingConstants
 
 class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionListener
 {
-
     val cpOddSingle = ColourPicker()
     val cpOddDouble = ColourPicker()
     val cpOddTreble = ColourPicker()
@@ -79,24 +78,24 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr, DartsColour.DARTBOARD_GREEN)
         val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr, DartsColour.DARTBOARD_GREEN)
 
-        cpOddSingle.selectedColor = oddSingle
-        cpOddDouble.selectedColor = oddDouble
-        cpOddTreble.selectedColor = oddTreble
-        cpEvenSingle.selectedColor = evenSingle
-        cpEvenDouble.selectedColor = evenDouble
-        cpEvenTreble.selectedColor = evenTreble
+        cpOddSingle.updateSelectedColor(oddSingle)
+        cpOddDouble.updateSelectedColor(oddDouble)
+        cpOddTreble.updateSelectedColor(oddTreble)
+        cpEvenSingle.updateSelectedColor(evenSingle)
+        cpEvenDouble.updateSelectedColor(evenDouble)
+        cpEvenTreble.updateSelectedColor(evenTreble)
 
         refreshDartboard()
     }
 
     private fun refreshDartboard()
     {
-        val oddSingle = cpOddSingle.selectedColor
-        val oddDouble = cpOddDouble.selectedColor
-        val oddTreble = cpOddTreble.selectedColor
-        val evenSingle = cpEvenSingle.selectedColor
-        val evenDouble = cpEvenDouble.selectedColor
-        val evenTreble = cpEvenTreble.selectedColor
+        val oddSingle = cpOddSingle.selectedColour
+        val oddDouble = cpOddDouble.selectedColour
+        val oddTreble = cpOddTreble.selectedColour
+        val evenSingle = cpEvenSingle.selectedColour
+        val evenDouble = cpEvenDouble.selectedColour
+        val evenTreble = cpEvenTreble.selectedColour
 
         val wrapper = ColourWrapper(evenSingle, evenDouble, evenTreble,
                 oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)
@@ -108,12 +107,12 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
 
     override fun save()
     {
-        val oddSingle = cpOddSingle.selectedColor
-        val oddDouble = cpOddDouble.selectedColor
-        val oddTreble = cpOddTreble.selectedColor
-        val evenSingle = cpEvenSingle.selectedColor
-        val evenDouble = cpEvenDouble.selectedColor
-        val evenTreble = cpEvenTreble.selectedColor
+        val oddSingle = cpOddSingle.selectedColour
+        val oddDouble = cpOddDouble.selectedColour
+        val oddTreble = cpOddTreble.selectedColour
+        val evenSingle = cpEvenSingle.selectedColour
+        val evenDouble = cpEvenDouble.selectedColour
+        val evenTreble = cpEvenTreble.selectedColour
 
         val oddSingleStr = DartsColour.toPrefStr(oddSingle)
         val oddDoubleStr = DartsColour.toPrefStr(oddDouble)

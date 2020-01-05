@@ -5,6 +5,7 @@ import burlton.dartzee.code.screen.dartzee.DartzeeTemplateRuleRenderer
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
+import burlton.desktopcore.test.helpers.getIconImage
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
@@ -23,8 +24,7 @@ class TestDartzeeTemplateRuleRenderer: AbstractDartsTest()
         val ruleTwo = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(40))
 
         val rendered = renderer.getLabel(listOf(ruleOne, ruleTwo))
-        val icon = rendered.icon as ImageIcon
-        val img = icon.image as BufferedImage
+        val img = rendered.getIconImage()
 
         val borderCol = Color(img.getRGB(10, 0))
         borderCol shouldBe Color.BLACK

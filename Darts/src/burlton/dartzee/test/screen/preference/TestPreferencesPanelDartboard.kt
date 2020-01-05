@@ -21,35 +21,35 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
 
     override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelDartboard)
     {
-        panel.cpOddSingle.selectedColor shouldBe DartsColour.DARTBOARD_WHITE
-        panel.cpOddDouble.selectedColor shouldBe DartsColour.DARTBOARD_GREEN
-        panel.cpOddTreble.selectedColor shouldBe DartsColour.DARTBOARD_GREEN
+        panel.cpOddSingle.selectedColour shouldBe DartsColour.DARTBOARD_WHITE
+        panel.cpOddDouble.selectedColour shouldBe DartsColour.DARTBOARD_GREEN
+        panel.cpOddTreble.selectedColour shouldBe DartsColour.DARTBOARD_GREEN
 
-        panel.cpEvenSingle.selectedColor shouldBe DartsColour.DARTBOARD_BLACK
-        panel.cpEvenDouble.selectedColor shouldBe DartsColour.DARTBOARD_RED
-        panel.cpEvenTreble.selectedColor shouldBe DartsColour.DARTBOARD_RED
+        panel.cpEvenSingle.selectedColour shouldBe DartsColour.DARTBOARD_BLACK
+        panel.cpEvenDouble.selectedColour shouldBe DartsColour.DARTBOARD_RED
+        panel.cpEvenTreble.selectedColour shouldBe DartsColour.DARTBOARD_RED
     }
 
     override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelDartboard)
     {
-        panel.cpOddSingle.selectedColor = Color.BLUE
-        panel.cpOddDouble.selectedColor = Color(200, 50, 128)
-        panel.cpOddTreble.selectedColor = Color.getHSBColor(0.9f, 0.8f, 1.0f)
+        panel.cpOddSingle.selectedColour = Color.BLUE
+        panel.cpOddDouble.selectedColour = Color(200, 50, 128)
+        panel.cpOddTreble.selectedColour = Color.getHSBColor(0.9f, 0.8f, 1.0f)
 
-        panel.cpEvenSingle.selectedColor = Color.YELLOW
-        panel.cpEvenDouble.selectedColor = Color.MAGENTA
-        panel.cpEvenTreble.selectedColor = Color.CYAN
+        panel.cpEvenSingle.selectedColour = Color.YELLOW
+        panel.cpEvenDouble.selectedColour = Color.MAGENTA
+        panel.cpEvenTreble.selectedColour = Color.CYAN
     }
 
     override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelDartboard)
     {
-        panel.cpOddSingle.selectedColor shouldBe Color.BLUE
-        panel.cpOddDouble.selectedColor shouldBe Color(200, 50, 128)
-        panel.cpOddTreble.selectedColor shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
+        panel.cpOddSingle.selectedColour shouldBe Color.BLUE
+        panel.cpOddDouble.selectedColour shouldBe Color(200, 50, 128)
+        panel.cpOddTreble.selectedColour shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
 
-        panel.cpEvenSingle.selectedColor shouldBe Color.YELLOW
-        panel.cpEvenDouble.selectedColor shouldBe Color.MAGENTA
-        panel.cpEvenTreble.selectedColor shouldBe Color.CYAN
+        panel.cpEvenSingle.selectedColour shouldBe Color.YELLOW
+        panel.cpEvenDouble.selectedColour shouldBe Color.MAGENTA
+        panel.cpEvenTreble.selectedColour shouldBe Color.CYAN
     }
 
     override fun checkPreferencesAreSetToNonDefaults()
