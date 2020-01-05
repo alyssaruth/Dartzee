@@ -32,7 +32,7 @@ public class ScrollTable extends JPanel
 	
 	private TableRowSorter<TableModel> sorter = null;
 	private ArrayList<RowSelectionListener> listeners = new ArrayList<>();
-	private ArrayList<DoubleClickListener> clickListeners = new ArrayList<>();
+	private ArrayList<IDoubleClickListener> clickListeners = new ArrayList<>();
 	
 	public ScrollTable() 
 	{
@@ -558,7 +558,7 @@ public class ScrollTable extends JPanel
 		listeners.add(listener);
 	}
 	
-	public void addDoubleClickListener(DoubleClickListener listener)
+	public void addDoubleClickListener(IDoubleClickListener listener)
 	{
 		clickListeners.add(listener);
 	}
@@ -584,7 +584,7 @@ public class ScrollTable extends JPanel
 	{
 		if (arg0.getClickCount() == 2)
 		{
-			for (DoubleClickListener listener : clickListeners)
+			for (IDoubleClickListener listener : clickListeners)
 			{
 				listener.doubleClicked(this);
 			}

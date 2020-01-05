@@ -1,27 +1,22 @@
 package burlton.desktopcore.code.bean;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import burlton.core.code.util.Debug;
+import burlton.desktopcore.code.util.DialogUtil;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
-
-import burlton.core.code.util.Debug;
-import burlton.desktopcore.code.util.DialogUtil;
-
 public class FileUploader extends JPanel
 						  implements ActionListener
 {
 	private File selectedFile = null;
-	private ArrayList<FileUploadListener> listeners = new ArrayList<>();
+	private ArrayList<IFileUploadListener> listeners = new ArrayList<>();
 	
 	public FileUploader(FileFilter ff)
 	{
@@ -66,7 +61,7 @@ public class FileUploader extends JPanel
 	{
 		return textField.getText();
 	}
-	public void addFileUploadListener(FileUploadListener listener)
+	public void addFileUploadListener(IFileUploadListener listener)
 	{
 		listeners.add(listener);
 	}
@@ -94,7 +89,7 @@ public class FileUploader extends JPanel
 		
 		for (int i=0; i<listeners.size(); i++)
 		{
-			FileUploadListener listener = listeners.get(i);
+			IFileUploadListener listener = listeners.get(i);
 			listener.fileUploaded(selectedFile);
 		}
 	}
