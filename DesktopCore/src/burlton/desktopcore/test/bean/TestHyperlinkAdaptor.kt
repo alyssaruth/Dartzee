@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.HyperlinkAdaptor
-import burlton.desktopcore.code.bean.HyperlinkListener
+import burlton.desktopcore.code.bean.IHyperlinkListener
 import burlton.desktopcore.test.helpers.AbstractDesktopTest
 import burlton.desktopcore.test.helpers.MOUSE_EVENT_SINGLE_CLICK
 import burlton.desktopcore.test.helpers.makeMouseEvent
@@ -31,9 +31,9 @@ class TestHyperlinkAdaptor: AbstractDesktopTest()
 
         val adaptor = HyperlinkAdaptor(listener)
         adaptor.mouseClicked(MOUSE_EVENT_SINGLE_CLICK)
-        adaptor.mouseClicked(null)
+        adaptor.mouseClicked(makeMouseEvent())
 
-        verifySequence{ listener.linkClicked(MOUSE_EVENT_SINGLE_CLICK); listener.linkClicked(null) }
+        verifySequence{ listener.linkClicked(MOUSE_EVENT_SINGLE_CLICK); listener.linkClicked(any()) }
     }
 
     @Test
@@ -48,7 +48,7 @@ class TestHyperlinkAdaptor: AbstractDesktopTest()
         adaptor.mouseMoved(MOUSE_EVENT_SINGLE_CLICK)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
 
-        adaptor.mouseMoved(null)
+        adaptor.mouseMoved(makeMouseEvent())
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
     }
 
@@ -66,18 +66,18 @@ class TestHyperlinkAdaptor: AbstractDesktopTest()
     }
 }
 
-private class TestHyperlinkListener: JPanel(), HyperlinkListener
+private class TestHyperlinkListener: JPanel(), IHyperlinkListener
 {
-    override fun isOverHyperlink(arg0: MouseEvent?): Boolean
+    override fun isOverHyperlink(arg0: MouseEvent): Boolean
     {
         return arg0 === MOUSE_EVENT_SINGLE_CLICK
     }
 
-    override fun linkClicked(arg0: MouseEvent?){}
+    override fun linkClicked(arg0: MouseEvent){}
 }
 
-private class NonComponentHyperlinkListener : HyperlinkListener
+private class NonComponentHyperlinkListener : IHyperlinkListener
 {
-    override fun isOverHyperlink(arg0: MouseEvent?) = false
-    override fun linkClicked(arg0: MouseEvent?){}
+    override fun isOverHyperlink(arg0: MouseEvent) = false
+    override fun linkClicked(arg0: MouseEvent){}
 }
