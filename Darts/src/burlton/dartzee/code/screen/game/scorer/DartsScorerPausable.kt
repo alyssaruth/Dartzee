@@ -14,7 +14,6 @@ abstract class DartsScorerPausable(private val parent: GamePanelPausable<out Dar
 
     init
     {
-
         btnResume.preferredSize = Dimension(30, 30)
         panelSouth.add(btnResume, BorderLayout.EAST)
         btnResume.isVisible = false
