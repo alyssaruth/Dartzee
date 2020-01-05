@@ -83,7 +83,7 @@ class TestPanelWithScorers: AbstractDartsTest()
     inner class FakeScorer: AbstractScorer()
     {
         override fun getNumberOfColumns() = 4
-        override fun initImpl(gameParams: String?) {}
+        override fun initImpl(gameParams: String) {}
     }
 
     inner class FakeDartsScreen: PanelWithScorers<FakeScorer>()

@@ -46,7 +46,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
             //Finish the game and set the last player's finishing position if we haven't already
             finishGameIfNecessary()
 
-            if (!activeScorer.paused)
+            if (!activeScorer.getPaused())
             {
                 nextTurn()
             }

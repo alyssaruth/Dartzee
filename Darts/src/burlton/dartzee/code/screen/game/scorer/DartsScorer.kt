@@ -29,7 +29,7 @@ abstract class DartsScorer : AbstractScorer() {
     init
     {
         preferredSize = Dimension(SCORER_WIDTH, 600)
-        panel_2.border = EmptyBorder(5, 30, 5, 30)
+        panelAvatar.border = EmptyBorder(5, 30, 5, 30)
     }
 
 
@@ -41,7 +41,7 @@ abstract class DartsScorer : AbstractScorer() {
         var rowCount = model.rowCount
         if (shouldAddRow(rowCount))
         {
-            val row = emptyRow
+            val row = makeEmptyRow()
             addRow(row)
             rowCount++
         }
@@ -60,9 +60,14 @@ abstract class DartsScorer : AbstractScorer() {
         return rowIsComplete(rowCount - 1)
     }
 
+    /**
+     * Default method, overridden by Round the Clock
+     */
+    open fun getNumberOfColumnsForAddingNewDart() = getNumberOfColumns() - 1
+
     private fun addDartToRow(rowNumber: Int, drt: Dart)
     {
-        for (i in 0 until numberOfColumnsForAddingNewDart)
+        for (i in 0 until getNumberOfColumnsForAddingNewDart())
         {
             val currentVal = model.getValueAt(rowNumber, i)
             if (currentVal == null)

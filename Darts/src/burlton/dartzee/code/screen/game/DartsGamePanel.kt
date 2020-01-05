@@ -576,7 +576,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         activeScorer.addDart(dart)
 
         //We've clicked on the dartboard, so dismiss the slider
-        if (activeScorer.getHuman())
+        if (activeScorer.human)
         {
             dismissSlider()
         }
@@ -587,10 +587,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         doAnimations(dart)
 
         //Enable both of these
-        btnReset.isEnabled = activeScorer.getHuman()
+        btnReset.isEnabled = activeScorer.human
         if (!mustContinueThrowing())
         {
-            btnConfirm.isEnabled = activeScorer.getHuman()
+            btnConfirm.isEnabled = activeScorer.human
         }
 
         //If we've thrown three or should stop for other reasons (bust in X01), then stop throwing

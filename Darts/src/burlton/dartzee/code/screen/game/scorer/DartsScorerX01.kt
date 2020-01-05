@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen.game.scorer
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartHint
-import burlton.dartzee.code.screen.game.GamePanelX01
+import burlton.dartzee.code.screen.game.GamePanelPausable
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.sumScore
 import java.awt.BorderLayout
@@ -14,7 +14,7 @@ import javax.swing.SwingConstants
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
 
-class DartsScorerX01 : DartsScorerPausable()
+class DartsScorerX01(parent: GamePanelPausable<out DartsScorerPausable>) : DartsScorerPausable(parent)
 {
     private val lblStartingScore = JLabel("X01")
 
@@ -199,15 +199,5 @@ class DartsScorerX01 : DartsScorerPausable()
     companion object
     {
         private const val SCORE_COLUMN = 3
-
-        /**
-         * Static methods
-         */
-        fun factory(parent: GamePanelX01): DartsScorerX01
-        {
-            val scorer = DartsScorerX01()
-            scorer.setParent(parent)
-            return scorer
-        }
     }
 }

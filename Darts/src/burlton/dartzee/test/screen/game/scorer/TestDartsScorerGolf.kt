@@ -20,10 +20,10 @@ class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
     fun `Should show the right number of columns`()
     {
         val scorer = factoryScorer()
-        scorer.numberOfColumns shouldBe 5
+        scorer.getNumberOfColumns() shouldBe 5
 
         scorer.showGameId = true
-        scorer.numberOfColumns shouldBe 6
+        scorer.getNumberOfColumns() shouldBe 6
     }
 
     @Test
