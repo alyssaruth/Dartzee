@@ -127,7 +127,7 @@ class TestDartsScorerDartzee: AbstractDartsTest()
         val scorer = DartsScorerDartzee(mockk())
         scorer.init(insertPlayer(), "")
 
-        scorer.numberOfColumns shouldBe 5
+        scorer.getNumberOfColumns() shouldBe 5
 
         scorer.tableScores.getColumn(0).cellRenderer.shouldBeInstanceOf<DartRenderer>()
         scorer.tableScores.getColumn(1).cellRenderer.shouldBeInstanceOf<DartRenderer>()

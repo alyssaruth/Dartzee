@@ -35,7 +35,7 @@ class DartsScorerGolf : DartsScorer()
         return 5 + if (showGameId) 1 else 0
     }
 
-    override fun initImpl(gameParams: String?)
+    override fun initImpl(gameParams: String)
     {
         for (i in 0..SCORE_COLUMN)
         {
@@ -48,9 +48,9 @@ class DartsScorerGolf : DartsScorer()
         }
     }
 
-    override fun getEmptyRow(): Array<Any>
+    override fun makeEmptyRow(): Array<Any?>
     {
-        val emptyRow = super.getEmptyRow()
+        val emptyRow = super.makeEmptyRow()
 
         //Set the first column to be the round number
         val rowCount = model.rowCount

@@ -7,12 +7,13 @@ import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
+import io.mockk.mockk
 import org.junit.Test
 
 class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
 {
     override fun getValidGameParams() = "501"
-    override fun factoryScorerImpl() = DartsScorerX01()
+    override fun factoryScorerImpl() = DartsScorerX01(mockk(relaxed = true))
     override fun addRound(scorer: DartsScorerX01, roundNumber: Int)
     {
         scorer.addDart(Dart(20, 1))
@@ -26,7 +27,7 @@ class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
     fun `should have 4 columns`()
     {
         val scorer = factoryScorer()
-        scorer.numberOfColumns shouldBe 4
+        scorer.getNumberOfColumns() shouldBe 4
     }
 
     @Test

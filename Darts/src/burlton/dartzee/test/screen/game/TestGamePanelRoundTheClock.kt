@@ -119,7 +119,7 @@ class TestGamePanelRoundTheClock: AbstractDartsTest()
         {
             for (i in 0..3)
             {
-                val scorer = DartsScorerRoundTheClock()
+                val scorer = DartsScorerRoundTheClock(this)
                 scorer.init(PlayerEntity(), CLOCK_TYPE_STANDARD)
                 hmPlayerNumberToDartsScorer[i] = scorer
             }

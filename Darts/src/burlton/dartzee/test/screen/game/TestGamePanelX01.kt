@@ -118,7 +118,7 @@ class TestGamePanelX01: AbstractDartsTest()
         {
             for (i in 0..3)
             {
-                val scorer = DartsScorerX01()
+                val scorer = DartsScorerX01(this)
                 scorer.init(PlayerEntity(), "501")
                 hmPlayerNumberToDartsScorer[i] = scorer
             }
