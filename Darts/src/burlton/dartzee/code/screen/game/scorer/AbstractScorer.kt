@@ -49,7 +49,7 @@ abstract class AbstractScorer : JPanel()
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
-        panelNorth.add(panelAvatar, BorderLayout.SOUTH)
+        panelNorth.add(panelAvatar, BorderLayout.CENTER)
         panelAvatar.layout = BorderLayout(0, 0)
         panelAvatar.add(lblAvatar, BorderLayout.NORTH)
         add(panelSouth, BorderLayout.SOUTH)

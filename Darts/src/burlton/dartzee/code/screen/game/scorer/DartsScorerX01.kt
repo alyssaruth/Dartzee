@@ -42,7 +42,7 @@ class DartsScorerX01(parent: GamePanelPausable<out DartsScorerPausable>) : Darts
     {
         lblStartingScore.horizontalAlignment = SwingConstants.CENTER
         lblStartingScore.font = Font("Trebuchet MS", Font.PLAIN, 16)
-        panelNorth.add(lblStartingScore, BorderLayout.CENTER)
+        panelNorth.add(lblStartingScore, BorderLayout.SOUTH)
     }
 
 
