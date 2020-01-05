@@ -3,8 +3,8 @@ package burlton.dartzee.code.screen
 import burlton.core.code.util.FileUtil
 import burlton.dartzee.code.bean.PlayerImageRadio
 import burlton.dartzee.code.db.PlayerImageEntity
-import burlton.desktopcore.code.bean.FileUploadListener
 import burlton.desktopcore.code.bean.FileUploader
+import burlton.desktopcore.code.bean.IFileUploadListener
 import burlton.desktopcore.code.bean.WrapLayout
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
@@ -17,7 +17,7 @@ import javax.swing.*
 import javax.swing.border.TitledBorder
 import javax.swing.filechooser.FileNameExtensionFilter
 
-class PlayerImageDialog : SimpleDialog(), FileUploadListener
+class PlayerImageDialog : SimpleDialog(), IFileUploadListener
 {
     var playerImageIdSelected = ""
 

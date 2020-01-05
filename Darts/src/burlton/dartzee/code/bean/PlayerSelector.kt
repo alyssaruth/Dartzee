@@ -2,7 +2,7 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.desktopcore.code.bean.DoubleClickListener
+import burlton.desktopcore.code.bean.IDoubleClickListener
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.DialogUtil
@@ -17,7 +17,7 @@ import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class PlayerSelector : JPanel(), ActionListener, DoubleClickListener
+class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
 {
     val tablePlayersToSelectFrom = ScrollTable()
     val tablePlayersSelected = ScrollTableOrdered()
