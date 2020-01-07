@@ -103,13 +103,11 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
         model.addColumn("Count")
         model.addColumn("!Wrapper")
 
-        val scores = hmScoreToThreeDartBreakdown.keys
-        scores.forEach{
-            val wrapper = hmScoreToThreeDartBreakdown[it]
-            val totalCount = wrapper!!.totalCount
-
-            model.addRow(arrayOf(it, totalCount, wrapper))
+        val rows = hmScoreToThreeDartBreakdown.entries.map { (score, wrapper)
+            -> arrayOf(score, wrapper.getTotalCount(), wrapper)
         }
+
+        model.addRows(rows)
 
         table.model = model
 
@@ -130,15 +128,13 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
         model.addColumn("Count")
         model.addColumn("Example Game")
 
-        wrapper.rows.forEach{
-            model.addRow(it)
-        }
+        model.addRows(wrapper.createRows())
 
         table.model = model
 
         table.setRenderer(1, SimpleRenderer(SwingConstants.LEFT, null))
 
-        val footerRow = arrayOf("Total", wrapper.totalCount, "-")
+        val footerRow = arrayOf("Total", wrapper.getTotalCount(), "-")
         table.addFooterRow(footerRow)
 
         table.sortBy(1, true)
