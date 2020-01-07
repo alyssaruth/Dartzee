@@ -55,12 +55,11 @@ class DateFilterPanel : JPanel()
     }
 
     fun filterSqlDate(sqlDt: Timestamp) = !sqlDt.before(getDtFrom()) && !sqlDt.after(getDtTo())
-
-    private fun getDtFrom(): Date = stripTimeComponent(cbDateFrom.date)
     fun getSqlDtFrom() = Timestamp(getDtFrom().time)
-
-    private fun getDtTo() = stripTimeComponent(cbDateTo.date)
     fun getSqlDtTo() = Timestamp(getDtTo().time)
 
     fun getFilterDesc() = "${dtFormat.format(getDtFrom())} - ${dtFormat.format(getDtTo())}"
+
+    private fun getDtFrom(): Date = stripTimeComponent(cbDateFrom.date)
+    private fun getDtTo() = stripTimeComponent(cbDateTo.date)
 }
