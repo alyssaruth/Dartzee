@@ -54,7 +54,6 @@ class DateFilterPanel : JPanel()
         return true
     }
 
-    fun filter(date: Date) = !date.before(getDtFrom()) && !date.after(getDtTo())
     fun filterSqlDate(sqlDt: Timestamp) = !sqlDt.before(getDtFrom()) && !sqlDt.after(getDtTo())
 
     private fun getDtFrom(): Date = stripTimeComponent(cbDateFrom.date)
