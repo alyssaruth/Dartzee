@@ -1,0 +1,37 @@
+package burlton.dartzee.test.stats
+
+import burlton.dartzee.code.stats.ThreeDartScoreWrapper
+import burlton.dartzee.test.helper.AbstractDartsTest
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotlintest.shouldBe
+import org.junit.Test
+
+class TestThreeDartScoreWrapper: AbstractDartsTest()
+{
+    @Test
+    fun `Should report the correct total across all methods`()
+    {
+        val wrapper = ThreeDartScoreWrapper()
+        wrapper.getTotalCount() shouldBe 0
+
+        wrapper.addDartStr("20, 5, 1", 100)
+        wrapper.addDartStr("20, 5, 1", 101)
+        wrapper.addDartStr("20, 3, 3", 102)
+
+        wrapper.getTotalCount() shouldBe 3
+    }
+
+    @Test
+    fun `Should return one row per method, with the first example game ID`()
+    {
+        val wrapper = ThreeDartScoreWrapper()
+
+        wrapper.addDartStr("20, 5, 1", 100)
+        wrapper.addDartStr("20, 5, 1", 101)
+        wrapper.addDartStr("20, 3, 3", 102)
+
+        val rows = wrapper.createRows()
+        rows.size shouldBe 2
+        rows.map { it.toList() }.shouldContainExactlyInAnyOrder(listOf("20, 5, 1", 2, 100L), listOf("20, 3, 3", 1, 102L))
+    }
+}
