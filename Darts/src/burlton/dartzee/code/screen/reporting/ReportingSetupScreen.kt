@@ -230,11 +230,8 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
         if (cbStartDate.isSelected)
         {
-            val dtStartFrom = dateFilterPanelStart.sqlDtFrom
-            val dtStartTo = dateFilterPanelStart.sqlDtTo
-
-            rp.dtStartFrom = dtStartFrom
-            rp.dtStartTo = dtStartTo
+            rp.dtStartFrom = dateFilterPanelStart.getSqlDtFrom()
+            rp.dtStartTo = dateFilterPanelStart.getSqlDtTo()
         }
 
         if (cbFinishDate.isSelected)
@@ -245,11 +242,8 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
             }
             else
             {
-                val dtFinishFrom = dateFilterPanelFinish.sqlDtFrom
-                val dtFinishTo = dateFilterPanelFinish.sqlDtTo
-
-                rp.dtFinishFrom = dtFinishFrom
-                rp.dtFinishTo = dtFinishTo
+                rp.dtFinishFrom = dateFilterPanelFinish.getSqlDtFrom()
+                rp.dtFinishTo = dateFilterPanelFinish.getSqlDtTo()
             }
         }
 

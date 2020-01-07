@@ -72,14 +72,7 @@ class PlayerStatisticsFilterDialog(gameType:Int):SimpleDialog(), ChangeListener
         return desc
     }
 
-    fun getDateDesc(): String
-    {
-        return if (filterByDate)
-        {
-            dateFilter.dtFromStr + " - " + dateFilter.dtToStr
-        }
-        else ""
-    }
+    fun getDateDesc() = if (filterByDate) dateFilter.getFilterDesc() else ""
 
     fun resetFilters()
     {
