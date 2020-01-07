@@ -6,6 +6,7 @@ import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.getFilterPanel
 import burlton.desktopcore.code.bean.DateFilterPanel
 import burlton.desktopcore.code.screen.SimpleDialog
+import burlton.desktopcore.code.util.enableChildren
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.GridLayout
@@ -105,7 +106,7 @@ class PlayerStatisticsFilterDialog(gameType:Int):SimpleDialog(), ChangeListener
         }
 
         chckbxDatePlayed.isSelected = filterByDate
-        dateFilter.enableComponents(chckbxDatePlayed.isSelected)
+        dateFilter.enableChildren(chckbxDatePlayed.isSelected)
     }
 
     private fun valid():Boolean
@@ -155,7 +156,7 @@ class PlayerStatisticsFilterDialog(gameType:Int):SimpleDialog(), ChangeListener
         }
         else if (src === chckbxDatePlayed)
         {
-            dateFilter.enableComponents(chckbxDatePlayed.isSelected)
+            dateFilter.enableChildren(chckbxDatePlayed.isSelected)
         }
     }
 }

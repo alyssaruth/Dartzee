@@ -14,6 +14,7 @@ import burlton.desktopcore.code.bean.RadioButtonPanel
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.createButtonGroup
+import burlton.desktopcore.code.util.enableChildren
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -279,10 +280,10 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         {
             checkBoxGameType -> comboBox.isEnabled = enabled
             cbType -> panelGameParams.isEnabled = enabled
-            cbStartDate -> dateFilterPanelStart.enableComponents(enabled)
+            cbStartDate -> dateFilterPanelStart.enableChildren(enabled)
             cbFinishDate -> toggleDtFinishFilters(enabled)
             rdbtnUnfinished -> lblUnfinished.isEnabled = enabled
-            rdbtnDtFinish -> dateFilterPanelFinish.enableComponents(enabled)
+            rdbtnDtFinish -> dateFilterPanelFinish.enableChildren(enabled)
             cbPartOfMatch -> {rdbtnYes.isEnabled = enabled
                 rdbtnNo.isEnabled = enabled}
             else -> Debug.stackTrace("Unexpected stateChanged [${src.text}]")
@@ -298,12 +299,12 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         {
             //CheckBox not enabled, so disable everything
             lblUnfinished.isEnabled = false
-            dateFilterPanelFinish.enableComponents(false)
+            dateFilterPanelFinish.enableChildren(false)
         }
         else
         {
             lblUnfinished.isEnabled = rdbtnUnfinished.isSelected
-            dateFilterPanelFinish.enableComponents(rdbtnDtFinish.isSelected)
+            dateFilterPanelFinish.enableChildren(rdbtnDtFinish.isSelected)
         }
     }
 
