@@ -11,6 +11,7 @@ import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.BorderLayout
+import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
@@ -128,5 +129,12 @@ class TestSwingExtensions: AbstractDesktopTest()
         {
             eventSource = e?.source
         }
+    }
+
+    @Test
+    fun `Should return all of the points for a given width and height in the correct order`()
+    {
+        val points = getPointList(2, 3)
+        points.shouldContainExactly(Point(0, 0), Point(1, 0), Point(0, 1), Point(1, 1), Point(0, 2), Point(1, 2))
     }
 }

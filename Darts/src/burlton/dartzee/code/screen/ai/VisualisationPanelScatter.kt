@@ -3,6 +3,7 @@ package burlton.dartzee.code.screen.ai
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.utils.DartsColour
+import burlton.desktopcore.code.bean.paint
 import java.awt.Color
 import java.awt.Font
 import java.awt.Point
@@ -64,27 +65,13 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
 
     override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: AbstractDartsModel)
     {
-        val width = overlayImg.width
-        val height = overlayImg.height
-        val pixels = IntArray(width * height)
-        var i = 0
-        for (y in 0 until height)
-        {
-            for (x in 0 until width)
-            {
-                val pt = Point(x, y)
-                var colorToUse = DartsColour.TRANSPARENT
-                if (hmPointToCount.containsKey(pt))
-                {
-                    val countInt = hmPointToCount[pt]!!
-                    colorToUse = getColourForNoOfHits(countInt)
-                }
-                pixels[i] = colorToUse.rgb
-                i++
-            }
-        }
-        overlayImg.setRGB(0, 0, width, height, pixels, 0, width)
+        overlayImg.paint { getColorForPoint(it, hmPointToCount) }
         repaint()
+    }
+    private fun getColorForPoint(pt: Point, hmPointToCount: Map<Point, Int>): Color
+    {
+        val count = hmPointToCount[pt] ?: return DartsColour.TRANSPARENT
+        return getColourForNoOfHits(count)
     }
 
     private fun getColourForNoOfHits(count: Int): Color

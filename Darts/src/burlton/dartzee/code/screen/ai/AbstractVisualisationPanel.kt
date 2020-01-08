@@ -57,6 +57,4 @@ abstract class AbstractVisualisationPanel : JPanel()
 
         isEnabled = true
     }
-
-
 }

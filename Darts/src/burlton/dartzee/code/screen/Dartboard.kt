@@ -10,6 +10,8 @@ import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.GamePanelX01
 import burlton.dartzee.code.utils.*
+import burlton.desktopcore.code.bean.getPointList
+import burlton.desktopcore.code.bean.paint
 import burlton.desktopcore.code.util.getParentWindow
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -109,19 +111,12 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             dartboardImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 
             //Construct the segments, populated with their points. Cache pt -> segment.
-            for (x in 0 until width)
-            {
-                for (y in 0 until height)
-                {
-                    val pt = Point(x, y)
-                    factoryAndCacheSegmentForPoint(pt)
-                }
-            }
+            getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
 
             Debug.append("Cached all points/segments.")
 
             //Render the actual image
-            renderDartboardImage(width, height)
+            renderDartboardImage()
         }
 
         dartboardLabel.icon = ImageIcon(dartboardImage!!)
@@ -149,31 +144,9 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         dartboardImage = dartboardTemplate!!.getDartboardImg()
     }
 
-    private fun renderDartboardImage(width: Int, height: Int)
+    private fun renderDartboardImage()
     {
-        val pixels = IntArray(width * height)
-        var pixelIx = 0
-        val pt = Point()
-        for (y in 0 until height)
-        {
-            for (x in 0 until width)
-            {
-                pt.setLocation(x, y)
-
-                val segment = getSegmentForPoint(pt)
-                val colour = getColourForPointAndSegment(pt, segment, false, colourWrapper)
-
-                if (colour != null)
-                {
-                    pixels[pixelIx] = colour.rgb
-                }
-
-                pixelIx++
-            }
-        }
-
-        dartboardImage!!.setRGB(0, 0, width, height, pixels, 0, width)
-
+        dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), false, colourWrapper) }
         Debug.append("Created dartboardImage")
     }
 
