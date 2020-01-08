@@ -2,7 +2,6 @@ package burlton.desktopcore.code.bean
 
 import burlton.desktopcore.code.util.TableUtil.DefaultModel
 import java.awt.*
-import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -408,7 +407,7 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
             if (selectedModelRows.isEmpty()) return
             fn()
         }
-        
+
         table.addKeyAction(key, fullFn)
     }
 
