@@ -179,7 +179,7 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
         table.rowHeight = height
     }
 
-    fun getValueAt(row: Int, col: Int): Any = when (row) {
+    fun getValueAt(row: Int, col: Int): Any? = when (row) {
         TABLE_ROW_FOOTER -> tableFooter.getValueAt(0, col)
         else -> model.getValueAt(row, col)
     }

@@ -74,8 +74,8 @@ class ReportingResultsScreen : EmbeddedScreen()
         tableResults.setRenderer(3, TableUtil.TimestampRenderer())
         tableResults.setRenderer(4, TableUtil.TimestampRenderer())
 
-        tableResults.setComparator(3, compareBy<Timestamp>())
-        tableResults.setComparator(4, compareBy<Timestamp>())
+        tableResults.setComparator(3, compareBy<Timestamp> { it })
+        tableResults.setComparator(4, compareBy<Timestamp> { it })
     }
 
     private fun stripOutRemovedColumns()
