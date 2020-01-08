@@ -20,29 +20,23 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String) : Scroll
     private var linkColumn = -1
     private var adaptor: HyperlinkAdaptor? = null
 
-    override fun setModel(model: DefaultTableModel)
-    {
-        super.setModel(model)
+    override var model: DefaultTableModel
+        get() = super.model
+        set(model) {
+            super.model = model
 
-        val columnCount = model.columnCount
-        for (i in 0 until columnCount)
-        {
-            val columnName = model.getColumnName(i)
-            if (columnName == linkColumnName)
+            val linkIndex = model.findColumn(linkColumnName)
+            if (linkIndex > -1) setLinkColumnIndex(linkIndex)
+
+            //Init the adaptor if we need to, but only once
+            if (adaptor == null)
             {
-                setLinkColumnIndex(i)
+                adaptor = HyperlinkAdaptor(this)
+
+                table.addMouseListener(adaptor)
+                table.addMouseMotionListener(adaptor)
             }
         }
-
-        //Init the adaptor if we need to, but only once
-        if (adaptor == null)
-        {
-            adaptor = HyperlinkAdaptor(this)
-
-            table.addMouseListener(adaptor)
-            table.addMouseMotionListener(adaptor)
-        }
-    }
 
     /**
      * Allow direct setting of the game column index, so I can show game hyperlinks within the DartsScorers

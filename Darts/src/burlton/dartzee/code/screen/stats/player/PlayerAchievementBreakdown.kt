@@ -27,7 +27,7 @@ class PlayerAchievementBreakdown : EmbeddedScreen()
     {
         this.achievement = achievement
 
-        tableBreakdown.model = achievement.tmBreakdown
+        tableBreakdown.model = achievement.tmBreakdown!!
     }
 
     override fun getBackTarget(): EmbeddedScreen
