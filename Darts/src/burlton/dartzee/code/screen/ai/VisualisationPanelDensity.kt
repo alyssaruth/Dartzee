@@ -14,7 +14,7 @@ import javax.swing.SwingConstants
 
 class VisualisationPanelDensity: AbstractVisualisationPanel()
 {
-    private var keyImg: BufferedImage? = null
+    private val keyImg = BufferedImage(100, 500, BufferedImage.TYPE_INT_ARGB)
     private val panelKey = JLabel()
 
     init
@@ -27,7 +27,6 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
 
         panelKey.setBounds(0, 0, 100, 500)
         panel.add(panelKey)
-        keyImg = BufferedImage(panelKey.width, panelKey.height, BufferedImage.TYPE_INT_ARGB)
         panelKey.icon = ImageIcon(keyImg)
     }
 
@@ -46,7 +45,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
 
     override fun paintKey()
     {
-        keyImg?.paint {
+        keyImg.paint {
             val probability: Double = it.y.toDouble() / height.toDouble()
             getColorForProbability(probability)
         }
