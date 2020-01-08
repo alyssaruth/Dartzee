@@ -20,14 +20,16 @@ class TestStringUtil: AbstractTest()
         StringUtil.convertOrdinalToText(8) shouldBe "8th"
         StringUtil.convertOrdinalToText(9) shouldBe "9th"
         StringUtil.convertOrdinalToText(10) shouldBe "10th"
-        StringUtil.convertOrdinalToText(10) shouldBe "11th"
-        StringUtil.convertOrdinalToText(10) shouldBe "12th"
-        StringUtil.convertOrdinalToText(10) shouldBe "13th"
+        StringUtil.convertOrdinalToText(11) shouldBe "11th"
+        StringUtil.convertOrdinalToText(12) shouldBe "12th"
+        StringUtil.convertOrdinalToText(13) shouldBe "13th"
     }
 
     @Test
     fun `Should return the right position descriptions for random other numbers`()
     {
-
+        StringUtil.convertOrdinalToText(20) shouldBe "20th"
+        StringUtil.convertOrdinalToText(51) shouldBe "51st"
+        StringUtil.convertOrdinalToText(102) shouldBe "102nd"
     }
 }
