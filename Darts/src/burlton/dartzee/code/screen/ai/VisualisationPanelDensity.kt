@@ -76,6 +76,4 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         private const val LABEL_WIDTH = 60
         private const val LABEL_HEIGHT = 30
     }
-
-
 }
