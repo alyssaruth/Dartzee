@@ -12,7 +12,6 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
-import javax.swing.AbstractAction
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -73,14 +72,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
 
     private fun moveRows(source: ScrollTable, destination: ScrollTable)
     {
-        val selectedPlayers = source.getSelectedPlayers()
-        if (selectedPlayers.isEmpty())
-        {
-            //Nothing to do
-            return
-        }
-
-        moveRows(source, destination, selectedPlayers)
+        moveRows(source, destination, source.getSelectedPlayers())
     }
     private fun moveRows(source: ScrollTable, destination: ScrollTable, selectedPlayers: List<PlayerEntity>)
     {

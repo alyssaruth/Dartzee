@@ -404,7 +404,12 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
 
     fun addKeyAction(key: Int, fn: () -> Unit)
     {
-        table.addKeyAction(key, fn)
+        val fullFn = fun () {
+            if (selectedModelRows.isEmpty()) return
+            fn()
+        }
+        
+        table.addKeyAction(key, fullFn)
     }
 
     fun addRowSelectionListener(listener: RowSelectionListener) {
