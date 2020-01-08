@@ -15,10 +15,6 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
     override fun getDeleteAction(t: ScrollTable): (() -> Unit)? =
         fun() {
             val rows = t.selectedModelRows
-            if (rows.isEmpty())
-            {
-                return
-            }
 
             val ans = DialogUtil.showQuestion("Are you sure you want to delete ${rows.size} row(s) from $entityName?", false)
             if (ans == JOptionPane.YES_OPTION)

@@ -64,7 +64,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         scrollTable.setTableFont(Font(font.name, Font.PLAIN, 18))
         scrollTable.addRowSelectionListener(this)
 
-        scrollTable.addKeyAction(KeyEvent.VK_DELETE) { if (btnDelete.isEnabled) deleteTemplate() }
+        scrollTable.addKeyAction(KeyEvent.VK_DELETE) { deleteTemplate() }
         scrollTable.setHeaderFont(Font(font.name, Font.PLAIN, 20))
 
         btnAdd.addActionListener(this)

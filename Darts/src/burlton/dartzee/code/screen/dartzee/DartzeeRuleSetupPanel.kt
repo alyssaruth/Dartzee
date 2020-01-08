@@ -41,8 +41,8 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         tableRules.setRowHeight(40)
         tableRules.addRowSelectionListener(this)
 
-        tableRules.addKeyAction(KeyEvent.VK_DELETE) { if (btnRemoveRule.isEnabled) removeRule() }
-        tableRules.addKeyAction(KeyEvent.VK_ENTER) { if (btnAmendRule.isEnabled) amendRule() }
+        tableRules.addKeyAction(KeyEvent.VK_DELETE) { removeRule() }
+        tableRules.addKeyAction(KeyEvent.VK_ENTER) { amendRule() }
 
         btnAddRule.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
         btnAddRule.toolTipText = "Add rule"

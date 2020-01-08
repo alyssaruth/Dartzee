@@ -12,11 +12,6 @@ class SanityCheckResultUnexpectedTables(model: DefaultModel) : SanityCheckResult
         fun()
         {
             val rows = t.selectedModelRows
-            if (rows.isEmpty())
-            {
-                return
-            }
-
             val tableNames = rows.map{ t.getValueAt(it, 1) as String }
 
             val tableList = tableNames.joinToString("\n")
