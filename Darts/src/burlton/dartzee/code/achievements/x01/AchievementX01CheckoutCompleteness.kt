@@ -5,8 +5,10 @@ import burlton.dartzee.code.achievements.AbstractAchievementRowPerGame
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.desktopcore.code.bean.paint
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL
@@ -100,27 +102,13 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
             return
         }
 
-        for (x in 0 until img.width)
-        {
-            for (y in 0 until img.height)
+        img.paint {
+            val current = Color(img.getRGB(it.x, it.y), true)
+            when
             {
-                if (Color(img.getRGB(x, y)) == Color.BLACK)
-                {
-                    img.setRGB(x, y, newColor.darker().rgb)
-                }
-                else
-                {
-                    val red = Color(img.getRGB(x, y)).red
-                    if (hitDoubles.contains(red))
-                    {
-                        img.setRGB(x, y, newColor.rgb)
-                    }
-                    else
-                    {
-                        val transparent = Color(0, true)
-                        img.setRGB(x, y, transparent.rgb)
-                    }
-                }
+                current == Color.BLACK -> newColor.darker()
+                hitDoubles.contains(current.red) -> newColor
+                else -> DartsColour.TRANSPARENT
             }
         }
     }

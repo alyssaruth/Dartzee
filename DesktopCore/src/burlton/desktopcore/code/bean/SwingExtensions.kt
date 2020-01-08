@@ -1,10 +1,13 @@
 package burlton.desktopcore.code.bean
 
 import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
+import java.awt.image.BufferedImage
 import javax.swing.*
 import javax.swing.text.JTextComponent
 
@@ -56,4 +59,19 @@ fun JTextComponent.addGhostText(text: String)
 {
     this.layout = BorderLayout()
     this.add(GhostText(text, this))
+}
+
+fun BufferedImage.paint(fn: (pt: Point) -> Color?)
+{
+    val pts = getPointList(width, height)
+    val colors = pts.map { fn(it)?.rgb ?: 0 }
+
+    setRGB(0, 0, width, height, colors.toIntArray(), 0, width)
+}
+fun getPointList(width: Int, height: Int): List<Point>
+{
+    val yRange = 0 until height
+    val xRange = 0 until width
+
+    return yRange.map { y -> xRange.map { x -> Point(x, y)} }.flatten()
 }

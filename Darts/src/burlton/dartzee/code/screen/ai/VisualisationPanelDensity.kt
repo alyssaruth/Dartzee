@@ -4,6 +4,7 @@ import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.getDistance
+import burlton.desktopcore.code.bean.paint
 import java.awt.Color
 import java.awt.Point
 import java.awt.image.BufferedImage
@@ -33,63 +34,34 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
     override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: AbstractDartsModel)
     {
         val centerPt = model.getScoringPoint(dartboard)
-        val width = overlay.width
-        val height = overlay.height
-        val pixels = IntArray(width * height)
-        var i = 0
-        for (y in 0 until height)
-        {
-            for (x in 0 until width)
-            {
-                val radius = getDistance(Point(x, y), centerPt)
-                val probability = model.getProbabilityWithinRadius(radius)
-                val c = getColorForProbability(probability)
-                pixels[i] = c.rgb
-                i++
-            }
+
+        overlayImg.paint {
+            val radius = getDistance(it, centerPt)
+            val probability = model.getProbabilityWithinRadius(radius)
+            getColorForProbability(probability)
         }
 
-        overlayImg.setRGB(0, 0, width, height, pixels, 0, width)
         repaint()
     }
 
     override fun paintKey()
     {
-        val width = panelKey.width
-        val height = panelKey.height
-        val pixels = IntArray(width * height)
-
-        val lblXPosition = panel.width / 2 - LABEL_WIDTH / 2
-
-        var i = 0
-        for (y in 0 until height)
-        {
-            for (x in 0 until width)
-            {
-                val probability: Double = y.toDouble() / height.toDouble()
-                val c = getColorForProbability(probability)
-                pixels[i] = c.rgb
-                i++
-
-                //Add the labels.
-                if (x == lblXPosition && y % 50 == 0 && y > 0)
-                {
-                    val probInt = 10 * y / 50
-                    //Add a label
-                    val label = JLabel("-   $probInt%   -")
-                    label.setBounds(
-                        lblXPosition,
-                        y - LABEL_HEIGHT / 2,
-                        LABEL_WIDTH,
-                        LABEL_HEIGHT
-                    )
-
-                    label.horizontalAlignment = SwingConstants.CENTER
-                    panelKey.add(label)
-                }
-            }
+        keyImg?.paint {
+            val probability: Double = it.y.toDouble() / height.toDouble()
+            getColorForProbability(probability)
         }
-        keyImg!!.setRGB(0, 0, width, height, pixels, 0, width)
+
+        //Add labels at 10% increments
+        val lblXPosition = panel.width / 2 - LABEL_WIDTH / 2
+        val yPositions = (1 until panel.height).filter { it % (height/10) == 0 }
+        yPositions.forEach {
+            val probInt = 10 * it / 50
+            val label = JLabel("-   $probInt%   -")
+            label.setBounds(lblXPosition, it - LABEL_HEIGHT / 2, LABEL_WIDTH, LABEL_HEIGHT)
+            label.horizontalAlignment = SwingConstants.CENTER
+            panelKey.add(label)
+        }
+
         repaint()
     }
 

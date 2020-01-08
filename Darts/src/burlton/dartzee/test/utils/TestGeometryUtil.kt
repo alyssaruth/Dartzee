@@ -123,5 +123,4 @@ class TestGeometryUtil: AbstractDartsTest()
             angle.shouldBeLessThanOrEqual(360.0)
         }
     }
-
 }

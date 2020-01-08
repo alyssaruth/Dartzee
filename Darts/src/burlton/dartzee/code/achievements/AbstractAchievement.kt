@@ -6,6 +6,7 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.desktopcore.code.bean.paint
 import burlton.desktopcore.code.util.DateStatics.Companion.START_OF_TIME
 import burlton.desktopcore.code.util.formatAsDate
 import java.awt.Color
@@ -199,15 +200,9 @@ abstract class AbstractAchievement
     }
     protected open fun changeIconColor(img : BufferedImage, newColor: Color)
     {
-        for (x in 0 until img.width)
-        {
-            for (y in 0 until img.height)
-            {
-                if (Color(img.getRGB(x, y), true) == Color.BLACK)
-                {
-                    img.setRGB(x, y, newColor.rgb)
-                }
-            }
+        img.paint {
+            val current = Color(img.getRGB(it.x, it.y), true)
+            if (current == Color.BLACK) newColor else current
         }
     }
 

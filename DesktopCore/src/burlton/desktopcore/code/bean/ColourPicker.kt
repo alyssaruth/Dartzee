@@ -35,14 +35,7 @@ class ColourPicker : JLabel(), MouseListener
         newColor ?: return
 
         this.selectedColour = newColor
-
-        for (x in 0 until width)
-        {
-            for (y in 0 until height)
-            {
-                img.setRGB(x, y, newColor.rgb)
-            }
-        }
+        img.paint { newColor }
 
         icon = ImageIcon(img)
         repaint()
