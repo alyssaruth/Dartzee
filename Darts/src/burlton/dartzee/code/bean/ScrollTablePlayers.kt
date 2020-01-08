@@ -49,7 +49,7 @@ fun ScrollTable.initPlayerTableModel(players: List<PlayerEntity> = listOf())
     model.addColumn("")
     model.addColumn("Player")
 
-    setModel(model)
+    this.model = model
 
     setRowHeight(23)
     setColumnWidths("25")

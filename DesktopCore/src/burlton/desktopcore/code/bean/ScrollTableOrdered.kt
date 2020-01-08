@@ -129,9 +129,8 @@ class ScrollTableOrdered : ScrollTable(), ActionListener
 
     private fun getRow(rowIx: Int): Array<Any?>
     {
-        val columnCount = columnCount
         val row = arrayOfNulls<Any>(columnCount)
-        for (i in 0 until getColumnCount()) {
+        for (i in 0 until columnCount) {
             row[i] = getValueAt(rowIx, i)
         }
 

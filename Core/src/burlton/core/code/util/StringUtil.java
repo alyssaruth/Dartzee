@@ -1,48 +1,7 @@
 package burlton.core.code.util;
 
-import java.util.ArrayList;
-
-public class StringUtil 
+public class StringUtil
 {
-	public static ArrayList<String> getListFromDelims(String delimitedStr, String delimChar)
-	{
-		ArrayList<String> list = new ArrayList<>();
-		
-		//Special case for no delimeter, i.e. "1234" -> {"1", "2", "3", "4"}
-		if (delimChar.isEmpty())
-		{
-			for (int i=0; i<delimitedStr.length(); i++)
-			{
-				String character = String.valueOf(delimitedStr.charAt(i));
-				list.add(character);
-			}
-			
-			return list;
-		}
-		
-		int index = 0;
-		while (index > -1)
-		{
-			int newIndex = delimitedStr.indexOf(delimChar, index);
-			int indexToUse = newIndex;
-			if (indexToUse == -1)
-			{
-				indexToUse = delimitedStr.length();
-			}
-			
-			String word = delimitedStr.substring(index, indexToUse);
-			list.add(word);
-			
-			index = newIndex;
-			if (index > -1)
-			{
-				index++;
-			}
-		}
-		
-		return list;
-	}
-	
 	public static String convertOrdinalToText(int position)
 	{
 		if (position == -1)

@@ -61,7 +61,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         btnDelete.toolTipText = "Delete Template"
         btnDelete.preferredSize = Dimension(40, 40)
 
-        scrollTable.font = Font(font.name, Font.PLAIN, 18)
+        scrollTable.setTableFont(Font(font.name, Font.PLAIN, 18))
         scrollTable.addRowSelectionListener(this)
 
         scrollTable.addKeyAction(KeyEvent.VK_DELETE) { if (btnDelete.isEnabled) deleteTemplate() }

@@ -69,7 +69,7 @@ abstract class GameStatisticsPanel : JPanel()
         add(table, BorderLayout.CENTER)
 
         table.disableSorting()
-        table.setBorder(EmptyBorder(10, 5, 0, 5))
+        table.setTableBorder(EmptyBorder(10, 5, 0, 5))
 
         val c = UIManager.getColor("Panel.background")
         val c2 = Color(c.red, c.green, c.blue)
