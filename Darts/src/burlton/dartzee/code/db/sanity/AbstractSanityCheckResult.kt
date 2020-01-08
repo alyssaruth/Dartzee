@@ -4,7 +4,6 @@ import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.screen.TableModelDialog
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.event.KeyEvent
-import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel
 
 abstract class AbstractSanityCheckResult
@@ -22,13 +21,13 @@ abstract class AbstractSanityCheckResult
 
         if (deleteAction != null)
         {
-            t.addKeyAction(KeyEvent.VK_DELETE, "Delete", deleteAction)
+            t.addKeyAction(KeyEvent.VK_DELETE, deleteAction)
         }
 
         return TableModelDialog(getDescription(), t)
     }
 
-    open fun getDeleteAction(t: ScrollTable): AbstractAction?
+    open fun getDeleteAction(t: ScrollTable): (() -> Unit)?
     {
         return null
     }

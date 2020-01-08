@@ -4,34 +4,29 @@ import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.TableUtil.DefaultModel
-import java.awt.event.ActionEvent
-import javax.swing.AbstractAction
 import javax.swing.JOptionPane
 
 class SanityCheckResultUnexpectedTables(model: DefaultModel) : SanityCheckResultSimpleTableModel(model, "Unexpected Tables")
 {
     override fun getDeleteAction(t: ScrollTable) =
-        object : AbstractAction()
+        fun()
         {
-            override fun actionPerformed(e: ActionEvent)
+            val rows = t.selectedModelRows
+            if (rows.isEmpty())
             {
-                val rows = t.selectedModelRows
-                if (rows.isEmpty())
-                {
-                    return
-                }
+                return
+            }
 
-                val tableNames = rows.map{ t.getValueAt(it, 1) as String }
+            val tableNames = rows.map{ t.getValueAt(it, 1) as String }
 
-                val tableList = tableNames.joinToString("\n")
-                val ans = DialogUtil.showQuestion("Are you sure you want to drop the following tables from the database?\n\n$tableList", false)
-                if (ans == JOptionPane.YES_OPTION)
+            val tableList = tableNames.joinToString("\n")
+            val ans = DialogUtil.showQuestion("Are you sure you want to drop the following tables from the database?\n\n$tableList", false)
+            if (ans == JOptionPane.YES_OPTION)
+            {
+                val success = deleteSelectedTables(tableNames)
+                if (!success)
                 {
-                    val success = deleteSelectedTables(tableNames)
-                    if (!success)
-                    {
-                        DialogUtil.showError("An error occurred dropping the tables. You should re-run the sanity check and check logs.")
-                    }
+                    DialogUtil.showError("An error occurred dropping the tables. You should re-run the sanity check and check logs.")
                 }
             }
         }

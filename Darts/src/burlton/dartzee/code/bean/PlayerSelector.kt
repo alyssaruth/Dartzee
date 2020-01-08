@@ -68,13 +68,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
 
     private fun addKeyListener(table: ScrollTable)
     {
-        table.addKeyAction(KeyEvent.VK_ENTER, "Enter", object : AbstractAction()
-        {
-            override fun actionPerformed(ae: ActionEvent)
-            {
-                moveRows(table)
-            }
-        })
+        table.addKeyAction(KeyEvent.VK_ENTER) { moveRows(table) }
     }
 
     private fun moveRows(source: ScrollTable, destination: ScrollTable)

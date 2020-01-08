@@ -73,7 +73,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         val c = UIManager.getColor("Panel.background")
         val c2 = Color(c.red, c.green, c.blue)
-        table.setBackgroundProper(c2)
+        table.setTableBackground(c2)
 
         table.setShowRowCount(false)
     }

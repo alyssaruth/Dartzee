@@ -9,7 +9,6 @@ import java.awt.event.MouseListener
 import java.util.*
 import javax.swing.*
 import javax.swing.border.AbstractBorder
-import javax.swing.border.Border
 import javax.swing.border.EmptyBorder
 import javax.swing.event.*
 import javax.swing.table.*
@@ -65,27 +64,23 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
         tableFooter.isVisible = false
         val boldFont = tableFooter.font.deriveFont(Font.BOLD)
         tableFooter.font = boldFont
-        table.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, JComponent.WHEN_FOCUSED), "Down")
-        table.actionMap.put("Down", object : AbstractAction() {
-            override fun actionPerformed(e: ActionEvent) {
-                val row = table.selectedRow
-                if (row == rowCount - 1
-                    && tableFooter.isVisible
-                ) {
-                    selectRow(TABLE_ROW_FOOTER)
-                    tableFooter.requestFocus()
-                } else if (row < rowCount - 1) {
-                    selectRow(row + 1)
-                }
+
+        addKeyAction(KeyEvent.VK_DOWN) {
+            val row = table.selectedRow
+            if (row == rowCount - 1
+                && tableFooter.isVisible
+            ) {
+                selectRow(TABLE_ROW_FOOTER)
+                tableFooter.requestFocus()
+            } else if (row < rowCount - 1) {
+                selectRow(row + 1)
             }
-        })
-        tableFooter.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, JComponent.WHEN_FOCUSED), "Up")
-        tableFooter.actionMap.put("Up", object : AbstractAction() {
-            override fun actionPerformed(e: ActionEvent) {
-                selectRow(table.rowCount - 1)
-                table.requestFocus()
-            }
-        })
+        }
+
+        tableFooter.addKeyAction(KeyEvent.VK_UP) {
+            selectRow(table.rowCount - 1)
+            table.requestFocus()
+        }
     }
 
     //Initialise our footer model in preparation
@@ -385,19 +380,19 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
     override fun columnMoved(e: TableColumnModelEvent) {}
     override fun columnRemoved(e: TableColumnModelEvent) {}
     override fun columnSelectionChanged(e: ListSelectionEvent) {}
+
     /**
      * ListSelectionListener
      */
-    override fun valueChanged(e: ListSelectionEvent) {
-        if (e.source === table.selectionModel) {
-            updateSelection(table, tableFooter)
-        } else if (e.source === tableFooter.selectionModel) {
-            updateSelection(tableFooter, table)
+    override fun valueChanged(e: ListSelectionEvent)
+    {
+        when (e.source)
+        {
+            table.selectionModel -> updateSelection(table, tableFooter)
+            else -> updateSelection(tableFooter, table)
         }
-        //Now fire off an event for external listeners, once we've sorted the footer row etc
-        for (listener in listeners) {
-            listener.selectionChanged(this)
-        }
+
+        listeners.forEach { it.selectionChanged(this) }
     }
 
     private fun updateSelection(src: JTable?, dest: JTable?) {
@@ -407,9 +402,9 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
         }
     }
 
-    fun addKeyAction(key: Int, actionName: String?, action: AbstractAction?) {
-        table.inputMap.put(KeyStroke.getKeyStroke(key, JComponent.WHEN_FOCUSED), actionName)
-        table.actionMap.put(actionName, action)
+    fun addKeyAction(key: Int, fn: () -> Unit)
+    {
+        table.addKeyAction(key, fn)
     }
 
     fun addRowSelectionListener(listener: RowSelectionListener) {
@@ -426,7 +421,7 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
         table.border = border
     }
 
-    fun setBackgroundProper(bg: Color?) {
+    fun setTableBackground(bg: Color?) {
         table.background = bg
     }
 
