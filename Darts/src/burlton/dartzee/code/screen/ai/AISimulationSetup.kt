@@ -38,7 +38,7 @@ class AISimulationSetup @JvmOverloads constructor(private val player: PlayerEnti
     {
         title = "Simulation Options"
         setSize(400, 160)
-        setLocationRelativeTo(ScreenCache.getAIConfigurationDialog())
+        setLocationRelativeTo(ScreenCache.getMainScreen())
         isModal = true
 
         nfNumberOfGames.columns = 10

@@ -21,6 +21,13 @@ class NumberField @JvmOverloads constructor(min: Int? = null, max: Int? = null) 
         }
     }
 
+    fun getDouble(): Double
+    {
+        val n = value ?: return 0.0
+
+        return if (n is Double) n else (n as Int).toDouble()
+    }
+
     fun getNumber(): Int
     {
         val n = value ?: return -1

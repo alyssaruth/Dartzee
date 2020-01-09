@@ -57,9 +57,9 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
     {
         val model = DartsModelNormalDistribution()
 
-        val sd = nfStandardDeviation.getNumber().toDouble()
-        val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getNumber().toDouble() else 0.0
-        val sdCentral = if(cbCenterBias.isSelected) nfCentralBias.getNumber().toDouble() else 0.0
+        val sd = nfStandardDeviation.getDouble()
+        val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else 0.0
+        val sdCentral = if(cbCenterBias.isSelected) nfCentralBias.getDouble() else 0.0
 
         val averageCount = if (cbRadiusAverage.isSelected) spinnerAverageCount.value as Int else 1
 

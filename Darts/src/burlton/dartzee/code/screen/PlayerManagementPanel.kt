@@ -112,7 +112,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
     {
         when (arg0.source)
         {
-            btnEdit -> AIConfigurationDialog.amendPlayer(player)
+            btnEdit -> AIConfigurationDialog.amendPlayer(player!!)
             btnDelete -> confirmAndDeletePlayer()
             btnRunSimulation -> AISimulationSetup(player!!).isVisible = true
             btnAchievements ->
