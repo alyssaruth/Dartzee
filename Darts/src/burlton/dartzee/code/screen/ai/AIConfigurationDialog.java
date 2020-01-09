@@ -139,7 +139,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 	private final VisualisationPanelScatter scatterTab = new VisualisationPanelScatter();
 	private final VisualisationPanelDensity densityTab = new VisualisationPanelDensity();
 	
-	private AbstractAIConfigurationPanel panelAIConfig = new AIConfigurationNormalDistribution();
+	private AbstractAIConfigurationPanel panelAIConfig = new AIConfigurationPanelNormalDistribution();
 	private final JButton btnRunSimulation = new JButton("Run Simulation...");
 	private final JTextField textFieldMissPercent = new JTextField();
 	private final JLabel lblTreble = new JLabel("Treble %");
@@ -223,7 +223,7 @@ public class AIConfigurationDialog extends AbstractPlayerCreationDialog
 		
 		if (model.equals(AbstractDartsModel.DARTS_MODEL_NORMAL_DISTRIBUTION))
 		{
-			panelAIConfig = new AIConfigurationNormalDistribution();
+			panelAIConfig = new AIConfigurationPanelNormalDistribution();
 		}
 		
 		panelNorth.add(panelAIConfig, BorderLayout.SOUTH);
