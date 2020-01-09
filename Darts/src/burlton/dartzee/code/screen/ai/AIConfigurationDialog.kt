@@ -229,15 +229,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         return !aiPlayer.retrievedFromDb
     }
 
-    private fun validModel(): Boolean
-    {
-        if (!panelAIConfig.valid())
-        {
-            return false
-        }
-
-        return panelX01Config.valid()
-    }
+    private fun validModel() = panelAIConfig.valid() && panelX01Config.valid()
 
     override fun savePlayer()
     {
