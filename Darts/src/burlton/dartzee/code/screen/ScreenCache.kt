@@ -82,17 +82,6 @@ object ScreenCache
         getMainScreen().switchScreen(scrn, reInit)
     }
 
-    @JvmStatic fun getAIConfigurationDialog(): AIConfigurationDialog
-    {
-        if (aiConfigurationDialog == null)
-        {
-            aiConfigurationDialog = AIConfigurationDialog()
-        }
-
-        aiConfigurationDialog!!.setLocationRelativeTo(getMainScreen())
-        return aiConfigurationDialog!!
-    }
-
     fun getHumanCreationDialog(): HumanCreationDialog
     {
         if (humanCreationDialog == null)
