@@ -10,6 +10,7 @@ import burlton.desktopcore.code.util.DialogUtil
 import java.io.File
 import java.util.*
 import javax.swing.JOptionPane
+import kotlin.system.exitProcess
 
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
@@ -313,7 +314,7 @@ object DartsDatabaseUtil
         }
 
         DialogUtil.showInfo("Database successfully restored. Application will now exit.")
-        System.exit(0)
+        exitProcess(0)
     }
 
     private fun selectAndValidateNewDatabase(messageSuffix: String): File?
