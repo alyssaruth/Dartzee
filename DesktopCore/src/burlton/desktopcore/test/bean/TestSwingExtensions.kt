@@ -95,7 +95,7 @@ class TestSwingExtensions: AbstractDesktopTest()
     }
 
     @Test
-    fun `Should add an action for the specified key`()
+    fun `Should add an action for the specified key, and only process if a row is selected`()
     {
         val scrollTable = ScrollTable()
 
@@ -104,6 +104,14 @@ class TestSwingExtensions: AbstractDesktopTest()
 
         scrollTable.processKeyPress(KeyEvent.VK_ENTER)
         keyPressed shouldBe false
+
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
+        keyPressed shouldBe false
+
+        //Now select a row
+        scrollTable.addColumn("Test")
+        scrollTable.addRow(arrayOf("Foo"))
+        scrollTable.selectFirstRow()
 
         scrollTable.processKeyPress(KeyEvent.VK_DELETE)
         keyPressed shouldBe true

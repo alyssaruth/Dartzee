@@ -1,6 +1,5 @@
 package burlton.desktopcore.test.helpers
 
-import burlton.core.code.util.Debug
 import burlton.desktopcore.code.bean.ScrollTable
 import io.mockk.mockk
 import java.awt.Component
@@ -45,9 +44,7 @@ fun JComponent.processKeyPress(key: Int)
         return
     }
 
-    Debug.append("" + actionName)
     val action = actionMap[actionName]
-
     action.actionPerformed(mockk(relaxed = true))
 }
 
