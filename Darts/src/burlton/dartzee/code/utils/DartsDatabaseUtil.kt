@@ -256,7 +256,7 @@ object DartsDatabaseUtil
                 return
 
         val destinationPath = file.absolutePath + "\\Databases"
-        val success = FileUtil.copyDirectoryRecursively(dbFolder, destinationPath)
+        val success = dbFolder.copyRecursively(File(destinationPath))
         if (!success)
         {
             DialogUtil.showError("There was a problem creating the backup.")
@@ -288,8 +288,7 @@ object DartsDatabaseUtil
         }
 
         //Copy the files to a temporary file path in the application directory - Databases_copying.
-        FileUtil.deleteDirectoryIfExists(File(DATABASE_FILE_PATH_TEMP))
-        val success = FileUtil.copyDirectoryRecursively(directoryFrom, DATABASE_FILE_PATH_TEMP)
+        val success = directoryFrom.copyRecursively(File(DATABASE_FILE_PATH_TEMP), true)
         if (!success)
         {
             DialogUtil.showError("Restore failed - failed to copy the new database files.")

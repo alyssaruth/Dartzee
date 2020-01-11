@@ -29,8 +29,7 @@ object FileUtil
         val newFile = File(newFilePath)
         val zzOldFile = File(oldFile.parent, "zz$oldFileName")
         if (oldFile.exists()
-            && !oldFile.renameTo(zzOldFile)
-        )
+            && !oldFile.renameTo(zzOldFile))
         {
             return "Failed to rename old out of the way."
         }
@@ -40,13 +39,9 @@ object FileUtil
             return "Failed to rename new file to $oldFileName"
         }
 
-        if (zzOldFile.isFile)
+        if (!zzOldFile.deleteRecursively())
         {
-            if (!deleteFileIfExists(zzOldFile.path)) return "Failed to delete zz'd old file: ${zzOldFile.path}"
-        }
-        else
-        {
-            if (!deleteDirectoryIfExists(zzOldFile)) return "Failed to delete zz'd old directory: ${zzOldFile.path}"
+            return "Failed to delete zz'd old file: ${zzOldFile.path}"
         }
 
         return null
@@ -107,53 +102,6 @@ object FileUtil
             Debug.stackTrace(ioe, "Failed to read classpath resource: $resourcePath")
             null
         }
-
-    /**
-     * Delete a whole directory, recursively clearing out the files/subfolders too.
-     */
-    fun deleteDirectoryIfExists(dir: File): Boolean
-    {
-        if (!dir.exists() || !dir.isDirectory) return true
-
-        val files = dir.listFiles()
-        files?.forEach {
-            val success = if (it.isDirectory) deleteDirectoryIfExists(it) else it.delete()
-            if (!success) {
-                return false
-            }
-        }
-
-        return dir.delete()
-    }
-
-    /**
-     * Copy directory A to a new directory, B. Copies all subfolders and files.
-     */
-    fun copyDirectoryRecursively(dirFrom: File, dirToCreate: String): Boolean
-    {
-        if (!copyFile(dirFrom, dirToCreate)) return false
-
-        val files = dirFrom.listFiles()
-        files?.forEach {
-            val dirTo = "dirToCreate\\${it.name}"
-            val success = if (it.isDirectory) copyDirectoryRecursively(it, dirTo) else copyFile(it, dirTo)
-            if (!success) return false
-        }
-
-        return true
-    }
-
-    private fun copyFile(fileFrom: File, destinationFile: String): Boolean {
-        try {
-            Files.copy(fileFrom.toPath(), Paths.get(destinationFile))
-        } catch (ioe: IOException) {
-            Debug.append("Caught $ioe copying $fileFrom to $destinationFile")
-            Debug.stackTraceSilently(ioe)
-            return false
-        }
-
-        return true
-    }
 
     /**
      * FileChooser
