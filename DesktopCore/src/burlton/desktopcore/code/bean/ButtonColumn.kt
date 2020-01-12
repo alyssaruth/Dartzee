@@ -49,22 +49,20 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
 
     override fun getTableCellEditorComponent(table: JTable, value: Any?, isSelected: Boolean, row: Int, column: Int): Component
     {
-        if (value == null)
+        when (value)
         {
-            editButton.text = ""
-            editButton.icon = null
-        } else if (value is Icon)
-        {
-            editButton.text = ""
-            editButton.icon = value
-        } else
-        {
-            editButton.text = value.toString()
-            editButton.icon = null
+            null -> editButton.clear()
+            is Icon -> editButton.icon = value
+            else -> editButton.text = "$value"
         }
 
         this.editorValue = value
         return editButton
+    }
+    private fun JButton.clear()
+    {
+        text = ""
+        icon = null
     }
 
     override fun getCellEditorValue() = editorValue
@@ -78,35 +76,22 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
         {
             renderButton.foreground = table.selectionForeground
             renderButton.background = table.selectionBackground
-        } else
+        }
+        else
         {
             renderButton.foreground = table.foreground
             renderButton.background = UIManager.getColor("Button.background")
         }
 
-        if (hasFocus)
-        {
-            renderButton.border = LineBorder(Color.BLUE)
-        }
-        else
-        {
-            renderButton.border = originalBorder
-        }
+        renderButton.border = if (hasFocus) LineBorder(Color.BLUE) else originalBorder
 
         table.rowHeight = 40
 
-        if (value == null)
+        when (value)
         {
-            renderButton.text = ""
-            renderButton.icon = null
-        } else if (value is Icon)
-        {
-            renderButton.text = ""
-            renderButton.icon = value
-        } else
-        {
-            renderButton.text = "" + value
-            renderButton.icon = null
+            null -> renderButton.clear()
+            is Icon -> renderButton.icon = value
+            else -> renderButton.text = "$value"
         }
 
         return renderButton
