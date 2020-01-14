@@ -69,6 +69,7 @@ fun getCheckoutScores(): MutableList<Int>
 
     return list
 }
+fun getCheckoutSingles(): List<Int> = getCheckoutScores().map { it / 2 }
 
 fun isFinishRound(round: MutableList<Dart>): Boolean
 {
