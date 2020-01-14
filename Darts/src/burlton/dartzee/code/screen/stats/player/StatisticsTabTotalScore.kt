@@ -138,7 +138,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
 
     private fun populateStatsWithoutChangingFields(gameParams: String)
     {
-        lineChartPanel.init("$graphTitle ($gameParams)", graphTitle)
+        lineChartPanel.reset("$graphTitle ($gameParams)", graphTitle)
 
         //Filter out unfinished games and games with the wrong params
         val filter = { g: GameWrapper -> g.gameParams == gameParams && (g.isFinished() || chckbxIncludeUnfinishedGames.isSelected) }

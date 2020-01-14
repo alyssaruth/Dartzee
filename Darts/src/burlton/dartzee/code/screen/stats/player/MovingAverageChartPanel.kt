@@ -30,7 +30,7 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) : JP
         add(panelCheckBoxes, BorderLayout.SOUTH)
     }
 
-    fun init(title: String, yLabel: String)
+    fun reset(title: String, yLabel: String)
     {
         graphCollection = XYSeriesCollection()
         panelGraph.chart = ChartFactory.createXYLineChart(title, "Game", yLabel, graphCollection)
