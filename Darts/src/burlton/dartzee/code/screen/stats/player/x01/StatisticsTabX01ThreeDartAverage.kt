@@ -81,7 +81,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
 
     override fun populateStats()
     {
-        chartPanel.init("3 Dart Average", "Average")
+        chartPanel.reset("3 Dart Average", "Average")
 
         nfOtherThreeDartAvg.isVisible = includeOtherComparison()
         nfOtherMissPercent.isVisible = includeOtherComparison()
