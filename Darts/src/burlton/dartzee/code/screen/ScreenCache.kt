@@ -16,7 +16,7 @@ object ScreenCache
 
     //Embedded screens
     private val hmClassToScreen = mutableMapOf<Class<out EmbeddedScreen>, EmbeddedScreen>()
-    private var mainScreen: DartsApp? = null
+    val mainScreen = DartsApp(CheatBar())
 
     //Dialogs
     private var humanCreationDialog: HumanCreationDialog? = null
@@ -25,7 +25,7 @@ object ScreenCache
     private var configureReportColumnsDialog: ConfigureReportColumnsDialog? = null
 
     //Other
-    private var debugConsole: DebugConsole? = null
+    val debugConsole = DebugConsole()
 
     fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)
 
@@ -33,41 +33,10 @@ object ScreenCache
 
     fun <K : EmbeddedScreen> getScreen(screenClass: Class<K>): K
     {
-        var scrn: K? = hmClassToScreen[screenClass] as K?
-
-        try
-        {
-            if (scrn == null)
-            {
-                scrn = screenClass.newInstance()
-                hmClassToScreen[screenClass] = scrn
-            }
-        }
-        catch (iae: IllegalAccessException)
-        {
-            Debug.stackTrace(iae)
-            DialogUtil.showError("Error loading screen.")
-        }
-        catch (iae: InstantiationException)
-        {
-            Debug.stackTrace(iae)
-            DialogUtil.showError("Error loading screen.")
-        }
-
-        return scrn!!
+        return hmClassToScreen.getOrPut(screenClass) { screenClass.getConstructor().newInstance() } as K
     }
 
-    fun getMainScreen(): DartsApp
-    {
-        if (mainScreen == null)
-        {
-            mainScreen = DartsApp(CheatBar())
-        }
-
-        return mainScreen!!
-    }
-
-    fun currentScreen() = getMainScreen().currentScreen
+    fun currentScreen() = mainScreen.currentScreen
 
     fun <K : EmbeddedScreen> switchScreen(screenClass: Class<K>)
     {
@@ -77,7 +46,7 @@ object ScreenCache
 
     fun switchScreen(scrn: EmbeddedScreen?, reInit: Boolean = true)
     {
-        getMainScreen().switchScreen(scrn, reInit)
+        mainScreen.switchScreen(scrn, reInit)
     }
 
     fun getHumanCreationDialog(): HumanCreationDialog
@@ -87,18 +56,8 @@ object ScreenCache
             humanCreationDialog = HumanCreationDialog()
         }
 
-        humanCreationDialog!!.setLocationRelativeTo(getMainScreen())
+        humanCreationDialog!!.setLocationRelativeTo(mainScreen)
         return humanCreationDialog!!
-    }
-
-    fun getDebugConsole(): DebugConsole
-    {
-        if (debugConsole == null)
-        {
-            debugConsole = DebugConsole()
-        }
-
-        return debugConsole!!
     }
 
     fun getPreferencesDialog(): PreferencesDialog

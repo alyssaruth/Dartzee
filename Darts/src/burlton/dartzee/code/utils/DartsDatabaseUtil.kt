@@ -251,7 +251,7 @@ object DartsDatabaseUtil
 
         Debug.append("About to start DB backup")
 
-        val file = FileUtil.chooseDirectory(ScreenCache.getMainScreen())
+        val file = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
                 return
 
@@ -319,7 +319,7 @@ object DartsDatabaseUtil
     private fun selectAndValidateNewDatabase(messageSuffix: String): File?
     {
         DialogUtil.showInfo("Select the 'Databases' folder you want to $messageSuffix")
-        val directoryFrom = FileUtil.chooseDirectory(ScreenCache.getMainScreen())
+        val directoryFrom = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
                 return null
 

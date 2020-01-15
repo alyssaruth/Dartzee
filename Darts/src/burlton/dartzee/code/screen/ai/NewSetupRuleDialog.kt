@@ -142,7 +142,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
         fun addNewSetupRule(hmScoreToDart: MutableMap<Int, Dart>)
         {
             val dlg = NewSetupRuleDialog(hmScoreToDart)
-            dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+            dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true
         }
     }

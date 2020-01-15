@@ -108,7 +108,7 @@ object DatabaseSanityCheck
 
             val dlg = TableModelDialog("Sanity Results", table)
             dlg.setColumnWidths("-1;50;150;150")
-            dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+            dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true
         }
         else
@@ -138,7 +138,7 @@ object DatabaseSanityCheck
     {
         val dlg = result.getResultsDialog()
         dlg.setSize(800, 600)
-        dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+        dlg.setLocationRelativeTo(ScreenCache.mainScreen)
         dlg.isVisible = true
     }
 }

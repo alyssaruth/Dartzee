@@ -47,7 +47,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     {
         title = "Add Dartzee Rule"
         setSize(900, 640)
-        setLocationRelativeTo(ScreenCache.getMainScreen())
+        setLocationRelativeTo(ScreenCache.mainScreen)
         isModal = true
 
         add(panelRuleName, BorderLayout.NORTH)

@@ -285,7 +285,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         fun amendPlayer(player: PlayerEntity)
         {
             val dialog = AIConfigurationDialog(player)
-            dialog.setLocationRelativeTo(ScreenCache.getMainScreen())
+            dialog.setLocationRelativeTo(ScreenCache.mainScreen)
             dialog.isVisible = true
         }
     }

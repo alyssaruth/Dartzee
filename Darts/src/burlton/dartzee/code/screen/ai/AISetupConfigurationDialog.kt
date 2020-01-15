@@ -201,7 +201,7 @@ class AISetupConfigurationDialog : SimpleDialog()
         fun configureSetups(hmScoreToSingle: MutableMap<Int, Dart>)
         {
             val dlg = AISetupConfigurationDialog()
-            dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+            dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.init(hmScoreToSingle)
             dlg.isVisible = true
         }

@@ -94,7 +94,7 @@ class DartzeeTemplateDialog : SimpleDialog()
         {
             val dlg = DartzeeTemplateDialog()
             templateToCopy?.let { dlg.copy(it) }
-            dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+            dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true
             return dlg.dartzeeTemplate
         }

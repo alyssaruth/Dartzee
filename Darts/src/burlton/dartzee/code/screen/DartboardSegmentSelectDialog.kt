@@ -14,7 +14,7 @@ class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegmen
     {
         title = "Select Segments"
         setSize(500, 600)
-        setLocationRelativeTo(ScreenCache.getMainScreen())
+        setLocationRelativeTo(ScreenCache.mainScreen)
         isResizable = false
         isModal = true
 
