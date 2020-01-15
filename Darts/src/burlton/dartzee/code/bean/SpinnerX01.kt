@@ -26,10 +26,7 @@ class SpinnerX01 : JSpinner(), ChangeListener
             value = 501
         }
 
-        if (listener != null)
-        {
-            listener!!.actionPerformed(ActionEvent(this, ActionEvent.ACTION_PERFORMED, null))
-        }
+        listener?.actionPerformed(ActionEvent(this, ActionEvent.ACTION_PERFORMED, null))
     }
 
     fun addActionListener(listener: ActionListener)
