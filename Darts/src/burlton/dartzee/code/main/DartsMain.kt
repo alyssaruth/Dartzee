@@ -24,16 +24,16 @@ object DartsMain
 
         setLookAndFeel()
 
-        Debug.setDebugExtension(DartsDebugExtension())
-        Debug.setProductDesc("Darts $DARTS_VERSION_NUMBER")
-        Debug.setLogToSystemOut(true)
+        Debug.debugExtension = DartsDebugExtension()
+        Debug.productDesc = "Darts $DARTS_VERSION_NUMBER"
+        Debug.logToSystemOut = true
 
         val mainScreen = ScreenCache.getMainScreen()
         Thread.setDefaultUncaughtExceptionHandler(DebugUncaughtExceptionHandler())
 
         DartsClient.parseProgramArguments(args)
 
-        Debug.setSendingEmails(!DartsClient.devMode)
+        Debug.sendingEmails = !DartsClient.devMode
         ClientEmailer.tryToSendUnsentLogs()
 
         DartsClient.checkForUpdatesIfRequired()

@@ -6,6 +6,7 @@ import com.mashape.unirest.http.Unirest
 import org.json.JSONObject
 import java.io.File
 import javax.swing.JOptionPane
+import kotlin.system.exitProcess
 
 /**
  * Automatically check for and download updates using the Github API
@@ -101,11 +102,11 @@ object UpdateManager
         try
         {
             runtime.exec("cmd /c start update.bat $args")
-            System.exit(0)
+            exitProcess(0)
         }
         catch (t: Throwable)
         {
-            Debug.stackTraceNoError(t)
+            Debug.stackTrace(t, suppressError = true)
             val manualCommand = "update.bat $args"
 
             val msg = "Failed to launch update.bat - call the following manually to perform the update: \n\n$manualCommand"

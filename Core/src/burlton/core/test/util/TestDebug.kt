@@ -17,7 +17,7 @@ import java.io.PrintStream
 
 class TestDebug: AbstractTest()
 {
-    private val ext = Debug.getDebugExtension()
+    private val ext = Debug.debugExtension
     private val originalOut = System.out
     private val newOut = ByteArrayOutputStream()
 
@@ -26,6 +26,7 @@ class TestDebug: AbstractTest()
         super.beforeEachTest()
 
         System.setOut(PrintStream(newOut))
+        Debug.lastEmailMillis = -1
     }
 
     override fun afterEachTest()
@@ -33,8 +34,8 @@ class TestDebug: AbstractTest()
         super.afterEachTest()
         System.setOut(originalOut)
 
-        Debug.setDebugExtension(ext)
-        Debug.setSendingEmails(false)
+        Debug.debugExtension = ext
+        Debug.sendingEmails = true
     }
 
     @Test
@@ -98,12 +99,12 @@ class TestDebug: AbstractTest()
     {
         Debug.clearLogs()
 
-        Debug.setLogToSystemOut(false)
+        Debug.logToSystemOut = false
         Debug.append("NotOut")
 
         Debug.waitUntilLoggingFinished()
 
-        Debug.setLogToSystemOut(true)
+        Debug.logToSystemOut = true
         Debug.append("ToOut")
 
         val debugLogs = getLogs()
@@ -123,7 +124,7 @@ class TestDebug: AbstractTest()
     fun testStackTraceBasic()
     {
         Debug.clearLogs()
-        Debug.stackTraceNoError("This is a test")
+        Debug.stackTrace(message = "This is a test", suppressError = true)
 
         val logs = getLogs()
 
@@ -138,8 +139,8 @@ class TestDebug: AbstractTest()
     fun `Should show an error and send an email for a regular stack trace`()
     {
         val ext = mockk<DebugExtension>(relaxed = true)
-        Debug.setDebugExtension(ext)
-        Debug.setSendingEmails(true)
+        Debug.debugExtension = ext
+        Debug.sendingEmails = true
 
         Debug.stackTrace("Foo")
 
@@ -154,8 +155,8 @@ class TestDebug: AbstractTest()
     fun `Should disable emailing if an error occurs trying to email a log`()
     {
         val ext = mockk<DebugExtension>(relaxed = true)
-        Debug.setDebugExtension(ext)
-        Debug.setSendingEmails(true)
+        Debug.debugExtension = ext
+        Debug.sendingEmails = true
 
         every { ext.sendEmail(any(), any()) } throws Exception("Not again")
         Debug.stackTrace("Foo")

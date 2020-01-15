@@ -15,13 +15,13 @@ import org.junit.Test
 
 class TestDebugUncaughtExceptionHandler: AbstractTest()
 {
-    private val ext = Debug.getDebugExtension()
+    private val ext = Debug.debugExtension
 
     override fun afterEachTest()
     {
         super.afterEachTest()
 
-        Debug.setDebugExtension(ext)
+        Debug.debugExtension = ext
     }
 
     @Test
@@ -30,7 +30,7 @@ class TestDebugUncaughtExceptionHandler: AbstractTest()
         val handler = DebugUncaughtExceptionHandler()
 
         val extension = mockk<DebugExtension>(relaxed = true)
-        Debug.setDebugExtension(extension)
+        Debug.debugExtension = extension
 
         val ex = Exception("javax.swing.plaf.FontUIResource cannot be cast to javax.swing.Painter")
         handler.uncaughtException(Thread.currentThread(), ex)
@@ -45,7 +45,7 @@ class TestDebugUncaughtExceptionHandler: AbstractTest()
         val handler = DebugUncaughtExceptionHandler()
 
         val extension = mockk<DebugExtension>(relaxed = true)
-        Debug.setDebugExtension(extension)
+        Debug.debugExtension = extension
 
         val ex = Exception()
         handler.uncaughtException(Thread.currentThread(), ex)
@@ -60,7 +60,7 @@ class TestDebugUncaughtExceptionHandler: AbstractTest()
         val handler = DebugUncaughtExceptionHandler()
 
         val extension = mockk<DebugExtension>(relaxed = true)
-        Debug.setDebugExtension(extension)
+        Debug.debugExtension = extension
 
         val ex = Exception("Argh")
         handler.uncaughtException(Thread.currentThread(), ex)
@@ -77,7 +77,7 @@ class TestDebugUncaughtExceptionHandler: AbstractTest()
         val handler = DebugUncaughtExceptionHandler()
 
         val extension = mockk<DebugExtension>(relaxed = true)
-        Debug.setDebugExtension(extension)
+        Debug.debugExtension = extension
 
         val ex = Exception()
         handler.uncaughtException(t, ex)

@@ -115,8 +115,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         catch (t: Throwable)
         {
-            Debug.stackTraceNoError(t, "Failed to load screen " + scrn!!.getScreenName())
-            DialogUtil.showError("Error loading screen - " + scrn.getScreenName())
+            Debug.stackTrace(t, "Failed to load screen ${scrn?.getScreenName()}", true)
+            DialogUtil.showError("Error loading screen - " + scrn?.getScreenName())
             return
         }
 
@@ -205,9 +205,9 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == "stacktrace")
         {
-            Debug.setSendingEmails(true)
-            Debug.stackTraceNoError("Testing")
-            Debug.setSendingEmails(false)
+            Debug.sendingEmails = true
+            Debug.stackTrace(message = "Testing", suppressError = true)
+            Debug.sendingEmails = false
         }
 
         return textToShow

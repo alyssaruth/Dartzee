@@ -106,7 +106,7 @@ class TestDatabaseUtil: AbstractDartsTest()
     @Test
     fun `Should log SQLExceptions (and show an error) for failed queries`()
     {
-        Debug.setLogToSystemOut(true)
+        Debug.logToSystemOut = true
 
         val query = "SELECT * FROM zzQueryTest"
         DatabaseUtil.executeQuery(query)
