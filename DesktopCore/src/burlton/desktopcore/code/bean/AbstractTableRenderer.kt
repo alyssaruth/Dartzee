@@ -28,7 +28,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer()
             val rowHeight = getRowHeight()
             if (rowHeight > -1)
             {
-                table!!.rowHeight = rowHeight
+                table?.rowHeight = rowHeight
             }
 
             //For ButtonRenderer. If we're actually a component, then return the component itself (otherwise we just call toString()
