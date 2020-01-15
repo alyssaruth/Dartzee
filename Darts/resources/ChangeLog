@@ -1,8 +1,10 @@
 --------- v4.0.1 ---------
 
+= Make Dartboard more responsive to clicks
 = Fix bug where Dartzee leaderboard sorted the wrong way, and didn't update to include new templates
 = Fix truncation error when trying to save custom dart rules
 = Fix inconsistency with how games are numbered as part of a match (e.g. in report results)
+= 100% Kotlin!
 
 --------- v4.0.0 ---------
 
