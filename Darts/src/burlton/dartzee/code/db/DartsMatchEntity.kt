@@ -29,7 +29,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
     var players = mutableListOf<PlayerEntity>()
 
     private var currentOrdinal = 0
-    private var hmPositionToPoints: MutableMap<Int, Int>? = null
+    private val hmPositionToPoints: MutableMap<Int, Int> = mutableMapOf()
 
     override fun getTableName() = "DartsMatch"
 
@@ -126,20 +126,18 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
     }
     private fun getHmPositionToPoints(): MutableMap<Int, Int>
     {
-        if (hmPositionToPoints == null)
+        if (hmPositionToPoints.isEmpty())
         {
-            hmPositionToPoints = mutableMapOf()
+            val doc = matchParams.toXmlDoc() ?: return hmPositionToPoints
+            val root = doc.documentElement
 
-            val doc = matchParams.toXmlDoc()
-            val root = doc!!.documentElement
-
-            hmPositionToPoints!![1] = root.getAttributeInt("First")
-            hmPositionToPoints!![2] = root.getAttributeInt("Second")
-            hmPositionToPoints!![3] = root.getAttributeInt("Third")
-            hmPositionToPoints!![4] = root.getAttributeInt("Fourth")
+            hmPositionToPoints[1] = root.getAttributeInt("First")
+            hmPositionToPoints[2] = root.getAttributeInt("Second")
+            hmPositionToPoints[3] = root.getAttributeInt("Third")
+            hmPositionToPoints[4] = root.getAttributeInt("Fourth")
         }
 
-        return hmPositionToPoints!!
+        return hmPositionToPoints
     }
 
     fun incrementAndGetCurrentOrdinal() = ++currentOrdinal
