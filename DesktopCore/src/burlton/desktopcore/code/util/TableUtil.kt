@@ -33,8 +33,7 @@ object TableUtil
                 return null
             }
 
-            val timestamp = value as Timestamp?
-            return timestamp!!.formatTimestamp()
+            return value.formatTimestamp()
         }
     }
 

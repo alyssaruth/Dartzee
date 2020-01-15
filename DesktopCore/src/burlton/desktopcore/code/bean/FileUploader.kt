@@ -58,12 +58,13 @@ class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), Ac
     private fun selectFile()
     {
         val returnVal = fc.showOpenDialog(this)
-        if (returnVal == JFileChooser.APPROVE_OPTION)
+        val selectedFile = fc.selectedFile
+        if (returnVal == JFileChooser.APPROVE_OPTION && selectedFile != null)
         {
-            selectedFile = fc.selectedFile
-            textField.text = selectedFile!!.path
+            this.selectedFile = fc.selectedFile
+            textField.text = selectedFile.path
 
-            Debug.append("Selected " + selectedFile!!.name)
+            Debug.append("Selected " + selectedFile.name)
         }
     }
 

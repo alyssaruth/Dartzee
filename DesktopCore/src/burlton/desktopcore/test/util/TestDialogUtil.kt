@@ -33,34 +33,4 @@ class TestDialogUtil: AbstractDesktopTest()
             factoryMock.showErrorLater("Later error")
         }
     }
-
-    @Test
-    fun `Should throw errors if factory is unset`()
-    {
-        DialogUtil.init(null)
-
-        shouldThrow<KotlinNullPointerException>{
-            DialogUtil.showError("")
-        }
-
-        shouldThrow<KotlinNullPointerException>{
-            DialogUtil.showInfo("")
-        }
-
-        shouldThrow<KotlinNullPointerException>{
-            DialogUtil.showErrorLater("")
-        }
-
-        shouldThrow<KotlinNullPointerException>{
-            DialogUtil.showQuestion("")
-        }
-
-        shouldThrow<KotlinNullPointerException>{
-            DialogUtil.showLoadingDialog("")
-        }
-
-        shouldThrow<KotlinNullPointerException>{
-            DialogUtil.dismissLoadingDialog()
-        }
-    }
 }

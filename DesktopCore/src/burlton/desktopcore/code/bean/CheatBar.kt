@@ -7,7 +7,7 @@ import javax.swing.*
 
 class CheatBar : JTextField(), ActionListener
 {
-    private var listener: AbstractDevScreen? = null
+    private lateinit var listener: AbstractDevScreen
 
     init
     {
@@ -48,7 +48,7 @@ class CheatBar : JTextField(), ActionListener
         val text = text
         setText(null)
 
-        val result = listener!!.processCommandWithTry(text)
+        val result = listener.processCommandWithTry(text)
         if (result.isEmpty())
         {
             isEnabled = false

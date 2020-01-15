@@ -394,10 +394,11 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
         listeners.forEach { it.selectionChanged(this) }
     }
 
-    private fun updateSelection(src: JTable?, dest: JTable?) {
-        val srcRow = src!!.selectedRow
+    private fun updateSelection(src: JTable, dest: JTable)
+    {
+        val srcRow = src.selectedRow
         if (srcRow > -1) { //We've selected something in the source, so need to clear the destination table's selection
-            dest!!.clearSelection()
+            dest.clearSelection()
         }
     }
 
