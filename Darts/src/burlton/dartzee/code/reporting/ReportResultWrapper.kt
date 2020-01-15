@@ -14,7 +14,7 @@ data class ReportResultWrapper(val localId: Long,
 {
     private val participants = mutableListOf<ParticipantWrapper>()
 
-    fun getTableRow(): Array<Any?>
+    fun getTableRow(): Array<Any>
     {
         val gameTypeDesc = getGameDesc(gameType, gameParams)
         val playerDesc = getPlayerDesc()
@@ -57,15 +57,6 @@ data class ReportResultWrapper(val localId: Long,
             return ret
         }
 
-        fun getTableRowsFromWrappers(wrappers: List<ReportResultWrapper>): List<Array<Any?>>
-        {
-            val rows = mutableListOf<Array<Any?>>()
-            for (wrapper in wrappers)
-            {
-                rows.add(wrapper.getTableRow())
-            }
-
-            return rows
-        }
+        fun getTableRowsFromWrappers(wrappers: List<ReportResultWrapper>) = wrappers.map { it.getTableRow() }
     }
 }
