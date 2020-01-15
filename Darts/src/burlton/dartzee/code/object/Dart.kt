@@ -8,7 +8,7 @@ import burlton.desktopcore.code.util.DateStatics
 import java.awt.Point
 import java.sql.Timestamp
 
-open class Dart @JvmOverloads constructor(
+open class Dart constructor(
         var score: Int,
         var multiplier: Int,
         var pt: Point? = null,

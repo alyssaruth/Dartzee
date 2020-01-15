@@ -5,11 +5,11 @@ import java.awt.Color
 
 val DEFAULT_COLOUR_WRAPPER = ColourWrapper(DartsColour.DARTBOARD_BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
 
-class ColourWrapper @JvmOverloads constructor(private var evenSingleColour : Color?, private var evenDoubleColour : Color?,
-                                              private var evenTrebleColour : Color?, private var oddSingleColour : Color?,
-                                              private var oddDoubleColour : Color?, private var oddTrebleColour : Color?,
-                                              private var innerBullColour : Color?, private var outerBullColour : Color?,
-                                              var outerDartboardColour : Color? = Color.black)
+class ColourWrapper constructor(private var evenSingleColour : Color?, private var evenDoubleColour : Color?,
+                                private var evenTrebleColour : Color?, private var oddSingleColour : Color?,
+                                private var oddDoubleColour : Color?, private var oddTrebleColour : Color?,
+                                private var innerBullColour : Color?, private var outerBullColour : Color?,
+                                var outerDartboardColour : Color? = Color.black)
 {
     var missedBoardColour: Color? = null
     var edgeColour: Color? = null

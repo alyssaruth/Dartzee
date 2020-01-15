@@ -198,7 +198,7 @@ class AISetupConfigurationDialog : SimpleDialog()
 
     companion object
     {
-        @JvmStatic fun configureSetups(hmScoreToSingle: MutableMap<Int, Dart>)
+        fun configureSetups(hmScoreToSingle: MutableMap<Int, Dart>)
         {
             val dlg = AISetupConfigurationDialog()
             dlg.setLocationRelativeTo(ScreenCache.getMainScreen())

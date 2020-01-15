@@ -41,7 +41,7 @@ class DartEntity : AbstractEntity<DartEntity>()
 
     companion object
     {
-        @JvmStatic fun factory(dart: Dart, playerId: String, participantId: String, roundNumber: Int, ordinal: Int, startingScore: Int): DartEntity
+        fun factory(dart: Dart, playerId: String, participantId: String, roundNumber: Int, ordinal: Int, startingScore: Int): DartEntity
         {
             val de = DartEntity()
             de.assignRowId()

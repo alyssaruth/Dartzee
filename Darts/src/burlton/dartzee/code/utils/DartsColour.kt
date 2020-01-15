@@ -7,16 +7,16 @@ import java.lang.Float.max
 
 object DartsColour
 {
-    @JvmField val TRANSPARENT = Color(0, 0, 0, 0)
+    val TRANSPARENT = Color(0, 0, 0, 0)
 
     val DARTBOARD_RED: Color = Color.red
     val DARTBOARD_GREEN: Color = Color.green
     val DARTBOARD_BLACK: Color = Color.getHSBColor(0f, 0f, 0.1.toFloat())
-    @JvmField val DARTBOARD_WHITE: Color = Color.white
+    val DARTBOARD_WHITE: Color = Color.white
 
-    @JvmField val DARTBOARD_LIGHTEST_GREY: Color = Color.getHSBColor(0f, 0f, 0.9.toFloat())
-    @JvmField val DARTBOARD_LIGHTER_GREY: Color = Color.getHSBColor(0f, 0f, 0.75.toFloat())
-    @JvmField val DARTBOARD_LIGHT_GREY: Color = Color.getHSBColor(0f, 0f, 0.6.toFloat())
+    val DARTBOARD_LIGHTEST_GREY: Color = Color.getHSBColor(0f, 0f, 0.9.toFloat())
+    val DARTBOARD_LIGHTER_GREY: Color = Color.getHSBColor(0f, 0f, 0.75.toFloat())
+    val DARTBOARD_LIGHT_GREY: Color = Color.getHSBColor(0f, 0f, 0.6.toFloat())
 
     val COLOUR_GOLD_TEXT: Color = Color.getHSBColor(5.toFloat() / 36, 1f, 0.8.toFloat())
     val COLOUR_SILVER_TEXT: Color = Color.GRAY.darker().darker()
@@ -30,7 +30,7 @@ object DartsColour
 
     fun getDarkenedColour(colour: Color): Color = colour.darker().darker()
 
-    @JvmStatic fun getBrightenedColour(colour: Color): Color
+    fun getBrightenedColour(colour: Color): Color
     {
         var hsbValues = FloatArray(3)
         hsbValues = Color.RGBtoHSB(colour.red, colour.green, colour.blue, hsbValues)
@@ -62,7 +62,7 @@ object DartsColour
         }
 
 
-    @JvmOverloads @JvmStatic fun setFgAndBgColoursForPosition(c: Component, finishPos: Int, defaultBg: Color? = null)
+    fun setFgAndBgColoursForPosition(c: Component, finishPos: Int, defaultBg: Color? = null)
     {
         when (finishPos)
         {

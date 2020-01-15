@@ -22,9 +22,9 @@ import java.awt.FlowLayout
 import java.awt.Window
 import javax.swing.*
 
-class AISimulationSetup @JvmOverloads constructor(private val player: PlayerEntity,
-                                                  private var model: AbstractDartsModel? = null,
-                                                  private val modal: Boolean = false) : SimpleDialog()
+class AISimulationSetup constructor(private val player: PlayerEntity,
+                                    private var model: AbstractDartsModel? = null,
+                                    private val modal: Boolean = false) : SimpleDialog()
 {
     private val panelCenter = JPanel()
     private val lblGameMode = JLabel("Game Mode")

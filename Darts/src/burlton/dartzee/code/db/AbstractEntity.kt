@@ -117,7 +117,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         else entities.first()
     }
 
-    @JvmOverloads
     fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E>
     {
         var queryWithFrom = "FROM ${getTableName()} $alias"
@@ -153,7 +152,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return ret
     }
 
-    @JvmOverloads
     fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E?
     {
         val entities = retrieveEntities("RowId = '$rowId'")
@@ -187,7 +185,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return DatabaseUtil.executeUpdate(sql)
     }
 
-    @JvmOverloads
     fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
     {
         this.dtLastUpdate = dtLastUpdate
