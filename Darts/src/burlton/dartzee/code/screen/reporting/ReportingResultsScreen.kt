@@ -16,7 +16,7 @@ import javax.swing.JPanel
 class ReportingResultsScreen : EmbeddedScreen()
 {
     private var rp: ReportParameters? = null
-    private var cachedRows: List<Array<Any?>>? = null
+    private var cachedRows = emptyList<Array<Any>>()
 
     private val btnConfigureColumns = JButton("Configure Columns...")
     private val tableResults = ScrollTableDartsGame()
@@ -55,10 +55,7 @@ class ReportingResultsScreen : EmbeddedScreen()
             cachedRows = ReportResultWrapper.getTableRowsFromWrappers(wrappers)
         }
 
-        for (row in cachedRows!!)
-        {
-            model.addRow(row)
-        }
+        model.addRows(cachedRows)
 
         tableResults.setRowName("game")
         tableResults.model = model
