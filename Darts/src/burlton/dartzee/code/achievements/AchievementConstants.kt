@@ -1,4 +1,3 @@
-@file:JvmName("AchievementConstants")
 package burlton.dartzee.code.achievements
 
 /**

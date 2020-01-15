@@ -420,50 +420,44 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     /**
      * Write to statement methods
      */
-    @Throws(SQLException::class)
-    fun writeLong(ps: PreparedStatement, ix: Int, value: Long, statementStr: String): String
+    private fun writeLong(ps: PreparedStatement, ix: Int, value: Long, statementStr: String): String
     {
         ps.setLong(ix, value)
         return swapInValue(statementStr, value)
     }
 
-    @Throws(SQLException::class)
-    fun writeInt(ps: PreparedStatement, ix: Int, value: Int, statementStr: String): String
+    private fun writeInt(ps: PreparedStatement, ix: Int, value: Int, statementStr: String): String
     {
         ps.setInt(ix, value)
         return swapInValue(statementStr, value)
     }
 
-    fun writeDouble(ps: PreparedStatement, ix: Int, value: Double, statementStr: String): String
+    private fun writeDouble(ps: PreparedStatement, ix: Int, value: Double, statementStr: String): String
     {
         ps.setDouble(ix, value)
         return swapInValue(statementStr, value)
     }
 
-    @Throws(SQLException::class)
-    fun writeString(ps: PreparedStatement, ix: Int, value: String, statementStr: String): String
+    private fun writeString(ps: PreparedStatement, ix: Int, value: String, statementStr: String): String
     {
         ps.setString(ix, value)
         return swapInValue(statementStr, "'$value'")
     }
 
-    @Throws(SQLException::class)
-    fun writeTimestamp(ps: PreparedStatement, ix: Int, value: Timestamp, statementStr: String): String
+    private fun writeTimestamp(ps: PreparedStatement, ix: Int, value: Timestamp, statementStr: String): String
     {
         ps.setTimestamp(ix, value)
         return swapInValue(statementStr, "'$value'")
     }
 
-    @Throws(SQLException::class)
-    fun writeBlob(ps: PreparedStatement, ix: Int, value: Blob, statementStr: String): String
+    private fun writeBlob(ps: PreparedStatement, ix: Int, value: Blob, statementStr: String): String
     {
         ps.setBlob(ix, value)
         val blobStr = "Blob (dataLength: " + value.length() + ")"
         return swapInValue(statementStr, blobStr)
     }
 
-    @Throws(SQLException::class)
-    fun writeBoolean(ps: PreparedStatement, ix: Int, value: Boolean, statementStr: String): String
+    private fun writeBoolean(ps: PreparedStatement, ix: Int, value: Boolean, statementStr: String): String
     {
         ps.setBoolean(ix, value)
         return swapInValue(statementStr, value)
