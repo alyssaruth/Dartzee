@@ -4,21 +4,19 @@ import burlton.dartzee.code.utils.getGameDesc
 import java.sql.ResultSet
 import java.sql.Timestamp
 
-class ReportResultWrapper
+data class ReportResultWrapper(val localId: Long,
+                               val gameType: Int,
+                               val gameParams: String,
+                               val dtStart: Timestamp,
+                               val dtFinish: Timestamp,
+                               val localMatchId: Long,
+                               val matchOrdinal: Int)
 {
-    var localId: Long = -1
-    var gameType = -1
-    var gameParams: String? = null
-    var dtStart: Timestamp? = null
-    var dtFinish: Timestamp? = null
-    var localMatchId: Long = -1
-    var matchOrdinal = -1
-
     private val participants = mutableListOf<ParticipantWrapper>()
 
     fun getTableRow(): Array<Any?>
     {
-        val gameTypeDesc = getGameDesc(gameType, gameParams!!)
+        val gameTypeDesc = getGameDesc(gameType, gameParams)
         val playerDesc = getPlayerDesc()
 
         var matchDesc = ""
@@ -30,7 +28,7 @@ class ReportResultWrapper
         return arrayOf(localId, gameTypeDesc, playerDesc, dtStart, dtFinish, matchDesc)
     }
 
-    fun getPlayerDesc(): String
+    private fun getPlayerDesc(): String
     {
         participants.sortBy { it.finishingPosition }
         return participants.joinToString()
@@ -47,19 +45,15 @@ class ReportResultWrapper
     {
         fun factoryFromResultSet(localId: Long, rs: ResultSet): ReportResultWrapper
         {
-            val ret = ReportResultWrapper()
+            val gameType = rs.getInt("GameType")
+            val gameParams = rs.getString("GameParams")
+            val dtStart = rs.getTimestamp("DtCreation")
+            val dtFinish = rs.getTimestamp("DtFinish")
+            val localMatchId = rs.getLong("LocalMatchId")
+            val matchOrdinal = rs.getInt("MatchOrdinal")
 
-            ret.localId = localId
-            ret.gameType = rs.getInt("GameType")
-            ret.gameParams = rs.getString("GameParams")
-            ret.dtStart = rs.getTimestamp("DtCreation")
-            ret.dtFinish = rs.getTimestamp("DtFinish")
-
+            val ret = ReportResultWrapper(localId, gameType, gameParams, dtStart, dtFinish, localMatchId, matchOrdinal)
             ret.addParticipant(rs)
-
-            ret.localMatchId = rs.getLong("LocalMatchId")
-            ret.matchOrdinal = rs.getInt("MatchOrdinal")
-
             return ret
         }
 
