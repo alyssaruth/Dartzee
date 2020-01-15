@@ -1,4 +1,3 @@
-@file:JvmName("DateUtil")
 package burlton.desktopcore.code.util
 
 import burlton.desktopcore.code.util.DateStatics.Companion.END_OF_TIME
