@@ -35,7 +35,7 @@ class TestDebug: AbstractTest()
         System.setOut(originalOut)
 
         Debug.debugExtension = ext
-        Debug.sendingEmails = true
+        Debug.sendingEmails = false
     }
 
     @Test
