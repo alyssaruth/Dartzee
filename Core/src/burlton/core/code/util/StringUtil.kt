@@ -14,3 +14,11 @@ object StringUtil
         }
     }
 }
+
+
+fun String.truncate(desiredLength: Int): String
+{
+    if (length < desiredLength) return this
+
+    return take(desiredLength) + "..."
+}

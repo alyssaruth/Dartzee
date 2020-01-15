@@ -16,13 +16,13 @@ import org.junit.Test
 
 class TestBugReportDialog: AbstractDesktopTest()
 {
-    private val ext = Debug.getDebugExtension()
+    private val ext = Debug.debugExtension
 
     override fun afterEachTest()
     {
         super.afterEachTest()
 
-        Debug.setDebugExtension(ext)
+        Debug.debugExtension = ext
     }
 
     @Test
@@ -41,7 +41,7 @@ class TestBugReportDialog: AbstractDesktopTest()
         val ext = mockk<DebugExtension>(relaxed = true)
         every { ext.sendEmail(any(), any()) } throws Exception("Not again")
 
-        Debug.setDebugExtension(ext)
+        Debug.debugExtension = ext
 
         val dlg = BugReportDialog()
         dlg.descriptionField.text = "Foo"
@@ -58,7 +58,7 @@ class TestBugReportDialog: AbstractDesktopTest()
         val ext = mockk<DebugExtension>(relaxed = true)
 
         Debug.positionLastEmailed = 0
-        Debug.setDebugExtension(ext)
+        Debug.debugExtension = ext
 
         val dlg = BugReportDialog()
         dlg.descriptionField.text = "Description"

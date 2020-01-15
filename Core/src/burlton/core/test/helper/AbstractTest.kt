@@ -40,14 +40,14 @@ abstract class AbstractTest
     private fun doOneTimeSetup()
     {
         Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.setSendingEmails(false)
-        Debug.setLogToSystemOut(DEBUG_MODE)
+        Debug.sendingEmails = false
+        Debug.logToSystemOut = DEBUG_MODE
     }
 
     open fun doClassSetup()
     {
         Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.setLogToSystemOut(DEBUG_MODE)
+        Debug.logToSystemOut = DEBUG_MODE
     }
 
     open fun beforeEachTest()

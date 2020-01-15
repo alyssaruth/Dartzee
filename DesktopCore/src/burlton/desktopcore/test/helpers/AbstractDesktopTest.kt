@@ -15,7 +15,7 @@ abstract class AbstractDesktopTest: AbstractTest()
     {
         if (!doneOneTimeSetup)
         {
-            Debug.setDebugExtension(TestDebugExtension())
+            Debug.debugExtension = TestDebugExtension()
             DialogUtil.init(dialogFactory)
         }
 

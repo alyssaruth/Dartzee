@@ -145,7 +145,7 @@ class DatabaseUtil
 
             if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
             {
-                Debug.stackTraceNoError("SQL update took longer than ${DartsClient.sqlMaxDuration} millis: $statement")
+                Debug.stackTrace(message = "SQL update took longer than ${DartsClient.sqlMaxDuration} millis: $statement", suppressError = true)
             }
         }
 
@@ -184,7 +184,7 @@ class DatabaseUtil
             //No query should take longer than 5 seconds really...
             if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
             {
-                Debug.stackTraceNoError("SQL query took longer than ${DartsClient.sqlMaxDuration} millis: $query")
+                Debug.stackTrace(message = "SQL query took longer than ${DartsClient.sqlMaxDuration} millis: $query", suppressError = true)
             }
 
             //Return an empty one if something's gone wrong

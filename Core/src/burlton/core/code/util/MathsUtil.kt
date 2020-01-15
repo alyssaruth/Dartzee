@@ -21,9 +21,9 @@ class MathsUtil
             return rounded / powerOfTen
         }
 
-        @JvmStatic fun getPercentage(count: Int, total: Double): Double
+        @JvmStatic fun getPercentage(count: Number, total: Number): Double
         {
-            return getPercentage(count.toDouble(), total)
+            return getPercentage(count.toDouble(), total.toDouble())
         }
         fun getPercentage(count: Double, total: Double): Double
         {
