@@ -15,7 +15,7 @@ object BulkInserter
     {
         insert(entities.toList())
     }
-    @JvmStatic @JvmOverloads fun insert(entities: List<AbstractEntity<*>>, rowsPerThread: Int = 5000, rowsPerStatement: Int = 100)
+    fun insert(entities: List<AbstractEntity<*>>, rowsPerThread: Int = 5000, rowsPerStatement: Int = 100)
     {
         if (entities.isEmpty())
         {

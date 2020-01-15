@@ -48,7 +48,6 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
         }
     }
 
-    @JvmOverloads
     fun incrementProgressLater(increment: Int = 1)
     {
         SwingUtilities.invokeLater {
@@ -85,7 +84,7 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
 
     companion object
     {
-        @JvmStatic fun factory(title: String, message: String, workToDo: Int): ProgressDialog
+        fun factory(title: String, message: String, workToDo: Int): ProgressDialog
         {
             val dialog = ProgressDialog(workToDo, message)
             dialog.resetProgress()

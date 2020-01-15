@@ -8,11 +8,11 @@ import javax.swing.JTextField
 
 abstract class AbstractPlayerCreationDialog : SimpleDialog()
 {
-    @JvmField var createdPlayer = false
+    var createdPlayer = false
 
     //Components
-    @JvmField val avatar = PlayerAvatar()
-    @JvmField val textFieldName = JTextField()
+    val avatar = PlayerAvatar()
+    val textFieldName = JTextField()
 
     //Abstract methods
     abstract fun savePlayer()

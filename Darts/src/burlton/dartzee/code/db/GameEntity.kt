@@ -94,7 +94,7 @@ class GameEntity : AbstractEntity<GameEntity>()
 
     companion object
     {
-        @JvmStatic fun factoryAndSave(gameType: Int, gameParams: String): GameEntity
+        fun factoryAndSave(gameType: Int, gameParams: String): GameEntity
         {
             val gameEntity = GameEntity()
             gameEntity.assignRowId()
@@ -104,7 +104,7 @@ class GameEntity : AbstractEntity<GameEntity>()
             return gameEntity
         }
 
-        @JvmStatic fun factoryAndSave(match: DartsMatchEntity): GameEntity
+        fun factoryAndSave(match: DartsMatchEntity): GameEntity
         {
             val gameEntity = GameEntity()
             gameEntity.assignRowId()
@@ -119,13 +119,13 @@ class GameEntity : AbstractEntity<GameEntity>()
         /**
          * Ordered by DtCreation as well because of an historic bug with loading where the ordinals could get screwed up.
          */
-        @JvmStatic fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity>
+        fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity>
         {
             val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, DtCreation"
             return GameEntity().retrieveEntities(sql)
         }
 
-        @JvmStatic fun getGameId(localId: Long): String?
+        fun getGameId(localId: Long): String?
         {
             val game = GameEntity().retrieveEntity("LocalId = $localId") ?: return null
             return game.rowId

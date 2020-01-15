@@ -14,7 +14,7 @@ import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 import javax.swing.filechooser.FileFilter
 
-class FileUploader @JvmOverloads constructor(ff: FileFilter, buttonName: String = "Upload") : JPanel(), ActionListener
+class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), ActionListener
 {
     var selectedFile: File? = null
     private val listeners = mutableListOf<IFileUploadListener>()

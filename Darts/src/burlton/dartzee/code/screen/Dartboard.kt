@@ -85,7 +85,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         paintDartboard(cached = true)
     }
 
-    @JvmOverloads
     open fun paintDartboard(colourWrapper: ColourWrapper? = null, listen: Boolean = true, cached: Boolean = false)
     {
         val width = width
@@ -705,7 +704,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         private val hmSoundNameToUrl = mutableMapOf<String, URL>()
         var dartboardTemplate: DartboardTemplate? = null
 
-        @JvmStatic fun appearancePreferenceChanged()
+        fun appearancePreferenceChanged()
         {
             dartboardTemplate = null
         }

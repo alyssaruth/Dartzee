@@ -55,7 +55,7 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
         //Image cache, to prevent us hitting the DB too often
         private val hmRowIdToImageIcon = HashMap<String, ImageIcon>()
 
-        @JvmStatic fun factoryAndSave(file: File, preset: Boolean): PlayerImageEntity?
+        fun factoryAndSave(file: File, preset: Boolean): PlayerImageEntity?
         {
             return try
             {
@@ -95,7 +95,7 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
 
         }
 
-        @JvmStatic fun retrieveImageIconForId(rowId: String): ImageIcon
+        fun retrieveImageIconForId(rowId: String): ImageIcon
         {
             val cachedIcon = hmRowIdToImageIcon[rowId]
             if (cachedIcon != null)

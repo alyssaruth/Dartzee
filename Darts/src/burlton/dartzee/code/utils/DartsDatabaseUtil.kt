@@ -22,7 +22,7 @@ object DartsDatabaseUtil
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
 
-    @JvmStatic fun getAllEntities(): MutableList<AbstractEntity<*>>
+    fun getAllEntities(): MutableList<AbstractEntity<*>>
     {
         return mutableListOf(PlayerEntity(),
                 DartEntity(),
@@ -36,7 +36,7 @@ object DartsDatabaseUtil
                 DartzeeRoundResultEntity())
     }
 
-    @JvmStatic fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
+    fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
     {
         val entities = getAllEntities()
         entities.add(VersionEntity())

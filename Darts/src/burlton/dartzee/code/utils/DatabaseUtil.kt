@@ -20,13 +20,13 @@ class DatabaseUtil
 {
     companion object
     {
-        @JvmField val DATABASE_FILE_PATH = System.getProperty("user.dir") + "\\Databases"
+        val DATABASE_FILE_PATH = System.getProperty("user.dir") + "\\Databases"
 
         private val hsConnections = mutableListOf<Connection>()
         private val connectionPoolLock = Any()
         private var connectionCreateCount = 0
 
-        @JvmStatic fun initialiseConnectionPool(initialCount: Int)
+        fun initialiseConnectionPool(initialCount: Int)
         {
             synchronized(connectionPoolLock)
             {
@@ -39,7 +39,7 @@ class DatabaseUtil
             }
         }
 
-        @JvmStatic fun borrowConnection() : Connection
+        fun borrowConnection() : Connection
         {
             synchronized(connectionPoolLock)
             {
@@ -52,7 +52,7 @@ class DatabaseUtil
             }
         }
 
-        @JvmStatic fun returnConnection(connection: Connection)
+        fun returnConnection(connection: Connection)
         {
             synchronized(connectionPoolLock)
             {
@@ -60,8 +60,7 @@ class DatabaseUtil
             }
         }
 
-        @Throws(SQLException::class)
-        @JvmStatic fun createDatabaseConnection(): Connection
+        private fun createDatabaseConnection(): Connection
         {
             connectionCreateCount++
 
@@ -69,7 +68,6 @@ class DatabaseUtil
             return createDatabaseConnection(dbName = DartsClient.derbyDbName)
         }
 
-        @Throws(SQLException::class)
         private fun createDatabaseConnection(dbFilePath: String = DATABASE_FILE_PATH, dbName: String): Connection
         {
             val p = System.getProperties()
@@ -109,7 +107,7 @@ class DatabaseUtil
             return s
         }
 
-        @JvmStatic @JvmOverloads fun executeUpdate(statement: String, log: Boolean = true): Boolean
+        fun executeUpdate(statement: String, log: Boolean = true): Boolean
         {
             try
             {
@@ -124,7 +122,6 @@ class DatabaseUtil
             return true
         }
 
-        @Throws(SQLException::class)
         private fun executeUpdateUncaught(statement: String, log: Boolean = true)
         {
             val startMillis = System.currentTimeMillis()
@@ -149,12 +146,12 @@ class DatabaseUtil
             }
         }
 
-        @JvmStatic fun executeQuery(sb: StringBuilder): ResultSet
+        fun executeQuery(sb: StringBuilder): ResultSet
         {
             return executeQuery(sb.toString())
         }
 
-        @JvmStatic fun executeQuery(query: String): ResultSet
+        fun executeQuery(query: String): ResultSet
         {
             val startMillis = System.currentTimeMillis()
             var crs: CachedRowSet? = null
@@ -191,19 +188,19 @@ class DatabaseUtil
             return crs ?: RowSetProvider.newFactory().createCachedRowSet()
         }
 
-        @JvmStatic fun executeQueryAggregate(sb: StringBuilder): Int
+        fun executeQueryAggregate(sb: StringBuilder): Int
         {
             return executeQueryAggregate(sb.toString())
         }
 
-        @JvmStatic fun executeQueryAggregate(sql: String): Int
+        fun executeQueryAggregate(sql: String): Int
         {
             executeQuery(sql).use { rs ->
                 return if (rs.next()) rs.getInt(1) else -1
             }
         }
 
-        @JvmStatic fun doDuplicateInstanceCheck()
+        fun doDuplicateInstanceCheck()
         {
             try
             {
@@ -227,13 +224,13 @@ class DatabaseUtil
 
         }
 
-        @JvmStatic fun createTableIfNotExists(tableName: String, columnSql: String): Boolean
+        fun createTableIfNotExists(tableName: String, columnSql: String): Boolean
         {
             val statement = "CREATE TABLE $tableName($columnSql)"
 
             try
             {
-                DatabaseUtil.executeUpdateUncaught(statement)
+                executeUpdateUncaught(statement)
                 Debug.append("Created $tableName table.")
             }
             catch (sqle: SQLException)
@@ -254,7 +251,7 @@ class DatabaseUtil
             return true
         }
 
-        @JvmStatic fun createTempTable(tableName: String, colStr: String): String?
+        fun createTempTable(tableName: String, colStr: String): String?
         {
             val millis = System.currentTimeMillis()
             val fullTableName = "zzTmp_$tableName$millis"
@@ -267,13 +264,13 @@ class DatabaseUtil
             else null
         }
 
-        @JvmStatic fun dropTable(tableName: String?): Boolean
+        fun dropTable(tableName: String?): Boolean
         {
             val sql = "DROP TABLE $tableName"
             return executeUpdate(sql)
         }
 
-        @JvmStatic fun testConnection(dbPath: String): Boolean
+        fun testConnection(dbPath: String): Boolean
         {
             try
             {
@@ -290,7 +287,7 @@ class DatabaseUtil
             return true
         }
 
-        @JvmStatic fun shutdownDerby(): Boolean
+        fun shutdownDerby(): Boolean
         {
             try
             {
@@ -317,7 +314,7 @@ class DatabaseUtil
             rowIds.chunked(50).forEach {
                 val idStr = it.joinToString{rowId -> "'$rowId'"}
                 val sql = "DELETE FROM $tableName WHERE RowId IN ($idStr)"
-                success = DatabaseUtil.executeUpdate(sql)
+                success = executeUpdate(sql)
             }
 
             return success

@@ -68,7 +68,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
         }
 
 
-        @JvmStatic fun retrieveAchievement(achievementRef: Int, playerId: String): AchievementEntity?
+        fun retrieveAchievement(achievementRef: Int, playerId: String): AchievementEntity?
         {
             return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND AchievementRef = $achievementRef")
         }
@@ -76,7 +76,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
         /**
          * Methods for gameplay logic to update achievements
          */
-        @JvmStatic fun updateAchievement(achievementRef: Int, playerId: String, gameId: String, counter: Int)
+        fun updateAchievement(achievementRef: Int, playerId: String, gameId: String, counter: Int)
         {
             val existingAchievement = retrieveAchievement(achievementRef, playerId)
 
@@ -105,7 +105,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             }
         }
 
-        @JvmStatic fun incrementAchievement(achievementRef: Int, playerId: String, gameId: String, amountBy: Int = 1)
+        fun incrementAchievement(achievementRef: Int, playerId: String, gameId: String, amountBy: Int = 1)
         {
             val existingAchievement = retrieveAchievement(achievementRef, playerId)
 
@@ -158,8 +158,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             }
         }
 
-        @JvmOverloads
-        @JvmStatic fun factoryAndSave(achievementRef: Int, playerId: String, gameId: String, counter: Int,
+        fun factoryAndSave(achievementRef: Int, playerId: String, gameId: String, counter: Int,
                            achievementDetail: String = "", dtLastUpdate: Timestamp = getSqlDateNow()): AchievementEntity
         {
             val ae = AchievementEntity()

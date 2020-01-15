@@ -13,8 +13,8 @@ import javax.swing.JPanel
 
 abstract class AbstractStatisticsTab : JPanel(), PropertyChangeListener
 {
-    @JvmField protected var filteredGames = listOf<GameWrapper>()
-    @JvmField protected var filteredGamesOther = listOf<GameWrapper>()
+    protected var filteredGames = listOf<GameWrapper>()
+    protected var filteredGamesOther = listOf<GameWrapper>()
 
     init
     {

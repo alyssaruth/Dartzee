@@ -313,7 +313,7 @@ abstract class AbstractDartsModel
         /**
          * Static methods
          */
-        @JvmStatic fun factoryForType(type: Int): AbstractDartsModel?
+        fun factoryForType(type: Int): AbstractDartsModel?
         {
             return when (type)
             {
@@ -322,14 +322,14 @@ abstract class AbstractDartsModel
             }
         }
 
-        @JvmStatic fun getModelDescriptions(): Vector<String>
+        fun getModelDescriptions(): Vector<String>
         {
             val models = Vector<String>()
             models.add(DARTS_MODEL_NORMAL_DISTRIBUTION)
             return models
         }
 
-        @JvmStatic fun getStrategyDesc(type: Int): String?
+        fun getStrategyDesc(type: Int): String?
         {
             return when(type)
             {

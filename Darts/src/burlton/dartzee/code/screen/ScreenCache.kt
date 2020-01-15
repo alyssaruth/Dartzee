@@ -27,11 +27,11 @@ object ScreenCache
     //Other
     private var debugConsole: DebugConsole? = null
 
-    @JvmStatic fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)
+    fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)
 
     fun getDartsGameScreens() = hmGameIdToGameScreen.values
 
-    @JvmStatic fun <K : EmbeddedScreen> getScreen(screenClass: Class<K>): K
+    fun <K : EmbeddedScreen> getScreen(screenClass: Class<K>): K
     {
         var scrn: K? = hmClassToScreen[screenClass] as K?
 
@@ -75,8 +75,6 @@ object ScreenCache
         switchScreen(screen)
     }
 
-    @JvmOverloads
-    @JvmStatic
     fun switchScreen(scrn: EmbeddedScreen?, reInit: Boolean = true)
     {
         getMainScreen().switchScreen(scrn, reInit)
@@ -114,12 +112,12 @@ object ScreenCache
         return preferencesDialog!!
     }
 
-    @JvmStatic fun getDartsGameScreen(gameId: String): AbstractDartsGameScreen?
+    fun getDartsGameScreen(gameId: String): AbstractDartsGameScreen?
     {
         return hmGameIdToGameScreen[gameId]
     }
 
-    @JvmStatic fun addDartsGameScreen(gameId: String, scrn: AbstractDartsGameScreen)
+    fun addDartsGameScreen(gameId: String, scrn: AbstractDartsGameScreen)
     {
         if (gameId.isEmpty())
         {
@@ -130,7 +128,7 @@ object ScreenCache
         hmGameIdToGameScreen[gameId] = scrn
     }
 
-    @JvmStatic fun removeDartsGameScreen(scrn: AbstractDartsGameScreen)
+    fun removeDartsGameScreen(scrn: AbstractDartsGameScreen)
     {
         val keys = hmGameIdToGameScreen.filter { it.value == scrn }.map { it.key }
         keys.forEach { hmGameIdToGameScreen.remove(it) }

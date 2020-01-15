@@ -15,7 +15,6 @@ import javax.swing.UIManager
 
 object DartsMain
 {
-    @JvmStatic
     fun main(args: Array<String>)
     {
         Debug.initialise(ScreenCache.getDebugConsole())

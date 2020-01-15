@@ -103,7 +103,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         })
     }
 
-    @JvmOverloads
     fun switchScreen(scrn: EmbeddedScreen?, reInit: Boolean = true)
     {
         try

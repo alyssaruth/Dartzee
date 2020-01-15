@@ -64,7 +64,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         /**
          * Retrieval methods
          */
-        @JvmStatic fun retrievePlayers(startingSql:String, includeDeleted:Boolean):List<PlayerEntity>
+        fun retrievePlayers(startingSql:String, includeDeleted:Boolean):List<PlayerEntity>
         {
             var whereSql = startingSql
             if (!includeDeleted)
@@ -88,7 +88,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         /**
          * Creation/validation
          */
-        @JvmStatic fun createNewPlayer(human: Boolean)
+        fun createNewPlayer(human: Boolean)
         {
             val created = createAndSavePlayerIfValid(human)
             if (created)
@@ -118,7 +118,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
             return dialog.createdPlayer
         }
 
-        @JvmStatic fun factoryAndSaveHuman(name: String, avatarId: String): PlayerEntity
+        fun factoryAndSaveHuman(name: String, avatarId: String): PlayerEntity
         {
             val entity = factoryCreate()
 
@@ -129,7 +129,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
 
             return entity
         }
-        @JvmStatic fun factoryCreate(): PlayerEntity
+        fun factoryCreate(): PlayerEntity
         {
             val entity = PlayerEntity()
             entity.assignRowId()

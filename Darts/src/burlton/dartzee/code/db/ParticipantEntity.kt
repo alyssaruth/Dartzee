@@ -67,7 +67,7 @@ class ParticipantEntity : AbstractEntity<ParticipantEntity>()
 
     companion object
     {
-        @JvmStatic fun factoryAndSave(gameId: String, player: PlayerEntity, ordinal: Int): ParticipantEntity
+        fun factoryAndSave(gameId: String, player: PlayerEntity, ordinal: Int): ParticipantEntity
         {
             val gp = ParticipantEntity()
             gp.assignRowId()

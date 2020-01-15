@@ -14,15 +14,6 @@ class HashMapCount<K>: HashMap<K, Int>()
         return values.stream().mapToInt{v -> v}.sum()
     }
 
-    /**
-     * TODO - Remove once 100% kotlin
-     */
-    fun getKeysAsVector() : List<K>
-    {
-        return keys.toList()
-    }
-
-    @JvmOverloads
     fun incrementCount(key: K, amount: Int = 1): Int
     {
         val newVal = getOrDefault(key, 0) + amount
