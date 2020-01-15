@@ -38,7 +38,7 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
     {
         title = "Simulation Options"
         setSize(400, 160)
-        setLocationRelativeTo(ScreenCache.getMainScreen())
+        setLocationRelativeTo(ScreenCache.mainScreen)
         isModal = true
 
         nfNumberOfGames.columns = 10

@@ -388,7 +388,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
 
         panelIncludedPlayers.add(includedPlayerPanel, BorderLayout.SOUTH)
 
-        ScreenCache.getMainScreen().pack()
+        ScreenCache.mainScreen.pack()
         repaint()
     }
 }

@@ -67,7 +67,7 @@ class UtilitiesScreen : EmbeddedScreen()
             btnRestoreFromBackup -> DartsDatabaseUtil.restoreDatabase()
             btnPerformDatabaseCheck -> DatabaseSanityCheck.runSanityCheck()
             btnCheckForUpdates -> DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER)
-            btnViewLogs -> {val loggingDialog = ScreenCache.getDebugConsole()
+            btnViewLogs -> {val loggingDialog = ScreenCache.debugConsole
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()
@@ -103,7 +103,7 @@ class UtilitiesScreen : EmbeddedScreen()
     private fun runAchievementConversion()
     {
         val dlg = AchievementConversionDialog()
-        dlg.setLocationRelativeTo(ScreenCache.getMainScreen())
+        dlg.setLocationRelativeTo(ScreenCache.mainScreen)
         dlg.isVisible = true
     }
 

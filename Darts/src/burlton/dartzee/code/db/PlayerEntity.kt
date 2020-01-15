@@ -112,7 +112,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         private fun createNewAI(): Boolean
         {
             val dialog = AIConfigurationDialog()
-            dialog.setLocationRelativeTo(ScreenCache.getMainScreen())
+            dialog.setLocationRelativeTo(ScreenCache.mainScreen)
             dialog.isVisible = true
 
             return dialog.createdPlayer
