@@ -5,11 +5,11 @@ class HashMapList<K: Comparable<K>, V> : HashMap<K, MutableList<V>>()
 {
     fun getFlattenedValuesSortedByKey(): List<V>
     {
-        val sortedKeys = keys.toList().sorted()
+        val sortedEntries = entries.sortedBy { it.key }
 
         val values = mutableListOf<V>()
-        sortedKeys.forEach{
-            values.addAll(this[it]!!)
+        sortedEntries.forEach {
+            values.addAll(it.value)
         }
 
         return values
