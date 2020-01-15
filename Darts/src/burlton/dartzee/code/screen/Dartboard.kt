@@ -235,13 +235,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             return
         }
 
-        if (lastHoveredSegment != null)
-        {
-            colourSegment(lastHoveredSegment!!, false)
-        }
+        lastHoveredSegment?.let { colourSegment(it, false) }
 
         lastHoveredSegment = hoveredSegment
-        colourSegment(lastHoveredSegment!!, true)
+        colourSegment(hoveredSegment, true)
     }
 
     fun colourSegment(segment: DartboardSegment, highlight: Boolean)
@@ -269,7 +266,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         dartboardLabel.repaint()
     }
 
-    protected fun colourPoint(pt: Point, colour: Color)
+    private fun colourPoint(pt: Point, colour: Color)
     {
         val x = pt.getX().toInt()
         val y = pt.getY().toInt()
@@ -343,11 +340,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     open fun dartThrown(pt: Point)
     {
         val dart = convertPointToDart(pt, true)
-        if (listener != null)
-        {
-            addDart(pt)
 
-            listener!!.dartThrown(dart)
+        listener?.let {
+            addDart(pt)
+            it.dartThrown(dart)
         }
     }
 
@@ -371,28 +367,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun rationalisePoint(pt: Point)
     {
-        var x = pt.getX()
-        var y = pt.getY()
-
-        if (x < 0)
-        {
-            x = 0.0
-        }
-
-        if (y < 0)
-        {
-            y = 0.0
-        }
-
-        if (x >= width)
-        {
-            x = (width - 1).toDouble()
-        }
-
-        if (y >= height)
-        {
-            y = (height - 1).toDouble()
-        }
+        val x = pt.x.coerceIn(0, width - 1)
+        val y = pt.y.coerceIn(0, height - 1)
 
         pt.setLocation(x, y)
     }
@@ -427,10 +403,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
 
         //Undo any colouring that there might have been
-        if (lastHoveredSegment != null)
-        {
-            colourSegment(lastHoveredSegment!!, false)
-        }
+        lastHoveredSegment?.let { colourSegment(it, false) }
     }
 
     fun doFawlty()
@@ -572,7 +545,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             return
         }
 
-        val clip = initialiseAudioClip(null, null)
+        val clip = initialiseAudioClip(null, soundName)
         if (clip != null)
         {
             clip.open(AudioSystem.getAudioInputStream(url))
@@ -580,7 +553,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    private fun initialiseAudioClip(stream: AudioInputStream?, soundName: String?): Clip?
+    private fun initialiseAudioClip(stream: AudioInputStream?, soundName: String): Clip?
     {
         val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
 
@@ -595,13 +568,14 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
                 myClip.stop()
                 myClip.close()
 
-                if (ResourceCache.isInitialised)
+                if (ResourceCache.isInitialised && stream != null)
                 {
-                    ResourceCache.returnInputStream(soundName!!, stream!!)
+                    ResourceCache.returnInputStream(soundName, stream)
                 }
 
                 //See whether there's currently any later clip still running. If there isn't, also dismiss our dodgyLabel
-                if (!latestClip!!.isRunning)
+                val somethingRunning = latestClip?.isRunning ?: false
+                if (!somethingRunning)
                 {
                     remove(dodgyLabel)
                     repaint()
@@ -663,7 +637,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     override fun mouseMoved(arg0: MouseEvent)
     {
-        if (getParentWindow()!!.isFocused)
+        if (getParentWindow()?.isFocused == true)
         {
             highlightDartboard(arg0.point)
         }
