@@ -115,9 +115,10 @@ object DartsDatabaseUtil
         }
         else if (versionNumber == 9)
         {
-            runSqlScriptsForVersion(10)
-
-            convertX01Finishes()
+            val scripts = getScripts(10).map { { runScript(10, it)} }.toTypedArray()
+            runConversions(10,
+                    *scripts,
+                    { convertX01Finishes() })
 
             version.version = 10
             version.saveToDatabase()
@@ -126,22 +127,14 @@ object DartsDatabaseUtil
         initialiseDatabase(version)
     }
 
-    private fun runSqlScriptsForVersion(version: Int)
+    private fun runConversions(version: Int, vararg conversions: (() -> Unit))
     {
-        val resourcePath = "/sql/v$version/"
-        val sqlScripts = getScripts(version)
-
         val t = Thread {
-            val dlg = ProgressDialog.factory("Upgrading to V$version", "scripts remaining", sqlScripts.size)
+            val dlg = ProgressDialog.factory("Upgrading to V$version", "scripts remaining", conversions.size)
             dlg.setVisibleLater()
 
-            sqlScripts.forEach {
-                val rsrc = javaClass.getResource("$resourcePath$it").readText()
-
-                val batches = rsrc.split(";")
-
-                DatabaseUtil.executeUpdates(batches)
-
+            conversions.forEach {
+                it()
                 dlg.incrementProgressLater()
             }
 
@@ -152,6 +145,20 @@ object DartsDatabaseUtil
         t.join()
 
         Debug.appendBanner("Finished upgrading database")
+    }
+    private fun runSqlScriptsForVersion(version: Int)
+    {
+        val scripts = getScripts(version).map { { runScript(version, it)} }.toTypedArray()
+        runConversions(version, *scripts)
+    }
+    private fun runScript(version: Int, scriptName: String)
+    {
+        val resourcePath = "/sql/v$version/"
+        val rsrc = javaClass.getResource("$resourcePath$scriptName").readText()
+
+        val batches = rsrc.split(";")
+
+        DatabaseUtil.executeUpdates(batches)
     }
     private fun getScripts(version: Int): List<String>
     {
