@@ -1,0 +1,21 @@
+package burlton.dartzee.code.db
+
+class X01FinishEntity() : AbstractEntity<X01FinishEntity>()
+{
+    /**
+     * DB fields
+     */
+    var playerId = ""
+    var gameId = ""
+    var finish = -1
+
+    override fun getTableName() = "X01Finish"
+
+    override fun getCreateTableSqlSpecific(): String
+    {
+        return ("PlayerId VARCHAR(36) NOT NULL, "
+                + "GameId VARCHAR(36) NOT NULL, "
+                + "Finish INT NOT NULL")
+    }
+
+}

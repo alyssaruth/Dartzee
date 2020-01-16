@@ -4,8 +4,8 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.unlockThreeDartAchievement
 import burlton.dartzee.code.db.GAME_TYPE_X01
-import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.dartzee.code.utils.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.desktopcore.code.util.getEndOfTimeSqlString
 import java.net.URL
 

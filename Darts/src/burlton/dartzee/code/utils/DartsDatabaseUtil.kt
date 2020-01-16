@@ -2,6 +2,7 @@ package burlton.dartzee.code.utils
 
 import burlton.core.code.util.Debug
 import burlton.core.code.util.FileUtil
+import burlton.dartzee.code.achievements.LAST_ROUND_FROM_PARTICIPANT
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.db.VersionEntity.Companion.insertVersion
 import burlton.dartzee.code.screen.ScreenCache
@@ -11,6 +12,8 @@ import java.io.File
 import java.util.*
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
+
+const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
 
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
@@ -33,7 +36,8 @@ object DartsDatabaseUtil
                 AchievementEntity(),
                 DartzeeRuleEntity(),
                 DartzeeTemplateEntity(),
-                DartzeeRoundResultEntity())
+                DartzeeRoundResultEntity(),
+                X01FinishEntity())
     }
 
     fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
@@ -112,6 +116,9 @@ object DartsDatabaseUtil
         else if (versionNumber == 9)
         {
             runSqlScriptsForVersion(10)
+
+            convertX01Finishes()
+
             version.version = 10
             version.saveToDatabase()
         }
@@ -156,6 +163,66 @@ object DartsDatabaseUtil
             10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
             else -> listOf()
         }
+    }
+
+    private fun convertX01Finishes()
+    {
+        X01FinishEntity().createTable()
+
+        val zzParticipants = prepareParticipantTempTable()
+        val sql = getX01FinishSql(zzParticipants)
+
+        val finishes = mutableListOf<X01FinishEntity>()
+        DatabaseUtil.executeQuery(sql).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val finish = rs.getInt("StartingScore")
+
+                val entity = X01FinishEntity()
+                entity.assignRowId()
+                entity.playerId = playerId
+                entity.gameId = gameId
+                entity.finish = finish
+
+                finishes.add(entity)
+            }
+        }
+
+        BulkInserter.insert(finishes)
+        DatabaseUtil.dropTable(zzParticipants)
+    }
+    private fun prepareParticipantTempTable(): String
+    {
+        val zzParticipants = DatabaseUtil.createTempTable("FinishedParticipants", "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), RoundNumber INT")
+        zzParticipants ?: return ""
+
+        val sbPt = StringBuilder()
+        sbPt.append("INSERT INTO $zzParticipants ")
+        sbPt.append(" SELECT p.RowId, g.RowId, pt.RowId, $LAST_ROUND_FROM_PARTICIPANT")
+        sbPt.append(" FROM Player p, Participant pt, Game g")
+        sbPt.append(" WHERE pt.GameId = g.RowId")
+        sbPt.append(" AND g.GameType = $GAME_TYPE_X01")
+        sbPt.append(" AND pt.FinalScore > -1")
+        sbPt.append(" AND pt.PlayerId = p.RowId")
+
+        DatabaseUtil.executeUpdate(sbPt.toString())
+        DatabaseUtil.executeUpdate("CREATE INDEX ${zzParticipants}_PlayerId ON $zzParticipants(PlayerId, ParticipantId, RoundNumber)")
+
+        return zzParticipants
+    }
+    private fun getX01FinishSql(zzFinishedParticipants: String): String
+    {
+        val sb = StringBuilder()
+        sb.append("SELECT zz.PlayerId, zz.GameId, drtFirst.StartingScore")
+        sb.append(" FROM Dart drtFirst, $zzFinishedParticipants zz")
+        sb.append(" WHERE drtFirst.PlayerId = zz.PlayerId")
+        sb.append(" AND drtFirst.ParticipantId = zz.ParticipantId")
+        sb.append(" AND drtFirst.RoundNumber = zz.RoundNumber")
+        sb.append(" AND drtFirst.Ordinal = 1")
+
+        return sb.toString()
     }
 
     private fun initDatabaseFirstTime()

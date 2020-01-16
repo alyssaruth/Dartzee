@@ -5,8 +5,8 @@ import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getNotBustSql
 import burlton.dartzee.code.achievements.unlockThreeDartAchievement
 import burlton.dartzee.code.db.GAME_TYPE_X01
-import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.ResourceCache
+import burlton.dartzee.code.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 
 class AchievementX01BestThreeDarts : AbstractAchievement()
