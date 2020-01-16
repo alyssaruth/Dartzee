@@ -82,7 +82,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
 
             if (existingAchievement == null)
             {
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, counter)
+                factoryAndSave(achievementRef, playerId, gameId, counter)
 
                 triggerAchievementUnlock(-1, counter, achievementRef, playerId, gameId)
             }
@@ -111,7 +111,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
 
             if (existingAchievement == null)
             {
-                AchievementEntity.factoryAndSave(achievementRef, playerId, "", amountBy)
+                factoryAndSave(achievementRef, playerId, "", amountBy)
 
                 triggerAchievementUnlock(-1, amountBy, achievementRef, playerId, gameId)
             }
