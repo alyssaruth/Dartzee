@@ -9,6 +9,7 @@ import burlton.dartzee.code.achievements.*
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GameEntity
+import burlton.dartzee.code.db.X01FinishEntity
 import burlton.dartzee.code.screen.game.scorer.DartsScorerX01
 import burlton.dartzee.code.utils.*
 
@@ -122,6 +123,9 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
 
         val sum = sumScore(dartsThrown)
         AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, getGameId(), sum)
+
+        //Insert into the X01Finishes table for the leaderboard
+        X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
 
         val checkout = dartsThrown.last().score
         insertForCheckoutCompleteness(playerId, getGameId(), checkout)

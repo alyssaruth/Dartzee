@@ -179,12 +179,14 @@ object DartsDatabaseUtil
                 val playerId = rs.getString("PlayerId")
                 val gameId = rs.getString("GameId")
                 val finish = rs.getInt("StartingScore")
+                val dtFinished = rs.getTimestamp("DtFinished")
 
                 val entity = X01FinishEntity()
                 entity.assignRowId()
                 entity.playerId = playerId
                 entity.gameId = gameId
                 entity.finish = finish
+                entity.dtCreation = dtFinished
 
                 finishes.add(entity)
             }
@@ -195,12 +197,12 @@ object DartsDatabaseUtil
     }
     private fun prepareParticipantTempTable(): String
     {
-        val zzParticipants = DatabaseUtil.createTempTable("FinishedParticipants", "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), RoundNumber INT")
+        val zzParticipants = DatabaseUtil.createTempTable("FinishedParticipants", "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), RoundNumber INT, DtFinished TIMESTAMP")
         zzParticipants ?: return ""
 
         val sbPt = StringBuilder()
         sbPt.append("INSERT INTO $zzParticipants ")
-        sbPt.append(" SELECT p.RowId, g.RowId, pt.RowId, $LAST_ROUND_FROM_PARTICIPANT")
+        sbPt.append(" SELECT p.RowId, g.RowId, pt.RowId, $LAST_ROUND_FROM_PARTICIPANT, pt.DtFinished")
         sbPt.append(" FROM Player p, Participant pt, Game g")
         sbPt.append(" WHERE pt.GameId = g.RowId")
         sbPt.append(" AND g.GameType = $GAME_TYPE_X01")
@@ -215,7 +217,7 @@ object DartsDatabaseUtil
     private fun getX01FinishSql(zzFinishedParticipants: String): String
     {
         val sb = StringBuilder()
-        sb.append("SELECT zz.PlayerId, zz.GameId, drtFirst.StartingScore")
+        sb.append("SELECT zz.PlayerId, zz.GameId, drtFirst.StartingScore, zz.DtFinished")
         sb.append(" FROM Dart drtFirst, $zzFinishedParticipants zz")
         sb.append(" WHERE drtFirst.PlayerId = zz.PlayerId")
         sb.append(" AND drtFirst.ParticipantId = zz.ParticipantId")

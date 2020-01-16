@@ -18,4 +18,16 @@ class X01FinishEntity() : AbstractEntity<X01FinishEntity>()
                 + "Finish INT NOT NULL")
     }
 
+    companion object
+    {
+        fun factoryAndSave(playerId: String, gameId: String, finish: Int)
+        {
+            val entity = X01FinishEntity()
+            entity.assignRowId()
+            entity.playerId = playerId
+            entity.gameId = gameId
+            entity.finish = finish
+            entity.saveToDatabase()
+        }
+    }
 }

@@ -40,7 +40,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
         {
             sb.append(" AND p.$extraWhereSql")
         }
-        sb.append(" ORDER BY Finish DESC, g.DtCreation ASC")
+        sb.append(" ORDER BY Finish DESC, xf.DtCreation ASC")
         sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
 
         val sql = sb.toString()
