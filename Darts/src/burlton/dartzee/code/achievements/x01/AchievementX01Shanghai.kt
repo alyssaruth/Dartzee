@@ -5,9 +5,9 @@ import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
 import burlton.dartzee.code.achievements.AbstractAchievementRowPerGame
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
-import burlton.dartzee.code.screen.stats.overall.TOTAL_ROUND_SCORE_SQL_STR
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
+import burlton.dartzee.code.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 import java.sql.SQLException
 
