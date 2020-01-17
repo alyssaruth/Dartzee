@@ -63,6 +63,23 @@ class TestGamePanelX01: AbstractDartsTest()
     }
 
     @Test
+    fun `Should update X01Finish table`()
+    {
+        val playerId = randomGuid()
+        val panel = TestGamePanel(playerId)
+
+        val darts = listOf(Dart(20, 3), Dart(20, 2))
+        panel.setDartsThrown(darts)
+        panel.updateAchievementsForFinish(playerId, 1, 30)
+
+        X01FinishEntity().retrieveEntities().size shouldBe 1
+        val entity = X01FinishEntity().retrieveEntities().first()
+        entity.playerId shouldBe playerId
+        entity.gameId shouldBe panel.getGameId()
+        entity.finish shouldBe 100
+    }
+
+    @Test
     fun `Should update No Mercy achievement if the game was finished on from 3, 5, 7 or 9`()
     {
         val playerId = randomGuid()
