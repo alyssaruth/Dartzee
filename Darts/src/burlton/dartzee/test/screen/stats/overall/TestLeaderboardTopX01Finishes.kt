@@ -1,88 +1,37 @@
 package burlton.dartzee.test.screen.stats.overall
 
-import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
+import burlton.dartzee.code.db.X01FinishEntity
 import burlton.dartzee.code.screen.stats.overall.LeaderboardTopX01Finishes
 import burlton.dartzee.code.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import burlton.dartzee.code.utils.PreferenceUtil
-import burlton.dartzee.test.helper.*
-import io.kotlintest.matchers.collections.shouldBeEmpty
+import burlton.dartzee.test.helper.AbstractRegistryTest
+import burlton.dartzee.test.helper.insertGame
+import burlton.dartzee.test.helper.insertPlayer
+import burlton.desktopcore.code.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.sql.Timestamp
 
 class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_LEADERBOARD_SIZE)
 
     @Test
-    fun `Should count finishes with any remainder of 3`()
+    fun `Should get the correct local game ids`()
     {
-        val p = insertPlayer(name = "Clive")
-        val g1 = insertFinishForPlayer(p, 141, 9, 3)
-        val g2 = insertFinishForPlayer(p, 120, 10, 4)
-        val g3 = insertFinishForPlayer(p, 110, 11, 4)
+        val p = insertPlayer()
+
+        val g1 = insertFinishForPlayer(p, 150)
+        val g2 = insertFinishForPlayer(p, 90)
 
         val leaderboard = LeaderboardTopX01Finishes()
         leaderboard.buildTable()
 
-        leaderboard.rowCount() shouldBe 3
-
-        leaderboard.getNameAt(0) shouldBe "Clive"
         leaderboard.getGameIdAt(0) shouldBe g1.localId
         leaderboard.getGameIdAt(1) shouldBe g2.localId
-        leaderboard.getGameIdAt(2) shouldBe g3.localId
-        leaderboard.getScoreAt(0) shouldBe 141
-    }
-
-    @Test
-    fun `Should take the startingScore of the 1st dart in the final round`()
-    {
-        val p = insertPlayer()
-
-        val g = insertRelevantGame()
-
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 12)
-
-        insertDart(pt, roundNumber = 4, startingScore = 120, ordinal = 1, score = 20, multiplier = 1)
-        insertDart(pt, roundNumber = 4, startingScore = 100, ordinal = 2, score = 20, multiplier = 3)
-        insertDart(pt, roundNumber = 4, startingScore = 40, ordinal = 3, score = 20, multiplier = 2)
-
-        val leaderboard = LeaderboardTopX01Finishes()
-        leaderboard.buildTable()
-
-        leaderboard.rowCount() shouldBe 1
-        leaderboard.getScoreAt(0) shouldBe 120
-    }
-
-    @Test
-    fun `Should ignore games of the wrong type`()
-    {
-        val p = insertPlayer()
-        val g = insertGame(gameType = GAME_TYPE_GOLF)
-
-        insertFinishForPlayer(p, 100, game = g)
-
-        val leaderboard = LeaderboardTopX01Finishes()
-        leaderboard.buildTable()
-
-        leaderboard.rowCount() shouldBe 0
-    }
-
-    @Test
-    fun `Should ignore unfinished participants`()
-    {
-        val p = insertPlayer()
-        val g = insertRelevantGame()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = -1)
-
-        insertDart(pt, roundNumber = 4, startingScore = 100, ordinal = 1)
-
-        val leaderboard = LeaderboardTopX01Finishes()
-        leaderboard.buildTable()
-
-        leaderboard.rowCount() shouldBe 0
     }
 
     @Test
@@ -110,7 +59,7 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should respond to changing player filters`()
+    fun `Should respond to changing player filters, and pull through player names`()
     {
         val robot = insertPlayer(name = "Robot", strategy = 1)
         val human = insertPlayer(name = "Human", strategy = -1)
@@ -135,26 +84,34 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should not leave temp tables lying around`()
+    fun `Should use dtCreation as a tie-breaker when there are multiple rows with the same score`()
     {
-        val player = insertPlayer()
-        insertFinishForPlayer(player, 50)
+        val p = insertPlayer()
 
-        LeaderboardTopX01Finishes().buildTable()
+        val g1 = insertFinishForPlayer(p, 100, Timestamp(20))
+        val g3 = insertFinishForPlayer(p, 100, Timestamp(100))
+        val g2 = insertFinishForPlayer(p, 100, Timestamp(50))
 
-        dropUnexpectedTables().shouldBeEmpty()
+        val leaderboard = LeaderboardTopX01Finishes()
+        leaderboard.buildTable()
+
+        leaderboard.getGameIdAt(0) shouldBe g1.localId
+        leaderboard.getGameIdAt(1) shouldBe g2.localId
+        leaderboard.getGameIdAt(2) shouldBe g3.localId
     }
 
-    private fun insertFinishForPlayer(p: PlayerEntity, finish: Int, numberOfDarts: Int = 15, roundNumber: Int = 5, game: GameEntity = insertRelevantGame()): GameEntity
+    private fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timestamp = getSqlDateNow(), game: GameEntity = insertGame(gameType = GAME_TYPE_X01)): GameEntity
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = game.rowId, finalScore = numberOfDarts)
-
-        insertDart(pt, roundNumber = roundNumber, startingScore = finish, ordinal = 1)
+        val entity = X01FinishEntity()
+        entity.assignRowId()
+        entity.playerId = player.rowId
+        entity.gameId = game.rowId
+        entity.finish = finish
+        entity.dtCreation = dtCreation
+        entity.saveToDatabase()
 
         return game
     }
-
-    private fun insertRelevantGame() = insertGame(gameType = GAME_TYPE_X01)
 
     private fun LeaderboardTopX01Finishes.rowCount() = tableTopFinishes.rowCount
     private fun LeaderboardTopX01Finishes.getNameAt(row: Int) = tableTopFinishes.getValueAt(row, 1)
