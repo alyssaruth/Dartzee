@@ -1,14 +1,14 @@
 package burlton.desktopcore.test.screen
 
 import burlton.desktopcore.code.screen.ColourChooserDialog
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
 import java.awt.Color
 
-class TestColourChooserDialog: AbstractDesktopTest()
+class TestColourChooserDialog: AbstractTest()
 {
     @Test
     fun `Should update selectedColour and dispose on Ok`()

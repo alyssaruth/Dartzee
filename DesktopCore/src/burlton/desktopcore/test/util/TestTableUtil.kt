@@ -1,13 +1,13 @@
 package burlton.desktopcore.test.util
 
 import burlton.desktopcore.code.util.TableUtil
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestTableUtil: AbstractDesktopTest()
+class TestTableUtil: AbstractTest()
 {
     @Test
     fun `Default model should return all column values`()

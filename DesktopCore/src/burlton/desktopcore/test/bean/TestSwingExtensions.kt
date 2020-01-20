@@ -2,7 +2,7 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.*
 import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import burlton.desktopcore.test.helper.processKeyPress
 import burlton.desktopcore.test.helper.simulateLoseFocus
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -18,7 +18,7 @@ import java.awt.event.KeyEvent
 import javax.swing.JComboBox
 import javax.swing.JTextField
 
-class TestSwingExtensions: AbstractDesktopTest()
+class TestSwingExtensions: AbstractTest()
 {
     @Test
     fun `Should return the typed items of a combo box`()

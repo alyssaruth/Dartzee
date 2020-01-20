@@ -2,14 +2,14 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.DateFilterPanel
 import burlton.desktopcore.code.util.enableChildren
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
-class TestDateFilterPanel: AbstractDesktopTest()
+class TestDateFilterPanel: AbstractTest()
 {
     private val fmt = SimpleDateFormat("dd/MM/yyyy")
 

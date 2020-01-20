@@ -4,7 +4,7 @@ import burlton.desktopcore.code.bean.ColourPicker
 import burlton.desktopcore.code.bean.ColourSelectionListener
 import burlton.desktopcore.code.bean.IColourSelector
 import burlton.desktopcore.code.util.InjectedDesktopCore
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import burlton.desktopcore.test.helper.getIconImage
 import burlton.desktopcore.test.helper.makeMouseEvent
 import io.kotlintest.shouldBe
@@ -15,7 +15,7 @@ import org.junit.Test
 import java.awt.Color
 import java.awt.Cursor
 
-class TestColourPicker: AbstractDesktopTest()
+class TestColourPicker: AbstractTest()
 {
     @Test
     fun `Should change the cursor to a hand on hover`()

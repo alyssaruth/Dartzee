@@ -3,7 +3,7 @@ package burlton.desktopcore.test.screen
 import burlton.desktopcore.code.bean.ScrollTable
 import burlton.desktopcore.code.screen.TableModelDialog
 import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
@@ -11,7 +11,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
 
-class TestTableModelDialog: AbstractDesktopTest()
+class TestTableModelDialog: AbstractTest()
 {
     @Test
     fun `Should display with the correct title and dialog properties`()

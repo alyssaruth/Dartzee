@@ -3,12 +3,12 @@ package burlton.desktopcore.test.screen
 import burlton.desktopcore.code.util.Debug
 import burlton.desktopcore.test.helper.getLogs
 import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestSimpleDialog: AbstractDesktopTest()
+class TestSimpleDialog: AbstractTest()
 {
     var allowCancel = true
 

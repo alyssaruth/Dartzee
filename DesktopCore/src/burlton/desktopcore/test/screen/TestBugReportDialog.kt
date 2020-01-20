@@ -5,7 +5,7 @@ import burlton.desktopcore.code.util.DebugExtension
 import burlton.desktopcore.test.helper.exceptionLogged
 import burlton.desktopcore.test.helper.getLogs
 import burlton.desktopcore.code.screen.BugReportDialog
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -14,7 +14,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestBugReportDialog: AbstractDesktopTest()
+class TestBugReportDialog: AbstractTest()
 {
     private val ext = Debug.debugExtension
 
