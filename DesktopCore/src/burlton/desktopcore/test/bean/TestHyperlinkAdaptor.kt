@@ -2,7 +2,7 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.HyperlinkAdaptor
 import burlton.desktopcore.code.bean.IHyperlinkListener
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import burlton.desktopcore.test.helper.MOUSE_EVENT_SINGLE_CLICK
 import burlton.desktopcore.test.helper.makeMouseEvent
 import io.kotlintest.shouldBe
@@ -14,7 +14,7 @@ import java.awt.Cursor
 import java.awt.event.MouseEvent
 import javax.swing.JPanel
 
-class TestHyperlinkAdaptor: AbstractDesktopTest()
+class TestHyperlinkAdaptor: AbstractTest()
 {
     @Test
     fun `Should not accept a non-component listener`()

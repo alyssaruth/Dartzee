@@ -6,7 +6,7 @@ import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.ClientEmailer
 import burlton.dartzee.code.utils.ClientEmailer.TEMP_DIRECTORY
 import burlton.dartzee.code.utils.LOG_FILENAME_PREFIX
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith
@@ -16,7 +16,7 @@ import org.junit.Test
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-class TestClientEmailer: AbstractDesktopTest()
+class TestClientEmailer: AbstractTest()
 {
     override fun afterEachTest()
     {

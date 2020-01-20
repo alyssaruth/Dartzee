@@ -1,6 +1,7 @@
 package burlton.desktopcore.test.helper
 
 import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.test.util.TestDebug
 import io.kotlintest.shouldBe
 import org.junit.After
@@ -12,6 +13,7 @@ private var doneOneTimeSetup = false
 abstract class AbstractTest
 {
     private var doneClassSetup = false
+    protected val dialogFactory = TestMessageDialogFactory()
 
     @Before
     fun oneTimeSetup()
@@ -22,7 +24,6 @@ abstract class AbstractTest
             doneOneTimeSetup = true
         }
 
-        doOneTimeDesktopSetup()
         doOneTimeDartsSetup()
 
         if (!doneClassSetup)
@@ -34,7 +35,6 @@ abstract class AbstractTest
         beforeEachTest()
     }
 
-    open fun doOneTimeDesktopSetup() {}
     open fun doOneTimeDartsSetup() {}
 
     private fun doOneTimeSetup()
@@ -42,18 +42,23 @@ abstract class AbstractTest
         Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.sendingEmails = false
         Debug.logToSystemOut = DEBUG_MODE
+
+        Debug.debugExtension = TestDebugExtension()
+        DialogUtil.init(dialogFactory)
     }
 
     open fun doClassSetup()
     {
         Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.logToSystemOut = DEBUG_MODE
+        DialogUtil.init(dialogFactory)
     }
 
     open fun beforeEachTest()
     {
         Debug.lastErrorMillis = -1
         Debug.initialise(TestDebug.SimpleDebugOutput())
+        dialogFactory.reset()
     }
 
     @After

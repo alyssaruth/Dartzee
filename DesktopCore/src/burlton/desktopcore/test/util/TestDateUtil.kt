@@ -2,7 +2,7 @@ package burlton.desktopcore.test.util
 
 import burlton.desktopcore.code.util.*
 import burlton.desktopcore.code.util.DateStatics.Companion.END_OF_TIME
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty
@@ -12,7 +12,7 @@ import java.sql.Timestamp
 import java.time.ZonedDateTime
 import java.util.*
 
-class TestDateUtil: AbstractDesktopTest()
+class TestDateUtil: AbstractTest()
 {
     @Test
     fun testGetSqlDateNow()

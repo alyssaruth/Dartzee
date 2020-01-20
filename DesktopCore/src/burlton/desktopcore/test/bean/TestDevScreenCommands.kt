@@ -4,7 +4,7 @@ import burlton.desktopcore.test.helper.exceptionLogged
 import burlton.desktopcore.test.helper.getLogs
 import burlton.desktopcore.code.bean.AbstractDevScreen
 import burlton.desktopcore.code.bean.CheatBar
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty
@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
-class TestDevScreenCommands: AbstractDesktopTest()
+class TestDevScreenCommands: AbstractTest()
 {
     var commandsEnabled = true
     var toggle = false

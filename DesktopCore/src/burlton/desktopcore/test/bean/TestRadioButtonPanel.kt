@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.RadioButtonPanel
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JRadioButton
 
-class TestRadioButtonPanel: AbstractDesktopTest()
+class TestRadioButtonPanel: AbstractTest()
 {
     @Test
     fun `Should select the first radio button passed in by default`()

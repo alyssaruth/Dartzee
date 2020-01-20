@@ -3,7 +3,7 @@ package burlton.desktopcore.test.util
 import burlton.desktopcore.test.helper.exceptionLogged
 import burlton.desktopcore.test.helper.getLogs
 import burlton.desktopcore.code.util.*
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -17,7 +17,7 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.event.ChangeListener
 
-class TestComponentUtil: AbstractDesktopTest()
+class TestComponentUtil: AbstractTest()
 {
     @Test
     fun `Should return children of the appropriate type`()

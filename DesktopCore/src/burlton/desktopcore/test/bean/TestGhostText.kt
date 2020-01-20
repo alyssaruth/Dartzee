@@ -1,14 +1,14 @@
 package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.GhostText
-import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Font
 import javax.swing.JTextField
 import javax.swing.SwingConstants.LEADING
 
-class TestGhostText: AbstractDesktopTest()
+class TestGhostText: AbstractTest()
 {
     @Test
     fun `Should construct with the right values`()
