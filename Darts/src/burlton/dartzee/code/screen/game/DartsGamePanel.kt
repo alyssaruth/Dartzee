@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.obj.HashMapList
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getBestGameAchievement

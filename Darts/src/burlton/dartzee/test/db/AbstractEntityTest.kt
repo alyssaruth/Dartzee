@@ -1,10 +1,10 @@
 package burlton.dartzee.test.db
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.FileUtil
-import burlton.core.test.helper.exceptionLogged
-import burlton.core.test.helper.getLogLines
-import burlton.core.test.helper.getLogs
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.FileUtil
+import burlton.desktopcore.test.helper.exceptionLogged
+import burlton.desktopcore.test.helper.getLogLines
+import burlton.desktopcore.test.helper.getLogs
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.utils.DatabaseUtil

@@ -1,9 +1,8 @@
 package burlton.dartzee.code.ai
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.XmlUtil
-import burlton.core.code.util.getAttributeDouble
-import burlton.core.code.util.getAttributeInt
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.getAttributeDouble
+import burlton.desktopcore.code.util.getAttributeInt
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.generateRandomAngle
 import burlton.dartzee.code.utils.getAngleForPoint
@@ -99,7 +98,7 @@ class DartsModelNormalDistribution : AbstractDartsModel()
     }
 
     override fun getModelName() = "Gaussian"
-    override fun getType() = AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION
+    override fun getType() = TYPE_NORMAL_DISTRIBUTION
 
     override fun writeXmlSpecific(rootElement: Element)
     {

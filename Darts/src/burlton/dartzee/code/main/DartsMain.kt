@@ -1,8 +1,8 @@
 package burlton.dartzee.code.main
 
-import burlton.core.code.util.CoreRegistry
-import burlton.core.code.util.Debug
-import burlton.core.code.util.DebugUncaughtExceptionHandler
+import burlton.desktopcore.code.util.CoreRegistry
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.DebugUncaughtExceptionHandler
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.ClientEmailer

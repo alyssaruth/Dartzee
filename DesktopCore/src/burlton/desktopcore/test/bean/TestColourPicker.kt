@@ -4,9 +4,9 @@ import burlton.desktopcore.code.bean.ColourPicker
 import burlton.desktopcore.code.bean.ColourSelectionListener
 import burlton.desktopcore.code.bean.IColourSelector
 import burlton.desktopcore.code.util.InjectedDesktopCore
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
-import burlton.desktopcore.test.helpers.getIconImage
-import burlton.desktopcore.test.helpers.makeMouseEvent
+import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.getIconImage
+import burlton.desktopcore.test.helper.makeMouseEvent
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk

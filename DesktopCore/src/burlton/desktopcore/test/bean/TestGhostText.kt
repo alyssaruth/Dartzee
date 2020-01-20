@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.GhostText
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractDesktopTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Font

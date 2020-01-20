@@ -2,9 +2,9 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.*
 import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
-import burlton.desktopcore.test.helpers.processKeyPress
-import burlton.desktopcore.test.helpers.simulateLoseFocus
+import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.processKeyPress
+import burlton.desktopcore.test.helper.simulateLoseFocus
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf

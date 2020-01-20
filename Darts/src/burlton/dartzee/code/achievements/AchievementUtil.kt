@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.achievements.dartzee.AchievementDartzeeGamesWon
 import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
 import burlton.dartzee.code.achievements.golf.AchievementGolfCourseMaster

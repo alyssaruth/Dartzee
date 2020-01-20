@@ -6,7 +6,7 @@ import burlton.dartzee.code.screen.dartzee.DartzeeRuleTile
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import burlton.dartzee.test.helper.makeTotalScoreRule
-import burlton.desktopcore.test.helpers.makeMouseEvent
+import burlton.desktopcore.test.helper.makeMouseEvent
 import io.kotlintest.shouldBe
 import org.junit.Test
 

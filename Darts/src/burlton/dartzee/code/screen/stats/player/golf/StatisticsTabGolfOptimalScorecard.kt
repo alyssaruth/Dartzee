@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player.golf
 
-import burlton.core.code.obj.HashMapList
+import burlton.desktopcore.code.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab

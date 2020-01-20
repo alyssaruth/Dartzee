@@ -10,7 +10,7 @@ import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.FakeDartzeeRuleFactory
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
-import burlton.desktopcore.test.helpers.processKeyPress
+import burlton.desktopcore.test.helper.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe

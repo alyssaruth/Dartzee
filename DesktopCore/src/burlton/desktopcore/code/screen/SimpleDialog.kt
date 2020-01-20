@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.screen
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.achievements.convertEmptyAchievements

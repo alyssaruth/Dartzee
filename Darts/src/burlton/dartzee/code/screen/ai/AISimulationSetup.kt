@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.ai
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.ai.AbstractDartsSimulation

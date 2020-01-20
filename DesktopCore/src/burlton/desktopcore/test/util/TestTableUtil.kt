@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.util
 
 import burlton.desktopcore.code.util.TableUtil
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractDesktopTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe

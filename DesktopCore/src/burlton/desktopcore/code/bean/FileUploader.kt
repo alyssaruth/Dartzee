@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.bean
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.BorderLayout
 import java.awt.Dimension

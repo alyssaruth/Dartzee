@@ -2,7 +2,7 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.DateFilterPanel
 import burlton.desktopcore.code.util.enableChildren
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractDesktopTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test

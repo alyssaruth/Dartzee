@@ -1,7 +1,7 @@
 package burlton.dartzee.test.ai
 
-import burlton.core.code.obj.HashMapCount
-import burlton.core.code.util.XmlUtil
+import burlton.desktopcore.code.obj.HashMapCount
+import burlton.desktopcore.code.util.XmlUtil
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.ai.*

@@ -1,7 +1,7 @@
 package burlton.dartzee.code.db.sanity
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.runOnEventThread
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.runOnEventThread
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.desktopcore.code.bean.ScrollTableButton

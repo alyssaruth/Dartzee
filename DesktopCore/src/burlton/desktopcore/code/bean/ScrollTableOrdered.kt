@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.bean
 
-import burlton.core.code.util.InjectedCore
+import burlton.desktopcore.code.util.InjectedCore
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

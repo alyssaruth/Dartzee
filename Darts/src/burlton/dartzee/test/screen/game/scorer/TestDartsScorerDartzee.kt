@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.game.scorer
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.desktopcore.test.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.screen.game.GamePanelDartzee

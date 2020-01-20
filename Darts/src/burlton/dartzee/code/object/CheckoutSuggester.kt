@@ -1,6 +1,6 @@
 package burlton.dartzee.code.`object`
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 
 object CheckoutSuggester
 {

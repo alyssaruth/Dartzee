@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.screen
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.desktopcore.code.obj.LimitedDocument
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.BorderLayout

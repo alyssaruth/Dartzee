@@ -1,6 +1,6 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.*
+import burlton.desktopcore.code.util.*
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.getGameDesc
 import burlton.desktopcore.code.util.DateStatics

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.`object`
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.GameEntity

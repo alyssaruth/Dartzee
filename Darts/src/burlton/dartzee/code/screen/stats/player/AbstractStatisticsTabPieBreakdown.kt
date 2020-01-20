@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.core.code.util.getDescription
+import burlton.desktopcore.code.util.getDescription
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.desktopcore.code.bean.RowSelectionListener
 import burlton.desktopcore.code.bean.ScrollTable

@@ -1,11 +1,11 @@
 package burlton.desktopcore.test.screen
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.DebugExtension
-import burlton.core.test.helper.exceptionLogged
-import burlton.core.test.helper.getLogs
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.DebugExtension
+import burlton.desktopcore.test.helper.exceptionLogged
+import burlton.desktopcore.test.helper.getLogs
 import burlton.desktopcore.code.screen.BugReportDialog
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractDesktopTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe

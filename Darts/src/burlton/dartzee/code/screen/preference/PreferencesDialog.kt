@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.preference
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.resetCachedDartboardValues
 import burlton.desktopcore.code.util.getAllChildComponentsForType

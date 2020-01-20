@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.bean.*
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
