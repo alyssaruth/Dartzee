@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player.x01
 
-import burlton.core.code.util.MathsUtil.Companion.getPercentage
+import burlton.desktopcore.code.util.MathsUtil.Companion.getPercentage
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.getCheckoutSingles

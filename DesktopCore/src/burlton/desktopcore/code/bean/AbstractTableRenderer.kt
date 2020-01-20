@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.bean
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import java.awt.Component
 import javax.swing.JTable
 import javax.swing.table.DefaultTableCellRenderer

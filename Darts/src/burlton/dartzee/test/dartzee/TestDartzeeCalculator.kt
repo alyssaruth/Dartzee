@@ -1,6 +1,6 @@
 package burlton.dartzee.test.dartzee
 
-import burlton.core.code.util.getAllPermutations
+import burlton.desktopcore.code.util.getAllPermutations
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleAny

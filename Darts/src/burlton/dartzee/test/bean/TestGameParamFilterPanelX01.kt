@@ -1,6 +1,6 @@
 package burlton.dartzee.test.bean
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.desktopcore.test.helper.verifyNotCalled
 import burlton.dartzee.code.bean.GameParamFilterPanelX01
 import burlton.dartzee.test.helper.AbstractDartsTest
 import io.kotlintest.shouldBe

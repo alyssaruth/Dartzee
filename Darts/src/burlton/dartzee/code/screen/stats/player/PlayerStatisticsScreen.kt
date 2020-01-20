@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK

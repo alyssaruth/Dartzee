@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.game.scorer.DartsScorerPausable

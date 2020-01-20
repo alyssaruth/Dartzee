@@ -1,6 +1,6 @@
 package burlton.dartzee.test.helper
 
-import burlton.core.code.util.FileUtil
+import burlton.desktopcore.code.util.FileUtil
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE

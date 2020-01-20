@@ -1,9 +1,8 @@
 package burlton.desktopcore.test.util
 
 import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
-import burlton.desktopcore.test.helpers.TestMessageDialogFactory
-import io.kotlintest.shouldThrow
+import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.TestMessageDialogFactory
 import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.Test

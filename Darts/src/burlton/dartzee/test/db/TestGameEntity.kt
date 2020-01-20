@@ -1,7 +1,7 @@
 package burlton.dartzee.test.db
 
-import burlton.core.test.helper.exceptionLogged
-import burlton.core.test.helper.getLogs
+import burlton.desktopcore.test.helper.exceptionLogged
+import burlton.desktopcore.test.helper.getLogs
 import burlton.dartzee.code.db.*
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.DateStatics

@@ -2,9 +2,9 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.HyperlinkAdaptor
 import burlton.desktopcore.code.bean.IHyperlinkListener
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
-import burlton.desktopcore.test.helpers.MOUSE_EVENT_SINGLE_CLICK
-import burlton.desktopcore.test.helpers.makeMouseEvent
+import burlton.desktopcore.test.helper.AbstractDesktopTest
+import burlton.desktopcore.test.helper.MOUSE_EVENT_SINGLE_CLICK
+import burlton.desktopcore.test.helper.makeMouseEvent
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.mockk.mockk

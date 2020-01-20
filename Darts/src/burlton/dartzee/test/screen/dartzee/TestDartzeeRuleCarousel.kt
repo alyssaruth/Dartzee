@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.dartzee
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.desktopcore.test.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS
@@ -14,7 +14,7 @@ import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.test.helpers.makeMouseEvent
+import burlton.desktopcore.test.helper.makeMouseEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldContainExactly

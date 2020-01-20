@@ -1,7 +1,7 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.FileUtil
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.FileUtil
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.desktopcore.code.util.DialogUtil
 import com.sun.mail.smtp.SMTPTransport

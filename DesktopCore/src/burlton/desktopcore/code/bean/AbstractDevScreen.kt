@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.bean
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.JFrame

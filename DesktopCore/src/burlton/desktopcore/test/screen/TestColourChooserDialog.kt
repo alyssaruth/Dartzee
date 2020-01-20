@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.screen
 
 import burlton.desktopcore.code.screen.ColourChooserDialog
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractDesktopTest
 import io.kotlintest.shouldBe
 import io.mockk.spyk
 import io.mockk.verify

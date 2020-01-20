@@ -1,9 +1,9 @@
 package burlton.desktopcore.test.screen
 
-import burlton.core.code.util.Debug
-import burlton.core.test.helper.getLogs
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.test.helper.getLogs
 import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractDesktopTest
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test

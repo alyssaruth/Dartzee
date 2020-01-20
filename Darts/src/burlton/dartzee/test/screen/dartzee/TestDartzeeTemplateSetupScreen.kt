@@ -13,7 +13,7 @@ import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.test.helpers.processKeyPress
+import burlton.desktopcore.test.helper.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

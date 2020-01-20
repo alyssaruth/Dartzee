@@ -1,13 +1,13 @@
 package burlton.dartzee.test.`object`
 
-import burlton.core.test.helper.getLogs
+import burlton.desktopcore.test.helper.getLogs
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
 import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.dartzee.code.utils.UpdateManager
 import burlton.dartzee.test.helper.AbstractRegistryTest
-import burlton.core.test.helper.verifyNotCalled
+import burlton.desktopcore.test.helper.verifyNotCalled
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.string.shouldNotContain

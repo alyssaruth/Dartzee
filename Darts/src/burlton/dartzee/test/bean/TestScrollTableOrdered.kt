@@ -1,17 +1,14 @@
 package burlton.dartzee.test.bean
 
-import burlton.core.code.util.CollectionShuffler
-import burlton.core.code.util.IShuffler
-import burlton.core.code.util.InjectedCore
-import burlton.core.test.helper.FakeCollectionShuffler
+import burlton.desktopcore.code.util.CollectionShuffler
+import burlton.desktopcore.code.util.InjectedCore
+import burlton.desktopcore.test.helper.FakeCollectionShuffler
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.desktopcore.code.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.TableUtil
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.*
 import org.junit.Test
-import java.util.*
-import java.util.Collections.shuffle
 
 class TestScrollTableOrdered: AbstractDartsTest()
 {

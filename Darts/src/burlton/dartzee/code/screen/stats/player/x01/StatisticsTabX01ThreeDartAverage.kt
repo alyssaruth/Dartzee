@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.stats.player.x01
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.MathsUtil
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.MathsUtil
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.screen.stats.player.MovingAverageChartPanel
@@ -87,7 +87,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         nfOtherMissPercent.isVisible = includeOtherComparison()
 
         //Construct the table model
-        val model = TableUtil.DefaultModel()
+        val model = DefaultModel()
         model.addColumn("Ordinal")
         model.addColumn("Average")
         model.addColumn("Start Value")

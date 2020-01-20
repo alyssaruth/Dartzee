@@ -1,6 +1,6 @@
 package burlton.dartzee.code.ai
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity

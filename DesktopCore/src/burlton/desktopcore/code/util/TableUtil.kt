@@ -1,6 +1,5 @@
 package burlton.desktopcore.code.util
 
-import burlton.core.code.util.Debug
 import java.awt.Component
 import java.awt.Font
 import java.sql.Timestamp

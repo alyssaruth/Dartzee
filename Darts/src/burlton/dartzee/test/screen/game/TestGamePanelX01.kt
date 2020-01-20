@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.game
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_BTBF

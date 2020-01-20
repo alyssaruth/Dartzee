@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.dartzee
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.desktopcore.test.helper.verifyNotCalled
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE

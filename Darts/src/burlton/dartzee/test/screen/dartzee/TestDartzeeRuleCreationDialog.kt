@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.dartzee
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.desktopcore.test.helper.verifyNotCalled
 import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.*
@@ -14,7 +14,7 @@ import burlton.dartzee.test.flushEdt
 import burlton.dartzee.test.helper.*
 import burlton.desktopcore.code.bean.selectByClass
 import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.test.helpers.makeActionEvent
+import burlton.desktopcore.test.helper.makeActionEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

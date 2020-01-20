@@ -1,7 +1,7 @@
 package burlton.desktopcore.code.screen
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.DebugOutput
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.DebugOutput
 import java.awt.BorderLayout
 import java.awt.Color
 import javax.swing.JFrame

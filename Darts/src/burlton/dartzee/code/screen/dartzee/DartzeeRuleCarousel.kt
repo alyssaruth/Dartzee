@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.dartzee
 
-import burlton.core.code.util.ceilDiv
+import burlton.desktopcore.code.util.ceilDiv
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.dartzee.DartzeeRoundResult

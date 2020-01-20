@@ -1,7 +1,7 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.obj.HashMapList
+import burlton.desktopcore.code.util.Debug
 import burlton.desktopcore.code.util.DialogUtil
 import java.io.BufferedInputStream
 import java.net.URL

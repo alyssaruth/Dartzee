@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.dumpThreadStacks
+import burlton.desktopcore.code.util.dumpThreadStacks
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen

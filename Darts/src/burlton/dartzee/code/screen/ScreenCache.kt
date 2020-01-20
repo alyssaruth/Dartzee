@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.screen.ai.AIConfigurationDialog
 import burlton.dartzee.code.screen.game.AbstractDartsGameScreen
 import burlton.dartzee.code.screen.preference.PreferencesDialog

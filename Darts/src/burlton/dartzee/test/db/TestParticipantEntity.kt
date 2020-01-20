@@ -1,7 +1,7 @@
 package burlton.dartzee.test.db
 
-import burlton.core.code.util.Debug.clearLogs
-import burlton.core.test.helper.getLogs
+import burlton.desktopcore.code.util.Debug.clearLogs
+import burlton.desktopcore.test.helper.getLogs
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.ai.DartsModelNormalDistribution
 import burlton.dartzee.code.db.ParticipantEntity

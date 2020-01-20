@@ -1,7 +1,7 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.FileUtil
+import burlton.desktopcore.code.util.Debug
+import burlton.desktopcore.code.util.FileUtil
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.db.VersionEntity.Companion.insertVersion
 import burlton.dartzee.code.screen.ScreenCache

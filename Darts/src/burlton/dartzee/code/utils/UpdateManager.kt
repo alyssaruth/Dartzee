@@ -1,6 +1,6 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.desktopcore.code.util.DialogUtil
 import com.mashape.unirest.http.Unirest
 import org.json.JSONObject

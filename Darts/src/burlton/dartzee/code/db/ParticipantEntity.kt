@@ -1,6 +1,6 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.StringUtil
+import burlton.desktopcore.code.util.StringUtil
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.isEndOfTime
 

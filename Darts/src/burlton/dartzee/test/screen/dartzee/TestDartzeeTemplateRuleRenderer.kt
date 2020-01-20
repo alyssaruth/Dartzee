@@ -5,12 +5,10 @@ import burlton.dartzee.code.screen.dartzee.DartzeeTemplateRuleRenderer
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
-import burlton.desktopcore.test.helpers.getIconImage
+import burlton.desktopcore.test.helper.getIconImage
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
-import java.awt.image.BufferedImage
-import javax.swing.ImageIcon
 import javax.swing.JLabel
 
 class TestDartzeeTemplateRuleRenderer: AbstractDartsTest()

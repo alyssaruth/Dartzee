@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DartsColour

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.core.code.obj.HashMapCount
+import burlton.desktopcore.code.obj.HashMapCount
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.desktopcore.code.bean.NumberField

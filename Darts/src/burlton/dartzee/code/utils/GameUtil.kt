@@ -1,6 +1,6 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.sortedBy
+import burlton.desktopcore.code.util.sortedBy
 import burlton.dartzee.code.achievements.getWinAchievementRef
 import burlton.dartzee.code.bean.*
 import burlton.dartzee.code.db.*

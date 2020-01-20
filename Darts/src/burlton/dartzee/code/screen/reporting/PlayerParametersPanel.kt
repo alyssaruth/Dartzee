@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.reporting
 
-import burlton.core.code.util.Debug
+import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.reporting.COMPARATOR_SCORE_UNSET
 import burlton.dartzee.code.reporting.IncludedPlayerParameters

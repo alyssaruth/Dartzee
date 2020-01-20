@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.code.bean.NumberField
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.desktopcore.test.helper.AbstractDesktopTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test

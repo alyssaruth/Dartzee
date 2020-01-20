@@ -1,8 +1,8 @@
 package burlton.dartzee.test.db
 
-import burlton.core.code.obj.HashMapCount
-import burlton.core.test.helper.exceptionLogged
-import burlton.core.test.helper.getLogs
+import burlton.desktopcore.code.obj.HashMapCount
+import burlton.desktopcore.test.helper.exceptionLogged
+import burlton.desktopcore.test.helper.getLogs
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.db.DartsMatchEntity.Companion.constructPointsXml
 import burlton.dartzee.test.helper.*

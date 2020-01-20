@@ -1,6 +1,6 @@
 package burlton.dartzee.code.db.sanity
 
-import burlton.core.code.util.addUnique
+import burlton.desktopcore.code.util.addUnique
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.desktopcore.code.util.DialogUtil
