@@ -4,7 +4,7 @@ import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.AbstractPlayerCreationDialog
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.desktopcore.code.bean.selectedItemTyped
+import burlton.dartzee.code.core.bean.selectedItemTyped
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

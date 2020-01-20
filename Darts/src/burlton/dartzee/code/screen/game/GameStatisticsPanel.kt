@@ -9,7 +9,7 @@ import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component

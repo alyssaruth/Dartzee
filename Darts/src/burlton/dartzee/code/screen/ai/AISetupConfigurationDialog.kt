@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen.ai
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.TableUtil

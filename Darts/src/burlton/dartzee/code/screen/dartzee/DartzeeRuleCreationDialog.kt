@@ -5,7 +5,7 @@ import burlton.dartzee.code.bean.DartzeeTotalRuleSelector
 import burlton.dartzee.code.dartzee.DartzeeRandomiser
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.setFontSize

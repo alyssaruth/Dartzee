@@ -2,8 +2,8 @@ package burlton.desktopcore.test.bean
 
 import burlton.desktopcore.test.helper.exceptionLogged
 import burlton.desktopcore.test.helper.getLogs
-import burlton.desktopcore.code.bean.AbstractDevScreen
-import burlton.desktopcore.code.bean.CheatBar
+import burlton.dartzee.code.core.bean.AbstractDevScreen
+import burlton.dartzee.code.core.bean.CheatBar
 import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue

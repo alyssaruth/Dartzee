@@ -1,7 +1,7 @@
 package burlton.desktopcore.test.bean
 
-import burlton.desktopcore.code.bean.HyperlinkAdaptor
-import burlton.desktopcore.code.bean.IHyperlinkListener
+import burlton.dartzee.code.core.bean.HyperlinkAdaptor
+import burlton.dartzee.code.core.bean.IHyperlinkListener
 import burlton.desktopcore.test.helper.AbstractTest
 import burlton.desktopcore.test.helper.MOUSE_EVENT_SINGLE_CLICK
 import burlton.desktopcore.test.helper.makeMouseEvent

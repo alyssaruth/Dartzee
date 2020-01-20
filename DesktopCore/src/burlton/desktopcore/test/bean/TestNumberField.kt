@@ -1,6 +1,6 @@
 package burlton.desktopcore.test.bean
 
-import burlton.desktopcore.code.bean.NumberField
+import burlton.dartzee.code.core.bean.NumberField
 import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow

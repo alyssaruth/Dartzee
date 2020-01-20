@@ -1,4 +1,4 @@
-package burlton.desktopcore.code.bean
+package burlton.dartzee.code.core.bean
 
 import javax.swing.JFormattedTextField
 import javax.swing.text.NumberFormatter

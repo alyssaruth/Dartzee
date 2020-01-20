@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.desktopcore.code.bean.AbstractTableRenderer
+import burlton.dartzee.code.core.bean.AbstractTableRenderer
 import java.awt.Color
 import java.awt.Rectangle
 import java.awt.image.BufferedImage

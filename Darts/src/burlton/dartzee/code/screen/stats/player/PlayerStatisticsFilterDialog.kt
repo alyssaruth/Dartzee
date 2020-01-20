@@ -4,7 +4,7 @@ import burlton.dartzee.code.bean.GameParamFilterPanel
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.getFilterPanel
-import burlton.desktopcore.code.bean.DateFilterPanel
+import burlton.dartzee.code.core.bean.DateFilterPanel
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.enableChildren
 import java.awt.BorderLayout

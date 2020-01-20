@@ -3,7 +3,7 @@ package burlton.dartzee.test.screen.stats.player
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.desktopcore.code.util.DateStatics
 import burlton.desktopcore.code.util.containsComponent
 import burlton.desktopcore.code.util.getSqlDateNow

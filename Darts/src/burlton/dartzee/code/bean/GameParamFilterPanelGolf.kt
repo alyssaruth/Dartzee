@@ -1,6 +1,6 @@
 package burlton.dartzee.code.bean
 
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
 import javax.swing.JRadioButton

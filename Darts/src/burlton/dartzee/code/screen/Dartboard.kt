@@ -10,8 +10,8 @@ import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.GamePanelX01
 import burlton.dartzee.code.utils.*
-import burlton.desktopcore.code.bean.getPointList
-import burlton.desktopcore.code.bean.paint
+import burlton.dartzee.code.core.bean.getPointList
+import burlton.dartzee.code.core.bean.paint
 import burlton.desktopcore.code.util.getParentWindow
 import java.awt.*
 import java.awt.event.MouseEvent

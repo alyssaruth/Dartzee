@@ -1,6 +1,6 @@
 package burlton.desktopcore.test.bean
 
-import burlton.desktopcore.code.bean.GhostText
+import burlton.dartzee.code.core.bean.GhostText
 import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test

@@ -9,9 +9,9 @@ import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.PlayerSelectDialog
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.getFilterPanel
-import burlton.desktopcore.code.bean.DateFilterPanel
-import burlton.desktopcore.code.bean.RadioButtonPanel
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.DateFilterPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.createButtonGroup
 import burlton.desktopcore.code.util.enableChildren

@@ -1,6 +1,6 @@
 package burlton.desktopcore.test.screen
 
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.desktopcore.code.screen.TableModelDialog
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import burlton.desktopcore.test.helper.AbstractTest

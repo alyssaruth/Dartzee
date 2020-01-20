@@ -1,6 +1,6 @@
 package burlton.desktopcore.test.helper
 
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import io.mockk.mockk
 import java.awt.Component
 import java.awt.event.ActionEvent

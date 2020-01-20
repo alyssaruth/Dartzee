@@ -6,8 +6,7 @@ import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.screen.stats.player.MovingAverageChartPanel
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.bean.NumberField
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.bean.NumberField
 import burlton.desktopcore.code.util.TableUtil.DefaultModel
 import net.miginfocom.swing.MigLayout
 import org.jfree.data.xy.XYSeries

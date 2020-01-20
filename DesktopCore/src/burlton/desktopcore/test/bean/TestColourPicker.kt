@@ -1,8 +1,8 @@
 package burlton.desktopcore.test.bean
 
-import burlton.desktopcore.code.bean.ColourPicker
-import burlton.desktopcore.code.bean.ColourSelectionListener
-import burlton.desktopcore.code.bean.IColourSelector
+import burlton.dartzee.code.core.bean.ColourPicker
+import burlton.dartzee.code.core.bean.ColourSelectionListener
+import burlton.dartzee.code.core.bean.IColourSelector
 import burlton.desktopcore.code.util.InjectedDesktopCore
 import burlton.desktopcore.test.helper.AbstractTest
 import burlton.desktopcore.test.helper.getIconImage

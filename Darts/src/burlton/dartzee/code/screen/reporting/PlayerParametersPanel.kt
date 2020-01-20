@@ -4,7 +4,7 @@ import burlton.desktopcore.code.util.Debug
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.reporting.COMPARATOR_SCORE_UNSET
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
-import burlton.desktopcore.code.bean.ComboBoxNumberComparison
+import burlton.dartzee.code.core.bean.ComboBoxNumberComparison
 import burlton.desktopcore.code.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.event.ActionEvent

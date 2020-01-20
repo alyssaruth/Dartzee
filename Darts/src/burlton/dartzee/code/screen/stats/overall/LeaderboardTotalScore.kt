@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen.stats.overall
 
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.utils.*
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
 import javax.swing.Box

@@ -2,10 +2,9 @@ package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.utils.InjectedThings
-import burlton.desktopcore.code.bean.RowSelectionListener
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.bean.ScrollTableOrdered
-import burlton.desktopcore.code.bean.addKeyAction
+import burlton.dartzee.code.core.bean.RowSelectionListener
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Dimension

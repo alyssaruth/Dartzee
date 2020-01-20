@@ -6,7 +6,7 @@ import burlton.dartzee.code.screen.game.GamePanelPausable
 import burlton.dartzee.code.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import burlton.dartzee.code.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import burlton.dartzee.code.utils.PreferenceUtil
-import burlton.desktopcore.code.bean.AbstractTableRenderer
+import burlton.dartzee.code.core.bean.AbstractTableRenderer
 import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants
