@@ -4,9 +4,9 @@ import burlton.desktopcore.test.helper.verifyNotCalled
 import burlton.dartzee.code.bean.GameParamFilterPanelDartzee
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertDartzeeTemplate
-import burlton.desktopcore.code.bean.ComboBoxItem
-import burlton.desktopcore.code.bean.items
-import burlton.desktopcore.code.bean.selectedItemTyped
+import burlton.dartzee.code.core.bean.ComboBoxItem
+import burlton.dartzee.code.core.bean.items
+import burlton.dartzee.code.core.bean.selectedItemTyped
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks

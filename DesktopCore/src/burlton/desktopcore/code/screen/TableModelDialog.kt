@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.screen
 
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import java.awt.BorderLayout
 
 /**

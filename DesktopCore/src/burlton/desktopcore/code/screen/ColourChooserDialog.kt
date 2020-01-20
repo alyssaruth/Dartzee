@@ -1,6 +1,6 @@
 package burlton.desktopcore.code.screen
 
-import burlton.desktopcore.code.bean.IColourSelector
+import burlton.dartzee.code.core.bean.IColourSelector
 import java.awt.Color
 import java.awt.event.ActionListener
 import javax.swing.JColorChooser

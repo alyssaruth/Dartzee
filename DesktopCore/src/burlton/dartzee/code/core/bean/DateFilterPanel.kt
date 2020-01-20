@@ -1,7 +1,6 @@
-package burlton.desktopcore.code.bean
+package burlton.dartzee.code.core.bean
 
 import burlton.desktopcore.code.util.DialogUtil.showError
-import burlton.desktopcore.code.util.enableChildren
 import burlton.desktopcore.code.util.stripTimeComponent
 import de.wannawork.jcalendar.JCalendarComboBox
 import java.awt.Dimension

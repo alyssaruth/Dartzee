@@ -10,8 +10,8 @@ import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.DevUtilities
 import burlton.dartzee.code.utils.ResourceCache
 import burlton.dartzee.test.helper.randomGuid
-import burlton.desktopcore.code.bean.AbstractDevScreen
-import burlton.desktopcore.code.bean.CheatBar
+import burlton.dartzee.code.core.bean.AbstractDevScreen
+import burlton.dartzee.code.core.bean.CheatBar
 import burlton.desktopcore.code.util.DialogUtil
 import com.mashape.unirest.http.Unirest
 import java.awt.BorderLayout

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game.scorer
 
-import burlton.desktopcore.code.bean.AbstractTableRenderer
+import burlton.dartzee.code.core.bean.AbstractTableRenderer
 import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants

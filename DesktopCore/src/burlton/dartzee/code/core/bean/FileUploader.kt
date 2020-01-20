@@ -1,4 +1,4 @@
-package burlton.desktopcore.code.bean
+package burlton.dartzee.code.core.bean
 
 import burlton.desktopcore.code.util.Debug
 import burlton.desktopcore.code.util.DialogUtil

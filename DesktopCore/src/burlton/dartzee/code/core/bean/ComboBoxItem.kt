@@ -1,4 +1,4 @@
-package burlton.desktopcore.code.bean
+package burlton.dartzee.code.core.bean
 
 data class ComboBoxItem<E>(val hiddenData: E, val visibleData: Any, var isEnabled: Boolean = true)
 {

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.bean
 
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import javax.swing.JRadioButton
 
 class PlayerTypeFilterPanel : RadioButtonPanel()

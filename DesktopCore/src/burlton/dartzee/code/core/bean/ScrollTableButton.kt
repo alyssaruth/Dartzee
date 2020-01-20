@@ -1,4 +1,4 @@
-package burlton.desktopcore.code.bean
+package burlton.dartzee.code.core.bean
 
 import javax.swing.Action
 import javax.swing.table.DefaultTableModel

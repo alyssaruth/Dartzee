@@ -1,7 +1,7 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.utils.DartsColour
-import burlton.desktopcore.code.bean.AbstractTableRenderer
+import burlton.dartzee.code.core.bean.AbstractTableRenderer
 import java.awt.Color
 
 class X01ScoreRenderer : AbstractTableRenderer<Int>()

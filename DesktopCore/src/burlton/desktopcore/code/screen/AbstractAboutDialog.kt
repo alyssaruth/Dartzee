@@ -1,7 +1,7 @@
 package burlton.desktopcore.code.screen
 
-import burlton.desktopcore.code.bean.HyperlinkAdaptor
-import burlton.desktopcore.code.bean.IHyperlinkListener
+import burlton.dartzee.code.core.bean.HyperlinkAdaptor
+import burlton.dartzee.code.core.bean.IHyperlinkListener
 import java.awt.Color
 import java.awt.Font
 import java.awt.Insets

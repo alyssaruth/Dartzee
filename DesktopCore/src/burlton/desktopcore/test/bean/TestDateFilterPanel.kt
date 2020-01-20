@@ -1,6 +1,6 @@
 package burlton.desktopcore.test.bean
 
-import burlton.desktopcore.code.bean.DateFilterPanel
+import burlton.dartzee.code.core.bean.DateFilterPanel
 import burlton.desktopcore.code.util.enableChildren
 import burlton.desktopcore.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly

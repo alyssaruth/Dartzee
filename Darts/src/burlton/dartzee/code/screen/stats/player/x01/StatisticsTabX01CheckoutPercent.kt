@@ -7,7 +7,7 @@ import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.getCheckoutScores
 import burlton.dartzee.code.utils.isCheckoutDart
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.desktopcore.code.util.TableUtil.DefaultModel
 import java.awt.BorderLayout
 import java.awt.Color

@@ -11,8 +11,8 @@ import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.bean.NumberField
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.NumberField
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.ProgressDialog
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil

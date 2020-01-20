@@ -2,8 +2,8 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.utils.getAllGameTypes
 import burlton.dartzee.code.utils.getTypeDesc
-import burlton.desktopcore.code.bean.ComboBoxItem
-import burlton.desktopcore.code.bean.selectedItemTyped
+import burlton.dartzee.code.core.bean.ComboBoxItem
+import burlton.dartzee.code.core.bean.selectedItemTyped
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
 

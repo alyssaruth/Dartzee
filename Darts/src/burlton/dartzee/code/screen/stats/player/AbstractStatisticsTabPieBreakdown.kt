@@ -2,8 +2,8 @@ package burlton.dartzee.code.screen.stats.player
 
 import burlton.desktopcore.code.util.getDescription
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.bean.RowSelectionListener
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.RowSelectionListener
+import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.desktopcore.code.util.TableUtil
 import burlton.desktopcore.code.util.containsComponent
 import org.jfree.chart.ChartFactory

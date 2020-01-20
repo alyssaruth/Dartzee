@@ -12,7 +12,7 @@ import burlton.dartzee.code.screen.dartzee.DartzeeRuleVerificationPanel
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.flushEdt
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.bean.selectByClass
+import burlton.dartzee.code.core.bean.selectByClass
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import burlton.desktopcore.test.helper.makeActionEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty

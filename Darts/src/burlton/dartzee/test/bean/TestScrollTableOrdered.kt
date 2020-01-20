@@ -4,7 +4,7 @@ import burlton.desktopcore.code.util.CollectionShuffler
 import burlton.desktopcore.code.util.InjectedCore
 import burlton.desktopcore.test.helper.FakeCollectionShuffler
 import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.code.bean.ScrollTableOrdered
+import burlton.dartzee.code.core.bean.ScrollTableOrdered
 import burlton.desktopcore.code.util.TableUtil
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.*

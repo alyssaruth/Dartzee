@@ -6,7 +6,7 @@ import burlton.dartzee.code.utils.calculateThreeDartAverage
 import burlton.dartzee.code.utils.getScoringDarts
 import burlton.dartzee.code.utils.isCheckoutDart
 import burlton.dartzee.code.utils.sumScore
-import burlton.desktopcore.code.bean.NumberField
+import burlton.dartzee.code.core.bean.NumberField
 import java.awt.BorderLayout
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener

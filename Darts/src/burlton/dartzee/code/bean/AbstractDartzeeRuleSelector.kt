@@ -3,8 +3,8 @@ package burlton.dartzee.code.bean
 import burlton.dartzee.code.dartzee.AbstractDartzeeRule
 import burlton.dartzee.code.dartzee.IDartzeeRuleConfigurable
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCreationDialog
-import burlton.desktopcore.code.bean.findByConcreteClass
-import burlton.desktopcore.code.bean.selectedItemTyped
+import burlton.dartzee.code.core.bean.findByConcreteClass
+import burlton.dartzee.code.core.bean.selectedItemTyped
 import burlton.desktopcore.code.util.DialogUtil
 import burlton.desktopcore.code.util.addActionListenerToAllChildren
 import burlton.desktopcore.code.util.addChangeListenerToAllChildren

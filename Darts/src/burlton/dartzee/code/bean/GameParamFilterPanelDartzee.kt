@@ -1,9 +1,9 @@
 package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.DartzeeTemplateEntity
-import burlton.desktopcore.code.bean.ComboBoxItem
-import burlton.desktopcore.code.bean.items
-import burlton.desktopcore.code.bean.selectedItemTyped
+import burlton.dartzee.code.core.bean.ComboBoxItem
+import burlton.dartzee.code.core.bean.items
+import burlton.dartzee.code.core.bean.selectedItemTyped
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
 import javax.swing.JComboBox

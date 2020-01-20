@@ -1,6 +1,6 @@
 package burlton.desktopcore.test.bean
 
-import burlton.desktopcore.code.bean.*
+import burlton.dartzee.code.core.bean.*
 import burlton.desktopcore.code.util.getAllChildComponentsForType
 import burlton.desktopcore.test.helper.AbstractTest
 import burlton.desktopcore.test.helper.processKeyPress

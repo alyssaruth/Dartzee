@@ -3,7 +3,7 @@ package burlton.dartzee.code.screen
 import burlton.dartzee.code.bean.getSelectedPlayer
 import burlton.dartzee.code.bean.initPlayerTableModel
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout

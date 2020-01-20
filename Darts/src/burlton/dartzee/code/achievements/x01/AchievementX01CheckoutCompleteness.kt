@@ -8,7 +8,7 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.bean.paint
+import burlton.dartzee.code.core.bean.paint
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.db.sanity
 
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.desktopcore.code.screen.TableModelDialog
 import burlton.desktopcore.code.util.DialogUtil
 import java.awt.event.KeyEvent

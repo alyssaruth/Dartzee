@@ -1,4 +1,4 @@
-package burlton.desktopcore.code.bean
+package burlton.dartzee.code.core.bean
 
 import burlton.desktopcore.code.util.InjectedCore
 import net.miginfocom.swing.MigLayout

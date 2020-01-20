@@ -6,7 +6,7 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.ResourceCache
-import burlton.desktopcore.code.bean.paint
+import burlton.dartzee.code.core.bean.paint
 import burlton.desktopcore.code.util.DateStatics.Companion.START_OF_TIME
 import burlton.desktopcore.code.util.formatAsDate
 import java.awt.Color

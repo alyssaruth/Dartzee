@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen.ai
 
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.ai.DartsModelNormalDistribution
-import burlton.desktopcore.code.bean.NumberField
+import burlton.dartzee.code.core.bean.NumberField
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

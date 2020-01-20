@@ -4,7 +4,7 @@ import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAllAchievements
 import burlton.dartzee.code.achievements.runConversionsWithProgressBar
 import burlton.dartzee.code.bean.PlayerSelector
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import burlton.desktopcore.code.screen.SimpleDialog
 import burlton.desktopcore.code.util.DialogUtil
 import net.miginfocom.swing.MigLayout
