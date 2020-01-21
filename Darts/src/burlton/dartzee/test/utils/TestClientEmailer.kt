@@ -1,12 +1,12 @@
 package burlton.dartzee.test.utils
 
-import burlton.desktopcore.test.helper.exceptionLogged
-import burlton.desktopcore.test.helper.getLogs
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.ClientEmailer
 import burlton.dartzee.code.utils.ClientEmailer.TEMP_DIRECTORY
 import burlton.dartzee.code.utils.LOG_FILENAME_PREFIX
-import burlton.desktopcore.test.helper.AbstractTest
+import burlton.dartzee.test.core.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith

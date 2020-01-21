@@ -1,6 +1,6 @@
 package burlton.dartzee.code.core.bean
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import java.awt.Component
 import javax.swing.JTable
 import javax.swing.table.DefaultTableCellRenderer

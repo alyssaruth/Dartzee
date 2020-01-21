@@ -1,15 +1,15 @@
 package burlton.dartzee.code.main
 
-import burlton.desktopcore.code.util.CoreRegistry
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.DebugUncaughtExceptionHandler
+import burlton.dartzee.code.core.util.CoreRegistry
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.DebugUncaughtExceptionHandler
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.ClientEmailer
 import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
 import burlton.dartzee.code.utils.DartsDebugExtension
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.MessageDialogFactory
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.MessageDialogFactory
 import javax.swing.JOptionPane
 import javax.swing.UIManager
 

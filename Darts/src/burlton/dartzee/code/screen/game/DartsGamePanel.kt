@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.desktopcore.code.obj.HashMapList
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.obj.HashMapList
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getBestGameAchievement
@@ -18,9 +18,9 @@ import burlton.dartzee.code.stats.PlayerSummaryStats
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.PREFERENCES_INT_AI_SPEED
 import burlton.dartzee.code.utils.PreferenceUtil
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.getSqlDateNow
-import burlton.desktopcore.code.util.isEndOfTime
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.getSqlDateNow
+import burlton.dartzee.code.core.util.isEndOfTime
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Point

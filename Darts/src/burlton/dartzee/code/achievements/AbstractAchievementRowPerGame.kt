@@ -2,7 +2,7 @@ package burlton.dartzee.code.achievements
 
 import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil
 
 abstract class AbstractAchievementRowPerGame: AbstractAchievement()
 {

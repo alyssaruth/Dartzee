@@ -7,7 +7,7 @@ import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.insertDartzeeRules
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants

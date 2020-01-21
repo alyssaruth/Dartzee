@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements.x01
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
 import burlton.dartzee.code.achievements.AbstractAchievementRowPerGame
 import burlton.dartzee.code.achievements.getNotBustSql

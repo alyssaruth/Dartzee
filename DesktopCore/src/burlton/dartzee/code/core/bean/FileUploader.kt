@@ -1,7 +1,7 @@
 package burlton.dartzee.code.core.bean
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.DialogUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent

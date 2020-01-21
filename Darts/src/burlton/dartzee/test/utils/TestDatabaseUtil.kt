@@ -1,8 +1,8 @@
 package burlton.dartzee.test.utils
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.test.helper.exceptionLogged
-import burlton.desktopcore.test.helper.getLogs
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.MAX_SQL_DURATION

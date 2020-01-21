@@ -1,7 +1,7 @@
 package burlton.dartzee.code.dartzee
 
-import burlton.desktopcore.code.util.allIndexed
-import burlton.desktopcore.code.util.getAllPermutations
+import burlton.dartzee.code.core.util.allIndexed
+import burlton.dartzee.code.core.util.getAllPermutations
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_MISS

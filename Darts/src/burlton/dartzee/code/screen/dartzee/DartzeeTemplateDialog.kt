@@ -5,9 +5,9 @@ import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.DartzeeTemplateEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.core.bean.addGhostText
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.setFontSize
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.setFontSize
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JPanel

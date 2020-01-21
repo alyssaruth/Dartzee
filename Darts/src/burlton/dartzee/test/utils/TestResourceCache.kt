@@ -1,6 +1,6 @@
 package burlton.dartzee.test.utils
 
-import burlton.desktopcore.test.helper.getLogs
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES
 import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.dartzee.code.utils.ResourceCache

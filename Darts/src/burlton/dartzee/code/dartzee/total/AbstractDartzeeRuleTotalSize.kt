@@ -1,6 +1,6 @@
 package burlton.dartzee.code.dartzee.total
 
-import burlton.desktopcore.code.util.getAttributeInt
+import burlton.dartzee.code.core.util.getAttributeInt
 import burlton.dartzee.code.dartzee.IDartzeeRuleConfigurable
 import org.w3c.dom.Document
 import org.w3c.dom.Element

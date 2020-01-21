@@ -1,6 +1,6 @@
 package burlton.dartzee.code.core.bean
 
-import burlton.desktopcore.code.util.InjectedCore
+import burlton.dartzee.code.core.util.InjectedCore
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

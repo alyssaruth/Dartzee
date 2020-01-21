@@ -1,8 +1,8 @@
 package burlton.dartzee.code.ai
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.getAttributeDouble
-import burlton.desktopcore.code.util.getAttributeInt
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.getAttributeDouble
+import burlton.dartzee.code.core.util.getAttributeInt
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.generateRandomAngle
 import burlton.dartzee.code.utils.getAngleForPoint

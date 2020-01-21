@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font

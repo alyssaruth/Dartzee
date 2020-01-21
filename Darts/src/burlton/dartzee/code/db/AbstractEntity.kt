@@ -1,10 +1,10 @@
 package burlton.dartzee.code.db
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getSqlDateNow
 import java.sql.*
 import java.util.*
 import java.util.regex.Pattern

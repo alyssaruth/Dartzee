@@ -1,13 +1,13 @@
 package burlton.dartzee.code.screen.stats.player.x01
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.MathsUtil
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.MathsUtil
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.screen.stats.player.MovingAverageChartPanel
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.core.bean.NumberField
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 import net.miginfocom.swing.MigLayout
 import org.jfree.data.xy.XYSeries
 import java.awt.BorderLayout

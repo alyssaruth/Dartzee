@@ -8,8 +8,8 @@ import burlton.dartzee.code.stats.ThreeDartScoreWrapper
 import burlton.dartzee.code.core.bean.NumberField
 import burlton.dartzee.code.core.bean.RowSelectionListener
 import burlton.dartzee.code.core.bean.ScrollTable
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
-import burlton.desktopcore.code.util.TableUtil.SimpleRenderer
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.util.TableUtil.SimpleRenderer
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.GridLayout

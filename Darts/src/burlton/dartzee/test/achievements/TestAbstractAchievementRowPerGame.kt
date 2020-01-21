@@ -3,7 +3,7 @@ package burlton.dartzee.test.achievements
 import burlton.dartzee.code.achievements.AbstractAchievementRowPerGame
 import burlton.dartzee.test.helper.insertAchievement
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test

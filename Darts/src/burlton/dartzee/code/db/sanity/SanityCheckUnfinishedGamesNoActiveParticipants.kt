@@ -1,7 +1,7 @@
 package burlton.dartzee.code.db.sanity
 
 import burlton.dartzee.code.db.GameEntity
-import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import burlton.dartzee.code.core.util.getEndOfTimeSqlString
 
 class SanityCheckUnfinishedGamesNoActiveParticipants: AbstractSanityCheck()
 {

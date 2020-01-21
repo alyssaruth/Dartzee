@@ -7,8 +7,8 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.isBust
 import burlton.dartzee.code.core.bean.NumberField
 import burlton.dartzee.code.core.bean.RadioButtonPanel
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

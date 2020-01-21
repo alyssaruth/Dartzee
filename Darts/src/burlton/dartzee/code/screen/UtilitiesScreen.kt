@@ -1,12 +1,12 @@
 package burlton.dartzee.code.screen
 
-import burlton.desktopcore.code.util.dumpThreadStacks
+import burlton.dartzee.code.core.util.dumpThreadStacks
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.sanity.DatabaseSanityCheck
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.*
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Font

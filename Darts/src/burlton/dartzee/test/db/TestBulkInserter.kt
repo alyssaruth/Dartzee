@@ -1,9 +1,9 @@
 package burlton.dartzee.test.db
 
-import burlton.desktopcore.code.util.Debug.clearLogs
-import burlton.desktopcore.test.helper.exceptionLogged
-import burlton.desktopcore.test.helper.getLogLines
-import burlton.desktopcore.test.helper.getLogs
+import burlton.dartzee.code.core.util.Debug.clearLogs
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogLines
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil

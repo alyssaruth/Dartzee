@@ -1,6 +1,6 @@
 package burlton.dartzee.code.`object`
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.db.GameEntity
@@ -9,7 +9,7 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.game.DartsMatchScreen
 import burlton.dartzee.code.utils.insertDartzeeRules
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 
 object GameLauncher
 {

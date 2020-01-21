@@ -6,9 +6,9 @@ import burlton.dartzee.code.dartzee.DartzeeRandomiser
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.core.bean.RadioButtonPanel
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.setFontSize
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.setFontSize
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

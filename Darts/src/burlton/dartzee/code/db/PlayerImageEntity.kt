@@ -1,7 +1,7 @@
 package burlton.dartzee.code.db
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.FileUtil
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.FileUtil
 import java.io.File
 import java.nio.file.Files
 import java.sql.Blob

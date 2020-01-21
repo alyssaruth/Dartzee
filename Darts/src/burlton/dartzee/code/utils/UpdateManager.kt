@@ -1,7 +1,7 @@
 package burlton.dartzee.code.utils
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.DialogUtil
 import com.mashape.unirest.http.Unirest
 import org.json.JSONObject
 import java.io.File

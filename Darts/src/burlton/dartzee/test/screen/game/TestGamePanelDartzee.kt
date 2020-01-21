@@ -20,9 +20,9 @@ import burlton.dartzee.test.bullseye
 import burlton.dartzee.test.doubleNineteen
 import burlton.dartzee.test.doubleTwenty
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

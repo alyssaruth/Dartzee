@@ -5,8 +5,8 @@ import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.reporting.ReportParameters
 import burlton.dartzee.code.reporting.runReport
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.Test

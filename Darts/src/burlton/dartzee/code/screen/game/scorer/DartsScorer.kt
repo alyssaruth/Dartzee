@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game.scorer
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.bean.AchievementMedal

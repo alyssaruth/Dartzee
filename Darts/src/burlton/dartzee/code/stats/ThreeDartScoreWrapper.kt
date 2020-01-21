@@ -1,6 +1,6 @@
 package burlton.dartzee.code.stats
 
-import burlton.desktopcore.code.obj.HashMapCount
+import burlton.dartzee.code.core.obj.HashMapCount
 import java.util.*
 
 /**

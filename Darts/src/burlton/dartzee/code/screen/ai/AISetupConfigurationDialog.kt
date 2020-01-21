@@ -3,10 +3,10 @@ package burlton.dartzee.code.screen.ai
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.core.bean.ScrollTable
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.TableUtil
-import burlton.desktopcore.code.util.TableUtil.SimpleRenderer
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil.SimpleRenderer
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import javax.swing.JButton

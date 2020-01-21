@@ -3,8 +3,8 @@ package burlton.dartzee.code.db
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.ai.AIConfigurationDialog
-import burlton.desktopcore.code.util.DateStatics.Companion.END_OF_TIME
-import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import burlton.dartzee.code.core.util.DateStatics.Companion.END_OF_TIME
+import burlton.dartzee.code.core.util.getEndOfTimeSqlString
 import javax.swing.ImageIcon
 
 class PlayerEntity:AbstractEntity<PlayerEntity>()

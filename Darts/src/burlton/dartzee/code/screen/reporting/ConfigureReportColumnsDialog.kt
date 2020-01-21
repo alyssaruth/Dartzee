@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.reporting
 
-import burlton.desktopcore.code.screen.SimpleDialog
+import burlton.dartzee.code.core.screen.SimpleDialog
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import javax.swing.JCheckBox

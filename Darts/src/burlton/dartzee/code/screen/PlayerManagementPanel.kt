@@ -8,7 +8,7 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ai.AIConfigurationDialog
 import burlton.dartzee.code.screen.ai.AISimulationSetup
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

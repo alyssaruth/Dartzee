@@ -1,9 +1,9 @@
 package burlton.dartzee.code.utils
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.FileUtil
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.FileUtil
 import burlton.dartzee.code.`object`.DartsClient
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 import com.sun.mail.smtp.SMTPTransport
 import java.io.File
 import java.nio.charset.StandardCharsets

@@ -4,9 +4,9 @@ import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.code.core.bean.ScrollTable
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.containsComponent
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.containsComponent
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import org.junit.Test

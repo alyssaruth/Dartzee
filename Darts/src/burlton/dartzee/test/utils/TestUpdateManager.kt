@@ -1,7 +1,7 @@
 package burlton.dartzee.test.utils
 
-import burlton.desktopcore.test.helper.exceptionLogged
-import burlton.desktopcore.test.helper.getLogs
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
 import burlton.dartzee.code.utils.DARTZEE_REPOSITORY_URL
 import burlton.dartzee.code.utils.UpdateManager
