@@ -2,7 +2,7 @@ package burlton.dartzee.test.screen
 
 import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.screen.AbstractPlayerCreationDialog
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -12,7 +12,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
 
-class TestAbstractPlayerCreationDialog: AbstractDartsTest()
+class TestAbstractPlayerCreationDialog: AbstractTest()
 {
     @Test
     fun `Should not allow an empty player name, and should not call save with a validation error`()

@@ -7,7 +7,7 @@ import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleCarousel
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSummaryPanel
 import burlton.dartzee.code.utils.getAllPossibleSegments
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.getOuterSegments
 import burlton.dartzee.test.helper.makeDart
 import burlton.dartzee.test.helper.makeRoundResultEntities
@@ -18,7 +18,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestDartzeeRuleSummaryPanel: AbstractDartsTest()
+class TestDartzeeRuleSummaryPanel: AbstractTest()
 {
     @Test
     fun `Should show the high score panel by default`()

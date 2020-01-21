@@ -2,7 +2,7 @@ package burlton.dartzee.test.screen.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateRuleRenderer
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import burlton.dartzee.test.core.helper.getIconImage
@@ -11,7 +11,7 @@ import org.junit.Test
 import java.awt.Color
 import javax.swing.JLabel
 
-class TestDartzeeTemplateRuleRenderer: AbstractDartsTest()
+class TestDartzeeTemplateRuleRenderer: AbstractTest()
 {
     @Test
     fun `Should render squares of the right colour based on rule difficulty`()

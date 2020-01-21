@@ -2,7 +2,7 @@ package burlton.dartzee.test.screen
 
 import burlton.dartzee.code.bean.getAllPlayers
 import burlton.dartzee.code.screen.PlayerSelectDialog
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -11,7 +11,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.ListSelectionModel
 
-class TestPlayerSelectDialog: AbstractDartsTest()
+class TestPlayerSelectDialog: AbstractTest()
 {
     @Test
     fun `Should not display excluded players`()

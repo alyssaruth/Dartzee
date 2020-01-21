@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.obj
 
 import burlton.dartzee.code.core.obj.LimitedDocument
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

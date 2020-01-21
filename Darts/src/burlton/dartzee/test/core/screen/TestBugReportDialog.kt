@@ -5,7 +5,7 @@ import burlton.dartzee.code.core.util.DebugExtension
 import burlton.dartzee.test.core.helper.exceptionLogged
 import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.core.screen.BugReportDialog
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe

@@ -1,13 +1,13 @@
 package burlton.dartzee.test.dartzee.total
 
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeRuleTotalSize
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test
 import java.text.ParseException
 
-class TestAbstractDartzeeRuleTotalSize: AbstractDartsTest()
+class TestAbstractDartzeeRuleTotalSize: AbstractTest()
 {
     @Test
     fun `Should initialise with a target of 20`()

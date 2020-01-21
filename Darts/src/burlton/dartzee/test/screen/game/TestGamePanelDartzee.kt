@@ -34,7 +34,7 @@ import io.mockk.verify
 import org.junit.Test
 import java.awt.Color
 
-class TestGamePanelDartzee: AbstractDartsTest()
+class TestGamePanelDartzee: AbstractTest()
 {
     private val rules = listOf(twoBlackOneWhite, innerOuterInner)
     private val ruleResults = listOf(DartzeeRoundResult(2, true, 50), DartzeeRoundResult(1, false, -115))

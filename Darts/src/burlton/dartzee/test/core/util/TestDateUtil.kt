@@ -2,7 +2,7 @@ package burlton.dartzee.test.core.util
 
 import burlton.dartzee.code.core.util.*
 import burlton.dartzee.code.core.util.DateStatics.Companion.END_OF_TIME
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty

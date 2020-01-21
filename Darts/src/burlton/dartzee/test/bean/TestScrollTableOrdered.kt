@@ -3,14 +3,14 @@ package burlton.dartzee.test.bean
 import burlton.dartzee.code.core.util.CollectionShuffler
 import burlton.dartzee.code.core.util.InjectedCore
 import burlton.dartzee.test.core.helper.FakeCollectionShuffler
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.code.core.bean.ScrollTableOrdered
 import burlton.dartzee.code.core.util.TableUtil
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.*
 import org.junit.Test
 
-class TestScrollTableOrdered: AbstractDartsTest()
+class TestScrollTableOrdered: AbstractTest()
 {
     override fun beforeEachTest() {
         super.beforeEachTest()

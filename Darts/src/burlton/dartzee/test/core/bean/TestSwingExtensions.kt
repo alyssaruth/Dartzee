@@ -2,7 +2,7 @@ package burlton.dartzee.test.core.bean
 
 import burlton.dartzee.code.core.bean.*
 import burlton.dartzee.code.core.util.getAllChildComponentsForType
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.core.helper.processKeyPress
 import burlton.dartzee.test.core.helper.simulateLoseFocus
 import io.kotlintest.matchers.collections.shouldBeEmpty

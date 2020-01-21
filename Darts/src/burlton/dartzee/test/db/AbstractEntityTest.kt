@@ -9,7 +9,7 @@ import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.getCountFromTable
 import burlton.dartzee.test.helper.wipeTable
 import burlton.dartzee.code.core.util.DateStatics
@@ -24,7 +24,7 @@ import java.sql.Blob
 import java.sql.Timestamp
 import javax.sql.rowset.serial.SerialBlob
 
-abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractDartsTest()
+abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 {
     private val dao by lazy { factoryDao() }
 

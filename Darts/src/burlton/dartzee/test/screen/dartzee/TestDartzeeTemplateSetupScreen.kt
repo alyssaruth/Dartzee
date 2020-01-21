@@ -23,7 +23,7 @@ import org.junit.Test
 import java.awt.event.KeyEvent
 import javax.swing.JOptionPane
 
-class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
+class TestDartzeeTemplateSetupScreen: AbstractTest()
 {
     override fun afterEachTest()
     {

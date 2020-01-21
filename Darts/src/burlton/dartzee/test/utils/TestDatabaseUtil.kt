@@ -6,7 +6,7 @@ import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.MAX_SQL_DURATION
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -16,7 +16,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDatabaseUtil: AbstractDartsTest()
+class TestDatabaseUtil: AbstractTest()
 {
     @Test
     fun `Should create a new connection if the pool is depleted`()

@@ -2,13 +2,13 @@ package burlton.dartzee.test.screen.dartzee
 
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleInner
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleRenderer
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeRuleRenderer: AbstractDartsTest()
+class TestDartzeeRuleRenderer: AbstractTest()
 {
     @Test
     fun `Should render the rule description for the first column`()

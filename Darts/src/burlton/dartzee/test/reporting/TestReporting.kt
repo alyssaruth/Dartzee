@@ -12,7 +12,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.Test
 import java.sql.Timestamp
 
-class TestReporting: AbstractDartsTest()
+class TestReporting: AbstractTest()
 {
     @Test
     fun `Should be able to filter by game type`()

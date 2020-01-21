@@ -2,7 +2,7 @@ package burlton.dartzee.test.bean
 
 import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.bean.GameParamFilterPanelGolf
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
@@ -10,7 +10,7 @@ import io.mockk.verify
 import org.junit.Test
 import java.awt.event.ActionListener
 
-class TestGameParamFilterPanelGolf: AbstractDartsTest()
+class TestGameParamFilterPanelGolf: AbstractTest()
 {
     @Test
     fun `Should select 18 holes by default`()

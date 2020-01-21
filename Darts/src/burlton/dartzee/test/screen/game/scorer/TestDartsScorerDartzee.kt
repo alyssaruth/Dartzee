@@ -9,7 +9,7 @@ import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import burlton.dartzee.code.screen.game.scorer.DartzeeRoundResultRenderer
 import burlton.dartzee.code.screen.game.scorer.DartzeeScoreRenderer
 import burlton.dartzee.test.doClick
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertGame
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.code.core.util.DateStatics
@@ -21,7 +21,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestDartsScorerDartzee: AbstractDartsTest()
+class TestDartsScorerDartzee: AbstractTest()
 {
     @Test
     fun `Should listen to mouse events once the game has finished`()

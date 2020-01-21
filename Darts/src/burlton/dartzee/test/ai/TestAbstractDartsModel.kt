@@ -8,7 +8,7 @@ import burlton.dartzee.code.db.CLOCK_TYPE_TREBLES
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.getCheckoutScores
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
@@ -18,7 +18,7 @@ import org.junit.Test
 import org.w3c.dom.Element
 import java.awt.Point
 
-class TestAbstractDartsModel: AbstractDartsTest()
+class TestAbstractDartsModel: AbstractTest()
 {
     /**
      * Serialisation

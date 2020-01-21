@@ -2,7 +2,7 @@ package burlton.dartzee.test.bean
 
 import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.bean.GameParamFilterPanelDartzee
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertDartzeeTemplate
 import burlton.dartzee.code.core.bean.ComboBoxItem
 import burlton.dartzee.code.core.bean.items
@@ -15,7 +15,7 @@ import io.mockk.verify
 import org.junit.Test
 import java.awt.event.ActionListener
 
-class TestGameParamFilterPanelDartzee: AbstractDartsTest()
+class TestGameParamFilterPanelDartzee: AbstractTest()
 {
     @Test
     fun `Should populate empty if there are no templates set up`()

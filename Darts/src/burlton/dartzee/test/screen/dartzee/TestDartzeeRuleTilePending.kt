@@ -16,7 +16,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 
-class TestDartzeeRuleTilePending: AbstractDartsTest()
+class TestDartzeeRuleTilePending: AbstractTest()
 {
     override fun afterEachTest()
     {

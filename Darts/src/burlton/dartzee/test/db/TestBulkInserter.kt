@@ -17,7 +17,7 @@ import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestBulkInserter: AbstractDartsTest()
+class TestBulkInserter: AbstractTest()
 {
     override fun beforeEachTest()
     {

@@ -3,13 +3,13 @@ package burlton.dartzee.test.`object`
 import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.AbstractDartsGameScreen
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestGameLauncher: AbstractDartsTest()
+class TestGameLauncher: AbstractTest()
 {
     @Test
     fun `Should bring up the window when loading an already visible game`()

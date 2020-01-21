@@ -9,13 +9,13 @@ import burlton.dartzee.code.db.*
 import burlton.dartzee.code.screen.game.GamePanelX01
 import burlton.dartzee.code.screen.game.scorer.DartsScorerX01
 import burlton.dartzee.test.db.TestAchievementEntity
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.randomGuid
 import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestGamePanelX01: AbstractDartsTest()
+class TestGamePanelX01: AbstractTest()
 {
     @Test
     fun `Should update BTBF achievement if the game was finished on D1`()

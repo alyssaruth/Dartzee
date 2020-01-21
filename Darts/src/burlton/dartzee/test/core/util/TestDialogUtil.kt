@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.util
 
 import burlton.dartzee.code.core.util.DialogUtil
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.core.helper.TestMessageDialogFactory
 import io.mockk.mockk
 import io.mockk.verifySequence

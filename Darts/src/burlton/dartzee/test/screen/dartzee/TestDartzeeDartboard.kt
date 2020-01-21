@@ -4,12 +4,12 @@ import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.dartzee.DartzeeDartboard
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.test.*
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 
-class TestDartzeeDartboard: AbstractDartsTest()
+class TestDartzeeDartboard: AbstractTest()
 {
     @Test
     fun `It should fade out invalid segments, but leave valid segments opaque`()

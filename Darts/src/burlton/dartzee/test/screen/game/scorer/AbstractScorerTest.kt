@@ -2,11 +2,11 @@ package burlton.dartzee.test.screen.game.scorer
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.game.scorer.DartsScorer
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-abstract class AbstractScorerTest<S: DartsScorer> : AbstractDartsTest()
+abstract class AbstractScorerTest<S: DartsScorer> : AbstractTest()
 {
     abstract fun getValidGameParams(): String
     abstract fun factoryScorerImpl(): S

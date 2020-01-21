@@ -25,7 +25,7 @@ import io.mockk.verify
 import org.junit.Test
 import java.awt.Color
 
-class TestDartzeeRuleCarousel: AbstractDartsTest()
+class TestDartzeeRuleCarousel: AbstractTest()
 {
     private val dtos = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
 
