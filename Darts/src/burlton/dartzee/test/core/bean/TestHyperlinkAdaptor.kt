@@ -2,7 +2,7 @@ package burlton.dartzee.test.core.bean
 
 import burlton.dartzee.code.core.bean.HyperlinkAdaptor
 import burlton.dartzee.code.core.bean.IHyperlinkListener
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.core.helper.MOUSE_EVENT_SINGLE_CLICK
 import burlton.dartzee.test.core.helper.makeMouseEvent
 import io.kotlintest.shouldBe

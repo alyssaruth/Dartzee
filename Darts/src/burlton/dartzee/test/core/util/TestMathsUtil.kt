@@ -2,7 +2,7 @@ package burlton.dartzee.test.core.util
 
 import burlton.dartzee.code.core.util.MathsUtil
 import burlton.dartzee.code.core.util.ceilDiv
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

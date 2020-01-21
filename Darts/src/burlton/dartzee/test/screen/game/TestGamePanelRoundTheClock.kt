@@ -7,12 +7,12 @@ import burlton.dartzee.code.db.*
 import burlton.dartzee.code.screen.game.GamePanelRoundTheClock
 import burlton.dartzee.code.screen.game.scorer.DartsScorerRoundTheClock
 import burlton.dartzee.test.db.TestAchievementEntity
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestGamePanelRoundTheClock: AbstractDartsTest()
+class TestGamePanelRoundTheClock: AbstractTest()
 {
     @Test
     fun `Should load a current streak across several rounds`()

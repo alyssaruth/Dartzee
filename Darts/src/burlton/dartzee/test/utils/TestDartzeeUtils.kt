@@ -14,7 +14,7 @@ import org.junit.Test
 import java.awt.Color
 import javax.swing.JButton
 
-class TestDartzeeUtils: AbstractDartsTest()
+class TestDartzeeUtils: AbstractTest()
 {
     @Test
     fun `Should set the right colours based on dartzee result`()

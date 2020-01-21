@@ -4,7 +4,7 @@ import burlton.dartzee.code.bean.PlayerSelector
 import burlton.dartzee.code.bean.getAllPlayers
 import burlton.dartzee.code.bean.getSelectedPlayer
 import burlton.dartzee.code.db.*
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.test.core.helper.doubleClick
 import burlton.dartzee.test.core.helper.processKeyPress
@@ -15,7 +15,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.event.KeyEvent
 
-class TestPlayerSelector: AbstractDartsTest()
+class TestPlayerSelector: AbstractTest()
 {
     @Test
     fun `Should start with no players selected`()

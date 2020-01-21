@@ -6,7 +6,7 @@ import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupPanel
 import burlton.dartzee.code.utils.InjectedThings
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.FakeDartzeeRuleFactory
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
@@ -17,7 +17,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.event.KeyEvent
 
-class TestDartzeeRuleSetupPanel: AbstractDartsTest()
+class TestDartzeeRuleSetupPanel: AbstractTest()
 {
     override fun afterEachTest()
     {

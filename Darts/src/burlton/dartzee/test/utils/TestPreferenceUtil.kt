@@ -1,7 +1,7 @@
 package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.utils.PreferenceUtil
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -10,7 +10,7 @@ private const val INT_PREF = "FAKE_INT;20"
 private const val DOUBLE_PREF = "FAKE_DOUBLE;2.7"
 private const val BOOLEAN_PREF = "FAKE_BOOLEAN;false"
 
-class TestPreferenceUtil: AbstractDartsTest()
+class TestPreferenceUtil: AbstractTest()
 {
     override fun afterEachTest()
     {

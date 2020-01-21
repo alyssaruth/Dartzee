@@ -8,7 +8,7 @@ import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.doClick
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe
@@ -19,7 +19,7 @@ import io.mockk.verify
 import org.junit.Test
 import java.awt.Color
 
-class TestDartboard: AbstractDartsTest()
+class TestDartboard: AbstractTest()
 {
     @Test
     fun `Dartboard listener should be notified if set`()

@@ -3,7 +3,7 @@ package burlton.dartzee.test.core.screen
 import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.core.screen.SimpleDialog
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test

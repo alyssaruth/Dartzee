@@ -3,7 +3,7 @@ package burlton.dartzee.test.core.screen
 import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.dartzee.code.core.screen.TableModelDialog
 import burlton.dartzee.code.core.util.getAllChildComponentsForType
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk

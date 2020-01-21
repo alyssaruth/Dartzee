@@ -10,7 +10,7 @@ import burlton.dartzee.code.utils.doesHighestWin
 import burlton.dartzee.code.utils.getFilterPanel
 import burlton.dartzee.code.utils.getTypeDesc
 import burlton.dartzee.code.utils.setFinishingPositions
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertAchievement
 import burlton.dartzee.test.helper.insertGame
 import burlton.dartzee.test.helper.insertParticipant
@@ -19,7 +19,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import kotlin.test.assertNotNull
 
-class TestGameUtil: AbstractDartsTest()
+class TestGameUtil: AbstractTest()
 {
     @Test
     fun `Sensible descriptions when no params`()

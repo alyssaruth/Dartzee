@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.bean
 
 import burlton.dartzee.code.core.bean.RadioButtonPanel
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe

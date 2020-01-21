@@ -1,7 +1,7 @@
 package burlton.dartzee.test.db.sanity
 
 import burlton.dartzee.code.db.sanity.SanityCheckPlayerIdMismatch
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertDart
 import burlton.dartzee.test.helper.insertParticipant
 import burlton.dartzee.test.helper.randomGuid
@@ -9,7 +9,7 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestSanityCheckPlayerIdMismatch: AbstractDartsTest()
+class TestSanityCheckPlayerIdMismatch: AbstractTest()
 {
     @Test
     fun `Should not flag up matching rows`()

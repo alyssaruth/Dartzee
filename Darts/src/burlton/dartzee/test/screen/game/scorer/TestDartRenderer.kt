@@ -3,13 +3,13 @@ package burlton.dartzee.test.screen.game.scorer
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartHint
 import burlton.dartzee.code.screen.game.scorer.DartRenderer
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 import java.awt.Font
 
-class TestDartRenderer: AbstractDartsTest()
+class TestDartRenderer: AbstractTest()
 {
     @Test
     fun `Should render DartHints in brackets, and regular darts without`()

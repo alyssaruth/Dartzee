@@ -2,12 +2,12 @@ package burlton.dartzee.test.`object`
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.test.*
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Point
 
-class TestDartboardSegment: AbstractDartsTest()
+class TestDartboardSegment: AbstractTest()
 {
     @Test
     fun `Should return the correct multiplier based on segment type`()

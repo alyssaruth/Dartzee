@@ -5,12 +5,12 @@ import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOuter
 import burlton.dartzee.code.dartzee.getAllDartRules
 import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.parseDartRule
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeRules: AbstractDartsTest()
+class TestDartzeeRules: AbstractTest()
 {
     @Test
     fun `no dart rules should have overlapping identifiers`()

@@ -5,7 +5,7 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
 import burlton.dartzee.code.screen.preference.AbstractPreferencesPanel
 import burlton.dartzee.code.screen.preference.PreferencesDialog
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.core.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -13,7 +13,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestPreferencesDialog: AbstractDartsTest()
+class TestPreferencesDialog: AbstractTest()
 {
     private var dialog = PreferencesDialog()
     private var mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)

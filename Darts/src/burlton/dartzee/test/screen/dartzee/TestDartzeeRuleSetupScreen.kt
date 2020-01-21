@@ -3,12 +3,12 @@ package burlton.dartzee.test.screen.dartzee
 import burlton.dartzee.code.db.DartsMatchEntity
 import burlton.dartzee.code.screen.GameSetupScreen
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupScreen
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeRuleSetupScreen: AbstractDartsTest()
+class TestDartzeeRuleSetupScreen: AbstractTest()
 {
     @Test
     fun `Should have the right title n stuff`()

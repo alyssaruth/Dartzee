@@ -2,12 +2,12 @@ package burlton.dartzee.test.screen.game.scorer
 
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.screen.game.scorer.DartzeeRoundResultRenderer
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 
-class TestDartzeeRoundResultRenderer: AbstractDartsTest()
+class TestDartzeeRoundResultRenderer: AbstractTest()
 {
     @Test
     fun `Should allow nulls`()

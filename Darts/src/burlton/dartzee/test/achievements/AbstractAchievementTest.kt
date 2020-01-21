@@ -20,7 +20,7 @@ import org.junit.Test
 import java.sql.Timestamp
 import javax.imageio.ImageIO
 
-abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTest()
+abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
     abstract fun factoryAchievement(): E
     abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)

@@ -2,7 +2,7 @@ package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.*
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.code.core.bean.ScrollTable
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -10,7 +10,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.ListSelectionModel
 
-class TestScrollTablePlayers: AbstractDartsTest()
+class TestScrollTablePlayers: AbstractTest()
 {
     @Test
     fun `Should initialise correctly`()

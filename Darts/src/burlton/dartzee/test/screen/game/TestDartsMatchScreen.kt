@@ -5,14 +5,14 @@ import burlton.dartzee.code.achievements.x01.AchievementX01BestFinish
 import burlton.dartzee.code.db.PlayerImageEntity
 import burlton.dartzee.code.screen.game.DartsGamePanel
 import burlton.dartzee.code.screen.game.DartsMatchScreen
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertDartsMatch
 import burlton.dartzee.test.helper.insertPlayer
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestDartsMatchScreen: AbstractDartsTest()
+class TestDartsMatchScreen: AbstractTest()
 {
     @Test
     fun `Should update appearances on all game tabs`()

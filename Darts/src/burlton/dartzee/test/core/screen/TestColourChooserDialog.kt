@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.screen
 
 import burlton.dartzee.code.core.screen.ColourChooserDialog
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.spyk
 import io.mockk.verify

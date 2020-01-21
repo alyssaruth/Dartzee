@@ -2,7 +2,7 @@ package burlton.dartzee.test.screen.game
 
 import burlton.dartzee.code.screen.game.PanelWithScorers
 import burlton.dartzee.code.screen.game.scorer.AbstractScorer
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -10,7 +10,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowExactly
 import org.junit.Test
 
-class TestPanelWithScorers: AbstractDartsTest()
+class TestPanelWithScorers: AbstractTest()
 {
     @Test
     fun `Should init with the right number of scorers, and split them evenly between east and west`()

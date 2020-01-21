@@ -2,7 +2,7 @@ package burlton.dartzee.test.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleCalculationResult
 import burlton.dartzee.test.doubleNineteen
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.outerBull
 import burlton.dartzee.test.singleTwenty
@@ -10,7 +10,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeRuleCalculationResult: AbstractDartsTest()
+class TestDartzeeRuleCalculationResult: AbstractTest()
 {
     @Test
     fun `Should calculate the correct percentage based on the passed in probabilities`()

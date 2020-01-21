@@ -1,7 +1,7 @@
 package burlton.dartzee.test.utils
 
 import burlton.dartzee.code.utils.*
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.doubles.shouldBeGreaterThanOrEqual
 import io.kotlintest.matchers.doubles.shouldBeLessThanOrEqual
@@ -16,7 +16,7 @@ import java.awt.Point
  * 14/01/2019 - Now brought to you with Kotlin!
  * 23/04/2019 - Class under test is now Kotlin, and this now uses Kotlintest
  * */
-class TestGeometryUtil: AbstractDartsTest()
+class TestGeometryUtil: AbstractTest()
 {
     @Test
     fun testTranslatePoint()

@@ -6,7 +6,7 @@ import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
 import burlton.dartzee.code.utils.DARTZEE_REPOSITORY_URL
 import burlton.dartzee.code.utils.UpdateManager
 import burlton.dartzee.code.utils.UpdateMetadata
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import com.mashape.unirest.http.Unirest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
@@ -22,7 +22,7 @@ import java.io.File
 import java.io.IOException
 import javax.swing.JOptionPane
 
-class TestUpdateManager: AbstractDartsTest()
+class TestUpdateManager: AbstractTest()
 {
     /**
      * Communication

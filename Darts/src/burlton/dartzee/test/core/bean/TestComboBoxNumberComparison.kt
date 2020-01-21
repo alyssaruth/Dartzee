@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.bean
 
 import burlton.dartzee.code.core.bean.ComboBoxNumberComparison
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

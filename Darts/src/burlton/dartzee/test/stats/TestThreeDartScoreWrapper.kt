@@ -1,12 +1,12 @@
 package burlton.dartzee.test.stats
 
 import burlton.dartzee.code.stats.ThreeDartScoreWrapper
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestThreeDartScoreWrapper: AbstractDartsTest()
+class TestThreeDartScoreWrapper: AbstractTest()
 {
     @Test
     fun `Should report the correct total across all methods`()

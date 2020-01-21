@@ -1,13 +1,24 @@
-package burlton.dartzee.test.core.helper
+package burlton.dartzee.test.helper
 
+import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.db.LocalIdGenerator
+import burlton.dartzee.code.utils.DartsDatabaseUtil
+import burlton.dartzee.code.utils.InjectedThings
+import burlton.dartzee.test.core.helper.TestDebugExtension
+import burlton.dartzee.test.core.helper.TestMessageDialogFactory
+import burlton.dartzee.test.core.helper.checkedForExceptions
+import burlton.dartzee.test.core.helper.exceptionLogged
 import burlton.dartzee.test.core.util.TestDebug
 import io.kotlintest.shouldBe
+import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After
 import org.junit.Before
+import java.sql.DriverManager
+import javax.swing.UIManager
 
-private const val DEBUG_MODE = true
+private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
 private var doneOneTimeSetup = false
 
 abstract class AbstractTest
@@ -24,8 +35,6 @@ abstract class AbstractTest
             doneOneTimeSetup = true
         }
 
-        doOneTimeDartsSetup()
-
         if (!doneClassSetup)
         {
             doClassSetup()
@@ -35,22 +44,28 @@ abstract class AbstractTest
         beforeEachTest()
     }
 
-    open fun doOneTimeDartsSetup() {}
-
     private fun doOneTimeSetup()
     {
         Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.sendingEmails = false
-        Debug.logToSystemOut = DEBUG_MODE
+        Debug.logToSystemOut = true
 
         Debug.debugExtension = TestDebugExtension()
         DialogUtil.init(dialogFactory)
+
+        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
+        InjectedThings.verificationDartboardSize = 50
+
+        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
+        DartsClient.derbyDbName = DATABASE_NAME_TEST
+        DriverManager.registerDriver(EmbeddedDriver())
+        DartsDatabaseUtil.initialiseDatabase()
     }
 
     open fun doClassSetup()
     {
         Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.logToSystemOut = DEBUG_MODE
+        Debug.logToSystemOut = true
         DialogUtil.init(dialogFactory)
     }
 
@@ -59,6 +74,9 @@ abstract class AbstractTest
         Debug.lastErrorMillis = -1
         Debug.initialise(TestDebug.SimpleDebugOutput())
         dialogFactory.reset()
+
+        LocalIdGenerator.hmLastAssignedIdByTableName.clear()
+        DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
     }
 
     @After

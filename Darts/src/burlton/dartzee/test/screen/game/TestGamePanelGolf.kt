@@ -7,14 +7,14 @@ import burlton.dartzee.code.db.*
 import burlton.dartzee.code.screen.game.scorer.DartsScorerGolf
 import burlton.dartzee.code.screen.game.GamePanelGolf
 import burlton.dartzee.test.db.TestAchievementEntity
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertAchievement
 import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestGamePanelGolf: AbstractDartsTest()
+class TestGamePanelGolf: AbstractTest()
 {
     /**
      * Updating Gambler achievement

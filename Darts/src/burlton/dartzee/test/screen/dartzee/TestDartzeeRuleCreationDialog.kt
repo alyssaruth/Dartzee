@@ -28,7 +28,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
 
-class TestDartzeeRuleAmendment: AbstractDartsTest()
+class TestDartzeeRuleAmendment: AbstractTest()
 {
     @Test
     fun `Should adjust the dialog title appropriately`()
@@ -178,7 +178,7 @@ class TestDartzeeRuleAmendment: AbstractDartsTest()
     }
 }
 
-class TestDartzeeRuleCreationDialogValidation: AbstractDartsTest()
+class TestDartzeeRuleCreationDialogValidation: AbstractTest()
 {
     override fun afterEachTest()
     {
@@ -260,7 +260,7 @@ class TestDartzeeRuleCreationDialogValidation: AbstractDartsTest()
     }
 }
 
-class TestDartzeeRuleCreationDialogDtoPopulation : AbstractDartsTest()
+class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
 {
     @Test
     fun `Should populate an 'at least one' rule correctly`()
@@ -344,7 +344,7 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractDartsTest()
     }
 }
 
-class TestDartzeeRuleCreationDialogInteraction : AbstractDartsTest()
+class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 {
     override fun afterEachTest()
     {

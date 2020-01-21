@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.util
 
 import burlton.dartzee.code.core.util.FileUtil
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.core.helper.exceptionLogged
 import burlton.dartzee.test.core.helper.getLogs
 import io.kotlintest.matchers.collections.shouldContainExactly

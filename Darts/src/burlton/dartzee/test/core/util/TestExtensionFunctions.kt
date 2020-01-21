@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.util
 
 import burlton.dartzee.code.core.util.*
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.core.helper.verifyNotCalled
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

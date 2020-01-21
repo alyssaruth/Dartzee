@@ -1,7 +1,7 @@
 package burlton.dartzee.test.core.obj
 
 import burlton.dartzee.code.core.obj.HashMapList
-import burlton.dartzee.test.core.helper.AbstractTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe

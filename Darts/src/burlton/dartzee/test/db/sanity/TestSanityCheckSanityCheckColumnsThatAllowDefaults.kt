@@ -2,12 +2,12 @@ package burlton.dartzee.test.db.sanity
 
 import burlton.dartzee.code.db.sanity.SanityCheckColumnsThatAllowDefaults
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestSanityCheckSanityCheckColumnsThatAllowDefaults: AbstractDartsTest()
+class TestSanityCheckSanityCheckColumnsThatAllowDefaults: AbstractTest()
 {
     @Test
     fun `Should return no results by default`()

@@ -12,7 +12,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JOptionPane
 
-class TestDevUtilities: AbstractDartsTest()
+class TestDevUtilities: AbstractTest()
 {
     @Test
     fun `Should show an error and return out if there are no games in the DB`()

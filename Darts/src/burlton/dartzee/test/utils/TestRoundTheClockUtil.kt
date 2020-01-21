@@ -3,7 +3,7 @@ package burlton.dartzee.test.utils
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.utils.getLongestStreak
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.factoryClockHit
 import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -11,7 +11,7 @@ import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestRoundTheClockUtil: AbstractDartsTest()
+class TestRoundTheClockUtil: AbstractTest()
 {
     @Test
     fun `getLongestStreak should return 0 for an empty list`()

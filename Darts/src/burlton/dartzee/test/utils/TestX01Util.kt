@@ -3,7 +3,7 @@ package burlton.dartzee.test.utils
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.utils.*
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -11,7 +11,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestX01Util: AbstractDartsTest()
+class TestX01Util: AbstractTest()
 {
     @Test
     fun testIsBust()
