@@ -2,11 +2,11 @@ package burlton.dartzee.test.screen.stats.player
 
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.containsComponent
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.containsComponent
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import org.junit.Test
@@ -14,7 +14,7 @@ import java.awt.Color
 import java.awt.Component
 import java.sql.Timestamp
 
-abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractDartsTest()
+abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractTest()
 {
     abstract fun factoryTab(): E
     abstract fun getComponentsForComparison(tab: E): List<Component>

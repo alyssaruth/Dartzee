@@ -4,7 +4,7 @@ import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_TREBLES
 import burlton.dartzee.code.utils.PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE
 import burlton.dartzee.code.utils.PreferenceUtil
-import burlton.desktopcore.code.util.DateStatics
+import burlton.dartzee.code.core.util.DateStatics
 import java.awt.Point
 import java.sql.Timestamp
 

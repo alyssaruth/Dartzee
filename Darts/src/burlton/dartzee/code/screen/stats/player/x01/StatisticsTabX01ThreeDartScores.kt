@@ -5,11 +5,11 @@ import burlton.dartzee.code.bean.X01ScoreRenderer
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.stats.ThreeDartScoreWrapper
-import burlton.desktopcore.code.bean.NumberField
-import burlton.desktopcore.code.bean.RowSelectionListener
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
-import burlton.desktopcore.code.util.TableUtil.SimpleRenderer
+import burlton.dartzee.code.core.bean.NumberField
+import burlton.dartzee.code.core.bean.RowSelectionListener
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.util.TableUtil.SimpleRenderer
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.GridLayout

@@ -1,11 +1,11 @@
 package burlton.dartzee.code.screen.reporting
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.reporting.COMPARATOR_SCORE_UNSET
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
-import burlton.desktopcore.code.bean.ComboBoxNumberComparison
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.bean.ComboBoxNumberComparison
+import burlton.dartzee.code.core.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener

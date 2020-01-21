@@ -2,7 +2,7 @@ package burlton.dartzee.test.screen.ai
 
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.ai.NewSetupRuleDialog
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.maps.shouldContain
@@ -10,7 +10,7 @@ import io.kotlintest.shouldBe
 import net.miginfocom.swing.MigLayout
 import org.junit.Test
 
-class TestNewSetupRuleDialog: AbstractDartsTest()
+class TestNewSetupRuleDialog: AbstractTest()
 {
     @Test
     fun `Should move the spinner to the correct cell when radio selection changes`()

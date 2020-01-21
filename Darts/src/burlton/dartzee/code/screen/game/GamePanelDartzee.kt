@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.obj.HashMapList
+import burlton.dartzee.code.core.obj.HashMapList
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.ai.AbstractDartsModel

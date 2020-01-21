@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player.rtc
 
-import burlton.core.code.obj.HashMapCount
+import burlton.dartzee.code.core.obj.HashMapCount
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTabPieBreakdown
 import burlton.dartzee.code.stats.GameWrapper
 import java.awt.Color

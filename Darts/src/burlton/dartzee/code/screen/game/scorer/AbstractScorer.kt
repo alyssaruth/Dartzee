@@ -4,7 +4,7 @@ import burlton.dartzee.code.bean.PlayerAvatar
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DartsColour
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension

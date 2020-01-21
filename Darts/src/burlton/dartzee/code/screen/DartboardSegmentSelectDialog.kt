@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.utils.DartsColour
-import burlton.desktopcore.code.screen.SimpleDialog
+import burlton.dartzee.code.core.screen.SimpleDialog
 import java.awt.BorderLayout
 import javax.swing.JPanel
 

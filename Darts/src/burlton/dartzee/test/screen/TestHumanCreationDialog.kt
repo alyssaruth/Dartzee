@@ -2,12 +2,12 @@ package burlton.dartzee.test.screen
 
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.HumanCreationDialog
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.randomGuid
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestHumanCreationDialog: AbstractDartsTest()
+class TestHumanCreationDialog: AbstractTest()
 {
     @Test
     fun `Should be modal and non-resizable`()

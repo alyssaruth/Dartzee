@@ -1,14 +1,14 @@
 package burlton.dartzee.code.ai
 
-import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.obj.HashMapList
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import java.sql.Timestamp
 
 abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,

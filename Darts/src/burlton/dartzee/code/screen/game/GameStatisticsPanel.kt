@@ -1,15 +1,15 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
-import burlton.core.code.util.MathsUtil
-import burlton.core.code.util.addUnique
-import burlton.core.code.util.runOnEventThread
+import burlton.dartzee.code.core.obj.HashMapList
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.MathsUtil
+import burlton.dartzee.code.core.util.addUnique
+import burlton.dartzee.code.core.util.runOnEventThread
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTable
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component

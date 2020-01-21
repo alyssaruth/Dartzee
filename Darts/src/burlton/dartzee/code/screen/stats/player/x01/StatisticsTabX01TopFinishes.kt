@@ -3,8 +3,8 @@ package burlton.dartzee.code.screen.stats.player.x01
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.util.TableUtil
-import burlton.desktopcore.code.util.TableUtil.SimpleRenderer
+import burlton.dartzee.code.core.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil.SimpleRenderer
 import java.awt.Color
 import java.awt.GridLayout
 import javax.swing.SwingConstants

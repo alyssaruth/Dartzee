@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.dartzee
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.*
@@ -12,9 +12,9 @@ import burlton.dartzee.code.screen.dartzee.DartzeeRuleVerificationPanel
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.flushEdt
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.bean.selectByClass
-import burlton.desktopcore.code.util.getAllChildComponentsForType
-import burlton.desktopcore.test.helpers.makeActionEvent
+import burlton.dartzee.code.core.bean.selectByClass
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
+import burlton.dartzee.test.core.helper.makeActionEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -28,7 +28,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
 
-class TestDartzeeRuleAmendment: AbstractDartsTest()
+class TestDartzeeRuleAmendment: AbstractTest()
 {
     @Test
     fun `Should adjust the dialog title appropriately`()
@@ -178,7 +178,7 @@ class TestDartzeeRuleAmendment: AbstractDartsTest()
     }
 }
 
-class TestDartzeeRuleCreationDialogValidation: AbstractDartsTest()
+class TestDartzeeRuleCreationDialogValidation: AbstractTest()
 {
     override fun afterEachTest()
     {
@@ -260,7 +260,7 @@ class TestDartzeeRuleCreationDialogValidation: AbstractDartsTest()
     }
 }
 
-class TestDartzeeRuleCreationDialogDtoPopulation : AbstractDartsTest()
+class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
 {
     @Test
     fun `Should populate an 'at least one' rule correctly`()
@@ -344,7 +344,7 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractDartsTest()
     }
 }
 
-class TestDartzeeRuleCreationDialogInteraction : AbstractDartsTest()
+class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 {
     override fun afterEachTest()
     {

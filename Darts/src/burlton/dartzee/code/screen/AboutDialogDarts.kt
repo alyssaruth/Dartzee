@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
-import burlton.desktopcore.code.screen.AbstractAboutDialog
+import burlton.dartzee.code.core.screen.AbstractAboutDialog
 
 class AboutDialogDarts : AbstractAboutDialog()
 {

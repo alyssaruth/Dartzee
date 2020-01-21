@@ -1,8 +1,8 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.StringUtil
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.isEndOfTime
+import burlton.dartzee.code.core.util.StringUtil
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.isEndOfTime
 
 /**
  * Represents the participant of a game. This is a link between a player and a game, with additional information

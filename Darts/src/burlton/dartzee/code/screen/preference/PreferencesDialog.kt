@@ -1,9 +1,9 @@
 package burlton.dartzee.code.screen.preference
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.resetCachedDartboardValues
-import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.event.ActionEvent

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.bean.*
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
@@ -10,7 +10,7 @@ import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleSetupScreen
 import burlton.dartzee.code.utils.getFilterPanel
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.GridLayout

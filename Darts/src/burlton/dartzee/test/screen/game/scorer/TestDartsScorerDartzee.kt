@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.game.scorer
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.screen.game.GamePanelDartzee
@@ -9,11 +9,11 @@ import burlton.dartzee.code.screen.game.scorer.DartsScorerDartzee
 import burlton.dartzee.code.screen.game.scorer.DartzeeRoundResultRenderer
 import burlton.dartzee.code.screen.game.scorer.DartzeeScoreRenderer
 import burlton.dartzee.test.doClick
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertGame
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -21,7 +21,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestDartsScorerDartzee: AbstractDartsTest()
+class TestDartsScorerDartzee: AbstractTest()
 {
     @Test
     fun `Should listen to mouse events once the game has finished`()

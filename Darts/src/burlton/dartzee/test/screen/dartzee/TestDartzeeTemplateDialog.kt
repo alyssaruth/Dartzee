@@ -1,12 +1,12 @@
 package burlton.dartzee.test.screen.dartzee
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleEven
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleOdd
 import burlton.dartzee.code.db.DARTZEE_TEMPLATE
 import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateDialog
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertDartzeeTemplate
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
@@ -18,7 +18,7 @@ import io.mockk.verify
 import org.junit.Test
 import kotlin.test.assertNotNull
 
-class TestDartzeeTemplateDialog: AbstractDartsTest()
+class TestDartzeeTemplateDialog: AbstractTest()
 {
     @Test
     fun `Should show an error if template name not specified`()

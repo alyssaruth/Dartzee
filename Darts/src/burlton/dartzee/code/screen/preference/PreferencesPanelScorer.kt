@@ -1,8 +1,8 @@
 package burlton.dartzee.code.screen.preference
 
 import burlton.dartzee.code.utils.*
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font

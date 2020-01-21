@@ -1,7 +1,7 @@
 package burlton.dartzee.code.reporting
 
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import burlton.dartzee.code.core.util.getEndOfTimeSqlString
 import java.sql.Timestamp
 import java.util.*
 

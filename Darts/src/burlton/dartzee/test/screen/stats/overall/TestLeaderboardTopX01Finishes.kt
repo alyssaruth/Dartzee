@@ -10,7 +10,7 @@ import burlton.dartzee.code.utils.PreferenceUtil
 import burlton.dartzee.test.helper.AbstractRegistryTest
 import burlton.dartzee.test.helper.insertGame
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp

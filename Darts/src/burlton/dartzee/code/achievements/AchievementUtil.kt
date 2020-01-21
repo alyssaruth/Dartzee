@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.achievements.dartzee.AchievementDartzeeGamesWon
 import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
 import burlton.dartzee.code.achievements.golf.AchievementGolfCourseMaster
@@ -15,7 +15,7 @@ import burlton.dartzee.code.db.AchievementEntity
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.screen.ProgressDialog
+import burlton.dartzee.code.core.screen.ProgressDialog
 import java.sql.SQLException
 import kotlin.streams.toList
 

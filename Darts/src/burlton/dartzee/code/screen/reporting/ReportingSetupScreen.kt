@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.reporting
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.bean.*
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
@@ -9,12 +9,12 @@ import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.PlayerSelectDialog
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.getFilterPanel
-import burlton.desktopcore.code.bean.DateFilterPanel
-import burlton.desktopcore.code.bean.RadioButtonPanel
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.createButtonGroup
-import burlton.desktopcore.code.util.enableChildren
+import burlton.dartzee.code.core.bean.DateFilterPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.createButtonGroup
+import burlton.dartzee.code.core.util.enableChildren
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

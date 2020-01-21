@@ -2,8 +2,8 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.screen.reporting.ReportingSetupScreen
 import burlton.dartzee.code.screen.stats.overall.LeaderboardsScreen
-import burlton.desktopcore.code.screen.BugReportDialog
-import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.dartzee.code.core.screen.BugReportDialog
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent

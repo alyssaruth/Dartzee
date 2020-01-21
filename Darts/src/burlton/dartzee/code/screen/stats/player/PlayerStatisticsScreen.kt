@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.GAME_TYPE_GOLF
 import burlton.dartzee.code.db.GAME_TYPE_ROUND_THE_CLOCK
@@ -16,7 +16,7 @@ import burlton.dartzee.code.screen.stats.player.rtc.StatisticsTabRoundTheClockHi
 import burlton.dartzee.code.screen.stats.player.x01.*
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.sql.SQLException

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game.scorer
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import burlton.dartzee.code.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS

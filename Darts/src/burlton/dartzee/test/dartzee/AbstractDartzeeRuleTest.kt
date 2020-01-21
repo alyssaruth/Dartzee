@@ -5,12 +5,12 @@ import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.getAllDartRules
 import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.parseRule
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-abstract class AbstractDartzeeRuleTest<E: AbstractDartzeeRule>: AbstractDartsTest()
+abstract class AbstractDartzeeRuleTest<E: AbstractDartzeeRule>: AbstractTest()
 {
     abstract fun factory(): E
 

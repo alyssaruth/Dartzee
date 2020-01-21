@@ -5,7 +5,7 @@ import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleGreaterThan
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRulePrime
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.getFakeValidSegment
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
@@ -15,7 +15,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import kotlin.test.assertNotNull
 
-class TestDartzeeRuleDto: AbstractDartsTest()
+class TestDartzeeRuleDto: AbstractTest()
 {
     @Test
     fun `Dart rule list should return all 3 rules when set`()

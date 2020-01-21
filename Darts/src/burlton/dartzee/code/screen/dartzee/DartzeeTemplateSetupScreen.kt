@@ -9,11 +9,10 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.InjectedThings
-import burlton.desktopcore.code.bean.RowSelectionListener
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.bean.addKeyAction
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.bean.RowSelectionListener
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.TableUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension

@@ -2,13 +2,13 @@ package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.dartzee.getAllDartRules
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeDartRuleSelector : AbstractDartsTest()
+class TestDartzeeDartRuleSelector : AbstractTest()
 {
     @Test
     fun `Should initialise with all the dart rules`()

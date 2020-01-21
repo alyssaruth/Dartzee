@@ -1,12 +1,12 @@
 package burlton.dartzee.test.ai
 
-import burlton.core.code.obj.HashMapCount
-import burlton.core.code.util.XmlUtil
+import burlton.dartzee.code.core.obj.HashMapCount
+import burlton.dartzee.code.core.util.XmlUtil
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_DOUBLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.ai.*
 import burlton.dartzee.test.borrowTestDartboard
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.numerics.shouldBeBetween
 import io.kotlintest.shouldBe
@@ -17,7 +17,7 @@ import org.apache.commons.math3.distribution.NormalDistribution
 import org.junit.Test
 import java.awt.Point
 
-class TestDartsModelNormalDistribution: AbstractDartsTest()
+class TestDartsModelNormalDistribution: AbstractTest()
 {
     /**
      * Read / write XML etc

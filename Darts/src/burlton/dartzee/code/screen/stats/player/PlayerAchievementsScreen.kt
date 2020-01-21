@@ -11,7 +11,7 @@ import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.getAllGameTypes
 import burlton.dartzee.code.utils.getTypeDesc
-import burlton.desktopcore.code.bean.WrapLayout
+import burlton.dartzee.code.core.bean.WrapLayout
 import java.awt.*
 import javax.swing.*
 import javax.swing.border.EmptyBorder

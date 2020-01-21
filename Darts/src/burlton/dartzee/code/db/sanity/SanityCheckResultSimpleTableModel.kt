@@ -1,6 +1,6 @@
 package burlton.dartzee.code.db.sanity
 
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 
 open class SanityCheckResultSimpleTableModel(private val model: DefaultModel, private val desc: String) : AbstractSanityCheckResult()
 {

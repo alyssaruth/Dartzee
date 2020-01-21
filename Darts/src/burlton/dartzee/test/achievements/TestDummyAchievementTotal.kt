@@ -1,7 +1,7 @@
 package burlton.dartzee.test.achievements
 
 import burlton.dartzee.code.achievements.*
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertAchievement
 import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -10,7 +10,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
 
-class TestDummyAchievementTotal: AbstractDartsTest()
+class TestDummyAchievementTotal: AbstractTest()
 {
     @Test
     fun `Should not be in the list of all achievements`()

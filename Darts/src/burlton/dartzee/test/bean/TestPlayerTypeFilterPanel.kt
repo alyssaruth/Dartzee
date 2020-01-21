@@ -2,14 +2,14 @@ package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.PlayerTypeFilterPanel
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.test.helper.wipeTable
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestPlayerTypeFilterPanel: AbstractDartsTest()
+class TestPlayerTypeFilterPanel: AbstractTest()
 {
     @Test
     fun `Should have All selected by default`()

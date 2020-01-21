@@ -3,14 +3,14 @@ package burlton.dartzee.test.screen.game
 import burlton.dartzee.code.achievements.x01.AchievementX01BestGame
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.game.DartsGameScreen
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertGame
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestDartsGameScreen: AbstractDartsTest()
+class TestDartsGameScreen: AbstractTest()
 {
     @Test
     fun `Should initialise correctly`()

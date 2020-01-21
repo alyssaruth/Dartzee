@@ -3,8 +3,8 @@ package burlton.dartzee.code.screen.preference
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.*
-import burlton.desktopcore.code.bean.ColourPicker
-import burlton.desktopcore.code.bean.ColourSelectionListener
+import burlton.dartzee.code.core.bean.ColourPicker
+import burlton.dartzee.code.core.bean.ColourSelectionListener
 import java.awt.Color
 import java.awt.Font
 import javax.swing.JLabel

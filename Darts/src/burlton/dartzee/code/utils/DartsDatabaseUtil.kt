@@ -1,12 +1,12 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.Debug
-import burlton.core.code.util.FileUtil
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.FileUtil
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.db.VersionEntity.Companion.insertVersion
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.desktopcore.code.screen.ProgressDialog
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.screen.ProgressDialog
+import burlton.dartzee.code.core.util.DialogUtil
 import java.io.File
 import java.util.*
 import javax.swing.JOptionPane

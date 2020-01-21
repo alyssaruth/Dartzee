@@ -3,7 +3,7 @@ package burlton.dartzee.code.bean
 import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_STANDARD
 import burlton.dartzee.code.db.CLOCK_TYPE_TREBLES
-import burlton.desktopcore.code.bean.RadioButtonPanel
+import burlton.dartzee.code.core.bean.RadioButtonPanel
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
 import javax.swing.JRadioButton

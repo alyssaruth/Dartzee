@@ -7,7 +7,7 @@ import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
@@ -20,7 +20,7 @@ import org.junit.Test
 import java.sql.Timestamp
 import javax.imageio.ImageIO
 
-abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractDartsTest()
+abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
     abstract fun factoryAchievement(): E
     abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)

@@ -13,7 +13,7 @@ import burlton.dartzee.code.screen.UtilitiesScreen
 import burlton.dartzee.code.screen.dartzee.DartzeeTemplateSetupScreen
 import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.test.helpers.processKeyPress
+import burlton.dartzee.test.core.helper.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -23,7 +23,7 @@ import org.junit.Test
 import java.awt.event.KeyEvent
 import javax.swing.JOptionPane
 
-class TestDartzeeTemplateSetupScreen: AbstractDartsTest()
+class TestDartzeeTemplateSetupScreen: AbstractTest()
 {
     override fun afterEachTest()
     {

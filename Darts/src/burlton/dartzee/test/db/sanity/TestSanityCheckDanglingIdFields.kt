@@ -4,7 +4,7 @@ import burlton.dartzee.code.db.DartzeeRuleEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.sanity.SanityCheckDanglingIdFields
 import burlton.dartzee.code.db.sanity.SanityCheckResultDanglingIdFields
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertDartsMatch
 import burlton.dartzee.test.helper.insertDartzeeRule
 import burlton.dartzee.test.helper.insertGame
@@ -13,7 +13,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestSanityCheckDanglingIdFields: AbstractDartsTest()
+class TestSanityCheckDanglingIdFields: AbstractTest()
 {
     @Test
     fun `Should flag up ID fields that point at non-existent rows`()

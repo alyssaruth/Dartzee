@@ -1,6 +1,6 @@
 package burlton.dartzee.code.achievements.golf
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.db.AchievementEntity

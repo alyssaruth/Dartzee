@@ -1,11 +1,11 @@
 package burlton.dartzee.test.db
 
-import burlton.core.test.helper.exceptionLogged
-import burlton.core.test.helper.getLogs
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.db.*
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize

@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen.preference
 
 import burlton.dartzee.code.bean.SliderAiSpeed
 import burlton.dartzee.code.utils.*
-import burlton.desktopcore.code.bean.NumberField
+import burlton.dartzee.code.core.bean.NumberField
 import net.miginfocom.swing.MigLayout
 import javax.swing.JCheckBox
 import javax.swing.JLabel

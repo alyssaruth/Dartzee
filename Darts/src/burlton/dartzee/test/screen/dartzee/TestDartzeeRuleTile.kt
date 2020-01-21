@@ -3,14 +3,14 @@ package burlton.dartzee.test.screen.dartzee
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleLessThan
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleTile
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import burlton.dartzee.test.helper.makeTotalScoreRule
-import burlton.desktopcore.test.helpers.makeMouseEvent
+import burlton.dartzee.test.core.helper.makeMouseEvent
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeRuleTile: AbstractDartsTest()
+class TestDartzeeRuleTile: AbstractTest()
 {
     @Test
     fun `Should initialise with the rule number and description`()

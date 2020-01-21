@@ -1,14 +1,14 @@
 package burlton.dartzee.code.screen.stats.player.x01
 
-import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.MathsUtil
+import burlton.dartzee.code.core.obj.HashMapList
+import burlton.dartzee.code.core.util.MathsUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.screen.stats.player.AbstractStatisticsTab
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.getCheckoutScores
 import burlton.dartzee.code.utils.isCheckoutDart
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.GridLayout
