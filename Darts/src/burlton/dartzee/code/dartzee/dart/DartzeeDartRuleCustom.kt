@@ -2,7 +2,7 @@ package burlton.dartzee.code.dartzee.dart
 
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.utils.InjectedThings
-import burlton.desktopcore.code.bean.addUpdateListener
+import burlton.dartzee.code.core.bean.addUpdateListener
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.FlowLayout

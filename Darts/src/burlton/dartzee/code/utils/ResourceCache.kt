@@ -1,8 +1,8 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.obj.HashMapList
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.DialogUtil
 import java.io.BufferedInputStream
 import java.net.URL
 import javax.sound.sampled.AudioInputStream

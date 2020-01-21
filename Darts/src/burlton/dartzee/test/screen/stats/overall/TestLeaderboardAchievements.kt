@@ -8,13 +8,13 @@ import burlton.dartzee.code.achievements.golf.AchievementGolfBestGame
 import burlton.dartzee.code.achievements.x01.AchievementX01BestFinish
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.stats.overall.LeaderboardAchievements
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertAchievement
 import burlton.dartzee.test.helper.insertPlayer
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestLeaderboardAchievements: AbstractDartsTest()
+class TestLeaderboardAchievements: AbstractTest()
 {
     @Test
     fun `Combo box should be disabled by default`()

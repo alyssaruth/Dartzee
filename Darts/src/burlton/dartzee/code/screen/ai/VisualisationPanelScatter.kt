@@ -3,7 +3,7 @@ package burlton.dartzee.code.screen.ai
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.utils.DartsColour
-import burlton.desktopcore.code.bean.paint
+import burlton.dartzee.code.core.bean.paint
 import java.awt.Color
 import java.awt.Font
 import java.awt.Point

@@ -3,11 +3,11 @@ package burlton.dartzee.test.screen.ai
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.ai.DartsModelNormalDistribution
 import burlton.dartzee.code.screen.ai.AIConfigurationSubPanelX01
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAIConfigurationSubPanelX01: AbstractDartsTest()
+class TestAIConfigurationSubPanelX01: AbstractTest()
 {
     @Test
     fun `Should populate the scoring dart onto the model`()

@@ -1,7 +1,7 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.DebugExtension
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DebugExtension
+import burlton.dartzee.code.core.util.DialogUtil
 
 class DartsDebugExtension : DebugExtension
 {

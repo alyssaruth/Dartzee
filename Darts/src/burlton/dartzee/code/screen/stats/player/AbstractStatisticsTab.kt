@@ -1,8 +1,8 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.util.containsComponent
+import burlton.dartzee.code.core.util.containsComponent
 import java.awt.Component
 import java.awt.Container
 import java.awt.Dimension

@@ -1,7 +1,7 @@
 package burlton.dartzee.code.ai
 
-import burlton.core.code.obj.HashMapCount
-import burlton.core.code.util.*
+import burlton.dartzee.code.core.obj.HashMapCount
+import burlton.dartzee.code.core.util.*
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_STANDARD

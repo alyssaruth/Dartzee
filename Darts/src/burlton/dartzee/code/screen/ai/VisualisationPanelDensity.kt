@@ -4,7 +4,7 @@ import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.getDistance
-import burlton.desktopcore.code.bean.paint
+import burlton.dartzee.code.core.bean.paint
 import java.awt.Color
 import java.awt.Point
 import java.awt.image.BufferedImage

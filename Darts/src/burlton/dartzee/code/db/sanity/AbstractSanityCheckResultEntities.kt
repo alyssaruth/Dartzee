@@ -3,8 +3,8 @@ package burlton.dartzee.code.db.sanity
 import burlton.dartzee.code.bean.TableModelEntity
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.code.utils.DatabaseUtil.Companion.deleteRowsFromTable
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.DialogUtil
 import javax.swing.JOptionPane
 
 abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEntity<*>>): AbstractSanityCheckResult()

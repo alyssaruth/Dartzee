@@ -1,19 +1,16 @@
 package burlton.dartzee.test.bean
 
-import burlton.core.code.util.CollectionShuffler
-import burlton.core.code.util.IShuffler
-import burlton.core.code.util.InjectedCore
-import burlton.core.test.helper.FakeCollectionShuffler
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.code.bean.ScrollTableOrdered
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.CollectionShuffler
+import burlton.dartzee.code.core.util.InjectedCore
+import burlton.dartzee.test.core.helper.FakeCollectionShuffler
+import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.code.core.bean.ScrollTableOrdered
+import burlton.dartzee.code.core.util.TableUtil
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.*
 import org.junit.Test
-import java.util.*
-import java.util.Collections.shuffle
 
-class TestScrollTableOrdered: AbstractDartsTest()
+class TestScrollTableOrdered: AbstractTest()
 {
     override fun beforeEachTest() {
         super.beforeEachTest()

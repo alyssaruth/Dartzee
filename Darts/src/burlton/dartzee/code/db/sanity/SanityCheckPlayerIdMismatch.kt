@@ -1,7 +1,7 @@
 package burlton.dartzee.code.db.sanity
 
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil
 
 class SanityCheckPlayerIdMismatch: AbstractSanityCheck()
 {

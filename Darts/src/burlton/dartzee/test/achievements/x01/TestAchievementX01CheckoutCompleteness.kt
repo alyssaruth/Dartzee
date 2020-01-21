@@ -10,7 +10,7 @@ import burlton.dartzee.test.helper.getCountFromTable
 import burlton.dartzee.test.helper.insertDart
 import burlton.dartzee.test.helper.insertParticipant
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test

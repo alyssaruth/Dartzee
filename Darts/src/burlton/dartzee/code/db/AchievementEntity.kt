@@ -4,7 +4,7 @@ import burlton.dartzee.code.achievements.AbstractAchievement
 import burlton.dartzee.code.achievements.getAchievementForRef
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import java.sql.Timestamp
 
 /**

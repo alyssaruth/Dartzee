@@ -1,12 +1,12 @@
 package burlton.dartzee.test.utils
 
-import burlton.core.test.helper.exceptionLogged
-import burlton.core.test.helper.getLogs
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.ClientEmailer
 import burlton.dartzee.code.utils.ClientEmailer.TEMP_DIRECTORY
 import burlton.dartzee.code.utils.LOG_FILENAME_PREFIX
-import burlton.desktopcore.test.helpers.AbstractDesktopTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith
@@ -16,13 +16,13 @@ import org.junit.Test
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-class TestClientEmailer: AbstractDesktopTest()
+class TestClientEmailer: AbstractTest()
 {
     override fun afterEachTest()
     {
         super.afterEachTest()
 
-        File(ClientEmailer.TEMP_DIRECTORY).deleteRecursively()
+        File(TEMP_DIRECTORY).deleteRecursively()
     }
 
     @Test
@@ -49,13 +49,13 @@ class TestClientEmailer: AbstractDesktopTest()
     {
         ClientEmailer.tryToSendUnsentLogs()
 
-        getLogs() shouldContain "${ClientEmailer.TEMP_DIRECTORY} does not exist, no logs to resend"
+        getLogs() shouldContain "$TEMP_DIRECTORY does not exist, no logs to resend"
     }
 
     @Test
     fun `Should not attempt to send logs of the wrong name`()
     {
-        val tempDir = File(ClientEmailer.TEMP_DIRECTORY)
+        val tempDir = File(TEMP_DIRECTORY)
         tempDir.mkdirs()
 
         val fileName = "$tempDir/foo.txt"
@@ -103,7 +103,7 @@ class TestClientEmailer: AbstractDesktopTest()
 
     fun verifyLogFile()
     {
-        val files = File(ClientEmailer.TEMP_DIRECTORY).listFiles()
+        val files = File(TEMP_DIRECTORY).listFiles()!!
 
         files.size shouldBe 1
         val f = files.first()

@@ -4,7 +4,7 @@ import burlton.dartzee.code.db.DartEntity
 import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 import javax.swing.JOptionPane
 
 object DevUtilities

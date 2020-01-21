@@ -1,13 +1,13 @@
 package burlton.dartzee.code.screen
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.screen.ai.AIConfigurationDialog
 import burlton.dartzee.code.screen.game.AbstractDartsGameScreen
 import burlton.dartzee.code.screen.preference.PreferencesDialog
 import burlton.dartzee.code.screen.reporting.ConfigureReportColumnsDialog
-import burlton.desktopcore.code.bean.CheatBar
-import burlton.desktopcore.code.screen.DebugConsole
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.bean.CheatBar
+import burlton.dartzee.code.core.screen.DebugConsole
+import burlton.dartzee.code.core.util.DialogUtil
 import javax.swing.JOptionPane
 
 object ScreenCache

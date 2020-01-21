@@ -1,6 +1,6 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 
 class VersionEntity : AbstractEntity<VersionEntity>()

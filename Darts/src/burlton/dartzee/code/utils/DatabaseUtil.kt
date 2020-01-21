@@ -1,8 +1,8 @@
 package burlton.dartzee.code.utils
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet

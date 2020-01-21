@@ -1,8 +1,8 @@
 package burlton.dartzee.code.reporting
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 import java.sql.SQLException
 
 /**

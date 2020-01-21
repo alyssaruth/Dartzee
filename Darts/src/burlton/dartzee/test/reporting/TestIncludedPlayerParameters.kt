@@ -3,7 +3,7 @@ package burlton.dartzee.test.reporting
 import burlton.dartzee.code.reporting.IncludedPlayerParameters
 import burlton.dartzee.code.reporting.ReportParameters
 import burlton.dartzee.code.reporting.runReport
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.insertGame
 import burlton.dartzee.test.helper.insertParticipant
 import burlton.dartzee.test.helper.insertPlayer
@@ -12,7 +12,7 @@ import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
 import org.junit.Test
 
-class TestIncludedPlayerParameters: AbstractDartsTest()
+class TestIncludedPlayerParameters: AbstractTest()
 {
     @Test
     fun `Should be blank by default`()

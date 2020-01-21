@@ -1,11 +1,11 @@
 package burlton.dartzee.test.bean
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.bean.GameParamFilterPanelRoundTheClock
 import burlton.dartzee.code.db.CLOCK_TYPE_DOUBLES
 import burlton.dartzee.code.db.CLOCK_TYPE_STANDARD
 import burlton.dartzee.code.db.CLOCK_TYPE_TREBLES
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
@@ -13,7 +13,7 @@ import io.mockk.verify
 import org.junit.Test
 import java.awt.event.ActionListener
 
-class TestGameParamFilterPanelRoundTheClock: AbstractDartsTest()
+class TestGameParamFilterPanelRoundTheClock: AbstractTest()
 {
     @Test
     fun `Should select Standard by default`()

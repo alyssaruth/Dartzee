@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.ai
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.ai.AbstractDartsSimulation
@@ -11,11 +11,11 @@ import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.stats.player.PlayerStatisticsScreen
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.bean.NumberField
-import burlton.desktopcore.code.bean.RadioButtonPanel
-import burlton.desktopcore.code.screen.ProgressDialog
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.bean.NumberField
+import burlton.dartzee.code.core.bean.RadioButtonPanel
+import burlton.dartzee.code.core.screen.ProgressDialog
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.FlowLayout

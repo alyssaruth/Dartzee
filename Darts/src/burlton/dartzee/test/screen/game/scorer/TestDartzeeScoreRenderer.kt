@@ -1,14 +1,14 @@
 package burlton.dartzee.test.screen.game.scorer
 
 import burlton.dartzee.code.screen.game.scorer.DartzeeScoreRenderer
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.shouldBeBetween
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 import javax.swing.SwingConstants
 
-class TestDartzeeScoreRenderer: AbstractDartsTest()
+class TestDartzeeScoreRenderer: AbstractTest()
 {
     @Test
     fun `Should set the background colour saturation to a percentage of the maximum`()

@@ -4,9 +4,9 @@ import burlton.dartzee.code.bean.AbstractDartzeeRuleSelector
 import burlton.dartzee.code.bean.DartzeeDartRuleSelector
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.getAllDartRules
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.code.bean.findByClass
-import burlton.desktopcore.code.bean.items
+import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.code.core.bean.findByClass
+import burlton.dartzee.code.core.bean.items
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -14,7 +14,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import kotlin.test.assertNotNull
 
-class TestAbstractDartzeeRuleSelector: AbstractDartsTest()
+class TestAbstractDartzeeRuleSelector: AbstractTest()
 {
     @Test
     fun `Should render the description passed to it`()

@@ -5,9 +5,9 @@ import burlton.dartzee.code.`object`.SEGMENT_TYPE_INNER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import burlton.dartzee.code.`object`.SEGMENT_TYPE_TREBLE
 import burlton.dartzee.code.ai.AbstractDartsModel
-import burlton.desktopcore.code.bean.ComboBoxItem
-import burlton.desktopcore.code.bean.items
-import burlton.desktopcore.code.bean.selectedItemTyped
+import burlton.dartzee.code.core.bean.ComboBoxItem
+import burlton.dartzee.code.core.bean.items
+import burlton.dartzee.code.core.bean.selectedItemTyped
 import javax.swing.*
 import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent

@@ -3,13 +3,13 @@ package burlton.dartzee.test.bean
 import burlton.dartzee.code.bean.DartzeeTotalRuleSelector
 import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.total.DartzeeTotalRuleEqualTo
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestDartzeeTotalRuleSelector : AbstractDartsTest()
+class TestDartzeeTotalRuleSelector : AbstractTest()
 {
     @Test
     fun `Should initialise with all the total rules`()

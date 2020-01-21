@@ -2,8 +2,8 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.db.GameEntity
-import burlton.desktopcore.code.bean.ScrollTableHyperlink
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.bean.ScrollTableHyperlink
+import burlton.dartzee.code.core.util.DialogUtil
 
 class ScrollTableDartsGame(linkColumnName: String = "Game") : ScrollTableHyperlink(linkColumnName)
 {

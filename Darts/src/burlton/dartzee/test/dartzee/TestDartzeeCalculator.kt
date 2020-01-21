@@ -1,6 +1,6 @@
 package burlton.dartzee.test.dartzee
 
-import burlton.core.code.util.getAllPermutations
+import burlton.dartzee.code.core.util.getAllPermutations
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.dartzee.DartzeeCalculator
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleAny
@@ -20,7 +20,7 @@ import io.kotlintest.matchers.doubles.shouldBeExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAllPossibilities: AbstractDartsTest()
+class TestAllPossibilities: AbstractTest()
 {
     @Test
     fun `Should generate the right number of possibilities if given no darts`()
@@ -59,7 +59,7 @@ class TestAllPossibilities: AbstractDartsTest()
     }
 }
 
-class TestValidSegments: AbstractDartsTest()
+class TestValidSegments: AbstractTest()
 {
     @Test
     fun `getValidSegments should return the right results for the first dart`()
@@ -207,7 +207,7 @@ class TestValidSegments: AbstractDartsTest()
     }
 }
 
-class TestValidCombinations: AbstractDartsTest()
+class TestValidCombinations: AbstractTest()
 {
     @Test
     fun `should correctly identify all permutations as valid if no ordering required`()

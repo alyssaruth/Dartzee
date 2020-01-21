@@ -1,10 +1,10 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.*
+import burlton.dartzee.code.core.util.*
 import burlton.dartzee.code.utils.DatabaseUtil
 import burlton.dartzee.code.utils.getGameDesc
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getEndOfTimeSqlString
 
 /**
  * Simple entity to join multiple 'games' together into a 'match'.

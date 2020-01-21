@@ -1,9 +1,9 @@
 package burlton.dartzee.code.db.sanity
 
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 import javax.swing.JOptionPane
 
 class SanityCheckResultUnexpectedTables(model: DefaultModel) : SanityCheckResultSimpleTableModel(model, "Unexpected Tables")

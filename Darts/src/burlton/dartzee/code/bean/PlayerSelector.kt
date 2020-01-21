@@ -2,10 +2,10 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.GAME_TYPE_DARTZEE
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.desktopcore.code.bean.IDoubleClickListener
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.bean.ScrollTableOrdered
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.bean.IDoubleClickListener
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.bean.ScrollTableOrdered
+import burlton.dartzee.code.core.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
 import java.awt.Dimension

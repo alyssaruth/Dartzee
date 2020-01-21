@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.dartzee
 
 import burlton.dartzee.code.dartzee.DartzeeRuleDto
-import burlton.desktopcore.code.util.setFontSize
+import burlton.dartzee.code.core.util.setFontSize
 import org.jfree.chart.imagemap.ImageMapUtilities
 import java.awt.Dimension
 import java.awt.event.MouseEvent

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.util.ceilDiv
+import burlton.dartzee.code.core.util.ceilDiv
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.game.scorer.AbstractScorer
 import net.miginfocom.swing.MigLayout

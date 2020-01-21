@@ -6,7 +6,7 @@ import burlton.dartzee.code.achievements.unlockThreeDartAchievement
 import burlton.dartzee.code.db.GAME_TYPE_X01
 import burlton.dartzee.code.utils.ResourceCache
 import burlton.dartzee.code.utils.TOTAL_ROUND_SCORE_SQL_STR
-import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import burlton.dartzee.code.core.util.getEndOfTimeSqlString
 import java.net.URL
 
 class AchievementX01BestFinish : AbstractAchievement()

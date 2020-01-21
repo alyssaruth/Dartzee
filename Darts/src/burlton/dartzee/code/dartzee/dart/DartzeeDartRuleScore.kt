@@ -1,6 +1,6 @@
 package burlton.dartzee.code.dartzee.dart
 
-import burlton.core.code.util.getAttributeInt
+import burlton.dartzee.code.core.util.getAttributeInt
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.bean.SpinnerSingleSelector
 import org.w3c.dom.Document

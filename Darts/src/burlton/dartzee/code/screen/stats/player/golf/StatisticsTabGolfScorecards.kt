@@ -7,10 +7,10 @@ import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.stats.MODE_BACK_9
 import burlton.dartzee.code.stats.MODE_FRONT_9
 import burlton.dartzee.code.stats.MODE_FULL_18
-import burlton.desktopcore.code.bean.ComboBoxItem
-import burlton.desktopcore.code.bean.RowSelectionListener
-import burlton.desktopcore.code.bean.ScrollTable
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.bean.ComboBoxItem
+import burlton.dartzee.code.core.bean.RowSelectionListener
+import burlton.dartzee.code.core.bean.ScrollTable
+import burlton.dartzee.code.core.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout

@@ -1,10 +1,10 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.core.code.obj.HashMapCount
+import burlton.dartzee.code.core.obj.HashMapCount
 import burlton.dartzee.code.bean.ScrollTableDartsGame
 import burlton.dartzee.code.stats.GameWrapper
-import burlton.desktopcore.code.bean.NumberField
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.bean.NumberField
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 import net.miginfocom.swing.MigLayout
 import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel

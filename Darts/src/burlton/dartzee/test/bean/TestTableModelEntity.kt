@@ -2,12 +2,12 @@ package burlton.dartzee.test.bean
 
 import burlton.dartzee.code.bean.TableModelEntity
 import burlton.dartzee.code.utils.DartsDatabaseUtil
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeOneOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestTableModelEntity: AbstractDartsTest()
+class TestTableModelEntity: AbstractTest()
 {
     @Test
     fun `Should have precisely the same column names and types as on the table`()

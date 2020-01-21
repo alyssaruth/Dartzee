@@ -16,7 +16,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 
-class TestDartzeeRuleVerificationPanel: AbstractDartsTest()
+class TestDartzeeRuleVerificationPanel: AbstractTest()
 {
     override fun afterEachTest()
     {

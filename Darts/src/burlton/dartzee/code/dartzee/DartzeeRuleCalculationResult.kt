@@ -1,6 +1,6 @@
 package burlton.dartzee.code.dartzee
 
-import burlton.core.code.util.*
+import burlton.dartzee.code.core.util.*
 import burlton.dartzee.code.`object`.DartboardSegment
 import burlton.dartzee.code.utils.DartsColour
 import kotlin.math.sqrt

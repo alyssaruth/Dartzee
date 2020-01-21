@@ -1,9 +1,9 @@
 package burlton.dartzee.test.db
 
-import burlton.core.code.util.Debug.clearLogs
-import burlton.core.test.helper.exceptionLogged
-import burlton.core.test.helper.getLogLines
-import burlton.core.test.helper.getLogs
+import burlton.dartzee.code.core.util.Debug.clearLogs
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogLines
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -17,7 +17,7 @@ import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestBulkInserter: AbstractDartsTest()
+class TestBulkInserter: AbstractTest()
 {
     override fun beforeEachTest()
     {

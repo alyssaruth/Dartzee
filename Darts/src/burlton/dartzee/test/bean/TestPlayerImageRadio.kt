@@ -3,8 +3,8 @@ package burlton.dartzee.test.bean
 import burlton.dartzee.code.bean.PlayerImageRadio
 import burlton.dartzee.code.db.PlayerImageEntity
 import burlton.dartzee.test.db.getBlobValue
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.test.helpers.singleClick
+import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.test.core.helper.singleClick
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -13,7 +13,7 @@ import javax.swing.ButtonGroup
 import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
 
-class TestPlayerImageRadio: AbstractDartsTest()
+class TestPlayerImageRadio: AbstractTest()
 {
     @Test
     fun `Should pull through the image and ID from the PlayerImageEntity`()

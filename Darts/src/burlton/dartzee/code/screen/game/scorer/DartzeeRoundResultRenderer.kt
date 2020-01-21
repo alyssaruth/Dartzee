@@ -2,7 +2,7 @@ package burlton.dartzee.code.screen.game.scorer
 
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.utils.setColoursForDartzeeResult
-import burlton.desktopcore.code.bean.AbstractTableRenderer
+import burlton.dartzee.code.core.bean.AbstractTableRenderer
 import java.awt.Font
 import javax.swing.SwingConstants
 

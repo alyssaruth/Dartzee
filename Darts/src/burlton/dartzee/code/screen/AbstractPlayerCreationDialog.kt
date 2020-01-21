@@ -2,8 +2,8 @@ package burlton.dartzee.code.screen
 
 import burlton.dartzee.code.bean.PlayerAvatar
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.DialogUtil
 import javax.swing.JTextField
 
 abstract class AbstractPlayerCreationDialog : SimpleDialog()

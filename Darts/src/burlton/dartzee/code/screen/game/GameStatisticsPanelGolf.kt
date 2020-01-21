@@ -1,9 +1,8 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.core.code.util.MathsUtil
+import burlton.dartzee.code.core.util.MathsUtil
 import burlton.dartzee.code.`object`.Dart
 import java.util.stream.IntStream
-import kotlin.streams.toList
 
 open class GameStatisticsPanelGolf : GameStatisticsPanel()
 {
@@ -147,7 +146,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
     {
         val rounds = hmPlayerToDarts[playerName]!!
 
-        return rounds.stream().map { r -> r.last() }.toList()
+        return rounds.map { r -> r.last() }
     }
 
     override fun getRankedRowsHighestWins(): MutableList<String>

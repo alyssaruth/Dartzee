@@ -3,7 +3,7 @@ package burlton.dartzee.code.bean
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.screen.stats.player.PlayerAchievementsScreen
-import burlton.desktopcore.code.bean.ScrollTableHyperlink
+import burlton.dartzee.code.core.bean.ScrollTableHyperlink
 
 class ScrollTableAchievements : ScrollTableHyperlink("Player")
 {

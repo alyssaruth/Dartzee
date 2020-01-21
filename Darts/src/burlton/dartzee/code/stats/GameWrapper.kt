@@ -1,7 +1,7 @@
 package burlton.dartzee.code.stats
 
-import burlton.core.code.obj.HashMapList
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.obj.HashMapList
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.db.DartEntity
 import burlton.dartzee.code.db.GameEntity

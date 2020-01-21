@@ -2,11 +2,11 @@ package burlton.dartzee.test.screen
 
 import burlton.dartzee.code.screen.ChangeLog
 import burlton.dartzee.code.utils.DARTS_VERSION_NUMBER
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.string.shouldContain
 import org.junit.Test
 
-class TestChangeLog: AbstractDartsTest()
+class TestChangeLog: AbstractTest()
 {
     @Test
     fun `Should include the current version number`()

@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen
 
-import burlton.core.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener
@@ -8,21 +8,18 @@ import burlton.dartzee.code.screen.Dartboard
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.getAllPossibleSegments
 import burlton.dartzee.test.doClick
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
 import java.awt.Color
-import java.awt.Point
-import java.awt.event.MouseEvent
 
-class TestDartboard: AbstractDartsTest()
+class TestDartboard: AbstractTest()
 {
     @Test
     fun `Dartboard listener should be notified if set`()

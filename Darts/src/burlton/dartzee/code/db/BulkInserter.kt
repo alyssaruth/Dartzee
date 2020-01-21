@@ -1,9 +1,9 @@
 package burlton.dartzee.code.db
 
-import burlton.core.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import java.sql.SQLException
 
 object BulkInserter

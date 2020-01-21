@@ -2,14 +2,14 @@ package burlton.dartzee.test.screen.dartzee
 
 import burlton.dartzee.code.screen.dartzee.DartzeeRuleTileComplete
 import burlton.dartzee.code.screen.dartzee.SoftDisableButtonModel
-import burlton.dartzee.test.helper.AbstractDartsTest
+import burlton.dartzee.test.helper.AbstractTest
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
 
-class TestDartzeeRuleTileComplete: AbstractDartsTest()
+class TestDartzeeRuleTileComplete: AbstractTest()
 {
     @Test
     fun `Should use a disabled button model and set the colours to green for success`()

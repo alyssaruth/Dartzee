@@ -1,9 +1,9 @@
 package burlton.dartzee.code.dartzee
 
-import burlton.core.code.util.XmlUtil
-import burlton.core.code.util.toXmlString
-import burlton.core.code.util.createRootElement
-import burlton.core.code.util.toXmlDoc
+import burlton.dartzee.code.core.util.XmlUtil
+import burlton.dartzee.code.core.util.toXmlString
+import burlton.dartzee.code.core.util.createRootElement
+import burlton.dartzee.code.core.util.toXmlDoc
 import burlton.dartzee.code.dartzee.dart.*
 import burlton.dartzee.code.dartzee.total.*
 import org.w3c.dom.Document

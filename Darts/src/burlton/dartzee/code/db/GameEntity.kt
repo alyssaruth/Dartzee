@@ -2,8 +2,8 @@ package burlton.dartzee.code.db
 
 import burlton.dartzee.code.utils.getGameDesc
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.isEndOfTime
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.isEndOfTime
 import java.util.*
 
 

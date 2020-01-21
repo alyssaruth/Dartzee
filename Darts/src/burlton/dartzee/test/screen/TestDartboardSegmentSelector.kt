@@ -9,8 +9,8 @@ import burlton.dartzee.code.screen.DartboardSegmentSelector
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.test.doubleNineteen
 import burlton.dartzee.test.getColor
-import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.test.helpers.makeMouseEvent
+import burlton.dartzee.test.helper.AbstractTest
+import burlton.dartzee.test.core.helper.makeMouseEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeEmpty
@@ -20,7 +20,7 @@ import java.awt.Color
 import java.awt.event.MouseEvent
 import kotlin.test.assertNotNull
 
-class TestDartboardSegmentSelector: AbstractDartsTest()
+class TestDartboardSegmentSelector: AbstractTest()
 {
     @Test
     fun `clicking the same segment should toggle it on and off`()
