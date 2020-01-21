@@ -5,8 +5,8 @@ import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.stats.GameWrapper
 import burlton.dartzee.code.utils.getFilterPanel
 import burlton.dartzee.code.core.bean.DateFilterPanel
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.enableChildren
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.enableChildren
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.GridLayout

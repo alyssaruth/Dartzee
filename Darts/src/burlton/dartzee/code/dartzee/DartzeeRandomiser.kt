@@ -1,6 +1,6 @@
 package burlton.dartzee.code.dartzee
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.dartzee.dart.AbstractDartzeeDartRule
 import burlton.dartzee.code.dartzee.dart.DartzeeDartRuleCustom
 import kotlin.random.Random

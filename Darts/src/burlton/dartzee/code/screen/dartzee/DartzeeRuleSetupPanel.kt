@@ -5,7 +5,7 @@ import burlton.dartzee.code.utils.InjectedThings
 import burlton.dartzee.code.core.bean.RowSelectionListener
 import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.dartzee.code.core.bean.ScrollTableOrdered
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent

@@ -5,7 +5,7 @@ import burlton.dartzee.code.achievements.DummyAchievementTotal
 import burlton.dartzee.code.achievements.getAllAchievements
 import burlton.dartzee.code.bean.ScrollTableAchievements
 import burlton.dartzee.code.db.PlayerEntity
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.event.ActionEvent

@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.`object`.GameLauncher
 import burlton.dartzee.code.achievements.convertEmptyAchievements
@@ -12,7 +12,7 @@ import burlton.dartzee.code.utils.ResourceCache
 import burlton.dartzee.test.helper.randomGuid
 import burlton.dartzee.code.core.bean.AbstractDevScreen
 import burlton.dartzee.code.core.bean.CheatBar
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 import com.mashape.unirest.http.Unirest
 import java.awt.BorderLayout
 import java.awt.Dimension

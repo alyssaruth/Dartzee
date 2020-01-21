@@ -1,14 +1,14 @@
 package burlton.dartzee.code.db.sanity
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.runOnEventThread
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.runOnEventThread
 import burlton.dartzee.code.screen.ScreenCache
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.core.bean.ScrollTableButton
-import burlton.desktopcore.code.screen.ProgressDialog
-import burlton.desktopcore.code.screen.TableModelDialog
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.screen.ProgressDialog
+import burlton.dartzee.code.core.screen.TableModelDialog
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel

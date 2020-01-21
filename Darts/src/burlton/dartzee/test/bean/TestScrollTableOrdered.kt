@@ -1,11 +1,11 @@
 package burlton.dartzee.test.bean
 
-import burlton.desktopcore.code.util.CollectionShuffler
-import burlton.desktopcore.code.util.InjectedCore
-import burlton.desktopcore.test.helper.FakeCollectionShuffler
+import burlton.dartzee.code.core.util.CollectionShuffler
+import burlton.dartzee.code.core.util.InjectedCore
+import burlton.dartzee.test.core.helper.FakeCollectionShuffler
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.code.core.bean.ScrollTableOrdered
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.*
 import org.junit.Test

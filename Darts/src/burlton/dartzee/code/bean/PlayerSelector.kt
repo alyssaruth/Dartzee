@@ -5,7 +5,7 @@ import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.core.bean.IDoubleClickListener
 import burlton.dartzee.code.core.bean.ScrollTable
 import burlton.dartzee.code.core.bean.ScrollTableOrdered
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.util.DialogUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
 import java.awt.Dimension

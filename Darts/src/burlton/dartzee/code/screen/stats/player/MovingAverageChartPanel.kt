@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen.stats.player
 
 import burlton.dartzee.code.utils.DartsColour.getBrightenedColour
-import burlton.desktopcore.code.util.getAllChildComponentsForType
+import burlton.dartzee.code.core.util.getAllChildComponentsForType
 import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.JFreeChart

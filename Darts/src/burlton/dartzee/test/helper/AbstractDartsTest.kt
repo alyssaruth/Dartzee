@@ -4,8 +4,8 @@ import burlton.dartzee.code.`object`.DartsClient
 import burlton.dartzee.code.db.LocalIdGenerator
 import burlton.dartzee.code.utils.DartsDatabaseUtil
 import burlton.dartzee.code.utils.InjectedThings
-import burlton.desktopcore.code.util.DialogUtil
-import burlton.desktopcore.test.helper.AbstractTest
+import burlton.dartzee.code.core.util.DialogUtil
+import burlton.dartzee.test.core.helper.AbstractTest
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.sql.DriverManager
 import javax.swing.UIManager

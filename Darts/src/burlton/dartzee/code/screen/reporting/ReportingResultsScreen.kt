@@ -6,7 +6,7 @@ import burlton.dartzee.code.reporting.ReportResultWrapper
 import burlton.dartzee.code.reporting.runReport
 import burlton.dartzee.code.screen.EmbeddedScreen
 import burlton.dartzee.code.screen.ScreenCache
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.sql.Timestamp

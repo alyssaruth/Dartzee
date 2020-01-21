@@ -6,8 +6,8 @@ import burlton.dartzee.code.bean.getSelectedPlayer
 import burlton.dartzee.code.db.*
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.desktopcore.test.helper.doubleClick
-import burlton.desktopcore.test.helper.processKeyPress
+import burlton.dartzee.test.core.helper.doubleClick
+import burlton.dartzee.test.core.helper.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainExactly

@@ -5,8 +5,8 @@ import burlton.dartzee.code.bean.getSelectedPlayers
 import burlton.dartzee.code.bean.initPlayerTableModel
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.core.bean.ScrollTable
-import burlton.desktopcore.code.screen.SimpleDialog
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.screen.SimpleDialog
+import burlton.dartzee.code.core.util.DialogUtil
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import javax.swing.ListSelectionModel

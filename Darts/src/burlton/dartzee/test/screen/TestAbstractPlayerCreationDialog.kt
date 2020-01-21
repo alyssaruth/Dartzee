@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen
 
-import burlton.desktopcore.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.screen.AbstractPlayerCreationDialog
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertPlayer

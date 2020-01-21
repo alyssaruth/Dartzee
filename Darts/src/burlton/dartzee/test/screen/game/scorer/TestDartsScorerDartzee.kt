@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen.game.scorer
 
-import burlton.desktopcore.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.dartzee.DartzeeRoundResult
 import burlton.dartzee.code.screen.game.GamePanelDartzee
@@ -12,8 +12,8 @@ import burlton.dartzee.test.doClick
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.insertGame
 import burlton.dartzee.test.helper.insertPlayer
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every

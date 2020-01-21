@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.stats.player
 
-import burlton.desktopcore.code.obj.HashMapCount
+import burlton.dartzee.code.core.obj.HashMapCount
 
 class HoleBreakdownWrapper
 {

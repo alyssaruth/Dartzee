@@ -7,7 +7,7 @@ import burlton.dartzee.code.listener.DartboardListener
 import burlton.dartzee.code.utils.DartsColour
 import burlton.dartzee.code.utils.InjectedThings.dartzeeCalculator
 import burlton.dartzee.code.utils.InjectedThings.verificationDartboardSize
-import burlton.desktopcore.code.util.setFontSize
+import burlton.dartzee.code.core.util.setFontSize
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension

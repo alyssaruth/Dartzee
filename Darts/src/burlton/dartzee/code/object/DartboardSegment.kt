@@ -1,6 +1,6 @@
 package burlton.dartzee.code.`object`
 
-import burlton.desktopcore.code.obj.HashMapList
+import burlton.dartzee.code.core.obj.HashMapList
 import java.awt.Point
 
 const val SEGMENT_TYPE_DOUBLE = 1

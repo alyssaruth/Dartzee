@@ -1,7 +1,7 @@
 package burlton.dartzee.code.screen
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.runOnEventThread
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.runOnEventThread
 import burlton.dartzee.code.`object`.ColourWrapper
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.`object`.DartboardSegment
@@ -12,7 +12,7 @@ import burlton.dartzee.code.screen.game.GamePanelX01
 import burlton.dartzee.code.utils.*
 import burlton.dartzee.code.core.bean.getPointList
 import burlton.dartzee.code.core.bean.paint
-import burlton.desktopcore.code.util.getParentWindow
+import burlton.dartzee.code.core.util.getParentWindow
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener

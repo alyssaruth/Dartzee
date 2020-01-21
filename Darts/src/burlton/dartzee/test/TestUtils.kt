@@ -2,7 +2,7 @@ package burlton.dartzee.test
 
 import burlton.dartzee.code.`object`.*
 import burlton.dartzee.code.screen.Dartboard
-import burlton.desktopcore.test.helper.makeMouseEvent
+import burlton.dartzee.test.core.helper.makeMouseEvent
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import java.awt.Color
 import java.awt.Component

@@ -3,7 +3,7 @@ package burlton.dartzee.test.utils
 import burlton.dartzee.code.db.*
 import burlton.dartzee.code.utils.X01FinishConversion
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test

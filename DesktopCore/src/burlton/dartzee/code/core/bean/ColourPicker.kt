@@ -1,6 +1,6 @@
 package burlton.dartzee.code.core.bean
 
-import burlton.desktopcore.code.util.InjectedDesktopCore
+import burlton.dartzee.code.core.util.InjectedDesktopCore
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.event.MouseEvent

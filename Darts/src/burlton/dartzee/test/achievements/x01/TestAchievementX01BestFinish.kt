@@ -5,8 +5,8 @@ import burlton.dartzee.code.db.GameEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.achievements.AbstractAchievementTest
 import burlton.dartzee.test.helper.*
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getSqlDateNow
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp

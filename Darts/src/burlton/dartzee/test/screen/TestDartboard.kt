@@ -1,6 +1,6 @@
 package burlton.dartzee.test.screen
 
-import burlton.desktopcore.test.helper.verifyNotCalled
+import burlton.dartzee.test.core.helper.verifyNotCalled
 import burlton.dartzee.code.`object`.DEFAULT_COLOUR_WRAPPER
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.listener.DartboardListener

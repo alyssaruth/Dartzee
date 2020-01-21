@@ -4,7 +4,7 @@ import burlton.dartzee.code.bean.PlayerImageRadio
 import burlton.dartzee.code.db.PlayerImageEntity
 import burlton.dartzee.test.db.getBlobValue
 import burlton.dartzee.test.helper.AbstractDartsTest
-import burlton.desktopcore.test.helper.singleClick
+import burlton.dartzee.test.core.helper.singleClick
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe

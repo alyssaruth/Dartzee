@@ -5,7 +5,7 @@ import burlton.dartzee.code.screen.dartzee.DartzeeTemplateRuleRenderer
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.makeDartzeeRuleCalculationResult
 import burlton.dartzee.test.helper.makeDartzeeRuleDto
-import burlton.desktopcore.test.helper.getIconImage
+import burlton.dartzee.test.core.helper.getIconImage
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color

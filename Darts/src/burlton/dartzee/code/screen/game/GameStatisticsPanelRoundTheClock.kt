@@ -1,6 +1,6 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.desktopcore.code.util.MathsUtil
+import burlton.dartzee.code.core.util.MathsUtil
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.utils.getLongestStreak
 import java.util.stream.IntStream

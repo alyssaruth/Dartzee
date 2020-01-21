@@ -1,14 +1,14 @@
 package burlton.dartzee.test.db
 
-import burlton.desktopcore.code.util.Debug.clearLogs
-import burlton.desktopcore.test.helper.getLogs
+import burlton.dartzee.code.core.util.Debug.clearLogs
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.ai.AbstractDartsModel
 import burlton.dartzee.code.ai.DartsModelNormalDistribution
 import burlton.dartzee.code.db.ParticipantEntity
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.test.helper.insertPlayer
 import burlton.dartzee.test.helper.randomGuid
-import burlton.desktopcore.code.util.DateStatics
+import burlton.dartzee.code.core.util.DateStatics
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe

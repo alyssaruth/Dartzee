@@ -1,6 +1,6 @@
 package burlton.dartzee.code.utils
 
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.util.Debug
 import java.util.prefs.Preferences
 
 object PreferenceUtil

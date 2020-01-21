@@ -1,7 +1,7 @@
 package burlton.dartzee.code.core.bean
 
-import burlton.desktopcore.code.util.DialogUtil.showError
-import burlton.desktopcore.code.util.stripTimeComponent
+import burlton.dartzee.code.core.util.DialogUtil.showError
+import burlton.dartzee.code.core.util.stripTimeComponent
 import de.wannawork.jcalendar.JCalendarComboBox
 import java.awt.Dimension
 import java.sql.Timestamp

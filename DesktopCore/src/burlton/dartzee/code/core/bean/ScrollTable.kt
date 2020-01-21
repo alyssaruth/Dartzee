@@ -1,6 +1,6 @@
 package burlton.dartzee.code.core.bean
 
-import burlton.desktopcore.code.util.TableUtil.DefaultModel
+import burlton.dartzee.code.core.util.TableUtil.DefaultModel
 import java.awt.*
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent

@@ -1,8 +1,8 @@
 package burlton.dartzee.code.db.sanity
 
 import burlton.dartzee.code.core.bean.ScrollTable
-import burlton.desktopcore.code.screen.TableModelDialog
-import burlton.desktopcore.code.util.DialogUtil
+import burlton.dartzee.code.core.screen.TableModelDialog
+import burlton.dartzee.code.core.util.DialogUtil
 import java.awt.event.KeyEvent
 import javax.swing.table.DefaultTableModel
 

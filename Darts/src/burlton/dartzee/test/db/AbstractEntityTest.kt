@@ -1,10 +1,10 @@
 package burlton.dartzee.test.db
 
-import burlton.desktopcore.code.util.Debug
-import burlton.desktopcore.code.util.FileUtil
-import burlton.desktopcore.test.helper.exceptionLogged
-import burlton.desktopcore.test.helper.getLogLines
-import burlton.desktopcore.test.helper.getLogs
+import burlton.dartzee.code.core.util.Debug
+import burlton.dartzee.code.core.util.FileUtil
+import burlton.dartzee.test.core.helper.exceptionLogged
+import burlton.dartzee.test.core.helper.getLogLines
+import burlton.dartzee.test.core.helper.getLogs
 import burlton.dartzee.code.db.AbstractEntity
 import burlton.dartzee.code.db.BulkInserter
 import burlton.dartzee.code.utils.DatabaseUtil
@@ -12,8 +12,8 @@ import burlton.dartzee.code.utils.DatabaseUtil.Companion.executeQueryAggregate
 import burlton.dartzee.test.helper.AbstractDartsTest
 import burlton.dartzee.test.helper.getCountFromTable
 import burlton.dartzee.test.helper.wipeTable
-import burlton.desktopcore.code.util.DateStatics
-import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import burlton.dartzee.code.core.util.DateStatics
+import burlton.dartzee.code.core.util.getEndOfTimeSqlString
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain

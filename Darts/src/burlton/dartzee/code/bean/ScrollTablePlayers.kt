@@ -2,7 +2,7 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.core.bean.ScrollTable
-import burlton.desktopcore.code.util.TableUtil
+import burlton.dartzee.code.core.util.TableUtil
 
 fun ScrollTable.getSelectedPlayer(): PlayerEntity?
 {

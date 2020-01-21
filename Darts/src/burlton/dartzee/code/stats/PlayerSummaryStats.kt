@@ -2,7 +2,7 @@ package burlton.dartzee.code.stats
 
 import burlton.dartzee.code.db.PlayerEntity
 import burlton.dartzee.code.utils.DatabaseUtil
-import burlton.desktopcore.code.util.getEndOfTimeSqlString
+import burlton.dartzee.code.core.util.getEndOfTimeSqlString
 import java.sql.Timestamp
 
 class PlayerSummaryStats private constructor(player: PlayerEntity, private val gameType: Int)

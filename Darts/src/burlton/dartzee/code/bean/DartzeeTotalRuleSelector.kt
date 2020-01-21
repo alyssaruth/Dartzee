@@ -2,7 +2,7 @@ package burlton.dartzee.code.bean
 
 import burlton.dartzee.code.dartzee.getAllTotalRules
 import burlton.dartzee.code.dartzee.total.AbstractDartzeeTotalRule
-import burlton.desktopcore.code.util.enableChildren
+import burlton.dartzee.code.core.util.enableChildren
 
 class DartzeeTotalRuleSelector(desc: String): AbstractDartzeeRuleSelector<AbstractDartzeeTotalRule>(desc)
 {

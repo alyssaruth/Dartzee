@@ -1,8 +1,8 @@
 package burlton.dartzee.code.screen.game
 
-import burlton.desktopcore.code.obj.HashMapCount
-import burlton.desktopcore.code.obj.HashMapList
-import burlton.desktopcore.code.util.Debug
+import burlton.dartzee.code.core.obj.HashMapCount
+import burlton.dartzee.code.core.obj.HashMapList
+import burlton.dartzee.code.core.util.Debug
 import burlton.dartzee.code.`object`.CheckoutSuggester
 import burlton.dartzee.code.`object`.Dart
 import burlton.dartzee.code.achievements.*
