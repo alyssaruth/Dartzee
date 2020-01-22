@@ -1,12 +1,10 @@
 package dartzee.core.bean
 
+import com.github.lgooddatepicker.components.DatePicker
 import dartzee.core.util.DialogUtil.showError
-import dartzee.core.util.stripTimeComponent
-import de.wannawork.jcalendar.JCalendarComboBox
 import java.awt.Dimension
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
@@ -15,8 +13,8 @@ class DateFilterPanel : JPanel()
 {
     private val dtFormat = SimpleDateFormat("dd/MM/yyyy")
 
-    val cbDateFrom = JCalendarComboBox()
-    val cbDateTo = JCalendarComboBox()
+    val cbDateFrom = DatePicker()
+    val cbDateTo = DatePicker()
     private val lblFrom = JLabel("from")
     private val lblTo = JLabel("to")
 
@@ -39,7 +37,7 @@ class DateFilterPanel : JPanel()
             return true
         }
 
-        if (getDtFrom().after(getDtTo()))
+        if (getDtFrom().isAfter(getDtTo()))
         {
             showError("The 'date from' cannot be after the 'date to'")
             return false
@@ -48,12 +46,12 @@ class DateFilterPanel : JPanel()
         return true
     }
 
-    fun filterSqlDate(sqlDt: Timestamp) = !sqlDt.before(getDtFrom()) && !sqlDt.after(getDtTo())
-    fun getSqlDtFrom() = Timestamp(getDtFrom().time)
-    fun getSqlDtTo() = Timestamp(getDtTo().time)
+    fun filterSqlDate(sqlDt: Timestamp) = !sqlDt.before(getSqlDtFrom()) && !sqlDt.after(getSqlDtTo())
+    fun getSqlDtFrom(): Timestamp = Timestamp.valueOf(getDtFrom())
+    fun getSqlDtTo(): Timestamp = Timestamp.valueOf(getDtTo())
 
-    fun getFilterDesc() = "${dtFormat.format(getDtFrom())} - ${dtFormat.format(getDtTo())}"
+    fun getFilterDesc() = "${dtFormat.format(getSqlDtFrom())} - ${dtFormat.format(getSqlDtTo())}"
 
-    private fun getDtFrom(): Date = stripTimeComponent(cbDateFrom.date)
-    private fun getDtTo() = stripTimeComponent(cbDateTo.date)
+    private fun getDtFrom() = cbDateFrom.date.atTime(0, 0)
+    private fun getDtTo() = cbDateTo.date.atTime(0, 0)
 }

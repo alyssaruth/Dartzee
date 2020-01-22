@@ -5,7 +5,7 @@ import dartzee.dartzee.parseDartRule
 import dartzee.test.*
 import dartzee.test.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
-import io.kotlintest.matchers.numerics.shouldNotBeInRange
+import io.kotlintest.matchers.shouldNotBeInRange
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -38,7 +38,7 @@ class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
             rule.spinner.value = i
 
             rule.spinner.value shouldBe rule.score
-            rule.score shouldNotBeInRange(21..24)
+            rule.score.shouldNotBeInRange(21..24)
         }
     }
 

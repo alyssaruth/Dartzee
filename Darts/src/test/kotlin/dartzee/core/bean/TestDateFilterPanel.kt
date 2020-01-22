@@ -8,6 +8,8 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class TestDateFilterPanel: AbstractTest()
 {
@@ -17,8 +19,8 @@ class TestDateFilterPanel: AbstractTest()
     fun `Should always be valid if disabled`()
     {
         val filterPanel = DateFilterPanel()
-        filterPanel.cbDateFrom.date = fmt.parse("04/01/2020")
-        filterPanel.cbDateTo.date = fmt.parse("01/01/2020")
+        filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-04")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-01-01")
         filterPanel.enableChildren(false)
 
         filterPanel.valid() shouldBe true
@@ -28,8 +30,8 @@ class TestDateFilterPanel: AbstractTest()
     fun `Should not be valid if start date is after end date`()
     {
         val filterPanel = DateFilterPanel()
-        filterPanel.cbDateFrom.date = fmt.parse("04/01/2020")
-        filterPanel.cbDateTo.date = fmt.parse("01/01/2020")
+        filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-04")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-01-01")
 
         filterPanel.valid() shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
@@ -39,11 +41,11 @@ class TestDateFilterPanel: AbstractTest()
     fun `Should be valid if the end date is on or after the start date`()
     {
         val filterPanel = DateFilterPanel()
-        filterPanel.cbDateFrom.date = fmt.parse("01/01/2020")
-        filterPanel.cbDateTo.date = fmt.parse("01/01/2020")
+        filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-01-01")
         filterPanel.valid() shouldBe true
 
-        filterPanel.cbDateTo.date = fmt.parse("02/01/2020")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-01-02")
         filterPanel.valid() shouldBe true
     }
 
@@ -52,8 +54,8 @@ class TestDateFilterPanel: AbstractTest()
     {
         val filterPanel = DateFilterPanel()
 
-        filterPanel.cbDateFrom.date = fmt.parse("01/01/2020")
-        filterPanel.cbDateTo.date = fmt.parse("07/11/2020")
+        filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-01-07")
 
         filterPanel.getFilterDesc() shouldBe "01/01/2020 - 07/11/2020"
     }
@@ -63,8 +65,8 @@ class TestDateFilterPanel: AbstractTest()
     {
         val filterPanel = DateFilterPanel()
 
-        filterPanel.cbDateFrom.date = fmt.parse("01/01/2020")
-        filterPanel.cbDateTo.date = fmt.parse("07/11/2020")
+        filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-11-07")
 
         val sqlDtFrom = filterPanel.getSqlDtFrom()
         fmt.format(sqlDtFrom) shouldBe "01/01/2020"
@@ -77,8 +79,8 @@ class TestDateFilterPanel: AbstractTest()
     fun `Should correctly filter SQL dates`()
     {
         val filterPanel = DateFilterPanel()
-        filterPanel.cbDateFrom.date = fmt.parse("02/01/2020")
-        filterPanel.cbDateTo.date = fmt.parse("04/01/2020")
+        filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-02")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-01-04")
 
         filterPanel.filterSqlDate(Timestamp.valueOf("2020-01-01 00:00:00")) shouldBe false
         filterPanel.filterSqlDate(Timestamp.valueOf("2020-01-01 23:59:59")) shouldBe false
