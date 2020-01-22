@@ -52,5 +52,12 @@ compileTestKotlin {
     }
 }
 
+task runDev(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+
+    args 'devMode'
+    main 'dartzee.main.DartsMainKt'
+}
+
 // Define the main class for the application.
 mainClassName = 'dartzee.main.DartsMainKt'
