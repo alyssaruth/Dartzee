@@ -7,7 +7,9 @@ import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.screen.ScreenCache
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
+import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
+import java.sql.DriverManager
 import java.util.*
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
@@ -48,6 +50,8 @@ object DartsDatabaseUtil
 
     fun initialiseDatabase()
     {
+        DriverManager.registerDriver(EmbeddedDriver())
+
         DialogUtil.showLoadingDialog("Checking database status...")
 
         DatabaseUtil.doDuplicateInstanceCheck()

@@ -25,15 +25,25 @@ dependencies {
     implementation 'org.jfree:jfreechart:1.0.19'
     implementation 'com.mashape.unirest:unirest-java:1.4.9'
     implementation 'javax.mail:mail:1.4.7'
+    implementation 'com.github.lgooddatepicker:LGoodDatePicker:10.3.1'
+    implementation 'org.apache.derby:derby:10.14.2.0'
+    implementation 'org.apache.derby:derbytools:10.14.2.0'
 
-    // Use the Kotlin test library.
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-
-    // Use the Kotlin JUnit integration.
+    testImplementation "io.mockk:mockk:1.9.3"
+    testImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 }
 
 compileKotlin {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 

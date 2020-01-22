@@ -50,26 +50,6 @@ class TestDateUtil: AbstractTest()
     }
 
     @Test
-    fun testStripTimeComponent()
-    {
-        val calendarOrig = Calendar.getInstance()
-        val dt = calendarOrig.time
-
-        val strippedDt = stripTimeComponent(dt)
-        val calendarStripped = Calendar.getInstance()
-        calendarStripped.time = strippedDt
-
-        calendarOrig.get(Calendar.YEAR) shouldBe calendarStripped.get(Calendar.YEAR)
-        calendarOrig.get(Calendar.MONTH) shouldBe calendarStripped.get(Calendar.MONTH)
-        calendarOrig.get(Calendar.DAY_OF_MONTH) shouldBe calendarStripped.get(Calendar.DAY_OF_MONTH)
-
-        calendarStripped.get(Calendar.HOUR_OF_DAY) shouldBe 0
-        calendarStripped.get(Calendar.MINUTE) shouldBe 0
-        calendarStripped.get(Calendar.SECOND) shouldBe 0
-        calendarStripped.get(Calendar.MILLISECOND) shouldBe 0
-    }
-
-    @Test
     fun testIsEndOfTime()
     {
         isEndOfTime(null).shouldBeFalse()
