@@ -1,4 +1,4 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.achievements.*
 import dartzee.achievements.golf.AchievementGolfPointsRisked
@@ -8,7 +8,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_X01
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.test.helper.*
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test

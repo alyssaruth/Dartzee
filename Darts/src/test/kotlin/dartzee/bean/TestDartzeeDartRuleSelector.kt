@@ -1,8 +1,8 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.dartzee.getAllDartRules
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe

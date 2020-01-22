@@ -1,4 +1,4 @@
-package dartzee.test.screen.preference
+package dartzee.screen.preference
 
 import dartzee.screen.preference.PreferencesPanelDartboard
 import dartzee.utils.*

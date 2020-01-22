@@ -1,4 +1,4 @@
-package dartzee.test.screen.stats.player
+package dartzee.screen.stats.player
 
 import dartzee.screen.stats.player.AbstractStatisticsTabPieBreakdown
 import io.kotlintest.matchers.collections.shouldContainNoNulls

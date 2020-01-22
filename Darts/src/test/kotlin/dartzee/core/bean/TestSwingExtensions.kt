@@ -1,10 +1,10 @@
-package dartzee.test.core.bean
+package dartzee.core.bean
 
 import dartzee.core.bean.*
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.processKeyPress
-import dartzee.test.core.helper.simulateLoseFocus
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.processKeyPress
+import dartzee.core.helper.simulateLoseFocus
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf

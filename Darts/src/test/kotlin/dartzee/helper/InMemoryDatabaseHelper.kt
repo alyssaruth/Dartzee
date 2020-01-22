@@ -1,4 +1,4 @@
-package dartzee.test.helper
+package dartzee.helper
 
 import dartzee.core.util.FileUtil
 import dartzee.`object`.SEGMENT_TYPE_DOUBLE

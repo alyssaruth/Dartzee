@@ -1,12 +1,12 @@
-package dartzee.test.reporting
+package dartzee.reporting
 
 import dartzee.reporting.IncludedPlayerParameters
 import dartzee.reporting.ReportParameters
 import dartzee.reporting.runReport
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertGame
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty

@@ -1,7 +1,7 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.utils.*
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.doubles.shouldBeGreaterThanOrEqual
 import io.kotlintest.matchers.doubles.shouldBeLessThanOrEqual

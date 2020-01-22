@@ -1,11 +1,11 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.`object`.Dart
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.utils.getLongestStreak
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.factoryClockHit
-import dartzee.test.helper.randomGuid
+import dartzee.helper.AbstractTest
+import dartzee.helper.factoryClockHit
+import dartzee.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe

@@ -1,7 +1,7 @@
-package dartzee.test.core.obj
+package dartzee.core.obj
 
 import dartzee.core.obj.HashMapList
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe

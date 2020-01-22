@@ -1,4 +1,4 @@
-package dartzee.test.screen
+package dartzee.screen
 
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SEGMENT_TYPE_DOUBLE
@@ -7,10 +7,10 @@ import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import dartzee.screen.Dartboard
 import dartzee.screen.DartboardSegmentSelector
 import dartzee.utils.DartsColour
-import dartzee.test.doubleNineteen
-import dartzee.test.getColor
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.makeMouseEvent
+import dartzee.doubleNineteen
+import dartzee.getColor
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.makeMouseEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeEmpty

@@ -1,4 +1,4 @@
-package dartzee.test.achievements.golf
+package dartzee.achievements.golf
 
 import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.`object`.SEGMENT_TYPE_TREBLE
@@ -8,11 +8,11 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_GOLF
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.achievements.TestAbstractAchievementRowPerGame
-import dartzee.test.helper.insertAchievement
-import dartzee.test.helper.insertDart
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.retrieveAchievement
+import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.helper.insertAchievement
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.retrieveAchievement
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp

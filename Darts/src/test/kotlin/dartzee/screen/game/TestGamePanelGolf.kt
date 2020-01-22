@@ -1,4 +1,4 @@
-package dartzee.test.screen.game
+package dartzee.screen.game
 
 import dartzee.`object`.*
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
@@ -6,10 +6,10 @@ import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.db.*
 import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.game.GamePanelGolf
-import dartzee.test.db.TestAchievementEntity
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertAchievement
-import dartzee.test.helper.randomGuid
+import dartzee.db.TestAchievementEntity
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertAchievement
+import dartzee.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test

@@ -1,12 +1,12 @@
-package dartzee.test.utils
+package dartzee.utils
 
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DARTZEE_REPOSITORY_URL
 import dartzee.utils.UpdateManager
 import dartzee.utils.UpdateMetadata
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import com.mashape.unirest.http.Unirest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain

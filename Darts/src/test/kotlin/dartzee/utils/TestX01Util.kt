@@ -1,9 +1,9 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.`object`.Dart
 import dartzee.ai.AbstractDartsModel
 import dartzee.utils.*
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty

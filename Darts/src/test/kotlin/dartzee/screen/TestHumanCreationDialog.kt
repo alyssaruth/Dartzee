@@ -1,9 +1,9 @@
-package dartzee.test.screen
+package dartzee.screen
 
 import dartzee.db.PlayerEntity
 import dartzee.screen.HumanCreationDialog
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.randomGuid
+import dartzee.helper.AbstractTest
+import dartzee.helper.randomGuid
 import io.kotlintest.shouldBe
 import org.junit.Test
 

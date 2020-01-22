@@ -1,17 +1,17 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.core.util.Debug
 import dartzee.core.util.FileUtil
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogLines
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogLines
+import dartzee.core.helper.getLogs
 import dartzee.db.AbstractEntity
 import dartzee.db.BulkInserter
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.getCountFromTable
-import dartzee.test.helper.wipeTable
+import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
+import dartzee.helper.wipeTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getEndOfTimeSqlString
 import io.kotlintest.matchers.collections.shouldHaveSize

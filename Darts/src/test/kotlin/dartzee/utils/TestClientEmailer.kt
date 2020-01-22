@@ -1,12 +1,12 @@
-package dartzee.test.utils
+package dartzee.utils
 
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
 import dartzee.`object`.DartsClient
 import dartzee.utils.ClientEmailer
 import dartzee.utils.ClientEmailer.TEMP_DIRECTORY
 import dartzee.utils.LOG_FILENAME_PREFIX
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith

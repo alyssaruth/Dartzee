@@ -1,8 +1,8 @@
-package dartzee.test.achievements.x01
+package dartzee.achievements.x01
 
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.db.GAME_TYPE_X01
-import dartzee.test.achievements.TestAbstractAchievementBestGame
+import dartzee.achievements.TestAbstractAchievementBestGame
 import io.kotlintest.shouldBe
 import org.junit.Test
 

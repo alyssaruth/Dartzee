@@ -1,13 +1,13 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.PlayerSelector
 import dartzee.bean.getAllPlayers
 import dartzee.bean.getSelectedPlayer
 import dartzee.db.*
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertPlayer
-import dartzee.test.core.helper.doubleClick
-import dartzee.test.core.helper.processKeyPress
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
+import dartzee.core.helper.doubleClick
+import dartzee.core.helper.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainExactly

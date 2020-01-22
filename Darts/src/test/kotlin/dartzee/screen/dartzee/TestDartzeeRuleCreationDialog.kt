@@ -1,6 +1,6 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.dart.*
@@ -10,11 +10,11 @@ import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.screen.dartzee.DartzeeRuleCreationDialog
 import dartzee.screen.dartzee.DartzeeRuleVerificationPanel
 import dartzee.utils.InjectedThings
-import dartzee.test.flushEdt
-import dartzee.test.helper.*
+import dartzee.flushEdt
+import dartzee.helper.*
 import dartzee.core.bean.selectByClass
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.test.core.helper.makeActionEvent
+import dartzee.core.helper.makeActionEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

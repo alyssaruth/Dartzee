@@ -1,10 +1,10 @@
-package dartzee.test.db.sanity
+package dartzee.db.sanity
 
 import dartzee.db.sanity.SanityCheckPlayerIdMismatch
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertDart
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.randomGuid
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test

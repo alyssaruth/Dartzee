@@ -1,4 +1,4 @@
-package dartzee.test.helper
+package dartzee.helper
 
 import dartzee.`object`.DartsClient
 import dartzee.core.util.Debug
@@ -6,11 +6,11 @@ import dartzee.core.util.DialogUtil
 import dartzee.db.LocalIdGenerator
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
-import dartzee.test.core.helper.TestDebugExtension
-import dartzee.test.core.helper.TestMessageDialogFactory
-import dartzee.test.core.helper.checkedForExceptions
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.util.TestDebug
+import dartzee.core.helper.TestDebugExtension
+import dartzee.core.helper.TestMessageDialogFactory
+import dartzee.core.helper.checkedForExceptions
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.util.TestDebug
 import io.kotlintest.shouldBe
 import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After

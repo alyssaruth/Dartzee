@@ -1,9 +1,9 @@
-package dartzee.test.dartzee.dart
+package dartzee.dartzee.dart
 
 import dartzee.dartzee.dart.DartzeeDartRuleScore
 import dartzee.dartzee.parseDartRule
-import dartzee.test.*
-import dartzee.test.dartzee.AbstractDartzeeRuleTest
+import dartzee.*
+import dartzee.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.shouldNotBeInRange
 import io.kotlintest.shouldBe

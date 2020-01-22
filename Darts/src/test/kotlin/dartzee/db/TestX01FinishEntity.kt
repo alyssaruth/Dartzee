@@ -1,4 +1,4 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.db.X01FinishEntity
 

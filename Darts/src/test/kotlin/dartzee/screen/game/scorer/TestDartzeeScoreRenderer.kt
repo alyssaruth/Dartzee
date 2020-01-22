@@ -1,8 +1,8 @@
-package dartzee.test.screen.game.scorer
+package dartzee.screen.game.scorer
 
 import dartzee.screen.game.scorer.DartzeeScoreRenderer
-import dartzee.test.helper.AbstractTest
-import dartzee.test.shouldBeBetween
+import dartzee.helper.AbstractTest
+import dartzee.shouldBeBetween
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color

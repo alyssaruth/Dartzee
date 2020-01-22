@@ -1,13 +1,13 @@
-package dartzee.test.`object`
+package dartzee.`object`
 
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.getLogs
 import dartzee.`object`.DartsClient
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.UpdateManager
-import dartzee.test.helper.AbstractRegistryTest
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.helper.AbstractRegistryTest
+import dartzee.core.helper.verifyNotCalled
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.string.shouldNotContain

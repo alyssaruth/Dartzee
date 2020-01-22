@@ -1,8 +1,8 @@
-package dartzee.test.screen.stats.player
+package dartzee.screen.stats.player
 
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.containsComponent

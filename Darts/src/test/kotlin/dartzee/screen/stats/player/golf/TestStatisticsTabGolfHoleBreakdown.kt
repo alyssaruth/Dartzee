@@ -1,7 +1,7 @@
-package dartzee.test.screen.stats.player.golf
+package dartzee.screen.stats.player.golf
 
 import dartzee.screen.stats.player.golf.StatisticsTabGolfHoleBreakdown
-import dartzee.test.screen.stats.player.AbstractStatsPieBreakdownTest
+import dartzee.screen.stats.player.AbstractStatsPieBreakdownTest
 
 class TestStatisticsTabGolfHoleBreakdown: AbstractStatsPieBreakdownTest<StatisticsTabGolfHoleBreakdown>()
 {

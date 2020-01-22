@@ -1,7 +1,7 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.utils.PreferenceUtil
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

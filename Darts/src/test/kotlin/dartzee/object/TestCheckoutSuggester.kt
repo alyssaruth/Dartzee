@@ -1,10 +1,10 @@
-package dartzee.test.`object`
+package dartzee.`object`
 
 import dartzee.`object`.CheckoutSuggester
 import dartzee.`object`.DartHint
 import dartzee.utils.getCheckoutScores
 import dartzee.utils.sumScore
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldHaveAtMostSize
 import io.kotlintest.matchers.collections.shouldHaveSingleElement

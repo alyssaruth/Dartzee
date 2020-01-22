@@ -1,8 +1,8 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
 import dartzee.core.util.*
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.verifyNotCalled
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe

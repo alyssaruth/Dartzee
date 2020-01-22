@@ -1,11 +1,11 @@
-package dartzee.test.achievements.x01
+package dartzee.achievements.x01
 
 import dartzee.achievements.x01.AchievementX01Btbf
 import dartzee.db.GAME_TYPE_GOLF
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.achievements.TestAbstractAchievementRowPerGame
-import dartzee.test.helper.*
+import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
 

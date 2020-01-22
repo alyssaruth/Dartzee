@@ -1,4 +1,4 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.`object`.Dart
 import dartzee.db.DartzeeRuleEntity
@@ -6,7 +6,7 @@ import dartzee.utils.DartsColour
 import dartzee.utils.factoryHighScoreResult
 import dartzee.utils.insertDartzeeRules
 import dartzee.utils.setColoursForDartzeeResult
-import dartzee.test.helper.*
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe

@@ -1,8 +1,8 @@
-package dartzee.test.achievements.dartzee
+package dartzee.achievements.dartzee
 
 import dartzee.achievements.dartzee.AchievementDartzeeGamesWon
 import dartzee.db.GAME_TYPE_DARTZEE
-import dartzee.test.achievements.TestAbstractAchievementGamesWon
+import dartzee.achievements.TestAbstractAchievementGamesWon
 import io.kotlintest.shouldBe
 import org.junit.Test
 

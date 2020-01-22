@@ -1,12 +1,12 @@
-package dartzee.test.screen.preference
+package dartzee.screen.preference
 
 import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
 import dartzee.screen.preference.AbstractPreferencesPanel
 import dartzee.screen.preference.PreferencesDialog
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.verifyNotCalled
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk

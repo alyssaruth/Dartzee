@@ -1,9 +1,9 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.screen.dartzee.DartzeeRuleTileComplete
 import dartzee.screen.dartzee.SoftDisableButtonModel
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.makeDartzeeRuleDto
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test

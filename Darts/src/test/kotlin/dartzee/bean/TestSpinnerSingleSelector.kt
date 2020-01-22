@@ -1,7 +1,7 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.SpinnerSingleSelector
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import org.junit.Test
 import kotlin.test.assertEquals
 

@@ -1,4 +1,4 @@
-package dartzee.test.screen.stats.overall
+package dartzee.screen.stats.overall
 
 import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameEntity
@@ -7,9 +7,9 @@ import dartzee.db.X01FinishEntity
 import dartzee.screen.stats.overall.LeaderboardTopX01Finishes
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
-import dartzee.test.helper.AbstractRegistryTest
-import dartzee.test.helper.insertGame
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import org.junit.Test

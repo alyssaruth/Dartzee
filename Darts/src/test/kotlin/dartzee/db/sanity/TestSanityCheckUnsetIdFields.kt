@@ -1,11 +1,11 @@
-package dartzee.test.db.sanity
+package dartzee.db.sanity
 
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.sanity.SanityCheckUnsetIdFields
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertGame
-import dartzee.test.helper.insertParticipant
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.Test

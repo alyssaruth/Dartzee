@@ -1,9 +1,9 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.DartzeeTotalRuleSelector
 import dartzee.dartzee.getAllTotalRules
 import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe

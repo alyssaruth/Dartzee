@@ -1,10 +1,10 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.PlayerImageRadio
 import dartzee.db.PlayerImageEntity
-import dartzee.test.db.getBlobValue
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.singleClick
+import dartzee.db.getBlobValue
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.singleClick
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe

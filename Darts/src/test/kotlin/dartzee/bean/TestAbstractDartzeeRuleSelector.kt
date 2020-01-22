@@ -1,10 +1,10 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.AbstractDartzeeRuleSelector
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.getAllDartRules
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import dartzee.core.bean.findByClass
 import dartzee.core.bean.items
 import io.kotlintest.matchers.collections.shouldBeEmpty

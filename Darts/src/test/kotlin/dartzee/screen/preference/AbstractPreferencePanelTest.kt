@@ -1,7 +1,7 @@
-package dartzee.test.screen.preference
+package dartzee.screen.preference
 
 import dartzee.screen.preference.AbstractPreferencesPanel
-import dartzee.test.helper.AbstractRegistryTest
+import dartzee.helper.AbstractRegistryTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

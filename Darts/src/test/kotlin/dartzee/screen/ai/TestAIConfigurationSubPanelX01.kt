@@ -1,9 +1,9 @@
-package dartzee.test.screen.ai
+package dartzee.screen.ai
 
 import dartzee.`object`.Dart
 import dartzee.ai.DartsModelNormalDistribution
 import dartzee.screen.ai.AIConfigurationSubPanelX01
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

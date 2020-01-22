@@ -1,6 +1,6 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_MISS
@@ -12,9 +12,9 @@ import dartzee.screen.dartzee.DartzeeRuleTile
 import dartzee.screen.dartzee.IDartzeeCarouselListener
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.helper.*
+import dartzee.helper.*
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.test.core.helper.makeMouseEvent
+import dartzee.core.helper.makeMouseEvent
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldContainExactly

@@ -1,9 +1,9 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
 import dartzee.core.util.FileUtil
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe

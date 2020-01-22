@@ -1,10 +1,10 @@
-package dartzee.test.dartzee.dart
+package dartzee.dartzee.dart
 
 import dartzee.dartzee.dart.DartzeeDartRuleColour
 import dartzee.dartzee.parseDartRule
-import dartzee.test.*
-import dartzee.test.dartzee.AbstractDartzeeRuleTest
-import dartzee.test.helper.makeColourRule
+import dartzee.*
+import dartzee.dartzee.AbstractDartzeeRuleTest
+import dartzee.helper.makeColourRule
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test

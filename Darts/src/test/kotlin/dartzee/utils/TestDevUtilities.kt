@@ -1,9 +1,9 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.screen.ScreenCache
 import dartzee.utils.DevUtilities
-import dartzee.test.db.TestAchievementEntity
-import dartzee.test.helper.*
+import dartzee.db.TestAchievementEntity
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize

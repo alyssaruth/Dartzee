@@ -1,12 +1,12 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.total.DartzeeTotalRuleLessThan
 import dartzee.screen.dartzee.DartzeeRuleTile
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.makeDartzeeRuleDto
-import dartzee.test.helper.makeTotalScoreRule
-import dartzee.test.core.helper.makeMouseEvent
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.makeTotalScoreRule
+import dartzee.core.helper.makeMouseEvent
 import io.kotlintest.shouldBe
 import org.junit.Test
 

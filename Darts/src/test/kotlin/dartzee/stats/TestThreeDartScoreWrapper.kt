@@ -1,7 +1,7 @@
-package dartzee.test.stats
+package dartzee.stats
 
 import dartzee.stats.ThreeDartScoreWrapper
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test

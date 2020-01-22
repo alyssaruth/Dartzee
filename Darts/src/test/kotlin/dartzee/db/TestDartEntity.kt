@@ -1,9 +1,9 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SEGMENT_TYPE_TREBLE
 import dartzee.db.DartEntity
-import dartzee.test.helper.randomGuid
+import dartzee.helper.randomGuid
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test

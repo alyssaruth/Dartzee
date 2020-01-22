@@ -1,9 +1,9 @@
-package dartzee.test.achievements
+package dartzee.achievements
 
 import dartzee.achievements.*
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertAchievement
-import dartzee.test.helper.wipeTable
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertAchievement
+import dartzee.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.shouldBe

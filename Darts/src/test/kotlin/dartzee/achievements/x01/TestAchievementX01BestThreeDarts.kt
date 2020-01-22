@@ -1,14 +1,14 @@
-package dartzee.test.achievements.x01
+package dartzee.achievements.x01
 
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.achievements.AbstractAchievementTest
-import dartzee.test.helper.insertDart
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.insertPlayer
-import dartzee.test.helper.retrieveAchievement
+import dartzee.achievements.AbstractAchievementTest
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp

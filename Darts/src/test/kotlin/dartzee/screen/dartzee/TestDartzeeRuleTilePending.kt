@@ -1,4 +1,4 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.`object`.SEGMENT_TYPE_MISS
@@ -7,9 +7,9 @@ import dartzee.dartzee.DartzeeCalculator
 import dartzee.screen.dartzee.DartzeeRuleTilePending
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.doubleNineteen
-import dartzee.test.helper.*
-import dartzee.test.trebleTwenty
+import dartzee.doubleNineteen
+import dartzee.helper.*
+import dartzee.trebleTwenty
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe

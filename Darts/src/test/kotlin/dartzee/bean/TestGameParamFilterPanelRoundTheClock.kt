@@ -1,11 +1,11 @@
-package dartzee.test.bean
+package dartzee.bean
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.CLOCK_TYPE_TREBLES
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk

@@ -1,11 +1,11 @@
-package dartzee.test.achievements.x01
+package dartzee.achievements.x01
 
 import dartzee.achievements.x01.AchievementX01HighestBust
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.achievements.AbstractAchievementTest
-import dartzee.test.helper.insertDart
-import dartzee.test.helper.insertParticipant
+import dartzee.achievements.AbstractAchievementTest
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
 
 class TestAchievementX01HighestBust: AbstractAchievementTest<AchievementX01HighestBust>()
 {

@@ -1,8 +1,8 @@
-package dartzee.test.screen
+package dartzee.screen
 
 import dartzee.screen.ChangeLog
 import dartzee.utils.DARTS_VERSION_NUMBER
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.string.shouldContain
 import org.junit.Test
 

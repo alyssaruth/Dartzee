@@ -1,15 +1,15 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeRuleEntity
 import dartzee.screen.dartzee.DartzeeTemplateDialog
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertDartzeeTemplate
-import dartzee.test.helper.makeDartzeeRuleCalculationResult
-import dartzee.test.helper.makeDartzeeRuleDto
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartzeeTemplate
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe

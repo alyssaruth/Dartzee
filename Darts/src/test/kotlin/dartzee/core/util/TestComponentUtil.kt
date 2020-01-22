@@ -1,9 +1,8 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
-import dartzee.core.util.*
-import dartzee.test.helper.AbstractTest
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -15,6 +14,7 @@ import io.mockk.mockk
 import org.junit.Test
 import java.awt.event.ActionListener
 import javax.swing.*
+import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
 class TestComponentUtil: AbstractTest()
@@ -200,7 +200,7 @@ class TestComponentUtil: AbstractTest()
         panel.add(subPanel)
         subPanel.add(subSpinner)
 
-        val changeListener = mockk<ChangeListener>()
+        val changeListener = ListenerOne()
         window.addChangeListenerToAllChildren(changeListener)
 
         spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(changeListener, spinner.editor)
@@ -215,8 +215,8 @@ class TestComponentUtil: AbstractTest()
 
         panel.add(spinner)
 
-        val listenerOne = mockk<ChangeListener>()
-        val listenerTwo = mockk<ChangeListener>()
+        val listenerOne = ListenerOne()
+        val listenerTwo = ListenerTwo()
 
         panel.addChangeListenerToAllChildren(listenerOne)
         spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, spinner.editor)
@@ -226,5 +226,15 @@ class TestComponentUtil: AbstractTest()
 
         panel.addChangeListenerToAllChildren(listenerTwo)
         spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, listenerTwo, spinner.editor)
+    }
+
+    private class ListenerOne: ChangeListener
+    {
+        override fun stateChanged(e: ChangeEvent?) {}
+    }
+
+    private class ListenerTwo: ChangeListener
+    {
+        override fun stateChanged(e: ChangeEvent?) {}
     }
 }

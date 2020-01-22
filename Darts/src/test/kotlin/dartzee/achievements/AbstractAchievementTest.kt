@@ -1,4 +1,4 @@
-package dartzee.test.achievements
+package dartzee.achievements
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.db.AchievementEntity
@@ -6,7 +6,7 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.utils.DatabaseUtil
-import dartzee.test.helper.*
+import dartzee.helper.*
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

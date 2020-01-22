@@ -1,7 +1,7 @@
-package dartzee.test.core.bean
+package dartzee.core.bean
 
 import dartzee.core.bean.GhostText
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Font

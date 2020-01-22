@@ -1,4 +1,4 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.dartzee.DartzeeRuleFactory
 import dartzee.dartzee.dart.DartzeeDartRuleEven
@@ -6,11 +6,11 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.screen.dartzee.DartzeeRuleSetupPanel
 import dartzee.utils.InjectedThings
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.FakeDartzeeRuleFactory
-import dartzee.test.helper.makeDartzeeRuleCalculationResult
-import dartzee.test.helper.makeDartzeeRuleDto
-import dartzee.test.core.helper.processKeyPress
+import dartzee.helper.AbstractTest
+import dartzee.helper.FakeDartzeeRuleFactory
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.core.helper.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe

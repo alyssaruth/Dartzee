@@ -1,10 +1,10 @@
-package dartzee.test.utils
+package dartzee.utils
 
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.getLogs
 import dartzee.utils.PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache
-import dartzee.test.helper.AbstractRegistryTest
+import dartzee.helper.AbstractRegistryTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain

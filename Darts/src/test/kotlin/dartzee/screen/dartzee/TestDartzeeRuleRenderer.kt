@@ -1,10 +1,10 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.screen.dartzee.DartzeeRuleRenderer
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.makeDartzeeRuleCalculationResult
-import dartzee.test.helper.makeDartzeeRuleDto
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
 import io.kotlintest.shouldBe
 import org.junit.Test
 

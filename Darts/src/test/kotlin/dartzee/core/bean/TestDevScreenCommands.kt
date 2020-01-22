@@ -1,10 +1,10 @@
-package dartzee.test.core.bean
+package dartzee.core.bean
 
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty

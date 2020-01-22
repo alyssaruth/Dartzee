@@ -1,11 +1,11 @@
-package dartzee.test.core.screen
+package dartzee.core.screen
 
 import dartzee.core.util.Debug
 import dartzee.core.util.DebugExtension
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
 import dartzee.core.screen.BugReportDialog
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe

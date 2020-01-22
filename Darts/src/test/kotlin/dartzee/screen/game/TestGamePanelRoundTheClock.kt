@@ -1,4 +1,4 @@
-package dartzee.test.screen.game
+package dartzee.screen.game
 
 import dartzee.core.obj.HashMapList
 import dartzee.`object`.Dart
@@ -6,9 +6,9 @@ import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.db.*
 import dartzee.screen.game.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
-import dartzee.test.db.TestAchievementEntity
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.randomGuid
+import dartzee.db.TestAchievementEntity
+import dartzee.helper.AbstractTest
+import dartzee.helper.randomGuid
 import io.kotlintest.shouldBe
 import org.junit.Test
 

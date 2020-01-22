@@ -1,10 +1,10 @@
-package dartzee.test.reporting
+package dartzee.reporting
 
 import dartzee.db.GAME_TYPE_GOLF
 import dartzee.db.GAME_TYPE_X01
 import dartzee.reporting.ReportParameters
 import dartzee.reporting.runReport
-import dartzee.test.helper.*
+import dartzee.helper.*
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldContainExactly

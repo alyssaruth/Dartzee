@@ -1,4 +1,4 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.db.PlayerEntity
 import io.kotlintest.shouldBe

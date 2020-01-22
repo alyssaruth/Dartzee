@@ -1,4 +1,4 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.dartzee.dart.DartzeeDartRuleEven
@@ -8,8 +8,8 @@ import dartzee.dartzee.total.DartzeeTotalRuleEven
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeRuleEntity
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.doubleNineteen
-import dartzee.test.helper.*
+import dartzee.doubleNineteen
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf

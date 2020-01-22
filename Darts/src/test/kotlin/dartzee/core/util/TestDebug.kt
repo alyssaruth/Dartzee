@@ -1,12 +1,12 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
 import dartzee.core.util.Debug
 import dartzee.core.util.DebugExtension
 import dartzee.core.util.DebugOutput
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
+import dartzee.core.helper.verifyNotCalled
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe

@@ -1,4 +1,4 @@
-package dartzee.test.ai
+package dartzee.ai
 
 import dartzee.`object`.*
 import dartzee.ai.AbstractDartsModel
@@ -8,7 +8,7 @@ import dartzee.db.CLOCK_TYPE_TREBLES
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.utils.getCheckoutScores
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk

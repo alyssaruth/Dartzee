@@ -1,9 +1,9 @@
-package dartzee.test.core.screen
+package dartzee.core.screen
 
 import dartzee.core.util.Debug
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.getLogs
 import dartzee.core.screen.SimpleDialog
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test

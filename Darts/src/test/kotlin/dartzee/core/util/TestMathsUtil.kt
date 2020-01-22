@@ -1,8 +1,8 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.ceilDiv
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

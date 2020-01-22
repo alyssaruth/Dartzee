@@ -1,12 +1,12 @@
-package dartzee.test.ai
+package dartzee.ai
 
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.XmlUtil
 import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import dartzee.ai.*
-import dartzee.test.borrowTestDartboard
-import dartzee.test.helper.AbstractTest
+import dartzee.borrowTestDartboard
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.numerics.shouldBeBetween
 import io.kotlintest.shouldBe
