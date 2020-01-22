@@ -1,9 +1,9 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.core.util.CollectionShuffler
 import dartzee.core.util.InjectedCore
-import dartzee.test.core.helper.FakeCollectionShuffler
-import dartzee.test.helper.AbstractTest
+import dartzee.core.helper.FakeCollectionShuffler
+import dartzee.helper.AbstractTest
 import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.TableUtil
 import io.kotlintest.matchers.collections.shouldContainExactly

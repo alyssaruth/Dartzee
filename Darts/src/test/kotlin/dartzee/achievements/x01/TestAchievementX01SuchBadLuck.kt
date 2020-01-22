@@ -1,14 +1,14 @@
-package dartzee.test.achievements.x01
+package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import dartzee.achievements.x01.AchievementX01SuchBadLuck
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.achievements.AbstractAchievementTest
-import dartzee.test.helper.insertDart
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.insertPlayer
+import dartzee.achievements.AbstractAchievementTest
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp

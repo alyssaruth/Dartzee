@@ -1,10 +1,10 @@
-package dartzee.test.screen
+package dartzee.screen
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.screen.AbstractPlayerCreationDialog
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertPlayer
-import dartzee.test.helper.randomGuid
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
+import dartzee.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.impl.annotations.SpyK

@@ -1,9 +1,9 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.db.DartsMatchEntity
 import dartzee.screen.GameSetupScreen
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test

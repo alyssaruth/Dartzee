@@ -1,7 +1,7 @@
-package dartzee.test.core.screen
+package dartzee.core.screen
 
 import dartzee.core.screen.ColourChooserDialog
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.spyk
 import io.mockk.verify

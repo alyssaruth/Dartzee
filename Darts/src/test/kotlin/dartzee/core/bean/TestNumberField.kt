@@ -1,7 +1,6 @@
-package dartzee.test.core.bean
+package dartzee.core.bean
 
-import dartzee.core.bean.NumberField
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test

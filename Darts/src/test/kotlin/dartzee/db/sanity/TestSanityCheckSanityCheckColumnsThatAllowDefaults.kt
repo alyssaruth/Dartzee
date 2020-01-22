@@ -1,8 +1,8 @@
-package dartzee.test.db.sanity
+package dartzee.db.sanity
 
 import dartzee.db.sanity.SanityCheckColumnsThatAllowDefaults
 import dartzee.utils.DatabaseUtil
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test

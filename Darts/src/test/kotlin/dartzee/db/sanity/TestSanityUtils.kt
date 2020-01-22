@@ -1,8 +1,8 @@
-package dartzee.test.db.sanity
+package dartzee.db.sanity
 
 import dartzee.db.GameEntity
 import dartzee.db.sanity.getIdColumns
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import org.junit.Test
 

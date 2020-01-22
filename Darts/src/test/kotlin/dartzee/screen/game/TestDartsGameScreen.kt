@@ -1,10 +1,10 @@
-package dartzee.test.screen.game
+package dartzee.screen.game
 
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertGame
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify

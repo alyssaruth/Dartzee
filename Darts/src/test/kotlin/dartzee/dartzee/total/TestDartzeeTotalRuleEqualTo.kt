@@ -1,7 +1,7 @@
-package dartzee.test.dartzee.total
+package dartzee.dartzee.total
 
 import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
-import dartzee.test.dartzee.AbstractDartzeeRuleTest
+import dartzee.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

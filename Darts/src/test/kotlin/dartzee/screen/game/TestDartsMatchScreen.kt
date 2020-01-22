@@ -1,13 +1,13 @@
-package dartzee.test.screen.game
+package dartzee.screen.game
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.db.PlayerImageEntity
 import dartzee.screen.game.DartsGamePanel
 import dartzee.screen.game.DartsMatchScreen
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertDartsMatch
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertPlayer
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test

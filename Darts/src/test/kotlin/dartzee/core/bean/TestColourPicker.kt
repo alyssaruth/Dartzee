@@ -1,12 +1,12 @@
-package dartzee.test.core.bean
+package dartzee.core.bean
 
 import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
 import dartzee.core.bean.IColourSelector
 import dartzee.core.util.InjectedDesktopCore
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.getIconImage
-import dartzee.test.core.helper.makeMouseEvent
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.getIconImage
+import dartzee.core.helper.makeMouseEvent
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk

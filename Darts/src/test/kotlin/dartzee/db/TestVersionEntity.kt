@@ -1,10 +1,10 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.db.VersionEntity
 import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.utils.DartsDatabaseUtil
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.helper.wipeTable
+import dartzee.core.helper.exceptionLogged
+import dartzee.helper.wipeTable
 import io.kotlintest.shouldBe
 import org.junit.Test
 

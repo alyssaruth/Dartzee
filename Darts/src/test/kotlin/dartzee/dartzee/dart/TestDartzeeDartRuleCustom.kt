@@ -1,11 +1,11 @@
-package dartzee.test.dartzee.dart
+package dartzee.dartzee.dart
 
 import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.dartzee.parseDartRule
 import dartzee.utils.InjectedThings
-import dartzee.test.*
-import dartzee.test.dartzee.AbstractDartzeeRuleTest
-import dartzee.test.helper.FakeDartzeeSegmentFactory
+import dartzee.*
+import dartzee.dartzee.AbstractDartzeeRuleTest
+import dartzee.helper.FakeDartzeeSegmentFactory
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

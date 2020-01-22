@@ -1,9 +1,9 @@
-package dartzee.test.core.screen
+package dartzee.core.screen
 
 import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.TableModelDialog
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk

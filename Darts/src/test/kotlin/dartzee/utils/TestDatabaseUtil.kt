@@ -1,13 +1,13 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.core.util.Debug
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
 import dartzee.`object`.DartsClient
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.MAX_SQL_DURATION
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.wipeTable
+import dartzee.helper.AbstractTest
+import dartzee.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize

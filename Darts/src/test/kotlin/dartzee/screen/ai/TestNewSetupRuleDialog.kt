@@ -1,8 +1,8 @@
-package dartzee.test.screen.ai
+package dartzee.screen.ai
 
 import dartzee.`object`.Dart
 import dartzee.screen.ai.NewSetupRuleDialog
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.maps.shouldContain

@@ -1,10 +1,10 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.`object`.*
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.utils.DartsColour
-import dartzee.test.*
-import dartzee.test.helper.AbstractTest
+import dartzee.*
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color

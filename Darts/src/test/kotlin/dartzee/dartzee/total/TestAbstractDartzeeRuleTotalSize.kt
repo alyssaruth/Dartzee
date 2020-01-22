@@ -1,7 +1,7 @@
-package dartzee.test.dartzee.total
+package dartzee.dartzee.total
 
 import dartzee.dartzee.total.AbstractDartzeeRuleTotalSize
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test

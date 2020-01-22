@@ -1,8 +1,8 @@
-package dartzee.test.dartzee.dart
+package dartzee.dartzee.dart
 
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
-import dartzee.test.*
-import dartzee.test.dartzee.AbstractDartzeeRuleTest
+import dartzee.*
+import dartzee.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

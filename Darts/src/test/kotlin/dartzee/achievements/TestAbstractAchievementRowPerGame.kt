@@ -1,8 +1,8 @@
-package dartzee.test.achievements
+package dartzee.achievements
 
 import dartzee.achievements.AbstractAchievementRowPerGame
-import dartzee.test.helper.insertAchievement
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.insertAchievement
+import dartzee.helper.insertPlayer
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe

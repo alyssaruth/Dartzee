@@ -1,4 +1,4 @@
-package dartzee.test.screen.game.scorer
+package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint

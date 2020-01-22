@@ -1,9 +1,9 @@
-package dartzee.test.achievements.rtc
+package dartzee.achievements.rtc
 
 import dartzee.achievements.rtc.AchievementClockBruceyBonuses
 import dartzee.db.*
-import dartzee.test.achievements.AbstractAchievementTest
-import dartzee.test.helper.*
+import dartzee.achievements.AbstractAchievementTest
+import dartzee.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp

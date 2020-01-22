@@ -1,6 +1,6 @@
-package dartzee.test.screen.game.scorer
+package dartzee.screen.game.scorer
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.screen.game.GamePanelDartzee
@@ -8,10 +8,10 @@ import dartzee.screen.game.scorer.DartRenderer
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.screen.game.scorer.DartzeeRoundResultRenderer
 import dartzee.screen.game.scorer.DartzeeScoreRenderer
-import dartzee.test.doClick
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertGame
-import dartzee.test.helper.insertPlayer
+import dartzee.doClick
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.matchers.types.shouldBeInstanceOf

@@ -1,10 +1,10 @@
-package dartzee.test.core.bean
+package dartzee.core.bean
 
 import dartzee.core.bean.HyperlinkAdaptor
 import dartzee.core.bean.IHyperlinkListener
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.MOUSE_EVENT_SINGLE_CLICK
-import dartzee.test.core.helper.makeMouseEvent
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.MOUSE_EVENT_SINGLE_CLICK
+import dartzee.core.helper.makeMouseEvent
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.mockk.mockk

@@ -1,9 +1,9 @@
-package dartzee.test.db
+package dartzee.db
 
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogs
 import dartzee.db.*
-import dartzee.test.helper.*
+import dartzee.helper.*
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldBeEmpty

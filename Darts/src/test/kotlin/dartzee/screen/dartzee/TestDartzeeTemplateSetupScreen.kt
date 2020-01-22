@@ -1,4 +1,4 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.DartzeeTemplateFactory
@@ -12,8 +12,8 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.UtilitiesScreen
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.utils.InjectedThings
-import dartzee.test.helper.*
-import dartzee.test.core.helper.processKeyPress
+import dartzee.helper.*
+import dartzee.core.helper.processKeyPress
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

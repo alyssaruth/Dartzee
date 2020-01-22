@@ -1,4 +1,4 @@
-package dartzee.test.screen.game
+package dartzee.screen.game
 
 import dartzee.core.util.Debug
 import dartzee.`object`.Dart
@@ -8,10 +8,10 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.db.*
 import dartzee.screen.game.GamePanelX01
 import dartzee.screen.game.scorer.DartsScorerX01
-import dartzee.test.db.TestAchievementEntity
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.randomGuid
-import dartzee.test.helper.wipeTable
+import dartzee.db.TestAchievementEntity
+import dartzee.helper.AbstractTest
+import dartzee.helper.randomGuid
+import dartzee.helper.wipeTable
 import io.kotlintest.shouldBe
 import org.junit.Test
 

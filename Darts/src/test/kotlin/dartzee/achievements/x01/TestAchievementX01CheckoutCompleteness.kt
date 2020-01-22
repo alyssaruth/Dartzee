@@ -1,15 +1,15 @@
-package dartzee.test.achievements.x01
+package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
 import dartzee.achievements.x01.AchievementX01CheckoutCompleteness
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.achievements.TestAbstractAchievementRowPerGame
-import dartzee.test.helper.getCountFromTable
-import dartzee.test.helper.insertDart
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.insertPlayer
+import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe

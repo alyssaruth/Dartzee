@@ -1,9 +1,9 @@
-package dartzee.test.bean
+package dartzee.bean
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.bean.GameParamFilterPanelDartzee
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertDartzeeTemplate
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartzeeTemplate
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped

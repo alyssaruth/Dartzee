@@ -1,8 +1,8 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.TableModelEntity
 import dartzee.utils.DartsDatabaseUtil
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeOneOf
 import io.kotlintest.shouldBe
 import org.junit.Test

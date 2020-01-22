@@ -1,8 +1,8 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
 import dartzee.core.util.*
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty

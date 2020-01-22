@@ -1,11 +1,11 @@
-package dartzee.test.dartzee
+package dartzee.dartzee
 
 import dartzee.dartzee.DartzeeRuleCalculationResult
-import dartzee.test.doubleNineteen
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.makeDartzeeRuleCalculationResult
-import dartzee.test.outerBull
-import dartzee.test.singleTwenty
+import dartzee.doubleNineteen
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.outerBull
+import dartzee.singleTwenty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test

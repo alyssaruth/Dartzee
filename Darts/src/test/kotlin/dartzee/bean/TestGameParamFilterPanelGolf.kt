@@ -1,8 +1,8 @@
-package dartzee.test.bean
+package dartzee.bean
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.bean.GameParamFilterPanelGolf
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk

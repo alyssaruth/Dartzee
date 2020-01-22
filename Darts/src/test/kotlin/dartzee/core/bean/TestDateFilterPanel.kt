@@ -1,15 +1,13 @@
-package dartzee.test.core.bean
+package dartzee.core.bean
 
-import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.enableChildren
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class TestDateFilterPanel: AbstractTest()
 {
@@ -55,7 +53,7 @@ class TestDateFilterPanel: AbstractTest()
         val filterPanel = DateFilterPanel()
 
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
-        filterPanel.cbDateTo.date = LocalDate.parse("2020-01-07")
+        filterPanel.cbDateTo.date = LocalDate.parse("2020-11-07")
 
         filterPanel.getFilterDesc() shouldBe "01/01/2020 - 07/11/2020"
     }

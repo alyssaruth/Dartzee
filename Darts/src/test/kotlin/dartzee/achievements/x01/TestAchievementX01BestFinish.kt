@@ -1,10 +1,10 @@
-package dartzee.test.achievements.x01
+package dartzee.achievements.x01
 
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.achievements.AbstractAchievementTest
-import dartzee.test.helper.*
+import dartzee.achievements.AbstractAchievementTest
+import dartzee.helper.*
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import io.kotlintest.shouldBe

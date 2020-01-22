@@ -1,4 +1,4 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
@@ -8,8 +8,8 @@ import dartzee.screen.dartzee.DartzeeRuleVerificationPanel
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.doClick
-import dartzee.test.helper.*
+import dartzee.doClick
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe

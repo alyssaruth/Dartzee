@@ -1,11 +1,11 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.screen.dartzee.DartzeeTemplateRuleRenderer
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.makeDartzeeRuleCalculationResult
-import dartzee.test.helper.makeDartzeeRuleDto
-import dartzee.test.core.helper.getIconImage
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.core.helper.getIconImage
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color

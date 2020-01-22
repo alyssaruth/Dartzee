@@ -1,4 +1,4 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_GAMES_WON
 import dartzee.bean.GameParamFilterPanelDartzee
@@ -10,10 +10,10 @@ import dartzee.utils.doesHighestWin
 import dartzee.utils.getFilterPanel
 import dartzee.utils.getTypeDesc
 import dartzee.utils.setFinishingPositions
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertAchievement
-import dartzee.test.helper.insertGame
-import dartzee.test.helper.insertParticipant
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertAchievement
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test

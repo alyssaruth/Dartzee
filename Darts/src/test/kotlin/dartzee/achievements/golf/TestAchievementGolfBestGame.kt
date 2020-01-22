@@ -1,8 +1,8 @@
-package dartzee.test.achievements.golf
+package dartzee.achievements.golf
 
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.db.GAME_TYPE_GOLF
-import dartzee.test.achievements.TestAbstractAchievementBestGame
+import dartzee.achievements.TestAbstractAchievementBestGame
 import io.kotlintest.shouldBe
 import org.junit.Test
 

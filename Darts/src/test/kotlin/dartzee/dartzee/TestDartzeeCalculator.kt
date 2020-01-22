@@ -1,4 +1,4 @@
-package dartzee.test.dartzee
+package dartzee.dartzee
 
 import dartzee.core.util.getAllPermutations
 import dartzee.`object`.*
@@ -11,8 +11,8 @@ import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.dartzee.total.DartzeeTotalRuleEven
 import dartzee.dartzee.total.DartzeeTotalRuleLessThan
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.*
-import dartzee.test.helper.*
+import dartzee.*
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.doubles.shouldBeBetween

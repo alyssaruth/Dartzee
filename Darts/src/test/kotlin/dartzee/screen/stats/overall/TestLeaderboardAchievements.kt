@@ -1,4 +1,4 @@
-package dartzee.test.screen.stats.overall
+package dartzee.screen.stats.overall
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
@@ -8,9 +8,9 @@ import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.db.PlayerEntity
 import dartzee.screen.stats.overall.LeaderboardAchievements
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertAchievement
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertAchievement
+import dartzee.helper.insertPlayer
 import io.kotlintest.shouldBe
 import org.junit.Test
 

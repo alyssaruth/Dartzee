@@ -1,9 +1,9 @@
-package dartzee.test.`object`
+package dartzee.`object`
 
 import dartzee.`object`.GameLauncher
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
 import io.mockk.verify

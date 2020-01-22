@@ -1,8 +1,8 @@
-package dartzee.test.`object`
+package dartzee.`object`
 
 import dartzee.`object`.*
-import dartzee.test.*
-import dartzee.test.helper.AbstractTest
+import dartzee.*
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Point

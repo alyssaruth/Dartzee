@@ -1,4 +1,4 @@
-package dartzee.test.screen.dartzee
+package dartzee.screen.dartzee
 
 import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
@@ -7,10 +7,10 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.screen.dartzee.DartzeeRuleCarousel
 import dartzee.screen.dartzee.DartzeeRuleSummaryPanel
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.getOuterSegments
-import dartzee.test.helper.makeDart
-import dartzee.test.helper.makeRoundResultEntities
+import dartzee.helper.AbstractTest
+import dartzee.helper.getOuterSegments
+import dartzee.helper.makeDart
+import dartzee.helper.makeRoundResultEntities
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.every

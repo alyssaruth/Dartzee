@@ -1,12 +1,12 @@
-package dartzee.test.achievements
+package dartzee.achievements
 
 import dartzee.achievements.AbstractAchievementGamesWon
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.helper.getCountFromTable
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp

@@ -1,9 +1,9 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.*
 import dartzee.db.PlayerEntity
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
 import dartzee.core.bean.ScrollTable
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe

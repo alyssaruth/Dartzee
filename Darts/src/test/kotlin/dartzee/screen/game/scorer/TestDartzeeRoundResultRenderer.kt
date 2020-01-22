@@ -1,8 +1,8 @@
-package dartzee.test.screen.game.scorer
+package dartzee.screen.game.scorer
 
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.screen.game.scorer.DartzeeRoundResultRenderer
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color

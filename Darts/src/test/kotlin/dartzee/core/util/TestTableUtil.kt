@@ -1,7 +1,7 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
 import dartzee.core.util.TableUtil
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe

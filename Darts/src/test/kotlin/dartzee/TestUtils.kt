@@ -1,8 +1,8 @@
-package dartzee.test
+package dartzee
 
 import dartzee.`object`.*
 import dartzee.screen.Dartboard
-import dartzee.test.core.helper.makeMouseEvent
+import dartzee.core.helper.makeMouseEvent
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import java.awt.Color
 import java.awt.Component

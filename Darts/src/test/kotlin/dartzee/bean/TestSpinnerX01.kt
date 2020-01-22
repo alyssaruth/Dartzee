@@ -1,7 +1,7 @@
-package dartzee.test.bean
+package dartzee.bean
 
 import dartzee.bean.SpinnerX01
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

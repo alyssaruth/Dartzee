@@ -1,8 +1,8 @@
-package dartzee.test.screen.game.scorer
+package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
 import dartzee.screen.game.scorer.DartsScorer
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 

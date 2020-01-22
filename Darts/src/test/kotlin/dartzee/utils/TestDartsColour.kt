@@ -1,7 +1,7 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.utils.DartsColour
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color

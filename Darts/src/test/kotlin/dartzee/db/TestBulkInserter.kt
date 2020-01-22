@@ -1,13 +1,13 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.core.util.Debug.clearLogs
-import dartzee.test.core.helper.exceptionLogged
-import dartzee.test.core.helper.getLogLines
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.exceptionLogged
+import dartzee.core.helper.getLogLines
+import dartzee.core.helper.getLogs
 import dartzee.db.BulkInserter
 import dartzee.db.PlayerEntity
 import dartzee.utils.DatabaseUtil
-import dartzee.test.helper.*
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeSortedWith
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeSortedWith

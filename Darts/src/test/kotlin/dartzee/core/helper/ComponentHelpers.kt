@@ -1,4 +1,4 @@
-package dartzee.test.core.helper
+package dartzee.core.helper
 
 import dartzee.core.bean.ScrollTable
 import io.mockk.mockk

@@ -1,8 +1,8 @@
-package dartzee.test.utils
+package dartzee.utils
 
 import dartzee.`object`.*
 import dartzee.utils.*
-import dartzee.test.helper.AbstractRegistryTest
+import dartzee.helper.AbstractRegistryTest
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe

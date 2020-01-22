@@ -1,14 +1,14 @@
-package dartzee.test.screen
+package dartzee.screen
 
-import dartzee.test.core.helper.verifyNotCalled
+import dartzee.core.helper.verifyNotCalled
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.doClick
-import dartzee.test.helper.AbstractTest
+import dartzee.doClick
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe

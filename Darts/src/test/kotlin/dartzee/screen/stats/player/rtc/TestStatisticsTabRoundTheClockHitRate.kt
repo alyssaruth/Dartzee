@@ -1,7 +1,7 @@
-package dartzee.test.screen.stats.player.rtc
+package dartzee.screen.stats.player.rtc
 
 import dartzee.screen.stats.player.rtc.StatisticsTabRoundTheClockHitRate
-import dartzee.test.screen.stats.player.AbstractStatsPieBreakdownTest
+import dartzee.screen.stats.player.AbstractStatsPieBreakdownTest
 
 class TestStatisticsTabRoundTheClockHitRate: AbstractStatsPieBreakdownTest<StatisticsTabRoundTheClockHitRate>()
 {

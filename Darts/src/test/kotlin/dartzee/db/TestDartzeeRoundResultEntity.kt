@@ -1,9 +1,9 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.test.helper.insertParticipant
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test

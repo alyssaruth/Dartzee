@@ -1,8 +1,8 @@
-package dartzee.test.`object`
+package dartzee.`object`
 
 import dartzee.`object`.DartHint
 import dartzee.`object`.factoryDartHintFromString
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test

@@ -1,4 +1,4 @@
-package dartzee.test.screen.game
+package dartzee.screen.game
 
 import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_MISS
@@ -16,10 +16,10 @@ import dartzee.screen.game.GamePanelDartzee
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
-import dartzee.test.bullseye
-import dartzee.test.doubleNineteen
-import dartzee.test.doubleTwenty
-import dartzee.test.helper.*
+import dartzee.bullseye
+import dartzee.doubleNineteen
+import dartzee.doubleTwenty
+import dartzee.helper.*
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.getSqlDateNow

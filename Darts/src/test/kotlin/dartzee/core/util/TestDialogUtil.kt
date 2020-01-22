@@ -1,8 +1,8 @@
-package dartzee.test.core.util
+package dartzee.core.util
 
 import dartzee.core.util.DialogUtil
-import dartzee.test.helper.AbstractTest
-import dartzee.test.core.helper.TestMessageDialogFactory
+import dartzee.helper.AbstractTest
+import dartzee.core.helper.TestMessageDialogFactory
 import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.Test

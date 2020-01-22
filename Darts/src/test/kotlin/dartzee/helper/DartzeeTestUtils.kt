@@ -1,4 +1,4 @@
-package dartzee.test.helper
+package dartzee.helper
 
 import dartzee.`object`.*
 import dartzee.dartzee.DartzeeRoundResult

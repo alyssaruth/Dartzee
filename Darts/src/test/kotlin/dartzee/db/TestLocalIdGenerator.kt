@@ -1,9 +1,9 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.db.LocalIdGenerator
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertGame
-import dartzee.test.helper.wipeTable
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldBeUnique
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe

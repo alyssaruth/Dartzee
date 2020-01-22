@@ -1,11 +1,11 @@
-package dartzee.test.dartzee
+package dartzee.dartzee
 
 import dartzee.dartzee.AbstractDartzeeRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.getAllDartRules
 import dartzee.dartzee.getAllTotalRules
 import dartzee.dartzee.parseRule
-import dartzee.test.helper.AbstractTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import org.junit.Test

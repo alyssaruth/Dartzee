@@ -1,9 +1,9 @@
-package dartzee.test.screen
+package dartzee.screen
 
 import dartzee.bean.getAllPlayers
 import dartzee.screen.PlayerSelectDialog
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertPlayer
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

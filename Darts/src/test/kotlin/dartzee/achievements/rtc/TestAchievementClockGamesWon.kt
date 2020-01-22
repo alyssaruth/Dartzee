@@ -1,8 +1,8 @@
-package dartzee.test.achievements.rtc
+package dartzee.achievements.rtc
 
 import dartzee.achievements.rtc.AchievementClockGamesWon
 import dartzee.db.GAME_TYPE_ROUND_THE_CLOCK
-import dartzee.test.achievements.TestAbstractAchievementGamesWon
+import dartzee.achievements.TestAbstractAchievementGamesWon
 import io.kotlintest.shouldBe
 import org.junit.Test
 

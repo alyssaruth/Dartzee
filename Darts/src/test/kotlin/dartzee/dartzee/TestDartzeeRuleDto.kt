@@ -1,14 +1,14 @@
-package dartzee.test.dartzee
+package dartzee.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.total.DartzeeTotalRuleGreaterThan
 import dartzee.dartzee.total.DartzeeTotalRulePrime
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.getFakeValidSegment
-import dartzee.test.helper.makeDartzeeRuleCalculationResult
-import dartzee.test.helper.makeDartzeeRuleDto
+import dartzee.helper.AbstractTest
+import dartzee.helper.getFakeValidSegment
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe

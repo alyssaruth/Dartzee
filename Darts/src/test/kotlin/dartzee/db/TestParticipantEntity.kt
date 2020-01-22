@@ -1,13 +1,13 @@
-package dartzee.test.db
+package dartzee.db
 
 import dartzee.core.util.Debug.clearLogs
-import dartzee.test.core.helper.getLogs
+import dartzee.core.helper.getLogs
 import dartzee.ai.AbstractDartsModel
 import dartzee.ai.DartsModelNormalDistribution
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
-import dartzee.test.helper.insertPlayer
-import dartzee.test.helper.randomGuid
+import dartzee.helper.insertPlayer
+import dartzee.helper.randomGuid
 import dartzee.core.util.DateStatics
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain

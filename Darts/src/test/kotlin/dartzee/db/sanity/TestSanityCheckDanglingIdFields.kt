@@ -1,13 +1,13 @@
-package dartzee.test.db.sanity
+package dartzee.db.sanity
 
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
 import dartzee.db.sanity.SanityCheckDanglingIdFields
 import dartzee.db.sanity.SanityCheckResultDanglingIdFields
-import dartzee.test.helper.AbstractTest
-import dartzee.test.helper.insertDartsMatch
-import dartzee.test.helper.insertDartzeeRule
-import dartzee.test.helper.insertGame
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertDartzeeRule
+import dartzee.helper.insertGame
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
