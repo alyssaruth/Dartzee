@@ -1,12 +1,10 @@
 /.idea
-/Databases
+Databases
 /out
 /lib
 *.iml
-Darts/.idea
 *.log
 .gradle
 build
 /bin/
-Darts
 out
