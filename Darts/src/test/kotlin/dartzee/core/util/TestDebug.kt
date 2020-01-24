@@ -3,9 +3,7 @@ package dartzee.core.util
 import dartzee.core.helper.exceptionLogged
 import dartzee.core.helper.getLogs
 import dartzee.core.helper.verifyNotCalled
-import dartzee.core.util.CoreRegistry.INSTANCE_STRING_USER_NAME
-import dartzee.core.util.CoreRegistry.instance
-import dartzee.helper.AbstractTest
+import dartzee.helper.AbstractTestWithUsername
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
@@ -14,19 +12,15 @@ import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
-class TestDebug: AbstractTest()
+class TestDebug: AbstractTestWithUsername()
 {
     private val ext = Debug.debugExtension
     private val originalOut = System.out
     private val newOut = ByteArrayOutputStream()
 
-    private val originalName = instance.get(INSTANCE_STRING_USER_NAME, "")
-
     override fun beforeEachTest()
     {
         super.beforeEachTest()
-
-        instance.put(INSTANCE_STRING_USER_NAME, "TestUser")
 
         System.setOut(PrintStream(newOut))
         Debug.lastEmailMillis = -1
@@ -36,8 +30,6 @@ class TestDebug: AbstractTest()
     {
         super.afterEachTest()
         System.setOut(originalOut)
-
-        instance.put(INSTANCE_STRING_USER_NAME, originalName)
 
         Debug.debugExtension = ext
         Debug.sendingEmails = false

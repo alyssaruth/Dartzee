@@ -1,11 +1,10 @@
 package dartzee.core.screen
 
-import dartzee.core.util.Debug
-import dartzee.core.util.DebugExtension
 import dartzee.core.helper.exceptionLogged
 import dartzee.core.helper.getLogs
-import dartzee.core.screen.BugReportDialog
-import dartzee.helper.AbstractTest
+import dartzee.core.util.Debug
+import dartzee.core.util.DebugExtension
+import dartzee.helper.AbstractTestWithUsername
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -14,7 +13,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class TestBugReportDialog: AbstractTest()
+class TestBugReportDialog: AbstractTestWithUsername()
 {
     private val ext = Debug.debugExtension
 
@@ -65,7 +64,7 @@ class TestBugReportDialog: AbstractTest()
         dlg.textPaneReplicationSteps.text = "Some steps"
         dlg.btnOk.doClick()
 
-        verify { ext.sendEmail("BUG REPORT: Description - Alex", any()) }
+        verify { ext.sendEmail("BUG REPORT: Description - TestUser", any()) }
         dialogFactory.infosShown.shouldContainExactly("Bug report submitted.")
     }
 }
