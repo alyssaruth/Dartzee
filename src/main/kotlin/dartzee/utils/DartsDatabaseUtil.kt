@@ -22,7 +22,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
 object DartsDatabaseUtil
 {
     const val DATABASE_VERSION = 10
-    const val DATABASE_NAME = "jdbc:derby:Darts;create=true"
+    const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
 
