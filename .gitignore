@@ -5,3 +5,8 @@
 *.iml
 Darts/.idea
 *.log
+.gradle
+build
+/bin/
+Darts
+out
