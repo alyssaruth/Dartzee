@@ -1,12 +1,11 @@
 package dartzee.core.util
 
-import dartzee.core.util.Debug
-import dartzee.core.util.DebugExtension
-import dartzee.core.util.DebugOutput
-import dartzee.helper.AbstractTest
 import dartzee.core.helper.exceptionLogged
 import dartzee.core.helper.getLogs
 import dartzee.core.helper.verifyNotCalled
+import dartzee.core.util.CoreRegistry.INSTANCE_STRING_USER_NAME
+import dartzee.core.util.CoreRegistry.instance
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
@@ -21,9 +20,13 @@ class TestDebug: AbstractTest()
     private val originalOut = System.out
     private val newOut = ByteArrayOutputStream()
 
+    private val originalName = instance.get(INSTANCE_STRING_USER_NAME, "")
+
     override fun beforeEachTest()
     {
         super.beforeEachTest()
+
+        instance.put(INSTANCE_STRING_USER_NAME, "TestUser")
 
         System.setOut(PrintStream(newOut))
         Debug.lastEmailMillis = -1
@@ -33,6 +36,8 @@ class TestDebug: AbstractTest()
     {
         super.afterEachTest()
         System.setOut(originalOut)
+
+        instance.put(INSTANCE_STRING_USER_NAME, originalName)
 
         Debug.debugExtension = ext
         Debug.sendingEmails = false
@@ -146,7 +151,7 @@ class TestDebug: AbstractTest()
 
         exceptionLogged() shouldBe true
         verify { ext.exceptionCaught(true) }
-        verify { ext.sendEmail("java.lang.Throwable - Foo () - Alex", any()) }
+        verify { ext.sendEmail("java.lang.Throwable - Foo () - TestUser", any()) }
 
         getLogs() shouldContain Debug.SUCCESS_MESSAGE
     }
@@ -163,7 +168,7 @@ class TestDebug: AbstractTest()
 
         exceptionLogged() shouldBe true
         verify { ext.exceptionCaught(true) }
-        verify { ext.sendEmail("java.lang.Throwable - Foo () - Alex", any()) }
+        verify { ext.sendEmail("java.lang.Throwable - Foo () - TestUser", any()) }
         verify { ext.unableToEmailLogs() }
 
         getLogs() shouldNotContain Debug.SUCCESS_MESSAGE
