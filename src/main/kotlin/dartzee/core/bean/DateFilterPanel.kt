@@ -1,8 +1,8 @@
 package dartzee.core.bean
 
 import com.github.lgooddatepicker.components.DatePicker
+import com.github.lgooddatepicker.components.DatePickerSettings
 import dartzee.core.util.DialogUtil.showError
-import java.awt.Dimension
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.swing.JLabel
@@ -13,8 +13,8 @@ class DateFilterPanel : JPanel()
 {
     private val dtFormat = SimpleDateFormat("dd/MM/yyyy")
 
-    val cbDateFrom = DatePicker()
-    val cbDateTo = DatePicker()
+    val cbDateFrom = DatePicker(makeDatePickerSettings())
+    val cbDateTo = DatePicker(makeDatePickerSettings())
     private val lblFrom = JLabel("from")
     private val lblTo = JLabel("to")
 
@@ -22,11 +22,9 @@ class DateFilterPanel : JPanel()
     {
         add(lblFrom)
         lblFrom.horizontalAlignment = SwingConstants.LEFT
-        cbDateFrom.preferredSize = Dimension(130, 22)
         add(cbDateFrom)
         add(lblTo)
         lblTo.horizontalAlignment = SwingConstants.LEFT
-        cbDateTo.preferredSize = Dimension(130, 22)
         add(cbDateTo)
     }
 
@@ -54,4 +52,14 @@ class DateFilterPanel : JPanel()
 
     private fun getDtFrom() = cbDateFrom.date.atTime(0, 0)
     private fun getDtTo() = cbDateTo.date.atTime(0, 0)
+
+    private fun makeDatePickerSettings(): DatePickerSettings
+    {
+        val settings = DatePickerSettings()
+
+        settings.allowEmptyDates = false
+        settings.visibleTodayButton = true
+
+        return settings
+    }
 }
