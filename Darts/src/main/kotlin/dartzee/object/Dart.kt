@@ -1,10 +1,8 @@
 package dartzee.`object`
 
+import dartzee.core.util.DateStatics
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_TREBLES
-import dartzee.utils.PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE
-import dartzee.utils.PreferenceUtil
-import dartzee.core.util.DateStatics
 import java.awt.Point
 import java.sql.Timestamp
 
@@ -117,16 +115,7 @@ open class Dart constructor(
         return (score == other.score)
     }
 
-    override fun toString(): String
-    {
-        val showTotal = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE)
-        return if (showTotal)
-        {
-            "" + getTotal()
-        }
-        else getRendered()
-
-    }
+    override fun toString() = getRendered()
 
     fun hitClockTarget(clockType: String?): Boolean
     {

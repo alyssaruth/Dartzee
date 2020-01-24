@@ -1,10 +1,9 @@
 package dartzee.screen.preference
 
-import dartzee.utils.*
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.utils.*
 import java.awt.Dimension
-import java.awt.FlowLayout
 import java.awt.Font
 import javax.swing.*
 import javax.swing.border.TitledBorder
@@ -18,8 +17,6 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
     val spinnerHueFactor = JSpinner()
     val spinnerFgBrightness = JSpinner()
     val spinnerBgBrightness = JSpinner()
-    val rdbtnD20 = JRadioButton("D20")
-    val rdbtn40 = JRadioButton("40")
 
     init
     {
@@ -107,21 +104,6 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         panel_1.add(spinnerBgBrightness)
         spinnerBgBrightness.preferredSize = Dimension(60, 25)
         spinnerBgBrightness.model = SpinnerNumberModel(1.0, 0.1, 1.0, 0.05)
-        val panel_2 = JPanel()
-        val flowLayout = panel_2.layout as FlowLayout
-        flowLayout.alignment = FlowLayout.LEFT
-        panel_2.border = TitledBorder(null, "Other Options", TitledBorder.LEADING, TitledBorder.TOP, null, null)
-        panel_2.setBounds(10, 149, 449, 68)
-        add(panel_2)
-        val lblDartNotation = JLabel("Dart Notation")
-        panel_2.add(lblDartNotation)
-        val horizontalStrut = Box.createHorizontalStrut(20)
-        panel_2.add(horizontalStrut)
-        panel_2.add(rdbtnD20)
-        panel_2.add(rdbtn40)
-        val bg = ButtonGroup()
-        bg.add(rdbtnD20)
-        bg.add(rdbtn40)
 
         spinnerHueFactor.addChangeListener(this)
         spinnerBgBrightness.addChangeListener(this)
@@ -137,10 +119,6 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         spinnerHueFactor.value = hueFactor
         spinnerBgBrightness.value = bgBrightness
         spinnerFgBrightness.value = fgBrightness
-
-        val totalScore = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE, useDefaults)
-        rdbtn40.isSelected = totalScore
-        rdbtnD20.isSelected = !totalScore
 
         repaintScorerPreview()
     }
@@ -187,13 +165,9 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         val fgBrightness = spinnerFgBrightness.value as Double
         val bgBrightness = spinnerBgBrightness.value as Double
 
-        val showTotal = rdbtn40.isSelected
-
         PreferenceUtil.saveDouble(PREFERENCES_DOUBLE_BG_BRIGHTNESS, bgBrightness)
         PreferenceUtil.saveDouble(PREFERENCES_DOUBLE_FG_BRIGHTNESS, fgBrightness)
         PreferenceUtil.saveDouble(PREFERENCES_DOUBLE_HUE_FACTOR, hueFactor)
-
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_DISPLAY_DART_TOTAL_SCORE, showTotal)
     }
 
     override fun stateChanged(arg0: ChangeEvent) = repaintScorerPreview()
