@@ -24,7 +24,9 @@ abstract class AbstractDevScreen(private val commandBar: CheatBar) : JFrame()
      */
     fun enableCheatBar(enable: Boolean)
     {
-        commandBar.isEnabled = enable
+        commandBar.isVisible = enable
+        repaint()
+        revalidate()
     }
     
     fun getKeyStrokeForCommandBar(): KeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_MASK)

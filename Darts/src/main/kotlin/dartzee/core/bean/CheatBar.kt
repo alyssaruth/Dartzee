@@ -13,7 +13,7 @@ class CheatBar : JTextField(), ActionListener
     {
         border = null
         isOpaque = false
-        isEnabled = false
+        isVisible = false
         border = BorderFactory.createEmptyBorder(0, 5, 0, 0)
 
         addActionListener(this)
@@ -51,7 +51,7 @@ class CheatBar : JTextField(), ActionListener
         val result = listener.processCommandWithTry(text)
         if (result.isEmpty())
         {
-            isEnabled = false
+            listener.enableCheatBar(false)
         }
         else
         {

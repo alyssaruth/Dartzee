@@ -31,7 +31,7 @@ class TestDevScreenCommands: AbstractTest()
 
         simulateKeyStroke(devScreen)
 
-        cheatBar.isEnabled shouldBe false
+        cheatBar.isVisible shouldBe false
     }
 
     @Test
@@ -44,7 +44,7 @@ class TestDevScreenCommands: AbstractTest()
 
         simulateKeyStroke(devScreen)
 
-        cheatBar.isEnabled shouldBe true
+        cheatBar.isVisible shouldBe true
     }
 
     private fun simulateKeyStroke(devScreen: AbstractDevScreen)
@@ -72,7 +72,7 @@ class TestDevScreenCommands: AbstractTest()
         cheatBar.actionPerformed(mockk())
 
         cheatBar.text shouldBe "2"
-        cheatBar.isEnabled shouldBe true
+        cheatBar.isVisible shouldBe true
     }
 
     @Test
@@ -90,7 +90,7 @@ class TestDevScreenCommands: AbstractTest()
         cheatBar.actionPerformed(mockk())
 
         cheatBar.text.shouldBeEmpty()
-        cheatBar.isEnabled.shouldBeFalse()
+        cheatBar.isVisible.shouldBeFalse()
         toggle.shouldBeTrue()
     }
 
@@ -108,7 +108,7 @@ class TestDevScreenCommands: AbstractTest()
         cheatBar.actionPerformed(mockk())
 
         cheatBar.text.shouldBeEmpty()
-        cheatBar.isEnabled.shouldBeFalse()
+        cheatBar.isVisible.shouldBeFalse()
         exceptionLogged() shouldBe true
         getLogs().shouldContain("java.lang.Exception: Test")
     }
