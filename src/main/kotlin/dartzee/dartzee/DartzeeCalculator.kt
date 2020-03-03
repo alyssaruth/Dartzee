@@ -24,14 +24,15 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
     }
 
     private fun isValidDartCombination(darts: List<Dart>, rule: DartzeeRuleDto) =
-            isValidCombination(darts.map{ DartboardSegment("${it.score}_${it.segmentType}")}, rule)
+            isValidCombination(darts.map { DartboardSegment("${it.score}_${it.segmentType}") }, rule)
 
     fun isValidCombination(combination: List<DartboardSegment>,
-                                    rule: DartzeeRuleDto): Boolean
+                           rule: DartzeeRuleDto,
+                           cachedResults: MutableMap<List<DartboardSegment>, Boolean> = mutableMapOf()): Boolean
     {
         return isValidCombinationForTotalRule(combination, rule.totalRule)
                 && isValidFromMisses(combination, rule)
-                && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder)
+                && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder, cachedResults)
     }
 
     override fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
@@ -46,7 +47,8 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
 
         val allPossibilities = generateAllPossibilities(dartsSoFar)
 
-        val validCombinations = allPossibilities.filter { isValidCombinationCached(it, rule, cachedCombinationResults) }
+        val validCombinations = allPossibilities.filter {
+            isValidCombination(it, rule, cachedCombinationResults) }
 
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
 
@@ -54,14 +56,6 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         val allProbabilities = allPossibilities.map { mapCombinationToProbability(it) }.sum()
 
         return DartzeeRuleCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
-    }
-    private fun isValidCombinationCached(combination: List<DartboardSegment>,
-                                 rule: DartzeeRuleDto,
-                                 cachedResults: MutableMap<List<DartboardSegment>, Boolean>): Boolean
-    {
-        return isValidCombinationForTotalRule(combination, rule.totalRule)
-                && isValidFromMisses(combination, rule)
-                && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder, cachedResults)
     }
     private fun isValidFromMisses(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
     {
