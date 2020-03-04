@@ -8,7 +8,6 @@ import dartzee.core.util.getAllPermutations
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.utils.getAllPossibleSegments
-import java.lang.Double.min
 
 abstract class AbstractDartzeeCalculator
 {
@@ -17,6 +16,8 @@ abstract class AbstractDartzeeCalculator
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
 {
+    private val allPossibilities: List<List<DartboardSegment>> = generateAllPossibilities()
+
     private fun isValidDartCombination(darts: List<Dart>, rule: DartzeeRuleDto) =
             isValidCombination(darts.map { DartboardSegment("${it.score}_${it.segmentType}") }, rule)
 
@@ -118,31 +119,29 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return probabilities.reduce { acc, i -> acc * i }
     }
 
-    fun generateAllPossibilities(dartsSoFar: List<Dart>): List<List<DartboardSegment>>
+    private fun generateAllPossibilities(): List<List<DartboardSegment>>
     {
         val segments = getAllPossibleSegments().filter { !it.isMiss() }.toMutableList()
         segments.add(DartboardSegment("20_$SEGMENT_TYPE_MISS"))
 
-        val segmentsSoFar = dartsSoFar.map { DartboardSegment("${it.score}_${it.segmentType}") }
-
-        var allPossibilities: List<List<DartboardSegment>> = segments.map { segmentsSoFar + it }
-        while (allPossibilities.first().size < 3)
-        {
-            allPossibilities = addAnotherLayer(allPossibilities, segments)
-        }
-
-        return allPossibilities
-    }
-    private fun addAnotherLayer(allPossibilities: List<List<DartboardSegment>>, segments: List<DartboardSegment>): List<List<DartboardSegment>>
-    {
-        val ret = mutableListOf<List<DartboardSegment>>()
-        for (possibility in allPossibilities)
-        {
-            segments.forEach {
-                ret.add(possibility + it)
+        val allPossibilities: MutableList<List<DartboardSegment>> = mutableListOf()
+        segments.forEach { s1 ->
+            segments.forEach { s2 ->
+                segments.forEach { s3 ->
+                    val combination = listOf(s1, s2, s3)
+                    allPossibilities.add(combination)
+                }
             }
         }
 
-        return ret
+        return allPossibilities.toList()
+    }
+
+    fun generateAllPossibilities(dartsSoFar: List<Dart>): List<List<DartboardSegment>> {
+        return allPossibilities.filter {
+            dartsSoFar.allIndexed { ix, dart ->
+                it[ix].type == dart.segmentType && it[ix].score == dart.score
+            }
+        }
     }
 }
