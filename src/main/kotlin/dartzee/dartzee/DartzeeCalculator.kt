@@ -7,7 +7,8 @@ import dartzee.core.util.allIndexed
 import dartzee.core.util.getAllPermutations
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.total.AbstractDartzeeTotalRule
-import dartzee.screen.Dartboard
+import dartzee.utils.getAllPossibleSegments
+import java.lang.Double.min
 
 abstract class AbstractDartzeeCalculator
 {
@@ -16,13 +17,6 @@ abstract class AbstractDartzeeCalculator
 
 class DartzeeCalculator: AbstractDartzeeCalculator()
 {
-    val dartboard = Dartboard(100, 100)
-
-    init
-    {
-        dartboard.paintDartboard()
-    }
-
     private fun isValidDartCombination(darts: List<Dart>, rule: DartzeeRuleDto) =
             isValidCombination(darts.map { DartboardSegment("${it.score}_${it.segmentType}") }, rule)
 
@@ -46,7 +40,6 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         val cachedCombinationResults = mutableMapOf<List<DartboardSegment>, Boolean>()
 
         val allPossibilities = generateAllPossibilities(dartsSoFar)
-
         val validCombinations = allPossibilities.filter {
             isValidCombination(it, rule, cachedCombinationResults) }
 
@@ -55,7 +48,11 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         val validPixelPossibility = validCombinations.map { mapCombinationToProbability(it) }.sum()
         val allProbabilities = allPossibilities.map { mapCombinationToProbability(it) }.sum()
 
-        return DartzeeRuleCalculationResult(validSegments, validCombinations.size, allPossibilities.size, validPixelPossibility, allProbabilities)
+        return DartzeeRuleCalculationResult(validSegments,
+            validCombinations.size,
+            allPossibilities.size,
+            validPixelPossibility,
+            allProbabilities)
     }
     private fun isValidFromMisses(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
     {
@@ -117,22 +114,16 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
 
     private fun mapCombinationToProbability(combination: List<DartboardSegment>): Double
     {
-        val probabilities = combination.map { getProbabilityOfSegment(it) }
+        val probabilities = combination.map { it.getRoughProbability() }
         return probabilities.reduce { acc, i -> acc * i }
-    }
-
-    private fun getProbabilityOfSegment(segment: DartboardSegment): Double
-    {
-        val allPointsCount = dartboard.scoringPoints.size.toDouble()
-        return dartboard.getPointsForSegment(segment.score, segment.type).size.toDouble() / allPointsCount
     }
 
     fun generateAllPossibilities(dartsSoFar: List<Dart>): List<List<DartboardSegment>>
     {
-        val segments = dartboard.getAllSegments().filter { !it.isMiss() }.toMutableList()
+        val segments = getAllPossibleSegments().filter { !it.isMiss() }.toMutableList()
         segments.add(DartboardSegment("20_$SEGMENT_TYPE_MISS"))
 
-        val segmentsSoFar = dartsSoFar.map { dartboard.getSegment(it.score, it.segmentType)!! }
+        val segmentsSoFar = dartsSoFar.map { DartboardSegment("${it.score}_${it.segmentType}") }
 
         var allPossibilities: List<List<DartboardSegment>> = segments.map { segmentsSoFar + it }
         while (allPossibilities.first().size < 3)
