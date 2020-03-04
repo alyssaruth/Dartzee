@@ -58,8 +58,8 @@ private fun getRoughSize(type: Int, score: Int): Int
  */
 data class DartboardSegment(val scoreAndType : String)
 {
-    var type : Int
-    var score : Int
+    val type : Int
+    val score : Int
 
     //The Points this segment contains
     val points = mutableListOf<Point>()

@@ -24,6 +24,9 @@ fun main(args: Array<String>)
     val mainScreen = ScreenCache.mainScreen
     Thread.setDefaultUncaughtExceptionHandler(DebugUncaughtExceptionHandler())
 
+    val heapSize = Runtime.getRuntime().totalMemory()
+    Debug.append("Running with heap size: $heapSize")
+
     DartsClient.parseProgramArguments(args)
 
     Debug.sendingEmails = !DartsClient.devMode
