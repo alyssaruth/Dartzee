@@ -43,7 +43,7 @@ compileTestKotlin {
 task runDev(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
-    args 'devMode'
+    args 'devMode', 'trueLaunch'
     main 'dartzee.main.DartsMainKt'
 }
 
