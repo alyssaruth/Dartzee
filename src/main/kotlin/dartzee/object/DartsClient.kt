@@ -11,6 +11,7 @@ object DartsClient
     var traceReadSql = true
     var traceWriteSql = true
     var logSecret: String = PreferenceUtil.getStringValue(PREFERENCES_STRING_LOG_SECRET)
+    var trueLaunch = false
     var sqlMaxDuration = MAX_SQL_DURATION
     var operatingSystem = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
     var justUpdated = false
@@ -19,10 +20,18 @@ object DartsClient
     fun parseProgramArguments(args: Array<String>)
     {
         args.forEach { parseProgramArgument(it) }
+    }
 
-        if (devMode) Debug.appendBanner("Running in dev mode")
-        if (justUpdated) Debug.append("I've just updated")
-        if (!logSecret.isEmpty()) Debug.append("logSecret is present - will email diagnostics")
+    fun logArgumentState()
+    {
+        Debug.appendBanner("Running in dev mode", devMode)
+        Debug.append("I've just updated", justUpdated)
+        Debug.append("logSecret is present - will email diagnostics", logSecret.isNotEmpty())
+
+        val rt = Runtime.getRuntime()
+        val maxMb = rt.maxMemory() / (1024*1024)
+        val totalMb = rt.totalMemory() / (1024*1024)
+        Debug.append("Heap settings - Max [$maxMb MB], Total [$totalMb MB]")
     }
 
     private fun parseProgramArgument(arg: String)
@@ -36,6 +45,7 @@ object DartsClient
             "justUpdated" -> justUpdated = true
             "devMode" -> devMode = true
             "logSecret" -> logSecret = argValue
+            "trueLaunch" -> trueLaunch = true
             else -> Debug.append("Unexpected program argument: $arg")
         }
     }

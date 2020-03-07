@@ -13,5 +13,5 @@ ren Dartzee.jar Dartzee_OLD.jar
 ren %3 Dartzee.jar
 del Dartzee_OLD.jar
 
-start javaw -jar Dartzee.jar justUpdated
+start javaw -jar -Xms256m -Xmx512m Dartzee.jar justUpdated trueLaunch
 exit
