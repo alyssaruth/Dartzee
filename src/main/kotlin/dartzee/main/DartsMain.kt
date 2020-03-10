@@ -47,7 +47,7 @@ fun main(args: Array<String>)
 private fun checkForUserName()
 {
     var userName: String? = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, "")
-    if (!userName!!.isEmpty())
+    if (userName?.isNotEmpty() == true)
     {
         return
     }
