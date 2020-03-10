@@ -8,9 +8,18 @@ import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDebugExtension
 import javax.swing.JOptionPane
 import javax.swing.UIManager
+import kotlin.system.exitProcess
 
 fun main(args: Array<String>)
 {
+    DartsClient.parseProgramArguments(args)
+
+    if (!DartsClient.trueLaunch)
+    {
+        Runtime.getRuntime().exec("cmd /c start javaw -Xms256m -Xmx512m -jar Dartzee.jar trueLaunch")
+        exitProcess(0)
+    }
+
     Debug.initialise(ScreenCache.debugConsole)
     checkForUserName()
     DialogUtil.init(MessageDialogFactory())
@@ -24,7 +33,7 @@ fun main(args: Array<String>)
     val mainScreen = ScreenCache.mainScreen
     Thread.setDefaultUncaughtExceptionHandler(DebugUncaughtExceptionHandler())
 
-    DartsClient.parseProgramArguments(args)
+    DartsClient.logArgumentState()
 
     Debug.sendingEmails = !DartsClient.devMode
     ClientEmailer.tryToSendUnsentLogs()
@@ -38,7 +47,7 @@ fun main(args: Array<String>)
 private fun checkForUserName()
 {
     var userName: String? = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, "")
-    if (!userName!!.isEmpty())
+    if (userName?.isNotEmpty() == true)
     {
         return
     }

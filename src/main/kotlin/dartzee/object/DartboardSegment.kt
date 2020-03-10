@@ -10,6 +10,8 @@ const val SEGMENT_TYPE_INNER_SINGLE = 4
 const val SEGMENT_TYPE_MISS = 5
 const val SEGMENT_TYPE_MISSED_BOARD = 6
 
+const val MISS_FUDGE_FACTOR = 1805
+
 fun getGolfScoreForSegment(type: Int): Int
 {
     return when (type)
@@ -34,12 +36,30 @@ fun getMultiplier(type: Int): Int
 }
 
 /**
+ * Hard-coded values based on counting the points in a 500x500 rendered dartboard.
+ */
+private fun getRoughScoringArea(): Double = 96173.0 + MISS_FUDGE_FACTOR
+private fun getRoughSize(type: Int, score: Int): Int
+{
+    if (score == 25) return if (type == SEGMENT_TYPE_DOUBLE) 137 else 716
+    return when (type)
+    {
+        SEGMENT_TYPE_DOUBLE -> 441 //8820
+        SEGMENT_TYPE_TREBLE -> 275 //5500
+        SEGMENT_TYPE_OUTER_SINGLE -> 2464 //49280
+        SEGMENT_TYPE_INNER_SINGLE -> 1586 //31720
+        SEGMENT_TYPE_MISS -> MISS_FUDGE_FACTOR
+        else -> 3321
+    }
+}
+
+/**
  * Data class so that equivalent segments are treated as equal (e.g. DartzeeRuleCalculationResult externalisation)
  */
 data class DartboardSegment(val scoreAndType : String)
 {
-    var type : Int
-    var score : Int
+    val type : Int
+    val score : Int
 
     //The Points this segment contains
     val points = mutableListOf<Point>()
@@ -88,5 +108,9 @@ data class DartboardSegment(val scoreAndType : String)
         val xMax = otherYPts.map { it.x }.max() ?: return true
 
         return pt.x == xMax || pt.x == xMin || pt.y == yMax || pt.y == yMin
+    }
+
+    fun getRoughProbability(): Double {
+        return getRoughSize(type, score).toDouble() / getRoughScoringArea()
     }
 }
