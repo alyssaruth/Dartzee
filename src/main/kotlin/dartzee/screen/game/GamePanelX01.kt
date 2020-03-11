@@ -152,7 +152,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
             updateNearMisses(darts, playerNumber)
         }
 
-        val pt = hmPlayerNumberToParticipant[playerNumber]!!
+        val pt = getParticipant(playerNumber)
         val finishPos = pt.finishingPosition
         if (finishPos > -1)
         {

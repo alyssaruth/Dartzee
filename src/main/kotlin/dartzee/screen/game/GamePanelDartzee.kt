@@ -50,7 +50,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val pt = hmPlayerNumberToParticipant[playerNumber]!!
+        val pt = getParticipant(playerNumber)
 
         val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '${pt.playerId}' AND ParticipantId = '${pt.rowId}'")
         hmPlayerNumberToRoundResults[playerNumber] = roundResults
@@ -127,7 +127,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     private fun completeRound(result: DartzeeRoundResult)
     {
-        val pt = hmPlayerNumberToParticipant[currentPlayerNumber]!!
+        val pt = getCurrentParticipant()
 
         activeScorer.setResult(result)
         if (currentRoundNumber > 1)
