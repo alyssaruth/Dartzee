@@ -4,7 +4,9 @@ import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.core.obj.HashMapList
 import dartzee.db.*
+import dartzee.game.state.PlayerState
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 import io.kotlintest.shouldBe
@@ -115,18 +117,17 @@ class TestGamePanelRoundTheClock: AbstractTest()
     {
         init
         {
-            for (i in 0..3)
-            {
-                val scorer = DartsScorerRoundTheClock(this)
-                scorer.init(PlayerEntity(), CLOCK_TYPE_STANDARD)
-                hmPlayerNumberToDartsScorer[i] = scorer
-            }
+            val player = insertPlayer(currentPlayerId)
+            val scorer = DartsScorerRoundTheClock(this)
+            scorer.init(player, CLOCK_TYPE_STANDARD)
 
-            activeScorer = hmPlayerNumberToDartsScorer[0]!!
+            activeScorer = scorer
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
-            hmPlayerNumberToParticipant[0] = pt
+
+            addState(0, PlayerState(pt, scorer, 0))
+
             currentRoundNumber = 1
         }
 

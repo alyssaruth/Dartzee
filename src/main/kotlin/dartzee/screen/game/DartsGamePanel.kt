@@ -39,9 +39,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         ActionListener,
         MouseListener
 {
-    protected var hmPlayerNumberToParticipant = mutableMapOf<Int, ParticipantEntity>()
-    protected var hmPlayerNumberToDartsScorer = mutableMapOf<Int, S>()
-    protected val hmPlayerNumberToState = mutableMapOf<Int, PlayerState<S>>()
+    private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState<S>>()
 
     protected var totalPlayers = -1
 
@@ -106,14 +104,25 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
      * Stuff that will ultimately get refactored off into a GameState thingy
      */
     protected fun getCurrentPlayerId() = getCurrentParticipant().playerId
-    protected fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
-    protected fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
+    private fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
+    private fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
     protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).pt
     protected fun getCurrentParticipant() = getCurrentPlayerState().pt
     protected fun updateLastRoundNumber(playerNumber: Int, newRoundNumber: Int) {
-        val state = getPlayerState(playerNumber)
-        hmPlayerNumberToState[playerNumber] = state.copy(lastRoundNumber = newRoundNumber)
+        updateState(playerNumber) { state -> state.copy(lastRoundNumber = newRoundNumber) }
     }
+    private fun updateState(playerNumber: Int, fn: (state: PlayerState<S>) -> PlayerState<S>) {
+        val state = getPlayerState(playerNumber)
+        hmPlayerNumberToState[playerNumber] = fn(state)
+    }
+
+    protected fun addState(playerNumber: Int, state: PlayerState<S>) {
+        hmPlayerNumberToState[playerNumber] = state
+    }
+
+    protected fun getCurrentScorer() = getCurrentPlayerState().scorer
+    protected fun getScorer(playerNumber: Int) = getPlayerState(playerNumber).scorer
+    protected fun getPlayerNumberForScorer(scorer: S): Int = hmPlayerNumberToState.filter { it.value.scorer == scorer }.keys.first()
 
 
     init
@@ -204,7 +213,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
 
     protected fun nextTurn()
     {
-        activeScorer = hmPlayerNumberToDartsScorer[currentPlayerNumber]!!
+        activeScorer = getCurrentScorer()
         selectScorer(activeScorer)
 
         dartsThrown.clear()

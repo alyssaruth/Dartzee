@@ -35,11 +35,11 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Ga
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val scorer = hmPlayerNumberToDartsScorer[playerNumber]
+        val scorer = getScorer(playerNumber)
         for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
-            scorer?.addDarts(darts)
+            scorer.addDarts(darts)
         }
     }
 

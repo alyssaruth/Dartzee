@@ -24,7 +24,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val scorer = hmPlayerNumberToDartsScorer[playerNumber]!!
+        val scorer = getScorer(playerNumber)
         for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!

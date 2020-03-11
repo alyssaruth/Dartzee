@@ -41,7 +41,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
         }
         else if (activePlayers == 1)
         {
-            activeScorer = hmPlayerNumberToDartsScorer[currentPlayerNumber]!!
+            activeScorer = getCurrentScorer()
 
             //Finish the game and set the last player's finishing position if we haven't already
             finishGameIfNecessary()

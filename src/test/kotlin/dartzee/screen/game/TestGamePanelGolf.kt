@@ -4,8 +4,10 @@ import dartzee.`object`.*
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.db.*
+import dartzee.game.state.PlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
+import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.game.scorer.DartsScorerGolf
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -145,18 +147,17 @@ class TestGamePanelGolf: AbstractTest()
     {
         init
         {
-            for (i in 0..3)
-            {
-                val scorer = DartsScorerGolf()
-                scorer.init(PlayerEntity(), "18")
-                hmPlayerNumberToDartsScorer[i] = scorer
-            }
+            val player = insertPlayer(currentPlayerId)
+            val scorer = DartsScorerGolf()
+            scorer.init(player, "18")
 
-            activeScorer = hmPlayerNumberToDartsScorer[0]!!
+            activeScorer = scorer
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
-            hmPlayerNumberToParticipant[0] = pt
+
+            addState(0, PlayerState(pt, scorer, 0))
+
             currentRoundNumber = 1
         }
 

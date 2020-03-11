@@ -143,7 +143,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val scorer = hmPlayerNumberToDartsScorer[playerNumber]
+        val scorer = getScorer(playerNumber)
         for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
@@ -156,14 +156,12 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
         val finishPos = pt.finishingPosition
         if (finishPos > -1)
         {
-            scorer?.finalisePlayerResult(finishPos)
+            scorer.finalisePlayerResult(finishPos)
         }
     }
 
-    private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerX01?)
+    private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerX01)
     {
-        scorer ?: return
-
         val startingScore = scorer.getLatestScoreRemaining()
 
         var score = startingScore
