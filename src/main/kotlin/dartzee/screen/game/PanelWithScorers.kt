@@ -59,11 +59,9 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         westScorers.forEach { panelWest.add(it, "growy") }
     }
 
-    fun <K> assignScorer(player: PlayerEntity, hmKeyToScorer: MutableMap<K, S>, key: K, gameParams: String): S
+    fun assignScorer(player: PlayerEntity, gameParams: String): S
     {
-        val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player and key $key")
-
-        hmKeyToScorer[key] = scorer
+        val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player")
         scorer.init(player, gameParams)
         return scorer
     }

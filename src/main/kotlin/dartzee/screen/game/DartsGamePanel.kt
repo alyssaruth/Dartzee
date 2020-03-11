@@ -12,6 +12,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.isEndOfTime
 import dartzee.db.*
+import dartzee.game.state.PlayerState
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeRuleCarousel
@@ -41,6 +42,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     protected var hmPlayerNumberToParticipant = mutableMapOf<Int, ParticipantEntity>()
     protected var hmPlayerNumberToDartsScorer = mutableMapOf<Int, S>()
     protected var hmPlayerNumberToLastRoundNumber = HashMap<Int, Int>()
+    protected val hmPlayerNumberToState = mutableMapOf<Int, PlayerState<S>>()
 
     protected var totalPlayers = -1
 
@@ -179,9 +181,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         players.forEachIndexed { ix, player ->
             val gameId = gameEntity.rowId
             val participant = ParticipantEntity.factoryAndSave(gameId, player, ix)
-            addParticipant(ix, participant)
+            addParticipant(participant)
 
-            assignScorer(player, ix)
+            val scorer = assignScorer(player, gameEntity.gameParams)
+            hmPlayerNumberToState[ix] = PlayerState(participant, scorer, 0)
         }
 
         initForAi(hasAi())
@@ -224,11 +227,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
 
         selectedScorer!!.setSelected(true)
-    }
-
-    private fun assignScorer(player: PlayerEntity, playerNumber: Int)
-    {
-        assignScorer(player, hmPlayerNumberToDartsScorer, playerNumber, gameEntity.gameParams)
     }
 
     private fun initForAi(hasAi: Boolean)
@@ -361,10 +359,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         for (i in participants.indices)
         {
             val pt = participants[i]
-            addParticipant(i, pt)
+            addParticipant(pt)
 
-            val player = pt.getPlayer()
-            assignScorer(player, i)
+            val scorer = assignScorer(pt.getPlayer(), gameEntity.gameParams)
+            hmPlayerNumberToState[i] = PlayerState(pt, scorer, 0)
         }
 
         initForAi(hasAi())
@@ -762,10 +760,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         panelCenter.repaint()
     }
 
-    private fun addParticipant(playerNumber: Int, participant: ParticipantEntity)
+    private fun addParticipant(participant: ParticipantEntity)
     {
-        hmPlayerNumberToParticipant[playerNumber] = participant
-
         if (parentWindow is DartsMatchScreen)
         {
             (parentWindow as DartsMatchScreen).addParticipant(gameEntity.localId, participant)

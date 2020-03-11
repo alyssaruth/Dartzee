@@ -54,8 +54,8 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
 
         for (player in playersInStartingOrder)
         {
-            val playerId = player.rowId
-            val scorer = assignScorer(player, hmPlayerIdToScorer, playerId, "")
+            val scorer = assignScorer(player, "")
+            hmPlayerIdToScorer[player.rowId] = scorer
             scorer.setMatch(match)
         }
     }
