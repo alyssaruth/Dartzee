@@ -53,7 +53,7 @@ class TestPanelWithScorers: AbstractTest()
             scrn.assignScorer(insertPlayer(name = "Richard"), "")
         }
 
-        e.message shouldBe "Unable to assign scorer for player Richard and key 2"
+        e.message shouldBe "Unable to assign scorer for player Richard"
     }
 
 
