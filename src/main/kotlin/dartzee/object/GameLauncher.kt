@@ -104,11 +104,7 @@ object GameLauncher
         {
             allGames.forEach {
                 val panel = scrn.addGameToMatch(it)
-                when (it.rowId)
-                {
-                    originalGameId -> panel.loadGame()
-                    else -> panel.preLoad()
-                }
+                panel.loadGame()
             }
 
             scrn.displayGame(originalGameId)

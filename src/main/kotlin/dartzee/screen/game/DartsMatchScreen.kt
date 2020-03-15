@@ -122,11 +122,6 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: MutableList<PlayerE
         {
             val title = selectedTab.gameTitle
             setTitle(title)
-
-            if (selectedTab.pendingLoad)
-            {
-                selectedTab.loadGameInCatch()
-            }
         }
         else
         {

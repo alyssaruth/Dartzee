@@ -35,7 +35,7 @@ abstract class GameStatisticsPanel : JPanel()
 {
     protected var playerNamesOrdered = mutableListOf<String>()
     protected var participants: List<ParticipantEntity>? = null
-    protected var hmPlayerToDarts = HashMapList<String, MutableList<Dart>>()
+    protected val hmPlayerToDarts = HashMapList<String, MutableList<Dart>>()
     var gameParams: String? = null
 
     private var tm = DefaultTableModel()
@@ -82,7 +82,7 @@ abstract class GameStatisticsPanel : JPanel()
     {
         this.participants = participants
 
-        hmPlayerToDarts = HashMapList()
+        hmPlayerToDarts.clear()
 
         for (participant in participants)
         {
@@ -156,8 +156,7 @@ abstract class GameStatisticsPanel : JPanel()
     private fun isSufficientData(): Boolean
     {
         val playerNames = hmPlayerToDarts.keys
-
-        return playerNames.stream().allMatch { p -> !getFlattenedDarts(p).isEmpty() }
+        return playerNames.all { p -> getFlattenedDarts(p).isNotEmpty() }
     }
 
     protected fun getRowWidth(): Int

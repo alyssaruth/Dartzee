@@ -23,8 +23,6 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
     private val refreshPanel = JPanel()
     private val btnRefresh = JButton()
 
-    //TODO - test me
-
     init
     {
         refreshPanel.add(btnRefresh)

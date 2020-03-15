@@ -8,6 +8,8 @@ fun <E> MutableList<E>.addUnique(element: E)
     }
 }
 
+fun <K: Comparable<K>, V> Map<K, V>.getSortedValues(): List<V> = entries.sortedBy { it.key }.map { it.value }
+
 inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(descending: Boolean, crossinline selector: (T) -> R?): List<T> {
     return if (descending) this.sortedByDescending(selector) else this.sortedBy(selector)
 }
