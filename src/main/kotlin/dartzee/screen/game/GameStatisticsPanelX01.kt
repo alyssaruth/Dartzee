@@ -239,12 +239,12 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         return row
     }
 
-    private fun getScoringRounds(playerName: String): MutableList<MutableList<Dart>>
+    private fun getScoringRounds(playerName: String): List<List<Dart>>
     {
         val rounds = hmPlayerToDarts[playerName]
         rounds ?: return mutableListOf()
 
-        return rounds.filter{r -> r.last().startingScore > nfSetupThreshold.getNumber()}.toMutableList()
+        return rounds.filter{ r -> r.last().startingScore > nfSetupThreshold.getNumber() }.toList()
     }
 
     private fun getScoringDarts(playerName: String): MutableList<Dart>

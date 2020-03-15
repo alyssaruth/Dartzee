@@ -71,7 +71,7 @@ fun getCheckoutScores(): MutableList<Int>
 }
 fun getCheckoutSingles(): List<Int> = getCheckoutScores().map { it / 2 }
 
-fun isFinishRound(round: MutableList<Dart>): Boolean
+fun isFinishRound(round: List<Dart>): Boolean
 {
     val drt = round.last()
     return drt.isDouble() && drt.getTotal() == drt.startingScore

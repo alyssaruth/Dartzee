@@ -97,6 +97,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     /**
      * Stuff that will ultimately get refactored off into a GameState thingy
      */
+    fun getPlayerStates() = hmPlayerNumberToState.getSortedValues()
+    protected fun getParticipants() = hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.pt }
     protected fun getCurrentPlayerId() = getCurrentParticipant().playerId
     private fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
     private fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
@@ -477,7 +479,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
     }
 
-    protected fun getParticipants() = hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.pt }
+
 
     /**
      * Should I stop throwing?
@@ -744,7 +746,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             panelCenter.remove(dartboard)
             panelCenter.add(statsPanel!!, BorderLayout.CENTER)
 
-            statsPanel.showStats(getParticipants())
+            statsPanel.showStats(getPlayerStates())
         }
         else
         {
