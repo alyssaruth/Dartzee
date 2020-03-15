@@ -1,5 +1,6 @@
 package dartzee.screen.game
 
+import dartzee.core.util.minOrZero
 import dartzee.utils.isFinishRound
 import dartzee.utils.sumScore
 
@@ -11,9 +12,7 @@ class MatchStatisticsPanelX01 : GameStatisticsPanelX01()
 
         addRow(getHighestFinishRow())
 
-        //addRow(arrayOfNulls(getRowWidth()))
-
-        addRow(getBestGameRow { s -> s.min() })
+        addRow(getBestGameRow { s -> s.minOrZero() })
         addRow(getAverageGameRow())
     }
 
@@ -28,17 +27,7 @@ class MatchStatisticsPanelX01 : GameStatisticsPanelX01()
             val rounds = hmPlayerToDarts[playerName]!!
 
             val finishRounds = rounds.filter { r -> isFinishRound(r) }
-            if (finishRounds.isEmpty())
-            {
-                row[i + 1] = "N/A"
-            }
-            else
-            {
-                val stream = finishRounds.stream().mapToInt { r -> sumScore(r) }
-                val max = stream.max().asInt
-
-                row[i + 1] = max
-            }
+            row[i + 1] = finishRounds.map { r -> sumScore(r) }.max() ?: "N/A"
         }
 
         return row

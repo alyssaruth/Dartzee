@@ -3,15 +3,14 @@ package dartzee.screen.game
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.utils.getLongestStreak
-import java.util.stream.IntStream
 
 open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
 {
     override fun addRowsToTable()
     {
-        addRow(getDartsPerNumber({ i -> getMaxDartsForAnyRound(i) }, "Most darts", true))
-        addRow(getDartsPerNumber({ i -> getAverageDartsForAnyRound(i) }, "Avg. darts", false))
-        addRow(getDartsPerNumber({ i -> getMinDartsForAnyRound(i) }, "Fewest darts", false))
+        addRow(getDartsPerNumber("Most darts", true) { getMaxDartsForAnyRound(it) })
+        addRow(getDartsPerNumber("Avg. darts", false) { getAverageDartsForAnyRound(it) })
+        addRow(getDartsPerNumber("Fewest darts", false) { getMinDartsForAnyRound(it) })
 
         //addRow(arrayOfNulls(getRowWidth()))
 
@@ -46,31 +45,22 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
         return row
     }
 
-    private fun getMaxDartsForAnyRound(darts: IntStream): Any
+    private fun getMaxDartsForAnyRound(darts: List<Int>): Any
     {
-        //This includes incomplete rounds, so there'll always be something.#
-        return darts.max().asInt
+        return darts.max() ?: 0
     }
 
-    private fun getAverageDartsForAnyRound(darts: IntStream): Any
+    private fun getAverageDartsForAnyRound(darts: List<Int>): Any
     {
         val oi = darts.average()
-        return if (!oi.isPresent)
+        return if (oi == 0.0)
         {
             "N/A"
-        } else MathsUtil.round(oi.asDouble, 2)
+        } else MathsUtil.round(oi, 2)
 
     }
 
-    private fun getMinDartsForAnyRound(darts: IntStream): Any
-    {
-        val oi = darts.min()
-        return if (!oi.isPresent)
-        {
-            "N/A"
-        } else oi.asInt
-
-    }
+    private fun getMinDartsForAnyRound(darts: List<Int>) = darts.min() ?: "N/A"
 
     private fun getBruceys(desc: String, enforceSuccess: Boolean): Array<Any?>
     {
@@ -101,16 +91,15 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             val playerName = playerNamesOrdered[i]
 
             val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-            row[i + 1] = dartsGrouped.stream()
-                    .mapToInt { g -> g.size }
-                    .filter { ix -> ix in min..max }
+            row[i + 1] = dartsGrouped.map { g -> g.size }
+                    .filter { it in min..max }
                     .count()
         }
 
         return row
     }
 
-    private fun getDartsPerNumber(fn: (stream: IntStream) -> Any, desc: String, includeUnfinished: Boolean): Array<Any?>
+    private fun getDartsPerNumber(desc: String, includeUnfinished: Boolean, fn: (stream: List<Int>) -> Any): Array<Any?>
     {
         val row = factoryRow(desc)
         for (i in playerNamesOrdered.indices)
@@ -123,8 +112,8 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
                 dartsGrouped = dartsGrouped.filter { g -> g.last().hitClockTarget(gameParams) }.toMutableList()
             }
 
-            val stream = dartsGrouped.stream().mapToInt { g -> g.size }
-            row[i + 1] = fn.invoke(stream)
+            val sizes = dartsGrouped.map { g -> g.size }
+            row[i + 1] = fn.invoke(sizes)
         }
 
         return row

@@ -10,7 +10,6 @@ import dartzee.utils.sumScore
 import java.awt.BorderLayout
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import java.util.stream.IntStream
 import javax.swing.JLabel
 import javax.swing.JPanel
 
@@ -40,9 +39,9 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         nfSetupThreshold.setMinimum(62)
         nfSetupThreshold.setMaximum(Integer.parseInt(gameParams) - 1)
 
-        addRow(getScoreRow({i -> i.max().asInt}, "Highest Score"))
+        addRow(getScoreRow("Highest Score") { it.max() ?: 0 })
         addRow(getThreeDartAvgsRow())
-        addRow(getScoreRow({i -> i.min().asInt}, "Lowest Score"))
+        addRow(getScoreRow("Lowest Score") { it.min() ?: 0 })
         addRow(getMultiplePercent("Miss %", 0))
         addRow(getMultiplePercent("Treble %", 3))
 
@@ -91,7 +90,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
             parseTopDartEntry(sortedEntries, fifthDarts, i, darts.size)
 
             //Deal with the remainder
-            val remainder = sortedEntries.stream().mapToInt{e -> e.value.size}.sum().toDouble()
+            val remainder = sortedEntries.map { it.value.size }.sum().toDouble()
             val percent = MathsUtil.round(100*remainder / darts.size, 1)
             remainingDarts[i+1] = "$percent%"
         }
@@ -196,7 +195,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         return row
     }
 
-    private fun getScoreRow(f: (i: IntStream) -> Int, desc: String): Array<Any?>
+    private fun getScoreRow(desc: String, f: (i: List<Int>) -> Int): Array<Any?>
     {
         val row = arrayOfNulls<Any>(getRowWidth())
         row[0] = desc
@@ -206,11 +205,12 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
             val playerName = playerNamesOrdered[i]
             val rounds = getScoringRounds(playerName)
 
-            if (!rounds.isEmpty())
+            if (rounds.isNotEmpty())
             {
-                val roundsAsTotal = rounds.stream().mapToInt { rnd -> sumScore(rnd) }
+                val roundsAsTotal = rounds.map { rnd -> sumScore(rnd) }
                 row[i + 1] = f.invoke(roundsAsTotal)
-            } else
+            }
+            else
             {
                 row[i + 1] = "N/A"
             }

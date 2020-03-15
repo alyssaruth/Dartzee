@@ -114,8 +114,8 @@ fun isShanghai(darts: MutableList<Dart>): Boolean
 {
     return darts.size == 3
       && sumScore(darts) == 120
-      && darts.stream().allMatch{it.score == 20}
-      && darts.stream().anyMatch {it.multiplier == 1}
+      && darts.all { it.score == 20 }
+      && darts.any { it.multiplier == 1 }
 }
 
 /**

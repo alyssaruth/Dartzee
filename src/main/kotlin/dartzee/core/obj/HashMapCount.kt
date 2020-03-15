@@ -11,7 +11,7 @@ class HashMapCount<K>: HashMap<K, Int>()
 {
     fun getTotalCount() : Int
     {
-        return values.stream().mapToInt{v -> v}.sum()
+        return values.sum()
     }
 
     fun incrementCount(key: K, amount: Int = 1): Int

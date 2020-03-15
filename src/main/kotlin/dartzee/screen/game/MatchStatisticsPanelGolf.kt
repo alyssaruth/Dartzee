@@ -1,14 +1,14 @@
 package dartzee.screen.game
 
+import dartzee.core.util.minOrZero
+
 class MatchStatisticsPanelGolf : GameStatisticsPanelGolf()
 {
     override fun addRowsToTable()
     {
         super.addRowsToTable()
 
-        //addRow(arrayOfNulls(getRowWidth()))
-
-        addRow(getBestGameRow { s -> s.min() })
+        addRow(getBestGameRow { s -> s.minOrZero() })
         addRow(getAverageGameRow())
     }
 

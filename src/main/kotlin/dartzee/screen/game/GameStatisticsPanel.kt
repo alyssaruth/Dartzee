@@ -15,8 +15,6 @@ import java.awt.Color
 import java.awt.Component
 import java.awt.Font
 import java.sql.SQLException
-import java.util.*
-import java.util.stream.IntStream
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.border.MatteBorder
@@ -180,9 +178,7 @@ abstract class GameStatisticsPanel : JPanel()
                 row[i + 1] = "N/A"
             } else
             {
-                val scores = playerPts.stream().mapToInt { pt -> pt.finalScore }
-                val avg = scores.average().asDouble
-
+                val avg = playerPts.map { pt -> pt.finalScore }.average()
                 row[i + 1] = MathsUtil.round(avg, 2)
             }
         }
@@ -240,7 +236,7 @@ abstract class GameStatisticsPanel : JPanel()
         return row
     }
 
-    protected fun getBestGameRow(fn: (s: IntStream) -> OptionalInt): Array<Any?>
+    protected fun getBestGameRow(fn: (s: List<Int>) -> Int): Array<Any?>
     {
         val row = arrayOfNulls<Any>(getRowWidth())
         row[0] = "Best Game"
@@ -256,8 +252,8 @@ abstract class GameStatisticsPanel : JPanel()
             }
             else
             {
-                val scores = playerPts.stream().mapToInt { pt -> pt.finalScore }
-                row[i + 1] = fn.invoke(scores).asInt
+                val scores = playerPts.map { pt -> pt.finalScore }
+                row[i + 1] = fn.invoke(scores)
             }
 
         }
@@ -434,8 +430,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         private fun getHistogramSum(tm: TableModel, col: Int): Long
         {
-            return getHistogramRowNumbers().stream()
-                    .mapToLong { row -> (tm.getValueAt(row, col) as Number).toLong() }
+            return getHistogramRowNumbers().map { row -> (tm.getValueAt(row, col) as Number).toLong() }
                     .sum()
         }
     }
