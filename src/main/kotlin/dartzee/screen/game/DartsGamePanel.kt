@@ -202,7 +202,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             addParticipant(participant)
 
             val scorer = assignScorer(player, gameEntity.gameParams)
-            hmPlayerNumberToState[ix] = PlayerState(participant, scorer, 0)
+            addState(ix, PlayerState(participant, scorer, 0))
         }
 
         initForAi(hasAi())
@@ -378,7 +378,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             addParticipant(pt)
 
             val scorer = assignScorer(pt.getPlayer(), gameEntity.gameParams)
-            hmPlayerNumberToState[i] = PlayerState(pt, scorer, 0)
+            addState(i, PlayerState(pt, scorer, 0))
         }
 
         initForAi(hasAi())
