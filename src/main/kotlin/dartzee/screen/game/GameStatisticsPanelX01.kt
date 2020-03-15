@@ -3,6 +3,8 @@ package dartzee.screen.game
 import dartzee.`object`.Dart
 import dartzee.core.bean.NumberField
 import dartzee.core.util.MathsUtil
+import dartzee.core.util.maxOrZero
+import dartzee.core.util.minOrZero
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
 import dartzee.utils.isCheckoutDart
@@ -39,9 +41,9 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         nfSetupThreshold.setMinimum(62)
         nfSetupThreshold.setMaximum(Integer.parseInt(gameParams) - 1)
 
-        addRow(getScoreRow("Highest Score") { it.max() ?: 0 })
+        addRow(getScoreRow("Highest Score") { it.maxOrZero() })
         addRow(getThreeDartAvgsRow())
-        addRow(getScoreRow("Lowest Score") { it.min() ?: 0 })
+        addRow(getScoreRow("Lowest Score") { it.minOrZero() })
         addRow(getMultiplePercent("Miss %", 0))
         addRow(getMultiplePercent("Treble %", 3))
 
@@ -244,7 +246,7 @@ open class GameStatisticsPanelX01 : GameStatisticsPanel(), PropertyChangeListene
         val rounds = hmPlayerToDarts[playerName]
         rounds ?: return mutableListOf()
 
-        return rounds.filter{ r -> r.last().startingScore > nfSetupThreshold.getNumber() }.toList()
+        return rounds.filter { it.last().startingScore > nfSetupThreshold.getNumber() }.toList()
     }
 
     private fun getScoringDarts(playerName: String): MutableList<Dart>

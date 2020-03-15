@@ -2,23 +2,21 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
+import dartzee.core.util.maxOrZero
+import dartzee.core.util.minOrZero
 import dartzee.utils.getLongestStreak
 
 open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
 {
     override fun addRowsToTable()
     {
-        addRow(getDartsPerNumber("Most darts", true) { getMaxDartsForAnyRound(it) })
+        addRow(getDartsPerNumber("Most darts", true) { it.maxOrZero() })
         addRow(getDartsPerNumber("Avg. darts", false) { getAverageDartsForAnyRound(it) })
-        addRow(getDartsPerNumber("Fewest darts", false) { getMinDartsForAnyRound(it) })
-
-        //addRow(arrayOfNulls(getRowWidth()))
+        addRow(getDartsPerNumber("Fewest darts", false) { it.minOrZero() })
 
         addRow(getLongestStreak())
         addRow(getBruceys("Brucey chances", false))
         addRow(getBruceys("Bruceys executed", true))
-
-        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getDartsPerNumber(1, 1, "1"))
         addRow(getDartsPerNumber(2, 3))
@@ -45,11 +43,6 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
         return row
     }
 
-    private fun getMaxDartsForAnyRound(darts: List<Int>): Any
-    {
-        return darts.max() ?: 0
-    }
-
     private fun getAverageDartsForAnyRound(darts: List<Int>): Any
     {
         val oi = darts.average()
@@ -60,8 +53,6 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
 
     }
 
-    private fun getMinDartsForAnyRound(darts: List<Int>) = darts.min() ?: "N/A"
-
     private fun getBruceys(desc: String, enforceSuccess: Boolean): Array<Any?>
     {
         val row = factoryRow(desc)
@@ -70,11 +61,11 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             val playerName = playerNamesOrdered[i]
 
             val rounds = hmPlayerToDarts[playerName]!!
-            var bruceyRounds = rounds.filter { r -> r.size == 4 }
+            var bruceyRounds = rounds.filter { it.size == 4 }
 
             if (enforceSuccess)
             {
-                bruceyRounds = bruceyRounds.filter { r -> r.last().hitClockTarget(gameParams) }
+                bruceyRounds = bruceyRounds.filter { it.last().hitClockTarget(gameParams) }
             }
 
             row[i + 1] = bruceyRounds.size
@@ -91,9 +82,7 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             val playerName = playerNamesOrdered[i]
 
             val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-            row[i + 1] = dartsGrouped.map { g -> g.size }
-                    .filter { it in min..max }
-                    .count()
+            row[i + 1] = dartsGrouped.filter { it.size in min..max }.size
         }
 
         return row
@@ -109,10 +98,10 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             var dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
             if (!includeUnfinished)
             {
-                dartsGrouped = dartsGrouped.filter { g -> g.last().hitClockTarget(gameParams) }.toMutableList()
+                dartsGrouped = dartsGrouped.filter { it.last().hitClockTarget(gameParams) }.toMutableList()
             }
 
-            val sizes = dartsGrouped.map { g -> g.size }
+            val sizes = dartsGrouped.map { it.size }
             row[i + 1] = fn.invoke(sizes)
         }
 

@@ -8,7 +8,7 @@ class MatchStatisticsPanelGolf : GameStatisticsPanelGolf()
     {
         super.addRowsToTable()
 
-        addRow(getBestGameRow { s -> s.minOrZero() })
+        addRow(getBestGameRow { it.minOrZero() })
         addRow(getAverageGameRow())
     }
 

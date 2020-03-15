@@ -12,7 +12,7 @@ class MatchStatisticsPanelX01 : GameStatisticsPanelX01()
 
         addRow(getHighestFinishRow())
 
-        addRow(getBestGameRow { s -> s.minOrZero() })
+        addRow(getBestGameRow { it.minOrZero() })
         addRow(getAverageGameRow())
     }
 

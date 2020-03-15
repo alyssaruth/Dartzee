@@ -8,8 +8,7 @@ class MatchStatisticsPanelRoundTheClock : GameStatisticsPanelRoundTheClock()
     {
         super.addRowsToTable()
 
-        //addRow(arrayOfNulls(getRowWidth()))
-        addRow(getBestGameRow { stream -> stream.minOrZero() })
+        addRow(getBestGameRow { it.minOrZero() })
         addRow(getAverageGameRow())
     }
 

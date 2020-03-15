@@ -5,14 +5,9 @@ import java.util.ArrayList
 import java.util.HashMap
 import kotlin.Comparator
 
-
-
 class HashMapCount<K>: HashMap<K, Int>()
 {
-    fun getTotalCount() : Int
-    {
-        return values.sum()
-    }
+    fun getTotalCount() = values.sum()
 
     fun incrementCount(key: K, amount: Int = 1): Int
     {
@@ -22,10 +17,7 @@ class HashMapCount<K>: HashMap<K, Int>()
         return newVal
     }
 
-    fun getCount(key: K): Int
-    {
-        return get(key) ?: return 0
-    }
+    fun getCount(key: K) = get(key) ?: 0
 
     /**
      * These ONLY WORK FOR INTEGER KEYS

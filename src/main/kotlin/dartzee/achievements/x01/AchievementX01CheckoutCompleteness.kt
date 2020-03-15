@@ -90,7 +90,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
     {
         super.initialiseFromDb(achievementRows, player)
 
-        hitDoubles = achievementRows.map { row -> row.achievementCounter }.toMutableList()
+        hitDoubles = achievementRows.map { it.achievementCounter }.toMutableList()
     }
 
     override fun changeIconColor(img : BufferedImage, newColor: Color)
