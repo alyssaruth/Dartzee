@@ -50,12 +50,12 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val pt = hmPlayerNumberToParticipant[playerNumber]!!
+        val pt = getParticipant(playerNumber)
 
         val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '${pt.playerId}' AND ParticipantId = '${pt.rowId}'")
         hmPlayerNumberToRoundResults[playerNumber] = roundResults
 
-        val scorer = hmPlayerNumberToDartsScorer[playerNumber]!!
+        val scorer = getScorer(playerNumber)
         for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
@@ -127,7 +127,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     private fun completeRound(result: DartzeeRoundResult)
     {
-        val pt = hmPlayerNumberToParticipant[currentPlayerNumber]!!
+        val pt = getCurrentParticipant()
 
         activeScorer.setResult(result)
         if (currentRoundNumber > 1)
@@ -178,7 +178,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         scorersOrdered.forEach { it.setSelected(false) }
         scorer.setSelected(true)
 
-        currentPlayerNumber = hmPlayerNumberToDartsScorer.filter { it.value == scorer }.keys.first()
+        currentPlayerNumber = getPlayerNumberForScorer(scorer)
         updateCarousel()
     }
 }

@@ -134,9 +134,17 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT, true)
 
         //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
-        fakeSegment.type = SEGMENT_TYPE_MISS
-        assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
-        assertColourForPointAndSegment(Point(1, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
+        val missSegment = DartboardSegment("20_$SEGMENT_TYPE_MISS")
+        for (x in 0..200)
+        {
+            for (y in 0..200)
+            {
+                missSegment.addPoint(Point(x, y))
+            }
+        }
+
+        assertColourForPointAndSegment(Point(0, 0), missSegment, wrapper, DartsColour.TRANSPARENT, false)
+        assertColourForPointAndSegment(Point(1, 1), missSegment, wrapper, DartsColour.TRANSPARENT, false)
     }
 
     private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegment, wrapper: ColourWrapper?, expected: Color?, highlight: Boolean)

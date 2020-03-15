@@ -41,7 +41,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
         }
         else if (activePlayers == 1)
         {
-            activeScorer = hmPlayerNumberToDartsScorer[currentPlayerNumber]!!
+            activeScorer = getCurrentScorer()
 
             //Finish the game and set the last player's finishing position if we haven't already
             finishGameIfNecessary()
@@ -83,7 +83,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
             return
         }
 
-        val loser = hmPlayerNumberToParticipant[currentPlayerNumber]!!
+        val loser = getCurrentParticipant()
         loser.finishingPosition = totalPlayers
         loser.saveToDatabase()
 
@@ -114,7 +114,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
 
         //Set the current round number back to the previous round
         currentRoundNumber--
-        hmPlayerNumberToLastRoundNumber[currentPlayerNumber] = currentRoundNumber
+        updateLastRoundNumber(currentPlayerNumber, currentRoundNumber)
 
         dartboard.stopListening()
     }

@@ -6,7 +6,9 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.core.util.Debug
 import dartzee.db.*
+import dartzee.game.state.PlayerState
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.helper.wipeTable
 import dartzee.screen.game.scorer.DartsScorerX01
@@ -131,18 +133,17 @@ class TestGamePanelX01: AbstractTest()
     {
         init
         {
-            for (i in 0..3)
-            {
-                val scorer = DartsScorerX01(this)
-                scorer.init(PlayerEntity(), "501")
-                hmPlayerNumberToDartsScorer[i] = scorer
-            }
+            val player = insertPlayer(currentPlayerId)
+            val scorer = DartsScorerX01(this)
+            scorer.init(player, "501")
 
-            activeScorer = hmPlayerNumberToDartsScorer[0]!!
+            activeScorer = scorer
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
-            hmPlayerNumberToParticipant[0] = pt
+
+            addState(0, PlayerState(pt, scorer, 0))
+
             currentRoundNumber = 1
         }
 

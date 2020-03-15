@@ -33,7 +33,7 @@ abstract class GamePanelFixedLength<S : DartsScorer, D: Dartboard>(parent: Abstr
     private fun finishGame()
     {
         //Get the participants sorted by score so we can assign finishing positions
-        setFinishingPositions(hmPlayerNumberToParticipant.values.toList(), gameEntity)
+        setFinishingPositions(getParticipants(), gameEntity)
 
         updateScorersWithFinishingPositions()
 

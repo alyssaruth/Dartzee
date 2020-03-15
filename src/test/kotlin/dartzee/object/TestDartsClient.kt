@@ -24,6 +24,7 @@ class TestDartsClient: AbstractRegistryTest()
     {
         DartsClient.logSecret = ""
         DartsClient.parseProgramArguments(arrayOf("logSecret=foo"))
+        DartsClient.logArgumentState()
 
         DartsClient.logSecret shouldBe "foo"
         getLogs() shouldContain "logSecret is present - will email diagnostics"
@@ -65,6 +66,7 @@ class TestDartsClient: AbstractRegistryTest()
     fun `Should parse devMode argument`()
     {
         DartsClient.parseProgramArguments(arrayOf("devMode"))
+        DartsClient.logArgumentState()
 
         DartsClient.devMode shouldBe true
         getLogs() shouldContain "Running in dev mode"
@@ -74,6 +76,7 @@ class TestDartsClient: AbstractRegistryTest()
     fun `Should parse justUpdated argument`()
     {
         DartsClient.parseProgramArguments(arrayOf("justUpdated"))
+        DartsClient.logArgumentState()
 
         DartsClient.justUpdated shouldBe true
         getLogs() shouldContain "I've just updated"
