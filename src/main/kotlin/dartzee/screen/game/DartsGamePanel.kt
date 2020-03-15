@@ -291,9 +291,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         loadParticipants(gameId)
         loadScoresAndCurrentPlayer(gameId)
 
-        //Paint the dartboard
-        dartboard.paintDartboardCached()
-
         //If the game is over, do some extra stuff to sort the screen out
         val dtFinish = gameEntity.dtFinish
         if (!isEndOfTime(dtFinish))
@@ -302,6 +299,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
         else
         {
+            //Paint the dartboard
+            dartboard.paintDartboardCached()
+
             nextTurn()
         }
     }
@@ -752,6 +752,12 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         {
             panelCenter.remove(statsPanel)
             panelCenter.add(dartboard, BorderLayout.CENTER)
+
+            //We might not have painted it if this is a complete, loaded game
+            if (dartboard.dartboardImage == null)
+            {
+                dartboard.paintDartboardCached()
+            }
         }
 
         panelCenter.revalidate()
