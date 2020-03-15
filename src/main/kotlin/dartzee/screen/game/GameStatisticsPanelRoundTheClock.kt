@@ -2,24 +2,21 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
+import dartzee.core.util.maxOrZero
+import dartzee.core.util.minOrZero
 import dartzee.utils.getLongestStreak
-import java.util.stream.IntStream
 
 open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
 {
     override fun addRowsToTable()
     {
-        addRow(getDartsPerNumber({ i -> getMaxDartsForAnyRound(i) }, "Most darts", true))
-        addRow(getDartsPerNumber({ i -> getAverageDartsForAnyRound(i) }, "Avg. darts", false))
-        addRow(getDartsPerNumber({ i -> getMinDartsForAnyRound(i) }, "Fewest darts", false))
-
-        //addRow(arrayOfNulls(getRowWidth()))
+        addRow(getDartsPerNumber("Most darts", true) { it.maxOrZero() })
+        addRow(getDartsPerNumber("Avg. darts", false) { getAverageDartsForAnyRound(it) })
+        addRow(getDartsPerNumber("Fewest darts", false) { it.minOrZero() })
 
         addRow(getLongestStreak())
         addRow(getBruceys("Brucey chances", false))
         addRow(getBruceys("Bruceys executed", true))
-
-        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getDartsPerNumber(1, 1, "1"))
         addRow(getDartsPerNumber(2, 3))
@@ -46,29 +43,13 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
         return row
     }
 
-    private fun getMaxDartsForAnyRound(darts: IntStream): Any
-    {
-        //This includes incomplete rounds, so there'll always be something.#
-        return darts.max().asInt
-    }
-
-    private fun getAverageDartsForAnyRound(darts: IntStream): Any
+    private fun getAverageDartsForAnyRound(darts: List<Int>): Any
     {
         val oi = darts.average()
-        return if (!oi.isPresent)
+        return if (oi == 0.0)
         {
             "N/A"
-        } else MathsUtil.round(oi.asDouble, 2)
-
-    }
-
-    private fun getMinDartsForAnyRound(darts: IntStream): Any
-    {
-        val oi = darts.min()
-        return if (!oi.isPresent)
-        {
-            "N/A"
-        } else oi.asInt
+        } else MathsUtil.round(oi, 2)
 
     }
 
@@ -80,11 +61,11 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             val playerName = playerNamesOrdered[i]
 
             val rounds = hmPlayerToDarts[playerName]!!
-            var bruceyRounds = rounds.filter { r -> r.size == 4 }
+            var bruceyRounds = rounds.filter { it.size == 4 }
 
             if (enforceSuccess)
             {
-                bruceyRounds = bruceyRounds.filter { r -> r.last().hitClockTarget(gameParams) }
+                bruceyRounds = bruceyRounds.filter { it.last().hitClockTarget(gameParams) }
             }
 
             row[i + 1] = bruceyRounds.size
@@ -101,16 +82,13 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             val playerName = playerNamesOrdered[i]
 
             val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-            row[i + 1] = dartsGrouped.stream()
-                    .mapToInt { g -> g.size }
-                    .filter { ix -> ix in min..max }
-                    .count()
+            row[i + 1] = dartsGrouped.filter { it.size in min..max }.size
         }
 
         return row
     }
 
-    private fun getDartsPerNumber(fn: (stream: IntStream) -> Any, desc: String, includeUnfinished: Boolean): Array<Any?>
+    private fun getDartsPerNumber(desc: String, includeUnfinished: Boolean, fn: (stream: List<Int>) -> Any): Array<Any?>
     {
         val row = factoryRow(desc)
         for (i in playerNamesOrdered.indices)
@@ -120,11 +98,11 @@ open class GameStatisticsPanelRoundTheClock : GameStatisticsPanel()
             var dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
             if (!includeUnfinished)
             {
-                dartsGrouped = dartsGrouped.filter { g -> g.last().hitClockTarget(gameParams) }.toMutableList()
+                dartsGrouped = dartsGrouped.filter { it.last().hitClockTarget(gameParams) }.toMutableList()
             }
 
-            val stream = dartsGrouped.stream().mapToInt { g -> g.size }
-            row[i + 1] = fn.invoke(stream)
+            val sizes = dartsGrouped.map { it.size }
+            row[i + 1] = fn.invoke(sizes)
         }
 
         return row

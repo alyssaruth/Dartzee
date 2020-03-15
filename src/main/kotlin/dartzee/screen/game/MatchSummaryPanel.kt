@@ -13,17 +13,14 @@ import javax.swing.JPanel
 /**
  * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
  */
-class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
+class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchScorer>(), ActionListener
 {
     private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
-    private val participants = mutableListOf<ParticipantEntity>()
-    private var match: DartsMatchEntity? = null
+    private val gameTabs = mutableListOf<DartsGamePanel<*, *>>()
 
     private var statsPanel: GameStatisticsPanel? = null
     private val refreshPanel = JPanel()
     private val btnRefresh = JButton()
-
-    //TODO - test me
 
     init
     {
@@ -34,10 +31,8 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
         btnRefresh.toolTipText = "Refresh stats"
     }
 
-    fun init(match: DartsMatchEntity, playersInStartingOrder: MutableList<PlayerEntity>)
+    fun init(playersInStartingOrder: List<PlayerEntity>)
     {
-        this.match = match
-
         val statsPanel = factoryStatsPanel()
 
         if (statsPanel != null)
@@ -68,8 +63,6 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
 
         val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
-
-        participants.add(participant)
     }
 
     fun updateTotalScores()
@@ -85,29 +78,22 @@ class MatchSummaryPanel : PanelWithScorers<MatchScorer>(), ActionListener
 
     fun updateStats()
     {
-        if (statsPanel != null && btnRefresh.isEnabled)
-        {
-            btnRefresh.isEnabled = false
-
-            val participantsCopy = participants.toMutableList()
-            val updateRunnable = Runnable{
-                statsPanel!!.showStats(participantsCopy)
-                btnRefresh.isEnabled = true
-            }
-
-            Thread(updateRunnable).start()
+        statsPanel?.let { statsPanel ->
+            val states = gameTabs.map { it.getPlayerStates() }.flatten()
+            statsPanel.showStats(states)
         }
     }
 
-    override fun factoryScorer(): MatchScorer
+    override fun factoryScorer() = MatchScorer()
+
+    fun addGameTab(tab: DartsGamePanel<*, *>)
     {
-        return MatchScorer()
+        gameTabs.add(tab)
     }
 
     private fun factoryStatsPanel(): GameStatisticsPanel?
     {
-        val type = match!!.gameType
-        return when (type)
+        return when (match.gameType)
         {
             GAME_TYPE_X01 -> MatchStatisticsPanelX01()
             GAME_TYPE_GOLF -> MatchStatisticsPanelGolf()

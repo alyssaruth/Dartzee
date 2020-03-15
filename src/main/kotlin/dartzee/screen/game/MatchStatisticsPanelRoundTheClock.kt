@@ -1,13 +1,14 @@
 package dartzee.screen.game
 
+import dartzee.core.util.minOrZero
+
 class MatchStatisticsPanelRoundTheClock : GameStatisticsPanelRoundTheClock()
 {
     override fun addRowsToTable()
     {
         super.addRowsToTable()
 
-        //addRow(arrayOfNulls(getRowWidth()))
-        addRow(getBestGameRow { stream -> stream.min() })
+        addRow(getBestGameRow { it.minOrZero() })
         addRow(getAverageGameRow())
     }
 

@@ -122,4 +122,32 @@ class TestExtensionFunctions: AbstractTest()
         ascending.shouldContainExactly(1, 2, 3, 4, 5)
         descending.shouldContainExactly(5, 4, 3, 2, 1)
     }
+
+    @Test
+    fun `Should return hash map values sorted by key`()
+    {
+        val map = mutableMapOf<Int, String>()
+        map[1] = "First"
+        map[3] = "Third"
+        map[2] = "Second"
+        map[4] = "Fourth"
+
+        map.getSortedValues().shouldContainExactly("First", "Second", "Third", "Fourth")
+    }
+
+    @Test
+    fun `Should return 0 for an empty list, or minmax otherwise`()
+    {
+        val list = mutableListOf<Int>()
+
+        list.minOrZero() shouldBe 0
+        list.maxOrZero() shouldBe 0
+
+        list.add(1)
+        list.add(4)
+        list.add(7)
+
+        list.minOrZero() shouldBe 1
+        list.maxOrZero() shouldBe 7
+    }
 }

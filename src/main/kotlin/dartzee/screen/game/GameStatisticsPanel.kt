@@ -2,21 +2,17 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
-import dartzee.core.obj.HashMapList
 import dartzee.core.util.Debug
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.addUnique
 import dartzee.core.util.runOnEventThread
 import dartzee.db.ParticipantEntity
+import dartzee.game.state.PlayerState
 import dartzee.utils.DartsColour
-import dartzee.utils.DatabaseUtil
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
-import java.sql.SQLException
-import java.util.*
-import java.util.stream.IntStream
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.border.MatteBorder
@@ -35,7 +31,7 @@ abstract class GameStatisticsPanel : JPanel()
 {
     protected var playerNamesOrdered = mutableListOf<String>()
     protected var participants: List<ParticipantEntity>? = null
-    protected var hmPlayerToDarts = HashMapList<String, MutableList<Dart>>()
+    protected val hmPlayerToDarts = mutableMapOf<String, List<List<Dart>>>()
     var gameParams: String? = null
 
     private var tm = DefaultTableModel()
@@ -78,74 +74,15 @@ abstract class GameStatisticsPanel : JPanel()
         table.setShowRowCount(false)
     }
 
-    fun showStats(participants: List<ParticipantEntity>)
+    fun showStats(playerStates: List<PlayerState<*>>)
     {
-        this.participants = participants
+        this.participants = playerStates.map { it.pt }
 
-        hmPlayerToDarts = HashMapList()
+        hmPlayerToDarts.clear()
 
-        for (participant in participants)
-        {
-            val playerName = participant.getPlayerName()
-
-            //Ensure all the keys are in this map ready for our empty check lower down
-            if (!hmPlayerToDarts.containsKey(playerName))
-            {
-                hmPlayerToDarts[playerName] = mutableListOf()
-            }
-
-            val sbSql = StringBuilder()
-            sbSql.append(" SELECT d.Score, d.Multiplier, d.StartingScore, d.SegmentType, d.RoundNumber")
-            sbSql.append(" FROM Dart d")
-            sbSql.append(" WHERE d.ParticipantId = '${participant.rowId}'")
-            sbSql.append(" AND d.PlayerId = '${participant.playerId}'")
-            sbSql.append(" ORDER BY d.RoundNumber, d.Ordinal")
-
-            try
-            {
-                DatabaseUtil.executeQuery(sbSql).use { rs ->
-                    var dartsForRound = mutableListOf<Dart>()
-                    var currentRoundNumber = 1
-
-                    while (rs.next())
-                    {
-                        val score = rs.getInt("Score")
-                        val multiplier = rs.getInt("Multiplier")
-                        val startingScore = rs.getInt("StartingScore")
-                        val segmentType = rs.getInt("SegmentType")
-
-                        val d = Dart(score, multiplier)
-                        d.startingScore = startingScore
-                        d.segmentType = segmentType
-
-                        val roundNumber = rs.getInt("RoundNumber")
-                        if (roundNumber > currentRoundNumber)
-                        {
-                            hmPlayerToDarts.putInList(playerName, dartsForRound)
-                            dartsForRound = mutableListOf()
-                            currentRoundNumber = roundNumber
-                        }
-
-                        //only needed for golf but doesn't hurt to always set it
-                        d.setGolfHole(roundNumber)
-                        d.participantId = participant.rowId
-
-                        dartsForRound.add(d)
-                    }
-
-                    //Always add the last one, if it's populated
-                    if (!dartsForRound.isEmpty())
-                    {
-                        hmPlayerToDarts.putInList(playerName, dartsForRound)
-                    }
-                }
-            }
-            catch (sqle: SQLException)
-            {
-                Debug.logSqlException("" + sbSql, sqle)
-            }
-
-        }
+        val hm = playerStates.groupBy { it.pt.getPlayerName() }
+                .mapValues { it.value.flatMap { state -> state.darts }}
+        hmPlayerToDarts.putAll(hm)
 
         if (isSufficientData())
         {
@@ -156,15 +93,13 @@ abstract class GameStatisticsPanel : JPanel()
     private fun isSufficientData(): Boolean
     {
         val playerNames = hmPlayerToDarts.keys
-
-        return playerNames.stream().allMatch { p -> !getFlattenedDarts(p).isEmpty() }
+        return playerNames.all { p -> getFlattenedDarts(p).isNotEmpty() }
     }
 
     protected fun getRowWidth(): Int
     {
         return playerNamesOrdered.size + 1
     }
-
 
     protected fun getAverageGameRow(): Array<Any?>
     {
@@ -181,9 +116,7 @@ abstract class GameStatisticsPanel : JPanel()
                 row[i + 1] = "N/A"
             } else
             {
-                val scores = playerPts.stream().mapToInt { pt -> pt.finalScore }
-                val avg = scores.average().asDouble
-
+                val avg = playerPts.map { pt -> pt.finalScore }.average()
                 row[i + 1] = MathsUtil.round(avg, 2)
             }
         }
@@ -241,7 +174,7 @@ abstract class GameStatisticsPanel : JPanel()
         return row
     }
 
-    protected fun getBestGameRow(fn: (s: IntStream) -> OptionalInt): Array<Any?>
+    protected fun getBestGameRow(fn: (s: List<Int>) -> Int): Array<Any?>
     {
         val row = arrayOfNulls<Any>(getRowWidth())
         row[0] = "Best Game"
@@ -257,8 +190,8 @@ abstract class GameStatisticsPanel : JPanel()
             }
             else
             {
-                val scores = playerPts.stream().mapToInt { pt -> pt.finalScore }
-                row[i + 1] = fn.invoke(scores).asInt
+                val scores = playerPts.map { pt -> pt.finalScore }
+                row[i + 1] = fn.invoke(scores)
             }
 
         }
@@ -435,8 +368,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         private fun getHistogramSum(tm: TableModel, col: Int): Long
         {
-            return getHistogramRowNumbers().stream()
-                    .mapToLong { row -> (tm.getValueAt(row, col) as Number).toLong() }
+            return getHistogramRowNumbers().map { row -> (tm.getValueAt(row, col) as Number).toLong() }
                     .sum()
         }
     }

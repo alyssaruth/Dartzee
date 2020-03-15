@@ -2,15 +2,16 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
-import java.util.stream.IntStream
+import dartzee.core.util.maxOrZero
+import dartzee.core.util.minOrZero
 
 open class GameStatisticsPanelGolf : GameStatisticsPanel()
 {
     override fun addRowsToTable()
     {
-        addRow(getScoreRow({ i -> i.min().asInt.toDouble() }, "Best Hole"))
-        addRow(getScoreRow({ stream -> MathsUtil.round(stream.average().asDouble, 2) }, "Avg. Hole"))
-        addRow(getScoreRow({ stream -> stream.max().asInt.toDouble() }, "Worst Hole"))
+        addRow(getScoreRow("Best Hole") { it.minOrZero().toDouble() } )
+        addRow(getScoreRow("Avg. Hole") { MathsUtil.round(it.average(), 2) })
+        addRow(getScoreRow("Worst Hole") { it.maxOrZero().toDouble() })
         addRow(getMissesRow())
         addRow(getGambleRow({ r -> getPointsSquandered(r) }, "Points Squandered"))
         addRow(getGambleRow({ r -> getPointsImproved(r) }, "Points Improved"))
@@ -58,7 +59,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
             val playerName = playerNamesOrdered[i]
             val rounds = hmPlayerToDarts[playerName]!!
 
-            pointsSquandered[i + 1] = rounds.stream().mapToInt { r -> f.invoke(r) }.sum()
+            pointsSquandered[i + 1] = rounds.map { r -> f.invoke(r) }.sum()
         }
 
         return pointsSquandered
@@ -67,7 +68,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
     private fun getPointsSquandered(round: List<Dart>): Int
     {
         val finalScore = round.last().getGolfScore()
-        val bestScore = round.stream().mapToInt { d -> d.getGolfScore() }.min().asInt
+        val bestScore = round.map { it.getGolfScore() }.min() ?: finalScore
 
         return finalScore - bestScore
     }
@@ -84,7 +85,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
     private fun getPointsImproved(round: List<Dart>): Int
     {
         val finalScore = round.last().getGolfScore()
-        val bestScore = round.stream().mapToInt { d -> d.getGolfScore() }.min().asInt
+        val bestScore = round.map { d -> d.getGolfScore() }.min() ?: finalScore
 
         //This round is stuffed - points have been squandered, not gained! Or it's just 1 dart!
         if (finalScore > bestScore || round.size == 1)
@@ -123,7 +124,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         return row
     }
 
-    private fun getScoreRow(f: (stream: IntStream) -> Double, desc: String): Array<Any?>
+    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Double): Array<Any?>
     {
         val row = arrayOfNulls<Any>(getRowWidth())
         row[0] = desc
@@ -132,7 +133,7 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         {
             val playerName = playerNamesOrdered[i]
             val countedDarts = getCountedDarts(playerName)
-            val stream = countedDarts.stream().mapToInt { d -> d.getGolfScore() }
+            val stream = countedDarts.map { d -> d.getGolfScore() }
             row[i + 1] = f.invoke(stream)
         }
 

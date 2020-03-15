@@ -12,7 +12,6 @@ import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL
-import kotlin.streams.toList
 
 class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
 {
@@ -91,7 +90,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
     {
         super.initialiseFromDb(achievementRows, player)
 
-        hitDoubles = achievementRows.stream().map{row -> row.achievementCounter}.toList().toMutableList()
+        hitDoubles = achievementRows.map { it.achievementCounter }.toMutableList()
     }
 
     override fun changeIconColor(img : BufferedImage, newColor: Color)

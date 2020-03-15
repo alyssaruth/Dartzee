@@ -14,10 +14,10 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartsMatchScreen(val match: DartsMatchEntity, players: MutableList<PlayerEntity>):
+class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>):
         AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
-    private val matchPanel = MatchSummaryPanel()
+    private val matchPanel = MatchSummaryPanel(match)
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *>>()
 
@@ -28,7 +28,7 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: MutableList<PlayerE
         tabbedPane.addTab("Match", matchPanel)
         tabbedPane.addChangeListener(this)
 
-        matchPanel.init(match, players)
+        matchPanel.init(players)
 
         title = match.getMatchDesc()
     }
@@ -44,6 +44,8 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: MutableList<PlayerE
         //Initialise some basic properties of the tab, such as visibility of components etc
         val tab = DartsGamePanel.factory(this, game)
         tab.initBasic(match.getPlayerCount())
+
+        matchPanel.addGameTab(tab)
 
         //Add the single game tab and set the parent window to be visible
         tabbedPane.addTab("#" + game.localId, tab)
@@ -122,11 +124,6 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: MutableList<PlayerE
         {
             val title = selectedTab.gameTitle
             setTitle(title)
-
-            if (selectedTab.pendingLoad)
-            {
-                selectedTab.loadGameInCatch()
-            }
         }
         else
         {

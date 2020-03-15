@@ -17,7 +17,6 @@ import dartzee.db.GAME_TYPE_X01
 import dartzee.db.PlayerEntity
 import dartzee.utils.DatabaseUtil
 import java.sql.SQLException
-import kotlin.streams.toList
 
 fun getNotBustSql(): String
 {
@@ -217,7 +216,7 @@ fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int
     val whereSql = "PlayerId = '$playerId' AND AchievementRef = $achievementRef"
 
     val achievementRows = AchievementEntity().retrieveEntities(whereSql)
-    val hitDoubles = achievementRows.stream().mapToInt{it.achievementCounter}.toList()
+    val hitDoubles = achievementRows.map { it.achievementCounter }
     if (!hitDoubles.contains(counter))
     {
         AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, counter)

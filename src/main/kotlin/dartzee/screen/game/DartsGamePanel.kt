@@ -7,10 +7,7 @@ import dartzee.achievements.getWinAchievementRef
 import dartzee.ai.AbstractDartsModel
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
-import dartzee.core.util.DialogUtil
-import dartzee.core.util.getSqlDateNow
-import dartzee.core.util.isEndOfTime
+import dartzee.core.util.*
 import dartzee.db.*
 import dartzee.game.state.PlayerState
 import dartzee.listener.DartboardListener
@@ -45,9 +42,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
 
     protected var parentWindow: AbstractDartsGameScreen? = null
     var gameTitle = ""
-
-    //If this tab is displaying as part of a loaded match, but this game still needs loading, this will be set.
-    var pendingLoad = false
 
     //Transitive things
     var currentPlayerNumber = 0
@@ -103,6 +97,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     /**
      * Stuff that will ultimately get refactored off into a GameState thingy
      */
+    fun getPlayerStates() = hmPlayerNumberToState.getSortedValues()
+    protected fun getParticipants() = hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.pt }
     protected fun getCurrentPlayerId() = getCurrentParticipant().playerId
     private fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
     private fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
@@ -286,30 +282,14 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
     }
 
-    /**
-     * Called when loading up a match for the tabs that aren't visible. Just do enough so that we can generate the match
-     * summary, and set a flag to say this tab needs to do a proper load if selected.
-     */
-    fun preLoad()
-    {
-        val gameId = gameEntity.rowId
-        loadParticipants(gameId)
-
-        pendingLoad = true
-    }
 
     fun loadGame()
     {
-        pendingLoad = false
-
         val gameId = gameEntity.rowId
 
         //Get the participants, sorted by Ordinal. Assign their scorers.
         loadParticipants(gameId)
         loadScoresAndCurrentPlayer(gameId)
-
-        //Paint the dartboard
-        dartboard.paintDartboardCached()
 
         //If the game is over, do some extra stuff to sort the screen out
         val dtFinish = gameEntity.dtFinish
@@ -319,6 +299,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
         else
         {
+            //Paint the dartboard
+            dartboard.paintDartboardCached()
+
             nextTurn()
         }
     }
@@ -363,12 +346,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
      */
     private fun loadParticipants(gameId: String)
     {
-        //We may have already done this in the preLoad
-        if (getParticipants().isNotEmpty())
-        {
-            return
-        }
-
         val whereSql = "GameId = '$gameId' ORDER BY Ordinal ASC"
         val participants = ParticipantEntity().retrieveEntities(whereSql)
 
@@ -435,6 +412,11 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
                 throw sqle
             }
 
+            val state = getPlayerState(i)
+            hmRoundToDarts.getSortedValues().forEach {
+                state.addDarts(it)
+            }
+
             loadDartsForParticipant(i, hmRoundToDarts, lastRound)
 
             updateLastRoundNumber(i, lastRound)
@@ -497,7 +479,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
     }
 
-    protected fun getParticipants() = hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.pt }
+
 
     /**
      * Should I stop throwing?
@@ -693,7 +675,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     protected fun saveDartsToDatabase()
     {
         val pt = getCurrentParticipant()
-        val darts = ArrayList<DartEntity>()
+        val darts = mutableListOf<DartEntity>()
         for (i in dartsThrown.indices)
         {
             val dart = dartsThrown[i]
@@ -701,6 +683,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         }
 
         BulkInserter.insert(darts)
+
+        getCurrentPlayerState().addDarts(dartsThrown)
     }
 
     open fun readyForThrow()
@@ -762,12 +746,18 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             panelCenter.remove(dartboard)
             panelCenter.add(statsPanel!!, BorderLayout.CENTER)
 
-            statsPanel.showStats(getParticipants())
+            statsPanel.showStats(getPlayerStates())
         }
         else
         {
             panelCenter.remove(statsPanel)
             panelCenter.add(dartboard, BorderLayout.CENTER)
+
+            //We might not have painted it if this is a complete, loaded game
+            if (dartboard.dartboardImage == null)
+            {
+                dartboard.paintDartboardCached()
+            }
         }
 
         panelCenter.revalidate()
