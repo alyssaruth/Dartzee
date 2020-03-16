@@ -17,8 +17,6 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         addRow(getGambleRow({ r -> getPointsSquandered(r) }, "Points Squandered"))
         addRow(getGambleRow({ r -> getPointsImproved(r) }, "Points Improved"))
 
-        //addRow(arrayOfNulls(getRowWidth()))
-
         addRow(getScoreCountRow(1))
         addRow(getScoreCountRow(2))
         addRow(getScoreCountRow(3))

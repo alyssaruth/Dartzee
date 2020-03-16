@@ -160,7 +160,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         updateCarousel()
     }
 
-    override fun factoryStatsPanel(): GameStatisticsPanel? = null
+    override fun factoryStatsPanel() = GameStatisticsPanelDartzee()
     override fun factoryScorer() = DartsScorerDartzee(this)
 
     override fun hoverChanged(validSegments: List<DartboardSegment>)
