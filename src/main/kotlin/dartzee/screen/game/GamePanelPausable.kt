@@ -3,6 +3,7 @@ package dartzee.screen.game
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
 import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.Dartboard
 import dartzee.screen.game.scorer.DartsScorerPausable
@@ -20,6 +21,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
     abstract fun currentPlayerHasFinished(): Boolean
 
     override fun factoryDartboard() = Dartboard()
+    override fun factoryState(pt: ParticipantEntity, scorer: S) = DefaultPlayerState(pt, scorer)
 
     override fun saveDartsAndProceed()
     {

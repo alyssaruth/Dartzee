@@ -5,9 +5,8 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.util.Debug
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.addUnique
-import dartzee.core.util.runOnEventThread
 import dartzee.db.ParticipantEntity
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.AbstractPlayerState
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import java.awt.Color
@@ -74,7 +73,7 @@ abstract class GameStatisticsPanel : JPanel()
         table.setShowRowCount(false)
     }
 
-    fun showStats(playerStates: List<DefaultPlayerState<*>>)
+    fun showStats(playerStates: List<AbstractPlayerState<*>>)
     {
         this.participants = playerStates.map { it.pt }
 
@@ -86,7 +85,7 @@ abstract class GameStatisticsPanel : JPanel()
 
         if (isSufficientData())
         {
-            runOnEventThread { buildTableModel() }
+            buildTableModel()
         }
     }
 
@@ -96,10 +95,7 @@ abstract class GameStatisticsPanel : JPanel()
         return playerNames.all { p -> getFlattenedDarts(p).isNotEmpty() }
     }
 
-    protected fun getRowWidth(): Int
-    {
-        return playerNamesOrdered.size + 1
-    }
+    protected fun getRowWidth() = playerNamesOrdered.size + 1
 
     protected fun getAverageGameRow(): Array<Any?>
     {

@@ -8,6 +8,7 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -37,6 +38,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     }
 
     override fun factoryDartboard() = DartzeeDartboard()
+    override fun factoryState(pt: ParticipantEntity, scorer: DartsScorerDartzee) = DartzeePlayerState(pt, scorer)
 
     override fun doAiTurn(model: AbstractDartsModel)
     {

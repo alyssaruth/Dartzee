@@ -8,6 +8,7 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
 import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -22,6 +23,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
     override val totalRounds = Integer.parseInt(game.gameParams)
 
     override fun factoryDartboard() = Dartboard()
+    override fun factoryState(pt: ParticipantEntity, scorer: DartsScorerGolf) = DefaultPlayerState(pt, scorer)
 
     private fun getScoreForMostRecentDart() : Int
     {

@@ -10,7 +10,6 @@ import dartzee.core.obj.HashMapList
 import dartzee.core.util.*
 import dartzee.db.*
 import dartzee.game.state.AbstractPlayerState
-import dartzee.game.state.DefaultPlayerState
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
@@ -41,7 +40,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         ActionListener,
         MouseListener
 {
-    private val hmPlayerNumberToState = mutableMapOf<Int, DefaultPlayerState<S>>()
+    private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
 
     protected var totalPlayers = -1
 
@@ -109,14 +108,11 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).pt
     protected fun getCurrentParticipant() = getCurrentPlayerState().pt
     protected fun updateLastRoundNumber(playerNumber: Int, newRoundNumber: Int) {
-        updateState(playerNumber) { state -> state.copy(lastRoundNumber = newRoundNumber) }
-    }
-    private fun updateState(playerNumber: Int, fn: (state: DefaultPlayerState<S>) -> DefaultPlayerState<S>) {
         val state = getPlayerState(playerNumber)
-        hmPlayerNumberToState[playerNumber] = fn(state)
+        state.lastRoundNumber = newRoundNumber
     }
 
-    protected fun addState(playerNumber: Int, state: DefaultPlayerState<S>) {
+    protected fun addState(playerNumber: Int, state: PlayerState) {
         hmPlayerNumberToState[playerNumber] = state
     }
 
@@ -176,6 +172,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     /**
      * Abstract methods
      */
+    abstract fun factoryState(pt: ParticipantEntity, scorer: S): PlayerState
     abstract fun doAiTurn(model: AbstractDartsModel)
 
     abstract fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
@@ -199,7 +196,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             addParticipant(participant)
 
             val scorer = assignScorer(player, gameEntity.gameParams)
-            addState(ix, DefaultPlayerState(participant, scorer, 0))
+            addState(ix, factoryState(participant, scorer))
         }
 
         initForAi(hasAi())
@@ -356,7 +353,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             addParticipant(pt)
 
             val scorer = assignScorer(pt.getPlayer(), gameEntity.gameParams)
-            addState(i, DefaultPlayerState(pt, scorer, 0))
+            addState(i, factoryState(pt, scorer))
         }
 
         initForAi(hasAi())
