@@ -9,6 +9,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
+import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.scorer.DartsScorerGolf
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe

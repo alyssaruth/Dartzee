@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package dartzee.screen.game.x01
 
 import dartzee.core.util.minOrZero
 import dartzee.utils.isFinishRound

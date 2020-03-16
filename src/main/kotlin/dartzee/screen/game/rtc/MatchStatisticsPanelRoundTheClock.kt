@@ -1,6 +1,7 @@
-package dartzee.screen.game
+package dartzee.screen.game.rtc
 
 import dartzee.core.util.minOrZero
+import dartzee.screen.game.rtc.GameStatisticsPanelRoundTheClock
 
 class MatchStatisticsPanelRoundTheClock : GameStatisticsPanelRoundTheClock()
 {

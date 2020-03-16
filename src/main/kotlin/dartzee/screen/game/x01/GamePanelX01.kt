@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package dartzee.screen.game.x01
 
 import dartzee.`object`.CheckoutSuggester
 import dartzee.`object`.Dart
@@ -10,6 +10,9 @@ import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
+import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.GamePanelPausable
+import dartzee.screen.game.GameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 

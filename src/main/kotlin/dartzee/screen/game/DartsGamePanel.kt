@@ -12,9 +12,13 @@ import dartzee.db.*
 import dartzee.game.state.PlayerState
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeRuleCarousel
-import dartzee.screen.dartzee.DartzeeRuleSummaryPanel
+import dartzee.screen.game.dartzee.DartzeeRuleCarousel
+import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
+import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.screen.game.golf.GamePanelGolf
+import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.DartsScorer
+import dartzee.screen.game.x01.GamePanelX01
 import dartzee.stats.PlayerSummaryStats
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
@@ -831,7 +835,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             {
                 GAME_TYPE_X01 -> GamePanelX01(parent, game)
                 GAME_TYPE_GOLF -> GamePanelGolf(parent, game)
-                GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
+                GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(
+                    parent,
+                    game
+                )
                 GAME_TYPE_DARTZEE -> constructGamePanelDartzee(parent, game)
                 else -> GamePanelX01(parent, game)
             }
@@ -840,7 +847,11 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
         private fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
         {
             val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
-            val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(dtos))
+            val summaryPanel = DartzeeRuleSummaryPanel(
+                DartzeeRuleCarousel(
+                    dtos
+                )
+            )
 
             return GamePanelDartzee(parent, game, dtos, summaryPanel)
         }

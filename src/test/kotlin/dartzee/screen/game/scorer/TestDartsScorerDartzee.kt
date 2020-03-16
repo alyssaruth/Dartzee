@@ -9,7 +9,7 @@ import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
-import dartzee.screen.game.GamePanelDartzee
+import dartzee.screen.game.dartzee.GamePanelDartzee
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every

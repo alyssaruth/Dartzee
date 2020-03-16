@@ -8,6 +8,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.getOuterSegments
 import dartzee.helper.makeDart
 import dartzee.helper.makeRoundResultEntities
+import dartzee.screen.game.dartzee.DartzeeRuleCarousel
+import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -72,5 +74,6 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
         verify { carousel.gameFinished() }
     }
 
-    private fun makeSummaryPanel() = DartzeeRuleSummaryPanel(mockk(relaxed = true))
+    private fun makeSummaryPanel() =
+        DartzeeRuleSummaryPanel(mockk(relaxed = true))
 }

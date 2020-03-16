@@ -11,7 +11,7 @@ import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThread
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.DartsGameScreen
-import dartzee.screen.game.GamePanelX01
+import dartzee.screen.game.x01.GamePanelX01
 import dartzee.utils.*
 import java.awt.*
 import java.awt.event.MouseEvent

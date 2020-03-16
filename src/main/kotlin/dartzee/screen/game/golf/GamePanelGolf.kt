@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
@@ -9,6 +9,9 @@ import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.screen.Dartboard
+import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.GamePanelFixedLength
+import dartzee.screen.game.GameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerGolf
 
 open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelFixedLength<DartsScorerGolf, Dartboard>(parent, game)

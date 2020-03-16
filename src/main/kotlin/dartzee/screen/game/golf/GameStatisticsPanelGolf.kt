@@ -1,9 +1,10 @@
-package dartzee.screen.game
+package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
+import dartzee.screen.game.GameStatisticsPanel
 
 open class GameStatisticsPanelGolf : GameStatisticsPanel()
 {

@@ -12,6 +12,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.helper.wipeTable
 import dartzee.screen.game.scorer.DartsScorerX01
+import dartzee.screen.game.x01.GamePanelX01
 import io.kotlintest.shouldBe
 import org.junit.Test
 

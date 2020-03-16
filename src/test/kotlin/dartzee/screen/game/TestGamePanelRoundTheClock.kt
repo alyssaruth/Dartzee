@@ -8,6 +8,7 @@ import dartzee.game.state.PlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
+import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 import io.kotlintest.shouldBe
 import org.junit.Test

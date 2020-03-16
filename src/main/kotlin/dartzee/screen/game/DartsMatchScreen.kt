@@ -7,6 +7,7 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
+import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.insertDartzeeRules
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane

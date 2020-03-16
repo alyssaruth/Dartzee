@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
@@ -9,8 +9,9 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.screen.dartzee.DartzeeDartboard
-import dartzee.screen.dartzee.DartzeeRuleSummaryPanel
-import dartzee.screen.dartzee.IDartzeeCarouselListener
+import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.GamePanelFixedLength
+import dartzee.screen.game.GameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.factoryHighScoreResult
 import dartzee.utils.getAllPossibleSegments
@@ -19,7 +20,9 @@ import java.awt.BorderLayout
 class GamePanelDartzee(parent: AbstractDartsGameScreen,
                        game: GameEntity,
                        val dtos: List<DartzeeRuleDto>,
-                       val summaryPanel: DartzeeRuleSummaryPanel) : GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard>(parent, game), IDartzeeCarouselListener
+                       val summaryPanel: DartzeeRuleSummaryPanel
+) : GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard>(parent, game),
+    IDartzeeCarouselListener
 {
     override val totalRounds = dtos.size + 1
 

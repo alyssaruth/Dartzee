@@ -10,6 +10,9 @@ import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.*
+import dartzee.screen.game.dartzee.DartzeeRuleCarousel
+import dartzee.screen.game.dartzee.DartzeeRuleTile
+import dartzee.screen.game.dartzee.IDartzeeCarouselListener
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -272,6 +275,8 @@ class TestDartzeeRuleCarousel: AbstractTest()
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).filter { it.isVisible }
     private fun DartzeeRuleCarousel.getDisplayedRules() = getDisplayedTiles().map { it.dto }
-    private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(dtos).also { it.listener = listener }
+    private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(
+        dtos
+    ).also { it.listener = listener }
     private fun DartzeeRuleCarousel.getPendingRules() = pendingTiles.filter { it.isVisible }.map { it.dto }
 }

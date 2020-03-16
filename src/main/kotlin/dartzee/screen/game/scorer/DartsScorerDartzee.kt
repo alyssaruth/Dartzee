@@ -1,7 +1,7 @@
 package dartzee.screen.game.scorer
 
 import dartzee.dartzee.DartzeeRoundResult
-import dartzee.screen.game.GamePanelDartzee
+import dartzee.screen.game.dartzee.GamePanelDartzee
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 
