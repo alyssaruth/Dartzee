@@ -20,7 +20,7 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
 {
     private val matchPanel = MatchSummaryPanel(match)
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *>>()
+    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, *>>()
 
     init
     {
@@ -36,7 +36,7 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
 
     override fun getScreenHeight() = super.getScreenHeight() + 30
 
-    fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *>
+    fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *, *>
     {
         //Cache this screen in ScreenCache
         val gameId = game.rowId
@@ -121,7 +121,7 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
     {
         val sourceTabbedPane = e.source as JTabbedPane
         val selectedTab = sourceTabbedPane.selectedComponent
-        if (selectedTab is DartsGamePanel<*, *>)
+        if (selectedTab is DartsGamePanel<*, *, *>)
         {
             val title = selectedTab.gameTitle
             setTitle(title)

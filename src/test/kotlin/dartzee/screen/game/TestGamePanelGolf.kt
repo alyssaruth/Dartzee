@@ -4,7 +4,7 @@ import dartzee.`object`.*
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.db.*
-import dartzee.game.state.PlayerState
+import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
@@ -157,7 +157,7 @@ class TestGamePanelGolf: AbstractTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
 
-            addState(0, PlayerState(pt, scorer, 0))
+            addState(0, DefaultPlayerState(pt, scorer, 0))
 
             currentRoundNumber = 1
         }

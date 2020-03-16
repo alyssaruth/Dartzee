@@ -17,8 +17,8 @@ class TestDartsMatchScreen: AbstractTest()
     {
         val scrn = setUpMatchScreen()
 
-        val panelOne = mockk<DartsGamePanel<*, *>>(relaxed = true)
-        val panelTwo = mockk<DartsGamePanel<*, *>>(relaxed = true)
+        val panelOne = mockk<DartsGamePanel<*, *, *>>(relaxed = true)
+        val panelTwo = mockk<DartsGamePanel<*, *, *>>(relaxed = true)
         scrn.hmGameIdToTab["foo"] = panelOne
         scrn.hmGameIdToTab["bar"] = panelTwo
 
@@ -33,8 +33,8 @@ class TestDartsMatchScreen: AbstractTest()
     {
         val scrn = setUpMatchScreen()
 
-        val panelOne = mockk<DartsGamePanel<*, *>>(relaxed = true)
-        val panelTwo = mockk<DartsGamePanel<*, *>>(relaxed = true)
+        val panelOne = mockk<DartsGamePanel<*, *, *>>(relaxed = true)
+        val panelTwo = mockk<DartsGamePanel<*, *, *>>(relaxed = true)
         scrn.hmGameIdToTab["foo"] = panelOne
         scrn.hmGameIdToTab["bar"] = panelTwo
 

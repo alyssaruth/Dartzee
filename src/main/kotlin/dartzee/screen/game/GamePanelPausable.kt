@@ -3,12 +3,14 @@ package dartzee.screen.game
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
+import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.Dartboard
 import dartzee.screen.game.scorer.DartsScorerPausable
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PreferenceUtil
 
-abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsGameScreen, game: GameEntity) : DartsGamePanel<S, Dartboard>(parent, game)
+abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsGameScreen, game: GameEntity):
+        DartsGamePanel<S, Dartboard, DefaultPlayerState<S>>(parent, game)
 {
     private var aiShouldPause = false
 
@@ -90,7 +92,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
         gameEntity.dtFinish = getSqlDateNow()
         gameEntity.saveToDatabase()
 
-        parentWindow?.startNextGameIfNecessary()
+        parentWindow.startNextGameIfNecessary()
 
         //Display this player's result. If they're an AI and we have the preference, then
         //automatically play on.

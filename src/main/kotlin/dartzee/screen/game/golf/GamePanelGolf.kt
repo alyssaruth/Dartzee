@@ -8,13 +8,15 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.GameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelFixedLength<DartsScorerGolf, Dartboard>(parent, game)
+open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
+        GamePanelFixedLength<DartsScorerGolf, Dartboard, DefaultPlayerState<DartsScorerGolf>>(parent, game)
 {
     //Number of rounds - 9 holes or 18?
     override val totalRounds = Integer.parseInt(game.gameParams)

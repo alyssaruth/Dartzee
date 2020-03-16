@@ -19,7 +19,7 @@ import javax.swing.JPanel
 class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchScorer>(), ActionListener
 {
     private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
-    private val gameTabs = mutableListOf<DartsGamePanel<*, *>>()
+    private val gameTabs = mutableListOf<DartsGamePanel<*, *, *>>()
 
     private var statsPanel: GameStatisticsPanel? = null
     private val refreshPanel = JPanel()
@@ -89,7 +89,7 @@ class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchSco
 
     override fun factoryScorer() = MatchScorer()
 
-    fun addGameTab(tab: DartsGamePanel<*, *>)
+    fun addGameTab(tab: DartsGamePanel<*, *, *>)
     {
         gameTabs.add(tab)
     }

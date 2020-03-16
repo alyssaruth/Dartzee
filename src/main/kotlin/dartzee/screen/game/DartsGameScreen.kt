@@ -2,17 +2,15 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.db.GameEntity
-import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
-import dartzee.screen.game.scorer.DartsScorer
 
 /**
  * DartsGameScreen
- * Simple screen which wraps up either a single game panel, or multiple tabs for a match.
+ * Simple screen which wraps up a single game panel
  */
 class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen(totalPlayers, game.gameType)
 {
-    var gamePanel: DartsGamePanel<out DartsScorer, out Dartboard> = DartsGamePanel.factory(this, game)
+    var gamePanel: DartsGamePanel<*, *, *> = DartsGamePanel.factory(this, game)
 
     init
     {

@@ -9,7 +9,8 @@ import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.*
 import dartzee.db.*
-import dartzee.game.state.PlayerState
+import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.DefaultPlayerState
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
@@ -34,17 +35,16 @@ import java.sql.SQLException
 import java.util.*
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDartsGameScreen, val gameEntity: GameEntity) :
+abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState<S>>(protected val parentWindow: AbstractDartsGameScreen, val gameEntity: GameEntity) :
         PanelWithScorers<S>(),
         DartboardListener,
         ActionListener,
         MouseListener
 {
-    private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState<S>>()
+    private val hmPlayerNumberToState = mutableMapOf<Int, DefaultPlayerState<S>>()
 
     protected var totalPlayers = -1
 
-    protected var parentWindow: AbstractDartsGameScreen? = null
     var gameTitle = ""
 
     //Transitive things
@@ -111,12 +111,12 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     protected fun updateLastRoundNumber(playerNumber: Int, newRoundNumber: Int) {
         updateState(playerNumber) { state -> state.copy(lastRoundNumber = newRoundNumber) }
     }
-    private fun updateState(playerNumber: Int, fn: (state: PlayerState<S>) -> PlayerState<S>) {
+    private fun updateState(playerNumber: Int, fn: (state: DefaultPlayerState<S>) -> DefaultPlayerState<S>) {
         val state = getPlayerState(playerNumber)
         hmPlayerNumberToState[playerNumber] = fn(state)
     }
 
-    protected fun addState(playerNumber: Int, state: PlayerState<S>) {
+    protected fun addState(playerNumber: Int, state: DefaultPlayerState<S>) {
         hmPlayerNumberToState[playerNumber] = state
     }
 
@@ -127,9 +127,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
 
     init
     {
-
-        this.parentWindow = parent
-
         panelCenter.add(dartboard, BorderLayout.CENTER)
         dartboard.addDartboardListener(this)
         panelCenter.add(panelSouth, BorderLayout.SOUTH)
@@ -202,7 +199,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             addParticipant(participant)
 
             val scorer = assignScorer(player, gameEntity.gameParams)
-            addState(ix, PlayerState(participant, scorer, 0))
+            addState(ix, DefaultPlayerState(participant, scorer, 0))
         }
 
         initForAi(hasAi())
@@ -359,7 +356,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
             addParticipant(pt)
 
             val scorer = assignScorer(pt.getPlayer(), gameEntity.gameParams)
-            addState(i, PlayerState(pt, scorer, 0))
+            addState(i, DefaultPlayerState(pt, scorer, 0))
         }
 
         initForAi(hasAi())
@@ -492,7 +489,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
      */
     private fun shouldAiStopThrowing(): Boolean
     {
-        if (!parentWindow!!.isVisible)
+        if (!parentWindow.isVisible)
         {
             Debug.append("Game window has been closed, stopping throwing.")
             return true
@@ -772,9 +769,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     {
         if (parentWindow is DartsMatchScreen)
         {
-            (parentWindow as DartsMatchScreen).addParticipant(gameEntity.localId, participant)
+            parentWindow.addParticipant(gameEntity.localId, participant)
         }
-
     }
 
     fun achievementUnlocked(playerId: String, achievement: AbstractAchievement)
@@ -829,7 +825,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard>(parent: AbstractDar
     {
         const val VERBOSE_LOGGING = false
 
-        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<out DartsScorer, out Dartboard>
+        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, *>
         {
             return when (game.gameType)
             {

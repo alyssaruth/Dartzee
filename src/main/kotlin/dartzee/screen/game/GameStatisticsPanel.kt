@@ -7,7 +7,7 @@ import dartzee.core.util.MathsUtil
 import dartzee.core.util.addUnique
 import dartzee.core.util.runOnEventThread
 import dartzee.db.ParticipantEntity
-import dartzee.game.state.PlayerState
+import dartzee.game.state.DefaultPlayerState
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import java.awt.Color
@@ -74,7 +74,7 @@ abstract class GameStatisticsPanel : JPanel()
         table.setShowRowCount(false)
     }
 
-    fun showStats(playerStates: List<PlayerState<*>>)
+    fun showStats(playerStates: List<DefaultPlayerState<*>>)
     {
         this.participants = playerStates.map { it.pt }
 
