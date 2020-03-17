@@ -29,3 +29,9 @@ data class DartzeePlayerState(override val pt: ParticipantEntity,
                               override var lastRoundNumber: Int = 0,
                               override val darts: MutableList<List<Dart>> = mutableListOf(),
                               val roundResults: MutableList<DartzeeRoundResultEntity> = mutableListOf()): AbstractPlayerState<DartsScorerDartzee>()
+{
+    fun addRoundResult(result: DartzeeRoundResultEntity)
+    {
+        roundResults.add(result)
+    }
+}

@@ -29,7 +29,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     //Transient things
     var lastRoundScore = -1
-    private val hmPlayerNumberToRoundResults = HashMapList<Int, DartzeeRoundResultEntity>()
 
     init
     {
@@ -58,7 +57,8 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         val pt = getParticipant(playerNumber)
 
         val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '${pt.playerId}' AND ParticipantId = '${pt.rowId}'")
-        hmPlayerNumberToRoundResults[playerNumber] = roundResults
+
+        roundResults.forEach { getPlayerState(playerNumber).addRoundResult(it) }
 
         val scorer = getScorer(playerNumber)
         for (i in 1..totalRounds)
@@ -118,7 +118,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     }
     private fun updateCarousel()
     {
-        val ruleResults = hmPlayerNumberToRoundResults.getOrDefault(currentPlayerNumber, mutableListOf())
+        val ruleResults = getCurrentPlayerState().roundResults
         summaryPanel.update(ruleResults, dartsThrown, lastRoundScore, currentRoundNumber)
     }
 
@@ -138,7 +138,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         if (currentRoundNumber > 1)
         {
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
-            hmPlayerNumberToRoundResults.putInList(currentPlayerNumber, entity)
+            getCurrentPlayerState().addRoundResult(entity)
         }
 
         disableInputButtons()

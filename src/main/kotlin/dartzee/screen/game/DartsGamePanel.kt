@@ -103,8 +103,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     fun getPlayerStates() = hmPlayerNumberToState.getSortedValues()
     protected fun getParticipants() = hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.pt }
     protected fun getCurrentPlayerId() = getCurrentParticipant().playerId
-    private fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
-    private fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
+    protected fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
+    protected fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
     protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).pt
     protected fun getCurrentParticipant() = getCurrentPlayerState().pt
     protected fun updateLastRoundNumber(playerNumber: Int, newRoundNumber: Int) {
