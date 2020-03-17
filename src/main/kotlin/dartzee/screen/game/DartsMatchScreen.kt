@@ -6,6 +6,7 @@ import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.insertDartzeeRules
@@ -20,7 +21,7 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
 {
     private val matchPanel = MatchSummaryPanel(match)
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, *>>()
+    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, out AbstractPlayerState<*>>>()
 
     init
     {

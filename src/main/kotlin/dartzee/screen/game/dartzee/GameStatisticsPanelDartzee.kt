@@ -1,8 +1,9 @@
 package dartzee.screen.game.dartzee
 
-import dartzee.screen.game.GameStatisticsPanel
+import dartzee.game.state.DartzeePlayerState
+import dartzee.screen.game.AbstractGameStatisticsPanel
 
-class GameStatisticsPanelDartzee: GameStatisticsPanel()
+class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayerState>()
 {
     override fun getRankedRowsHighestWins(): MutableList<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

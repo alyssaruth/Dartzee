@@ -4,9 +4,11 @@ import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
-import dartzee.screen.game.GameStatisticsPanel
+import dartzee.game.state.DefaultPlayerState
+import dartzee.screen.game.AbstractGameStatisticsPanel
+import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GameStatisticsPanelGolf : GameStatisticsPanel()
+open class GameStatisticsPanelGolf : AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerGolf>>()
 {
     override fun addRowsToTable()
     {

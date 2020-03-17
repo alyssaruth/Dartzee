@@ -59,7 +59,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
      * Screen stuff
      */
     val dartboard = factoryDartboard()
-    protected val statsPanel: GameStatisticsPanel? = factoryStatsPanel()
+    protected val statsPanel: AbstractGameStatisticsPanel<PlayerState>? = factoryStatsPanel()
 
     private val panelSouth = JPanel()
     protected val slider = SliderAiSpeed(true)
@@ -182,7 +182,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
     abstract fun saveDartsAndProceed()
-    abstract fun factoryStatsPanel(): GameStatisticsPanel?
+    abstract fun factoryStatsPanel(): AbstractGameStatisticsPanel<PlayerState>?
     abstract fun factoryDartboard(): D
 
     /**
@@ -822,7 +822,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         const val VERBOSE_LOGGING = false
 
-        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, *>
+        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, out AbstractPlayerState<*>>
         {
             return when (game.gameType)
             {

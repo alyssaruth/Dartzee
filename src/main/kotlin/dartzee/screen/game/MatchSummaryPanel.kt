@@ -1,6 +1,7 @@
 package dartzee.screen.game
 
 import dartzee.db.*
+import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.game.golf.MatchStatisticsPanelGolf
 import dartzee.screen.game.rtc.MatchStatisticsPanelRoundTheClock
 import dartzee.screen.game.scorer.MatchScorer
@@ -19,9 +20,9 @@ import javax.swing.JPanel
 class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchScorer>(), ActionListener
 {
     private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
-    private val gameTabs = mutableListOf<DartsGamePanel<*, *, *>>()
+    private val gameTabs = mutableListOf<DartsGamePanel<*, *, out AbstractPlayerState<*>>>()
 
-    private var statsPanel: GameStatisticsPanel? = null
+    private val statsPanel: AbstractGameStatisticsPanel<out AbstractPlayerState<*>>? = factoryStatsPanel()
     private val refreshPanel = JPanel()
     private val btnRefresh = JButton()
 
@@ -36,15 +37,11 @@ class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchSco
 
     fun init(playersInStartingOrder: List<PlayerEntity>)
     {
-        val statsPanel = factoryStatsPanel()
-
         if (statsPanel != null)
         {
             statsPanel.gameParams = match.gameParams
             panelCenter.add(statsPanel, BorderLayout.CENTER)
             panelCenter.add(refreshPanel, BorderLayout.SOUTH)
-
-            this.statsPanel = statsPanel
         }
 
         val totalPlayers = playersInStartingOrder.size
@@ -89,12 +86,12 @@ class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchSco
 
     override fun factoryScorer() = MatchScorer()
 
-    fun addGameTab(tab: DartsGamePanel<*, *, *>)
+    fun addGameTab(tab: DartsGamePanel<*, *, out AbstractPlayerState<*>>)
     {
         gameTabs.add(tab)
     }
 
-    private fun factoryStatsPanel(): GameStatisticsPanel?
+    private fun factoryStatsPanel(): AbstractGameStatisticsPanel<out AbstractPlayerState<*>>?
     {
         return when (match.gameType)
         {

@@ -11,7 +11,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
-import dartzee.screen.game.GameStatisticsPanel
+import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
 open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game)
@@ -187,9 +187,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun factoryScorer() = DartsScorerRoundTheClock(this)
 
-    override fun factoryStatsPanel(): GameStatisticsPanel
-    {
-        return GameStatisticsPanelRoundTheClock()
-    }
+    override fun factoryStatsPanel() = GameStatisticsPanelRoundTheClock()
 
 }

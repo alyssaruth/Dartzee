@@ -26,11 +26,12 @@ import javax.swing.text.StyleConstants
  * Shows statistics for each player in a particular game.
  * Runs ad-hoc SQL to get the stats, because the full detail isn't readily available in memory (and would be messy to maintain)
  */
-abstract class GameStatisticsPanel : JPanel()
+abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>> : JPanel()
 {
     protected var playerNamesOrdered = mutableListOf<String>()
     protected var participants: List<ParticipantEntity>? = null
     protected val hmPlayerToDarts = mutableMapOf<String, List<List<Dart>>>()
+    protected val hmPlayerToStates = mutableMapOf<String, List<PlayerState>>()
     var gameParams: String? = null
 
     private var tm = DefaultTableModel()
@@ -73,15 +74,17 @@ abstract class GameStatisticsPanel : JPanel()
         table.setShowRowCount(false)
     }
 
-    fun showStats(playerStates: List<AbstractPlayerState<*>>)
+    fun showStats(playerStates: List<PlayerState>)
     {
         this.participants = playerStates.map { it.pt }
 
         hmPlayerToDarts.clear()
+        hmPlayerToStates.clear()
 
         val hm = playerStates.groupBy { it.pt.getPlayerName() }
-                .mapValues { it.value.flatMap { state -> state.darts }}
-        hmPlayerToDarts.putAll(hm)
+        hmPlayerToStates.putAll(hm)
+
+        hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.darts }})
 
         if (isSufficientData())
         {
