@@ -16,12 +16,13 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>):
+abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<*>>(private val matchPanel: MatchSummaryPanel<PlayerState>,
+                                                                     val match: DartsMatchEntity,
+                                                                     players: List<PlayerEntity>):
         AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
-    private val matchPanel = MatchSummaryPanel(match)
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, out AbstractPlayerState<*>>>()
+    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, PlayerState>>()
 
     init
     {
@@ -35,6 +36,8 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
         title = match.getMatchDesc()
     }
 
+    abstract fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, PlayerState>
+
     override fun getScreenHeight() = super.getScreenHeight() + 30
 
     fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *, *>
@@ -44,7 +47,7 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
         ScreenCache.addDartsGameScreen(gameId, this)
 
         //Initialise some basic properties of the tab, such as visibility of components etc
-        val tab = DartsGamePanel.factory(this, game)
+        val tab = factoryGamePanel(this, game)
         tab.initBasic(match.getPlayerCount())
 
         matchPanel.addGameTab(tab)

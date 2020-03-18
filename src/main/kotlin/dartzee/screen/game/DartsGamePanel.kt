@@ -764,7 +764,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     private fun addParticipant(participant: ParticipantEntity)
     {
-        if (parentWindow is DartsMatchScreen)
+        if (parentWindow is DartsMatchScreen<*>)
         {
             parentWindow.addParticipant(gameEntity.localId, participant)
         }
@@ -837,7 +837,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             }
         }
 
-        private fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
+        fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
         {
             val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
             val summaryPanel = DartzeeRuleSummaryPanel(
