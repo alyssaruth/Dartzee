@@ -33,42 +33,18 @@ open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPa
         table.setColumnWidths("150")
     }
 
-    private fun getMissesRow(): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "Miss %"
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val darts = getFlattenedDarts(playerName)
-            val missDarts = darts.filter { d -> d.getGolfScore() == 5 }
-
-            val misses = missDarts.size.toDouble()
-            val percent = 100 * misses / darts.size
-
-            row[i + 1] = MathsUtil.round(percent, 2)
-        }
-
-        return row
+    private fun getMissesRow() = prepareRow("Miss %") { playerName ->
+        val darts = getFlattenedDarts(playerName)
+        val missDarts = darts.filter { d -> d.getGolfScore() == 5 }
+        MathsUtil.getPercentage(missDarts.size, darts.size)
     }
 
     /**
      * Any round where you could have "banked" and ended on something higher.
      */
-    private fun getGambleRow(f: (rnd: List<Dart>) -> Int, desc: String): Array<Any?>
-    {
-        val pointsSquandered = arrayOfNulls<Any>(getRowWidth())
-        pointsSquandered[0] = desc
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val rounds = hmPlayerToDarts[playerName]!!
-
-            pointsSquandered[i + 1] = rounds.map { r -> f.invoke(r) }.sum()
-        }
-
-        return pointsSquandered
+    private fun getGambleRow(f: (rnd: List<Dart>) -> Int, desc: String) = prepareRow(desc) { playerName ->
+        val rounds = hmPlayerToDarts[playerName] ?: listOf()
+        rounds.map { f(it) }.sum()
     }
 
     private fun getPointsSquandered(round: List<Dart>): Int
@@ -113,37 +89,12 @@ open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPa
     }
 
 
-    private fun getScoreCountRow(score: Int): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "" + score
+    private fun getScoreCountRow(score: Int) = getScoreRow("$score") { scores -> scores.count { it == score } }
 
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val darts = getCountedDarts(playerName)
-            val dartsOfScore = darts.filter { d -> d.getGolfScore() == score }
-
-            row[i + 1] = dartsOfScore.size
-        }
-
-        return row
-    }
-
-    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Double): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = desc
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val countedDarts = getCountedDarts(playerName)
-            val stream = countedDarts.map { d -> d.getGolfScore() }
-            row[i + 1] = f.invoke(stream)
-        }
-
-        return row
+    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Any) = prepareRow(desc) { playerName ->
+        val countedDarts = getCountedDarts(playerName)
+        val scores = countedDarts.map { d -> d.getGolfScore() }
+        f(scores)
     }
 
     /**

@@ -101,7 +101,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
 
             //Deal with the remainder
             val remainder = sortedEntries.map { it.value.size }.sum().toDouble()
-            val percent = MathsUtil.round(100*remainder / darts.size, 1)
+            val percent = MathsUtil.getPercentage(remainder, darts.size)
             remainingDarts[i+1] = "$percent%"
         }
 
@@ -122,7 +122,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         else
         {
             val entry = sortedEntries.removeAt(0)
-            val percent = MathsUtil.round((100*entry.value.size.toDouble()) / totalDarts, 0).toInt()
+            val percent = MathsUtil.getPercentage(entry.value.size, totalDarts, 0).toInt()
 
             row[i+1] = "${entry.key} [$percent%]"
         }
@@ -148,7 +148,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         }
         else
         {
-            MathsUtil.round(actualFinishes.size.toDouble() / potentialFinishers.size, 2)
+            MathsUtil.getPercentage(actualFinishes.size, potentialFinishers.size)
         }
     }
 
@@ -167,7 +167,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
     private fun getMultiplePercent(desc: String, multiplier: Int) = prepareRow(desc) { playerName ->
         val scoringDarts = getScoringDarts(playerName)
         val hits = scoringDarts.filter { d -> d.multiplier == multiplier }
-        MathsUtil.round(hits.size.toDouble() / scoringDarts.size, 2)
+        MathsUtil.getPercentage(hits.size, scoringDarts.size)
     }
 
     private fun getScoringRounds(playerName: String): List<List<Dart>>
