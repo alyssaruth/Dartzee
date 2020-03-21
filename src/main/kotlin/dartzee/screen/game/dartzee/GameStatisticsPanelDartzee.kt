@@ -12,17 +12,26 @@ open class GameStatisticsPanelDartzee(gameParams: String): AbstractGameStatistic
 {
     override fun addRowsToTable()
     {
-        addRow(getScoreRow("Highest Score") { it.maxOrZero() })
-        addRow(getScoreRow("Avg. Score") { MathsUtil.round(it.average(), 1) })
-        addRow(getScoreRow("Lowest Score") { it.minOrZero() })
+        addRow(getPeakScoreRow())
+        addRow(getScoreRow("Highest Round") { it.maxOrZero() })
+        addRow(getScoreRow("Avg Round") { MathsUtil.round(it.average(), 1) })
+        addRow(getScoreRow("Lowest Round") { it.minOrZero() })
 
         addRow(getLongestStreakRow())
+        addRow(getHardestRuleRow())
     }
 
-    override fun getRankedRowsHighestWins() = listOf("Highest Score", "Avg Score", "Lowest Score", "Longest Streak")
+    override fun getRankedRowsHighestWins() = listOf("Highest Round", "Avg Round", "Lowest Round", "Longest Streak", "Hardest Rule", "Peak Score")
     override fun getRankedRowsLowestWins() = emptyList<String>()
     override fun getHistogramRows() = emptyList<String>()
     override fun getStartOfSectionRows() = listOf("Longest Streak")
+
+    private fun getPeakScoreRow() = prepareRow("Peak Score", ::getPeakScore)
+    private fun getPeakScore(playerName: String): Any?
+    {
+        val states = hmPlayerToStates[playerName] ?: return null
+        return states.mapNotNull { it.scorer.getMaxScoreSoFar() }.max()
+    }
 
     private fun getScoreRow(desc: String, f: (i: List<Int>) -> Number) = prepareRow(desc) { playerName ->
         val results = getRoundResults(playerName).flatten()
@@ -35,6 +44,11 @@ open class GameStatisticsPanelDartzee(gameParams: String): AbstractGameStatistic
         val allResults = getRoundResults(playerName)
 
         allResults.map { results -> results.getLongestStreak { it.success }.size }.max()
+    }
+
+    private fun getHardestRuleRow() = prepareRow("Hardest Rule") { playerName ->
+        val allResults = getRoundResults(playerName).flatten()
+        allResults.filter { it.success }.map { it.ruleNumber }.max()
     }
 
     private fun getRoundResults(playerName: String): List<List<DartzeeRoundResultEntity>>

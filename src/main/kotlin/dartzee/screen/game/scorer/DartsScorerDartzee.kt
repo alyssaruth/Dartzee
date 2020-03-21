@@ -50,7 +50,7 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
         tableScores.repaint()
     }
 
-    private fun getMaxScoreSoFar() = model.getColumnValues(SCORE_COLUMN).filterIsInstance<Int>().max()
+    fun getMaxScoreSoFar() = model.getColumnValues(SCORE_COLUMN).filterIsInstance<Int>().max()
 
     override fun mouseReleased(e: MouseEvent?)
     {
