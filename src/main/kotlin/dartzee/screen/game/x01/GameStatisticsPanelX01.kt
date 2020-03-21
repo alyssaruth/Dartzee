@@ -39,6 +39,11 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         nfSetupThreshold.addPropertyChangeListener(this)
     }
 
+    override fun getRankedRowsHighestWins() = listOf("Highest Score", "3-dart avg", "Lowest Score", "Treble %", "Checkout %")
+    override fun getRankedRowsLowestWins() = listOf("Miss %")
+    override fun getHistogramRows() = listOf("180", "140 - 179", "100 - 139", "80 - 99", "60 - 79", "40 - 59", "20 - 39", "0 - 19")
+    override fun getStartOfSectionRows() = listOf("180", "Top Darts", "Checkout %", "Best Game")
+
     override fun addRowsToTable()
     {
         nfSetupThreshold.setMinimum(62)
@@ -256,26 +261,6 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
     {
         val darts = getFlattenedDarts(playerName)
         return getScoringDarts(darts, nfSetupThreshold.getNumber())
-    }
-
-    override fun getRankedRowsHighestWins(): MutableList<String>
-    {
-        return mutableListOf("Highest Score", "3-dart avg", "Lowest Score", "Treble %", "Checkout %")
-    }
-
-    override fun getRankedRowsLowestWins(): MutableList<String>
-    {
-        return mutableListOf("Miss %")
-    }
-
-    override fun getHistogramRows(): MutableList<String>
-    {
-        return mutableListOf("180", "140 - 179", "100 - 139", "80 - 99", "60 - 79", "40 - 59", "20 - 39", "0 - 19")
-    }
-
-    override fun getStartOfSectionRows(): MutableList<String>
-    {
-        return mutableListOf("180", "Top Darts", "Checkout %", "Best Game")
     }
 
     override fun propertyChange(arg0: PropertyChangeEvent)

@@ -16,35 +16,12 @@ class MatchStatisticsPanelX01(gameParams: String): GameStatisticsPanelX01(gamePa
         addRow(getAverageGameRow())
     }
 
-    private fun getHighestFinishRow(): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "Best Finish"
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val rounds = hmPlayerToDarts[playerName]!!
-
-            val finishRounds = rounds.filter { r -> isFinishRound(r) }
-            row[i + 1] = finishRounds.map { r -> sumScore(r) }.max() ?: "N/A"
-        }
-
-        return row
+    private fun getHighestFinishRow() = prepareRow("Best Finish") { playerName ->
+        val rounds = hmPlayerToDarts[playerName] ?: listOf()
+        val finishRounds = rounds.filter { r -> isFinishRound(r) }
+        finishRounds.map { r -> sumScore(r) }.max()
     }
 
-    override fun getRankedRowsHighestWins(): MutableList<String>
-    {
-        val v = super.getRankedRowsHighestWins()
-        v.add("Best Finish")
-        return v
-    }
-
-    override fun getRankedRowsLowestWins(): MutableList<String>
-    {
-        val v = super.getRankedRowsLowestWins()
-        v.add("Best Game")
-        v.add("Avg Game")
-        return v
-    }
+    override fun getRankedRowsHighestWins() = super.getRankedRowsHighestWins() + "Best Finish"
+    override fun getRankedRowsLowestWins() = super.getRankedRowsLowestWins() + "Best Game" + "Avg Game"
 }

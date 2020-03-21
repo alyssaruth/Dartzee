@@ -37,10 +37,10 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
 
     protected val table = ScrollTable()
 
-    protected abstract fun getRankedRowsHighestWins(): MutableList<String>
-    protected abstract fun getRankedRowsLowestWins(): MutableList<String>
-    protected abstract fun getHistogramRows(): MutableList<String>
-    protected abstract fun getStartOfSectionRows(): MutableList<String>
+    protected abstract fun getRankedRowsHighestWins(): List<String>
+    protected abstract fun getRankedRowsLowestWins(): List<String>
+    protected abstract fun getHistogramRows(): List<String>
+    protected abstract fun getStartOfSectionRows(): List<String>
 
     private fun getHistogramRowNumbers(): MutableList<Int>
     {
@@ -200,6 +200,22 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
     private fun getFinishedParticipants(playerName: String): MutableList<ParticipantEntity>
     {
         return participants!!.filter { pt -> pt.getPlayerName() == playerName && pt.finalScore > -1 }.toMutableList()
+    }
+
+    protected fun prepareRow(name: String, fn: (playerName: String) -> Any?): Array<Any?>
+    {
+        val row = arrayOfNulls<Any>(getRowWidth())
+        row[0] = name
+
+        for (i in playerNamesOrdered.indices)
+        {
+            val playerName = playerNamesOrdered[i]
+            val result = fn(playerName)
+
+            row[i + 1] = result ?: "N/A"
+        }
+
+        return row
     }
 
     protected abstract fun addRowsToTable()

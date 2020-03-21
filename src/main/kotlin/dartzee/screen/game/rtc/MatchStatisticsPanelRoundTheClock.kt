@@ -12,11 +12,5 @@ class MatchStatisticsPanelRoundTheClock(gameParams: String): GameStatisticsPanel
         addRow(getAverageGameRow())
     }
 
-    override fun getRankedRowsLowestWins(): MutableList<String>
-    {
-        val ret = super.getRankedRowsLowestWins()
-        ret.add("Best Game")
-        ret.add("Avg Game")
-        return ret
-    }
+    override fun getRankedRowsLowestWins() = super.getRankedRowsLowestWins() + "Best Game" + "Avg Game"
 }

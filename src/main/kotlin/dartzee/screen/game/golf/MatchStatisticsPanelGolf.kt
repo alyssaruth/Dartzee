@@ -12,11 +12,5 @@ class MatchStatisticsPanelGolf(gameParams: String): GameStatisticsPanelGolf(game
         addRow(getAverageGameRow())
     }
 
-    override fun getRankedRowsLowestWins(): MutableList<String>
-    {
-        val rows = super.getRankedRowsLowestWins()
-        rows.add("Best Game")
-        rows.add("Avg Game")
-        return rows
-    }
+    override fun getRankedRowsLowestWins() = super.getRankedRowsLowestWins() + "Best Game" + "Avg Game"
 }

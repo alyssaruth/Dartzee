@@ -10,6 +10,11 @@ import dartzee.screen.game.scorer.DartsScorerGolf
 
 open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerGolf>>(gameParams)
 {
+    override fun getRankedRowsHighestWins() = listOf("Points Improved")
+    override fun getRankedRowsLowestWins() = listOf("Best Hole", "Avg. Hole", "Worst Hole", "Miss %", "Points Squandered")
+    override fun getHistogramRows() = listOf("1", "2", "3", "4", "5")
+    override fun getStartOfSectionRows() = listOf("Points Squandered", "1", "Best Game")
+
     override fun addRowsToTable()
     {
         addRow(getScoreRow("Best Hole") { it.minOrZero().toDouble() } )
@@ -149,25 +154,5 @@ open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPa
         val rounds = hmPlayerToDarts[playerName]!!
 
         return rounds.map { r -> r.last() }
-    }
-
-    override fun getRankedRowsHighestWins(): MutableList<String>
-    {
-        return mutableListOf("Points Improved")
-    }
-
-    override fun getRankedRowsLowestWins(): MutableList<String>
-    {
-        return mutableListOf("Best Hole", "Avg. Hole", "Worst Hole", "Miss %", "Points Squandered")
-    }
-
-    override fun getHistogramRows(): MutableList<String>
-    {
-        return mutableListOf("1", "2", "3", "4", "5")
-    }
-
-    override fun getStartOfSectionRows(): MutableList<String>
-    {
-        return mutableListOf("Points Squandered", "1", "Best Game")
     }
 }

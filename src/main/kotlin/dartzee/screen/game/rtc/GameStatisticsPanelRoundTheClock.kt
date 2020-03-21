@@ -11,6 +11,11 @@ import dartzee.utils.getLongestStreak
 
 open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>(gameParams)
 {
+    override fun getRankedRowsHighestWins() = listOf("Best Streak", "Brucey chances", "Bruceys executed")
+    override fun getRankedRowsLowestWins() = listOf("Most darts", "Avg. darts", "Fewest darts")
+    override fun getHistogramRows() = listOf("1", "2 - 3", "4 - 6", "6 - 10", "10 - 15", "16 - 20", "21+")
+    override fun getStartOfSectionRows() = listOf("Best Streak", "1", "Best Game")
+
     override fun addRowsToTable()
     {
         addRow(getDartsPerNumber("Most darts", true) { it.maxOrZero() })
@@ -40,7 +45,7 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameSta
             val playerName = playerNamesOrdered[i]
 
             val darts = getFlattenedDarts(playerName)
-            row[i + 1] = getLongestStreak(darts, gameParams!!).size
+            row[i + 1] = getLongestStreak(darts, gameParams).size
         }
 
         return row
@@ -116,25 +121,5 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameSta
         val darts = getFlattenedDarts(playerName)
         val hm = darts.groupBy{d -> "${d.participantId}_${d.startingScore}"}
         return hm.values.toMutableList()
-    }
-
-    override fun getRankedRowsHighestWins(): MutableList<String>
-    {
-        return mutableListOf("Best Streak", "Brucey chances", "Bruceys executed")
-    }
-
-    override fun getRankedRowsLowestWins(): MutableList<String>
-    {
-        return mutableListOf("Most darts", "Avg. darts", "Fewest darts")
-    }
-
-    override fun getHistogramRows(): MutableList<String>
-    {
-        return mutableListOf("1", "2 - 3", "4 - 6", "6 - 10", "10 - 15", "16 - 20", "21+")
-    }
-
-    override fun getStartOfSectionRows(): MutableList<String>
-    {
-        return mutableListOf("Best Streak", "1", "Best Game")
     }
 }
