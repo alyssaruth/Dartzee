@@ -37,89 +37,40 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameSta
         table.setColumnWidths("140")
     }
 
-    private fun getLongestStreak(): Array<Any?>
-    {
-        val row = factoryRow("Best Streak")
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-
-            val darts = getFlattenedDarts(playerName)
-            row[i + 1] = getLongestStreak(darts, gameParams).size
-        }
-
-        return row
+    private fun getLongestStreak() = prepareRow("Best Streak") { playerName ->
+        val darts = getFlattenedDarts(playerName)
+        getLongestStreak(darts, gameParams).size
     }
 
     private fun getAverageDartsForAnyRound(darts: List<Int>): Any
     {
         val oi = darts.average()
-        return if (oi == 0.0)
-        {
-            "N/A"
-        } else MathsUtil.round(oi, 2)
+        return if (oi == 0.0) "N/A" else MathsUtil.round(oi, 2)
 
     }
 
-    private fun getBruceys(desc: String, enforceSuccess: Boolean): Array<Any?>
-    {
-        val row = factoryRow(desc)
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-
-            val rounds = hmPlayerToDarts[playerName]!!
-            var bruceyRounds = rounds.filter { it.size == 4 }
-
-            if (enforceSuccess)
-            {
-                bruceyRounds = bruceyRounds.filter { it.last().hitClockTarget(gameParams) }
-            }
-
-            row[i + 1] = bruceyRounds.size
-        }
-
-        return row
+    private fun getBruceys(desc: String, enforceSuccess: Boolean) = prepareRow(desc) { playerName ->
+        val rounds = hmPlayerToDarts[playerName] ?: listOf()
+        rounds.filter { it.size == 4 }.count { it.last().hitClockTarget(gameParams) || !enforceSuccess }
     }
 
-    private fun getDartsPerNumber(min: Int, max: Int, desc: String = "$min - $max"): Array<Any?>
-    {
-        val row = factoryRow(desc)
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-
-            val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-            row[i + 1] = dartsGrouped.filter { it.size in min..max }.size
-        }
-
-        return row
+    private fun getDartsPerNumber(min: Int, max: Int, desc: String = "$min - $max") = prepareRow(desc) { playerName ->
+        val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
+        dartsGrouped.count { it.size in min..max }
     }
 
-    private fun getDartsPerNumber(desc: String, includeUnfinished: Boolean, fn: (stream: List<Int>) -> Any): Array<Any?>
-    {
-        val row = factoryRow(desc)
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-
-            var dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-            if (!includeUnfinished)
-            {
-                dartsGrouped = dartsGrouped.filter { it.last().hitClockTarget(gameParams) }.toMutableList()
-            }
-
-            val sizes = dartsGrouped.map { it.size }
-            row[i + 1] = fn.invoke(sizes)
-        }
-
-        return row
+    private fun getDartsPerNumber(desc: String,
+                                  includeUnfinished: Boolean,
+                                  fn: (stream: List<Int>) -> Any) = prepareRow(desc) { playerName ->
+        val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
+        val sizes = dartsGrouped.filter { it.last().hitClockTarget(gameParams) || includeUnfinished }.map { it.size }
+        fn(sizes)
     }
 
-    private fun getDartsGroupedByParticipantAndNumber(playerName: String): MutableList<List<Dart>>
+    private fun getDartsGroupedByParticipantAndNumber(playerName: String): List<List<Dart>>
     {
         val darts = getFlattenedDarts(playerName)
         val hm = darts.groupBy{d -> "${d.participantId}_${d.startingScore}"}
-        return hm.values.toMutableList()
+        return hm.values.toList()
     }
 }
