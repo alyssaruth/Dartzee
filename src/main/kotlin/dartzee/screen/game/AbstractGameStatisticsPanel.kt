@@ -159,10 +159,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
     protected fun getFlattenedDarts(playerName: String): List<Dart>
     {
         val rounds = hmPlayerToDarts[playerName]
-
-        rounds ?: return mutableListOf()
-
-        return rounds.flatten()
+        return rounds?.flatten() ?: listOf()
     }
 
     protected fun factoryRow(rowName: String): Array<Any?>

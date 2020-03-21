@@ -129,124 +129,45 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
     }
 
 
-    private fun getThreeDartAvgsRow(): Array<Any?>
-    {
-        val threeDartAvgs = arrayOfNulls<Any>(getRowWidth())
-        threeDartAvgs[0] = "3-dart avg"
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val rounds = hmPlayerToDarts[playerName]
-            val darts = rounds!!.flatten()
+    private fun getThreeDartAvgsRow() = prepareRow("3-dart avg") { playerName ->
+        val darts = getFlattenedDarts(playerName)
 
-            var avg = calculateThreeDartAverage(darts, nfSetupThreshold.getNumber())
-            if (avg < 0)
-            {
-                threeDartAvgs[i + 1] = "N/A"
-            }
-            else
-            {
-                val p1 = (100 * avg).toInt()
-                avg = p1.toDouble() / 100
-
-                threeDartAvgs[i + 1] = avg
-            }
-
-
-        }
-
-        return threeDartAvgs
+        val avg = calculateThreeDartAverage(darts, nfSetupThreshold.getNumber())
+        if (avg < 0) null else MathsUtil.round(avg, 2)
     }
 
-    private fun getCheckoutPercentRow(): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "Checkout %"
+    private fun getCheckoutPercentRow() = prepareRow("Checkout %") { playerName ->
+        val darts = getFlattenedDarts(playerName)
 
-        for (i in playerNamesOrdered.indices)
+        val potentialFinishers = darts.filter { d -> isCheckoutDart(d) }
+        val actualFinishes = potentialFinishers.filter { d -> d.isDouble() && d.getTotal() == d.startingScore }
+
+        if (actualFinishes.isEmpty())
         {
-            val playerName = playerNamesOrdered[i]
-            val darts = getFlattenedDarts(playerName)
-
-            val potentialFinishers = darts.filter { d -> isCheckoutDart(d) }
-            val actualFinishes = potentialFinishers.filter { d -> d.isDouble() && d.getTotal() == d.startingScore }
-
-            if (actualFinishes.isEmpty())
-            {
-                row[i + 1] = "N/A"
-            }
-            else
-            {
-                val p1 = 10000 * actualFinishes.size / potentialFinishers.size
-                val percent = p1.toDouble() / 100
-
-                row[i + 1] = percent
-            }
+            null
         }
-
-        return row
+        else
+        {
+            MathsUtil.round(actualFinishes.size.toDouble() / potentialFinishers.size, 2)
+        }
     }
 
-    private fun getScoresBetween(min: Int, max: Int, desc: String): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = desc
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val rounds = getScoringRounds(playerName)
-
-            val bigRounds = rounds.filter { r -> sumScore(r) in min until max }
-
-            row[i + 1] = bigRounds.size
-        }
-
-        return row
+    private fun getScoresBetween(min: Int, max: Int, desc: String) = prepareRow(desc) { playerName ->
+        val rounds = getScoringRounds(playerName)
+        val roundsInRange = rounds.filter { r -> sumScore(r) in min until max }
+        roundsInRange.size
     }
 
-    private fun getScoreRow(desc: String, f: (i: List<Int>) -> Int): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = desc
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val rounds = getScoringRounds(playerName)
-
-            if (rounds.isNotEmpty())
-            {
-                val roundsAsTotal = rounds.map { rnd -> sumScore(rnd) }
-                row[i + 1] = f.invoke(roundsAsTotal)
-            }
-            else
-            {
-                row[i + 1] = "N/A"
-            }
-        }
-
-        return row
+    private fun getScoreRow(desc: String, f: (i: List<Int>) -> Int) = prepareRow(desc) { playerName ->
+        val rounds = getScoringRounds(playerName)
+        val roundsAsTotal = rounds.map { rnd -> sumScore(rnd) }
+        if (roundsAsTotal.isEmpty()) null else f(roundsAsTotal)
     }
 
-    private fun getMultiplePercent(desc: String, multiplier: Int): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = desc
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val scoringDarts = getScoringDarts(playerName)
-            val hits = scoringDarts.filter { d -> d.multiplier == multiplier }
-
-            var percent = 100 * hits.size.toDouble() / scoringDarts.size
-            percent = MathsUtil.round(percent, 2)
-
-            row[i + 1] = percent
-        }
-
-        return row
+    private fun getMultiplePercent(desc: String, multiplier: Int) = prepareRow(desc) { playerName ->
+        val scoringDarts = getScoringDarts(playerName)
+        val hits = scoringDarts.filter { d -> d.multiplier == multiplier }
+        MathsUtil.round(hits.size.toDouble() / scoringDarts.size, 2)
     }
 
     private fun getScoringRounds(playerName: String): List<List<Dart>>
