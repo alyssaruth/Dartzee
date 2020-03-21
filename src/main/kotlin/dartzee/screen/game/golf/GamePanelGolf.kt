@@ -13,7 +13,6 @@ import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
-import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerGolf
 
 open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
@@ -116,5 +115,5 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
         dartboard.doGolfMiss()
     }
 
-    override fun factoryStatsPanel() = GameStatisticsPanelGolf()
+    override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelGolf(gameParams)
 }

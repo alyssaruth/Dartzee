@@ -1,6 +1,3 @@
 package dartzee.screen.game.dartzee
 
-class MatchStatisticsPanelDartzee: GameStatisticsPanelDartzee()
-{
-
-}
+class MatchStatisticsPanelDartzee(gameParams: String): GameStatisticsPanelDartzee(gameParams)

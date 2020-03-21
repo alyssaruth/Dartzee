@@ -37,7 +37,6 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<*>>(val match: DartsMat
 
     fun init(playersInStartingOrder: List<PlayerEntity>)
     {
-        statsPanel.gameParams = match.gameParams
         panelCenter.add(statsPanel, BorderLayout.CENTER)
         panelCenter.add(refreshPanel, BorderLayout.SOUTH)
 

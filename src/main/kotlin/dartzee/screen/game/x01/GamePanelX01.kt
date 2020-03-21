@@ -12,7 +12,6 @@ import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
-import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 
@@ -232,7 +231,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
         return DartsScorerX01(this)
     }
 
-    override fun factoryStatsPanel() = GameStatisticsPanelX01()
+    override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 
     override fun shouldAnimateMiss(dart: Dart): Boolean
     {

@@ -1,9 +1,8 @@
 package dartzee.screen.game.golf
 
 import dartzee.core.util.minOrZero
-import dartzee.screen.game.golf.GameStatisticsPanelGolf
 
-class MatchStatisticsPanelGolf : GameStatisticsPanelGolf()
+class MatchStatisticsPanelGolf(gameParams: String): GameStatisticsPanelGolf(gameParams)
 {
     override fun addRowsToTable()
     {

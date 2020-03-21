@@ -59,7 +59,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
      * Screen stuff
      */
     val dartboard = factoryDartboard()
-    protected val statsPanel: AbstractGameStatisticsPanel<PlayerState>? = factoryStatsPanel()
+    protected val statsPanel: AbstractGameStatisticsPanel<PlayerState>? = factoryStatsPanel(gameEntity.gameParams)
 
     private val panelSouth = JPanel()
     protected val slider = SliderAiSpeed(true)
@@ -182,7 +182,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
     abstract fun saveDartsAndProceed()
-    abstract fun factoryStatsPanel(): AbstractGameStatisticsPanel<PlayerState>?
+    abstract fun factoryStatsPanel(gameParams: String): AbstractGameStatisticsPanel<PlayerState>?
     abstract fun factoryDartboard(): D
 
     /**
@@ -258,11 +258,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         val gameNo = gameEntity.localId
         val gameDesc = gameEntity.getTypeDesc()
         gameTitle = "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
-
-        if (statsPanel != null)
-        {
-            statsPanel.gameParams = gameEntity.gameParams
-        }
 
         initScorers(totalPlayers)
     }

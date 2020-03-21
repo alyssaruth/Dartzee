@@ -4,7 +4,7 @@ import dartzee.core.util.minOrZero
 import dartzee.utils.isFinishRound
 import dartzee.utils.sumScore
 
-class MatchStatisticsPanelX01 : GameStatisticsPanelX01()
+class MatchStatisticsPanelX01(gameParams: String): GameStatisticsPanelX01(gameParams)
 {
     override fun addRowsToTable()
     {

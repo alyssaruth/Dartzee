@@ -8,7 +8,7 @@ import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GameStatisticsPanelGolf : AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerGolf>>()
+open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerGolf>>(gameParams)
 {
     override fun addRowsToTable()
     {

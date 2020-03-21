@@ -9,7 +9,7 @@ import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 import dartzee.utils.getLongestStreak
 
-open class GameStatisticsPanelRoundTheClock : AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>()
+open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>(gameParams)
 {
     override fun addRowsToTable()
     {

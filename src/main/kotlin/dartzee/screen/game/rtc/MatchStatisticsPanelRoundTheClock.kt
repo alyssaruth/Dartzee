@@ -1,9 +1,8 @@
 package dartzee.screen.game.rtc
 
 import dartzee.core.util.minOrZero
-import dartzee.screen.game.rtc.GameStatisticsPanelRoundTheClock
 
-class MatchStatisticsPanelRoundTheClock : GameStatisticsPanelRoundTheClock()
+class MatchStatisticsPanelRoundTheClock(gameParams: String): GameStatisticsPanelRoundTheClock(gameParams)
 {
     override fun addRowsToTable()
     {

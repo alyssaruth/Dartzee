@@ -11,7 +11,6 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
-import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
 open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game)
@@ -49,7 +48,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         var currentStreak = 0
 
         val dartsLatestFirst = hmRoundToDarts.getFlattenedValuesSortedByKey().reversed()
-        Debug.append("" + dartsLatestFirst)
         for (drt in dartsLatestFirst)
         {
             if (!drt.hitClockTarget(clockType)) { break }
@@ -187,6 +185,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun factoryScorer() = DartsScorerRoundTheClock(this)
 
-    override fun factoryStatsPanel() = GameStatisticsPanelRoundTheClock()
+    override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelRoundTheClock(gameParams)
 
 }
