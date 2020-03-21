@@ -15,7 +15,7 @@ sealed class AbstractPlayerState<S: DartsScorer>
 
     fun addDarts(darts: List<Dart>)
     {
-        this.darts.add(darts)
+        this.darts.add(darts.toList())
     }
 }
 

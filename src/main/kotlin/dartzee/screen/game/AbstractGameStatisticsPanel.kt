@@ -23,8 +23,7 @@ import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 
 /**
- * Shows statistics for each player in a particular game.
- * Runs ad-hoc SQL to get the stats, because the full detail isn't readily available in memory (and would be messy to maintain)
+ * Shows statistics for each player in a particular game, based on the PlayerStates
  */
 abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(protected val gameParams: String) : JPanel()
 {
