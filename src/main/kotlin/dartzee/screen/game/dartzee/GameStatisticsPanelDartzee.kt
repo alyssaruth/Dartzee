@@ -16,21 +16,10 @@ open class GameStatisticsPanelDartzee(gameParams: String): AbstractGameStatistic
         addRow(getScoreRow("Lowest Score") { it.minOrZero() })
     }
 
-    override fun getRankedRowsHighestWins(): List<String> {
-        return mutableListOf("Highest Score", "Avg Score", "Lowest Score")
-    }
-
-    override fun getRankedRowsLowestWins(): List<String> {
-        return mutableListOf()
-    }
-
-    override fun getHistogramRows(): List<String> {
-        return mutableListOf()
-    }
-
-    override fun getStartOfSectionRows(): List<String> {
-        return mutableListOf()
-    }
+    override fun getRankedRowsHighestWins() = listOf("Highest Score", "Avg Score", "Lowest Score")
+    override fun getRankedRowsLowestWins() = emptyList<String>()
+    override fun getHistogramRows() = emptyList<String>()
+    override fun getStartOfSectionRows() = emptyList<String>()
 
     private fun getScoreRow(desc: String, f: (i: List<Int>) -> Number): Array<Any?>
     {

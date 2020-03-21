@@ -12,15 +12,6 @@ class MatchStatisticsPanelDartzee(gameParams: String): GameStatisticsPanelDartze
         addRow(getAverageGameRow())
     }
 
-    override fun getStartOfSectionRows(): List<String>
-    {
-        val list = super.getStartOfSectionRows()
-        return list + "Best Game"
-    }
-
-    override fun getRankedRowsHighestWins(): List<String>
-    {
-        val rows = super.getRankedRowsHighestWins()
-        return rows + "Best Game" + "Avg Game"
-    }
+    override fun getStartOfSectionRows() = super.getStartOfSectionRows() + "Best Game"
+    override fun getRankedRowsHighestWins() = super.getRankedRowsHighestWins() + "Best Game" + "Avg Game"
 }
