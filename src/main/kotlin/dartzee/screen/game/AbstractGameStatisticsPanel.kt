@@ -27,7 +27,7 @@ import javax.swing.text.StyleConstants
  */
 abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(protected val gameParams: String) : JPanel()
 {
-    protected var playerNamesOrdered = mutableListOf<String>()
+    protected val playerNamesOrdered = mutableListOf<String>()
     protected var participants: List<ParticipantEntity>? = null
     protected val hmPlayerToDarts = mutableMapOf<String, List<List<Dart>>>()
     protected val hmPlayerToStates = mutableMapOf<String, List<PlayerState>>()

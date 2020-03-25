@@ -61,7 +61,7 @@ inline fun <T> Iterable<T>.allIndexed(predicate: (index: Int, T) -> Boolean): Bo
     return true
 }
 
-fun <T> Iterable<T>.getLongestStreak(isHit: (item: T) -> Boolean): List<T>
+fun <T> List<T>.getLongestStreak(isHit: (item: T) -> Boolean): List<T>
 {
     var biggestChain = mutableListOf<T>()
     var currentChain = mutableListOf<T>()
