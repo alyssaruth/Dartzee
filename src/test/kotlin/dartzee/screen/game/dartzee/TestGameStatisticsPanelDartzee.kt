@@ -7,6 +7,7 @@ import dartzee.helper.makeDartzeePlayerState
 import dartzee.helper.makeDartzeeScorer
 import dartzee.helper.makeRoundResultEntities
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
+import dartzee.screen.game.getValueForRow
 import io.kotlintest.shouldBe
 import org.junit.Test
 

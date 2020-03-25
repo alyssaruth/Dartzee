@@ -22,22 +22,22 @@ abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState<
 
         categorisedRows.shouldContainExactlyInAnyOrder(rowNames)
     }
+}
 
-    private fun AbstractGameStatisticsPanel<*>.getAllRowNames(): List<String>
+private fun AbstractGameStatisticsPanel<*>.getAllRowNames(): List<String>
+{
+    val rows = 0 until tm.rowCount
+    return rows.map { tm.getValueAt(it, 0) as String }
+}
+
+fun AbstractGameStatisticsPanel<*>.getValueForRow(rowName: String, column: Int = 1): Any?
+{
+    val rowIndex = getAllRowNames().indexOf(rowName)
+    if (rowIndex > -1)
     {
-        val rows = 0 until tm.rowCount
-        return rows.map { tm.getValueAt(it, 0) as String }
+        return tm.getValueAt(rowIndex, column)
     }
 
-    fun AbstractGameStatisticsPanel<*>.getValueForRow(rowName: String): Any?
-    {
-        val rowIndex = getAllRowNames().indexOf(rowName)
-        if (rowIndex > -1)
-        {
-            return tm.getValueAt(rowIndex, 1)
-        }
-
-        Debug.stackTrace("No row called $rowName")
-        return null
-    }
+    Debug.stackTrace("No row called $rowName")
+    return null
 }
