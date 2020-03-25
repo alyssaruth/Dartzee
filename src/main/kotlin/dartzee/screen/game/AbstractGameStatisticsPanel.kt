@@ -32,13 +32,13 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
     protected val hmPlayerToDarts = mutableMapOf<String, List<List<Dart>>>()
     protected val hmPlayerToStates = mutableMapOf<String, List<PlayerState>>()
 
-    private var tm = DefaultTableModel()
+    var tm = DefaultTableModel()
 
     protected val table = ScrollTable()
 
-    protected abstract fun getRankedRowsHighestWins(): List<String>
-    protected abstract fun getRankedRowsLowestWins(): List<String>
-    protected abstract fun getHistogramRows(): List<String>
+    abstract fun getRankedRowsHighestWins(): List<String>
+    abstract fun getRankedRowsLowestWins(): List<String>
+    abstract fun getHistogramRows(): List<String>
     protected abstract fun getStartOfSectionRows(): List<String>
 
     private fun getHistogramRowNumbers(): MutableList<Int>

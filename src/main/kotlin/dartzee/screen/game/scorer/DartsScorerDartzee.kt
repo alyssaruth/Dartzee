@@ -54,7 +54,8 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
 
     override fun mouseReleased(e: MouseEvent?)
     {
-        if (parent.gameEntity.isFinished()) {
+        if (parent.gameEntity.isFinished())
+        {
             parent.scorerSelected(this)
         }
     }
