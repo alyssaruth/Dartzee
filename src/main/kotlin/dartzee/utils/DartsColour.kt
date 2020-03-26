@@ -28,6 +28,11 @@ object DartsColour
 
     val COLOUR_PASTEL_BLUE: Color = Color.getHSBColor(242.toFloat() / 360, 0.48.toFloat(), 0.8.toFloat())
 
+    val FIRST_COLOURS = Pair(Color.YELLOW, COLOUR_GOLD_TEXT)
+    val SECOND_COLOURS = Pair(Color.GRAY, COLOUR_SILVER_TEXT)
+    val THIRD_COLOURS = Pair(COLOUR_BRONZE, COLOUR_BRONZE_TEXT)
+    val FOURTH_COLOURS = Pair(Color.BLACK, COLOUR_BRONZE)
+
     fun getDarkenedColour(colour: Color): Color = colour.darker().darker()
 
     fun getBrightenedColour(colour: Color): Color

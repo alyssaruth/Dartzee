@@ -34,7 +34,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
 
     var tm = DefaultTableModel()
 
-    protected val table = ScrollTable()
+    val table = ScrollTable()
 
     abstract fun getRankedRowsHighestWins(): List<String>
     abstract fun getRankedRowsLowestWins(): List<String>
