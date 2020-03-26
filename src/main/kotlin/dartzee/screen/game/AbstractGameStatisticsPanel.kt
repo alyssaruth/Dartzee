@@ -28,7 +28,7 @@ import javax.swing.text.StyleConstants
 abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(protected val gameParams: String) : JPanel()
 {
     protected val playerNamesOrdered = mutableListOf<String>()
-    protected var participants: List<ParticipantEntity>? = null
+    protected var participants: List<ParticipantEntity> = emptyList()
     protected val hmPlayerToDarts = mutableMapOf<String, List<List<Dart>>>()
     protected val hmPlayerToStates = mutableMapOf<String, List<PlayerState>>()
 
@@ -126,7 +126,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         tm = DefaultTableModel()
         tm.addColumn("")
 
-        for (pt in participants!!)
+        for (pt in participants)
         {
             val playerName = pt.getPlayerName()
             playerNamesOrdered.addUnique(playerName)
@@ -168,34 +168,15 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         return row
     }
 
-    protected fun getBestGameRow(fn: (s: List<Int>) -> Int): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "Best Game"
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val playerPts = getFinishedParticipants(playerName)
-
-            if (playerPts.isEmpty())
-            {
-                row[i + 1] = "N/A"
-            }
-            else
-            {
-                val scores = playerPts.map { pt -> pt.finalScore }
-                row[i + 1] = fn.invoke(scores)
-            }
-
-        }
-
-        return row
+    protected fun getBestGameRow(fn: (s: List<Int>) -> Int) = prepareRow("Best Game") { playerName ->
+        val playerPts = getFinishedParticipants(playerName)
+        val scores = playerPts.map { it.finalScore }
+        if (scores.isEmpty()) null else fn(scores)
     }
 
     private fun getFinishedParticipants(playerName: String): MutableList<ParticipantEntity>
     {
-        return participants!!.filter { pt -> pt.getPlayerName() == playerName && pt.finalScore > -1 }.toMutableList()
+        return participants.filter { pt -> pt.getPlayerName() == playerName && pt.finalScore > -1 }.toMutableList()
     }
 
     protected fun prepareRow(name: String, fn: (playerName: String) -> Any?): Array<Any?>
