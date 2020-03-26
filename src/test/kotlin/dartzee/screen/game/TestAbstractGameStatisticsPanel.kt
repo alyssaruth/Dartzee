@@ -1,5 +1,6 @@
 package dartzee.screen.game
 
+import dartzee.core.util.maxOrZero
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -38,7 +39,36 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
         panel.getValueForRow("Darts Thrown", 2) shouldBe 3
     }
 
+    @Test
+    fun `Should clear down previous stats`()
+    {
+        val clive = insertPlayer(name = "Clive")
+        val cliveState1 = makeDefaultPlayerState(clive, dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
 
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(cliveState1))
+
+        val cliveState2 = makeDefaultPlayerState(clive, dartsThrown = listOf(makeDart()))
+        panel.showStats(listOf(cliveState2))
+
+        panel.getValueForRow("Darts Thrown", 1) shouldBe 1
+    }
+
+
+    @Test
+    fun `Should show nothing if there is insufficient data`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+
+        val aliceState = makeDefaultPlayerState(alice, dartsThrown = listOf(makeDart()))
+        val bobState = makeDefaultPlayerState(bob, dartsThrown = listOf())
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(aliceState, bobState))
+
+        panel.tm.rowCount shouldBe 0
+    }
 }
 
 class TestAbstractGameStatisticsPanelRenderers: AbstractTest()
@@ -123,7 +153,7 @@ class TestAbstractGameStatisticsPanelRenderers: AbstractTest()
     }
 
     @Test
-    fun `Should additionally set bottom borders if row is bottom of section`()
+    fun `Should additionally set bottom borders for the last row`()
     {
         val state1 = makeDefaultPlayerState(insertPlayer(name = "Alice"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
         val state2 = makeDefaultPlayerState(insertPlayer(name = "Bob"), dartsThrown = listOf(makeDart()))
@@ -131,9 +161,9 @@ class TestAbstractGameStatisticsPanelRenderers: AbstractTest()
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(state1, state2))
 
-        panel.getCellComponent(2, 0).shouldHaveBorderThickness(2, 1, 0, 2)
-        panel.getCellComponent(2, 1).shouldHaveBorderThickness(1, 1, 0, 2)
-        panel.getCellComponent(2, 2).shouldHaveBorderThickness(1, 2, 0, 2)
+        panel.getCellComponent(4, 0).shouldHaveBorderThickness(2, 1, 0, 2)
+        panel.getCellComponent(4, 1).shouldHaveBorderThickness(1, 1, 0, 2)
+        panel.getCellComponent(4, 2).shouldHaveBorderThickness(1, 2, 0, 2)
     }
 
     @Test
@@ -200,6 +230,8 @@ private class FakeGameStatisticsPanel(private val highestWins: List<String> = em
         addRow(getDartsThrownRow())
         addRow(getTwentiesRow())
         addRow(getOtherDartsRow())
+        addRow(getBestGameRow() { it.maxOrZero() })
+        addRow(getAverageGameRow())
     }
 
     private fun getDartsThrownRow() = prepareRow("Darts Thrown") { playerName ->
