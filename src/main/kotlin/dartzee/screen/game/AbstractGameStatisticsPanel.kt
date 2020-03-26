@@ -98,29 +98,6 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
 
     protected fun getRowWidth() = playerNamesOrdered.size + 1
 
-    protected fun getAverageGameRow(): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "Avg Game"
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-
-            val playerPts = getFinishedParticipants(playerName)
-            if (playerPts.isEmpty())
-            {
-                row[i + 1] = "N/A"
-            } else
-            {
-                val avg = playerPts.map { pt -> pt.finalScore }.average()
-                row[i + 1] = MathsUtil.round(avg, 2)
-            }
-        }
-
-        return row
-    }
-
     protected fun buildTableModel()
     {
         tm = DefaultTableModel()
@@ -173,11 +150,13 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         val scores = playerPts.map { it.finalScore }
         if (scores.isEmpty()) null else fn(scores)
     }
-
-    private fun getFinishedParticipants(playerName: String): MutableList<ParticipantEntity>
-    {
-        return participants.filter { pt -> pt.getPlayerName() == playerName && pt.finalScore > -1 }.toMutableList()
+    protected fun getAverageGameRow() = prepareRow("Avg Game") { playerName ->
+        val playerPts = getFinishedParticipants(playerName)
+        val scores = playerPts.map { it.finalScore }
+        if (scores.isEmpty()) null else MathsUtil.round(scores.average(), 2)
     }
+
+    private fun getFinishedParticipants(playerName: String) = participants.filter { it.getPlayerName() == playerName && it.finalScore > -1 }
 
     protected fun prepareRow(name: String, fn: (playerName: String) -> Any?): Array<Any?>
     {
