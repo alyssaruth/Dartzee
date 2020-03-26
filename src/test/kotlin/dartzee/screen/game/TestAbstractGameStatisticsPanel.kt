@@ -99,17 +99,13 @@ class TestAbstractGameStatisticsPanelRenderers: AbstractTest()
     {
         val state1 = makeDefaultPlayerState(insertPlayer(name = "Alice"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
         val state2 = makeDefaultPlayerState(insertPlayer(name = "Bob"), dartsThrown = listOf(makeDart()))
-        val state3 = makeDefaultPlayerState(insertPlayer(name = "Clive"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
-        val state4 = makeDefaultPlayerState(insertPlayer(name = "Derek"), dartsThrown = listOf(makeDart(), makeDart(), makeDart(), makeDart()))
 
         val panel = FakeGameStatisticsPanel()
-        panel.showStats(listOf(state1, state2, state3, state4))
+        panel.showStats(listOf(state1, state2))
 
-        panel.getCellComponent(0, 0).shouldHaveBorderThickness(2, 1, 0, 2)
-        panel.getCellComponent(0, 1).shouldHaveBorderThickness(1, 1, 0, 2)
-        panel.getCellComponent(0, 2).shouldHaveBorderThickness(1, 1, 0, 2)
-        panel.getCellComponent(0, 3).shouldHaveBorderThickness(1, 1, 0, 2)
-        panel.getCellComponent(0, 4).shouldHaveBorderThickness(1, 2, 0, 2)
+        panel.getCellComponent(0, 0).shouldHaveBorderThickness(2, 1, 0, 0)
+        panel.getCellComponent(0, 1).shouldHaveBorderThickness(1, 1, 0, 0)
+        panel.getCellComponent(0, 2).shouldHaveBorderThickness(1, 2, 0, 0)
     }
 
     @Test
@@ -117,17 +113,27 @@ class TestAbstractGameStatisticsPanelRenderers: AbstractTest()
     {
         val state1 = makeDefaultPlayerState(insertPlayer(name = "Alice"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
         val state2 = makeDefaultPlayerState(insertPlayer(name = "Bob"), dartsThrown = listOf(makeDart()))
-        val state3 = makeDefaultPlayerState(insertPlayer(name = "Clive"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
-        val state4 = makeDefaultPlayerState(insertPlayer(name = "Derek"), dartsThrown = listOf(makeDart(), makeDart(), makeDart(), makeDart()))
 
         val panel = FakeGameStatisticsPanel(sectionStarts = listOf("20s"))
-        panel.showStats(listOf(state1, state2, state3, state4))
+        panel.showStats(listOf(state1, state2))
 
-        panel.getCellComponent(1, 0).shouldHaveBorderThickness(2, 1, 2, 2)
-        panel.getCellComponent(1, 1).shouldHaveBorderThickness(1, 1, 2, 2)
-        panel.getCellComponent(1, 2).shouldHaveBorderThickness(1, 1, 2, 2)
-        panel.getCellComponent(1, 3).shouldHaveBorderThickness(1, 1, 2, 2)
-        panel.getCellComponent(1, 4).shouldHaveBorderThickness(1, 2, 2, 2)
+        panel.getCellComponent(1, 0).shouldHaveBorderThickness(2, 1, 2, 0)
+        panel.getCellComponent(1, 1).shouldHaveBorderThickness(1, 1, 2, 0)
+        panel.getCellComponent(1, 2).shouldHaveBorderThickness(1, 2, 2, 0)
+    }
+
+    @Test
+    fun `Should additionally set bottom borders if row is bottom of section`()
+    {
+        val state1 = makeDefaultPlayerState(insertPlayer(name = "Alice"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
+        val state2 = makeDefaultPlayerState(insertPlayer(name = "Bob"), dartsThrown = listOf(makeDart()))
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(state1, state2))
+
+        panel.getCellComponent(2, 0).shouldHaveBorderThickness(2, 1, 0, 2)
+        panel.getCellComponent(2, 1).shouldHaveBorderThickness(1, 1, 0, 2)
+        panel.getCellComponent(2, 2).shouldHaveBorderThickness(1, 2, 0, 2)
     }
 
     @Test
