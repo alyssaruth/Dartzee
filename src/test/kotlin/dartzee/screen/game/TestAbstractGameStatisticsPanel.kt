@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import arrow.core.left
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -12,7 +11,6 @@ import org.junit.Test
 import java.awt.Color
 import java.awt.Component
 import javax.swing.JComponent
-import javax.swing.border.MatteBorder
 
 
 class TestAbstractGameStatisticsPanel: AbstractTest()
