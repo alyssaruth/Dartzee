@@ -2,12 +2,10 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
-import dartzee.core.util.Debug
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.addUnique
 import dartzee.db.ParticipantEntity
 import dartzee.game.state.AbstractPlayerState
-import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
@@ -15,10 +13,8 @@ import java.awt.Font
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.border.MatteBorder
-import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableModel
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 
@@ -40,22 +36,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
     abstract fun getRankedRowsLowestWins(): List<String>
     abstract fun getHistogramRows(): List<String>
     protected abstract fun getStartOfSectionRows(): List<String>
-
-    private fun getHistogramRowNumbers(): MutableList<Int>
-    {
-        val ret = mutableListOf<Int>()
-        for (i in 0 until table.rowCount)
-        {
-            val columnName = table.getValueAt(i, 0)
-            if (getHistogramRows().contains(columnName))
-            {
-                ret.add(i)
-            }
-        }
-
-        return ret
-    }
-
+    protected abstract fun addRowsToTable()
 
     init
     {
@@ -96,8 +77,6 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         return playerNames.all { p -> getFlattenedDarts(p).isNotEmpty() }
     }
 
-    protected fun getRowWidth() = playerNamesOrdered.size + 1
-
     protected fun buildTableModel()
     {
         tm = DefaultTableModel()
@@ -120,12 +99,15 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         addRowsToTable()
 
         //Rendering
-        for (i in 0 until getRowWidth())
+        for (i in 0 until tm.columnCount)
         {
-            table.getColumn(i).cellRenderer = ScorerRenderer()
+            table.getColumn(i).cellRenderer = factoryStatsCellRenderer()
             table.getColumn(i).headerRenderer = HeaderRenderer()
         }
     }
+
+    private fun factoryStatsCellRenderer() =
+        GameStatisticsCellRenderer(getStartOfSectionRows(), getRankedRowsHighestWins(), getRankedRowsLowestWins(), getHistogramRows())
 
     protected fun addRow(row: Array<Any?>)
     {
@@ -140,7 +122,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
 
     protected fun factoryRow(rowName: String): Array<Any?>
     {
-        val row = arrayOfNulls<Any>(getRowWidth())
+        val row = arrayOfNulls<Any>(tm.columnCount)
         row[0] = rowName
         return row
     }
@@ -160,8 +142,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
 
     protected fun prepareRow(name: String, fn: (playerName: String) -> Any?): Array<Any?>
     {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = name
+        val row = factoryRow(name)
 
         for (i in playerNamesOrdered.indices)
         {
@@ -173,8 +154,6 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
 
         return row
     }
-
-    protected abstract fun addRowsToTable()
 
     private inner class HeaderRenderer : JTextPane(), TableCellRenderer
     {
@@ -209,137 +188,9 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         {
             val top = if (column == 0) 0 else 2
             val left = if (column == 0) 0 else 1
-            val right = if (column == getRowWidth() - 1) 2 else 1
+            val right = if (column == tm.columnCount - 1) 2 else 1
 
             return MatteBorder(top, left, 2, right, Color.BLACK)
-        }
-    }
-
-    private inner class ScorerRenderer : DefaultTableCellRenderer()
-    {
-        override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-        {
-            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-            horizontalAlignment = SwingConstants.CENTER
-
-            if (column == 0)
-            {
-                font = Font("Trebuchet MS", Font.BOLD, 15)
-            }
-            else
-            {
-                font = Font("Trebuchet MS", Font.PLAIN, 15)
-            }
-
-            setColours(table, row, column)
-            border = getBorder(table!!, row, column)
-
-            return this
-        }
-
-        private fun getBorder(table: JTable, row: Int, column: Int): MatteBorder
-        {
-            val left = if (column == 0) 2 else 1
-            val right = if (column == getRowWidth() - 1) 2 else 1
-
-
-            val bottom = if (row == table.rowCount - 1) 2 else 0
-
-            val startOfSectionRow = getStartOfSectionRows().contains(table.getValueAt(row, 0))
-            val top = if (startOfSectionRow) 2 else 0
-
-            return MatteBorder(top, left, bottom, right, Color.BLACK)
-        }
-
-        private fun setColours(table: JTable?, row: Int, column: Int)
-        {
-            if (column == 0)
-            {
-                //Do nothing
-                foreground = null
-                background = Color.WHITE
-                return
-            }
-
-            val tm = table!!.model
-
-            val rowName = table.getValueAt(row, 0)
-            if (getRankedRowsHighestWins().contains(rowName))
-            {
-                val pos = getPositionForColour(tm, row, column, true)
-                DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
-            }
-            else if (getRankedRowsLowestWins().contains(rowName))
-            {
-                val pos = getPositionForColour(tm, row, column, false)
-                DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
-            }
-            else if (getHistogramRows().contains(rowName))
-            {
-                val sum = getHistogramSum(tm, column)
-
-                val thisValue = getDoubleAt(tm, row, column)
-                val percent = if (sum == 0L) 0f else thisValue.toFloat() / sum
-
-                val bg = Color.getHSBColor(0.5.toFloat(), percent, 1f)
-
-                foreground = null
-                background = bg
-            }
-            else
-            {
-                foreground = null
-                background = Color.WHITE
-            }
-        }
-
-        private fun getDoubleAt(tm: TableModel, row: Int, col: Int): Double
-        {
-            val thisValue = tm.getValueAt(row, col)
-
-            if (thisValue == null)
-            {
-                Debug.append("ROW: $row, COL: $col")
-                return -1.0
-            }
-
-            return (thisValue as Number).toDouble()
-        }
-
-        private fun getPositionForColour(tm: TableModel, row: Int, col: Int, highestWins: Boolean): Int
-        {
-            if (tm.getValueAt(row, col) is String || playerNamesOrdered.size == 1)
-            {
-                return -1
-            }
-
-            val myScore = getDoubleAt(tm, row, col)
-
-            var myPosition = 1
-            for (i in 1 until tm.columnCount)
-            {
-                if (i == col || tm.getValueAt(row, i) is String)
-                {
-                    continue
-                }
-
-                val theirScore = getDoubleAt(tm, row, i)
-
-                //Compare positivity to the boolean
-                val result = java.lang.Double.compare(theirScore, myScore)
-                if (result > 0 == highestWins && result != 0)
-                {
-                    myPosition++
-                }
-            }
-
-            return myPosition
-        }
-
-        private fun getHistogramSum(tm: TableModel, col: Int): Long
-        {
-            return getHistogramRowNumbers().map { row -> (tm.getValueAt(row, col) as Number).toLong() }
-                    .sum()
         }
     }
 }

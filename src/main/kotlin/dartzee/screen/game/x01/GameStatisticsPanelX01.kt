@@ -73,15 +73,13 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
 
     private fun addTopDartsRows()
     {
-        val topDarts = arrayOfNulls<Any>(getRowWidth())
-        val secondDarts = arrayOfNulls<Any>(getRowWidth())
-        val thirdDarts = arrayOfNulls<Any>(getRowWidth())
-        val fourthDarts = arrayOfNulls<Any>(getRowWidth())
-        val fifthDarts = arrayOfNulls<Any>(getRowWidth())
-        val remainingDarts = arrayOfNulls<Any>(getRowWidth())
+        val topDarts = factoryRow("Top Darts")
+        val secondDarts = factoryRow("")
+        val thirdDarts = factoryRow("")
+        val fourthDarts = factoryRow("")
+        val fifthDarts = factoryRow("")
+        val remainingDarts = factoryRow("Remainder")
 
-        topDarts[0] = "Top Darts"
-        remainingDarts[0] = "Remainder"
         for (i in playerNamesOrdered.indices)
         {
             val playerName = playerNamesOrdered[i]

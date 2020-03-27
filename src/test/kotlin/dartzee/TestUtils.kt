@@ -4,9 +4,11 @@ import dartzee.`object`.*
 import dartzee.core.helper.makeMouseEvent
 import dartzee.screen.Dartboard
 import io.kotlintest.matchers.doubles.shouldBeBetween
+import io.kotlintest.shouldBe
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
+import javax.swing.JComponent
 import javax.swing.SwingUtilities
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
@@ -67,4 +69,19 @@ fun Component.doClick(x: Int = 0, y: Int = 0) {
 
 fun Float.shouldBeBetween(a: Double, b: Double) {
     return toDouble().shouldBeBetween(a, b, 0.0)
+}
+
+fun Component.shouldHaveColours(colours: Pair<Color?, Color?>)
+{
+    background shouldBe colours.first
+    foreground shouldBe colours.second
+}
+
+fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom: Int)
+{
+    val insets = border.getBorderInsets(this)
+    insets.left shouldBe left
+    insets.right shouldBe right
+    insets.top shouldBe top
+    insets.bottom shouldBe bottom
 }
