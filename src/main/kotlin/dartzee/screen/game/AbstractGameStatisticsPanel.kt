@@ -8,15 +8,10 @@ import dartzee.db.ParticipantEntity
 import dartzee.game.state.AbstractPlayerState
 import java.awt.BorderLayout
 import java.awt.Color
-import java.awt.Component
-import java.awt.Font
-import javax.swing.*
+import javax.swing.JPanel
+import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
-import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableCellRenderer
-import javax.swing.text.SimpleAttributeSet
-import javax.swing.text.StyleConstants
 
 /**
  * Shows statistics for each player in a particular game, based on the PlayerStates
@@ -102,7 +97,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         for (i in 0 until tm.columnCount)
         {
             table.getColumn(i).cellRenderer = factoryStatsCellRenderer()
-            table.getColumn(i).headerRenderer = HeaderRenderer()
+            table.getColumn(i).headerRenderer = GameStatisticsHeaderRenderer()
         }
     }
 
@@ -153,44 +148,5 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>(
         }
 
         return row
-    }
-
-    private inner class HeaderRenderer : JTextPane(), TableCellRenderer
-    {
-        init
-        {
-            val doc = this.styledDocument
-            val center = SimpleAttributeSet()
-            StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER)
-            doc.setParagraphAttributes(0, doc.length, center, false)
-        }
-
-        override fun getTableCellRendererComponent(table: JTable,
-                                                   value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int,
-                                                   column: Int): Component
-        {
-            text = value as String
-            font = Font("Trebuchet MS", Font.BOLD, 15)
-            border = getBorder(column)
-
-            setSize(table.columnModel.getColumn(column).width, preferredSize.height)
-
-            if (column == 0)
-            {
-                background = Color(0, 0, 0, 0)
-                isOpaque = false
-            }
-
-            return this
-        }
-
-        private fun getBorder(column: Int): MatteBorder
-        {
-            val top = if (column == 0) 0 else 2
-            val left = if (column == 0) 0 else 1
-            val right = if (column == tm.columnCount - 1) 2 else 1
-
-            return MatteBorder(top, left, 2, right, Color.BLACK)
-        }
     }
 }
