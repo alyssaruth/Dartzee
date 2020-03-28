@@ -11,7 +11,6 @@ import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThread
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.DartsGameScreen
-import dartzee.screen.game.x01.GamePanelX01
 import dartzee.utils.*
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -673,7 +672,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     companion object
     {
-        private val DARTIMG = ImageIcon(GamePanelX01::class.java.getResource("/dartImage.png"))
+        private val DARTIMG = ImageIcon(javaClass.getResource("/dartImage.png"))
 
         private val hmSoundNameToUrl = mutableMapOf<String, URL>()
         var dartboardTemplate: DartboardTemplate? = null
