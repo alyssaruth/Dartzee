@@ -818,10 +818,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             {
                 GAME_TYPE_X01 -> GamePanelX01(parent, game)
                 GAME_TYPE_GOLF -> GamePanelGolf(parent, game)
-                GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(
-                    parent,
-                    game
-                )
+                GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
                 GAME_TYPE_DARTZEE -> constructGamePanelDartzee(parent, game)
                 else -> GamePanelX01(parent, game)
             }
@@ -830,11 +827,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
         {
             val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
-            val summaryPanel = DartzeeRuleSummaryPanel(
-                DartzeeRuleCarousel(
-                    dtos
-                )
-            )
+            val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(dtos))
 
             return GamePanelDartzee(parent, game, dtos, summaryPanel)
         }
