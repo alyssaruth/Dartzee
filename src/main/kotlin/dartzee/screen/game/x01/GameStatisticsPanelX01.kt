@@ -25,7 +25,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
 {
     private val panel = JPanel()
     private val lblSetupThreshold = JLabel("Setup Threshold")
-    private val nfSetupThreshold = NumberField()
+    val nfSetupThreshold = NumberField()
 
     init
     {
