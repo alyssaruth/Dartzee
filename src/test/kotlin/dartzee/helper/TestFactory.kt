@@ -24,10 +24,10 @@ fun makeDart(score: Int = 20, multiplier: Int = 1, segmentType: Int = SEGMENT_TY
     return dart
 }
 
-fun makeDefaultPlayerState(player: PlayerEntity = insertPlayer(),
+inline fun <reified S: DartsScorer> makeDefaultPlayerState(player: PlayerEntity = insertPlayer(),
                            participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
                            dartsThrown: List<Dart> = listOf(makeDart()),
-                           lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState<*>
+                           lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState<S>
 {
-    return DefaultPlayerState(participant, mockk<DartsScorer>(relaxed = true), lastRoundNumber, mutableListOf(dartsThrown))
+    return DefaultPlayerState(participant, mockk(relaxed = true), lastRoundNumber, mutableListOf(dartsThrown))
 }

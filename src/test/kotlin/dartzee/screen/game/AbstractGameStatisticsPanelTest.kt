@@ -3,7 +3,7 @@ package dartzee.screen.game
 import dartzee.core.util.Debug
 import dartzee.game.state.AbstractPlayerState
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotlintest.matchers.collections.shouldContainAll
 import org.junit.Test
 
 abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState<*>, S: AbstractGameStatisticsPanel<PlayerState>>: AbstractTest()
@@ -12,7 +12,7 @@ abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState<
     abstract fun makePlayerState(): PlayerState
 
     @Test
-    fun `All rows should be in a category`()
+    fun `Categorised rows should all exist in the table model`()
     {
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(makePlayerState()))
@@ -20,7 +20,7 @@ abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState<
         val rowNames = statsPanel.getAllRowNames()
         val categorisedRows = statsPanel.getRankedRowsHighestWins() + statsPanel.getRankedRowsLowestWins() + statsPanel.getHistogramRows()
 
-        categorisedRows.shouldContainExactlyInAnyOrder(rowNames)
+        rowNames.shouldContainAll(categorisedRows)
     }
 }
 
