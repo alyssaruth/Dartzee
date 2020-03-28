@@ -19,19 +19,15 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
     override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
     {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+        table ?: return this
+
         horizontalAlignment = SwingConstants.CENTER
 
-        if (column == 0)
-        {
-            font = Font("Trebuchet MS", Font.BOLD, 15)
-        }
-        else
-        {
-            font = Font("Trebuchet MS", Font.PLAIN, 15)
-        }
+        val style = if (column == 0) Font.BOLD else Font.PLAIN
+        font = Font("Trebuchet MS", style, 15)
 
         setColours(table, row, column)
-        border = getBorder(table!!, row, column)
+        border = getBorder(table, row, column)
 
         return this
     }
@@ -40,8 +36,6 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
     {
         val left = if (column == 0) 2 else 1
         val right = if (column == table.model.columnCount - 1) 2 else 1
-
-
         val bottom = if (row == table.rowCount - 1) 2 else 0
 
         val startOfSectionRow = sectionStarts.contains(table.getValueAt(row, 0))
@@ -50,7 +44,7 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
         return MatteBorder(top, left, bottom, right, Color.BLACK)
     }
 
-    private fun setColours(table: JTable?, row: Int, column: Int)
+    private fun setColours(table: JTable, row: Int, column: Int)
     {
         if (column == 0)
         {
@@ -60,7 +54,7 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
             return
         }
 
-        val tm = table!!.model
+        val tm = table.model
 
         val rowName = table.getValueAt(row, 0)
         if (highestWins.contains(rowName))
@@ -125,7 +119,7 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
             val theirScore = getDoubleAt(tm, row, i)
 
             //Compare positivity to the boolean
-            val result = java.lang.Double.compare(theirScore, myScore)
+            val result = theirScore.compareTo(myScore)
             if (result > 0 == highestWins && result != 0)
             {
                 myPosition++
