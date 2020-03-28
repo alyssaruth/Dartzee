@@ -1,4 +1,4 @@
-package dartzee.screen.dartzee
+package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
@@ -92,7 +92,12 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
     {
         results.sortedBy { it.roundNumber }.forEach { result ->
             val dto = dtos[result.ruleNumber - 1]
-            val completeRule = DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success, result.score)
+            val completeRule = DartzeeRuleTileComplete(
+                dto,
+                getRuleNumber(dto),
+                result.success,
+                result.score
+            )
             completeTiles.add(completeRule)
         }
         toggleButtonComplete.isEnabled = completeTiles.isNotEmpty()
@@ -101,7 +106,12 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
     private fun populateIncompleteTiles(results: List<DartzeeRoundResultEntity>)
     {
         val incompleteRules = dtos.filterIndexed { ix, _ -> results.none { it.ruleNumber == ix + 1 }}
-        pendingTiles.addAll(incompleteRules.map { rule -> DartzeeRuleTilePending(rule, getRuleNumber(rule)) })
+        pendingTiles.addAll(incompleteRules.map { rule ->
+            DartzeeRuleTilePending(
+                rule,
+                getRuleNumber(rule)
+            )
+        })
         pendingTiles.forEach {
             it.addActionListener(this)
             it.addMouseListener(this)

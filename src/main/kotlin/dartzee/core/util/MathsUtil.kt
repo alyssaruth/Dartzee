@@ -21,16 +21,16 @@ class MathsUtil
             return rounded / powerOfTen
         }
 
-        fun getPercentage(count: Number, total: Number): Double
+        fun getPercentage(count: Number, total: Number, digits: Int = 1): Double
         {
-            return getPercentage(count.toDouble(), total.toDouble())
+            return getPercentage(count.toDouble(), total.toDouble(), digits)
         }
-        fun getPercentage(count: Double, total: Double): Double
+        fun getPercentage(count: Double, total: Double, digits: Int = 1): Double
         {
             return if (count == 0.0)
             {
                 0.0
-            } else round(100 * count / total, 1)
+            } else round(100 * count / total, digits)
         }
     }
 }

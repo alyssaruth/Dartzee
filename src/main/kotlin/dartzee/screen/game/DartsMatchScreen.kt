@@ -6,7 +6,9 @@ import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.ScreenCache
+import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.insertDartzeeRules
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
@@ -14,12 +16,13 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>):
+abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<*>>(private val matchPanel: MatchSummaryPanel<PlayerState>,
+                                                                     val match: DartsMatchEntity,
+                                                                     players: List<PlayerEntity>):
         AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
-    private val matchPanel = MatchSummaryPanel(match)
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *>>()
+    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, PlayerState>>()
 
     init
     {
@@ -33,16 +36,18 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
         title = match.getMatchDesc()
     }
 
+    abstract fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, PlayerState>
+
     override fun getScreenHeight() = super.getScreenHeight() + 30
 
-    fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *>
+    fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *, *>
     {
         //Cache this screen in ScreenCache
         val gameId = game.rowId
         ScreenCache.addDartsGameScreen(gameId, this)
 
         //Initialise some basic properties of the tab, such as visibility of components etc
-        val tab = DartsGamePanel.factory(this, game)
+        val tab = factoryGamePanel(this, game)
         tab.initBasic(match.getPlayerCount())
 
         matchPanel.addGameTab(tab)
@@ -120,7 +125,7 @@ class DartsMatchScreen(val match: DartsMatchEntity, players: List<PlayerEntity>)
     {
         val sourceTabbedPane = e.source as JTabbedPane
         val selectedTab = sourceTabbedPane.selectedComponent
-        if (selectedTab is DartsGamePanel<*, *>)
+        if (selectedTab is DartsGamePanel<*, *, *>)
         {
             val title = selectedTab.gameTitle
             setTitle(title)

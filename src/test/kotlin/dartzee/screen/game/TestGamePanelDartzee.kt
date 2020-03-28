@@ -16,9 +16,10 @@ import dartzee.db.GameEntity
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.helper.*
-import dartzee.screen.dartzee.DartzeeRuleCarousel
-import dartzee.screen.dartzee.DartzeeRuleSummaryPanel
-import dartzee.screen.dartzee.DartzeeRuleTile
+import dartzee.screen.game.dartzee.DartzeeRuleCarousel
+import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
+import dartzee.screen.game.dartzee.DartzeeRuleTile
+import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -275,6 +276,11 @@ class TestGamePanelDartzee: AbstractTest()
                               summaryPanel: DartzeeRuleSummaryPanel = mockk(relaxed = true),
                               game: GameEntity = insertGame()): GamePanelDartzee
     {
-        return GamePanelDartzee(mockk(relaxed = true), game, dtos, summaryPanel)
+        return GamePanelDartzee(
+            mockk(relaxed = true),
+            game,
+            dtos,
+            summaryPanel
+        )
     }
 }

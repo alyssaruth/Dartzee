@@ -1,12 +1,20 @@
-package dartzee.screen.game
+package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
+import dartzee.game.state.DefaultPlayerState
+import dartzee.screen.game.AbstractGameStatisticsPanel
+import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GameStatisticsPanelGolf : GameStatisticsPanel()
+open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerGolf>>(gameParams)
 {
+    override fun getRankedRowsHighestWins() = listOf("Points Improved")
+    override fun getRankedRowsLowestWins() = listOf("Best Hole", "Avg. Hole", "Worst Hole", "Miss %", "Points Squandered")
+    override fun getHistogramRows() = listOf("1", "2", "3", "4", "5")
+    override fun getStartOfSectionRows() = listOf("Points Squandered", "1", "Best Game")
+
     override fun addRowsToTable()
     {
         addRow(getScoreRow("Best Hole") { it.minOrZero().toDouble() } )
@@ -15,8 +23,6 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         addRow(getMissesRow())
         addRow(getGambleRow({ r -> getPointsSquandered(r) }, "Points Squandered"))
         addRow(getGambleRow({ r -> getPointsImproved(r) }, "Points Improved"))
-
-        //addRow(arrayOfNulls(getRowWidth()))
 
         addRow(getScoreCountRow(1))
         addRow(getScoreCountRow(2))
@@ -27,42 +33,18 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         table.setColumnWidths("150")
     }
 
-    private fun getMissesRow(): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "Miss %"
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val darts = getFlattenedDarts(playerName)
-            val missDarts = darts.filter { d -> d.getGolfScore() == 5 }
-
-            val misses = missDarts.size.toDouble()
-            val percent = 100 * misses / darts.size
-
-            row[i + 1] = MathsUtil.round(percent, 2)
-        }
-
-        return row
+    private fun getMissesRow() = prepareRow("Miss %") { playerName ->
+        val darts = getFlattenedDarts(playerName)
+        val missDarts = darts.filter { d -> d.getGolfScore() == 5 }
+        MathsUtil.getPercentage(missDarts.size, darts.size)
     }
 
     /**
      * Any round where you could have "banked" and ended on something higher.
      */
-    private fun getGambleRow(f: (rnd: List<Dart>) -> Int, desc: String): Array<Any?>
-    {
-        val pointsSquandered = arrayOfNulls<Any>(getRowWidth())
-        pointsSquandered[0] = desc
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val rounds = hmPlayerToDarts[playerName]!!
-
-            pointsSquandered[i + 1] = rounds.map { r -> f.invoke(r) }.sum()
-        }
-
-        return pointsSquandered
+    private fun getGambleRow(f: (rnd: List<Dart>) -> Int, desc: String) = prepareRow(desc) { playerName ->
+        val rounds = hmPlayerToDarts[playerName] ?: listOf()
+        rounds.map { f(it) }.sum()
     }
 
     private fun getPointsSquandered(round: List<Dart>): Int
@@ -107,37 +89,12 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
     }
 
 
-    private fun getScoreCountRow(score: Int): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = "" + score
+    private fun getScoreCountRow(score: Int) = getScoreRow("$score") { scores -> scores.count { it == score } }
 
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val darts = getCountedDarts(playerName)
-            val dartsOfScore = darts.filter { d -> d.getGolfScore() == score }
-
-            row[i + 1] = dartsOfScore.size
-        }
-
-        return row
-    }
-
-    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Double): Array<Any?>
-    {
-        val row = arrayOfNulls<Any>(getRowWidth())
-        row[0] = desc
-
-        for (i in playerNamesOrdered.indices)
-        {
-            val playerName = playerNamesOrdered[i]
-            val countedDarts = getCountedDarts(playerName)
-            val stream = countedDarts.map { d -> d.getGolfScore() }
-            row[i + 1] = f.invoke(stream)
-        }
-
-        return row
+    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Any) = prepareRow(desc) { playerName ->
+        val countedDarts = getCountedDarts(playerName)
+        val scores = countedDarts.map { d -> d.getGolfScore() }
+        f(scores)
     }
 
     /**
@@ -148,25 +105,5 @@ open class GameStatisticsPanelGolf : GameStatisticsPanel()
         val rounds = hmPlayerToDarts[playerName]!!
 
         return rounds.map { r -> r.last() }
-    }
-
-    override fun getRankedRowsHighestWins(): MutableList<String>
-    {
-        return mutableListOf("Points Improved")
-    }
-
-    override fun getRankedRowsLowestWins(): MutableList<String>
-    {
-        return mutableListOf("Best Hole", "Avg. Hole", "Worst Hole", "Miss %", "Points Squandered")
-    }
-
-    override fun getHistogramRows(): MutableList<String>
-    {
-        return mutableListOf("1", "2", "3", "4", "5")
-    }
-
-    override fun getStartOfSectionRows(): MutableList<String>
-    {
-        return mutableListOf("Points Squandered", "1", "Best Game")
     }
 }

@@ -3,19 +3,20 @@ package dartzee.`object`
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.dartzee.DartzeeRuleDto
-import dartzee.db.DartsMatchEntity
-import dartzee.db.GameEntity
-import dartzee.db.PlayerEntity
+import dartzee.db.*
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
-import dartzee.screen.game.DartsMatchScreen
+import dartzee.screen.game.dartzee.DartzeeMatchScreen
+import dartzee.screen.game.golf.GolfMatchScreen
+import dartzee.screen.game.rtc.RoundTheClockMatchScreen
+import dartzee.screen.game.x01.X01MatchScreen
 import dartzee.utils.insertDartzeeRules
 
 object GameLauncher
 {
     fun launchNewMatch(match: DartsMatchEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
     {
-        val scrn = DartsMatchScreen(match, match.players)
+        val scrn = factoryMatchScreen(match, match.players)
 
         val game = GameEntity.factoryAndSave(match)
 
@@ -98,7 +99,7 @@ object GameLauncher
         val match = DartsMatchEntity().retrieveForId(matchId)
         match!!.cacheMetadataFromGame(lastGame)
 
-        val scrn = DartsMatchScreen(match, firstGame.retrievePlayersVector())
+        val scrn = factoryMatchScreen(match, firstGame.retrievePlayersVector())
 
         try
         {
@@ -119,4 +120,14 @@ object GameLauncher
 
         scrn.updateTotalScores()
     }
+
+    private fun factoryMatchScreen(match: DartsMatchEntity, players: List<PlayerEntity>) =
+        when (match.gameType)
+        {
+            GAME_TYPE_X01 -> X01MatchScreen(match, players)
+            GAME_TYPE_ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match, players)
+            GAME_TYPE_GOLF -> GolfMatchScreen(match, players)
+            GAME_TYPE_DARTZEE -> DartzeeMatchScreen(match, players)
+            else -> X01MatchScreen(match, players)
+        }
 }

@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
@@ -8,15 +8,21 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
+import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.Dartboard
+import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelFixedLength<DartsScorerGolf, Dartboard>(parent, game)
+open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
+        GamePanelFixedLength<DartsScorerGolf, Dartboard, DefaultPlayerState<DartsScorerGolf>>(parent, game)
 {
     //Number of rounds - 9 holes or 18?
     override val totalRounds = Integer.parseInt(game.gameParams)
 
     override fun factoryDartboard() = Dartboard()
+    override fun factoryState(pt: ParticipantEntity, scorer: DartsScorerGolf) = DefaultPlayerState(pt, scorer)
 
     private fun getScoreForMostRecentDart() : Int
     {
@@ -109,8 +115,5 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) : Ga
         dartboard.doGolfMiss()
     }
 
-    override fun factoryStatsPanel(): GameStatisticsPanel
-    {
-        return GameStatisticsPanelGolf()
-    }
+    override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelGolf(gameParams)
 }

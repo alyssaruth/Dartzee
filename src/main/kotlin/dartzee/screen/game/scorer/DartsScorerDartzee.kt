@@ -1,7 +1,7 @@
 package dartzee.screen.game.scorer
 
 import dartzee.dartzee.DartzeeRoundResult
-import dartzee.screen.game.GamePanelDartzee
+import dartzee.screen.game.dartzee.GamePanelDartzee
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 
@@ -50,11 +50,12 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
         tableScores.repaint()
     }
 
-    private fun getMaxScoreSoFar() = model.getColumnValues(SCORE_COLUMN).filterIsInstance<Int>().max()
+    fun getMaxScoreSoFar() = model.getColumnValues(SCORE_COLUMN).filterIsInstance<Int>().max()
 
     override fun mouseReleased(e: MouseEvent?)
     {
-        if (parent.gameEntity.isFinished()) {
+        if (parent.gameEntity.isFinished())
+        {
             parent.scorerSelected(this)
         }
     }

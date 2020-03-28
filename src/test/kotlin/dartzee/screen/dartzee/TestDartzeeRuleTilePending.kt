@@ -6,6 +6,7 @@ import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.doubleNineteen
 import dartzee.helper.*
+import dartzee.screen.game.dartzee.DartzeeRuleTilePending
 import dartzee.trebleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -38,7 +39,10 @@ class TestDartzeeRuleTilePending: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val tile = DartzeeRuleTilePending(makeDartzeeRuleDto(allowMisses = false), 5)
+        val tile = DartzeeRuleTilePending(
+            makeDartzeeRuleDto(allowMisses = false),
+            5
+        )
         tile.updateState(listOf(makeDart(20, 0, SEGMENT_TYPE_MISS)))
         tile.isVisible shouldBe false
 

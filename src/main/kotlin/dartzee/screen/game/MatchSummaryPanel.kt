@@ -1,6 +1,9 @@
 package dartzee.screen.game
 
-import dartzee.db.*
+import dartzee.db.DartsMatchEntity
+import dartzee.db.ParticipantEntity
+import dartzee.db.PlayerEntity
+import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.game.scorer.MatchScorer
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -13,12 +16,13 @@ import javax.swing.JPanel
 /**
  * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
  */
-class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchScorer>(), ActionListener
+class MatchSummaryPanel<PlayerState: AbstractPlayerState<*>>(val match: DartsMatchEntity,
+                                                             private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) :
+    PanelWithScorers<MatchScorer>(), ActionListener
 {
     private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
-    private val gameTabs = mutableListOf<DartsGamePanel<*, *>>()
+    private val gameTabs = mutableListOf<DartsGamePanel<*, *, PlayerState>>()
 
-    private var statsPanel: GameStatisticsPanel? = null
     private val refreshPanel = JPanel()
     private val btnRefresh = JButton()
 
@@ -33,16 +37,8 @@ class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchSco
 
     fun init(playersInStartingOrder: List<PlayerEntity>)
     {
-        val statsPanel = factoryStatsPanel()
-
-        if (statsPanel != null)
-        {
-            statsPanel.gameParams = match.gameParams
-            panelCenter.add(statsPanel, BorderLayout.CENTER)
-            panelCenter.add(refreshPanel, BorderLayout.SOUTH)
-
-            this.statsPanel = statsPanel
-        }
+        panelCenter.add(statsPanel, BorderLayout.CENTER)
+        panelCenter.add(refreshPanel, BorderLayout.SOUTH)
 
         val totalPlayers = playersInStartingOrder.size
         initScorers(totalPlayers)
@@ -78,28 +74,15 @@ class MatchSummaryPanel(val match: DartsMatchEntity) : PanelWithScorers<MatchSco
 
     fun updateStats()
     {
-        statsPanel?.let { statsPanel ->
-            val states = gameTabs.map { it.getPlayerStates() }.flatten()
-            statsPanel.showStats(states)
-        }
+        val states = gameTabs.map { it.getPlayerStates() }.flatten()
+        statsPanel.showStats(states)
     }
 
     override fun factoryScorer() = MatchScorer()
 
-    fun addGameTab(tab: DartsGamePanel<*, *>)
+    fun addGameTab(tab: DartsGamePanel<*, *, PlayerState>)
     {
         gameTabs.add(tab)
-    }
-
-    private fun factoryStatsPanel(): GameStatisticsPanel?
-    {
-        return when (match.gameType)
-        {
-            GAME_TYPE_X01 -> MatchStatisticsPanelX01()
-            GAME_TYPE_GOLF -> MatchStatisticsPanelGolf()
-            GAME_TYPE_ROUND_THE_CLOCK -> MatchStatisticsPanelRoundTheClock()
-            else -> null
-        }
     }
 
     override fun actionPerformed(e: ActionEvent)

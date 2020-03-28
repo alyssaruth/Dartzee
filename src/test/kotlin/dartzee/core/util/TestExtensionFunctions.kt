@@ -150,4 +150,13 @@ class TestExtensionFunctions: AbstractTest()
         list.minOrZero() shouldBe 1
         list.maxOrZero() shouldBe 7
     }
+
+    @Test
+    fun `Should correctly report the longest streak`()
+    {
+        val list: List<Boolean> = listOf(true, true, false, false, false, true, false, true, true, true, true, false, false, true)
+
+        list.getLongestStreak { it } shouldBe listOf(true, true, true, true)
+        list.getLongestStreak { !it } shouldBe listOf(false, false, false)
+    }
 }

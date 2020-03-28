@@ -29,7 +29,7 @@ object ScreenCache
 
     fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)
 
-    fun getDartsGameScreens() = hmGameIdToGameScreen.values
+    fun getDartsGameScreens() = hmGameIdToGameScreen.values.distinct()
 
     fun <K : EmbeddedScreen> getScreen(screenClass: Class<K>): K
     {

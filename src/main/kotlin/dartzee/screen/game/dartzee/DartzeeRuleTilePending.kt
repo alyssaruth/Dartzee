@@ -1,4 +1,4 @@
-package dartzee.screen.dartzee
+package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment

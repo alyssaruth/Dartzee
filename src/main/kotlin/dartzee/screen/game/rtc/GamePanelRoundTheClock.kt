@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package dartzee.screen.game.rtc
 
 import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
@@ -9,6 +9,8 @@ import dartzee.core.obj.HashMapList
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
 open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game)
@@ -46,7 +48,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         var currentStreak = 0
 
         val dartsLatestFirst = hmRoundToDarts.getFlattenedValuesSortedByKey().reversed()
-        Debug.append("" + dartsLatestFirst)
         for (drt in dartsLatestFirst)
         {
             if (!drt.hitClockTarget(clockType)) { break }
@@ -184,9 +185,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun factoryScorer() = DartsScorerRoundTheClock(this)
 
-    override fun factoryStatsPanel(): GameStatisticsPanel
-    {
-        return GameStatisticsPanelRoundTheClock()
-    }
+    override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelRoundTheClock(gameParams)
 
 }
