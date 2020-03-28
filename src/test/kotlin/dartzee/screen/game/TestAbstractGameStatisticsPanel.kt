@@ -2,10 +2,7 @@ package dartzee.screen.game
 
 import dartzee.core.util.maxOrZero
 import dartzee.game.state.DefaultPlayerState
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertPlayer
-import dartzee.helper.makeDart
-import dartzee.helper.makeDefaultPlayerState
+import dartzee.helper.*
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
@@ -69,6 +66,56 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
         panel.tm.rowCount shouldBe 0
     }
 
+    @Test
+    fun `Should calculate best game correctly`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+
+        val aliceState1 = makeDefaultPlayerState(alice, insertParticipant(playerId = alice.rowId, finalScore = 50))
+        val aliceState2 = makeDefaultPlayerState(alice, insertParticipant(playerId = alice.rowId, finalScore = 35))
+
+        val bobState1 = makeDefaultPlayerState(bob, insertParticipant(playerId = bob.rowId, finalScore = 28))
+        val bobState2 = makeDefaultPlayerState(bob, insertParticipant(playerId = bob.rowId, finalScore = 70))
+        val bobState3 = makeDefaultPlayerState(bob, insertParticipant(playerId = bob.rowId, finalScore = -1))
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(aliceState1, bobState1, bobState2, aliceState2, bobState3))
+
+        panel.getValueForRow("Best Game", 1) shouldBe 50
+        panel.getValueForRow("Best Game", 2) shouldBe 70
+    }
+
+    @Test
+    fun `Should calculate avg game correctly`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+
+        val aliceState1 = makeDefaultPlayerState(alice, insertParticipant(playerId = alice.rowId, finalScore = 50))
+        val aliceState2 = makeDefaultPlayerState(alice, insertParticipant(playerId = alice.rowId, finalScore = 35))
+
+        val bobState1 = makeDefaultPlayerState(bob, insertParticipant(playerId = bob.rowId, finalScore = 28))
+        val bobState2 = makeDefaultPlayerState(bob, insertParticipant(playerId = bob.rowId, finalScore = 70))
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(aliceState1, bobState1, bobState2, aliceState2))
+
+        panel.getValueForRow("Avg Game", 1) shouldBe 42.5
+        panel.getValueForRow("Avg Game", 2) shouldBe 49.0
+    }
+
+    @Test
+    fun `Should replace NULL values with NA`()
+    {
+        val state = makeDefaultPlayerState()
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(state))
+
+        panel.getValueForRow("Nulls", 1) shouldBe "N/A"
+    }
+
     /**
      * Couple of renderer tests just to prove it's being set on all appropriate columns
      */
@@ -119,12 +166,15 @@ private class FakeGameStatisticsPanel(private val highestWins: List<String> = em
         addRow(getDartsThrownRow())
         addRow(getBestGameRow() { it.maxOrZero() })
         addRow(getAverageGameRow())
+        addRow(getNullRow())
     }
 
     private fun getDartsThrownRow() = prepareRow("Darts Thrown") { playerName ->
         val darts = hmPlayerToDarts[playerName] ?: emptyList()
         darts.map { it.size }.sum()
     }
+
+    private fun getNullRow() = prepareRow("Nulls") { null }
 
     fun getCellComponent(row: Int, column: Int): JComponent
     {

@@ -26,7 +26,7 @@ fun makeDart(score: Int = 20, multiplier: Int = 1, segmentType: Int = SEGMENT_TY
 
 fun makeDefaultPlayerState(player: PlayerEntity = insertPlayer(),
                            participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                           dartsThrown: List<Dart> = emptyList(),
+                           dartsThrown: List<Dart> = listOf(makeDart()),
                            lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState<*>
 {
     return DefaultPlayerState(participant, mockk<DartsScorer>(relaxed = true), lastRoundNumber, mutableListOf(dartsThrown))
