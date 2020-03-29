@@ -4,12 +4,21 @@ import dartzee.core.util.Debug
 import dartzee.game.state.AbstractPlayerState
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainAll
+import io.kotlintest.shouldBe
 import org.junit.Test
 
 abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState<*>, S: AbstractGameStatisticsPanel<PlayerState>>: AbstractTest()
 {
     abstract fun factoryStatsPanel(): S
     abstract fun makePlayerState(): PlayerState
+
+    protected fun S.shouldHaveBreakdownState(expected: Map<String, Int>)
+    {
+        val breakdownRows = getHistogramRows()
+        breakdownRows.forEach {
+            getValueForRow(it) shouldBe (expected[it] ?: 0)
+        }
+    }
 
     @Test
     fun `Categorised rows should all exist in the table model`()

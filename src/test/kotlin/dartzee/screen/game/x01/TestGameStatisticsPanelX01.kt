@@ -243,15 +243,4 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<DefaultPlayerS
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Checkout %") shouldBe 25.0
     }
-
-    private fun GameStatisticsPanelX01.shouldHaveBreakdownState(map: Map<String, Int>)
-    {
-        val rows = listOf("180", "140 - 179", "100 - 139", "80 - 99", "60 - 79", "40 - 59", "20 - 39", "0 - 19")
-
-        rows.forEach {
-            getValueForRow(it) shouldBe (map[it] ?: 0)
-        }
-    }
-
-
 }

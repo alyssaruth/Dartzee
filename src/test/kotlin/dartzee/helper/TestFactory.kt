@@ -1,7 +1,6 @@
 package dartzee.helper
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.*
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.state.DefaultPlayerState
@@ -18,7 +17,7 @@ fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
 
 fun makeDart(score: Int = 20,
              multiplier: Int = 1,
-             segmentType: Int = SEGMENT_TYPE_OUTER_SINGLE,
+             segmentType: Int = makeSegmentTypeForMultiplier(multiplier),
              pt: Point = Point(0, 0),
              startingScore: Int = -1): Dart
 {
@@ -27,6 +26,17 @@ fun makeDart(score: Int = 20,
     dart.pt = pt
     dart.startingScore = startingScore
     return dart
+}
+
+private fun makeSegmentTypeForMultiplier(multiplier: Int): Int
+{
+    return when (multiplier)
+    {
+        0 -> SEGMENT_TYPE_MISS
+        2 -> SEGMENT_TYPE_DOUBLE
+        3 -> SEGMENT_TYPE_TREBLE
+        else -> SEGMENT_TYPE_OUTER_SINGLE
+    }
 }
 
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
