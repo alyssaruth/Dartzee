@@ -9,7 +9,7 @@ import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 import dartzee.utils.getLongestStreak
 
-open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>(gameParams)
+open class GameStatisticsPanelRoundTheClock(private val gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>()
 {
     override fun getRankedRowsHighestWins() = listOf("Best Streak", "Brucey chances", "Bruceys executed")
     override fun getRankedRowsLowestWins() = listOf("Most darts", "Avg. darts", "Fewest darts")

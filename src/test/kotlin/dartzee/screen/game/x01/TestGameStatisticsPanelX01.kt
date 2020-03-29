@@ -18,6 +18,12 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<DefaultPlayerS
     override fun makePlayerState() = makeDefaultPlayerState<DartsScorerX01>(dartsThrown = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
 
     @Test
+    fun `Should set the maximum setupThreshold to be 1 less than the starting score`()
+    {
+
+    }
+
+    @Test
     fun `Should get correct highest score, lowest score and 3 dart average`()
     {
         //Alive - 26, 100

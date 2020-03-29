@@ -115,5 +115,5 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
         dartboard.doGolfMiss()
     }
 
-    override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelGolf(gameParams)
+    override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelGolf()
 }
