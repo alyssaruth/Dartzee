@@ -57,6 +57,7 @@ class TestDartsMatchScreen: AbstractTest()
         PlayerImageEntity.createPresets()
 
         val match = insertDartsMatch()
+        match.gameParams = "501"
         return X01MatchScreen(match, mutableListOf(insertPlayer(), insertPlayer()))
     }
 }
