@@ -29,6 +29,11 @@ fun makeDart(score: Int = 20,
     return dart
 }
 
+fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
+{
+    val allDarts = darts.toList().flatten()
+    return makeX01Rounds(startingScore, *allDarts.toTypedArray())
+}
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>>
 {
     var currentTotal = startingScore
