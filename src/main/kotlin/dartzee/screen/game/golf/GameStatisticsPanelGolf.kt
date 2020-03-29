@@ -53,15 +53,6 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<DefaultPlayerSta
         return finalScore - bestScore
     }
 
-    /**
-     * A bit difficult to define. Some examples:
-     *
-     * 4-3-2. You've gambled twice, and gained 1 each time. So method should return 2.
-     * 3-4-2. You've gambled the 3, stuffed it, then clawed it back. Method should return 1.
-     * 5-5-1. You've not gambled anything. Method should return 0.
-     * 4-3-5. You've stuffed it - there was a gain but it's gone. Method should return 0.
-     * 4-2-3. You've gained 1 (and also lost 1). Method should return 1 for the original '4' gamble. I guess.
-     */
     private fun getPointsImproved(round: List<Dart>): Int
     {
         val finalScore = round.last().getGolfScore()
