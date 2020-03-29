@@ -98,7 +98,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
 
             //Deal with the remainder
             val remainder = sortedEntries.map { it.value.size }.sum().toDouble()
-            val percent = MathsUtil.getPercentage(remainder, darts.size)
+            val percent = MathsUtil.getPercentage(remainder, darts.size, 0).toInt()
             remainingDarts[i+1] = "$percent%"
         }
 
@@ -114,7 +114,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
     {
         if (sortedEntries.isEmpty())
         {
-            row[i+1] = "N/A [0.0%]"
+            row[i+1] = "N/A [0%]"
         }
         else
         {

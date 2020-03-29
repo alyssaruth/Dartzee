@@ -30,6 +30,10 @@ private fun AbstractGameStatisticsPanel<*>.getAllRowNames(): List<String>
     return rows.map { tm.getValueAt(it, 0) as String }
 }
 
+fun AbstractGameStatisticsPanel<*>.getRowIndex(rowName: String) = getAllRowNames().indexOf(rowName)
+
+fun AbstractGameStatisticsPanel<*>.getValueForRow(rowIndex: Int, column: Int = 1): Any? = tm.getValueAt(rowIndex, column)
+
 fun AbstractGameStatisticsPanel<*>.getValueForRow(rowName: String, column: Int = 1): Any?
 {
     val rowIndex = getAllRowNames().indexOf(rowName)

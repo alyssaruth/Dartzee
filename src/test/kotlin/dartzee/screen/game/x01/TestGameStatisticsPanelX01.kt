@@ -7,6 +7,7 @@ import dartzee.helper.makeDefaultPlayerState
 import dartzee.helper.makeDefaultPlayerStateWithRounds
 import dartzee.helper.makeX01Rounds
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
+import dartzee.screen.game.getRowIndex
 import dartzee.screen.game.getValueForRow
 import dartzee.screen.game.scorer.DartsScorerX01
 import io.kotlintest.shouldBe
@@ -140,6 +141,78 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<DefaultPlayerS
         state.addDarts(roundFour)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("140 - 179" to 2, "180" to 1, "80 - 99" to 1))
+    }
+
+    @Test
+    fun `Should populate top darts correctly, and respond to setup threshold changing`()
+    {
+        val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(5, 1)) //45 - 456
+        val roundTwo = listOf(Dart(1, 1), Dart(18, 3), Dart(20, 1)) //75 - 381
+        val roundThree = listOf(Dart(12, 1), Dart(18, 1), Dart(1, 1)) //40 - 350
+        val roundFour = listOf(Dart(3, 1), Dart(5, 1), Dart(7, 1)) //7 - 335
+        val roundFive = listOf(Dart(19, 1), Dart(1, 1), Dart(1, 1)) //21 - 314
+
+        //Sort out the startingScores
+        makeX01Rounds(501, roundOne, roundTwo, roundThree, roundFour, roundFive)
+
+        val state = makeDefaultPlayerState<DartsScorerX01>(insertPlayer(name = "Alice"), dartsThrown = roundOne)
+        val statsPanel = GameStatisticsPanelX01("501")
+        statsPanel.showStats(listOf(state))
+
+        // [20, 20, 5]
+        val sectionStart = statsPanel.getRowIndex("Top Darts")
+        statsPanel.getValueForRow(sectionStart) shouldBe "20 [67%]"
+        statsPanel.getValueForRow(sectionStart + 1) shouldBe "5 [33%]"
+        statsPanel.getValueForRow(sectionStart + 2) shouldBe "N/A [0%]"
+
+        // [20, 20, 20, 18, 5, 1]
+        state.addDarts(roundTwo)
+        statsPanel.showStats(listOf(state))
+        statsPanel.getValueForRow(sectionStart) shouldBe "20 [50%]"
+        statsPanel.getValueForRow(sectionStart + 1) shouldBe "18 [17%]"
+        statsPanel.getValueForRow(sectionStart + 2) shouldBe "5 [17%]"
+        statsPanel.getValueForRow(sectionStart + 3) shouldBe "1 [17%]"
+        statsPanel.getValueForRow(sectionStart + 4) shouldBe "N/A [0%]"
+
+        // [20, 20, 20, 18, 18, 12, 5, 1, 1], still no remainder
+        state.addDarts(roundThree)
+        statsPanel.showStats(listOf(state))
+        statsPanel.getValueForRow(sectionStart) shouldBe "20 [33%]"
+        statsPanel.getValueForRow(sectionStart + 1) shouldBe "18 [22%]"
+        statsPanel.getValueForRow(sectionStart + 2) shouldBe "1 [22%]"
+        statsPanel.getValueForRow(sectionStart + 3) shouldBe "12 [11%]"
+        statsPanel.getValueForRow(sectionStart + 4) shouldBe "5 [11%]"
+        statsPanel.getValueForRow(sectionStart + 5) shouldBe "0%"
+
+        // [20, 20, 20, 18, 18, 5, 5, 1, 1, 12] [7, 3]
+        state.addDarts(roundFour)
+        statsPanel.showStats(listOf(state))
+        statsPanel.getValueForRow(sectionStart) shouldBe "20 [25%]"
+        statsPanel.getValueForRow(sectionStart + 1) shouldBe "18 [17%]"
+        statsPanel.getValueForRow(sectionStart + 2) shouldBe "5 [17%]"
+        statsPanel.getValueForRow(sectionStart + 3) shouldBe "1 [17%]"
+        statsPanel.getValueForRow(sectionStart + 4) shouldBe "12 [8%]"
+        statsPanel.getValueForRow(sectionStart + 5) shouldBe "17%"
+
+        // [1, 1, 1, 1, 20, 20, 20, 18, 18, 5, 5, 19] [12, 7, 3]
+        state.addDarts(roundFive)
+        statsPanel.showStats(listOf(state))
+        statsPanel.getValueForRow(sectionStart) shouldBe "1 [27%]"
+        statsPanel.getValueForRow(sectionStart + 1) shouldBe "20 [20%]"
+        statsPanel.getValueForRow(sectionStart + 2) shouldBe "18 [13%]"
+        statsPanel.getValueForRow(sectionStart + 3) shouldBe "5 [13%]"
+        statsPanel.getValueForRow(sectionStart + 4) shouldBe "19 [7%]"
+        statsPanel.getValueForRow(sectionStart + 5) shouldBe "20%"
+
+        //Knock out last round and part of the previous one
+        // [20, 20, 20, 18, 18, 12, 5, 1, 1] [3]
+        statsPanel.nfSetupThreshold.value = 348
+        statsPanel.getValueForRow(sectionStart) shouldBe "20 [30%]"
+        statsPanel.getValueForRow(sectionStart + 1) shouldBe "18 [20%]"
+        statsPanel.getValueForRow(sectionStart + 2) shouldBe "1 [20%]"
+        statsPanel.getValueForRow(sectionStart + 3) shouldBe "12 [10%]"
+        statsPanel.getValueForRow(sectionStart + 4) shouldBe "5 [10%]"
+        statsPanel.getValueForRow(sectionStart + 5) shouldBe "10%"
     }
 
     private fun GameStatisticsPanelX01.shouldHaveBreakdownState(map: Map<String, Int>)
