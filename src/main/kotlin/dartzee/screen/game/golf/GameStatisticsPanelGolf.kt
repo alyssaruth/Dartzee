@@ -2,8 +2,6 @@ package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
-import dartzee.core.util.maxOrZero
-import dartzee.core.util.minOrZero
 import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerGolf
@@ -17,9 +15,9 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<DefaultPlayerSta
 
     override fun addRowsToTable()
     {
-        addRow(getScoreRow("Best Hole") { it.minOrZero().toDouble() } )
+        addRow(getScoreRow("Best Hole") { it.min() } )
         addRow(getScoreRow("Avg. Hole") { MathsUtil.round(it.average(), 2) })
-        addRow(getScoreRow("Worst Hole") { it.maxOrZero().toDouble() })
+        addRow(getScoreRow("Worst Hole") { it.max() })
         addRow(getMissesRow())
         addRow(getGambleRow({ r -> getPointsSquandered(r) }, "Points Squandered"))
         addRow(getGambleRow({ r -> getPointsImproved(r) }, "Points Improved"))
@@ -91,7 +89,7 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<DefaultPlayerSta
 
     private fun getScoreCountRow(score: Int) = getScoreRow("$score") { scores -> scores.count { it == score } }
 
-    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Any) = prepareRow(desc) { playerName ->
+    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Any?) = prepareRow(desc) { playerName ->
         val countedDarts = getCountedDarts(playerName)
         val scores = countedDarts.map { d -> d.getGolfScore() }
         f(scores)

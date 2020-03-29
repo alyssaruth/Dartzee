@@ -19,13 +19,21 @@ fun makeDart(score: Int = 20,
              multiplier: Int = 1,
              segmentType: Int = makeSegmentTypeForMultiplier(multiplier),
              pt: Point = Point(0, 0),
-             startingScore: Int = -1): Dart
+             startingScore: Int = -1,
+             golfHole: Int = -1): Dart
 {
     val dart = Dart(score, multiplier)
     dart.segmentType = segmentType
     dart.pt = pt
     dart.startingScore = startingScore
+    dart.setGolfHole(golfHole)
     return dart
+}
+
+fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
+{
+    darts.forEach { it.setGolfHole(golfHole) }
+    return darts
 }
 
 private fun makeSegmentTypeForMultiplier(multiplier: Int): Int
