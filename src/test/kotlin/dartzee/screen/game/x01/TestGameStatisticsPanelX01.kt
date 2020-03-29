@@ -215,6 +215,35 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<DefaultPlayerS
         statsPanel.getValueForRow(sectionStart + 5) shouldBe "10%"
     }
 
+    @Test
+    fun `should correctly calculate checkout %`()
+    {
+        val roundOne = listOf(Dart(17, 1), Dart(20, 0), Dart(20, 0)) //On 40, two chances
+        val roundTwo = listOf(Dart(5, 1), Dart(19, 1), Dart(8, 1)) //On 8, four chances
+        val roundThree = listOf(Dart(4, 0), Dart(4, 2)) //Win, 6 chances = 16.7%
+
+        val separateGameFinish = listOf(Dart(20, 0), Dart(20, 2)) //now 2 our of 8 changes = 25.0%
+
+        makeX01Rounds(57, roundOne, roundTwo, roundThree)
+        makeX01Rounds(40, separateGameFinish)
+
+        val state = makeDefaultPlayerState<DartsScorerX01>(dartsThrown = roundOne)
+        val statsPanel = factoryStatsPanel()
+
+        statsPanel.showStats(listOf(state))
+        statsPanel.getValueForRow("Checkout %") shouldBe "N/A" //not finished yet
+
+        state.addDarts(roundTwo)
+        state.addDarts(roundThree)
+
+        statsPanel.showStats(listOf(state))
+        statsPanel.getValueForRow("Checkout %") shouldBe 16.7
+
+        state.addDarts(separateGameFinish)
+        statsPanel.showStats(listOf(state))
+        statsPanel.getValueForRow("Checkout %") shouldBe 25.0
+    }
+
     private fun GameStatisticsPanelX01.shouldHaveBreakdownState(map: Map<String, Int>)
     {
         val rows = listOf("180", "140 - 179", "100 - 139", "80 - 99", "60 - 79", "40 - 59", "20 - 39", "0 - 19")
