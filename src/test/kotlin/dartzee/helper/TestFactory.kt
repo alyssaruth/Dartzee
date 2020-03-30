@@ -1,7 +1,6 @@
 package dartzee.helper
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.*
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.state.DefaultPlayerState
@@ -18,17 +17,41 @@ fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
 
 fun makeDart(score: Int = 20,
              multiplier: Int = 1,
-             segmentType: Int = SEGMENT_TYPE_OUTER_SINGLE,
+             segmentType: Int = makeSegmentTypeForMultiplier(multiplier),
              pt: Point = Point(0, 0),
-             startingScore: Int = -1): Dart
+             startingScore: Int = -1,
+             golfHole: Int = -1): Dart
 {
     val dart = Dart(score, multiplier)
     dart.segmentType = segmentType
     dart.pt = pt
     dart.startingScore = startingScore
+    dart.setGolfHole(golfHole)
     return dart
 }
 
+fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
+{
+    darts.forEach { it.setGolfHole(golfHole) }
+    return darts
+}
+
+private fun makeSegmentTypeForMultiplier(multiplier: Int): Int
+{
+    return when (multiplier)
+    {
+        0 -> SEGMENT_TYPE_MISS
+        2 -> SEGMENT_TYPE_DOUBLE
+        3 -> SEGMENT_TYPE_TREBLE
+        else -> SEGMENT_TYPE_OUTER_SINGLE
+    }
+}
+
+fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
+{
+    val allDarts = darts.toList().flatten()
+    return makeX01Rounds(startingScore, *allDarts.toTypedArray())
+}
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>>
 {
     var currentTotal = startingScore

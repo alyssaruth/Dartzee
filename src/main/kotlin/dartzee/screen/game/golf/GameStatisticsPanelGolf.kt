@@ -2,13 +2,11 @@ package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
-import dartzee.core.util.maxOrZero
-import dartzee.core.util.minOrZero
 import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerGolf>>(gameParams)
+open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerGolf>>()
 {
     override fun getRankedRowsHighestWins() = listOf("Points Improved")
     override fun getRankedRowsLowestWins() = listOf("Best Hole", "Avg. Hole", "Worst Hole", "Miss %", "Points Squandered")
@@ -17,9 +15,9 @@ open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPa
 
     override fun addRowsToTable()
     {
-        addRow(getScoreRow("Best Hole") { it.minOrZero().toDouble() } )
+        addRow(getScoreRow("Best Hole") { it.min() } )
         addRow(getScoreRow("Avg. Hole") { MathsUtil.round(it.average(), 2) })
-        addRow(getScoreRow("Worst Hole") { it.maxOrZero().toDouble() })
+        addRow(getScoreRow("Worst Hole") { it.max() })
         addRow(getMissesRow())
         addRow(getGambleRow({ r -> getPointsSquandered(r) }, "Points Squandered"))
         addRow(getGambleRow({ r -> getPointsImproved(r) }, "Points Improved"))
@@ -55,15 +53,6 @@ open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPa
         return finalScore - bestScore
     }
 
-    /**
-     * A bit difficult to define. Some examples:
-     *
-     * 4-3-2. You've gambled twice, and gained 1 each time. So method should return 2.
-     * 3-4-2. You've gambled the 3, stuffed it, then clawed it back. Method should return 1.
-     * 5-5-1. You've not gambled anything. Method should return 0.
-     * 4-3-5. You've stuffed it - there was a gain but it's gone. Method should return 0.
-     * 4-2-3. You've gained 1 (and also lost 1). Method should return 1 for the original '4' gamble. I guess.
-     */
     private fun getPointsImproved(round: List<Dart>): Int
     {
         val finalScore = round.last().getGolfScore()
@@ -91,7 +80,7 @@ open class GameStatisticsPanelGolf(gameParams: String): AbstractGameStatisticsPa
 
     private fun getScoreCountRow(score: Int) = getScoreRow("$score") { scores -> scores.count { it == score } }
 
-    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Any) = prepareRow(desc) { playerName ->
+    private fun getScoreRow(desc: String, f: (golfScores: List<Int>) -> Any?) = prepareRow(desc) { playerName ->
         val countedDarts = getCountedDarts(playerName)
         val scores = countedDarts.map { d -> d.getGolfScore() }
         f(scores)

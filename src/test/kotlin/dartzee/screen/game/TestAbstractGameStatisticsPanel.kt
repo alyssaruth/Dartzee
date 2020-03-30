@@ -156,7 +156,7 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
 }
 
 private class FakeGameStatisticsPanel(private val highestWins: List<String> = emptyList(),
-                                      private val lowestWins: List<String> = emptyList()): AbstractGameStatisticsPanel<DefaultPlayerState<*>>("")
+                                      private val lowestWins: List<String> = emptyList()): AbstractGameStatisticsPanel<DefaultPlayerState<*>>()
 {
     override fun getRankedRowsHighestWins() = highestWins
     override fun getRankedRowsLowestWins() = lowestWins

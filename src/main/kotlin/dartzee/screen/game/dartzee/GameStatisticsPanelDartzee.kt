@@ -8,7 +8,7 @@ import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 
-open class GameStatisticsPanelDartzee(gameParams: String): AbstractGameStatisticsPanel<DartzeePlayerState>(gameParams)
+open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayerState>()
 {
     override fun addRowsToTable()
     {

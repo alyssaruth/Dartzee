@@ -21,7 +21,7 @@ import javax.swing.JPanel
 /**
  * Shows running stats for X01 games - three-dart average, checkout % etc.
  */
-open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerX01>>(gameParams), PropertyChangeListener
+open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerX01>>(), PropertyChangeListener
 {
     private val panel = JPanel()
     private val lblSetupThreshold = JLabel("Setup Threshold")
@@ -37,6 +37,8 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
 
         nfSetupThreshold.value = 100
         nfSetupThreshold.addPropertyChangeListener(this)
+        nfSetupThreshold.setMinimum(62)
+        nfSetupThreshold.setMaximum(Integer.parseInt(gameParams) - 1)
     }
 
     override fun getRankedRowsHighestWins() = listOf("Highest Score", "3-dart avg", "Lowest Score", "Treble %", "Checkout %")
@@ -46,9 +48,6 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
 
     override fun addRowsToTable()
     {
-        nfSetupThreshold.setMinimum(62)
-        nfSetupThreshold.setMaximum(Integer.parseInt(gameParams) - 1)
-
         addRow(getScoreRow("Highest Score") { it.maxOrZero() })
         addRow(getThreeDartAvgsRow())
         addRow(getScoreRow("Lowest Score") { it.minOrZero() })
@@ -99,7 +98,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
 
             //Deal with the remainder
             val remainder = sortedEntries.map { it.value.size }.sum().toDouble()
-            val percent = MathsUtil.getPercentage(remainder, darts.size)
+            val percent = MathsUtil.getPercentage(remainder, darts.size, 0).toInt()
             remainingDarts[i+1] = "$percent%"
         }
 
@@ -115,7 +114,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
     {
         if (sortedEntries.isEmpty())
         {
-            row[i+1] = "N/A [0.0%]"
+            row[i+1] = "N/A [0%]"
         }
         else
         {

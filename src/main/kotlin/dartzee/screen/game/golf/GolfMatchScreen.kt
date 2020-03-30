@@ -10,7 +10,7 @@ import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.DartsScorerGolf
 
 class GolfMatchScreen(match: DartsMatchEntity, players: List<PlayerEntity>):
-    DartsMatchScreen<DefaultPlayerState<DartsScorerGolf>>(MatchSummaryPanel(match, MatchStatisticsPanelGolf(match.gameParams)), match, players)
+    DartsMatchScreen<DefaultPlayerState<DartsScorerGolf>>(MatchSummaryPanel(match, MatchStatisticsPanelGolf()), match, players)
 {
     override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity) = GamePanelGolf(parent, game)
 }

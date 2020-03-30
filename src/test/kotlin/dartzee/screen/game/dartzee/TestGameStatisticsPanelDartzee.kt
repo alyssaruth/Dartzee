@@ -34,12 +34,12 @@ class TestGameStatisticsPanelDartzee: AbstractGameStatisticsPanelTest<DartzeePla
         return makeDartzeePlayerState(scorer = scorer, dartsThrown = listOf(firstRound, secondRound, thirdRound), roundResults = listOf(secondResult, thirdResult))
     }
 
-    override fun factoryStatsPanel() = GameStatisticsPanelDartzee("")
+    override fun factoryStatsPanel() = GameStatisticsPanelDartzee()
 
     @Test
     fun `Should correctly identify the peak score for a player`()
     {
-        val statsPanel = GameStatisticsPanelDartzee("")
+        val statsPanel = GameStatisticsPanelDartzee()
         val state = makePlayerState()
         statsPanel.showStats(listOf(state))
 
@@ -49,7 +49,7 @@ class TestGameStatisticsPanelDartzee: AbstractGameStatisticsPanelTest<DartzeePla
     @Test
     fun `Should correctly identify the highest, lowest and avg round scores`()
     {
-        val statsPanel = GameStatisticsPanelDartzee("")
+        val statsPanel = GameStatisticsPanelDartzee()
         val state = makePlayerState()
         statsPanel.showStats(listOf(state))
 
@@ -61,7 +61,7 @@ class TestGameStatisticsPanelDartzee: AbstractGameStatisticsPanelTest<DartzeePla
     @Test
     fun `Should correctly identify the longest streak`()
     {
-        val statsPanel = GameStatisticsPanelDartzee("")
+        val statsPanel = GameStatisticsPanelDartzee()
         val state = makePlayerState()
         statsPanel.showStats(listOf(state))
 
@@ -80,7 +80,7 @@ class TestGameStatisticsPanelDartzee: AbstractGameStatisticsPanelTest<DartzeePla
     @Test
     fun `Should correctly identify the hardest rule that has been passed`()
     {
-        val statsPanel = GameStatisticsPanelDartzee("")
+        val statsPanel = GameStatisticsPanelDartzee()
         val state = makePlayerState()
         statsPanel.showStats(listOf(state))
 

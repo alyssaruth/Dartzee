@@ -2,7 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.core.util.maxOrZero
 
-class MatchStatisticsPanelDartzee(gameParams: String): GameStatisticsPanelDartzee(gameParams)
+class MatchStatisticsPanelDartzee: GameStatisticsPanelDartzee()
 {
     override fun addRowsToTable()
     {

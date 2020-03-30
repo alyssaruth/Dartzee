@@ -45,4 +45,6 @@ class NumberField constructor(min: Int? = null, max: Int? = null) : JFormattedTe
         val nf = formatter as NumberFormatter
         nf.minimum = min
     }
+
+    fun getMaximum() = (formatter as NumberFormatter).maximum
 }

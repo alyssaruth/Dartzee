@@ -2,7 +2,7 @@ package dartzee.screen.game.golf
 
 import dartzee.core.util.minOrZero
 
-class MatchStatisticsPanelGolf(gameParams: String): GameStatisticsPanelGolf(gameParams)
+class MatchStatisticsPanelGolf: GameStatisticsPanelGolf()
 {
     override fun addRowsToTable()
     {
