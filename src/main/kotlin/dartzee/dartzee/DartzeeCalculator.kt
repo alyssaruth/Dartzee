@@ -119,10 +119,15 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return probabilities.reduce { acc, i -> acc * i }
     }
 
+    private fun getAllSegments(): List<DartboardSegment>
+    {
+        val segments = getAllPossibleSegments().filter { !it.isMiss() }
+        return segments + DartboardSegment("20_$SEGMENT_TYPE_MISS")
+    }
+
     private fun generateAllPossibilities(): List<List<DartboardSegment>>
     {
-        val segments = getAllPossibleSegments().filter { !it.isMiss() }.toMutableList()
-        segments.add(DartboardSegment("20_$SEGMENT_TYPE_MISS"))
+        val segments = getAllSegments()
 
         val allPossibilities: MutableList<List<DartboardSegment>> = mutableListOf()
         segments.forEach { s1 ->
@@ -137,11 +142,34 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return allPossibilities.toList()
     }
 
-    fun generateAllPossibilities(dartsSoFar: List<Dart>): List<List<DartboardSegment>> {
-        return allPossibilities.filter {
-            dartsSoFar.allIndexed { ix, dart ->
-                it[ix].type == dart.segmentType && it[ix].score == dart.score
+    fun generateAllPossibilities(dartsSoFar: List<Dart>): List<List<DartboardSegment>>
+    {
+        if (dartsSoFar.isEmpty())
+        {
+            return allPossibilities
+        }
+
+        val segments = getAllSegments()
+        val segmentsSoFar = dartsSoFar.map { DartboardSegment("${it.score}_${it.segmentType}") }
+
+        var allPossibilities: List<List<DartboardSegment>> = segments.map { segmentsSoFar + it }
+        while (allPossibilities.first().size < 3)
+        {
+            allPossibilities = addAnotherLayer(allPossibilities, segments)
+        }
+
+        return allPossibilities
+    }
+    private fun addAnotherLayer(allPossibilities: List<List<DartboardSegment>>, segments: List<DartboardSegment>): List<List<DartboardSegment>>
+    {
+        val ret = mutableListOf<List<DartboardSegment>>()
+        for (possibility in allPossibilities)
+        {
+            segments.forEach {
+                ret.add(possibility + it)
             }
         }
+
+        return ret
     }
 }
