@@ -7,7 +7,7 @@
 = Project now built through gradle
 = Make dev bar properly hidden when not in use
 - Preference for how darts are displayed - always use D20 format
-= 52.2% test coverage (7101 / 13,608 lines covered by 1210 tests)
+= 54.3% test coverage (7018 / 12,913 lines covered by 1259 tests)
 
 --------- v4.0.1 ---------
 
