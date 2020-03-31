@@ -1,5 +1,9 @@
 --------- v4.0.2 ---------
 
++ In-game stats for Dartzee mode
+= Performance improvement: In-game stats no longer need to run SQL
+= Performance improvement: Enforce sensible JVM memory settings
+= Performance improvement: Calculations during dartzee rule setup might be a little faster...
 = Project now built through gradle
 = Make dev bar properly hidden when not in use
 - Preference for how darts are displayed - always use D20 format
