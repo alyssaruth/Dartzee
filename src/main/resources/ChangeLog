@@ -1,4 +1,4 @@
---------- v4.0.2 ---------
+--------- v4.1.0 ---------
 
 + In-game stats for Dartzee mode
 = Performance improvement: In-game stats no longer need to run SQL
