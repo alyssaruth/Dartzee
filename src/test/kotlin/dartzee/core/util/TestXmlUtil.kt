@@ -146,4 +146,13 @@ class TestXmlUtil: AbstractTest()
         val newList = root.readList("SomeList")
         newList.shouldContainExactly("Foo", "Bar", "Baz")
     }
+
+    @Test
+    fun `Should return null for a list that does not exist in the XML`()
+    {
+        val doc = XmlUtil.factoryNewDocument()
+        val root = doc.createRootElement("Root")
+
+        root.readList("Foo") shouldBe null
+    }
 }

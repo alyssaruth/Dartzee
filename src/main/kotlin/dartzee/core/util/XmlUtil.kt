@@ -80,11 +80,13 @@ fun Element.writeList(list: List<Any>, tagName: String)
     }
 }
 
-fun Element.readList(tagName: String): List<String>
+fun Element.readList(tagName: String): List<String>?
 {
     val list = mutableListOf<String>()
 
-    val listElement = getElementsByTagName(tagName).item(0) as Element
+    val listElement = getElementsByTagName(tagName).item(0) as Element?
+    listElement ?: return null
+
     val items = listElement.getElementsByTagName("ListItem")
 
     val size = items.length

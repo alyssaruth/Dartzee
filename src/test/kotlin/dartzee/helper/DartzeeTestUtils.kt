@@ -47,18 +47,19 @@ fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
     return rule
 }
 
-fun makeDartzeeRuleCalculationResult(validSegments: List<DartboardSegment> = listOf(),
+fun makeDartzeeRuleCalculationResult(scoringSegments: List<DartboardSegment> = emptyList(),
+                                     validSegments: List<DartboardSegment> = emptyList(),
                                      validCombinations: Int = 10,
                                      allCombinations: Int = 50,
                                      validCombinationProbability: Double = 1.0,
                                      allCombinationsProbability: Double = 6.0): DartzeeRuleCalculationResult
 {
-    return DartzeeRuleCalculationResult(validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
+    return DartzeeRuleCalculationResult(scoringSegments, validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
 }
 
 fun makeDartzeeRuleCalculationResult(percentage: Int): DartzeeRuleCalculationResult
 {
-    return DartzeeRuleCalculationResult(listOf(), 10, 50, percentage.toDouble(), 100.toDouble())
+    return DartzeeRuleCalculationResult(emptyList(), emptyList(), 10, 50, percentage.toDouble(), 100.toDouble())
 }
 
 fun makeScoreRule(score: Int) = DartzeeDartRuleScore().also { it.score = score }
