@@ -10,7 +10,7 @@ object DartzeeRuleConversion
         val allRules = DartzeeRuleEntity().retrieveEntities()
 
         val r = Runnable {
-            val dlg = ProgressDialog.factory("Convertin Dartzee Rules",
+            val dlg = ProgressDialog.factory("Converting Dartzee Rules",
                 "rules", allRules.size)
 
             dlg.setVisibleLater()
@@ -29,5 +29,6 @@ object DartzeeRuleConversion
 
         val t = Thread(r)
         t.start()
+        t.join()
     }
 }
