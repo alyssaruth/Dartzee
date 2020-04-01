@@ -89,6 +89,32 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
+    fun `Should optionally skip populating the calculationResult when converting to a DTO`()
+    {
+        val entity = DartzeeRuleEntity()
+        entity.dart1Rule = "<Even />"
+        entity.dart2Rule = "<Odd />"
+        entity.dart3Rule = "<Outer />"
+        entity.totalRule = "<Even />"
+        entity.allowMisses = true
+        entity.inOrder = false
+
+        val calculationResult = makeDartzeeRuleCalculationResult(listOf(doubleNineteen))
+        entity.calculationResult = calculationResult.toDbString()
+
+        val dto = entity.toDto(includeCalculationResult = false)
+
+        dto.dart1Rule!!.shouldBeInstanceOf<DartzeeDartRuleEven>()
+        dto.dart2Rule!!.shouldBeInstanceOf<DartzeeDartRuleOdd>()
+        dto.dart3Rule!!.shouldBeInstanceOf<DartzeeDartRuleOuter>()
+        dto.totalRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
+        dto.allowMisses shouldBe true
+        dto.inOrder shouldBe false
+
+        dto.calculationResult shouldBe null
+    }
+
+    @Test
     fun `Should retrieve rows for a template, sorted by ordinal`()
     {
         val templateA = insertDartzeeTemplate(name = "Template A")
