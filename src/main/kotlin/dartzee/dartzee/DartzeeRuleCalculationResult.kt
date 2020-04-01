@@ -2,6 +2,7 @@ package dartzee.dartzee
 
 import dartzee.`object`.DartboardSegment
 import dartzee.core.util.*
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DartsColour
 import kotlin.math.sqrt
 
@@ -30,6 +31,8 @@ data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegme
     fun getCombinationsDesc() = "$validCombinations combinations (success%: $percentage%)"
 
     fun getDifficultyDesc() = getDifficulty().desc
+
+    fun getSegmentStatus() = SegmentStatus(scoringSegments.toSet(), validSegments.toSet())
 
     fun getForeground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 1.0)
     fun getBackground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 0.5)

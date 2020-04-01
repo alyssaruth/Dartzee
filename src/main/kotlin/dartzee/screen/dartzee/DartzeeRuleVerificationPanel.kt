@@ -5,6 +5,7 @@ import dartzee.core.util.setFontSize
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.dartzeeCalculator
 import dartzee.utils.InjectedThings.verificationDartboardSize
@@ -88,7 +89,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         if (dartsThrown.size < 3)
         {
             lblCombinations.text = calculationResult.getCombinationsDesc()
-            dartboard.refreshValidSegments(calculationResult.validSegments)
+            dartboard.refreshValidSegments(calculationResult.getSegmentStatus())
         }
         else
         {

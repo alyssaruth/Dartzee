@@ -2,39 +2,54 @@ package dartzee.screen.dartzee
 
 import dartzee.`object`.DartboardSegment
 import dartzee.screen.Dartboard
+import dartzee.screen.game.dartzee.SegmentStatus
 import java.awt.Color
 
 class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, height)
 {
-    var validSegments = listOf<DartboardSegment>()
+    var segmentStatus: SegmentStatus? = SegmentStatus(emptySet(), emptySet())
 
-    fun refreshValidSegments(segments: List<DartboardSegment>)
+    fun refreshValidSegments(segmentStatus: SegmentStatus?)
     {
-        this.validSegments = segments
+        this.segmentStatus = segmentStatus
 
         getAllSegments().forEach{
             colourSegment(it, false)
         }
     }
 
-    override fun shouldActuallyHighlight(segment: DartboardSegment) = validSegments.contains(segment)
+    override fun shouldActuallyHighlight(segment: DartboardSegment): Boolean {
+        val status = segmentStatus
+        return status == null || status.validSegments.contains(segment)
+    }
 
     override fun colourSegment(segment: DartboardSegment, col: Color)
     {
-        if (!isValidSegment(segment))
+        val status = segmentStatus
+        if (status == null)
+        {
+            super.colourSegment(segment, col)
+        }
+        else if (status.scoringSegments.contains(segment))
+        {
+            val newCol = Color(col.red / 2, 255, col.blue / 2)
+            super.colourSegment(segment, newCol)
+        }
+        else if (isValidSegment(status, segment))
         {
             val newCol = Color(col.red, col.green, col.blue, 20)
             super.colourSegment(segment, newCol)
         }
         else
         {
-            super.colourSegment(segment, col)
+            val newCol = Color(255, col.green, col.blue)
+            super.colourSegment(segment, newCol)
         }
     }
-    private fun isValidSegment(segment: DartboardSegment): Boolean
+    private fun isValidSegment(status: SegmentStatus, segment: DartboardSegment): Boolean
     {
-        val validBecauseMiss =  validSegments.any { it.isMiss() } && segment.isMiss()
+        val validBecauseMiss =  status.validSegments.any { it.isMiss() } && segment.isMiss()
 
-        return validSegments.contains(segment) || validBecauseMiss
+        return status.validSegments.contains(segment) || validBecauseMiss
     }
 }

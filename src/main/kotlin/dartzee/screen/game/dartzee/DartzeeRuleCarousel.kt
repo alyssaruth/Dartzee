@@ -143,14 +143,12 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     private fun getFirstIncompleteRule(): DartzeeRuleTilePending? = pendingTiles.firstOrNull()
 
-    fun getValidSegments(): List<DartboardSegment>
+    fun getSegmentStatus(): SegmentStatus
     {
-        val validSegments = HashSet<DartboardSegment>()
-        pendingTiles.forEach {
-            validSegments.addAll(it.getValidSegments(dartsThrown))
-        }
+        val scoringSegments = pendingTiles.flatMap { it.getScoringSegments(dartsThrown) }.toSet()
+        val validSegments = pendingTiles.flatMap { it.getValidSegments(dartsThrown) }.toSet()
 
-        return validSegments.toList()
+        return SegmentStatus(scoringSegments, validSegments)
     }
 
     private fun displayTiles(tiles: List<DartzeeRuleTile>)
@@ -195,7 +193,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         if (src is DartzeeRuleTilePending)
         {
             hoveredTile = src
-            listener?.hoverChanged(src.getValidSegments(dartsThrown))
+            listener?.hoverChanged(src.getSegmentStatus(dartsThrown))
         }
     }
 
@@ -203,7 +201,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
     {
         hoveredTile = null
 
-        listener?.hoverChanged(getValidSegments())
+        listener?.hoverChanged(getSegmentStatus())
     }
 
     override fun mousePressed(e: MouseEvent?) {}

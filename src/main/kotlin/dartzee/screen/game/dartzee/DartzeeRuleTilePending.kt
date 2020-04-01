@@ -26,16 +26,31 @@ class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): DartzeeRuleT
         isVisible = getValidSegments(darts).isNotEmpty()
     }
 
-    fun getValidSegments(darts: List<Dart>): List<DartboardSegment>
+    fun getSegmentStatus(darts: List<Dart>) = SegmentStatus(getScoringSegments(darts), getValidSegments(darts))
+
+    fun getScoringSegments(darts: List<Dart>): Set<DartboardSegment>
     {
         if (darts.isEmpty())
         {
-            return dto.calculationResult!!.validSegments
+            return dto.calculationResult!!.scoringSegments.toSet()
         }
         else
         {
             val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
-            return result.validSegments
+            return result.scoringSegments.toSet()
+        }
+    }
+
+    fun getValidSegments(darts: List<Dart>): Set<DartboardSegment>
+    {
+        if (darts.isEmpty())
+        {
+            return dto.calculationResult!!.validSegments.toSet()
+        }
+        else
+        {
+            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
+            return result.validSegments.toSet()
         }
     }
 
