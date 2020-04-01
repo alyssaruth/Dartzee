@@ -1,8 +1,12 @@
 package dartzee.screen.dartzee
 
 import dartzee.`object`.DartboardSegment
+import dartzee.`object`.GREEN_COLOUR_WRAPPER
+import dartzee.`object`.RED_COLOUR_WRAPPER
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.DartsColour
+import dartzee.utils.getColourFromHashMap
 import java.awt.Color
 
 class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, height)
@@ -26,25 +30,15 @@ class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, he
     override fun colourSegment(segment: DartboardSegment, col: Color)
     {
         val status = segmentStatus
-        if (status == null)
-        {
-            super.colourSegment(segment, col)
+        val colourWithAlpha = Color(col.red, col.green, col.blue, 50)
+        val colour = when {
+            status == null -> col
+            status.scoringSegments.contains(segment) -> getColourFromHashMap(segment, GREEN_COLOUR_WRAPPER)
+            isValidSegment(status, segment) -> colourWithAlpha
+            else -> getColourFromHashMap(segment, RED_COLOUR_WRAPPER)
         }
-        else if (status.scoringSegments.contains(segment))
-        {
-            val newCol = Color(col.red / 2, 255, col.blue / 2)
-            super.colourSegment(segment, newCol)
-        }
-        else if (isValidSegment(status, segment))
-        {
-            val newCol = Color(col.red, col.green, col.blue, 20)
-            super.colourSegment(segment, newCol)
-        }
-        else
-        {
-            val newCol = Color(255, col.green, col.blue)
-            super.colourSegment(segment, newCol)
-        }
+
+        super.colourSegment(segment, colour)
     }
     private fun isValidSegment(status: SegmentStatus, segment: DartboardSegment): Boolean
     {

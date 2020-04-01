@@ -140,7 +140,7 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlight
 
 }
 
-private fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color?
+fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color
 {
     val type = segment.type
     if (type == SEGMENT_TYPE_MISS)

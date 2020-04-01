@@ -5,13 +5,21 @@ import java.awt.Color
 
 val DEFAULT_COLOUR_WRAPPER = ColourWrapper(DartsColour.DARTBOARD_BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
 
-class ColourWrapper constructor(private var evenSingleColour : Color?, private var evenDoubleColour : Color?,
-                                private var evenTrebleColour : Color?, private var oddSingleColour : Color?,
-                                private var oddDoubleColour : Color?, private var oddTrebleColour : Color?,
-                                private var innerBullColour : Color?, private var outerBullColour : Color?,
-                                var outerDartboardColour : Color? = Color.black)
+val GREEN_COLOUR_WRAPPER = makeMonochromeWrapper(Color(0, 102, 0), Color(0, 153, 0), Color.GREEN)
+val RED_COLOUR_WRAPPER = makeMonochromeWrapper(Color(102, 0, 0), Color(153, 0, 0), Color.RED)
+
+fun makeMonochromeWrapper(dark: Color, medium: Color, light: Color): ColourWrapper
 {
-    var missedBoardColour: Color? = null
+    return ColourWrapper(dark, medium, medium, medium, light, light, medium, light)
+}
+
+class ColourWrapper constructor(private var evenSingleColour : Color, private var evenDoubleColour : Color,
+                                private var evenTrebleColour : Color, private var oddSingleColour : Color,
+                                private var oddDoubleColour : Color, private var oddTrebleColour : Color,
+                                private var innerBullColour : Color, private var outerBullColour : Color,
+                                var outerDartboardColour : Color = Color.black)
+{
+    var missedBoardColour: Color = Color(0, 0, 0, 0)
     var edgeColour: Color? = null
 
     constructor(singleColour: Color) : this(singleColour, singleColour, singleColour, singleColour, singleColour,
@@ -20,7 +28,7 @@ class ColourWrapper constructor(private var evenSingleColour : Color?, private v
     /**
      * Helpers
      */
-    fun getBullColour(multiplier: Int): Color?
+    fun getBullColour(multiplier: Int): Color
     {
         return when (multiplier)
         {
@@ -30,7 +38,7 @@ class ColourWrapper constructor(private var evenSingleColour : Color?, private v
 
     }
 
-    fun getColour(multiplier: Int, even: Boolean): Color?
+    fun getColour(multiplier: Int, even: Boolean): Color
     {
         return when (multiplier)
         {
@@ -40,17 +48,17 @@ class ColourWrapper constructor(private var evenSingleColour : Color?, private v
         }
     }
 
-    private fun getSingleColour(even: Boolean): Color?
+    private fun getSingleColour(even: Boolean): Color
     {
         return if (even) evenSingleColour else oddSingleColour
     }
 
-    private fun getDoubleColour(even: Boolean): Color?
+    private fun getDoubleColour(even: Boolean): Color
     {
         return if (even) evenDoubleColour else oddDoubleColour
     }
 
-    private fun getTrebleColour(even: Boolean): Color?
+    private fun getTrebleColour(even: Boolean): Color
     {
         return if (even) evenTrebleColour else oddTrebleColour
     }
