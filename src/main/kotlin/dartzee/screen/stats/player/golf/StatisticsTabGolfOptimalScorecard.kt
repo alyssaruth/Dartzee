@@ -34,7 +34,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         panelOther.add(panelOtherScorecard)
         panelOtherScorecard.layout = BorderLayout(0, 0)
         val scorer = DartsScorerGolf()
-        scorer.init(null, null)
+        scorer.init(null, "18")
         panelMyScorecard.add(scorer, BorderLayout.CENTER)
     }
 
@@ -67,7 +67,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         }
 
         scorer.showGameId = true
-        scorer.init(null, null)
+        scorer.init(null, "18")
 
         for (i in 1..18)
         {
