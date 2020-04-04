@@ -5,7 +5,6 @@ import dartzee.`object`.GREEN_COLOUR_WRAPPER
 import dartzee.`object`.RED_COLOUR_WRAPPER
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
-import dartzee.utils.DartsColour
 import dartzee.utils.getColourFromHashMap
 import java.awt.Color
 
@@ -27,22 +26,22 @@ class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, he
         return status == null || status.validSegments.contains(segment)
     }
 
-    override fun colourSegment(segment: DartboardSegment, col: Color)
+    override fun getInitialColourForSegment(segment: DartboardSegment): Color
     {
         val status = segmentStatus
-        val colourWithAlpha = Color(col.red, col.green, col.blue, 50)
-        val colour = when {
-            status == null -> col
+        val default = super.getInitialColourForSegment(segment)
+        val colourWithAlpha = Color(default.red, default.green, default.blue, 50)
+        return when {
+            status == null -> default
             status.scoringSegments.contains(segment) -> getColourFromHashMap(segment, GREEN_COLOUR_WRAPPER)
             isValidSegment(status, segment) -> colourWithAlpha
             else -> getColourFromHashMap(segment, RED_COLOUR_WRAPPER)
         }
-
-        super.colourSegment(segment, colour)
     }
+
     private fun isValidSegment(status: SegmentStatus, segment: DartboardSegment): Boolean
     {
-        val validBecauseMiss =  status.validSegments.any { it.isMiss() } && segment.isMiss()
+        val validBecauseMiss = status.validSegments.any { it.isMiss() } && segment.isMiss()
 
         return status.validSegments.contains(segment) || validBecauseMiss
     }

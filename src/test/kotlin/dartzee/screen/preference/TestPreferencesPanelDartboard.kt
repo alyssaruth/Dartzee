@@ -60,13 +60,13 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
         val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
         val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
-        DartsColour.getColorFromPrefStr(oddSingleStr, null) shouldBe Color.BLUE
-        DartsColour.getColorFromPrefStr(oddDoubleStr, null) shouldBe Color(200, 50, 128)
-        DartsColour.getColorFromPrefStr(oddTrebleStr, null) shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
+        DartsColour.getColorFromPrefStr(oddSingleStr, DartsColour.TRANSPARENT) shouldBe Color.BLUE
+        DartsColour.getColorFromPrefStr(oddDoubleStr, DartsColour.TRANSPARENT) shouldBe Color(200, 50, 128)
+        DartsColour.getColorFromPrefStr(oddTrebleStr, DartsColour.TRANSPARENT) shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
 
-        DartsColour.getColorFromPrefStr(evenSingleStr, null) shouldBe Color.YELLOW
-        DartsColour.getColorFromPrefStr(evenDoubleStr, null) shouldBe Color.MAGENTA
-        DartsColour.getColorFromPrefStr(evenTrebleStr, null) shouldBe Color.CYAN
+        DartsColour.getColorFromPrefStr(evenSingleStr, DartsColour.TRANSPARENT) shouldBe Color.YELLOW
+        DartsColour.getColorFromPrefStr(evenDoubleStr, DartsColour.TRANSPARENT) shouldBe Color.MAGENTA
+        DartsColour.getColorFromPrefStr(evenTrebleStr, DartsColour.TRANSPARENT) shouldBe Color.CYAN
 
 
     }

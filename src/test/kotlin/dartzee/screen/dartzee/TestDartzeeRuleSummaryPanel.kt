@@ -10,7 +10,7 @@ import dartzee.helper.makeDart
 import dartzee.helper.makeRoundResultEntities
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
-import dartzee.utils.getAllPossibleSegments
+import dartzee.screen.game.dartzee.SegmentStatus
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -47,19 +47,19 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
     {
         val summaryPanel = makeSummaryPanel()
 
-        summaryPanel.getValidSegments() shouldBe getAllPossibleSegments()
+        summaryPanel.getSegmentStatus() shouldBe null
     }
 
     @Test
     fun `Should return the carousel segments once past round one`()
     {
         val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
-        every { carousel.getValidSegments() } returns getOuterSegments()
+        every { carousel.getSegmentStatus() } returns SegmentStatus(getOuterSegments(), getOuterSegments())
 
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         summaryPanel.update(listOf(), listOf(), 103, 2)
 
-        summaryPanel.getValidSegments() shouldBe getOuterSegments()
+        summaryPanel.getSegmentStatus() shouldBe SegmentStatus(getOuterSegments(), getOuterSegments())
     }
 
     @Test

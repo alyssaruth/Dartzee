@@ -109,8 +109,7 @@ private fun getScoreForAngle(angle: Double): Int
     return numberOrder[index]
 }
 
-fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlighted: Boolean,
-                                colourWrapper: ColourWrapper?): Color?
+fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, colourWrapper: ColourWrapper?): Color
 {
     val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
 
@@ -122,22 +121,7 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlight
         return edgeColour
     }
 
-    val colour = getColourFromHashMap(segment, colourWrapperToUse)
-    colour ?: return null
-
-    return if (highlighted)
-    {
-        if (colour == DARTBOARD_BLACK)
-        {
-            Color.DARK_GRAY
-        }
-        else
-        {
-            DartsColour.getDarkenedColour(colour)
-        }
-    }
-    else colour
-
+    return getColourFromHashMap(segment, colourWrapperToUse)
 }
 
 fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color

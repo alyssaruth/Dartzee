@@ -12,6 +12,7 @@ import dartzee.core.util.runOnEventThread
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.*
+import dartzee.utils.DartsColour.DARTBOARD_BLACK
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -144,7 +145,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private fun renderDartboardImage()
     {
-        dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), false, colourWrapper) }
+        dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), colourWrapper) }
         Debug.append("Created dartboardImage")
     }
 
@@ -240,17 +241,30 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         colourSegment(hoveredSegment, true)
     }
 
+    open fun getInitialColourForSegment(segment: DartboardSegment) = getColourForPointAndSegment(null, segment, colourWrapper)
+
     fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
         val actuallyHighlight = highlight && !segment.isMiss() && shouldActuallyHighlight(segment)
 
-        val hoveredColour = getColourForPointAndSegment(null, segment, actuallyHighlight, colourWrapper) ?: return
+        val colour = getInitialColourForSegment(segment)
+        val hoveredColour = if (actuallyHighlight) getHighlightedColour(colour) else colour
+
         colourSegment(segment, hoveredColour)
     }
+    private fun getHighlightedColour(colour: Color): Color =
+        if (colour == DARTBOARD_BLACK)
+        {
+            Color.DARK_GRAY
+        }
+        else
+        {
+            DartsColour.getDarkenedColour(colour)
+        }
 
     open fun shouldActuallyHighlight(segment: DartboardSegment) = true
 
-    open fun colourSegment(segment: DartboardSegment, col: Color)
+    fun colourSegment(segment: DartboardSegment, col: Color)
     {
         val pointsForCurrentSegment = segment.points
         for (i in pointsForCurrentSegment.indices)

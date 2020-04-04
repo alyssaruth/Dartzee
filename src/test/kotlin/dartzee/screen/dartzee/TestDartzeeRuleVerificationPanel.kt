@@ -35,7 +35,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(dto)
 
-        panel.dartboard.validSegments.shouldContainExactly(d20)
+        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactly(d20)
     }
 
     @Test
@@ -74,17 +74,17 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(rule)
 
-        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(0))
+        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(0))
         panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
 
-        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(1))
+        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(1))
         panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
 
-        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(2))
+        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
         panel.dartThrown(makeDart(20, 2, SEGMENT_TYPE_DOUBLE))
 
         //Shouldn't update on the last dart thrown
-        dartboard.validSegments.shouldContainExactly(getFakeValidSegment(2))
+        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
     }
 
     @Test
