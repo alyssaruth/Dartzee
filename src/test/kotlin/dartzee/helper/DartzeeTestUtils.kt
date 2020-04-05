@@ -49,7 +49,7 @@ fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
 }
 
 fun makeDartzeeRuleCalculationResult(scoringSegments: List<DartboardSegment> = emptyList(),
-                                     validSegments: List<DartboardSegment> = emptyList(),
+                                     validSegments: List<DartboardSegment> = scoringSegments,
                                      validCombinations: Int = 10,
                                      allCombinations: Int = 50,
                                      validCombinationProbability: Double = 1.0,
