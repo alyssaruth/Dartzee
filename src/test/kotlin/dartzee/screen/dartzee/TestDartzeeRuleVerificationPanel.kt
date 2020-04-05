@@ -35,7 +35,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(dto)
 
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactly(d20)
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(d20)
     }
 
     @Test

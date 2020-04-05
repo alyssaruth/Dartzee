@@ -126,19 +126,19 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.pendingTiles.size shouldBe 2
 
         val expectedSegments = getAllPossibleSegments().filter { !it.isMiss() && !it.isDoubleExcludingBull() }
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
 
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
 
-        val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.validSegments.toTypedArray()
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
+        val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.scoringSegments.toTypedArray()
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
 
         panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
-        panel.dartboard.segmentStatus!!.validSegments.shouldBeEmpty()
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldBeEmpty()
 
         panel.btnReset.isEnabled = true
         panel.btnReset.doClick()
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
     }
 
     @Test
@@ -202,9 +202,9 @@ class TestGamePanelDartzee: AbstractTest()
         panel.dartboard.segmentStatus!!.validSegments.shouldContainExactly(doubleTwenty)
 
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactlyInAnyOrder(*getAllPossibleSegments().toTypedArray())
+        panel.dartboard.segmentStatus shouldBe null
         panel.hoverChanged(SegmentStatus(listOf(bullseye), listOf(bullseye)))
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactlyInAnyOrder(*getAllPossibleSegments().toTypedArray()) //Should not have changed
+        panel.dartboard.segmentStatus shouldBe null
     }
 
     @Test

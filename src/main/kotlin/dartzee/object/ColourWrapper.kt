@@ -18,7 +18,7 @@ class ColourWrapper constructor(private var evenSingleColour : Color, private va
                                 private var innerBullColour : Color, private var outerBullColour : Color,
                                 var outerDartboardColour : Color = Color.black)
 {
-    var missedBoardColour: Color = Color(0, 0, 0, 0)
+    var missedBoardColour: Color = DartsColour.TRANSPARENT
     var edgeColour: Color? = null
 
     constructor(singleColour: Color) : this(singleColour, singleColour, singleColour, singleColour, singleColour,

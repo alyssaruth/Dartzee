@@ -54,7 +54,7 @@ class TestDartzeeRuleTilePending: AbstractTest()
     fun `Should use the cached calculation result when getting valid segments and no darts have been thrown`()
     {
         val segments = listOf(doubleNineteen, trebleTwenty)
-        val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(segments))
+        val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(validSegments = segments))
 
         val tile = DartzeeRuleTilePending(rule, 2)
         tile.getValidSegments(listOf()).shouldContainExactlyInAnyOrder(doubleNineteen, trebleTwenty)

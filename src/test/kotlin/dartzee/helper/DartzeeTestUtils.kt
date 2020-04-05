@@ -11,6 +11,7 @@ import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.state.DartzeePlayerState
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.factoryHighScoreResult
 import dartzee.utils.getAllPossibleSegments
@@ -105,3 +106,6 @@ fun makeDartzeeScorer(firstRound: List<Dart> = listOf(Dart(20, 1), Dart(5, 1), D
 
     return scorer
 }
+
+fun makeSegmentStatus(validSegments: List<DartboardSegment>, scoringSegments: List<DartboardSegment> = validSegments)
+ = SegmentStatus(scoringSegments, validSegments)

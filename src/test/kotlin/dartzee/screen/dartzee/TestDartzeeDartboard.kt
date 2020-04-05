@@ -3,6 +3,7 @@ package dartzee.screen.dartzee
 import dartzee.*
 import dartzee.`object`.*
 import dartzee.helper.AbstractTest
+import dartzee.helper.makeSegmentStatus
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -17,7 +18,7 @@ class TestDartzeeDartboard: AbstractTest()
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
 
         val validSegments = listOf(trebleNineteen, bullseye)
-        dartboard.refreshValidSegments(validSegments)
+        dartboard.refreshValidSegments(makeSegmentStatus(validSegments))
 
         val t19pts = dartboard.getPointsForSegment(19, SEGMENT_TYPE_TREBLE)
         t19pts.forEach { dartboard.getColor(it) shouldBe Color.GREEN }
@@ -34,7 +35,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(100, 100)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(trebleNineteen))
+        dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen)))
 
         val missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color(0, 0, 0, 20) }
@@ -45,7 +46,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(100, 100)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(trebleNineteen, missTwenty))
+        dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen, missTwenty)))
 
         val missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
@@ -56,7 +57,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(100, 100)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(trebleNineteen))
+        dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen)))
 
         dartboard.ensureListening()
 
@@ -71,7 +72,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(100, 100)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(doubleTwenty))
+        dartboard.refreshValidSegments(makeSegmentStatus(listOf(doubleTwenty)))
 
         dartboard.ensureListening()
 

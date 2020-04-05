@@ -85,7 +85,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         dto.inOrder shouldBe false
 
         val newCalcResult = dto.calculationResult!!
-        newCalcResult.validSegments.shouldContainExactly(doubleNineteen)
+        newCalcResult.scoringSegments.shouldContainExactly(doubleNineteen)
     }
 
     @Test
