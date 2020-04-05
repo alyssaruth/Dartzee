@@ -36,7 +36,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 {
     private var hmPointToSegment = mutableMapOf<Point, DartboardSegment>()
     protected var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegment>()
-    val scoringPoints = mutableListOf<Point>()
 
     private val dartLabels = mutableListOf<JLabel>()
 
@@ -267,10 +266,15 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     fun colourSegment(segment: DartboardSegment, col: Color)
     {
         val pointsForCurrentSegment = segment.points
+        val edgeColour = getEdgeColourForSegment(segment)
         for (i in pointsForCurrentSegment.indices)
         {
             val pt = pointsForCurrentSegment[i]
-            if (colourWrapper?.edgeColour == null || !segment.isEdgePoint(pt))
+            if (edgeColour != null && segment.isEdgePoint(pt))
+            {
+                colourPoint(pt, edgeColour)
+            }
+            else
             {
                 colourPoint(pt, col)
             }
@@ -278,6 +282,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
         dartboardLabel.repaint()
     }
+
+    open fun getEdgeColourForSegment(segment: DartboardSegment) = colourWrapper?.edgeColour
 
     private fun colourPoint(pt: Point, colour: Color)
     {
@@ -324,11 +330,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
         segment.addPoint(pt)
         hmPointToSegment[pt] = segment
-
-        if (!segment.isMiss())
-        {
-            scoringPoints.add(pt)
-        }
 
         return segment
     }

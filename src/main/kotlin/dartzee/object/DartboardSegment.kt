@@ -67,6 +67,7 @@ data class DartboardSegment(val scoreAndType : String)
     //For tracking edge points
     private val hmXCoordToPoints = HashMapList<Int, Point>()
     private val hmYCoordToPoints = HashMapList<Int, Point>()
+    private val edgePoints = mutableListOf<Point>()
 
     init
     {
@@ -99,16 +100,35 @@ data class DartboardSegment(val scoreAndType : String)
     {
         pt ?: return false
 
-        val otherXPts = hmXCoordToPoints.getOrDefault(pt.x, mutableListOf())
-        val otherYPts = hmYCoordToPoints.getOrDefault(pt.y, mutableListOf())
+        if (edgePoints.isEmpty())
+        {
+            cacheEdgePoints()
+        }
 
-        val yMin = otherXPts.map { it.y }.min() ?: return true
-        val yMax = otherXPts.map { it.y }.max() ?: return true
-        val xMin = otherYPts.map { it.x }.min() ?: return true
-        val xMax = otherYPts.map { it.x }.max() ?: return true
-
-        return pt.x == xMax || pt.x == xMin || pt.y == yMax || pt.y == yMin
+        return edgePoints.contains(pt)
     }
+
+    private fun cacheEdgePoints()
+    {
+        val yMins: List<Point> = hmXCoordToPoints.values.map { points -> points.minBy { it.y }!! }
+        val yMaxes: List<Point> = hmXCoordToPoints.values.map { points -> points.maxBy { it.y }!! }
+        val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minBy { it.x }!! }
+        val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxBy { it.x }!! }
+        edgePoints.addAll(yMins + yMaxes + xMins + xMaxes)
+    }
+
+//    private fun calculateIsEdgePoint(pt: Point): Boolean
+//    {
+//        val otherXPts = hmXCoordToPoints.getOrDefault(pt.x, mutableListOf())
+//        val otherYPts = hmYCoordToPoints.getOrDefault(pt.y, mutableListOf())
+//
+//        val yMin = otherXPts.map { it.y }.min() ?: return true
+//        val yMax = otherXPts.map { it.y }.max() ?: return true
+//        val xMin = otherYPts.map { it.x }.min() ?: return true
+//        val xMax = otherYPts.map { it.x }.max() ?: return true
+//
+//        return pt.x == xMax || pt.x == xMin || pt.y == yMax || pt.y == yMin
+//    }
 
     fun getRoughProbability(): Double {
         return getRoughSize(type, score).toDouble() / getRoughScoringArea()

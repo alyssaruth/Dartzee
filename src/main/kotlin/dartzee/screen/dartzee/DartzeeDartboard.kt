@@ -32,15 +32,20 @@ class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, he
         return when {
             status == null || segment.isMiss() -> default
             status.scoringSegments.contains(segment) -> default
-            isValidSegment(status, segment) -> getColourFromHashMap(segment, GREY_COLOUR_WRAPPER)
+            status.validSegments.contains(segment) -> getColourFromHashMap(segment, GREY_COLOUR_WRAPPER)
             else -> Color.BLACK
         }
     }
 
-    private fun isValidSegment(status: SegmentStatus, segment: DartboardSegment): Boolean
+    override fun getEdgeColourForSegment(segment: DartboardSegment): Color?
     {
-        val validBecauseMiss = status.validSegments.any { it.isMiss() } && segment.isMiss()
-
-        return status.validSegments.contains(segment) || validBecauseMiss
+        val status = segmentStatus
+        val default = null
+        return when {
+            status == null || segment.isMiss() -> default
+            status.scoringSegments.contains(segment) -> Color.GRAY
+            status.validSegments.contains(segment) -> default
+            else -> default
+        }
     }
 }
