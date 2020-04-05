@@ -107,5 +107,5 @@ fun makeDartzeeScorer(firstRound: List<Dart> = listOf(Dart(20, 1), Dart(5, 1), D
     return scorer
 }
 
-fun makeSegmentStatus(validSegments: List<DartboardSegment>, scoringSegments: List<DartboardSegment> = validSegments)
+fun makeSegmentStatus(scoringSegments: List<DartboardSegment>, validSegments: List<DartboardSegment> = scoringSegments)
  = SegmentStatus(scoringSegments, validSegments)

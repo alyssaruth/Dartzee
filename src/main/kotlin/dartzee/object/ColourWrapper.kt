@@ -1,6 +1,7 @@
 package dartzee.`object`
 
 import dartzee.utils.DartsColour
+import dartzee.utils.hmScoreToOrdinal
 import java.awt.Color
 
 val DEFAULT_COLOUR_WRAPPER = ColourWrapper(DartsColour.DARTBOARD_BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
@@ -37,8 +38,9 @@ class ColourWrapper constructor(private var evenSingleColour : Color, private va
 
     }
 
-    fun getColour(multiplier: Int, even: Boolean): Color
+    fun getColour(multiplier: Int, score: Int): Color
     {
+        val even = hmScoreToOrdinal[Integer.valueOf(score)] ?: false
         return when (multiplier)
         {
             1 -> getSingleColour(even)

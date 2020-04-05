@@ -14,7 +14,7 @@ import java.awt.Point
  */
 private val numberOrder = mutableListOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
 
-private var hmScoreToOrdinal = initialiseOrdinalHashMap()
+val hmScoreToOrdinal = initialiseOrdinalHashMap()
 private var colourWrapperFromPrefs: ColourWrapper? = null
 
 private const val RATIO_INNER_BULL = 0.038
@@ -145,8 +145,7 @@ fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper
         return colourWrapper.getBullColour(multiplier)
     }
 
-    val even = hmScoreToOrdinal[Integer.valueOf(score)] ?: false
-    return colourWrapper.getColour(multiplier, even)
+    return colourWrapper.getColour(multiplier, score)
 }
 
 private fun getColourWrapperFromPrefs(): ColourWrapper
