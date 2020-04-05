@@ -40,12 +40,10 @@ class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, he
     override fun getEdgeColourForSegment(segment: DartboardSegment): Color?
     {
         val status = segmentStatus
-        val default = null
         return when {
-            status == null || segment.isMiss() -> default
+            status == null || segment.isMiss() -> null
             status.scoringSegments.contains(segment) -> Color.GRAY
-            status.validSegments.contains(segment) -> default
-            else -> default
+            else -> null
         }
     }
 }
