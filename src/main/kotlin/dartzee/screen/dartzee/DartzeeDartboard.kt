@@ -1,8 +1,7 @@
 package dartzee.screen.dartzee
 
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.GREEN_COLOUR_WRAPPER
-import dartzee.`object`.RED_COLOUR_WRAPPER
+import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getColourFromHashMap
@@ -30,12 +29,11 @@ class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, he
     {
         val status = segmentStatus
         val default = super.getInitialColourForSegment(segment)
-        val colourWithAlpha = Color(default.red, default.green, default.blue, 50)
         return when {
-            status == null -> default
-            status.scoringSegments.contains(segment) -> getColourFromHashMap(segment, GREEN_COLOUR_WRAPPER)
-            isValidSegment(status, segment) -> colourWithAlpha
-            else -> getColourFromHashMap(segment, RED_COLOUR_WRAPPER)
+            status == null || segment.isMiss() -> default
+            status.scoringSegments.contains(segment) -> default
+            isValidSegment(status, segment) -> getColourFromHashMap(segment, GREY_COLOUR_WRAPPER)
+            else -> Color.BLACK
         }
     }
 

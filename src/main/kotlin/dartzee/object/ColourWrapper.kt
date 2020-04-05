@@ -5,12 +5,11 @@ import java.awt.Color
 
 val DEFAULT_COLOUR_WRAPPER = ColourWrapper(DartsColour.DARTBOARD_BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
 
-val GREEN_COLOUR_WRAPPER = makeMonochromeWrapper(Color(0, 102, 0), Color(0, 153, 0), Color.GREEN)
-val RED_COLOUR_WRAPPER = makeMonochromeWrapper(Color(102, 0, 0), Color(153, 0, 0), Color.RED)
+val GREY_COLOUR_WRAPPER = makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIGHT_GRAY)
 
-fun makeMonochromeWrapper(dark: Color, medium: Color, light: Color): ColourWrapper
+fun makeMonochromeWrapper(dark: Color, light: Color): ColourWrapper
 {
-    return ColourWrapper(dark, medium, medium, medium, light, light, medium, light)
+    return ColourWrapper(dark, light, light, light, dark, dark, dark, light)
 }
 
 class ColourWrapper constructor(private var evenSingleColour : Color, private var evenDoubleColour : Color,
