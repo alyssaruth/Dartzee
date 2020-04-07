@@ -5,6 +5,7 @@ import dartzee.`object`.DartsClient
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
@@ -26,7 +27,7 @@ abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
     protected var hmRoundNumberToDarts = HashMapList<Int, Dart>()
 
     abstract val gameParams: String
-    abstract val gameType: Int
+    abstract val gameType: GameType
 
     init
     {

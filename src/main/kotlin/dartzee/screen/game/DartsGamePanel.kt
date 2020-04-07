@@ -812,17 +812,14 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         const val VERBOSE_LOGGING = false
 
-        fun factory(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, out AbstractPlayerState<*>>
-        {
-            return when (game.gameType)
+        fun factory(parent: AbstractDartsGameScreen, game: GameEntity) =
+            when (game.gameType)
             {
-                GAME_TYPE_X01 -> GamePanelX01(parent, game)
-                GAME_TYPE_GOLF -> GamePanelGolf(parent, game)
-                GAME_TYPE_ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
-                GAME_TYPE_DARTZEE -> constructGamePanelDartzee(parent, game)
-                else -> GamePanelX01(parent, game)
+                GameType.X01 -> GamePanelX01(parent, game)
+                GameType.GOLF -> GamePanelGolf(parent, game)
+                GameType.ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
+                GameType.DARTZEE -> constructGamePanelDartzee(parent, game)
             }
-        }
 
         fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
         {

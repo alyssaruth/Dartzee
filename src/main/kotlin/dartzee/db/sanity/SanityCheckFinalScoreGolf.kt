@@ -5,11 +5,12 @@ import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_TREBLE
 import dartzee.db.GAME_TYPE_GOLF
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 
 class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()
 {
-    override val gameType = GAME_TYPE_GOLF
+    override val gameType = GameType.GOLF
 
     override fun populateParticipantToFinalScoreTable(tempTable: String)
     {

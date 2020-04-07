@@ -7,8 +7,8 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeTemplateEntity
-import dartzee.db.GAME_TYPE_DARTZEE
 import dartzee.db.GameEntity
+import dartzee.db.GameType
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
 import dartzee.screen.UtilitiesScreen
@@ -47,8 +47,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     {
         val templateId = insertTemplateAndRule().rowId
 
-        insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
-        insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
+        insertGame(gameType = GameType.DARTZEE, gameParams = templateId)
+        insertGame(gameType = GameType.DARTZEE, gameParams = templateId)
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
@@ -158,8 +158,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
 
         val templateId = insertTemplateAndRule(name = "ABC").rowId
 
-        insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
-        insertGame(gameType = GAME_TYPE_DARTZEE, gameParams = templateId)
+        insertGame(gameType = GameType.DARTZEE, gameParams = templateId)
+        insertGame(gameType = GameType.DARTZEE, gameParams = templateId)
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()

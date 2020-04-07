@@ -2,8 +2,7 @@ package dartzee.reporting
 
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.GAME_TYPE_GOLF
-import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -15,15 +14,15 @@ class TestReporting: AbstractTest()
     @Test
     fun `Should be able to filter by game type`()
     {
-        val gameOne = insertGameForReport(gameType = GAME_TYPE_X01)
-        val gameTwo = insertGameForReport(gameType = GAME_TYPE_GOLF)
+        val gameOne = insertGameForReport(gameType = GameType.X01)
+        val gameTwo = insertGameForReport(gameType = GameType.GOLF)
 
         val rpAll = ReportParameters()
         val resultsAll = runReportForTest(rpAll)
         resultsAll.shouldContainExactlyInAnyOrder(gameOne.localId, gameTwo.localId)
 
         val rpX01 = ReportParameters()
-        rpX01.gameType = GAME_TYPE_X01
+        rpX01.gameType = GameType.X01
 
         val resultsX01 = runReportForTest(rpX01)
         resultsX01.shouldContainExactly(gameOne.localId)

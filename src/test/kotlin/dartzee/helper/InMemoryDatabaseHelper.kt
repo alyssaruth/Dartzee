@@ -148,7 +148,7 @@ private fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
 
 fun insertGameForReport(uuid: String = randomGuid(),
                         localId: Long = LocalIdGenerator.generateLocalId("Game"),
-                        gameType: Int = GAME_TYPE_X01,
+                        gameType: GameType = GameType.X01,
                         gameParams: String = "501",
                         dtFinish: Timestamp = DateStatics.END_OF_TIME,
                         dartsMatchId: String = "",
@@ -164,7 +164,7 @@ fun insertGameForReport(uuid: String = randomGuid(),
 
 fun insertGame(uuid: String = randomGuid(),
                localId: Long = LocalIdGenerator.generateLocalId("Game"),
-               gameType: Int = GAME_TYPE_X01,
+               gameType: GameType = GameType.X01,
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
                dartsMatchId: String = "",

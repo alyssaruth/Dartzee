@@ -5,6 +5,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_GOLF
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache
 import java.net.URL
@@ -14,7 +15,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
 {
     override val name = "Gambler"
     override val desc = "Total number of points risked (by continuing to throw) in Golf"
-    override val gameType = GAME_TYPE_GOLF
+    override val gameType = GameType.GOLF
 
     override val achievementRef = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
     override val redThreshold = 5

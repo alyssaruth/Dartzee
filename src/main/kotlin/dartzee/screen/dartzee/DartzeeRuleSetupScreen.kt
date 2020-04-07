@@ -2,7 +2,7 @@ package dartzee.screen.dartzee
 
 import dartzee.`object`.GameLauncher
 import dartzee.db.DartsMatchEntity
-import dartzee.db.GAME_TYPE_DARTZEE
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.GameSetupScreen
@@ -41,7 +41,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
         }
         else
         {
-            GameLauncher.launchNewGame(players, GAME_TYPE_DARTZEE, "", dtos)
+            GameLauncher.launchNewGame(players, GameType.DARTZEE, "", dtos)
         }
     }
 

@@ -2,7 +2,7 @@ package dartzee.achievements.golf
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
 import dartzee.achievements.AbstractAchievementBestGame
-import dartzee.db.GAME_TYPE_GOLF
+import dartzee.db.GameType
 import dartzee.utils.ResourceCache
 import java.net.URL
 
@@ -11,7 +11,7 @@ class AchievementGolfBestGame : AbstractAchievementBestGame()
     override val achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME
     override val name = "Career Round"
     override val desc = "Best game of golf (18 holes)"
-    override val gameType = GAME_TYPE_GOLF
+    override val gameType = GameType.GOLF
     override val gameParams = "18"
 
     override val redThreshold = 81    //4.5 per hole

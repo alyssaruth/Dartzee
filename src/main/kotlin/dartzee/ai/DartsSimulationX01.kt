@@ -3,6 +3,7 @@ package dartzee.ai
 import dartzee.`object`.Dart
 import dartzee.core.util.Debug
 import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.Dartboard
 import dartzee.utils.isBust
@@ -20,7 +21,7 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Abst
     protected var currentScore = -1
 
     override val gameParams = "$X01"
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override fun getTotalScore(): Int
     {

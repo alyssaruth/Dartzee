@@ -5,6 +5,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_GOLF
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache
 import java.net.URL
@@ -21,7 +22,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
     override val blueThreshold = 14
     override val pinkThreshold = 18
     override val maxValue = 18
-    override val gameType = GAME_TYPE_GOLF
+    override val gameType = GameType.GOLF
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
 

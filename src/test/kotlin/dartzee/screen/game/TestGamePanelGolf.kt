@@ -144,7 +144,7 @@ class TestGamePanelGolf: AbstractTest()
     }
 
     private class TestGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelGolf(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GAME_TYPE_GOLF, "18"))
+        : GamePanelGolf(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.GOLF, "18"))
     {
         init
         {

@@ -6,6 +6,12 @@ import dartzee.utils.DatabaseUtil
 import dartzee.utils.getGameDesc
 import java.util.*
 
+enum class GameType {
+    X01,
+    GOLF,
+    ROUND_THE_CLOCK,
+    DARTZEE
+}
 
 const val GAME_TYPE_X01 = 1
 const val GAME_TYPE_GOLF = 2
@@ -25,7 +31,7 @@ class GameEntity : AbstractEntity<GameEntity>()
      * DB fields
      */
     var localId = -1L
-    var gameType = -1
+    var gameType: GameType = GameType.X01
     var gameParams = ""
     var dtFinish = DateStatics.END_OF_TIME
     var dartsMatchId: String = ""
@@ -37,7 +43,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     override fun getCreateTableSqlSpecific(): String
     {
         return ("LocalId INT UNIQUE NOT NULL, "
-                + "GameType INT NOT NULL, "
+                + "GameType varchar(255) NOT NULL, "
                 + "GameParams varchar(255) NOT NULL, "
                 + "DtFinish timestamp NOT NULL, "
                 + "DartsMatchId VARCHAR(36) NOT NULL, "
@@ -94,7 +100,7 @@ class GameEntity : AbstractEntity<GameEntity>()
 
     companion object
     {
-        fun factoryAndSave(gameType: Int, gameParams: String): GameEntity
+        fun factoryAndSave(gameType: GameType, gameParams: String): GameEntity
         {
             val gameEntity = GameEntity()
             gameEntity.assignRowId()

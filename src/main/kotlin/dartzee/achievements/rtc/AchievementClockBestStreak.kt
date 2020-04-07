@@ -6,6 +6,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_ROUND_THE_CLOCK
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import dartzee.utils.getLongestStreak
@@ -16,7 +17,7 @@ class AchievementClockBestStreak: AbstractAchievement()
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_BEST_STREAK
     override val name = "Like Clockwork"
     override val desc = "Longest streak of hits in Round the Clock"
-    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
+    override val gameType = GameType.ROUND_THE_CLOCK
 
     override val redThreshold = 2
     override val orangeThreshold = 3

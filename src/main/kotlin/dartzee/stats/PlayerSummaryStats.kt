@@ -1,11 +1,12 @@
 package dartzee.stats
 
 import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DatabaseUtil
 import java.sql.Timestamp
 
-class PlayerSummaryStats private constructor(player: PlayerEntity, private val gameType: Int)
+class PlayerSummaryStats private constructor(player: PlayerEntity, private val gameType: GameType)
 {
     var gamesPlayed = -1
     var gamesWon = -1
@@ -50,7 +51,7 @@ class PlayerSummaryStats private constructor(player: PlayerEntity, private val g
         /**
          * Static methods
          */
-        fun getSummaryStats(player: PlayerEntity, gameType: Int): PlayerSummaryStats
+        fun getSummaryStats(player: PlayerEntity, gameType: GameType): PlayerSummaryStats
         {
             val key = player.rowId + "_" + gameType
 
@@ -59,7 +60,7 @@ class PlayerSummaryStats private constructor(player: PlayerEntity, private val g
             return stats
         }
 
-        fun resetPlayerStats(playerId: String, gameType: Int)
+        fun resetPlayerStats(playerId: String, gameType: GameType)
         {
             val key = playerId + "_" + gameType
             hmPlayerKeyToSummaryStats.remove(key)

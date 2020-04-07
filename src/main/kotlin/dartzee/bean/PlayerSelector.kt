@@ -4,7 +4,7 @@ import dartzee.core.bean.IDoubleClickListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
-import dartzee.db.GAME_TYPE_DARTZEE
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
@@ -98,7 +98,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
     /**
      * Is this selection valid for a game/match?
      */
-    fun valid(match: Boolean, gameType: Int): Boolean
+    fun valid(match: Boolean, gameType: GameType): Boolean
     {
         val selectedPlayers = getSelectedPlayers()
         val rowCount = selectedPlayers.size
@@ -121,7 +121,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         }
 
         //Temporary measure until https://trello.com/c/T89Kqmxj is implemented
-        if (gameType == GAME_TYPE_DARTZEE && selectedPlayers.any { it.isAi() })
+        if (gameType == GameType.DARTZEE && selectedPlayers.any { it.isAi() })
         {
             DialogUtil.showError("You cannot select AI opponents for Dartzee.")
             return false

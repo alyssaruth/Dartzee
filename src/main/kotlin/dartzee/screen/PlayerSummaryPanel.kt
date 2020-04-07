@@ -1,5 +1,6 @@
 package dartzee.screen
 
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.stats.PlayerSummaryStats
@@ -11,7 +12,7 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-class PlayerSummaryPanel(private val gameType: Int) : JPanel(), ActionListener
+class PlayerSummaryPanel(private val gameType: GameType) : JPanel(), ActionListener
 {
     private var player: PlayerEntity? = null
 

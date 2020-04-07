@@ -3,9 +3,7 @@ package dartzee.screen.stats.player
 import dartzee.`object`.Dart
 import dartzee.core.util.Debug
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.db.GAME_TYPE_GOLF
-import dartzee.db.GAME_TYPE_ROUND_THE_CLOCK
-import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.PlayerSelectDialog
@@ -32,7 +30,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     private var filteredGames = listOf<GameWrapper>()
     private var filteredGamesOther = listOf<GameWrapper>()
 
-    private var gameType = -1
+    private var gameType: GameType = GameType.X01
     private var player: PlayerEntity? = null
 
     //Components
@@ -107,7 +105,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     {
         tabbedPane.removeAll()
 
-        if (gameType == GAME_TYPE_X01)
+        if (gameType == GameType.X01)
         {
             tabbedPane.addTab("Finish Breakdown", null, tabFinishing, null)
             tabbedPane.addTab("Checkout %", null, tabCheckoutPercent, null)
@@ -116,14 +114,14 @@ class PlayerStatisticsScreen : EmbeddedScreen()
             tabbedPane.addTab("Total Darts", null, tabTotalDarts, null)
             tabbedPane.addTab("Three Dart Scores", null, tabThreeDartScores, null)
         }
-        else if (gameType == GAME_TYPE_GOLF)
+        else if (gameType == GameType.GOLF)
         {
             tabbedPane.addTab("Hole Breakdown", null, tabHoleBreakdown, null)
             tabbedPane.addTab("Scorecards", null, tabBestRounds, null)
             tabbedPane.addTab("Optimal Scorecard", null, tabOptimalScorecard, null)
             tabbedPane.addTab("All Scores", null, tabAllScores, null)
         }
-        else if (gameType == GAME_TYPE_ROUND_THE_CLOCK)
+        else if (gameType == GameType.ROUND_THE_CLOCK)
         {
             tabbedPane.addTab("Total Darts", null, tabTotalClockDarts, null)
             tabbedPane.addTab("Target Breakdown", null, tabTargetBreakdown, null)
@@ -252,7 +250,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         return filteredGames
     }
 
-    fun setVariables(gameType: Int, player: PlayerEntity)
+    fun setVariables(gameType: GameType, player: PlayerEntity)
     {
         this.gameType = gameType
         this.player = player

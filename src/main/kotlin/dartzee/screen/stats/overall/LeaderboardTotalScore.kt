@@ -2,6 +2,7 @@ package dartzee.screen.stats.overall
 
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.RadioButtonPanel
+import dartzee.db.GameType
 import dartzee.utils.*
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
@@ -9,7 +10,7 @@ import javax.swing.Box
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 
-class LeaderboardTotalScore(private val gameType: Int) : AbstractLeaderboard(), ActionListener
+class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboard(), ActionListener
 {
     private val panelGameParams = getFilterPanel(gameType)
 

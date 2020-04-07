@@ -5,6 +5,7 @@ import dartzee.core.util.DateStatics.Companion.START_OF_TIME
 import dartzee.core.util.Debug
 import dartzee.core.util.formatAsDate
 import dartzee.db.AchievementEntity
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
 import dartzee.utils.DatabaseUtil
@@ -27,7 +28,7 @@ abstract class AbstractAchievement
     abstract val blueThreshold : Int
     abstract val pinkThreshold : Int
     abstract val maxValue : Int
-    abstract val gameType: Int
+    abstract val gameType: GameType?
 
     var attainedValue = -1
     var gameIdEarned = ""

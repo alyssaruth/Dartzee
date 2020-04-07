@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getNotBustSql
 import dartzee.achievements.unlockThreeDartAchievement
-import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.utils.ResourceCache
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
@@ -14,7 +14,7 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
     override val name = "Three Darter"
     override val desc = "Best three dart score in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override val redThreshold = 60
     override val orangeThreshold = 80

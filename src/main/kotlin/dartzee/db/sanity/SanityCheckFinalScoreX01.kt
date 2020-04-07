@@ -1,6 +1,7 @@
 package dartzee.db.sanity
 
 import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.dropTable
 import dartzee.utils.DatabaseUtil.Companion.executeUpdate
@@ -10,7 +11,7 @@ import dartzee.utils.DatabaseUtil.Companion.executeUpdate
  */
 class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
 {
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override fun populateParticipantToFinalScoreTable(tempTable: String)
     {

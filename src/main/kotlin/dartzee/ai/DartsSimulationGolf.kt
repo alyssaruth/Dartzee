@@ -3,6 +3,7 @@ package dartzee.ai
 import dartzee.`object`.Dart
 import dartzee.core.util.Debug
 import dartzee.db.GAME_TYPE_GOLF
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.Dartboard
 
@@ -10,7 +11,7 @@ private const val ROUNDS = 18
 
 class DartsSimulationGolf(dartboard: Dartboard, player: PlayerEntity, model: AbstractDartsModel) : AbstractDartsSimulation(dartboard, player, model)
 {
-    override val gameType = GAME_TYPE_GOLF
+    override val gameType = GameType.GOLF
     override val gameParams = "$ROUNDS"
     var score = 0
 

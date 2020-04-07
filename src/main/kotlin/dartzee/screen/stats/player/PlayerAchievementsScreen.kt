@@ -7,10 +7,10 @@ import dartzee.achievements.getPlayerAchievementScore
 import dartzee.bean.AchievementMedal
 import dartzee.core.bean.WrapLayout
 import dartzee.db.AchievementEntity
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
-import dartzee.utils.getAllGameTypes
 import dartzee.utils.getTypeDesc
 import java.awt.*
 import javax.swing.*
@@ -67,7 +67,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         val playerId = player?.rowId!!
 
         val achievementRows = AchievementEntity.retrieveAchievements(playerId)
-        getAllGameTypes().forEach {
+        GameType.values().forEach {
             addAchievementTab(it, achievementRows)
         }
 
@@ -75,7 +75,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         progressDesc = "$score/${getAchievementMaximum()}"
     }
 
-    private fun addAchievementTab(gameType: Int, achievementRows: List<AchievementEntity>)
+    private fun addAchievementTab(gameType: GameType, achievementRows: List<AchievementEntity>)
     {
         val panel = JPanel()
 

@@ -14,6 +14,7 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DatabaseUtil
 import java.sql.SQLException
@@ -88,7 +89,7 @@ fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
     return count > 0
 }
 
-fun getAchievementsForGameType(gameType: Int) = getAllAchievements().filter{ it.gameType == gameType }
+fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter{ it.gameType == gameType }
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
@@ -128,13 +129,13 @@ fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
     return null
 }
 
-fun getBestGameAchievement(gameType : Int) : AbstractAchievementBestGame?
+fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
 {
     val ref = getAllAchievements().find {it is AbstractAchievementBestGame && it.gameType == gameType}
     return ref as AbstractAchievementBestGame?
 }
 
-fun getWinAchievementRef(gameType : Int) : Int
+fun getWinAchievementRef(gameType : GameType) : Int
 {
     val ref = getAllAchievements().find {it is AbstractAchievementGamesWon && it.gameType == gameType}?.achievementRef
     if (ref == null)

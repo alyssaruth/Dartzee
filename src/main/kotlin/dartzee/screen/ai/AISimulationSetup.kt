@@ -144,7 +144,7 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
         }
     }
 
-    private fun simulationFinished(hmGameIdToWrapper: Map<Long, GameWrapper>, gameType: Int)
+    private fun simulationFinished(hmGameIdToWrapper: Map<Long, GameWrapper>, gameType: GameType)
     {
         if (DartsClient.devMode)
         {

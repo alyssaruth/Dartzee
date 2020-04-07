@@ -5,6 +5,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
 import dartzee.utils.getAdjacentNumbers
@@ -17,7 +18,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override val name = "Such Bad Luck"
     override val desc = "Most adjacent doubles hit when on a checkout in a game of X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override val redThreshold = 1
     override val orangeThreshold = 2

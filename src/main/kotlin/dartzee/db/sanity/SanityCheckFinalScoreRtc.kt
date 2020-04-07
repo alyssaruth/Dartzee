@@ -1,11 +1,12 @@
 package dartzee.db.sanity
 
 import dartzee.db.GAME_TYPE_ROUND_THE_CLOCK
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 
 class SanityCheckFinalScoreRtc: AbstractSanityCheckFinalScore()
 {
-    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
+    override val gameType = GameType.ROUND_THE_CLOCK
 
     override fun populateParticipantToFinalScoreTable(tempTable: String)
     {

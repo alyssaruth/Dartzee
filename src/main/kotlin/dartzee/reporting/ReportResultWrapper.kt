@@ -1,11 +1,12 @@
 package dartzee.reporting
 
+import dartzee.db.GameType
 import dartzee.utils.getGameDesc
 import java.sql.ResultSet
 import java.sql.Timestamp
 
 data class ReportResultWrapper(val localId: Long,
-                               val gameType: Int,
+                               val gameType: GameType,
                                val gameParams: String,
                                val dtStart: Timestamp,
                                val dtFinish: Timestamp,
@@ -45,7 +46,7 @@ data class ReportResultWrapper(val localId: Long,
     {
         fun factoryFromResultSet(localId: Long, rs: ResultSet): ReportResultWrapper
         {
-            val gameType = rs.getInt("GameType")
+            val gameType = GameType.valueOf(rs.getString("GameType"))
             val gameParams = rs.getString("GameParams")
             val dtStart = rs.getTimestamp("DtCreation")
             val dtFinish = rs.getTimestamp("DtFinish")

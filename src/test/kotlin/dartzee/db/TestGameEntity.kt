@@ -118,23 +118,23 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
 
         game.gameParams = "foo"
 
-        game.gameType = GAME_TYPE_X01
+        game.gameType = GameType.X01
         game.getTypeDesc() shouldBe "foo"
 
-        game.gameType = GAME_TYPE_GOLF
+        game.gameType = GameType.GOLF
         game.getTypeDesc() shouldBe "Golf - foo holes"
 
-        game.gameType = GAME_TYPE_ROUND_THE_CLOCK
+        game.gameType = GameType.ROUND_THE_CLOCK
         game.getTypeDesc() shouldBe "Round the Clock - foo"
 
-        game.gameType = GAME_TYPE_DARTZEE
+        game.gameType = GameType.DARTZEE
         game.getTypeDesc() shouldBe "Dartzee"
     }
 
     @Test
     fun `Factory and save individual game`()
     {
-        val game = GameEntity.factoryAndSave(GAME_TYPE_X01, "301")
+        val game = GameEntity.factoryAndSave(GameType.X01, "301")
 
         val gameId = game.rowId
         game.localId shouldNotBe -1
@@ -151,7 +151,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     fun `Factory and save for a match`()
     {
         val match = DartsMatchEntity.factoryFirstTo(4)
-        match.gameType = GAME_TYPE_GOLF
+        match.gameType = GameType.GOLF
         match.gameParams = "18"
 
         val matchId = match.rowId

@@ -23,7 +23,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
      * Non-db gets / sets
      */
     var gameParams = ""
-    var gameType = -1
+    var gameType: GameType = GameType.X01
     var players = mutableListOf<PlayerEntity>()
 
     private var currentOrdinal = 0

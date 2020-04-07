@@ -6,6 +6,7 @@ import dartzee.achievements.getNotBustSql
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
@@ -17,7 +18,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
     override val name = "Hotel Inspector"
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"
     override val achievementRef = ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override val redThreshold = 1
     override val orangeThreshold = 5

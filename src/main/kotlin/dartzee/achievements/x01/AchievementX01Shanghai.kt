@@ -5,6 +5,7 @@ import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
@@ -16,7 +17,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
     override val name = "Shanghai"
     override val desc = "Total number of times player has scored T20, D20, 20 (in any order)"
     override val achievementRef = ACHIEVEMENT_REF_X01_SHANGHAI
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override val redThreshold = 1
     override val orangeThreshold = 2

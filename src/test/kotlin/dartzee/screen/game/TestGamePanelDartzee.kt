@@ -11,8 +11,8 @@ import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.db.GAME_TYPE_DARTZEE
 import dartzee.db.GameEntity
+import dartzee.db.GameType
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.helper.*
@@ -145,7 +145,7 @@ class TestGamePanelDartzee: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val game = insertGame(gameType = GAME_TYPE_DARTZEE)
+        val game = insertGame(gameType = GameType.DARTZEE)
         val player = insertPlayer(strategy = -1)
 
         val carousel = DartzeeRuleCarousel(rules)
@@ -234,7 +234,7 @@ class TestGamePanelDartzee: AbstractTest()
     private fun setUpDartzeeGameOnDatabase(rounds: Int): GameEntity
     {
         val dtFinish = if (rounds > 2) getSqlDateNow() else DateStatics.END_OF_TIME
-        val game = insertGame(gameType = GAME_TYPE_DARTZEE, dtFinish = dtFinish)
+        val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
 
         rules.forEachIndexed { ix, it ->
             val entity = it.toEntity(ix, "Game", game.rowId)

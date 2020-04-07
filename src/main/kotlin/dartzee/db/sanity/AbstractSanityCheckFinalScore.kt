@@ -1,11 +1,12 @@
 package dartzee.db.sanity
 
+import dartzee.db.GameType
 import dartzee.db.ParticipantEntity
 import dartzee.utils.DatabaseUtil
 
 abstract class AbstractSanityCheckFinalScore: AbstractSanityCheck()
 {
-    abstract val gameType: Int
+    abstract val gameType: GameType
 
     abstract fun populateParticipantToFinalScoreTable(tempTable: String)
 

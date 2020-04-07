@@ -1,58 +1,49 @@
 package dartzee.utils
 
 import dartzee.achievements.getWinAchievementRef
-import dartzee.bean.*
+import dartzee.bean.GameParamFilterPanelDartzee
+import dartzee.bean.GameParamFilterPanelGolf
+import dartzee.bean.GameParamFilterPanelRoundTheClock
+import dartzee.bean.GameParamFilterPanelX01
 import dartzee.core.util.sortedBy
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.GameEntity
+import dartzee.db.GameType
+import dartzee.db.ParticipantEntity
 
-fun getGameDesc(gameType: Int, gameParams: String): String
-{
-    return when(gameType)
+fun getGameDesc(gameType: GameType, gameParams: String) =
+    when(gameType)
     {
-        GAME_TYPE_X01 -> gameParams
-        GAME_TYPE_GOLF -> "Golf - $gameParams holes"
-        GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
-        GAME_TYPE_DARTZEE -> "Dartzee"
-        else -> ""
+        GameType.X01 -> gameParams
+        GameType.GOLF -> "Golf - $gameParams holes"
+        GameType.ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
+        GameType.DARTZEE -> "Dartzee"
     }
-}
 
-fun getTypeDesc(gameType: Int): String
-{
-    return when (gameType)
+fun getTypeDesc(gameType: GameType) =
+    when (gameType)
     {
-        GAME_TYPE_X01 -> "X01"
-        GAME_TYPE_GOLF -> "Golf"
-        GAME_TYPE_ROUND_THE_CLOCK -> "Round the Clock"
-        GAME_TYPE_DARTZEE -> "Dartzee"
-        else -> "<Game Type>"
+        GameType.X01 -> "X01"
+        GameType.GOLF -> "Golf"
+        GameType.ROUND_THE_CLOCK -> "Round the Clock"
+        GameType.DARTZEE -> "Dartzee"
     }
-}
 
-fun getFilterPanel(gameType: Int): GameParamFilterPanel
-{
-    return when (gameType)
+fun getFilterPanel(gameType: GameType) =
+    when (gameType)
     {
-        GAME_TYPE_X01 -> GameParamFilterPanelX01()
-        GAME_TYPE_GOLF -> GameParamFilterPanelGolf()
-        GAME_TYPE_ROUND_THE_CLOCK -> GameParamFilterPanelRoundTheClock()
-        else -> GameParamFilterPanelDartzee()
+        GameType.X01 -> GameParamFilterPanelX01()
+        GameType.GOLF -> GameParamFilterPanelGolf()
+        GameType.ROUND_THE_CLOCK -> GameParamFilterPanelRoundTheClock()
+        GameType.DARTZEE -> GameParamFilterPanelDartzee()
     }
-}
 
-fun doesHighestWin(gameType: Int): Boolean
-{
-    return when (gameType)
+fun doesHighestWin(gameType: GameType?) =
+    when (gameType)
     {
-        GAME_TYPE_DARTZEE -> true
-        else -> false
+        GameType.DARTZEE -> true
+        GameType.X01, GameType.GOLF, GameType.ROUND_THE_CLOCK, null -> false
     }
-}
-
-fun getAllGameTypes(): MutableList<Int>
-{
-    return mutableListOf(GAME_TYPE_X01, GAME_TYPE_GOLF, GAME_TYPE_ROUND_THE_CLOCK, GAME_TYPE_DARTZEE)
-}
 
 fun setFinishingPositions(participants: List<ParticipantEntity>, game: GameEntity)
 {
