@@ -40,7 +40,7 @@ class TestDartzeeRuleTilePending: AbstractTest()
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val tile = DartzeeRuleTilePending(
-            makeDartzeeRuleDto(allowMisses = false),
+            makeDartzeeRuleDto(makeScoreRule(15), allowMisses = false),
             5
         )
         tile.updateState(listOf(makeDart(20, 0, SEGMENT_TYPE_MISS)))
