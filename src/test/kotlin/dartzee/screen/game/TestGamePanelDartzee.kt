@@ -193,13 +193,13 @@ class TestGamePanelDartzee: AbstractTest()
         panel.startNewGame(listOf(insertPlayer(strategy = -1)))
 
         panel.hoverChanged(SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen)))
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactly(doubleNineteen)
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen))
 
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
 
         panel.hoverChanged(SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty)))
-        panel.dartboard.segmentStatus!!.validSegments.shouldContainExactly(doubleTwenty)
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty))
 
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
         panel.dartboard.segmentStatus shouldBe null
