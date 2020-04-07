@@ -120,10 +120,10 @@ object DartsDatabaseUtil
         }
         else if (versionNumber == 10)
         {
+            runSqlScriptsForVersion(11)
+
             //Added "ScoringSegments"
             DartzeeRuleConversion.convertDartzeeRules()
-
-            runSqlScriptsForVersion(11)
 
             version.version = 11
             version.saveToDatabase()

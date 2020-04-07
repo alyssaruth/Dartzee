@@ -21,11 +21,11 @@ SELECT
 	RowId,
 	DtCreation,
 	DtLastUpdate,
-	RowId,
+	LocalId,
 	CASE
-	    WHEN GameType IS 0 THEN 'X01'
-	    WHEN GameType IS 1 THEN 'GOLF'
-	    WHEN GameType IS 2 THEN 'ROUND_THE_CLOCK'
+	    WHEN GameType = 1 THEN 'X01'
+	    WHEN GameType = 2 THEN 'GOLF'
+	    WHEN GameType = 3 THEN 'ROUND_THE_CLOCK'
 	    ELSE 'DARTZEE'
 	END,
 	GameParams,
@@ -33,7 +33,7 @@ SELECT
 	DartsMatchId,
 	MatchOrdinal
 FROM
-	Game
+	Game;
 
 RENAME TABLE Game TO zzGame;
 RENAME TABLE Game_Tmp TO Game;
