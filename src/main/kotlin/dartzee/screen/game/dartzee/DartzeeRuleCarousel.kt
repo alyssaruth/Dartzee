@@ -145,10 +145,8 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     fun getSegmentStatus(): SegmentStatus
     {
-        val scoringSegments = pendingTiles.flatMap { it.getScoringSegments(dartsThrown) }.toSet()
-        val validSegments = pendingTiles.flatMap { it.getValidSegments(dartsThrown) }.toSet()
-
-        return SegmentStatus(scoringSegments, validSegments)
+        val statuses = pendingTiles.map { it.getSegmentStatus(dartsThrown) }
+        return SegmentStatus(statuses.flatMap { it.scoringSegments }, statuses.flatMap { it.validSegments })
     }
 
     private fun displayTiles(tiles: List<DartzeeRuleTile>)

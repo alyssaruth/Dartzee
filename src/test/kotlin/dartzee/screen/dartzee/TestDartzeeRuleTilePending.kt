@@ -57,7 +57,7 @@ class TestDartzeeRuleTilePending: AbstractTest()
         val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(validSegments = segments))
 
         val tile = DartzeeRuleTilePending(rule, 2)
-        tile.getValidSegments(listOf()).shouldContainExactlyInAnyOrder(doubleNineteen, trebleTwenty)
+        tile.getSegmentStatus(listOf()).validSegments.shouldContainExactlyInAnyOrder(doubleNineteen, trebleTwenty)
     }
 
     @Test
@@ -68,14 +68,14 @@ class TestDartzeeRuleTilePending: AbstractTest()
         val rule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(18), makeScoreRule(19), inOrder = true)
         val tile = DartzeeRuleTilePending(rule, 2)
 
-        tile.getValidSegments(listOf(makeDart(18, 1, SEGMENT_TYPE_OUTER_SINGLE))).shouldBeEmpty()
+        tile.getSegmentStatus(listOf(makeDart(18, 1, SEGMENT_TYPE_OUTER_SINGLE))).validSegments.shouldBeEmpty()
 
         val eighteenSegments = getAllPossibleSegments().filter { it.score == 18 && !it.isMiss()}.toTypedArray()
-        tile.getValidSegments(listOf(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))).shouldContainExactlyInAnyOrder(*eighteenSegments)
+        tile.getSegmentStatus(listOf(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))).validSegments.shouldContainExactlyInAnyOrder(*eighteenSegments)
 
         val twoDarts = listOf(makeDart(20, 2, SEGMENT_TYPE_DOUBLE), makeDart(18, 2, SEGMENT_TYPE_DOUBLE))
         val nineteenSegments = getAllPossibleSegments().filter { it.score == 19 && !it.isMiss()}.toTypedArray()
-        tile.getValidSegments(twoDarts).shouldContainExactlyInAnyOrder(*nineteenSegments)
+        tile.getSegmentStatus(twoDarts).validSegments.shouldContainExactlyInAnyOrder(*nineteenSegments)
     }
 
     @Test

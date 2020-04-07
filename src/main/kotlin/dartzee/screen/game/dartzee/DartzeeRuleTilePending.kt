@@ -1,7 +1,6 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.utils.InjectedThings
 import dartzee.utils.setColoursForDartzeeResult
@@ -23,35 +22,13 @@ class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): DartzeeRuleT
 
     fun updateState(darts: List<Dart>)
     {
-        isVisible = getValidSegments(darts).isNotEmpty()
+        isVisible = getSegmentStatus(darts).validSegments.isNotEmpty()
     }
 
-    fun getSegmentStatus(darts: List<Dart>) = SegmentStatus(getScoringSegments(darts), getValidSegments(darts))
-
-    fun getScoringSegments(darts: List<Dart>): Set<DartboardSegment>
+    fun getSegmentStatus(darts: List<Dart>): SegmentStatus
     {
-        if (darts.isEmpty())
-        {
-            return dto.calculationResult!!.scoringSegments.toSet()
-        }
-        else
-        {
-            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
-            return result.scoringSegments.toSet()
-        }
-    }
-
-    fun getValidSegments(darts: List<Dart>): Set<DartboardSegment>
-    {
-        if (darts.isEmpty())
-        {
-            return dto.calculationResult!!.validSegments.toSet()
-        }
-        else
-        {
-            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
-            return result.validSegments.toSet()
-        }
+        val result = if (darts.isEmpty()) dto.calculationResult!! else InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
+        return result.getSegmentStatus()
     }
 
     override fun getScoreForHover() = pendingScore
