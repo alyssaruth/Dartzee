@@ -13,7 +13,6 @@ import dartzee.achievements.x01.*
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DatabaseUtil
@@ -168,7 +167,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
     sb.append(" AND $lastDartWhereSql")
     sb.append(" AND pt.GameId = g.RowId")
-    sb.append(" AND g.GameType = $GAME_TYPE_X01")
+    sb.append(" AND g.GameType = '${GameType.X01}'")
 
     if (!DatabaseUtil.executeUpdate("" + sb))
     {

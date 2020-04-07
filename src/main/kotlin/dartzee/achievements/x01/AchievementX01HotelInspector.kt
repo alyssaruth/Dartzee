@@ -5,7 +5,6 @@ import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.getNotBustSql
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
@@ -54,7 +53,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         sb.append(" AND d.ParticipantId = pt.RowId")
         sb.append(" AND d.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtSecond.Ordinal = 2")
         sb.append(" AND drtLast.Ordinal = 3")

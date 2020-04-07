@@ -4,7 +4,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
@@ -36,7 +35,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
 
         sb.append(" SELECT pt.PlayerId, pt.DtFinished, g.RowId AS GameId")
         sb.append(" FROM Game g, Participant pt, Dart drt")
-        sb.append(" WHERE g.GameType = $GAME_TYPE_X01")
+        sb.append(" WHERE g.GameType = '${GameType.X01}'")
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND $LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber")
         sb.append(" AND pt.RowId = drt.ParticipantId")

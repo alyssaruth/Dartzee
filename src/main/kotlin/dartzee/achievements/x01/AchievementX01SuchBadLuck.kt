@@ -4,7 +4,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
@@ -44,7 +43,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" WHERE d.ParticipantId = pt.RowId")
         sb.append(" AND d.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND d.StartingScore IN ($checkoutsStr)")
         if (!playerIds.isEmpty())
         {

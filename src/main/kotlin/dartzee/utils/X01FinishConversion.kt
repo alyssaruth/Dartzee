@@ -2,7 +2,7 @@ package dartzee.utils
 
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.BulkInserter
-import dartzee.db.GAME_TYPE_X01
+import dartzee.db.GameType
 import dartzee.db.X01FinishEntity
 
 object X01FinishConversion
@@ -47,7 +47,7 @@ object X01FinishConversion
         sbPt.append(" SELECT p.RowId, g.RowId, pt.RowId, $LAST_ROUND_FROM_PARTICIPANT, pt.DtFinished")
         sbPt.append(" FROM Player p, Participant pt, Game g")
         sbPt.append(" WHERE pt.GameId = g.RowId")
-        sbPt.append(" AND g.GameType = $GAME_TYPE_X01")
+        sbPt.append(" AND g.GameType = '${GameType.X01}'")
         sbPt.append(" AND pt.FinalScore > -1")
         sbPt.append(" AND pt.PlayerId = p.RowId")
 

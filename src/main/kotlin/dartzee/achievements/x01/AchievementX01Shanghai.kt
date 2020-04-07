@@ -4,7 +4,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
@@ -46,7 +45,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
         sb.append(" AND drtLast.ParticipantId = pt.RowId")
         sb.append(" AND drtLast.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtLast.Ordinal = 3")
         sb.append(" AND drtLast.RoundNumber = drtFirst.RoundNumber")

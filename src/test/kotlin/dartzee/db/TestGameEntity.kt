@@ -138,7 +138,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
 
         val gameId = game.rowId
         game.localId shouldNotBe -1
-        game.gameType shouldBe GAME_TYPE_X01
+        game.gameType shouldBe GameType.X01
         game.gameParams shouldBe "301"
         game.dtFinish shouldBe DateStatics.END_OF_TIME
         game.dartsMatchId shouldBe ""

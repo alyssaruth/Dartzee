@@ -13,8 +13,6 @@ enum class GameType {
     DARTZEE
 }
 
-const val GAME_TYPE_X01 = 1
-
 const val CLOCK_TYPE_STANDARD = "Standard"
 const val CLOCK_TYPE_DOUBLES = "Doubles"
 const val CLOCK_TYPE_TREBLES = "Trebles"

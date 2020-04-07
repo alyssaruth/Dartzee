@@ -4,7 +4,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.core.bean.paint
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
@@ -52,7 +51,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
         sb.append(" AND d.ParticipantId = pt.RowId")
         sb.append(" AND d.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND g.GameType = '${GameType.X01}'")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")
