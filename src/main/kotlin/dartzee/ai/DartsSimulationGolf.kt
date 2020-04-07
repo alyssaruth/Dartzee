@@ -2,7 +2,7 @@ package dartzee.ai
 
 import dartzee.`object`.Dart
 import dartzee.core.util.Debug
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.Dartboard
 

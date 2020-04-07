@@ -2,7 +2,7 @@ package dartzee.achievements.rtc
 
 import dartzee.achievements.TestAbstractAchievementBestGame
 import dartzee.db.CLOCK_TYPE_STANDARD
-import dartzee.db.GameType
+import dartzee.game.GameType
 import io.kotlintest.shouldBe
 import org.junit.Test
 

@@ -1,7 +1,7 @@
 package dartzee.achievements.golf
 
 import dartzee.achievements.TestAbstractAchievementBestGame
-import dartzee.db.GameType
+import dartzee.game.GameType
 import io.kotlintest.shouldBe
 import org.junit.Test
 

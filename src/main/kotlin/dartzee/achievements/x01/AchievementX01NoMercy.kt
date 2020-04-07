@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache
 import java.net.URL

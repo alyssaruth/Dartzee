@@ -7,11 +7,10 @@ import dartzee.achievements.getPlayerAchievementScore
 import dartzee.bean.AchievementMedal
 import dartzee.core.bean.WrapLayout
 import dartzee.db.AchievementEntity
-import dartzee.db.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
-import dartzee.utils.getTypeDesc
 import java.awt.*
 import javax.swing.*
 import javax.swing.border.EmptyBorder
@@ -90,7 +89,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         sp.verticalScrollBar.unitIncrement = 16
 
-        tabbedPane.addTab(getTypeDesc(gameType), sp)
+        tabbedPane.addTab(gameType.getDescription(), sp)
 
         getAchievementsForGameType(gameType).forEach {
             addAchievement(it, achievementRows, panel)

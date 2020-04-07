@@ -1,7 +1,7 @@
 package dartzee.screen.stats.player
 
 import dartzee.bean.PlayerAvatar
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
 import dartzee.stats.GameWrapper

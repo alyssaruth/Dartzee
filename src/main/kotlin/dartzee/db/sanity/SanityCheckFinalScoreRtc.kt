@@ -1,6 +1,6 @@
 package dartzee.db.sanity
 
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 
 class SanityCheckFinalScoreRtc: AbstractSanityCheckFinalScore()

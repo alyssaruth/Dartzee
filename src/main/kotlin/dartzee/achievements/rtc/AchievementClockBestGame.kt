@@ -3,7 +3,7 @@ package dartzee.achievements.rtc
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_GAME
 import dartzee.achievements.AbstractAchievementBestGame
 import dartzee.db.CLOCK_TYPE_STANDARD
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 import java.net.URL
 

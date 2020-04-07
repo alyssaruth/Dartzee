@@ -5,7 +5,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.achievements.AbstractAchievement
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import dartzee.utils.getLongestStreak

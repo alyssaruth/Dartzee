@@ -3,7 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.ACHIEVEMENT_REF_X01_HIGHEST_BUST
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.unlockThreeDartAchievement
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 import java.net.URL
 

@@ -2,7 +2,7 @@ package dartzee.achievements.dartzee
 
 import dartzee.achievements.ACHIEVEMENT_REF_DARTZEE_GAMES_WON
 import dartzee.achievements.AbstractAchievementGamesWon
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 import java.net.URL
 

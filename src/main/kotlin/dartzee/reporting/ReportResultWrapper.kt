@@ -1,6 +1,6 @@
 package dartzee.reporting
 
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.getGameDesc
 import java.sql.ResultSet
 import java.sql.Timestamp

@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getNotBustSql
 import dartzee.achievements.unlockThreeDartAchievement
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL

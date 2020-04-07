@@ -1,7 +1,7 @@
 package dartzee.achievements
 
 import dartzee.db.AchievementEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_LOCKED
 

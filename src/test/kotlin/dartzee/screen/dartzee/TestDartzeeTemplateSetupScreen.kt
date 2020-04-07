@@ -8,7 +8,7 @@ import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
 import dartzee.screen.UtilitiesScreen

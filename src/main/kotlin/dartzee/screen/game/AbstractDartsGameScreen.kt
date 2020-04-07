@@ -1,7 +1,7 @@
 package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.scorer.SCORER_WIDTH
 import java.awt.Dimension

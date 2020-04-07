@@ -12,7 +12,7 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.helper.*

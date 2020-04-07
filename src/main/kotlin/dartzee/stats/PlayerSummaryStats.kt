@@ -1,7 +1,7 @@
 package dartzee.stats
 
 import dartzee.core.util.getEndOfTimeSqlString
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DatabaseUtil
 import java.sql.Timestamp

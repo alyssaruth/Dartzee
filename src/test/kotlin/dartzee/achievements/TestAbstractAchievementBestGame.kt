@@ -2,7 +2,7 @@ package dartzee.achievements
 
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertGame

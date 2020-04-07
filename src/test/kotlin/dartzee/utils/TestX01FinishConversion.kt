@@ -2,7 +2,7 @@ package dartzee.utils
 
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.db.X01FinishEntity
 import dartzee.helper.*

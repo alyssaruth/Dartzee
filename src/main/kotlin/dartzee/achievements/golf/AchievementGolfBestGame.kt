@@ -2,7 +2,7 @@ package dartzee.achievements.golf
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
 import dartzee.achievements.AbstractAchievementBestGame
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 import java.net.URL
 

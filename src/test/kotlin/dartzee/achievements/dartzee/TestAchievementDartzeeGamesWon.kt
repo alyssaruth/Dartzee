@@ -1,7 +1,7 @@
 package dartzee.achievements.dartzee
 
 import dartzee.achievements.TestAbstractAchievementGamesWon
-import dartzee.db.GameType
+import dartzee.game.GameType
 import io.kotlintest.shouldBe
 import org.junit.Test
 

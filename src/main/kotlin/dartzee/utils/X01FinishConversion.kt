@@ -2,7 +2,7 @@ package dartzee.utils
 
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.BulkInserter
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.X01FinishEntity
 
 object X01FinishConversion

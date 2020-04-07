@@ -1,6 +1,6 @@
 package dartzee.screen.stats.overall
 
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane

@@ -1,10 +1,9 @@
 package dartzee.screen
 
-import dartzee.db.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.stats.PlayerSummaryStats
-import dartzee.utils.getTypeDesc
 import net.miginfocom.swing.MigLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -26,7 +25,7 @@ class PlayerSummaryPanel(private val gameType: GameType) : JPanel(), ActionListe
 
     init
     {
-        border = TitledBorder(null, getTypeDesc(gameType), TitledBorder.LEADING, TitledBorder.TOP, Font("Tahoma", Font.PLAIN, 20))
+        border = TitledBorder(null, gameType.getDescription(), TitledBorder.LEADING, TitledBorder.TOP, Font("Tahoma", Font.PLAIN, 20))
         layout = MigLayout("", "[][][][][][][][][grow][]", "[][][]")
 
         add(lblP, "cell 0 0")

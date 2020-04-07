@@ -4,7 +4,7 @@ import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_TREBLE
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 
 class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()

@@ -2,7 +2,7 @@ package dartzee.screen
 
 import dartzee.bean.PlayerAvatar
 import dartzee.core.util.DialogUtil
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup

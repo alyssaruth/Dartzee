@@ -5,7 +5,7 @@ import dartzee.core.util.DateStatics.Companion.START_OF_TIME
 import dartzee.core.util.Debug
 import dartzee.core.util.formatAsDate
 import dartzee.db.AchievementEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
 import dartzee.utils.DatabaseUtil

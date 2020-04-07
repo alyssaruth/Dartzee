@@ -4,7 +4,7 @@ import dartzee.core.bean.IDoubleClickListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import net.miginfocom.swing.MigLayout
 import java.awt.Component

@@ -2,7 +2,7 @@ package dartzee.screen.dartzee
 
 import dartzee.`object`.GameLauncher
 import dartzee.db.DartsMatchEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.GameSetupScreen

@@ -7,7 +7,7 @@ import dartzee.core.util.TableUtil
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
 import dartzee.screen.UtilitiesScreen

@@ -4,7 +4,7 @@ import dartzee.bean.GameParamFilterPanel
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.enableChildren
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.stats.GameWrapper
 import dartzee.utils.getFilterPanel

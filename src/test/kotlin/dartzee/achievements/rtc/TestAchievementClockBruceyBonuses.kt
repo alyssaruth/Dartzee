@@ -2,6 +2,7 @@ package dartzee.achievements.rtc
 
 import dartzee.achievements.AbstractAchievementTest
 import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test

@@ -2,8 +2,11 @@ package dartzee.screen.stats.overall
 
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.RadioButtonPanel
-import dartzee.db.GameType
-import dartzee.utils.*
+import dartzee.game.GameType
+import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
+import dartzee.utils.PreferenceUtil
+import dartzee.utils.doesHighestWin
+import dartzee.utils.getFilterPanel
 import java.awt.BorderLayout
 import java.awt.event.ActionListener
 import javax.swing.Box
@@ -43,7 +46,7 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
         panelBestOrWorst.addActionListener(this)
     }
 
-    override fun getTabName() = getTypeDesc(gameType)
+    override fun getTabName() = gameType.getDescription()
 
     override fun buildTable()
     {

@@ -2,7 +2,7 @@ package dartzee.reporting
 
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

@@ -2,16 +2,10 @@ package dartzee.db
 
 import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.getGameDesc
 import java.util.*
-
-enum class GameType {
-    X01,
-    GOLF,
-    ROUND_THE_CLOCK,
-    DARTZEE
-}
 
 const val CLOCK_TYPE_STANDARD = "Standard"
 const val CLOCK_TYPE_DOUBLES = "Doubles"

@@ -5,7 +5,7 @@ import dartzee.`object`.DartsClient
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard

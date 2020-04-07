@@ -2,7 +2,7 @@ package dartzee.bean
 
 import dartzee.core.helper.doubleClick
 import dartzee.core.helper.processKeyPress
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

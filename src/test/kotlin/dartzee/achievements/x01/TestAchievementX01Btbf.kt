@@ -2,7 +2,7 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.TestAbstractAchievementRowPerGame
 import dartzee.db.GameEntity
-import dartzee.db.GameType
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.helper.*
 import io.kotlintest.shouldBe

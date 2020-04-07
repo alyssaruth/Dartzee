@@ -8,8 +8,8 @@ import dartzee.bean.GameParamFilterPanelX01
 import dartzee.core.util.sortedBy
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.GameType
 import dartzee.db.ParticipantEntity
+import dartzee.game.GameType
 
 fun getGameDesc(gameType: GameType, gameParams: String) =
     when(gameType)
@@ -17,15 +17,6 @@ fun getGameDesc(gameType: GameType, gameParams: String) =
         GameType.X01 -> gameParams
         GameType.GOLF -> "Golf - $gameParams holes"
         GameType.ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
-        GameType.DARTZEE -> "Dartzee"
-    }
-
-fun getTypeDesc(gameType: GameType) =
-    when (gameType)
-    {
-        GameType.X01 -> "X01"
-        GameType.GOLF -> "Golf"
-        GameType.ROUND_THE_CLOCK -> "Round the Clock"
         GameType.DARTZEE -> "Dartzee"
     }
 

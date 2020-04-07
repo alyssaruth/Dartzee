@@ -1,6 +1,7 @@
 package dartzee.db
 
 import dartzee.core.util.*
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.getGameDesc
 

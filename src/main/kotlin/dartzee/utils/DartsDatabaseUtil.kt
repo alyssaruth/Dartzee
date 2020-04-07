@@ -85,8 +85,8 @@ object DartsDatabaseUtil
         }
         else if (versionNumber < MIN_DB_VERSION_FOR_CONVERSION)
         {
-            Debug.append("Below the minimum version for conversion, aborting.")
             val dbDetails = "Your version: $versionNumber, min supported: $MIN_DB_VERSION_FOR_CONVERSION, current: $DATABASE_VERSION"
+            Debug.append("Below the minimum version for conversion, aborting - $dbDetails")
             DialogUtil.showError("Your database is too out-of-date to run this version of Dartzee. " +
                     "Please downgrade to an earlier version so that your data can be converted.\n\n$dbDetails")
 

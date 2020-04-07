@@ -6,8 +6,8 @@ import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
 import dartzee.db.AchievementEntity
-import dartzee.db.GameType
 import dartzee.db.ParticipantEntity
+import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertGame
@@ -19,15 +19,6 @@ import kotlin.test.assertNotNull
 
 class TestGameUtil: AbstractTest()
 {
-    @Test
-    fun `Sensible descriptions when no params`()
-    {
-        getTypeDesc(GameType.X01) shouldBe "X01"
-        getTypeDesc(GameType.GOLF) shouldBe "Golf"
-        getTypeDesc(GameType.ROUND_THE_CLOCK) shouldBe "Round the Clock"
-        getTypeDesc(GameType.DARTZEE) shouldBe "Dartzee"
-    }
-
     @Test
     fun `Filter panel mappings`()
     {
