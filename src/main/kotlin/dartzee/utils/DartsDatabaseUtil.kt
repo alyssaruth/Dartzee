@@ -131,6 +131,8 @@ object DartsDatabaseUtil
             //Added "ScoringSegments"
             DartzeeRuleConversion.convertDartzeeRules()
 
+            runSqlScriptsForVersion(11)
+
             version.version = 11
             version.saveToDatabase()
         }
@@ -179,6 +181,7 @@ object DartsDatabaseUtil
                     "6. Participant.sql", "7. Player.sql", "8. PlayerImage.sql", "9. Round.sql")
             8 -> listOf("1. Dart.sql", "2. Round.sql")
             10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
+            11 -> listOf("1. Game.sql")
             else -> listOf()
         }
     }

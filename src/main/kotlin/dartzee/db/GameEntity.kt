@@ -32,7 +32,6 @@ class GameEntity : AbstractEntity<GameEntity>()
     var dartsMatchId: String = ""
     var matchOrdinal = -1
 
-
     override fun getTableName() = "Game"
 
     override fun getCreateTableSqlSpecific(): String
