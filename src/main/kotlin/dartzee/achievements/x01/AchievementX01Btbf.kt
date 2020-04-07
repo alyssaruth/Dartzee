@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
 import java.net.URL
@@ -14,7 +14,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
     override val achievementRef = ACHIEVEMENT_REF_X01_BTBF
     override val name = "BTBF"
     override val desc = "Number of games of X01 finished on D1"
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override val redThreshold = 1
     override val orangeThreshold = 5
@@ -35,7 +35,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
 
         sb.append(" SELECT pt.PlayerId, pt.DtFinished, g.RowId AS GameId")
         sb.append(" FROM Game g, Participant pt, Dart drt")
-        sb.append(" WHERE g.GameType = $GAME_TYPE_X01")
+        sb.append(" WHERE g.GameType = '${GameType.X01}'")
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND $LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber")
         sb.append(" AND pt.RowId = drt.ParticipantId")

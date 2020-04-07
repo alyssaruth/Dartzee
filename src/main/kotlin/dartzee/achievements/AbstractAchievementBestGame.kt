@@ -14,7 +14,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.FinalScore, pt.DtFinished")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $gameType")
+        sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND g.GameParams = '$gameParams'")
         sb.append(" AND pt.FinalScore > -1")
 

@@ -6,6 +6,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.core.util.Debug
 import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -130,7 +131,7 @@ class TestGamePanelX01: AbstractTest()
     }
 
     private class TestGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelX01(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GAME_TYPE_X01, "501"))
+        : GamePanelX01(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.X01, "501"))
     {
         init
         {

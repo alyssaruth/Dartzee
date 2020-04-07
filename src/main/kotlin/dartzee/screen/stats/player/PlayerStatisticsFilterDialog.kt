@@ -4,6 +4,7 @@ import dartzee.bean.GameParamFilterPanel
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.enableChildren
+import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.stats.GameWrapper
 import dartzee.utils.getFilterPanel
@@ -16,7 +17,7 @@ import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
 
-class PlayerStatisticsFilterDialog(gameType:Int):SimpleDialog(), ChangeListener
+class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeListener
 {
     private var gameParams = ""
     private var filterByDate = false

@@ -19,7 +19,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
         sb.append(" SELECT PlayerId, COUNT(1) AS WinCount, MAX(pt.DtFinished) AS DtLastUpdate")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $gameType")
+        sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND pt.FinishingPosition = 1")
         if (!playerIds.isEmpty())
         {

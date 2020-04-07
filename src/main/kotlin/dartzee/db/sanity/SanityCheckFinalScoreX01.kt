@@ -1,6 +1,6 @@
 package dartzee.db.sanity
 
-import dartzee.db.GAME_TYPE_X01
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.dropTable
 import dartzee.utils.DatabaseUtil.Companion.executeUpdate
@@ -10,7 +10,7 @@ import dartzee.utils.DatabaseUtil.Companion.executeUpdate
  */
 class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
 {
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override fun populateParticipantToFinalScoreTable(tempTable: String)
     {
@@ -23,7 +23,7 @@ class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND pt.FinalScore > -1")
         sb.append(" GROUP BY pt.RowId, pt.PlayerId")
 

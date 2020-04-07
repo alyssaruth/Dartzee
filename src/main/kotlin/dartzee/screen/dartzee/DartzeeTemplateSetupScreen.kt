@@ -7,7 +7,7 @@ import dartzee.core.util.TableUtil
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
-import dartzee.db.GAME_TYPE_DARTZEE
+import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
 import dartzee.screen.UtilitiesScreen
@@ -102,7 +102,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         val sb = StringBuilder()
         sb.append(" SELECT $cols, COUNT(g.RowId) AS GameCount")
         sb.append(" FROM DartzeeTemplate t")
-        sb.append(" LEFT OUTER JOIN Game g ON (g.GameType = $GAME_TYPE_DARTZEE AND g.GameParams = t.RowId)")
+        sb.append(" LEFT OUTER JOIN Game g ON (g.GameType = '${GameType.DARTZEE}' AND g.GameParams = t.RowId)")
         sb.append(" GROUP BY $cols")
 
         DatabaseUtil.executeQuery(sb).use { rs ->
@@ -170,7 +170,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         selection.deleteFromDatabase()
         DartzeeRuleEntity().deleteForTemplate(selection.rowId)
 
-        val gameSql = "UPDATE Game SET GameParams = '' WHERE GameType = $GAME_TYPE_DARTZEE AND GameParams = '${selection.rowId}'"
+        val gameSql = "UPDATE Game SET GameParams = '' WHERE GameType = '${GameType.DARTZEE}' AND GameParams = '${selection.rowId}'"
         DatabaseUtil.executeUpdate(gameSql)
 
         initialise()

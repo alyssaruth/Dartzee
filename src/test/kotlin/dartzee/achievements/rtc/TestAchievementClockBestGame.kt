@@ -2,7 +2,7 @@ package dartzee.achievements.rtc
 
 import dartzee.achievements.TestAbstractAchievementBestGame
 import dartzee.db.CLOCK_TYPE_STANDARD
-import dartzee.db.GAME_TYPE_ROUND_THE_CLOCK
+import dartzee.game.GameType
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -15,7 +15,7 @@ class TestAchievementClockBestGame: TestAbstractAchievementBestGame<AchievementC
     {
         val achievement = factoryAchievement()
 
-        achievement.gameType shouldBe GAME_TYPE_ROUND_THE_CLOCK
+        achievement.gameType shouldBe GameType.ROUND_THE_CLOCK
         achievement.gameParams shouldBe CLOCK_TYPE_STANDARD
     }
 }

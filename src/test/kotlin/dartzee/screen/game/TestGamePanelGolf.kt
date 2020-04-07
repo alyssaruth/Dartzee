@@ -4,6 +4,7 @@ import dartzee.`object`.*
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
@@ -144,7 +145,7 @@ class TestGamePanelGolf: AbstractTest()
     }
 
     private class TestGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelGolf(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GAME_TYPE_GOLF, "18"))
+        : GamePanelGolf(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.GOLF, "18"))
     {
         init
         {

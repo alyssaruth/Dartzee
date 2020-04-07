@@ -3,10 +3,8 @@ package dartzee.stats
 import dartzee.`object`.Dart
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.Debug
-import dartzee.db.DartEntity
-import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
-import dartzee.db.PlayerEntity
+import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.HoleBreakdownWrapper
 import dartzee.utils.calculateThreeDartAverage
@@ -344,7 +342,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         dartEntities.clear()
     }
 
-    fun generateRealEntities(gameType: Int, player: PlayerEntity)
+    fun generateRealEntities(gameType: GameType, player: PlayerEntity)
     {
         val game = GameEntity()
         game.assignRowId()

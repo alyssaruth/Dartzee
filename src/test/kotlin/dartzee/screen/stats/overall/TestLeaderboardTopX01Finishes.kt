@@ -1,8 +1,8 @@
 package dartzee.screen.stats.overall
 
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.GAME_TYPE_X01
 import dartzee.db.GameEntity
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.db.X01FinishEntity
 import dartzee.helper.AbstractRegistryTest
@@ -99,7 +99,7 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
         leaderboard.getGameIdAt(2) shouldBe g3.localId
     }
 
-    private fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timestamp = getSqlDateNow(), game: GameEntity = insertGame(gameType = GAME_TYPE_X01)): GameEntity
+    private fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timestamp = getSqlDateNow(), game: GameEntity = insertGame(gameType = GameType.X01)): GameEntity
     {
         val entity = X01FinishEntity()
         entity.assignRowId()

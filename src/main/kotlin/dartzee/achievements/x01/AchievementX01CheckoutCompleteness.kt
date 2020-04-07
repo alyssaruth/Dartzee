@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.core.bean.paint
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
 import dartzee.utils.DatabaseUtil
@@ -18,7 +18,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
     override val name = "Completionist"
     override val desc = "Total unique doubles checked out on in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override val redThreshold = 1
     override val orangeThreshold = 5
@@ -51,7 +51,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
         sb.append(" AND d.ParticipantId = pt.RowId")
         sb.append(" AND d.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND g.GameType = '${GameType.X01}'")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")

@@ -2,9 +2,7 @@ package dartzee.screen
 
 import dartzee.bean.PlayerAvatar
 import dartzee.core.util.DialogUtil
-import dartzee.db.GAME_TYPE_GOLF
-import dartzee.db.GAME_TYPE_ROUND_THE_CLOCK
-import dartzee.db.GAME_TYPE_X01
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup
@@ -28,9 +26,9 @@ class PlayerManagementPanel : JPanel(), ActionListener
     private val panel = JPanel()
     private val avatar = PlayerAvatar()
     private val panelCenter = JPanel()
-    private val panelX01 = PlayerSummaryPanel(GAME_TYPE_X01)
-    private val panelGolf = PlayerSummaryPanel(GAME_TYPE_GOLF)
-    private val panelClock = PlayerSummaryPanel(GAME_TYPE_ROUND_THE_CLOCK)
+    private val panelX01 = PlayerSummaryPanel(GameType.X01)
+    private val panelGolf = PlayerSummaryPanel(GameType.GOLF)
+    private val panelClock = PlayerSummaryPanel(GameType.ROUND_THE_CLOCK)
     private val btnRunSimulation = JButton("Run Simulation")
     private val btnAchievements = JButton("Achievements")
 

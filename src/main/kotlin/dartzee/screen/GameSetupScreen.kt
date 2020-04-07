@@ -8,7 +8,7 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
 import dartzee.db.DartzeeRuleEntity
-import dartzee.db.GAME_TYPE_DARTZEE
+import dartzee.game.GameType
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.utils.getFilterPanel
 import net.miginfocom.swing.MigLayout
@@ -166,7 +166,7 @@ class GameSetupScreen : EmbeddedScreen()
             matchConfigPanel.remove(panelPointBreakdown)
         }
 
-        val customDartzee = gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE && gameParamFilterPanel.getGameParams() == ""
+        val customDartzee = gameTypeComboBox.getGameType() == GameType.DARTZEE && gameParamFilterPanel.getGameParams() == ""
         btnLaunch.isVisible = !customDartzee
         toggleNextVisibility(customDartzee)
 
@@ -204,7 +204,7 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun retrieveDartzeeRules(): List<DartzeeRuleDto>?
     {
-        if (gameTypeComboBox.getGameType() != GAME_TYPE_DARTZEE)
+        if (gameTypeComboBox.getGameType() != GameType.DARTZEE)
         {
             return null
         }
@@ -237,10 +237,10 @@ class GameSetupScreen : EmbeddedScreen()
 
     override fun nextPressed()
     {
-        if (gameTypeComboBox.getGameType() == GAME_TYPE_DARTZEE)
+        if (gameTypeComboBox.getGameType() == GameType.DARTZEE)
         {
             val match = factoryMatch()
-            if (!playerSelector.valid(match != null, GAME_TYPE_DARTZEE))
+            if (!playerSelector.valid(match != null, GameType.DARTZEE))
             {
                 return
             }

@@ -2,7 +2,8 @@ package dartzee.bean
 
 import dartzee.core.helper.doubleClick
 import dartzee.core.helper.processKeyPress
-import dartzee.db.*
+import dartzee.game.GameType
+import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -212,8 +213,8 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init()
 
-        selector.valid(false, GAME_TYPE_X01) shouldBe false
-        selector.valid(true, GAME_TYPE_X01) shouldBe false
+        selector.valid(false, GameType.X01) shouldBe false
+        selector.valid(true, GameType.X01) shouldBe false
 
         dialogFactory.errorsShown.shouldContain("You must select at least 1 player.")
     }
@@ -226,7 +227,7 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init(listOf(alex))
 
-        selector.valid(false, GAME_TYPE_X01) shouldBe true
+        selector.valid(false, GameType.X01) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
     }
 
@@ -238,7 +239,7 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init(listOf(alex))
 
-        selector.valid(true, GAME_TYPE_X01) shouldBe false
+        selector.valid(true, GameType.X01) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You must select at least 2 players for a match.")
     }
 
@@ -254,8 +255,8 @@ class TestPlayerSelector: AbstractTest()
             val selector = PlayerSelector()
             selector.init(players)
 
-            selector.valid(true, GAME_TYPE_X01) shouldBe true
-            selector.valid(false, GAME_TYPE_X01) shouldBe true
+            selector.valid(true, GameType.X01) shouldBe true
+            selector.valid(false, GameType.X01) shouldBe true
             dialogFactory.errorsShown.shouldBeEmpty()
 
             val p = insertPlayer()
@@ -272,11 +273,11 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init(players)
 
-        selector.valid(true, GAME_TYPE_X01) shouldBe false
+        selector.valid(true, GameType.X01) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 players.")
 
         dialogFactory.errorsShown.clear()
-        selector.valid(false, GAME_TYPE_X01) shouldBe false
+        selector.valid(false, GameType.X01) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 players.")
     }
 
@@ -289,7 +290,7 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init(players)
 
-        selector.valid(false, GAME_TYPE_DARTZEE) shouldBe false
+        selector.valid(false, GameType.DARTZEE) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You cannot select AI opponents for Dartzee.")
     }
 
@@ -302,9 +303,9 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init(players)
 
-        selector.valid(false, GAME_TYPE_X01) shouldBe true
-        selector.valid(false, GAME_TYPE_GOLF) shouldBe true
-        selector.valid(false, GAME_TYPE_ROUND_THE_CLOCK) shouldBe true
+        selector.valid(false, GameType.X01) shouldBe true
+        selector.valid(false, GameType.GOLF) shouldBe true
+        selector.valid(false, GameType.ROUND_THE_CLOCK) shouldBe true
 
         dialogFactory.errorsShown.shouldBeEmpty()
     }

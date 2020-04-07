@@ -4,6 +4,7 @@ import dartzee.`object`.DartsClient
 import dartzee.core.util.DateStatics
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import java.sql.*
 import java.util.*
@@ -497,6 +498,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Timestamp::class.java -> rs.getTimestamp(columnName)
             Blob::class.java -> rs.getBlob(columnName)
             Double::class.java -> rs.getDouble(columnName)
+            GameType::class.java -> GameType.valueOf(rs.getString(columnName))
             else -> null
         }
     }

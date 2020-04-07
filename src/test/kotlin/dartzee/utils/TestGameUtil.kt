@@ -5,7 +5,9 @@ import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.ParticipantEntity
+import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertGame
@@ -18,31 +20,21 @@ import kotlin.test.assertNotNull
 class TestGameUtil: AbstractTest()
 {
     @Test
-    fun `Sensible descriptions when no params`()
-    {
-        getTypeDesc(GAME_TYPE_X01) shouldBe "X01"
-        getTypeDesc(GAME_TYPE_GOLF) shouldBe "Golf"
-        getTypeDesc(GAME_TYPE_ROUND_THE_CLOCK) shouldBe "Round the Clock"
-        getTypeDesc(GAME_TYPE_DARTZEE) shouldBe "Dartzee"
-        getTypeDesc(-1) shouldBe "<Game Type>"
-    }
-
-    @Test
     fun `Filter panel mappings`()
     {
-        getFilterPanel(GAME_TYPE_X01).shouldBeInstanceOf<GameParamFilterPanelX01>()
-        getFilterPanel(GAME_TYPE_GOLF).shouldBeInstanceOf<GameParamFilterPanelGolf>()
-        getFilterPanel(GAME_TYPE_ROUND_THE_CLOCK).shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
-        getFilterPanel(GAME_TYPE_DARTZEE).shouldBeInstanceOf<GameParamFilterPanelDartzee>()
+        getFilterPanel(GameType.X01).shouldBeInstanceOf<GameParamFilterPanelX01>()
+        getFilterPanel(GameType.GOLF).shouldBeInstanceOf<GameParamFilterPanelGolf>()
+        getFilterPanel(GameType.ROUND_THE_CLOCK).shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
+        getFilterPanel(GameType.DARTZEE).shouldBeInstanceOf<GameParamFilterPanelDartzee>()
     }
 
     @Test
     fun `Does highest win`()
     {
-        doesHighestWin(GAME_TYPE_X01) shouldBe false
-        doesHighestWin(GAME_TYPE_GOLF) shouldBe false
-        doesHighestWin(GAME_TYPE_ROUND_THE_CLOCK) shouldBe false
-        doesHighestWin(GAME_TYPE_DARTZEE) shouldBe true
+        doesHighestWin(GameType.X01) shouldBe false
+        doesHighestWin(GameType.GOLF) shouldBe false
+        doesHighestWin(GameType.ROUND_THE_CLOCK) shouldBe false
+        doesHighestWin(GameType.DARTZEE) shouldBe true
     }
 
     @Test
@@ -62,7 +54,7 @@ class TestGameUtil: AbstractTest()
         val pt2 = insertParticipant(finalScore = 40)
         val pt3 = insertParticipant(finalScore = 55)
 
-        setFinishingPositions(listOf(pt, pt3, pt2), insertGame(gameType = GAME_TYPE_GOLF))
+        setFinishingPositions(listOf(pt, pt3, pt2), insertGame(gameType = GameType.GOLF))
 
         pt.finishingPosition shouldBe 1
         pt2.finishingPosition shouldBe 2
@@ -77,7 +69,7 @@ class TestGameUtil: AbstractTest()
         val pt3 = insertParticipant(finalScore = 55)
         val pt4 = insertParticipant(finalScore = 40)
 
-        setFinishingPositions(listOf(pt, pt3, pt2, pt4), insertGame(gameType = GAME_TYPE_GOLF))
+        setFinishingPositions(listOf(pt, pt3, pt2, pt4), insertGame(gameType = GameType.GOLF))
 
         pt.finishingPosition shouldBe 1
         pt2.finishingPosition shouldBe 2
@@ -92,7 +84,7 @@ class TestGameUtil: AbstractTest()
         val pt2 = insertParticipant(finalScore = 40)
         val pt3 = insertParticipant(finalScore = 55)
 
-        setFinishingPositions(listOf(pt, pt3, pt2), insertGame(gameType = GAME_TYPE_DARTZEE))
+        setFinishingPositions(listOf(pt, pt3, pt2), insertGame(gameType = GameType.DARTZEE))
 
         pt.finishingPosition shouldBe 3
         pt2.finishingPosition shouldBe 2
@@ -107,7 +99,7 @@ class TestGameUtil: AbstractTest()
         val pt3 = insertParticipant(finalScore = 55)
         val pt4 = insertParticipant(finalScore = 40)
 
-        setFinishingPositions(listOf(pt, pt3, pt2, pt4), insertGame(gameType = GAME_TYPE_DARTZEE))
+        setFinishingPositions(listOf(pt, pt3, pt2, pt4), insertGame(gameType = GameType.DARTZEE))
 
         pt.finishingPosition shouldBe 4
         pt2.finishingPosition shouldBe 2
@@ -121,7 +113,7 @@ class TestGameUtil: AbstractTest()
         val pt = insertParticipant(finalScore = 25)
         val pt2 = insertParticipant(finalScore = 40)
 
-        setFinishingPositions(listOf(pt, pt2), insertGame(gameType = GAME_TYPE_GOLF))
+        setFinishingPositions(listOf(pt, pt2), insertGame(gameType = GameType.GOLF))
 
         val retrievedPt = ParticipantEntity().retrieveForId(pt.rowId)
         retrievedPt!!.finishingPosition shouldBe 1
@@ -139,7 +131,7 @@ class TestGameUtil: AbstractTest()
 
         insertAchievement(achievementRef = ACHIEVEMENT_REF_GOLF_GAMES_WON, playerId = pt.playerId, achievementCounter = 1)
 
-        setFinishingPositions(listOf(pt, pt2, pt3), insertGame(gameType = GAME_TYPE_GOLF))
+        setFinishingPositions(listOf(pt, pt2, pt3), insertGame(gameType = GameType.GOLF))
 
         val a1 = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt.playerId)
         assertNotNull(a1)

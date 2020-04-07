@@ -10,7 +10,6 @@ import dartzee.screen.ScreenCache
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
 import java.sql.DriverManager
-import java.util.*
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
 
@@ -21,6 +20,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
+    private const val MIN_DB_VERSION_FOR_CONVERSION = 7
     const val DATABASE_VERSION = 11
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
@@ -83,22 +83,14 @@ object DartsDatabaseUtil
             Debug.append("Database versions match.")
             return
         }
-        else if (versionNumber == 5)
+        else if (versionNumber < MIN_DB_VERSION_FOR_CONVERSION)
         {
-            upgradeDatabaseToVersion6()
+            val dbDetails = "Your version: $versionNumber, min supported: $MIN_DB_VERSION_FOR_CONVERSION, current: $DATABASE_VERSION"
+            Debug.append("Below the minimum version for conversion, aborting - $dbDetails")
+            DialogUtil.showError("Your database is too out-of-date to run this version of Dartzee. " +
+                    "Please downgrade to an earlier version so that your data can be converted.\n\n$dbDetails")
 
-            val newVersion = VersionEntity.retrieveCurrentDatabaseVersion()!!
-            newVersion.version = 6
-            newVersion.saveToDatabase()
-
-            version.version = 6
-        }
-        else if (versionNumber == 6)
-        {
-            Debug.appendBanner("Upgrading to Version 7")
-            DatabaseUtil.executeUpdate("CREATE INDEX ParticipantId_RoundNumber ON Round(ParticipantId, RoundNumber)")
-            version.version = 7
-            version.saveToDatabase()
+            exitProcess(1)
         }
         else if (versionNumber == 7)
         {
@@ -128,6 +120,8 @@ object DartsDatabaseUtil
         }
         else if (versionNumber == 10)
         {
+            runSqlScriptsForVersion(11)
+
             //Added "ScoringSegments"
             DartzeeRuleConversion.convertDartzeeRules()
 
@@ -175,10 +169,9 @@ object DartsDatabaseUtil
     {
         return when(version)
         {
-            6 -> listOf("1. Version.sql", "2. Achievement.sql", "3. Dart.sql", "4. DartsMatch.sql", "5. Game.sql",
-                    "6. Participant.sql", "7. Player.sql", "8. PlayerImage.sql", "9. Round.sql")
             8 -> listOf("1. Dart.sql", "2. Round.sql")
             10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
+            11 -> listOf("1. Game.sql")
             else -> listOf()
         }
     }
@@ -196,68 +189,6 @@ object DartsDatabaseUtil
 
         Debug.appendBanner("Finished initting database")
         DialogUtil.dismissLoadingDialog()
-    }
-
-    private fun upgradeDatabaseToVersion6()
-    {
-        Debug.appendBanner("Upgrading to Version 6")
-
-        val hmTableNameToRowCount = mutableMapOf<String, Int>()
-
-        val t = Thread {
-            val entities = getAllEntitiesIncludingVersion()
-            val dlg = ProgressDialog.factory("Preparing upgrade to V6", "tables remaining", entities.size)
-            dlg.setVisibleLater()
-
-            entities.forEach {
-                val name = it.getTableName()
-                hmTableNameToRowCount[name] = DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM $name")
-
-                createGuidTableForEntity(name)
-
-                dlg.incrementProgressLater()
-            }
-
-            dlg.disposeLater()
-        }
-
-        t.start()
-        t.join()
-
-        runSqlScriptsForVersion(6)
-
-        getAllEntitiesIncludingVersion().forEach {
-            val name = it.getTableName()
-            val newCount = DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM $name")
-
-            if (newCount == hmTableNameToRowCount[name])
-            {
-                Debug.append("$name: $newCount rows migrated successfully")
-                DatabaseUtil.dropTable("zz${name}Guids")
-            }
-            else
-            {
-                Debug.stackTrace("$name counts don't match. Migrated ${hmTableNameToRowCount[name]} -> $newCount")
-            }
-        }
-
-        Debug.appendBanner("Finished DB Upgrade")
-    }
-
-    private fun createGuidTableForEntity(tableName: String)
-    {
-        val maxLegacyId = DatabaseUtil.executeQueryAggregate("SELECT MAX(RowId) FROM $tableName")
-
-        val keysTable = "zz${tableName}Guids"
-
-        DatabaseUtil.createTableIfNotExists(keysTable, "RowId INT, Guid VARCHAR(36)")
-
-        val rowIds = (1..maxLegacyId).toList()
-        val rows = rowIds.map{ id -> "($id, '${UUID.randomUUID()}')"}
-
-        BulkInserter.insert(keysTable, rows, 5000, 50)
-
-        DatabaseUtil.executeUpdate("CREATE INDEX ${keysTable}_RowId_Guid ON $keysTable(RowId, Guid)")
     }
 
     private fun createAllTables()

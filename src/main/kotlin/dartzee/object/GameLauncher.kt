@@ -3,7 +3,10 @@ package dartzee.`object`
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.dartzee.DartzeeRuleDto
-import dartzee.db.*
+import dartzee.db.DartsMatchEntity
+import dartzee.db.GameEntity
+import dartzee.game.GameType
+import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
 import dartzee.screen.game.dartzee.DartzeeMatchScreen
@@ -26,7 +29,7 @@ object GameLauncher
         panel.startNewGame(match.players)
     }
 
-    fun launchNewGame(players: List<PlayerEntity>, gameType: Int, gameParams: String, dartzeeDtos: List<DartzeeRuleDto>? = null)
+    fun launchNewGame(players: List<PlayerEntity>, gameType: GameType, gameParams: String, dartzeeDtos: List<DartzeeRuleDto>? = null)
     {
         //Create and save a game
         val gameEntity = GameEntity.factoryAndSave(gameType, gameParams)
@@ -124,10 +127,9 @@ object GameLauncher
     private fun factoryMatchScreen(match: DartsMatchEntity, players: List<PlayerEntity>) =
         when (match.gameType)
         {
-            GAME_TYPE_X01 -> X01MatchScreen(match, players)
-            GAME_TYPE_ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match, players)
-            GAME_TYPE_GOLF -> GolfMatchScreen(match, players)
-            GAME_TYPE_DARTZEE -> DartzeeMatchScreen(match, players)
-            else -> X01MatchScreen(match, players)
+            GameType.X01 -> X01MatchScreen(match, players)
+            GameType.ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match, players)
+            GameType.GOLF -> GolfMatchScreen(match, players)
+            GameType.DARTZEE -> DartzeeMatchScreen(match, players)
         }
 }

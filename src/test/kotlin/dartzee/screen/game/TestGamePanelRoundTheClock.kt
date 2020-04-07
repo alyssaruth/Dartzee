@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.core.obj.HashMapList
 import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -114,7 +115,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
     }
 
     class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GAME_TYPE_ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD))
+        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD))
     {
         init
         {

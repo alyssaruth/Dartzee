@@ -8,7 +8,7 @@ CREATE TABLE Game_Tmp
 	DtCreation TIMESTAMP NOT NULL,
 	DtLastUpdate TIMESTAMP NOT NULL,
 	LocalId INT UNIQUE NOT NULL,
-	GameType INT NOT NULL,
+	GameType VARCHAR(255) NOT NULL,
 	GameParams VARCHAR(255) NOT NULL,
 	DtFinish TIMESTAMP NOT NULL,
 	DartsMatchId VARCHAR(36) NOT NULL,
@@ -18,23 +18,22 @@ CREATE TABLE Game_Tmp
 INSERT INTO
 	Game_Tmp
 SELECT
-	zzG.Guid,
+	RowId,
 	DtCreation,
 	DtLastUpdate,
-	g.RowId,
-	GameType,
+	LocalId,
+	CASE
+	    WHEN GameType = 1 THEN 'X01'
+	    WHEN GameType = 2 THEN 'GOLF'
+	    WHEN GameType = 3 THEN 'ROUND_THE_CLOCK'
+	    ELSE 'DARTZEE'
+	END,
 	GameParams,
 	DtFinish,
-	CASE
-	    WHEN zzM.Guid IS NULL THEN ''
-	    ELSE zzM.Guid
-	END,
+	DartsMatchId,
 	MatchOrdinal
 FROM
-	Game g LEFT OUTER JOIN zzDartsMatchGuids zzM ON (g.DartsMatchId = zzM.RowId),
-	zzGameGuids zzG
-WHERE
-    g.RowId = zzG.RowId;
+	Game;
 
 RENAME TABLE Game TO zzGame;
 RENAME TABLE Game_Tmp TO Game;

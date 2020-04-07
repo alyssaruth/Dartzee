@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_X01
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache
 import java.net.URL
@@ -14,7 +14,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
     override val name = "No Mercy"
     override val desc = "Finishes from 3, 5, 7 or 9 in X01"
     override val achievementRef = ACHIEVEMENT_REF_X01_NO_MERCY
-    override val gameType = GAME_TYPE_X01
+    override val gameType = GameType.X01
 
     override val redThreshold = 1
     override val orangeThreshold = 2
@@ -30,7 +30,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
         sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished")
         sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_X01")
+        sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND pt.FinalScore > -1")
         sb.append(" AND $LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber")
         sb.append(" AND pt.RowId = drt.ParticipantId")

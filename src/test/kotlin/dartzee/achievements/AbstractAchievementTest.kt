@@ -1,10 +1,8 @@
 package dartzee.achievements
 
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.AchievementEntity
-import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
-import dartzee.db.PlayerEntity
+import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.utils.DatabaseUtil
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -38,7 +36,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 
     open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
     {
-        return insertGame(gameType = factoryAchievement().gameType, dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate)
     }
 
     fun insertRelevantParticipant(): ParticipantEntity
@@ -62,8 +60,10 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     @Test
     fun `Should ignore games of the wrong type`()
     {
+        val otherType = GameType.values().find { it != factoryAchievement().gameType }!!
+
         val p = insertPlayer()
-        val g = insertGame(gameType = factoryAchievement().gameType + 1)
+        val g = insertGame(gameType = otherType)
         setUpAchievementRowForPlayerAndGame(p, g)
 
         factoryAchievement().populateForConversion("")

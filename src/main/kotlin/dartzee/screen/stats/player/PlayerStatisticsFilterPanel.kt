@@ -1,7 +1,7 @@
 package dartzee.screen.stats.player
 
 import dartzee.bean.PlayerAvatar
-import dartzee.db.GAME_TYPE_X01
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
 import dartzee.stats.GameWrapper
@@ -31,7 +31,7 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
     private val btnX = JButton("X")
     private val panelX = JPanel()
 
-    private var dlg: PlayerStatisticsFilterDialog = PlayerStatisticsFilterDialog(GAME_TYPE_X01)
+    private var dlg: PlayerStatisticsFilterDialog = PlayerStatisticsFilterDialog(GameType.X01)
 
     init
     {
@@ -63,7 +63,7 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
         btnX.addActionListener(this)
     }
 
-    fun init(player: PlayerEntity, gameType: Int, comparison: Boolean)
+    fun init(player: PlayerEntity, gameType: GameType, comparison: Boolean)
     {
         dlg = PlayerStatisticsFilterDialog(gameType)
 

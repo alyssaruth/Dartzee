@@ -2,6 +2,7 @@ package dartzee.achievements.rtc
 
 import dartzee.achievements.AbstractAchievementTest
 import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -60,7 +61,7 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
     fun `Should count doubles for a doubles game`()
     {
         val p = insertPlayer()
-        val g = insertGame(gameType = GAME_TYPE_ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_DOUBLES)
+        val g = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_DOUBLES)
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
@@ -76,7 +77,7 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
     fun `Should count trebles for a trebles game`()
     {
         val p = insertPlayer()
-        val g = insertGame(gameType = GAME_TYPE_ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_TREBLES)
+        val g = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_TREBLES)
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
@@ -107,7 +108,7 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
     fun `Should not count non-doubles for a doubles game`()
     {
         val p = insertPlayer()
-        val g = insertGame(gameType = GAME_TYPE_ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_DOUBLES)
+        val g = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_DOUBLES)
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
@@ -124,7 +125,7 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
     fun `Should not count non-trebles for a trebles game`()
     {
         val p = insertPlayer()
-        val g = insertGame(gameType = GAME_TYPE_ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_TREBLES)
+        val g = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_TREBLES)
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 

@@ -4,11 +4,11 @@ import dartzee.core.helper.exceptionLogged
 import dartzee.core.helper.getLogs
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
+import dartzee.game.GameType
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
@@ -110,35 +110,22 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
 
 
     @Test
-    fun `Game descriptions`()
+    fun `Should get the description along with the params`()
     {
         val game = GameEntity()
-
-        game.getTypeDesc().shouldBeEmpty()
-
         game.gameParams = "foo"
-
-        game.gameType = GAME_TYPE_X01
-        game.getTypeDesc() shouldBe "foo"
-
-        game.gameType = GAME_TYPE_GOLF
+        game.gameType = GameType.GOLF
         game.getTypeDesc() shouldBe "Golf - foo holes"
-
-        game.gameType = GAME_TYPE_ROUND_THE_CLOCK
-        game.getTypeDesc() shouldBe "Round the Clock - foo"
-
-        game.gameType = GAME_TYPE_DARTZEE
-        game.getTypeDesc() shouldBe "Dartzee"
     }
 
     @Test
     fun `Factory and save individual game`()
     {
-        val game = GameEntity.factoryAndSave(GAME_TYPE_X01, "301")
+        val game = GameEntity.factoryAndSave(GameType.X01, "301")
 
         val gameId = game.rowId
         game.localId shouldNotBe -1
-        game.gameType shouldBe GAME_TYPE_X01
+        game.gameType shouldBe GameType.X01
         game.gameParams shouldBe "301"
         game.dtFinish shouldBe DateStatics.END_OF_TIME
         game.dartsMatchId shouldBe ""
@@ -151,7 +138,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     fun `Factory and save for a match`()
     {
         val match = DartsMatchEntity.factoryFirstTo(4)
-        match.gameType = GAME_TYPE_GOLF
+        match.gameType = GameType.GOLF
         match.gameParams = "18"
 
         val matchId = match.rowId
@@ -159,14 +146,14 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         val gameOne = GameEntity.factoryAndSave(match)
         gameOne.matchOrdinal shouldBe 1
         gameOne.dartsMatchId shouldBe matchId
-        gameOne.gameType shouldBe GAME_TYPE_GOLF
+        gameOne.gameType shouldBe GameType.GOLF
         gameOne.gameParams shouldBe "18"
         gameOne.rowId shouldNotBe ""
 
         val gameTwo = GameEntity.factoryAndSave(match)
         gameTwo.matchOrdinal shouldBe 2
         gameTwo.dartsMatchId shouldBe matchId
-        gameTwo.gameType shouldBe GAME_TYPE_GOLF
+        gameTwo.gameType shouldBe GameType.GOLF
         gameTwo.gameParams shouldBe "18"
         gameTwo.rowId shouldNotBe ""
     }

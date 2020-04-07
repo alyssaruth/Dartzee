@@ -2,6 +2,7 @@ package dartzee.achievements
 
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertGame
@@ -15,7 +16,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 {
     override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
     {
-        return insertGame(gameType = factoryAchievement().gameType, gameParams = factoryAchievement().gameParams, dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType!!, gameParams = factoryAchievement().gameParams, dtLastUpdate = dtLastUpdate)
     }
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
@@ -26,8 +27,9 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     @Test
     fun `Should ignore games that are the wrong type`()
     {
+        val otherType = GameType.values().find { it != factoryAchievement().gameType }!!
         val alice = insertPlayer(name = "Alice")
-        val game = insertGame(gameType = 5000, gameParams = factoryAchievement().gameParams)
+        val game = insertGame(gameType = otherType, gameParams = factoryAchievement().gameParams)
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 
@@ -40,7 +42,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     fun `Should ignore games that are the wrong params`()
     {
         val alice = insertPlayer(name = "Alice")
-        val game = insertGame(gameType = factoryAchievement().gameType, gameParams = "blah")
+        val game = insertGame(gameType = factoryAchievement().gameType!!, gameParams = "blah")
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 

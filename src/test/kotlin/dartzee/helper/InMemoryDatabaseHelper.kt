@@ -9,6 +9,7 @@ import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
@@ -148,7 +149,7 @@ private fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
 
 fun insertGameForReport(uuid: String = randomGuid(),
                         localId: Long = LocalIdGenerator.generateLocalId("Game"),
-                        gameType: Int = GAME_TYPE_X01,
+                        gameType: GameType = GameType.X01,
                         gameParams: String = "501",
                         dtFinish: Timestamp = DateStatics.END_OF_TIME,
                         dartsMatchId: String = "",
@@ -164,7 +165,7 @@ fun insertGameForReport(uuid: String = randomGuid(),
 
 fun insertGame(uuid: String = randomGuid(),
                localId: Long = LocalIdGenerator.generateLocalId("Game"),
-               gameType: Int = GAME_TYPE_X01,
+               gameType: GameType = GameType.X01,
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
                dartsMatchId: String = "",

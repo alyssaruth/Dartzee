@@ -1,6 +1,7 @@
 package dartzee.achievements
 
 import dartzee.db.AchievementEntity
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_LOCKED
 
@@ -9,7 +10,7 @@ class DummyAchievementTotal: AbstractAchievement()
     override val name = "Total Achievements"
     override val desc = ""
     override val achievementRef = -1
-    override val gameType = -1
+    override val gameType: GameType? = null
 
     override val redThreshold = 1
     override val orangeThreshold = getAchievementMaximum() / 6

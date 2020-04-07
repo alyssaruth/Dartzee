@@ -5,6 +5,7 @@ import dartzee.core.helper.getLogs
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
+import dartzee.game.GameType
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -143,7 +144,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.localId = 1
         dm.games = 3
         dm.mode = DartsMatchEntity.MODE_FIRST_TO
-        dm.gameType = GAME_TYPE_X01
+        dm.gameType = GameType.X01
         dm.gameParams = "501"
 
         dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501, 0 players)"
@@ -156,7 +157,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.localId = 1
         dm.games = 3
         dm.mode = DartsMatchEntity.MODE_POINTS
-        dm.gameType = GAME_TYPE_GOLF
+        dm.gameType = GameType.GOLF
         dm.gameParams = "18"
 
         dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes, 0 players)"
@@ -247,9 +248,9 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     @Test
     fun `Should cache metadata from a game correctly`()
     {
-        val game501 = GameEntity.factoryAndSave(GAME_TYPE_X01, "501")
+        val game501 = GameEntity.factoryAndSave(GameType.X01, "501")
         game501.matchOrdinal = 2
-        val gameGolf = GameEntity.factoryAndSave(GAME_TYPE_GOLF, "18")
+        val gameGolf = GameEntity.factoryAndSave(GameType.GOLF, "18")
         gameGolf.matchOrdinal = 4
 
         insertPlayerForGame("BTBF", game501.rowId)

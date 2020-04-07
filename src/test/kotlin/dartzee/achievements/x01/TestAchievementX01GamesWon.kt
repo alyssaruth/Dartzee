@@ -1,7 +1,7 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.TestAbstractAchievementGamesWon
-import dartzee.db.GAME_TYPE_X01
+import dartzee.game.GameType
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -12,6 +12,6 @@ class TestAchievementX01GamesWon: TestAbstractAchievementGamesWon<AchievementX01
     @Test
     fun `Game type should be correct`()
     {
-        AchievementX01GamesWon().gameType shouldBe GAME_TYPE_X01
+        AchievementX01GamesWon().gameType shouldBe GameType.X01
     }
 }

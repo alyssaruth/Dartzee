@@ -1,8 +1,8 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.TestAbstractAchievementRowPerGame
-import dartzee.db.GAME_TYPE_GOLF
 import dartzee.db.GameEntity
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.helper.*
 import io.kotlintest.shouldBe
@@ -22,7 +22,7 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
     {
         val alice = insertPlayer()
 
-        val game = insertGame(gameType = GAME_TYPE_GOLF)
+        val game = insertGame(gameType = GameType.GOLF)
         insertSuccessfulParticipant(game, alice)
 
         factoryAchievement().populateForConversion("")

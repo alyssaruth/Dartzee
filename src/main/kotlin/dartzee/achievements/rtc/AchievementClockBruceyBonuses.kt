@@ -4,6 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.Debug
 import dartzee.db.*
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache
 import java.net.URL
@@ -14,7 +15,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
     override val name = "Didn't he do well!?"
     override val desc = "Total number of 'Brucey Bonuses' executed in Round the Clock"
     override val achievementRef = ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
-    override val gameType = GAME_TYPE_ROUND_THE_CLOCK
+    override val gameType = GameType.ROUND_THE_CLOCK
 
     override val redThreshold = 1
     override val orangeThreshold = 5
@@ -34,7 +35,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_ROUND_THE_CLOCK")
+        sb.append(" AND g.GameType = '${GameType.ROUND_THE_CLOCK}'")
         sb.append(" AND drt.Ordinal = 4")
         sb.append(" AND drt.Score = drt.StartingScore")
         sb.append(" AND (")

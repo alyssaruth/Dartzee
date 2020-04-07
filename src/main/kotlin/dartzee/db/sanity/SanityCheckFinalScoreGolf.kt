@@ -4,12 +4,12 @@ import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_TREBLE
-import dartzee.db.GAME_TYPE_GOLF
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 
 class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()
 {
-    override val gameType = GAME_TYPE_GOLF
+    override val gameType = GameType.GOLF
 
     override fun populateParticipantToFinalScoreTable(tempTable: String)
     {
@@ -29,7 +29,7 @@ class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_GOLF")
+        sb.append(" AND g.GameType = '${GameType.GOLF}'")
         sb.append(" AND pt.FinalScore > -1")
         sb.append(" AND NOT EXISTS")
         sb.append(" (")

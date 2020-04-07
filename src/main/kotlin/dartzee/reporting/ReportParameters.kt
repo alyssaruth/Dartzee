@@ -1,13 +1,14 @@
 package dartzee.reporting
 
 import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import java.sql.Timestamp
 import java.util.*
 
 class ReportParameters
 {
-    var gameType = -1
+    var gameType: GameType? = null
     var gameParams = ""
     var unfinishedOnly = false
     var dtStartFrom: Timestamp? = null
@@ -22,17 +23,14 @@ class ReportParameters
     {
         val sb = StringBuilder()
 
-        if (gameType > -1)
+        if (gameType != null)
         {
-            sb.append(" AND g.GameType = ")
-            sb.append(gameType)
+            sb.append(" AND g.GameType = '$gameType'")
         }
 
         if (!gameParams.isEmpty())
         {
-            sb.append(" AND g.GameParams = '")
-            sb.append(gameParams)
-            sb.append("'")
+            sb.append(" AND g.GameParams = '$gameParams'")
         }
 
         if (dtStartFrom != null)

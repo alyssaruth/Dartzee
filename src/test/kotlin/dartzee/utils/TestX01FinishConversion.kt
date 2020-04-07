@@ -1,7 +1,10 @@
 package dartzee.utils
 
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.*
+import dartzee.db.GameEntity
+import dartzee.game.GameType
+import dartzee.db.PlayerEntity
+import dartzee.db.X01FinishEntity
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
@@ -57,7 +60,7 @@ class TestX01FinishConversion: AbstractTest()
     fun `Should ignore games of the wrong type`()
     {
         val p = insertPlayer()
-        val g = insertGame(gameType = GAME_TYPE_GOLF)
+        val g = insertGame(gameType = GameType.GOLF)
 
         insertFinishForPlayer(p, 100, game = g)
 
@@ -115,5 +118,5 @@ class TestX01FinishConversion: AbstractTest()
         return game
     }
 
-    private fun insertRelevantGame() = insertGame(gameType = GAME_TYPE_X01)
+    private fun insertRelevantGame() = insertGame(gameType = GameType.X01)
 }

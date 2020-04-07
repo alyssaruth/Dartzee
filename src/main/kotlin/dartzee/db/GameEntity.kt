@@ -2,15 +2,9 @@ package dartzee.db
 
 import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
-import dartzee.utils.getGameDesc
 import java.util.*
-
-
-const val GAME_TYPE_X01 = 1
-const val GAME_TYPE_GOLF = 2
-const val GAME_TYPE_ROUND_THE_CLOCK = 3
-const val GAME_TYPE_DARTZEE = 4
 
 const val CLOCK_TYPE_STANDARD = "Standard"
 const val CLOCK_TYPE_DOUBLES = "Doubles"
@@ -25,19 +19,18 @@ class GameEntity : AbstractEntity<GameEntity>()
      * DB fields
      */
     var localId = -1L
-    var gameType = -1
+    var gameType: GameType = GameType.X01
     var gameParams = ""
     var dtFinish = DateStatics.END_OF_TIME
     var dartsMatchId: String = ""
     var matchOrdinal = -1
-
 
     override fun getTableName() = "Game"
 
     override fun getCreateTableSqlSpecific(): String
     {
         return ("LocalId INT UNIQUE NOT NULL, "
-                + "GameType INT NOT NULL, "
+                + "GameType varchar(255) NOT NULL, "
                 + "GameParams varchar(255) NOT NULL, "
                 + "DtFinish timestamp NOT NULL, "
                 + "DartsMatchId VARCHAR(36) NOT NULL, "
@@ -76,7 +69,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     }
 
     fun isFinished() = !isEndOfTime(dtFinish)
-    fun getTypeDesc() = getGameDesc(gameType, gameParams)
+    fun getTypeDesc() = gameType.getDescription(gameParams)
 
     fun retrievePlayersVector(): MutableList<PlayerEntity>
     {
@@ -94,7 +87,7 @@ class GameEntity : AbstractEntity<GameEntity>()
 
     companion object
     {
-        fun factoryAndSave(gameType: Int, gameParams: String): GameEntity
+        fun factoryAndSave(gameType: GameType, gameParams: String): GameEntity
         {
             val gameEntity = GameEntity()
             gameEntity.assignRowId()
