@@ -1,7 +1,7 @@
 package dartzee.achievements.golf
 
 import dartzee.achievements.TestAbstractAchievementGamesWon
-import dartzee.db.GAME_TYPE_GOLF
+import dartzee.db.GameType
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -13,6 +13,6 @@ class TestAchievementGolfGamesWon: TestAbstractAchievementGamesWon<AchievementGo
     @Test
     fun `Game type should be correct`()
     {
-        factoryAchievement().gameType shouldBe GAME_TYPE_GOLF
+        factoryAchievement().gameType shouldBe GameType.GOLF
     }
 }

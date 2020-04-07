@@ -4,7 +4,6 @@ import dartzee.`object`.SEGMENT_TYPE_DOUBLE
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_GOLF
 import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache
@@ -45,7 +44,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
         sb.append(" AND d.ParticipantId = pt.RowId")
         sb.append(" AND d.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_GOLF")
+        sb.append(" AND g.GameType = '${GameType.GOLF}'")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")

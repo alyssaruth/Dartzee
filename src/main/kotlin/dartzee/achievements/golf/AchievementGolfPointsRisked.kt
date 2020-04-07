@@ -4,7 +4,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_GOLF
 import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache
@@ -40,7 +39,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         sb.append(" WHERE drtFirst.ParticipantId = pt.RowId")
         sb.append(" AND drtFirst.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $GAME_TYPE_GOLF")
+        sb.append(" AND g.GameType = '${GameType.GOLF}'")
         sb.append(" AND drtFirst.RoundNumber = drtFirst.Score")
         sb.append(" AND drtFirst.Multiplier > 0")
 

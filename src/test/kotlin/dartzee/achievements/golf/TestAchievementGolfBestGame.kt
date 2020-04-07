@@ -1,7 +1,7 @@
 package dartzee.achievements.golf
 
 import dartzee.achievements.TestAbstractAchievementBestGame
-import dartzee.db.GAME_TYPE_GOLF
+import dartzee.db.GameType
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -14,7 +14,7 @@ class TestAchievementGolfBestGame: TestAbstractAchievementBestGame<AchievementGo
     {
         val achievement = factoryAchievement()
 
-        achievement.gameType shouldBe GAME_TYPE_GOLF
+        achievement.gameType shouldBe GameType.GOLF
         achievement.gameParams shouldBe "18"
     }
 }

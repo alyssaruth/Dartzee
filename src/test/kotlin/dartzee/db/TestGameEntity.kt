@@ -159,14 +159,14 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         val gameOne = GameEntity.factoryAndSave(match)
         gameOne.matchOrdinal shouldBe 1
         gameOne.dartsMatchId shouldBe matchId
-        gameOne.gameType shouldBe GAME_TYPE_GOLF
+        gameOne.gameType shouldBe GameType.GOLF
         gameOne.gameParams shouldBe "18"
         gameOne.rowId shouldNotBe ""
 
         val gameTwo = GameEntity.factoryAndSave(match)
         gameTwo.matchOrdinal shouldBe 2
         gameTwo.dartsMatchId shouldBe matchId
-        gameTwo.gameType shouldBe GAME_TYPE_GOLF
+        gameTwo.gameType shouldBe GameType.GOLF
         gameTwo.gameParams shouldBe "18"
         gameTwo.rowId shouldNotBe ""
     }
