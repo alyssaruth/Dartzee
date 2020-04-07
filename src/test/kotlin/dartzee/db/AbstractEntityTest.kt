@@ -193,6 +193,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
             Blob::class.java -> if (initial) getBlobValue("BaboOne") else getBlobValue("Goomba")
             Boolean::class.java -> initial
             Double::class.java -> if (initial) 5.0 else 10.0
+            GameType::class.java -> if (initial) GameType.X01 else GameType.GOLF
             else -> {
                 println(fieldType)
                 "uh oh"
