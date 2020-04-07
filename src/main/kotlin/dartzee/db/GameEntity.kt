@@ -15,7 +15,6 @@ enum class GameType {
 
 const val GAME_TYPE_X01 = 1
 const val GAME_TYPE_GOLF = 2
-const val GAME_TYPE_ROUND_THE_CLOCK = 3
 
 const val CLOCK_TYPE_STANDARD = "Standard"
 const val CLOCK_TYPE_DOUBLES = "Doubles"

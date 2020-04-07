@@ -5,7 +5,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.achievements.AbstractAchievement
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
-import dartzee.db.GAME_TYPE_ROUND_THE_CLOCK
 import dartzee.db.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
@@ -34,7 +33,7 @@ class AchievementClockBestStreak: AbstractAchievement()
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate")
         sb.append(" FROM Game g, Participant pt, Dart drt")
-        sb.append(" WHERE g.GameType = $GAME_TYPE_ROUND_THE_CLOCK")
+        sb.append(" WHERE g.GameType = '${GameType.ROUND_THE_CLOCK}'")
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
