@@ -70,8 +70,11 @@ class TestValidSegments: AbstractTest()
             inOrder = true
         )
 
-        val firstSegments = DartzeeCalculator().getValidSegments(rule, listOf()).validSegments
-        firstSegments.shouldContainExactlyInAnyOrder(getAllPossibleSegments().filter { it.score % 2 == 0 && !it.isMiss()})
+        val expectedSegments = getAllPossibleSegments().filter { DartzeeDartRuleEven().isValidSegment(it) }
+
+        val firstSegments = DartzeeCalculator().getValidSegments(rule, listOf())
+        firstSegments.validSegments.shouldContainExactlyInAnyOrder(expectedSegments)
+        firstSegments.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments)
     }
 
     @Test
@@ -84,8 +87,10 @@ class TestValidSegments: AbstractTest()
                 inOrder = true
         )
 
-        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE))).validSegments
-        secondSegments.shouldContainExactlyInAnyOrder(getAllPossibleSegments().filter { it.score % 2 != 0 && !it.isMiss() })
+        val expectedSegments = getAllPossibleSegments().filter { DartzeeDartRuleOdd().isValidSegment(it) }
+        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE)))
+        secondSegments.validSegments.shouldContainExactlyInAnyOrder(expectedSegments)
+        secondSegments.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments)
     }
 
     @Test
@@ -99,8 +104,10 @@ class TestValidSegments: AbstractTest()
         )
 
         val dartsThrown = listOf(makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE), makeDart(3, 1, SEGMENT_TYPE_INNER_SINGLE))
-        val thirdSegments = DartzeeCalculator().getValidSegments(rule, dartsThrown).validSegments
-        thirdSegments.shouldContainExactlyInAnyOrder(getOuterSegments())
+        val expectedSegments = getAllPossibleSegments().filter { DartzeeDartRuleOuter().isValidSegment(it) }
+        val thirdSegments = DartzeeCalculator().getValidSegments(rule, dartsThrown)
+        thirdSegments.validSegments.shouldContainExactlyInAnyOrder(expectedSegments)
+        thirdSegments.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments)
     }
 
     @Test
@@ -113,12 +120,14 @@ class TestValidSegments: AbstractTest()
                 inOrder = true
         )
 
-        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(3, 1, SEGMENT_TYPE_OUTER_SINGLE))).validSegments
-        secondSegments.shouldBeEmpty()
+        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(3, 1, SEGMENT_TYPE_OUTER_SINGLE)))
+        secondSegments.validSegments.shouldBeEmpty()
+        secondSegments.scoringSegments.shouldBeEmpty()
 
         val invalidSecondDart = listOf(makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE), makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE))
-        val thirdSegments = DartzeeCalculator().getValidSegments(rule, invalidSecondDart).validSegments
-        thirdSegments.shouldBeEmpty()
+        val thirdSegments = DartzeeCalculator().getValidSegments(rule, invalidSecondDart)
+        thirdSegments.validSegments.shouldBeEmpty()
+        thirdSegments.scoringSegments.shouldBeEmpty()
     }
 
     @Test
@@ -134,6 +143,7 @@ class TestValidSegments: AbstractTest()
         val dartsThrown = listOf(makeDart(2, 1, SEGMENT_TYPE_DOUBLE), makeDart(19, 3, SEGMENT_TYPE_TREBLE), makeDart(20, 0, SEGMENT_TYPE_MISS))
         val result = DartzeeCalculator().getValidSegments(rule, dartsThrown)
 
+        result.scoringSegments.shouldBeEmpty()
         result.validSegments.shouldBeEmpty()
         result.percentage shouldBe 0.0
         result.validCombinationProbability shouldBe 0.0
@@ -152,6 +162,7 @@ class TestValidSegments: AbstractTest()
         val dartsThrown = listOf(makeDart(2, 1, SEGMENT_TYPE_DOUBLE), makeDart(19, 3, SEGMENT_TYPE_TREBLE), makeDart(20, 2, SEGMENT_TYPE_DOUBLE))
         val result = DartzeeCalculator().getValidSegments(rule, dartsThrown)
 
+        result.scoringSegments.shouldContainExactlyInAnyOrder(getOuterSegments())
         result.validSegments.shouldContainExactlyInAnyOrder(getOuterSegments())
     }
 
@@ -160,12 +171,14 @@ class TestValidSegments: AbstractTest()
     {
         val rule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = false)
 
-        val validSegments = getAllPossibleSegments().filter { listOf(20, 19, 18).contains(it.score) && !it.isMiss() }
+        val expectedSegments = getAllPossibleSegments().filter { listOf(20, 19, 18).contains(it.score) && !it.isMiss() }
         val result = DartzeeCalculator().getValidSegments(rule, listOf())
-        result.validSegments.shouldContainExactlyInAnyOrder(validSegments)
+        result.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments)
+        result.validSegments.shouldContainExactlyInAnyOrder(expectedSegments)
 
         val resultTwo = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE)))
-        resultTwo.validSegments.shouldContainExactlyInAnyOrder(validSegments.filter { it.score != 20 })
+        resultTwo.validSegments.shouldContainExactlyInAnyOrder(expectedSegments.filter { it.score != 20 })
+        resultTwo.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments.filter { it.score != 20 })
     }
 
     @Test
@@ -185,9 +198,10 @@ class TestValidSegments: AbstractTest()
     {
         val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleEven(), DartzeeDartRuleEven(), makeTotalScoreRule<DartzeeTotalRuleLessThan>(20), true)
 
-        val segments = DartzeeCalculator().getValidSegments(rule, listOf()).validSegments
+        val segments = DartzeeCalculator().getValidSegments(rule, listOf())
 
-        segments.find { it.score == 16 } shouldBe null
+        segments.validSegments.find { it.score == 16 } shouldBe null
+        segments.scoringSegments.find { it.score == 16 } shouldBe null
     }
 
     @Test
@@ -198,11 +212,44 @@ class TestValidSegments: AbstractTest()
 
         val calculator = DartzeeCalculator()
 
-        val firstSegments = calculator.getValidSegments(ruleOne, listOf()).validSegments
-        val secondSegments = calculator.getValidSegments(ruleTwo, listOf()).validSegments
+        val firstSegments = calculator.getValidSegments(ruleOne, listOf())
+        val secondSegments = calculator.getValidSegments(ruleTwo, listOf())
 
-        firstSegments.any { it.score == 20 } shouldBe true
-        secondSegments.any { it.score == 20 } shouldBe false
+        firstSegments.validSegments.any { it.score == 20 } shouldBe true
+        firstSegments.scoringSegments.any { it.score == 20 } shouldBe true
+        secondSegments.validSegments.any { it.score == 20 } shouldBe false
+        secondSegments.scoringSegments.any { it.score == 20 } shouldBe false
+    }
+
+    @Test
+    fun `Should distinguish scoring segments from valid ones for Score X rules`()
+    {
+        val dartRule = makeScoreRule(20)
+        val rule = makeDartzeeRuleDto(dartRule)
+        val calculator = DartzeeCalculator()
+
+        val expectedScoringSegments = getAllPossibleSegments().filter { dartRule.isValidSegment(it) }
+        val expectedValidSegments = getAllPossibleSegments().filter { !it.isMiss() }
+
+        //0 darts
+        val firstSegments = calculator.getValidSegments(rule, emptyList())
+        firstSegments.scoringSegments.shouldContainExactlyInAnyOrder(expectedScoringSegments)
+        firstSegments.validSegments.shouldContainExactlyInAnyOrder(expectedValidSegments)
+
+        //1 dart - non-20s should still be valid
+        val secondSegments = calculator.getValidSegments(rule, listOf(makeDart(19, 1)))
+        secondSegments.scoringSegments.shouldContainExactlyInAnyOrder(expectedScoringSegments)
+        secondSegments.validSegments.shouldContainExactlyInAnyOrder(expectedValidSegments)
+
+        //2 darts - non-20s should no longer be valid
+        val thirdSegments = calculator.getValidSegments(rule, listOf(makeDart(19, 1), makeDart(19, 1)))
+        thirdSegments.scoringSegments.shouldContainExactlyInAnyOrder(expectedScoringSegments)
+        thirdSegments.validSegments.shouldContainExactlyInAnyOrder(expectedScoringSegments)
+
+        //2 darts, but with a hit - non-20s should be valid
+        val thirdSegmentsWithHit = calculator.getValidSegments(rule, listOf(makeDart(19, 1), makeDart(20, 1)))
+        thirdSegmentsWithHit.scoringSegments.shouldContainExactlyInAnyOrder(expectedScoringSegments)
+        thirdSegmentsWithHit.validSegments.shouldContainExactlyInAnyOrder(expectedValidSegments)
     }
 }
 

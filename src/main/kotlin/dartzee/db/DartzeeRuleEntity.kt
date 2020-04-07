@@ -34,16 +34,20 @@ class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
                 + "CalculationResult VARCHAR(32000) NOT NULL")
     }
 
-    fun toDto(): DartzeeRuleDto
+    fun toDto(includeCalculationResult: Boolean = true): DartzeeRuleDto
     {
         val rule1 = parseDartRule(dart1Rule)
         val rule2 = parseDartRule(dart2Rule)
         val rule3 = parseDartRule(dart3Rule)
         val total = parseTotalRule(totalRule)
-        val calculationResult = DartzeeRuleCalculationResult.fromDbString(calculationResult)
 
         val dto = DartzeeRuleDto(rule1, rule2, rule3, total, inOrder, allowMisses)
-        dto.calculationResult = calculationResult
+        if (includeCalculationResult)
+        {
+            val calculationResult = DartzeeRuleCalculationResult.fromDbString(calculationResult)
+            dto.calculationResult = calculationResult
+        }
+
         return dto
     }
 

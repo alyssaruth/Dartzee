@@ -59,11 +59,11 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
         repaint()
     }
 
-    fun getValidSegments(): List<DartboardSegment> =
+    fun getSegmentStatus(): SegmentStatus? =
         when
         {
-            components.contains(panelHighScore) -> getAllPossibleSegments()
-            else -> carousel.getValidSegments()
+            components.contains(panelHighScore) -> null
+            else -> carousel.getSegmentStatus()
         }
 
     fun gameFinished()

@@ -3,81 +3,142 @@ package dartzee.screen.dartzee
 import dartzee.*
 import dartzee.`object`.*
 import dartzee.helper.AbstractTest
+import dartzee.helper.makeSegmentStatus
+import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
+import java.awt.Point
 
 class TestDartzeeDartboard: AbstractTest()
 {
     @Test
-    fun `It should fade out invalid segments, but leave valid segments opaque`()
+    fun `Should leave scoring segments the original colour`()
     {
-        val dartboard = DartzeeDartboard(100, 100)
+        val dartboard = DartzeeDartboard(150, 150)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+
+        val scoringSegments = listOf(trebleNineteen, bullseye)
+        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments))
+
+        val t19Pt = dartboard.getNonEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        dartboard.getColor(t19Pt) shouldBe Color.GREEN
+
+        val bullPt = dartboard.getNonEdgePointForSegment(25, SEGMENT_TYPE_DOUBLE)
+        dartboard.getColor(bullPt) shouldBe Color.RED
+    }
+
+    @Test
+    fun `Should colour segments that are only valid in grayscale`()
+    {
+        val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
 
         val validSegments = listOf(trebleNineteen, bullseye)
-        dartboard.refreshValidSegments(validSegments)
+        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = emptyList(), validSegments = validSegments))
 
-        val t19pts = dartboard.getPointsForSegment(19, SEGMENT_TYPE_TREBLE)
-        t19pts.forEach { dartboard.getColor(it) shouldBe Color.GREEN }
+        val t19Pt = dartboard.getNonEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        dartboard.getColor(t19Pt) shouldBe GREY_COLOUR_WRAPPER.getColour(3, 19)
 
-        val bullPts = dartboard.getPointsForSegment(25, SEGMENT_TYPE_DOUBLE)
-        bullPts.forEach { dartboard.getColor(it) shouldBe Color.RED }
-
-        val outerBullPts = dartboard.getPointsForSegment(25, SEGMENT_TYPE_OUTER_SINGLE)
-        outerBullPts.forEach { dartboard.getColor(it) shouldBe Color(0, 255, 0, 20) }
+        val bullPt = dartboard.getNonEdgePointForSegment(25, SEGMENT_TYPE_DOUBLE)
+        dartboard.getColor(bullPt) shouldBe GREY_COLOUR_WRAPPER.getBullColour(2)
     }
 
     @Test
-    fun `Should fade out miss segments if valid segments doesn't contain a miss`()
+    fun `Should colour segments that are invalid in black`()
     {
-        val dartboard = DartzeeDartboard(100, 100)
+        val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(trebleNineteen))
 
-        val missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
-        missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color(0, 0, 0, 20) }
+        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = emptyList(), validSegments = emptyList()))
+
+        val t19Pt = dartboard.getNonEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        dartboard.getColor(t19Pt) shouldBe Color.BLACK
+
+        val bullPt = dartboard.getNonEdgePointForSegment(25, SEGMENT_TYPE_DOUBLE)
+        dartboard.getColor(bullPt) shouldBe Color.BLACK
     }
 
     @Test
-    fun `Should not fade out miss segments if valid segments contains a miss`()
+    fun `Should leave miss segments alone regardless of whether missing is allowed`()
     {
         val dartboard = DartzeeDartboard(100, 100)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(trebleNineteen, missTwenty))
+        dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen, missTwenty)))
 
-        val missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
+        var missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
+
+        dartboard.refreshValidSegments(makeSegmentStatus(emptyList()))
+        missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
+        missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
+
+        val missedBoardSegments = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISSED_BOARD)
+        missedBoardSegments.forEach { dartboard.getColor(it) shouldBe DartsColour.TRANSPARENT }
     }
 
     @Test
     fun `Should not highlight invalid segments on hover`()
     {
-        val dartboard = DartzeeDartboard(100, 100)
+        val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(trebleNineteen))
+        dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen)))
 
         dartboard.ensureListening()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
+        val pt = dartboard.getNonEdgePointForSegment(20, SEGMENT_TYPE_DOUBLE)
         dartboard.highlightDartboard(pt)
 
-        dartboard.getColor(pt) shouldBe Color(255, 0, 0, 20)
+        dartboard.getColor(pt) shouldBe Color.BLACK
     }
 
     @Test
-    fun `Should highlight valid segments on hover`()
+    fun `Should put a border around scoring segments, but not valid or invalid segments`()
     {
-        val dartboard = DartzeeDartboard(100, 100)
+        val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(listOf(doubleTwenty))
+        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = listOf(trebleNineteen), validSegments = listOf(trebleNineteen, doubleNineteen)))
+
+        val scoringEdgePt = dartboard.getEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        dartboard.getColor(scoringEdgePt) shouldBe Color.GRAY
+
+        val validEdgePt = dartboard.getEdgePointForSegment(19, SEGMENT_TYPE_DOUBLE)
+        dartboard.getColor(validEdgePt) shouldBe GREY_COLOUR_WRAPPER.getColour(2, 19)
+
+        val invalidEdgePt = dartboard.getEdgePointForSegment(20, SEGMENT_TYPE_OUTER_SINGLE)
+        dartboard.getColor(invalidEdgePt) shouldBe Color.BLACK
+    }
+
+    @Test
+    fun `Should highlight scoring & valid segments on hover`()
+    {
+        val dartboard = DartzeeDartboard(150, 150)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = listOf(doubleTwenty), validSegments = listOf(singleTwenty, doubleTwenty)))
 
         dartboard.ensureListening()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
+        val pt = dartboard.getNonEdgePointForSegment(20, SEGMENT_TYPE_DOUBLE)
         dartboard.highlightDartboard(pt)
-
         dartboard.getColor(pt) shouldBe DartsColour.getDarkenedColour(Color.RED)
+
+        val validPt = dartboard.getNonEdgePointForSegment(20, SEGMENT_TYPE_INNER_SINGLE)
+        dartboard.highlightDartboard(validPt)
+        dartboard.getColor(validPt) shouldBe DartsColour.getDarkenedColour(GREY_COLOUR_WRAPPER.getColour(1, 20))
+    }
+
+    private fun Dartboard.getEdgePointForSegment(score: Int, segmentType: Int): Point
+    {
+        val segment = getSegment(score, segmentType)!!
+        segment.isEdgePoint(Point(0, 0))
+        return segment.edgePoints.first()
+    }
+    private fun Dartboard.getNonEdgePointForSegment(score: Int, segmentType: Int): Point
+    {
+        val segment = getSegment(score, segmentType)!!
+        segment.isEdgePoint(Point(0, 0))
+        val innerPoints = segment.points - segment.edgePoints
+        return innerPoints.first()
     }
 }

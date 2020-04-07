@@ -1,7 +1,6 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapList
 import dartzee.dartzee.DartzeeRoundResult
@@ -15,7 +14,6 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.factoryHighScoreResult
-import dartzee.utils.getAllPossibleSegments
 import java.awt.BorderLayout
 
 class GamePanelDartzee(parent: AbstractDartsGameScreen,
@@ -93,8 +91,9 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun shouldStopAfterDartThrown(): Boolean
     {
-        val validSegments = summaryPanel.getValidSegments()
-        return dartsThrown.size == 3 || validSegments.isEmpty()
+        val segmentStatus = summaryPanel.getSegmentStatus()
+        val failedAllRules = segmentStatus?.validSegments?.isEmpty() ?: false
+        return dartsThrown.size == 3 || failedAllRules
     }
 
     override fun shouldAIStop() = false
@@ -114,7 +113,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     private fun updateCarouselAndDartboard()
     {
         updateCarousel()
-        dartboard.refreshValidSegments(summaryPanel.getValidSegments())
+        dartboard.refreshValidSegments(summaryPanel.getSegmentStatus())
     }
     private fun updateCarousel()
     {
@@ -157,7 +156,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     private fun gameFinished()
     {
         summaryPanel.gameFinished()
-        dartboard.refreshValidSegments(getAllPossibleSegments())
+        dartboard.refreshValidSegments(null)
 
         updateCarousel()
     }
@@ -165,11 +164,11 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelDartzee()
     override fun factoryScorer() = DartsScorerDartzee(this)
 
-    override fun hoverChanged(validSegments: List<DartboardSegment>)
+    override fun hoverChanged(segmentStatus: SegmentStatus)
     {
         if (dartsThrown.size < 3)
         {
-            dartboard.refreshValidSegments(validSegments)
+            dartboard.refreshValidSegments(segmentStatus)
         }
     }
 

@@ -46,7 +46,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertSegment(Point(0, -999), SEGMENT_TYPE_DOUBLE, 20, 2, DartsColour.DARTBOARD_RED)
         assertSegment(Point(0, -1000), SEGMENT_TYPE_MISS, 20, 0, Color.black)
         assertSegment(Point(0, -1299), SEGMENT_TYPE_MISS, 20, 0, Color.black)
-        assertSegment(Point(0, -1300), SEGMENT_TYPE_MISSED_BOARD, 20, 0, null)
+        assertSegment(Point(0, -1300), SEGMENT_TYPE_MISSED_BOARD, 20, 0, DartsColour.TRANSPARENT)
 
         //Test 45 degrees etc
         assertSegment(Point(100, -100), SEGMENT_TYPE_INNER_SINGLE, 4, 1, DartsColour.DARTBOARD_WHITE)
@@ -55,7 +55,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertSegment(Point(100, 100), SEGMENT_TYPE_INNER_SINGLE, 15, 1, DartsColour.DARTBOARD_WHITE)
     }
 
-    private fun assertSegment(pt: Point, segmentType: Int, score: Int, multiplier: Int, expectedColor: Color?)
+    private fun assertSegment(pt: Point, segmentType: Int, score: Int, multiplier: Int, expectedColor: Color)
     {
         val key = factorySegmentKeyForPoint(pt, Point(0, 0), 2000.0)
         key shouldBe score.toString() + "_" + segmentType
@@ -71,7 +71,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         drt.multiplier shouldBe multiplier
         drt.segmentType shouldBe segmentType
 
-        assertColourForPointAndSegment(pt, segment, null, expectedColor, false)
+        assertColourForPointAndSegment(pt, segment, null, expectedColor)
     }
 
     @Test
@@ -81,20 +81,6 @@ class TestDartboardUtil : AbstractRegistryTest()
         val pink = Color.pink
         PreferenceUtil.saveString(PREFERENCES_STRING_EVEN_SINGLE_COLOUR, DartsColour.toPrefStr(pink))
         assertSegment(Point(0, -629), SEGMENT_TYPE_OUTER_SINGLE, 20, 1, pink)
-    }
-
-
-    @Test
-    fun testHighlights()
-    {
-        val wrapper = DEFAULT_COLOUR_WRAPPER
-        val segment = DartboardSegment("20_4")
-
-        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, DartsColour.DARTBOARD_BLACK, false)
-        assertColourForPointAndSegment(Point(0, 0), segment, wrapper, Color.DARK_GRAY, true)
-
-        assertColourForPointAndSegment(Point(0, 0), DartboardSegment("19_1"), wrapper, Color.GREEN, false)
-        assertColourForPointAndSegment(Point(0, 0), DartboardSegment("19_1"), wrapper, Color.GREEN.darker().darker(), true)
     }
 
     @Test
@@ -115,23 +101,23 @@ class TestDartboardUtil : AbstractRegistryTest()
         fakeSegment.points.shouldHaveSize(40401)
 
         //Four corners and four edge mid-points
-        assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, Color.YELLOW, false)
-        assertColourForPointAndSegment(Point(0, 100), fakeSegment, wrapper, Color.YELLOW, false)
-        assertColourForPointAndSegment(Point(100, 0), fakeSegment, wrapper, Color.YELLOW, false)
-        assertColourForPointAndSegment(Point(0, 200), fakeSegment, wrapper, Color.YELLOW, false)
-        assertColourForPointAndSegment(Point(200, 0), fakeSegment, wrapper, Color.YELLOW, false)
-        assertColourForPointAndSegment(Point(200, 100), fakeSegment, wrapper, Color.YELLOW, false)
-        assertColourForPointAndSegment(Point(100, 200), fakeSegment, wrapper, Color.YELLOW, false)
-        assertColourForPointAndSegment(Point(200, 200), fakeSegment, wrapper, Color.YELLOW, false)
+        assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, Color.YELLOW)
+        assertColourForPointAndSegment(Point(0, 100), fakeSegment, wrapper, Color.YELLOW)
+        assertColourForPointAndSegment(Point(100, 0), fakeSegment, wrapper, Color.YELLOW)
+        assertColourForPointAndSegment(Point(0, 200), fakeSegment, wrapper, Color.YELLOW)
+        assertColourForPointAndSegment(Point(200, 0), fakeSegment, wrapper, Color.YELLOW)
+        assertColourForPointAndSegment(Point(200, 100), fakeSegment, wrapper, Color.YELLOW)
+        assertColourForPointAndSegment(Point(100, 200), fakeSegment, wrapper, Color.YELLOW)
+        assertColourForPointAndSegment(Point(200, 200), fakeSegment, wrapper, Color.YELLOW)
 
         //Non-edge boundary cases
-        assertColourForPointAndSegment(Point(1, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
-        assertColourForPointAndSegment(Point(199, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
-        assertColourForPointAndSegment(Point(1, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
-        assertColourForPointAndSegment(Point(199, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT, false)
+        assertColourForPointAndSegment(Point(1, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT)
+        assertColourForPointAndSegment(Point(199, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT)
+        assertColourForPointAndSegment(Point(1, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
+        assertColourForPointAndSegment(Point(199, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
 
         //Another non-edge. Let's say we'll highlight this one, to check theres no NPE
-        assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT, true)
+        assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT)
 
         //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
         val missSegment = DartboardSegment("20_$SEGMENT_TYPE_MISS")
@@ -143,13 +129,13 @@ class TestDartboardUtil : AbstractRegistryTest()
             }
         }
 
-        assertColourForPointAndSegment(Point(0, 0), missSegment, wrapper, DartsColour.TRANSPARENT, false)
-        assertColourForPointAndSegment(Point(1, 1), missSegment, wrapper, DartsColour.TRANSPARENT, false)
+        assertColourForPointAndSegment(Point(0, 0), missSegment, wrapper, DartsColour.TRANSPARENT)
+        assertColourForPointAndSegment(Point(1, 1), missSegment, wrapper, DartsColour.TRANSPARENT)
     }
 
-    private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegment, wrapper: ColourWrapper?, expected: Color?, highlight: Boolean)
+    private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegment, wrapper: ColourWrapper?, expected: Color)
     {
-        val color = getColourForPointAndSegment(pt, segment, highlight, wrapper)
+        val color = getColourForPointAndSegment(pt, segment, wrapper)
         color shouldBe expected
     }
 

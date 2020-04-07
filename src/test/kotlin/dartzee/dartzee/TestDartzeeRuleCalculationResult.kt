@@ -5,6 +5,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.outerBull
 import dartzee.singleTwenty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -49,7 +50,8 @@ class TestDartzeeRuleCalculationResult: AbstractTest()
     @Test
     fun `Should externalise correctly`()
     {
-        val result = DartzeeRuleCalculationResult(listOf(doubleNineteen, singleTwenty, outerBull),
+        val result = DartzeeRuleCalculationResult(listOf(doubleNineteen),
+            listOf(doubleNineteen, singleTwenty, outerBull),
             10,
             100,
             5.7,
@@ -63,6 +65,7 @@ class TestDartzeeRuleCalculationResult: AbstractTest()
         newResult.allCombinations shouldBe 100
         newResult.validCombinationProbability shouldBe 5.7
         newResult.allCombinationsProbability shouldBe 100.0
+        newResult.scoringSegments.shouldContainExactly(doubleNineteen)
         newResult.validSegments.shouldContainExactlyInAnyOrder(doubleNineteen, singleTwenty, outerBull)
     }
 

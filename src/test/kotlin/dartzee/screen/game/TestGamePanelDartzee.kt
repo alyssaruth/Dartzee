@@ -16,15 +16,11 @@ import dartzee.db.GameEntity
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.helper.*
-import dartzee.screen.game.dartzee.DartzeeRuleCarousel
-import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
-import dartzee.screen.game.dartzee.DartzeeRuleTile
-import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.screen.game.dartzee.*
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
@@ -129,19 +125,19 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.pendingTiles.size shouldBe 2
 
         val expectedSegments = getAllPossibleSegments().filter { !it.isMiss() && !it.isDoubleExcludingBull() }
-        panel.dartboard.validSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
 
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
 
-        val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.validSegments.toTypedArray()
-        panel.dartboard.validSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
+        val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.scoringSegments.toTypedArray()
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
 
         panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
-        panel.dartboard.validSegments.shouldBeEmpty()
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldBeEmpty()
 
         panel.btnReset.isEnabled = true
         panel.btnReset.doClick()
-        panel.dartboard.validSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
     }
 
     @Test
@@ -195,19 +191,19 @@ class TestGamePanelDartzee: AbstractTest()
         panel.initBasic(1)
         panel.startNewGame(listOf(insertPlayer(strategy = -1)))
 
-        panel.hoverChanged(listOf(doubleNineteen))
-        panel.dartboard.validSegments.shouldContainExactly(doubleNineteen)
+        panel.hoverChanged(SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen)))
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen))
 
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
 
-        panel.hoverChanged(listOf(doubleTwenty))
-        panel.dartboard.validSegments.shouldContainExactly(doubleTwenty)
+        panel.hoverChanged(SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty)))
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty))
 
         panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
-        panel.dartboard.validSegments.shouldContainExactlyInAnyOrder(*getAllPossibleSegments().toTypedArray())
-        panel.hoverChanged(listOf(bullseye))
-        panel.dartboard.validSegments.shouldContainExactlyInAnyOrder(*getAllPossibleSegments().toTypedArray()) //Should not have changed
+        panel.dartboard.segmentStatus shouldBe null
+        panel.hoverChanged(SegmentStatus(listOf(bullseye), listOf(bullseye)))
+        panel.dartboard.segmentStatus shouldBe null
     }
 
     @Test

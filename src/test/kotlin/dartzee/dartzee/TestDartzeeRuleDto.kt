@@ -4,10 +4,9 @@ import dartzee.`object`.Dart
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.total.DartzeeTotalRuleGreaterThan
 import dartzee.dartzee.total.DartzeeTotalRulePrime
-import dartzee.helper.AbstractTest
-import dartzee.helper.getFakeValidSegment
-import dartzee.helper.makeDartzeeRuleCalculationResult
-import dartzee.helper.makeDartzeeRuleDto
+import dartzee.doubleNineteen
+import dartzee.doubleTwenty
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
@@ -159,6 +158,33 @@ class TestDartzeeRuleDto: AbstractTest()
     }
 
     @Test
+    fun `Should return all validSegments as scoring segments if there are no dart rules`()
+    {
+        val validSegments = listOf(doubleNineteen, doubleTwenty)
+
+        val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+        rule.getScoringSegments(validSegments).shouldContainExactly(doubleNineteen, doubleTwenty)
+    }
+
+    @Test
+    fun `Should return all validSegments as scoring segments if there are three dart rules`()
+    {
+        val validSegments = listOf(doubleNineteen, doubleTwenty)
+
+        val rule = makeDartzeeRuleDto(makeScoreRule(19), DartzeeDartRuleOdd(), DartzeeDartRuleEven())
+        rule.getScoringSegments(validSegments).shouldContainExactly(doubleNineteen, doubleTwenty)
+    }
+
+    @Test
+    fun `Should only return the segments that score if there is a single dart rule`()
+    {
+        val validSegments = listOf(doubleNineteen, doubleTwenty)
+
+        val rule = makeDartzeeRuleDto(makeScoreRule(19))
+        rule.getScoringSegments(validSegments).shouldContainExactly(doubleNineteen)
+    }
+
+    @Test
     fun `Should convert to an entity correctly`()
     {
         val rule = DartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeTotalRulePrime(), true, false)
@@ -179,7 +205,8 @@ class TestDartzeeRuleDto: AbstractTest()
         dao.totalRule shouldBe DartzeeTotalRulePrime().toDbString()
     }
 
-    val dartsForTotal = listOf(Dart(20, 1), Dart(20, 1), Dart(5, 2))
+    private val dartsForTotal = listOf(Dart(20, 1), Dart(20, 1), Dart(5, 2))
+
     @Test
     fun `Should just sum the darts if there are no dart rules`()
     {

@@ -1,7 +1,6 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.utils.InjectedThings
 import dartzee.utils.setColoursForDartzeeResult
@@ -23,20 +22,13 @@ class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): DartzeeRuleT
 
     fun updateState(darts: List<Dart>)
     {
-        isVisible = getValidSegments(darts).isNotEmpty()
+        isVisible = getSegmentStatus(darts).validSegments.isNotEmpty()
     }
 
-    fun getValidSegments(darts: List<Dart>): List<DartboardSegment>
+    fun getSegmentStatus(darts: List<Dart>): SegmentStatus
     {
-        if (darts.isEmpty())
-        {
-            return dto.calculationResult!!.validSegments
-        }
-        else
-        {
-            val result = InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
-            return result.validSegments
-        }
+        val result = if (darts.isEmpty()) dto.calculationResult!! else InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
+        return result.getSegmentStatus()
     }
 
     override fun getScoreForHover() = pendingScore

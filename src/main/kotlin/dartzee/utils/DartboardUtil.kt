@@ -14,7 +14,7 @@ import java.awt.Point
  */
 private val numberOrder = mutableListOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
 
-private var hmScoreToOrdinal = initialiseOrdinalHashMap()
+val hmScoreToOrdinal = initialiseOrdinalHashMap()
 private var colourWrapperFromPrefs: ColourWrapper? = null
 
 private const val RATIO_INNER_BULL = 0.038
@@ -109,8 +109,7 @@ private fun getScoreForAngle(angle: Double): Int
     return numberOrder[index]
 }
 
-fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlighted: Boolean,
-                                colourWrapper: ColourWrapper?): Color?
+fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, colourWrapper: ColourWrapper?): Color
 {
     val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
 
@@ -122,25 +121,10 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, highlight
         return edgeColour
     }
 
-    val colour = getColourFromHashMap(segment, colourWrapperToUse)
-    colour ?: return null
-
-    return if (highlighted)
-    {
-        if (colour == DARTBOARD_BLACK)
-        {
-            Color.DARK_GRAY
-        }
-        else
-        {
-            DartsColour.getDarkenedColour(colour)
-        }
-    }
-    else colour
-
+    return getColourFromHashMap(segment, colourWrapperToUse)
 }
 
-private fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color?
+fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color
 {
     val type = segment.type
     if (type == SEGMENT_TYPE_MISS)
@@ -161,8 +145,7 @@ private fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: Colou
         return colourWrapper.getBullColour(multiplier)
     }
 
-    val even = hmScoreToOrdinal[Integer.valueOf(score)] ?: false
-    return colourWrapper.getColour(multiplier, even)
+    return colourWrapper.getColour(multiplier, score)
 }
 
 private fun getColourWrapperFromPrefs(): ColourWrapper

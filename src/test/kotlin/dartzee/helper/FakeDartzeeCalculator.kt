@@ -28,7 +28,7 @@ class FakeDartzeeCalculator: AbstractDartzeeCalculator()
             segments.add(DartboardSegment("20_0"))
         }
 
-        return DartzeeRuleCalculationResult(segments, segments.size, 10, 1.0 + dartsSoFar.size, 10.0)
+        return DartzeeRuleCalculationResult(segments, segments, segments.size, 10, 1.0 + dartsSoFar.size, 10.0)
     }
 
     private fun isValidSoFar(dartsSoFar: List<Dart>): Boolean

@@ -28,7 +28,7 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
 
             selectedSegments.add(mySegment)
 
-            val col = getColourForPointAndSegment(null, mySegment, false, DEFAULT_COLOUR_WRAPPER)!!
+            val col = getColourForPointAndSegment(null, mySegment, DEFAULT_COLOUR_WRAPPER)
             colourSegment(mySegment, col)
         }
     }
@@ -65,7 +65,7 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
         {
             selectedSegments.add(segment)
 
-            val col = getColourForPointAndSegment(null, segment, false, DEFAULT_COLOUR_WRAPPER)!!
+            val col = getColourForPointAndSegment(null, segment, DEFAULT_COLOUR_WRAPPER)
             colourSegment(segment, col)
         }
     }

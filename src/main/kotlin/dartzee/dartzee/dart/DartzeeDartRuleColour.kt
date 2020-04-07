@@ -52,7 +52,7 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListen
             return false
         }
 
-        val color = getColourForPointAndSegment(null, segment, false, DEFAULT_COLOUR_WRAPPER)
+        val color = getColourForPointAndSegment(null, segment, DEFAULT_COLOUR_WRAPPER)
 
         return (color == DartsColour.DARTBOARD_BLACK && black)
                 || (color == Color.WHITE && white)

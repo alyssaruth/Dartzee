@@ -2,6 +2,7 @@ package dartzee.dartzee
 
 import dartzee.`object`.DartboardSegment
 import dartzee.core.util.*
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DartsColour
 import kotlin.math.sqrt
 
@@ -16,9 +17,10 @@ enum class DartzeeRuleDifficulty(val desc: String)
     VERY_EASY("Very Easy")
 }
 
-val INVALID_CALCULATION_RESULT = DartzeeRuleCalculationResult(listOf(), 0, 0, 0.0, 1.0)
+val INVALID_CALCULATION_RESULT = DartzeeRuleCalculationResult(listOf(), listOf(), 0, 0, 0.0, 1.0)
 
-data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment>,
+data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegment>,
+                                        val validSegments: List<DartboardSegment>,
                                         val validCombinations: Int,
                                         val allCombinations: Int,
                                         val validCombinationProbability: Double,
@@ -29,6 +31,8 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
     fun getCombinationsDesc() = "$validCombinations combinations (success%: $percentage%)"
 
     fun getDifficultyDesc() = getDifficulty().desc
+
+    fun getSegmentStatus() = SegmentStatus(scoringSegments, validSegments)
 
     fun getForeground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 1.0)
     fun getBackground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 0.5)
@@ -53,6 +57,7 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
         root.setAttributeAny("AllCombinations", allCombinations)
         root.setAttributeAny("ValidCombinationProbability", validCombinationProbability)
         root.setAttributeAny("AllCombinationsProbability", allCombinationsProbability)
+        root.writeList(scoringSegments.map { it.scoreAndType }, "ScoringSegments")
         root.writeList(validSegments.map { it.scoreAndType }, "ValidSegments")
 
         return doc.toXmlString()
@@ -69,9 +74,10 @@ data class DartzeeRuleCalculationResult(val validSegments: List<DartboardSegment
             val allCombinations = root.getAttributeInt("AllCombinations")
             val validCombinationProbability = root.getAttributeDouble("ValidCombinationProbability")
             val allCombinationsProbability = root.getAttributeDouble("AllCombinationsProbability")
-            val validSegments = root.readList("ValidSegments").map{ DartboardSegment(it) }
+            val validSegments = root.readList("ValidSegments")?.map { DartboardSegment(it) } ?: emptyList()
+            val scoringSegments = root.readList("ScoringSegments")?.map { DartboardSegment(it) } ?: emptyList()
 
-            return DartzeeRuleCalculationResult(validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
+            return DartzeeRuleCalculationResult(scoringSegments, validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
         }
     }
 }

@@ -1,40 +1,49 @@
 package dartzee.screen.dartzee
 
 import dartzee.`object`.DartboardSegment
+import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.screen.Dartboard
+import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.getColourFromHashMap
 import java.awt.Color
 
 class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, height)
 {
-    var validSegments = listOf<DartboardSegment>()
+    var segmentStatus: SegmentStatus? = SegmentStatus(emptySet(), emptySet())
 
-    fun refreshValidSegments(segments: List<DartboardSegment>)
+    fun refreshValidSegments(segmentStatus: SegmentStatus?)
     {
-        this.validSegments = segments
+        this.segmentStatus = segmentStatus
 
         getAllSegments().forEach{
             colourSegment(it, false)
         }
     }
 
-    override fun shouldActuallyHighlight(segment: DartboardSegment) = validSegments.contains(segment)
+    override fun shouldActuallyHighlight(segment: DartboardSegment): Boolean {
+        val status = segmentStatus
+        return status == null || status.validSegments.contains(segment)
+    }
 
-    override fun colourSegment(segment: DartboardSegment, col: Color)
+    override fun getInitialColourForSegment(segment: DartboardSegment): Color
     {
-        if (!isValidSegment(segment))
-        {
-            val newCol = Color(col.red, col.green, col.blue, 20)
-            super.colourSegment(segment, newCol)
-        }
-        else
-        {
-            super.colourSegment(segment, col)
+        val status = segmentStatus
+        val default = super.getInitialColourForSegment(segment)
+        return when {
+            status == null || segment.isMiss() -> default
+            status.scoringSegments.contains(segment) -> default
+            status.validSegments.contains(segment) -> getColourFromHashMap(segment, GREY_COLOUR_WRAPPER)
+            else -> Color.BLACK
         }
     }
-    private fun isValidSegment(segment: DartboardSegment): Boolean
-    {
-        val validBecauseMiss =  validSegments.any { it.isMiss() } && segment.isMiss()
 
-        return validSegments.contains(segment) || validBecauseMiss
+    override fun getEdgeColourForSegment(segment: DartboardSegment): Color?
+    {
+        val status = segmentStatus
+        return when {
+            status == null || segment.isMiss() -> null
+            status.scoringSegments.contains(segment) -> Color.GRAY
+            else -> null
+        }
     }
 }

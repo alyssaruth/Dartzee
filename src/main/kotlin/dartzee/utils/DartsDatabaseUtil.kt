@@ -21,7 +21,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 10
+    const val DATABASE_VERSION = 11
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -124,6 +124,14 @@ object DartsDatabaseUtil
                     { X01FinishConversion.convertX01Finishes() })
 
             version.version = 10
+            version.saveToDatabase()
+        }
+        else if (versionNumber == 10)
+        {
+            //Added "ScoringSegments"
+            DartzeeRuleConversion.convertDartzeeRules()
+
+            version.version = 11
             version.saveToDatabase()
         }
 

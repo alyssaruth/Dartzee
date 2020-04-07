@@ -1,6 +1,5 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
 import dartzee.`object`.SEGMENT_TYPE_MISS
 import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
@@ -13,6 +12,7 @@ import dartzee.helper.*
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -155,7 +155,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
         val allSegments = getAllPossibleSegments()
         val eighteens = allSegments.filter { it.score == 18 && !it.isMiss() }
         val allTwelves = allSegments.filter { it.getTotal() == 12 }
-        carousel.getValidSegments().shouldContainAll(eighteens + allTwelves)
+        carousel.getSegmentStatus().validSegments.shouldContainAll(eighteens + allTwelves)
     }
 
     @Test
@@ -246,25 +246,24 @@ class TestDartzeeRuleCarousel: AbstractTest()
         val eighteensTile = carousel.getDisplayedTiles().find { it.dto == scoreEighteens }!!
         val me = makeMouseEvent(component = eighteensTile)
         carousel.mouseEntered(me)
-        listener.validSegments.shouldContainExactlyInAnyOrder(eighteens)
+        listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(eighteens)
 
         val totalFiftyTile = carousel.getDisplayedTiles().find { it.dto == totalIsFifty }!!
         val meTotalFifty = makeMouseEvent(component = totalFiftyTile)
         carousel.mouseEntered(meTotalFifty)
-        listener.validSegments.shouldContainExactlyInAnyOrder(allTwelves)
+        listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(allTwelves)
 
         carousel.mouseExited(makeMouseEvent())
-        listener.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
+        listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
     }
 
     private class TrackingCarouselListener: IDartzeeCarouselListener
     {
-        val validSegments = mutableListOf<DartboardSegment>()
+        var segmentStatus: SegmentStatus = SegmentStatus(emptySet(), emptySet())
 
-        override fun hoverChanged(validSegments: List<DartboardSegment>)
+        override fun hoverChanged(segmentStatus: SegmentStatus)
         {
-            this.validSegments.clear()
-            this.validSegments.addAll(validSegments)
+            this.segmentStatus = segmentStatus
         }
 
         override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)

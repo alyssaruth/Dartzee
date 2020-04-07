@@ -5,6 +5,7 @@ import java.awt.Color
 import java.awt.Component
 import java.lang.Float.max
 
+
 object DartsColour
 {
     val TRANSPARENT = Color(0, 0, 0, 0)
@@ -53,7 +54,7 @@ object DartsColour
         return "$r;$g;$b;$a"
     }
 
-    fun getColorFromPrefStr(prefsStr: String, defaultColor: Color?) = if (prefsStr.isEmpty()) defaultColor else fromPrefStr(prefsStr)
+    fun getColorFromPrefStr(prefsStr: String, defaultColor: Color): Color = if (prefsStr.isEmpty()) defaultColor else fromPrefStr(prefsStr)
     private fun fromPrefStr(prefStr: String) =
         try
         {
@@ -63,7 +64,7 @@ object DartsColour
         catch (t: Throwable)
         {
             Debug.stackTrace("Failed to reconstruct colour from string: $prefStr")
-            null
+            Color.BLACK
         }
 
 

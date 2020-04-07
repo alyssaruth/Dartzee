@@ -1,10 +1,12 @@
 package dartzee.dartzee
 
 import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.db.DartzeeRuleEntity
 import dartzee.utils.InjectedThings.dartzeeCalculator
+import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.sumScore
 
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,
@@ -42,6 +44,19 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
             val validDarts = darts.filter { dart1Rule.isValidDart(it) }
             return sumScore(validDarts)
         }
+    }
+
+    /**
+     * If this is a "Score X" rule, return the relevant segments
+     */
+    fun getScoringSegments(validSegments: List<DartboardSegment>): List<DartboardSegment>
+    {
+        if (dart1Rule == null || dart2Rule != null)
+        {
+            return validSegments
+        }
+
+        return validSegments.filter { dart1Rule.isValidSegment(it) }
     }
 
 
