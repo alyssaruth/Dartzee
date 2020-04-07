@@ -497,6 +497,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Timestamp::class.java -> rs.getTimestamp(columnName)
             Blob::class.java -> rs.getBlob(columnName)
             Double::class.java -> rs.getDouble(columnName)
+            GameType::class.java -> GameType.valueOf(rs.getString(columnName))
             else -> null
         }
     }

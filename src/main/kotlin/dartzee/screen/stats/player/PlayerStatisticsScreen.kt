@@ -214,7 +214,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND pt.PlayerId = '$playerId'")
-        sb.append(" AND g.GameType = $gameType")
+        sb.append(" AND g.GameType = '$gameType'")
 
         DatabaseUtil.executeUpdate("" + sb)
 

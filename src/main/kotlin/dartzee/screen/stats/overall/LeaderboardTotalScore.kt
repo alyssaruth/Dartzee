@@ -64,7 +64,7 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
         sb.append(" FROM Participant pt, Game g, Player p")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND pt.PlayerId = p.RowId")
-        sb.append(" AND g.GameType = $gameType")
+        sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND g.GameParams = '$gameParams'")
         sb.append(" AND pt.FinalScore > -1")
 

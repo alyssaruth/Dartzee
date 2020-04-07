@@ -39,7 +39,7 @@ class PlayerSummaryStats private constructor(player: PlayerEntity, private val g
     {
         sb.append(" FROM Game g, Participant pt")
         sb.append(" WHERE pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = $gameType")
+        sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND pt.PlayerId = '${player.rowId}'")
         sb.append(" AND pt.DtFinished <> ${getEndOfTimeSqlString()}")
     }
