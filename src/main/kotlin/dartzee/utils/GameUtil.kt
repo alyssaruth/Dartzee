@@ -11,15 +11,6 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.game.GameType
 
-fun getGameDesc(gameType: GameType, gameParams: String) =
-    when(gameType)
-    {
-        GameType.X01 -> gameParams
-        GameType.GOLF -> "Golf - $gameParams holes"
-        GameType.ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
-        GameType.DARTZEE -> "Dartzee"
-    }
-
 fun getFilterPanel(gameType: GameType) =
     when (gameType)
     {

@@ -14,4 +14,13 @@ enum class GameType {
             ROUND_THE_CLOCK -> "Round the Clock"
             DARTZEE -> "Dartzee"
         }
+
+    fun getDescription(gameParams: String) =
+        when (this)
+        {
+            X01 -> gameParams
+            GOLF -> "Golf - $gameParams holes"
+            ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
+            DARTZEE -> "Dartzee"
+        }
 }

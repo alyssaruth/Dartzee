@@ -4,7 +4,6 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
-import dartzee.utils.getGameDesc
 import java.util.*
 
 const val CLOCK_TYPE_STANDARD = "Standard"
@@ -70,7 +69,7 @@ class GameEntity : AbstractEntity<GameEntity>()
     }
 
     fun isFinished() = !isEndOfTime(dtFinish)
-    fun getTypeDesc() = getGameDesc(gameType, gameParams)
+    fun getTypeDesc() = gameType.getDescription(gameParams)
 
     fun retrievePlayersVector(): MutableList<PlayerEntity>
     {

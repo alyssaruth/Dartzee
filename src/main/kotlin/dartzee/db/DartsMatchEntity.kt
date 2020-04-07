@@ -3,7 +3,6 @@ package dartzee.db
 import dartzee.core.util.*
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
-import dartzee.utils.getGameDesc
 
 /**
  * Simple entity to join multiple 'games' together into a 'match'.
@@ -98,7 +97,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     fun getMatchDesc(): String
     {
-        return "Match #$localId (${getMatchTypeDesc()} - ${getGameDesc(gameType, gameParams)}, ${getPlayerCount()} players)"
+        return "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)}, ${getPlayerCount()} players)"
     }
 
     private fun getMatchTypeDesc(): String

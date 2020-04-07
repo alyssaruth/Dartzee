@@ -1,7 +1,6 @@
 package dartzee.reporting
 
 import dartzee.game.GameType
-import dartzee.utils.getGameDesc
 import java.sql.ResultSet
 import java.sql.Timestamp
 
@@ -17,7 +16,7 @@ data class ReportResultWrapper(val localId: Long,
 
     fun getTableRow(): Array<Any>
     {
-        val gameTypeDesc = getGameDesc(gameType, gameParams)
+        val gameTypeDesc = gameType.getDescription(gameParams)
         val playerDesc = getPlayerDesc()
 
         var matchDesc = ""

@@ -9,7 +9,6 @@ import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
@@ -111,25 +110,12 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
 
 
     @Test
-    fun `Game descriptions`()
+    fun `Should get the description along with the params`()
     {
         val game = GameEntity()
-
-        game.getTypeDesc().shouldBeEmpty()
-
         game.gameParams = "foo"
-
-        game.gameType = GameType.X01
-        game.getTypeDesc() shouldBe "foo"
-
         game.gameType = GameType.GOLF
         game.getTypeDesc() shouldBe "Golf - foo holes"
-
-        game.gameType = GameType.ROUND_THE_CLOCK
-        game.getTypeDesc() shouldBe "Round the Clock - foo"
-
-        game.gameType = GameType.DARTZEE
-        game.getTypeDesc() shouldBe "Dartzee"
     }
 
     @Test
