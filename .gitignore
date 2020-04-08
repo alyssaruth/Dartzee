@@ -9,4 +9,3 @@ build
 /bin/
 out
 .terraform/
-*.backup
