@@ -20,28 +20,6 @@ output "access_key" {
   value = aws_iam_access_key.elasticsearch.id
 }
 
-data "aws_iam_policy_document" "elasticsearch" {
-  statement {
-    actions = [
-      "es:*",
-    ]
-
-    effect = "Allow"
-
-    resources = [
-      "arn:aws:es:eu-west-2:${data.aws_caller_identity.current.account_id}:domain/dartzee/*",
-    ]
-
-    principals {
-      type = "AWS"
-
-      identifiers = [
-        aws_iam_user.elasticsearch.arn,
-      ]
-    }
-  }
-}
-
 resource "aws_elasticsearch_domain" "dartzee" {
   domain_name           = "dartzee"
   elasticsearch_version = "7.4"
@@ -67,6 +45,4 @@ resource "aws_elasticsearch_domain" "dartzee" {
   encrypt_at_rest {
     enabled = true
   }
-
-  access_policies = data.aws_iam_policy_document.elasticsearch.json
 }
