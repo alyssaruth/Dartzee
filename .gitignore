@@ -8,3 +8,4 @@ Databases
 build
 /bin/
 out
+.terraform/
