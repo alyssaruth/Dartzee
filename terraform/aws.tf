@@ -8,24 +8,12 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
-resource "aws_iam_user" "elasticsearch" {
-  name = "elasticsearch"
-}
-
-resource "aws_iam_access_key" "elasticsearch" {
-  user = aws_iam_user.elasticsearch.name
-}
-
-output "access_key" {
-  value = aws_iam_access_key.elasticsearch.id
-}
-
 resource "aws_elasticsearch_domain" "dartzee" {
   domain_name           = "dartzee"
   elasticsearch_version = "7.4"
 
   cluster_config {
-    instance_type = "r5.large.elasticsearch"
+    instance_type = "t2.small.elasticsearch"
   }
 
   ebs_options {
@@ -39,10 +27,6 @@ resource "aws_elasticsearch_domain" "dartzee" {
   }
 
   node_to_node_encryption {
-    enabled = true
-  }
-
-  encrypt_at_rest {
     enabled = true
   }
 }
