@@ -13,6 +13,10 @@ resource "aws_cognito_user_pool" "kibana" {
     require_uppercase                = true
     temporary_password_validity_days = 7
   }
+
+  username_configuration {
+    case_sensitive = false
+  }
 }
 
 resource "aws_cognito_user_pool_domain" "kibana" {
