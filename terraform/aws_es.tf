@@ -6,7 +6,7 @@ provider "aws" {
   version    = "2.56"
 }
 
-data "aws_caller_identity" "current" {}
+data aws_caller_identity "current" {}
 
 resource "aws_elasticsearch_domain" "dartzee" {
   domain_name           = "dartzee"
@@ -20,6 +20,13 @@ resource "aws_elasticsearch_domain" "dartzee" {
     ebs_enabled = true
     volume_size = 10
     volume_type = "standard"
+  }
+
+  cognito_options {
+    enabled          = true
+    identity_pool_id = aws_cognito_identity_pool.kibana.id
+    role_arn         = aws_iam_role.cognito_access_for_amazon_es.arn
+    user_pool_id     = aws_cognito_user_pool.kibana.id
   }
 
   snapshot_options {
