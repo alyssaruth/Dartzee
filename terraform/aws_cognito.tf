@@ -50,7 +50,7 @@ resource "aws_cognito_identity_pool_roles_attachment" "unauth" {
   identity_pool_id = aws_cognito_identity_pool.kibana.id
 
   roles = {
-    authenticated = aws_iam_role.cognito_kibana_auth.arn
+    authenticated   = aws_iam_role.cognito_kibana_auth.arn
     unauthenticated = aws_iam_role.cognito_kibana_unauth.arn
   }
 }
