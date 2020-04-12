@@ -8,3 +8,5 @@ Databases
 build
 /bin/
 out
+.terraform/
+/terraform/terraform.tfstate.backup
