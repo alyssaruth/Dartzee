@@ -25,7 +25,7 @@ resource "aws_cognito_user_pool_domain" "kibana" {
 }
 
 resource "aws_cognito_user_pool_client" "dartzee" {
-  name         = "AWSElasticsearch-dartzee-eu-west-2-nfqeufkxsx6cu7sybhm53dts7e"
+  name         = "AWSElasticsearch-dartzee-${var.aws_region}-${var.aws_elasticsearch_uuid}"
   user_pool_id = aws_cognito_user_pool.kibana.id
 
   allowed_oauth_flows                  = ["code"]
@@ -35,8 +35,8 @@ resource "aws_cognito_user_pool_client" "dartzee" {
 
   supported_identity_providers = ["COGNITO"]
 
-  callback_urls = ["https://${aws_elasticsearch_domain.dartzee.kibana_endpoint}app/kibana"]
-  logout_urls   = ["https://${aws_elasticsearch_domain.dartzee.kibana_endpoint}app/kibana"]
+  callback_urls = ["https://search-dartzee-${var.aws_elasticsearch_uuid}.${var.aws_region}.es.amazonaws.com/_plugin/kibana/app/kibana"]
+  logout_urls   = ["https://search-dartzee-${var.aws_elasticsearch_uuid}.${var.aws_region}.es.amazonaws.com/_plugin/kibana/app/kibana"]
 }
 
 resource "aws_cognito_identity_pool" "kibana" {
@@ -44,7 +44,7 @@ resource "aws_cognito_identity_pool" "kibana" {
   allow_unauthenticated_identities = false
 
   cognito_identity_providers {
-    client_id               = var.aws_user_pool_client_id # Can't reference the client id directly as this creates a cycle
+    client_id               = aws_cognito_user_pool_client.dartzee.id
     provider_name           = aws_cognito_user_pool.kibana.endpoint
     server_side_token_check = false
   }
