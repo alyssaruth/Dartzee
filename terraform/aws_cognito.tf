@@ -25,13 +25,13 @@ resource "aws_cognito_user_pool_domain" "kibana" {
 }
 
 resource "aws_cognito_user_pool_client" "dartzee" {
-  name         = "AWSElasticsearch"
+  name         = "AWSElasticsearch-dartzee-eu-west-2-nfqeufkxsx6cu7sybhm53dts7e"
   user_pool_id = aws_cognito_user_pool.kibana.id
 
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_scopes                 = ["email", "openid", "phone", "profile"]
-  explicit_auth_flows                  = ["ALLOW_CUSTOM_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
+  explicit_auth_flows                  = []
 
   supported_identity_providers = ["COGNITO"]
 
@@ -46,7 +46,7 @@ resource "aws_cognito_identity_pool" "kibana" {
   cognito_identity_providers {
     client_id               = var.aws_user_pool_client_id # Can't reference the client id directly as this creates a cycle
     provider_name           = aws_cognito_user_pool.kibana.endpoint
-    server_side_token_check = true
+    server_side_token_check = false
   }
 }
 
