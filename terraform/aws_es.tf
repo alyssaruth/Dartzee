@@ -46,10 +46,6 @@ resource "aws_iam_access_key" "elasticsearch" {
   user = aws_iam_user.elasticsearch.name
 }
 
-output "elasticsearch_keys" {
-  value = aws_iam_access_key.elasticsearch.secret
-}
-
 data "aws_iam_policy_document" "elasticsearch_put" {
   statement {
     effect = "Allow"
