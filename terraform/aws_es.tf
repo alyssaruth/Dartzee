@@ -37,3 +37,32 @@ resource "aws_elasticsearch_domain" "dartzee" {
     enabled = true
   }
 }
+
+resource "aws_iam_user" "elasticsearch" {
+  name = "elasticsearch"
+}
+
+resource "aws_iam_access_key" "elasticsearch" {
+  user = aws_iam_user.elasticsearch.name
+}
+
+output "elasticsearch_keys" {
+  value = aws_iam_access_key.elasticsearch.secret
+}
+
+data "aws_iam_policy_document" "elasticsearch_put" {
+  statement {
+    effect = "Allow"
+
+    actions = ["es:ESHttpPut"]
+
+    resources = [
+      "${aws_elasticsearch_domain.dartzee.arn}/dartzee/*"
+    ]
+  }
+}
+
+resource "aws_iam_user_policy" "elasticsearch" {
+  user = aws_iam_user.elasticsearch.name
+  policy = data.aws_iam_policy_document.elasticsearch_put.json
+}
