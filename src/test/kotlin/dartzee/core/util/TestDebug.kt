@@ -36,25 +36,6 @@ class TestDebug: AbstractTestWithUsername()
     }
 
     @Test
-    fun testAppendSql()
-    {
-        Debug.clearLogs()
-
-        val time = Debug.getCurrentTimeForLogging()
-        val dayAndMonthStr = time.split(" ")[0]
-
-        Debug.appendSql("SELECT * FROM Table", false)
-        Debug.appendSql("SELECT * FROM OtherTable", true)
-
-        val logs = getLogs()
-
-        logs shouldContain("[SQL] SELECT * FROM OtherTable")
-        logs shouldContain(dayAndMonthStr)
-
-        logs shouldNotContain("SELECT * FROM Table")
-    }
-
-    @Test
     fun testAppendWithoutDate()
     {
         Debug.clearLogs()

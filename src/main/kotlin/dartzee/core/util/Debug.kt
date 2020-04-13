@@ -34,11 +34,6 @@ object Debug
     var productDesc = ""
     var debugExtension: DebugExtension? = null
 
-    fun appendSql(text: String, logging: Boolean)
-    {
-        append(SQL_PREFIX + text, logging)
-    }
-
     fun append(text: String, logging: Boolean = true, includeDate: Boolean = true, emailSubject: String? = null)
     {
         if (!logging) return
