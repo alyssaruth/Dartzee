@@ -2,6 +2,7 @@ package dartzee.main
 
 import dartzee.`object`.DartsClient
 import dartzee.core.util.*
+import dartzee.logging.Logger
 import dartzee.screen.ScreenCache
 import dartzee.utils.ClientEmailer
 import dartzee.utils.DARTS_VERSION_NUMBER
@@ -20,6 +21,7 @@ fun main(args: Array<String>)
         exitProcess(0)
     }
 
+    Logger.destinations.add(ScreenCache.loggingConsole)
     Debug.initialise(ScreenCache.debugConsole)
     checkForUserName()
     DialogUtil.init(MessageDialogFactory())

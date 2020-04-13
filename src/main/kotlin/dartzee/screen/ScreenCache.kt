@@ -4,6 +4,7 @@ import dartzee.core.bean.CheatBar
 import dartzee.core.screen.DebugConsole
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
+import dartzee.logging.LoggingConsole
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.preference.PreferencesDialog
@@ -26,6 +27,7 @@ object ScreenCache
 
     //Other
     val debugConsole = DebugConsole()
+    val loggingConsole = LoggingConsole()
 
     fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)
 
