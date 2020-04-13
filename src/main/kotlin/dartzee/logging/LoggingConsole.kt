@@ -64,19 +64,6 @@ class LoggingConsole: JFrame(), ILogDestination
         }
     }
 
-    fun getLogs(): String
-    {
-        return try
-        {
-            doc.getText(0, doc.length)
-        }
-        catch (t: Throwable)
-        {
-            Debug.stackTrace(t)
-            ""
-        }
-    }
-
     fun clear()
     {
         textArea.text = ""
