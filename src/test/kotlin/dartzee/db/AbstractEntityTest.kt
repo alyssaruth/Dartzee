@@ -1,21 +1,18 @@
 package dartzee.db
 
 import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogLines
 import dartzee.core.helper.getLogs
 import dartzee.core.util.DateStatics
-import dartzee.core.util.Debug
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.wipeTable
+import dartzee.logging.CODE_SQL
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
-import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -45,14 +42,16 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
         setExtraValuesForBulkInsert(e1 as E)
         setExtraValuesForBulkInsert(e2 as E)
 
-        Debug.waitUntilLoggingFinished()
-        Debug.clearLogs()
+        clearLogs()
         BulkInserter.insert(e1, e2)
 
-        getLogLines() shouldHaveSize 1
-        getLogs().shouldNotContain("?")
-        getLogs().shouldContain(e1.rowId)
-        getLogs().shouldContain(e2.rowId)
+        val records = getLogRecords()
+        records.size shouldBe 1
+        val log = records.first()
+        log.loggingCode shouldBe CODE_SQL
+        log.message shouldContain e1.rowId
+        log.message shouldContain e2.rowId
+
         getCountFromTable(tableName) shouldBe 2
 
         executeQueryAggregate("SELECT COUNT(1) FROM $tableName WHERE DtLastUpdate = ${getEndOfTimeSqlString()}") shouldBe 0

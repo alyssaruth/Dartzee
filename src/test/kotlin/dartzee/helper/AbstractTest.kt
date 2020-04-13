@@ -29,7 +29,7 @@ abstract class AbstractTest
 {
     private var doneClassSetup = false
     protected val dialogFactory = TestMessageDialogFactory()
-    protected val logDestination = FakeLogDestination()
+    private val logDestination = FakeLogDestination()
 
     @Before
     fun oneTimeSetup()
@@ -81,6 +81,7 @@ abstract class AbstractTest
         Debug.lastErrorMillis = -1
         Debug.initialise(TestDebug.SimpleDebugOutput())
         dialogFactory.reset()
+        clearLogs()
 
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
@@ -95,5 +96,11 @@ abstract class AbstractTest
         }
 
         checkedForExceptions = false
+    }
+
+    fun getLogRecords() = logDestination.logRecords.toList()
+    fun clearLogs()
+    {
+        logDestination.clear()
     }
 }
