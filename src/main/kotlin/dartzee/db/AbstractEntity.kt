@@ -257,9 +257,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
                 val timer = DurationTimer()
                 psInsert.executeUpdate()
-                val duration = timer.getDuration()
-
-                Logger.logSql(insertQuery, psInsert.toString(), duration)
+                Logger.logSql(insertQuery, psInsert.toString(), timer.getDuration())
 
                 //Set this so we can call save() again on the same object and get the right behaviour
                 retrievedFromDb = true
