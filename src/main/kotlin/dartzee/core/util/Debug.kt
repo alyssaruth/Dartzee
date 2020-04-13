@@ -12,7 +12,6 @@ import kotlin.math.floor
 object Debug
 {
     const val SQL_PREFIX = "[SQL] "
-    const val BUG_REPORT_ADDITONAL_INFO_LINE = "Additional Information:"
     const val SUCCESS_MESSAGE = "Email sent successfully"
 
     private const val ERROR_MESSAGE_DELAY_MILLIS: Long = 10000 //10s
@@ -250,43 +249,6 @@ object Debug
 
             debugExtension?.unableToEmailLogs()
         }
-    }
-
-    fun sendBugReport(description: String, replication: String): Boolean
-    {
-        var fullDescription = description
-        try
-        {
-            val username = CoreRegistry.instance[CoreRegistry.INSTANCE_STRING_USER_NAME, ""]
-            if (username != "")
-            {
-                fullDescription += " - $username"
-            }
-
-            val totalLogs = getCurrentLogs()
-            var message = ""
-            if (replication.isNotEmpty())
-            {
-                message += BUG_REPORT_ADDITONAL_INFO_LINE
-                message += "\n\n"
-                message += replication
-                message += "\n--------------------------\n"
-            }
-
-            val logsToSend = totalLogs.substring(positionLastEmailed)
-            message += logsToSend
-            debugExtension?.sendEmail(fullDescription, message)
-            append(SUCCESS_MESSAGE, true)
-            positionLastEmailed += logsToSend.length
-            emailsSentInSuccession++
-        }
-        catch (t: Throwable)
-        {
-            append("Unable to send Bug Report. Exceptions follow.")
-            stackTraceSilently(t)
-            return false
-        }
-        return true
     }
 
     private fun needToSendMoreLogs(): Boolean

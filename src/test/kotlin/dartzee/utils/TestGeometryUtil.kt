@@ -38,7 +38,7 @@ class TestGeometryUtil: AbstractTest()
 
     private fun assertPointTranslation(radius: Double, degrees: Double, expected: Point)
     {
-        val result = translatePoint(Point(0, 0), radius, degrees, false)
+        val result = translatePoint(Point(0, 0), radius, degrees)
         result shouldBe expected
     }
 
