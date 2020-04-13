@@ -1,5 +1,6 @@
 package dartzee.helper
 
+import dartzee.CURRENT_TIME
 import dartzee.`object`.DartsClient
 import dartzee.core.helper.TestDebugExtension
 import dartzee.core.helper.TestMessageDialogFactory
@@ -9,6 +10,7 @@ import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TestDebug
 import dartzee.db.LocalIdGenerator
+import dartzee.logging.Logger
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
@@ -16,6 +18,8 @@ import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After
 import org.junit.Before
 import java.sql.DriverManager
+import java.time.Clock
+import java.time.ZoneId
 import javax.swing.UIManager
 
 private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
@@ -25,6 +29,7 @@ abstract class AbstractTest
 {
     private var doneClassSetup = false
     protected val dialogFactory = TestMessageDialogFactory()
+    protected val logDestination = FakeLogDestination()
 
     @Before
     fun oneTimeSetup()
@@ -46,6 +51,7 @@ abstract class AbstractTest
 
     private fun doOneTimeSetup()
     {
+        Logger.destinations.add(logDestination)
         Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.sendingEmails = false
         Debug.logToSystemOut = true
@@ -55,6 +61,7 @@ abstract class AbstractTest
 
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
         InjectedThings.verificationDartboardSize = 50
+        InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
         DartsClient.derbyDbName = DATABASE_NAME_TEST

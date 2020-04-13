@@ -8,6 +8,7 @@ import io.kotlintest.shouldBe
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
+import java.time.Instant
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
 
@@ -27,6 +28,8 @@ val trebleNineteen = DartboardSegment("19_$SEGMENT_TYPE_TREBLE")
 val singleEighteen = DartboardSegment("18_$SEGMENT_TYPE_OUTER_SINGLE")
 val singleTen = DartboardSegment("10_$SEGMENT_TYPE_INNER_SINGLE")
 val singleFive = DartboardSegment("5_$SEGMENT_TYPE_INNER_SINGLE")
+
+val CURRENT_TIME = Instant.parse("2020-04-13T11:04:00.00Z")
 
 private var dartboard: Dartboard? = null
 
