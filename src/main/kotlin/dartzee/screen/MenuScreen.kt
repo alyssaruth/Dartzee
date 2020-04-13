@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import dartzee.core.screen.BugReportDialog
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
@@ -20,7 +19,6 @@ class MenuScreen : EmbeddedScreen()
     private val btnGameStats = JButton("Leaderboards")
     private val btnPreferences = JButton("Preferences")
     private val btnAbout = JButton("About...")
-    private val btnBugReport = JButton("Bug Report...")
     private val btnUtilities = JButton("Utilities")
     private val btnExit = JButton("Exit")
     private val btnGameReport = JButton("Game Report")
@@ -46,18 +44,15 @@ class MenuScreen : EmbeddedScreen()
         btnAbout.font = Font("Tahoma", Font.PLAIN, 18)
         btnAbout.setBounds(590, 140, 150, 50)
         panel.add(btnAbout)
-        btnBugReport.font = Font("Tahoma", Font.PLAIN, 18)
-        btnBugReport.setBounds(615, 240, 150, 50)
-        panel.add(btnBugReport)
+        btnUtilities.font = Font("Tahoma", Font.PLAIN, 18)
+        btnUtilities.setBounds(615, 240, 150, 50)
+        panel.add(btnUtilities)
         btnExit.font = Font("Tahoma", Font.PLAIN, 18)
         btnExit.setBounds(325, 465, 150, 50)
         panel.add(btnExit)
         btnGameReport.font = Font("Tahoma", Font.PLAIN, 18)
         btnGameReport.setBounds(60, 340, 150, 50)
         panel.add(btnGameReport)
-        btnUtilities.font = Font("Tahoma", Font.PLAIN, 18)
-        btnUtilities.setBounds(590, 340, 150, 50)
-        panel.add(btnUtilities)
 
         menuDartboard.setBounds(200, 65, 400, 400)
         menuDartboard.paintDartboard(null, false)
@@ -97,12 +92,6 @@ class MenuScreen : EmbeddedScreen()
                 val dialog = AboutDialogDarts()
                 dialog.setLocationRelativeTo(this)
                 dialog.isModal = true
-                dialog.isVisible = true
-            }
-
-            btnBugReport -> {
-                val dialog = BugReportDialog()
-                dialog.setLocationRelativeTo(this)
                 dialog.isVisible = true
             }
 
