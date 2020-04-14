@@ -27,7 +27,7 @@ object Logger
 
     fun logError(code: LoggingCode, message: String, errorObject: Throwable, vararg keyValuePairs: Pair<String, Any?>)
     {
-        log(Severity.ERROR, code, message, errorObject, mapOf(*keyValuePairs))
+        log(Severity.ERROR, code, message, errorObject, mapOf(*keyValuePairs, KEY_EXCEPTION_MESSAGE to errorObject.message))
     }
 
     private fun log(severity: Severity, code: LoggingCode, message: String, errorObject: Throwable?, keyValuePairs: Map<String, Any?>)

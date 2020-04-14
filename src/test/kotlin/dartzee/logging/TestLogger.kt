@@ -61,6 +61,24 @@ class TestLogger: AbstractTest()
     }
 
     @Test
+    fun `Should log ERROR`()
+    {
+        val destination = FakeLogDestination()
+        Logger.destinations.add(destination)
+
+        val loggingCode = LoggingCode("bad.thing")
+        val throwable = Throwable("Boo")
+        Logger.logError(LoggingCode("bad.thing"), "An exception happened!", throwable, "other.info" to 60)
+
+        val record = destination.awaitLogs().first()
+        record.severity shouldBe Severity.ERROR
+        record.errorObject shouldBe throwable
+        record.loggingCode shouldBe loggingCode
+        record.timestamp shouldBe CURRENT_TIME
+        record.shouldContainKeyValues("other.info" to 60, KEY_EXCEPTION_MESSAGE to "Boo")
+    }
+
+    @Test
     fun `Should log SQL statements`()
     {
         val destination = FakeLogDestination()
