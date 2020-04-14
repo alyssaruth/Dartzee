@@ -19,7 +19,7 @@ object Debug
     private val DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("dd/MM HH:mm:ss.SSS")
 
     private val emailSyncObject = Any()
-    private val loggerFactory = ThreadFactory { r -> Thread(r, "Logger") }
+    private val loggerFactory = ThreadFactory { r -> Thread(r, "Debug") }
     private var logService = Executors.newFixedThreadPool(1, loggerFactory)
     var lastErrorMillis: Long = -1
     var lastEmailMillis: Long = -1
@@ -39,7 +39,7 @@ object Debug
 
         val logRunnable = Runnable { appendInCurrentThread(text, includeDate, emailSubject) }
         val threadName = Thread.currentThread().name
-        if (threadName != "Logger")
+        if (threadName != "Debug")
         {
             logService.execute(logRunnable)
         }

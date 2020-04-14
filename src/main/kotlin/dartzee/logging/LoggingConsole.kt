@@ -53,8 +53,8 @@ class LoggingConsole: JFrame(), ILogDestination
 
         try
         {
-            doc.insertString(doc.length, text, style)
-            record.getThrowableStr()?.let { doc.insertString(doc.length, it, style) }
+            doc.insertString(doc.length, "\n$text", style)
+            record.getThrowableStr()?.let { doc.insertString(doc.length, "\n$it", style) }
 
             textArea.select(doc.length, doc.length)
         }

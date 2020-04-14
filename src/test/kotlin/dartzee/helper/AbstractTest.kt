@@ -10,6 +10,7 @@ import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TestDebug
 import dartzee.db.LocalIdGenerator
+import dartzee.logging.LogRecord
 import dartzee.logging.Logger
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
@@ -98,9 +99,14 @@ abstract class AbstractTest
         checkedForExceptions = false
     }
 
-    fun getLogRecords() = logDestination.logRecords.toList()
+    fun getLogRecords(): List<LogRecord>
+    {
+        Logger.waitUntilLoggingFinished()
+        return logDestination.logRecords.toList()
+    }
     fun clearLogs()
     {
+        Logger.waitUntilLoggingFinished()
         logDestination.clear()
     }
 }

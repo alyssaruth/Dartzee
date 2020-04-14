@@ -15,14 +15,14 @@ data class LogRecord(val timestamp: Instant,
                      val loggingCode: LoggingCode,
                      val message: String,
                      val errorObject: Throwable?,
-                     val keyValuePairs: Map<Any, Any?>)
+                     val keyValuePairs: Map<String, Any?>)
 {
     private val dateStr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             .withLocale(Locale.UK)
             .withZone(ZoneId.systemDefault())
             .format(timestamp)
 
-    override fun toString() = "\n$dateStr   [$loggingCode] $message"
+    override fun toString() = "$dateStr   [$loggingCode] $message"
 
-    fun getThrowableStr() = errorObject?.let { "\n$dateStr   ${extractStackTrace(errorObject)}" }
+    fun getThrowableStr() = errorObject?.let { "$dateStr   ${extractStackTrace(errorObject)}" }
 }
