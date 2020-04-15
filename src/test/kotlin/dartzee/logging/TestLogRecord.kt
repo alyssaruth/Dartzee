@@ -16,4 +16,20 @@ class TestLogRecord: AbstractTest()
 
         record.toString() shouldBe "$CURRENT_TIME_STRING   [some.code] This is a log"
     }
+
+    @Test
+    fun `Should return NULL if no error object`()
+    {
+        val record = makeLogRecord()
+        record.getThrowableStr() shouldBe null
+    }
+
+    @Test
+    fun `Should return the dated stack trace if it exists`()
+    {
+        val t = Throwable("Boom")
+        val record = makeLogRecord(errorObject = t)
+
+        record.getThrowableStr() shouldBe "$CURRENT_TIME_STRING   ${extractStackTrace(t)}"
+    }
 }
