@@ -1,8 +1,8 @@
 package dartzee.db
 
-import dartzee.`object`.DartsClient
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
+import dartzee.logging.CODE_BULK_SQL
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -10,6 +10,8 @@ import java.sql.SQLException
 
 object BulkInserter
 {
+    var logInserts = true
+
     /**
      * Entity insert
      */
@@ -60,7 +62,11 @@ object BulkInserter
 
                         val timer = DurationTimer()
                         ps.executeUpdate()
-                        logger.logSql(insertQuery, ps.toString(), timer.getDuration())
+
+                        if (logInserts)
+                        {
+                            logger.logSql(insertQuery, ps.toString(), timer.getDuration())
+                        }
                     }
                 }
                 catch (sqle: SQLException)
@@ -112,17 +118,15 @@ object BulkInserter
      */
     private fun doBulkInsert(threads: List<Thread>, tableName: String, rowCount: Int, rowsPerStatement: Int)
     {
-        val traceWriteSql = DartsClient.traceWriteSql
-
         if (rowCount > 500)
         {
-            DartsClient.traceWriteSql = false
-            Debug.append("[SQL] Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
+            logInserts = false
+            logger.logInfo(CODE_BULK_SQL, "Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
         }
 
         threads.forEach{ it.start() }
         threads.forEach{ it.join() }
 
-        DartsClient.traceWriteSql = traceWriteSql
+        logInserts = true
     }
 }

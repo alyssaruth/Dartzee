@@ -1,17 +1,16 @@
 package dartzee.db
 
 import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogLines
 import dartzee.core.helper.getLogs
-import dartzee.core.util.Debug.clearLogs
 import dartzee.helper.*
+import dartzee.logging.CODE_BULK_SQL
+import dartzee.logging.CODE_SQL
 import dartzee.utils.DatabaseUtil
 import io.kotlintest.matchers.collections.shouldBeSortedWith
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeSortedWith
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -86,7 +85,7 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert("InsertTest", rows, 1000, rowsPerInsert)
 
-        getLogLines() shouldHaveSize(expectedNumberOfBatches)
+        getLogRecords() shouldHaveSize(expectedNumberOfBatches)
         getCountFromTable("InsertTest") shouldBe rows.size
     }
 
@@ -120,14 +119,20 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert("InsertTest", rows, 300, 50)
 
-        getLogs() shouldNotContain("INSERT INTO InsertTest VALUES")
-        getLogs() shouldContain("[SQL] Inserting 501 rows into InsertTest (2 threads @ 50 rows per insert)")
+        println(getLogRecords())
+
+        getLogRecords().size shouldBe 1
+        val log = getLastLog()
+        log.loggingCode shouldBe CODE_BULK_SQL
+        log.message shouldBe "Inserting 501 rows into InsertTest (2 threads @ 50 rows per insert)"
         getCountFromTable("InsertTest") shouldBe 501
 
         val moreRows = prepareRows(10)
         BulkInserter.insert("InsertTest", moreRows, 300, 50)
 
-        getLogs() shouldContain("INSERT INTO InsertTest VALUES")
+        val newLog = getLastLog()
+        newLog.loggingCode shouldBe CODE_SQL
+        newLog.message shouldContain "INSERT INTO InsertTest VALUES"
     }
 
 
