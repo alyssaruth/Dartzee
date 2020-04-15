@@ -119,8 +119,6 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert("InsertTest", rows, 300, 50)
 
-        println(getLogRecords())
-
         getLogRecords().size shouldBe 1
         val log = getLastLog()
         log.loggingCode shouldBe CODE_BULK_SQL

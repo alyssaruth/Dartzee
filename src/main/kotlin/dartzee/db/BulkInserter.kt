@@ -108,7 +108,7 @@ object BulkInserter
                     s += rowValues
                 }
 
-                DatabaseUtil.executeUpdate(s)
+                DatabaseUtil.executeUpdate(s, logInserts)
             }
         }
     }
@@ -124,8 +124,8 @@ object BulkInserter
             logger.logInfo(CODE_BULK_SQL, "Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
         }
 
-        threads.forEach{ it.start() }
-        threads.forEach{ it.join() }
+        threads.forEach { it.start() }
+        threads.forEach { it.join() }
 
         logInserts = true
     }

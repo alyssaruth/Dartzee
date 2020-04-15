@@ -95,11 +95,11 @@ class DatabaseUtil
             return true
         }
 
-        fun executeUpdate(statement: String): Boolean
+        fun executeUpdate(statement: String, log: Boolean = true): Boolean
         {
             try
             {
-                executeUpdateUncaught(statement)
+                executeUpdateUncaught(statement, log)
             }
             catch (sqle: SQLException)
             {
@@ -110,7 +110,7 @@ class DatabaseUtil
             return true
         }
 
-        private fun executeUpdateUncaught(statement: String)
+        private fun executeUpdateUncaught(statement: String, log: Boolean = true)
         {
             val timer = DurationTimer()
             val conn = borrowConnection()
@@ -125,7 +125,10 @@ class DatabaseUtil
                 returnConnection(conn)
             }
 
-            logger.logSql(statement, "", timer.getDuration())
+            if (log)
+            {
+                logger.logSql(statement, "", timer.getDuration())
+            }
         }
 
         fun executeQuery(sb: StringBuilder): ResultSet
