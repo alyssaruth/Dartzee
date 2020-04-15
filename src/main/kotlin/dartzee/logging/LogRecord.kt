@@ -19,7 +19,7 @@ data class LogRecord(val timestamp: Instant,
 {
     private val dateStr = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             .withLocale(Locale.UK)
-            .withZone(ZoneId.systemDefault())
+            .withZone(ZoneId.of("UTC"))
             .format(timestamp)
 
     override fun toString() = "$dateStr   [$loggingCode] $message"
