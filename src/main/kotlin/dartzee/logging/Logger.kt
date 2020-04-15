@@ -7,12 +7,10 @@ import java.util.concurrent.TimeUnit
 
 private const val LOGGER_THREAD = "Logger"
 
-object Logger
+class Logger(private val destinations: List<ILogDestination>)
 {
     private val loggerFactory = ThreadFactory { r -> Thread(r, LOGGER_THREAD) }
     private var logService = Executors.newFixedThreadPool(1, loggerFactory)
-
-    val destinations = mutableListOf<ILogDestination>()
 
     fun logSql(sqlStatement: String, genericStatement: String, duration: Long)
     {

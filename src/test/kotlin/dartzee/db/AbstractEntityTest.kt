@@ -41,13 +41,9 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 
         setExtraValuesForBulkInsert(e1 as E)
         setExtraValuesForBulkInsert(e2 as E)
-
-        clearLogs()
         BulkInserter.insert(e1, e2)
 
-        val records = getLogRecords()
-        records.size shouldBe 1
-        val log = records.first()
+        val log = getLastLog()
         log.loggingCode shouldBe CODE_SQL
         log.message shouldContain e1.rowId
         log.message shouldContain e2.rowId
@@ -92,7 +88,10 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
         val rowId = entity.rowId
 
         setValuesAndSaveToDatabase(entity, true)
-        getLogs().shouldContain("INSERT INTO ${dao.getTableName()} VALUES ('$rowId'")
+
+        val log = getLastLog()
+        log.loggingCode shouldBe CODE_SQL
+        log.message shouldContain "INSERT INTO ${dao.getTableName()} VALUES ('$rowId'"
 
         //Retrieve and check all values are as expected
         val retrievedEntity = dao.retrieveForId(rowId)!!
@@ -124,7 +123,11 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 
         //Update
         setValuesAndSaveToDatabase(entity, false)
-        getLogs().shouldContain("UPDATE ${dao.getTableName()}")
+
+        val log = getLastLog()
+        log.loggingCode shouldBe CODE_SQL
+        log.message shouldContain "UPDATE ${dao.getTableName()}"
+
         getCountFromTable(dao.getTableName()) shouldBe 1
 
         //Retrieve to make sure updated values are set correctly

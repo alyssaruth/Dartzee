@@ -3,7 +3,7 @@ package dartzee.utils
 import dartzee.`object`.DartsClient
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
-import dartzee.logging.Logger
+import dartzee.utils.InjectedThings.logger
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -125,7 +125,7 @@ class DatabaseUtil
                 returnConnection(conn)
             }
 
-            Logger.logSql(statement, "", timer.getDuration())
+            logger.logSql(statement, "", timer.getDuration())
         }
 
         fun executeQuery(sb: StringBuilder): ResultSet
@@ -157,7 +157,7 @@ class DatabaseUtil
                 returnConnection(conn)
             }
 
-            Logger.logSql(query, "", timer.getDuration())
+            logger.logSql(query, "", timer.getDuration())
 
             //Return an empty one if something's gone wrong
             return crs ?: RowSetProvider.newFactory().createCachedRowSet()

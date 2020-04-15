@@ -1,5 +1,6 @@
 package dartzee.logging
 
+import dartzee.flushEdt
 import dartzee.helper.AbstractTest
 import dartzee.makeLogRecord
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
@@ -113,6 +114,7 @@ class TestLoggingConsole: AbstractTest()
             console.log(makeLogRecord())
         }
 
+        flushEdt()
         console.scrollPane.verticalScrollBar.value shouldBeGreaterThan 0
     }
 

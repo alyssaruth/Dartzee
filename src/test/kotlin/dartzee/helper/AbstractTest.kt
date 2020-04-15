@@ -25,12 +25,13 @@ import javax.swing.UIManager
 
 private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
 private var doneOneTimeSetup = false
+private val logDestination = FakeLogDestination()
+val logger = Logger(listOf(logDestination))
 
 abstract class AbstractTest
 {
     private var doneClassSetup = false
     protected val dialogFactory = TestMessageDialogFactory()
-    private val logDestination = FakeLogDestination()
 
     @Before
     fun oneTimeSetup()
@@ -52,7 +53,6 @@ abstract class AbstractTest
 
     private fun doOneTimeSetup()
     {
-        Logger.destinations.add(logDestination)
         Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.sendingEmails = false
         Debug.logToSystemOut = true
@@ -60,6 +60,7 @@ abstract class AbstractTest
         Debug.debugExtension = TestDebugExtension()
         DialogUtil.init(dialogFactory)
 
+        InjectedThings.logger = logger
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
         InjectedThings.verificationDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
@@ -99,14 +100,16 @@ abstract class AbstractTest
         checkedForExceptions = false
     }
 
+    fun getLastLog() = getLogRecords().last()
+
     fun getLogRecords(): List<LogRecord>
     {
-        Logger.waitUntilLoggingFinished()
+        logger.waitUntilLoggingFinished()
         return logDestination.logRecords.toList()
     }
     fun clearLogs()
     {
-        Logger.waitUntilLoggingFinished()
+        logger.waitUntilLoggingFinished()
         logDestination.clear()
     }
 }

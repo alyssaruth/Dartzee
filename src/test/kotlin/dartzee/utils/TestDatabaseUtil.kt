@@ -1,12 +1,11 @@
 package dartzee.utils
 
-import dartzee.`object`.DartsClient
 import dartzee.core.helper.exceptionLogged
 import dartzee.core.helper.getLogs
 import dartzee.core.util.Debug
 import dartzee.helper.AbstractTest
-import dartzee.helper.wipeTable
-import io.kotlintest.matchers.collections.shouldBeEmpty
+import dartzee.helper.dropUnexpectedTables
+import dartzee.logging.CODE_SQL
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
@@ -16,6 +15,13 @@ import org.junit.Test
 
 class TestDatabaseUtil: AbstractTest()
 {
+    override fun afterEachTest()
+    {
+        super.afterEachTest()
+
+        dropUnexpectedTables()
+    }
+
     @Test
     fun `Should create a new connection if the pool is depleted`()
     {
@@ -43,11 +49,15 @@ class TestDatabaseUtil: AbstractTest()
     @Test
     fun `Should execute all updates and log them to the console`()
     {
-        val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
+        clearLogs()
 
+        val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
         DatabaseUtil.executeUpdates(updates) shouldBe true
-        getLogs().shouldContain("CREATE TABLE zzUpdateTest(str VARCHAR(50));")
-        getLogs().shouldContain("INSERT INTO zzUpdateTest VALUES ('5');")
+
+        val records = getLogRecords().filter { it.loggingCode == CODE_SQL }
+        records.size shouldBe 2
+        records.first().message shouldContain "CREATE TABLE zzUpdateTest(str VARCHAR(50))"
+        records.last().message shouldContain "INSERT INTO zzUpdateTest VALUES ('5')"
 
         DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM zzUpdateTest") shouldBe 1
 
@@ -63,8 +73,6 @@ class TestDatabaseUtil: AbstractTest()
         exceptionLogged() shouldBe true
 
         DatabaseUtil.createTableIfNotExists("zzUpdateTest", "str VARCHAR(50)") shouldBe true
-
-        DatabaseUtil.dropTable("zzUpdateTest")
     }
 
     @Test
@@ -95,10 +103,11 @@ class TestDatabaseUtil: AbstractTest()
             }
         }
 
-        getLogs().shouldContain("SELECT * FROM zzQueryTest")
-        retrievedValues.shouldContainExactly("RowOne", "RowTwo")
+        val log = getLastLog()
+        log.loggingCode shouldBe CODE_SQL
+        log.message shouldContain "SELECT * FROM zzQueryTest"
 
-        DatabaseUtil.dropTable("zzQueryTest")
+        retrievedValues.shouldContainExactly("RowOne", "RowTwo")
     }
 
     @Test
@@ -114,35 +123,5 @@ class TestDatabaseUtil: AbstractTest()
         getLogs().shouldContain("Caught SQLException for query: $query")
 
         dialogFactory.errorsShown.shouldHaveSize(1)
-    }
-
-    @Test
-    fun `Should log an exception (but not show an error) for queries that take too long`()
-    {
-        DartsClient.sqlMaxDuration = -1
-
-        val query = "SELECT * FROM Game"
-        DatabaseUtil.executeQuery(query)
-
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("SQL query took longer than -1 millis: $query")
-        dialogFactory.errorsShown.shouldBeEmpty()
-
-        DartsClient.sqlMaxDuration = MAX_SQL_DURATION
-        wipeTable("Game")
-    }
-
-    @Test
-    fun `Should log an exception (but not show an error) for updates that take too long`()
-    {
-        DartsClient.sqlMaxDuration = -1
-
-        val update = "DELETE FROM Game"
-        DatabaseUtil.executeUpdate(update)
-
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("SQL update took longer than -1 millis: $update")
-
-        DartsClient.sqlMaxDuration = MAX_SQL_DURATION
     }
 }

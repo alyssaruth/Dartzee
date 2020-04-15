@@ -3,9 +3,9 @@ package dartzee.db
 import dartzee.`object`.DartsClient
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
-import dartzee.logging.Logger
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DurationTimer
+import dartzee.utils.InjectedThings.logger
 import java.sql.SQLException
 
 object BulkInserter
@@ -60,7 +60,7 @@ object BulkInserter
 
                         val timer = DurationTimer()
                         ps.executeUpdate()
-                        Logger.logSql(insertQuery, ps.toString(), timer.getDuration())
+                        logger.logSql(insertQuery, ps.toString(), timer.getDuration())
                     }
                 }
                 catch (sqle: SQLException)
