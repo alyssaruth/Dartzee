@@ -1,6 +1,5 @@
 package dartzee.logging
 
-import dartzee.core.util.Debug
 import java.awt.BorderLayout
 import java.awt.Color
 import javax.swing.JFrame
@@ -13,8 +12,8 @@ import javax.swing.text.StyleContext
 
 class LoggingConsole: JFrame(), ILogDestination
 {
-    private val doc = DefaultStyledDocument()
-    private val scrollPane = JScrollPane()
+    val doc = DefaultStyledDocument()
+    val scrollPane = JScrollPane()
     private val textArea = JTextPane(doc)
 
     init
@@ -39,9 +38,9 @@ class LoggingConsole: JFrame(), ILogDestination
         {
             when
             {
-                text.contains("INSERT") -> StyleConstants.setForeground(style, Color.YELLOW)
-                text.contains("UPDATE") -> StyleConstants.setForeground(style, Color.YELLOW)
-                text.contains("DELETE") -> StyleConstants.setForeground(style, Color.ORANGE)
+                text.contains("INSERT") -> StyleConstants.setForeground(style, Color.ORANGE)
+                text.contains("UPDATE") -> StyleConstants.setForeground(style, Color.ORANGE)
+                text.contains("DELETE") -> StyleConstants.setForeground(style, Color.PINK)
                 else -> StyleConstants.setForeground(style, Color.CYAN)
             }
         }
@@ -60,7 +59,8 @@ class LoggingConsole: JFrame(), ILogDestination
         }
         catch (ble: BadLocationException)
         {
-            Debug.stackTrace(ble, "BLE trying to append: $text")
+            System.err.println("BLE trying to append: $text")
+            System.err.println(extractStackTrace(ble))
         }
     }
 
