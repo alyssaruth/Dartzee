@@ -2,12 +2,16 @@ package dartzee
 
 import dartzee.`object`.*
 import dartzee.core.helper.makeMouseEvent
+import dartzee.logging.LogRecord
+import dartzee.logging.LoggingCode
+import dartzee.logging.Severity
 import dartzee.screen.Dartboard
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.shouldBe
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
+import java.time.Instant
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
 
@@ -27,6 +31,9 @@ val trebleNineteen = DartboardSegment("19_$SEGMENT_TYPE_TREBLE")
 val singleEighteen = DartboardSegment("18_$SEGMENT_TYPE_OUTER_SINGLE")
 val singleTen = DartboardSegment("10_$SEGMENT_TYPE_INNER_SINGLE")
 val singleFive = DartboardSegment("5_$SEGMENT_TYPE_INNER_SINGLE")
+
+val CURRENT_TIME: Instant = Instant.parse("2020-04-13T11:04:00.00Z")
+val CURRENT_TIME_STRING = "2020-04-13 12:04:00"
 
 private var dartboard: Dartboard? = null
 
@@ -60,6 +67,16 @@ fun Dartboard.doClick(x: Int, y: Int)
     dartboardLabel.mouseListeners.forEach {
         it.mouseReleased(me)
     }
+}
+
+fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
+                  severity: Severity = Severity.INFO,
+                  loggingCode: LoggingCode = LoggingCode("log"),
+                  message: String = "A thing happened",
+                  errorObject: Throwable? = null,
+                  keyValuePairs: Map<String, Any?> = mapOf()): LogRecord
+{
+    return LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
 }
 
 fun Component.doClick(x: Int = 0, y: Int = 0) {

@@ -95,7 +95,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             override fun actionPerformed(e: ActionEvent)
             {
-                val loggingDialog = ScreenCache.debugConsole
+                val loggingDialog = ScreenCache.loggingConsole
                 loggingDialog.isVisible = true
                 loggingDialog.toFront()
             }

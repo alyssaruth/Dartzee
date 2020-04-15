@@ -1,7 +1,6 @@
 package dartzee.utils
 
 import dartzee.`object`.Quadrant
-import dartzee.core.util.Debug
 import java.awt.Point
 import java.util.*
 
@@ -12,18 +11,14 @@ private val TOP_LEFT = Quadrant(270, 360, false, yIsPositive = false)
 
 private val QUADRANTS = arrayOf(TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT)
 
-fun translatePoint(pt: Point, radius: Double, degrees: Double, logging: Boolean): Point
+fun translatePoint(pt: Point, radius: Double, degrees: Double): Point
 {
-    Debug.appendBanner("Translating $pt by $radius at angle $degrees", logging)
-
-    val quadrant = getQuadrantForAngle(degrees) ?: return translatePointAlongAxis(pt, radius, degrees, logging)
+    val quadrant = getQuadrantForAngle(degrees) ?: return translatePointAlongAxis(pt, radius, degrees)
 
     //Need radians for trig functions
     val theta = Math.toRadians(degrees)
     val dSin = Math.abs(radius * Math.sin(theta))
     val dCos = Math.abs(radius * Math.cos(theta))
-
-    Debug.appendWithoutDate("dSin = $dSin, dCos = $dCos", logging)
 
     var x = dSin
     var y = dCos
@@ -38,23 +33,16 @@ fun translatePoint(pt: Point, radius: Double, degrees: Double, logging: Boolean)
         y *= -1.0
     }
 
-    Debug.appendWithoutDate("Translating x: $x", logging)
-    Debug.appendWithoutDate("Translating y: $y", logging)
-
     x += pt.getX()
     y += pt.getY()
 
     val ret = Point()
     ret.setLocation(x, y)
-
-    Debug.appendWithoutDate("New point: $ret", logging)
     return ret
 }
 
-private fun translatePointAlongAxis(pt: Point, radius: Double, degrees: Double, logging: Boolean): Point
+private fun translatePointAlongAxis(pt: Point, radius: Double, degrees: Double): Point
 {
-    Debug.appendWithoutDate("Translating along axis", logging)
-
     val x = pt.getX()
     val y = pt.getY()
 
@@ -67,7 +55,6 @@ private fun translatePointAlongAxis(pt: Point, radius: Double, degrees: Double, 
         270.0 -> ret.setLocation(x - radius, y)
     }
 
-    Debug.appendWithoutDate("New point: $ret", logging)
     return ret
 }
 

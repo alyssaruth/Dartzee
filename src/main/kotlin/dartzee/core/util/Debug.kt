@@ -12,7 +12,6 @@ import kotlin.math.floor
 object Debug
 {
     const val SQL_PREFIX = "[SQL] "
-    const val BUG_REPORT_ADDITONAL_INFO_LINE = "Additional Information:"
     const val SUCCESS_MESSAGE = "Email sent successfully"
 
     private const val ERROR_MESSAGE_DELAY_MILLIS: Long = 10000 //10s
@@ -20,7 +19,7 @@ object Debug
     private val DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("dd/MM HH:mm:ss.SSS")
 
     private val emailSyncObject = Any()
-    private val loggerFactory = ThreadFactory { r -> Thread(r, "Logger") }
+    private val loggerFactory = ThreadFactory { r -> Thread(r, "Debug") }
     private var logService = Executors.newFixedThreadPool(1, loggerFactory)
     var lastErrorMillis: Long = -1
     var lastEmailMillis: Long = -1
@@ -34,18 +33,13 @@ object Debug
     var productDesc = ""
     var debugExtension: DebugExtension? = null
 
-    fun appendSql(text: String, logging: Boolean)
-    {
-        append(SQL_PREFIX + text, logging)
-    }
-
     fun append(text: String, logging: Boolean = true, includeDate: Boolean = true, emailSubject: String? = null)
     {
         if (!logging) return
 
         val logRunnable = Runnable { appendInCurrentThread(text, includeDate, emailSubject) }
         val threadName = Thread.currentThread().name
-        if (threadName != "Logger")
+        if (threadName != "Debug")
         {
             logService.execute(logRunnable)
         }
@@ -255,43 +249,6 @@ object Debug
 
             debugExtension?.unableToEmailLogs()
         }
-    }
-
-    fun sendBugReport(description: String, replication: String): Boolean
-    {
-        var fullDescription = description
-        try
-        {
-            val username = CoreRegistry.instance[CoreRegistry.INSTANCE_STRING_USER_NAME, ""]
-            if (username != "")
-            {
-                fullDescription += " - $username"
-            }
-
-            val totalLogs = getCurrentLogs()
-            var message = ""
-            if (replication.isNotEmpty())
-            {
-                message += BUG_REPORT_ADDITONAL_INFO_LINE
-                message += "\n\n"
-                message += replication
-                message += "\n--------------------------\n"
-            }
-
-            val logsToSend = totalLogs.substring(positionLastEmailed)
-            message += logsToSend
-            debugExtension?.sendEmail(fullDescription, message)
-            append(SUCCESS_MESSAGE, true)
-            positionLastEmailed += logsToSend.length
-            emailsSentInSuccession++
-        }
-        catch (t: Throwable)
-        {
-            append("Unable to send Bug Report. Exceptions follow.")
-            stackTraceSilently(t)
-            return false
-        }
-        return true
     }
 
     private fun needToSendMoreLogs(): Boolean

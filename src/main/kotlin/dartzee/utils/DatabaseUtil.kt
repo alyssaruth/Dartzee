@@ -3,6 +3,7 @@ package dartzee.utils
 import dartzee.`object`.DartsClient
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
+import dartzee.utils.InjectedThings.logger
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -84,27 +85,14 @@ class DatabaseUtil
 
         fun executeUpdates(statements: List<String>): Boolean
         {
-            val sql = getCombinedSqlForLogging(statements)
-            Debug.appendSql(sql, DartsClient.traceWriteSql)
-
             statements.forEach{
-                if (!executeUpdate(it, false))
+                if (!executeUpdate(it))
                 {
                     return false
                 }
             }
 
             return true
-        }
-        private fun getCombinedSqlForLogging(batches: List<String>): String
-        {
-            var s = ""
-
-            batches.forEach{
-                s += "\n$it;"
-            }
-
-            return s
         }
 
         fun executeUpdate(statement: String, log: Boolean = true): Boolean
@@ -124,7 +112,7 @@ class DatabaseUtil
 
         private fun executeUpdateUncaught(statement: String, log: Boolean = true)
         {
-            val startMillis = System.currentTimeMillis()
+            val timer = DurationTimer()
             val conn = borrowConnection()
             try
             {
@@ -137,12 +125,9 @@ class DatabaseUtil
                 returnConnection(conn)
             }
 
-            val totalMillis = System.currentTimeMillis() - startMillis
-            Debug.appendSql("(${totalMillis}ms) $statement", DartsClient.traceWriteSql && log)
-
-            if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
+            if (log)
             {
-                Debug.stackTrace(message = "SQL update took longer than ${DartsClient.sqlMaxDuration} millis: $statement", suppressError = true)
+                logger.logSql(statement, "", timer.getDuration())
             }
         }
 
@@ -153,7 +138,7 @@ class DatabaseUtil
 
         fun executeQuery(query: String): ResultSet
         {
-            val startMillis = System.currentTimeMillis()
+            val timer = DurationTimer()
             var crs: CachedRowSet? = null
 
             val conn = borrowConnection()
@@ -175,14 +160,7 @@ class DatabaseUtil
                 returnConnection(conn)
             }
 
-            val totalMillis = System.currentTimeMillis() - startMillis
-            Debug.appendSql("(" + totalMillis + "ms) " + query, DartsClient.traceReadSql)
-
-            //No query should take longer than 5 seconds really...
-            if (totalMillis > DartsClient.sqlMaxDuration && !DartsClient.devMode)
-            {
-                Debug.stackTrace(message = "SQL query took longer than ${DartsClient.sqlMaxDuration} millis: $query", suppressError = true)
-            }
+            logger.logSql(query, "", timer.getDuration())
 
             //Return an empty one if something's gone wrong
             return crs ?: RowSetProvider.newFactory().createCachedRowSet()

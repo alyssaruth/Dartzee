@@ -67,7 +67,7 @@ class UtilitiesScreen : EmbeddedScreen()
             btnRestoreFromBackup -> DartsDatabaseUtil.restoreDatabase()
             btnPerformDatabaseCheck -> DatabaseSanityCheck.runSanityCheck()
             btnCheckForUpdates -> DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER)
-            btnViewLogs -> {val loggingDialog = ScreenCache.debugConsole
+            btnViewLogs -> {val loggingDialog = ScreenCache.loggingConsole
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()

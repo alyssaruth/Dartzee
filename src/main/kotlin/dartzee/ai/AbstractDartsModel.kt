@@ -23,8 +23,6 @@ abstract class AbstractDartsModel
     var hmDartNoToSegmentType = mutableMapOf<Int, Int>()
     var hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
 
-    private var logging = LIGHT_LOGGING
-
     /**
      * Abstract methods
      */
@@ -113,8 +111,6 @@ abstract class AbstractDartsModel
 
     private fun getX01Dart(score: Int, dartboard: Dartboard): Point
     {
-        Debug.append("Score = $score", logging)
-
         //Check for a specific dart to aim for. It's possible to override any value for a specific AI strategy.
         val drtToAimAt = getOveriddenDartToAimAt(score)
         if (drtToAimAt != null)
@@ -198,9 +194,6 @@ abstract class AbstractDartsModel
 
     private fun getPointForScore(score: Int, dartboard: Dartboard, type: Int): Point
     {
-        val multiplier = getMultiplier(type)
-        Debug.append("Aiming for " + Dart(score, multiplier), logging)
-
         val points = dartboard.getPointsForSegment(score, type)
         val avgPoint = getAverage(points)
 
@@ -213,9 +206,6 @@ abstract class AbstractDartsModel
 
     fun runSimulation(dartboard: Dartboard): SimulationWrapper
     {
-        //Turn this off before we start
-        logging = false
-
         Debug.append("Simulating scoring throws for $SCORING_DARTS_TO_THROW darts")
 
         val hmPointToCount = HashMapCount<Point>()
@@ -293,10 +283,6 @@ abstract class AbstractDartsModel
         const val TYPE_NORMAL_DISTRIBUTION = 2
 
         const val DARTS_MODEL_NORMAL_DISTRIBUTION = "Simple Gaussian"
-
-        //Log levels
-        const val LOGGING = false
-        private const val LIGHT_LOGGING = false
 
         const val TAG_SETUP_DART = "SetupDart"
         const val TAG_GOLF_AIM = "GolfAim"

@@ -1,11 +1,12 @@
 package dartzee.db
 
-import dartzee.`object`.DartsClient
 import dartzee.core.util.DateStatics
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.DurationTimer
+import dartzee.utils.InjectedThings.logger
 import java.sql.*
 import java.util.*
 import java.util.regex.Pattern
@@ -211,9 +212,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
                 updateQuery = writeValuesToStatement(psUpdate, 1, updateQuery)
                 updateQuery = writeString(psUpdate, getColumnCount(), rowId, updateQuery)
 
-                Debug.appendSql(updateQuery, DartsClient.traceWriteSql)
-
+                val timer = DurationTimer()
                 psUpdate.executeUpdate()
+
+                logger.logSql(updateQuery, psUpdate.toString(), timer.getDuration())
 
                 val updateCount = psUpdate.updateCount
                 if (updateCount == 0)
@@ -253,9 +255,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             conn.prepareStatement(insertQuery).use { psInsert ->
                 insertQuery = writeValuesToInsertStatement(insertQuery, psInsert)
 
-                Debug.appendSql(insertQuery, DartsClient.traceWriteSql)
-
+                val timer = DurationTimer()
                 psInsert.executeUpdate()
+                logger.logSql(insertQuery, psInsert.toString(), timer.getDuration())
 
                 //Set this so we can call save() again on the same object and get the right behaviour
                 retrievedFromDb = true

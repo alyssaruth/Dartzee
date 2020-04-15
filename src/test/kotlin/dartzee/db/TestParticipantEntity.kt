@@ -4,7 +4,6 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.ai.DartsModelNormalDistribution
 import dartzee.core.helper.getLogs
 import dartzee.core.util.DateStatics
-import dartzee.core.util.Debug.clearLogs
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import io.kotlintest.matchers.string.shouldBeEmpty
@@ -28,7 +27,9 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
 
         val player = pt.getPlayer()
         player shouldNotBe null
-        getLogs().shouldContain("WHERE RowId = '$playerId'")
+
+        val log = getLastLog()
+        log.message shouldContain "WHERE RowId = '$playerId'"
 
         clearLogs()
 
