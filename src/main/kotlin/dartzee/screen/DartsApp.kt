@@ -203,9 +203,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == "stacktrace")
         {
-            Debug.sendingEmails = true
             Debug.stackTrace(message = "Testing", suppressError = true)
-            Debug.sendingEmails = false
         }
 
         return textToShow

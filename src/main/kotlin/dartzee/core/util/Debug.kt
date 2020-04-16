@@ -15,29 +15,23 @@ object Debug
     const val SUCCESS_MESSAGE = "Email sent successfully"
 
     private const val ERROR_MESSAGE_DELAY_MILLIS: Long = 10000 //10s
-    private const val MINIMUM_EMAIL_GAP_MILLIS: Long = 10000
     private val DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("dd/MM HH:mm:ss.SSS")
 
-    private val emailSyncObject = Any()
     private val loggerFactory = ThreadFactory { r -> Thread(r, "Debug") }
     private var logService = Executors.newFixedThreadPool(1, loggerFactory)
     var lastErrorMillis: Long = -1
-    var lastEmailMillis: Long = -1
     private var output: DebugOutput? = null
-    var positionLastEmailed = 0
-    private var emailsSentInSuccession = 1
 
     //Config
-    var sendingEmails = true
     var logToSystemOut = false
     var productDesc = ""
     var debugExtension: DebugExtension? = null
 
-    fun append(text: String, logging: Boolean = true, includeDate: Boolean = true, emailSubject: String? = null)
+    fun append(text: String, logging: Boolean = true, includeDate: Boolean = true)
     {
         if (!logging) return
 
-        val logRunnable = Runnable { appendInCurrentThread(text, includeDate, emailSubject) }
+        val logRunnable = Runnable { appendInCurrentThread(text, includeDate) }
         val threadName = Thread.currentThread().name
         if (threadName != "Debug")
         {
@@ -49,7 +43,7 @@ object Debug
         }
     }
 
-    private fun appendInCurrentThread(text: String, includeDate: Boolean, emailSubject: String?)
+    private fun appendInCurrentThread(text: String, includeDate: Boolean)
     {
         val time = if (includeDate) getCurrentTimeForLogging() else ""
 
@@ -59,11 +53,6 @@ object Debug
         if (logToSystemOut)
         {
             println(time + text)
-        }
-
-        if (emailSubject != null && shouldSendEmail())
-        {
-            sendContentsAsEmail(emailSubject)
         }
     }
 
@@ -130,20 +119,7 @@ object Debug
         val pw = PrintWriter(sw)
         t.printStackTrace(pw)
         trace += datetime + sw.toString()
-        append(trace, true, false, makeEmailTitle(t, message))
-    }
-
-    private fun makeEmailTitle(t: Throwable, message: String): String
-    {
-        val truncatedMessage = message.truncate(50)
-        var extraDetails = " ($productDesc)"
-        val username = CoreRegistry.instance[CoreRegistry.INSTANCE_STRING_USER_NAME, ""]
-        if (username != "")
-        {
-            extraDetails += " - $username"
-        }
-
-        return "$t - $truncatedMessage$extraDetails"
+        append(trace, true, false)
     }
 
     fun stackTraceSilently(message: String)
@@ -205,58 +181,6 @@ object Debug
     }
 
     fun getCurrentTimeForLogging() = "${DATE_FORMAT.format(System.currentTimeMillis())}   "
-
-    private fun shouldSendEmail() = debugExtension != null && sendingEmails
-
-    private fun sendContentsAsEmail(title: String)
-    {
-        var fullTitle = title
-
-        try
-        {
-            synchronized(emailSyncObject)
-            {
-                if (!needToSendMoreLogs()) return
-
-                val timeSinceLastEmail = System.currentTimeMillis() - lastEmailMillis
-                if (timeSinceLastEmail < MINIMUM_EMAIL_GAP_MILLIS)
-                {
-                    val timeToSleep = MINIMUM_EMAIL_GAP_MILLIS - timeSinceLastEmail
-                    append("Waiting $timeToSleep millis before sending logs...")
-                    Thread.sleep(timeToSleep)
-                    fullTitle += " (Part " + (emailsSentInSuccession + 1) + ")"
-                    emailsSentInSuccession++
-                }
-                else
-                {
-                    emailsSentInSuccession = 1
-                }
-
-                val totalLogs = getCurrentLogs()
-                val message = totalLogs.substring(positionLastEmailed)
-                debugExtension?.sendEmail(fullTitle, message)
-
-                appendInCurrentThread(SUCCESS_MESSAGE,true,null)
-
-                positionLastEmailed += message.length
-                lastEmailMillis = System.currentTimeMillis()
-            }
-        }
-        catch (t: Throwable)
-        {
-            stackTraceSilently(t)
-            sendingEmails = false
-
-            debugExtension?.unableToEmailLogs()
-        }
-    }
-
-    private fun needToSendMoreLogs(): Boolean
-    {
-        val ta = getCurrentLogs()
-        val m = ta.substring(positionLastEmailed)
-        return !(m.contains(SUCCESS_MESSAGE) && m.length < 100)
-    }
 
     fun getCurrentLogs(): String = output?.getLogs() ?: ""
 
