@@ -12,7 +12,6 @@ import kotlin.math.floor
 object Debug
 {
     const val SQL_PREFIX = "[SQL] "
-    const val SUCCESS_MESSAGE = "Email sent successfully"
 
     private const val ERROR_MESSAGE_DELAY_MILLIS: Long = 10000 //10s
     private val DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("dd/MM HH:mm:ss.SSS")
