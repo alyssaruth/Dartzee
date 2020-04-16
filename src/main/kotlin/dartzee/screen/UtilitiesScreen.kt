@@ -1,19 +1,19 @@
 package dartzee.screen
 
 import dartzee.`object`.DartsClient
-import dartzee.core.util.DialogUtil
 import dartzee.core.util.dumpThreadStacks
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
-import dartzee.utils.*
+import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.DevUtilities
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.AbstractButton
 import javax.swing.JButton
-import javax.swing.JOptionPane
 import javax.swing.JPanel
 
 class UtilitiesScreen : EmbeddedScreen()
@@ -26,7 +26,6 @@ class UtilitiesScreen : EmbeddedScreen()
     private val btnViewLogs = JButton("View Logs")
     private val btnThreadStacks = JButton("Thread Stacks")
     private val btnAchievementConversion = JButton("Run Achievement Conversion")
-    private val btnSetLogSecret = JButton("Enable emailing of logs")
     private val btnDartzeeTemplates = JButton("Dartzee Templates")
 
     init
@@ -42,7 +41,6 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnCheckForUpdates, "cell 0 8,alignx center")
         panel.add(btnViewLogs, "cell 0 10,alignx center")
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
-        panel.add(btnSetLogSecret, "cell 0 12, alignx center")
         panel.add(btnDartzeeTemplates, "cell 0 13, alignx center")
 
         val buttons = getAllChildComponentsForType(panel, AbstractButton::class.java)
@@ -72,31 +70,8 @@ class UtilitiesScreen : EmbeddedScreen()
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()
             btnAchievementConversion -> runAchievementConversion()
-            btnSetLogSecret -> setLogSecret()
             btnDartzeeTemplates -> ScreenCache.switchScreen(DartzeeTemplateSetupScreen::class.java)
             else -> super.actionPerformed(arg0)
-        }
-    }
-
-    private fun setLogSecret()
-    {
-        val pwd = JOptionPane.showInputDialog(null, "Please enter the debugging password.", "Password")
-        if (pwd.isNullOrEmpty())
-        {
-            return
-        }
-
-        PreferenceUtil.saveString(PREFERENCES_STRING_LOG_SECRET, pwd)
-        DartsClient.logSecret = pwd
-
-        val success = ClientEmailer.sendClientEmail("Log secret test", "Secret set successfully")
-        if (success)
-        {
-            DialogUtil.showInfo("Test log sent successfully!")
-        }
-        else
-        {
-            DialogUtil.showError("Sending a test log failed. Check you entered the password correctly or let me know!")
         }
     }
 
