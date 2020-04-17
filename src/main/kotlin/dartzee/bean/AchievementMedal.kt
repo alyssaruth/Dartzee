@@ -1,11 +1,11 @@
 package dartzee.bean
 
-import dartzee.`object`.GameLauncher
 import dartzee.achievements.AbstractAchievement
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.getDistance
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -131,7 +131,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
         }
         else if (achievement.gameIdEarned.isNotEmpty())
         {
-            GameLauncher.loadAndDisplayGame(achievement.gameIdEarned)
+            gameLauncher.loadAndDisplayGame(achievement.gameIdEarned)
         }
     }
     override fun mousePressed(e: MouseEvent?) {}

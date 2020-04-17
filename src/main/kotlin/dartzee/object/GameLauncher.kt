@@ -5,8 +5,8 @@ import dartzee.core.util.DialogUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
 import dartzee.screen.game.dartzee.DartzeeMatchScreen
@@ -15,7 +15,7 @@ import dartzee.screen.game.rtc.RoundTheClockMatchScreen
 import dartzee.screen.game.x01.X01MatchScreen
 import dartzee.utils.insertDartzeeRules
 
-object GameLauncher
+class GameLauncher()
 {
     fun launchNewMatch(match: DartsMatchEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
     {

@@ -1,9 +1,9 @@
 package dartzee.bean
 
-import dartzee.`object`.GameLauncher
 import dartzee.core.bean.ScrollTableHyperlink
 import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
+import dartzee.utils.InjectedThings.gameLauncher
 
 class ScrollTableDartsGame(linkColumnName: String = "Game") : ScrollTableHyperlink(linkColumnName)
 {
@@ -13,7 +13,7 @@ class ScrollTableDartsGame(linkColumnName: String = "Game") : ScrollTableHyperli
         if (localId > 0)
         {
             val gameId = GameEntity.getGameId(localId)
-            gameId?.let{ GameLauncher.loadAndDisplayGame(gameId) }
+            gameId?.let{ gameLauncher.loadAndDisplayGame(gameId) }
         }
         else
         {

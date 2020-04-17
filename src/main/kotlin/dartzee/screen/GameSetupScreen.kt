@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import dartzee.`object`.GameLauncher
 import dartzee.bean.*
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.util.Debug
@@ -10,6 +9,7 @@ import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
 import dartzee.db.DartzeeRuleEntity
 import dartzee.game.GameType
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
+import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.getFilterPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -24,7 +24,7 @@ class GameSetupScreen : EmbeddedScreen()
     private val panelGameType = JPanel()
     private val panelPlayers = JPanel()
     private val launchPanel = JPanel()
-    private val btnLaunch = JButton("Launch Game")
+    val btnLaunch = JButton("Launch Game")
     private val playerSelector = PlayerSelector()
     val gameTypeComboBox = ComboBoxGameType()
     private val panelGameTypeCb = JPanel()
@@ -190,7 +190,7 @@ class GameSetupScreen : EmbeddedScreen()
 
         if (match == null)
         {
-            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
+            gameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
         }
         else
         {
@@ -198,7 +198,7 @@ class GameSetupScreen : EmbeddedScreen()
             match.gameType = gameTypeComboBox.getGameType()
             match.gameParams = getGameParams()
 
-            GameLauncher.launchNewMatch(match, rules)
+            gameLauncher.launchNewMatch(match, rules)
         }
     }
 

@@ -1,12 +1,12 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.GameLauncher
 import dartzee.db.DartsMatchEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.GameSetupScreen
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.gameLauncher
 import java.awt.BorderLayout
 
 class DartzeeRuleSetupScreen : EmbeddedScreen()
@@ -37,11 +37,11 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
 
         if (match != null)
         {
-            GameLauncher.launchNewMatch(match!!, dtos)
+            gameLauncher.launchNewMatch(match!!, dtos)
         }
         else
         {
-            GameLauncher.launchNewGame(players, GameType.DARTZEE, "", dtos)
+            gameLauncher.launchNewGame(players, GameType.DARTZEE, "", dtos)
         }
     }
 

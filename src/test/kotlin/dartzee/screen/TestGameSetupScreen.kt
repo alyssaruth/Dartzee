@@ -6,6 +6,7 @@ import dartzee.bean.GameParamFilterPanelX01
 import dartzee.core.bean.items
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import org.junit.Test
 
@@ -19,6 +20,15 @@ class TestGameSetupScreen: AbstractTest()
 
         screen.gameTypeComboBox.updateSelection(GameType.GOLF)
         screen.gameParamFilterPanel.shouldBeInstanceOf<GameParamFilterPanelGolf>()
+    }
+
+    @Test
+    fun `Should perform player selector validation when attempting to launch a game`()
+    {
+        val screen = GameSetupScreen()
+        screen.btnLaunch.doClick()
+
+        dialogFactory.errorsShown.shouldContainExactly("You must select at least 1 player.")
     }
 
     private fun ComboBoxGameType.updateSelection(type: GameType)

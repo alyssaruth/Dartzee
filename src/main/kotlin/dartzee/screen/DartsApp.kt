@@ -2,7 +2,6 @@ package dartzee.screen
 
 import com.mashape.unirest.http.Unirest
 import dartzee.`object`.DartsClient
-import dartzee.`object`.GameLauncher
 import dartzee.achievements.convertEmptyAchievements
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
@@ -12,6 +11,7 @@ import dartzee.db.GameEntity
 import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
+import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -168,7 +168,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             val gameIdentifier = cmd.substring(CMD_LOAD_GAME.length)
             val localId = gameIdentifier.toLong()
             val gameId = GameEntity.getGameId(localId)
-            gameId?.let { GameLauncher.loadAndDisplayGame(gameId) }
+            gameId?.let { gameLauncher.loadAndDisplayGame(gameId) }
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {

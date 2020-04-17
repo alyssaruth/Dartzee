@@ -16,7 +16,7 @@ class TestGameLauncher: AbstractTest()
         val scrn = mockk<AbstractDartsGameScreen>(relaxed = true)
         ScreenCache.addDartsGameScreen("foo", scrn)
 
-        GameLauncher.loadAndDisplayGame("foo")
+        GameLauncher().loadAndDisplayGame("foo")
 
         verify { scrn.displayGame("foo") }
     }
@@ -24,7 +24,7 @@ class TestGameLauncher: AbstractTest()
     @Test
     fun `Should show an error and return if no game exists for the id`()
     {
-        GameLauncher.loadAndDisplayGame("foo")
+        GameLauncher().loadAndDisplayGame("foo")
 
         dialogFactory.errorsShown.shouldContainExactly("Game foo does not exist.")
     }
