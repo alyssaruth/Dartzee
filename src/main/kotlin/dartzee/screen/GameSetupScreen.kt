@@ -26,9 +26,9 @@ class GameSetupScreen : EmbeddedScreen()
     private val launchPanel = JPanel()
     private val btnLaunch = JButton("Launch Game")
     private val playerSelector = PlayerSelector()
-    private val gameTypeComboBox = ComboBoxGameType()
+    val gameTypeComboBox = ComboBoxGameType()
     private val panelGameTypeCb = JPanel()
-    private var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
+    var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
 
     private val matchConfigPanel = RadioButtonPanel()
     private val rdbtnSingleGame = JRadioButton("Single Game")
@@ -216,11 +216,10 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun factoryMatch(): DartsMatchEntity?
     {
-        val games = spinnerWins.value as Int
         return when
         {
-            rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(games)
-            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(games, getPointsXml())
+            rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(spinnerWins.value as Int)
+            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(spinnerGames.value as Int, getPointsXml())
             else -> null
         }
     }
