@@ -4,6 +4,7 @@ import dartzee.`object`.DartsClient
 import dartzee.core.util.CoreRegistry
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
+import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.logger
 import java.util.*
 import javax.swing.UIManager
@@ -29,6 +30,15 @@ fun setLookAndFeel(laf: String)
     }
 
     logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")
+}
+
+fun setLoggingContextFields()
+{
+    logger.addToContext(KEY_USERNAME, getUsername())
+    logger.addToContext(KEY_APP_VERSION, DARTS_VERSION_NUMBER)
+    logger.addToContext(KEY_OPERATING_SYSTEM, DartsClient.operatingSystem)
+    logger.addToContext(KEY_DEVICE_ID, getDeviceId())
+    logger.addToContext(KEY_DEV_MODE, DartsClient.devMode)
 }
 
 fun getDeviceId() = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()

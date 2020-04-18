@@ -5,11 +5,12 @@ import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
 import dartzee.core.util.CoreRegistry.INSTANCE_STRING_USER_NAME
 import dartzee.core.util.CoreRegistry.instance
 import dartzee.helper.AbstractTest
-import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
-import dartzee.logging.CODE_LOOK_AND_FEEL_SET
-import dartzee.logging.Severity
+import dartzee.helper.logger
+import dartzee.logging.*
+import dartzee.utils.DARTS_VERSION_NUMBER
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -101,5 +102,21 @@ class TestMainUtil: AbstractTest()
 
         getUsername() shouldBe "My Awesome Username"
         dialogFactory.inputsShown.shouldContainExactly("Enter your name")
+    }
+
+    @Test
+    fun `Should set up logging context fields`()
+    {
+        instance.put(INSTANCE_STRING_USER_NAME, "some.user")
+        instance.put(INSTANCE_STRING_DEVICE_ID, "some.device")
+        DartsClient.operatingSystem = "Windows 10"
+        DartsClient.devMode = true
+
+        setLoggingContextFields()
+
+        val expectedContextFields = mapOf(KEY_USERNAME to "some.user", KEY_DEVICE_ID to "some.device",
+                KEY_OPERATING_SYSTEM to "Windows 10", KEY_APP_VERSION to DARTS_VERSION_NUMBER, KEY_DEV_MODE to true)
+
+        logger.loggingContext.shouldContainExactly(expectedContextFields)
     }
 }
