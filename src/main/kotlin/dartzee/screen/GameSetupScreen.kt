@@ -174,10 +174,6 @@ class GameSetupScreen : EmbeddedScreen()
         }
         else
         {
-            match.players = selectedPlayers
-            match.gameType = gameTypeComboBox.getGameType()
-            match.gameParams = getGameParams()
-
             gameLauncher.launchNewMatch(match, rules)
         }
     }
