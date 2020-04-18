@@ -3,6 +3,9 @@ package dartzee.`object`
 import dartzee.core.helper.getLogs
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
+import dartzee.logging.CODE_JUST_UPDATED
+import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
+import dartzee.logging.Severity
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import dartzee.utils.PreferenceUtil
@@ -18,13 +21,13 @@ class TestDartsClient: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES)
 
-
     @Test
     fun `Should log unexpected arguments`()
     {
         DartsClient.parseProgramArguments(arrayOf("foo"))
 
-        getLogs() shouldContain "Unexpected program argument: foo"
+        val log = verifyLog(CODE_UNEXPECTED_ARGUMENT, Severity.WARN)
+        log.message shouldContain "foo"
     }
 
     @Test
@@ -43,10 +46,8 @@ class TestDartsClient: AbstractRegistryTest()
     fun `Should parse devMode argument`()
     {
         DartsClient.parseProgramArguments(arrayOf("devMode"))
-        DartsClient.logArgumentState()
 
         DartsClient.devMode shouldBe true
-        getLogs() shouldContain "Running in dev mode"
     }
 
     @Test
@@ -56,7 +57,7 @@ class TestDartsClient: AbstractRegistryTest()
         DartsClient.logArgumentState()
 
         DartsClient.justUpdated shouldBe true
-        getLogs() shouldContain "I've just updated"
+        verifyLog(CODE_JUST_UPDATED)
     }
 
     @Test
