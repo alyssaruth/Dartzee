@@ -14,8 +14,6 @@ import java.awt.event.MouseMotionListener
 import javax.swing.JComponent
 import javax.swing.JLabel
 
-
-
 const val SIZE = 175
 
 class AchievementMedal (private var achievement : AbstractAchievement) : JComponent(), MouseListener, MouseMotionListener
