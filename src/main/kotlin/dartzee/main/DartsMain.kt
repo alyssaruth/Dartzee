@@ -2,10 +2,11 @@ package dartzee.main
 
 import dartzee.`object`.DartsClient
 import dartzee.core.util.*
+import dartzee.logging.USERNAME_SET
 import dartzee.screen.ScreenCache
-import dartzee.utils.ClientEmailer
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDebugExtension
+import dartzee.utils.InjectedThings.logger
 import javax.swing.JOptionPane
 import javax.swing.UIManager
 import kotlin.system.exitProcess
@@ -35,9 +36,6 @@ fun main(args: Array<String>)
 
     DartsClient.logArgumentState()
 
-    Debug.sendingEmails = !DartsClient.devMode
-    ClientEmailer.tryToSendUnsentLogs()
-
     DartsClient.checkForUpdatesIfRequired()
 
     mainScreen.isVisible = true
@@ -62,7 +60,7 @@ private fun checkForUserName()
 
     try
     {
-        ClientEmailer.sendClientEmail("Username notification", "$userName has set their username.")
+        logger.logInfo(USERNAME_SET, "$userName has set their username")
     }
     catch (t: Throwable)
     {

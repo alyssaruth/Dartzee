@@ -12,7 +12,4 @@ class TestDebugExtension: DebugExtension
             DialogUtil.showError("Exception")
         }
     }
-
-    override fun unableToEmailLogs(){}
-    override fun sendEmail(title: String, message: String){}
 }

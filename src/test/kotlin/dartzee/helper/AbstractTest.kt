@@ -55,7 +55,6 @@ abstract class AbstractTest
     private fun doOneTimeSetup()
     {
         Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.sendingEmails = false
         Debug.logToSystemOut = true
 
         Debug.debugExtension = TestDebugExtension()

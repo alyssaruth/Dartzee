@@ -35,18 +35,20 @@ class TestFileUtil: AbstractTest()
     @Test
     fun `Should stack trace and return false if the deletion fails`()
     {
-        val f = File("Test.txt")
-        f.createNewFile()
-        f.setReadOnly()
+        val dir = File("Test/")
+        dir.mkdirs()
 
-        FileUtil.deleteFileIfExists("Test.txt") shouldBe false
+        val f = File("Test/File.txt")
+        f.mkdirs()
+        f.createNewFile()
+
+        FileUtil.deleteFileIfExists("Test") shouldBe false
         exceptionLogged() shouldBe true
         getLogs().shouldContain("Failed to delete file")
-        getLogs().shouldContain("AccessDeniedException")
+        getLogs().shouldContain("DirectoryNotEmptyException")
 
         //Tidy up
-        f.setWritable(true)
-        f.delete()
+        dir.deleteRecursively()
     }
 
     @Test
