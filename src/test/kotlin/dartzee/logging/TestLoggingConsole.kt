@@ -2,6 +2,7 @@ package dartzee.logging
 
 import dartzee.flushEdt
 import dartzee.helper.AbstractTest
+import dartzee.helper.logger
 import dartzee.makeLogRecord
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.string.shouldContain
@@ -127,6 +128,23 @@ class TestLoggingConsole: AbstractTest()
         console.clear()
 
         console.getText() shouldBe ""
+    }
+
+    @Test
+    fun `Should update when logging context changes`()
+    {
+        val record = makeLogRecord()
+        val console = LoggingConsole()
+        console.log(record)
+        console.labelContext.text shouldBe ""
+
+        logger.addToContext("appVersion", "4.1.1")
+        console.log(record)
+        console.labelContext.text shouldBe "appVersion: 4.1.1"
+
+        logger.addToContext("devMode", "false")
+        console.log(record)
+        console.labelContext.text shouldBe "appVersion: 4.1.1  |  devMode: false"
     }
 
     private fun LoggingConsole.getText(): String =

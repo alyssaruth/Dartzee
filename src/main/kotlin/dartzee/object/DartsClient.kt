@@ -24,7 +24,10 @@ object DartsClient
 
     fun logArgumentState()
     {
-        logger.info(CODE_JUST_UPDATED, "Just updated to a new version")
+        if (justUpdated)
+        {
+            logger.info(CODE_JUST_UPDATED, "Just updated to a new version")
+        }
 
         val rt = Runtime.getRuntime()
         val maxMb = rt.maxMemory() / (1024*1024)

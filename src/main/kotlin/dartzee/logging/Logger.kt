@@ -9,7 +9,7 @@ private const val LOGGER_THREAD = "Logger"
 
 class Logger(private val destinations: List<ILogDestination>)
 {
-    private val loggingContext = mutableMapOf<String, Any?>()
+    val loggingContext = mutableMapOf<String, Any?>()
     private val loggerFactory = ThreadFactory { r -> Thread(r, LOGGER_THREAD) }
     private var logService = Executors.newFixedThreadPool(1, loggerFactory)
 

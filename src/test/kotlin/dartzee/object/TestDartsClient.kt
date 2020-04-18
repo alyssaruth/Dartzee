@@ -9,7 +9,6 @@ import dartzee.utils.PreferenceUtil
 import dartzee.utils.UpdateManager
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,26 +18,6 @@ class TestDartsClient: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES)
 
-    @Test
-    fun `Should parse and set logSecret if present`()
-    {
-        DartsClient.logSecret = ""
-        DartsClient.parseProgramArguments(arrayOf("logSecret=foo"))
-        DartsClient.logArgumentState()
-
-        DartsClient.logSecret shouldBe "foo"
-        getLogs() shouldContain "logSecret is present - will email diagnostics"
-    }
-
-    @Test
-    fun `Should fall back on an empty value for logSecret if passed without a value`()
-    {
-        DartsClient.logSecret = "foo"
-        DartsClient.parseProgramArguments(arrayOf("logSecret"))
-
-        DartsClient.logSecret shouldBe ""
-        getLogs() shouldNotContain "Unexpected program argument"
-    }
 
     @Test
     fun `Should log unexpected arguments`()
@@ -53,13 +32,11 @@ class TestDartsClient: AbstractRegistryTest()
     {
         DartsClient.devMode = false
         DartsClient.justUpdated = false
-        DartsClient.logSecret = ""
 
         DartsClient.parseProgramArguments(arrayOf())
 
         DartsClient.devMode shouldBe false
         DartsClient.justUpdated shouldBe false
-        DartsClient.logSecret shouldBe ""
     }
 
     @Test
