@@ -3,10 +3,16 @@ package dartzee.screen
 import dartzee.`object`.GameLauncher
 import dartzee.bean.*
 import dartzee.core.bean.items
+import dartzee.dartzee.dart.DartzeeDartRuleEven
+import dartzee.dartzee.dart.DartzeeDartRuleOdd
+import dartzee.dartzee.total.DartzeeTotalRulePrime
+import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertPlayer
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.ruleDtosEq
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -142,7 +148,23 @@ class TestGameSetupScreen: AbstractTest()
     @Test
     fun `Should retrieve Dartzee rules when launching a Dartzee game from a template`()
     {
+        val templateId = insertDartzeeTemplate().rowId
 
+        val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven())
+        val ruleTwo = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+
+        ruleOne.toEntity(1, DARTZEE_TEMPLATE, templateId).saveToDatabase()
+        ruleTwo.toEntity(2, DARTZEE_TEMPLATE, templateId).saveToDatabase()
+
+        val screen = makeGameSetupScreenReadyToLaunch()
+        screen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
+
+        val dartzeeParamPanel = screen.gameParamFilterPanel as GameParamFilterPanelDartzee
+        dartzeeParamPanel.comboBox.selectedIndex = 2
+
+        screen.btnLaunch.doClick()
+
+        verify { gameLauncher.launchNewGame(any(), GameType.DARTZEE, templateId, ruleDtosEq(listOf(ruleOne, ruleTwo))) }
     }
 
     @Test
@@ -172,5 +194,16 @@ class TestGameSetupScreen: AbstractTest()
     private fun ComboBoxGameType.updateSelection(type: GameType)
     {
         selectedItem = items().find { it.hiddenData == type }
+    }
+    private fun makeGameSetupScreenReadyToLaunch(): GameSetupScreen
+    {
+        val p1 = insertPlayer(strategy = -1)
+        val p2 = insertPlayer(strategy = -1)
+
+        val setupScreen = GameSetupScreen()
+        setupScreen.initialise()
+        setupScreen.playerSelector.init(listOf(p1, p2))
+
+        return setupScreen
     }
 }
