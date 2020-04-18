@@ -1,7 +1,9 @@
 package dartzee.main
 
 import dartzee.`object`.DartsClient
-import dartzee.core.util.CoreRegistry
+import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
+import dartzee.core.util.CoreRegistry.INSTANCE_STRING_USER_NAME
+import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
 import dartzee.utils.DARTS_VERSION_NUMBER
@@ -41,15 +43,15 @@ fun setLoggingContextFields()
     logger.addToContext(KEY_DEV_MODE, DartsClient.devMode)
 }
 
-fun getDeviceId() = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()
+fun getDeviceId() = instance.get(INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()
 private fun setDeviceId(): String
 {
     val deviceId = UUID.randomUUID().toString()
-    CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_DEVICE_ID, deviceId)
+    instance.put(INSTANCE_STRING_DEVICE_ID, deviceId)
     return deviceId
 }
 
-fun getUsername() = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, null) ?: setUsername()
+fun getUsername() = instance.get(INSTANCE_STRING_USER_NAME, null) ?: setUsername()
 private fun setUsername(): String
 {
     logger.info(CODE_USERNAME_UNSET, "No username found, prompting for one now")
@@ -61,6 +63,6 @@ private fun setUsername(): String
     }
 
     logger.info(CODE_USERNAME_SET, "$username has set their username", KEY_USERNAME to username)
-    CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_USER_NAME, username)
+    instance.put(INSTANCE_STRING_USER_NAME, username)
     return username
 }
