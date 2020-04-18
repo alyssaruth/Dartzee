@@ -9,6 +9,7 @@ import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.terminator
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
 import java.sql.DriverManager
@@ -22,7 +23,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    private const val MIN_DB_VERSION_FOR_CONVERSION = 7
+    const val MIN_DB_VERSION_FOR_CONVERSION = 7
     const val DATABASE_VERSION = 11
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
@@ -72,7 +73,7 @@ object DartsDatabaseUtil
         initialiseDatabase(version)
     }
 
-    private fun initialiseDatabase(version: VersionEntity?)
+    fun initialiseDatabase(version: VersionEntity?)
     {
         if (version == null)
         {
@@ -95,7 +96,7 @@ object DartsDatabaseUtil
             DialogUtil.showError("Your database is too out-of-date to run this version of Dartzee. " +
                     "Please downgrade to an earlier version so that your data can be converted.\n\n$dbDetails")
 
-            exitProcess(1)
+            terminator.terminate(1)
         }
 
         logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${versionNumber + 1}")

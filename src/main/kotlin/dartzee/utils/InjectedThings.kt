@@ -17,4 +17,5 @@ object InjectedThings
     var clock: Clock = Clock.systemUTC()
     var logger: Logger = Logger(listOf(ScreenCache.loggingConsole, LogDestinationSystemOut()))
     var gameLauncher: GameLauncher = GameLauncher()
+    var terminator: ITerminator = Terminator()
 }

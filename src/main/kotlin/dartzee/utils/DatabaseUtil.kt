@@ -13,6 +13,7 @@ import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.CachedRowSet
 import javax.sql.rowset.RowSetProvider
+import kotlin.system.exitProcess
 
 const val TABLE_ALREADY_EXISTS = "X0Y32"
 
@@ -194,7 +195,7 @@ class DatabaseUtil
                 {
                     Debug.stackTraceSilently(sqle)
                     DialogUtil.showError("Database already in use - Dartzee will now exit.")
-                    System.exit(1)
+                    exitProcess(1)
                 }
                 else
                 {
