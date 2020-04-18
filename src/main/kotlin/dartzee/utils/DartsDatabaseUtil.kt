@@ -6,7 +6,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
 import dartzee.db.VersionEntity.Companion.insertVersion
-import dartzee.logging.KEY_DB_VERSION
+import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.logger
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -84,33 +84,31 @@ object DartsDatabaseUtil
         if (versionNumber == DATABASE_VERSION)
         {
             //nothing to do
-            Debug.append("Database versions match.")
+            logger.info(CODE_DATABASE_UP_TO_DATE, "Database is up to date")
             return
         }
-        else if (versionNumber < MIN_DB_VERSION_FOR_CONVERSION)
+
+        if (versionNumber < MIN_DB_VERSION_FOR_CONVERSION)
         {
             val dbDetails = "Your version: $versionNumber, min supported: $MIN_DB_VERSION_FOR_CONVERSION, current: $DATABASE_VERSION"
-            Debug.append("Below the minimum version for conversion, aborting - $dbDetails")
+            logger.warn(CODE_DATABASE_TOO_OLD, "Database too old, exiting. $dbDetails")
             DialogUtil.showError("Your database is too out-of-date to run this version of Dartzee. " +
                     "Please downgrade to an earlier version so that your data can be converted.\n\n$dbDetails")
 
             exitProcess(1)
         }
-        else if (versionNumber == 7)
+
+        logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${versionNumber + 1}")
+
+        if (versionNumber == 7)
         {
             runSqlScriptsForVersion(8)
-            version.version = 8
-            version.saveToDatabase()
         }
         else if (versionNumber == 8)
         {
-            Debug.appendBanner("Upgrading to Version 9")
             DartzeeRuleEntity().createTable()
             DartzeeTemplateEntity().createTable()
             DartzeeRoundResultEntity().createTable()
-
-            version.version = 9
-            version.saveToDatabase()
         }
         else if (versionNumber == 9)
         {
@@ -118,9 +116,6 @@ object DartsDatabaseUtil
             runConversions(10,
                     *scripts,
                     { X01FinishConversion.convertX01Finishes() })
-
-            version.version = 10
-            version.saveToDatabase()
         }
         else if (versionNumber == 10)
         {
@@ -128,10 +123,10 @@ object DartsDatabaseUtil
 
             //Added "ScoringSegments"
             DartzeeRuleConversion.convertDartzeeRules()
-
-            version.version = 11
-            version.saveToDatabase()
         }
+
+        version.version = versionNumber + 1
+        version.saveToDatabase()
 
         logger.addToContext(KEY_DB_VERSION, version.version)
         initialiseDatabase(version)
@@ -153,8 +148,6 @@ object DartsDatabaseUtil
 
         t.start()
         t.join()
-
-        Debug.appendBanner("Finished upgrading database")
     }
     private fun runSqlScriptsForVersion(version: Int)
     {
@@ -184,15 +177,13 @@ object DartsDatabaseUtil
     private fun initDatabaseFirstTime()
     {
         DialogUtil.showLoadingDialog("Initialising database, please wait...")
-        Debug.appendBanner("Initting database for the first time")
+        logger.info(CODE_DATABASE_CREATING, "Initialising empty database")
 
         insertVersion()
-
-        Debug.append("Saved database version of $DATABASE_VERSION")
-
         createAllTables()
 
-        Debug.appendBanner("Finished initting database")
+        logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)
+        logger.info(CODE_DATABASE_CREATED, "Finished creating database")
         DialogUtil.dismissLoadingDialog()
     }
 
