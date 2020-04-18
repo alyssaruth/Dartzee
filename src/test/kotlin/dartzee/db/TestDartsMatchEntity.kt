@@ -178,13 +178,15 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     @Test
     fun `Should return the correct points per position in POINTS mode`()
     {
-        val matchParams = constructPointsXml(10, 6, 3, 1)
+        val matchParams = constructPointsXml(15, 9, 6, 3, 2, 1)
         val dm = DartsMatchEntity.factoryPoints(3, matchParams)
 
-        dm.getScoreForFinishingPosition(1) shouldBe 10
-        dm.getScoreForFinishingPosition(2) shouldBe 6
-        dm.getScoreForFinishingPosition(3) shouldBe 3
-        dm.getScoreForFinishingPosition(4) shouldBe 1
+        dm.getScoreForFinishingPosition(1) shouldBe 15
+        dm.getScoreForFinishingPosition(2) shouldBe 9
+        dm.getScoreForFinishingPosition(3) shouldBe 6
+        dm.getScoreForFinishingPosition(4) shouldBe 3
+        dm.getScoreForFinishingPosition(5) shouldBe 2
+        dm.getScoreForFinishingPosition(6) shouldBe 1
         dm.getScoreForFinishingPosition(-1) shouldBe 0
     }
 

@@ -203,10 +203,12 @@ class TestGameSetupScreen: AbstractTest()
 
         scrn.rdbtnPoints.doClick()
         scrn.spinnerGames.value = 8
-        scrn.spinnerPoints1st.value = 10
-        scrn.spinnerPoints2nd.value = 7
-        scrn.spinnerPoints3rd.value = 4
-        scrn.spinnerPoints4th.value = 1
+        scrn.spinners[0].value = 15
+        scrn.spinners[1].value = 9
+        scrn.spinners[2].value = 6
+        scrn.spinners[3].value = 3
+        scrn.spinners[4].value = 2
+        scrn.spinners[5].value = 1
 
         scrn.btnLaunch.doClick()
 
@@ -217,7 +219,7 @@ class TestGameSetupScreen: AbstractTest()
         match.gameParams shouldBe "18"
         match.mode shouldBe DartsMatchEntity.MODE_POINTS
         match.games shouldBe 8
-        match.matchParams shouldBe DartsMatchEntity.constructPointsXml(10, 7, 4, 1)
+        match.matchParams shouldBe DartsMatchEntity.constructPointsXml(15, 9, 6, 3, 2, 1)
     }
 
     @Test

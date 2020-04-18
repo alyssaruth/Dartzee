@@ -3,10 +3,12 @@ package dartzee.screen
 import dartzee.bean.*
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.util.Debug
+import dartzee.core.util.StringUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
@@ -39,15 +41,10 @@ class GameSetupScreen : EmbeddedScreen()
     val spinnerGames = JSpinner()
     val lblWins = JLabel("  wins")
     val lblGames = JLabel("  games  ")
-    val spinnerPoints1st = JSpinner()
-    private val lblst = JLabel("1st")
-    val spinnerPoints2nd = JSpinner()
-    private val lb2nd = JLabel("2nd")
-    val spinnerPoints3rd = JSpinner()
-    private val lb3rd = JLabel("3rd")
-    val spinnerPoints4th = JSpinner()
-    private val lb4th = JLabel("4th")
     val panelPointBreakdown = JPanel()
+
+    val spinners = List(MAX_PLAYERS) { ix -> JSpinner().also { it.model = SpinnerNumberModel(maxOf(0, 4 - ix), 0, 20, 1) } }
+    private val labels = List(MAX_PLAYERS) { ix -> JLabel(StringUtil.convertOrdinalToText(ix + 1)) }
 
     init
     {
@@ -78,18 +75,8 @@ class GameSetupScreen : EmbeddedScreen()
         matchConfigPanel.add(lblWins, "cell 1 1")
         matchConfigPanel.add(lblGames, "cell 1 2,alignx left,aligny top")
         panelPointBreakdown.layout = MigLayout("", "[]", "[]")
-        panelPointBreakdown.add(lblst, "flowy,cell 0 0,alignx center")
-        spinnerPoints1st.model = SpinnerNumberModel(4, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints1st, "cell 0 0,alignx center")
-        panelPointBreakdown.add(lb2nd, "flowy,cell 1 0,alignx center")
-        spinnerPoints2nd.model = SpinnerNumberModel(3, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints2nd, "cell 1 0,alignx center")
-        panelPointBreakdown.add(lb3rd, "flowy,cell 2 0,alignx center")
-        spinnerPoints3rd.model = SpinnerNumberModel(2, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints3rd, "cell 2 0,alignx center")
-        panelPointBreakdown.add(lb4th, "flowy,cell 3 0,alignx center")
-        spinnerPoints4th.model = SpinnerNumberModel(1, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints4th, "cell 3 0,alignx center")
+        labels.forEachIndexed { ix, lbl -> panelPointBreakdown.add(lbl, "flowy,cell $ix 0,alignx center") }
+        spinners.forEachIndexed { ix, spinner -> panelPointBreakdown.add(spinner, "cell $ix 0,alignx center") }
 
         matchConfigPanel.addActionListener(this)
         gameTypeComboBox.addActionListener(this)
@@ -225,10 +212,12 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun getPointsXml(): String
     {
-        return constructPointsXml(spinnerPoints1st.value as Int,
-                spinnerPoints2nd.value as Int,
-                spinnerPoints3rd.value as Int,
-                spinnerPoints4th.value as Int)
+        return constructPointsXml(spinners[0].value as Int,
+                spinners[1].value as Int,
+                spinners[2].value as Int,
+                spinners[3].value as Int,
+                spinners[4].value as Int,
+                spinners[5].value as Int)
     }
 
     override fun getScreenName() = "Game Setup"
