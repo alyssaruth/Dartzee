@@ -4,8 +4,9 @@ import dartzee.core.bean.IDoubleClickListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
-import dartzee.game.GameType
+import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
 import java.awt.Dimension
@@ -114,9 +115,9 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
             return false
         }
 
-        if (rowCount > 6)
+        if (rowCount > MAX_PLAYERS)
         {
-            DialogUtil.showError("You cannot select more than 6 players.")
+            DialogUtil.showError("You cannot select more than $MAX_PLAYERS players.")
             return false
         }
 

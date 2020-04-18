@@ -1,6 +1,10 @@
 --------- v4.1.1 ---------
 
 = Fix bug with Optimal Scorecard rendering
+= Fix bug with the number of games in "First To" matches
+= Fix bug with layout of player selectors
+= Fix bug trying to launch a custom match of Dartzee
+= Fix points based matches to support 6 players
 
 --------- v4.1.0 ---------
 

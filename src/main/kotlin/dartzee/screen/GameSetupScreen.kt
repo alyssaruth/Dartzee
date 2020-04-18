@@ -1,15 +1,18 @@
 package dartzee.screen
 
-import dartzee.`object`.GameLauncher
 import dartzee.bean.*
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.util.Debug
+import dartzee.core.util.StringUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.MAX_PLAYERS
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
+import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.getFilterPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -24,29 +27,24 @@ class GameSetupScreen : EmbeddedScreen()
     private val panelGameType = JPanel()
     private val panelPlayers = JPanel()
     private val launchPanel = JPanel()
-    private val btnLaunch = JButton("Launch Game")
-    private val playerSelector = PlayerSelector()
-    private val gameTypeComboBox = ComboBoxGameType()
+    val btnLaunch = JButton("Launch Game")
+    val playerSelector = PlayerSelector()
+    val gameTypeComboBox = ComboBoxGameType()
     private val panelGameTypeCb = JPanel()
-    private var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
+    var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
 
-    private val matchConfigPanel = RadioButtonPanel()
-    private val rdbtnSingleGame = JRadioButton("Single Game")
-    private val rdbtnFirstTo = JRadioButton("First to")
-    private val rdbtnPoints = JRadioButton("Points-based")
-    private val spinnerWins = JSpinner()
-    private val spinnerGames = JSpinner()
-    private val lblWins = JLabel("  wins")
-    private val lblGames = JLabel("  games  ")
-    private val spinnerPoints1st = JSpinner()
-    private val lblst = JLabel("1st")
-    private val spinnerPoints2nd = JSpinner()
-    private val lb2nd = JLabel("2nd")
-    private val spinnerPoints3rd = JSpinner()
-    private val lb3rd = JLabel("3rd")
-    private val spinnerPoints4th = JSpinner()
-    private val lb4th = JLabel("4th")
-    private val panelPointBreakdown = JPanel()
+    val matchConfigPanel = RadioButtonPanel()
+    val rdbtnSingleGame = JRadioButton("Single Game")
+    val rdbtnFirstTo = JRadioButton("First to")
+    val rdbtnPoints = JRadioButton("Points-based")
+    val spinnerWins = JSpinner()
+    val spinnerGames = JSpinner()
+    val lblWins = JLabel("  wins")
+    val lblGames = JLabel("  games  ")
+    val panelPointBreakdown = JPanel()
+
+    val spinners = List(MAX_PLAYERS) { ix -> JSpinner().also { it.model = SpinnerNumberModel(maxOf(0, 4 - ix), 0, 20, 1) } }
+    private val labels = List(MAX_PLAYERS) { ix -> JLabel(StringUtil.convertOrdinalToText(ix + 1)) }
 
     init
     {
@@ -77,18 +75,8 @@ class GameSetupScreen : EmbeddedScreen()
         matchConfigPanel.add(lblWins, "cell 1 1")
         matchConfigPanel.add(lblGames, "cell 1 2,alignx left,aligny top")
         panelPointBreakdown.layout = MigLayout("", "[]", "[]")
-        panelPointBreakdown.add(lblst, "flowy,cell 0 0,alignx center")
-        spinnerPoints1st.model = SpinnerNumberModel(4, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints1st, "cell 0 0,alignx center")
-        panelPointBreakdown.add(lb2nd, "flowy,cell 1 0,alignx center")
-        spinnerPoints2nd.model = SpinnerNumberModel(3, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints2nd, "cell 1 0,alignx center")
-        panelPointBreakdown.add(lb3rd, "flowy,cell 2 0,alignx center")
-        spinnerPoints3rd.model = SpinnerNumberModel(2, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints3rd, "cell 2 0,alignx center")
-        panelPointBreakdown.add(lb4th, "flowy,cell 3 0,alignx center")
-        spinnerPoints4th.model = SpinnerNumberModel(1, 0, 20, 1)
-        panelPointBreakdown.add(spinnerPoints4th, "cell 3 0,alignx center")
+        labels.forEachIndexed { ix, lbl -> panelPointBreakdown.add(lbl, "flowy,cell $ix 0,alignx center") }
+        spinners.forEachIndexed { ix, spinner -> panelPointBreakdown.add(spinner, "cell $ix 0,alignx center") }
 
         matchConfigPanel.addActionListener(this)
         gameTypeComboBox.addActionListener(this)
@@ -148,14 +136,6 @@ class GameSetupScreen : EmbeddedScreen()
 
         spinnerGames.isVisible = rdbtnPoints.isSelected
         lblGames.isVisible = rdbtnPoints.isSelected
-        lblst.isVisible = rdbtnPoints.isSelected
-        lb2nd.isVisible = rdbtnPoints.isSelected
-        lb3rd.isVisible = rdbtnPoints.isSelected
-        lb4th.isVisible = rdbtnPoints.isSelected
-        spinnerPoints1st.isVisible = rdbtnPoints.isSelected
-        spinnerPoints2nd.isVisible = rdbtnPoints.isSelected
-        spinnerPoints3rd.isVisible = rdbtnPoints.isSelected
-        spinnerPoints4th.isVisible = rdbtnPoints.isSelected
 
         if (rdbtnPoints.isSelected)
         {
@@ -179,26 +159,22 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun launchGame()
     {
-        val match = factoryMatch()
+        val selectedPlayers = playerSelector.getSelectedPlayers()
+        val match = factoryMatch(selectedPlayers)
         if (!playerSelector.valid(match != null, gameTypeComboBox.getGameType()))
         {
             return
         }
 
-        val selectedPlayers = playerSelector.getSelectedPlayers()
         val rules = retrieveDartzeeRules()
 
         if (match == null)
         {
-            GameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
+            gameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
         }
         else
         {
-            match.players = selectedPlayers
-            match.gameType = gameTypeComboBox.getGameType()
-            match.gameParams = getGameParams()
-
-            GameLauncher.launchNewMatch(match, rules)
+            gameLauncher.launchNewMatch(match, rules)
         }
     }
 
@@ -214,23 +190,30 @@ class GameSetupScreen : EmbeddedScreen()
         return rules.map { it.toDto() }
     }
 
-    private fun factoryMatch(): DartsMatchEntity?
+    private fun factoryMatch(players: MutableList<PlayerEntity>): DartsMatchEntity?
     {
-        val games = spinnerWins.value as Int
-        return when
+        val match = when
         {
-            rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(games)
-            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(games, getPointsXml())
+            rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(spinnerWins.value as Int)
+            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(spinnerGames.value as Int, getPointsXml())
             else -> null
+        }
+
+        return match?.also {
+            it.players = players
+            it.gameType = gameTypeComboBox.getGameType()
+            it.gameParams = getGameParams()
         }
     }
 
     private fun getPointsXml(): String
     {
-        return constructPointsXml(spinnerPoints1st.value as Int,
-                spinnerPoints2nd.value as Int,
-                spinnerPoints3rd.value as Int,
-                spinnerPoints4th.value as Int)
+        return constructPointsXml(spinners[0].value as Int,
+                spinners[1].value as Int,
+                spinners[2].value as Int,
+                spinners[3].value as Int,
+                spinners[4].value as Int,
+                spinners[5].value as Int)
     }
 
     override fun getScreenName() = "Game Setup"
@@ -239,13 +222,12 @@ class GameSetupScreen : EmbeddedScreen()
     {
         if (gameTypeComboBox.getGameType() == GameType.DARTZEE)
         {
-            val match = factoryMatch()
+            val selectedPlayers = playerSelector.getSelectedPlayers()
+            val match = factoryMatch(selectedPlayers)
             if (!playerSelector.valid(match != null, GameType.DARTZEE))
             {
                 return
             }
-
-            val selectedPlayers = playerSelector.getSelectedPlayers()
 
             val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
             scrn.setState(match, selectedPlayers)

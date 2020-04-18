@@ -133,6 +133,8 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
             hmPositionToPoints[2] = root.getAttributeInt("Second")
             hmPositionToPoints[3] = root.getAttributeInt("Third")
             hmPositionToPoints[4] = root.getAttributeInt("Fourth")
+            hmPositionToPoints[5] = root.getAttributeInt("Fifth")
+            hmPositionToPoints[6] = root.getAttributeInt("Sixth")
         }
 
         return hmPositionToPoints
@@ -167,14 +169,16 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         const val MODE_FIRST_TO = 0
         const val MODE_POINTS = 1
 
-        fun constructPointsXml(first: Int, second: Int, third: Int, fourth: Int): String
+        fun constructPointsXml(first: Int, second: Int, third: Int, fourth: Int, fifth: Int, sixth: Int): String
         {
             val doc = XmlUtil.factoryNewDocument()
             val rootElement = doc.createRootElement("MatchParams")
-            rootElement.setAttribute("First", "$first")
-            rootElement.setAttribute("Second", "$second")
-            rootElement.setAttribute("Third", "$third")
-            rootElement.setAttribute("Fourth", "$fourth")
+            rootElement.setAttributeAny("First", first)
+            rootElement.setAttributeAny("Second", second)
+            rootElement.setAttributeAny("Third", third)
+            rootElement.setAttributeAny("Fourth", fourth)
+            rootElement.setAttributeAny("Fifth", fifth)
+            rootElement.setAttributeAny("Sixth", sixth)
 
             return doc.toXmlString()
         }

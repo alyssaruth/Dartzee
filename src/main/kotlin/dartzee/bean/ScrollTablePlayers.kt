@@ -38,7 +38,7 @@ fun ScrollTable.getSelectedPlayers(): MutableList<PlayerEntity>
     return ret
 }
 
-private fun ScrollTable.getPlayerEntityForRow(row: Int): PlayerEntity
+fun ScrollTable.getPlayerEntityForRow(row: Int): PlayerEntity
 {
     return table.getValueAt(row, 1) as PlayerEntity
 }

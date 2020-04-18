@@ -2,12 +2,14 @@ package dartzee
 
 import dartzee.`object`.*
 import dartzee.core.helper.makeMouseEvent
+import dartzee.dartzee.DartzeeRuleDto
 import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.screen.Dartboard
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.shouldBe
+import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
@@ -101,4 +103,8 @@ fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom
     insets.right shouldBe right
     insets.top shouldBe top
     insets.bottom shouldBe bottom
+}
+
+fun MockKMatcherScope.ruleDtosEq(players: List<DartzeeRuleDto>) = match<List<DartzeeRuleDto>> {
+    it.map { p -> p.generateRuleDescription() } == players.map { p -> p.generateRuleDescription() }
 }

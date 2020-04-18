@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.`object`.GameLauncher
 import dartzee.dartzee.*
 import dartzee.logging.Logger
 import dartzee.screen.ScreenCache
@@ -14,4 +15,5 @@ object InjectedThings
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
     var clock: Clock = Clock.systemUTC()
     var logger: Logger = Logger(listOf(ScreenCache.loggingConsole))
+    var gameLauncher: GameLauncher = GameLauncher()
 }

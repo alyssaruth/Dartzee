@@ -15,6 +15,7 @@ import dartzee.logging.Logger
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
+import io.mockk.clearAllMocks
 import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After
 import org.junit.Before
@@ -83,6 +84,7 @@ abstract class AbstractTest
         Debug.initialise(TestDebug.SimpleDebugOutput())
         dialogFactory.reset()
         clearLogs()
+        clearAllMocks()
 
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }

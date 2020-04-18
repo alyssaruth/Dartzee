@@ -11,9 +11,9 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
 
-class ScrollTableOrdered : ScrollTable(), ActionListener
+class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
 {
-    private val panelOrdering = JPanel()
+    val panelOrdering = JPanel()
     val btnMoveUp = JButton("")
     val btnMoveDown = JButton("")
     val btnRandomize = JButton("")
@@ -26,17 +26,17 @@ class ScrollTableOrdered : ScrollTable(), ActionListener
         btnMoveUp.preferredSize = Dimension(40, 40)
         btnMoveUp.toolTipText = "Move row up"
 
-        panelOrdering.add(btnMoveUp, "cell 0 3")
+        panelOrdering.add(btnMoveUp, "cell 0 $customButtons")
         btnMoveDown.icon = ImageIcon(javaClass.getResource("/buttons/downArrow.png"))
         btnMoveDown.preferredSize = Dimension(40, 40)
         btnMoveDown.toolTipText = "Move row down"
 
-        panelOrdering.add(btnMoveDown, "cell 0 4")
+        panelOrdering.add(btnMoveDown, "cell 0 ${customButtons + 1}")
         btnRandomize.icon = ImageIcon(javaClass.getResource("/buttons/dice.png"))
         btnRandomize.preferredSize = Dimension(40, 40)
         btnRandomize.toolTipText = "Randomise row order"
 
-        panelOrdering.add(btnRandomize, "cell 0 5")
+        panelOrdering.add(btnRandomize, "cell 0 ${customButtons + 2}")
 
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
 
