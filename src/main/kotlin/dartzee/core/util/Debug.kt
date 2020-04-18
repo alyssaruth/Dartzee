@@ -24,7 +24,6 @@ object Debug
 
     //Config
     var logToSystemOut = false
-    var productDesc = ""
     var debugExtension: DebugExtension? = null
 
     fun append(text: String, logging: Boolean = true, includeDate: Boolean = true)

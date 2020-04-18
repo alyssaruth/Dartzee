@@ -22,22 +22,20 @@ fun main(args: Array<String>)
 {
     DartsClient.parseProgramArguments(args)
 
-    if (!DartsClient.trueLaunch)
+    if (!DartsClient.trueLaunch && !DartsClient.isAppleOs())
     {
         Runtime.getRuntime().exec("cmd /c start javaw -Xms256m -Xmx512m -jar Dartzee.jar trueLaunch")
         exitProcess(0)
     }
 
     Debug.initialise(ScreenCache.debugConsole)
-    getUsername()
-    setOtherLoggingContextFields()
+    setLoggingContextFields()
 
     DialogUtil.init(MessageDialogFactory())
 
     setLookAndFeel()
 
     Debug.debugExtension = DartsDebugExtension()
-    Debug.productDesc = "Darts $DARTS_VERSION_NUMBER"
     Debug.logToSystemOut = true
 
     val mainScreen = ScreenCache.mainScreen
@@ -51,12 +49,13 @@ fun main(args: Array<String>)
     mainScreen.init()
 }
 
-private fun setOtherLoggingContextFields()
+private fun setLoggingContextFields()
 {
     logger.addToContext(KEY_USERNAME, getUsername())
     logger.addToContext(KEY_APP_VERSION, DARTS_VERSION_NUMBER)
     logger.addToContext(KEY_OPERATING_SYSTEM, DartsClient.operatingSystem)
     logger.addToContext(KEY_DEVICE_ID, getDeviceId())
+    logger.addToContext(KEY_DEV_MODE, DartsClient.devMode)
 }
 
 private fun getDeviceId() = instance.get(INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()
@@ -70,7 +69,7 @@ private fun setDeviceId(): String
 private fun getUsername() = instance.get(INSTANCE_STRING_USER_NAME, null) ?: setUsername()
 private fun setUsername(): String
 {
-    logger.logInfo(USERNAME_UNSET, "No username found, prompting for one now")
+    logger.info(CODE_USERNAME_UNSET, "No username found, prompting for one now")
 
     var username: String? = null
     while (username == null || username.isEmpty())
@@ -78,14 +77,13 @@ private fun setUsername(): String
         username = JOptionPane.showInputDialog(null, "Please enter your name (for debugging purposes).\nThis will only be asked for once.", "Enter your name")
     }
 
-    logger.logInfo(USERNAME_SET, "$username has set their username", KEY_USERNAME to username)
+    logger.info(CODE_USERNAME_SET, "$username has set their username", KEY_USERNAME to username)
     instance.put(INSTANCE_STRING_USER_NAME, username)
     return username
 }
 
 private fun setLookAndFeel()
 {
-    Debug.append("Initialising Look & Feel - Operating System: ${DartsClient.operatingSystem}")
     if (DartsClient.isAppleOs())
     {
         setLookAndFeel("javax.swing.plaf.metal")
@@ -102,10 +100,11 @@ private fun setLookAndFeel(laf: String)
     {
         UIManager.setLookAndFeel(laf)
     }
-    catch (e: Exception)
+    catch (e: Throwable)
     {
-        Debug.append("Failed to load LookAndFeel $laf. Caught $e")
+        logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)
         DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")
     }
 
+    logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")
 }

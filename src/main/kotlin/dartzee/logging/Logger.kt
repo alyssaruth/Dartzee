@@ -21,15 +21,20 @@ class Logger(private val destinations: List<ILogDestination>)
     fun logSql(sqlStatement: String, genericStatement: String, duration: Long)
     {
         val message = "(${duration}ms) $sqlStatement"
-        logInfo(CODE_SQL, message, KEY_DURATION to duration, KEY_GENERIC_SQL to genericStatement, KEY_SQL to sqlStatement)
+        info(CODE_SQL, message, KEY_DURATION to duration, KEY_GENERIC_SQL to genericStatement, KEY_SQL to sqlStatement)
     }
 
-    fun logInfo(code: LoggingCode, message: String, vararg keyValuePairs: Pair<String, Any?>)
+    fun info(code: LoggingCode, message: String, vararg keyValuePairs: Pair<String, Any?>)
     {
         log(Severity.INFO, code, message, null, mapOf(*keyValuePairs))
     }
 
-    fun logError(code: LoggingCode, message: String, errorObject: Throwable, vararg keyValuePairs: Pair<String, Any?>)
+    fun warn(code: LoggingCode, message: String, vararg keyValuePairs: Pair<String, Any?>)
+    {
+        log(Severity.WARN, code, message, null, mapOf(*keyValuePairs))
+    }
+
+    fun error(code: LoggingCode, message: String, errorObject: Throwable, vararg keyValuePairs: Pair<String, Any?>)
     {
         log(Severity.ERROR, code, message, errorObject, mapOf(*keyValuePairs, KEY_EXCEPTION_MESSAGE to errorObject.message))
     }

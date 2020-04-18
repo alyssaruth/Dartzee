@@ -121,7 +121,7 @@ object BulkInserter
         if (rowCount > 500)
         {
             logInserts = false
-            logger.logInfo(CODE_BULK_SQL, "Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
+            logger.info(CODE_BULK_SQL, "Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")
         }
 
         threads.forEach { it.start() }
