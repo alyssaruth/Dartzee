@@ -7,6 +7,7 @@ import java.util.*
 
 enum class Severity {
     INFO,
+    WARN,
     ERROR
 }
 

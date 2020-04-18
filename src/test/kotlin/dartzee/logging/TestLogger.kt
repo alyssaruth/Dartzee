@@ -18,7 +18,7 @@ class TestLogger: AbstractTest()
         val logger = Logger(listOf(destination))
 
         val loggingCode = LoggingCode("some.event")
-        logger.logInfo(loggingCode, "A thing happened")
+        logger.info(loggingCode, "A thing happened")
         logger.waitUntilLoggingFinished()
 
         val record = destination.logRecords.first()
@@ -37,7 +37,7 @@ class TestLogger: AbstractTest()
         val logger = Logger(listOf(destination))
 
         val loggingCode = LoggingCode("some.event")
-        logger.logInfo(loggingCode, "A thing happened", "Key" to "Value")
+        logger.info(loggingCode, "A thing happened", "Key" to "Value")
         logger.waitUntilLoggingFinished()
 
         val record = destination.logRecords.first()
@@ -50,6 +50,25 @@ class TestLogger: AbstractTest()
     }
 
     @Test
+    fun `Should log WARN`()
+    {
+        val destination = FakeLogDestination()
+        val logger = Logger(listOf(destination))
+
+        val loggingCode = LoggingCode("some.event")
+        logger.warn(loggingCode, "A slightly bad thing happened")
+        logger.waitUntilLoggingFinished()
+
+        val record = destination.logRecords.first()
+        record.severity shouldBe Severity.WARN
+        record.loggingCode shouldBe loggingCode
+        record.message shouldBe "A slightly bad thing happened"
+        record.errorObject shouldBe null
+        record.timestamp shouldBe CURRENT_TIME
+        record.keyValuePairs.size shouldBe 0
+    }
+
+    @Test
     fun `Should log ERROR`()
     {
         val destination = FakeLogDestination()
@@ -57,7 +76,7 @@ class TestLogger: AbstractTest()
 
         val loggingCode = LoggingCode("bad.thing")
         val throwable = Throwable("Boo")
-        logger.logError(LoggingCode("bad.thing"), "An exception happened!", throwable, "other.info" to 60)
+        logger.error(LoggingCode("bad.thing"), "An exception happened!", throwable, "other.info" to 60)
         logger.waitUntilLoggingFinished()
 
         val record = destination.logRecords.first()
@@ -97,7 +116,7 @@ class TestLogger: AbstractTest()
         val destinationOne = FakeLogDestination()
         val destinationTwo = FakeLogDestination()
         val logger = Logger(listOf(destinationOne, destinationTwo))
-        logger.logInfo(LoggingCode("foo"), "bar")
+        logger.info(LoggingCode("foo"), "bar")
         logger.waitUntilLoggingFinished()
 
         destinationOne.logRecords.shouldHaveSize(1)
@@ -110,7 +129,7 @@ class TestLogger: AbstractTest()
         val destination = SleepyLogDestination()
         val logger = Logger(listOf(destination))
 
-        logger.logInfo(LoggingCode("foo"), "bar")
+        logger.info(LoggingCode("foo"), "bar")
 
         destination.logRecords.shouldBeEmpty()
         logger.waitUntilLoggingFinished()
@@ -123,13 +142,27 @@ class TestLogger: AbstractTest()
         val destination = SleepyLogDestination()
         val logger = Logger(listOf(destination))
 
-        logger.logInfo(LoggingCode("foo"), "bar")
+        logger.info(LoggingCode("foo"), "bar")
         logger.waitUntilLoggingFinished()
 
-        logger.logInfo(LoggingCode("foo"), "baz")
+        logger.info(LoggingCode("foo"), "baz")
         logger.waitUntilLoggingFinished()
 
         destination.logRecords.shouldHaveSize(2)
+    }
+
+    @Test
+    fun `Should automatically include logging context fields`()
+    {
+        val destination = FakeLogDestination()
+        val logger = Logger(listOf(destination))
+
+        logger.addToContext("appVersion", "4.1.1")
+        logger.info(LoggingCode("foo"), "a thing happened", "otherKey" to "otherValue")
+        logger.waitUntilLoggingFinished()
+
+        val record = destination.logRecords.last()
+        record.shouldContainKeyValues("appVersion" to "4.1.1", "otherKey" to "otherValue")
     }
 
     private fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
