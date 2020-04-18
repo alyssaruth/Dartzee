@@ -15,7 +15,6 @@ import dartzee.utils.DartsDebugExtension
 import dartzee.utils.InjectedThings.logger
 import java.util.*
 import javax.swing.JOptionPane
-import javax.swing.UIManager
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>)
@@ -80,31 +79,4 @@ private fun setUsername(): String
     logger.info(CODE_USERNAME_SET, "$username has set their username", KEY_USERNAME to username)
     instance.put(INSTANCE_STRING_USER_NAME, username)
     return username
-}
-
-private fun setLookAndFeel()
-{
-    if (DartsClient.isAppleOs())
-    {
-        setLookAndFeel("javax.swing.plaf.metal")
-    }
-    else
-    {
-        setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-    }
-}
-
-private fun setLookAndFeel(laf: String)
-{
-    try
-    {
-        UIManager.setLookAndFeel(laf)
-    }
-    catch (e: Throwable)
-    {
-        logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)
-        DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")
-    }
-
-    logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")
 }

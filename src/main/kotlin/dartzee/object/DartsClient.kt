@@ -46,7 +46,7 @@ object DartsClient
         }
     }
 
-    fun isAppleOs() = operatingSystem.contains("mac") || operatingSystem.contains("darwin")
+    fun isAppleOs() = operatingSystem.contains("mac", ignoreCase = true) || operatingSystem.contains("darwin", ignoreCase = true)
 
     fun checkForUpdatesIfRequired()
     {

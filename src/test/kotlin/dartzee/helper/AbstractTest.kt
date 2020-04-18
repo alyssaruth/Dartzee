@@ -10,10 +10,7 @@ import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TestDebug
 import dartzee.db.LocalIdGenerator
-import dartzee.logging.LogRecord
-import dartzee.logging.Logger
-import dartzee.logging.LoggingCode
-import dartzee.logging.Severity
+import dartzee.logging.*
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
@@ -30,7 +27,7 @@ import kotlin.test.assertNotNull
 private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
 private var doneOneTimeSetup = false
 private val logDestination = FakeLogDestination()
-val logger = Logger(listOf(logDestination))
+val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
 
 abstract class AbstractTest
 {
@@ -99,6 +96,7 @@ abstract class AbstractTest
         if (!checkedForExceptions)
         {
             exceptionLogged() shouldBe false
+            errorLogged() shouldBe false
         }
 
         checkedForExceptions = false
@@ -110,7 +108,19 @@ abstract class AbstractTest
     {
         val record = getLogRecords().find { it.loggingCode == code && it.severity == severity }
         assertNotNull(record)
+
+        if (severity == Severity.ERROR)
+        {
+            checkedForExceptions = true
+        }
+
         return record
+    }
+
+    fun errorLogged(): Boolean
+    {
+        checkedForExceptions = true
+        return getLogRecords().any { it.severity == Severity.ERROR }
     }
 
     fun getLogRecords(): List<LogRecord>
