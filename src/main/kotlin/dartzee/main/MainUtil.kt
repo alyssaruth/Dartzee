@@ -1,10 +1,11 @@
 package dartzee.main
 
 import dartzee.`object`.DartsClient
+import dartzee.core.util.CoreRegistry
 import dartzee.core.util.DialogUtil
-import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
-import dartzee.logging.CODE_LOOK_AND_FEEL_SET
+import dartzee.logging.*
 import dartzee.utils.InjectedThings.logger
+import java.util.*
 import javax.swing.UIManager
 
 fun setLookAndFeel()
@@ -28,4 +29,28 @@ fun setLookAndFeel(laf: String)
     }
 
     logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")
+}
+
+fun getDeviceId() = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()
+private fun setDeviceId(): String
+{
+    val deviceId = UUID.randomUUID().toString()
+    CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_DEVICE_ID, deviceId)
+    return deviceId
+}
+
+fun getUsername() = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, null) ?: setUsername()
+private fun setUsername(): String
+{
+    logger.info(CODE_USERNAME_UNSET, "No username found, prompting for one now")
+
+    var username: String? = null
+    while (username == null || username.isEmpty())
+    {
+        username = DialogUtil.showInput("Enter your name", "Please enter your name (for debugging purposes).\nThis will only be asked for once.")
+    }
+
+    logger.info(CODE_USERNAME_SET, "$username has set their username", KEY_USERNAME to username)
+    CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_USER_NAME, username)
+    return username
 }

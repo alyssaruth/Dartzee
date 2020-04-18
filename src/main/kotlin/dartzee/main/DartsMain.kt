@@ -1,7 +1,6 @@
 package dartzee.main
 
 import dartzee.`object`.DartsClient
-import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
 import dartzee.core.util.CoreRegistry.INSTANCE_STRING_USER_NAME
 import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.Debug
@@ -13,8 +12,6 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDebugExtension
 import dartzee.utils.InjectedThings.logger
-import java.util.*
-import javax.swing.JOptionPane
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>)
@@ -28,9 +25,9 @@ fun main(args: Array<String>)
     }
 
     Debug.initialise(ScreenCache.debugConsole)
-    setLoggingContextFields()
-
     DialogUtil.init(MessageDialogFactory())
+
+    setLoggingContextFields()
 
     setLookAndFeel()
 
@@ -55,28 +52,4 @@ private fun setLoggingContextFields()
     logger.addToContext(KEY_OPERATING_SYSTEM, DartsClient.operatingSystem)
     logger.addToContext(KEY_DEVICE_ID, getDeviceId())
     logger.addToContext(KEY_DEV_MODE, DartsClient.devMode)
-}
-
-private fun getDeviceId() = instance.get(INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()
-private fun setDeviceId(): String
-{
-    val deviceId = UUID.randomUUID().toString()
-    instance.put(INSTANCE_STRING_DEVICE_ID, deviceId)
-    return deviceId
-}
-
-private fun getUsername() = instance.get(INSTANCE_STRING_USER_NAME, null) ?: setUsername()
-private fun setUsername(): String
-{
-    logger.info(CODE_USERNAME_UNSET, "No username found, prompting for one now")
-
-    var username: String? = null
-    while (username == null || username.isEmpty())
-    {
-        username = JOptionPane.showInputDialog(null, "Please enter your name (for debugging purposes).\nThis will only be asked for once.", "Enter your name")
-    }
-
-    logger.info(CODE_USERNAME_SET, "$username has set their username", KEY_USERNAME to username)
-    instance.put(INSTANCE_STRING_USER_NAME, username)
-    return username
 }
