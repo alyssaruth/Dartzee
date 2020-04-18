@@ -14,6 +14,7 @@ import java.awt.Point
 import java.time.Instant
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
+import javax.swing.table.DefaultTableModel
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
 val outerBull = DartboardSegment("25_$SEGMENT_TYPE_OUTER_SINGLE")
@@ -101,4 +102,12 @@ fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom
     insets.right shouldBe right
     insets.top shouldBe top
     insets.bottom shouldBe bottom
+}
+
+fun DefaultTableModel.findRowIndex()
+{
+    for (i in 0 until rowCount)
+    {
+
+    }
 }

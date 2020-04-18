@@ -18,7 +18,7 @@ import javax.swing.border.EmptyBorder
 
 class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
 {
-    val tableRules = ScrollTableOrdered()
+    val tableRules = ScrollTableOrdered(3)
     val btnAddRule = JButton()
     val btnAmendRule = JButton()
     val btnRemoveRule = JButton()

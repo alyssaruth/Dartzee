@@ -25,7 +25,7 @@ class GameSetupScreen : EmbeddedScreen()
     private val panelPlayers = JPanel()
     private val launchPanel = JPanel()
     val btnLaunch = JButton("Launch Game")
-    private val playerSelector = PlayerSelector()
+    val playerSelector = PlayerSelector()
     val gameTypeComboBox = ComboBoxGameType()
     private val panelGameTypeCb = JPanel()
     var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
@@ -34,17 +34,17 @@ class GameSetupScreen : EmbeddedScreen()
     private val rdbtnSingleGame = JRadioButton("Single Game")
     private val rdbtnFirstTo = JRadioButton("First to")
     private val rdbtnPoints = JRadioButton("Points-based")
-    private val spinnerWins = JSpinner()
-    private val spinnerGames = JSpinner()
-    private val lblWins = JLabel("  wins")
-    private val lblGames = JLabel("  games  ")
-    private val spinnerPoints1st = JSpinner()
+    val spinnerWins = JSpinner()
+    val spinnerGames = JSpinner()
+    val lblWins = JLabel("  wins")
+    val lblGames = JLabel("  games  ")
+    val spinnerPoints1st = JSpinner()
     private val lblst = JLabel("1st")
-    private val spinnerPoints2nd = JSpinner()
+    val spinnerPoints2nd = JSpinner()
     private val lb2nd = JLabel("2nd")
-    private val spinnerPoints3rd = JSpinner()
+    val spinnerPoints3rd = JSpinner()
     private val lb3rd = JLabel("3rd")
-    private val spinnerPoints4th = JSpinner()
+    val spinnerPoints4th = JSpinner()
     private val lb4th = JLabel("4th")
     private val panelPointBreakdown = JPanel()
 
@@ -148,14 +148,6 @@ class GameSetupScreen : EmbeddedScreen()
 
         spinnerGames.isVisible = rdbtnPoints.isSelected
         lblGames.isVisible = rdbtnPoints.isSelected
-        lblst.isVisible = rdbtnPoints.isSelected
-        lb2nd.isVisible = rdbtnPoints.isSelected
-        lb3rd.isVisible = rdbtnPoints.isSelected
-        lb4th.isVisible = rdbtnPoints.isSelected
-        spinnerPoints1st.isVisible = rdbtnPoints.isSelected
-        spinnerPoints2nd.isVisible = rdbtnPoints.isSelected
-        spinnerPoints3rd.isVisible = rdbtnPoints.isSelected
-        spinnerPoints4th.isVisible = rdbtnPoints.isSelected
 
         if (rdbtnPoints.isSelected)
         {
