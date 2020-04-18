@@ -13,8 +13,8 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
 {
     private val dartzeeRulePanel = DartzeeRuleSetupPanel()
 
-    private var match: DartsMatchEntity? = null
-    private var players: List<PlayerEntity> = listOf()
+    var match: DartsMatchEntity? = null
+    var players: List<PlayerEntity> = listOf()
 
     init
     {

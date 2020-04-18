@@ -7,6 +7,7 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.utils.InjectedThings.gameLauncher
@@ -171,13 +172,13 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun launchGame()
     {
-        val match = factoryMatch()
+        val selectedPlayers = playerSelector.getSelectedPlayers()
+        val match = factoryMatch(selectedPlayers)
         if (!playerSelector.valid(match != null, gameTypeComboBox.getGameType()))
         {
             return
         }
 
-        val selectedPlayers = playerSelector.getSelectedPlayers()
         val rules = retrieveDartzeeRules()
 
         if (match == null)
@@ -206,13 +207,19 @@ class GameSetupScreen : EmbeddedScreen()
         return rules.map { it.toDto() }
     }
 
-    private fun factoryMatch(): DartsMatchEntity?
+    private fun factoryMatch(players: MutableList<PlayerEntity>): DartsMatchEntity?
     {
-        return when
+        val match = when
         {
             rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(spinnerWins.value as Int)
             rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(spinnerGames.value as Int, getPointsXml())
             else -> null
+        }
+
+        return match?.also {
+            it.players = players
+            it.gameType = gameTypeComboBox.getGameType()
+            it.gameParams = getGameParams()
         }
     }
 
@@ -230,13 +237,12 @@ class GameSetupScreen : EmbeddedScreen()
     {
         if (gameTypeComboBox.getGameType() == GameType.DARTZEE)
         {
-            val match = factoryMatch()
+            val selectedPlayers = playerSelector.getSelectedPlayers()
+            val match = factoryMatch(selectedPlayers)
             if (!playerSelector.valid(match != null, GameType.DARTZEE))
             {
                 return
             }
-
-            val selectedPlayers = playerSelector.getSelectedPlayers()
 
             val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
             scrn.setState(match, selectedPlayers)

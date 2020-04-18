@@ -7,20 +7,22 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.db.DARTZEE_TEMPLATE
+import dartzee.db.DartsMatchEntity
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.ruleDtosEq
+import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.utils.InjectedThings
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.junit.Test
 
 class TestGameSetupScreen: AbstractTest()
@@ -170,25 +172,123 @@ class TestGameSetupScreen: AbstractTest()
     @Test
     fun `Should launch a first-to match with the right parameters`()
     {
+        val slot = slot<DartsMatchEntity>()
+        every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
 
+        val scrn = makeGameSetupScreenReadyToLaunch()
+
+        scrn.rdbtnFirstTo.doClick()
+        scrn.spinnerWins.value = 7
+
+        scrn.btnLaunch.doClick()
+
+        verify { gameLauncher.launchNewMatch(any(), null)}
+
+        val match = slot.captured
+        match.gameType shouldBe GameType.X01
+        match.gameParams shouldBe "501"
+        match.mode shouldBe DartsMatchEntity.MODE_FIRST_TO
+        match.games shouldBe 7
+        match.matchParams shouldBe ""
     }
 
     @Test
     fun `Should launch a points based match with the right parameters`()
     {
+        val slot = slot<DartsMatchEntity>()
+        every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
 
+        val scrn = makeGameSetupScreenReadyToLaunch()
+        scrn.gameTypeComboBox.updateSelection(GameType.GOLF)
+
+        scrn.rdbtnPoints.doClick()
+        scrn.spinnerGames.value = 8
+        scrn.spinnerPoints1st.value = 10
+        scrn.spinnerPoints2nd.value = 7
+        scrn.spinnerPoints3rd.value = 4
+        scrn.spinnerPoints4th.value = 1
+
+        scrn.btnLaunch.doClick()
+
+        verify { gameLauncher.launchNewMatch(any(), null)}
+
+        val match = slot.captured
+        match.gameType shouldBe GameType.GOLF
+        match.gameParams shouldBe "18"
+        match.mode shouldBe DartsMatchEntity.MODE_POINTS
+        match.games shouldBe 8
+        match.matchParams shouldBe DartsMatchEntity.constructPointsXml(10, 7, 4, 1)
     }
 
     @Test
     fun `Should perform validation on Dartzee mode when trying to hit Next`()
     {
+        val p1 = insertPlayer(strategy = 1)
+        val p2 = insertPlayer(strategy = 1)
 
+        val setupScreen = GameSetupScreen()
+        setupScreen.initialise()
+        setupScreen.playerSelector.init(listOf(p1, p2))
+
+        setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
+        setupScreen.btnNext.doClick()
+
+        dialogFactory.errorsShown.shouldContainExactly("You cannot select AI opponents for Dartzee.")
     }
 
     @Test
     fun `Should switch to the DartzeeRuleSetupScreen on Next, passing through the right parameters`()
     {
+        val p1 = insertPlayer(strategy = -1)
+        val p2 = insertPlayer(strategy = -1)
 
+        val setupScreen = GameSetupScreen()
+        setupScreen.initialise()
+        setupScreen.playerSelector.init(listOf(p1, p2))
+
+        setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
+        setupScreen.btnNext.doClick()
+
+        dialogFactory.errorsShown.shouldBeEmpty()
+
+        val currentScreen = ScreenCache.currentScreen()!!
+        currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
+
+        val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen
+        dartzeeScreen.players.shouldContainExactly(p1, p2)
+        dartzeeScreen.match shouldBe null
+        dartzeeScreen.btnNext.text shouldBe "Launch Game >"
+    }
+
+    @Test
+    fun `Should switch to the DartzeeRuleSetupScreen for a match`()
+    {
+        val p1 = insertPlayer(strategy = -1)
+        val p2 = insertPlayer(strategy = -1)
+
+        val setupScreen = GameSetupScreen()
+        setupScreen.initialise()
+        setupScreen.playerSelector.init(listOf(p1, p2))
+
+        setupScreen.rdbtnFirstTo.doClick()
+        setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
+        setupScreen.btnNext.doClick()
+
+        dialogFactory.errorsShown.shouldBeEmpty()
+
+        val currentScreen = ScreenCache.currentScreen()!!
+        currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
+
+        val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen
+        dartzeeScreen.players.shouldContainExactly(p1, p2)
+        dartzeeScreen.btnNext.text shouldBe "Launch Match >"
+
+        val match = dartzeeScreen.match!!
+        match.games shouldBe 2
+        match.mode shouldBe DartsMatchEntity.MODE_FIRST_TO
+        match.gameParams shouldBe ""
+        match.gameType shouldBe GameType.DARTZEE
+        match.players.shouldContainExactly(p1, p2)
     }
 
     private fun ComboBoxGameType.updateSelection(type: GameType)
