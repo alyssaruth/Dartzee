@@ -132,6 +132,20 @@ class TestLogger: AbstractTest()
         destination.logRecords.shouldHaveSize(2)
     }
 
+    @Test
+    fun `Should automatically include logging context fields`()
+    {
+        val destination = FakeLogDestination()
+        val logger = Logger(listOf(destination))
+
+        logger.addToContext("appVersion", "4.1.1")
+        logger.logInfo(LoggingCode("foo"), "a thing happened", "otherKey" to "otherValue")
+        logger.waitUntilLoggingFinished()
+
+        val record = destination.logRecords.last()
+        record.shouldContainKeyValues("appVersion" to "4.1.1", "otherKey" to "otherValue")
+    }
+
     private fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
     {
         keyValuePairs.shouldContainExactly(mapOf(*values))
