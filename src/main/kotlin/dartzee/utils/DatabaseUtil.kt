@@ -3,6 +3,8 @@ package dartzee.utils
 import dartzee.`object`.DartsClient
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
+import dartzee.logging.CODE_TABLE_CREATED
+import dartzee.logging.CODE_TABLE_EXISTS
 import dartzee.utils.InjectedThings.logger
 import java.sql.Connection
 import java.sql.DriverManager
@@ -209,14 +211,14 @@ class DatabaseUtil
             try
             {
                 executeUpdateUncaught(statement)
-                Debug.append("Created $tableName table.")
+                logger.info(CODE_TABLE_CREATED, "Created $tableName")
             }
             catch (sqle: SQLException)
             {
                 val state = sqle.sqlState
                 if (state == TABLE_ALREADY_EXISTS)
                 {
-                    Debug.append("$tableName table already exists")
+                    logger.info(CODE_TABLE_EXISTS, "$tableName already exists")
                 }
                 else
                 {

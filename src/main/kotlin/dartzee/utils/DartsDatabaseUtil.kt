@@ -6,7 +6,9 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
 import dartzee.db.VersionEntity.Companion.insertVersion
+import dartzee.logging.KEY_DB_VERSION
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.logger
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
 import java.sql.DriverManager
@@ -62,6 +64,8 @@ object DartsDatabaseUtil
         //Ensure this exists
         VersionEntity().createTable()
         val version = VersionEntity.retrieveCurrentDatabaseVersion()
+
+        logger.addToContext(KEY_DB_VERSION, version?.version)
 
         DialogUtil.dismissLoadingDialog()
 
@@ -129,6 +133,7 @@ object DartsDatabaseUtil
             version.saveToDatabase()
         }
 
+        logger.addToContext(KEY_DB_VERSION, version.version)
         initialiseDatabase(version)
     }
 
