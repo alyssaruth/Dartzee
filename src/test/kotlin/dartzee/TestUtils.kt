@@ -103,11 +103,3 @@ fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom
     insets.top shouldBe top
     insets.bottom shouldBe bottom
 }
-
-fun DefaultTableModel.findRowIndex()
-{
-    for (i in 0 until rowCount)
-    {
-
-    }
-}

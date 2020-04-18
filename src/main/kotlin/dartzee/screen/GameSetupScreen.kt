@@ -30,10 +30,10 @@ class GameSetupScreen : EmbeddedScreen()
     private val panelGameTypeCb = JPanel()
     var gameParamFilterPanel: GameParamFilterPanel = GameParamFilterPanelX01()
 
-    private val matchConfigPanel = RadioButtonPanel()
-    private val rdbtnSingleGame = JRadioButton("Single Game")
-    private val rdbtnFirstTo = JRadioButton("First to")
-    private val rdbtnPoints = JRadioButton("Points-based")
+    val matchConfigPanel = RadioButtonPanel()
+    val rdbtnSingleGame = JRadioButton("Single Game")
+    val rdbtnFirstTo = JRadioButton("First to")
+    val rdbtnPoints = JRadioButton("Points-based")
     val spinnerWins = JSpinner()
     val spinnerGames = JSpinner()
     val lblWins = JLabel("  wins")
@@ -46,7 +46,7 @@ class GameSetupScreen : EmbeddedScreen()
     private val lb3rd = JLabel("3rd")
     val spinnerPoints4th = JSpinner()
     private val lb4th = JLabel("4th")
-    private val panelPointBreakdown = JPanel()
+    val panelPointBreakdown = JPanel()
 
     init
     {
