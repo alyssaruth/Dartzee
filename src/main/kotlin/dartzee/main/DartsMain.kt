@@ -29,7 +29,7 @@ fun main(args: Array<String>)
     }
 
     Debug.initialise(ScreenCache.debugConsole)
-    checkForUserName()
+    getUsername()
     setOtherLoggingContextFields()
 
     DialogUtil.init(MessageDialogFactory())
@@ -53,6 +53,7 @@ fun main(args: Array<String>)
 
 private fun setOtherLoggingContextFields()
 {
+    logger.addToContext(KEY_USERNAME, getUsername())
     logger.addToContext(KEY_APP_VERSION, DARTS_VERSION_NUMBER)
     logger.addToContext(KEY_OPERATING_SYSTEM, DartsClient.operatingSystem)
     logger.addToContext(KEY_DEVICE_ID, getDeviceId())
@@ -66,12 +67,7 @@ private fun setDeviceId(): String
     return deviceId
 }
 
-private fun checkForUserName()
-{
-    val username = instance.get(INSTANCE_STRING_USER_NAME, null) ?: setUsername()
-    logger.addToContext(KEY_USERNAME, username)
-}
-
+private fun getUsername() = instance.get(INSTANCE_STRING_USER_NAME, null) ?: setUsername()
 private fun setUsername(): String
 {
     logger.logInfo(USERNAME_UNSET, "No username found, prompting for one now")
