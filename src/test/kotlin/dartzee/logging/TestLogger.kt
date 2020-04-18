@@ -50,6 +50,25 @@ class TestLogger: AbstractTest()
     }
 
     @Test
+    fun `Should log WARN`()
+    {
+        val destination = FakeLogDestination()
+        val logger = Logger(listOf(destination))
+
+        val loggingCode = LoggingCode("some.event")
+        logger.warn(loggingCode, "A slightly bad thing happened")
+        logger.waitUntilLoggingFinished()
+
+        val record = destination.logRecords.first()
+        record.severity shouldBe Severity.WARN
+        record.loggingCode shouldBe loggingCode
+        record.message shouldBe "A slightly bad thing happened"
+        record.errorObject shouldBe null
+        record.timestamp shouldBe CURRENT_TIME
+        record.keyValuePairs.size shouldBe 0
+    }
+
+    @Test
     fun `Should log ERROR`()
     {
         val destination = FakeLogDestination()
