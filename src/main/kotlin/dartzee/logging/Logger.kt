@@ -1,6 +1,7 @@
 package dartzee.logging
 
 import dartzee.utils.InjectedThings
+import java.sql.SQLException
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeUnit
@@ -34,9 +35,18 @@ class Logger(private val destinations: List<ILogDestination>)
         log(Severity.WARN, code, message, null, mapOf(*keyValuePairs))
     }
 
-    fun error(code: LoggingCode, message: String, errorObject: Throwable, vararg keyValuePairs: Pair<String, Any?>)
+    fun error(code: LoggingCode, message: String, errorObject: Throwable = Throwable(), vararg keyValuePairs: Pair<String, Any?>)
     {
         log(Severity.ERROR, code, message, errorObject, mapOf(*keyValuePairs, KEY_EXCEPTION_MESSAGE to errorObject.message))
+    }
+
+    fun logSqlException(sqlStatement: String, genericStatement: String, sqlException: SQLException)
+    {
+        error(CODE_SQL_EXCEPTION, "Caught SQLException for statement: $sqlStatement", sqlException,
+                KEY_SQL to sqlStatement,
+                KEY_GENERIC_SQL to genericStatement,
+                KEY_ERROR_CODE to sqlException.errorCode,
+                KEY_SQL_STATE to sqlException.sqlState)
     }
 
     private fun log(severity: Severity, code: LoggingCode, message: String, errorObject: Throwable?, keyValuePairs: Map<String, Any?>)
