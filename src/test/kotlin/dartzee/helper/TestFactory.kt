@@ -76,5 +76,6 @@ inline fun <reified S: DartsScorer> makeDefaultPlayerStateWithRounds(player: Pla
                                                            dartsThrown: List<List<Dart>> = emptyList(),
                                                            lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState<S>
 {
+    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
     return DefaultPlayerState(participant, mockk(relaxed = true), lastRoundNumber, dartsThrown.toMutableList())
 }
