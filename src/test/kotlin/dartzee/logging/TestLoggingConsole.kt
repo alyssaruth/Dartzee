@@ -133,6 +133,8 @@ class TestLoggingConsole: AbstractTest()
     @Test
     fun `Should update when logging context changes`()
     {
+        logger.loggingContext.clear()
+
         val record = makeLogRecord()
         val console = LoggingConsole()
         console.log(record)

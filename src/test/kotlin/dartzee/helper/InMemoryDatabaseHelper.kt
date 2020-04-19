@@ -273,7 +273,10 @@ fun getCountFromTable(table: String): Int
     return executeQueryAggregate("SELECT COUNT(1) FROM $table")
 }
 
-fun dropUnexpectedTables(): List<String>
+fun dropAllTables() = dropTables(false)
+fun dropUnexpectedTables() = dropTables(true)
+
+fun dropTables(onlyUnexpected: Boolean): List<String>
 {
     val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
     val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
@@ -282,7 +285,11 @@ fun dropUnexpectedTables(): List<String>
     sb.append(" SELECT TableName")
     sb.append(" FROM sys.systables")
     sb.append(" WHERE TableType = 'T'")
-    sb.append(" AND TableName NOT IN ($tableNameSql)")
+
+    if (onlyUnexpected)
+    {
+        sb.append(" AND TableName NOT IN ($tableNameSql)")
+    }
 
     val list = mutableListOf<String>()
     DatabaseUtil.executeQuery(sb).use{ rs ->
