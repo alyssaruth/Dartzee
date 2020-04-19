@@ -49,7 +49,8 @@ object BulkInserter
     {
         return Thread {
             batch.chunked(rowsPerInsert).forEach { entities ->
-                var insertQuery = "INSERT INTO $tableName VALUES ${entities.joinToString{it.getInsertBlockForStatement()}}"
+                val genericInsert = "INSERT INTO $tableName VALUES ${entities.joinToString{it.getInsertBlockForStatement()}}"
+                var insertQuery = genericInsert
                 val conn = DatabaseUtil.borrowConnection()
 
                 try
@@ -65,13 +66,13 @@ object BulkInserter
 
                         if (logInserts)
                         {
-                            logger.logSql(insertQuery, ps.toString(), timer.getDuration())
+                            logger.logSql(insertQuery, genericInsert, timer.getDuration())
                         }
                     }
                 }
                 catch (sqle: SQLException)
                 {
-                    Debug.logSqlException(insertQuery, sqle)
+                    logger.logSqlException(insertQuery, genericInsert, sqle)
                 }
                 finally
                 {

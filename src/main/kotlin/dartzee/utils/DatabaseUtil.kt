@@ -106,7 +106,7 @@ class DatabaseUtil
             }
             catch (sqle: SQLException)
             {
-                Debug.logSqlException(statement, sqle)
+                logger.logSqlException(statement, "", sqle)
                 return false
             }
 
@@ -156,7 +156,7 @@ class DatabaseUtil
             }
             catch (sqle: SQLException)
             {
-                Debug.logSqlException(query, sqle)
+                logger.logSqlException(query, "", sqle)
             }
             finally
             {
@@ -223,7 +223,7 @@ class DatabaseUtil
                 }
                 else
                 {
-                    Debug.logSqlException(statement, sqle)
+                    logger.logSqlException(statement, "", sqle)
                 }
 
                 return false

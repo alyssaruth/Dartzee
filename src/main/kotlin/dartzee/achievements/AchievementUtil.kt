@@ -13,9 +13,10 @@ import dartzee.achievements.x01.*
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import java.sql.SQLException
 
 fun getNotBustSql(): String
@@ -202,7 +203,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
     catch (sqle: SQLException)
     {
-        Debug.logSqlException(sb.toString(), sqle)
+        logger.logSqlException(sb.toString(), sb.toString(), sqle)
     }
     finally
     {

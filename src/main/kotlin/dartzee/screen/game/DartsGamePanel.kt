@@ -22,6 +22,7 @@ import dartzee.screen.game.scorer.DartsScorer
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.stats.PlayerSummaryStats
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import java.awt.BorderLayout
@@ -397,7 +398,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             }
             catch (sqle: SQLException)
             {
-                Debug.logSqlException(sql, sqle)
+                logger.logSqlException(sql, sql, sqle)
                 throw sqle
             }
 
