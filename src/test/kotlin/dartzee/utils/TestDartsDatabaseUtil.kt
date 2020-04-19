@@ -48,8 +48,8 @@ class TestDartsDatabaseUtil: AbstractTest()
     @Test
     fun `Should do nothing if db already up to date`()
     {
-        val version = VersionEntity.retrieveCurrentDatabaseVersion()!!
-        version.version shouldBe DATABASE_VERSION
+        val version = VersionEntity()
+        version.version = DATABASE_VERSION
 
         clearLogs()
         DartsDatabaseUtil.initialiseDatabase(version)
