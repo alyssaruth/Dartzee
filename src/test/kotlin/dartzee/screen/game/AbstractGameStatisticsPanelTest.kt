@@ -1,8 +1,9 @@
 package dartzee.screen.game
 
-import dartzee.core.util.Debug
 import dartzee.game.state.AbstractPlayerState
 import dartzee.helper.AbstractTest
+import dartzee.helper.logger
+import dartzee.logging.LoggingCode
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -51,6 +52,6 @@ fun AbstractGameStatisticsPanel<*>.getValueForRow(rowName: String, column: Int =
         return tm.getValueAt(rowIndex, column)
     }
 
-    Debug.stackTrace("No row called $rowName")
+    logger.error(LoggingCode("invalidRow"), "No row called $rowName")
     return null
 }

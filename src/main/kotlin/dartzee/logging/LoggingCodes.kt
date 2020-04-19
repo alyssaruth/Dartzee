@@ -20,4 +20,6 @@ val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpected.argument")
 val CODE_DATABASE_TOO_OLD = LoggingCode("databaseTooOld")
 
 //Error
-val CODE_LOOK_AND_FEEL_ERROR = LoggingCode("laf.error")
+val CODE_LOOK_AND_FEEL_ERROR = LoggingCode("lafError")
+val CODE_SQL_EXCEPTION = LoggingCode("sqlException")
+val CODE_UNCAUGHT_EXCEPTION = LoggingCode("uncaughtException")

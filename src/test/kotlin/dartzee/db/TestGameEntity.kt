@@ -1,11 +1,11 @@
 package dartzee.db
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.helper.*
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -26,11 +26,11 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         wipeTable("Game")
 
         insertGame(localId = 5)
-        exceptionLogged() shouldBe false
+        verifyNoLogs(CODE_SQL_EXCEPTION)
 
         insertGame(localId = 5)
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("duplicate key")
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.errorObject?.message shouldContain "duplicate key"
 
         getCountFromTable("Game") shouldBe 1
     }

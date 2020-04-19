@@ -148,7 +148,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(query, sqle)
+            logger.logSqlException(query, "", sqle)
         }
 
         return ret
@@ -203,7 +203,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
     private fun updateDatabaseRow()
     {
-        var updateQuery = buildUpdateQuery()
+        val genericUpdate = buildUpdateQuery()
+        var updateQuery = genericUpdate
 
         val conn = DatabaseUtil.borrowConnection()
         try
@@ -215,7 +216,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
                 val timer = DurationTimer()
                 psUpdate.executeUpdate()
 
-                logger.logSql(updateQuery, psUpdate.toString(), timer.getDuration())
+                logger.logSql(updateQuery, genericUpdate, timer.getDuration())
 
                 val updateCount = psUpdate.updateCount
                 if (updateCount == 0)
@@ -226,7 +227,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(updateQuery, sqle)
+            logger.logSqlException(updateQuery, genericUpdate, sqle)
         }
         finally
         {
@@ -247,7 +248,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
     private fun insertIntoDatabase()
     {
-        var insertQuery = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
+        val genericInsert = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
+        var insertQuery = genericInsert
 
         val conn = DatabaseUtil.borrowConnection()
         try
@@ -257,7 +259,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
                 val timer = DurationTimer()
                 psInsert.executeUpdate()
-                logger.logSql(insertQuery, psInsert.toString(), timer.getDuration())
+                logger.logSql(insertQuery, genericInsert, timer.getDuration())
 
                 //Set this so we can call save() again on the same object and get the right behaviour
                 retrievedFromDb = true
@@ -265,7 +267,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(insertQuery, sqle)
+            logger.logSqlException(insertQuery, genericInsert, sqle)
         }
         finally
         {

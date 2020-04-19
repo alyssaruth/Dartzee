@@ -1,8 +1,8 @@
 package dartzee.reporting
 
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import java.sql.SQLException
 
 /**
@@ -38,7 +38,7 @@ fun runReport(rp: ReportParameters?): List<ReportResultWrapper>
     }
     catch (sqle: SQLException)
     {
-        Debug.logSqlException(sql, sqle)
+        logger.logSqlException(sql, sql, sqle)
         DialogUtil.showError("SQL failed for report parameters.")
 
         //return an empty hashmap so we show an empty table

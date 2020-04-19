@@ -1,13 +1,13 @@
 package dartzee.utils
 
-import dartzee.core.helper.exceptionLogged
 import dartzee.core.helper.getLogs
 import dartzee.core.util.Debug
 import dartzee.helper.AbstractTest
 import dartzee.helper.dropUnexpectedTables
 import dartzee.logging.CODE_SQL
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -70,7 +70,7 @@ class TestDatabaseUtil: AbstractTest()
         val updates = listOf("bollucks", "CREATE TABLE zzUpdateTest(str VARCHAR(50))")
 
         DatabaseUtil.executeUpdates(updates) shouldBe false
-        exceptionLogged() shouldBe true
+        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
 
         DatabaseUtil.createTableIfNotExists("zzUpdateTest", "str VARCHAR(50)") shouldBe true
     }
@@ -81,9 +81,9 @@ class TestDatabaseUtil: AbstractTest()
         val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
         DatabaseUtil.executeUpdate(update) shouldBe false
 
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("Caught SQLException for query: $update")
-        getLogs().shouldContain("Syntax error: Encountered \"(\"")
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.message.shouldContain("Caught SQLException for statement: $update")
+        log.errorObject!!.message.shouldContain("Syntax error: Encountered \"(\"")
     }
 
     @Test
@@ -113,15 +113,11 @@ class TestDatabaseUtil: AbstractTest()
     @Test
     fun `Should log SQLExceptions (and show an error) for failed queries`()
     {
-        Debug.logToSystemOut = true
-
         val query = "SELECT * FROM zzQueryTest"
         DatabaseUtil.executeQuery(query)
 
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("Table/View 'ZZQUERYTEST' does not exist.")
-        getLogs().shouldContain("Caught SQLException for query: $query")
-
-        dialogFactory.errorsShown.shouldHaveSize(1)
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.message shouldBe "Caught SQLException for statement: $query"
+        log.errorObject?.message shouldContain "Table/View 'ZZQUERYTEST' does not exist."
     }
 }

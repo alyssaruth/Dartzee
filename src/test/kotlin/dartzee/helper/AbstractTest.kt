@@ -88,6 +88,8 @@ abstract class AbstractTest
 
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
+
+        logger.loggingContext.clear()
     }
 
     @After
@@ -106,7 +108,7 @@ abstract class AbstractTest
 
     fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
     {
-        val record = getLogRecords().find { it.loggingCode == code && it.severity == severity }
+        val record = getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
         assertNotNull(record)
 
         if (severity == Severity.ERROR)

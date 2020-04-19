@@ -2,7 +2,6 @@ package dartzee.core.util
 
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.sql.SQLException
 import java.text.SimpleDateFormat
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
@@ -151,30 +150,6 @@ object Debug
             val percentStr = MathsUtil.getPercentage(workDone, workToDo)
             val logStr = "Done $workDone/$workToDo ($percentStr%)"
             append(logStr)
-        }
-    }
-
-    /**
-     * SQLException
-     */
-    fun logSqlException(query: StringBuilder, sqle: SQLException?)
-    {
-        logSqlException(query.toString(), sqle)
-    }
-
-    fun logSqlException(query: String, sqle: SQLException?)
-    {
-        append("Caught SQLException for query: $query")
-
-        var childSqle = sqle
-        while (childSqle != null)
-        {
-            append("\n----- SQLException -----")
-            append("  SQL State:  " + childSqle.sqlState)
-            append("  Error Code: " + childSqle.errorCode)
-            append("  Message:    " + childSqle.message)
-            stackTrace(childSqle)
-            childSqle = childSqle.nextException
         }
     }
 

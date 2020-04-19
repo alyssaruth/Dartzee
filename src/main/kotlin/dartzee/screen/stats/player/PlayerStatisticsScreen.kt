@@ -1,10 +1,9 @@
 package dartzee.screen.stats.player
 
 import dartzee.`object`.Dart
-import dartzee.core.util.Debug
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
@@ -15,6 +14,7 @@ import dartzee.screen.stats.player.rtc.StatisticsTabRoundTheClockHitRate
 import dartzee.screen.stats.player.x01.*
 import dartzee.stats.GameWrapper
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.sql.SQLException
@@ -194,7 +194,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(sb.toString(), sqle)
+            logger.logSqlException(sb.toString(), "", sqle)
         }
         finally
         {

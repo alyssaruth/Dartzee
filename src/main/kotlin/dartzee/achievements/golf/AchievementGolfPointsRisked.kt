@@ -2,10 +2,10 @@ package dartzee.achievements.golf
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.achievements.AbstractAchievement
-import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
 import java.sql.SQLException
@@ -72,7 +72,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(sb.toString(), sqle)
+            logger.logSqlException(sb.toString(), sb.toString(), sqle)
         }
     }
 }

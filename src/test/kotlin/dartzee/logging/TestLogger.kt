@@ -3,11 +3,12 @@ package dartzee.logging
 import dartzee.CURRENT_TIME
 import dartzee.helper.AbstractTest
 import dartzee.helper.FakeLogDestination
+import dartzee.shouldContainKeyValues
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.sql.SQLException
 
 class TestLogger: AbstractTest()
 {
@@ -111,6 +112,33 @@ class TestLogger: AbstractTest()
     }
 
     @Test
+    fun `Should log SQLExceptions`()
+    {
+        val sqle = SQLException("Unable to drop table FOO", "State.ROLLBACK", 403)
+
+        val destination = FakeLogDestination()
+        val logger = Logger(listOf(destination))
+
+        val sql = "DROP TABLE Foo"
+        val genericSql = "DROP TABLE ?"
+
+        logger.logSqlException(sql, genericSql, sqle)
+        logger.waitUntilLoggingFinished()
+
+        val record = destination.logRecords.first()
+        record.severity shouldBe Severity.ERROR
+        record.loggingCode shouldBe CODE_SQL_EXCEPTION
+        record.message shouldBe "Caught SQLException for statement: DROP TABLE Foo"
+        record.errorObject shouldBe sqle
+        record.timestamp shouldBe CURRENT_TIME
+        record.shouldContainKeyValues(KEY_GENERIC_SQL to genericSql,
+                KEY_SQL to sql,
+                KEY_SQL_STATE to "State.ROLLBACK",
+                KEY_ERROR_CODE to 403,
+                KEY_EXCEPTION_MESSAGE to "Unable to drop table FOO")
+    }
+
+    @Test
     fun `Should log to all destinations`()
     {
         val destinationOne = FakeLogDestination()
@@ -163,11 +191,6 @@ class TestLogger: AbstractTest()
 
         val record = destination.logRecords.last()
         record.shouldContainKeyValues("appVersion" to "4.1.1", "otherKey" to "otherValue")
-    }
-
-    private fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
-    {
-        keyValuePairs.shouldContainExactly(mapOf(*values))
     }
 }
 
