@@ -15,6 +15,7 @@ sealed class AbstractPlayerState<S: DartsScorer>
 
     fun addDarts(darts: List<Dart>)
     {
+        darts.forEach { it.participantId = pt.rowId }
         this.darts.add(darts.toList())
     }
 }

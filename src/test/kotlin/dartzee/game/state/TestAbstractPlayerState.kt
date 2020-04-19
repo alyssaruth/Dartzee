@@ -5,6 +5,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.screen.game.scorer.DartsScorer
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
 
@@ -20,5 +21,19 @@ class TestAbstractPlayerState: AbstractTest()
 
         darts.clear()
         state.darts.first().shouldContainExactly(Dart(20, 1))
+    }
+
+    @Test
+    fun `It should populate the darts with the ParticipantId`()
+    {
+        val pt = insertParticipant()
+        val state = DefaultPlayerState(pt, mockk<DartsScorer>())
+
+        val dart = Dart(20, 1)
+        dart.participantId shouldBe ""
+
+        state.addDarts(mutableListOf(dart))
+
+        dart.participantId shouldBe pt.rowId
     }
 }
