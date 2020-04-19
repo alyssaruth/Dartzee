@@ -3,9 +3,9 @@ package dartzee.logging
 import dartzee.CURRENT_TIME
 import dartzee.helper.AbstractTest
 import dartzee.helper.FakeLogDestination
+import dartzee.shouldContainKeyValues
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.SQLException
@@ -191,11 +191,6 @@ class TestLogger: AbstractTest()
 
         val record = destination.logRecords.last()
         record.shouldContainKeyValues("appVersion" to "4.1.1", "otherKey" to "otherValue")
-    }
-
-    private fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
-    {
-        keyValuePairs.shouldContainExactly(mapOf(*values))
     }
 }
 

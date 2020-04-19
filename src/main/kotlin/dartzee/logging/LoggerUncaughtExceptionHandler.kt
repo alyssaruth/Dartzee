@@ -1,21 +1,20 @@
-package dartzee.core.util
+package dartzee.logging
 
+import dartzee.utils.InjectedThings.logger
 import java.lang.Thread.UncaughtExceptionHandler
 
-class DebugUncaughtExceptionHandler : UncaughtExceptionHandler
+class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler
 {
     override fun uncaughtException(arg0: Thread, arg1: Throwable)
     {
-        Debug.append("UNCAUGHT EXCEPTION in thread $arg0")
-
         if (isSuppressed(arg1))
         {
             //Still stack trace, but don't show an error message or email a log
-            Debug.stackTraceSilently(arg1)
+            logger.warn(CODE_UNCAUGHT_EXCEPTION, "Suppressing uncaught exception: $arg1", KEY_THREAD to arg0.toString(), KEY_EXCEPTION_MESSAGE to arg1.message)
         }
         else
         {
-            Debug.stackTrace(arg1)
+            logger.error(CODE_UNCAUGHT_EXCEPTION, "Uncaught exception: $arg1", arg1, KEY_THREAD to arg0.toString())
         }
     }
 

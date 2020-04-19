@@ -88,6 +88,8 @@ abstract class AbstractTest
 
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
+
+        logger.loggingContext.clear()
     }
 
     @After
