@@ -10,7 +10,7 @@ import dartzee.logging.*
 import dartzee.utils.DARTS_VERSION_NUMBER
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.maps.shouldContainExactly
+import io.kotlintest.matchers.maps.shouldContainAll
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -117,6 +117,6 @@ class TestMainUtil: AbstractTest()
         val expectedContextFields = mapOf(KEY_USERNAME to "some.user", KEY_DEVICE_ID to "some.device",
                 KEY_OPERATING_SYSTEM to "Windows 10", KEY_APP_VERSION to DARTS_VERSION_NUMBER, KEY_DEV_MODE to true)
 
-        logger.loggingContext.shouldContainExactly(expectedContextFields)
+        logger.loggingContext.shouldContainAll(expectedContextFields)
     }
 }

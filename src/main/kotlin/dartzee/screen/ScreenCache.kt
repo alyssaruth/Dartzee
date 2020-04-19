@@ -10,6 +10,7 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.preference.PreferencesDialog
 import dartzee.screen.reporting.ConfigureReportColumnsDialog
 import javax.swing.JOptionPane
+import kotlin.system.exitProcess
 
 object ScreenCache
 {
@@ -118,7 +119,7 @@ object ScreenCache
             }
         }
 
-        System.exit(0)
+        exitProcess(0)
     }
 
     fun emptyCache()

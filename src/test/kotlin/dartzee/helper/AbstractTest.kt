@@ -117,6 +117,11 @@ abstract class AbstractTest
         return record
     }
 
+    fun verifyNoLogs(code: LoggingCode)
+    {
+        getLogRecords().any { it.loggingCode == code } shouldBe false
+    }
+
     fun errorLogged(): Boolean
     {
         checkedForExceptions = true
