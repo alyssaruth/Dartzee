@@ -5,6 +5,8 @@ import dartzee.core.helper.getLogs
 import dartzee.helper.*
 import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import dartzee.utils.DatabaseUtil
 import io.kotlintest.matchers.collections.shouldBeSortedWith
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -64,8 +66,9 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert(playerOne, playerTwo)
 
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("duplicate key value")
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.errorObject?.message shouldContain "duplicate key value"
+
         getCountFromTable("Player") shouldBe 0
     }
 

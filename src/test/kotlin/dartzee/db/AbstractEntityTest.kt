@@ -1,7 +1,5 @@
 package dartzee.db
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getEndOfTimeSqlString
@@ -10,6 +8,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.wipeTable
 import dartzee.logging.CODE_SQL
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
 import io.kotlintest.matchers.string.shouldContain
@@ -157,8 +157,9 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
             val sql = "UPDATE ${dao.getTableName()} SET $it = NULL WHERE RowId = '$rowId'"
             DatabaseUtil.executeUpdate(sql) shouldBe false
 
-            exceptionLogged() shouldBe true
-            getLogs().shouldContain("Column '${it.toUpperCase()}'  cannot accept a NULL value.")
+            val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+            log.message shouldBe "Caught SQLException for statement: $sql"
+            log.errorObject?.message shouldContain "Column '${it.toUpperCase()}'  cannot accept a NULL value."
         }
     }
 

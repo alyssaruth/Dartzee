@@ -7,6 +7,8 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
 import dartzee.game.GameType
 import dartzee.helper.*
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeBetween
@@ -26,11 +28,11 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         wipeTable("DartsMatch")
 
         insertDartsMatch(localId = 5)
-        exceptionLogged() shouldBe false
+        verifyNoLogs(CODE_SQL_EXCEPTION)
 
         insertDartsMatch(localId = 5)
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("duplicate key")
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.errorObject?.message.shouldContain("duplicate key")
 
         getCountFromTable("DartsMatch") shouldBe 1
     }
@@ -83,7 +85,8 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         match.rowId = "'"
 
         match.isComplete() shouldBe false
-        exceptionLogged() shouldBe true
+
+        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
     }
 
     @Test
@@ -95,7 +98,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         match.games = 2
 
         match.isComplete() shouldBe false
-        exceptionLogged() shouldBe true
+        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
     }
 
     @Test
