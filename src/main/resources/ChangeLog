@@ -5,6 +5,7 @@
 = Fix bug with layout of player selectors
 = Fix bug trying to launch a custom match of Dartzee
 = Fix points based matches to support 6 players
+= Fix bug with RTC stats being incorrectly aggregated for matches
 
 --------- v4.1.0 ---------
 
