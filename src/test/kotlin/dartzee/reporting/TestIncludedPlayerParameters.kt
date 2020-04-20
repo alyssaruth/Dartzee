@@ -37,7 +37,7 @@ class TestIncludedPlayerParameters: AbstractTest()
         ipp.finishingPositions = listOf(1, 3)
 
         val rp = ReportParameters()
-        rp.hmIncludedPlayerToParms[player] = ipp
+        rp.hmIncludedPlayerToParms = mapOf(player to ipp)
 
         val results = runReport(rp)
         results shouldHaveSize 2

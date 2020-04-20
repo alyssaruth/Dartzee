@@ -9,7 +9,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.Test
 import java.sql.Timestamp
 
-class TestReporting: AbstractTest()
+class TestReportParameters: AbstractTest()
 {
     @Test
     fun `Should be able to filter by game type`()
@@ -170,12 +170,41 @@ class TestReporting: AbstractTest()
         rpExcludeAliceAndBob.excludedPlayers = listOf(alice, bob)
         val resultsNoAliceOrBob = runReportForTest(rpExcludeAliceAndBob)
         resultsNoAliceOrBob.shouldContainExactly(gCliveDaisy.localId)
+    }
 
+    @Test
+    fun `Should only include games with at least one human player if specified`()
+    {
+        val gAllPlayers = insertGame()
+        val ai = insertPlayerForGame("AI", gAllPlayers.rowId, strategy = 1)
+        val aiTwo = insertPlayerForGame("AI2", gAllPlayers.rowId, strategy = 1)
+        val human = insertPlayerForGame("Human", gAllPlayers.rowId, strategy = -1)
+
+        val gBothAi = insertGame()
+        insertParticipant(playerId = ai.rowId, gameId = gBothAi.rowId)
+        insertParticipant(playerId = aiTwo.rowId, gameId = gBothAi.rowId)
+
+        val gHumanAndBothAI = insertGame()
+        insertParticipant(playerId = human.rowId, gameId = gHumanAndBothAI.rowId)
+        insertParticipant(playerId = ai.rowId, gameId = gHumanAndBothAI.rowId)
+        insertParticipant(playerId = aiTwo.rowId, gameId = gHumanAndBothAI.rowId)
+
+        val gSingleHuman = insertGame()
+        insertParticipant(playerId = human.rowId, gameId = gSingleHuman.rowId)
+
+        val gSingleAi = insertGame()
+        insertParticipant(playerId = ai.rowId, gameId = gSingleAi.rowId)
+
+        val rp = ReportParameters()
+        rp.excludeOnlyAi = true
+
+        val results = runReportForTest(rp)
+        results.shouldContainExactlyInAnyOrder(listOf(gAllPlayers.localId, gHumanAndBothAI.localId, gSingleHuman.localId))
     }
 
     private fun runReportForTest(rp: ReportParameters): List<Long>
     {
         val wrappers = runReport(rp)
-        return wrappers.map{it.localId}.toList()
+        return wrappers.map { it.localId }.toList()
     }
 }
