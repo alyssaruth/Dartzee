@@ -16,10 +16,10 @@ import javax.swing.SpinnerNumberModel
 
 class PlayerParametersPanel : JPanel(), ActionListener
 {
-    private val chckbxFinalScore = JCheckBox("Game Score")
+    val chckbxFinalScore = JCheckBox("Game Score")
     private val comboBox = ComboBoxNumberComparison()
     private val spinner = JSpinner(SpinnerNumberModel(3, 3, 200, 1))
-    private val chckbxPosition = JCheckBox("Position")
+    val chckbxPosition = JCheckBox("Position")
     private val cbFirst = JCheckBox("1st")
     private val cbSecond = JCheckBox("2nd")
     private val cbThird = JCheckBox("3rd")
@@ -54,7 +54,7 @@ class PlayerParametersPanel : JPanel(), ActionListener
     {
         if (chckbxPosition.isSelected && getFinishingPositions().isEmpty())
         {
-            DialogUtil.showError("You must select at least one finishing position for Player " + player.name)
+            DialogUtil.showError("You must select at least one finishing position for player " + player.name)
             return false
         }
 

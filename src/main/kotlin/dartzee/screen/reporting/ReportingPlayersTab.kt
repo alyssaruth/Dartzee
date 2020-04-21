@@ -24,18 +24,18 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
     private val hmPlayerToParametersPanel = mutableMapOf<PlayerEntity, PlayerParametersPanel>()
 
     private val panelNorth = JPanel()
-    private val checkBoxExcludeOnlyAi = JCheckBox("Exclude games with only AI players")
+    val checkBoxExcludeOnlyAi = JCheckBox("Exclude games with only AI players")
     private val lblIncludeMode = JLabel("Include games with:")
     private val panelRdbtns = RadioButtonPanel()
-    private val rdbtnInclude = JRadioButton("All the selected players")
-    private val rdbtnExclude = JRadioButton("None of the selected players")
+    val rdbtnInclude = JRadioButton("All the selected players")
+    val rdbtnExclude = JRadioButton("None of the selected players")
     private val panelTable = JPanel()
     private val panelTableButtons = JPanel()
-    private val scrollTable = ScrollTable()
+    val scrollTable = ScrollTable()
     private val btnAddPlayer = JButton("")
-    private val btnRemovePlayer = JButton("")
+    val btnRemovePlayer = JButton("")
 
-    private var includedPlayerPanel = PlayerParametersPanel().also { it.disableAll() }
+    var includedPlayerPanel = PlayerParametersPanel().also { it.disableAll() }
 
     init
     {
@@ -100,6 +100,11 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
     {
         val allSelected = hmPlayerToParametersPanel.keys.toList()
         val players = PlayerSelectDialog.selectPlayers(allSelected)
+        addPlayers(players)
+    }
+
+    fun addPlayers(players: List<PlayerEntity>)
+    {
         for (player in players)
         {
             hmPlayerToParametersPanel[player] = PlayerParametersPanel()
@@ -147,8 +152,13 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
 
     fun valid(): Boolean
     {
-        val entries = hmPlayerToParametersPanel.entries
-        return entries.all { it.value.valid(it.key) }
+        if (rdbtnInclude.isSelected)
+        {
+            val entries = hmPlayerToParametersPanel.entries
+            return entries.all { it.value.valid(it.key) }
+        }
+
+        return true
     }
 
     fun populateReportParameters(rp: ReportParameters)

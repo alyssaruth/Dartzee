@@ -2,12 +2,10 @@ package dartzee.reporting
 
 const val COMPARATOR_SCORE_UNSET = "is unset"
 
-class IncludedPlayerParameters
+data class IncludedPlayerParameters(var finishingPositions: List<Int> = listOf(),
+                                    var finalScoreComparator: String = "",
+                                    var finalScore: Int = -1)
 {
-    var finishingPositions = listOf<Int>()
-    var finalScoreComparator = ""
-    var finalScore = -1
-
     fun generateExtraWhereSql(alias: String): String
     {
         val sb = StringBuilder()
