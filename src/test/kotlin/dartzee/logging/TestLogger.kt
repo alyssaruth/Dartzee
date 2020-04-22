@@ -139,6 +139,22 @@ class TestLogger: AbstractTest()
     }
 
     @Test
+    fun `Should log progress correctly`()
+    {
+        val destination = FakeLogDestination()
+        val logger = Logger(listOf(destination))
+        logger.logProgress(LoggingCode("progress"), 9, 100)
+        logger.logProgress(LoggingCode("progress"), 11, 100)
+        logger.waitUntilLoggingFinished()
+        destination.logRecords.shouldBeEmpty()
+
+        logger.logProgress(LoggingCode("progress"), 10, 100)
+        logger.waitUntilLoggingFinished()
+        val log = destination.logRecords.last()
+        log.message shouldBe "Done 10/100 (10.0%)"
+    }
+
+    @Test
     fun `Should log to all destinations`()
     {
         val destinationOne = FakeLogDestination()

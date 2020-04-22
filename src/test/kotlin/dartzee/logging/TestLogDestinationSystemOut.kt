@@ -52,4 +52,20 @@ class TestLogDestinationSystemOut: AbstractTest()
         output shouldContain "$CURRENT_TIME_STRING   [some.event] blah"
         output shouldContain "$CURRENT_TIME_STRING   java.lang.Throwable: oh no"
     }
+
+    @Test
+    fun `Should print the stack for a thread dump`()
+    {
+        val dest = LogDestinationSystemOut()
+
+        val record = makeLogRecord(severity = Severity.INFO,
+                loggingCode = LoggingCode("some.event"),
+                message = "blah",
+                keyValuePairs = mapOf(KEY_STACK to "at Something.blah"))
+        dest.log(record)
+
+        val output = newOut.toString()
+        output shouldContain "$CURRENT_TIME_STRING   [some.event] blah"
+        output shouldContain "at Something.blah"
+    }
 }

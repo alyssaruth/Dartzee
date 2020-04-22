@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeUnit
-import kotlin.math.floor
 
 object Debug
 {
@@ -67,26 +66,6 @@ object Debug
         }
     }
 
-    fun appendWithoutDate(text: String, logging: Boolean = true)
-    {
-        append("                                      $text", logging, false)
-    }
-
-    fun appendTabbed(text: String)
-    {
-        appendWithoutDate("	$text")
-    }
-
-    fun appendBanner(text: String, logging: Boolean = true)
-    {
-        val length = text.length
-        val starStr = (0 until length + 4).joinToString("") { "*" }
-
-        append(starStr, logging)
-        append("* $text *", logging)
-        append(starStr, logging)
-    }
-
     /**
      * Stack Trace methods
      */
@@ -134,26 +113,7 @@ object Debug
         append(trace, true)
     }
 
-    fun newLine()
-    {
-        appendWithoutDate("")
-    }
-
-    fun logProgress(workDone: Long, workToDo: Long, percentageToLogAt: Int)
-    {
-        //Convert 1 to 0.01, 50 to 0.5, etc.
-        val percentageAsDecimal = percentageToLogAt.toDouble() / 100
-        val percentageOfTotal = floor(workToDo * percentageAsDecimal)
-        val remainder = workDone % percentageOfTotal
-        if (remainder == 0.0)
-        {
-            val percentStr = MathsUtil.getPercentage(workDone, workToDo)
-            val logStr = "Done $workDone/$workToDo ($percentStr%)"
-            append(logStr)
-        }
-    }
-
-    fun getCurrentTimeForLogging() = "${DATE_FORMAT.format(System.currentTimeMillis())}   "
+    private fun getCurrentTimeForLogging() = "${DATE_FORMAT.format(System.currentTimeMillis())}   "
 
     fun getCurrentLogs(): String = output?.getLogs() ?: ""
 

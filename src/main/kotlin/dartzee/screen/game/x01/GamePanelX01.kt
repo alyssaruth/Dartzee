@@ -6,7 +6,6 @@ import dartzee.achievements.*
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
@@ -216,7 +215,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
     {
         if (shouldStopForMercyRule(model, startingScore, currentScore))
         {
-            Debug.append("MERCY RULE", VERBOSE_LOGGING)
             stopThrowing()
         }
         else

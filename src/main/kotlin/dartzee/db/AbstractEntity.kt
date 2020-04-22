@@ -4,6 +4,7 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
+import dartzee.logging.CODE_INSTANTIATION_ERROR
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -83,14 +84,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         {
             return javaClass.newInstance() as E
         }
-        catch (iae: IllegalAccessException)
+        catch (t: Throwable)
         {
-            Debug.stackTrace(iae)
-            return null
-        }
-        catch (iae: InstantiationException)
-        {
-            Debug.stackTrace(iae)
+            logger.error(CODE_INSTANTIATION_ERROR, "Failed to instantiate ${javaClass.simpleName}", t)
             return null
         }
     }

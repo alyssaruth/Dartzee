@@ -1,11 +1,15 @@
 package dartzee.core.util
 
+import dartzee.logging.CODE_THREAD_STACK
+import dartzee.logging.CODE_THREAD_STACKS
+import dartzee.logging.KEY_STACK
+import dartzee.logging.extractThreadStack
+import dartzee.utils.InjectedThings.logger
 import javax.swing.SwingUtilities
 
 fun dumpThreadStacks()
 {
-    Debug.appendWithoutDate("")
-    Debug.appendBanner("STACKS DUMP")
+    logger.info(CODE_THREAD_STACKS, "Dumping thread stacks")
 
     val threads = Thread.getAllStackTraces()
     val it = threads.keys.iterator()
@@ -16,15 +20,9 @@ fun dumpThreadStacks()
         val state = thread.state
         if (stack.isNotEmpty())
         {
-            Debug.append("---- THREAD " + thread.name + "  (" + state + ") ----")
-            for (element in stack)
-            {
-                Debug.appendWithoutDate("" + element)
-            }
+            logger.info(CODE_THREAD_STACK, "${thread.name} ($state)", KEY_STACK to extractThreadStack(stack))
         }
     }
-
-    Debug.appendWithoutDate("")
 }
 
 fun runOnEventThread(r: (() -> Unit))

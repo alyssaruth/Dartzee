@@ -32,43 +32,6 @@ class TestDebug: AbstractTestWithUsername()
     }
 
     @Test
-    fun testAppendWithoutDate()
-    {
-        Debug.clearLogs()
-
-        val time = Debug.getCurrentTimeForLogging()
-        val dayAndMonthStr = time.split(" ")[0]
-
-        Debug.appendWithoutDate("Not here", false)
-        Debug.appendWithoutDate("Present")
-        Debug.appendTabbed("Tabbed")
-
-        val logs = getLogs()
-
-        logs shouldContain("                                      Present")
-        logs shouldContain("                                      \tTabbed")
-
-        logs shouldNotContain(dayAndMonthStr)
-        logs shouldNotContain("Not here")
-    }
-
-    @Test
-    fun testAppendBanner()
-    {
-        Debug.clearLogs()
-
-        Debug.appendBanner("NoBanner", false)
-        Debug.appendBanner("IMPORTANT")
-
-        val logs = getLogs()
-
-        logs shouldNotContain("NoBanner")
-        logs shouldContain("*************")
-        logs shouldContain("* IMPORTANT *")
-        logs shouldNotContain("**************")
-    }
-
-    @Test
     fun testLoggingToSystemOut()
     {
         Debug.clearLogs()
@@ -107,16 +70,6 @@ class TestDebug: AbstractTestWithUsername()
         logs shouldContain("TestDebug.testStackTraceBasic(TestDebug.kt:")
 
         exceptionLogged() shouldBe true
-    }
-
-    @Test
-    fun testNewLine()
-    {
-        Debug.clearLogs()
-        Debug.newLine()
-
-        val logs = getLogs()
-        logs shouldBe("\n                                      ")
     }
 
     class SimpleDebugOutput: DebugOutput
