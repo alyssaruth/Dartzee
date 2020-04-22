@@ -118,11 +118,10 @@ fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
     keyValuePairs.shouldContainExactly(mapOf(*values))
 }
 
-inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
+inline fun <reified T: AbstractButton> Container.findComponent(text: String): T
 {
-
     val allComponents = getAllChildComponentsForType<T>()
-    val matching = allComponents.filter { it.text == name }
+    val matching = allComponents.filter { it.text == text }
 
     if (matching.isEmpty())
     {
@@ -133,5 +132,10 @@ inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
         throw Exception("Non-unique text - ${matching.size} ${T::class.simpleName}s found with text [$text]")
     }
 
-    matching.first().doClick()
+    return matching.first()
+}
+
+inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
+{
+    findComponent<T>(text).doClick()
 }

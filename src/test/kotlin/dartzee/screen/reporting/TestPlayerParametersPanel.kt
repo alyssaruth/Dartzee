@@ -1,6 +1,7 @@
 package dartzee.screen.reporting
 
 import dartzee.clickComponent
+import dartzee.core.bean.ComboBoxNumberComparison
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
@@ -86,7 +87,7 @@ class TestPlayerParametersPanel: AbstractTest()
         val panel = PlayerParametersPanel()
         panel.valid(player) shouldBe true
 
-        panel.clickComponent<JCheckBox>("Undecided")
+        panel.clickComponent<JCheckBox>("Position")
         panel.valid(player) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Gordon")
         dialogFactory.errorsShown.clear()
@@ -99,5 +100,32 @@ class TestPlayerParametersPanel: AbstractTest()
         panel.clickComponent<JCheckBox>("1st")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should generate the correct parameters for final score`()
+    {
+        val panel = PlayerParametersPanel()
+        panel.clickComponent<JCheckBox>("Game Score")
+        panel.spinner.value = 20
+        panel.comboBox.selectedItem = ComboBoxNumberComparison.FILTER_MODE_GREATER_THAN
+
+        val params = panel.generateParameters()
+        params.finalScore shouldBe 20
+        params.finalScoreComparator shouldBe ComboBoxNumberComparison.FILTER_MODE_GREATER_THAN
+    }
+
+    @Test
+    fun `Should generate the correct parameters for position`()
+    {
+        val panel = PlayerParametersPanel()
+        panel.clickComponent<JCheckBox>("Position")
+        panel.clickComponent<JCheckBox>("1st")
+        panel.clickComponent<JCheckBox>("5th")
+        panel.clickComponent<JCheckBox>("Undecided")
+
+
+        val params = panel.generateParameters()
+        params.finishingPositions.shouldContainExactly(1, 5, -1)
     }
 }
