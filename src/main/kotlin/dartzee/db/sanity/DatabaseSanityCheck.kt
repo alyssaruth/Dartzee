@@ -3,12 +3,13 @@ package dartzee.db.sanity
 import dartzee.core.bean.ScrollTableButton
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.screen.TableModelDialog
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.core.util.runOnEventThread
+import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel
@@ -44,7 +45,7 @@ object DatabaseSanityCheck
 
     fun runSanityCheck()
     {
-        Debug.appendBanner("RUNNING SANITY CHECK")
+        logger.info(CODE_SANITY_CHECK_STARTED, "Running ${getAllSanityChecks().size} sanity checks...")
 
         sanityErrors.clear()
 
@@ -77,6 +78,15 @@ object DatabaseSanityCheck
 
     private fun sanityCheckComplete()
     {
+        logger.info(CODE_SANITY_CHECK_COMPLETED, "Completed sanity check and found ${sanityErrors.size} issues")
+
+        sanityErrors.forEach {
+            logger.info(CODE_SANITY_CHECK_RESULT,
+                    "${it.getCount()} ${it.getDescription()}",
+                    KEY_SANITY_DESCRIPTION to it.getDescription(),
+                    KEY_SANITY_COUNT to it.getCount())
+        }
+
         val tm = buildResultsModel()
         if (tm.rowCount > 0)
         {

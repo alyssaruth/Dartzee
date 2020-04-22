@@ -17,9 +17,15 @@ val CODE_DATABASE_CREATED = LoggingCode("databaseCreated")
 val CODE_THREAD_STACKS = LoggingCode("threadStacks")
 val CODE_THREAD_STACK = LoggingCode("threadStack")
 val CODE_NEW_CONNECTION = LoggingCode("newConnection")
+val CODE_SANITY_CHECK_STARTED = LoggingCode("sanityCheckStarted")
+val CODE_SANITY_CHECK_COMPLETED = LoggingCode("sanityCheckCompleted")
+val CODE_SANITY_CHECK_RESULT = LoggingCode("sanityCheckResult")
+val CODE_SIMULATION_STARTED = LoggingCode("simulationStarted")
+val CODE_SIMULATION_PROGRESS = LoggingCode("simulationProgress")
+val CODE_SIMULATION_FINISHED = LoggingCode("simulationFinished")
 
 //Warn
-val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpected.argument")
+val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
 val CODE_DATABASE_TOO_OLD = LoggingCode("databaseTooOld")
 
 //Error

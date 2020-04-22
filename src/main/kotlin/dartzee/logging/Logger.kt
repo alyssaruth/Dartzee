@@ -1,10 +1,12 @@
 package dartzee.logging
 
+import dartzee.core.util.MathsUtil
 import dartzee.utils.InjectedThings
 import java.sql.SQLException
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeUnit
+import kotlin.math.floor
 
 private const val LOGGER_THREAD = "Logger"
 
@@ -23,6 +25,20 @@ class Logger(private val destinations: List<ILogDestination>)
     {
         val message = "(${duration}ms) $sqlStatement"
         info(CODE_SQL, message, KEY_DURATION to duration, KEY_GENERIC_SQL to genericStatement, KEY_SQL to sqlStatement)
+    }
+
+    fun logProgress(code: LoggingCode, workDone: Long, workToDo: Long, percentageToLogAt: Int = 10)
+    {
+        //Convert 1 to 0.01, 50 to 0.5, etc.
+        val percentageAsDecimal = percentageToLogAt.toDouble() / 100
+        val percentageOfTotal = floor(workToDo * percentageAsDecimal)
+        val remainder = workDone % percentageOfTotal
+        if (remainder == 0.0)
+        {
+            val percentStr = MathsUtil.getPercentage(workDone, workToDo)
+            val logStr = "Done $workDone/$workToDo ($percentStr%)"
+            info(code, logStr)
+        }
     }
 
     fun info(code: LoggingCode, message: String, vararg keyValuePairs: Pair<String, Any?>)

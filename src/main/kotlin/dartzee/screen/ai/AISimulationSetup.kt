@@ -13,10 +13,15 @@ import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.db.*
 import dartzee.game.GameType
+import dartzee.logging.CODE_SIMULATION_FINISHED
+import dartzee.logging.CODE_SIMULATION_PROGRESS
+import dartzee.logging.CODE_SIMULATION_STARTED
 import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.stats.GameWrapper
+import dartzee.utils.DurationTimer
+import dartzee.utils.InjectedThings.logger
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.FlowLayout
@@ -99,22 +104,22 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
 
     private fun runSimulation(sim: AbstractDartsSimulation, hmGameIdToWrapper: MutableMap<Long, GameWrapper>, numberOfGames: Int)
     {
-        val startTime = System.currentTimeMillis()
         val dialog = ProgressDialog.factory("Simulating games...", "games remaining", numberOfGames)
         dialog.showCancel(true)
         dialog.setVisibleLater()
 
-        Debug.appendBanner("Starting simulation for $numberOfGames games")
+        logger.info(CODE_SIMULATION_STARTED, "Starting simulation for $numberOfGames games")
+        val timer = DurationTimer()
 
         for (i in 1..numberOfGames)
         {
             try
             {
                 val wrapper = sim.simulateGame((-i).toLong())
-                hmGameIdToWrapper[java.lang.Long.valueOf((-i).toLong())] = wrapper
+                hmGameIdToWrapper[i.toLong()] = wrapper
                 dialog.incrementProgressLater()
 
-                Debug.logProgress(i.toLong(), numberOfGames.toLong(), 10)
+                logger.logProgress(CODE_SIMULATION_PROGRESS, i.toLong(), numberOfGames.toLong())
 
                 if (dialog.cancelPressed())
                 {
@@ -134,11 +139,10 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
 
         }
 
-        val totalTime = System.currentTimeMillis() - startTime
-        Debug.appendBanner("Simulation complete - Took $totalTime millis")
+        logger.info(CODE_SIMULATION_FINISHED, "Simulation completed in ${timer.getDuration()} millis")
         dialog.disposeLater()
 
-        if (!hmGameIdToWrapper.isEmpty())
+        if (hmGameIdToWrapper.isNotEmpty())
         {
             //The simulation finished successfully, so show it
             SwingUtilities.invokeLater { simulationFinished(hmGameIdToWrapper, sim.gameType) }
