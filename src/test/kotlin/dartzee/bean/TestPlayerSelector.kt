@@ -182,7 +182,7 @@ class TestPlayerSelector: AbstractTest()
         selector.init()
 
         selector.tablePlayersToSelectFrom.selectRow(0)
-        doubleClick(selector.tablePlayersToSelectFrom)
+        selector.tablePlayersToSelectFrom.doubleClick()
         selector.getSelectedPlayers().size shouldBe 1
     }
 
@@ -195,7 +195,7 @@ class TestPlayerSelector: AbstractTest()
         selector.init(listOf(alex))
 
         selector.tablePlayersSelected.selectRow(0)
-        doubleClick(selector.tablePlayersSelected)
+        selector.tablePlayersSelected.doubleClick()
         selector.tablePlayersToSelectFrom.rowCount shouldBe 1
     }
 

@@ -43,7 +43,7 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
         panel.add(btnDartzeeTemplates, "cell 0 13, alignx center")
 
-        val buttons = getAllChildComponentsForType(panel, AbstractButton::class.java)
+        val buttons = panel.getAllChildComponentsForType<AbstractButton>()
         for (button in buttons)
         {
             button.font = Font("Tahoma", Font.PLAIN, 18)

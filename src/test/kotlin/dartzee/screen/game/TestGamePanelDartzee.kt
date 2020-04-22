@@ -229,7 +229,7 @@ class TestGamePanelDartzee: AbstractTest()
         verify { summaryPanel.update(listOf(), listOf(), 0, 1) }
     }
 
-    private fun DartzeeRuleCarousel.getDisplayedTiles() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).filter { it.isVisible }
+    private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
     private fun setUpDartzeeGameOnDatabase(rounds: Int): GameEntity
     {

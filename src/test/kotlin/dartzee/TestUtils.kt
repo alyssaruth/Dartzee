@@ -2,6 +2,7 @@ package dartzee
 
 import dartzee.`object`.*
 import dartzee.core.helper.makeMouseEvent
+import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
@@ -13,8 +14,10 @@ import io.kotlintest.shouldBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
+import java.awt.Container
 import java.awt.Point
 import java.time.Instant
+import javax.swing.AbstractButton
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
 
@@ -113,4 +116,26 @@ fun MockKMatcherScope.ruleDtosEq(players: List<DartzeeRuleDto>) = match<List<Dar
 fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
 {
     keyValuePairs.shouldContainExactly(mapOf(*values))
+}
+
+inline fun <reified T: AbstractButton> Container.findComponent(text: String): T
+{
+    val allComponents = getAllChildComponentsForType<T>()
+    val matching = allComponents.filter { it.text == text }
+
+    if (matching.isEmpty())
+    {
+        throw Exception("No ${T::class.simpleName} found with text [$text]")
+    }
+    else if (matching.size > 1)
+    {
+        throw Exception("Non-unique text - ${matching.size} ${T::class.simpleName}s found with text [$text]")
+    }
+
+    return matching.first()
+}
+
+inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
+{
+    findComponent<T>(text).doClick()
 }

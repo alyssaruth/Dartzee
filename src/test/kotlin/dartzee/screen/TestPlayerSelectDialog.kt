@@ -1,6 +1,7 @@
 package dartzee.screen
 
 import dartzee.bean.getAllPlayers
+import dartzee.core.helper.doubleClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -64,6 +65,21 @@ class TestPlayerSelectDialog: AbstractTest()
 
         dlg.tablePlayers.selectRow(0)
         dlg.btnOk.doClick()
+
+        dialogFactory.errorsShown.shouldBeEmpty()
+        dlg.selectedPlayers.size shouldBe 1
+    }
+
+    @Test
+    fun `Should respond to double-click`()
+    {
+        insertPlayer(name = "Bob")
+
+        val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
+        dlg.buildTable()
+
+        dlg.tablePlayers.selectRow(0)
+        dlg.tablePlayers.doubleClick()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         dlg.selectedPlayers.size shouldBe 1

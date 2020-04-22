@@ -1,39 +1,35 @@
 package dartzee.screen.reporting
 
-import dartzee.bean.*
+import dartzee.bean.ComboBoxGameType
+import dartzee.bean.GameParamFilterPanel
+import dartzee.bean.GameParamFilterPanelX01
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.RadioButtonPanel
-import dartzee.core.bean.ScrollTable
 import dartzee.core.util.Debug
-import dartzee.core.util.DialogUtil
 import dartzee.core.util.createButtonGroup
 import dartzee.core.util.enableChildren
-import dartzee.db.PlayerEntity
-import dartzee.reporting.IncludedPlayerParameters
 import dartzee.reporting.ReportParameters
 import dartzee.screen.EmbeddedScreen
-import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
 import dartzee.utils.getFilterPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
-import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
-import javax.swing.event.ListSelectionEvent
-import javax.swing.event.ListSelectionListener
 
-class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionListener
+class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
 {
-    private val hmIncludedPlayerToPanel = mutableMapOf<PlayerEntity, PlayerParametersPanel>()
-    private val excludedPlayers = mutableListOf<PlayerEntity>()
-
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
 
     //Game tab
+    private val checkBoxGameType = JCheckBox("Game")
+    private val verticalStrut = Box.createVerticalStrut(20)
+    private val horizontalStrut = Box.createHorizontalStrut(20)
+    private val panelGameType = RadioButtonPanel()
+    private val cbType = JCheckBox(" Type")
     private val panelGame = JPanel()
     private var panelGameParams: GameParamFilterPanel = GameParamFilterPanelX01()
     private val comboBox = ComboBoxGameType()
@@ -49,26 +45,8 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
     private val rdbtnYes = JRadioButton("Yes")
     private val rdbtnNo = JRadioButton("No")
 
-    //Included/Excluded Players
-    private val panelIncludedPlayers = JPanel()
-    private val panelExcludedPlayers = JPanel()
-    private val panel_2 = JPanel()
-    private val scrollTableExcluded = ScrollTable()
-    private val panel_3 = JPanel()
-    private val scrollTableIncluded = ScrollTable()
-    private val btnAddIncluded = JButton("")
-    private val btnRemoveIncluded = JButton("")
-    private val btnAddExcluded = JButton("")
-    private val btnRemoveExcluded = JButton("")
-    private val defaultIncludedPlayerPanel = PlayerParametersPanel()
-
-    //Will have one of these per included player, we'll swap them out/in as different players are selected
-    private var includedPlayerPanel = defaultIncludedPlayerPanel
-    private val checkBoxGameType = JCheckBox("Game")
-    private val verticalStrut = Box.createVerticalStrut(20)
-    private val horizontalStrut = Box.createHorizontalStrut(20)
-    private val panelGameType = RadioButtonPanel()
-    private val cbType = JCheckBox(" Type")
+    //Player tab
+    private val playerTab = ReportingPlayersTab()
 
     init
     {
@@ -97,32 +75,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         panelGame.add(panelGameType, "cell 2 0")
         panelGameType.add(comboBox)
         panelGame.add(rdbtnNo, "cell 2 6")
-        tabbedPane.addTab("Players", null, panelIncludedPlayers, null)
-        panelIncludedPlayers.layout = BorderLayout(0, 0)
-        val flowLayout = panel_3.layout as FlowLayout
-        flowLayout.alignment = FlowLayout.LEFT
-        panelIncludedPlayers.add(panel_3, BorderLayout.NORTH)
-        btnAddIncluded.preferredSize = Dimension(30, 30)
-        btnAddIncluded.icon = ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/addPlayer.png"))
-        panel_3.add(btnAddIncluded)
-        btnRemoveIncluded.icon = ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/removePlayer.png"))
-        btnRemoveIncluded.preferredSize = Dimension(30, 30)
-        panel_3.add(btnRemoveIncluded)
-        panelIncludedPlayers.add(scrollTableIncluded, BorderLayout.CENTER)
-        panelIncludedPlayers.add(includedPlayerPanel, BorderLayout.SOUTH)
-        tabbedPane.addTab("Excluded players", null, panelExcludedPlayers, null)
-        panelExcludedPlayers.layout = BorderLayout(0, 0)
-        val flowLayout_1 = panel_2.layout as FlowLayout
-        flowLayout_1.alignment = FlowLayout.LEFT
-        panelExcludedPlayers.add(panel_2, BorderLayout.NORTH)
-        btnAddExcluded.icon = ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/addPlayer.png"))
-        btnAddExcluded.preferredSize = Dimension(30, 30)
-        panel_2.add(btnAddExcluded)
-        btnRemoveExcluded.icon = ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/removePlayer.png"))
-        btnRemoveExcluded.preferredSize = Dimension(30, 30)
-        panel_2.add(btnRemoveExcluded)
-        defaultIncludedPlayerPanel.disableAll()
-        panelExcludedPlayers.add(scrollTableExcluded, BorderLayout.CENTER)
+        tabbedPane.addTab("Players", null, playerTab, null)
 
         createButtonGroupsAndSelectDefaults()
         addListeners()
@@ -149,14 +102,6 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
         addChangeListener(rdbtnUnfinished)
         addChangeListener(cbFinishDate)
         addChangeListener(cbPartOfMatch)
-
-        btnAddIncluded.addActionListener(this)
-        btnRemoveIncluded.addActionListener(this)
-        btnAddExcluded.addActionListener(this)
-        btnRemoveExcluded.addActionListener(this)
-
-        val model = scrollTableIncluded.selectionModel
-        model.addListSelectionListener(this)
     }
 
     private fun valid(): Boolean
@@ -171,17 +116,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
             return false
         }
 
-        val players = hmIncludedPlayerToPanel.keys
-        for (player in players)
-        {
-            val panel = hmIncludedPlayerToPanel[player]
-            if (panel?.valid(player) != true)
-            {
-                return false
-            }
-        }
-
-        return true
+        return playerTab.valid()
     }
 
     /**
@@ -248,27 +183,9 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
             }
         }
 
-        val hmIncludedPlayerToParms = generateIncludedPlayerParams()
-        rp.hmIncludedPlayerToParms = hmIncludedPlayerToParms
-        rp.excludedPlayers = excludedPlayers
+        playerTab.populateReportParameters(rp)
 
         return rp
-    }
-
-    private fun generateIncludedPlayerParams(): MutableMap<PlayerEntity, IncludedPlayerParameters>
-    {
-        val ret = mutableMapOf<PlayerEntity, IncludedPlayerParameters>()
-
-        val includedPlayers = hmIncludedPlayerToPanel.keys
-        for (player in includedPlayers)
-        {
-            val panel = hmIncludedPlayerToPanel[player]!!
-            val parms = panel.generateParameters()
-
-            ret[player] = parms
-        }
-
-        return ret
     }
 
     override fun stateChanged(arg0: ChangeEvent)
@@ -324,71 +241,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener, ListSelectionList
                 panelGame.revalidate()
             }
 
-            btnAddIncluded -> addPlayers(scrollTableIncluded, hmIncludedPlayerToPanel.keys.toMutableList())
-            btnAddExcluded -> addPlayers(scrollTableExcluded, excludedPlayers)
-            btnRemoveIncluded -> removePlayers(scrollTableIncluded, hmIncludedPlayerToPanel.keys.toMutableList())
-            btnRemoveExcluded -> removePlayers(scrollTableExcluded, excludedPlayers)
             else -> super.actionPerformed(arg0)
         }
-    }
-
-    private fun addPlayers(table: ScrollTable, tableList: MutableList<PlayerEntity>)
-    {
-        val allSelected = (hmIncludedPlayerToPanel.keys + excludedPlayers).toList()
-
-        val players = PlayerSelectDialog.selectPlayers(allSelected)
-        if (table === scrollTableIncluded)
-        {
-            for (player in players)
-            {
-                hmIncludedPlayerToPanel[player] = PlayerParametersPanel()
-            }
-        }
-
-        tableList.addAll(players)
-        table.initPlayerTableModel(tableList)
-        table.selectFirstRow()
-    }
-
-    private fun removePlayers(table: ScrollTable, tableList: MutableList<PlayerEntity>)
-    {
-        val playersToRemove = table.getSelectedPlayers()
-        if (playersToRemove.isEmpty())
-        {
-            DialogUtil.showError("You must select player(s) to remove.")
-            return
-        }
-
-        tableList.removeAll(playersToRemove)
-        table.initPlayerTableModel(tableList)
-
-        //Bleh
-        if (table === scrollTableIncluded)
-        {
-            for (player in playersToRemove)
-            {
-                hmIncludedPlayerToPanel.remove(player)
-            }
-        }
-    }
-
-    override fun valueChanged(arg0: ListSelectionEvent)
-    {
-        panelIncludedPlayers.remove(includedPlayerPanel)
-
-        val player = scrollTableIncluded.getSelectedPlayer()
-        if (player == null)
-        {
-            includedPlayerPanel = defaultIncludedPlayerPanel
-        }
-        else
-        {
-            includedPlayerPanel = hmIncludedPlayerToPanel[player]!!
-        }
-
-        panelIncludedPlayers.add(includedPlayerPanel, BorderLayout.SOUTH)
-
-        ScreenCache.mainScreen.pack()
-        repaint()
     }
 }

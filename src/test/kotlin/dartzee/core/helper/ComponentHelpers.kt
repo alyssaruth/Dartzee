@@ -48,14 +48,14 @@ fun JComponent.processKeyPress(key: Int)
     action.actionPerformed(mockk(relaxed = true))
 }
 
-fun doubleClick(component: Component)
+fun Component.doubleClick()
 {
-    val mouseEvent = MouseEvent(component, MOUSE_CLICKED, System.currentTimeMillis(), -1,
+    val mouseEvent = MouseEvent(this, MOUSE_CLICKED, System.currentTimeMillis(), -1,
     0, 0, 2, false)
 
-    if (component is MouseListener)
+    if (this is MouseListener)
     {
-        component.mouseClicked(mouseEvent)
+        this.mouseClicked(mouseEvent)
     }
 }
 

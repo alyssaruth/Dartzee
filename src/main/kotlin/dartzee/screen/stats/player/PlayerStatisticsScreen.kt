@@ -228,7 +228,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         filteredGamesOther = populateFilteredGames(hmLocalIdToWrapperOther, filterPanelOther)
 
         //Update the tabs
-        val tabs = getAllChildComponentsForType(this, AbstractStatisticsTab::class.java)
+        val tabs = getAllChildComponentsForType<AbstractStatisticsTab>()
         for (tab in tabs)
         {
             tab.setFilteredGames(filteredGames, filteredGamesOther)

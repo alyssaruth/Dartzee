@@ -129,7 +129,7 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         val fgBrightness = spinnerFgBrightness.value as Double
         val bgBrightness = spinnerBgBrightness.value as Double
 
-        val scoreLabels = getAllChildComponentsForType(panelScorerPreview, JLabel::class.java)
+        val scoreLabels = panelScorerPreview.getAllChildComponentsForType<JLabel>()
         for (i in scoreLabels.indices)
         {
             val scoreLabel = scoreLabels[i]

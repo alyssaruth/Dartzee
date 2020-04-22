@@ -175,7 +175,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
         statsPanel.shouldHaveBreakdownState(mapOf("2 - 3" to 1))
 
         //6
-        state = state.copy(darts = mutableListOf(missRound, hitRound))
+        state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4 - 6" to 1))
 

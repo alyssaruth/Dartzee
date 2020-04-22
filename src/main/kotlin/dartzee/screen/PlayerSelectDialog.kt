@@ -3,15 +3,17 @@ package dartzee.screen
 import dartzee.bean.PlayerTypeFilterPanel
 import dartzee.bean.getSelectedPlayers
 import dartzee.bean.initPlayerTableModel
+import dartzee.core.bean.IDoubleClickListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
 import dartzee.db.PlayerEntity
 import java.awt.BorderLayout
+import java.awt.Component
 import java.awt.event.ActionEvent
 import javax.swing.ListSelectionModel
 
-class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
+class PlayerSelectDialog(selectionMode: Int) : SimpleDialog(), IDoubleClickListener
 {
     var selectedPlayers = listOf<PlayerEntity>()
     var playersToExclude = listOf<PlayerEntity>()
@@ -28,6 +30,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
         contentPane.add(panelNorth, BorderLayout.NORTH)
         contentPane.add(tablePlayers, BorderLayout.CENTER)
         tablePlayers.setSelectionMode(selectionMode)
+        tablePlayers.addDoubleClickListener(this)
 
         panelNorth.addActionListener(this)
     }
@@ -42,6 +45,11 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog()
         {
             super.actionPerformed(arg0)
         }
+    }
+
+    override fun doubleClicked(source: Component)
+    {
+        okPressed()
     }
 
     fun buildTable()

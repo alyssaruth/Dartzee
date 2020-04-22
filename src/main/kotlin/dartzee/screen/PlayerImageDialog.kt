@@ -101,7 +101,7 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener
     {
         val panel = tabbedPane.selectedComponent as JPanel
 
-        val radios = getAllChildComponentsForType(panel, PlayerImageRadio::class.java)
+        val radios = panel.getAllChildComponentsForType<PlayerImageRadio>()
         return radios.find { it.isSelected() } ?.playerImageId
     }
 

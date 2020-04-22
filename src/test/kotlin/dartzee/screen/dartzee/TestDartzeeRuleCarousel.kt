@@ -272,7 +272,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
         }
     }
 
-    private fun DartzeeRuleCarousel.getDisplayedTiles() = getAllChildComponentsForType(tilePanel, DartzeeRuleTile::class.java).filter { it.isVisible }
+    private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
     private fun DartzeeRuleCarousel.getDisplayedRules() = getDisplayedTiles().map { it.dto }
     private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(
         dtos
