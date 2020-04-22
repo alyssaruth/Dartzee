@@ -22,6 +22,7 @@ val CODE_SANITY_CHECK_COMPLETED = LoggingCode("sanityCheckCompleted")
 val CODE_SANITY_CHECK_RESULT = LoggingCode("sanityCheckResult")
 val CODE_SIMULATION_STARTED = LoggingCode("simulationStarted")
 val CODE_SIMULATION_PROGRESS = LoggingCode("simulationProgress")
+val CODE_SIMULATION_CANCELLED = LoggingCode("simulationCancelled")
 val CODE_SIMULATION_FINISHED = LoggingCode("simulationFinished")
 
 //Warn
@@ -32,3 +33,4 @@ val CODE_DATABASE_TOO_OLD = LoggingCode("databaseTooOld")
 val CODE_LOOK_AND_FEEL_ERROR = LoggingCode("lafError")
 val CODE_SQL_EXCEPTION = LoggingCode("sqlException")
 val CODE_UNCAUGHT_EXCEPTION = LoggingCode("uncaughtException")
+val CODE_SIMULATION_ERROR = LoggingCode("simulationError")

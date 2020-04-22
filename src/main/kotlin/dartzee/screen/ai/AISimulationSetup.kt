@@ -9,13 +9,10 @@ import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.screen.SimpleDialog
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.db.*
 import dartzee.game.GameType
-import dartzee.logging.CODE_SIMULATION_FINISHED
-import dartzee.logging.CODE_SIMULATION_PROGRESS
-import dartzee.logging.CODE_SIMULATION_STARTED
+import dartzee.logging.*
 import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
@@ -123,7 +120,7 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
 
                 if (dialog.cancelPressed())
                 {
-                    Debug.append("Simulation Cancelled")
+                    logger.info(CODE_SIMULATION_CANCELLED, "Simulation Cancelled")
                     hmGameIdToWrapper.clear()
                     dialog.disposeLater()
                     return
@@ -133,7 +130,7 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
             {
                 hmGameIdToWrapper.clear()
                 dialog.disposeLater()
-                Debug.stackTrace(t)
+                logger.error(CODE_SIMULATION_ERROR, "Caught $t running simulation", t)
                 DialogUtil.showErrorLater("A serious problem has occurred with the simulation.")
             }
 
