@@ -113,7 +113,7 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
             try
             {
                 val wrapper = sim.simulateGame((-i).toLong())
-                hmGameIdToWrapper[i.toLong()] = wrapper
+                hmGameIdToWrapper[-i.toLong()] = wrapper
                 dialog.incrementProgressLater()
 
                 logger.logProgress(CODE_SIMULATION_PROGRESS, i.toLong(), numberOfGames.toLong())
