@@ -1,14 +1,12 @@
 package dartzee.utils
 
-import dartzee.core.helper.getLogs
-import dartzee.core.util.Debug
 import dartzee.helper.AbstractTest
 import dartzee.helper.dropUnexpectedTables
+import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -26,24 +24,23 @@ class TestDatabaseUtil: AbstractTest()
     fun `Should create a new connection if the pool is depleted`()
     {
         DatabaseUtil.initialiseConnectionPool(1)
-        Debug.waitUntilLoggingFinished()
-        Debug.clearLogs()
+        clearLogs()
 
         //Should borrow from the pool when non-empty
         val conn = DatabaseUtil.borrowConnection()
-        getLogs().shouldBeEmpty()
+        verifyNoLogs(CODE_NEW_CONNECTION)
 
         //Should create a new one now that there are none left
         val conn2 = DatabaseUtil.borrowConnection()
-        getLogs().shouldContain("CREATED new connection")
+        verifyLog(CODE_NEW_CONNECTION)
 
         DatabaseUtil.returnConnection(conn2)
         DatabaseUtil.returnConnection(conn)
 
         //Should have returned the connection successfully
-        Debug.clearLogs()
+        clearLogs()
         DatabaseUtil.borrowConnection()
-        getLogs().shouldBeEmpty()
+        verifyNoLogs(CODE_NEW_CONNECTION)
     }
 
     @Test
