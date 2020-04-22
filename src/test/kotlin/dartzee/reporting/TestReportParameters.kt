@@ -173,6 +173,43 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
+    fun `Should be able to only include games with the specified players`()
+    {
+        val gAllPlayers = insertGame()
+        val alice = insertPlayerForGame("Alice", gAllPlayers.rowId)
+        val bob = insertPlayerForGame("Bob", gAllPlayers.rowId)
+        val clive = insertPlayerForGame("Clive", gAllPlayers.rowId)
+        val daisy = insertPlayerForGame("Daisy", gAllPlayers.rowId)
+
+        val gAliceAndBob = insertGame()
+        insertParticipant(playerId = alice.rowId, gameId = gAliceAndBob.rowId)
+        insertParticipant(playerId = bob.rowId, gameId = gAliceAndBob.rowId)
+
+        val gAliceCliveDaisy = insertGame()
+        insertParticipant(playerId = alice.rowId, gameId = gAliceCliveDaisy.rowId)
+        insertParticipant(playerId = clive.rowId, gameId = gAliceCliveDaisy.rowId)
+        insertParticipant(playerId = daisy.rowId, gameId = gAliceCliveDaisy.rowId)
+
+        val gBobAndDaisy = insertGame()
+        insertParticipant(playerId = bob.rowId, gameId = gBobAndDaisy.rowId)
+        insertParticipant(playerId = daisy.rowId, gameId = gBobAndDaisy.rowId)
+
+        val gCliveDaisy = insertGame()
+        insertParticipant(playerId = clive.rowId, gameId = gCliveDaisy.rowId)
+        insertParticipant(playerId = daisy.rowId, gameId = gCliveDaisy.rowId)
+
+        val rpIncludeAlice = ReportParameters()
+        rpIncludeAlice.hmIncludedPlayerToParms = mapOf(alice to IncludedPlayerParameters())
+        val resultsAlice = runReportForTest(rpIncludeAlice)
+        resultsAlice.shouldContainExactlyInAnyOrder(gAllPlayers.localId, gAliceAndBob.localId, gAliceCliveDaisy.localId)
+
+        val rpIncludeAliceAndBob = ReportParameters()
+        rpIncludeAliceAndBob.hmIncludedPlayerToParms = mapOf(alice to IncludedPlayerParameters(), bob to IncludedPlayerParameters())
+        val resultsAliceAndBob = runReportForTest(rpIncludeAliceAndBob)
+        resultsAliceAndBob.shouldContainExactly(gAllPlayers.localId, gAliceAndBob.localId)
+    }
+
+    @Test
     fun `Should only include games with at least one human player if specified`()
     {
         val gAllPlayers = insertGame()

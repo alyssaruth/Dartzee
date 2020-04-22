@@ -9,7 +9,7 @@ data class IncludedPlayerParameters(var finishingPositions: List<Int> = listOf()
     fun generateExtraWhereSql(alias: String): String
     {
         val sb = StringBuilder()
-        if (!finishingPositions.isEmpty())
+        if (finishingPositions.isNotEmpty())
         {
             val finishingPositionsStr = finishingPositions.joinToString()
             sb.append(" AND $alias.FinishingPosition IN ($finishingPositionsStr)")
