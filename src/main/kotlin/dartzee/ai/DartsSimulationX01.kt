@@ -1,9 +1,8 @@
 package dartzee.ai
 
 import dartzee.`object`.Dart
-import dartzee.core.util.Debug
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.Dartboard
 import dartzee.utils.isBust
 import dartzee.utils.shouldStopForMercyRule
@@ -58,11 +57,6 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Abst
         {
             currentScore = startingScore
         }
-
-        Debug.appendBanner("Round $currentRound", logging)
-        Debug.append("StartingScore [$startingScore]", logging)
-        Debug.append("Darts [$dartsThrown]", logging)
-        Debug.append("CurrentScore [$currentScore]", logging)
 
         currentRound++
     }

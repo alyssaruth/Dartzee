@@ -3,10 +3,9 @@ package dartzee.ai
 import dartzee.`object`.Dart
 import dartzee.`object`.DartsClient
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.stats.GameWrapper
@@ -16,8 +15,6 @@ abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
                                        protected var player: PlayerEntity,
                                        protected var model: AbstractDartsModel) : DartboardListener
 {
-    protected var logging = false
-
     //Transient things
     protected var dtStart: Timestamp? = null
     protected var dtFinish: Timestamp? = null
@@ -53,8 +50,6 @@ abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
 
         val totalRounds = currentRound - 1
         val totalScore = getTotalScore()
-
-        Debug.appendBanner("Game Over. Rounds: $totalRounds, Score: $totalScore", logging)
 
         val wrapper = GameWrapper(gameId, gameParams, dtStart!!, dtFinish!!, totalScore)
         wrapper.setHmRoundNumberToDartsThrown(hmRoundNumberToDarts)
