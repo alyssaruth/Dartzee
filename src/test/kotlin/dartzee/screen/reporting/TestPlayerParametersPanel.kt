@@ -1,5 +1,6 @@
 package dartzee.screen.reporting
 
+import dartzee.clickComponent
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
@@ -8,6 +9,7 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
+import javax.swing.JCheckBox
 
 class TestPlayerParametersPanel: AbstractTest()
 {
@@ -84,17 +86,17 @@ class TestPlayerParametersPanel: AbstractTest()
         val panel = PlayerParametersPanel()
         panel.valid(player) shouldBe true
 
-        panel.chckbxPosition.doClick()
+        panel.clickComponent<JCheckBox>("Undecided")
         panel.valid(player) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Gordon")
         dialogFactory.errorsShown.clear()
 
-        panel.cbUndecided.doClick()
+        panel.clickComponent<JCheckBox>("Undecided")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
 
         panel.cbUndecided.doClick()
-        panel.positionCheckboxes.first().doClick()
+        panel.clickComponent<JCheckBox>("1st")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
     }

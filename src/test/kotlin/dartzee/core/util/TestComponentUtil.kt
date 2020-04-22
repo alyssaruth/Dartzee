@@ -29,10 +29,10 @@ class TestComponentUtil: AbstractTest()
         panel.add(btn)
         panel.add(rdbtn)
 
-        getAllChildComponentsForType(panel, JButton::class.java).shouldContainExactly(btn)
-        getAllChildComponentsForType(panel, JRadioButton::class.java).shouldContainExactly(rdbtn)
-        getAllChildComponentsForType(panel, AbstractButton::class.java).shouldContainExactly(btn, rdbtn)
-        getAllChildComponentsForType(panel, JCheckBox::class.java).shouldBeEmpty()
+        panel.getAllChildComponentsForType<JButton>().shouldContainExactly(btn)
+        panel.getAllChildComponentsForType<JRadioButton>().shouldContainExactly(rdbtn)
+        panel.getAllChildComponentsForType<AbstractButton>().shouldContainExactly(btn, rdbtn)
+        panel.getAllChildComponentsForType<JCheckBox>().shouldBeEmpty()
     }
 
     @Test
@@ -52,7 +52,7 @@ class TestComponentUtil: AbstractTest()
         panel2.add(panel3)
         panel3.add(btn3)
 
-        getAllChildComponentsForType(panel, JButton::class.java).shouldContainExactly(btn1, btn2, btn3)
+        panel.getAllChildComponentsForType<JButton>().shouldContainExactly(btn1, btn2, btn3)
     }
 
     @Test
@@ -65,10 +65,10 @@ class TestComponentUtil: AbstractTest()
         panel.add(panel2)
         panel2.add(btnOne)
 
-        containsComponent(panel, btnOne) shouldBe true
-        containsComponent(panel2, btnOne) shouldBe true
+        panel.containsComponent(btnOne) shouldBe true
+        panel2.containsComponent(btnOne) shouldBe true
 
-        containsComponent(panel, JButton()) shouldBe false
+        panel.containsComponent(JButton()) shouldBe false
     }
 
     @Test

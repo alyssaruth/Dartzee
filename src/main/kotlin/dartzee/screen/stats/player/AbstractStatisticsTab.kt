@@ -40,7 +40,7 @@ abstract class AbstractStatisticsTab : JPanel(), PropertyChangeListener
             container.layout = GridLayout(0, 1, 0, 0)
             container.remove(otherComponent)
         }
-        else if (!containsComponent(container, otherComponent))
+        else if (!container.containsComponent(otherComponent))
         {
             container.layout = GridLayout(0, 2, 0, 0)
             container.add(otherComponent)

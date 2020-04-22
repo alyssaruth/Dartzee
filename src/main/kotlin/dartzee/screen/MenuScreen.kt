@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import dartzee.core.util.getAllChildComponentsForType
+import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import java.awt.BorderLayout
@@ -59,11 +59,7 @@ class MenuScreen : EmbeddedScreen()
         panel.add(menuDartboard)
 
         //Add ActionListeners
-        val buttons = getAllChildComponentsForType(this, AbstractButton::class.java)
-        for (button in buttons)
-        {
-            button.addActionListener(this)
-        }
+        addActionListenerToAllChildren(this)
     }
 
     override fun getScreenName(): String

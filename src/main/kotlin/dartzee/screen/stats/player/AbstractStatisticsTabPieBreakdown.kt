@@ -135,7 +135,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
             tablePanel.layout = GridLayout(1, 1, 0, 0)
             tablePanel.remove(tableHoleBreakdownOther)
         }
-        else if (!containsComponent(tablePanel, tableHoleBreakdownOther))
+        else if (!tablePanel.containsComponent(tableHoleBreakdownOther))
         {
             pieChartPanel.layout = GridLayout(2, 1, 0, 0)
             pieChartPanel.add(otherPieChartPanel)

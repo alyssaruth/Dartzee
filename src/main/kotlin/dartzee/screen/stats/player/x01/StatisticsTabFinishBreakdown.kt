@@ -103,7 +103,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
             tablePanel.layout = GridLayout(1, 1, 0, 0)
             tablePanel.remove(tableFavouriteDoublesOther)
         }
-        else if (!containsComponent(tablePanel, tableFavouriteDoublesOther))
+        else if (!tablePanel.containsComponent(tableFavouriteDoublesOther))
         {
             tablePanel.layout = GridLayout(2, 1, 0, 0)
             tablePanel.add(tableFavouriteDoublesOther)

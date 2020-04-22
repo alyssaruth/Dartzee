@@ -39,19 +39,19 @@ abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractT
         tab.setFilteredGames(listOf(constructGameWrapper()), listOf())
         tab.populateStats()
         components.forEach{
-            containsComponent(tab, it) shouldBe false
+            tab.containsComponent(it) shouldBe false
         }
 
         tab.setFilteredGames(listOf(constructGameWrapper()), listOf(constructGameWrapper()))
         tab.populateStats()
         components.forEach{
-            containsComponent(tab, it) shouldBe true
+            tab.containsComponent(it) shouldBe true
         }
 
         tab.setFilteredGames(listOf(constructGameWrapper()), listOf())
         tab.populateStats()
         components.forEach{
-            containsComponent(tab, it) shouldBe false
+            tab.containsComponent(it) shouldBe false
         }
     }
 

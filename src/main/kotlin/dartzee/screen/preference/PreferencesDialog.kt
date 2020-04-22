@@ -93,7 +93,7 @@ class PreferencesDialog : JDialog(), ActionListener
         selectedTab.refresh(true)
     }
 
-    private fun getPreferencePanels() = getAllChildComponentsForType(this, AbstractPreferencesPanel::class.java)
+    private fun getPreferencePanels() = getAllChildComponentsForType<AbstractPreferencesPanel>()
 
     override fun actionPerformed(arg0: ActionEvent)
     {

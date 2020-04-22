@@ -364,21 +364,21 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     {
         val dlg = DartzeeRuleCreationDialog()
 
-        var children = getAllChildComponentsForType(dlg, DartzeeDartRuleSelector::class.java)
+        var children = dlg.getAllChildComponentsForType<DartzeeDartRuleSelector>()
         children.shouldContainExactlyInAnyOrder(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
         children.shouldNotContain(dlg.targetSelector)
 
         dlg.rdbtnAtLeastOne.doClick()
-        children = getAllChildComponentsForType(dlg, DartzeeDartRuleSelector::class.java)
+        children = dlg.getAllChildComponentsForType()
         children.shouldContainExactly(dlg.targetSelector)
 
         dlg.rdbtnAllDarts.doClick()
-        children = getAllChildComponentsForType(dlg, DartzeeDartRuleSelector::class.java)
+        children = dlg.getAllChildComponentsForType()
         children.shouldContainExactlyInAnyOrder(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
         children.shouldNotContain(dlg.targetSelector)
 
         dlg.rdbtnNoDarts.doClick()
-        children = getAllChildComponentsForType(dlg, DartzeeDartRuleSelector::class.java)
+        children = dlg.getAllChildComponentsForType()
         children.shouldBeEmpty()
     }
 
