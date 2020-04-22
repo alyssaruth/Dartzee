@@ -6,5 +6,6 @@ class LogDestinationSystemOut: ILogDestination
     {
         println(record)
         record.getThrowableStr()?.let { println(it) }
+        record.keyValuePairs[KEY_STACK]?.let { println(it) }
     }
 }
