@@ -3,6 +3,7 @@ package dartzee.utils
 import dartzee.`object`.DartsClient
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
+import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_TABLE_CREATED
 import dartzee.logging.CODE_TABLE_EXISTS
 import dartzee.utils.InjectedThings.logger
@@ -68,8 +69,9 @@ class DatabaseUtil
         {
             connectionCreateCount++
 
-            Debug.appendBanner("CREATED new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
-            return createDatabaseConnection(dbName = DartsClient.derbyDbName)
+            val connection = createDatabaseConnection(dbName = DartsClient.derbyDbName)
+            logger.info(CODE_NEW_CONNECTION, "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
+            return connection
         }
 
         private fun createDatabaseConnection(dbFilePath: String = DATABASE_FILE_PATH, dbName: String): Connection

@@ -41,31 +41,13 @@ class TestDebug: AbstractTestWithUsername()
 
         Debug.appendWithoutDate("Not here", false)
         Debug.appendWithoutDate("Present")
-        Debug.appendTabbed("Tabbed")
 
         val logs = getLogs()
 
         logs shouldContain("                                      Present")
-        logs shouldContain("                                      \tTabbed")
 
         logs shouldNotContain(dayAndMonthStr)
         logs shouldNotContain("Not here")
-    }
-
-    @Test
-    fun testAppendBanner()
-    {
-        Debug.clearLogs()
-
-        Debug.appendBanner("NoBanner", false)
-        Debug.appendBanner("IMPORTANT")
-
-        val logs = getLogs()
-
-        logs shouldNotContain("NoBanner")
-        logs shouldContain("*************")
-        logs shouldContain("* IMPORTANT *")
-        logs shouldNotContain("**************")
     }
 
     @Test

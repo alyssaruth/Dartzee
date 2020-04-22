@@ -72,11 +72,6 @@ object Debug
         append("                                      $text", logging, false)
     }
 
-    fun appendTabbed(text: String)
-    {
-        appendWithoutDate("	$text")
-    }
-
     fun appendBanner(text: String, logging: Boolean = true)
     {
         val length = text.length

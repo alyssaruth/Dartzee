@@ -16,6 +16,7 @@ val CODE_DATABASE_CREATING = LoggingCode("databaseCreating")
 val CODE_DATABASE_CREATED = LoggingCode("databaseCreated")
 val CODE_THREAD_STACKS = LoggingCode("threadStacks")
 val CODE_THREAD_STACK = LoggingCode("threadStack")
+val CODE_NEW_CONNECTION = LoggingCode("newConnection")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpected.argument")

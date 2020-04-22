@@ -218,8 +218,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         currentRoundNumber = newRoundNo
         updateLastRoundNumber(currentPlayerNumber, newRoundNo)
 
-        Debug.appendBanner(activeScorer.playerName + ": Round " + newRoundNo, VERBOSE_LOGGING)
-
         btnReset.isEnabled = false
         btnConfirm.isEnabled = false
 
@@ -451,8 +449,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     fun allPlayersFinished()
     {
-        Debug.append("All players now finished.", VERBOSE_LOGGING)
-
         if (!gameEntity.isFinished())
         {
             gameEntity.dtFinish = getSqlDateNow()
@@ -554,8 +550,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     override fun dartThrown(dart: Dart)
     {
-        Debug.append("Hit $dart", VERBOSE_LOGGING)
-
         dartsThrown.add(dart)
         activeScorer.addDart(dart)
 
@@ -812,8 +806,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     companion object
     {
-        const val VERBOSE_LOGGING = false
-
         fun factory(parent: AbstractDartsGameScreen, game: GameEntity) =
             when (game.gameType)
             {
