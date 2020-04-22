@@ -1,5 +1,6 @@
 --------- v4.1.1 ---------
 
++ Ability to exclude "all AI" games from reporting. Clarified existing player options.
 = Fix bug with Optimal Scorecard rendering
 = Fix bug with the number of games in "First To" matches
 = Fix bug with layout of player selectors
