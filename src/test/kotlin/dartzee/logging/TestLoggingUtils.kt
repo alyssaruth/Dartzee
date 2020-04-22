@@ -2,6 +2,7 @@ package dartzee.logging
 
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.SQLException
 
@@ -48,5 +49,16 @@ class TestLoggingUtils: AbstractTest()
         stackTrace.shouldContain("java.sql.SQLException: Unable to drop table FOO")
         stackTrace.shouldContain("Child: java.sql.SQLException: Permission Denied")
         stackTrace.shouldContain("Child: java.sql.SQLException: Hard Disk Error")
+    }
+    
+    @Test
+    fun `Should extract a string from a stack trace array`()
+    {
+        val stackTrace = arrayOf(StackTraceElement("SomeClass", "doStuff", "SomeClass.kt", 58), StackTraceElement("SomeClass", "maybeDoStuff", "SomeClass.kt", 40))
+
+        val result = extractThreadStack(stackTrace)
+        val lines = result.lines()
+        lines[0] shouldBe "\tat SomeClass.doStuff(SomeClass.kt:58)"
+        lines[1] shouldBe "\tat SomeClass.maybeDoStuff(SomeClass.kt:40)"
     }
 }

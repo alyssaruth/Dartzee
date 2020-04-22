@@ -64,6 +64,18 @@ class TestLoggingConsole: AbstractTest()
     }
 
     @Test
+    fun `Should log thread stacks`()
+    {
+        val console = LoggingConsole()
+
+        val threadStackLock = makeLogRecord(severity = Severity.INFO, message = "AWT Thread", keyValuePairs = mapOf(KEY_STACK to "at Foo.bar(58)"))
+        console.log(threadStackLock)
+
+        console.getText() shouldContain "AWT Thread"
+        console.getText() shouldContain "at Foo.bar(58)"
+    }
+
+    @Test
     fun `Should log SELECT statements in blue`()
     {
         val console = LoggingConsole()
