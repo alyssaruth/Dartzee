@@ -26,7 +26,6 @@ class PlayerParametersPanel : JPanel(), ActionListener
 
     init
     {
-
         layout = MigLayout("", "[][][]", "[][]")
 
         comboBox.addOption(COMPARATOR_SCORE_UNSET)

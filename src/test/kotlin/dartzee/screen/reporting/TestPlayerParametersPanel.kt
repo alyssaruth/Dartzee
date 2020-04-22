@@ -1,8 +1,11 @@
 package dartzee.screen.reporting
 
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
 import dartzee.reporting.IncludedPlayerParameters
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -71,5 +74,28 @@ class TestPlayerParametersPanel: AbstractTest()
 
         panel.comboBox.selectedIndex = 0
         panel.spinner.isEnabled shouldBe true
+    }
+
+    @Test
+    fun `Should not be valid if position is selected but nothing ticked`()
+    {
+        val player = insertPlayer(name = "Gordon")
+
+        val panel = PlayerParametersPanel()
+        panel.valid(player) shouldBe true
+
+        panel.chckbxPosition.doClick()
+        panel.valid(player) shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Gordon")
+        dialogFactory.errorsShown.clear()
+
+        panel.cbUndecided.doClick()
+        panel.valid(player) shouldBe true
+        dialogFactory.errorsShown.shouldBeEmpty()
+
+        panel.cbUndecided.doClick()
+        panel.positionCheckboxes.first().doClick()
+        panel.valid(player) shouldBe true
+        dialogFactory.errorsShown.shouldBeEmpty()
     }
 }
