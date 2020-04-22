@@ -22,6 +22,17 @@ private fun getStackString(t: Throwable): String
     return sw.toString()
 }
 
+fun extractThreadStack(stack: Array<StackTraceElement>): String
+{
+    val sw = StringWriter()
+    val pw = PrintWriter(sw)
+    stack.forEach {
+        pw.println("\tat $it")
+    }
+
+    return sw.toString()
+}
+
 private fun extractSqlException(sqle: SQLException): String
 {
     val sb = StringBuilder()

@@ -14,6 +14,8 @@ val CODE_DATABASE_UP_TO_DATE = LoggingCode("databaseCurrent")
 val CODE_DATABASE_NEEDS_UPDATE = LoggingCode("databaseNeedsUpdate")
 val CODE_DATABASE_CREATING = LoggingCode("databaseCreating")
 val CODE_DATABASE_CREATED = LoggingCode("databaseCreated")
+val CODE_THREAD_STACKS = LoggingCode("threadStacks")
+val CODE_THREAD_STACK = LoggingCode("threadStack")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpected.argument")

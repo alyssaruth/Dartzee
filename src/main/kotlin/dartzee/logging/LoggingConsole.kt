@@ -65,6 +65,9 @@ class LoggingConsole: JFrame(), ILogDestination
             doc.insertString(doc.length, "\n$text", style)
             record.getThrowableStr()?.let { doc.insertString(doc.length, "\n$it", style) }
 
+            val threadStack = record.keyValuePairs[KEY_STACK]
+            threadStack?.let { doc.insertString(doc.length, "\n$it", style) }
+
             textArea.select(doc.length, doc.length)
         }
         catch (ble: BadLocationException)
