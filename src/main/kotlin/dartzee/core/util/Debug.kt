@@ -113,7 +113,7 @@ object Debug
         append(trace, true)
     }
 
-    fun getCurrentTimeForLogging() = "${DATE_FORMAT.format(System.currentTimeMillis())}   "
+    private fun getCurrentTimeForLogging() = "${DATE_FORMAT.format(System.currentTimeMillis())}   "
 
     fun getCurrentLogs(): String = output?.getLogs() ?: ""
 

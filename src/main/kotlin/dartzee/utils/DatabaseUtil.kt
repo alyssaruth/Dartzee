@@ -201,7 +201,7 @@ class DatabaseUtil
                 }
                 else
                 {
-                    Debug.stackTrace(sqle)
+                    logger.logSqlException("", "", sqle)
                 }
             }
 
@@ -285,7 +285,7 @@ class DatabaseUtil
                     return true
                 }
 
-                Debug.stackTrace(sqle)
+                logger.logSqlException("jdbc:derby:;shutdown=true", "jdbc:derby:;shutdown=true", sqle)
             }
 
             return false

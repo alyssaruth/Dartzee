@@ -12,6 +12,7 @@ import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
 import dartzee.listener.DartboardListener
+import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
@@ -265,7 +266,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t)
+            logger.error(CODE_LOAD_ERROR, "Failed to load Game ${gameEntity.rowId}", t)
             DialogUtil.showError("Failed to load Game #${gameEntity.localId}")
         }
     }
