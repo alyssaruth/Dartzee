@@ -28,6 +28,7 @@ val CODE_SIMULATION_FINISHED = LoggingCode("simulationFinished")
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
 val CODE_DATABASE_TOO_OLD = LoggingCode("databaseTooOld")
+val CODE_RESOURCE_CACHE_NOT_INITIALISED = LoggingCode("resourceCacheNotInitialised")
 
 //Error
 val CODE_LOOK_AND_FEEL_ERROR = LoggingCode("lafError")
@@ -36,3 +37,4 @@ val CODE_UNCAUGHT_EXCEPTION = LoggingCode("uncaughtException")
 val CODE_SIMULATION_ERROR = LoggingCode("simulationError")
 val CODE_LOAD_ERROR = LoggingCode("loadError")
 val CODE_INSTANTIATION_ERROR = LoggingCode("instantiationError")
+val CODE_AUDIO_ERROR = LoggingCode("audioError")

@@ -10,15 +10,17 @@ import dartzee.core.util.Debug
 import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThread
 import dartzee.listener.DartboardListener
+import dartzee.logging.CODE_AUDIO_ERROR
+import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.*
 import dartzee.utils.DartsColour.DARTBOARD_BLACK
+import dartzee.utils.InjectedThings.logger
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import java.awt.image.BufferedImage
-import java.net.URL
 import java.util.*
 import javax.sound.sampled.*
 import javax.swing.ImageIcon
@@ -515,12 +517,12 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             }
             else
             {
-                playDodgySoundAdHoc(soundName)
+                logger.warn(CODE_RESOURCE_CACHE_NOT_INITIALISED, "Not playing [$soundName] - ResourceCache not initialised")
             }
         }
         catch (e: Exception)
         {
-            Debug.stackTrace(e, "Caught error playing sound [$soundName]")
+            logger.error(CODE_AUDIO_ERROR, "Caught error playing sound [$soundName]", e)
         }
 
     }
@@ -537,37 +539,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
     }
 
-    /**
-     * Old, ad-hoc version for playing sounds (was really slow on home PC).
-     *
-     * Caches the URL on-the-fly, but still initialises a fresh InputStream every time.
-     */
-    private fun playDodgySoundAdHoc(soundName: String)
-    {
-        Debug.append("Playing $soundName ad-hoc - this will be slow")
-
-        var url: URL? = hmSoundNameToUrl[soundName]
-        if (url == null)
-        {
-            url = javaClass.getResource("/wav/$soundName.wav")
-            hmSoundNameToUrl[soundName] = url
-        }
-
-        //Resource may still be null if it genuinely doesn't exist. Just return.
-        if (url == null)
-        {
-            return
-        }
-
-        val clip = initialiseAudioClip(null, soundName)
-        if (clip != null)
-        {
-            clip.open(AudioSystem.getAudioInputStream(url))
-            clip.start()
-        }
-    }
-
-    private fun initialiseAudioClip(stream: AudioInputStream?, soundName: String): Clip?
+    private fun initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip?
     {
         val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
 
@@ -582,10 +554,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
                 myClip.stop()
                 myClip.close()
 
-                if (ResourceCache.isInitialised && stream != null)
-                {
-                    ResourceCache.returnInputStream(soundName, stream)
-                }
+                ResourceCache.returnInputStream(soundName, stream)
 
                 //See whether there's currently any later clip still running. If there isn't, also dismiss our dodgyLabel
                 val somethingRunning = latestClip?.isRunning ?: false
@@ -687,9 +656,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     companion object
     {
-        private val DARTIMG = ImageIcon(javaClass.getResource("/dartImage.png"))
-
-        private val hmSoundNameToUrl = mutableMapOf<String, URL>()
+        private val DARTIMG = ImageIcon(Dartboard::class.java.getResource("/dartImage.png"))
         var dartboardTemplate: DartboardTemplate? = null
 
         fun appearancePreferenceChanged()

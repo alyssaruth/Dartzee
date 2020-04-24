@@ -103,6 +103,10 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
                 dartboard.doForsyth()
             }
         }
+        else if (dartsThrown.size == 4)
+        {
+            dartboard.doBadLuck()
+        }
         else if (dartsThrown.size != 4)
         {
             activeScorer.disableBrucey()

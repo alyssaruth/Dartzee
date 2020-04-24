@@ -17,7 +17,6 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
     private val lblRowsToShow = JLabel("Rows to show on Leaderboards")
     val nfLeaderboardSize = NumberField(10, 200)
     val chckbxShowAnimations = JCheckBox("Play sounds/animations")
-    val chckbxPreloadResources = JCheckBox("Pre-load resources (recommended)")
 
     init
     {
@@ -35,8 +34,6 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
         add(chckbxCheckForUpdates, "flowx,cell 0 3")
 
         add(chckbxShowAnimations, "cell 0 4")
-
-        add(chckbxPreloadResources, "cell 0 5")
     }
 
     override fun refresh(useDefaults: Boolean)
@@ -55,9 +52,6 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
 
         val showAnimations = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults)
         chckbxShowAnimations.isSelected = showAnimations
-
-        val preLoad = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, useDefaults)
-        chckbxPreloadResources.isSelected = preLoad
 
     }
 
@@ -82,9 +76,6 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
 
         val showAnimations = chckbxShowAnimations.isSelected
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, showAnimations)
-
-        val preLoad = chckbxPreloadResources.isSelected
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, preLoad)
     }
 
 }

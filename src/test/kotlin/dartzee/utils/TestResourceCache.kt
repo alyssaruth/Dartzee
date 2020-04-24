@@ -1,7 +1,7 @@
 package dartzee.utils
 
 import dartzee.core.helper.getLogs
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotContain
@@ -11,28 +11,12 @@ import org.junit.Test
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class TestResourceCache : AbstractRegistryTest()
+class TestResourceCache : AbstractTest()
 {
     override fun beforeEachTest()
     {
         super.beforeEachTest()
         ResourceCache.resetCache()
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, true)
-    }
-
-    override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES)
-
-    @Test
-    fun `Should not pre-load any WAVs if the preference is disabled`()
-    {
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, false)
-
-        ResourceCache.initialiseResources()
-        getLogs() shouldContain "Not pre-loading WAVs as preference is disabled"
-
-        ResourceCache.isInitialised shouldBe false
-        val stream = ResourceCache.borrowInputStream("140")
-        stream shouldBe null
     }
 
     @Test
