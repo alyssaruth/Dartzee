@@ -29,10 +29,10 @@ import javax.swing.JLayeredPane
 import javax.swing.SwingConstants
 
 
-private const val LAYER_NUMBERS = 1
-private const val LAYER_DARTS = 2
-private const val LAYER_DODGY = 3
-private const val LAYER_SLIDER = 4
+const val LAYER_NUMBERS = 1
+const val LAYER_DARTS = 2
+const val LAYER_DODGY = 3
+const val LAYER_SLIDER = 4
 
 open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 {
@@ -51,16 +51,19 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     var renderScoreLabels = false
 
     private var dartCount = 0
-    private var simulation = false
+    var simulation = false
 
     //Cached things
     private var lastHoveredSegment: DartboardSegment? = null
     private var colourWrapper: ColourWrapper? = null
-    private var latestClip: Clip? = null
+
+    //For dodgy sounds/animations
+    var latestClip: Clip? = null
+    val dodgyLabel = JLabel()
 
     var dartboardImage: BufferedImage? = null
     val dartboardLabel = JLabel()
-    private val dodgyLabel = JLabel() //You know what this is...
+     //You know what this is...
 
     constructor()
     {
@@ -422,154 +425,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         lastHoveredSegment?.let { colourSegment(it, false) }
     }
 
-    fun doFawlty()
-    {
-        val rand = Random()
-        val brucey = rand.nextInt(4) + 1
-
-        doDodgy(ResourceCache.IMG_BASIL, 576, 419, "basil$brucey")
-    }
-
-    fun doForsyth()
-    {
-        val rand = Random()
-        val brucey = rand.nextInt(4) + 1
-
-        doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "forsyth$brucey")
-    }
-
-    fun doBadLuck()
-    {
-        val rand = Random()
-        val ix = rand.nextInt(2) + 1
-
-        doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "badLuck$ix")
-    }
-
-    fun doBull()
-    {
-        doDodgy(ResourceCache.IMG_DEV, 400, 476, "bull")
-    }
-
-    fun doBadMiss()
-    {
-        val rand = Random()
-        val miss = rand.nextInt(5) + 1
-
-        //4-1 ratio because mitchell > spencer!
-        if (miss <= 4)
-        {
-            doDodgy(ResourceCache.IMG_MITCHELL, 300, 250, "badmiss$miss")
-        }
-        else
-        {
-            doDodgy(ResourceCache.IMG_SPENCER, 460, 490, "damage")
-        }
-    }
-
-    fun doGolfMiss()
-    {
-        doDodgy(ResourceCache.IMG_DEV, 400, 476, "fourTrimmed")
-    }
-
-    private fun doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
-    {
-        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) || simulation)
-        {
-            return
-        }
-
-        runOnEventThread { doDodgyOnEdt(ii, width, height, soundName) }
-    }
-
-    private fun doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, soundName: String)
-    {
-        dodgyLabel.icon = ii
-        dodgyLabel.setSize(width, height)
-
-        val x = (getWidth() - width) / 2
-        val y = getHeight() - height
-        dodgyLabel.setLocation(x, y)
-
-        remove(dodgyLabel)
-        add(dodgyLabel)
-
-        setLayer(dodgyLabel, LAYER_DODGY)
-
-        repaint()
-        revalidate()
-
-        playDodgySound(soundName)
-    }
-
-    fun playDodgySound(soundName: String)
-    {
-        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) || simulation)
-        {
-            return
-        }
-
-        try
-        {
-            if (ResourceCache.isInitialised)
-            {
-                playDodgySoundCached(soundName)
-            }
-            else
-            {
-                logger.warn(CODE_RESOURCE_CACHE_NOT_INITIALISED, "Not playing [$soundName] - ResourceCache not initialised")
-            }
-        }
-        catch (e: Exception)
-        {
-            logger.error(CODE_AUDIO_ERROR, "Caught error playing sound [$soundName]", e)
-        }
-
-    }
-
-    private fun playDodgySoundCached(soundName: String)
-    {
-        val stream = ResourceCache.borrowInputStream(soundName) ?: return
-
-        val clip = initialiseAudioClip(stream, soundName)
-        if (clip != null)
-        {
-            clip.open(stream)
-            clip.start()
-        }
-    }
-
-    private fun initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip?
-    {
-        val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
-
-        //Overwrite the 'latestClip' variable so this always stores the latest sound.
-        //Allows us to not dismiss the label until the final sound has finished, in the case of overlapping sounds.
-        latestClip = myClip
-
-        myClip.addLineListener { event ->
-            if (event.type === LineEvent.Type.STOP)
-            {
-                //Always close or return our one
-                myClip.stop()
-                myClip.close()
-
-                ResourceCache.returnInputStream(soundName, stream)
-
-                //See whether there's currently any later clip still running. If there isn't, also dismiss our dodgyLabel
-                val somethingRunning = latestClip?.isRunning ?: false
-                if (!somethingRunning)
-                {
-                    remove(dodgyLabel)
-                    repaint()
-                    revalidate()
-                }
-            }
-        }
-
-        return myClip
-    }
-
     private fun addDart(pt: Point)
     {
         if (dartLabels.isEmpty())
@@ -610,12 +465,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         dartCount = 0
         revalidate()
         repaint()
-
-    }
-
-    fun setSimulation(simulation: Boolean)
-    {
-        this.simulation = simulation
     }
 
     override fun mouseMoved(arg0: MouseEvent)
