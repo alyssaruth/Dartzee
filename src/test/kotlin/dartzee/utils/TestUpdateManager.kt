@@ -2,8 +2,10 @@ package dartzee.utils
 
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
+import dartzee.`object`.DartsClient
 import dartzee.helper.AbstractTest
 import dartzee.logging.*
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith
@@ -136,8 +138,26 @@ class TestUpdateManager: AbstractTest()
     }
 
     @Test
+    fun `Should show an info and not proceed to auto update if OS is not windows`()
+    {
+        DartsClient.operatingSystem = "foo"
+
+        val metadata = UpdateMetadata("v100", 123456, "Dartzee_x_y.jar", 100)
+        UpdateManager.shouldUpdate(DARTS_VERSION_NUMBER, metadata) shouldBe false
+
+        val log = verifyLog(CODE_UPDATE_RESULT)
+        log.message shouldBe "Newer release available - v100"
+
+        dialogFactory.questionsShown.shouldBeEmpty()
+        dialogFactory.infosShown.shouldContainExactly("An update is available (v100). You can download it manually from: \n" +
+                "$DARTZEE_MANUAL_DOWNLOAD_URL/tags/v100")
+    }
+
+    @Test
     fun `Should not proceed with the update if user selects 'No'`()
     {
+        DartsClient.operatingSystem = "windows"
+
         val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar", 100)
 
         dialogFactory.questionOption = JOptionPane.NO_OPTION
@@ -149,6 +169,8 @@ class TestUpdateManager: AbstractTest()
     @Test
     fun `Should proceed with the update if user selects 'Yes'`()
     {
+        DartsClient.operatingSystem = "windows"
+
         val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar", 100)
 
         dialogFactory.questionOption = JOptionPane.YES_OPTION
