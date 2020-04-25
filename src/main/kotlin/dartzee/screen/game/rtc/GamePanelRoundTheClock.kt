@@ -6,7 +6,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
 import dartzee.core.util.doBadLuck
 import dartzee.core.util.doForsyth
 import dartzee.db.AchievementEntity
@@ -58,8 +57,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         }
 
         hmPlayerNumberToCurrentStreak[playerNumber] = currentStreak
-
-        Debug.append("Player #$playerNumber: $currentStreak")
     }
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)

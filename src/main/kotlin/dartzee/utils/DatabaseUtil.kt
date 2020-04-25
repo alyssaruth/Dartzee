@@ -1,11 +1,8 @@
 package dartzee.utils
 
 import dartzee.`object`.DartsClient
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
-import dartzee.logging.CODE_NEW_CONNECTION
-import dartzee.logging.CODE_TABLE_CREATED
-import dartzee.logging.CODE_TABLE_EXISTS
+import dartzee.logging.*
 import dartzee.utils.InjectedThings.logger
 import java.sql.Connection
 import java.sql.DriverManager
@@ -195,7 +192,7 @@ class DatabaseUtil
                 if (next != null
                  && next.message!!.contains("Another instance of Derby may have already booted the database"))
                 {
-                    Debug.stackTraceSilently(sqle)
+                    logger.warn(CODE_DATABASE_IN_USE, "Failed multiple instance check, exiting.")
                     DialogUtil.showError("Database already in use - Dartzee will now exit.")
                     exitProcess(1)
                 }
@@ -261,12 +258,10 @@ class DatabaseUtil
             }
             catch (t: Throwable)
             {
-                Debug.append("Failed to establish test connection for path $dbPath")
-                Debug.stackTraceSilently(t)
+                logger.error(CODE_TEST_CONNECTION_ERROR, "Failed to establish test connection for path $dbPath", t)
                 return false
             }
 
-            Debug.append("Successfully created test connection to $dbPath")
             return true
         }
 

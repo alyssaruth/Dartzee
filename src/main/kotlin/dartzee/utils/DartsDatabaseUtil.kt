@@ -1,7 +1,6 @@
 package dartzee.utils
 
 import dartzee.core.screen.ProgressDialog
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
@@ -202,7 +201,7 @@ object DartsDatabaseUtil
     {
         val dbFolder = File(DatabaseUtil.DATABASE_FILE_PATH)
 
-        Debug.append("About to start DB backup")
+        logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
         val file = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
@@ -220,14 +219,14 @@ object DartsDatabaseUtil
 
     fun restoreDatabase()
     {
-        Debug.append("About to start DB restore")
+        logger.info(CODE_STARTING_RESTORE, "About to start DB restore")
 
         if (!checkAllGamesAreClosed())
         {
             return
         }
 
-        val directoryFrom = selectAndValidateNewDatabase("restore from.")
+        val directoryFrom = selectAndValidateNewDatabase()
                 ?: //Cancelled, or invalid
                 return
 
@@ -236,7 +235,6 @@ object DartsDatabaseUtil
         val option = DialogUtil.showQuestion(confirmationQ, false)
         if (option == JOptionPane.NO_OPTION)
         {
-            Debug.append("Restore cancelled.")
             return
         }
 
@@ -260,7 +258,6 @@ object DartsDatabaseUtil
         val error = FileUtil.swapInFile(DatabaseUtil.DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
         if (error != null)
         {
-            Debug.stackTraceSilently("Failed to swap in new database for restore: $error")
             DialogUtil.showError("Failed to restore database. Error: $error")
             return
         }
@@ -269,9 +266,9 @@ object DartsDatabaseUtil
         exitProcess(0)
     }
 
-    private fun selectAndValidateNewDatabase(messageSuffix: String): File?
+    private fun selectAndValidateNewDatabase(): File?
     {
-        DialogUtil.showInfo("Select the 'Databases' folder you want to $messageSuffix")
+        DialogUtil.showInfo("Select the 'Databases' folder you want to restore from.")
         val directoryFrom = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
                 return null
@@ -280,7 +277,6 @@ object DartsDatabaseUtil
         val name = directoryFrom.name
         if (name != "Databases")
         {
-            Debug.append("Aborting - selected folder invalid: $directoryFrom")
             DialogUtil.showError("Selected path is not valid - you must select a folder named 'Databases'")
             return null
         }
@@ -300,9 +296,8 @@ object DartsDatabaseUtil
     private fun checkAllGamesAreClosed(): Boolean
     {
         val openScreens = ScreenCache.getDartsGameScreens()
-        if (!openScreens.isEmpty())
+        if (openScreens.isNotEmpty())
         {
-            Debug.append("Aborting - there are games still open.")
             DialogUtil.showError("You must close all open games before continuing.")
             return false
         }

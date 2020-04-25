@@ -2,7 +2,6 @@ package dartzee.screen.stats.player.x01
 
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
-import dartzee.core.util.Debug
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.screen.stats.player.AbstractStatisticsTab
@@ -114,7 +113,6 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
 
         val totalScoringDarts = finishedGames.map{ it.getScoringDarts(scoreThreshold).size }.sum().toDouble()
         val misses = finishedGames.map { it.getDartsForMultiplierX01(scoreThreshold, 0) }.sum().toDouble()
-        val trebles = finishedGames.map { it.getDartsForMultiplierX01(scoreThreshold, 3) }.sum().toDouble()
         val avgTotal = finishedGames.map { it.getThreeDartAverage(scoreThreshold) }.sum()
 
         val rawAverages = XYSeries("Avg$graphSuffix")
@@ -142,7 +140,5 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
 
         //Miss percent, to 1 d.p
         nfMissPercent.text = "" + MathsUtil.round(100 * misses / totalScoringDarts, 1)
-
-        Debug.append("Treble %: " + 100 * trebles / totalScoringDarts)
     }
 }

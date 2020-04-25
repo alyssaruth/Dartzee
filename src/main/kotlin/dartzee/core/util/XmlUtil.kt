@@ -1,5 +1,7 @@
 package dartzee.core.util
 
+import dartzee.logging.CODE_PARSE_ERROR
+import dartzee.utils.InjectedThings.logger
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
@@ -118,7 +120,7 @@ fun Document.toXmlString(): String =
     }
     catch (t: Throwable)
     {
-        Debug.stackTrace(t)
+        logger.error(CODE_PARSE_ERROR, "Failed to convert xml doc to string", t)
         ""
     }
 
