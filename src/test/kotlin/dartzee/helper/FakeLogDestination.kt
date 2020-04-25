@@ -12,6 +12,8 @@ class FakeLogDestination: ILogDestination
         logRecords.add(record)
     }
 
+    override fun contextUpdated(context: Map<String, Any?>) {}
+
     fun clear()
     {
         logRecords.clear()

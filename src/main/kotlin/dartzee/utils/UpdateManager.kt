@@ -1,8 +1,10 @@
 package dartzee.utils
 
 import com.mashape.unirest.http.Unirest
-import dartzee.core.util.Debug
+import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
+import dartzee.logging.*
+import dartzee.utils.InjectedThings.logger
 import org.json.JSONObject
 import java.io.File
 import javax.swing.JOptionPane
@@ -18,7 +20,7 @@ object UpdateManager
     fun checkForUpdates(currentVersion: String)
     {
         //Show this here, checking the CRC can take time
-        Debug.append("Checking for updates - my version is $currentVersion")
+        logger.info(CODE_UPDATE_CHECK, "Checking for updates - my version is $currentVersion")
 
         val jsonResponse = queryLatestReleaseJson(DARTZEE_REPOSITORY_URL)
         jsonResponse ?: return
@@ -41,8 +43,10 @@ object UpdateManager
             val response = Unirest.get("$repositoryUrl/releases/latest").asJson()
             if (response.status != 200)
             {
-                Debug.append("Received non-success HTTP status: ${response.status} - ${response.statusText}")
-                Debug.append(response.body.toString())
+                logger.error(CODE_UPDATE_ERROR,
+                        "Received non-success HTTP status: ${response.status} - ${response.statusText}",
+                        Throwable(),
+                        KEY_RESPONSE_BODY to response.body)
                 DialogUtil.showError("Failed to check for updates (unable to connect).")
                 return null
             }
@@ -51,7 +55,7 @@ object UpdateManager
         }
         catch (t: Throwable)
         {
-            Debug.stackTraceSilently(t)
+            logger.error(CODE_UPDATE_ERROR, "Caught $t checking for updates", t)
             DialogUtil.showError("Failed to check for updates (unable to connect).")
             return null
         }
@@ -63,14 +67,22 @@ object UpdateManager
 
     fun shouldUpdate(currentVersion: String, metadata: UpdateMetadata): Boolean
     {
-        if (metadata.version == currentVersion)
+        val newVersion = metadata.version
+        if (newVersion == currentVersion)
         {
-            Debug.append("I am up to date")
+            logger.info(CODE_UPDATE_CHECK_RESULT, "Up to date")
             return false
         }
 
         //An update is available
-        Debug.append("Newer release available - ${metadata.version}")
+        logger.info(CODE_UPDATE_CHECK_RESULT, "Newer release available - $newVersion")
+
+        if (!DartsClient.isWindowsOs())
+        {
+            DialogUtil.showInfo("An update is available ($newVersion). You can download it manually from: \n$DARTZEE_MANUAL_DOWNLOAD_URL/tags/$newVersion")
+            return false
+        }
+
         val answer = DialogUtil.showQuestion("An update is available (${metadata.version}). Would you like to download it now?", false)
         return answer == JOptionPane.YES_OPTION
     }
@@ -90,7 +102,7 @@ object UpdateManager
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t, "Error parsing JSON: $responseJson")
+            logger.error(CODE_PARSE_ERROR, "Error parsing update response", t, KEY_RESPONSE_BODY to responseJson)
             null
         }
     }
@@ -106,7 +118,7 @@ object UpdateManager
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t, suppressError = true)
+            logger.error(CODE_BATCH_ERROR, "Error running update.bat", t)
             val manualCommand = "update.bat $args"
 
             val msg = "Failed to launch update.bat - call the following manually to perform the update: \n\n$manualCommand"

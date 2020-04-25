@@ -1,6 +1,5 @@
 package dartzee.core.bean
 
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -63,8 +62,6 @@ class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), Ac
         {
             this.selectedFile = fc.selectedFile
             textField.text = selectedFile.path
-
-            Debug.append("Selected " + selectedFile.name)
         }
     }
 

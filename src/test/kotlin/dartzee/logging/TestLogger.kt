@@ -7,6 +7,8 @@ import dartzee.shouldContainKeyValues
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Test
 import java.sql.SQLException
 
@@ -208,6 +210,17 @@ class TestLogger: AbstractTest()
         val record = destination.logRecords.last()
         record.shouldContainKeyValues("appVersion" to "4.1.1", "otherKey" to "otherValue")
     }
+
+    @Test
+    fun `Should notify destinations when context is updated`()
+    {
+        val destination = mockk<ILogDestination>(relaxed = true)
+        val logger = Logger(listOf(destination))
+
+        logger.addToContext("appVersion", "4.1.1")
+
+        verify { destination.contextUpdated(mapOf("appVersion" to "4.1.1")) }
+    }
 }
 
 class SleepyLogDestination: ILogDestination
@@ -219,6 +232,8 @@ class SleepyLogDestination: ILogDestination
         Thread.sleep(500)
         logRecords.add(record)
     }
+
+    override fun contextUpdated(context: Map<String, Any?>) {}
 
     fun clear()
     {

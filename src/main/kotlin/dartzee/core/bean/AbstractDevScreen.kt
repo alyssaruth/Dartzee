@@ -1,6 +1,8 @@
 package dartzee.core.bean
 
 import dartzee.core.util.Debug
+import dartzee.logging.CODE_COMMAND_ENTERED
+import dartzee.utils.InjectedThings.logger
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.JFrame
@@ -33,7 +35,7 @@ abstract class AbstractDevScreen(private val commandBar: CheatBar) : JFrame()
 
     fun processCommandWithTry(cmd: String): String
     {
-        Debug.append("[Command Entered: $cmd]", true)
+        logger.info(CODE_COMMAND_ENTERED, "Command entered: [$cmd]")
 
         var result = ""
         try

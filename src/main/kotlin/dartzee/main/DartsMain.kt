@@ -13,7 +13,7 @@ fun main(args: Array<String>)
 {
     DartsClient.parseProgramArguments(args)
 
-    if (!DartsClient.trueLaunch && !DartsClient.isAppleOs())
+    if (!DartsClient.trueLaunch && DartsClient.isWindowsOs())
     {
         Runtime.getRuntime().exec("cmd /c start javaw -Xms256m -Xmx512m -jar Dartzee.jar trueLaunch")
         exitProcess(0)

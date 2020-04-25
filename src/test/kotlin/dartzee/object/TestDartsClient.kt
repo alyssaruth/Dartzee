@@ -1,8 +1,8 @@
 package dartzee.`object`
 
-import dartzee.core.helper.getLogs
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
+import dartzee.logging.CODE_UPDATE_CHECK
 import dartzee.logging.CODE_JUST_UPDATED
 import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
 import dartzee.logging.Severity
@@ -93,7 +93,8 @@ class TestDartsClient: AbstractRegistryTest()
 
         DartsClient.checkForUpdatesIfRequired()
 
-        getLogs() shouldContain "Not checking for updates as I'm in dev mode"
+        val log = verifyLog(CODE_UPDATE_CHECK)
+        log.message shouldBe "Not checking for updates: I'm in dev mode"
         verifyNotCalled { mock.checkForUpdates(any()) }
     }
 
@@ -108,7 +109,8 @@ class TestDartsClient: AbstractRegistryTest()
 
         DartsClient.checkForUpdatesIfRequired()
 
-        getLogs() shouldContain "Just updated - not checking for updates"
+        val log = verifyLog(CODE_UPDATE_CHECK)
+        log.message shouldBe "Not checking for updates: just updated"
         verifyNotCalled { mock.checkForUpdates(any()) }
     }
 
@@ -124,6 +126,8 @@ class TestDartsClient: AbstractRegistryTest()
 
         DartsClient.checkForUpdatesIfRequired()
 
+        val log = verifyLog(CODE_UPDATE_CHECK)
+        log.message shouldBe "Not checking for updates: preference disabled"
         verifyNotCalled { mock.checkForUpdates(any()) }
     }
 

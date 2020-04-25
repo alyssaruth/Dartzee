@@ -4,7 +4,6 @@ import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
-import dartzee.core.util.Debug
 import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.state.DefaultPlayerState
@@ -91,7 +90,6 @@ class TestGamePanelX01: AbstractTest()
         {
             wipeTable("Achievement")
             val darts = listOf(Dart(1, 1), Dart((i-1)/2, 2))
-            Debug.append("$darts")
             panel.setDartsThrown(darts)
 
             panel.updateAchievementsForFinish(playerId, 1, 30)
