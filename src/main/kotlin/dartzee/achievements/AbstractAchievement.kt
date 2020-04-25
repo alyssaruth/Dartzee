@@ -2,13 +2,14 @@ package dartzee.achievements
 
 import dartzee.core.bean.paint
 import dartzee.core.util.DateStatics.Companion.START_OF_TIME
-import dartzee.core.util.Debug
 import dartzee.core.util.formatAsDate
 import dartzee.db.AchievementEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
+import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DartsColour
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -73,7 +74,7 @@ abstract class AbstractAchievement
 
         if (achievementRows.size > 1)
         {
-            Debug.stackTrace("Got ${achievementRows.size} rows (expected 1) for achievement $achievementRef and player ${achievementRows.first().playerId}")
+            logger.error(CODE_SQL_EXCEPTION, "Got ${achievementRows.size} rows (expected 1) for achievement $achievementRef and player ${achievementRows.first().playerId}")
         }
 
         val achievementRow = achievementRows.first()

@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity

@@ -1,15 +1,13 @@
 package dartzee.core.util
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.mockk.mockk
 import org.junit.Test
 import java.awt.event.ActionListener
@@ -74,12 +72,9 @@ class TestComponentUtil: AbstractTest()
     @Test
     fun `Should not create an empty ButtonGroup`()
     {
-        createButtonGroup()
-
-        val logs = getLogs()
-        exceptionLogged() shouldBe true
-        logs shouldContain("Trying to create empty ButtonGroup")
-        logs shouldContain("Debug.stackTrace")
+        shouldThrow<Exception> {
+            createButtonGroup()
+        }
     }
 
     @Test

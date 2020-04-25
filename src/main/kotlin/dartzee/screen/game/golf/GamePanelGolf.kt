@@ -72,7 +72,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
             val noDarts = dartsThrown.size
 
             val model = getCurrentPlayerStrategy()
-            val stopThreshold = model!!.getStopThresholdForDartNo(noDarts)
+            val stopThreshold = model.getStopThresholdForDartNo(noDarts)
 
             return score <= stopThreshold
         }

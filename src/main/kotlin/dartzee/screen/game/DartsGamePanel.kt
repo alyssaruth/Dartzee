@@ -12,7 +12,6 @@ import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
 import dartzee.listener.DartboardListener
-import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
@@ -88,15 +87,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         return totalPlayers - getActiveCount() + 1
     }
 
-    protected fun getCurrentPlayerStrategy(): AbstractDartsModel?
+    protected fun getCurrentPlayerStrategy(): AbstractDartsModel
     {
         val participant = getCurrentParticipant()
-        if (!participant.isAi())
-        {
-            Debug.stackTrace("Trying to get current strategy for human player: $participant")
-            return null
-        }
-
         return participant.getModel()
     }
 
@@ -781,7 +774,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
                 return
             }
 
-            val model = getCurrentPlayerStrategy()!!
+            val model = getCurrentPlayerStrategy()
             doAiTurn(model)
         }
     }

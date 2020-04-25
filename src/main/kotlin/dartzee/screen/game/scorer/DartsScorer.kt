@@ -3,7 +3,6 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
-import dartzee.core.util.Debug
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -78,7 +77,7 @@ abstract class DartsScorer : AbstractScorer() {
             }
         }
 
-        Debug.stackTrace("Trying to add dart to row $rowNumber but it's already full.")
+        throw Exception("Trying to add dart to row $rowNumber but it's already full.")
     }
 
     fun achievementUnlocked(achievement: AbstractAchievement)

@@ -5,12 +5,13 @@ import dartzee.bean.GameParamFilterPanel
 import dartzee.bean.GameParamFilterPanelX01
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.RadioButtonPanel
-import dartzee.core.util.Debug
 import dartzee.core.util.createButtonGroup
 import dartzee.core.util.enableChildren
+import dartzee.logging.CODE_SWING_ERROR
 import dartzee.reporting.ReportParameters
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.getFilterPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -203,7 +204,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
             rdbtnDtFinish -> dateFilterPanelFinish.enableChildren(enabled)
             cbPartOfMatch -> {rdbtnYes.isEnabled = enabled
                 rdbtnNo.isEnabled = enabled}
-            else -> Debug.stackTrace("Unexpected stateChanged [${src.text}]")
+            else -> logger.error(CODE_SWING_ERROR, "Unexpected stateChanged [${src.text}]")
         }
     }
 

@@ -90,8 +90,7 @@ fun createButtonGroup(vararg buttons: AbstractButton)
 {
     if (buttons.isEmpty())
     {
-        Debug.stackTrace("Trying to create empty ButtonGroup.")
-        return
+        throw Exception("Trying to create empty ButtonGroup.")
     }
 
     val bg = ButtonGroup()
