@@ -1,17 +1,19 @@
 package dartzee.utils
 
 import com.mashape.unirest.http.Unirest
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
+import com.mashape.unirest.http.exceptions.UnirestException
 import dartzee.helper.AbstractTest
+import dartzee.logging.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldEndWith
 import io.kotlintest.matchers.string.shouldStartWith
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
+import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Test
 import java.io.File
@@ -28,11 +30,12 @@ class TestUpdateManager: AbstractTest()
     {
         Unirest.setTimeouts(2000, 2000)
         val result = UpdateManager.queryLatestReleaseJson("https://api.github.com/repos/alexburlton/foo")
-
         result shouldBe null
 
-        getLogs().shouldContain("Received non-success HTTP status: 404 - Not Found")
-        getLogs().shouldContain("{\"message\":\"Not Found\"")
+        val log = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
+        log.message shouldBe "Received non-success HTTP status: 404 - Not Found"
+        log.keyValuePairs[KEY_RESPONSE_BODY].toString() shouldContain """"message":"Not Found""""
+
         dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
 
         dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")
@@ -46,11 +49,9 @@ class TestUpdateManager: AbstractTest()
         val result = UpdateManager.queryLatestReleaseJson("https://ww.blargh.zcss.w")
 
         result shouldBe null
-        exceptionLogged() shouldBe true
+        val errorLog = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
 
-        val logs = getLogs()
-        val hasExpectedError = logs.contains("java.net.UnknownHostException") || logs.contains("org.apache.http.conn.ConnectTimeoutException")
-        hasExpectedError shouldBe true
+        errorLog.errorObject.shouldBeInstanceOf<UnirestException>()
         dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
 
         dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")
@@ -103,9 +104,10 @@ class TestUpdateManager: AbstractTest()
         val json = "{\"other_tag\":\"foo\"}"
         val metadata = UpdateManager.parseUpdateMetadata(JSONObject(json))
         metadata shouldBe null
-        exceptionLogged() shouldBe true
-        getLogs() shouldContain json
-        getLogs() shouldContain "org.json.JSONException"
+
+        val log = verifyLog(CODE_PARSE_ERROR, Severity.ERROR)
+        log.errorObject.shouldBeInstanceOf<JSONException>()
+        log.keyValuePairs[KEY_RESPONSE_BODY].toString() shouldBe json
     }
 
     @Test
@@ -114,9 +116,10 @@ class TestUpdateManager: AbstractTest()
         val json = """{"assets":[],"tag_name":"foo"}"""
         val metadata = UpdateManager.parseUpdateMetadata(JSONObject(json))
         metadata shouldBe null
-        exceptionLogged() shouldBe true
-        getLogs() shouldContain json
-        getLogs() shouldContain "org.json.JSONException"
+
+        val log = verifyLog(CODE_PARSE_ERROR, Severity.ERROR)
+        log.errorObject.shouldBeInstanceOf<JSONException>()
+        log.keyValuePairs[KEY_RESPONSE_BODY].toString() shouldBe json
     }
 
     /**
@@ -128,7 +131,8 @@ class TestUpdateManager: AbstractTest()
         val metadata = UpdateMetadata(DARTS_VERSION_NUMBER, 123456, "Dartzee_x_y.jar", 100)
 
         UpdateManager.shouldUpdate(DARTS_VERSION_NUMBER, metadata) shouldBe false
-        getLogs() shouldContain "I am up to date"
+        val log = verifyLog(CODE_UPDATE_RESULT)
+        log.message shouldBe "Up to date"
     }
 
     @Test
@@ -175,10 +179,12 @@ class TestUpdateManager: AbstractTest()
     fun `Should log an error if batch file goes wrong`()
     {
         val runtime = mockk<Runtime>()
-        every {runtime.exec("foo") } throws IOException("Argh")
+        val error = IOException("Argh")
+        every { runtime.exec(any<String>()) } throws error
         UpdateManager.startUpdate("foo", runtime)
 
-        exceptionLogged() shouldBe true
+        val log = verifyLog(CODE_BATCH_ERROR, Severity.ERROR)
+        log.errorObject shouldBe error
 
         dialogFactory.errorsShown.shouldContainExactly("Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo")
     }
