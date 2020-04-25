@@ -9,8 +9,8 @@ import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
 import dartzee.db.sanity.DatabaseSanityCheck
+import dartzee.logging.CODE_SCREEN_LOAD_ERROR
 import dartzee.logging.KEY_CURRENT_SCREEN
-import dartzee.logging.SCREEN_LOAD_ERROR
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings.gameLauncher
@@ -116,7 +116,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         catch (t: Throwable)
         {
-            logger.error(SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
+            logger.error(CODE_SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
             DialogUtil.showError("Error loading screen - " + scrn.getScreenName())
             return
         }

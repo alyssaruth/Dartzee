@@ -1,6 +1,6 @@
 package dartzee.`object`
 
-import dartzee.core.util.Debug
+import dartzee.logging.CODE_CHECK_FOR_UPDATES
 import dartzee.logging.CODE_JUST_UPDATED
 import dartzee.logging.CODE_MEMORY_SETTINGS
 import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
@@ -47,24 +47,25 @@ object DartsClient
     }
 
     fun isAppleOs() = operatingSystem.contains("mac", ignoreCase = true) || operatingSystem.contains("darwin", ignoreCase = true)
+    fun isWindowsOs() = operatingSystem.contains("windows", ignoreCase = true)
 
     fun checkForUpdatesIfRequired()
     {
         if (devMode)
         {
-            Debug.append("Not checking for updates as I'm in dev mode")
+            logger.info(CODE_CHECK_FOR_UPDATES, "Not checking for updates: I'm in dev mode")
             return
         }
 
         if (justUpdated)
         {
-            Debug.append("Just updated - not checking for updates")
+            logger.info(CODE_CHECK_FOR_UPDATES, "Not checking for updates: just updated")
             return
         }
 
         if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES))
         {
-            Debug.append("Not checking for updates as preference is disabled")
+            logger.info(CODE_CHECK_FOR_UPDATES, "Not checking for updates: preference disabled")
             return
         }
 
