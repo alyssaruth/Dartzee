@@ -227,7 +227,7 @@ object DartsDatabaseUtil
             return
         }
 
-        val directoryFrom = selectAndValidateNewDatabase("restore from.")
+        val directoryFrom = selectAndValidateNewDatabase()
                 ?: //Cancelled, or invalid
                 return
 
@@ -260,7 +260,6 @@ object DartsDatabaseUtil
         val error = FileUtil.swapInFile(DatabaseUtil.DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
         if (error != null)
         {
-            Debug.stackTraceSilently("Failed to swap in new database for restore: $error")
             DialogUtil.showError("Failed to restore database. Error: $error")
             return
         }
@@ -269,9 +268,9 @@ object DartsDatabaseUtil
         exitProcess(0)
     }
 
-    private fun selectAndValidateNewDatabase(messageSuffix: String): File?
+    private fun selectAndValidateNewDatabase(): File?
     {
-        DialogUtil.showInfo("Select the 'Databases' folder you want to $messageSuffix")
+        DialogUtil.showInfo("Select the 'Databases' folder you want to restore from.")
         val directoryFrom = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
                 return null
@@ -300,7 +299,7 @@ object DartsDatabaseUtil
     private fun checkAllGamesAreClosed(): Boolean
     {
         val openScreens = ScreenCache.getDartsGameScreens()
-        if (!openScreens.isEmpty())
+        if (openScreens.isNotEmpty())
         {
             Debug.append("Aborting - there are games still open.")
             DialogUtil.showError("You must close all open games before continuing.")
