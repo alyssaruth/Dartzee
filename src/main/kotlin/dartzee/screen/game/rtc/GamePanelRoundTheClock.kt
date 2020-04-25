@@ -109,7 +109,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         {
             dartboard.doBadLuck()
         }
-        else if (dartsThrown.size != 4)
+        else
         {
             activeScorer.disableBrucey()
         }
