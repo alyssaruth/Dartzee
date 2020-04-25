@@ -19,7 +19,6 @@ fun main(args: Array<String>)
         exitProcess(0)
     }
 
-    Debug.initialise(ScreenCache.debugConsole)
     DialogUtil.init(MessageDialogFactory())
 
     setLoggingContextFields()

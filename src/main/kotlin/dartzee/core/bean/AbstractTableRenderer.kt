@@ -1,6 +1,8 @@
 package dartzee.core.bean
 
 import dartzee.core.util.Debug
+import dartzee.logging.CODE_RENDER_ERROR
+import dartzee.utils.InjectedThings.logger
 import java.awt.Component
 import javax.swing.JTable
 import javax.swing.table.DefaultTableCellRenderer
@@ -38,9 +40,9 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer()
                 return newValue
             }
         }
-        catch (cce: ClassCastException)
+        catch (t: Throwable)
         {
-            Debug.stackTrace(cce, "Caught CCE rendering row [$row], col [$column]. Value [$value]")
+            logger.error(CODE_RENDER_ERROR, "Error rendering row [$row], col [$column]. Value [$value]", t)
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         }
 

@@ -1,18 +1,19 @@
 package dartzee.`object`
 
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
 import dartzee.screen.game.dartzee.DartzeeMatchScreen
 import dartzee.screen.game.golf.GolfMatchScreen
 import dartzee.screen.game.rtc.RoundTheClockMatchScreen
 import dartzee.screen.game.x01.X01MatchScreen
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.insertDartzeeRules
 
 class GameLauncher()
@@ -84,12 +85,11 @@ class GameLauncher()
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t)
-            DialogUtil.showError("Failed to load Game #" + gameEntity.rowId)
+            logger.error(CODE_LOAD_ERROR, "Failed to load Game ${gameEntity.rowId}", t)
+            DialogUtil.showError("Failed to load Game #${gameEntity.localId}")
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }
-
     }
 
     private fun loadAndDisplayMatch(matchId: String, originalGameId: String)
@@ -115,8 +115,8 @@ class GameLauncher()
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t)
-            DialogUtil.showError("Failed to load Match #$matchId")
+            logger.error(CODE_LOAD_ERROR, "Failed to load Match $matchId", t)
+            DialogUtil.showError("Failed to load Match #${match.localId}")
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }

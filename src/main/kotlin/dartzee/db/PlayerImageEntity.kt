@@ -1,7 +1,7 @@
 package dartzee.db
 
-import dartzee.core.util.Debug
 import dartzee.core.util.FileUtil
+import dartzee.logging.CODE_FILE_ERROR
 import dartzee.utils.InjectedThings.logger
 import java.io.File
 import java.nio.file.Files
@@ -66,7 +66,7 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
             }
             catch (t: Throwable)
             {
-                Debug.stackTrace(t)
+                logger.error(CODE_FILE_ERROR, "Failed to read bytes from file $file", t)
                 null
             }
 

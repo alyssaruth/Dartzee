@@ -1,7 +1,6 @@
 package dartzee.screen
 
 import dartzee.core.bean.CheatBar
-import dartzee.core.screen.DebugConsole
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.logging.LoggingConsole
@@ -27,7 +26,6 @@ object ScreenCache
     private var configureReportColumnsDialog: ConfigureReportColumnsDialog? = null
 
     //Other
-    val debugConsole = DebugConsole()
     val loggingConsole = LoggingConsole()
 
     fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)

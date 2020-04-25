@@ -258,20 +258,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         initScorers(totalPlayers)
     }
 
-    fun loadGameInCatch()
-    {
-        try
-        {
-            loadGame()
-        }
-        catch (t: Throwable)
-        {
-            logger.error(CODE_LOAD_ERROR, "Failed to load Game ${gameEntity.rowId}", t)
-            DialogUtil.showError("Failed to load Game #${gameEntity.localId}")
-        }
-    }
-
-
     fun loadGame()
     {
         val gameId = gameEntity.rowId

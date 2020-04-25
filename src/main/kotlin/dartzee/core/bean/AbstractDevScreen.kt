@@ -1,7 +1,7 @@
 package dartzee.core.bean
 
-import dartzee.core.util.Debug
 import dartzee.logging.CODE_COMMAND_ENTERED
+import dartzee.logging.CODE_COMMAND_ERROR
 import dartzee.utils.InjectedThings.logger
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -37,16 +37,14 @@ abstract class AbstractDevScreen(private val commandBar: CheatBar) : JFrame()
     {
         logger.info(CODE_COMMAND_ENTERED, "Command entered: [$cmd]")
 
-        var result = ""
-        try
+        return try
         {
-            result = processCommand(cmd)
+            processCommand(cmd)
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t)
+            logger.error(CODE_COMMAND_ERROR, "Error running command $cmd", t)
+            ""
         }
-
-        return result
     }
 }
