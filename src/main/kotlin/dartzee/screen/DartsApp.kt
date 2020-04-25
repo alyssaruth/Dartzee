@@ -5,12 +5,12 @@ import dartzee.`object`.DartsClient
 import dartzee.achievements.convertEmptyAchievements
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
 import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.logging.CODE_SCREEN_LOAD_ERROR
 import dartzee.logging.KEY_CURRENT_SCREEN
+import dartzee.logging.LoggingCode
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings.gameLauncher
@@ -177,16 +177,15 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {
-            Debug.clearLogs()
+            ScreenCache.loggingConsole.clear()
         }
         else if (cmd == "dim")
         {
-            Debug.append("Current screen size: $size")
+            println("Current screen size: $size")
         }
         else if (cmd == CMD_EMPTY_SCREEN_CACHE)
         {
             ScreenCache.emptyCache()
-            Debug.append("Emptied screen cache.")
         }
         else if (cmd == CMD_SANITY)
         {
@@ -200,7 +199,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
 
-            Debug.append("Response tag: " + response.body.`object`.get("tag_name"))
+            println("Response tag: " + response.body.`object`.get("tag_name"))
         }
         else if (cmd == "load")
         {
@@ -208,7 +207,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == "stacktrace")
         {
-            Debug.stackTrace(message = "Testing", suppressError = true)
+            logger.error(LoggingCode("test"), "Testing stack trace")
         }
 
         return textToShow

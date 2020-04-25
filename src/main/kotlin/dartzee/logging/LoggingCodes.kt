@@ -29,12 +29,14 @@ val CODE_DIALOG_CLOSED = LoggingCode("dialogClosed")
 val CODE_COMMAND_ENTERED = LoggingCode("commandEntered")
 val CODE_UPDATE_CHECK = LoggingCode("updateCheck")
 val CODE_UPDATE_CHECK_RESULT = LoggingCode("updateCheckResult")
+val CODE_LOADED_RESOURCES = LoggingCode("loadedResources")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
 val CODE_DATABASE_TOO_OLD = LoggingCode("databaseTooOld")
 val CODE_RESOURCE_CACHE_NOT_INITIALISED = LoggingCode("resourceCacheNotInitialised")
 val CODE_DATABASE_IN_USE = LoggingCode("databaseInUse")
+val CODE_NO_STREAMS = LoggingCode("noStreams")
 
 //Error
 val CODE_LOOK_AND_FEEL_ERROR = LoggingCode("lafError")
@@ -49,3 +51,4 @@ val CODE_UPDATE_ERROR = LoggingCode("updateError")
 val CODE_PARSE_ERROR = LoggingCode("parseError")
 val CODE_BATCH_ERROR = LoggingCode("batchFileError")
 val CODE_TEST_CONNECTION_ERROR = LoggingCode("testConnectionError")
+val CODE_RESOURCE_LOAD_ERROR = LoggingCode("resourceLoadError")

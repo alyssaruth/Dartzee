@@ -114,8 +114,6 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
 
         fun createPresets()
         {
-            Debug.append("Creating ${avatarPresets.size} avatar presets")
-
             avatarPresets.forEach{
                 val resourceLocation = "/avatars/$it.png"
                 val bytes = FileUtil.getByteArrayForResource(resourceLocation)

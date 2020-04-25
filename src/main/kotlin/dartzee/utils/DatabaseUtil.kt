@@ -1,7 +1,6 @@
 package dartzee.utils
 
 import dartzee.`object`.DartsClient
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
 import dartzee.utils.InjectedThings.logger
@@ -263,7 +262,6 @@ class DatabaseUtil
                 return false
             }
 
-            Debug.append("Successfully created test connection to $dbPath")
             return true
         }
 

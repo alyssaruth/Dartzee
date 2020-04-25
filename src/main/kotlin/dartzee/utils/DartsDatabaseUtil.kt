@@ -236,7 +236,6 @@ object DartsDatabaseUtil
         val option = DialogUtil.showQuestion(confirmationQ, false)
         if (option == JOptionPane.NO_OPTION)
         {
-            Debug.append("Restore cancelled.")
             return
         }
 

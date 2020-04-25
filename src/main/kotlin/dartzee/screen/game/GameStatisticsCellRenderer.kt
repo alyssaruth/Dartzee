@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import dartzee.core.util.Debug
 import dartzee.utils.DartsColour
 import java.awt.Color
 import java.awt.Component
@@ -92,7 +91,6 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
 
         if (thisValue == null)
         {
-            Debug.append("ROW: $row, COL: $col")
             return -1.0
         }
 
