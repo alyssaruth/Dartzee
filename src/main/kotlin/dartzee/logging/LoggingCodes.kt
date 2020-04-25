@@ -24,6 +24,7 @@ val CODE_SIMULATION_STARTED = LoggingCode("simulationStarted")
 val CODE_SIMULATION_PROGRESS = LoggingCode("simulationProgress")
 val CODE_SIMULATION_CANCELLED = LoggingCode("simulationCancelled")
 val CODE_SIMULATION_FINISHED = LoggingCode("simulationFinished")
+val CODE_DIALOG_SHOWN = LoggingCode("dialogShown")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
