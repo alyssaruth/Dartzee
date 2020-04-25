@@ -72,7 +72,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
     {
         if (aiShouldPause)
         {
-            Debug.append("Been told to pause, stopping throwing.")
             aiShouldPause = false
             return true
         }

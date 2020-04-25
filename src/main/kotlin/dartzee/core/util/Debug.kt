@@ -23,11 +23,9 @@ object Debug
     var logToSystemOut = false
     var debugExtension: DebugExtension? = null
 
-    fun append(text: String, logging: Boolean = true, includeDate: Boolean = true)
+    private fun append(text: String)
     {
-        if (!logging) return
-
-        val logRunnable = Runnable { appendInCurrentThread(text, includeDate) }
+        val logRunnable = Runnable { appendInCurrentThread(text) }
         val threadName = Thread.currentThread().name
         if (threadName != "Debug")
         {
@@ -39,9 +37,9 @@ object Debug
         }
     }
 
-    private fun appendInCurrentThread(text: String, includeDate: Boolean)
+    private fun appendInCurrentThread(text: String)
     {
-        val time = if (includeDate) getCurrentTimeForLogging() else ""
+        val time = ""
 
         output ?: println("NULL OUTPUT. Trying to log: $text")
 
@@ -95,7 +93,7 @@ object Debug
         val pw = PrintWriter(sw)
         t.printStackTrace(pw)
         trace += datetime + sw.toString()
-        append(trace, true, false)
+        append(trace)
     }
 
     private fun getCurrentTimeForLogging() = "${DATE_FORMAT.format(System.currentTimeMillis())}   "

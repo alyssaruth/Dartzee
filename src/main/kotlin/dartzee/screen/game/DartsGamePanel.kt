@@ -425,7 +425,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         if (maxRounds == 0)
         {
             //The game literally hasn't started yet. No one has completed a round.
-            Debug.append("MaxRounds = 0, so setting CurrentPlayerNumber = 0 as game hasn't started.")
             currentPlayerNumber = 0
             return
         }
@@ -444,8 +443,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
         val lastPlayerNumber = DatabaseUtil.executeQueryAggregate(sb)
         currentPlayerNumber = getNextPlayerNumber(lastPlayerNumber)
-
-        Debug.append("MaxRounds = $maxRounds, CurrentPlayerNumber = $currentPlayerNumber")
     }
 
     fun allPlayersFinished()
@@ -477,7 +474,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         if (!parentWindow.isVisible)
         {
-            Debug.append("Game window has been closed, stopping throwing.")
             return true
         }
 
@@ -703,7 +699,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         when (source)
         {
             btnReset -> {
-                Debug.append("Reset pressed.")
                 resetRound()
                 readyForThrow()
             }
