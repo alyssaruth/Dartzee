@@ -8,10 +8,10 @@ import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
 import dartzee.core.util.Debug
 import dartzee.core.util.getParentWindow
-import dartzee.core.util.runOnEventThread
 import dartzee.listener.DartboardListener
-import dartzee.logging.CODE_AUDIO_ERROR
-import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
+import dartzee.logging.CODE_RENDERED_DARTBOARD
+import dartzee.logging.KEY_CACHED
+import dartzee.logging.KEY_DURATION
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.*
 import dartzee.utils.DartsColour.DARTBOARD_BLACK
@@ -21,8 +21,7 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import java.awt.image.BufferedImage
-import java.util.*
-import javax.sound.sampled.*
+import javax.sound.sampled.Clip
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JLayeredPane
@@ -94,7 +93,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         val width = width
         val height = height
 
-        Debug.append("Painting darboard. Dim[$width,$height]")
+        val timer = DurationTimer()
+        val usingCache = cached && dartboardTemplate != null
 
         dartboardLabel.setSize(width, height)
 
@@ -104,8 +104,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         diameter = 0.7 * width
         hmPointToSegment.clear()
 
-        if (cached
-          && dartboardTemplate != null)
+        if (usingCache)
         {
             initialiseFromTemplate()
         }
@@ -116,10 +115,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             //Construct the segments, populated with their points. Cache pt -> segment.
             getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
 
-            Debug.append("Cached all points/segments.")
-
             //Render the actual image
-            renderDartboardImage()
+            dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), colourWrapper) }
         }
 
         dartboardLabel.icon = ImageIcon(dartboardImage!!)
@@ -132,6 +129,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         {
             dartboardTemplate = DartboardTemplate(this)
         }
+
+        val duration = timer.getDuration()
+        logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
+                KEY_DURATION to duration, KEY_CACHED to usingCache)
 
         //Now the dartboard is painted, add the mouse listeners
         if (listen)
@@ -147,17 +148,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         dartboardImage = dartboardTemplate!!.getDartboardImg()
     }
 
-    private fun renderDartboardImage()
-    {
-        dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), colourWrapper) }
-        Debug.append("Created dartboardImage")
-    }
-
     private fun addScoreLabels()
     {
         if (!renderScoreLabels)
         {
-            Debug.append("Not adding scores.")
             return
         }
 
