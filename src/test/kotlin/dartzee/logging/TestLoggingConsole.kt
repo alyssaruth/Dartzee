@@ -1,14 +1,17 @@
 package dartzee.logging
 
+import dartzee.core.util.getAllChildComponentsForType
 import dartzee.flushEdt
 import dartzee.helper.AbstractTest
-import dartzee.helper.logger
 import dartzee.makeLogRecord
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
+import javax.swing.JLabel
 import javax.swing.text.StyleConstants
 
 class TestLoggingConsole: AbstractTest()
@@ -145,18 +148,19 @@ class TestLoggingConsole: AbstractTest()
     @Test
     fun `Should update when logging context changes`()
     {
-        val record = makeLogRecord()
         val console = LoggingConsole()
-        console.log(record)
-        console.labelContext.text shouldBe ""
+        console.contextUpdated(mapOf())
+        console.getAllChildComponentsForType<JLabel>().shouldBeEmpty()
 
-        logger.addToContext("appVersion", "4.1.1")
-        console.log(record)
-        console.labelContext.text shouldBe "appVersion: 4.1.1"
+        console.contextUpdated(mapOf("appVersion" to "4.1.1"))
+        val labels = console.getAllChildComponentsForType<JLabel>()
+        labels.size shouldBe 1
+        labels.first().text shouldBe "appVersion: 4.1.1"
 
-        logger.addToContext("devMode", "false")
-        console.log(record)
-        console.labelContext.text shouldBe "appVersion: 4.1.1  |  devMode: false"
+        console.contextUpdated(mapOf("appVersion" to "4.1.1", "devMode" to false))
+
+        val newLabels = console.getAllChildComponentsForType<JLabel>()
+        newLabels.map { it.text }.shouldContainExactly("appVersion: 4.1.1", "devMode: false")
     }
 
     private fun LoggingConsole.getText(): String =
