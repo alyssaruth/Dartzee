@@ -115,6 +115,11 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         }
     }
 
+    override fun shouldAnimateMiss(dart: Dart): Boolean
+    {
+        return dartsThrown.size < 4
+    }
+
     override fun shouldStopAfterDartThrown(): Boolean
     {
         if (dartsThrown.size == 4)
