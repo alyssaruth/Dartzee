@@ -1,6 +1,5 @@
 package dartzee.core.bean
 
-import dartzee.core.util.Debug
 import dartzee.logging.CODE_RENDER_ERROR
 import dartzee.utils.InjectedThings.logger
 import java.awt.Component
@@ -56,7 +55,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer()
         {
             if (!allowNulls())
             {
-                Debug.stackTrace("NULL element in table at row [$row] and column [$column].")
+                logger.error(CODE_RENDER_ERROR, "NULL element in table at row [$row] and column [$column]")
             }
 
             return typedValue

@@ -1,5 +1,6 @@
 package dartzee.core.util
 
+import dartzee.core.bean.AbstractTableRenderer
 import java.awt.Component
 import java.awt.Font
 import java.sql.Timestamp
@@ -10,30 +11,9 @@ import javax.swing.table.DefaultTableModel
 
 object TableUtil
 {
-    class TimestampRenderer: DefaultTableCellRenderer()
+    class TimestampRenderer: AbstractTableRenderer<Timestamp>()
     {
-        override fun getTableCellRendererComponent(table: JTable?, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-        {
-            val newValue = getObjectForValue(value, row, column)
-            super.getTableCellRendererComponent(table, newValue, isSelected, hasFocus, row, column)
-            return this
-        }
-
-        private fun getObjectForValue(value: Any?, row: Int, column: Int): Any?
-        {
-            if (value == null)
-            {
-                return ""
-            }
-
-            if (value !is Timestamp)
-            {
-                Debug.stackTrace("Non-timestamp object in table. Row $row, Col $column")
-                return null
-            }
-
-            return value.formatTimestamp()
-        }
+        override fun getReplacementValue(value: Timestamp) = value.formatTimestamp()
     }
 
     class SimpleRenderer(private val alignment: Int, private val tableFont: Font?) : DefaultTableCellRenderer()
