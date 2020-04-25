@@ -30,6 +30,8 @@ val CODE_COMMAND_ENTERED = LoggingCode("commandEntered")
 val CODE_UPDATE_CHECK = LoggingCode("updateCheck")
 val CODE_UPDATE_CHECK_RESULT = LoggingCode("updateCheckResult")
 val CODE_LOADED_RESOURCES = LoggingCode("loadedResources")
+val CODE_STARTING_BACKUP = LoggingCode("startingBackup")
+val CODE_STARTING_RESTORE = LoggingCode("startingRestore")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")

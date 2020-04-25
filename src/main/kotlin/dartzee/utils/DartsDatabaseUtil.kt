@@ -1,7 +1,6 @@
 package dartzee.utils
 
 import dartzee.core.screen.ProgressDialog
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
@@ -202,7 +201,7 @@ object DartsDatabaseUtil
     {
         val dbFolder = File(DatabaseUtil.DATABASE_FILE_PATH)
 
-        Debug.append("About to start DB backup")
+        logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
         val file = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
@@ -220,7 +219,7 @@ object DartsDatabaseUtil
 
     fun restoreDatabase()
     {
-        Debug.append("About to start DB restore")
+        logger.info(CODE_STARTING_RESTORE, "About to start DB restore")
 
         if (!checkAllGamesAreClosed())
         {
@@ -278,7 +277,6 @@ object DartsDatabaseUtil
         val name = directoryFrom.name
         if (name != "Databases")
         {
-            Debug.append("Aborting - selected folder invalid: $directoryFrom")
             DialogUtil.showError("Selected path is not valid - you must select a folder named 'Databases'")
             return null
         }
@@ -300,7 +298,6 @@ object DartsDatabaseUtil
         val openScreens = ScreenCache.getDartsGameScreens()
         if (openScreens.isNotEmpty())
         {
-            Debug.append("Aborting - there are games still open.")
             DialogUtil.showError("You must close all open games before continuing.")
             return false
         }

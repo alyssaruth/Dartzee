@@ -2,7 +2,6 @@ package dartzee.screen.stats.player.x01
 
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
-import dartzee.core.util.Debug
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.screen.stats.player.AbstractStatisticsTab
@@ -142,7 +141,5 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
 
         //Miss percent, to 1 d.p
         nfMissPercent.text = "" + MathsUtil.round(100 * misses / totalScoringDarts, 1)
-
-        Debug.append("Treble %: " + 100 * trebles / totalScoringDarts)
     }
 }
