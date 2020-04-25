@@ -57,12 +57,6 @@ object ResourceCache
 
     fun initialiseResources()
     {
-        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES))
-        {
-            Debug.append("Not pre-loading WAVs as preference is disabled")
-            return
-        }
-
         try
         {
             DialogUtil.showLoadingDialog("Loading resources...")

@@ -73,7 +73,7 @@ class AISimulationSetup constructor(private val player: PlayerEntity,
         }
 
         val dartboard = Dartboard(500, 500)
-        dartboard.setSimulation(true) //Don't do animations etc
+        dartboard.simulation = true //Don't do animations etc
         dartboard.paintDartboard()
 
         val sim = factorySimulationForSelection(dartboard)

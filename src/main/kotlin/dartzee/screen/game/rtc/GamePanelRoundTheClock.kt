@@ -7,6 +7,8 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.Debug
+import dartzee.core.util.doBadLuck
+import dartzee.core.util.doForsyth
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -103,10 +105,19 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
                 dartboard.doForsyth()
             }
         }
-        else if (dartsThrown.size != 4)
+        else if (dartsThrown.size == 4)
+        {
+            dartboard.doBadLuck()
+        }
+        else
         {
             activeScorer.disableBrucey()
         }
+    }
+
+    override fun shouldAnimateMiss(dart: Dart): Boolean
+    {
+        return dartsThrown.size < 4
     }
 
     override fun shouldStopAfterDartThrown(): Boolean
