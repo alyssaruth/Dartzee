@@ -47,7 +47,7 @@ object ScreenCache
         switchScreen(screen)
     }
 
-    fun switchScreen(scrn: EmbeddedScreen?, reInit: Boolean = true)
+    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true)
     {
         mainScreen.switchScreen(scrn, reInit)
     }

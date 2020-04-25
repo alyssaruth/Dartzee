@@ -9,9 +9,12 @@ import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
 import dartzee.db.sanity.DatabaseSanityCheck
+import dartzee.logging.KEY_CURRENT_SCREEN
+import dartzee.logging.SCREEN_LOAD_ERROR
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings.gameLauncher
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -102,19 +105,19 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         })
     }
 
-    fun switchScreen(scrn: EmbeddedScreen?, reInit: Boolean = true)
+    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true)
     {
         try
         {
             if (reInit)
             {
-                scrn!!.initialise()
+                scrn.initialise()
             }
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t, "Failed to load screen ${scrn?.getScreenName()}", true)
-            DialogUtil.showError("Error loading screen - " + scrn?.getScreenName())
+            logger.error(SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
+            DialogUtil.showError("Error loading screen - " + scrn.getScreenName())
             return
         }
 
@@ -124,10 +127,12 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
 
         this.currentScreen = scrn
-        contentPane.add(scrn!!, BorderLayout.CENTER)
+        contentPane.add(scrn, BorderLayout.CENTER)
 
         val screenName = scrn.getScreenName()
         title = "Darts - $screenName"
+
+        logger.addToContext(KEY_CURRENT_SCREEN, scrn.getScreenName())
 
         val desiredSize = scrn.getDesiredSize()
         if (desiredSize != null)
