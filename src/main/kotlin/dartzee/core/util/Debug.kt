@@ -98,21 +98,6 @@ object Debug
         append(trace, true, false)
     }
 
-    fun stackTraceSilently(message: String)
-    {
-        stackTraceSilently(Throwable(message))
-    }
-
-    fun stackTraceSilently(t: Throwable)
-    {
-        val sw = StringWriter()
-        val pw = PrintWriter(sw)
-        t.printStackTrace(pw)
-        val trace = sw.toString()
-        t.printStackTrace()
-        append(trace, true)
-    }
-
     private fun getCurrentTimeForLogging() = "${DATE_FORMAT.format(System.currentTimeMillis())}   "
 
     fun getCurrentLogs(): String = output?.getLogs() ?: ""
