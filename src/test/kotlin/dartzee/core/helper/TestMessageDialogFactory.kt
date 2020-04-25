@@ -1,7 +1,6 @@
 package dartzee.core.helper
 
 import dartzee.core.util.AbstractMessageDialogFactory
-import dartzee.core.util.Debug
 import javax.swing.JOptionPane
 
 class TestMessageDialogFactory: AbstractMessageDialogFactory()
@@ -34,8 +33,7 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
             return inputSelection as K
         }
 
-        Debug.stackTrace("Running a test where $inputSelection was to be returned, but wasn't a valid selection in the dialog shown.")
-        return null
+        throw Exception("Running a test where $inputSelection was to be returned, but wasn't a valid selection in the dialog shown.")
     }
 
     override fun showInfo(text: String)

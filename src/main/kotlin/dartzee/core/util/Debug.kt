@@ -69,7 +69,7 @@ object Debug
     {
         stackTrace(Throwable(), message)
     }
-    fun stackTrace(t: Throwable = Throwable(),  message: String = "", suppressError: Boolean = false)
+    private fun stackTrace(t: Throwable = Throwable(),  message: String = "", suppressError: Boolean = false)
     {
         if (debugExtension != null
             && !suppressError)

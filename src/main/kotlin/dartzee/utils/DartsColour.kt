@@ -1,6 +1,7 @@
 package dartzee.utils
 
-import dartzee.core.util.Debug
+import dartzee.logging.CODE_PARSE_ERROR
+import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 import java.awt.Component
 import java.lang.Float.max
@@ -63,7 +64,7 @@ object DartsColour
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace("Failed to reconstruct colour from string: $prefStr")
+            logger.error(CODE_PARSE_ERROR, "Failed to reconstruct colour from string: $prefStr", t)
             Color.BLACK
         }
 
