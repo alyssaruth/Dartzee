@@ -4,7 +4,7 @@ import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
 import dartzee.screen.Dartboard
 import dartzee.screen.LAYER_DODGY
-import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache
@@ -107,12 +107,12 @@ fun Dartboard.playDodgySound(soundName: String)
         }
         else
         {
-            InjectedThings.logger.warn(CODE_RESOURCE_CACHE_NOT_INITIALISED, "Not playing [$soundName] - ResourceCache not initialised")
+            logger.warn(CODE_RESOURCE_CACHE_NOT_INITIALISED, "Not playing [$soundName] - ResourceCache not initialised")
         }
     }
     catch (e: Exception)
     {
-        InjectedThings.logger.error(CODE_AUDIO_ERROR, "Caught error playing sound [$soundName]", e)
+        logger.error(CODE_AUDIO_ERROR, "Caught error playing sound [$soundName]", e)
     }
 
 }
