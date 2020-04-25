@@ -1,9 +1,9 @@
 package dartzee.`object`
 
-import dartzee.logging.CODE_CHECK_FOR_UPDATES
 import dartzee.logging.CODE_JUST_UPDATED
 import dartzee.logging.CODE_MEMORY_SETTINGS
 import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
+import dartzee.logging.CODE_UPDATE_CHECK
 import dartzee.utils.*
 import dartzee.utils.InjectedThings.logger
 import java.util.*
@@ -53,19 +53,19 @@ object DartsClient
     {
         if (devMode)
         {
-            logger.info(CODE_CHECK_FOR_UPDATES, "Not checking for updates: I'm in dev mode")
+            logger.info(CODE_UPDATE_CHECK, "Not checking for updates: I'm in dev mode")
             return
         }
 
         if (justUpdated)
         {
-            logger.info(CODE_CHECK_FOR_UPDATES, "Not checking for updates: just updated")
+            logger.info(CODE_UPDATE_CHECK, "Not checking for updates: just updated")
             return
         }
 
         if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES))
         {
-            logger.info(CODE_CHECK_FOR_UPDATES, "Not checking for updates: preference disabled")
+            logger.info(CODE_UPDATE_CHECK, "Not checking for updates: preference disabled")
             return
         }
 

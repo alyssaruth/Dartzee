@@ -20,7 +20,7 @@ object UpdateManager
     fun checkForUpdates(currentVersion: String)
     {
         //Show this here, checking the CRC can take time
-        logger.info(CODE_CHECK_FOR_UPDATES, "Checking for updates - my version is $currentVersion")
+        logger.info(CODE_UPDATE_CHECK, "Checking for updates - my version is $currentVersion")
 
         val jsonResponse = queryLatestReleaseJson(DARTZEE_REPOSITORY_URL)
         jsonResponse ?: return
@@ -70,12 +70,12 @@ object UpdateManager
         val newVersion = metadata.version
         if (newVersion == currentVersion)
         {
-            logger.info(CODE_UPDATE_RESULT, "Up to date")
+            logger.info(CODE_UPDATE_CHECK_RESULT, "Up to date")
             return false
         }
 
         //An update is available
-        logger.info(CODE_UPDATE_RESULT, "Newer release available - $newVersion")
+        logger.info(CODE_UPDATE_CHECK_RESULT, "Newer release available - $newVersion")
 
         if (!DartsClient.isWindowsOs())
         {

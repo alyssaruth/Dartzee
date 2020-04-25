@@ -133,7 +133,7 @@ class TestUpdateManager: AbstractTest()
         val metadata = UpdateMetadata(DARTS_VERSION_NUMBER, 123456, "Dartzee_x_y.jar", 100)
 
         UpdateManager.shouldUpdate(DARTS_VERSION_NUMBER, metadata) shouldBe false
-        val log = verifyLog(CODE_UPDATE_RESULT)
+        val log = verifyLog(CODE_UPDATE_CHECK_RESULT)
         log.message shouldBe "Up to date"
     }
 
@@ -145,7 +145,7 @@ class TestUpdateManager: AbstractTest()
         val metadata = UpdateMetadata("v100", 123456, "Dartzee_x_y.jar", 100)
         UpdateManager.shouldUpdate(DARTS_VERSION_NUMBER, metadata) shouldBe false
 
-        val log = verifyLog(CODE_UPDATE_RESULT)
+        val log = verifyLog(CODE_UPDATE_CHECK_RESULT)
         log.message shouldBe "Newer release available - v100"
 
         dialogFactory.questionsShown.shouldBeEmpty()
