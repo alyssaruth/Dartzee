@@ -14,6 +14,7 @@ object TableUtil
     class TimestampRenderer: AbstractTableRenderer<Timestamp>()
     {
         override fun getReplacementValue(value: Timestamp) = value.formatTimestamp()
+        override fun allowNulls() = true
     }
 
     class SimpleRenderer(private val alignment: Int, private val tableFont: Font?) : DefaultTableCellRenderer()

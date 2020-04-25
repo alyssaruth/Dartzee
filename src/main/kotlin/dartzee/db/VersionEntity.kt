@@ -1,6 +1,5 @@
 package dartzee.db
 
-import dartzee.core.util.Debug
 import dartzee.utils.DartsDatabaseUtil
 
 class VersionEntity : AbstractEntity<VersionEntity>()
@@ -13,20 +12,7 @@ class VersionEntity : AbstractEntity<VersionEntity>()
 
     companion object
     {
-        fun retrieveCurrentDatabaseVersion(): VersionEntity?
-        {
-            val entities = VersionEntity().retrieveEntities("1 = 1")
-            return if (entities.isEmpty()) null
-            else
-            {
-                if (entities.size > 1)
-                {
-                    Debug.stackTrace("Found ${entities.size} rows in Version - should only be 1")
-                }
-
-                entities.first()
-            }
-        }
+        fun retrieveCurrentDatabaseVersion() = VersionEntity().retrieveEntity("1 = 1")
 
         fun insertVersion()
         {

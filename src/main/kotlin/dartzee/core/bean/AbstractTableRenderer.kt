@@ -58,7 +58,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer()
                 logger.error(CODE_RENDER_ERROR, "NULL element in table at row [$row] and column [$column]")
             }
 
-            return typedValue
+            return ""
         }
 
         return getReplacementValue(typedValue)

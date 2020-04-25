@@ -26,7 +26,7 @@ object BulkInserter
             return
         }
 
-        if (entities.any{it.retrievedFromDb})
+        if (entities.any { it.retrievedFromDb })
         {
             Debug.stackTrace("Attempting to bulk insert entities, but some are already in the database")
             return
