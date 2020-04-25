@@ -8,7 +8,6 @@ import dartzee.core.helper.checkedForExceptions
 import dartzee.core.helper.exceptionLogged
 import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
-import dartzee.core.util.TestDebug
 import dartzee.db.LocalIdGenerator
 import dartzee.logging.*
 import dartzee.utils.DartsDatabaseUtil
@@ -54,7 +53,6 @@ abstract class AbstractTest
 
     private fun doOneTimeSetup()
     {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.logToSystemOut = true
 
         Debug.debugExtension = TestDebugExtension()
@@ -73,7 +71,6 @@ abstract class AbstractTest
 
     open fun doClassSetup()
     {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
         Debug.logToSystemOut = true
         DialogUtil.init(dialogFactory)
     }
@@ -81,7 +78,6 @@ abstract class AbstractTest
     open fun beforeEachTest()
     {
         Debug.lastErrorMillis = -1
-        Debug.initialise(TestDebug.SimpleDebugOutput())
         dialogFactory.reset()
         clearLogs()
         clearAllMocks()
