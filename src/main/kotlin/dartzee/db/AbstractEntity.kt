@@ -323,60 +323,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val indexName = columnList.replace(", ", "_")
 
         val statement = "CREATE INDEX $indexName ON ${getTableName()}($columnList)"
-        val success = DatabaseUtil.executeUpdate(statement)
-        if (!success)
-        {
-            Debug.append("Failed to create index $indexName on ${getTableName()}")
-        }
-    }
-
-    fun addIntColumn(columnName: String): Boolean
-    {
-        return addColumn(columnName, "INT", "-1")
-    }
-
-    fun addStringColumn(columnName: String, length: Int): Boolean
-    {
-        return addColumn(columnName, "VARCHAR($length)", "''")
-    }
-
-    private fun addColumn(columnName: String, dataType: String, defaultValue: String): Boolean
-    {
-        if (columnExists(columnName))
-        {
-            Debug.append("Not adding column $columnName to ${getTableName()} as it already exists")
-            return false
-        }
-
-        val sql = "ALTER TABLE ${getTableName()} ADD COLUMN $columnName $dataType NOT NULL DEFAULT $defaultValue"
-        val addedColumn = DatabaseUtil.executeUpdate(sql)
-        if (!addedColumn)
-        {
-            return false
-        }
-
-        //We've added the column, now attempt to drop the default.
-        val defaultSql = "ALTER TABLE ${getTableName()} ALTER COLUMN $columnName DEFAULT NULL"
-        return DatabaseUtil.executeUpdate(defaultSql)
-    }
-
-    private fun columnExists(columnName: String): Boolean
-    {
-        val columnNameUpperCase = columnName.toUpperCase()
-        val tableName = getTableNameUpperCase()
-
-        val sb = StringBuilder()
-        sb.append("SELECT COUNT(1) ")
-        sb.append("FROM sys.systables t, sys.syscolumns c ")
-        sb.append("WHERE c.ReferenceId = t.TableId ")
-        sb.append("AND t.TableName = '")
-        sb.append(tableName)
-        sb.append("' AND c.ColumnName = '")
-        sb.append(columnNameUpperCase)
-        sb.append("'")
-
-        val count = DatabaseUtil.executeQueryAggregate(sb)
-        return count > 0
+        DatabaseUtil.executeUpdate(statement)
     }
 
     fun getColumnsForSelectStatement(alias: String = ""): String

@@ -113,7 +113,6 @@ object FileUtil
         val option = fc.showDialog(comp, "Select")
         if (option != JFileChooser.APPROVE_OPTION)
         {
-            Debug.append("Cancelled directory selection")
             return null
         }
 
