@@ -1,10 +1,14 @@
 package dartzee.logging
 
 import dartzee.core.bean.WrapLayout
+import dartzee.screen.FocusableWindow
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
-import javax.swing.*
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTextPane
 import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
 import javax.swing.border.MatteBorder
@@ -13,8 +17,10 @@ import javax.swing.text.DefaultStyledDocument
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-class LoggingConsole: JFrame(), ILogDestination
+class LoggingConsole: FocusableWindow(), ILogDestination
 {
+    override val windowName = "Console"
+
     val doc = DefaultStyledDocument()
     val scrollPane = JScrollPane()
     private val textArea = JTextPane(doc)

@@ -2,16 +2,16 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.game.GameType
+import dartzee.screen.FocusableWindow
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.scorer.SCORER_WIDTH
 import java.awt.Dimension
 import java.awt.Frame
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
-import javax.swing.JFrame
 import javax.swing.WindowConstants
 
-abstract class AbstractDartsGameScreen(totalPlayers: Int, val gameType: GameType): JFrame(), WindowListener
+abstract class AbstractDartsGameScreen(totalPlayers: Int, val gameType: GameType): FocusableWindow(), WindowListener
 {
     var haveLostFocus = false
 
