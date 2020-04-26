@@ -98,10 +98,9 @@ class LogDestinationElasticsearch: ILogDestination
                 logger.error(CODE_ELASTICSEARCH_ERROR, "Received status code $status trying to post to ES", Throwable(), KEY_RESPONSE_BODY to response)
             }
         }
-        catch(t: Throwable)
+        catch (t: Throwable)
         {
             logger.error(CODE_ELASTICSEARCH_ERROR, "Failed to post log to ES", t)
         }
-
     }
 }
