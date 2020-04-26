@@ -2,13 +2,8 @@ package dartzee.helper
 
 import dartzee.CURRENT_TIME
 import dartzee.`object`.DartsClient
-import dartzee.core.helper.TestDebugExtension
 import dartzee.core.helper.TestMessageDialogFactory
-import dartzee.core.helper.checkedForExceptions
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
-import dartzee.core.util.TestDebug
 import dartzee.db.LocalIdGenerator
 import dartzee.logging.*
 import dartzee.utils.DartsDatabaseUtil
@@ -28,6 +23,7 @@ private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
 private var doneOneTimeSetup = false
 private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
+private var checkedForExceptions = false
 
 abstract class AbstractTest
 {
@@ -54,10 +50,6 @@ abstract class AbstractTest
 
     private fun doOneTimeSetup()
     {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.logToSystemOut = true
-
-        Debug.debugExtension = TestDebugExtension()
         DialogUtil.init(dialogFactory)
 
         InjectedThings.logger = logger
@@ -73,15 +65,11 @@ abstract class AbstractTest
 
     open fun doClassSetup()
     {
-        Debug.initialise(TestDebug.SimpleDebugOutput())
-        Debug.logToSystemOut = true
         DialogUtil.init(dialogFactory)
     }
 
     open fun beforeEachTest()
     {
-        Debug.lastErrorMillis = -1
-        Debug.initialise(TestDebug.SimpleDebugOutput())
         dialogFactory.reset()
         clearLogs()
         clearAllMocks()
@@ -97,7 +85,6 @@ abstract class AbstractTest
     {
         if (!checkedForExceptions)
         {
-            exceptionLogged() shouldBe false
             errorLogged() shouldBe false
         }
 

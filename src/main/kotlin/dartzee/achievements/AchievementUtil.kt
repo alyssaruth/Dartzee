@@ -11,7 +11,6 @@ import dartzee.achievements.rtc.AchievementClockBruceyBonuses
 import dartzee.achievements.rtc.AchievementClockGamesWon
 import dartzee.achievements.x01.*
 import dartzee.core.screen.ProgressDialog
-import dartzee.core.util.Debug
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -115,19 +114,7 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
             AchievementDartzeeGamesWon())
 }
 
-fun getAchievementForRef(achievementRef : Int) : AbstractAchievement?
-{
-    for (achievement in getAllAchievements())
-    {
-        if (achievement.achievementRef == achievementRef)
-        {
-            return achievement
-        }
-    }
-
-    Debug.stackTrace("No achievement found for AchievementRef [$achievementRef]")
-    return null
-}
+fun getAchievementForRef(achievementRef : Int) = getAllAchievements().find { it.achievementRef == achievementRef }
 
 fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
 {
@@ -135,15 +122,11 @@ fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
     return ref as AbstractAchievementBestGame?
 }
 
-fun getWinAchievementRef(gameType : GameType) : Int
+fun getWinAchievementRef(gameType : GameType): Int
 {
-    val ref = getAllAchievements().find {it is AbstractAchievementGamesWon && it.gameType == gameType}?.achievementRef
-    if (ref == null)
-    {
-        Debug.stackTrace("No total wins achievement found for GameType [$gameType]")
-    }
-
-    return ref ?: -1
+    val ref = getAllAchievements().find { it is AbstractAchievementGamesWon && it.gameType == gameType }?.achievementRef
+    ref ?: throw Exception("No total wins achievement found for GameType [$gameType]")
+    return ref
 }
 
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,

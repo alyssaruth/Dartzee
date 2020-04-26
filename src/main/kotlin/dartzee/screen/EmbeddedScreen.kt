@@ -1,12 +1,12 @@
 package dartzee.screen
 
-import dartzee.core.util.Debug
+import dartzee.logging.CODE_SWING_ERROR
+import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.AbstractButton
 import javax.swing.JButton
 import javax.swing.JPanel
 
@@ -63,13 +63,12 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        val src = arg0.source as AbstractButton
-
-        when (src)
+        val src = arg0.source
+        when (arg0.source)
         {
             btnBack -> backPressed()
             btnNext -> nextPressed()
-            else -> Debug.stackTrace("Unexpected actionPerformed: " + src.text)
+            else -> logger.error(CODE_SWING_ERROR, "Unexpected actionPerformed: $src")
         }
     }
 

@@ -52,8 +52,8 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
             MODE_FIRST_TO -> getIsFirstToMatchComplete()
             MODE_POINTS -> getIsPointsMatchComplete()
             else -> {
-                Debug.stackTrace("Unimplemented for match mode [$mode]")
-                false
+                //TODO - convert to enum to remove this
+                throw Exception("Unimplemented for match mode [$mode]")
             }
         }
     }
@@ -117,8 +117,8 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
             MODE_FIRST_TO -> if (position == 1) 1 else 0
             MODE_POINTS -> if (position == -1) 0 else getHmPositionToPoints()[position]!!
             else -> {
-                Debug.stackTrace("Unexpected mode [$mode]")
-                -1
+                //TODO - replace with enum to remove this
+                throw Exception("Unexpected mode [$mode]")
             }
         }
     }

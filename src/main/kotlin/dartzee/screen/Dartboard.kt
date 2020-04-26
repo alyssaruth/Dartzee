@@ -6,10 +6,10 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SEGMENT_TYPE_MISS
 import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
-import dartzee.core.util.Debug
 import dartzee.core.util.getParentWindow
 import dartzee.listener.DartboardListener
 import dartzee.logging.CODE_RENDERED_DARTBOARD
+import dartzee.logging.CODE_RENDER_ERROR
 import dartzee.logging.KEY_CACHED
 import dartzee.logging.KEY_DURATION
 import dartzee.screen.game.DartsGameScreen
@@ -310,7 +310,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
         if (stackTrace)
         {
-            Debug.stackTrace("Couldn't find segment for point (" + pt.getX() + ", " + pt.getY() + ")."
+            logger.error(CODE_RENDER_ERROR, "Couldn't find segment for point (" + pt.getX() + ", " + pt.getY() + ")."
                     + "Width = " + width + ", Height = " + height)
         }
 

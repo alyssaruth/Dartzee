@@ -1,8 +1,8 @@
 package dartzee.db
 
-import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.logging.CODE_BULK_SQL
+import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -10,7 +10,7 @@ import java.sql.SQLException
 
 object BulkInserter
 {
-    var logInserts = true
+    private var logInserts = true
 
     /**
      * Entity insert
@@ -26,13 +26,12 @@ object BulkInserter
             return
         }
 
-        if (entities.any{it.retrievedFromDb})
+        val tableName = entities.first().getTableName()
+        if (entities.any { it.retrievedFromDb })
         {
-            Debug.stackTrace("Attempting to bulk insert entities, but some are already in the database")
+            logger.error(CODE_SQL_EXCEPTION, "Attempting to bulk insert $tableName entities, but some are already in the database")
             return
         }
-
-        val tableName = entities.first().getTableName()
 
         val threads = mutableListOf<Thread>()
         val entitiesBatched = entities.chunked(rowsPerThread)

@@ -1,9 +1,10 @@
 package dartzee.ai
 
-import dartzee.core.util.Debug
 import dartzee.core.util.getAttributeDouble
 import dartzee.core.util.getAttributeInt
+import dartzee.logging.CODE_AI_ERROR
 import dartzee.screen.Dartboard
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
@@ -32,7 +33,7 @@ class DartsModelNormalDistribution : AbstractDartsModel()
     {
         if (standardDeviation == 0.0)
         {
-            Debug.stackTrace("Gaussian model with SD of 0 - this shouldn't be possible!")
+            logger.error(CODE_AI_ERROR, "Gaussian model with SD of 0 - this shouldn't be possible!")
             return pt
         }
 

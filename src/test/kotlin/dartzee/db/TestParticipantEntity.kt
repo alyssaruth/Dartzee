@@ -2,11 +2,10 @@ package dartzee.db
 
 import dartzee.ai.AbstractDartsModel
 import dartzee.ai.DartsModelNormalDistribution
-import dartzee.core.helper.getLogs
 import dartzee.core.util.DateStatics
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
-import io.kotlintest.matchers.string.shouldBeEmpty
+import dartzee.logging.CODE_SQL
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -34,7 +33,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
         clearLogs()
 
         pt.getPlayer() shouldBe player
-        getLogs().shouldBeEmpty()
+        verifyNoLogs(CODE_SQL)
     }
 
     @Test

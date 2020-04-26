@@ -331,12 +331,6 @@ abstract class AbstractDartsModel
          */
         fun getDefaultDartToAimAt(score: Int): Dart
         {
-            if (score > 60)
-            {
-                Debug.stackTrace("Trying to get strategy-invariant default for score over 60. This will not work.")
-                return factoryTreble(20)
-            }
-
             //Aim for the single that puts you on double top
             if (score > 40)
             {

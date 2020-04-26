@@ -1,10 +1,11 @@
 package dartzee.db
 
 import dartzee.core.util.DateStatics
-import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.logging.CODE_INSTANTIATION_ERROR
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.KEY_SQL
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -105,7 +106,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val entities = retrieveEntities(whereSql)
         if (entities.size > 1)
         {
-            Debug.stackTrace("Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]")
+            logger.error(CODE_SQL_EXCEPTION,
+                    "Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]",
+                    Throwable(),
+                    KEY_SQL to whereSql)
         }
 
         return if (entities.isEmpty())
@@ -157,7 +161,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         {
             if (stackTraceIfNotFound)
             {
-                Debug.stackTrace("Failed to find ${getTableName()} for ID [$rowId]")
+                logger.error(CODE_SQL_EXCEPTION,
+                        "Failed to find ${getTableName()} for ID [$rowId]",
+                        Throwable(),
+                        KEY_SQL to "RowId = '$rowId'")
             }
 
             return null
@@ -165,7 +172,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
         if (entities.size > 1)
         {
-            Debug.stackTrace("Found ${entities.size} ${getTableName()} rows for ID [$rowId]")
+            logger.error(CODE_SQL_EXCEPTION,
+                    "Found ${entities.size} ${getTableName()} rows for ID [$rowId]",
+                    Throwable(),
+                    KEY_SQL to "RowId = '$rowId'")
         }
 
         return entities[0]
@@ -217,7 +227,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
                 val updateCount = psUpdate.updateCount
                 if (updateCount == 0)
                 {
-                    Debug.stackTrace("0 rows updated: $updateQuery")
+                    logger.error(CODE_SQL_EXCEPTION,
+                            "0 rows updated for statement $updateQuery",
+                            Throwable(),
+                            KEY_SQL to updateQuery)
                 }
             }
         }

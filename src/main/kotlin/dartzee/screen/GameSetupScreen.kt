@@ -2,7 +2,6 @@ package dartzee.screen
 
 import dartzee.bean.*
 import dartzee.core.bean.RadioButtonPanel
-import dartzee.core.util.Debug
 import dartzee.core.util.StringUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
@@ -220,22 +219,15 @@ class GameSetupScreen : EmbeddedScreen()
 
     override fun nextPressed()
     {
-        if (gameTypeComboBox.getGameType() == GameType.DARTZEE)
+        val selectedPlayers = playerSelector.getSelectedPlayers()
+        val match = factoryMatch(selectedPlayers)
+        if (!playerSelector.valid(match != null, GameType.DARTZEE))
         {
-            val selectedPlayers = playerSelector.getSelectedPlayers()
-            val match = factoryMatch(selectedPlayers)
-            if (!playerSelector.valid(match != null, GameType.DARTZEE))
-            {
-                return
-            }
+            return
+        }
 
-            val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
-            scrn.setState(match, selectedPlayers)
-            ScreenCache.switchScreen(scrn)
-        }
-        else
-        {
-            Debug.stackTrace("Unexpected screen state. GameType = ${gameTypeComboBox.getGameType()}")
-        }
+        val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
+        scrn.setState(match, selectedPlayers)
+        ScreenCache.switchScreen(scrn)
     }
 }

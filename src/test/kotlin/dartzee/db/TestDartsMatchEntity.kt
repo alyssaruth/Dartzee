@@ -1,7 +1,5 @@
 package dartzee.db
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
@@ -99,16 +97,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
 
         match.isComplete() shouldBe false
         verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-    }
-
-    @Test
-    fun `Should stacktrace and return false for an unknown match type`()
-    {
-        val match = DartsMatchEntity()
-
-        match.isComplete() shouldBe false
-        exceptionLogged() shouldBe true
-        getLogs() shouldContain("Unimplemented for match mode [-1]")
     }
 
     @Test

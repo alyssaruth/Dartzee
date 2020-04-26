@@ -1,12 +1,10 @@
 package dartzee.main
 
 import dartzee.`object`.DartsClient
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.MessageDialogFactory
 import dartzee.logging.LoggerUncaughtExceptionHandler
 import dartzee.screen.ScreenCache
-import dartzee.utils.DartsDebugExtension
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>)
@@ -19,15 +17,11 @@ fun main(args: Array<String>)
         exitProcess(0)
     }
 
-    Debug.initialise(ScreenCache.debugConsole)
     DialogUtil.init(MessageDialogFactory())
 
     setLoggingContextFields()
 
     setLookAndFeel()
-
-    Debug.debugExtension = DartsDebugExtension()
-    Debug.logToSystemOut = true
 
     val mainScreen = ScreenCache.mainScreen
     Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())

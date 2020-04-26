@@ -1,14 +1,15 @@
 package dartzee.core.util
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.helper.AbstractTest
+import dartzee.logging.CODE_FILE_ERROR
+import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Dimension
 import java.io.File
+import java.nio.file.DirectoryNotEmptyException
 import javax.swing.ImageIcon
 
 class TestFileUtil: AbstractTest()
@@ -43,9 +44,10 @@ class TestFileUtil: AbstractTest()
         f.createNewFile()
 
         FileUtil.deleteFileIfExists("Test") shouldBe false
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("Failed to delete file")
-        getLogs().shouldContain("DirectoryNotEmptyException")
+
+        val log = verifyLog(CODE_FILE_ERROR, Severity.ERROR)
+        log.message shouldBe "Failed to delete file Test"
+        log.errorObject?.shouldBeInstanceOf<DirectoryNotEmptyException>()
 
         //Tidy up
         dir.deleteRecursively()

@@ -1,12 +1,11 @@
 package dartzee.core.bean
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.helper.AbstractTest
+import dartzee.logging.CODE_COMMAND_ERROR
+import dartzee.logging.Severity
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
@@ -107,8 +106,9 @@ class TestDevScreenCommands: AbstractTest()
 
         cheatBar.text.shouldBeEmpty()
         cheatBar.isVisible.shouldBeFalse()
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("java.lang.Exception: Test")
+
+        val log = verifyLog(CODE_COMMAND_ERROR, Severity.ERROR)
+        log.errorObject?.message shouldBe "Test"
     }
 
 

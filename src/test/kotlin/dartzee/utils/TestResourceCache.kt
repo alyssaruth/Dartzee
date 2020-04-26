@@ -1,10 +1,9 @@
 package dartzee.utils
 
-import dartzee.core.helper.getLogs
 import dartzee.helper.AbstractTest
+import dartzee.logging.CODE_NO_STREAMS
+import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -51,10 +50,11 @@ class TestResourceCache : AbstractTest()
         ResourceCache.borrowInputStream("100") shouldNotBe null
         ResourceCache.borrowInputStream("100") shouldNotBe null
         ResourceCache.borrowInputStream("100") shouldNotBe null
-        getLogs() shouldNotContain "No streams left for WAV [100], will spawn another"
+        verifyNoLogs(CODE_NO_STREAMS)
 
         ResourceCache.borrowInputStream("100") shouldNotBe null
-        getLogs() shouldContain "No streams left for WAV [100], will spawn another"
+        val log = verifyLog(CODE_NO_STREAMS, Severity.WARN)
+        log.message shouldBe "No streams left for WAV [100], will spawn another"
     }
 
     @Test
@@ -71,7 +71,7 @@ class TestResourceCache : AbstractTest()
         val newWav = ResourceCache.borrowInputStream("100")
         newWav shouldBe wav1
 
-        getLogs() shouldNotContain "No streams left for WAV [100], will spawn another"
+        verifyNoLogs(CODE_NO_STREAMS)
     }
 
     @Test
