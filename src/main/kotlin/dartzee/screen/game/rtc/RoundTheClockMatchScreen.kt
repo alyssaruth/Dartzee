@@ -12,5 +12,5 @@ import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 class RoundTheClockMatchScreen(match: DartsMatchEntity, players: List<PlayerEntity>):
     DartsMatchScreen<DefaultPlayerState<DartsScorerRoundTheClock>>(MatchSummaryPanel(match, MatchStatisticsPanelRoundTheClock(match.gameParams)), match, players)
 {
-    override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity) = GamePanelRoundTheClock(parent, game)
+    override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity) = GamePanelRoundTheClock(parent, game, match.getPlayerCount())
 }

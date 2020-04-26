@@ -36,17 +36,14 @@ import java.sql.SQLException
 import java.util.*
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState<S>>(protected val parentWindow: AbstractDartsGameScreen, val gameEntity: GameEntity) :
-        PanelWithScorers<S>(),
-        DartboardListener,
-        ActionListener,
-        MouseListener
+abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState<S>>(
+        protected val parentWindow: AbstractDartsGameScreen,
+        val gameEntity: GameEntity,
+        protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener
 {
     private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
 
-    protected var totalPlayers = -1
-
-    var gameTitle = ""
+    val gameTitle = makeGameTitle()
 
     //Transitive things
     var currentPlayerNumber = 0
@@ -157,6 +154,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         addMouseListener(this)
 
         dartboard.renderScoreLabels = true
+
+        initScorers(totalPlayers)
     }
 
 
@@ -239,16 +238,11 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         slider.value = defaultSpd
     }
 
-
-    fun initBasic(totalPlayers: Int)
+    private fun makeGameTitle(): String
     {
-        this.totalPlayers = totalPlayers
-
         val gameNo = gameEntity.localId
         val gameDesc = gameEntity.getTypeDesc()
-        gameTitle = "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
-
-        initScorers(totalPlayers)
+        return "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
     }
 
     fun loadGame()
@@ -781,21 +775,21 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     companion object
     {
-        fun factory(parent: AbstractDartsGameScreen, game: GameEntity) =
+        fun factory(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) =
             when (game.gameType)
             {
-                GameType.X01 -> GamePanelX01(parent, game)
-                GameType.GOLF -> GamePanelGolf(parent, game)
-                GameType.ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
-                GameType.DARTZEE -> constructGamePanelDartzee(parent, game)
+                GameType.X01 -> GamePanelX01(parent, game, totalPlayers)
+                GameType.GOLF -> GamePanelGolf(parent, game, totalPlayers)
+                GameType.ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game, totalPlayers)
+                GameType.DARTZEE -> constructGamePanelDartzee(parent, game, totalPlayers)
             }
 
-        fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
+        fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int): GamePanelDartzee
         {
             val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
             val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(dtos))
 
-            return GamePanelDartzee(parent, game, dtos, summaryPanel)
+            return GamePanelDartzee(parent, game, totalPlayers, dtos, summaryPanel)
         }
     }
 }

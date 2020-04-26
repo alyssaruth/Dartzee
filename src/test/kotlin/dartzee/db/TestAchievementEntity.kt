@@ -380,6 +380,8 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
 
     class FakeDartsScreen: AbstractDartsGameScreen(2, GameType.X01)
     {
+        override val windowName = "Fake"
+
         var gameId: String? = null
         var playerId: String? = null
         var achievementRef: Int? = null

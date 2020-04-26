@@ -2,13 +2,13 @@ package dartzee.core.bean
 
 import dartzee.logging.CODE_COMMAND_ENTERED
 import dartzee.logging.CODE_COMMAND_ERROR
+import dartzee.screen.FocusableWindow
 import dartzee.utils.InjectedThings.logger
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import javax.swing.JFrame
 import javax.swing.KeyStroke
 
-abstract class AbstractDevScreen(private val commandBar: CheatBar) : JFrame()
+abstract class AbstractDevScreen(private val commandBar: CheatBar) : FocusableWindow()
 {
     init
     {

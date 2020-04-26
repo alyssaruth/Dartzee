@@ -17,7 +17,7 @@ import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 
-open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerX01>(parent, game)
+open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerX01>(parent, game, totalPlayers)
 {
     //Transient variables for each round
     private var startingScore = -1

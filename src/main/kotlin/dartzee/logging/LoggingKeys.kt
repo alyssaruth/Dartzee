@@ -8,6 +8,7 @@ const val KEY_OPERATING_SYSTEM = "os"
 const val KEY_DEVICE_ID = "deviceId"
 const val KEY_DEV_MODE = "devMode"
 const val KEY_CURRENT_SCREEN = "currentScreen"
+const val KEY_ACTIVE_WINDOW = "activeWindow"
 
 //Other
 const val KEY_DURATION = "duration"

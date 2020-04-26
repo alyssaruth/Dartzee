@@ -23,6 +23,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<*>>(private val
 {
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, PlayerState>>()
+    override val windowName = match.getMatchDesc()
 
     init
     {
@@ -48,7 +49,6 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<*>>(private val
 
         //Initialise some basic properties of the tab, such as visibility of components etc
         val tab = factoryGamePanel(this, game)
-        tab.initBasic(match.getPlayerCount())
 
         matchPanel.addGameTab(tab)
 

@@ -114,6 +114,8 @@ class TestDevScreenCommands: AbstractTest()
 
     inner class TestDevScreen(cheatBar: CheatBar): AbstractDevScreen(cheatBar)
     {
+        override val windowName = "Test"
+
         override fun commandsEnabled(): Boolean
         {
             return commandsEnabled
