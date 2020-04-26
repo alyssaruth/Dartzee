@@ -10,12 +10,13 @@ import org.apache.http.entity.ContentType
 import org.apache.http.nio.entity.NStringEntity
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.RestClient
+import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-private const val INDEX_PATH = "/dartzee/_doc/_create"
+private const val INDEX_PATH = "/dartzee/_doc"
 private const val ELASTICSEARCH_URL = "https://search-dartzee-nfqeufkxsx6cu7sybhm53dts7e.eu-west-2.es.amazonaws.com"
 
 class LogDestinationElasticsearch: ILogDestination
@@ -28,7 +29,7 @@ class LogDestinationElasticsearch: ILogDestination
     init
     {
         val runnable = Runnable { postPendingLogs() }
-        scheduler.scheduleAtFixedRate(runnable, 30, 30, TimeUnit.SECONDS)
+        scheduler.scheduleAtFixedRate(runnable, 5, 5, TimeUnit.SECONDS)
     }
 
     override fun log(record: LogRecord)
@@ -54,7 +55,7 @@ class LogDestinationElasticsearch: ILogDestination
     private fun readCredentials(): BasicAWSCredentials
     {
         val awsCredentials = javaClass.getResource("/aws").readText()
-        val decoded = Base64.getDecoder().decode(awsCredentials).toString()
+        val decoded = Base64.getDecoder().decode(awsCredentials).toString(Charset.forName("UTF-8"))
         val lines = decoded.lines()
         return BasicAWSCredentials(lines[0], lines[1])
     }
@@ -63,9 +64,10 @@ class LogDestinationElasticsearch: ILogDestination
     {
         val logsForThisRun = pendingLogs.toList()
         logsForThisRun.forEach {
-            val request = Request("PUT", INDEX_PATH)
+            val request = Request("PUT", "$INDEX_PATH/${UUID.randomUUID()}")
             request.entity = NStringEntity(it.toJsonString(), ContentType.APPLICATION_JSON)
-            client.performRequest(request)
+            val response = client.performRequest(request)
+            println(response)
         }
     }
 }
