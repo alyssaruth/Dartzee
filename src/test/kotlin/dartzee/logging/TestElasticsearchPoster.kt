@@ -20,22 +20,19 @@ class TestElasticsearchPoster: AbstractTest()
     fun `Should post a test log successfully`()
     {
         val poster = ElasticsearchPoster(readCredentials()!!, "unittest")
-
         poster.postLog("""{"message": "test"}""") shouldBe true
     }
 
-    private fun readCredentials(): BasicAWSCredentials?
-    {
+    private fun readCredentials(): BasicAWSCredentials? =
         try
         {
             val awsCredentials = javaClass.getResource("/aws").readText()
             val decoded = Base64.getDecoder().decode(awsCredentials).toString(Charset.forName("UTF-8"))
             val lines = decoded.lines()
-            return BasicAWSCredentials(lines[0], lines[1])
+            BasicAWSCredentials(lines[0], lines[1])
         }
         catch (t: Throwable)
         {
-            return null
+            null
         }
-    }
 }
