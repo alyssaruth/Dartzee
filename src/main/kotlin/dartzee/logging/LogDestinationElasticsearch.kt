@@ -1,14 +1,12 @@
 package dartzee.logging
 
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?): ILogDestination
+class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?, private val scheduler: ScheduledExecutorService): ILogDestination
 {
     private val pendingLogs = ConcurrentHashMap.newKeySet<LogRecord>()
-
-    private val scheduler = Executors.newScheduledThreadPool(1)
 
     override fun log(record: LogRecord)
     {

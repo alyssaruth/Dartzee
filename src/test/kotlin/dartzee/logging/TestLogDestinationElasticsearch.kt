@@ -9,6 +9,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 class TestLogDestinationElasticsearch: AbstractTest()
 {
@@ -16,7 +19,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     fun `Should queue up logs to be posted in the next run`()
     {
         val poster = mockPoster()
-        val dest = LogDestinationElasticsearch(poster)
+        val dest = makeLogDestination(poster)
 
         val recordOne = makeLogRecord(loggingCode = LoggingCode("foo"))
         val recordTwo = makeLogRecord(loggingCode = LoggingCode("bar"))
@@ -38,7 +41,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     fun `Should remove a log from the queue if it is successful`()
     {
         val poster = mockPoster()
-        val dest = LogDestinationElasticsearch(poster)
+        val dest = makeLogDestination(poster)
 
         val log = makeLogRecord()
 
@@ -56,7 +59,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     fun `Should leave a log on the queue to be reattempted if it fails`()
     {
         val poster = mockPoster(false)
-        val dest = LogDestinationElasticsearch(poster)
+        val dest = makeLogDestination(poster)
 
         val log = makeLogRecord()
 
@@ -74,7 +77,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     fun `Should handle not having a poster if something goes wrong during startup`()
     {
         shouldNotThrowAny {
-            val dest = LogDestinationElasticsearch(null)
+            val dest = makeLogDestination(null)
             dest.log(makeLogRecord())
             dest.postPendingLogs()
         }
@@ -84,7 +87,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     fun `Should kick off posting logs immediately`()
     {
         val poster = mockPoster()
-        val dest = LogDestinationElasticsearch(poster)
+        val dest = LogDestinationElasticsearch(poster, Executors.newScheduledThreadPool(1))
 
         val log = makeLogRecord()
 
@@ -92,6 +95,21 @@ class TestLogDestinationElasticsearch: AbstractTest()
         dest.startPosting()
         verify { poster.postLog(log.toJsonString()) }
     }
+
+    @Test
+    fun `Should schedule the posting of logs`()
+    {
+        val scheduler = mockk<ScheduledExecutorService>(relaxed = true)
+        val dest = LogDestinationElasticsearch(mockPoster(), scheduler)
+
+        dest.startPosting()
+
+        verify { scheduler.scheduleAtFixedRate(any(), 0, 5, TimeUnit.SECONDS) }
+    }
+
+    private fun makeLogDestination(poster: ElasticsearchPoster?,
+                                   scheduler: ScheduledExecutorService = mockk(relaxed = true)) =
+            LogDestinationElasticsearch(poster, scheduler)
 
     private fun mockPoster(success: Boolean = true): ElasticsearchPoster
     {

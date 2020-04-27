@@ -3,6 +3,7 @@ package dartzee.logging
 import com.amazonaws.auth.BasicAWSCredentials
 import java.nio.charset.Charset
 import java.util.*
+import java.util.concurrent.Executors
 
 const val ELASTICSEARCH_URL = "https://search-dartzee-nfqeufkxsx6cu7sybhm53dts7e.eu-west-2.es.amazonaws.com"
 private const val INDEX_PATH = "dartzee"
@@ -12,7 +13,7 @@ object LoggerFactory
     fun constructElasticsearchDestination(): LogDestinationElasticsearch
     {
         val poster = readCredentials()?.let { ElasticsearchPoster(it, ELASTICSEARCH_URL, INDEX_PATH) }
-        return LogDestinationElasticsearch(poster)
+        return LogDestinationElasticsearch(poster, Executors.newScheduledThreadPool(1))
     }
 
     fun readCredentials(): BasicAWSCredentials?
