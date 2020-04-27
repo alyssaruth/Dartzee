@@ -2,7 +2,6 @@ package dartzee.logging
 
 import com.amazonaws.auth.BasicAWSCredentials
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings
 import java.nio.charset.Charset
 import java.util.*
 
@@ -30,7 +29,8 @@ object LoggerFactory
         }
         catch (t: Throwable)
         {
-            InjectedThings.logger.error(CODE_ELASTICSEARCH_ERROR, "Failed to read in AWS credentials", t)
+            println("Failed to read in AWS credentials: $t")
+            t.printStackTrace()
             return null
         }
     }

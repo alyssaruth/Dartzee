@@ -2,14 +2,13 @@ package dartzee.logging
 
 import com.amazonaws.auth.BasicAWSCredentials
 import dartzee.helper.AbstractTest
+import dartzee.logging.LoggerFactory.readCredentials
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.elasticsearch.client.ResponseException
 import org.junit.Assume
 import org.junit.Test
-import java.nio.charset.Charset
-import java.util.*
 
 class TestElasticsearchPoster: AbstractTest()
 {
@@ -70,17 +69,4 @@ class TestElasticsearchPoster: AbstractTest()
     {
         return ElasticsearchPoster(credentials, url, index)
     }
-
-    private fun readCredentials(): BasicAWSCredentials? =
-        try
-        {
-            val awsCredentials = javaClass.getResource("/aws").readText()
-            val decoded = Base64.getDecoder().decode(awsCredentials).toString(Charset.forName("UTF-8"))
-            val lines = decoded.lines()
-            BasicAWSCredentials(lines[0], lines[1])
-        }
-        catch (t: Throwable)
-        {
-            null
-        }
 }
