@@ -46,14 +46,15 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
 
     fun postLog(logJson: String): Boolean
     {
-        client ?: return false
+        val initialisedClient = client
+        initialisedClient ?: return false
 
         try
         {
             val request = Request("PUT", "/$indexPath/_doc/${UUID.randomUUID()}")
             request.entity = NStringEntity(logJson, ContentType.APPLICATION_JSON)
 
-            val response = client!!.performRequest(request)
+            val response = initialisedClient.performRequest(request)
             val status = response.statusLine.statusCode
             if (status == HttpStatus.SC_CREATED)
             {
