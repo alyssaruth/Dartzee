@@ -16,20 +16,18 @@ object LoggerFactory
         return LogDestinationElasticsearch(poster, Executors.newScheduledThreadPool(1))
     }
 
-    fun readCredentials(): BasicAWSCredentials?
-    {
+    fun readCredentials() =
         try
         {
             val awsCredentials = javaClass.getResource("/aws").readText()
             val decoded = Base64.getDecoder().decode(awsCredentials).toString(Charset.forName("UTF-8"))
             val lines = decoded.lines()
-            return BasicAWSCredentials(lines[0], lines[1])
+            BasicAWSCredentials(lines[0], lines[1])
         }
         catch (t: Throwable)
         {
             println("Failed to read in AWS credentials: $t")
             t.printStackTrace()
-            return null
+            null
         }
-    }
 }
