@@ -53,7 +53,8 @@ data "aws_iam_policy_document" "elasticsearch_put" {
     actions = ["es:ESHttpPut"]
 
     resources = [
-      "${aws_elasticsearch_domain.dartzee.arn}/dartzee/*"
+      "${aws_elasticsearch_domain.dartzee.arn}/dartzee/*",
+      "${aws_elasticsearch_domain.dartzee.arn}/unittest/*"
     ]
   }
 }
