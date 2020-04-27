@@ -2,7 +2,6 @@ package dartzee.utils
 
 import dartzee.`object`.GameLauncher
 import dartzee.dartzee.*
-import dartzee.logging.LogDestinationElasticsearch
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory
