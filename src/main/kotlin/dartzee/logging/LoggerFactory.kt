@@ -6,13 +6,14 @@ import dartzee.utils.InjectedThings
 import java.nio.charset.Charset
 import java.util.*
 
+const val ELASTICSEARCH_URL = "https://search-dartzee-nfqeufkxsx6cu7sybhm53dts7e.eu-west-2.es.amazonaws.com"
 private const val INDEX_PATH = "dartzee"
 
 object LoggerFactory
 {
     fun constructLogger(): Logger
     {
-        val poster = readCredentials()?.let{ ElasticsearchPoster(it, INDEX_PATH) }
+        val poster = readCredentials()?.let { ElasticsearchPoster(it, ELASTICSEARCH_URL, INDEX_PATH) }
         val esDestination = LogDestinationElasticsearch(poster)
 
         return Logger(listOf(ScreenCache.loggingConsole, LogDestinationSystemOut(), esDestination))
