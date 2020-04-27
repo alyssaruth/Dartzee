@@ -20,10 +20,10 @@ class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?): ILo
     fun startPosting()
     {
         val runnable = Runnable { postPendingLogs() }
-        scheduler.scheduleAtFixedRate(runnable, 5, 5, TimeUnit.SECONDS)
+        scheduler.scheduleAtFixedRate(runnable, 0, 5, TimeUnit.SECONDS)
     }
 
-    fun postPendingLogs()
+    private fun postPendingLogs()
     {
         val logsForThisRun = pendingLogs.toList()
         logsForThisRun.forEach(::postLogToElasticsearch)
