@@ -1,7 +1,6 @@
 package dartzee.logging
 
 import com.amazonaws.auth.BasicAWSCredentials
-import dartzee.screen.ScreenCache
 import java.nio.charset.Charset
 import java.util.*
 
@@ -10,12 +9,10 @@ private const val INDEX_PATH = "dartzee"
 
 object LoggerFactory
 {
-    fun constructLogger(): Logger
+    fun constructElasticsearchDestination(): LogDestinationElasticsearch
     {
         val poster = readCredentials()?.let { ElasticsearchPoster(it, ELASTICSEARCH_URL, INDEX_PATH) }
-        val esDestination = LogDestinationElasticsearch(poster)
-
-        return Logger(listOf(ScreenCache.loggingConsole, LogDestinationSystemOut(), esDestination))
+        return LogDestinationElasticsearch(poster)
     }
 
     fun readCredentials(): BasicAWSCredentials?

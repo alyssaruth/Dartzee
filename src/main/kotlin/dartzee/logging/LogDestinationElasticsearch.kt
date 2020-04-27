@@ -10,12 +10,6 @@ class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?): ILo
 
     private val scheduler = Executors.newScheduledThreadPool(1)
 
-    init
-    {
-        val runnable = Runnable { postPendingLogs() }
-        scheduler.scheduleAtFixedRate(runnable, 5, 5, TimeUnit.SECONDS)
-    }
-
     override fun log(record: LogRecord)
     {
         pendingLogs.add(record)
@@ -23,7 +17,13 @@ class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?): ILo
 
     override fun contextUpdated(context: Map<String, Any?>){}
 
-    private fun postPendingLogs()
+    fun startPosting()
+    {
+        val runnable = Runnable { postPendingLogs() }
+        scheduler.scheduleAtFixedRate(runnable, 5, 5, TimeUnit.SECONDS)
+    }
+
+    fun postPendingLogs()
     {
         val logsForThisRun = pendingLogs.toList()
         logsForThisRun.forEach(::postLogToElasticsearch)

@@ -17,7 +17,8 @@ object InjectedThings
     var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
     var clock: Clock = Clock.systemUTC()
-    var logger: Logger = LoggerFactory.constructLogger()
+    var esDestination = LoggerFactory.constructElasticsearchDestination()
+    var logger: Logger = Logger(listOf(ScreenCache.loggingConsole, LogDestinationSystemOut(), esDestination))
     var gameLauncher: GameLauncher = GameLauncher()
     var terminator: ITerminator = Terminator()
 }
