@@ -5,6 +5,7 @@ import dartzee.dartzee.*
 import dartzee.logging.LogDestinationElasticsearch
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
+import dartzee.logging.LoggerFactory
 import dartzee.screen.ScreenCache
 import java.time.Clock
 
@@ -16,7 +17,7 @@ object InjectedThings
     var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
     var clock: Clock = Clock.systemUTC()
-    var logger: Logger = Logger(listOf(ScreenCache.loggingConsole, LogDestinationSystemOut(), LogDestinationElasticsearch()))
+    var logger: Logger = LoggerFactory.constructLogger()
     var gameLauncher: GameLauncher = GameLauncher()
     var terminator: ITerminator = Terminator()
 }
