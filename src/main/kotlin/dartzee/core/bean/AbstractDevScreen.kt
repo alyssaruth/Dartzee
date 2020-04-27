@@ -31,7 +31,7 @@ abstract class AbstractDevScreen(private val commandBar: CheatBar) : FocusableWi
         revalidate()
     }
     
-    fun getKeyStrokeForCommandBar(): KeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_MASK)
+    fun getKeyStrokeForCommandBar(): KeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK)
 
     fun processCommandWithTry(cmd: String): String
     {
