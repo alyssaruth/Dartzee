@@ -5,6 +5,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.MessageDialogFactory
 import dartzee.logging.LoggerUncaughtExceptionHandler
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>)
@@ -19,17 +20,17 @@ fun main(args: Array<String>)
 
     DialogUtil.init(MessageDialogFactory())
 
+    Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
     setLoggingContextFields()
 
     setLookAndFeel()
 
-    val mainScreen = ScreenCache.mainScreen
-    Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
-
     DartsClient.logArgumentState()
-
     DartsClient.checkForUpdatesIfRequired()
 
+    InjectedThings.esDestination.startPosting()
+
+    val mainScreen = ScreenCache.mainScreen
     mainScreen.isVisible = true
     mainScreen.init()
 }

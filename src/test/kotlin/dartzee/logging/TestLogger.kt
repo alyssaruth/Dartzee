@@ -105,7 +105,7 @@ class TestLogger: AbstractTest()
         val record = destination.logRecords.first()
         record.severity shouldBe Severity.INFO
         record.loggingCode shouldBe CODE_SQL
-        record.message shouldBe "(150ms) $sql"
+        record.message shouldBe sql
         record.errorObject shouldBe null
         record.timestamp shouldBe CURRENT_TIME
         record.shouldContainKeyValues(KEY_DURATION to 150L,
