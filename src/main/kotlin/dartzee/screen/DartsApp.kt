@@ -11,8 +11,10 @@ import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.logging.CODE_SCREEN_LOAD_ERROR
 import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
+import dartzee.main.exitApplication
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
@@ -55,6 +57,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         ResourceCache.initialiseResources()
 
         DartsDatabaseUtil.initialiseDatabase()
+
+        InjectedThings.esDestination.readOldLogs()
 
         addConsoleShortcut()
         switchScreen(ScreenCache.getScreen(MenuScreen::class.java))
@@ -223,6 +227,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
     override fun windowClosing(arg0: WindowEvent)
     {
-        ScreenCache.exitApplication()
+        exitApplication()
     }
 }

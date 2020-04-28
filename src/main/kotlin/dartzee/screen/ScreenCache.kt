@@ -1,14 +1,11 @@
 package dartzee.screen
 
 import dartzee.core.bean.CheatBar
-import dartzee.core.util.DialogUtil
 import dartzee.logging.LoggingConsole
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.preference.PreferencesDialog
 import dartzee.screen.reporting.ConfigureReportColumnsDialog
-import javax.swing.JOptionPane
-import kotlin.system.exitProcess
 
 object ScreenCache
 {
@@ -95,22 +92,6 @@ object ScreenCache
         }
 
         return configureReportColumnsDialog!!
-    }
-
-    fun exitApplication()
-    {
-        val openGames = getDartsGameScreens()
-        val size = openGames.size
-        if (size > 0)
-        {
-            val ans = DialogUtil.showQuestion("Are you sure you want to exit? There are $size game window(s) still open.", false)
-            if (ans == JOptionPane.NO_OPTION)
-            {
-                return
-            }
-        }
-
-        exitProcess(0)
     }
 
     fun emptyCache()

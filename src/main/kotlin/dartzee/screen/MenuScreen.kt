@@ -1,6 +1,7 @@
 package dartzee.screen
 
 import dartzee.core.util.addActionListenerToAllChildren
+import dartzee.main.exitApplication
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import java.awt.BorderLayout
@@ -97,7 +98,7 @@ class MenuScreen : EmbeddedScreen()
                 dialog.isVisible = true
             }
 
-            btnExit -> ScreenCache.exitApplication()
+            btnExit -> exitApplication()
             btnNewGame -> ScreenCache.switchScreen(GameSetupScreen::class.java)
             btnManagePlayers -> ScreenCache.switchScreen(PlayerManagementScreen::class.java)
             btnGameReport -> ScreenCache.switchScreen(ReportingSetupScreen::class.java)

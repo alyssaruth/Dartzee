@@ -40,7 +40,8 @@ object DartsDatabaseUtil
                 DartzeeRuleEntity(),
                 DartzeeTemplateEntity(),
                 DartzeeRoundResultEntity(),
-                X01FinishEntity())
+                X01FinishEntity(),
+                PendingLogsEntity())
     }
 
     fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
@@ -120,6 +121,8 @@ object DartsDatabaseUtil
         else if (versionNumber == 10)
         {
             runSqlScriptsForVersion(11)
+
+            PendingLogsEntity().createTable()
 
             //Added "ScoringSegments"
             DartzeeRuleConversion.convertDartzeeRules()
