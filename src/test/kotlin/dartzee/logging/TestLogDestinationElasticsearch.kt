@@ -1,8 +1,11 @@
 package dartzee.logging
 
 import dartzee.core.helper.verifyNotCalled
+import dartzee.db.PendingLogsEntity
 import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
 import dartzee.makeLogRecord
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -105,6 +108,40 @@ class TestLogDestinationElasticsearch: AbstractTest()
         dest.startPosting()
 
         verify { scheduler.scheduleAtFixedRate(any(), 0, 5, TimeUnit.SECONDS) }
+    }
+
+    @Test
+    fun `Should read in and delete from the pending logs table`()
+    {
+        val logJson = makeLogRecord().toJsonString()
+        PendingLogsEntity.factory(logJson).saveToDatabase()
+
+        val poster = mockPoster()
+        val dest = makeLogDestination(poster)
+
+        dest.readOldLogs()
+        dest.postPendingLogs()
+
+        verify { poster.postLog(logJson) }
+        getCountFromTable("PendingLogs") shouldBe 0
+    }
+
+    @Test
+    fun `Should shut down and write out unsent logs`()
+    {
+        val scheduler = mockk<ScheduledExecutorService>(relaxed = true)
+        val dest = makeLogDestination(mockPoster(), scheduler)
+
+        val record = makeLogRecord(loggingCode = LoggingCode("tooLate"))
+        dest.log(record)
+
+        dest.shutDown()
+
+        verify { scheduler.shutdown() }
+
+        val pendingLogs = PendingLogsEntity().retrieveEntities()
+        pendingLogs.size shouldBe 1
+        pendingLogs.first().logJson shouldBe record.toJsonString()
     }
 
     private fun makeLogDestination(poster: ElasticsearchPoster?,

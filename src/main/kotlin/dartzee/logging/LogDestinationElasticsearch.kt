@@ -55,5 +55,4 @@ class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?, priv
         val entities = remainingLogs.map { PendingLogsEntity.factory(it) }
         BulkInserter.insert(entities)
     }
-
 }
