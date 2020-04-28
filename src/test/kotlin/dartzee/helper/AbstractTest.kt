@@ -6,6 +6,7 @@ import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.db.LocalIdGenerator
 import dartzee.logging.*
+import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
@@ -70,6 +71,7 @@ abstract class AbstractTest
 
     open fun beforeEachTest()
     {
+        ScreenCache.emptyCache()
         dialogFactory.reset()
         clearLogs()
         clearAllMocks()

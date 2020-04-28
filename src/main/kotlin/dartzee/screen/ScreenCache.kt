@@ -97,6 +97,7 @@ object ScreenCache
     fun emptyCache()
     {
         hmClassToScreen.clear()
+        hmGameIdToGameScreen.clear()
 
         humanCreationDialog = null
         aiConfigurationDialog = null

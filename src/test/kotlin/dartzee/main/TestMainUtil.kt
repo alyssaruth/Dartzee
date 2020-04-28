@@ -27,6 +27,7 @@ class TestMainUtil: AbstractTest()
 
     override fun afterEachTest()
     {
+        super.afterEachTest()
         instance.put(INSTANCE_STRING_DEVICE_ID, originalDeviceId)
         instance.put(INSTANCE_STRING_USER_NAME, originalUsername)
     }
