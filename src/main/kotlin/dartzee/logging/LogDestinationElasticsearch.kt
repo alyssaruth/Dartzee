@@ -1,5 +1,6 @@
 package dartzee.logging
 
+import dartzee.`object`.DartsClient
 import dartzee.db.BulkInserter
 import dartzee.db.PendingLogsEntity
 import dartzee.utils.InjectedThings.logger
@@ -13,7 +14,10 @@ class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?, priv
 
     override fun log(record: LogRecord)
     {
-        pendingLogs.add(record.toJsonString())
+        if (!DartsClient.devMode)
+        {
+            pendingLogs.add(record.toJsonString())
+        }
     }
 
     override fun contextUpdated(context: Map<String, Any?>){}
