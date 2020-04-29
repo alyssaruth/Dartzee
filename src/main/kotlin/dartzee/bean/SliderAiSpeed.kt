@@ -1,5 +1,6 @@
 package dartzee.bean
 
+import dartzee.`object`.DartsClient
 import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Rectangle
@@ -18,7 +19,7 @@ class SliderAiSpeed(custom: Boolean) : JSlider()
         setMajorTickSpacing(100)
         isOpaque = false
 
-        if (custom)
+        if (custom && !DartsClient.isAppleOs())
         {
             setUI(CustomUI(this))
         }
