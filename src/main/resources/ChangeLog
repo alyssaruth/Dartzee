@@ -11,6 +11,7 @@
 = Allow reporting on a player finishing 5th or 6th.
 = Fix bug with RTC stats being incorrectly aggregated for matches
 = Improved support for non-windows operating systems
+= 57.8% test coverage (7357 / 12,728 lines covered by 1356 tests)
 
 --------- v4.1.0 ---------
 

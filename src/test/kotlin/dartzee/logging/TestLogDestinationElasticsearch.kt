@@ -1,5 +1,6 @@
 package dartzee.logging
 
+import dartzee.`object`.DartsClient
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.PendingLogsEntity
 import dartzee.helper.AbstractTest
@@ -18,6 +19,28 @@ import java.util.concurrent.TimeUnit
 
 class TestLogDestinationElasticsearch: AbstractTest()
 {
+    @Test
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+
+        DartsClient.devMode = false
+    }
+
+    @Test
+    fun `Should not post logs in dev mode`()
+    {
+        DartsClient.devMode = true
+
+        val poster = mockPoster()
+        val dest = makeLogDestination(poster)
+
+        dest.log(makeLogRecord())
+        dest.postPendingLogs()
+
+        verifyNotCalled { poster.postLog(any()) }
+    }
+
     @Test
     fun `Should queue up logs to be posted in the next run`()
     {
