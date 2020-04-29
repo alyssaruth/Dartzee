@@ -3,6 +3,7 @@
 + Improved dartboard highlighting in Dartzee so it's clearer where to aim
 + Ability to exclude "all AI" games from reporting. Combined and clarified existing player options.
 + Bruce appearance on failed bonus shots in Round the Clock
+= Logging rewrite
 = Fix bug with Optimal Scorecard rendering
 = Fix bug with the number of games in "First To" matches
 = Fix bug with layout of player selectors
