@@ -1,16 +1,23 @@
 package dartzee.logging
 
+import dartzee.`object`.DartsClient
+import dartzee.db.BulkInserter
+import dartzee.db.PendingLogsEntity
+import dartzee.utils.InjectedThings.logger
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?, private val scheduler: ScheduledExecutorService): ILogDestination
 {
-    private val pendingLogs = ConcurrentHashMap.newKeySet<LogRecord>()
+    private val pendingLogs = ConcurrentHashMap.newKeySet<String>()
 
     override fun log(record: LogRecord)
     {
-        pendingLogs.add(record)
+        if (!DartsClient.devMode)
+        {
+            pendingLogs.add(record.toJsonString())
+        }
     }
 
     override fun contextUpdated(context: Map<String, Any?>){}
@@ -26,12 +33,30 @@ class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?, priv
         val logsForThisRun = pendingLogs.toList()
         logsForThisRun.forEach(::postLogToElasticsearch)
     }
-    private fun postLogToElasticsearch(log: LogRecord)
+    private fun postLogToElasticsearch(logJson: String)
     {
-        val logJson = log.toJsonString()
         if (poster?.postLog(logJson) == true)
         {
-            pendingLogs.remove(log)
+            pendingLogs.remove(logJson)
         }
+    }
+
+
+    fun readOldLogs()
+    {
+        val persistedLogs = PendingLogsEntity().retrieveEntities().map { it.logJson }
+        pendingLogs.addAll(persistedLogs)
+
+        PendingLogsEntity().deleteAll()
+    }
+
+    fun shutDown()
+    {
+        scheduler.shutdown()
+        logger.waitUntilLoggingFinished()
+
+        val remainingLogs = pendingLogs.toList()
+        val entities = remainingLogs.map { PendingLogsEntity.factory(it) }
+        BulkInserter.insert(entities)
     }
 }
