@@ -9,6 +9,7 @@ import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartsMatchEntity
 import dartzee.game.GameType
+import dartzee.game.MatchMode
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertPlayer
@@ -187,7 +188,7 @@ class TestGameSetupScreen: AbstractTest()
         val match = slot.captured
         match.gameType shouldBe GameType.X01
         match.gameParams shouldBe "501"
-        match.mode shouldBe DartsMatchEntity.MODE_FIRST_TO
+        match.mode shouldBe MatchMode.FIRST_TO
         match.games shouldBe 7
         match.matchParams shouldBe ""
     }
@@ -217,7 +218,7 @@ class TestGameSetupScreen: AbstractTest()
         val match = slot.captured
         match.gameType shouldBe GameType.GOLF
         match.gameParams shouldBe "18"
-        match.mode shouldBe DartsMatchEntity.MODE_POINTS
+        match.mode shouldBe MatchMode.POINTS
         match.games shouldBe 8
         match.matchParams shouldBe DartsMatchEntity.constructPointsXml(15, 9, 6, 3, 2, 1)
     }
@@ -287,7 +288,7 @@ class TestGameSetupScreen: AbstractTest()
 
         val match = dartzeeScreen.match!!
         match.games shouldBe 2
-        match.mode shouldBe DartsMatchEntity.MODE_FIRST_TO
+        match.mode shouldBe MatchMode.FIRST_TO
         match.gameParams shouldBe ""
         match.gameType shouldBe GameType.DARTZEE
         match.players.shouldContainExactly(p1, p2)
