@@ -17,15 +17,9 @@ class TestHumanCreationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should reset values properly`()
+    fun `Should start with empty values`()
     {
         val dlg = HumanCreationDialog()
-        dlg.textFieldName.text = "Foo"
-        dlg.createdPlayer = true
-        dlg.avatar.avatarId = "id"
-
-        dlg.init()
-
         dlg.textFieldName.text shouldBe ""
         dlg.createdPlayer shouldBe false
         dlg.avatar.avatarId shouldBe ""

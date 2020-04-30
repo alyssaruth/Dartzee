@@ -272,8 +272,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     fun `Pressing back should take you to the Utilities screen`()
     {
         val scrn = DartzeeTemplateSetupScreen()
-
-        scrn.btnNext.isVisible shouldBe false
+        scrn.showNextButton() shouldBe false
         scrn.btnBack.doClick()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
