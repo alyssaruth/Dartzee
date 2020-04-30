@@ -1,8 +1,8 @@
 package dartzee.screen.stats.player
 
 import dartzee.bean.PlayerAvatar
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.stats.GameWrapper
 import net.miginfocom.swing.MigLayout
@@ -100,7 +100,7 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
                 dlg.setLocationRelativeTo(this)
                 dlg.isVisible = true
             }
-            btnX -> ScreenCache.getScreen(PlayerStatisticsScreen::class.java).removeComparison()
+            btnX -> ScreenCache.getScreen<PlayerStatisticsScreen>().removeComparison()
         }
     }
 }

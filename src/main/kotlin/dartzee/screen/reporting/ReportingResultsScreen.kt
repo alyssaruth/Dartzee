@@ -95,7 +95,7 @@ class ReportingResultsScreen : EmbeddedScreen()
         this.rp = rp
     }
 
-    override fun getBackTarget() = ScreenCache.getScreen(ReportingSetupScreen::class.java)
+    override fun getBackTarget() = ScreenCache.getScreen<ReportingSetupScreen>()
 
     override fun actionPerformed(arg0: ActionEvent)
     {

@@ -56,10 +56,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
 
     }
 
-    open fun getBackTarget() : EmbeddedScreen
-    {
-        return ScreenCache.getScreen(MenuScreen::class.java)
-    }
+    open fun getBackTarget(): EmbeddedScreen = ScreenCache.getScreen<MenuScreen>()
 
     override fun actionPerformed(arg0: ActionEvent)
     {

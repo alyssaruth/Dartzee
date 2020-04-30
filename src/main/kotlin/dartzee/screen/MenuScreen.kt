@@ -99,11 +99,11 @@ class MenuScreen : EmbeddedScreen()
             }
 
             btnExit -> exitApplication()
-            btnNewGame -> ScreenCache.switchScreen(GameSetupScreen::class.java)
-            btnManagePlayers -> ScreenCache.switchScreen(PlayerManagementScreen::class.java)
-            btnGameReport -> ScreenCache.switchScreen(ReportingSetupScreen::class.java)
-            btnGameStats -> ScreenCache.switchScreen(LeaderboardsScreen())
-            btnUtilities -> ScreenCache.switchScreen(UtilitiesScreen::class.java)
+            btnNewGame -> ScreenCache.switchScreen<GameSetupScreen>()
+            btnManagePlayers -> ScreenCache.switchScreen<PlayerManagementScreen>()
+            btnGameReport -> ScreenCache.switchScreen<ReportingSetupScreen>()
+            btnGameStats -> ScreenCache.switchScreen<LeaderboardsScreen>()
+            btnUtilities -> ScreenCache.switchScreen<UtilitiesScreen>()
             else -> super.actionPerformed(arg0)
         }
     }

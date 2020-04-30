@@ -2,8 +2,8 @@ package dartzee.screen
 
 import dartzee.bean.PlayerAvatar
 import dartzee.core.util.DialogUtil
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup
 import dartzee.screen.stats.player.PlayerAchievementsScreen
@@ -115,9 +115,9 @@ class PlayerManagementPanel : JPanel(), ActionListener
             btnRunSimulation -> AISimulationSetup(player!!).isVisible = true
             btnAchievements ->
             {
-                val scrn = ScreenCache.getScreen(PlayerAchievementsScreen::class.java)
+                val scrn = ScreenCache.getScreen<PlayerAchievementsScreen>()
                 scrn.setPlayer(player!!)
-                scrn.previousScrn = ScreenCache.getPlayerManagementScreen()
+                scrn.previousScrn = ScreenCache.getScreen<PlayerManagementScreen>()
 
                 ScreenCache.switchScreen(scrn)
             }

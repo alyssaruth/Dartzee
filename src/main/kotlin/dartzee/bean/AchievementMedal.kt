@@ -99,7 +99,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
         val pt = e.point
         highlighted = getDistance(pt, Point(SIZE/2, SIZE/2)) < SIZE/2
 
-        ScreenCache.getScreen(PlayerAchievementsScreen::class.java).toggleAchievementDesc(highlighted, achievement)
+        ScreenCache.getScreen<PlayerAchievementsScreen>().toggleAchievementDesc(highlighted, achievement)
 
         cursor = if (highlighted && achievement.isClickable())
         {
@@ -122,7 +122,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     {
         if (achievement.tmBreakdown != null)
         {
-            val scrn = ScreenCache.getScreen(PlayerAchievementBreakdown::class.java)
+            val scrn = ScreenCache.getScreen<PlayerAchievementBreakdown>()
             scrn.setState(achievement)
 
             ScreenCache.switchScreen(scrn)

@@ -226,7 +226,7 @@ class GameSetupScreen : EmbeddedScreen()
             return
         }
 
-        val scrn = ScreenCache.getScreen(DartzeeRuleSetupScreen::class.java)
+        val scrn = ScreenCache.getScreen<DartzeeRuleSetupScreen>()
         scrn.setState(match, selectedPlayers)
         ScreenCache.switchScreen(scrn)
     }

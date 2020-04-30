@@ -254,7 +254,7 @@ class TestGameSetupScreen: AbstractTest()
 
         dialogFactory.errorsShown.shouldBeEmpty()
 
-        val currentScreen = ScreenCache.currentScreen()!!
+        val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
 
         val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen
@@ -279,7 +279,7 @@ class TestGameSetupScreen: AbstractTest()
 
         dialogFactory.errorsShown.shouldBeEmpty()
 
-        val currentScreen = ScreenCache.currentScreen()!!
+        val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
 
         val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen

@@ -6,13 +6,14 @@ import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.preference.PreferencesDialog
 import dartzee.screen.reporting.ConfigureReportColumnsDialog
+import kotlin.reflect.KClass
 
 object ScreenCache
 {
     private val hmGameIdToGameScreen = mutableMapOf<String, AbstractDartsGameScreen>()
 
     //Embedded screens
-    private val hmClassToScreen = mutableMapOf<Class<out EmbeddedScreen>, EmbeddedScreen>()
+    val hmClassToScreen = mutableMapOf<KClass<out EmbeddedScreen>, EmbeddedScreen>()
     val mainScreen = DartsApp(CheatBar())
 
     //Dialogs
@@ -24,20 +25,20 @@ object ScreenCache
     //Other
     val loggingConsole = LoggingConsole()
 
-    fun getPlayerManagementScreen() = getScreen(PlayerManagementScreen::class.java)
+    fun getPlayerManagementScreen() = getScreen<PlayerManagementScreen>()
 
     fun getDartsGameScreens() = hmGameIdToGameScreen.values.distinct()
 
-    fun <K : EmbeddedScreen> getScreen(screenClass: Class<K>): K
+    inline fun <reified K : EmbeddedScreen> getScreen(): K
     {
-        return hmClassToScreen.getOrPut(screenClass) { screenClass.getConstructor().newInstance() } as K
+        return hmClassToScreen.getOrPut(K::class) { K::class.java.getConstructor().newInstance() } as K
     }
 
     fun currentScreen() = mainScreen.currentScreen
 
-    fun <K : EmbeddedScreen> switchScreen(screenClass: Class<K>)
+    inline fun <reified K : EmbeddedScreen> switchScreen()
     {
-        val screen = getScreen(screenClass)
+        val screen = getScreen<K>()
         switchScreen(screen)
     }
 

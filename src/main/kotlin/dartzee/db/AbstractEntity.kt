@@ -80,18 +80,17 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return ret
     }
 
-    private fun factory(): E?
-    {
+    @Suppress("UNCHECKED_CAST")
+    private fun factory(): E? =
         try
         {
-            return javaClass.newInstance() as E
+            javaClass.newInstance() as E
         }
         catch (t: Throwable)
         {
             logger.error(CODE_INSTANTIATION_ERROR, "Failed to instantiate ${javaClass.simpleName}", t)
-            return null
+            null
         }
-    }
 
 
     fun columnCanBeUnset(columnName: String) = getColumnsAllowedToBeUnset().contains(columnName)

@@ -137,7 +137,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
             return
         }
 
-        val scrn = ScreenCache.getScreen(ReportingResultsScreen::class.java)
+        val scrn = ScreenCache.getScreen<ReportingResultsScreen>()
 
         val rp = generateReportParams()
         scrn.setReportParameters(rp)

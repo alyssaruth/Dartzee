@@ -88,7 +88,7 @@ class PlayerSummaryPanel(private val gameType: GameType) : JPanel(), ActionListe
     {
         if (arg0.source === btnViewStats)
         {
-            val statsScrn = ScreenCache.getScreen(PlayerStatisticsScreen::class.java)
+            val statsScrn = ScreenCache.getScreen<PlayerStatisticsScreen>()
             statsScrn.setVariables(gameType, player!!)
 
             ScreenCache.switchScreen(statsScrn)
