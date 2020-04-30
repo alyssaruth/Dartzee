@@ -5,6 +5,8 @@ import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
+import io.mockk.every
+import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
@@ -60,12 +62,13 @@ class TestExtensionFunctions: AbstractTest()
 
     interface Validator
     {
-        fun isValid(text: String, index: Int) = true
+        fun isValid(text: String, index: Int): Boolean
     }
     @Test
     fun `Should pass the element & index to the predicate correctly`()
     {
-        val mockValidator = spyk<Validator>()
+        val mockValidator = mockk<Validator>()
+        every { mockValidator.isValid(any(), any()) } returns true
 
         val list = listOf("one", "two", "three", "four")
 
