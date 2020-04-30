@@ -2,6 +2,7 @@ package dartzee.screen
 
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.main.exitApplication
+import dartzee.screen.preference.PreferencesDialog
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import java.awt.BorderLayout
@@ -93,8 +94,9 @@ class MenuScreen : EmbeddedScreen()
             }
 
             btnPreferences -> {
-                val dialog = ScreenCache.getPreferencesDialog()
+                val dialog = PreferencesDialog()
                 dialog.setLocationRelativeTo(this)
+                dialog.init()
                 dialog.isVisible = true
             }
 

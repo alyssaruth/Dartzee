@@ -25,13 +25,6 @@ class HumanCreationDialog : AbstractPlayerCreationDialog()
         textFieldName.columns = 10
     }
 
-    fun init()
-    {
-        createdPlayer = false
-        textFieldName.text = ""
-        avatar.init(null, false)
-    }
-
     override fun savePlayer()
     {
         val name = textFieldName.text

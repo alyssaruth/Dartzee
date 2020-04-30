@@ -36,10 +36,10 @@ class ReportingResultsScreen : EmbeddedScreen()
 
     override fun initialise()
     {
-        buildTable(true)
+        buildTable(true, emptyList())
     }
 
-    private fun buildTable(runSql: Boolean)
+    private fun buildTable(runSql: Boolean, excludedColumns: List<String>)
     {
         val model = TableUtil.DefaultModel()
         model.addColumn("Game")
@@ -63,7 +63,7 @@ class ReportingResultsScreen : EmbeddedScreen()
         tableResults.sortBy(0, false)
 
         setRenderersAndComparators()
-        stripOutRemovedColumns()
+        stripOutRemovedColumns(excludedColumns)
     }
 
     private fun setRenderersAndComparators()
@@ -75,15 +75,13 @@ class ReportingResultsScreen : EmbeddedScreen()
         tableResults.setComparator(4, compareBy<Timestamp> { it })
     }
 
-    private fun stripOutRemovedColumns()
+    private fun stripOutRemovedColumns(excludedColumns: List<String>)
     {
-        val dlg = ScreenCache.getConfigureReportColumnsDialog()
-
         val columns = tableResults.columnCount
         for (i in columns - 1 downTo 0)
         {
             val columnName = tableResults.getColumnName(i)
-            if (!dlg.includeColumn(columnName))
+            if (excludedColumns.contains(columnName))
             {
                 tableResults.removeColumn(i)
             }
@@ -102,11 +100,11 @@ class ReportingResultsScreen : EmbeddedScreen()
         when (arg0.source)
         {
             btnConfigureColumns -> {
-                val dlg = ScreenCache.getConfigureReportColumnsDialog()
+                val dlg = ConfigureReportColumnsDialog()
                 dlg.setLocationRelativeTo(this)
                 dlg.isVisible = true
 
-                buildTable(false)
+                buildTable(false, dlg.excludedColumns())
             }
             else -> super.actionPerformed(arg0)
         }

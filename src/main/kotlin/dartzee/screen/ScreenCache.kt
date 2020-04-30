@@ -1,10 +1,7 @@
 package dartzee.screen
 
 import dartzee.core.bean.CheatBar
-import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.screen.preference.PreferencesDialog
-import dartzee.screen.reporting.ConfigureReportColumnsDialog
 
 object ScreenCache
 {
@@ -13,12 +10,6 @@ object ScreenCache
     //Embedded screens
     val hmClassToScreen = mutableMapOf<Class<out EmbeddedScreen>, EmbeddedScreen>()
     val mainScreen = DartsApp(CheatBar())
-
-    //Dialogs
-    private var humanCreationDialog: HumanCreationDialog? = null
-    private var aiConfigurationDialog: AIConfigurationDialog? = null
-    private var preferencesDialog: PreferencesDialog? = null
-    private var configureReportColumnsDialog: ConfigureReportColumnsDialog? = null
 
     fun getDartsGameScreens() = hmGameIdToGameScreen.values.distinct()
 
@@ -40,32 +31,7 @@ object ScreenCache
         mainScreen.switchScreen(scrn, reInit)
     }
 
-    fun getHumanCreationDialog(): HumanCreationDialog
-    {
-        if (humanCreationDialog == null)
-        {
-            humanCreationDialog = HumanCreationDialog()
-        }
-
-        humanCreationDialog!!.setLocationRelativeTo(mainScreen)
-        return humanCreationDialog!!
-    }
-
-    fun getPreferencesDialog(): PreferencesDialog
-    {
-        if (preferencesDialog == null)
-        {
-            preferencesDialog = PreferencesDialog()
-        }
-
-        preferencesDialog!!.init()
-        return preferencesDialog!!
-    }
-
-    fun getDartsGameScreen(gameId: String): AbstractDartsGameScreen?
-    {
-        return hmGameIdToGameScreen[gameId]
-    }
+    fun getDartsGameScreen(gameId: String) = hmGameIdToGameScreen[gameId]
 
     fun addDartsGameScreen(gameId: String, scrn: AbstractDartsGameScreen)
     {
@@ -78,24 +44,9 @@ object ScreenCache
         keys.forEach { hmGameIdToGameScreen.remove(it) }
     }
 
-    fun getConfigureReportColumnsDialog(): ConfigureReportColumnsDialog
-    {
-        if (configureReportColumnsDialog == null)
-        {
-            configureReportColumnsDialog = ConfigureReportColumnsDialog()
-        }
-
-        return configureReportColumnsDialog!!
-    }
-
     fun emptyCache()
     {
         hmClassToScreen.clear()
         hmGameIdToGameScreen.clear()
-
-        humanCreationDialog = null
-        aiConfigurationDialog = null
-        preferencesDialog = null
-        configureReportColumnsDialog = null
     }
 }
