@@ -100,7 +100,7 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
                 dlg.setLocationRelativeTo(this)
                 dlg.isVisible = true
             }
-            btnX -> ScreenCache.getScreen<PlayerStatisticsScreen>().removeComparison()
+            btnX -> ScreenCache.get<PlayerStatisticsScreen>().removeComparison()
         }
     }
 }

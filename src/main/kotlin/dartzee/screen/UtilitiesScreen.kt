@@ -71,7 +71,7 @@ class UtilitiesScreen : EmbeddedScreen()
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()
             btnAchievementConversion -> runAchievementConversion()
-            btnDartzeeTemplates -> ScreenCache.switchScreen<DartzeeTemplateSetupScreen>()
+            btnDartzeeTemplates -> ScreenCache.switch<DartzeeTemplateSetupScreen>()
             else -> super.actionPerformed(arg0)
         }
     }

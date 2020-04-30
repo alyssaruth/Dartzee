@@ -20,24 +20,22 @@ object ScreenCache
     private var preferencesDialog: PreferencesDialog? = null
     private var configureReportColumnsDialog: ConfigureReportColumnsDialog? = null
 
-    fun getPlayerManagementScreen() = getScreen<PlayerManagementScreen>()
-
     fun getDartsGameScreens() = hmGameIdToGameScreen.values.distinct()
 
-    inline fun <reified K : EmbeddedScreen> getScreen(): K
+    inline fun <reified K : EmbeddedScreen> get(): K
     {
         return hmClassToScreen.getOrPut(K::class.java) { K::class.java.getConstructor().newInstance() } as K
     }
 
     fun currentScreen() = mainScreen.currentScreen
 
-    inline fun <reified K : EmbeddedScreen> switchScreen()
+    inline fun <reified K : EmbeddedScreen> switch()
     {
-        val screen = getScreen<K>()
-        switchScreen(screen)
+        val screen = get<K>()
+        switch(screen)
     }
 
-    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true)
+    fun switch(scrn: EmbeddedScreen, reInit: Boolean = true)
     {
         mainScreen.switchScreen(scrn, reInit)
     }

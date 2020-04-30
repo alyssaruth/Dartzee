@@ -138,7 +138,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
             saveState()
             dispose()
 
-            val scrn = ScreenCache.getScreen<PlayerStatisticsScreen>()
+            val scrn = ScreenCache.get<PlayerStatisticsScreen>()
             scrn.buildTabs()
         }
     }

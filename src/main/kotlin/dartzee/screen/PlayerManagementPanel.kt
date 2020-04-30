@@ -115,11 +115,11 @@ class PlayerManagementPanel : JPanel(), ActionListener
             btnRunSimulation -> AISimulationSetup(player!!).isVisible = true
             btnAchievements ->
             {
-                val scrn = ScreenCache.getScreen<PlayerAchievementsScreen>()
+                val scrn = ScreenCache.get<PlayerAchievementsScreen>()
                 scrn.setPlayer(player!!)
-                scrn.previousScrn = ScreenCache.getScreen<PlayerManagementScreen>()
+                scrn.previousScrn = ScreenCache.get<PlayerManagementScreen>()
 
-                ScreenCache.switchScreen(scrn)
+                ScreenCache.switch(scrn)
             }
         }
     }
@@ -134,7 +134,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
             player!!.saveToDatabase()
 
             //Re-initialise the screen so it updates
-            val screen = ScreenCache.getPlayerManagementScreen()
+            val screen = ScreenCache.get<PlayerManagementScreen>()
             screen.initialise()
         }
     }

@@ -35,7 +35,7 @@ private const val CMD_GUID = "guid"
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
     override val windowName = "Main Window"
-    var currentScreen: EmbeddedScreen = ScreenCache.getScreen<MenuScreen>()
+    var currentScreen: EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
     init
     {
@@ -61,7 +61,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         InjectedThings.esDestination.readOldLogs()
 
         addConsoleShortcut()
-        switchScreen(ScreenCache.getScreen<MenuScreen>())
+        switchScreen(ScreenCache.get<MenuScreen>())
 
         //Pop up the change log if we've just updated
         if (DartsClient.justUpdated)

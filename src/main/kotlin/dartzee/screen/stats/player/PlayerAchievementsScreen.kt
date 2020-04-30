@@ -10,6 +10,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
+import dartzee.screen.PlayerManagementScreen
 import dartzee.screen.ScreenCache
 import java.awt.*
 import javax.swing.*
@@ -17,7 +18,8 @@ import javax.swing.border.EmptyBorder
 
 class PlayerAchievementsScreen : EmbeddedScreen()
 {
-    var previousScrn: EmbeddedScreen = ScreenCache.getPlayerManagementScreen()
+    var previousScrn: EmbeddedScreen = ScreenCache.get<PlayerManagementScreen>()
+
     private var player: PlayerEntity? = null
     private var progressDesc = ""
 

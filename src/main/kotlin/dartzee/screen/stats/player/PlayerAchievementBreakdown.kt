@@ -30,7 +30,7 @@ class PlayerAchievementBreakdown : EmbeddedScreen()
         tableBreakdown.model = achievement.tmBreakdown!!
     }
 
-    override fun getBackTarget() = ScreenCache.getScreen<PlayerAchievementsScreen>()
+    override fun getBackTarget() = ScreenCache.get<PlayerAchievementsScreen>()
 
 }
 
