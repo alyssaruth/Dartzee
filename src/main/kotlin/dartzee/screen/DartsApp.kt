@@ -103,7 +103,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             override fun actionPerformed(e: ActionEvent)
             {
-                val loggingDialog = ScreenCache.loggingConsole
+                val loggingDialog = InjectedThings.loggingConsole
                 loggingDialog.isVisible = true
                 loggingDialog.toFront()
             }
@@ -179,7 +179,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {
-            ScreenCache.loggingConsole.clear()
+            InjectedThings.loggingConsole.clear()
         }
         else if (cmd == "dim")
         {

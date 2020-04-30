@@ -293,10 +293,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        val rules = scrn.scrollTable.getValueAt(0, 1) as List<DartzeeRuleDto>
-
-        rules.map { it.generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
-
+        val rules = scrn.scrollTable.getValueAt(0, 1) as List<*>
+        rules.map { (it as DartzeeRuleDto).generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
     }
 
     private fun DartzeeTemplateSetupScreen.getTemplate(row: Int): DartzeeTemplateEntity

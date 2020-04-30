@@ -8,6 +8,7 @@ import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
+import dartzee.utils.InjectedThings
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Font
@@ -65,7 +66,7 @@ class UtilitiesScreen : EmbeddedScreen()
             btnRestoreFromBackup -> DartsDatabaseUtil.restoreDatabase()
             btnPerformDatabaseCheck -> DatabaseSanityCheck.runSanityCheck()
             btnCheckForUpdates -> DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER)
-            btnViewLogs -> {val loggingDialog = ScreenCache.loggingConsole
+            btnViewLogs -> {val loggingDialog = InjectedThings.loggingConsole
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()

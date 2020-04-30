@@ -58,14 +58,14 @@ class TestExtensionFunctions: AbstractTest()
         list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 1, 2), listOf(1, 2, 1), listOf(2, 1, 1))
     }
 
-    class AlwaysValid
+    interface Validator
     {
         fun isValid(text: String, index: Int) = true
     }
     @Test
     fun `Should pass the element & index to the predicate correctly`()
     {
-        val mockValidator = spyk<AlwaysValid>()
+        val mockValidator = spyk<Validator>()
 
         val list = listOf("one", "two", "three", "four")
 

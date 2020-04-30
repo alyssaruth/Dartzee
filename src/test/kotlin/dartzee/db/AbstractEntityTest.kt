@@ -28,6 +28,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     abstract fun factoryDao(): AbstractEntity<E>
     open fun setExtraValuesForBulkInsert(e: E) {}
 
+    @Suppress("UNCHECKED_CAST")
     @Test
     fun `Should be bulk insertable`()
     {

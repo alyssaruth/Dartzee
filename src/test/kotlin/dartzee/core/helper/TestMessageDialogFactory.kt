@@ -26,10 +26,12 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         inputsShown.add(title)
         inputOptionsPresented = options
 
-        inputSelection ?: return null
+        val selection = inputSelection
+        selection ?: return null
 
         if (options == null || options.contains(inputSelection))
         {
+            @Suppress("UNCHECKED_CAST")
             return inputSelection as K
         }
 
