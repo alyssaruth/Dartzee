@@ -4,6 +4,7 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.game.GameType
+import dartzee.game.MatchMode
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.wipeTable
@@ -186,7 +187,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
         return cols
     }
 
-    private fun getValueForField(fieldType: Class<*>, initial: Boolean): Any
+    private fun <T> getValueForField(fieldType: Class<T>, initial: Boolean): Any
     {
         return when (fieldType)
         {
@@ -198,12 +199,14 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
             Boolean::class.java -> initial
             Double::class.java -> if (initial) 5.0 else 10.0
             GameType::class.java -> if (initial) GameType.X01 else GameType.GOLF
+            MatchMode::class.java -> if (initial) MatchMode.FIRST_TO else MatchMode.POINTS
             else -> {
                 println(fieldType)
                 "uh oh"
             }
         }
     }
+
 }
 
 fun getBlobValue(resource: String): Blob

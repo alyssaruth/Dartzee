@@ -22,8 +22,8 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    const val MIN_DB_VERSION_FOR_CONVERSION = 7
-    const val DATABASE_VERSION = 11
+    const val MIN_DB_VERSION_FOR_CONVERSION = 8
+    const val DATABASE_VERSION = 12
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -101,11 +101,7 @@ object DartsDatabaseUtil
 
         logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${versionNumber + 1}")
 
-        if (versionNumber == 7)
-        {
-            runSqlScriptsForVersion(8)
-        }
-        else if (versionNumber == 8)
+        if (versionNumber == 8)
         {
             DartzeeRuleEntity().createTable()
             DartzeeTemplateEntity().createTable()
@@ -126,6 +122,10 @@ object DartsDatabaseUtil
 
             //Added "ScoringSegments"
             DartzeeRuleConversion.convertDartzeeRules()
+        }
+        else if (versionNumber == 11)
+        {
+            runSqlScriptsForVersion(12)
         }
 
         version.version = versionNumber + 1
@@ -170,9 +170,9 @@ object DartsDatabaseUtil
     {
         return when(version)
         {
-            8 -> listOf("1. Dart.sql", "2. Round.sql")
             10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
             11 -> listOf("1. Game.sql")
+            12 -> listOf("1. DartsMatch.sql")
             else -> listOf()
         }
     }

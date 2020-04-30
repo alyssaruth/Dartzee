@@ -1,6 +1,7 @@
 package dartzee.game
 
-enum class GameType {
+enum class GameType
+{
     X01,
     GOLF,
     ROUND_THE_CLOCK,

@@ -10,6 +10,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
 import dartzee.game.GameType
+import dartzee.game.MatchMode
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
@@ -42,7 +43,7 @@ fun factoryPlayer(name: String): PlayerEntity
 fun insertDartsMatch(uuid: String = randomGuid(),
                      localId: Long = LocalIdGenerator.generateLocalId("DartsMatch"),
                      games: Int = 3,
-                     mode: Int = DartsMatchEntity.MODE_FIRST_TO,
+                     mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
                      matchParams: String = ""): DartsMatchEntity
 {

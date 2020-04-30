@@ -4,6 +4,7 @@ import dartzee.core.obj.HashMapCount
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
 import dartzee.game.GameType
+import dartzee.game.MatchMode
 import dartzee.helper.*
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
@@ -79,7 +80,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     fun `Should log a SQLException if SQL fails checking whether a FIRST_TO match is complete`()
     {
         val match = DartsMatchEntity()
-        match.mode = DartsMatchEntity.MODE_FIRST_TO
+        match.mode = MatchMode.FIRST_TO
         match.rowId = "'"
 
         match.isComplete() shouldBe false
@@ -91,7 +92,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     fun `Should log a SQLException if SQL fails checking whether a POINTS match is complete`()
     {
         val match = DartsMatchEntity()
-        match.mode = DartsMatchEntity.MODE_POINTS
+        match.mode = MatchMode.POINTS
         match.rowId = "'"
         match.games = 2
 
@@ -134,7 +135,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         val dm = DartsMatchEntity()
         dm.localId = 1
         dm.games = 3
-        dm.mode = DartsMatchEntity.MODE_FIRST_TO
+        dm.mode = MatchMode.FIRST_TO
         dm.gameType = GameType.X01
         dm.gameParams = "501"
 
@@ -147,7 +148,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         val dm = DartsMatchEntity()
         dm.localId = 1
         dm.games = 3
-        dm.mode = DartsMatchEntity.MODE_POINTS
+        dm.mode = MatchMode.POINTS
         dm.gameType = GameType.GOLF
         dm.gameParams = "18"
 
@@ -275,7 +276,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         val retrievedDm = dm.retrieveForId(dm.rowId)!!
         retrievedDm.games shouldBe 3
         retrievedDm.matchParams shouldBe ""
-        retrievedDm.mode shouldBe DartsMatchEntity.MODE_FIRST_TO
+        retrievedDm.mode shouldBe MatchMode.FIRST_TO
         retrievedDm.localId shouldNotBe -1
     }
 
@@ -287,7 +288,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         val retrievedDm = dm.retrieveForId(dm.rowId)!!
         retrievedDm.games shouldBe 3
         retrievedDm.matchParams shouldBe "foo"
-        retrievedDm.mode shouldBe DartsMatchEntity.MODE_POINTS
+        retrievedDm.mode shouldBe MatchMode.POINTS
         retrievedDm.localId shouldNotBe -1
     }
 }

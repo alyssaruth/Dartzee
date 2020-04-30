@@ -3,6 +3,7 @@ package dartzee.db
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
+import dartzee.game.MatchMode
 import dartzee.logging.CODE_INSTANTIATION_ERROR
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.KEY_SQL
@@ -461,6 +462,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Blob::class.java -> rs.getBlob(columnName)
             Double::class.java -> rs.getDouble(columnName)
             GameType::class.java -> GameType.valueOf(rs.getString(columnName))
+            MatchMode::class.java -> MatchMode.valueOf(rs.getString(columnName))
             else -> null
         }
     }
