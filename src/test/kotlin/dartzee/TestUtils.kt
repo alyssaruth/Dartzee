@@ -96,6 +96,11 @@ fun Component.doHover(x: Int = 0, y: Int = 0) {
     mouseListeners.forEach { it.mouseEntered(me) }
 }
 
+fun Component.doMouseMove() {
+    val me = makeMouseEvent(x = x, y = y)
+    mouseMotionListeners.forEach { it.mouseMoved(me) }
+}
+
 fun Float.shouldBeBetween(a: Double, b: Double) {
     return toDouble().shouldBeBetween(a, b, 0.0)
 }
@@ -149,11 +154,11 @@ inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
 fun Container.findLabel(text: String): JLabel?
 {
     val allComponents = getAllChildComponentsForType<JLabel>()
-    val matching = allComponents.filter { it.text == text }
+    val matching = allComponents.filter { it.text.contains(text) }
     if (matching.size > 1)
     {
-        throw Exception("Non-unique text - ${matching.size} JLabels found with text [$text]")
+        throw Exception("Non-unique text - ${matching.size} JLabels found with text containing [$text]")
     }
 
-    return allComponents.find { it.text == text }
+    return allComponents.find { it.text.contains(text) }
 }

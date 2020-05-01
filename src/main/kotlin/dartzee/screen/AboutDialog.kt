@@ -3,6 +3,7 @@ package dartzee.screen
 import dartzee.core.bean.HyperlinkAdaptor
 import dartzee.core.bean.IHyperlinkListener
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings.showChangeLog
 import java.awt.Color
 import java.awt.Font
 import java.awt.Insets
@@ -57,8 +58,7 @@ class AboutDialog: JDialog(), IHyperlinkListener, ActionListener
     override fun linkClicked(arg0: MouseEvent)
     {
         isVisible = false
-        val dialog = ChangeLog()
-        dialog.isVisible = true
+        showChangeLog()
     }
 
     override fun isOverHyperlink(arg0: MouseEvent) = true

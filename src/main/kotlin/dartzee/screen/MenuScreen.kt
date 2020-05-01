@@ -8,7 +8,6 @@ import dartzee.screen.stats.overall.LeaderboardsScreen
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
-import javax.swing.AbstractButton
 import javax.swing.JButton
 import javax.swing.JPanel
 
@@ -75,9 +74,7 @@ class MenuScreen : EmbeddedScreen()
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        val src = arg0.source as AbstractButton
-
-        when (src)
+        when (arg0.source)
         {
             btnAbout -> {
                 val dialog = AboutDialog()
