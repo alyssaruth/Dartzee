@@ -20,7 +20,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 {
     var previousScrn: EmbeddedScreen = ScreenCache.get<PlayerManagementScreen>()
 
-    private var player: PlayerEntity? = null
+    var player: PlayerEntity? = null
     private var progressDesc = ""
 
     private val centerPanel = JPanel()
@@ -153,11 +153,6 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     override fun getBackTarget(): EmbeddedScreen
     {
         return previousScrn
-    }
-
-    fun setPlayer(player: PlayerEntity)
-    {
-        this.player = player
     }
 
     override fun getDesiredSize(): Dimension?

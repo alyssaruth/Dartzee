@@ -116,7 +116,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
             btnAchievements ->
             {
                 val scrn = ScreenCache.get<PlayerAchievementsScreen>()
-                scrn.setPlayer(player!!)
+                scrn.player = player
                 scrn.previousScrn = ScreenCache.get<PlayerManagementScreen>()
 
                 ScreenCache.switch(scrn)
