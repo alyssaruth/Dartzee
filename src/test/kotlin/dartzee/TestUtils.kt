@@ -19,6 +19,7 @@ import java.awt.Point
 import java.time.Instant
 import javax.swing.AbstractButton
 import javax.swing.JComponent
+import javax.swing.JLabel
 import javax.swing.SwingUtilities
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
@@ -90,6 +91,11 @@ fun Component.doClick(x: Int = 0, y: Int = 0) {
     mouseListeners.forEach { it.mouseReleased(me) }
 }
 
+fun Component.doHover(x: Int = 0, y: Int = 0) {
+    val me = makeMouseEvent(x = x, y = y)
+    mouseListeners.forEach { it.mouseEntered(me) }
+}
+
 fun Float.shouldBeBetween(a: Double, b: Double) {
     return toDouble().shouldBeBetween(a, b, 0.0)
 }
@@ -138,4 +144,16 @@ inline fun <reified T: AbstractButton> Container.findComponent(text: String): T
 inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
 {
     findComponent<T>(text).doClick()
+}
+
+fun Container.findLabel(text: String): JLabel?
+{
+    val allComponents = getAllChildComponentsForType<JLabel>()
+    val matching = allComponents.filter { it.text == text }
+    if (matching.size > 1)
+    {
+        throw Exception("Non-unique text - ${matching.size} JLabels found with text [$text]")
+    }
+
+    return allComponents.find { it.text == text }
 }

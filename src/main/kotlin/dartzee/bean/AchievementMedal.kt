@@ -116,8 +116,8 @@ class AchievementMedal(private val achievement : AbstractAchievement, private va
     /**
      * MouseListener
      */
-    override fun mouseReleased(e: MouseEvent?) {}
-    override fun mouseClicked(e: MouseEvent?)
+    override fun mouseClicked(e: MouseEvent?) {}
+    override fun mouseReleased(e: MouseEvent?)
     {
         if (achievement.tmBreakdown != null)
         {
