@@ -6,6 +6,7 @@ import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.gameLauncher
+import dartzee.utils.ResourceCache
 import dartzee.utils.getDistance
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -70,7 +71,7 @@ class AchievementMedal(private val achievement : AbstractAchievement, private va
             {
                 val label = JLabel(achievement.getProgressDesc())
                 label.setSize(SIZE, 25)
-                label.font = Font("Trebuchet MS", Font.PLAIN, 24)
+                label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 24f)
                 label.horizontalAlignment = JLabel.CENTER
                 label.foreground = achievement.getColor(highlighted).darker()
 
