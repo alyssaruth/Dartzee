@@ -18,7 +18,7 @@ fun JComponent.shouldMatchImage(imageName: String)
     val os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
     if (osForScreenshots.isNotEmpty())
     {
-        Assume.assumeTrue("Wrong OS for screenshot tests", osForScreenshots == os)
+        Assume.assumeTrue("Wrong OS for screenshot tests", os.contains(osForScreenshots))
     }
 
     val img = BufferedImage(SIZE, SIZE, BufferedImage.TYPE_4BYTE_ABGR)
