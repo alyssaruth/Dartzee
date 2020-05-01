@@ -3,15 +3,24 @@ package dartzee.helper
 import dartzee.bean.SIZE
 import dartzee.core.bean.getPointList
 import io.kotlintest.fail
+import org.junit.Assume
 import java.awt.image.BufferedImage
 import java.io.File
+import java.util.*
 import javax.imageio.ImageIO
 import javax.swing.JComponent
 
 private val overwrite = System.getenv("updateSnapshots") == "true"
+private val osForScreenshots = System.getenv("screenshotOs")
 
 fun JComponent.shouldMatchImage(imageName: String)
 {
+    val os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
+    if (osForScreenshots.isNotEmpty())
+    {
+        Assume.assumeTrue("Wrong OS for screenshot tests", osForScreenshots == os)
+    }
+
     val img = BufferedImage(SIZE, SIZE, BufferedImage.TYPE_4BYTE_ABGR)
     val g2 = img.createGraphics()
     paint(g2)
