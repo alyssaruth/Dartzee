@@ -155,8 +155,7 @@ abstract class DartsScorer : AbstractScorer() {
             panelCenter.layout = MigLayout("", "[grow]", "[][][][]")
             panelCenter.background = fillColor
 
-            val medal = AchievementMedal(achievement)
-            medal.hoveringEnabled = false
+            val medal = AchievementMedal(achievement, false)
             medal.preferredSize = Dimension(175, 200)
             panelCenter.add(medal, "cell 0 2, alignx center")
 

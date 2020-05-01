@@ -16,16 +16,14 @@ import javax.swing.JLabel
 
 const val SIZE = 175
 
-class AchievementMedal (private var achievement : AbstractAchievement) : JComponent(), MouseListener, MouseMotionListener
+class AchievementMedal(private val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), MouseListener, MouseMotionListener
 {
-    private var angle = 0.0
+    private val angle = achievement.getAngle()
     private var highlighted = false
-    var hoveringEnabled = true
 
     init
     {
         preferredSize = Dimension(SIZE, SIZE)
-        angle = achievement.getAngle()
 
         addMouseListener(this)
         addMouseMotionListener(this)
@@ -66,7 +64,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
                 y = 50
             }
 
-            icon?.let{g.drawImage(icon, null, 52, y)}
+            icon?.let{ g.drawImage(icon, null, 52, y) }
 
             if (!achievement.isLocked())
             {
