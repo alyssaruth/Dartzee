@@ -11,7 +11,7 @@ import javax.imageio.ImageIO
 import javax.swing.JComponent
 
 private val overwrite = System.getenv("updateSnapshots") == "true"
-private val osForScreenshots = System.getenv("screenshotOs")
+private val osForScreenshots = System.getenv("screenshotOs").toLowerCase(Locale.ENGLISH)
 
 fun JComponent.shouldMatchImage(imageName: String)
 {
