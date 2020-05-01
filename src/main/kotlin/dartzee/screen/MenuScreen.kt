@@ -18,7 +18,7 @@ class MenuScreen : EmbeddedScreen()
 
     private val btnNewGame = JButton("New Game")
     private val btnManagePlayers = JButton("Manage Players")
-    private val btnGameStats = JButton("Leaderboards")
+    private val btnLeaderboards = JButton("Leaderboards")
     private val btnPreferences = JButton("Preferences")
     private val btnAbout = JButton("About...")
     private val btnUtilities = JButton("Utilities")
@@ -37,9 +37,9 @@ class MenuScreen : EmbeddedScreen()
         btnManagePlayers.font = Font("Tahoma", Font.PLAIN, 18)
         btnManagePlayers.setBounds(60, 140, 150, 50)
         panel.add(btnManagePlayers)
-        btnGameStats.font = Font("Tahoma", Font.PLAIN, 18)
-        btnGameStats.setBounds(35, 240, 150, 50)
-        panel.add(btnGameStats)
+        btnLeaderboards.font = Font("Tahoma", Font.PLAIN, 18)
+        btnLeaderboards.setBounds(35, 240, 150, 50)
+        panel.add(btnLeaderboards)
         btnPreferences.font = Font("Tahoma", Font.PLAIN, 18)
         btnPreferences.setBounds(505, 40, 150, 50)
         panel.add(btnPreferences)
@@ -64,21 +64,14 @@ class MenuScreen : EmbeddedScreen()
         addActionListenerToAllChildren(this)
     }
 
-    override fun getScreenName(): String
-    {
-        return "Menu"
-    }
+    override fun getScreenName() = "Menu"
 
     override fun initialise()
     {
         //Do nothing
     }
 
-    override fun showBackButton(): Boolean
-    {
-        //This is the root screen!
-        return false
-    }
+    override fun showBackButton() = false
 
     override fun actionPerformed(arg0: ActionEvent)
     {
@@ -104,7 +97,7 @@ class MenuScreen : EmbeddedScreen()
             btnNewGame -> ScreenCache.switch<GameSetupScreen>()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()
-            btnGameStats -> ScreenCache.switch<LeaderboardsScreen>()
+            btnLeaderboards -> ScreenCache.switch<LeaderboardsScreen>()
             btnUtilities -> ScreenCache.switch<UtilitiesScreen>()
             else -> super.actionPerformed(arg0)
         }
