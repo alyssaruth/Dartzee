@@ -1,9 +1,12 @@
 package dartzee
 
 import dartzee.`object`.*
+import dartzee.bean.ComboBoxGameType
+import dartzee.core.bean.items
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.game.GameType
 import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
@@ -177,4 +180,19 @@ fun Container.findLabel(text: String): JLabel?
     }
 
     return allComponents.find { it.text.contains(text) }
+}
+
+fun ComboBoxGameType.updateSelection(type: GameType)
+{
+    selectedItem = items().find { it.hiddenData == type }
+}
+
+fun JComponent.shouldBeEnabled()
+{
+    isEnabled shouldBe true
+}
+
+fun JComponent.shouldBeDisabled()
+{
+    isEnabled shouldBe false
 }

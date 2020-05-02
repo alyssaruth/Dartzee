@@ -1,8 +1,10 @@
 package dartzee.screen
 
 import dartzee.`object`.GameLauncher
-import dartzee.bean.*
-import dartzee.core.bean.items
+import dartzee.bean.GameParamFilterPanelDartzee
+import dartzee.bean.GameParamFilterPanelGolf
+import dartzee.bean.GameParamFilterPanelX01
+import dartzee.bean.getAllPlayers
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
@@ -16,6 +18,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.ruleDtosEq
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
+import dartzee.updateSelection
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
@@ -294,10 +297,6 @@ class TestGameSetupScreen: AbstractTest()
         match.players.shouldContainExactly(p1, p2)
     }
 
-    private fun ComboBoxGameType.updateSelection(type: GameType)
-    {
-        selectedItem = items().find { it.hiddenData == type }
-    }
     private fun makeGameSetupScreenReadyToLaunch(): GameSetupScreen
     {
         val p1 = insertPlayer(strategy = -1)
