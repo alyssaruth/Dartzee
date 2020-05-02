@@ -114,13 +114,15 @@ class TestReportingGameTab: AbstractTest()
         tab.findComponent<JRadioButton>("No").shouldBeDisabled()
     }
 
+    /**
+     * Validation
+     */
     @Test
     fun `Should validate against the start date filters`()
     {
         val tab = ReportingGameTab()
         tab.clickComponent<JCheckBox>("Start Date")
-        tab.getStartDateFilterPanel().cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
-        tab.getStartDateFilterPanel().cbDateTo.date = LocalDate.ofYearDay(2020, 20)
+        tab.getStartDateFilterPanel().makeInvalid()
 
         tab.valid() shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
@@ -131,8 +133,7 @@ class TestReportingGameTab: AbstractTest()
     {
         val tab = ReportingGameTab()
         tab.clickComponent<JCheckBox>("Finish Date")
-        tab.getFinishDateFilterPanel().cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
-        tab.getFinishDateFilterPanel().cbDateTo.date = LocalDate.ofYearDay(2020, 20)
+        tab.getFinishDateFilterPanel().makeInvalid()
 
         tab.valid() shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
