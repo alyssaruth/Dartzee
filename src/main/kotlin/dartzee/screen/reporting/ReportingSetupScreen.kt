@@ -18,6 +18,7 @@ class ReportingSetupScreen: EmbeddedScreen()
         add(tabbedPane, BorderLayout.CENTER)
 
         tabbedPane.addTab("Game", null, gameTab, null)
+        tabbedPane.addTab("Players", null, playerTab, null)
     }
 
     override fun getScreenName() = "Report Setup"
@@ -34,9 +35,7 @@ class ReportingSetupScreen: EmbeddedScreen()
         }
 
         val scrn = ScreenCache.get<ReportingResultsScreen>()
-
-        val rp = generateReportParams()
-        scrn.setReportParameters(rp)
+        scrn.rp = generateReportParams()
 
         ScreenCache.switch(scrn)
     }

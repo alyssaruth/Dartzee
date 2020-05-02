@@ -2,6 +2,7 @@ package dartzee
 
 import dartzee.`object`.*
 import dartzee.bean.ComboBoxGameType
+import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.items
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.util.getAllChildComponentsForType
@@ -20,6 +21,7 @@ import java.awt.Component
 import java.awt.Container
 import java.awt.Point
 import java.time.Instant
+import java.time.LocalDate
 import javax.swing.AbstractButton
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -195,4 +197,10 @@ fun JComponent.shouldBeEnabled()
 fun JComponent.shouldBeDisabled()
 {
     isEnabled shouldBe false
+}
+
+fun DateFilterPanel.makeInvalid()
+{
+    cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
+    cbDateTo.date = LocalDate.ofYearDay(2020, 20)
 }

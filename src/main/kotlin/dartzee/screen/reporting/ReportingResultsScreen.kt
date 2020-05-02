@@ -15,7 +15,7 @@ import javax.swing.JPanel
 
 class ReportingResultsScreen : EmbeddedScreen()
 {
-    private var rp: ReportParameters? = null
+    var rp: ReportParameters? = null
     private var cachedRows = emptyList<Array<Any>>()
 
     private val btnConfigureColumns = JButton("Configure Columns...")
@@ -86,11 +86,6 @@ class ReportingResultsScreen : EmbeddedScreen()
                 tableResults.removeColumn(i)
             }
         }
-    }
-
-    fun setReportParameters(rp: ReportParameters)
-    {
-        this.rp = rp
     }
 
     override fun getBackTarget() = ScreenCache.get<ReportingSetupScreen>()
