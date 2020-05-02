@@ -146,6 +146,22 @@ inline fun <reified T: AbstractButton> Container.findComponent(text: String): T
     return matching.first()
 }
 
+inline fun <reified T: JComponent> Container.findComponent(): T
+{
+    val allComponents = getAllChildComponentsForType<T>()
+
+    if (allComponents.isEmpty())
+    {
+        throw Exception("No ${T::class.simpleName} found")
+    }
+    else if (allComponents.size > 1)
+    {
+        throw Exception("Non-unique class - ${allComponents.size} ${T::class.simpleName}s found")
+    }
+
+    return allComponents.first()
+}
+
 inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
 {
     findComponent<T>(text).doClick()
