@@ -13,7 +13,7 @@ import java.sql.Timestamp
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class ReportingResultsScreen : EmbeddedScreen()
+class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReportColumnsDialog) : EmbeddedScreen()
 {
     var rp: ReportParameters? = null
     private var cachedRows = emptyList<Array<Any>>()
@@ -36,10 +36,10 @@ class ReportingResultsScreen : EmbeddedScreen()
 
     override fun initialise()
     {
-        buildTable(true, emptyList())
+        buildTable(true)
     }
 
-    private fun buildTable(runSql: Boolean, excludedColumns: List<String>)
+    private fun buildTable(runSql: Boolean)
     {
         val model = TableUtil.DefaultModel()
         model.addColumn("Game")
@@ -63,7 +63,7 @@ class ReportingResultsScreen : EmbeddedScreen()
         tableResults.sortBy(0, false)
 
         setRenderersAndComparators()
-        stripOutRemovedColumns(excludedColumns)
+        stripOutRemovedColumns()
     }
 
     private fun setRenderersAndComparators()
@@ -75,13 +75,13 @@ class ReportingResultsScreen : EmbeddedScreen()
         tableResults.setComparator(4, compareBy<Timestamp> { it })
     }
 
-    private fun stripOutRemovedColumns(excludedColumns: List<String>)
+    private fun stripOutRemovedColumns()
     {
         val columns = tableResults.columnCount
         for (i in columns - 1 downTo 0)
         {
             val columnName = tableResults.getColumnName(i)
-            if (excludedColumns.contains(columnName))
+            if (configureColumnsDialog.excludedColumns().contains(columnName))
             {
                 tableResults.removeColumn(i)
             }
@@ -95,11 +95,10 @@ class ReportingResultsScreen : EmbeddedScreen()
         when (arg0.source)
         {
             btnConfigureColumns -> {
-                val dlg = ConfigureReportColumnsDialog()
-                dlg.setLocationRelativeTo(this)
-                dlg.isVisible = true
+                configureColumnsDialog.setLocationRelativeTo(this)
+                configureColumnsDialog.isVisible = true
 
-                buildTable(false, dlg.excludedColumns())
+                buildTable(false)
             }
             else -> super.actionPerformed(arg0)
         }

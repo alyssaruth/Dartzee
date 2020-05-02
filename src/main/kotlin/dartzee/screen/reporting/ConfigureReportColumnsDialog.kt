@@ -8,7 +8,7 @@ import javax.swing.JPanel
 
 private val CONFIGURABLE_COLUMNS = listOf("Type", "Players", "Start Date", "Finish Date", "Match")
 
-class ConfigureReportColumnsDialog : SimpleDialog()
+class ConfigureReportColumnsDialog: SimpleDialog()
 {
     private val hmColumnNameToCheckBox = mutableMapOf<String, JCheckBox>()
 
