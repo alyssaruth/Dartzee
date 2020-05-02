@@ -20,6 +20,8 @@ inline fun <reified T> Container.getAllChildComponentsForType(): List<T>
 
     return ret
 }
+
+@Suppress("UNCHECKED_CAST")
 fun <T> addComponents(ret: MutableList<T>, components: Array<Component>, desiredClazz: Class<T>)
 {
     for (comp in components)

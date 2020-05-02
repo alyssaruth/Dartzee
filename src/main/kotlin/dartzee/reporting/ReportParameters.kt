@@ -18,7 +18,7 @@ class ReportParameters
     var hmIncludedPlayerToParms = mapOf<PlayerEntity, IncludedPlayerParameters>()
     var excludedPlayers: List<PlayerEntity> = ArrayList()
     var excludeOnlyAi: Boolean = false
-    private var partOfMatch = MatchFilter.BOTH
+    var partOfMatch = MatchFilter.BOTH
 
     fun getExtraWhereSql(): String
     {
@@ -126,7 +126,7 @@ class ReportParameters
     }
 }
 
-private enum class MatchFilter
+enum class MatchFilter
 {
     MATCHES_ONLY,
     GAMES_ONLY,

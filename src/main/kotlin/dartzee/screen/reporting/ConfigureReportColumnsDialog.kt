@@ -37,12 +37,7 @@ class ConfigureReportColumnsDialog : SimpleDialog()
         }
     }
 
-    fun includeColumn(columnName: String): Boolean
-    {
-        val cb = hmColumnNameToCheckBox[columnName] ?: return true
-
-        return cb.isSelected
-    }
+    fun excludedColumns() = hmColumnNameToCheckBox.filterValues { !it.isSelected }.map { it.key }
 
     override fun okPressed()
     {

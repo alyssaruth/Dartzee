@@ -35,7 +35,7 @@ private const val CMD_GUID = "guid"
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
     override val windowName = "Main Window"
-    var currentScreen: EmbeddedScreen? = null
+    var currentScreen: EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
     init
     {
@@ -61,7 +61,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         InjectedThings.esDestination.readOldLogs()
 
         addConsoleShortcut()
-        switchScreen(ScreenCache.getScreen(MenuScreen::class.java))
+        switchScreen(ScreenCache.get<MenuScreen>())
 
         //Pop up the change log if we've just updated
         if (DartsClient.justUpdated)
@@ -103,7 +103,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             override fun actionPerformed(e: ActionEvent)
             {
-                val loggingDialog = ScreenCache.loggingConsole
+                val loggingDialog = InjectedThings.loggingConsole
                 loggingDialog.isVisible = true
                 loggingDialog.toFront()
             }
@@ -126,10 +126,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             return
         }
 
-        if (this.currentScreen != null)
-        {
-            contentPane.remove(this.currentScreen!!)
-        }
+        contentPane.remove(this.currentScreen)
 
         this.currentScreen = scrn
         contentPane.add(scrn, BorderLayout.CENTER)
@@ -182,7 +179,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {
-            ScreenCache.loggingConsole.clear()
+            InjectedThings.loggingConsole.clear()
         }
         else if (cmd == "dim")
         {

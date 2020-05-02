@@ -1,9 +1,13 @@
 package dartzee
 
 import dartzee.`object`.*
+import dartzee.bean.ComboBoxGameType
+import dartzee.core.bean.DateFilterPanel
+import dartzee.core.bean.items
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.game.GameType
 import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
@@ -17,8 +21,10 @@ import java.awt.Component
 import java.awt.Container
 import java.awt.Point
 import java.time.Instant
+import java.time.LocalDate
 import javax.swing.AbstractButton
 import javax.swing.JComponent
+import javax.swing.JLabel
 import javax.swing.SwingUtilities
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
@@ -90,6 +96,16 @@ fun Component.doClick(x: Int = 0, y: Int = 0) {
     mouseListeners.forEach { it.mouseReleased(me) }
 }
 
+fun Component.doHover(x: Int = 0, y: Int = 0) {
+    val me = makeMouseEvent(x = x, y = y)
+    mouseListeners.forEach { it.mouseEntered(me) }
+}
+
+fun Component.doMouseMove() {
+    val me = makeMouseEvent(x = x, y = y)
+    mouseMotionListeners.forEach { it.mouseMoved(me) }
+}
+
 fun Float.shouldBeBetween(a: Double, b: Double) {
     return toDouble().shouldBeBetween(a, b, 0.0)
 }
@@ -135,7 +151,56 @@ inline fun <reified T: AbstractButton> Container.findComponent(text: String): T
     return matching.first()
 }
 
+inline fun <reified T: JComponent> Container.findComponent(): T
+{
+    val allComponents = getAllChildComponentsForType<T>()
+
+    if (allComponents.isEmpty())
+    {
+        throw Exception("No ${T::class.simpleName} found")
+    }
+    else if (allComponents.size > 1)
+    {
+        throw Exception("Non-unique class - ${allComponents.size} ${T::class.simpleName}s found")
+    }
+
+    return allComponents.first()
+}
+
 inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
 {
     findComponent<T>(text).doClick()
+}
+
+fun Container.findLabel(text: String): JLabel?
+{
+    val allComponents = getAllChildComponentsForType<JLabel>()
+    val matching = allComponents.filter { it.text.contains(text) }
+    if (matching.size > 1)
+    {
+        throw Exception("Non-unique text - ${matching.size} JLabels found with text containing [$text]")
+    }
+
+    return allComponents.find { it.text.contains(text) }
+}
+
+fun ComboBoxGameType.updateSelection(type: GameType)
+{
+    selectedItem = items().find { it.hiddenData == type }
+}
+
+fun JComponent.shouldBeEnabled()
+{
+    isEnabled shouldBe true
+}
+
+fun JComponent.shouldBeDisabled()
+{
+    isEnabled shouldBe false
+}
+
+fun DateFilterPanel.makeInvalid()
+{
+    cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
+    cbDateTo.date = LocalDate.ofYearDay(2020, 20)
 }

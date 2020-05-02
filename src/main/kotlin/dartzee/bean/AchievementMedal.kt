@@ -6,6 +6,7 @@ import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.gameLauncher
+import dartzee.utils.ResourceCache
 import dartzee.utils.getDistance
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -16,16 +17,14 @@ import javax.swing.JLabel
 
 const val SIZE = 175
 
-class AchievementMedal (private var achievement : AbstractAchievement) : JComponent(), MouseListener, MouseMotionListener
+class AchievementMedal(private val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), MouseListener, MouseMotionListener
 {
-    private var angle = 0.0
+    private val angle = achievement.getAngle()
     private var highlighted = false
-    var hoveringEnabled = true
 
     init
     {
         preferredSize = Dimension(SIZE, SIZE)
-        angle = achievement.getAngle()
 
         addMouseListener(this)
         addMouseMotionListener(this)
@@ -66,13 +65,13 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
                 y = 50
             }
 
-            icon?.let{g.drawImage(icon, null, 52, y)}
+            icon?.let{ g.drawImage(icon, null, 52, y) }
 
             if (!achievement.isLocked())
             {
                 val label = JLabel(achievement.getProgressDesc())
                 label.setSize(SIZE, 25)
-                label.font = Font("Trebuchet MS", Font.PLAIN, 24)
+                label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 24f)
                 label.horizontalAlignment = JLabel.CENTER
                 label.foreground = achievement.getColor(highlighted).darker()
 
@@ -99,7 +98,7 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
         val pt = e.point
         highlighted = getDistance(pt, Point(SIZE/2, SIZE/2)) < SIZE/2
 
-        ScreenCache.getScreen(PlayerAchievementsScreen::class.java).toggleAchievementDesc(highlighted, achievement)
+        ScreenCache.get<PlayerAchievementsScreen>().toggleAchievementDesc(highlighted, achievement)
 
         cursor = if (highlighted && achievement.isClickable())
         {
@@ -117,15 +116,15 @@ class AchievementMedal (private var achievement : AbstractAchievement) : JCompon
     /**
      * MouseListener
      */
-    override fun mouseReleased(e: MouseEvent?) {}
-    override fun mouseClicked(e: MouseEvent?)
+    override fun mouseClicked(e: MouseEvent?) {}
+    override fun mouseReleased(e: MouseEvent?)
     {
         if (achievement.tmBreakdown != null)
         {
-            val scrn = ScreenCache.getScreen(PlayerAchievementBreakdown::class.java)
+            val scrn = ScreenCache.get<PlayerAchievementBreakdown>()
             scrn.setState(achievement)
 
-            ScreenCache.switchScreen(scrn)
+            ScreenCache.switch(scrn)
         }
         else if (achievement.gameIdEarned.isNotEmpty())
         {

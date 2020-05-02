@@ -196,15 +196,15 @@ class FixedBoxAndWhiskerRenderer : BoxAndWhiskerRenderer()
                 }
                 val entity = CategoryItemEntity(
                     box, tip,
-                    url, dataset, row, dataset.getColumnKey(column),
-                    column
+                    url, dataset, dataset.getRowKey(row), dataset.getColumnKey(column)
                 )
                 entities.add(entity)
             }
         }
+
         //FIX #3: Draw the outliers...
         g2.paint = itemPaint
-        val outliers: List<Int> = bawDataset.getOutliers(row, column) as List<Int>
+        @Suppress("UNCHECKED_CAST") val outliers: List<Int> = bawDataset.getOutliers(row, column) as List<Int>
         for (outlier in outliers) { //FIX #4: Extend the plot to show the outliers...
             if (outlier > rangeAxis.upperBound) {
                 rangeAxis.upperBound = outlier + 2.toDouble()
@@ -229,6 +229,6 @@ class FixedBoxAndWhiskerRenderer : BoxAndWhiskerRenderer()
     }
 
     init {
-        toolTipGenerator = BoxAndWhiskerToolTipGenerator()
+        baseToolTipGenerator = BoxAndWhiskerToolTipGenerator()
     }
 }

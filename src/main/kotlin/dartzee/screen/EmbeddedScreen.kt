@@ -14,7 +14,7 @@ import javax.swing.JPanel
 abstract class EmbeddedScreen : JPanel(), ActionListener
 {
     val btnBack = JButton(" < Back")
-    val btnNext = JButton(getNextText() + " > ")
+    val btnNext = JButton("Next > ")
 
     protected val panelNavigation = JPanel()
     protected val panelNext = JPanel()
@@ -24,7 +24,6 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     {
         preferredSize = Dimension(800, 610)
         layout = BorderLayout(0, 0)
-
 
         add(panelNavigation, BorderLayout.SOUTH)
         panelNavigation.layout = BorderLayout(0, 0)
@@ -38,9 +37,6 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
         btnBack.font = Font("Tahoma", Font.PLAIN, 16)
         panelBack.add(btnBack)
 
-        btnBack.isVisible = showBackButton()
-        btnNext.isVisible = showNextButton()
-
         btnBack.addActionListener(this)
         btnNext.addActionListener(this)
     }
@@ -53,13 +49,13 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
      */
     fun postInit()
     {
+        btnBack.isVisible = showBackButton()
+        btnNext.isVisible = showNextButton()
 
+        btnNext.text = getNextText() + " >"
     }
 
-    open fun getBackTarget() : EmbeddedScreen
-    {
-        return ScreenCache.getScreen(MenuScreen::class.java)
-    }
+    open fun getBackTarget(): EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
     override fun actionPerformed(arg0: ActionEvent)
     {
@@ -85,7 +81,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
 
     private fun backPressed()
     {
-        ScreenCache.switchScreen(getBackTarget(), false)
+        ScreenCache.switch(getBackTarget(), false)
     }
 
     fun toggleNextVisibility(visible: Boolean)

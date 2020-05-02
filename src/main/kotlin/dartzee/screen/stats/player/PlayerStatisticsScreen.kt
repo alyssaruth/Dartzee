@@ -5,6 +5,7 @@ import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
+import dartzee.screen.PlayerManagementScreen
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.golf.StatisticsTabGolfHoleBreakdown
@@ -256,10 +257,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         this.player = player
     }
 
-    override fun getBackTarget(): EmbeddedScreen
-    {
-        return ScreenCache.getPlayerManagementScreen()
-    }
+    override fun getBackTarget() = ScreenCache.get<PlayerManagementScreen>()
 
 
     override fun actionPerformed(arg0: ActionEvent)

@@ -18,7 +18,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer()
     {
         try
         {
-            val typedValue = value as E?
+            @Suppress("UNCHECKED_CAST") val typedValue = value as E?
 
             val newValue = getReplacementValue(typedValue, row, column)
             super.getTableCellRendererComponent(table, newValue, isSelected, hasFocus, row, column)

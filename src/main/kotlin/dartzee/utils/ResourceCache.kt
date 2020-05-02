@@ -6,6 +6,7 @@ import dartzee.logging.CODE_LOADED_RESOURCES
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.CODE_RESOURCE_LOAD_ERROR
 import dartzee.utils.InjectedThings.logger
+import java.awt.Font
 import java.io.BufferedInputStream
 import java.net.URL
 import javax.sound.sampled.AudioInputStream
@@ -45,6 +46,8 @@ object ResourceCache
     val URL_ACHIEVEMENT_X01_NO_MERCY: URL = javaClass.getResource("/achievements/noMercy.png")
     val URL_ACHIEVEMENT_GOLF_COURSE_MASTER: URL = javaClass.getResource("/achievements/courseMaster.png")
     val URL_ACHIEVEMENT_DARTZEE_GAMES_WON: URL = javaClass.getResource("/achievements/trophyDartzee.png")
+
+    val BASE_FONT: Font = Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/trebuc.ttf"))
 
     private val wavPoolLock = Any()
     private val hmWavToInputStreams = HashMapList<String, AudioInputStream>()

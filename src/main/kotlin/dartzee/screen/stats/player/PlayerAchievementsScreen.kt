@@ -10,6 +10,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
+import dartzee.screen.PlayerManagementScreen
 import dartzee.screen.ScreenCache
 import java.awt.*
 import javax.swing.*
@@ -17,8 +18,9 @@ import javax.swing.border.EmptyBorder
 
 class PlayerAchievementsScreen : EmbeddedScreen()
 {
-    var previousScrn: EmbeddedScreen = ScreenCache.getPlayerManagementScreen()
-    private var player: PlayerEntity? = null
+    var previousScrn: EmbeddedScreen = ScreenCache.get<PlayerManagementScreen>()
+
+    var player: PlayerEntity? = null
     private var progressDesc = ""
 
     private val centerPanel = JPanel()
@@ -151,11 +153,6 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     override fun getBackTarget(): EmbeddedScreen
     {
         return previousScrn
-    }
-
-    fun setPlayer(player: PlayerEntity)
-    {
-        this.player = player
     }
 
     override fun getDesiredSize(): Dimension?

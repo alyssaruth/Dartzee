@@ -46,7 +46,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
     }
 
     override fun getScreenName() = "Dartzee - Custom Setup"
-    override fun getBackTarget() = ScreenCache.getScreen(GameSetupScreen::class.java)
+    override fun getBackTarget() = ScreenCache.get<GameSetupScreen>()
     override fun showNextButton() = true
     override fun getNextText() = if (match != null) "Launch Match" else "Launch Game"
 }

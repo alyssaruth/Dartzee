@@ -272,8 +272,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     fun `Pressing back should take you to the Utilities screen`()
     {
         val scrn = DartzeeTemplateSetupScreen()
-
-        scrn.btnNext.isVisible shouldBe false
+        scrn.showNextButton() shouldBe false
         scrn.btnBack.doClick()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
@@ -293,10 +292,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        val rules = scrn.scrollTable.getValueAt(0, 1) as List<DartzeeRuleDto>
-
-        rules.map { it.generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
-
+        val rules = scrn.scrollTable.getValueAt(0, 1) as List<*>
+        rules.map { (it as DartzeeRuleDto).generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
     }
 
     private fun DartzeeTemplateSetupScreen.getTemplate(row: Int): DartzeeTemplateEntity

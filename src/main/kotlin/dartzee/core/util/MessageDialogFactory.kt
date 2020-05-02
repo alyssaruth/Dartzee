@@ -16,6 +16,7 @@ class MessageDialogFactory: AbstractMessageDialogFactory()
         logDialogClosed("Info", null)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K?): K?
     {
         logDialogShown("Input", title, message)

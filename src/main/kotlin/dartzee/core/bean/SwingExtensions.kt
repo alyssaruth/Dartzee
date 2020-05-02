@@ -25,6 +25,7 @@ fun <K> JComboBox<K>.items(): List<K>
 
 fun <K> JComboBox<K>.selectedItemTyped(): K = getItemAt(selectedIndex)
 
+@Suppress("UNCHECKED_CAST")
 fun <T> JComboBox<*>.findByConcreteClass(clazz: Class<T>): T? = items().find { clazz.isInstance(it) } as T?
 inline fun <reified T> JComboBox<*>.findByClass(): T? = items().find { it is T } as T?
 
@@ -75,3 +76,5 @@ fun getPointList(width: Int, height: Int): List<Point>
 
     return yRange.map { y -> xRange.map { x -> Point(x, y)} }.flatten()
 }
+
+fun AbstractButton.isSelectedAndEnabled() = isEnabled && isSelected
