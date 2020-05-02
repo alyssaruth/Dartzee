@@ -76,3 +76,5 @@ fun getPointList(width: Int, height: Int): List<Point>
 
     return yRange.map { y -> xRange.map { x -> Point(x, y)} }.flatten()
 }
+
+fun AbstractButton.isSelectedAndEnabled() = isEnabled && isSelected

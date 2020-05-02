@@ -5,23 +5,21 @@ import dartzee.bean.GameParamFilterPanel
 import dartzee.bean.GameParamFilterPanelX01
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.RadioButtonPanel
+import dartzee.core.bean.isSelectedAndEnabled
+import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.core.util.createButtonGroup
 import dartzee.core.util.enableChildren
-import dartzee.logging.CODE_SWING_ERROR
 import dartzee.reporting.ReportParameters
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.getFilterPanel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import javax.swing.*
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
 
-class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
+class ReportingSetupScreen: EmbeddedScreen()
 {
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
 
@@ -82,7 +80,6 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
         addListeners()
     }
 
-
     override fun getScreenName() = "Report Setup"
     override fun initialise() {}
 
@@ -94,15 +91,8 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
 
     private fun addListeners()
     {
-        comboBox.addActionListener(this)
-
-        addChangeListener(checkBoxGameType)
-        addChangeListener(cbType)
-        addChangeListener(cbStartDate)
-        addChangeListener(rdbtnDtFinish)
-        addChangeListener(rdbtnUnfinished)
-        addChangeListener(cbFinishDate)
-        addChangeListener(cbPartOfMatch)
+        addActionListenerToAllChildren(this)
+        toggleComponents()
     }
 
     private fun valid(): Boolean
@@ -118,15 +108,6 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
         }
 
         return playerTab.valid()
-    }
-
-    /**
-     * Add the listener to the component and fire a state-changed to get its dependents in the correct state.
-     */
-    private fun addChangeListener(btn: AbstractButton)
-    {
-        btn.addChangeListener(this)
-        stateChanged(ChangeEvent(btn))
     }
 
     override fun showNextButton() = true
@@ -189,41 +170,18 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
         return rp
     }
 
-    override fun stateChanged(arg0: ChangeEvent)
+    private fun toggleComponents()
     {
-        val src = arg0.source as AbstractButton
-        val enabled = src.isSelected
+        comboBox.isEnabled = checkBoxGameType.isSelected
+        panelGameParams.isEnabled = cbType.isSelected
+        dateFilterPanelStart.enableChildren(cbStartDate.isSelected)
 
-        when (src)
-        {
-            checkBoxGameType -> comboBox.isEnabled = enabled
-            cbType -> panelGameParams.isEnabled = enabled
-            cbStartDate -> dateFilterPanelStart.enableChildren(enabled)
-            cbFinishDate -> toggleDtFinishFilters(enabled)
-            rdbtnUnfinished -> lblUnfinished.isEnabled = enabled
-            rdbtnDtFinish -> dateFilterPanelFinish.enableChildren(enabled)
-            cbPartOfMatch -> {rdbtnYes.isEnabled = enabled
-                rdbtnNo.isEnabled = enabled}
-            else -> logger.error(CODE_SWING_ERROR, "Unexpected stateChanged [${src.text}]")
-        }
-    }
-
-    private fun toggleDtFinishFilters(enabled: Boolean)
-    {
-        rdbtnDtFinish.isEnabled = enabled
-        rdbtnUnfinished.isEnabled = enabled
-
-        if (!enabled)
-        {
-            //CheckBox not enabled, so disable everything
-            lblUnfinished.isEnabled = false
-            dateFilterPanelFinish.enableChildren(false)
-        }
-        else
-        {
-            lblUnfinished.isEnabled = rdbtnUnfinished.isSelected
-            dateFilterPanelFinish.enableChildren(rdbtnDtFinish.isSelected)
-        }
+        rdbtnDtFinish.isEnabled = cbFinishDate.isSelected
+        rdbtnUnfinished.isEnabled = cbFinishDate.isSelected
+        lblUnfinished.isEnabled = rdbtnUnfinished.isSelectedAndEnabled()
+        dateFilterPanelFinish.enableChildren(rdbtnDtFinish.isSelectedAndEnabled())
+        rdbtnYes.isEnabled = cbPartOfMatch.isSelected
+        rdbtnNo.isEnabled = cbPartOfMatch.isSelected
     }
 
     override fun actionPerformed(arg0: ActionEvent)
@@ -241,8 +199,7 @@ class ReportingSetupScreen : EmbeddedScreen(), ChangeListener
 
                 panelGame.revalidate()
             }
-
-            else -> super.actionPerformed(arg0)
+            else -> toggleComponents()
         }
     }
 }
