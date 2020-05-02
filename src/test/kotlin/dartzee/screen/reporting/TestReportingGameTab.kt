@@ -2,17 +2,19 @@ package dartzee.screen.reporting
 
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.*
-import dartzee.bean.ComboBoxGameType
-import dartzee.bean.GameParamFilterPanel
-import dartzee.bean.GameParamFilterPanelRoundTheClock
-import dartzee.bean.GameParamFilterPanelX01
+import dartzee.bean.*
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
+import dartzee.reporting.MatchFilter
+import dartzee.reporting.ReportParameters
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.sql.Timestamp
+import java.time.LocalDate
 import javax.swing.JCheckBox
 import javax.swing.JComboBox
 import javax.swing.JLabel
@@ -110,6 +112,143 @@ class TestReportingGameTab: AbstractTest()
         tab.clickComponent<JCheckBox>("Part of Match")
         tab.findComponent<JRadioButton>("Yes").shouldBeDisabled()
         tab.findComponent<JRadioButton>("No").shouldBeDisabled()
+    }
+
+    @Test
+    fun `Should validate against the start date filters`()
+    {
+        val tab = ReportingGameTab()
+        tab.clickComponent<JCheckBox>("Start Date")
+        tab.getStartDateFilterPanel().cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
+        tab.getStartDateFilterPanel().cbDateTo.date = LocalDate.ofYearDay(2020, 20)
+
+        tab.valid() shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
+    }
+
+    @Test
+    fun `Should validate against the finish date filters`()
+    {
+        val tab = ReportingGameTab()
+        tab.clickComponent<JCheckBox>("Finish Date")
+        tab.getFinishDateFilterPanel().cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
+        tab.getFinishDateFilterPanel().cbDateTo.date = LocalDate.ofYearDay(2020, 20)
+
+        tab.valid() shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
+    }
+
+    @Test
+    fun `Should be valid by default`()
+    {
+        val tab = ReportingGameTab()
+        tab.valid() shouldBe true
+    }
+
+    /**
+     * Population
+     */
+    @Test
+    fun `Should populate game type correctly`()
+    {
+        val rp = ReportParameters()
+        val tab = ReportingGameTab()
+
+        tab.populateReportParameters(rp)
+        rp.gameType shouldBe null
+
+        tab.clickComponent<JCheckBox>("Game")
+        tab.populateReportParameters(rp)
+        rp.gameType shouldBe GameType.X01
+
+        tab.findComponent<ComboBoxGameType>().updateSelection(GameType.DARTZEE)
+        tab.populateReportParameters(rp)
+        rp.gameType shouldBe GameType.DARTZEE
+    }
+
+    @Test
+    fun `Should populate gameParams correctly`()
+    {
+        val rp = ReportParameters()
+        val tab = ReportingGameTab()
+
+        tab.populateReportParameters(rp)
+        rp.gameParams shouldBe ""
+
+        tab.clickComponent<JCheckBox>("Type")
+        tab.populateReportParameters(rp)
+        rp.gameParams shouldBe "501"
+
+        tab.findComponent<SpinnerX01>().value = 701
+        tab.populateReportParameters(rp)
+        rp.gameParams shouldBe "701"
+    }
+
+    @Test
+    fun `Should populate part of match correctly`()
+    {
+        val rp = ReportParameters()
+        val tab = ReportingGameTab()
+
+        tab.populateReportParameters(rp)
+        rp.partOfMatch shouldBe MatchFilter.BOTH
+
+        tab.clickComponent<JCheckBox>("Part of Match")
+        tab.populateReportParameters(rp)
+        rp.partOfMatch shouldBe MatchFilter.MATCHES_ONLY
+
+        tab.clickComponent<JRadioButton>("No")
+        tab.populateReportParameters(rp)
+        rp.partOfMatch shouldBe MatchFilter.GAMES_ONLY
+    }
+
+    @Test
+    fun `Should populate start date correctly`()
+    {
+        val rp = ReportParameters()
+        val tab = ReportingGameTab()
+
+        tab.populateReportParameters(rp)
+        rp.dtStartFrom shouldBe null
+        rp.dtStartTo shouldBe null
+
+        val startDate = LocalDate.ofYearDay(2020, 20)
+        val endDate = LocalDate.ofYearDay(2020, 30)
+        tab.clickComponent<JCheckBox>("Start Date")
+        tab.getStartDateFilterPanel().cbDateFrom.date = startDate
+        tab.getStartDateFilterPanel().cbDateTo.date = endDate
+        tab.populateReportParameters(rp)
+        rp.dtStartFrom shouldBe Timestamp.valueOf(startDate.atTime(0, 0))
+        rp.dtStartTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
+    }
+
+    @Test
+    fun `Should populate finish date correctly`()
+    {
+        var rp = ReportParameters()
+        val tab = ReportingGameTab()
+
+        tab.populateReportParameters(rp)
+        rp.dtFinishFrom shouldBe null
+        rp.dtFinishTo shouldBe null
+        rp.unfinishedOnly shouldBe false
+
+        val startDate = LocalDate.ofYearDay(2020, 20)
+        val endDate = LocalDate.ofYearDay(2020, 30)
+        tab.clickComponent<JCheckBox>("Finish Date")
+        tab.getFinishDateFilterPanel().cbDateFrom.date = startDate
+        tab.getFinishDateFilterPanel().cbDateTo.date = endDate
+        tab.populateReportParameters(rp)
+        rp.dtFinishFrom shouldBe Timestamp.valueOf(startDate.atTime(0, 0))
+        rp.dtFinishTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
+        rp.unfinishedOnly shouldBe false
+
+        rp = ReportParameters()
+        tab.clickComponent<JRadioButton>("Unfinished")
+        tab.populateReportParameters(rp)
+        rp.dtFinishFrom shouldBe null
+        rp.dtFinishTo shouldBe null
+        rp.unfinishedOnly shouldBe true
     }
 
     private fun ReportingGameTab.getStartDateFilterPanel() = getAllChildComponentsForType<DateFilterPanel>().first()

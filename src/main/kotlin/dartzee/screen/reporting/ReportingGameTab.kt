@@ -114,8 +114,7 @@ class ReportingGameTab: JPanel(), ActionListener
     {
         if (checkBoxGameType.isSelected)
         {
-            val gameType = comboBox.getGameType()
-            rp.gameType = gameType
+            rp.gameType = comboBox.getGameType()
         }
 
         if (cbType.isSelected)
