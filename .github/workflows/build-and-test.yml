@@ -16,6 +16,6 @@ jobs:
         java-version: 11
         java-package: jdk+fx
     - name: Build with Gradle
-      run: ./gradlew build
-    - name: Run tests
-      run: ./gradlew test
+      uses: GabrielBB/xvfb-action@v1.0
+      with:
+        run: ./gradlew build
