@@ -11,6 +11,8 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertPlayerForGame
 import dartzee.logging.CODE_SQL
 import dartzee.reporting.ReportParameters
+import dartzee.screen.ScreenCache
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -91,6 +93,15 @@ class TestReportingResultsScreen: AbstractTest()
         table.getDisplayValueAt(1, 0) shouldBe 3
         table.getDisplayValueAt(2, 0) shouldBe 4
         table.getDisplayValueAt(3, 0) shouldBe 1
+    }
+
+    @Test
+    fun `Should go back to setup screen`()
+    {
+        val scrn = ReportingResultsScreen()
+        scrn.btnBack.doClick()
+
+        ScreenCache.currentScreen().shouldBeInstanceOf<ReportingSetupScreen>()
     }
 
 }
