@@ -3,6 +3,7 @@ package dartzee
 import dartzee.`object`.*
 import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
+import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.util.getAllChildComponentsForType
@@ -204,3 +205,7 @@ fun DateFilterPanel.makeInvalid()
     cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
     cbDateTo.date = LocalDate.ofYearDay(2020, 20)
 }
+
+fun ScrollTable.getColumnNames() = (0 until columnCount).map { getColumnName(it) }
+
+fun ScrollTable.getDisplayValueAt(row: Int, col: Int) = table.getValueAt(row, col)
