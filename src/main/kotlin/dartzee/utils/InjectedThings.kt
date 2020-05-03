@@ -21,6 +21,5 @@ object InjectedThings
     var esDestination = LoggerFactory.constructElasticsearchDestination()
     var logger: Logger = Logger(listOf(loggingConsole, LogDestinationSystemOut(), esDestination))
     var gameLauncher: GameLauncher = GameLauncher()
-    var terminator: ITerminator = Terminator()
     var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true }}
 }

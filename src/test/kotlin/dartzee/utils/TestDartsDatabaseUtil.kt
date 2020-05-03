@@ -2,14 +2,12 @@ package dartzee.utils
 
 import dartzee.db.VersionEntity
 import dartzee.helper.AbstractTest
-import dartzee.helper.FakeTerminator
-import dartzee.helper.TerminationException
+import dartzee.helper.assertExits
 import dartzee.helper.dropAllTables
 import dartzee.logging.*
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
 import org.junit.Test
 
 class TestDartsDatabaseUtil: AbstractTest()
@@ -17,12 +15,10 @@ class TestDartsDatabaseUtil: AbstractTest()
     @Test
     fun `Should log a warning, show an error and exit if DB version is too old`()
     {
-        InjectedThings.terminator = FakeTerminator()
-
         val version = VersionEntity()
         version.version = DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION - 1
 
-        shouldThrow<TerminationException> {
+        assertExits(1) {
             DartsDatabaseUtil.initialiseDatabase(version)
         }
 
