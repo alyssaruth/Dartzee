@@ -18,9 +18,10 @@ import java.awt.BorderLayout
 
 class GamePanelDartzee(parent: AbstractDartsGameScreen,
                        game: GameEntity,
+                       totalPlayers: Int,
                        val dtos: List<DartzeeRuleDto>,
                        private val summaryPanel: DartzeeRuleSummaryPanel
-) : GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard, DartzeePlayerState>(parent, game),
+) : GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard, DartzeePlayerState>(parent, game, totalPlayers),
     IDartzeeCarouselListener
 {
     override val totalRounds = dtos.size + 1

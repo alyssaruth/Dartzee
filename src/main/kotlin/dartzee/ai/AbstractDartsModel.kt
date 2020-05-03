@@ -5,7 +5,10 @@ import dartzee.core.obj.HashMapCount
 import dartzee.core.util.*
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
+import dartzee.logging.CODE_SIMULATION_FINISHED
+import dartzee.logging.CODE_SIMULATION_STARTED
 import dartzee.screen.Dartboard
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.getAverage
 import org.w3c.dom.Element
 import java.awt.Point
@@ -206,7 +209,7 @@ abstract class AbstractDartsModel
 
     fun runSimulation(dartboard: Dartboard): SimulationWrapper
     {
-        Debug.append("Simulating scoring throws for $SCORING_DARTS_TO_THROW darts")
+        logger.info(CODE_SIMULATION_STARTED, "Simulating scoring and doubles throws")
 
         val hmPointToCount = HashMapCount<Point>()
 
@@ -241,8 +244,6 @@ abstract class AbstractDartsModel
         missPercent = 100 * missPercent / SCORING_DARTS_TO_THROW
         treblePercent = 100 * treblePercent / SCORING_DARTS_TO_THROW
 
-        Debug.append("Simulating throws at random doubles for $DOUBLE_DARTS_TO_THROW darts")
-
         var doublesHit = 0.0
         val rand = Random()
         for (i in 0 until DOUBLE_DARTS_TO_THROW)
@@ -260,7 +261,7 @@ abstract class AbstractDartsModel
             }
         }
 
-        Debug.append("Finished simulation")
+        logger.info(CODE_SIMULATION_FINISHED, "Finished simulating throws")
 
         val doublePercent = 100 * doublesHit / DOUBLE_DARTS_TO_THROW
         return SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount)
@@ -330,12 +331,6 @@ abstract class AbstractDartsModel
          */
         fun getDefaultDartToAimAt(score: Int): Dart
         {
-            if (score > 60)
-            {
-                Debug.stackTrace("Trying to get strategy-invariant default for score over 60. This will not work.")
-                return factoryTreble(20)
-            }
-
             //Aim for the single that puts you on double top
             if (score > 40)
             {

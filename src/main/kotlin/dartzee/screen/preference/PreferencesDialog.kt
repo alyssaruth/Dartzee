@@ -1,8 +1,9 @@
 package dartzee.screen.preference
 
-import dartzee.core.util.Debug
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.logging.CODE_SWING_ERROR
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.resetCachedDartboardValues
 import java.awt.BorderLayout
 import java.awt.Component
@@ -86,14 +87,14 @@ class PreferencesDialog : JDialog(), ActionListener
         val selectedTab = tabbedPane.selectedComponent
         if (selectedTab !is AbstractPreferencesPanel)
         {
-            Debug.stackTrace("Called 'restore defaults' on unexpected component: $selectedTab")
+            logger.error(CODE_SWING_ERROR, "Called 'restore defaults' on unexpected component: $selectedTab")
             return
         }
 
         selectedTab.refresh(true)
     }
 
-    private fun getPreferencePanels() = getAllChildComponentsForType(this, AbstractPreferencesPanel::class.java)
+    private fun getPreferencePanels() = getAllChildComponentsForType<AbstractPreferencesPanel>()
 
     override fun actionPerformed(arg0: ActionEvent)
     {

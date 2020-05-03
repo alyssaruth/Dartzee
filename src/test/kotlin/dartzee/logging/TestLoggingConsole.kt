@@ -1,13 +1,17 @@
 package dartzee.logging
 
+import dartzee.core.util.getAllChildComponentsForType
 import dartzee.flushEdt
 import dartzee.helper.AbstractTest
 import dartzee.makeLogRecord
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
+import javax.swing.JLabel
 import javax.swing.text.StyleConstants
 
 class TestLoggingConsole: AbstractTest()
@@ -60,6 +64,18 @@ class TestLoggingConsole: AbstractTest()
 
         val endColour = console.getTextColour(console.doc.length - 1)
         endColour shouldBe Color.RED
+    }
+
+    @Test
+    fun `Should log thread stacks`()
+    {
+        val console = LoggingConsole()
+
+        val threadStackLock = makeLogRecord(severity = Severity.INFO, message = "AWT Thread", keyValuePairs = mapOf(KEY_STACK to "at Foo.bar(58)"))
+        console.log(threadStackLock)
+
+        console.getText() shouldContain "AWT Thread"
+        console.getText() shouldContain "at Foo.bar(58)"
     }
 
     @Test
@@ -127,6 +143,24 @@ class TestLoggingConsole: AbstractTest()
         console.clear()
 
         console.getText() shouldBe ""
+    }
+
+    @Test
+    fun `Should update when logging context changes`()
+    {
+        val console = LoggingConsole()
+        console.contextUpdated(mapOf())
+        console.getAllChildComponentsForType<JLabel>().shouldBeEmpty()
+
+        console.contextUpdated(mapOf("appVersion" to "4.1.1"))
+        val labels = console.getAllChildComponentsForType<JLabel>()
+        labels.size shouldBe 1
+        labels.first().text shouldBe "appVersion: 4.1.1"
+
+        console.contextUpdated(mapOf("appVersion" to "4.1.1", "devMode" to false))
+
+        val newLabels = console.getAllChildComponentsForType<JLabel>()
+        newLabels.map { it.text }.shouldContainExactly("appVersion: 4.1.1", "devMode: false")
     }
 
     private fun LoggingConsole.getText(): String =

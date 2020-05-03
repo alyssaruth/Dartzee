@@ -9,7 +9,7 @@ class HyperlinkAdaptor(private val listener: IHyperlinkListener) : MouseAdapter(
 {
     private val listenerWindow = listener as Component
 
-    override fun mouseClicked(arg0: MouseEvent) = listener.linkClicked(arg0)
+    override fun mouseReleased(arg0: MouseEvent) = listener.linkClicked(arg0)
 
     override fun mouseMoved(arg0: MouseEvent)
     {

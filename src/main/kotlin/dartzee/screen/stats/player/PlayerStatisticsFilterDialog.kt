@@ -22,7 +22,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
     private var gameParams = ""
     private var filterByDate = false
 
-    private var filterPanel:GameParamFilterPanel? = null
+    private val filterPanel: GameParamFilterPanel = getFilterPanel(gameType)
 
     private val cbType = JCheckBox("Type")
     private val panelGameType = JPanel()
@@ -32,8 +32,6 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
 
     init
     {
-        filterPanel = getFilterPanel(gameType)
-
         title = "Filters"
         setSize(473, 200)
         isModal = true
@@ -42,12 +40,9 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         contentPane.add(panelFilters, BorderLayout.CENTER)
         panelFilters.layout = GridLayout(0, 1, 0, 0)
 
-        if (filterPanel != null)
-        {
-            panelFilters.add(panelGameType)
-            panelGameType.add(cbType)
-            panelGameType.add(filterPanel)
-        }
+        panelFilters.add(panelGameType)
+        panelGameType.add(cbType)
+        panelGameType.add(filterPanel)
 
         panelFilters.add(panelDate)
 
@@ -68,7 +63,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         }
         else
         {
-            desc += filterPanel!!.getFilterDesc()
+            desc += filterPanel.getFilterDesc()
         }
 
         return desc
@@ -86,7 +81,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
     {
         if (cbType.isSelected)
         {
-            gameParams = filterPanel!!.getGameParams()
+            gameParams = filterPanel.getGameParams()
         }
         else
         {
@@ -99,11 +94,11 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
     fun refresh()
     {
         cbType.isSelected = !gameParams.isEmpty()
-        filterPanel!!.isEnabled = cbType.isSelected
+        filterPanel.isEnabled = cbType.isSelected
 
         if (!gameParams.isEmpty())
         {
-            filterPanel!!.setGameParams(gameParams)
+            filterPanel.setGameParams(gameParams)
         }
 
         chckbxDatePlayed.isSelected = filterByDate
@@ -143,7 +138,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
             saveState()
             dispose()
 
-            val scrn = ScreenCache.getScreen(PlayerStatisticsScreen::class.java)
+            val scrn = ScreenCache.get<PlayerStatisticsScreen>()
             scrn.buildTabs()
         }
     }
@@ -153,7 +148,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         val src = arg0.source as Component
         if (src === cbType)
         {
-            filterPanel!!.isEnabled = cbType.isSelected
+            filterPanel.isEnabled = cbType.isSelected
         }
         else if (src === chckbxDatePlayed)
         {

@@ -1,15 +1,17 @@
 package dartzee.`object`
 
-import dartzee.core.helper.getLogs
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
+import dartzee.logging.CODE_UPDATE_CHECK
+import dartzee.logging.CODE_JUST_UPDATED
+import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
+import dartzee.logging.Severity
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.UpdateManager
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -20,32 +22,12 @@ class TestDartsClient: AbstractRegistryTest()
     override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES)
 
     @Test
-    fun `Should parse and set logSecret if present`()
-    {
-        DartsClient.logSecret = ""
-        DartsClient.parseProgramArguments(arrayOf("logSecret=foo"))
-        DartsClient.logArgumentState()
-
-        DartsClient.logSecret shouldBe "foo"
-        getLogs() shouldContain "logSecret is present - will email diagnostics"
-    }
-
-    @Test
-    fun `Should fall back on an empty value for logSecret if passed without a value`()
-    {
-        DartsClient.logSecret = "foo"
-        DartsClient.parseProgramArguments(arrayOf("logSecret"))
-
-        DartsClient.logSecret shouldBe ""
-        getLogs() shouldNotContain "Unexpected program argument"
-    }
-
-    @Test
     fun `Should log unexpected arguments`()
     {
         DartsClient.parseProgramArguments(arrayOf("foo"))
 
-        getLogs() shouldContain "Unexpected program argument: foo"
+        val log = verifyLog(CODE_UNEXPECTED_ARGUMENT, Severity.WARN)
+        log.message shouldContain "foo"
     }
 
     @Test
@@ -53,23 +35,19 @@ class TestDartsClient: AbstractRegistryTest()
     {
         DartsClient.devMode = false
         DartsClient.justUpdated = false
-        DartsClient.logSecret = ""
 
         DartsClient.parseProgramArguments(arrayOf())
 
         DartsClient.devMode shouldBe false
         DartsClient.justUpdated shouldBe false
-        DartsClient.logSecret shouldBe ""
     }
 
     @Test
     fun `Should parse devMode argument`()
     {
         DartsClient.parseProgramArguments(arrayOf("devMode"))
-        DartsClient.logArgumentState()
 
         DartsClient.devMode shouldBe true
-        getLogs() shouldContain "Running in dev mode"
     }
 
     @Test
@@ -79,7 +57,7 @@ class TestDartsClient: AbstractRegistryTest()
         DartsClient.logArgumentState()
 
         DartsClient.justUpdated shouldBe true
-        getLogs() shouldContain "I've just updated"
+        verifyLog(CODE_JUST_UPDATED)
     }
 
     @Test
@@ -115,7 +93,8 @@ class TestDartsClient: AbstractRegistryTest()
 
         DartsClient.checkForUpdatesIfRequired()
 
-        getLogs() shouldContain "Not checking for updates as I'm in dev mode"
+        val log = verifyLog(CODE_UPDATE_CHECK)
+        log.message shouldBe "Not checking for updates: I'm in dev mode"
         verifyNotCalled { mock.checkForUpdates(any()) }
     }
 
@@ -130,7 +109,8 @@ class TestDartsClient: AbstractRegistryTest()
 
         DartsClient.checkForUpdatesIfRequired()
 
-        getLogs() shouldContain "Just updated - not checking for updates"
+        val log = verifyLog(CODE_UPDATE_CHECK)
+        log.message shouldBe "Not checking for updates: just updated"
         verifyNotCalled { mock.checkForUpdates(any()) }
     }
 
@@ -146,6 +126,8 @@ class TestDartsClient: AbstractRegistryTest()
 
         DartsClient.checkForUpdatesIfRequired()
 
+        val log = verifyLog(CODE_UPDATE_CHECK)
+        log.message shouldBe "Not checking for updates: preference disabled"
         verifyNotCalled { mock.checkForUpdates(any()) }
     }
 

@@ -1,6 +1,7 @@
 package dartzee.core.screen
 
-import dartzee.core.util.Debug
+import dartzee.logging.CODE_SWING_ERROR
+import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -47,7 +48,7 @@ abstract class SimpleDialog : JDialog(), ActionListener
         {
             btnOk -> okPressed()
             btnCancel -> cancelPressed()
-            else -> Debug.stackTrace("Unexpected button pressed: ${arg0.source}")
+            else -> logger.error(CODE_SWING_ERROR, "Unexpected button pressed: ${arg0.source}")
         }
     }
 }

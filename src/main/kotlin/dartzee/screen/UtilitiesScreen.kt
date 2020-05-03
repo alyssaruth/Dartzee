@@ -8,6 +8,7 @@ import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
+import dartzee.utils.InjectedThings
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Font
@@ -43,7 +44,7 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
         panel.add(btnDartzeeTemplates, "cell 0 13, alignx center")
 
-        val buttons = getAllChildComponentsForType(panel, AbstractButton::class.java)
+        val buttons = panel.getAllChildComponentsForType<AbstractButton>()
         for (button in buttons)
         {
             button.font = Font("Tahoma", Font.PLAIN, 18)
@@ -65,12 +66,12 @@ class UtilitiesScreen : EmbeddedScreen()
             btnRestoreFromBackup -> DartsDatabaseUtil.restoreDatabase()
             btnPerformDatabaseCheck -> DatabaseSanityCheck.runSanityCheck()
             btnCheckForUpdates -> DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER)
-            btnViewLogs -> {val loggingDialog = ScreenCache.loggingConsole
+            btnViewLogs -> {val loggingDialog = InjectedThings.loggingConsole
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()
             btnAchievementConversion -> runAchievementConversion()
-            btnDartzeeTemplates -> ScreenCache.switchScreen(DartzeeTemplateSetupScreen::class.java)
+            btnDartzeeTemplates -> ScreenCache.switch<DartzeeTemplateSetupScreen>()
             else -> super.actionPerformed(arg0)
         }
     }

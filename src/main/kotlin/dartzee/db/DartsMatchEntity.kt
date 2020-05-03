@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.core.util.*
 import dartzee.game.GameType
+import dartzee.game.MatchMode
 import dartzee.utils.DatabaseUtil
 
 /**
@@ -15,7 +16,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
      */
     var localId = -1L
     var games = -1
-    var mode = -1
+    var mode: MatchMode = MatchMode.FIRST_TO
     var dtFinish = DateStatics.END_OF_TIME
     var matchParams = ""
 
@@ -33,7 +34,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     override fun getCreateTableSqlSpecific(): String
     {
-        return "LocalId INT UNIQUE NOT NULL, Games INT NOT NULL, Mode INT NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(255) NOT NULL"
+        return "LocalId INT UNIQUE NOT NULL, Games INT NOT NULL, Mode VARCHAR(255) NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(500) NOT NULL"
     }
 
     override fun assignRowId(): String
@@ -45,18 +46,12 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
     /**
      * Helpers
      */
-    fun isComplete(): Boolean
-    {
-        return when(mode)
+    fun isComplete() =
+        when (mode)
         {
-            MODE_FIRST_TO -> getIsFirstToMatchComplete()
-            MODE_POINTS -> getIsPointsMatchComplete()
-            else -> {
-                Debug.stackTrace("Unimplemented for match mode [$mode]")
-                false
-            }
+            MatchMode.FIRST_TO -> getIsFirstToMatchComplete()
+            MatchMode.POINTS -> getIsPointsMatchComplete()
         }
-    }
 
     private fun getIsFirstToMatchComplete(): Boolean
     {
@@ -100,28 +95,20 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         return "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)}, ${getPlayerCount()} players)"
     }
 
-    private fun getMatchTypeDesc(): String
-    {
-        return when(mode)
+    private fun getMatchTypeDesc() =
+        when(mode)
         {
-            MODE_FIRST_TO -> "First to $games"
-            MODE_POINTS -> "Points based ($games games)"
-            else -> ""
+            MatchMode.FIRST_TO -> "First to $games"
+            MatchMode.POINTS -> "Points based ($games games)"
         }
-    }
 
-    fun getScoreForFinishingPosition(position: Int): Int
-    {
-        return when(mode)
+    fun getScoreForFinishingPosition(position: Int) =
+        when(mode)
         {
-            MODE_FIRST_TO -> if (position == 1) 1 else 0
-            MODE_POINTS -> if (position == -1) 0 else getHmPositionToPoints()[position]!!
-            else -> {
-                Debug.stackTrace("Unexpected mode [$mode]")
-                -1
-            }
+            MatchMode.FIRST_TO -> if (position == 1) 1 else 0
+            MatchMode.POINTS -> if (position == -1) 0 else getHmPositionToPoints()[position]!!
         }
-    }
+
     private fun getHmPositionToPoints(): MutableMap<Int, Int>
     {
         if (hmPositionToPoints.isEmpty())
@@ -133,6 +120,8 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
             hmPositionToPoints[2] = root.getAttributeInt("Second")
             hmPositionToPoints[3] = root.getAttributeInt("Third")
             hmPositionToPoints[4] = root.getAttributeInt("Fourth")
+            hmPositionToPoints[5] = root.getAttributeInt("Fifth")
+            hmPositionToPoints[6] = root.getAttributeInt("Sixth")
         }
 
         return hmPositionToPoints
@@ -164,17 +153,16 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     companion object
     {
-        const val MODE_FIRST_TO = 0
-        const val MODE_POINTS = 1
-
-        fun constructPointsXml(first: Int, second: Int, third: Int, fourth: Int): String
+        fun constructPointsXml(first: Int, second: Int, third: Int, fourth: Int, fifth: Int, sixth: Int): String
         {
             val doc = XmlUtil.factoryNewDocument()
             val rootElement = doc.createRootElement("MatchParams")
-            rootElement.setAttribute("First", "$first")
-            rootElement.setAttribute("Second", "$second")
-            rootElement.setAttribute("Third", "$third")
-            rootElement.setAttribute("Fourth", "$fourth")
+            rootElement.setAttributeAny("First", first)
+            rootElement.setAttributeAny("Second", second)
+            rootElement.setAttributeAny("Third", third)
+            rootElement.setAttributeAny("Fourth", fourth)
+            rootElement.setAttributeAny("Fifth", fifth)
+            rootElement.setAttributeAny("Sixth", sixth)
 
             return doc.toXmlString()
         }
@@ -185,15 +173,15 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
          */
         fun factoryFirstTo(games: Int): DartsMatchEntity
         {
-            return factoryAndSave(games, MODE_FIRST_TO, "")
+            return factoryAndSave(games, MatchMode.FIRST_TO, "")
         }
 
         fun factoryPoints(games: Int, pointsXml: String): DartsMatchEntity
         {
-            return factoryAndSave(games, MODE_POINTS, pointsXml)
+            return factoryAndSave(games, MatchMode.POINTS, pointsXml)
         }
 
-        private fun factoryAndSave(games: Int, mode: Int, matchParams: String): DartsMatchEntity
+        private fun factoryAndSave(games: Int, mode: MatchMode, matchParams: String): DartsMatchEntity
         {
             val matchEntity = DartsMatchEntity()
             matchEntity.assignRowId()

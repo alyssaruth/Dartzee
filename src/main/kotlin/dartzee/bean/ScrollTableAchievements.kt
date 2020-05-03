@@ -11,10 +11,10 @@ class ScrollTableAchievements : ScrollTableHyperlink("Player")
     {
         val player = value as PlayerEntity
 
-        val scrn = ScreenCache.getScreen(PlayerAchievementsScreen::class.java)
-        scrn.setPlayer(player)
-        scrn.previousScrn = ScreenCache.currentScreen()!!
+        val scrn = ScreenCache.get<PlayerAchievementsScreen>()
+        scrn.player = player
+        scrn.previousScrn = ScreenCache.currentScreen()
 
-        ScreenCache.switchScreen(scrn)
+        ScreenCache.switch(scrn)
     }
 }

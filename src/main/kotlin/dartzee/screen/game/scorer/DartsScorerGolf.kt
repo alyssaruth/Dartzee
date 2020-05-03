@@ -1,7 +1,6 @@
 package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
-import dartzee.core.util.Debug
 import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import dartzee.utils.PreferenceUtil
@@ -149,8 +148,7 @@ class DartsScorerGolf : DartsScorer()
             return row + fudgeFactor
         }
 
-        Debug.stackTrace("Trying to get round target for the subtotal row")
-        return -1
+        throw Exception("Trying to get round target for the subtotal row")
     }
 
     /**

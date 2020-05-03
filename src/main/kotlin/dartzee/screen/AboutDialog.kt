@@ -1,11 +1,12 @@
-package dartzee.core.screen
+package dartzee.screen
 
 import dartzee.core.bean.HyperlinkAdaptor
 import dartzee.core.bean.IHyperlinkListener
+import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings.showChangeLog
 import java.awt.Color
 import java.awt.Font
 import java.awt.Insets
-import java.awt.Window
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
@@ -14,9 +15,9 @@ import javax.swing.JDialog
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 
-abstract class AbstractAboutDialog : JDialog(), IHyperlinkListener, ActionListener
+class AboutDialog: JDialog(), IHyperlinkListener, ActionListener
 {
-    private val lblProductDesc = JLabel(getProductDesc())
+    private val lblProductDesc = JLabel("Darts $DARTS_VERSION_NUMBER")
     private val lblViewChangelog = JLabel("<html><u>Change Log</u></html>")
     private val btnOk = JButton("Ok")
 
@@ -51,18 +52,13 @@ abstract class AbstractAboutDialog : JDialog(), IHyperlinkListener, ActionListen
         btnOk.addActionListener(this)
     }
 
-    //Abstract functions
-    abstract fun getProductDesc(): String
-    abstract fun getChangeLog(): Window
-
     /**
      * HyperlinkListener
      */
     override fun linkClicked(arg0: MouseEvent)
     {
         isVisible = false
-        val dialog = getChangeLog()
-        dialog.isVisible = true
+        showChangeLog()
     }
 
     override fun isOverHyperlink(arg0: MouseEvent) = true

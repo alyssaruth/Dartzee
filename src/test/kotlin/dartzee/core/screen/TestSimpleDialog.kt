@@ -1,9 +1,8 @@
 package dartzee.core.screen
 
-import dartzee.core.helper.getLogs
-import dartzee.core.util.Debug
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.string.shouldContain
+import dartzee.helper.logger
+import dartzee.logging.LoggingCode
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -43,15 +42,14 @@ class TestSimpleDialog: AbstractTest()
 
         dlg.btnOk.doClick()
 
-        getLogs() shouldContain "Ok pressed"
+        verifyLog(LoggingCode("OkPressed"))
     }
-
 
     inner class SimpleDialogTestExtension: SimpleDialog()
     {
         override fun okPressed()
         {
-            Debug.append("Ok pressed")
+            logger.info(LoggingCode("OkPressed"), "pressed ok")
         }
 
         override fun allowCancel() = allowCancel

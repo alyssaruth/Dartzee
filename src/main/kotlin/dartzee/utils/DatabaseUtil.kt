@@ -1,8 +1,8 @@
 package dartzee.utils
 
 import dartzee.`object`.DartsClient
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
+import dartzee.logging.*
 import dartzee.utils.InjectedThings.logger
 import java.sql.Connection
 import java.sql.DriverManager
@@ -11,6 +11,7 @@ import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.CachedRowSet
 import javax.sql.rowset.RowSetProvider
+import kotlin.system.exitProcess
 
 const val TABLE_ALREADY_EXISTS = "X0Y32"
 
@@ -65,8 +66,9 @@ class DatabaseUtil
         {
             connectionCreateCount++
 
-            Debug.appendBanner("CREATED new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
-            return createDatabaseConnection(dbName = DartsClient.derbyDbName)
+            val connection = createDatabaseConnection(dbName = DartsClient.derbyDbName)
+            logger.info(CODE_NEW_CONNECTION, "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
+            return connection
         }
 
         private fun createDatabaseConnection(dbFilePath: String = DATABASE_FILE_PATH, dbName: String): Connection
@@ -103,7 +105,7 @@ class DatabaseUtil
             }
             catch (sqle: SQLException)
             {
-                Debug.logSqlException(statement, sqle)
+                logger.logSqlException(statement, "", sqle)
                 return false
             }
 
@@ -153,7 +155,7 @@ class DatabaseUtil
             }
             catch (sqle: SQLException)
             {
-                Debug.logSqlException(query, sqle)
+                logger.logSqlException(query, "", sqle)
             }
             finally
             {
@@ -190,13 +192,13 @@ class DatabaseUtil
                 if (next != null
                  && next.message!!.contains("Another instance of Derby may have already booted the database"))
                 {
-                    Debug.stackTraceSilently(sqle)
+                    logger.warn(CODE_DATABASE_IN_USE, "Failed multiple instance check, exiting.")
                     DialogUtil.showError("Database already in use - Dartzee will now exit.")
-                    System.exit(1)
+                    exitProcess(1)
                 }
                 else
                 {
-                    Debug.stackTrace(sqle)
+                    logger.logSqlException("", "", sqle)
                 }
             }
 
@@ -209,18 +211,18 @@ class DatabaseUtil
             try
             {
                 executeUpdateUncaught(statement)
-                Debug.append("Created $tableName table.")
+                logger.info(CODE_TABLE_CREATED, "Created $tableName")
             }
             catch (sqle: SQLException)
             {
                 val state = sqle.sqlState
                 if (state == TABLE_ALREADY_EXISTS)
                 {
-                    Debug.append("$tableName table already exists")
+                    logger.info(CODE_TABLE_EXISTS, "$tableName already exists")
                 }
                 else
                 {
-                    Debug.logSqlException(statement, sqle)
+                    logger.logSqlException(statement, "", sqle)
                 }
 
                 return false
@@ -256,12 +258,10 @@ class DatabaseUtil
             }
             catch (t: Throwable)
             {
-                Debug.append("Failed to establish test connection for path $dbPath")
-                Debug.stackTraceSilently(t)
+                logger.error(CODE_TEST_CONNECTION_ERROR, "Failed to establish test connection for path $dbPath", t)
                 return false
             }
 
-            Debug.append("Successfully created test connection to $dbPath")
             return true
         }
 
@@ -280,7 +280,7 @@ class DatabaseUtil
                     return true
                 }
 
-                Debug.stackTrace(sqle)
+                logger.logSqlException("jdbc:derby:;shutdown=true", "jdbc:derby:;shutdown=true", sqle)
             }
 
             return false

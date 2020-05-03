@@ -1,8 +1,8 @@
 package dartzee.reporting
 
 import dartzee.core.util.getEndOfTimeSqlString
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import java.sql.Timestamp
 import java.util.*
 
@@ -15,9 +15,10 @@ class ReportParameters
     var dtStartTo: Timestamp? = null
     var dtFinishFrom: Timestamp? = null
     var dtFinishTo: Timestamp? = null
-    var hmIncludedPlayerToParms = mutableMapOf<PlayerEntity, IncludedPlayerParameters>()
+    var hmIncludedPlayerToParms = mapOf<PlayerEntity, IncludedPlayerParameters>()
     var excludedPlayers: List<PlayerEntity> = ArrayList()
-    private var partOfMatch = MATCH_FILTER_BOTH
+    var excludeOnlyAi: Boolean = false
+    var partOfMatch = MatchFilter.BOTH
 
     fun getExtraWhereSql(): String
     {
@@ -67,11 +68,11 @@ class ReportParameters
             sb.append(getEndOfTimeSqlString())
         }
 
-        if (partOfMatch == MATCH_FILTER_GAMES_ONLY)
+        if (partOfMatch == MatchFilter.GAMES_ONLY)
         {
             sb.append(" AND g.DartsMatchId = ''")
         }
-        else if (partOfMatch == MATCH_FILTER_MATCHES_ONLY)
+        else if (partOfMatch == MatchFilter.MATCHES_ONLY)
         {
             sb.append(" AND g.DartsMatchId <> ''")
         }
@@ -102,6 +103,15 @@ class ReportParameters
             sb.append(" AND z.GameId = g.RowId)")
         }
 
+        if (excludeOnlyAi)
+        {
+            sb.append(" AND EXISTS (")
+            sb.append(" SELECT 1 FROM Participant z, Player p")
+            sb.append(" WHERE z.PlayerId = p.RowId")
+            sb.append(" AND z.GameId = g.RowId")
+            sb.append(" AND p.Strategy = -1)")
+        }
+
         return sb.toString()
     }
 
@@ -112,13 +122,13 @@ class ReportParameters
 
     fun setEnforceMatch(matches: Boolean)
     {
-        partOfMatch = if (matches) MATCH_FILTER_MATCHES_ONLY else MATCH_FILTER_GAMES_ONLY
+        partOfMatch = if (matches) MatchFilter.MATCHES_ONLY else MatchFilter.GAMES_ONLY
     }
+}
 
-    companion object
-    {
-        private const val MATCH_FILTER_MATCHES_ONLY = 0
-        private const val MATCH_FILTER_GAMES_ONLY = 1
-        private const val MATCH_FILTER_BOTH = 2
-    }
+enum class MatchFilter
+{
+    MATCHES_ONLY,
+    GAMES_ONLY,
+    BOTH
 }

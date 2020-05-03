@@ -1,12 +1,14 @@
 package dartzee.core.bean
 
-import dartzee.core.util.Debug
+import dartzee.logging.CODE_COMMAND_ENTERED
+import dartzee.logging.CODE_COMMAND_ERROR
+import dartzee.screen.FocusableWindow
+import dartzee.utils.InjectedThings.logger
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import javax.swing.JFrame
 import javax.swing.KeyStroke
 
-abstract class AbstractDevScreen(private val commandBar: CheatBar) : JFrame()
+abstract class AbstractDevScreen(private val commandBar: CheatBar) : FocusableWindow()
 {
     init
     {
@@ -29,22 +31,20 @@ abstract class AbstractDevScreen(private val commandBar: CheatBar) : JFrame()
         revalidate()
     }
     
-    fun getKeyStrokeForCommandBar(): KeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_MASK)
+    fun getKeyStrokeForCommandBar(): KeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK)
 
     fun processCommandWithTry(cmd: String): String
     {
-        Debug.append("[Command Entered: $cmd]", true)
+        logger.info(CODE_COMMAND_ENTERED, "Command entered: [$cmd]")
 
-        var result = ""
-        try
+        return try
         {
-            result = processCommand(cmd)
+            processCommand(cmd)
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t)
+            logger.error(CODE_COMMAND_ERROR, "Error running command $cmd", t)
+            ""
         }
-
-        return result
     }
 }

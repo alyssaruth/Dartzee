@@ -1,7 +1,8 @@
 package dartzee.db
 
-import dartzee.core.util.Debug
 import dartzee.core.util.FileUtil
+import dartzee.logging.CODE_FILE_ERROR
+import dartzee.utils.InjectedThings.logger
 import java.io.File
 import java.nio.file.Files
 import java.sql.Blob
@@ -65,7 +66,7 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
             }
             catch (t: Throwable)
             {
-                Debug.stackTrace(t)
+                logger.error(CODE_FILE_ERROR, "Failed to read bytes from file $file", t)
                 null
             }
 
@@ -89,7 +90,7 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
             }
             catch (se: SQLException)
             {
-                Debug.logSqlException("Instantiating SerialBlob for bytes of length " + fileBytes!!.size, se)
+                logger.logSqlException("Instantiating SerialBlob for bytes of length " + fileBytes!!.size, "", se)
                 null
             }
 
@@ -113,8 +114,6 @@ class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
 
         fun createPresets()
         {
-            Debug.append("Creating ${avatarPresets.size} avatar presets")
-
             avatarPresets.forEach{
                 val resourceLocation = "/avatars/$it.png"
                 val bytes = FileUtil.getByteArrayForResource(resourceLocation)

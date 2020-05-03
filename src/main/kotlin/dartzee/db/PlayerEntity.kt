@@ -3,6 +3,8 @@ package dartzee.db
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.screen.HumanCreationDialog
+import dartzee.screen.PlayerManagementScreen
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import javax.swing.ImageIcon
@@ -93,7 +95,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
             val created = createAndSavePlayerIfValid(human)
             if (created)
             {
-                ScreenCache.getPlayerManagementScreen().initialise()
+                ScreenCache.get<PlayerManagementScreen>().initialise()
             }
         }
         private fun createAndSavePlayerIfValid(human: Boolean): Boolean
@@ -103,8 +105,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
 
         private fun createNewHuman(): Boolean
         {
-            val dlg = ScreenCache.getHumanCreationDialog()
-            dlg.init()
+            val dlg = HumanCreationDialog()
             dlg.isVisible = true
 
             return dlg.createdPlayer

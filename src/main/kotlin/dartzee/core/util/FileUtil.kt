@@ -1,5 +1,7 @@
 package dartzee.core.util
 
+import dartzee.logging.CODE_FILE_ERROR
+import dartzee.utils.InjectedThings.logger
 import java.awt.Component
 import java.awt.Dimension
 import java.io.ByteArrayOutputStream
@@ -14,11 +16,14 @@ import javax.swing.JFileChooser
 object FileUtil
 {
     fun deleteFileIfExists(filePath: String) =
-        try {
+        try
+        {
             val path = Paths.get(filePath)
             Files.deleteIfExists(path)
-        } catch (t: Throwable) {
-            Debug.stackTrace(t, "Failed to delete file")
+        }
+        catch (t: Throwable)
+        {
+            logger.error(CODE_FILE_ERROR, "Failed to delete file $filePath", t)
             false
         }
 
@@ -63,12 +68,12 @@ object FileUtil
                     return Dimension(width, height)
                 }
             }
-            catch (e: IOException) { Debug.stackTrace(e) }
+            catch (e: IOException) { logger.error(CODE_FILE_ERROR, "Failed to get img dimensions for $path", e) }
             finally { reader.dispose() }
         }
         else
         {
-            Debug.stackTrace("No reader found for file extension: $suffix (full path: $path)")
+            logger.error(CODE_FILE_ERROR, "No reader found for file extension: $suffix (full path: $path)")
         }
 
         return null
@@ -87,7 +92,8 @@ object FileUtil
     }
 
     fun getByteArrayForResource(resourcePath: String): ByteArray? =
-        try {
+        try
+        {
             javaClass.getResourceAsStream(resourcePath).use { `is` ->
                 ByteArrayOutputStream().use { baos ->
                     val b = ByteArray(4096)
@@ -98,8 +104,10 @@ object FileUtil
                     baos.toByteArray()
                 }
             }
-        } catch (ioe: IOException) {
-            Debug.stackTrace(ioe, "Failed to read classpath resource: $resourcePath")
+        }
+        catch (ioe: IOException)
+        {
+            logger.error(CODE_FILE_ERROR, "Failed to read classpath resource $resourcePath", ioe)
             null
         }
 
@@ -113,7 +121,6 @@ object FileUtil
         val option = fc.showDialog(comp, "Select")
         if (option != JFileChooser.APPROVE_OPTION)
         {
-            Debug.append("Cancelled directory selection")
             return null
         }
 

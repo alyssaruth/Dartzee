@@ -2,16 +2,21 @@ package dartzee.screen
 
 import com.mashape.unirest.http.Unirest
 import dartzee.`object`.DartsClient
-import dartzee.`object`.GameLauncher
 import dartzee.achievements.convertEmptyAchievements
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
 import dartzee.db.sanity.DatabaseSanityCheck
+import dartzee.logging.CODE_SCREEN_LOAD_ERROR
+import dartzee.logging.KEY_CURRENT_SCREEN
+import dartzee.logging.LoggingCode
+import dartzee.main.exitApplication
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
+import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.gameLauncher
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -29,7 +34,8 @@ private const val CMD_GUID = "guid"
 
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
-    var currentScreen: EmbeddedScreen? = null
+    override val windowName = "Main Window"
+    var currentScreen: EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
     init
     {
@@ -52,8 +58,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
         DartsDatabaseUtil.initialiseDatabase()
 
+        InjectedThings.esDestination.readOldLogs()
+
         addConsoleShortcut()
-        switchScreen(ScreenCache.getScreen(MenuScreen::class.java))
+        switchScreen(ScreenCache.get<MenuScreen>())
 
         //Pop up the change log if we've just updated
         if (DartsClient.justUpdated)
@@ -95,39 +103,38 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             override fun actionPerformed(e: ActionEvent)
             {
-                val loggingDialog = ScreenCache.loggingConsole
+                val loggingDialog = InjectedThings.loggingConsole
                 loggingDialog.isVisible = true
                 loggingDialog.toFront()
             }
         })
     }
 
-    fun switchScreen(scrn: EmbeddedScreen?, reInit: Boolean = true)
+    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true)
     {
         try
         {
             if (reInit)
             {
-                scrn!!.initialise()
+                scrn.initialise()
             }
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t, "Failed to load screen ${scrn?.getScreenName()}", true)
-            DialogUtil.showError("Error loading screen - " + scrn?.getScreenName())
+            logger.error(CODE_SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
+            DialogUtil.showError("Error loading screen - " + scrn.getScreenName())
             return
         }
 
-        if (this.currentScreen != null)
-        {
-            contentPane.remove(this.currentScreen!!)
-        }
+        contentPane.remove(this.currentScreen)
 
         this.currentScreen = scrn
-        contentPane.add(scrn!!, BorderLayout.CENTER)
+        contentPane.add(scrn, BorderLayout.CENTER)
 
         val screenName = scrn.getScreenName()
         title = "Darts - $screenName"
+
+        logger.addToContext(KEY_CURRENT_SCREEN, scrn.getScreenName())
 
         val desiredSize = scrn.getDesiredSize()
         if (desiredSize != null)
@@ -168,20 +175,19 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             val gameIdentifier = cmd.substring(CMD_LOAD_GAME.length)
             val localId = gameIdentifier.toLong()
             val gameId = GameEntity.getGameId(localId)
-            gameId?.let { GameLauncher.loadAndDisplayGame(gameId) }
+            gameId?.let { gameLauncher.loadAndDisplayGame(gameId) }
         }
         else if (cmd == CMD_CLEAR_CONSOLE)
         {
-            Debug.clearLogs()
+            InjectedThings.loggingConsole.clear()
         }
         else if (cmd == "dim")
         {
-            Debug.append("Current screen size: $size")
+            println("Current screen size: $size")
         }
         else if (cmd == CMD_EMPTY_SCREEN_CACHE)
         {
             ScreenCache.emptyCache()
-            Debug.append("Emptied screen cache.")
         }
         else if (cmd == CMD_SANITY)
         {
@@ -195,7 +201,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
 
-            Debug.append("Response tag: " + response.body.`object`.get("tag_name"))
+            println("Response tag: " + response.body.`object`.get("tag_name"))
         }
         else if (cmd == "load")
         {
@@ -203,7 +209,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == "stacktrace")
         {
-            Debug.stackTrace(message = "Testing", suppressError = true)
+            logger.error(LoggingCode("test"), "Testing stack trace")
         }
 
         return textToShow
@@ -218,6 +224,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
     override fun windowClosing(arg0: WindowEvent)
     {
-        ScreenCache.exitApplication()
+        exitApplication()
     }
 }

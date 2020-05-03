@@ -1,6 +1,5 @@
 package dartzee.utils
 
-import dartzee.core.util.Debug
 import java.util.prefs.Preferences
 
 object PreferenceUtil
@@ -15,7 +14,7 @@ object PreferenceUtil
     {
         val prefAndDefault = prefStr.split(PREFERENCE_DELIM_CHAR)
         if (prefAndDefault.size != 2) {
-            Debug.stackTrace("Unexpected preference format: $prefStr")
+            throw Exception("Unexpected preference format: $prefStr")
         }
         return Pair(prefAndDefault[0], prefAndDefault[1])
     }

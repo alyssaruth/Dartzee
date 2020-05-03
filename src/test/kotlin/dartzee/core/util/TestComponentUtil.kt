@@ -1,15 +1,13 @@
 package dartzee.core.util
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.mockk.mockk
 import org.junit.Test
 import java.awt.event.ActionListener
@@ -29,10 +27,10 @@ class TestComponentUtil: AbstractTest()
         panel.add(btn)
         panel.add(rdbtn)
 
-        getAllChildComponentsForType(panel, JButton::class.java).shouldContainExactly(btn)
-        getAllChildComponentsForType(panel, JRadioButton::class.java).shouldContainExactly(rdbtn)
-        getAllChildComponentsForType(panel, AbstractButton::class.java).shouldContainExactly(btn, rdbtn)
-        getAllChildComponentsForType(panel, JCheckBox::class.java).shouldBeEmpty()
+        panel.getAllChildComponentsForType<JButton>().shouldContainExactly(btn)
+        panel.getAllChildComponentsForType<JRadioButton>().shouldContainExactly(rdbtn)
+        panel.getAllChildComponentsForType<AbstractButton>().shouldContainExactly(btn, rdbtn)
+        panel.getAllChildComponentsForType<JCheckBox>().shouldBeEmpty()
     }
 
     @Test
@@ -52,7 +50,7 @@ class TestComponentUtil: AbstractTest()
         panel2.add(panel3)
         panel3.add(btn3)
 
-        getAllChildComponentsForType(panel, JButton::class.java).shouldContainExactly(btn1, btn2, btn3)
+        panel.getAllChildComponentsForType<JButton>().shouldContainExactly(btn1, btn2, btn3)
     }
 
     @Test
@@ -65,21 +63,18 @@ class TestComponentUtil: AbstractTest()
         panel.add(panel2)
         panel2.add(btnOne)
 
-        containsComponent(panel, btnOne) shouldBe true
-        containsComponent(panel2, btnOne) shouldBe true
+        panel.containsComponent(btnOne) shouldBe true
+        panel2.containsComponent(btnOne) shouldBe true
 
-        containsComponent(panel, JButton()) shouldBe false
+        panel.containsComponent(JButton()) shouldBe false
     }
 
     @Test
     fun `Should not create an empty ButtonGroup`()
     {
-        createButtonGroup()
-
-        val logs = getLogs()
-        exceptionLogged() shouldBe true
-        logs shouldContain("Trying to create empty ButtonGroup")
-        logs shouldContain("Debug.stackTrace")
+        shouldThrow<Exception> {
+            createButtonGroup()
+        }
     }
 
     @Test

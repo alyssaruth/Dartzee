@@ -11,19 +11,37 @@ import javax.swing.event.ChangeListener
 /**
  * Recurses through all child components, returning an ArrayList of all children of the appropriate type
  */
-fun <T> getAllChildComponentsForType(parent: Container, desiredClazz: Class<T>): MutableList<T>
+inline fun <reified T> Container.getAllChildComponentsForType(): List<T>
 {
     val ret = mutableListOf<T>()
 
-    val components = parent.components
-    addComponents(ret, components, desiredClazz)
+    val components = components
+    addComponents(ret, components, T::class.java)
 
     return ret
 }
 
+@Suppress("UNCHECKED_CAST")
+fun <T> addComponents(ret: MutableList<T>, components: Array<Component>, desiredClazz: Class<T>)
+{
+    for (comp in components)
+    {
+        if (desiredClazz.isInstance(comp))
+        {
+            ret.add(comp as T)
+        }
+
+        if (comp is Container)
+        {
+            val subComponents = comp.components
+            addComponents(ret, subComponents, desiredClazz)
+        }
+    }
+}
+
 fun Container.addActionListenerToAllChildren(listener: ActionListener)
 {
-    val children = getAllChildComponentsForType(this, JComponent::class.java)
+    val children = getAllChildComponentsForType<JComponent>()
     children.forEach {
         if (it is JComboBox<*>)
         {
@@ -45,7 +63,7 @@ fun Container.addActionListenerToAllChildren(listener: ActionListener)
 
 fun Container.addChangeListenerToAllChildren(listener: ChangeListener)
 {
-    val children = getAllChildComponentsForType(this, JComponent::class.java)
+    val children = getAllChildComponentsForType<JComponent>()
     children.forEach {
         if (it is JSpinner)
         {
@@ -59,31 +77,14 @@ fun Container.addChangeListenerToAllChildren(listener: ChangeListener)
 
 fun Container.enableChildren(enable: Boolean)
 {
-    getAllChildComponentsForType(this, Component::class.java).forEach{
+    getAllChildComponentsForType<Component>().forEach{
         it.isEnabled = enable
     }
 }
 
-private fun <T> addComponents(ret: MutableList<T>, components: Array<Component>, desiredClazz: Class<T>)
+fun Container.containsComponent(component: Component): Boolean
 {
-    for (comp in components)
-    {
-        if (desiredClazz.isInstance(comp))
-        {
-            ret.add(comp as T)
-        }
-
-        if (comp is Container)
-        {
-            val subComponents = comp.components
-            addComponents(ret, subComponents, desiredClazz)
-        }
-    }
-}
-
-fun containsComponent(parent: Container, component: Component): Boolean
-{
-    val list = getAllChildComponentsForType(parent, Component::class.java)
+    val list = getAllChildComponentsForType<Component>()
     return list.contains(component)
 }
 
@@ -91,8 +92,7 @@ fun createButtonGroup(vararg buttons: AbstractButton)
 {
     if (buttons.isEmpty())
     {
-        Debug.stackTrace("Trying to create empty ButtonGroup.")
-        return
+        throw Exception("Trying to create empty ButtonGroup.")
     }
 
     val bg = ButtonGroup()

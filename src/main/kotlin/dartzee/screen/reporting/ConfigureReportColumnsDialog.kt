@@ -8,7 +8,7 @@ import javax.swing.JPanel
 
 private val CONFIGURABLE_COLUMNS = listOf("Type", "Players", "Start Date", "Finish Date", "Match")
 
-class ConfigureReportColumnsDialog : SimpleDialog()
+class ConfigureReportColumnsDialog: SimpleDialog()
 {
     private val hmColumnNameToCheckBox = mutableMapOf<String, JCheckBox>()
 
@@ -37,12 +37,7 @@ class ConfigureReportColumnsDialog : SimpleDialog()
         }
     }
 
-    fun includeColumn(columnName: String): Boolean
-    {
-        val cb = hmColumnNameToCheckBox[columnName] ?: return true
-
-        return cb.isSelected
-    }
+    fun excludedColumns() = hmColumnNameToCheckBox.filterValues { !it.isSelected }.map { it.key }
 
     override fun okPressed()
     {

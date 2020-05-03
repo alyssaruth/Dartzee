@@ -1,6 +1,7 @@
 package dartzee.`object`
 
-import dartzee.core.util.Debug
+import dartzee.logging.CODE_FILE_ERROR
+import dartzee.utils.InjectedThings.logger
 
 object CheckoutSuggester
 {
@@ -34,7 +35,7 @@ object CheckoutSuggester
         }
         catch (t: Throwable)
         {
-            Debug.stackTrace(t, "Failed to read in checkouts - won't make suggestions")
+            logger.error(CODE_FILE_ERROR, "Failed to read in checkouts - won't make suggestions", t)
             mutableMapOf()
         }
     }

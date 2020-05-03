@@ -13,9 +13,9 @@ import java.sql.Timestamp
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class ReportingResultsScreen : EmbeddedScreen()
+class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReportColumnsDialog = ConfigureReportColumnsDialog()) : EmbeddedScreen()
 {
-    private var rp: ReportParameters? = null
+    var rp: ReportParameters? = null
     private var cachedRows = emptyList<Array<Any>>()
 
     private val btnConfigureColumns = JButton("Configure Columns...")
@@ -77,34 +77,26 @@ class ReportingResultsScreen : EmbeddedScreen()
 
     private fun stripOutRemovedColumns()
     {
-        val dlg = ScreenCache.getConfigureReportColumnsDialog()
-
         val columns = tableResults.columnCount
         for (i in columns - 1 downTo 0)
         {
             val columnName = tableResults.getColumnName(i)
-            if (!dlg.includeColumn(columnName))
+            if (configureColumnsDialog.excludedColumns().contains(columnName))
             {
                 tableResults.removeColumn(i)
             }
         }
     }
 
-    fun setReportParameters(rp: ReportParameters)
-    {
-        this.rp = rp
-    }
-
-    override fun getBackTarget() = ScreenCache.getScreen(ReportingSetupScreen::class.java)
+    override fun getBackTarget() = ScreenCache.get<ReportingSetupScreen>()
 
     override fun actionPerformed(arg0: ActionEvent)
     {
         when (arg0.source)
         {
             btnConfigureColumns -> {
-                val dlg = ScreenCache.getConfigureReportColumnsDialog()
-                dlg.setLocationRelativeTo(this)
-                dlg.isVisible = true
+                configureColumnsDialog.setLocationRelativeTo(this)
+                configureColumnsDialog.isVisible = true
 
                 buildTable(false)
             }

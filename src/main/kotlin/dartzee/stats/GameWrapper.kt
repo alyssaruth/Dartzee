@@ -2,8 +2,10 @@ package dartzee.stats
 
 import dartzee.`object`.Dart
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
-import dartzee.db.*
+import dartzee.db.DartEntity
+import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.HoleBreakdownWrapper
@@ -52,8 +54,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     {
         if (scoreCutOff < 62)
         {
-            Debug.stackTrace("Calculating scoring darts with cutoff that makes busts possible: $scoreCutOff")
-            return null
+            throw Exception("Calculating scoring darts with cutoff that makes busts possible: $scoreCutOff")
         }
 
         val allDartsInRounds = mutableListOf<MutableList<Dart>>()
@@ -82,8 +83,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
         if (isFinished())
         {
-            Debug.stackTrace("Unable to calculate scoring darts for finished game $localId. Score never went below threshold: $scoreCutOff")
-            return null
+            throw Exception("Unable to calculate scoring darts for finished game $localId. Score never went below threshold: $scoreCutOff")
         }
 
         //If we get to here, it's an unfinished game that never went below the threshold. THat's fine - just return what we've got.

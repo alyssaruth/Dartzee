@@ -1,6 +1,5 @@
 package dartzee.dartzee
 
-import dartzee.core.util.Debug
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import kotlin.random.Random
@@ -21,7 +20,7 @@ object DartzeeRandomiser
         val totalRule = if (hasTotalRule) getAllTotalRules().random().also { it.randomise() } else null
 
         val allowMisses = Random.nextInt(5) == 1
-        Debug.append("$dartRule, $totalRule, $allowMisses")
+
         return DartzeeRuleDto(dartRule?.dart1Rule, dartRule?.dart2Rule, dartRule?.dart3Rule, totalRule, dartRule?.inOrder ?: false, allowMisses)
     }
 

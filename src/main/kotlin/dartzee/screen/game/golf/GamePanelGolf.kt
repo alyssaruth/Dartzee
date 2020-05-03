@@ -6,6 +6,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapList
+import dartzee.core.util.doGolfMiss
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -15,8 +16,8 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
-        GamePanelFixedLength<DartsScorerGolf, Dartboard, DefaultPlayerState<DartsScorerGolf>>(parent, game)
+open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
+        GamePanelFixedLength<DartsScorerGolf, Dartboard, DefaultPlayerState<DartsScorerGolf>>(parent, game, totalPlayers)
 {
     //Number of rounds - 9 holes or 18?
     override val totalRounds = Integer.parseInt(game.gameParams)
@@ -71,7 +72,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity) :
             val noDarts = dartsThrown.size
 
             val model = getCurrentPlayerStrategy()
-            val stopThreshold = model!!.getStopThresholdForDartNo(noDarts)
+            val stopThreshold = model.getStopThresholdForDartNo(noDarts)
 
             return score <= stopThreshold
         }

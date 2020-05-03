@@ -2,10 +2,13 @@ package dartzee.achievements.rtc
 
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.achievements.AbstractAchievement
-import dartzee.core.util.Debug
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.CLOCK_TYPE_DOUBLES
+import dartzee.db.CLOCK_TYPE_STANDARD
+import dartzee.db.CLOCK_TYPE_TREBLES
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
 import java.sql.SQLException
@@ -66,7 +69,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(sb.toString(), sqle)
+            logger.logSqlException(sb.toString(), sb.toString(), sqle)
         }
     }
 

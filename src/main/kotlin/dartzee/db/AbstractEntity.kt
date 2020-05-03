@@ -1,9 +1,12 @@
 package dartzee.db
 
 import dartzee.core.util.DateStatics
-import dartzee.core.util.Debug
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
+import dartzee.game.MatchMode
+import dartzee.logging.CODE_INSTANTIATION_ERROR
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.KEY_SQL
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -77,23 +80,17 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return ret
     }
 
-    private fun factory(): E?
-    {
+    @Suppress("UNCHECKED_CAST")
+    private fun factory(): E? =
         try
         {
-            return javaClass.newInstance() as E
+            javaClass.newInstance() as E
         }
-        catch (iae: IllegalAccessException)
+        catch (t: Throwable)
         {
-            Debug.stackTrace(iae)
-            return null
+            logger.error(CODE_INSTANTIATION_ERROR, "Failed to instantiate ${javaClass.simpleName}", t)
+            null
         }
-        catch (iae: InstantiationException)
-        {
-            Debug.stackTrace(iae)
-            return null
-        }
-    }
 
 
     fun columnCanBeUnset(columnName: String) = getColumnsAllowedToBeUnset().contains(columnName)
@@ -109,7 +106,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val entities = retrieveEntities(whereSql)
         if (entities.size > 1)
         {
-            Debug.stackTrace("Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]")
+            logger.error(CODE_SQL_EXCEPTION,
+                    "Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]",
+                    Throwable(),
+                    KEY_SQL to whereSql)
         }
 
         return if (entities.isEmpty())
@@ -148,7 +148,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(query, sqle)
+            logger.logSqlException(query, "", sqle)
         }
 
         return ret
@@ -161,7 +161,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         {
             if (stackTraceIfNotFound)
             {
-                Debug.stackTrace("Failed to find ${getTableName()} for ID [$rowId]")
+                logger.error(CODE_SQL_EXCEPTION,
+                        "Failed to find ${getTableName()} for ID [$rowId]",
+                        Throwable(),
+                        KEY_SQL to "RowId = '$rowId'")
             }
 
             return null
@@ -169,7 +172,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
         if (entities.size > 1)
         {
-            Debug.stackTrace("Found ${entities.size} ${getTableName()} rows for ID [$rowId]")
+            logger.error(CODE_SQL_EXCEPTION,
+                    "Found ${entities.size} ${getTableName()} rows for ID [$rowId]",
+                    Throwable(),
+                    KEY_SQL to "RowId = '$rowId'")
         }
 
         return entities[0]
@@ -180,6 +186,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
         return DatabaseUtil.executeUpdate(sql)
     }
+
+    fun deleteAll() = DatabaseUtil.executeUpdate("DELETE FROM ${getTableName()}")
 
     fun deleteWhere(whereSql: String): Boolean
     {
@@ -203,7 +211,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
     private fun updateDatabaseRow()
     {
-        var updateQuery = buildUpdateQuery()
+        val genericUpdate = buildUpdateQuery()
+        var updateQuery = genericUpdate
 
         val conn = DatabaseUtil.borrowConnection()
         try
@@ -215,18 +224,21 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
                 val timer = DurationTimer()
                 psUpdate.executeUpdate()
 
-                logger.logSql(updateQuery, psUpdate.toString(), timer.getDuration())
+                logger.logSql(updateQuery, genericUpdate, timer.getDuration())
 
                 val updateCount = psUpdate.updateCount
                 if (updateCount == 0)
                 {
-                    Debug.stackTrace("0 rows updated: $updateQuery")
+                    logger.error(CODE_SQL_EXCEPTION,
+                            "0 rows updated for statement $updateQuery",
+                            Throwable(),
+                            KEY_SQL to updateQuery)
                 }
             }
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(updateQuery, sqle)
+            logger.logSqlException(updateQuery, genericUpdate, sqle)
         }
         finally
         {
@@ -247,7 +259,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
     private fun insertIntoDatabase()
     {
-        var insertQuery = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
+        val genericInsert = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
+        var insertQuery = genericInsert
 
         val conn = DatabaseUtil.borrowConnection()
         try
@@ -257,7 +270,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
                 val timer = DurationTimer()
                 psInsert.executeUpdate()
-                logger.logSql(insertQuery, psInsert.toString(), timer.getDuration())
+                logger.logSql(insertQuery, genericInsert, timer.getDuration())
 
                 //Set this so we can call save() again on the same object and get the right behaviour
                 retrievedFromDb = true
@@ -265,7 +278,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
         catch (sqle: SQLException)
         {
-            Debug.logSqlException(insertQuery, sqle)
+            logger.logSqlException(insertQuery, genericInsert, sqle)
         }
         finally
         {
@@ -308,7 +321,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return createdTable
     }
 
-    fun createIndexes()
+    private fun createIndexes()
     {
         //Also create the indexes
         val indexes = mutableListOf<List<String>>()
@@ -325,60 +338,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val indexName = columnList.replace(", ", "_")
 
         val statement = "CREATE INDEX $indexName ON ${getTableName()}($columnList)"
-        val success = DatabaseUtil.executeUpdate(statement)
-        if (!success)
-        {
-            Debug.append("Failed to create index $indexName on ${getTableName()}")
-        }
-    }
-
-    fun addIntColumn(columnName: String): Boolean
-    {
-        return addColumn(columnName, "INT", "-1")
-    }
-
-    fun addStringColumn(columnName: String, length: Int): Boolean
-    {
-        return addColumn(columnName, "VARCHAR($length)", "''")
-    }
-
-    private fun addColumn(columnName: String, dataType: String, defaultValue: String): Boolean
-    {
-        if (columnExists(columnName))
-        {
-            Debug.append("Not adding column $columnName to ${getTableName()} as it already exists")
-            return false
-        }
-
-        val sql = "ALTER TABLE ${getTableName()} ADD COLUMN $columnName $dataType NOT NULL DEFAULT $defaultValue"
-        val addedColumn = DatabaseUtil.executeUpdate(sql)
-        if (!addedColumn)
-        {
-            return false
-        }
-
-        //We've added the column, now attempt to drop the default.
-        val defaultSql = "ALTER TABLE ${getTableName()} ALTER COLUMN $columnName DEFAULT NULL"
-        return DatabaseUtil.executeUpdate(defaultSql)
-    }
-
-    private fun columnExists(columnName: String): Boolean
-    {
-        val columnNameUpperCase = columnName.toUpperCase()
-        val tableName = getTableNameUpperCase()
-
-        val sb = StringBuilder()
-        sb.append("SELECT COUNT(1) ")
-        sb.append("FROM sys.systables t, sys.syscolumns c ")
-        sb.append("WHERE c.ReferenceId = t.TableId ")
-        sb.append("AND t.TableName = '")
-        sb.append(tableName)
-        sb.append("' AND c.ColumnName = '")
-        sb.append(columnNameUpperCase)
-        sb.append("'")
-
-        val count = DatabaseUtil.executeQueryAggregate(sb)
-        return count > 0
+        DatabaseUtil.executeUpdate(statement)
     }
 
     fun getColumnsForSelectStatement(alias: String = ""): String
@@ -501,6 +461,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
             Blob::class.java -> rs.getBlob(columnName)
             Double::class.java -> rs.getDouble(columnName)
             GameType::class.java -> GameType.valueOf(rs.getString(columnName))
+            MatchMode::class.java -> MatchMode.valueOf(rs.getString(columnName))
             else -> null
         }
     }

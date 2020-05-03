@@ -1,6 +1,5 @@
 package dartzee.screen.stats.player
 
-import dartzee.core.util.Debug
 import dartzee.core.util.containsComponent
 import dartzee.stats.GameWrapper
 import java.awt.Component
@@ -31,8 +30,7 @@ abstract class AbstractStatisticsTab : JPanel(), PropertyChangeListener
     {
         if (container.layout !is GridLayout)
         {
-            Debug.stackTrace("Calling method with inappropriate layout: $layout")
-            return
+            throw Exception("Calling method with inappropriate layout: $layout")
         }
 
         if (!includeOtherComparison())
@@ -40,7 +38,7 @@ abstract class AbstractStatisticsTab : JPanel(), PropertyChangeListener
             container.layout = GridLayout(0, 1, 0, 0)
             container.remove(otherComponent)
         }
-        else if (!containsComponent(container, otherComponent))
+        else if (!container.containsComponent(otherComponent))
         {
             container.layout = GridLayout(0, 2, 0, 0)
             container.add(otherComponent)

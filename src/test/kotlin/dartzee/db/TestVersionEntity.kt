@@ -1,8 +1,9 @@
 package dartzee.db
 
-import dartzee.core.helper.exceptionLogged
 import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.helper.wipeTable
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import dartzee.utils.DartsDatabaseUtil
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -27,7 +28,6 @@ class TestVersionEntity: AbstractEntityTest<VersionEntity>()
         insertVersion()
 
         VersionEntity.retrieveCurrentDatabaseVersion()!!.version shouldBe DartsDatabaseUtil.DATABASE_VERSION
-        exceptionLogged() shouldBe false
     }
 
     @Test
@@ -39,6 +39,7 @@ class TestVersionEntity: AbstractEntityTest<VersionEntity>()
         insertVersion()
 
         VersionEntity.retrieveCurrentDatabaseVersion()!!.version shouldBe DartsDatabaseUtil.DATABASE_VERSION
-        exceptionLogged() shouldBe true
+        val error = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        error.message shouldBe "Retrieved 2 rows from Version. Expected 1. WhereSQL [1 = 1]"
     }
 }

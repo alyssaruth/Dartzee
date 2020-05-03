@@ -22,7 +22,7 @@ class TestTableModelDialog: AbstractTest()
         tmd.isModal shouldBe true
         tmd.allowCancel() shouldBe false
 
-        getAllChildComponentsForType(tmd, table.javaClass).shouldContainExactly(table)
+        tmd.getAllChildComponentsForType<ScrollTable>().shouldContainExactly(table)
     }
 
     @Test

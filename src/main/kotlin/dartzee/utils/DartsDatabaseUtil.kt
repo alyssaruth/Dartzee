@@ -1,12 +1,13 @@
 package dartzee.utils
 
 import dartzee.core.screen.ProgressDialog
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
 import dartzee.db.VersionEntity.Companion.insertVersion
+import dartzee.logging.*
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.logger
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
 import java.sql.DriverManager
@@ -20,8 +21,8 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    private const val MIN_DB_VERSION_FOR_CONVERSION = 7
-    const val DATABASE_VERSION = 11
+    const val MIN_DB_VERSION_FOR_CONVERSION = 8
+    const val DATABASE_VERSION = 12
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -38,7 +39,8 @@ object DartsDatabaseUtil
                 DartzeeRuleEntity(),
                 DartzeeTemplateEntity(),
                 DartzeeRoundResultEntity(),
-                X01FinishEntity())
+                X01FinishEntity(),
+                PendingLogsEntity())
     }
 
     fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
@@ -63,12 +65,14 @@ object DartsDatabaseUtil
         VersionEntity().createTable()
         val version = VersionEntity.retrieveCurrentDatabaseVersion()
 
+        logger.addToContext(KEY_DB_VERSION, version?.version)
+
         DialogUtil.dismissLoadingDialog()
 
         initialiseDatabase(version)
     }
 
-    private fun initialiseDatabase(version: VersionEntity?)
+    fun initialiseDatabase(version: VersionEntity?)
     {
         if (version == null)
         {
@@ -80,33 +84,27 @@ object DartsDatabaseUtil
         if (versionNumber == DATABASE_VERSION)
         {
             //nothing to do
-            Debug.append("Database versions match.")
+            logger.info(CODE_DATABASE_UP_TO_DATE, "Database is up to date")
             return
         }
-        else if (versionNumber < MIN_DB_VERSION_FOR_CONVERSION)
+
+        if (versionNumber < MIN_DB_VERSION_FOR_CONVERSION)
         {
             val dbDetails = "Your version: $versionNumber, min supported: $MIN_DB_VERSION_FOR_CONVERSION, current: $DATABASE_VERSION"
-            Debug.append("Below the minimum version for conversion, aborting - $dbDetails")
+            logger.warn(CODE_DATABASE_TOO_OLD, "Database too old, exiting. $dbDetails")
             DialogUtil.showError("Your database is too out-of-date to run this version of Dartzee. " +
                     "Please downgrade to an earlier version so that your data can be converted.\n\n$dbDetails")
 
             exitProcess(1)
         }
-        else if (versionNumber == 7)
+
+        logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${versionNumber + 1}")
+
+        if (versionNumber == 8)
         {
-            runSqlScriptsForVersion(8)
-            version.version = 8
-            version.saveToDatabase()
-        }
-        else if (versionNumber == 8)
-        {
-            Debug.appendBanner("Upgrading to Version 9")
             DartzeeRuleEntity().createTable()
             DartzeeTemplateEntity().createTable()
             DartzeeRoundResultEntity().createTable()
-
-            version.version = 9
-            version.saveToDatabase()
         }
         else if (versionNumber == 9)
         {
@@ -114,21 +112,25 @@ object DartsDatabaseUtil
             runConversions(10,
                     *scripts,
                     { X01FinishConversion.convertX01Finishes() })
-
-            version.version = 10
-            version.saveToDatabase()
         }
         else if (versionNumber == 10)
         {
             runSqlScriptsForVersion(11)
 
+            PendingLogsEntity().createTable()
+
             //Added "ScoringSegments"
             DartzeeRuleConversion.convertDartzeeRules()
-
-            version.version = 11
-            version.saveToDatabase()
+        }
+        else if (versionNumber == 11)
+        {
+            runSqlScriptsForVersion(12)
         }
 
+        version.version = versionNumber + 1
+        version.saveToDatabase()
+
+        logger.addToContext(KEY_DB_VERSION, version.version)
         initialiseDatabase(version)
     }
 
@@ -148,8 +150,6 @@ object DartsDatabaseUtil
 
         t.start()
         t.join()
-
-        Debug.appendBanner("Finished upgrading database")
     }
     private fun runSqlScriptsForVersion(version: Int)
     {
@@ -169,9 +169,9 @@ object DartsDatabaseUtil
     {
         return when(version)
         {
-            8 -> listOf("1. Dart.sql", "2. Round.sql")
             10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
             11 -> listOf("1. Game.sql")
+            12 -> listOf("1. DartsMatch.sql")
             else -> listOf()
         }
     }
@@ -179,15 +179,13 @@ object DartsDatabaseUtil
     private fun initDatabaseFirstTime()
     {
         DialogUtil.showLoadingDialog("Initialising database, please wait...")
-        Debug.appendBanner("Initting database for the first time")
+        logger.info(CODE_DATABASE_CREATING, "Initialising empty database")
 
         insertVersion()
-
-        Debug.append("Saved database version of $DATABASE_VERSION")
-
         createAllTables()
 
-        Debug.appendBanner("Finished initting database")
+        logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)
+        logger.info(CODE_DATABASE_CREATED, "Finished creating database")
         DialogUtil.dismissLoadingDialog()
     }
 
@@ -205,7 +203,7 @@ object DartsDatabaseUtil
     {
         val dbFolder = File(DatabaseUtil.DATABASE_FILE_PATH)
 
-        Debug.append("About to start DB backup")
+        logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
         val file = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
@@ -223,14 +221,14 @@ object DartsDatabaseUtil
 
     fun restoreDatabase()
     {
-        Debug.append("About to start DB restore")
+        logger.info(CODE_STARTING_RESTORE, "About to start DB restore")
 
         if (!checkAllGamesAreClosed())
         {
             return
         }
 
-        val directoryFrom = selectAndValidateNewDatabase("restore from.")
+        val directoryFrom = selectAndValidateNewDatabase()
                 ?: //Cancelled, or invalid
                 return
 
@@ -239,7 +237,6 @@ object DartsDatabaseUtil
         val option = DialogUtil.showQuestion(confirmationQ, false)
         if (option == JOptionPane.NO_OPTION)
         {
-            Debug.append("Restore cancelled.")
             return
         }
 
@@ -263,7 +260,6 @@ object DartsDatabaseUtil
         val error = FileUtil.swapInFile(DatabaseUtil.DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
         if (error != null)
         {
-            Debug.stackTraceSilently("Failed to swap in new database for restore: $error")
             DialogUtil.showError("Failed to restore database. Error: $error")
             return
         }
@@ -272,9 +268,9 @@ object DartsDatabaseUtil
         exitProcess(0)
     }
 
-    private fun selectAndValidateNewDatabase(messageSuffix: String): File?
+    private fun selectAndValidateNewDatabase(): File?
     {
-        DialogUtil.showInfo("Select the 'Databases' folder you want to $messageSuffix")
+        DialogUtil.showInfo("Select the 'Databases' folder you want to restore from.")
         val directoryFrom = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
                 return null
@@ -283,7 +279,6 @@ object DartsDatabaseUtil
         val name = directoryFrom.name
         if (name != "Databases")
         {
-            Debug.append("Aborting - selected folder invalid: $directoryFrom")
             DialogUtil.showError("Selected path is not valid - you must select a folder named 'Databases'")
             return null
         }
@@ -303,9 +298,8 @@ object DartsDatabaseUtil
     private fun checkAllGamesAreClosed(): Boolean
     {
         val openScreens = ScreenCache.getDartsGameScreens()
-        if (!openScreens.isEmpty())
+        if (openScreens.isNotEmpty())
         {
-            Debug.append("Aborting - there are games still open.")
             DialogUtil.showError("You must close all open games before continuing.")
             return false
         }

@@ -124,7 +124,7 @@ class TestSwingExtensions: AbstractTest()
 
         tf.layout.shouldBeInstanceOf<BorderLayout>()
 
-        val ghostText = getAllChildComponentsForType(tf, GhostText::class.java).first()
+        val ghostText = tf.getAllChildComponentsForType<GhostText>().first()
         ghostText.text shouldBe "Hello"
     }
 

@@ -1,38 +1,21 @@
 package dartzee.utils
 
-import dartzee.core.helper.getLogs
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
+import dartzee.logging.CODE_NO_STREAMS
+import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class TestResourceCache : AbstractRegistryTest()
+class TestResourceCache : AbstractTest()
 {
     override fun beforeEachTest()
     {
         super.beforeEachTest()
         ResourceCache.resetCache()
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, true)
-    }
-
-    override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES)
-
-    @Test
-    fun `Should not pre-load any WAVs if the preference is disabled`()
-    {
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES, false)
-
-        ResourceCache.initialiseResources()
-        getLogs() shouldContain "Not pre-loading WAVs as preference is disabled"
-
-        ResourceCache.isInitialised shouldBe false
-        val stream = ResourceCache.borrowInputStream("140")
-        stream shouldBe null
     }
 
     @Test
@@ -67,10 +50,11 @@ class TestResourceCache : AbstractRegistryTest()
         ResourceCache.borrowInputStream("100") shouldNotBe null
         ResourceCache.borrowInputStream("100") shouldNotBe null
         ResourceCache.borrowInputStream("100") shouldNotBe null
-        getLogs() shouldNotContain "No streams left for WAV [100], will spawn another"
+        verifyNoLogs(CODE_NO_STREAMS)
 
         ResourceCache.borrowInputStream("100") shouldNotBe null
-        getLogs() shouldContain "No streams left for WAV [100], will spawn another"
+        val log = verifyLog(CODE_NO_STREAMS, Severity.WARN)
+        log.message shouldBe "No streams left for WAV [100], will spawn another"
     }
 
     @Test
@@ -87,7 +71,7 @@ class TestResourceCache : AbstractRegistryTest()
         val newWav = ResourceCache.borrowInputStream("100")
         newWav shouldBe wav1
 
-        getLogs() shouldNotContain "No streams left for WAV [100], will spawn another"
+        verifyNoLogs(CODE_NO_STREAMS)
     }
 
     @Test

@@ -30,7 +30,7 @@ open class ScrollTable : JPanel(), TableColumnModelListener,
             return isEditable(arg0, arg1)
         }
     }
-    private val lblRowCount = JLabel("<Row Count>")
+    val lblRowCount = JLabel("<Row Count>")
     private val panelRowCount = JPanel()
     private val tableFooter: JTable = object : JTable() {
         override fun isCellEditable(row: Int, column: Int): Boolean {

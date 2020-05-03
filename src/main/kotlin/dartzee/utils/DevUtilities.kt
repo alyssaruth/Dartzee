@@ -19,9 +19,7 @@ object DevUtilities
         }
 
         val choice = DialogUtil.showInput("Delete Game", "Select Game ID", gameIds, gameIds[0]) ?: return
-
-        val gameId = choice
-        purgeGame(gameId)
+        purgeGame(choice)
     }
     private fun getAllGameIds(): Array<Long>?
     {

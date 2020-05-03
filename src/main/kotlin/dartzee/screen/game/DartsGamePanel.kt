@@ -22,6 +22,7 @@ import dartzee.screen.game.scorer.DartsScorer
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.stats.PlayerSummaryStats
 import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import java.awt.BorderLayout
@@ -35,17 +36,14 @@ import java.sql.SQLException
 import java.util.*
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState<S>>(protected val parentWindow: AbstractDartsGameScreen, val gameEntity: GameEntity) :
-        PanelWithScorers<S>(),
-        DartboardListener,
-        ActionListener,
-        MouseListener
+abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState<S>>(
+        protected val parentWindow: AbstractDartsGameScreen,
+        val gameEntity: GameEntity,
+        protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener
 {
     private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
 
-    protected var totalPlayers = -1
-
-    var gameTitle = ""
+    val gameTitle = makeGameTitle()
 
     //Transitive things
     var currentPlayerNumber = 0
@@ -86,15 +84,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         return totalPlayers - getActiveCount() + 1
     }
 
-    protected fun getCurrentPlayerStrategy(): AbstractDartsModel?
+    protected fun getCurrentPlayerStrategy(): AbstractDartsModel
     {
         val participant = getCurrentParticipant()
-        if (!participant.isAi())
-        {
-            Debug.stackTrace("Trying to get current strategy for human player: $participant")
-            return null
-        }
-
         return participant.getModel()
     }
 
@@ -162,6 +154,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         addMouseListener(this)
 
         dartboard.renderScoreLabels = true
+
+        initScorers(totalPlayers)
     }
 
 
@@ -217,8 +211,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         currentRoundNumber = newRoundNo
         updateLastRoundNumber(currentPlayerNumber, newRoundNo)
 
-        Debug.appendBanner(activeScorer.playerName + ": Round " + newRoundNo, VERBOSE_LOGGING)
-
         btnReset.isEnabled = false
         btnConfirm.isEnabled = false
 
@@ -246,31 +238,12 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         slider.value = defaultSpd
     }
 
-
-    fun initBasic(totalPlayers: Int)
+    private fun makeGameTitle(): String
     {
-        this.totalPlayers = totalPlayers
-
         val gameNo = gameEntity.localId
         val gameDesc = gameEntity.getTypeDesc()
-        gameTitle = "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
-
-        initScorers(totalPlayers)
+        return "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
     }
-
-    fun loadGameInCatch()
-    {
-        try
-        {
-            loadGame()
-        }
-        catch (t: Throwable)
-        {
-            Debug.stackTrace(t)
-            DialogUtil.showError("Failed to load Game #${gameEntity.localId}")
-        }
-    }
-
 
     fun loadGame()
     {
@@ -397,7 +370,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             }
             catch (sqle: SQLException)
             {
-                Debug.logSqlException(sql, sqle)
+                logger.logSqlException(sql, sql, sqle)
                 throw sqle
             }
 
@@ -425,7 +398,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         if (maxRounds == 0)
         {
             //The game literally hasn't started yet. No one has completed a round.
-            Debug.append("MaxRounds = 0, so setting CurrentPlayerNumber = 0 as game hasn't started.")
             currentPlayerNumber = 0
             return
         }
@@ -444,14 +416,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
         val lastPlayerNumber = DatabaseUtil.executeQueryAggregate(sb)
         currentPlayerNumber = getNextPlayerNumber(lastPlayerNumber)
-
-        Debug.append("MaxRounds = $maxRounds, CurrentPlayerNumber = $currentPlayerNumber")
     }
 
     fun allPlayersFinished()
     {
-        Debug.append("All players now finished.", VERBOSE_LOGGING)
-
         if (!gameEntity.isFinished())
         {
             gameEntity.dtFinish = getSqlDateNow()
@@ -479,7 +447,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         if (!parentWindow.isVisible)
         {
-            Debug.append("Game window has been closed, stopping throwing.")
             return true
         }
 
@@ -553,8 +520,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     override fun dartThrown(dart: Dart)
     {
-        Debug.append("Hit $dart", VERBOSE_LOGGING)
-
         dartsThrown.add(dart)
         activeScorer.addDart(dart)
 
@@ -707,7 +672,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         when (source)
         {
             btnReset -> {
-                Debug.append("Reset pressed.")
                 resetRound()
                 readyForThrow()
             }
@@ -804,30 +768,28 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
                 return
             }
 
-            val model = getCurrentPlayerStrategy()!!
+            val model = getCurrentPlayerStrategy()
             doAiTurn(model)
         }
     }
 
     companion object
     {
-        const val VERBOSE_LOGGING = false
-
-        fun factory(parent: AbstractDartsGameScreen, game: GameEntity) =
+        fun factory(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) =
             when (game.gameType)
             {
-                GameType.X01 -> GamePanelX01(parent, game)
-                GameType.GOLF -> GamePanelGolf(parent, game)
-                GameType.ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game)
-                GameType.DARTZEE -> constructGamePanelDartzee(parent, game)
+                GameType.X01 -> GamePanelX01(parent, game, totalPlayers)
+                GameType.GOLF -> GamePanelGolf(parent, game, totalPlayers)
+                GameType.ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game, totalPlayers)
+                GameType.DARTZEE -> constructGamePanelDartzee(parent, game, totalPlayers)
             }
 
-        fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelDartzee
+        fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int): GamePanelDartzee
         {
             val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
             val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(dtos))
 
-            return GamePanelDartzee(parent, game, dtos, summaryPanel)
+            return GamePanelDartzee(parent, game, totalPlayers, dtos, summaryPanel)
         }
     }
 }

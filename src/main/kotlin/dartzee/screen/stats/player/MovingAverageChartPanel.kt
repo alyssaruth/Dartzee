@@ -45,12 +45,12 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) : JP
     private fun adjustTickboxes()
     {
         //Remove checkboxes that are no longer relevant (e.g. just removed a comparison)
-        getAllChildComponentsForType(panelCheckBoxes, JCheckBox::class.java).forEach {
+        panelCheckBoxes.getAllChildComponentsForType<JCheckBox>().forEach {
             if (getGraphSeriesIndexForCheckBox(it) == -1) panelCheckBoxes.remove(it)
         }
 
         //Go through what's left and add any others that are required by the graph (e.g. just added a comparison)
-        val checkBoxes = getAllChildComponentsForType(panelCheckBoxes, JCheckBox::class.java)
+        val checkBoxes = panelCheckBoxes.getAllChildComponentsForType<JCheckBox>()
         val allSeries: List<XYSeries> = graphCollection.getXYSeries()
         allSeries.forEach {
             val key = "${it.key}"

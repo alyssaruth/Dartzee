@@ -3,6 +3,7 @@ package dartzee.screen.game.rtc
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.game.state.DefaultPlayerState
+import dartzee.helper.insertPlayer
 import dartzee.helper.makeDart
 import dartzee.helper.makeDefaultPlayerStateWithRounds
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
@@ -37,6 +38,24 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
         state.addDarts(listOf(makeDart(15, 1, startingScore = 2), makeDart(17, 1, startingScore = 2), makeDart(2, 0, startingScore = 2)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Most darts") shouldBe 4
+    }
+
+    @Test
+    fun `Should separate out participants when calculating most fewest and avg darts`()
+    {
+        val roundOne = listOf(makeDart(5, 1, startingScore = 1), makeDart(1, 0, startingScore = 1), makeDart(1, 3, startingScore = 1))
+        val roundOneOther = listOf(makeDart(1, 1, startingScore = 1), makeDart(2, 0, startingScore = 2), makeDart(17, 1, startingScore = 2))
+
+        val player = insertPlayer()
+        val stateOne = makeDefaultPlayerStateWithRounds<DartsScorerRoundTheClock>(player, dartsThrown = listOf(roundOne))
+        val stateTwo = makeDefaultPlayerStateWithRounds<DartsScorerRoundTheClock>(player, dartsThrown = listOf(roundOneOther))
+
+        val statsPanel = GameStatisticsPanelRoundTheClock(CLOCK_TYPE_STANDARD)
+        statsPanel.showStats(listOf(stateOne, stateTwo))
+
+        statsPanel.getValueForRow("Most darts") shouldBe 3
+        statsPanel.getValueForRow("Avg darts") shouldBe 2.0
+        statsPanel.getValueForRow("Fewest darts") shouldBe 1
     }
 
     @Test
@@ -156,7 +175,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
         statsPanel.shouldHaveBreakdownState(mapOf("2 - 3" to 1))
 
         //6
-        state = state.copy(darts = mutableListOf(missRound, hitRound))
+        state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4 - 6" to 1))
 

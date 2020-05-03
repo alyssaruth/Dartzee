@@ -1,8 +1,12 @@
 package dartzee.utils
 
+import dartzee.`object`.GameLauncher
 import dartzee.dartzee.*
+import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
-import dartzee.screen.ScreenCache
+import dartzee.logging.LoggerFactory
+import dartzee.logging.LoggingConsole
+import dartzee.screen.ChangeLog
 import java.time.Clock
 
 object InjectedThings
@@ -13,5 +17,9 @@ object InjectedThings
     var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
     var clock: Clock = Clock.systemUTC()
-    var logger: Logger = Logger(listOf(ScreenCache.loggingConsole))
+    val loggingConsole = LoggingConsole()
+    var esDestination = LoggerFactory.constructElasticsearchDestination()
+    var logger: Logger = Logger(listOf(loggingConsole, LogDestinationSystemOut(), esDestination))
+    var gameLauncher: GameLauncher = GameLauncher()
+    var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true }}
 }

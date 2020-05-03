@@ -1,9 +1,8 @@
 package dartzee.ai
 
 import dartzee.`object`.Dart
-import dartzee.core.util.Debug
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.screen.Dartboard
 
 private const val ROUNDS = 18
@@ -42,11 +41,6 @@ class DartsSimulationGolf(dartboard: Dartboard, player: PlayerEntity, model: Abs
         val drt = dartsThrown.last()
         val roundScore = drt.getGolfScore(currentRound)
         score += roundScore
-
-        Debug.appendBanner("Round $currentRound", logging)
-        Debug.append("Darts [$dartsThrown]", logging)
-        Debug.append("Score [$roundScore]", logging)
-        Debug.append("Total Score [${getTotalScore()}]", logging)
 
         currentRound++
     }

@@ -32,4 +32,13 @@ class TestLogRecord: AbstractTest()
 
         record.getThrowableStr() shouldBe "$CURRENT_TIME_STRING   ${extractStackTrace(t)}"
     }
+
+    @Test
+    fun `Should convert to valid JSON string`()
+    {
+        val record = makeLogRecord(loggingCode = LoggingCode("someEvent"), keyValuePairs = mapOf("devMode" to true, "currentScreen" to null))
+
+        val str = record.toJsonString()
+        str shouldBe """{"severity":"INFO","currentScreen":"null","devMode":"true","loggingCode":"someEvent","message":"A thing happened","timestamp":"2020-04-13T11:04:00Z"}"""
+    }
 }

@@ -6,7 +6,9 @@ import dartzee.achievements.*
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
+import dartzee.core.util.doBadLuck
+import dartzee.core.util.doFawlty
+import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
@@ -15,7 +17,7 @@ import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 
-open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerX01>(parent, game)
+open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerX01>(parent, game, totalPlayers)
 {
     //Transient variables for each round
     private var startingScore = -1
@@ -216,7 +218,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity) : Gam
     {
         if (shouldStopForMercyRule(model, startingScore, currentScore))
         {
-            Debug.append("MERCY RULE", VERBOSE_LOGGING)
             stopThrowing()
         }
         else

@@ -1,15 +1,15 @@
 package dartzee.db
 
-import dartzee.core.helper.exceptionLogged
-import dartzee.core.helper.getLogs
 import dartzee.helper.*
 import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import dartzee.utils.DatabaseUtil
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldBeSortedWith
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeSortedWith
-import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -35,7 +35,7 @@ class TestBulkInserter: AbstractTest()
     {
         clearLogs()
         BulkInserter.insert()
-        getLogs().shouldBeEmpty()
+        getLogRecords().shouldBeEmpty()
     }
 
     @Test
@@ -48,7 +48,8 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert(playerOne, playerTwo)
 
-        exceptionLogged() shouldBe true
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.message shouldBe "Attempting to bulk insert Player entities, but some are already in the database"
         getCountFromTable("Player") shouldBe 1
     }
 
@@ -64,8 +65,9 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert(playerOne, playerTwo)
 
-        exceptionLogged() shouldBe true
-        getLogs().shouldContain("duplicate key value")
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.errorObject?.message shouldContain "duplicate key value"
+
         getCountFromTable("Player") shouldBe 0
     }
 

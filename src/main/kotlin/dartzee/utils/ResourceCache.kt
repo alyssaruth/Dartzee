@@ -1,8 +1,12 @@
 package dartzee.utils
 
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
 import dartzee.core.util.DialogUtil
+import dartzee.logging.CODE_LOADED_RESOURCES
+import dartzee.logging.CODE_NO_STREAMS
+import dartzee.logging.CODE_RESOURCE_LOAD_ERROR
+import dartzee.utils.InjectedThings.logger
+import java.awt.Font
 import java.io.BufferedInputStream
 import java.net.URL
 import javax.sound.sampled.AudioInputStream
@@ -43,6 +47,8 @@ object ResourceCache
     val URL_ACHIEVEMENT_GOLF_COURSE_MASTER: URL = javaClass.getResource("/achievements/courseMaster.png")
     val URL_ACHIEVEMENT_DARTZEE_GAMES_WON: URL = javaClass.getResource("/achievements/trophyDartzee.png")
 
+    val BASE_FONT: Font = Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/trebuc.ttf"))
+
     private val wavPoolLock = Any()
     private val hmWavToInputStreams = HashMapList<String, AudioInputStream>()
 
@@ -57,19 +63,11 @@ object ResourceCache
 
     fun initialiseResources()
     {
-        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_PRE_LOAD_RESOURCES))
-        {
-            Debug.append("Not pre-loading WAVs as preference is disabled")
-            return
-        }
-
         try
         {
             DialogUtil.showLoadingDialog("Loading resources...")
 
             val wavFiles = getWavFiles()
-
-            Debug.append("Pre-loading " + wavFiles.size + " WAVs")
 
             for (wavFile in wavFiles)
             {
@@ -82,12 +80,12 @@ object ResourceCache
                 }
             }
 
-            Debug.append("Finished pre-loading")
+            logger.info(CODE_LOADED_RESOURCES, "Finished loading ${wavFiles.size} resources")
             isInitialised = true
         }
         catch (e: Exception)
         {
-            Debug.stackTrace(e)
+            logger.error(CODE_RESOURCE_LOAD_ERROR, "Failed to load resources", e)
         }
         finally
         {
@@ -106,7 +104,7 @@ object ResourceCache
 
             if (streams.isEmpty())
             {
-                Debug.append("No streams left for WAV [$wavName], will spawn another")
+                logger.warn(CODE_NO_STREAMS, "No streams left for WAV [$wavName], will spawn another")
 
                 val ais = getAudioInputStream(wavFile)
                 ais.mark(Integer.MAX_VALUE)

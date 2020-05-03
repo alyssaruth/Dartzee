@@ -115,7 +115,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
     }
 
     class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD))
+        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD), 1)
     {
         init
         {

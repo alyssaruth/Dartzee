@@ -10,6 +10,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
 import dartzee.game.GameType
+import dartzee.game.MatchMode
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
@@ -24,9 +25,9 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
-fun insertPlayerForGame(name: String, gameId: String): PlayerEntity
+fun insertPlayerForGame(name: String, gameId: String, strategy: Int = 1): PlayerEntity
 {
-    val player = insertPlayer(name = name)
+    val player = insertPlayer(name = name, strategy = strategy)
     insertParticipant(playerId = player.rowId, gameId = gameId)
     return player
 }
@@ -42,7 +43,7 @@ fun factoryPlayer(name: String): PlayerEntity
 fun insertDartsMatch(uuid: String = randomGuid(),
                      localId: Long = LocalIdGenerator.generateLocalId("DartsMatch"),
                      games: Int = 3,
-                     mode: Int = DartsMatchEntity.MODE_FIRST_TO,
+                     mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
                      matchParams: String = ""): DartsMatchEntity
 {
@@ -273,7 +274,10 @@ fun getCountFromTable(table: String): Int
     return executeQueryAggregate("SELECT COUNT(1) FROM $table")
 }
 
-fun dropUnexpectedTables(): List<String>
+fun dropAllTables() = dropTables(false)
+fun dropUnexpectedTables() = dropTables(true)
+
+fun dropTables(onlyUnexpected: Boolean): List<String>
 {
     val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
     val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
@@ -282,7 +286,11 @@ fun dropUnexpectedTables(): List<String>
     sb.append(" SELECT TableName")
     sb.append(" FROM sys.systables")
     sb.append(" WHERE TableType = 'T'")
-    sb.append(" AND TableName NOT IN ($tableNameSql)")
+
+    if (onlyUnexpected)
+    {
+        sb.append(" AND TableName NOT IN ($tableNameSql)")
+    }
 
     val list = mutableListOf<String>()
     DatabaseUtil.executeQuery(sb).use{ rs ->

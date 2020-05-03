@@ -6,14 +6,15 @@ import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.Debug
+import dartzee.core.util.doBadLuck
+import dartzee.core.util.doForsyth
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
-open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game)
+open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game, totalPlayers)
 {
     private val clockType = game.gameParams
     val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
@@ -56,8 +57,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         }
 
         hmPlayerNumberToCurrentStreak[playerNumber] = currentStreak
-
-        Debug.append("Player #$playerNumber: $currentStreak")
     }
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
@@ -103,10 +102,19 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
                 dartboard.doForsyth()
             }
         }
-        else if (dartsThrown.size != 4)
+        else if (dartsThrown.size == 4)
+        {
+            dartboard.doBadLuck()
+        }
+        else
         {
             activeScorer.disableBrucey()
         }
+    }
+
+    override fun shouldAnimateMiss(dart: Dart): Boolean
+    {
+        return dartsThrown.size < 4
     }
 
     override fun shouldStopAfterDartThrown(): Boolean

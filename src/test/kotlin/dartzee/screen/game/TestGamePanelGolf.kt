@@ -3,7 +3,10 @@ package dartzee.screen.game
 import dartzee.`object`.*
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
+import dartzee.db.TestAchievementEntity
 import dartzee.game.GameType
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
@@ -145,7 +148,7 @@ class TestGamePanelGolf: AbstractTest()
     }
 
     private class TestGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelGolf(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.GOLF, "18"))
+        : GamePanelGolf(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.GOLF, "18"), 1)
     {
         init
         {

@@ -10,6 +10,8 @@ const val CLOCK_TYPE_STANDARD = "Standard"
 const val CLOCK_TYPE_DOUBLES = "Doubles"
 const val CLOCK_TYPE_TREBLES = "Trebles"
 
+const val MAX_PLAYERS = 6
+
 /**
  * Represents a single game of Darts, e.g. X01 or Dartzee.
  */
