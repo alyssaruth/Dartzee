@@ -17,4 +17,4 @@ jobs:
     - name: Build with Gradle
       uses: GabrielBB/xvfb-action@v1.0
       with:
-        run: ./gradlew test --info --tests "dartzee.logging.TestLogDestinationSystemOut"
+        run: ./gradlew test
