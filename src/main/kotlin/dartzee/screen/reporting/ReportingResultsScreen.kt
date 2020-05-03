@@ -13,7 +13,7 @@ import java.sql.Timestamp
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReportColumnsDialog) : EmbeddedScreen()
+class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReportColumnsDialog = ConfigureReportColumnsDialog()) : EmbeddedScreen()
 {
     var rp: ReportParameters? = null
     private var cachedRows = emptyList<Array<Any>>()
