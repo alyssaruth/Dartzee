@@ -121,8 +121,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
         dest.log(log)
         dest.startPosting()
 
-        pool.shutdown()
-        pool.awaitTermination(500, TimeUnit.MILLISECONDS)
+        Thread.sleep(500)
 
         verify { poster.postLog(log.toJsonString()) }
     }
