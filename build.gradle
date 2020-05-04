@@ -51,6 +51,14 @@ task runDev(type: JavaExec) {
     main 'dartzee.main.DartsMainKt'
 }
 
+test {
+    testLogging {
+        events "failed"
+        exceptionFormat "short"
+        info.events = ["failed", "skipped"]
+    }
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'dartzee.main.DartsMainKt'

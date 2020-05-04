@@ -12,14 +12,14 @@ object LoggerFactory
 {
     fun constructElasticsearchDestination(): LogDestinationElasticsearch
     {
-        val poster = readCredentials()?.let { ElasticsearchPoster(it, ELASTICSEARCH_URL, INDEX_PATH) }
+        val poster = readCredentials("aws")?.let { ElasticsearchPoster(it, ELASTICSEARCH_URL, INDEX_PATH) }
         return LogDestinationElasticsearch(poster, Executors.newScheduledThreadPool(1))
     }
 
-    fun readCredentials() =
+    fun readCredentials(resourceName: String) =
         try
         {
-            val awsCredentials = javaClass.getResource("/aws").readText()
+            val awsCredentials = javaClass.getResource("/$resourceName").readText()
             val decoded = Base64.getDecoder().decode(awsCredentials).toString(Charset.forName("UTF-8"))
             val lines = decoded.lines()
             BasicAWSCredentials(lines[0], lines[1])

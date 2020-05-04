@@ -113,12 +113,16 @@ class TestLogDestinationElasticsearch: AbstractTest()
     fun `Should kick off posting logs immediately`()
     {
         val poster = mockPoster()
-        val dest = LogDestinationElasticsearch(poster, Executors.newScheduledThreadPool(1))
+        val pool = Executors.newScheduledThreadPool(1)
+        val dest = LogDestinationElasticsearch(poster, pool)
 
         val log = makeLogRecord()
 
         dest.log(log)
         dest.startPosting()
+
+        Thread.sleep(500)
+
         verify { poster.postLog(log.toJsonString()) }
     }
 

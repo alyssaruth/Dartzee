@@ -23,6 +23,9 @@ import java.awt.Container
 import java.awt.Point
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.swing.AbstractButton
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -46,7 +49,10 @@ val singleTen = DartboardSegment("10_$SEGMENT_TYPE_INNER_SINGLE")
 val singleFive = DartboardSegment("5_$SEGMENT_TYPE_INNER_SINGLE")
 
 val CURRENT_TIME: Instant = Instant.parse("2020-04-13T11:04:00.00Z")
-val CURRENT_TIME_STRING = "2020-04-13 12:04:00"
+val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        .withLocale(Locale.UK)
+        .withZone(ZoneId.systemDefault())
+        .format(CURRENT_TIME)
 
 private var dartboard: Dartboard? = null
 
@@ -67,6 +73,7 @@ fun borrowTestDartboard(): Dartboard
 fun flushEdt()
 {
     val lambda = {}
+    SwingUtilities.invokeAndWait(lambda)
     SwingUtilities.invokeAndWait(lambda)
 }
 

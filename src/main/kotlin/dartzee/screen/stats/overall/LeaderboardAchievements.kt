@@ -61,7 +61,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
         players.forEach{ p ->
             val myRows = achievementRows.filter { it.playerId == p.rowId }
 
-            val myAchievement = achievement.javaClass.newInstance()
+            val myAchievement = achievement.javaClass.getDeclaredConstructor().newInstance()
             myAchievement.initialiseFromDb(myRows, p)
 
             if (myAchievement.isDecreasing() && myAchievement.attainedValue == -1)
