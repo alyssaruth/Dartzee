@@ -119,6 +119,9 @@ class TestLogDestinationElasticsearch: AbstractTest()
 
         dest.log(log)
         dest.startPosting()
+
+        Thread.sleep(500)
+
         verify { poster.postLog(log.toJsonString()) }
     }
 
