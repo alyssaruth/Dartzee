@@ -53,7 +53,10 @@ task runDev(type: JavaExec) {
 
 test {
     testLogging {
-        info.events = ["failed", "skipped"]
+        info {
+            events "failed" "skipped"
+            exceptionFormat "full"
+        }
     }
 }
 
