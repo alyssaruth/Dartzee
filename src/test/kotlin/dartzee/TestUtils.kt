@@ -74,6 +74,7 @@ fun flushEdt()
 {
     val lambda = {}
     SwingUtilities.invokeAndWait(lambda)
+    SwingUtilities.invokeAndWait(lambda)
 }
 
 
