@@ -49,7 +49,10 @@ val singleTen = DartboardSegment("10_$SEGMENT_TYPE_INNER_SINGLE")
 val singleFive = DartboardSegment("5_$SEGMENT_TYPE_INNER_SINGLE")
 
 val CURRENT_TIME: Instant = Instant.parse("2020-04-13T11:04:00.00Z")
-val CURRENT_TIME_STRING: String = "2020-04-13 12:04:00"
+val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        .withLocale(Locale.UK)
+        .withZone(ZoneId.systemDefault())
+        .format(CURRENT_TIME)
 
 private var dartboard: Dartboard? = null
 
