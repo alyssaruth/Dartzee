@@ -14,7 +14,7 @@ class TestElasticsearchPoster: AbstractTest()
 {
     override fun beforeEachTest()
     {
-        Assume.assumeNotNull(readCredentials())
+        Assume.assumeNotNull(readCredentials("aws"))
         super.beforeEachTest()
     }
 
@@ -63,7 +63,7 @@ class TestElasticsearchPoster: AbstractTest()
         poster.postLog("""{"message": "test"}""") shouldBe false
     }
 
-    private fun makePoster(credentials: BasicAWSCredentials? = readCredentials(),
+    private fun makePoster(credentials: BasicAWSCredentials? = readCredentials("aws"),
                            url: String = ELASTICSEARCH_URL,
                            index: String = "unittest"): ElasticsearchPoster
     {
