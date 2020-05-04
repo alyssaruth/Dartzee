@@ -52,7 +52,7 @@ class TestDevScreenCommands: AbstractTest()
         val keyEvent = mockk<KeyEvent>(relaxed = true)
         val action = innerPanel.actionMap["showCheatBar"]
 
-        SwingUtilities.notifyAction(action, cheatBarKeyStroke, keyEvent, this, keyEvent.modifiers)
+        SwingUtilities.notifyAction(action, cheatBarKeyStroke, keyEvent, this, keyEvent.modifiersEx)
     }
 
     @Test

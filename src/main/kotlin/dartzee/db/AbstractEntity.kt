@@ -84,7 +84,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     private fun factory(): E? =
         try
         {
-            javaClass.newInstance() as E
+            javaClass.getDeclaredConstructor().newInstance() as E
         }
         catch (t: Throwable)
         {
