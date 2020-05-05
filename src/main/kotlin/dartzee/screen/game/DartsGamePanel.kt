@@ -427,13 +427,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         }
 
         dartboard.stopListening()
-
-        val participants = getParticipants()
-        for (pt in participants)
-        {
-            val playerId = pt.playerId
-            PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType)
-        }
     }
 
 
@@ -494,8 +487,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         participant.saveToDatabase()
 
         val playerId = participant.playerId
-        PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType)
-
         updateAchievementsForFinish(playerId, finishingPosition, numberOfDarts)
 
         return finishingPosition

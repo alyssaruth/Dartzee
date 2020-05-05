@@ -66,26 +66,20 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
     {
         val players = PlayerEntity.retrievePlayers("", false)
         tablePlayers.initPlayerTableModel(players)
-        showNoSelectionPanel()
-    }
-
-    private fun showNoSelectionPanel()
-    {
-        panel.clear()
+        refreshSummaryPanel()
     }
 
     override fun getScreenName() = "Player Management"
 
     override fun valueChanged(arg0: ListSelectionEvent)
     {
-        val player = tablePlayers.getSelectedPlayer()
-        if (player == null)
-        {
-            showNoSelectionPanel()
-            return
-        }
+        refreshSummaryPanel()
+    }
 
-        panel.init(player)
+    private fun refreshSummaryPanel()
+    {
+        val player = tablePlayers.getSelectedPlayer()
+        panel.refresh(player)
     }
 
     override fun actionPerformed(arg0: ActionEvent)

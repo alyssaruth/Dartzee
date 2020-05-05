@@ -7,6 +7,9 @@ import dartzee.game.GameType
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup
 import dartzee.screen.stats.player.PlayerAchievementsScreen
+import dartzee.stats.ParticipantStats
+import dartzee.stats.PlayerSummaryStats
+import dartzee.utils.DatabaseUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -26,9 +29,6 @@ class PlayerManagementPanel : JPanel(), ActionListener
     private val panel = JPanel()
     private val avatar = PlayerAvatar()
     private val panelCenter = JPanel()
-    private val panelX01 = PlayerSummaryPanel(GameType.X01)
-    private val panelGolf = PlayerSummaryPanel(GameType.GOLF)
-    private val panelClock = PlayerSummaryPanel(GameType.ROUND_THE_CLOCK)
     private val btnRunSimulation = JButton("Run Simulation")
     private val btnAchievements = JButton("Achievements")
 
@@ -66,44 +66,72 @@ class PlayerManagementPanel : JPanel(), ActionListener
         panelCenter.layout = MigLayout("", "[grow][]", "[][][][][]")
         panelCenter.add(avatar, "cell 0 0 3 1,alignx center")
         avatar.preferredSize = Dimension(150, 150)
-        panelCenter.add(panelX01, "cell 0 1 2 1,grow")
-        panelCenter.add(panelGolf, "cell 0 2 2 1,grow")
-        panelCenter.add(panelClock, "cell 0 3 2 1,grow")
     }
 
-    fun init(player: PlayerEntity)
+    fun refresh(player: PlayerEntity?)
     {
         this.player = player
 
-        lblPlayerName.text = player.name
+        lblPlayerName.text = player?.name ?: ""
 
         //Only show this for AIs
-        btnEdit.isVisible = player.isAi()
-        btnRunSimulation.isVisible = player.isAi()
+        btnEdit.isVisible = player?.isAi() == true
+        btnRunSimulation.isVisible = player?.isAi() == true
 
-        btnDelete.isEnabled = true
-        btnAchievements.isEnabled = true
+        btnDelete.isEnabled = player != null
+        btnAchievements.isEnabled = player != null
 
-        avatar.isVisible = true
-        panelX01.init(player)
-        panelGolf.init(player)
-        panelClock.init(player)
-        avatar.init(player, true)
+        panelCenter.removeAll()
+
+        player?.let {
+            avatar.init(player, true)
+            panelCenter.add(avatar, "cell 0 0 3 1,alignx center")
+            addSummaryPanels(player)
+        }
+
+        repaint()
+        revalidate()
     }
 
-    fun clear()
+    private fun addSummaryPanels(player: PlayerEntity)
     {
-        this.player = null
-        lblPlayerName.text = ""
-        btnEdit.isVisible = false
-        btnRunSimulation.isVisible = false
-        avatar.isVisible = false
-        panelX01.isVisible = false
-        panelGolf.isVisible = false
-        panelClock.isVisible = false
+        val stats = runSql(player)
 
-        btnDelete.isEnabled = false
-        btnAchievements.isEnabled = false
+        panelCenter.add(makeSummaryPanel(player, stats, GameType.X01), "cell 0 1 2 1,grow")
+        panelCenter.add(makeSummaryPanel(player, stats, GameType.GOLF), "cell 0 2 2 1,grow")
+        panelCenter.add(makeSummaryPanel(player, stats, GameType.ROUND_THE_CLOCK), "cell 0 3 2 1,grow")
+    }
+
+    private fun runSql(player: PlayerEntity): List<ParticipantStats>
+    {
+        val list = mutableListOf<ParticipantStats>()
+
+        val query = "SELECT g.GameType, pt.FinishingPosition, pt.FinalScore FROM Participant pt, Game g WHERE pt.GameId = g.RowId AND pt.PlayerId = '${player.rowId}'"
+        DatabaseUtil.executeQuery(query).use { rs ->
+            while (rs.next())
+            {
+                val gameType = GameType.valueOf(rs.getString("GameType"))
+                val finishingPosition = rs.getInt("FinishingPosition")
+                val finalScore = rs.getInt("FinalScore")
+
+                list.add(ParticipantStats(gameType, finalScore, finishingPosition))
+            }
+        }
+
+        return list.toList()
+    }
+
+    private fun makeSummaryPanel(player: PlayerEntity, participantStats: List<ParticipantStats>, gameType: GameType): PlayerSummaryPanel
+    {
+        val filteredPts = participantStats.filter { it.gameType == gameType }
+
+        val gamesPlayed = filteredPts.size
+        val gamesWon = filteredPts.count { it.finishingPosition == 1 }
+
+        val bestScore: Int = filteredPts.filter { it.finalScore > -1 }.minBy { it.finalScore }?.finalScore ?: 0
+
+        val stats = PlayerSummaryStats(gamesPlayed, gamesWon, bestScore)
+        return PlayerSummaryPanel(player, gameType, stats)
     }
 
     override fun actionPerformed(arg0: ActionEvent)

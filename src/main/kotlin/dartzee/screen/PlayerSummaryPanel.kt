@@ -11,13 +11,11 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-class PlayerSummaryPanel(private val gameType: GameType) : JPanel(), ActionListener
+class PlayerSummaryPanel(private val player: PlayerEntity, private val gameType: GameType, stats: PlayerSummaryStats) : JPanel(), ActionListener
 {
-    private var player: PlayerEntity? = null
-
-    private val nfGamesPlayed = JTextField()
-    private val nfGamesWon = JTextField()
-    private val nfBestGame = JTextField()
+    private val nfGamesPlayed = JTextField("${stats.gamesPlayed}")
+    private val nfGamesWon = JTextField("${stats.gamesWon}")
+    private val nfBestGame = JTextField("${stats.bestScore}")
     private val btnViewStats = JButton("View Stats")
     private val lblP = JLabel("Played")
     private val lblW = JLabel("Won")
@@ -54,42 +52,15 @@ class PlayerSummaryPanel(private val gameType: GameType) : JPanel(), ActionListe
         add(btnViewStats, "cell 8 1,alignx center")
 
         btnViewStats.addActionListener(this)
+        btnViewStats.isEnabled = stats.gamesPlayed > 0
     }
-
-    fun init(player: PlayerEntity)
-    {
-        isVisible = true
-
-        this.player = player
-
-        val stats = PlayerSummaryStats.getSummaryStats(player, gameType)
-
-        val gamesPlayed = stats.gamesPlayed
-        val gamesWon = stats.gamesWon
-        val bestScore = stats.bestScore
-
-        nfGamesPlayed.text = "" + gamesPlayed
-        nfGamesWon.text = "" + gamesWon
-
-        if (bestScore > 0)
-        {
-            nfBestGame.text = "$bestScore"
-        }
-        else
-        {
-            nfBestGame.text = ""
-        }
-
-        btnViewStats.isEnabled = gamesPlayed > 0
-    }
-
 
     override fun actionPerformed(arg0: ActionEvent)
     {
         if (arg0.source === btnViewStats)
         {
             val statsScrn = ScreenCache.get<PlayerStatisticsScreen>()
-            statsScrn.setVariables(gameType, player!!)
+            statsScrn.setVariables(gameType, player)
 
             ScreenCache.switch(statsScrn)
         }
