@@ -43,7 +43,7 @@ fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, playe
     var score = 0
     for (achievement in getAllAchievements())
     {
-        val myRelevantRows = myAchievementRows.filter{it.achievementRef == achievement.achievementRef}.toMutableList()
+        val myRelevantRows = myAchievementRows.filter{ it.achievementRef == achievement.achievementRef }
         achievement.initialiseFromDb(myRelevantRows, player)
 
         score += achievement.getScore()

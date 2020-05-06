@@ -4,7 +4,7 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.screen.HumanCreationDialog
-import dartzee.screen.PlayerManagementScreen
+import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import javax.swing.ImageIcon

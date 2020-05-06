@@ -5,7 +5,7 @@ import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.screen.PlayerManagementScreen
+import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.golf.StatisticsTabGolfHoleBreakdown

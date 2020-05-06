@@ -1,18 +1,19 @@
-package dartzee.screen
+package dartzee.screen.player
 
 import dartzee.achievements.getGamesWonIcon
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import java.awt.Dimension
 import java.awt.event.*
 import javax.swing.ImageIcon
 import javax.swing.JButton
 
-class PlayerSummaryPanel(private val player: PlayerEntity,
-                         private val gameType: GameType,
-                         played: Int,
-                         highScore: Int) : JButton(), ActionListener, MouseListener
+class PlayerStatsButton(private val player: PlayerEntity,
+                        private val gameType: GameType,
+                        played: Int,
+                        highScore: Int) : JButton(), ActionListener, MouseListener
 {
     private val iconUrl = getGamesWonIcon(gameType)
     private val statsText = makeStatsText(played, highScore)
@@ -46,6 +47,8 @@ class PlayerSummaryPanel(private val player: PlayerEntity,
         statsScrn.setVariables(gameType, player)
 
         ScreenCache.switch(statsScrn)
+
+        text = statsText
     }
 
     override fun mouseClicked(e: MouseEvent?) {}

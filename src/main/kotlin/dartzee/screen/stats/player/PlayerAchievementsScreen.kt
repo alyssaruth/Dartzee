@@ -10,7 +10,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.screen.PlayerManagementScreen
+import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.ScreenCache
 import java.awt.*
 import javax.swing.*

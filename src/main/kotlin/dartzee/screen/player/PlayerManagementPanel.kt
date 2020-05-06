@@ -1,13 +1,14 @@
-package dartzee.screen
+package dartzee.screen.player
 
 import dartzee.bean.PlayerAvatar
 import dartzee.core.bean.WrapLayout
 import dartzee.core.util.DialogUtil
+import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup
-import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.stats.ParticipantSummary
 import dartzee.stats.getParticipantSummaries
 import java.awt.BorderLayout
@@ -30,7 +31,6 @@ class PlayerManagementPanel : JPanel(), ActionListener
     private val avatar = PlayerAvatar()
     private val panelCenter = JPanel()
     private val btnRunSimulation = JButton("Run Simulation")
-    private val btnAchievements = JButton("Achievements")
 
     init
     {
@@ -39,7 +39,6 @@ class PlayerManagementPanel : JPanel(), ActionListener
         val panelOptions = JPanel()
         add(panelOptions, BorderLayout.SOUTH)
 
-        panelOptions.add(btnAchievements)
         btnEdit.font = Font("Tahoma", Font.PLAIN, 16)
         panelOptions.add(btnEdit)
         btnRunSimulation.font = Font("Tahoma", Font.PLAIN, 16)
@@ -48,12 +47,9 @@ class PlayerManagementPanel : JPanel(), ActionListener
         btnDelete.font = Font("Tahoma", Font.PLAIN, 16)
         panelOptions.add(btnDelete)
 
-        btnAchievements.font = Font("Tahoma", Font.PLAIN, 16)
-
         btnEdit.addActionListener(this)
         btnRunSimulation.addActionListener(this)
         btnDelete.addActionListener(this)
-        btnAchievements.addActionListener(this)
 
         panelNorth.layout = BorderLayout(0, 0)
         val panelName = JPanel()
@@ -88,7 +84,6 @@ class PlayerManagementPanel : JPanel(), ActionListener
         btnRunSimulation.isVisible = player?.isAi() == true
 
         btnDelete.isEnabled = player != null
-        btnAchievements.isEnabled = player != null
         avatar.isVisible = player != null
 
         panelCenter.removeAll()
@@ -105,20 +100,22 @@ class PlayerManagementPanel : JPanel(), ActionListener
     private fun addSummaryPanels(player: PlayerEntity)
     {
         val stats = getParticipantSummaries(player)
+        val achievements = AchievementEntity.retrieveAchievements(player.rowId)
 
-        panelCenter.add(makeSummaryPanel(player, stats, GameType.X01), "cell 0 1 2 1,grow")
-        panelCenter.add(makeSummaryPanel(player, stats, GameType.GOLF), "cell 0 2 2 1,grow")
-        panelCenter.add(makeSummaryPanel(player, stats, GameType.ROUND_THE_CLOCK), "cell 0 3 2 1,grow")
+        panelCenter.add(makeStatsButton(player, stats, GameType.X01))
+        panelCenter.add(makeStatsButton(player, stats, GameType.GOLF))
+        panelCenter.add(makeStatsButton(player, stats, GameType.ROUND_THE_CLOCK))
+        panelCenter.add(PlayerAchievementsButton(player, achievements))
     }
 
-    private fun makeSummaryPanel(player: PlayerEntity, participantStats: List<ParticipantSummary>, gameType: GameType): PlayerSummaryPanel
+    private fun makeStatsButton(player: PlayerEntity, participantStats: List<ParticipantSummary>, gameType: GameType): PlayerStatsButton
     {
         val filteredPts = participantStats.filter { it.gameType == gameType }
 
         val gamesPlayed = filteredPts.size
         val bestScore: Int = filteredPts.filter { it.finalScore > -1 }.minBy { it.finalScore }?.finalScore ?: 0
 
-        return PlayerSummaryPanel(player, gameType, gamesPlayed, bestScore)
+        return PlayerStatsButton(player, gameType, gamesPlayed, bestScore)
     }
 
     override fun actionPerformed(arg0: ActionEvent)
@@ -128,14 +125,6 @@ class PlayerManagementPanel : JPanel(), ActionListener
             btnEdit -> AIConfigurationDialog.amendPlayer(player!!)
             btnDelete -> confirmAndDeletePlayer()
             btnRunSimulation -> AISimulationSetup(player!!).isVisible = true
-            btnAchievements ->
-            {
-                val scrn = ScreenCache.get<PlayerAchievementsScreen>()
-                scrn.player = player
-                scrn.previousScrn = ScreenCache.get<PlayerManagementScreen>()
-
-                ScreenCache.switch(scrn)
-            }
         }
     }
 
@@ -149,7 +138,8 @@ class PlayerManagementPanel : JPanel(), ActionListener
             player!!.saveToDatabase()
 
             //Re-initialise the screen so it updates
-            val screen = ScreenCache.get<PlayerManagementScreen>()
+            val screen =
+                ScreenCache.get<PlayerManagementScreen>()
             screen.initialise()
         }
     }

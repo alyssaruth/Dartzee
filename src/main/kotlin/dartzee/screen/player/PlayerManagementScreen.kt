@@ -1,9 +1,10 @@
-package dartzee.screen
+package dartzee.screen.player
 
 import dartzee.bean.getSelectedPlayer
 import dartzee.bean.initPlayerTableModel
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
+import dartzee.screen.EmbeddedScreen
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
