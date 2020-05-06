@@ -65,7 +65,7 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 
     override fun initialise()
     {
-        val players = PlayerEntity.retrievePlayers("", false)
+        val players = PlayerEntity.retrievePlayers("")
         tablePlayers.initPlayerTableModel(players)
         refreshSummaryPanel()
     }

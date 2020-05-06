@@ -4,9 +4,9 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.screen.HumanCreationDialog
-import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
+import dartzee.screen.player.PlayerManagementScreen
 import javax.swing.ImageIcon
 
 class PlayerEntity:AbstractEntity<PlayerEntity>()
@@ -66,17 +66,14 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         /**
          * Retrieval methods
          */
-        fun retrievePlayers(startingSql:String, includeDeleted:Boolean):List<PlayerEntity>
+        fun retrievePlayers(startingSql:String): List<PlayerEntity>
         {
             var whereSql = startingSql
-            if (!includeDeleted)
+            if (!startingSql.isEmpty())
             {
-                if (!startingSql.isEmpty())
-                {
-                    whereSql += " AND "
-                }
-                whereSql += "DtDeleted = " + getEndOfTimeSqlString()
+                whereSql += " AND "
             }
+            whereSql += "DtDeleted = " + getEndOfTimeSqlString()
 
             return PlayerEntity().retrieveEntities(whereSql)
         }

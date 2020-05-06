@@ -12,6 +12,7 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup
 import dartzee.stats.getGameCounts
+import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
@@ -27,7 +28,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
 
     private val btnEdit = JButton("Edit")
     private val btnDelete = JButton("Delete")
-    private val lblPlayerName = JLabel("")
+    val lblPlayerName = JLabel("")
     private val panelNorth = JPanel()
     private val avatar = PlayerAvatar()
     private val panelCenter = JPanel()
@@ -68,7 +69,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
         add(panelNorth, BorderLayout.NORTH)
 
         lblPlayerName.preferredSize = Dimension(0, 25)
-        lblPlayerName.font = Font("Tahoma", Font.PLAIN, 14)
+        lblPlayerName.font = ResourceCache.BASE_FONT.deriveFont(Font.BOLD, 20f)
         lblPlayerName.horizontalAlignment = SwingConstants.CENTER
 
         add(panelCenter, BorderLayout.CENTER)
@@ -80,8 +81,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
     {
         this.player = player
 
-        val text = player?.let { "<html><h1>${it.name}</h1></html>" }
-        lblPlayerName.text = text ?: ""
+        lblPlayerName.text = player?.name ?: ""
 
         //Only show this for AIs
         btnEdit.isVisible = player?.isAi() == true

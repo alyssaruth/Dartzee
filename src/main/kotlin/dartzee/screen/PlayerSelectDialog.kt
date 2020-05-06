@@ -55,7 +55,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog(), IDoubleClickListe
     fun buildTable()
     {
         val whereSql = panelNorth.getWhereSql()
-        val allPlayers = PlayerEntity.retrievePlayers(whereSql, false)
+        val allPlayers = PlayerEntity.retrievePlayers(whereSql)
 
         val players = allPlayers.filter{ p -> playersToExclude.none{ it.rowId == p.rowId} }
         tablePlayers.initPlayerTableModel(players)

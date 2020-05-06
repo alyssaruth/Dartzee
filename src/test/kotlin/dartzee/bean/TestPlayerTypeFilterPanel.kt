@@ -28,16 +28,16 @@ class TestPlayerTypeFilterPanel: AbstractTest()
 
         val panel = PlayerTypeFilterPanel()
 
-        val players = PlayerEntity.retrievePlayers(panel.getWhereSql(), false)
+        val players = PlayerEntity.retrievePlayers(panel.getWhereSql())
         players.size shouldBe 2
 
         panel.rdbtnAi.doClick()
-        val aiPlayers = PlayerEntity.retrievePlayers(panel.getWhereSql(), false)
+        val aiPlayers = PlayerEntity.retrievePlayers(panel.getWhereSql())
         aiPlayers.size shouldBe 1
         aiPlayers.first().rowId shouldBe ai.rowId
 
         panel.rdbtnHuman.doClick()
-        val humanPlayers = PlayerEntity.retrievePlayers(panel.getWhereSql(), false)
+        val humanPlayers = PlayerEntity.retrievePlayers(panel.getWhereSql())
         humanPlayers.size shouldBe 1
         humanPlayers.first().rowId shouldBe human.rowId
     }
