@@ -1,11 +1,9 @@
 package dartzee.screen.player
 
 import dartzee.achievements.getAchievementMaximum
-import dartzee.achievements.getGamesWonIcon
 import dartzee.achievements.getPlayerAchievementScore
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
-import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import java.awt.event.ActionListener
@@ -17,11 +15,9 @@ class PlayerAchievementsButton(private val player: PlayerEntity,
     override val defaultText = makeDefaultText()
     override val hoverText = "<html><h3>Achievements &gt;</h3></html>"
 
-    private val iconUrl = getGamesWonIcon(GameType.X01)
-
     init
     {
-        icon = ImageIcon(iconUrl)
+        icon = ImageIcon(javaClass.getResource("/achievements/trophy.png"))
         text = defaultText
 
         addActionListener(this)
@@ -33,7 +29,7 @@ class PlayerAchievementsButton(private val player: PlayerEntity,
         val score = getPlayerAchievementScore(achievementRows, player)
         val lineOne = "<h3>Achievements</h3>"
         val lineTwo = "$score / ${getAchievementMaximum()}"
-        return "<html><center>$lineOne<br>$lineTwo</center></html>"
+        return "<html><center>$lineOne $lineTwo</center></html>"
     }
 
     override fun buttonPressed()

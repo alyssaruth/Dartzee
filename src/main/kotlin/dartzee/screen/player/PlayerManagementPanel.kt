@@ -1,7 +1,9 @@
 package dartzee.screen.player
 
+import dartzee.achievements.getBestGameAchievement
 import dartzee.bean.PlayerAvatar
 import dartzee.core.bean.WrapLayout
+import dartzee.core.obj.HashMapCount
 import dartzee.core.util.DialogUtil
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
@@ -9,8 +11,7 @@ import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup
-import dartzee.stats.ParticipantSummary
-import dartzee.stats.getParticipantSummaries
+import dartzee.stats.getGameCounts
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
@@ -39,12 +40,15 @@ class PlayerManagementPanel : JPanel(), ActionListener
         val panelOptions = JPanel()
         add(panelOptions, BorderLayout.SOUTH)
 
+        btnEdit.icon = ImageIcon(javaClass.getResource("/buttons/amend.png"))
         btnEdit.font = Font("Tahoma", Font.PLAIN, 16)
         panelOptions.add(btnEdit)
         btnRunSimulation.font = Font("Tahoma", Font.PLAIN, 16)
+        btnRunSimulation.icon = ImageIcon(javaClass.getResource("/buttons/stats.png"))
 
         panelOptions.add(btnRunSimulation)
         btnDelete.font = Font("Tahoma", Font.PLAIN, 16)
+        btnDelete.icon = ImageIcon(javaClass.getResource("/buttons/delete.png"))
         panelOptions.add(btnDelete)
 
         btnEdit.addActionListener(this)
@@ -99,21 +103,21 @@ class PlayerManagementPanel : JPanel(), ActionListener
 
     private fun addSummaryPanels(player: PlayerEntity)
     {
-        val stats = getParticipantSummaries(player)
+        val counts = getGameCounts(player)
         val achievements = AchievementEntity.retrieveAchievements(player.rowId)
 
-        panelCenter.add(makeStatsButton(player, stats, GameType.X01))
-        panelCenter.add(makeStatsButton(player, stats, GameType.GOLF))
-        panelCenter.add(makeStatsButton(player, stats, GameType.ROUND_THE_CLOCK))
+        panelCenter.add(makeStatsButton(player, counts, achievements, GameType.X01))
+        panelCenter.add(makeStatsButton(player, counts, achievements, GameType.GOLF))
+        panelCenter.add(makeStatsButton(player, counts, achievements, GameType.ROUND_THE_CLOCK))
         panelCenter.add(PlayerAchievementsButton(player, achievements))
     }
 
-    private fun makeStatsButton(player: PlayerEntity, participantStats: List<ParticipantSummary>, gameType: GameType): PlayerStatsButton
+    private fun makeStatsButton(player: PlayerEntity, gameCounts: HashMapCount<GameType>, achievements: List<AchievementEntity>, gameType: GameType): PlayerStatsButton
     {
-        val filteredPts = participantStats.filter { it.gameType == gameType }
+        val gamesPlayed = gameCounts.getCount(gameType)
 
-        val gamesPlayed = filteredPts.size
-        val bestScore: Int = filteredPts.filter { it.finalScore > -1 }.minBy { it.finalScore }?.finalScore ?: 0
+        val achievement = achievements.find { it.achievementRef == getBestGameAchievement(gameType)?.achievementRef }
+        val bestScore: Int = achievement?.achievementCounter ?: 0
 
         return PlayerStatsButton(player, gameType, gamesPlayed, bestScore)
     }

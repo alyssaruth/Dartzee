@@ -33,8 +33,9 @@ class PlayerStatsButton(private val player: PlayerEntity,
     private fun makeStatsText(played: Int, highScore: Int): String
     {
         val lineOne = "<h3>${gameType.getDescription()}</h3>"
-        val lineTwo = "<b>P:</b> $played  <b>Best:</b> $highScore"
-        return "<html><center>$lineOne<br>$lineTwo</center></html>"
+        val lineTwo = "<b>Played: </b> $played"
+        val lineThree = "<b>Best game: </b> $highScore"
+        return "<html><center>$lineOne $lineTwo<br>$lineThree</center></html>"
     }
 
     override fun buttonPressed()

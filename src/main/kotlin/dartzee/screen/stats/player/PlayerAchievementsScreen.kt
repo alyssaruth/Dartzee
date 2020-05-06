@@ -10,8 +10,8 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.ScreenCache
+import dartzee.screen.player.PlayerManagementScreen
 import java.awt.*
 import javax.swing.*
 import javax.swing.border.EmptyBorder
@@ -150,13 +150,6 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     }
 
 
-    override fun getBackTarget(): EmbeddedScreen
-    {
-        return previousScrn
-    }
-
-    override fun getDesiredSize(): Dimension?
-    {
-        return Dimension(1240, 700)
-    }
+    override fun getBackTarget() = previousScrn
+    override fun getDesiredSize() = Dimension(1240, 700)
 }
