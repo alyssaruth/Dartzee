@@ -74,7 +74,6 @@ class PlayerManagementPanel : JPanel(), ActionListener
         add(panelCenter, BorderLayout.CENTER)
         panelCenter.border = EmptyBorder(10, 0, 0, 0)
         panelCenter.layout = WrapLayout()
-        avatar.preferredSize = Dimension(150, 150)
     }
 
     fun refresh(player: PlayerEntity?)
