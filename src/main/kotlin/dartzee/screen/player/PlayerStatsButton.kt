@@ -5,25 +5,21 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
-import java.awt.Dimension
-import java.awt.event.*
 import javax.swing.ImageIcon
-import javax.swing.JButton
 
 class PlayerStatsButton(private val player: PlayerEntity,
                         private val gameType: GameType,
                         played: Int,
-                        highScore: Int) : JButton(), ActionListener, MouseListener
+                        highScore: Int) : PlayerSummaryButton()
 {
     private val iconUrl = getGamesWonIcon(gameType)
-    private val statsText = makeStatsText(played, highScore)
+    override val defaultText = makeStatsText(played, highScore)
+    override val hoverText = "<html><h3>${gameType.getDescription()} stats &gt;</h3></html>"
 
     init
     {
-        preferredSize = Dimension(275, 100)
-
         icon = ImageIcon(iconUrl)
-        text = statsText
+        text = defaultText
 
         rolloverIcon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
         selectedIcon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
@@ -41,30 +37,11 @@ class PlayerStatsButton(private val player: PlayerEntity,
         return "<html><center>$lineOne<br>$lineTwo</center></html>"
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
+    override fun buttonPressed()
     {
         val statsScrn = ScreenCache.get<PlayerStatisticsScreen>()
         statsScrn.setVariables(gameType, player)
 
         ScreenCache.switch(statsScrn)
-
-        text = statsText
-    }
-
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mouseReleased(e: MouseEvent?) {}
-    override fun mousePressed(e: MouseEvent?) {}
-
-    override fun mouseEntered(e: MouseEvent?)
-    {
-        if (isEnabled)
-        {
-            text = "<html><h3>${gameType.getDescription()} stats &gt;</h3></html>"
-        }
-    }
-
-    override fun mouseExited(e: MouseEvent?)
-    {
-        text = statsText
     }
 }
