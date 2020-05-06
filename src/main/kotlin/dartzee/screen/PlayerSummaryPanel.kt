@@ -1,68 +1,67 @@
 package dartzee.screen
 
+import dartzee.achievements.getGamesWonIcon
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.stats.player.PlayerStatisticsScreen
-import dartzee.stats.PlayerSummaryStats
-import net.miginfocom.swing.MigLayout
-import java.awt.Font
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import javax.swing.*
-import javax.swing.border.TitledBorder
+import java.awt.Dimension
+import java.awt.event.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
 
-class PlayerSummaryPanel(private val player: PlayerEntity, private val gameType: GameType, stats: PlayerSummaryStats) : JPanel(), ActionListener
+class PlayerSummaryPanel(private val player: PlayerEntity,
+                         private val gameType: GameType,
+                         played: Int,
+                         highScore: Int) : JButton(), ActionListener, MouseListener
 {
-    private val nfGamesPlayed = JTextField("${stats.gamesPlayed}")
-    private val nfGamesWon = JTextField("${stats.gamesWon}")
-    private val nfBestGame = JTextField("${stats.bestScore}")
-    private val btnViewStats = JButton("View Stats")
-    private val lblP = JLabel("Played")
-    private val lblW = JLabel("Won")
-    private val lblHighScore = JLabel("High score")
+    private val iconUrl = getGamesWonIcon(gameType)
+    private val statsText = makeStatsText(played, highScore)
 
     init
     {
-        border = TitledBorder(null, gameType.getDescription(), TitledBorder.LEADING, TitledBorder.TOP, Font("Tahoma", Font.PLAIN, 20))
-        layout = MigLayout("", "[][][][][][][][][grow][]", "[][][]")
+        preferredSize = Dimension(275, 100)
 
-        add(lblP, "cell 0 0")
+        icon = ImageIcon(iconUrl)
+        text = statsText
 
-        add(lblW, "cell 2 0,alignx leading")
+        rolloverIcon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
+        selectedIcon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
 
-        add(lblHighScore, "cell 4 0")
-        nfGamesPlayed.isEditable = false
-        add(nfGamesPlayed, "cell 0 1,growx")
-        nfGamesPlayed.columns = 10
-        val horizontalStrut = Box.createHorizontalStrut(20)
-        add(horizontalStrut, "cell 1 1")
-        nfGamesWon.isEditable = false
-        add(nfGamesWon, "cell 2 1,growx")
-        nfGamesWon.columns = 10
+        isEnabled = played > 0
 
-        val strutOne = Box.createHorizontalStrut(20)
-        add(strutOne, "cell 3 1")
-        nfBestGame.isEditable = false
-        add(nfBestGame, "cell 4 1,growx")
-        nfBestGame.columns = 10
+        addActionListener(this)
+        addMouseListener(this)
+    }
 
-        val strut2 = Box.createHorizontalStrut(20)
-        add(strut2, "flowx,cell 8 1")
-        btnViewStats.font = Font("Tahoma", Font.PLAIN, 16)
-        add(btnViewStats, "cell 8 1,alignx center")
-
-        btnViewStats.addActionListener(this)
-        btnViewStats.isEnabled = stats.gamesPlayed > 0
+    private fun makeStatsText(played: Int, highScore: Int): String
+    {
+        val lineOne = "<h3>${gameType.getDescription()}</h3>"
+        val lineTwo = "<b>P:</b> $played  <b>Best:</b> $highScore"
+        return "<html><center>$lineOne<br>$lineTwo</center></html>"
     }
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        if (arg0.source === btnViewStats)
-        {
-            val statsScrn = ScreenCache.get<PlayerStatisticsScreen>()
-            statsScrn.setVariables(gameType, player)
+        val statsScrn = ScreenCache.get<PlayerStatisticsScreen>()
+        statsScrn.setVariables(gameType, player)
 
-            ScreenCache.switch(statsScrn)
+        ScreenCache.switch(statsScrn)
+    }
+
+    override fun mouseClicked(e: MouseEvent?) {}
+    override fun mouseReleased(e: MouseEvent?) {}
+    override fun mousePressed(e: MouseEvent?) {}
+
+    override fun mouseEntered(e: MouseEvent?)
+    {
+        if (isEnabled)
+        {
+            text = "<html><h3>${gameType.getDescription()} stats &gt;</h3></html>"
         }
+    }
+
+    override fun mouseExited(e: MouseEvent?)
+    {
+        text = statsText
     }
 }
