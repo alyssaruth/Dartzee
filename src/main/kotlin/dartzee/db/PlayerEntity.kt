@@ -49,7 +49,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         return model
     }
 
-    fun getAvatar() = if (playerImageId.isEmpty()) null else PlayerImageEntity.retrieveImageIconForId(playerImageId)
+    fun getAvatar() = PlayerImageEntity.retrieveImageIconForId(playerImageId)
     fun getFlag() = getPlayerFlag(isHuman())
 
     companion object
@@ -62,7 +62,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         /**
          * Retrieval methods
          */
-        fun retrievePlayers(startingSql:String): List<PlayerEntity>
+        fun retrievePlayers(startingSql: String): List<PlayerEntity>
         {
             var whereSql = startingSql
             if (!startingSql.isEmpty())
