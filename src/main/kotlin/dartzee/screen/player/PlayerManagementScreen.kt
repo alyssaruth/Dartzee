@@ -5,6 +5,7 @@ import dartzee.bean.initPlayerTableModel
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
 import dartzee.screen.EmbeddedScreen
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -46,9 +47,11 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
         panelNorth.layout = FlowLayout(FlowLayout.LEFT, 5, 5)
         btnNewPlayer.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addHuman.png"))
         btnNewPlayer.preferredSize = Dimension(30, 30)
+        btnNewPlayer.toolTipText = "Add player"
         panelNorth.add(btnNewPlayer)
         btnNewPlayer.border = EmptyBorder(5, 0, 5, 0)
         btnNewAi.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addAi.png"))
+        btnNewAi.toolTipText = "Add computer"
         btnNewAi.preferredSize = Dimension(30, 30)
 
         panelNorth.add(btnNewAi)
@@ -87,9 +90,18 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
     {
         when (arg0.source)
         {
-            btnNewPlayer -> PlayerEntity.createNewPlayer(true)
-            btnNewAi -> PlayerEntity.createNewPlayer(false)
+            btnNewPlayer -> createPlayer(true)
+            btnNewAi -> createPlayer(false)
             else -> super.actionPerformed(arg0)
+        }
+    }
+
+    private fun createPlayer(human: Boolean)
+    {
+        val created = InjectedThings.playerManager.createNewPlayer(human)
+        if (created)
+        {
+            initialise()
         }
     }
 }

@@ -142,10 +142,11 @@ fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
     keyValuePairs.shouldContainExactly(mapOf(*values))
 }
 
-inline fun <reified T: AbstractButton> Container.findComponent(text: String): T
+inline fun <reified T: AbstractButton> Container.findComponent(text: String, toolTipText: String? = null): T
 {
     val allComponents = getAllChildComponentsForType<T>()
     val matching = allComponents.filter { it.text == text }
+            .filter { toolTipText == null || it.toolTipText == toolTipText }
 
     if (matching.isEmpty())
     {
@@ -175,9 +176,9 @@ inline fun <reified T: JComponent> Container.findComponent(): T
     return allComponents.first()
 }
 
-inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
+inline fun <reified T: AbstractButton> Container.clickComponent(text: String, toolTipText: String? = null)
 {
-    findComponent<T>(text).doClick()
+    findComponent<T>(text, toolTipText).doClick()
 }
 
 fun Container.findLabel(text: String): JLabel?
