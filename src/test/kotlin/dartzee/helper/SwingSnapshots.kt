@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.util.*
 import javax.imageio.ImageIO
-import javax.swing.ImageIcon
+import javax.swing.Icon
 import javax.swing.JComponent
 
 private val overwrite = System.getenv("updateSnapshots") == "true"
@@ -61,11 +61,11 @@ private fun BufferedImage.isEqual(other: BufferedImage): Boolean
     return getPointList(width, height).all { getRGB(it.x, it.y) == other.getRGB(it.x, it.y) }
 }
 
-fun ImageIcon.shouldMatch(other: ImageIcon)
+fun Icon.shouldMatch(other: Icon)
 {
     toBufferedImage().isEqual(other.toBufferedImage()) shouldBe true
 }
-private fun ImageIcon.toBufferedImage(): BufferedImage
+private fun Icon.toBufferedImage(): BufferedImage
 {
     val bi = BufferedImage(iconWidth, iconHeight, BufferedImage.TYPE_INT_RGB)
     val g = bi.createGraphics()

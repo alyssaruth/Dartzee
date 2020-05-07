@@ -87,7 +87,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
         btnEdit.isVisible = player?.isAi() == true
         btnRunSimulation.isVisible = player?.isAi() == true
 
-        btnDelete.isEnabled = player != null
+        btnDelete.isVisible = player != null
         avatar.isVisible = player != null
 
         panelCenter.removeAll()
@@ -124,27 +124,26 @@ class PlayerManagementPanel : JPanel(), ActionListener
 
     override fun actionPerformed(arg0: ActionEvent)
     {
+        val selectedPlayer = player ?: return
         when (arg0.source)
         {
-            btnEdit -> AIConfigurationDialog.amendPlayer(player!!)
-            btnDelete -> confirmAndDeletePlayer()
-            btnRunSimulation -> AISimulationSetup(player!!).isVisible = true
+            btnEdit -> AIConfigurationDialog.amendPlayer(selectedPlayer)
+            btnDelete -> confirmAndDeletePlayer(selectedPlayer)
+            btnRunSimulation -> AISimulationSetup(selectedPlayer).isVisible = true
         }
     }
 
-    private fun confirmAndDeletePlayer()
+    private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity)
     {
-        val option = DialogUtil.showQuestion("Are you sure you want to delete ${player!!.name}?", false)
+        val option = DialogUtil.showQuestion("Are you sure you want to delete ${selectedPlayer.name}?", false)
         if (option == JOptionPane.YES_OPTION)
         {
             val timestamp = Timestamp(System.currentTimeMillis())
-            player!!.dtDeleted = timestamp
-            player!!.saveToDatabase()
+            selectedPlayer.dtDeleted = timestamp
+            selectedPlayer.saveToDatabase()
 
             //Re-initialise the screen so it updates
-            val screen =
-                ScreenCache.get<PlayerManagementScreen>()
-            screen.initialise()
+            ScreenCache.get<PlayerManagementScreen>().initialise()
         }
     }
 }

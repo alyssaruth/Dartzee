@@ -24,7 +24,6 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     {
         val player = PlayerEntity()
         player.name = "BTBF"
-
         "$player" shouldBe "BTBF"
     }
 
