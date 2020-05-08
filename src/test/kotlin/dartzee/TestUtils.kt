@@ -145,7 +145,7 @@ fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
 inline fun <reified T: AbstractButton> Container.findComponent(text: String, toolTipText: String? = null): T
 {
     val allComponents = getAllChildComponentsForType<T>()
-    val matching = allComponents.filter { it.text == text }
+    val matching = allComponents.filter { it.text.contains(text) }
             .filter { toolTipText == null || it.toolTipText == toolTipText }
 
     if (matching.isEmpty())

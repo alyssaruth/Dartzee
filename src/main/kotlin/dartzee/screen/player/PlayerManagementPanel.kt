@@ -9,9 +9,9 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.ScreenCache
-import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetup
 import dartzee.stats.getGameCounts
+import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -127,7 +127,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
         val selectedPlayer = player ?: return
         when (arg0.source)
         {
-            btnEdit -> AIConfigurationDialog.amendPlayer(selectedPlayer)
+            btnEdit -> InjectedThings.playerManager.amendPlayer(selectedPlayer)
             btnDelete -> confirmAndDeletePlayer(selectedPlayer)
             btnRunSimulation -> AISimulationSetup(selectedPlayer).isVisible = true
         }

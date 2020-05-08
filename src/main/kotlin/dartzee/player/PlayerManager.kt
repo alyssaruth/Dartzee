@@ -1,5 +1,6 @@
 package dartzee.player
 
+import dartzee.db.PlayerEntity
 import dartzee.screen.HumanCreationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
@@ -7,7 +8,6 @@ import dartzee.screen.ai.AIConfigurationDialog
 class PlayerManager
 {
     fun createNewPlayer(human: Boolean) = if (human) createNewHuman() else createNewAI()
-
     private fun createNewHuman(): Boolean
     {
         val dlg = HumanCreationDialog()
@@ -22,5 +22,10 @@ class PlayerManager
         dialog.isVisible = true
 
         return dialog.createdPlayer
+    }
+
+    fun amendPlayer(player: PlayerEntity)
+    {
+        AIConfigurationDialog.amendPlayer(player)
     }
 }

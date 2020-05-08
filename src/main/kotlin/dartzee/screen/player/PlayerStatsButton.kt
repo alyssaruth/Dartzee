@@ -32,9 +32,11 @@ class PlayerStatsButton(private val player: PlayerEntity,
 
     private fun makeStatsText(played: Int, highScore: Int): String
     {
+        val scoreDesc = if (highScore > 0) "$highScore" else "-"
+
         val lineOne = "<h3>${gameType.getDescription()}</h3>"
         val lineTwo = "<b>Played: </b> $played"
-        val lineThree = "<b>Best game: </b> $highScore"
+        val lineThree = "<b>Best game: </b> $scoreDesc"
         return "<html><center>$lineOne $lineTwo<br>$lineThree</center></html>"
     }
 
