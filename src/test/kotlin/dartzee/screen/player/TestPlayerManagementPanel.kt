@@ -212,4 +212,19 @@ class TestPlayerManagementPanel: AbstractTest()
         verify { playerManager.amendPlayer(player) }
     }
 
+    @Test
+    fun `Should run a simulation for a player`()
+    {
+        val playerManager = mockk<PlayerManager>(relaxed = true)
+        InjectedThings.playerManager = playerManager
+
+        val player = insertPlayer(strategy = 2)
+
+        val panel = PlayerManagementPanel()
+        panel.refresh(player)
+        panel.clickComponent<JButton>("Run Simulation")
+
+        verify { playerManager.runSimulation(player) }
+    }
+
 }

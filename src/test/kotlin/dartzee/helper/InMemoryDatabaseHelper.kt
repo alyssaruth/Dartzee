@@ -74,7 +74,7 @@ fun insertPlayer(uuid: String = randomGuid(),
                  strategy: Int = 1,
                  strategyXml: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
-                 playerImageId: String = insertPlayerImage().rowId): PlayerEntity
+                 playerImageId: String? = null): PlayerEntity
 {
     val p = PlayerEntity()
     p.rowId = uuid
@@ -82,7 +82,7 @@ fun insertPlayer(uuid: String = randomGuid(),
     p.strategy = strategy
     p.strategyXml = strategyXml
     p.dtDeleted = dtDeleted
-    p.playerImageId = playerImageId
+    p.playerImageId = playerImageId ?: insertPlayerImage().rowId
 
     p.saveToDatabase()
     return p

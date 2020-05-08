@@ -5,6 +5,7 @@ import dartzee.bean.PlayerAvatar
 import dartzee.core.bean.WrapLayout
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.DialogUtil
+import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -18,7 +19,6 @@ import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.sql.Timestamp
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
@@ -129,7 +129,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
         {
             btnEdit -> InjectedThings.playerManager.amendPlayer(selectedPlayer)
             btnDelete -> confirmAndDeletePlayer(selectedPlayer)
-            btnRunSimulation -> AISimulationSetup(selectedPlayer).isVisible = true
+            btnRunSimulation -> InjectedThings.playerManager.runSimulation(selectedPlayer)
         }
     }
 
@@ -138,8 +138,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
         val option = DialogUtil.showQuestion("Are you sure you want to delete ${selectedPlayer.name}?", false)
         if (option == JOptionPane.YES_OPTION)
         {
-            val timestamp = Timestamp(System.currentTimeMillis())
-            selectedPlayer.dtDeleted = timestamp
+            selectedPlayer.dtDeleted = getSqlDateNow()
             selectedPlayer.saveToDatabase()
 
             //Re-initialise the screen so it updates
