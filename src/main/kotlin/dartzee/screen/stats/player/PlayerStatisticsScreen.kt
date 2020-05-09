@@ -32,8 +32,8 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     private var filteredGames = listOf<GameWrapper>()
     private var filteredGamesOther = listOf<GameWrapper>()
 
-    private var gameType: GameType = GameType.X01
-    private var player: PlayerEntity? = null
+    var gameType: GameType = GameType.X01
+    var player: PlayerEntity? = null
 
     //Components
     private val filterPanels = JPanel()
