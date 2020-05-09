@@ -109,6 +109,11 @@ fun Component.doHover(x: Int = 0, y: Int = 0) {
     mouseListeners.forEach { it.mouseEntered(me) }
 }
 
+fun Component.doHoverAway(x: Int = 0, y: Int = 0) {
+    val me = makeMouseEvent(x = x, y = y)
+    mouseListeners.forEach { it.mouseExited(me) }
+}
+
 fun Component.doMouseMove() {
     val me = makeMouseEvent(x = x, y = y)
     mouseMotionListeners.forEach { it.mouseMoved(me) }

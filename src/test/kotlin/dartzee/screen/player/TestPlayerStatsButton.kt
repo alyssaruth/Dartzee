@@ -1,6 +1,7 @@
 package dartzee.screen.player
 
 import dartzee.doHover
+import dartzee.doHoverAway
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -47,17 +48,26 @@ class TestPlayerStatsButton: AbstractTest()
         val player = insertPlayer()
 
         val button = PlayerStatsButton(player, GameType.X01, 10, 35)
+        val text = button.text
         button.doHover()
 
         button.text shouldBe "<html><h3>X01 stats &gt;</h3></html>"
+
+        button.doHoverAway()
+        button.text shouldBe text
     }
 
     @Test
-    fun `Should switch to the players stats on click`()
+    fun `Should switch to the players stats on click, and reset button text`()
     {
         val player = insertPlayer()
         val button = PlayerStatsButton(player, GameType.X01, 10, 35)
+        val text = button.text
+
+        button.doHover()
         button.doClick()
+
+        button.text shouldBe text
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<PlayerStatisticsScreen>()

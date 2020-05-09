@@ -8,6 +8,7 @@ import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.doHover
+import dartzee.doHoverAway
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
@@ -39,7 +40,11 @@ class TestPlayerAchievementsButton: AbstractTest()
         val player = insertPlayer()
 
         val button = PlayerAchievementsButton(player, listOf())
+        val text = button.text
+        button.doHover()
         button.doClick()
+
+        button.text shouldBe text
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<PlayerAchievementsScreen>()
@@ -54,8 +59,12 @@ class TestPlayerAchievementsButton: AbstractTest()
     {
         val player = insertPlayer()
         val button = PlayerAchievementsButton(player, listOf())
+        val text = button.text
 
         button.doHover()
         button.text shouldBe "<html><h3>Achievements &gt;</h3></html>"
+
+        button.doHoverAway()
+        button.text shouldBe text
     }
 }
