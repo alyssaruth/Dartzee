@@ -20,7 +20,6 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.DartsScorer
 import dartzee.screen.game.x01.GamePanelX01
-import dartzee.stats.PlayerSummaryStats
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
@@ -427,13 +426,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         }
 
         dartboard.stopListening()
-
-        val participants = getParticipants()
-        for (pt in participants)
-        {
-            val playerId = pt.playerId
-            PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType)
-        }
     }
 
 
@@ -494,8 +486,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         participant.saveToDatabase()
 
         val playerId = participant.playerId
-        PlayerSummaryStats.resetPlayerStats(playerId, gameEntity.gameType)
-
         updateAchievementsForFinish(playerId, finishingPosition, numberOfDarts)
 
         return finishingPosition

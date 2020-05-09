@@ -53,7 +53,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
 
     fun init()
     {
-        val allPlayers = PlayerEntity.retrievePlayers("", false)
+        val allPlayers = PlayerEntity.retrievePlayers("")
         tablePlayersToSelectFrom.initPlayerTableModel(allPlayers)
         tablePlayersSelected.initPlayerTableModel()
     }

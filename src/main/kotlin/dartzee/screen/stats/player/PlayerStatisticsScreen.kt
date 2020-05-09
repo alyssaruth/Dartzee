@@ -5,9 +5,9 @@ import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.screen.PlayerManagementScreen
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
+import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.stats.player.golf.StatisticsTabGolfHoleBreakdown
 import dartzee.screen.stats.player.golf.StatisticsTabGolfOptimalScorecard
 import dartzee.screen.stats.player.golf.StatisticsTabGolfScorecards
@@ -17,6 +17,7 @@ import dartzee.stats.GameWrapper
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
+import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.sql.SQLException
 import javax.swing.JButton
@@ -31,8 +32,8 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     private var filteredGames = listOf<GameWrapper>()
     private var filteredGamesOther = listOf<GameWrapper>()
 
-    private var gameType: GameType = GameType.X01
-    private var player: PlayerEntity? = null
+    var gameType: GameType = GameType.X01
+    var player: PlayerEntity? = null
 
     //Components
     private val filterPanels = JPanel()
@@ -71,7 +72,8 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         btnAdd.addActionListener(this)
     }
 
-    override fun getScreenName() = "Statistics for $player"
+    override fun getScreenName() = "${gameType.getDescription()} Statistics for $player"
+    override fun getDesiredSize() = Dimension(1240, 700)
 
     override fun initialise()
     {

@@ -3,6 +3,7 @@ package dartzee.screen
 import dartzee.clickComponent
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertExits
+import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import io.kotlintest.matchers.types.shouldBeInstanceOf

@@ -1,9 +1,11 @@
-package dartzee.screen
+package dartzee.screen.player
 
 import dartzee.bean.getSelectedPlayer
 import dartzee.bean.initPlayerTableModel
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
+import dartzee.screen.EmbeddedScreen
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -45,9 +47,11 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
         panelNorth.layout = FlowLayout(FlowLayout.LEFT, 5, 5)
         btnNewPlayer.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addHuman.png"))
         btnNewPlayer.preferredSize = Dimension(30, 30)
+        btnNewPlayer.toolTipText = "Add player"
         panelNorth.add(btnNewPlayer)
         btnNewPlayer.border = EmptyBorder(5, 0, 5, 0)
         btnNewAi.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addAi.png"))
+        btnNewAi.toolTipText = "Add computer"
         btnNewAi.preferredSize = Dimension(30, 30)
 
         panelNorth.add(btnNewAi)
@@ -64,37 +68,40 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 
     override fun initialise()
     {
-        val players = PlayerEntity.retrievePlayers("", false)
+        val players = PlayerEntity.retrievePlayers("")
         tablePlayers.initPlayerTableModel(players)
-        showNoSelectionPanel()
-    }
-
-    private fun showNoSelectionPanel()
-    {
-        panel.clear()
+        refreshSummaryPanel()
     }
 
     override fun getScreenName() = "Player Management"
 
     override fun valueChanged(arg0: ListSelectionEvent)
     {
-        val player = tablePlayers.getSelectedPlayer()
-        if (player == null)
-        {
-            showNoSelectionPanel()
-            return
-        }
+        refreshSummaryPanel()
+    }
 
-        panel.init(player)
+    private fun refreshSummaryPanel()
+    {
+        val player = tablePlayers.getSelectedPlayer()
+        panel.refresh(player)
     }
 
     override fun actionPerformed(arg0: ActionEvent)
     {
         when (arg0.source)
         {
-            btnNewPlayer -> PlayerEntity.createNewPlayer(true)
-            btnNewAi -> PlayerEntity.createNewPlayer(false)
+            btnNewPlayer -> createPlayer(true)
+            btnNewAi -> createPlayer(false)
             else -> super.actionPerformed(arg0)
+        }
+    }
+
+    private fun createPlayer(human: Boolean)
+    {
+        val created = InjectedThings.playerManager.createNewPlayer(human)
+        if (created)
+        {
+            initialise()
         }
     }
 }

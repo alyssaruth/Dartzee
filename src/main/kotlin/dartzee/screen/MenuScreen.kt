@@ -2,9 +2,11 @@ package dartzee.screen
 
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.main.exitApplication
+import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesDialog
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
+import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -24,34 +26,36 @@ class MenuScreen : EmbeddedScreen()
     private val btnExit = JButton("Exit")
     private val btnGameReport = JButton("Game Report")
 
+    private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
+
     init
     {
         val panel = JPanel()
         add(panel, BorderLayout.CENTER)
         panel.layout = null
-        btnNewGame.font = Font("Tahoma", Font.PLAIN, 18)
+        btnNewGame.font = buttonFont
 
         btnNewGame.setBounds(145, 40, 150, 50)
         panel.add(btnNewGame)
-        btnManagePlayers.font = Font("Tahoma", Font.PLAIN, 18)
+        btnManagePlayers.font = buttonFont
         btnManagePlayers.setBounds(60, 140, 150, 50)
         panel.add(btnManagePlayers)
-        btnLeaderboards.font = Font("Tahoma", Font.PLAIN, 18)
+        btnLeaderboards.font = buttonFont
         btnLeaderboards.setBounds(35, 240, 150, 50)
         panel.add(btnLeaderboards)
-        btnPreferences.font = Font("Tahoma", Font.PLAIN, 18)
+        btnPreferences.font = buttonFont
         btnPreferences.setBounds(505, 40, 150, 50)
         panel.add(btnPreferences)
-        btnAbout.font = Font("Tahoma", Font.PLAIN, 18)
+        btnAbout.font = buttonFont
         btnAbout.setBounds(590, 140, 150, 50)
         panel.add(btnAbout)
-        btnUtilities.font = Font("Tahoma", Font.PLAIN, 18)
+        btnUtilities.font = buttonFont
         btnUtilities.setBounds(615, 240, 150, 50)
         panel.add(btnUtilities)
-        btnExit.font = Font("Tahoma", Font.PLAIN, 18)
+        btnExit.font = buttonFont
         btnExit.setBounds(325, 465, 150, 50)
         panel.add(btnExit)
-        btnGameReport.font = Font("Tahoma", Font.PLAIN, 18)
+        btnGameReport.font = buttonFont
         btnGameReport.setBounds(60, 340, 150, 50)
         panel.add(btnGameReport)
 

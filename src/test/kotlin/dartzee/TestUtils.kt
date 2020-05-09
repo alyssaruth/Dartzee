@@ -109,6 +109,11 @@ fun Component.doHover(x: Int = 0, y: Int = 0) {
     mouseListeners.forEach { it.mouseEntered(me) }
 }
 
+fun Component.doHoverAway(x: Int = 0, y: Int = 0) {
+    val me = makeMouseEvent(x = x, y = y)
+    mouseListeners.forEach { it.mouseExited(me) }
+}
+
 fun Component.doMouseMove() {
     val me = makeMouseEvent(x = x, y = y)
     mouseMotionListeners.forEach { it.mouseMoved(me) }
@@ -142,10 +147,11 @@ fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
     keyValuePairs.shouldContainExactly(mapOf(*values))
 }
 
-inline fun <reified T: AbstractButton> Container.findComponent(text: String): T
+inline fun <reified T: AbstractButton> Container.findComponent(text: String, toolTipText: String? = null): T
 {
     val allComponents = getAllChildComponentsForType<T>()
-    val matching = allComponents.filter { it.text == text }
+    val matching = allComponents.filter { it.text.contains(text) }
+            .filter { toolTipText == null || it.toolTipText == toolTipText }
 
     if (matching.isEmpty())
     {
@@ -175,9 +181,9 @@ inline fun <reified T: JComponent> Container.findComponent(): T
     return allComponents.first()
 }
 
-inline fun <reified T: AbstractButton> Container.clickComponent(text: String)
+inline fun <reified T: AbstractButton> Container.clickComponent(text: String, toolTipText: String? = null)
 {
-    findComponent<T>(text).doClick()
+    findComponent<T>(text, toolTipText).doClick()
 }
 
 fun Container.findLabel(text: String): JLabel?

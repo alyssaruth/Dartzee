@@ -16,6 +16,8 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.ResourceCache
+import java.net.URL
 import java.sql.SQLException
 
 fun getNotBustSql(): String
@@ -41,7 +43,7 @@ fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, playe
     var score = 0
     for (achievement in getAllAchievements())
     {
-        val myRelevantRows = myAchievementRows.filter{it.achievementRef == achievement.achievementRef}.toMutableList()
+        val myRelevantRows = myAchievementRows.filter{ it.achievementRef == achievement.achievementRef }
         achievement.initialiseFromDb(myRelevantRows, player)
 
         score += achievement.getScore()
@@ -118,7 +120,7 @@ fun getAchievementForRef(achievementRef : Int) = getAllAchievements().find { it.
 
 fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
 {
-    val ref = getAllAchievements().find {it is AbstractAchievementBestGame && it.gameType == gameType}
+    val ref = getAllAchievements().find { it is AbstractAchievementBestGame && it.gameType == gameType }
     return ref as AbstractAchievementBestGame?
 }
 
@@ -220,3 +222,12 @@ fun retrieveAchievementForDetail(achievementRef: Int, playerId: String, achievem
     val whereSql = "AchievementRef = $achievementRef AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
     return AchievementEntity().retrieveEntity(whereSql)
 }
+
+fun getGamesWonIcon(gameType: GameType): URL =
+    when (gameType)
+    {
+        GameType.X01 -> ResourceCache.URL_ACHIEVEMENT_X01_GAMES_WON
+        GameType.GOLF -> ResourceCache.URL_ACHIEVEMENT_GOLF_GAMES_WON
+        GameType.ROUND_THE_CLOCK -> ResourceCache.URL_ACHIEVEMENT_CLOCK_GAMES_WON
+        GameType.DARTZEE -> ResourceCache.URL_ACHIEVEMENT_DARTZEE_GAMES_WON
+    }

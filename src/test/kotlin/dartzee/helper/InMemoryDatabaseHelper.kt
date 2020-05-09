@@ -59,23 +59,30 @@ fun insertDartsMatch(uuid: String = randomGuid(),
     return m
 }
 
+fun insertGameForPlayer(player: PlayerEntity,
+                        gameType: GameType = GameType.X01,
+                        finalScore: Int = -1,
+                        dtFinished: Timestamp = DateStatics.END_OF_TIME)
+{
+    val game = insertGame(gameType = gameType)
+    insertParticipant(playerId = player.rowId, gameId = game.rowId, finalScore = finalScore, dtFinished = dtFinished)
+}
+
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
                  strategy: Int = 1,
                  strategyXml: String = "",
-                 dtDeleted: Timestamp = DateStatics.END_OF_TIME): PlayerEntity
+                 dtDeleted: Timestamp = DateStatics.END_OF_TIME,
+                 playerImageId: String? = null): PlayerEntity
 {
-
-    val playerImageId = insertPlayerImage().rowId
-
     val p = PlayerEntity()
     p.rowId = uuid
     p.name = name
     p.strategy = strategy
     p.strategyXml = strategyXml
     p.dtDeleted = dtDeleted
-    p.playerImageId = playerImageId
+    p.playerImageId = playerImageId ?: insertPlayerImage().rowId
 
     p.saveToDatabase()
     return p
@@ -255,12 +262,12 @@ fun insertAchievement(uuid: String = randomGuid(),
 
 private val fileBytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
 private val serialBlob = SerialBlob(fileBytes)
-fun insertPlayerImage(): PlayerImageEntity
+fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
 {
     val pi = PlayerImageEntity()
     pi.assignRowId()
     pi.blobData = serialBlob
-    pi.filepath = "rsrc:/avatars/BaboOne.png"
+    pi.filepath = "rsrc:/avatars/$resource.png"
     pi.bytes = fileBytes
     pi.preset = false
 

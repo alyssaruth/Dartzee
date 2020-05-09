@@ -3,10 +3,6 @@ package dartzee.db
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
-import dartzee.screen.HumanCreationDialog
-import dartzee.screen.PlayerManagementScreen
-import dartzee.screen.ScreenCache
-import dartzee.screen.ai.AIConfigurationDialog
 import javax.swing.ImageIcon
 
 class PlayerEntity:AbstractEntity<PlayerEntity>()
@@ -53,7 +49,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         return model
     }
 
-    fun getAvatar() = if (playerImageId.isEmpty()) null else PlayerImageEntity.retrieveImageIconForId(playerImageId)
+    fun getAvatar() = PlayerImageEntity.retrieveImageIconForId(playerImageId)
     fun getFlag() = getPlayerFlag(isHuman())
 
     companion object
@@ -66,17 +62,14 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         /**
          * Retrieval methods
          */
-        fun retrievePlayers(startingSql:String, includeDeleted:Boolean):List<PlayerEntity>
+        fun retrievePlayers(startingSql: String): List<PlayerEntity>
         {
             var whereSql = startingSql
-            if (!includeDeleted)
+            if (!startingSql.isEmpty())
             {
-                if (!startingSql.isEmpty())
-                {
-                    whereSql += " AND "
-                }
-                whereSql += "DtDeleted = " + getEndOfTimeSqlString()
+                whereSql += " AND "
             }
+            whereSql += "DtDeleted = " + getEndOfTimeSqlString()
 
             return PlayerEntity().retrieveEntities(whereSql)
         }
@@ -85,38 +78,6 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
             val whereSql = "Name = '$name' AND DtDeleted = ${getEndOfTimeSqlString()}"
             val players = PlayerEntity().retrieveEntities(whereSql)
             return if (players.isEmpty()) null else players[0]
-        }
-
-        /**
-         * Creation/validation
-         */
-        fun createNewPlayer(human: Boolean)
-        {
-            val created = createAndSavePlayerIfValid(human)
-            if (created)
-            {
-                ScreenCache.get<PlayerManagementScreen>().initialise()
-            }
-        }
-        private fun createAndSavePlayerIfValid(human: Boolean): Boolean
-        {
-            return if (human) createNewHuman() else createNewAI()
-        }
-
-        private fun createNewHuman(): Boolean
-        {
-            val dlg = HumanCreationDialog()
-            dlg.isVisible = true
-
-            return dlg.createdPlayer
-        }
-        private fun createNewAI(): Boolean
-        {
-            val dialog = AIConfigurationDialog()
-            dialog.setLocationRelativeTo(ScreenCache.mainScreen)
-            dialog.isVisible = true
-
-            return dialog.createdPlayer
         }
 
         fun factoryAndSaveHuman(name: String, avatarId: String): PlayerEntity

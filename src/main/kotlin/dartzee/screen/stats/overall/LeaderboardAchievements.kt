@@ -57,7 +57,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
         model.addColumn("Player")
         model.addColumn("Score")
 
-        val players = PlayerEntity.retrievePlayers(panelPlayerFilters.getWhereSql(), false)
+        val players = PlayerEntity.retrievePlayers(panelPlayerFilters.getWhereSql())
         players.forEach{ p ->
             val myRows = achievementRows.filter { it.playerId == p.rowId }
 
