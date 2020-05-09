@@ -6,11 +6,10 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementsScreen
-import java.awt.event.ActionListener
 import javax.swing.ImageIcon
 
 class PlayerAchievementsButton(private val player: PlayerEntity,
-                               private val achievementRows: List<AchievementEntity>): PlayerSummaryButton(), ActionListener
+                               private val achievementRows: List<AchievementEntity>): PlayerSummaryButton()
 {
     override val defaultText = makeDefaultText()
     override val hoverText = "<html><h3>Achievements &gt;</h3></html>"
