@@ -60,9 +60,9 @@ fun insertDartsMatch(uuid: String = randomGuid(),
 }
 
 fun insertGameForPlayer(player: PlayerEntity,
-                                gameType: GameType = GameType.X01,
-                                finalScore: Int = -1,
-                                dtFinished: Timestamp = DateStatics.END_OF_TIME)
+                        gameType: GameType = GameType.X01,
+                        finalScore: Int = -1,
+                        dtFinished: Timestamp = DateStatics.END_OF_TIME)
 {
     val game = insertGame(gameType = gameType)
     insertParticipant(playerId = player.rowId, gameId = game.rowId, finalScore = finalScore, dtFinished = dtFinished)
