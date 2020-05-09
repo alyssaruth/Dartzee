@@ -19,6 +19,9 @@ class PlayerAchievementsButton(private val player: PlayerEntity,
         icon = ImageIcon(javaClass.getResource("/achievements/trophy.png"))
         text = defaultText
 
+        rolloverIcon = ImageIcon(javaClass.getResource("/buttons/achievement.png"))
+        selectedIcon = ImageIcon(javaClass.getResource("/buttons/achievement.png"))
+
         addActionListener(this)
         addMouseListener(this)
     }
