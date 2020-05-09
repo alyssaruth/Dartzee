@@ -105,6 +105,8 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
         p.rowId.shouldNotBeEmpty()
         p.name shouldBe "Clive"
         p.playerImageId shouldBe "foo"
+        p.strategy shouldBe -1
+        p.strategyXml shouldBe ""
 
         PlayerEntity().retrieveForId(p.rowId).shouldNotBeNull()
     }
