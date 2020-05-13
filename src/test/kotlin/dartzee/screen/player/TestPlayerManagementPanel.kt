@@ -16,6 +16,7 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.player.PlayerManager
 import dartzee.screen.ScreenCache
+import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly

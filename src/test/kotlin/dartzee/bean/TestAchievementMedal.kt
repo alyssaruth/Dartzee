@@ -2,21 +2,21 @@ package dartzee.bean
 
 import dartzee.`object`.GameLauncher
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
-import dartzee.doClick
 import dartzee.doHover
 import dartzee.findLabel
 import dartzee.helper.AbstractTest
-import dartzee.helper.shouldMatchImage
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.InjectedThings
+import doClick
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
+import shouldMatchImage
 import java.awt.Cursor
 import javax.swing.table.DefaultTableModel
 

@@ -10,9 +10,9 @@ import dartzee.dartzee.dart.*
 import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.dartzee.total.DartzeeTotalRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
-import dartzee.flushEdt
 import dartzee.helper.*
 import dartzee.utils.InjectedThings
+import flushEdt
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder

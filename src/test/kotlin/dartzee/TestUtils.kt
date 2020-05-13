@@ -17,19 +17,18 @@ import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.MockKMatcherScope
+import isEqual
 import java.awt.Color
 import java.awt.Component
 import java.awt.Container
 import java.awt.Point
+import java.awt.image.BufferedImage
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.swing.AbstractButton
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.SwingUtilities
+import javax.swing.*
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
 val outerBull = DartboardSegment("25_$SEGMENT_TYPE_OUTER_SINGLE")
@@ -67,17 +66,6 @@ fun borrowTestDartboard(): Dartboard
     return dartboard!!
 }
 
-/**
- * Flush the Event Dispatch Thread by invoking an empty fn onto the back of the queue and waiting for it
- */
-fun flushEdt()
-{
-    val lambda = {}
-    SwingUtilities.invokeAndWait(lambda)
-    SwingUtilities.invokeAndWait(lambda)
-}
-
-
 fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)
 
 fun Dartboard.doClick(x: Int, y: Int)
@@ -97,11 +85,6 @@ fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
                   keyValuePairs: Map<String, Any?> = mapOf()): LogRecord
 {
     return LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
-}
-
-fun Component.doClick(x: Int = 0, y: Int = 0) {
-    val me = makeMouseEvent(x = x, y = y)
-    mouseListeners.forEach { it.mouseReleased(me) }
 }
 
 fun Component.doHover(x: Int = 0, y: Int = 0) {
@@ -222,3 +205,16 @@ fun DateFilterPanel.makeInvalid()
 fun ScrollTable.getColumnNames() = (0 until columnCount).map { getColumnName(it) }
 
 fun ScrollTable.getDisplayValueAt(row: Int, col: Int) = table.getValueAt(row, col)
+
+fun Icon.shouldMatch(other: Icon)
+{
+    toBufferedImage().isEqual(other.toBufferedImage()) shouldBe true
+}
+private fun Icon.toBufferedImage(): BufferedImage
+{
+    val bi = BufferedImage(iconWidth, iconHeight, BufferedImage.TYPE_INT_RGB)
+    val g = bi.createGraphics()
+    paintIcon(null, g, 0, 0)
+    g.dispose()
+    return bi
+}

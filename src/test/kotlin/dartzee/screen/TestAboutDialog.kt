@@ -1,10 +1,10 @@
 package dartzee.screen
 
-import dartzee.doClick
 import dartzee.doMouseMove
 import dartzee.findLabel
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
+import doClick
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
