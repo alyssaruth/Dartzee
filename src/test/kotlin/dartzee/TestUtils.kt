@@ -13,6 +13,7 @@ import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.screen.Dartboard
+import find
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -130,70 +131,15 @@ fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
     keyValuePairs.shouldContainExactly(mapOf(*values))
 }
 
-inline fun <reified T: AbstractButton> Container.findComponent(text: String, toolTipText: String? = null): T
-{
-    val allComponents = getAllChildComponentsForType<T>()
-    val matching = allComponents.filter { it.text.contains(text) }
-            .filter { toolTipText == null || it.toolTipText == toolTipText }
-
-    if (matching.isEmpty())
-    {
-        throw Exception("No ${T::class.simpleName} found with text [$text]")
-    }
-    else if (matching.size > 1)
-    {
-        throw Exception("Non-unique text - ${matching.size} ${T::class.simpleName}s found with text [$text]")
-    }
-
-    return matching.first()
-}
-
-inline fun <reified T: JComponent> Container.findComponent(): T
-{
-    val allComponents = getAllChildComponentsForType<T>()
-
-    if (allComponents.isEmpty())
-    {
-        throw Exception("No ${T::class.simpleName} found")
-    }
-    else if (allComponents.size > 1)
-    {
-        throw Exception("Non-unique class - ${allComponents.size} ${T::class.simpleName}s found")
-    }
-
-    return allComponents.first()
-}
-
 inline fun <reified T: AbstractButton> Container.clickComponent(text: String, toolTipText: String? = null)
 {
-    findComponent<T>(text, toolTipText).doClick()
-}
-
-fun Container.findLabel(text: String): JLabel?
-{
-    val allComponents = getAllChildComponentsForType<JLabel>()
-    val matching = allComponents.filter { it.text.contains(text) }
-    if (matching.size > 1)
-    {
-        throw Exception("Non-unique text - ${matching.size} JLabels found with text containing [$text]")
-    }
-
-    return allComponents.find { it.text.contains(text) }
+    val component = find<T>(text, toolTipText) ?: throw Exception("No component found")
+    component.doClick()
 }
 
 fun ComboBoxGameType.updateSelection(type: GameType)
 {
     selectedItem = items().find { it.hiddenData == type }
-}
-
-fun JComponent.shouldBeEnabled()
-{
-    isEnabled shouldBe true
-}
-
-fun JComponent.shouldBeDisabled()
-{
-    isEnabled shouldBe false
 }
 
 fun DateFilterPanel.makeInvalid()

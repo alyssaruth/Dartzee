@@ -11,13 +11,13 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
-import dartzee.findComponent
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.player.PlayerManager
 import dartzee.screen.ScreenCache
 import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
+import find
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
@@ -40,10 +40,10 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(null)
 
         panel.lblPlayerName.text shouldBe ""
-        panel.findComponent<PlayerAvatar>().isVisible shouldBe false
-        panel.findComponent<JButton>("Edit").isVisible shouldBe false
-        panel.findComponent<JButton>("Run Simulation").isVisible shouldBe false
-        panel.findComponent<JButton>("Delete").isVisible shouldBe false
+        panel.find<PlayerAvatar>()?.isVisible shouldBe false
+        panel.find<JButton>("Edit")?.isVisible shouldBe false
+        panel.find<JButton>("Run Simulation")?.isVisible shouldBe false
+        panel.find<JButton>("Delete")?.isVisible shouldBe false
         panel.getAllChildComponentsForType<PlayerSummaryButton>().shouldBeEmpty()
     }
 
@@ -62,7 +62,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete Leah?")
         player.dtDeleted shouldBe DateStatics.END_OF_TIME
-        managementScreen.findComponent<ScrollTable>().rowCount shouldBe 1
+        managementScreen.find<ScrollTable>()?.rowCount shouldBe 1
         PlayerEntity.retrieveForName("Leah") shouldNotBe null
     }
 
@@ -81,7 +81,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete BTBF?")
         player.dtDeleted shouldNotBe DateStatics.END_OF_TIME
-        managementScreen.findComponent<ScrollTable>().rowCount shouldBe 0
+        managementScreen.find<ScrollTable>()?.rowCount shouldBe 0
         PlayerEntity.retrieveForName("BTBF") shouldBe null
     }
 
@@ -95,10 +95,10 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
         panel.lblPlayerName.text shouldBe "Alex"
-        panel.findComponent<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
-        panel.findComponent<JButton>("Delete").isVisible shouldBe true
-        panel.findComponent<JButton>("Edit").isVisible shouldBe false
-        panel.findComponent<JButton>("Run Simulation").isVisible shouldBe false
+        panel.find<PlayerAvatar>()!!.icon.shouldMatch(player.getAvatar())
+        panel.find<JButton>("Delete")?.isVisible shouldBe true
+        panel.find<JButton>("Edit")?.isVisible shouldBe false
+        panel.find<JButton>("Run Simulation")?.isVisible shouldBe false
     }
 
     @Test
@@ -111,10 +111,10 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
         panel.lblPlayerName.text shouldBe "Dennis"
-        panel.findComponent<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
-        panel.findComponent<JButton>("Delete").isVisible shouldBe true
-        panel.findComponent<JButton>("Edit").isVisible shouldBe true
-        panel.findComponent<JButton>("Run Simulation").isVisible shouldBe true
+        panel.find<PlayerAvatar>()!!.icon.shouldMatch(player.getAvatar())
+        panel.find<JButton>("Delete")!!.isVisible shouldBe true
+        panel.find<JButton>("Edit")!!.isVisible shouldBe true
+        panel.find<JButton>("Run Simulation")!!.isVisible shouldBe true
     }
 
     @Test
@@ -126,12 +126,12 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
 
-        val x01Button = panel.findComponent<PlayerStatsButton>("X01")
+        val x01Button = panel.find<PlayerStatsButton>("X01")!!
         x01Button.isEnabled shouldBe false
         x01Button.text.shouldContain("Played: </b> 0")
         x01Button.text.shouldContain("Best game: </b> -")
 
-        val achievementButton = panel.findComponent<PlayerAchievementsButton>()
+        val achievementButton = panel.find<PlayerAchievementsButton>()!!
         achievementButton.isEnabled shouldBe true
         achievementButton.text.shouldContain("0 / ${getAchievementMaximum()}")
     }
@@ -149,15 +149,15 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val x01Button = panel.findComponent<PlayerStatsButton>("X01")
+        val x01Button = panel.find<PlayerStatsButton>("X01")!!
         x01Button.isEnabled shouldBe true
         x01Button.text.shouldContain("Played: </b> 2")
 
-        val golfButton = panel.findComponent<PlayerStatsButton>("Golf")
+        val golfButton = panel.find<PlayerStatsButton>("Golf")!!
         golfButton.isEnabled shouldBe true
         golfButton.text.shouldContain("Played: </b> 1")
 
-        val rtcButton = panel.findComponent<PlayerStatsButton>("Round the Clock")
+        val rtcButton = panel.find<PlayerStatsButton>("Round the Clock")!!
         rtcButton.isEnabled shouldBe false
         rtcButton.text.shouldContain("Played: </b> 0")
     }
@@ -172,13 +172,13 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val x01Button = panel.findComponent<PlayerStatsButton>("X01")
+        val x01Button = panel.find<PlayerStatsButton>("X01")!!
         x01Button.text.shouldContain("Best game: </b> 25")
 
-        val golfButton = panel.findComponent<PlayerStatsButton>("Golf")
+        val golfButton = panel.find<PlayerStatsButton>("Golf")!!
         golfButton.text.shouldContain("Best game: </b> 55")
 
-        val rtcButton = panel.findComponent<PlayerStatsButton>("Round the Clock")
+        val rtcButton = panel.find<PlayerStatsButton>("Round the Clock")!!
         rtcButton.text.shouldContain("Best game: </b> -")
     }
 
@@ -194,7 +194,7 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val achievementButton = panel.findComponent<PlayerAchievementsButton>()
+        val achievementButton = panel.find<PlayerAchievementsButton>()!!
         achievementButton.text.shouldContain("10 / ${getAchievementMaximum()}")
     }
 

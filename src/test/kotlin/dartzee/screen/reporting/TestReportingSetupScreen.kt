@@ -3,12 +3,12 @@ package dartzee.screen.reporting
 import dartzee.clickComponent
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.findComponent
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.makeInvalid
 import dartzee.screen.ScreenCache
+import find
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -24,7 +24,7 @@ class TestReportingSetupScreen: AbstractTest()
         val scrn = ReportingSetupScreen()
         ScreenCache.switch(scrn)
 
-        val gameTab = scrn.findComponent<ReportingGameTab>()
+        val gameTab = scrn.find<ReportingGameTab>()!!
         gameTab.clickComponent<JCheckBox>("Start Date")
         gameTab.getStartDateFilterPanel().makeInvalid()
 
@@ -42,7 +42,7 @@ class TestReportingSetupScreen: AbstractTest()
 
         val playerOne = insertPlayer(name = "Alice")
 
-        val tab = scrn.findComponent<ReportingPlayersTab>()
+        val tab = scrn.find<ReportingPlayersTab>()!!
         tab.addPlayers(listOf(playerOne))
         tab.includedPlayerPanel.chckbxPosition.doClick()
 
@@ -56,10 +56,10 @@ class TestReportingSetupScreen: AbstractTest()
     {
         val scrn = ReportingSetupScreen()
 
-        val gameTab = scrn.findComponent<ReportingGameTab>()
+        val gameTab = scrn.find<ReportingGameTab>()!!
         gameTab.clickComponent<JCheckBox>("Game")
 
-        val playersTab = scrn.findComponent<ReportingPlayersTab>()
+        val playersTab = scrn.find<ReportingPlayersTab>()!!
         playersTab.clickComponent<JCheckBox>("Exclude games with only AI players")
 
         scrn.btnNext.doClick()

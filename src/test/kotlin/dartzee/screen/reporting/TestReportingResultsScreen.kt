@@ -2,7 +2,6 @@ package dartzee.screen.reporting
 
 import dartzee.clickComponent
 import dartzee.core.bean.ScrollTable
-import dartzee.findComponent
 import dartzee.game.GameType
 import dartzee.getColumnNames
 import dartzee.getDisplayValueAt
@@ -12,6 +11,7 @@ import dartzee.helper.insertPlayerForGame
 import dartzee.logging.CODE_SQL
 import dartzee.reporting.ReportParameters
 import dartzee.screen.ScreenCache
+import find
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -38,7 +38,7 @@ class TestReportingResultsScreen: AbstractTest()
         resultsScreen.rp = rp
         resultsScreen.initialise()
 
-        val table = resultsScreen.findComponent<ScrollTable>()
+        val table = resultsScreen.find<ScrollTable>()!!
         table.rowCount shouldBe 1
         table.getValueAt(0, 0) shouldBe 1
     }
@@ -56,7 +56,7 @@ class TestReportingResultsScreen: AbstractTest()
         scrn.rp = ReportParameters()
         scrn.initialise()
 
-        val table = scrn.findComponent<ScrollTable>()
+        val table = scrn.find<ScrollTable>()!!
         table.rowCount shouldBe 1
         table.getColumnNames() shouldBe listOf("Game", "Type", "Players", "Start Date", "Finish Date", "Match")
 
@@ -86,7 +86,7 @@ class TestReportingResultsScreen: AbstractTest()
         scrn.rp = ReportParameters()
         scrn.initialise()
 
-        val table = scrn.findComponent<ScrollTable>()
+        val table = scrn.find<ScrollTable>()!!
         table.sortBy(3, false)
 
         table.getDisplayValueAt(0, 0) shouldBe 2

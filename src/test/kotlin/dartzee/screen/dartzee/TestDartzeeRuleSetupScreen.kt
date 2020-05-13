@@ -4,7 +4,6 @@ import dartzee.`object`.GameLauncher
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
-import dartzee.findComponent
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
@@ -12,6 +11,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.screen.GameSetupScreen
 import dartzee.utils.InjectedThings
+import find
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.mockk
@@ -70,7 +70,7 @@ class TestDartzeeRuleSetupScreen: AbstractTest()
 
         val scrn = DartzeeRuleSetupScreen()
         scrn.setState(null, players)
-        val panel = scrn.findComponent<DartzeeRuleSetupPanel>()
+        val panel = scrn.find<DartzeeRuleSetupPanel>()!!
         panel.addRulesToTable(rules)
 
         scrn.btnNext.doClick()

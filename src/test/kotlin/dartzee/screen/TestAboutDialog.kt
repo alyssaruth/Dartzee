@@ -1,15 +1,16 @@
 package dartzee.screen
 
 import dartzee.doMouseMove
-import dartzee.findLabel
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
 import doClick
+import find
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import java.awt.Cursor
+import javax.swing.JLabel
 
 class TestAboutDialog: AbstractTest()
 {
@@ -21,7 +22,7 @@ class TestAboutDialog: AbstractTest()
         val dlg = AboutDialog()
         dlg.isVisible = true
 
-        val lbl = dlg.findLabel("Change Log")!!
+        val lbl = dlg.find<JLabel>("Change Log")!!
         lbl.doClick()
 
         dlg.isVisible shouldBe false
@@ -34,7 +35,7 @@ class TestAboutDialog: AbstractTest()
     {
         val dlg = AboutDialog()
 
-        val lbl = dlg.findLabel("Change Log")!!
+        val lbl = dlg.find<JLabel>("Change Log")!!
         lbl.doMouseMove()
 
         dlg.cursor.type shouldBe Cursor.HAND_CURSOR

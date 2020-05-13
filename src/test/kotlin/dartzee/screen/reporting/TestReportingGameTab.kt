@@ -9,10 +9,13 @@ import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.reporting.MatchFilter
 import dartzee.reporting.ReportParameters
+import find
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
+import shouldBeDisabled
+import shouldBeEnabled
 import java.sql.Timestamp
 import java.time.LocalDate
 import javax.swing.JCheckBox
@@ -40,22 +43,22 @@ class TestReportingGameTab: AbstractTest()
     {
         val scrn = ReportingGameTab()
         scrn.clickComponent<JCheckBox>("Game")
-        scrn.findComponent<ComboBoxGameType>().shouldBeEnabled()
+        scrn.find<ComboBoxGameType>()!!.shouldBeEnabled()
 
         scrn.clickComponent<JCheckBox>("Game")
-        scrn.findComponent<ComboBoxGameType>().shouldBeDisabled()
+        scrn.find<ComboBoxGameType>()!!.shouldBeDisabled()
     }
 
     @Test
     fun `Should swap in the right game param filter panel`()
     {
         val scrn = ReportingGameTab()
-        scrn.findComponent<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelX01>()
+        scrn.find<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelX01>()
 
         scrn.clickComponent<JCheckBox>("Game")
-        val comboBox = scrn.findComponent<ComboBoxGameType>()
+        val comboBox = scrn.find<ComboBoxGameType>()!!
         comboBox.updateSelection(GameType.ROUND_THE_CLOCK)
-        scrn.findComponent<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
+        scrn.find<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
     }
 
     @Test
@@ -63,10 +66,10 @@ class TestReportingGameTab: AbstractTest()
     {
         val scrn = ReportingGameTab()
         scrn.clickComponent<JCheckBox>("Type")
-        scrn.findComponent<GameParamFilterPanel>().shouldBeEnabled()
+        scrn.find<GameParamFilterPanel>()!!.shouldBeEnabled()
 
         scrn.clickComponent<JCheckBox>("Type")
-        scrn.findComponent<GameParamFilterPanel>().shouldBeDisabled()
+        scrn.find<GameParamFilterPanel>()!!.shouldBeDisabled()
     }
 
     @Test
@@ -86,8 +89,8 @@ class TestReportingGameTab: AbstractTest()
         val scrn = ReportingGameTab()
         scrn.clickComponent<JCheckBox>("Finish Date")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeEnabled()
-        scrn.findComponent<JRadioButton>("Finished:").shouldBeEnabled()
-        scrn.findComponent<JRadioButton>("Unfinished").shouldBeEnabled()
+        scrn.find<JRadioButton>("Finished:")!!.shouldBeEnabled()
+        scrn.find<JRadioButton>("Unfinished")!!.shouldBeEnabled()
 
         scrn.clickComponent<JRadioButton>("Unfinished")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeDisabled()
@@ -97,8 +100,8 @@ class TestReportingGameTab: AbstractTest()
 
         scrn.clickComponent<JCheckBox>("Finish Date")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeDisabled()
-        scrn.findComponent<JRadioButton>("Finished:").shouldBeDisabled()
-        scrn.findComponent<JRadioButton>("Unfinished").shouldBeDisabled()
+        scrn.find<JRadioButton>("Finished:")!!.shouldBeDisabled()
+        scrn.find<JRadioButton>("Unfinished")!!.shouldBeDisabled()
     }
 
     @Test
@@ -106,12 +109,12 @@ class TestReportingGameTab: AbstractTest()
     {
         val tab = ReportingGameTab()
         tab.clickComponent<JCheckBox>("Part of Match")
-        tab.findComponent<JRadioButton>("Yes").shouldBeEnabled()
-        tab.findComponent<JRadioButton>("No").shouldBeEnabled()
+        tab.find<JRadioButton>("Yes")!!.shouldBeEnabled()
+        tab.find<JRadioButton>("No")!!.shouldBeEnabled()
 
         tab.clickComponent<JCheckBox>("Part of Match")
-        tab.findComponent<JRadioButton>("Yes").shouldBeDisabled()
-        tab.findComponent<JRadioButton>("No").shouldBeDisabled()
+        tab.find<JRadioButton>("Yes")!!.shouldBeDisabled()
+        tab.find<JRadioButton>("No")!!.shouldBeDisabled()
     }
 
     /**
@@ -162,7 +165,7 @@ class TestReportingGameTab: AbstractTest()
         tab.populateReportParameters(rp)
         rp.gameType shouldBe GameType.X01
 
-        tab.findComponent<ComboBoxGameType>().updateSelection(GameType.DARTZEE)
+        tab.find<ComboBoxGameType>()!!.updateSelection(GameType.DARTZEE)
         tab.populateReportParameters(rp)
         rp.gameType shouldBe GameType.DARTZEE
     }
@@ -180,7 +183,7 @@ class TestReportingGameTab: AbstractTest()
         tab.populateReportParameters(rp)
         rp.gameParams shouldBe "501"
 
-        tab.findComponent<SpinnerX01>().value = 701
+        tab.find<SpinnerX01>()!!.value = 701
         tab.populateReportParameters(rp)
         rp.gameParams shouldBe "701"
     }
