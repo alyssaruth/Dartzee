@@ -1,14 +1,14 @@
 package dartzee.screen.player
 
+import com.github.alexburlton.swingtest.clickChild
+import com.github.alexburlton.swingtest.getChild
 import dartzee.bean.getAllPlayers
 import dartzee.bean.getPlayerEntityForRow
-import dartzee.clickComponent
 import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.player.PlayerManager
 import dartzee.utils.InjectedThings
-import find
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -28,7 +28,7 @@ class TestPlayerManagementScreen: AbstractTest()
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
-        val table = scrn.find<ScrollTable>()!!
+        val table = scrn.getChild<ScrollTable>()
         table.getAllPlayers().map { it.rowId }.shouldContainExactly(p1.rowId, p2.rowId)
     }
 
@@ -42,7 +42,7 @@ class TestPlayerManagementScreen: AbstractTest()
         scrn.initialise()
         scrn.getSummaryPlayerName() shouldBe ""
 
-        val table = scrn.find<ScrollTable>()!!
+        val table = scrn.getChild<ScrollTable>()
         table.selectRow(0)
         scrn.getSummaryPlayerName() shouldBe "Alex"
 
@@ -60,7 +60,7 @@ class TestPlayerManagementScreen: AbstractTest()
 
         val scrn = PlayerManagementScreen()
         scrn.initialise()
-        scrn.find<ScrollTable>()!!.selectFirstRow()
+        scrn.getChild<ScrollTable>().selectFirstRow()
         scrn.getSummaryPlayerName() shouldBe "Alex"
 
         scrn.initialise()
@@ -79,10 +79,10 @@ class TestPlayerManagementScreen: AbstractTest()
 
         val player = insertPlayer()
 
-        scrn.clickComponent<JButton>("", "Add player")
+        scrn.clickChild<JButton>("", "Add player")
         verify { playerManager.createNewPlayer(true) }
 
-        val table = scrn.find<ScrollTable>()!!
+        val table = scrn.getChild<ScrollTable>()
         table.getPlayerEntityForRow(0).rowId shouldBe player.rowId
     }
 
@@ -98,10 +98,10 @@ class TestPlayerManagementScreen: AbstractTest()
 
         val player = insertPlayer()
 
-        scrn.clickComponent<JButton>("", "Add computer")
+        scrn.clickChild<JButton>("", "Add computer")
         verify { playerManager.createNewPlayer(false) }
 
-        val table = scrn.find<ScrollTable>()!!
+        val table = scrn.getChild<ScrollTable>()
         table.getPlayerEntityForRow(0).rowId shouldBe player.rowId
     }
 
@@ -117,16 +117,16 @@ class TestPlayerManagementScreen: AbstractTest()
 
         insertPlayer()
 
-        scrn.clickComponent<JButton>("", "Add computer")
-        scrn.clickComponent<JButton>("", "Add player")
+        scrn.clickChild<JButton>("", "Add computer")
+        scrn.clickChild<JButton>("", "Add player")
 
-        val table = scrn.find<ScrollTable>()!!
+        val table = scrn.getChild<ScrollTable>()
         table.rowCount shouldBe 0
     }
 
     private fun PlayerManagementScreen.getSummaryPlayerName(): String
     {
-        val summaryPanel = find<PlayerManagementPanel>()!!
+        val summaryPanel = getChild<PlayerManagementPanel>()
         return summaryPanel.lblPlayerName.text
     }
 }

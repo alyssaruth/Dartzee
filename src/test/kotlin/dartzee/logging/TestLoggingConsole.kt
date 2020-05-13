@@ -1,9 +1,9 @@
 package dartzee.logging
 
+import com.github.alexburlton.swingtest.flushEdt
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import dartzee.makeLogRecord
-import flushEdt
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan

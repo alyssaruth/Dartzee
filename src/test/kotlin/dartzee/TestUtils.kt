@@ -1,27 +1,24 @@
 package dartzee
 
+import com.github.alexburlton.swingtest.isEqual
 import dartzee.`object`.*
 import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
 import dartzee.core.helper.makeMouseEvent
-import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.game.GameType
 import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.screen.Dartboard
-import find
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.MockKMatcherScope
-import isEqual
 import java.awt.Color
 import java.awt.Component
-import java.awt.Container
 import java.awt.Point
 import java.awt.image.BufferedImage
 import java.time.Instant
@@ -29,7 +26,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.swing.*
+import javax.swing.Icon
+import javax.swing.JComponent
 
 val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
 val outerBull = DartboardSegment("25_$SEGMENT_TYPE_OUTER_SINGLE")
@@ -129,12 +127,6 @@ fun MockKMatcherScope.ruleDtosEq(players: List<DartzeeRuleDto>) = match<List<Dar
 fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
 {
     keyValuePairs.shouldContainExactly(mapOf(*values))
-}
-
-inline fun <reified T: AbstractButton> Container.clickComponent(text: String, toolTipText: String? = null)
-{
-    val component = find<T>(text, toolTipText) ?: throw Exception("No component found")
-    component.doClick()
 }
 
 fun ComboBoxGameType.updateSelection(type: GameType)

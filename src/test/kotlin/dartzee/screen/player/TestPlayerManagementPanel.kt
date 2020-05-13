@@ -1,12 +1,15 @@
 package dartzee.screen.player
 
+import com.github.alexburlton.swingtest.clickChild
+import com.github.alexburlton.swingtest.getChild
+import com.github.alexburlton.swingtest.shouldBeVisible
+import com.github.alexburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_GAME
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.bean.PlayerAvatar
-import dartzee.clickComponent
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
@@ -17,7 +20,6 @@ import dartzee.player.PlayerManager
 import dartzee.screen.ScreenCache
 import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
-import find
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
@@ -40,10 +42,10 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(null)
 
         panel.lblPlayerName.text shouldBe ""
-        panel.find<PlayerAvatar>()?.isVisible shouldBe false
-        panel.find<JButton>("Edit")?.isVisible shouldBe false
-        panel.find<JButton>("Run Simulation")?.isVisible shouldBe false
-        panel.find<JButton>("Delete")?.isVisible shouldBe false
+        panel.getChild<PlayerAvatar>().shouldNotBeVisible()
+        panel.getChild<JButton>("Edit").shouldNotBeVisible()
+        panel.getChild<JButton>("Run Simulation").shouldNotBeVisible()
+        panel.getChild<JButton>("Delete").shouldNotBeVisible()
         panel.getAllChildComponentsForType<PlayerSummaryButton>().shouldBeEmpty()
     }
 
@@ -58,11 +60,11 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickComponent<JButton>("Delete")
+        panel.clickChild<JButton>("Delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete Leah?")
         player.dtDeleted shouldBe DateStatics.END_OF_TIME
-        managementScreen.find<ScrollTable>()?.rowCount shouldBe 1
+        managementScreen.getChild<ScrollTable>().rowCount shouldBe 1
         PlayerEntity.retrieveForName("Leah") shouldNotBe null
     }
 
@@ -77,11 +79,11 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickComponent<JButton>("Delete")
+        panel.clickChild<JButton>("Delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete BTBF?")
         player.dtDeleted shouldNotBe DateStatics.END_OF_TIME
-        managementScreen.find<ScrollTable>()?.rowCount shouldBe 0
+        managementScreen.getChild<ScrollTable>().rowCount shouldBe 0
         PlayerEntity.retrieveForName("BTBF") shouldBe null
     }
 
@@ -95,10 +97,10 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
         panel.lblPlayerName.text shouldBe "Alex"
-        panel.find<PlayerAvatar>()!!.icon.shouldMatch(player.getAvatar())
-        panel.find<JButton>("Delete")?.isVisible shouldBe true
-        panel.find<JButton>("Edit")?.isVisible shouldBe false
-        panel.find<JButton>("Run Simulation")?.isVisible shouldBe false
+        panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
+        panel.getChild<JButton>("Delete").shouldBeVisible()
+        panel.getChild<JButton>("Edit").shouldNotBeVisible()
+        panel.getChild<JButton>("Run Simulation").shouldNotBeVisible()
     }
 
     @Test
@@ -111,10 +113,10 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
         panel.lblPlayerName.text shouldBe "Dennis"
-        panel.find<PlayerAvatar>()!!.icon.shouldMatch(player.getAvatar())
-        panel.find<JButton>("Delete")!!.isVisible shouldBe true
-        panel.find<JButton>("Edit")!!.isVisible shouldBe true
-        panel.find<JButton>("Run Simulation")!!.isVisible shouldBe true
+        panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
+        panel.getChild<JButton>("Delete").shouldBeVisible()
+        panel.getChild<JButton>("Edit").shouldBeVisible()
+        panel.getChild<JButton>("Run Simulation").shouldBeVisible()
     }
 
     @Test
@@ -126,12 +128,12 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
 
-        val x01Button = panel.find<PlayerStatsButton>("X01")!!
+        val x01Button = panel.getChild<PlayerStatsButton>("X01")
         x01Button.isEnabled shouldBe false
         x01Button.text.shouldContain("Played: </b> 0")
         x01Button.text.shouldContain("Best game: </b> -")
 
-        val achievementButton = panel.find<PlayerAchievementsButton>()!!
+        val achievementButton = panel.getChild<PlayerAchievementsButton>()
         achievementButton.isEnabled shouldBe true
         achievementButton.text.shouldContain("0 / ${getAchievementMaximum()}")
     }
@@ -149,15 +151,15 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val x01Button = panel.find<PlayerStatsButton>("X01")!!
+        val x01Button = panel.getChild<PlayerStatsButton>("X01")
         x01Button.isEnabled shouldBe true
         x01Button.text.shouldContain("Played: </b> 2")
 
-        val golfButton = panel.find<PlayerStatsButton>("Golf")!!
+        val golfButton = panel.getChild<PlayerStatsButton>("Golf")
         golfButton.isEnabled shouldBe true
         golfButton.text.shouldContain("Played: </b> 1")
 
-        val rtcButton = panel.find<PlayerStatsButton>("Round the Clock")!!
+        val rtcButton = panel.getChild<PlayerStatsButton>("Round the Clock")
         rtcButton.isEnabled shouldBe false
         rtcButton.text.shouldContain("Played: </b> 0")
     }
@@ -172,13 +174,13 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val x01Button = panel.find<PlayerStatsButton>("X01")!!
+        val x01Button = panel.getChild<PlayerStatsButton>("X01")
         x01Button.text.shouldContain("Best game: </b> 25")
 
-        val golfButton = panel.find<PlayerStatsButton>("Golf")!!
+        val golfButton = panel.getChild<PlayerStatsButton>("Golf")
         golfButton.text.shouldContain("Best game: </b> 55")
 
-        val rtcButton = panel.find<PlayerStatsButton>("Round the Clock")!!
+        val rtcButton = panel.getChild<PlayerStatsButton>("Round the Clock")
         rtcButton.text.shouldContain("Best game: </b> -")
     }
 
@@ -194,7 +196,7 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val achievementButton = panel.find<PlayerAchievementsButton>()!!
+        val achievementButton = panel.getChild<PlayerAchievementsButton>()
         achievementButton.text.shouldContain("10 / ${getAchievementMaximum()}")
     }
 
@@ -208,7 +210,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickComponent<JButton>("Edit")
+        panel.clickChild<JButton>("Edit")
 
         verify { playerManager.amendPlayer(player) }
     }
@@ -223,7 +225,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickComponent<JButton>("Run Simulation")
+        panel.clickChild<JButton>("Run Simulation")
 
         verify { playerManager.runSimulation(player) }
     }

@@ -1,5 +1,8 @@
 package dartzee.bean
 
+import com.github.alexburlton.swingtest.doClick
+import com.github.alexburlton.swingtest.findChild
+import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.`object`.GameLauncher
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.doHover
@@ -8,15 +11,12 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.InjectedThings
-import doClick
-import find
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
-import shouldMatchImage
 import java.awt.Cursor
 import javax.swing.JLabel
 import javax.swing.table.DefaultTableModel
@@ -96,7 +96,7 @@ class TestAchievementMedal: AbstractTest()
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.HAND_CURSOR
 
-        ScreenCache.get<PlayerAchievementsScreen>().find<JLabel>("Three Darter").shouldNotBeNull()
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter").shouldNotBeNull()
     }
 
     @Test
@@ -107,7 +107,7 @@ class TestAchievementMedal: AbstractTest()
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().find<JLabel>("Three Darter").shouldNotBeNull()
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter").shouldNotBeNull()
     }
 
     @Test
@@ -119,7 +119,7 @@ class TestAchievementMedal: AbstractTest()
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().find<JLabel>("Three Darter") shouldBe null
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter") shouldBe null
     }
 
     @Test

@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import dartzee.clickComponent
+import com.github.alexburlton.swingtest.clickChild
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertExits
 import dartzee.screen.player.PlayerManagementScreen
@@ -18,7 +18,7 @@ class TestMenuScreen: AbstractTest()
         val scrn = MenuScreen()
 
         assertExits(0) {
-            scrn.clickComponent<JButton>("Exit")
+            scrn.clickChild<JButton>("Exit")
         }
     }
 
@@ -26,7 +26,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the game setup screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickComponent<JButton>("New Game")
+        scrn.clickChild<JButton>("New Game")
         ScreenCache.currentScreen().shouldBeInstanceOf<GameSetupScreen>()
     }
 
@@ -34,7 +34,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the player management screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickComponent<JButton>("Manage Players")
+        scrn.clickChild<JButton>("Manage Players")
         ScreenCache.currentScreen().shouldBeInstanceOf<PlayerManagementScreen>()
     }
 
@@ -42,7 +42,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the reporting setup screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickComponent<JButton>("Game Report")
+        scrn.clickChild<JButton>("Game Report")
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingSetupScreen>()
     }
 
@@ -50,7 +50,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the leaderboards screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickComponent<JButton>("Leaderboards")
+        scrn.clickChild<JButton>("Leaderboards")
         ScreenCache.currentScreen().shouldBeInstanceOf<LeaderboardsScreen>()
     }
 
@@ -58,7 +58,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the utilities screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickComponent<JButton>("Utilities")
+        scrn.clickChild<JButton>("Utilities")
         ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
     }
 }

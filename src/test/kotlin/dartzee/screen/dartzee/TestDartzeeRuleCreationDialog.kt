@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import com.github.alexburlton.swingtest.flushEdt
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.helper.makeActionEvent
@@ -12,7 +13,6 @@ import dartzee.dartzee.total.DartzeeTotalRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.helper.*
 import dartzee.utils.InjectedThings
-import flushEdt
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
