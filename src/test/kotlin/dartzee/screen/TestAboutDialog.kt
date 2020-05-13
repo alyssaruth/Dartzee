@@ -22,7 +22,7 @@ class TestAboutDialog: AbstractTest()
         val dlg = AboutDialog()
         dlg.isVisible = true
 
-        val lbl = dlg.getChild<JLabel>("Change Log")
+        val lbl = dlg.getChild<JLabel> { it.text.contains("Change Log") }
         lbl.doClick()
 
         dlg.isVisible shouldBe false
@@ -35,7 +35,7 @@ class TestAboutDialog: AbstractTest()
     {
         val dlg = AboutDialog()
 
-        val lbl = dlg.getChild<JLabel>("Change Log")
+        val lbl = dlg.getChild<JLabel> { it.text.contains("Change Log") }
         lbl.doMouseMove()
 
         dlg.cursor.type shouldBe Cursor.HAND_CURSOR

@@ -128,7 +128,7 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
 
-        val x01Button = panel.getChild<PlayerStatsButton>("X01")
+        val x01Button = panel.getChild<PlayerStatsButton> { it.text.contains("X01") }
         x01Button.isEnabled shouldBe false
         x01Button.text.shouldContain("Played: </b> 0")
         x01Button.text.shouldContain("Best game: </b> -")
@@ -151,15 +151,15 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val x01Button = panel.getChild<PlayerStatsButton>("X01")
+        val x01Button = panel.getChild<PlayerStatsButton> { it.text.contains("X01") }
         x01Button.isEnabled shouldBe true
         x01Button.text.shouldContain("Played: </b> 2")
 
-        val golfButton = panel.getChild<PlayerStatsButton>("Golf")
+        val golfButton = panel.getChild<PlayerStatsButton> { it.text.contains("Golf") }
         golfButton.isEnabled shouldBe true
         golfButton.text.shouldContain("Played: </b> 1")
 
-        val rtcButton = panel.getChild<PlayerStatsButton>("Round the Clock")
+        val rtcButton = panel.getChild<PlayerStatsButton> { it.text.contains("Round the Clock") }
         rtcButton.isEnabled shouldBe false
         rtcButton.text.shouldContain("Played: </b> 0")
     }
@@ -174,13 +174,13 @@ class TestPlayerManagementPanel: AbstractTest()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
 
-        val x01Button = panel.getChild<PlayerStatsButton>("X01")
+        val x01Button = panel.getChild<PlayerStatsButton> { it.text.contains("X01") }
         x01Button.text.shouldContain("Best game: </b> 25")
 
-        val golfButton = panel.getChild<PlayerStatsButton>("Golf")
+        val golfButton = panel.getChild<PlayerStatsButton> { it.text.contains("Golf") }
         golfButton.text.shouldContain("Best game: </b> 55")
 
-        val rtcButton = panel.getChild<PlayerStatsButton>("Round the Clock")
+        val rtcButton = panel.getChild<PlayerStatsButton> { it.text.contains("Round the Clock") }
         rtcButton.text.shouldContain("Best game: </b> -")
     }
 
