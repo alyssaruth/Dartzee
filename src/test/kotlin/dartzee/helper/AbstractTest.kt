@@ -9,6 +9,7 @@ import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
+import io.kotlintest.matchers.withClue
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -87,7 +88,8 @@ abstract class AbstractTest
     {
         if (!checkedForExceptions)
         {
-            errorLogged() shouldBe false
+            val errorLog = getLogRecords().find { it.severity == Severity.ERROR }
+            withClue("$errorLog") { errorLogged() shouldBe false }
         }
 
         checkedForExceptions = false
