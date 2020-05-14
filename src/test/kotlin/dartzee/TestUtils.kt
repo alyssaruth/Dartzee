@@ -86,21 +86,6 @@ fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
     return LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
 }
 
-fun Component.doHover(x: Int = 0, y: Int = 0) {
-    val me = makeMouseEvent(x = x, y = y)
-    mouseListeners.forEach { it.mouseEntered(me) }
-}
-
-fun Component.doHoverAway(x: Int = 0, y: Int = 0) {
-    val me = makeMouseEvent(x = x, y = y)
-    mouseListeners.forEach { it.mouseExited(me) }
-}
-
-fun Component.doMouseMove() {
-    val me = makeMouseEvent(x = x, y = y)
-    mouseMotionListeners.forEach { it.mouseMoved(me) }
-}
-
 fun Float.shouldBeBetween(a: Double, b: Double) {
     return toDouble().shouldBeBetween(a, b, 0.0)
 }
@@ -142,7 +127,7 @@ fun DateFilterPanel.makeInvalid()
 
 fun ScrollTable.getColumnNames() = (0 until columnCount).map { getColumnName(it) }
 
-fun ScrollTable.getDisplayValueAt(row: Int, col: Int) = table.getValueAt(row, col)
+fun ScrollTable.getDisplayValueAt(row: Int, col: Int): Any = table.getValueAt(row, col)
 
 fun Icon.shouldMatch(other: Icon)
 {

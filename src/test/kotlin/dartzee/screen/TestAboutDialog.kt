@@ -1,8 +1,8 @@
 package dartzee.screen
 
 import com.github.alexburlton.swingtest.doClick
+import com.github.alexburlton.swingtest.doMouseMove
 import com.github.alexburlton.swingtest.getChild
-import dartzee.doMouseMove
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
