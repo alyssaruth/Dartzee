@@ -463,8 +463,6 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         flushEdt()
         println("Flushed thrice")
 
-        Thread.sleep(2000)
-
         dlg.tfName.text shouldBe "15 → Any → Any"
     }
 
