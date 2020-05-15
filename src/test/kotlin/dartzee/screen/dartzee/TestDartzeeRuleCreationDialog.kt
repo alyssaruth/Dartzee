@@ -455,9 +455,15 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         dlg.tfName.text shouldBe "20 → Any → Any"
 
         scoreRule.spinner.value = 15
+        println("Set spinner")
         flushEdt()
+        println("Flushed once")
         flushEdt()
+        println("Flushed twice")
         flushEdt()
+        println("Flushed thrice")
+
+        Thread.sleep(2000)
 
         dlg.tfName.text shouldBe "15 → Any → Any"
     }
