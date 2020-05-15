@@ -8,9 +8,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.setFontSize
 import dartzee.dartzee.DartzeeRandomiser
 import dartzee.dartzee.DartzeeRuleDto
-import dartzee.logging.LoggingCode
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings.logger
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -247,14 +245,10 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         repaint()
         panelDarts.revalidate()
 
-        logger.info(LoggingCode("updateComponents"), "Firing updateComponents")
-
         SwingUtilities.invokeLater {
             val rule = constructRuleFromComponents()
             val ruleName = rule.generateRuleDescription()
             tfName.text = ruleName
-
-            logger.info(LoggingCode("updateComponentsLater"), "Processing invoked later part. ${dartOneSelector.getSelection().getDescription()}")
 
             val calculationResult = rule.runStrengthCalculation()
             lblDifficulty.text = calculationResult.getDifficultyDesc()
