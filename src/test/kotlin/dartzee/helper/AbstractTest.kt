@@ -87,7 +87,6 @@ abstract class AbstractTest
     {
         if (!checkedForExceptions)
         {
-            val errorLog = getLogRecords().find { it.severity == Severity.ERROR }
             errorLogged() shouldBe false
         }
 
