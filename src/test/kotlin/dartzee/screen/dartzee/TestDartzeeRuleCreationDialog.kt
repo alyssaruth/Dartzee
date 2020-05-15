@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import com.github.alexburlton.swingtest.flushEdt
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.helper.makeActionEvent
@@ -10,7 +11,6 @@ import dartzee.dartzee.dart.*
 import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.dartzee.total.DartzeeTotalRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
-import dartzee.flushEdt
 import dartzee.helper.*
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -451,10 +451,11 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
         flushEdt()
+        flushEdt()
 
         dlg.tfName.text shouldBe "20 → Any → Any"
-
         scoreRule.spinner.value = 15
+        flushEdt()
         flushEdt()
 
         dlg.tfName.text shouldBe "15 → Any → Any"

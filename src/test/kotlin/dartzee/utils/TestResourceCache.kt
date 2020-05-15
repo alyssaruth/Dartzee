@@ -18,6 +18,12 @@ class TestResourceCache : AbstractTest()
         ResourceCache.resetCache()
     }
 
+    override fun afterEachTest()
+    {
+        super.afterEachTest()
+        ResourceCache.resetCache()
+    }
+
     @Test
     fun `Should pre-load all the WAVs in the appropriate resource directory`()
     {

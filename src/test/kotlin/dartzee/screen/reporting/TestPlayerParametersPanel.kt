@@ -1,6 +1,6 @@
 package dartzee.screen.reporting
 
-import dartzee.clickComponent
+import com.github.alexburlton.swingtest.clickChild
 import dartzee.core.bean.ComboBoxNumberComparison
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -87,17 +87,17 @@ class TestPlayerParametersPanel: AbstractTest()
         val panel = PlayerParametersPanel()
         panel.valid(player) shouldBe true
 
-        panel.clickComponent<JCheckBox>("Position")
+        panel.clickChild<JCheckBox>("Position")
         panel.valid(player) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Gordon")
         dialogFactory.errorsShown.clear()
 
-        panel.clickComponent<JCheckBox>("Undecided")
+        panel.clickChild<JCheckBox>("Undecided")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
 
         panel.cbUndecided.doClick()
-        panel.clickComponent<JCheckBox>("1st")
+        panel.clickChild<JCheckBox>("1st")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
     }
@@ -106,7 +106,7 @@ class TestPlayerParametersPanel: AbstractTest()
     fun `Should generate the correct parameters for final score`()
     {
         val panel = PlayerParametersPanel()
-        panel.clickComponent<JCheckBox>("Game Score")
+        panel.clickChild<JCheckBox>("Game Score")
         panel.spinner.value = 20
         panel.comboBox.selectedItem = ComboBoxNumberComparison.FILTER_MODE_GREATER_THAN
 
@@ -119,10 +119,10 @@ class TestPlayerParametersPanel: AbstractTest()
     fun `Should generate the correct parameters for position`()
     {
         val panel = PlayerParametersPanel()
-        panel.clickComponent<JCheckBox>("Position")
-        panel.clickComponent<JCheckBox>("1st")
-        panel.clickComponent<JCheckBox>("5th")
-        panel.clickComponent<JCheckBox>("Undecided")
+        panel.clickChild<JCheckBox>("Position")
+        panel.clickChild<JCheckBox>("1st")
+        panel.clickChild<JCheckBox>("5th")
+        panel.clickChild<JCheckBox>("Undecided")
 
 
         val params = panel.generateParameters()

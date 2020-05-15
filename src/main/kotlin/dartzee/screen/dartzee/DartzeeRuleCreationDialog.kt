@@ -245,7 +245,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         repaint()
         panelDarts.revalidate()
 
-        SwingUtilities.invokeLater{
+        SwingUtilities.invokeLater {
             val rule = constructRuleFromComponents()
             val ruleName = rule.generateRuleDescription()
             tfName.text = ruleName

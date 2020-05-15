@@ -1,6 +1,6 @@
 package dartzee.screen.reporting
 
-import dartzee.clickComponent
+import com.github.alexburlton.swingtest.clickChild
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -25,8 +25,8 @@ class TestConfigureReportColumnsDialog: AbstractTest()
     fun `Should exclude unticked options`()
     {
         val dlg = ConfigureReportColumnsDialog()
-        dlg.clickComponent<JCheckBox>("Type")
-        dlg.clickComponent<JCheckBox>("Match")
+        dlg.clickChild<JCheckBox>("Type")
+        dlg.clickChild<JCheckBox>("Match")
 
         dlg.excludedColumns().shouldContainExactly("Type", "Match")
     }

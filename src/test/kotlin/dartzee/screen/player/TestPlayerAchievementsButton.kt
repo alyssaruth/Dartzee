@@ -1,5 +1,7 @@
 package dartzee.screen.player
 
+import com.github.alexburlton.swingtest.doHover
+import com.github.alexburlton.swingtest.doHoverAway
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_GAME
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_GAME
@@ -7,8 +9,6 @@ import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.achievements.x01.AchievementX01BestGame
-import dartzee.doHover
-import dartzee.doHoverAway
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer

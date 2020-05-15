@@ -1,11 +1,11 @@
 package dartzee.screen.game.scorer
 
+import com.github.alexburlton.swingtest.doClick
 import dartzee.`object`.Dart
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRoundResult
-import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer

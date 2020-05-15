@@ -1,10 +1,10 @@
 package dartzee.screen.dartzee
 
+import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.GameLauncher
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
-import dartzee.findComponent
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
@@ -70,7 +70,7 @@ class TestDartzeeRuleSetupScreen: AbstractTest()
 
         val scrn = DartzeeRuleSetupScreen()
         scrn.setState(null, players)
-        val panel = scrn.findComponent<DartzeeRuleSetupPanel>()
+        val panel = scrn.getChild<DartzeeRuleSetupPanel>()
         panel.addRulesToTable(rules)
 
         scrn.btnNext.doClick()

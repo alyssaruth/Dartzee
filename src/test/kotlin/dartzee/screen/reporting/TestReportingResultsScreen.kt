@@ -1,8 +1,8 @@
 package dartzee.screen.reporting
 
-import dartzee.clickComponent
+import com.github.alexburlton.swingtest.clickChild
+import com.github.alexburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
-import dartzee.findComponent
 import dartzee.game.GameType
 import dartzee.getColumnNames
 import dartzee.getDisplayValueAt
@@ -38,7 +38,7 @@ class TestReportingResultsScreen: AbstractTest()
         resultsScreen.rp = rp
         resultsScreen.initialise()
 
-        val table = resultsScreen.findComponent<ScrollTable>()
+        val table = resultsScreen.getChild<ScrollTable>()
         table.rowCount shouldBe 1
         table.getValueAt(0, 0) shouldBe 1
     }
@@ -56,14 +56,14 @@ class TestReportingResultsScreen: AbstractTest()
         scrn.rp = ReportParameters()
         scrn.initialise()
 
-        val table = scrn.findComponent<ScrollTable>()
+        val table = scrn.getChild<ScrollTable>()
         table.rowCount shouldBe 1
         table.getColumnNames() shouldBe listOf("Game", "Type", "Players", "Start Date", "Finish Date", "Match")
 
         clearLogs()
         every { dlg.excludedColumns() } returns listOf("Players", "Finish Date")
 
-        scrn.clickComponent<JButton>("Configure Columns...")
+        scrn.clickChild<JButton>("Configure Columns...")
         verifyNoLogs(CODE_SQL)
         table.rowCount shouldBe 1
         table.getColumnNames() shouldBe listOf("Game", "Type", "Start Date", "Match")
@@ -86,7 +86,7 @@ class TestReportingResultsScreen: AbstractTest()
         scrn.rp = ReportParameters()
         scrn.initialise()
 
-        val table = scrn.findComponent<ScrollTable>()
+        val table = scrn.getChild<ScrollTable>()
         table.sortBy(3, false)
 
         table.getDisplayValueAt(0, 0) shouldBe 2
