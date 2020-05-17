@@ -448,16 +448,16 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     fun `Should update the rule description when score config changes`()
     {
         val dlg = DartzeeRuleCreationDialog()
+        flushEdt()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
         flushEdt()
         flushEdt()
-
         dlg.tfName.text shouldBe "20 → Any → Any"
+
         scoreRule.spinner.value = 15
         flushEdt()
         flushEdt()
-
         dlg.tfName.text shouldBe "15 → Any → Any"
     }
 
