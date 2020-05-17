@@ -450,15 +450,18 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         val dlg = DartzeeRuleCreationDialog()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
-        flushEdt()
-        flushEdt()
-
+        flushHard()
         dlg.tfName.text shouldBe "20 → Any → Any"
-        scoreRule.spinner.value = 15
-        flushEdt()
-        flushEdt()
 
+        scoreRule.spinner.value = 15
+        flushHard()
         dlg.tfName.text shouldBe "15 → Any → Any"
+    }
+    private fun flushHard()
+    {
+        flushEdt()
+        Thread.sleep(1000)
+        flushEdt()
     }
 
     @Test

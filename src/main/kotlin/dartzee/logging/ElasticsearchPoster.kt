@@ -11,6 +11,7 @@ import org.apache.http.HttpStatus
 import org.apache.http.entity.ContentType
 import org.apache.http.nio.entity.NStringEntity
 import org.elasticsearch.client.Request
+import org.elasticsearch.client.ResponseException
 import org.elasticsearch.client.RestClient
 import java.io.InterruptedIOException
 import java.net.SocketException
@@ -19,9 +20,10 @@ import java.util.*
 
 class ElasticsearchPoster(private val credentials: AWSCredentials?,
                           private val url: String,
-                          private val indexPath: String)
+                          private val indexPath: String,
+                          client: RestClient? = null)
 {
-    private val client: RestClient? by lazy { createClient() }
+    private val client: RestClient? by lazy { client ?: createClient() }
 
     private fun createClient(): RestClient?
     {
@@ -34,8 +36,8 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
 
             val interceptor = AWSRequestSigningApacheInterceptor(signer.serviceName, signer, AWSStaticCredentialsProvider(credentials))
             return RestClient.builder(HttpHost.create(url))
-                .setHttpClientConfigCallback { it.addInterceptorLast(interceptor) }
-                .build()
+                    .setHttpClientConfigCallback { it.addInterceptorLast(interceptor) }
+                    .build()
         }
         catch (t: Throwable)
         {
@@ -62,7 +64,7 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
             }
             else
             {
-                logger.error(CODE_ELASTICSEARCH_ERROR, "Received status code $status trying to post to ES", Throwable(), KEY_RESPONSE_BODY to response)
+                handleResponseException(ResponseException(response))
                 return false
             }
         }
@@ -71,10 +73,20 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
             when (t)
             {
                 is SocketException, is InterruptedIOException -> logger.warn(CODE_ELASTICSEARCH_ERROR, "Caught $t trying to post to elasticsearch")
+                is ResponseException -> handleResponseException(t)
                 else -> logger.error(CODE_ELASTICSEARCH_ERROR, "Failed to post log to ES", t)
             }
 
             return false
+        }
+    }
+
+    private fun handleResponseException(t: ResponseException)
+    {
+        when (val statusCode = t.response.statusLine.statusCode)
+        {
+            502, 503 -> logger.warn(CODE_ELASTICSEARCH_ERROR, "Elasticsearch currently unavailable - got $statusCode response", KEY_RESPONSE_BODY to t.response)
+            else -> logger.error(CODE_ELASTICSEARCH_ERROR, "Received status code $statusCode trying to post to ES", t, KEY_RESPONSE_BODY to t.response)
         }
     }
 }
