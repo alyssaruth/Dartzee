@@ -125,6 +125,9 @@ object DartsDatabaseUtil
         else if (versionNumber == 11)
         {
             runSqlScriptsForVersion(12)
+
+            //SegmentType enum
+            DartzeeRuleConversion.convertDartzeeRules()
         }
 
         version.version = versionNumber + 1
@@ -171,7 +174,7 @@ object DartsDatabaseUtil
         {
             10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
             11 -> listOf("1. Game.sql")
-            12 -> listOf("1. DartsMatch.sql")
+            12 -> listOf("1. DartsMatch.sql", "2. Dart.sql")
             else -> listOf()
         }
     }
