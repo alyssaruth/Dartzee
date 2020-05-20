@@ -6,6 +6,7 @@ import dartzee.core.util.*
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
 import dartzee.screen.Dartboard
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.getAverage
 import org.w3c.dom.Element
@@ -66,6 +67,40 @@ abstract class AbstractDartsModel
         //Golf
         val hmDartNoToString = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
         hmDartNoToSegmentType = hmDartNoToString.mapValues { SegmentType.valueOf(it.value) }.toMutableMap()
+        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
+
+        readXmlSpecific(rootElement)
+    }
+
+    fun readXmlOldWay(xmlStr: String)
+    {
+        val xmlDoc = xmlStr.toXmlDoc()
+        val rootElement = xmlDoc!!.documentElement
+
+        val scoringSingle = rootElement.getAttributeInt(ATTRIBUTE_SCORING_DART)
+        if (scoringSingle > 0)
+        {
+            this.scoringDart = scoringSingle
+        }
+
+        //X01
+        mercyThreshold = rootElement.getAttributeInt(ATTRIBUTE_MERCY_RULE, -1)
+
+        hmScoreToDart = mutableMapOf()
+        val setupDarts = rootElement.getElementsByTagName(TAG_SETUP_DART)
+        for (i in 0 until setupDarts.length)
+        {
+            val setupDart = setupDarts.item(i) as Element
+            val score = setupDart.getAttributeInt(ATTRIBUTE_SCORE)
+            val value = setupDart.getAttributeInt(ATTRIBUTE_DART_VALUE)
+            val multiplier = setupDart.getAttributeInt(ATTRIBUTE_DART_MULTIPLIER)
+
+            hmScoreToDart[score] = Dart(value, multiplier)
+        }
+
+        //Golf
+        val hmDartNoToSegmentInt = rootElement.readIntegerHashMap(TAG_GOLF_AIM).mapValues { it.value.toInt() }
+        hmDartNoToSegmentType = hmDartNoToSegmentInt.mapValues { DartsDatabaseUtil.convertOldSegmentType(it.value) }.toMutableMap()
         hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
 
         readXmlSpecific(rootElement)

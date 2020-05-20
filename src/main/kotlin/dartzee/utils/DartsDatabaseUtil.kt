@@ -1,5 +1,7 @@
 package dartzee.utils
 
+import dartzee.`object`.SegmentType
+import dartzee.ai.AbstractDartsModel
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
@@ -125,6 +127,7 @@ object DartsDatabaseUtil
         else if (versionNumber == 11)
         {
             runSqlScriptsForVersion(12)
+            convertPlayerStrategies()
 
             //SegmentType enum
             DartzeeRuleConversion.convertDartzeeRules()
@@ -136,6 +139,31 @@ object DartsDatabaseUtil
         logger.addToContext(KEY_DB_VERSION, version.version)
         initialiseDatabase(version)
     }
+
+    private fun convertPlayerStrategies()
+    {
+        val players = PlayerEntity().retrieveEntities("Strategy > -1")
+        players.forEach {
+            val model = AbstractDartsModel.factoryForType(it.strategy)!!
+            model.readXmlOldWay(it.strategyXml)
+            it.strategyXml = model.writeXml()
+            it.saveToDatabase()
+        }
+    }
+
+    fun convertOldSegmentType(segmentType: Int): SegmentType
+    {
+        return when (segmentType)
+        {
+            1 -> SegmentType.DOUBLE
+            2 -> SegmentType.TREBLE
+            3 -> SegmentType.OUTER_SINGLE
+            4 -> SegmentType.INNER_SINGLE
+            5 -> SegmentType.MISS
+            else -> SegmentType.MISSED_BOARD
+        }
+    }
+
 
     private fun runConversions(version: Int, vararg conversions: (() -> Unit))
     {
