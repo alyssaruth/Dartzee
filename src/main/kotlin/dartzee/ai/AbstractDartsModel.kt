@@ -64,9 +64,9 @@ abstract class AbstractDartsModel
         }
 
         //Golf
-        val hmDartNoToString = rootElement.readIntegerHashMap<String>(TAG_GOLF_AIM)
+        val hmDartNoToString = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
         hmDartNoToSegmentType = hmDartNoToString.mapValues { SegmentType.valueOf(it.value) }.toMutableMap()
-        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP)
+        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
 
         readXmlSpecific(rootElement)
     }

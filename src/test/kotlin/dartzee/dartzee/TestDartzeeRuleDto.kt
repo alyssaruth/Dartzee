@@ -205,7 +205,7 @@ class TestDartzeeRuleDto: AbstractTest()
         dao.totalRule shouldBe DartzeeTotalRulePrime().toDbString()
     }
 
-    private val dartsForTotal = listOf(Dart(20, 1), Dart(20, 1), Dart(5, 2))
+    private val dartsForTotal = listOf(makeDart(20, 1), makeDart(20, 1), makeDart(5, 2))
 
     @Test
     fun `Should just sum the darts if there are no dart rules`()

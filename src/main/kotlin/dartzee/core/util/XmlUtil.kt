@@ -41,9 +41,9 @@ fun Element.getAttributeDouble(attributeName: String): Double
     return if (attribute == "") 0.0 else attribute.toDouble()
 }
 
-inline fun <reified T> Element.readIntegerHashMap(tagName: String): MutableMap<Int, T>
+fun Element.readIntegerHashMap(tagName: String): MutableMap<Int, String>
 {
-    val hm = mutableMapOf<Int, T>()
+    val hm = mutableMapOf<Int, String>()
 
     val children = getElementsByTagName(tagName)
     val size = children.length
@@ -51,7 +51,7 @@ inline fun <reified T> Element.readIntegerHashMap(tagName: String): MutableMap<I
     {
         val child = children.item(i) as Element
         val key = child.getAttributeInt("Key")
-        val value = child.getAttribute("Value") as T
+        val value = child.getAttribute("Value")
 
         hm[key] = value
     }

@@ -1,6 +1,6 @@
 package dartzee.achievements.golf
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
+import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.db.AchievementEntity
@@ -39,7 +39,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
         sb.append(" INSERT INTO $tempTable")
         sb.append(" SELECT pt.PlayerId, d.Score, g.RowId, d.DtCreation")
         sb.append(" FROM Dart d, Participant pt, Game g")
-        sb.append(" WHERE d.SegmentType = $SEGMENT_TYPE_DOUBLE")
+        sb.append(" WHERE d.SegmentType = '${SegmentType.DOUBLE}'")
         sb.append(" AND d.RoundNumber = d.Score")
         sb.append(" AND d.ParticipantId = pt.RowId")
         sb.append(" AND d.PlayerId = pt.PlayerId")

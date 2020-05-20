@@ -25,6 +25,7 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
         verifySegmentTypeScoredCorrectly(SegmentType.INNER_SINGLE, 2)
         verifySegmentTypeScoredCorrectly(SegmentType.TREBLE, 3)
         verifySegmentTypeScoredCorrectly(SegmentType.DOUBLE, 4)
+        verifySegmentTypeScoredCorrectly(SegmentType.MISS, 0)
     }
     private fun verifySegmentTypeScoredCorrectly(segmentType: SegmentType, expectedScore: Int)
     {

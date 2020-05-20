@@ -198,7 +198,7 @@ class TestAbstractDartsModel: AbstractTest()
         dartboard.addDartboardListener(listener)
 
         model.throwX01Dart(7, dartboard)
-        verify { listener.dartThrown(Dart(3, 1))}
+        verify { listener.dartThrown(Dart(3, 1)) }
     }
 
     @Test
@@ -322,7 +322,7 @@ class TestAbstractDartsModel: AbstractTest()
             segment.addPoint(Point(3, 3))
             segment.addPoint(Point(5, 2))
 
-            hmSegmentKeyToSegment["20_$SEGMENT_TYPE_TREBLE"] = segment
+            hmSegmentKeyToSegment["20_${SegmentType.TREBLE}"] = segment
         }
     }
 

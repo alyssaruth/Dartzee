@@ -1,9 +1,6 @@
 package dartzee.db.sanity
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_TREBLE
+import dartzee.achievements.getGolfSegmentCases
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 
@@ -18,11 +15,7 @@ class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()
         sb.append(" SELECT pt.RowId, SUM(")
         sb.append(" 	CASE")
         sb.append(" 		WHEN drt.Score <> drt.RoundNumber THEN 5")
-        sb.append(" 		WHEN drt.SegmentType = $SEGMENT_TYPE_DOUBLE THEN 1")
-        sb.append(" 		WHEN drt.SegmentType = $SEGMENT_TYPE_TREBLE THEN 2")
-        sb.append(" 		WHEN drt.SegmentType = $SEGMENT_TYPE_INNER_SINGLE THEN 3")
-        sb.append(" 		WHEN drt.SegmentType = $SEGMENT_TYPE_OUTER_SINGLE THEN 4")
-        sb.append(" 		ELSE 5")
+        sb.append(getGolfSegmentCases())
         sb.append(" 	END")
         sb.append(" )")
         sb.append(" FROM Dart drt, Participant pt, Game g")

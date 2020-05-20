@@ -1,7 +1,6 @@
 package dartzee.db
 
 import dartzee.`object`.Dart
-import dartzee.`object`.SEGMENT_TYPE_TREBLE
 import dartzee.`object`.SegmentType
 import dartzee.helper.randomGuid
 import io.kotlintest.shouldBe
@@ -32,6 +31,6 @@ class TestDartEntity: AbstractEntityTest<DartEntity>()
         de.multiplier shouldBe 3
         de.posX shouldBe 5
         de.posY shouldBe 5
-        de.segmentType shouldBe SEGMENT_TYPE_TREBLE
+        de.segmentType shouldBe SegmentType.TREBLE
     }
 }

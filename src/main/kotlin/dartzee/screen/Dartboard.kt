@@ -317,7 +317,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     private fun factoryAndCacheSegmentForPoint(pt: Point): DartboardSegment
     {
         val newSegment = factorySegmentForPoint(pt, centerPoint, diameter)
-        val segmentKey = "${newSegment.type}_${newSegment.score}"
+        val segmentKey = "${newSegment.score}_${newSegment.type}"
 
         val segment = hmSegmentKeyToSegment.getOrPut(segmentKey) { newSegment }
         segment.addPoint(pt)

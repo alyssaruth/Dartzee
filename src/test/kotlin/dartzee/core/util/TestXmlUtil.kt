@@ -125,7 +125,7 @@ class TestXmlUtil: AbstractTest()
         val root = doc.createRootElement("Root")
 
         root.writeHashMap(map, "SomeMap")
-        val newMap = root.readIntegerHashMap<Int>("SomeMap")
+        val newMap = root.readIntegerHashMap("SomeMap").mapValues { it.value.toInt() }
         newMap.size shouldBe 3
         newMap[0] shouldBe 10
         newMap[1] shouldBe 20

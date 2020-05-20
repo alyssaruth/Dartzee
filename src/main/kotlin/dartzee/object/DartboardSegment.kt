@@ -6,13 +6,6 @@ import dartzee.core.util.setAttributeAny
 import org.w3c.dom.Element
 import java.awt.Point
 
-const val SEGMENT_TYPE_DOUBLE = 1
-const val SEGMENT_TYPE_TREBLE = 2
-const val SEGMENT_TYPE_OUTER_SINGLE = 3
-const val SEGMENT_TYPE_INNER_SINGLE = 4
-const val SEGMENT_TYPE_MISS = 5
-const val SEGMENT_TYPE_MISSED_BOARD = 6
-
 const val MISS_FUDGE_FACTOR = 1805
 
 /**
