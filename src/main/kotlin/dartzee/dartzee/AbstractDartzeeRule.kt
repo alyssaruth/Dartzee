@@ -78,7 +78,7 @@ fun <K: AbstractDartzeeRule> parseRule(xmlStr: String, ruleTemplates: List<K>): 
 
     val rootElement = xmlDoc.documentElement
 
-    val rule = ruleTemplates.find{it.getRuleIdentifier() == rootElement.tagName}
+    val rule = ruleTemplates.find{ it.getRuleIdentifier() == rootElement.tagName }
     rule ?: return null
 
     rule.populate(rootElement)

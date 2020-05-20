@@ -53,6 +53,8 @@ abstract class AbstractTest
     {
         DialogUtil.init(dialogFactory)
 
+        Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
+
         InjectedThings.logger = logger
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
         InjectedThings.verificationDartboardSize = 50
