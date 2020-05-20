@@ -3,8 +3,6 @@ package dartzee.ai
 import dartzee.`object`.*
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.*
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
 import dartzee.screen.Dartboard
@@ -23,7 +21,7 @@ abstract class AbstractDartsModel
     var mercyThreshold = -1
 
     //Golf
-    var hmDartNoToSegmentType = mutableMapOf<Int, Int>()
+    var hmDartNoToSegmentType = mutableMapOf<Int, SegmentType>()
     var hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
 
     /**
@@ -66,7 +64,8 @@ abstract class AbstractDartsModel
         }
 
         //Golf
-        hmDartNoToSegmentType = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
+        val hmDartNoToString = rootElement.readIntegerHashMap<String>(TAG_GOLF_AIM)
+        hmDartNoToSegmentType = hmDartNoToString.mapValues { SegmentType.valueOf(it.value) }.toMutableMap()
         hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP)
 
         readXmlSpecific(rootElement)
@@ -82,7 +81,7 @@ abstract class AbstractDartsModel
             rootElement.setAttribute(ATTRIBUTE_SCORING_DART, "" + scoringDart)
         }
 
-        hmScoreToDart.forEach { score, drt ->
+        hmScoreToDart.forEach { (score, drt) ->
             val child = xmlDoc.createElement(TAG_SETUP_DART)
             child.setAttribute(ATTRIBUTE_SCORE, "" + score)
             child.setAttribute(ATTRIBUTE_DART_VALUE, "" + drt.score)
@@ -143,7 +142,7 @@ abstract class AbstractDartsModel
 
     fun getScoringPoint(dartboard: Dartboard): Point
     {
-        val segmentType = if (scoringDart == 25) SEGMENT_TYPE_DOUBLE else SEGMENT_TYPE_TREBLE
+        val segmentType = if (scoringDart == 25) SegmentType.DOUBLE else SegmentType.TREBLE
         return getPointForScore(scoringDart, dartboard, segmentType)
     }
 
@@ -160,7 +159,7 @@ abstract class AbstractDartsModel
         dartboard.dartThrown(pt)
     }
 
-    private fun getDefaultSegmentType(dartNo: Int) = if (dartNo == 1) SEGMENT_TYPE_DOUBLE else SEGMENT_TYPE_TREBLE
+    private fun getDefaultSegmentType(dartNo: Int) = if (dartNo == 1) SegmentType.DOUBLE else SegmentType.TREBLE
     private fun getDefaultStopThreshold(dartNo: Int) = if (dartNo == 2) 3 else 2
 
     /**
@@ -175,16 +174,6 @@ abstract class AbstractDartsModel
         dartboard.dartThrown(pt)
     }
 
-    private fun getSegmentTypeForClockType(clockType: String): Int
-    {
-        return when (clockType)
-        {
-            CLOCK_TYPE_STANDARD -> SEGMENT_TYPE_OUTER_SINGLE
-            CLOCK_TYPE_DOUBLES -> SEGMENT_TYPE_DOUBLE
-            else -> SEGMENT_TYPE_TREBLE
-        }
-    }
-
     /**
      * Given the single/double/treble required, calculate the physical coordinates of the optimal place to aim
      */
@@ -195,7 +184,7 @@ abstract class AbstractDartsModel
         return getPointForScore(score, dartboard, segmentType)
     }
 
-    private fun getPointForScore(score: Int, dartboard: Dartboard, type: Int): Point
+    private fun getPointForScore(score: Int, dartboard: Dartboard, type: SegmentType): Point
     {
         val points = dartboard.getPointsForSegment(score, type)
         val avgPoint = getAverage(points)
@@ -250,7 +239,7 @@ abstract class AbstractDartsModel
         {
             val doubleToAimAt = rand.nextInt(20) + 1
 
-            val doublePtToAimAt = getPointForScore(doubleToAimAt, dartboard, SEGMENT_TYPE_DOUBLE)
+            val doublePtToAimAt = getPointForScore(doubleToAimAt, dartboard, SegmentType.DOUBLE)
 
             val pt = throwDartAtPoint(doublePtToAimAt, dartboard)
             val dart = dartboard.convertPointToDart(pt, true)
@@ -268,7 +257,7 @@ abstract class AbstractDartsModel
     }
 
     fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getOrDefault(dartNo, getDefaultSegmentType(dartNo))
-    fun setSegmentTypeForDartNo(dartNo: Int, segmentType: Int)
+    fun setSegmentTypeForDartNo(dartNo: Int, segmentType: SegmentType)
     {
         hmDartNoToSegmentType[dartNo] = segmentType
     }

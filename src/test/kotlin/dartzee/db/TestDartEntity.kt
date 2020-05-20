@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SEGMENT_TYPE_TREBLE
+import dartzee.`object`.SegmentType
 import dartzee.helper.randomGuid
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -15,7 +16,7 @@ class TestDartEntity: AbstractEntityTest<DartEntity>()
     @Test
     fun `Should factory with the correct values`()
     {
-        val dart = Dart(20, 3, Point(5, 5), SEGMENT_TYPE_TREBLE)
+        val dart = Dart(20, 3, Point(5, 5), SegmentType.TREBLE)
         val playerId = randomGuid()
         val participantId = randomGuid()
 

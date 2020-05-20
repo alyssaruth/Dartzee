@@ -22,10 +22,10 @@ class TestDartzeeDartboard: AbstractTest()
         val scoringSegments = listOf(trebleNineteen, bullseye)
         dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments))
 
-        val t19Pt = dartboard.getNonEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        val t19Pt = dartboard.getNonEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(t19Pt) shouldBe Color.GREEN
 
-        val bullPt = dartboard.getNonEdgePointForSegment(25, SEGMENT_TYPE_DOUBLE)
+        val bullPt = dartboard.getNonEdgePointForSegment(25, SegmentType.DOUBLE)
         dartboard.getColor(bullPt) shouldBe Color.RED
     }
 
@@ -38,10 +38,10 @@ class TestDartzeeDartboard: AbstractTest()
         val validSegments = listOf(trebleNineteen, bullseye)
         dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = emptyList(), validSegments = validSegments))
 
-        val t19Pt = dartboard.getNonEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        val t19Pt = dartboard.getNonEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(t19Pt) shouldBe GREY_COLOUR_WRAPPER.getColour(3, 19)
 
-        val bullPt = dartboard.getNonEdgePointForSegment(25, SEGMENT_TYPE_DOUBLE)
+        val bullPt = dartboard.getNonEdgePointForSegment(25, SegmentType.DOUBLE)
         dartboard.getColor(bullPt) shouldBe GREY_COLOUR_WRAPPER.getBullColour(2)
     }
 
@@ -53,10 +53,10 @@ class TestDartzeeDartboard: AbstractTest()
 
         dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = emptyList(), validSegments = emptyList()))
 
-        val t19Pt = dartboard.getNonEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        val t19Pt = dartboard.getNonEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(t19Pt) shouldBe Color.BLACK
 
-        val bullPt = dartboard.getNonEdgePointForSegment(25, SEGMENT_TYPE_DOUBLE)
+        val bullPt = dartboard.getNonEdgePointForSegment(25, SegmentType.DOUBLE)
         dartboard.getColor(bullPt) shouldBe Color.BLACK
     }
 
@@ -67,14 +67,14 @@ class TestDartzeeDartboard: AbstractTest()
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen, missTwenty)))
 
-        var missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
+        var missTwentyPts = dartboard.getPointsForSegment(20, SegmentType.MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
 
         dartboard.refreshValidSegments(makeSegmentStatus(emptyList()))
-        missTwentyPts = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS)
+        missTwentyPts = dartboard.getPointsForSegment(20, SegmentType.MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
 
-        val missedBoardSegments = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISSED_BOARD)
+        val missedBoardSegments = dartboard.getPointsForSegment(20, SegmentType.MISSED_BOARD)
         missedBoardSegments.forEach { dartboard.getColor(it) shouldBe DartsColour.TRANSPARENT }
     }
 
@@ -87,7 +87,7 @@ class TestDartzeeDartboard: AbstractTest()
 
         dartboard.ensureListening()
 
-        val pt = dartboard.getNonEdgePointForSegment(20, SEGMENT_TYPE_DOUBLE)
+        val pt = dartboard.getNonEdgePointForSegment(20, SegmentType.DOUBLE)
         dartboard.highlightDartboard(pt)
 
         dartboard.getColor(pt) shouldBe Color.BLACK
@@ -100,13 +100,13 @@ class TestDartzeeDartboard: AbstractTest()
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = listOf(trebleNineteen), validSegments = listOf(trebleNineteen, doubleNineteen)))
 
-        val scoringEdgePt = dartboard.getEdgePointForSegment(19, SEGMENT_TYPE_TREBLE)
+        val scoringEdgePt = dartboard.getEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(scoringEdgePt) shouldBe Color.GRAY
 
-        val validEdgePt = dartboard.getEdgePointForSegment(19, SEGMENT_TYPE_DOUBLE)
+        val validEdgePt = dartboard.getEdgePointForSegment(19, SegmentType.DOUBLE)
         dartboard.getColor(validEdgePt) shouldBe GREY_COLOUR_WRAPPER.getColour(2, 19)
 
-        val invalidEdgePt = dartboard.getEdgePointForSegment(20, SEGMENT_TYPE_OUTER_SINGLE)
+        val invalidEdgePt = dartboard.getEdgePointForSegment(20, SegmentType.OUTER_SINGLE)
         dartboard.getColor(invalidEdgePt) shouldBe Color.BLACK
     }
 
@@ -119,22 +119,22 @@ class TestDartzeeDartboard: AbstractTest()
 
         dartboard.ensureListening()
 
-        val pt = dartboard.getNonEdgePointForSegment(20, SEGMENT_TYPE_DOUBLE)
+        val pt = dartboard.getNonEdgePointForSegment(20, SegmentType.DOUBLE)
         dartboard.highlightDartboard(pt)
         dartboard.getColor(pt) shouldBe DartsColour.getDarkenedColour(Color.RED)
 
-        val validPt = dartboard.getNonEdgePointForSegment(20, SEGMENT_TYPE_INNER_SINGLE)
+        val validPt = dartboard.getNonEdgePointForSegment(20, SegmentType.INNER_SINGLE)
         dartboard.highlightDartboard(validPt)
         dartboard.getColor(validPt) shouldBe DartsColour.getDarkenedColour(GREY_COLOUR_WRAPPER.getColour(1, 20))
     }
 
-    private fun Dartboard.getEdgePointForSegment(score: Int, segmentType: Int): Point
+    private fun Dartboard.getEdgePointForSegment(score: Int, segmentType: SegmentType): Point
     {
         val segment = getSegment(score, segmentType)!!
         segment.isEdgePoint(Point(0, 0))
         return segment.edgePoints.first()
     }
-    private fun Dartboard.getNonEdgePointForSegment(score: Int, segmentType: Int): Point
+    private fun Dartboard.getNonEdgePointForSegment(score: Int, segmentType: SegmentType): Point
     {
         val segment = getSegment(score, segmentType)!!
         segment.isEdgePoint(Point(0, 0))

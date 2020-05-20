@@ -57,10 +57,7 @@ class TestDartboardUtil : AbstractRegistryTest()
 
     private fun assertSegment(pt: Point, segmentType: Int, score: Int, multiplier: Int, expectedColor: Color)
     {
-        val key = factorySegmentKeyForPoint(pt, Point(0, 0), 2000.0)
-        key shouldBe score.toString() + "_" + segmentType
-
-        val segment = DartboardSegment(key)
+        val segment = factorySegmentForPoint(pt, Point(0, 0), 2000.0)
 
         val segmentStr = "" + segment
         segmentStr shouldBe "$score ($segmentType)"
@@ -89,7 +86,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         val wrapper = ColourWrapper(DartsColour.TRANSPARENT)
         wrapper.edgeColour = Color.YELLOW
 
-        val fakeSegment = DartboardSegment("20_1")
+        val fakeSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20)
         for (x in 0..200)
         {
             for (y in 0..200)
@@ -120,7 +117,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT)
 
         //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
-        val missSegment = DartboardSegment("20_$SEGMENT_TYPE_MISS")
+        val missSegment = DartboardSegment(SegmentType.MISS, 20)
         for (x in 0..200)
         {
             for (y in 0..200)

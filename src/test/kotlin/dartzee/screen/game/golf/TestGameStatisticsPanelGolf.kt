@@ -1,7 +1,6 @@
 package dartzee.screen.game.golf
 
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.makeDart
 import dartzee.helper.makeDefaultPlayerState
@@ -28,7 +27,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     @Test
     fun `Should get best, avg and worst hole state correct`()
     {
-        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SEGMENT_TYPE_OUTER_SINGLE)))
+        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.OUTER_SINGLE)))
 
         val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
 
@@ -67,7 +66,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     @Test
     fun `Should correctly calculate miss %`()
     {
-        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SEGMENT_TYPE_OUTER_SINGLE)))
+        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.OUTER_SINGLE)))
 
         val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
 
@@ -93,7 +92,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     fun `Should correctly populate points squandered`()
     {
         // 3-5-4
-        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SEGMENT_TYPE_INNER_SINGLE), makeDart(20, 1), makeDart(1, 1)))
+        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.INNER_SINGLE), makeDart(20, 1), makeDart(1, 1)))
         val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
 
         val statsPanel = factoryStatsPanel()
@@ -120,20 +119,20 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     fun `Should correctly populate points improved`()
     {
         //4-3-2. You've gambled twice, and gained 1 each time. 2 points improved.
-        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1), makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE), makeDart(1, 3)))
+        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1), makeDart(1, 1, SegmentType.INNER_SINGLE), makeDart(1, 3)))
         val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 2
 
         //5-4-3. You didn't gamble the first one, so have only gained 1.
-        val roundTwo = makeGolfRound(2, listOf(makeDart(2, 0), makeDart(2, 1), makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE)))
+        val roundTwo = makeGolfRound(2, listOf(makeDart(2, 0), makeDart(2, 1), makeDart(2, 1, SegmentType.INNER_SINGLE)))
         state.addDarts(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 3
 
         //3-5-2. You've gambled the 3, stuffed it, then clawed it back. Improved by 1
-        val roundThree = makeGolfRound(3, listOf(makeDart(3, 1, SEGMENT_TYPE_INNER_SINGLE), makeDart(3, 0), makeDart(3, 3)))
+        val roundThree = makeGolfRound(3, listOf(makeDart(3, 1, SegmentType.INNER_SINGLE), makeDart(3, 0), makeDart(3, 3)))
         state.addDarts(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 4
@@ -151,7 +150,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
         statsPanel.getValueForRow("Points Improved") shouldBe 4
 
         //4-2-3. You've gained 1 (and also lost 1). 0.
-        val roundSix = makeGolfRound(6, listOf(makeDart(6, 1), makeDart(6, 3), makeDart(6, 1, SEGMENT_TYPE_INNER_SINGLE)))
+        val roundSix = makeGolfRound(6, listOf(makeDart(6, 1), makeDart(6, 3), makeDart(6, 1, SegmentType.INNER_SINGLE)))
         state.addDarts(roundSix)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 4
@@ -160,7 +159,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     @Test
     fun `Should calculate score breakdown correctly`()
     {
-        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SEGMENT_TYPE_OUTER_SINGLE)))
+        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.OUTER_SINGLE)))
 
         val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
 
@@ -188,7 +187,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
         statsPanel.shouldHaveBreakdownState(mapOf("4" to 1, "2" to 1, "5" to 2))
 
         //4, 2, 5, 5, 3
-        val roundFive = makeGolfRound(5, listOf(makeDart(5, 1, SEGMENT_TYPE_INNER_SINGLE)))
+        val roundFive = makeGolfRound(5, listOf(makeDart(5, 1, SegmentType.INNER_SINGLE)))
         state.addDarts(roundFive)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4" to 1, "2" to 1, "5" to 2, "3" to 1))

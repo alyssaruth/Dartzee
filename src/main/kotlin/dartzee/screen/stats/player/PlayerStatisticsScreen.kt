@@ -1,6 +1,7 @@
 package dartzee.screen.stats.player
 
 import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -182,7 +183,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
                     val score = rs.getInt("Score")
                     val multiplier = rs.getInt("Multiplier")
                     val startingScore = rs.getInt("StartingScore")
-                    val segmentType = rs.getInt("SegmentType")
+                    val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
 
                     val wrapper = hm[gameId] ?: GameWrapper(gameId, gameParams, dtStart, dtFinish, numberOfDarts)
                     hm[gameId] = wrapper

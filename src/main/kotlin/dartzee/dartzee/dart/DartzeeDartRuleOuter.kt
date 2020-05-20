@@ -1,8 +1,7 @@
 package dartzee.dartzee.dart
 
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 
 class DartzeeDartRuleOuter : AbstractDartzeeDartRule()
 {
@@ -13,7 +12,7 @@ class DartzeeDartRuleOuter : AbstractDartzeeDartRule()
             return false
         }
 
-        return segment.type == SEGMENT_TYPE_OUTER_SINGLE || segment.type == SEGMENT_TYPE_DOUBLE
+        return segment.type == SegmentType.OUTER_SINGLE || segment.type == SegmentType.DOUBLE
     }
 
     override fun getRuleIdentifier() = "Outer"

@@ -41,9 +41,9 @@ fun Element.getAttributeDouble(attributeName: String): Double
     return if (attribute == "") 0.0 else attribute.toDouble()
 }
 
-fun Element.readIntegerHashMap(tagName: String): MutableMap<Int, Int>
+inline fun <reified T> Element.readIntegerHashMap(tagName: String): MutableMap<Int, T>
 {
-    val hm = mutableMapOf<Int, Int>()
+    val hm = mutableMapOf<Int, T>()
 
     val children = getElementsByTagName(tagName)
     val size = children.length
@@ -51,7 +51,7 @@ fun Element.readIntegerHashMap(tagName: String): MutableMap<Int, Int>
     {
         val child = children.item(i) as Element
         val key = child.getAttributeInt("Key")
-        val value = child.getAttributeInt("Value")
+        val value = child.getAttribute("Value") as T
 
         hm[key] = value
     }
@@ -67,40 +67,6 @@ fun Element.writeHashMap(hm: Map<*, *>, tagName: String)
         child.setAttribute("Value", "$value")
         appendChild(child)
     }
-}
-
-fun Element.writeList(list: List<Any>, tagName: String)
-{
-    val listElement = ownerDocument.createElement(tagName)
-    appendChild(listElement)
-
-    list.forEachIndexed { ix, value ->
-        val itemElement = ownerDocument.createElement("ListItem")
-        itemElement.setAttributeAny("Value", value)
-        itemElement.setAttributeAny("Index", ix)
-        listElement.appendChild(itemElement)
-    }
-}
-
-fun Element.readList(tagName: String): List<String>?
-{
-    val list = mutableListOf<String>()
-
-    val listElement = getElementsByTagName(tagName).item(0) as Element?
-    listElement ?: return null
-
-    val items = listElement.getElementsByTagName("ListItem")
-
-    val size = items.length
-    for (i in 0 until size)
-    {
-        val child = items.item(i) as Element
-        val ix = child.getAttributeInt("Index")
-        val value = child.getAttribute("Value")
-        list.add(ix, value)
-    }
-
-    return list
 }
 
 fun Element.setAttributeAny(key: String, value: Any) = setAttribute(key, "$value")

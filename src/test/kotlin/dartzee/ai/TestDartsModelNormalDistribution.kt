@@ -1,7 +1,6 @@
 package dartzee.ai
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 import dartzee.borrowTestDartboard
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.XmlUtil
@@ -153,8 +152,8 @@ class TestDartsModelNormalDistribution: AbstractTest()
 
         val dartboard = borrowTestDartboard()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
-        val ptDouble = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
+        val ptDouble = dartboard.getPointsForSegment(20, SegmentType.DOUBLE).first()
 
         val (radiusNonDouble) = model.calculateRadiusAndAngle(pt, dartboard)
         radiusNonDouble shouldBe 3.0
@@ -177,8 +176,8 @@ class TestDartsModelNormalDistribution: AbstractTest()
 
         val dartboard = borrowTestDartboard()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
-        val ptDouble = dartboard.getPointsForSegment(20, SEGMENT_TYPE_DOUBLE).first()
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
+        val ptDouble = dartboard.getPointsForSegment(20, SegmentType.DOUBLE).first()
 
         val (radiusNonDouble) = model.calculateRadiusAndAngle(pt, dartboard)
         radiusNonDouble shouldBe 3.0
@@ -204,7 +203,7 @@ class TestDartsModelNormalDistribution: AbstractTest()
 
         val dartboard = borrowTestDartboard()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
 
         val (radius) = model.calculateRadiusAndAngle(pt, dartboard)
         radius shouldBe 6.0

@@ -1,8 +1,6 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_MISS
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
@@ -57,7 +55,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val carousel = makeCarousel()
-        val dart = makeDart(18, 1, SEGMENT_TYPE_OUTER_SINGLE)
+        val dart = makeDart(18, 1, SegmentType.OUTER_SINGLE)
         carousel.update(emptyList(), listOf(dart), 20)
 
         carousel.dartsThrown.shouldContainExactly(dart)
@@ -96,9 +94,9 @@ class TestDartzeeRuleCarousel: AbstractTest()
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val carousel = makeCarousel()
-        val darts = listOf(makeDart(18, 1, SEGMENT_TYPE_INNER_SINGLE),
-                makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE),
-                makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        val darts = listOf(makeDart(18, 1, SegmentType.INNER_SINGLE),
+                makeDart(20, 1, SegmentType.OUTER_SINGLE),
+                makeDart(1, 1, SegmentType.INNER_SINGLE))
 
         carousel.update(emptyList(), darts, 50)
 
@@ -114,7 +112,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     fun `If no remaining rules are valid, then the first should be shown with a pending result of false`()
     {
         val carousel = makeCarousel()
-        carousel.update(emptyList(), listOf(makeDart(20, 0, SEGMENT_TYPE_MISS)), 20)
+        carousel.update(emptyList(), listOf(makeDart(20, 0, SegmentType.MISS)), 20)
 
         val pendingTiles = carousel.pendingTiles.filter { it.isVisible }
         pendingTiles.size shouldBe 1
@@ -129,7 +127,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     fun `Should round up when calculating a failure score`()
     {
         val carousel = makeCarousel()
-        carousel.update(emptyList(), listOf(makeDart(20, 0, SEGMENT_TYPE_MISS)), 41)
+        carousel.update(emptyList(), listOf(makeDart(20, 0, SegmentType.MISS)), 41)
 
         val pendingTiles = carousel.pendingTiles.filter { it.isVisible }
         pendingTiles.size shouldBe 1
@@ -143,8 +141,8 @@ class TestDartzeeRuleCarousel: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val dartOne = makeDart(19, 1, SEGMENT_TYPE_OUTER_SINGLE)
-        val dartTwo = makeDart(19, 1, SEGMENT_TYPE_OUTER_SINGLE)
+        val dartOne = makeDart(19, 1, SegmentType.OUTER_SINGLE)
+        val dartTwo = makeDart(19, 1, SegmentType.OUTER_SINGLE)
 
         val carousel = makeCarousel()
         carousel.update(emptyList(), listOf(dartOne, dartTwo), 20)
@@ -214,7 +212,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     {
         val listener = mockk<IDartzeeCarouselListener>(relaxed = true)
         val carousel = makeCarousel(listener)
-        carousel.update(emptyList(), listOf(makeDart(20, 0, SEGMENT_TYPE_MISS)), 20)
+        carousel.update(emptyList(), listOf(makeDart(20, 0, SegmentType.MISS)), 20)
 
         val pendingTiles = carousel.pendingTiles.filter { it.isVisible }
         pendingTiles.size shouldBe 1
@@ -230,8 +228,8 @@ class TestDartzeeRuleCarousel: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val dartOne = makeDart(19, 1, SEGMENT_TYPE_OUTER_SINGLE)
-        val dartTwo = makeDart(19, 1, SEGMENT_TYPE_OUTER_SINGLE)
+        val dartOne = makeDart(19, 1, SegmentType.OUTER_SINGLE)
+        val dartTwo = makeDart(19, 1, SegmentType.OUTER_SINGLE)
 
         val listener = TrackingCarouselListener()
         val carousel = makeCarousel(listener)

@@ -1,9 +1,7 @@
 package dartzee.screen
 
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_MISS
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 import dartzee.core.helper.makeMouseEvent
 import dartzee.doubleNineteen
 import dartzee.getColor
@@ -26,7 +24,7 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
         dartboard.dartThrown(pt)
 
         dartboard.selectedSegments.shouldHaveSize(1)
@@ -41,7 +39,7 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_MISS).first()
+        val pt = dartboard.getPointsForSegment(20, SegmentType.MISS).first()
         dartboard.dartThrown(pt)
 
         dartboard.selectedSegments.shouldBeEmpty()
@@ -53,12 +51,12 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
         dartboard.dartThrown(pt)
 
         dartboard.selectedSegments.shouldHaveSize(1)
 
-        val me = generateMouseEvent(dartboard, 20, SEGMENT_TYPE_OUTER_SINGLE)
+        val me = generateMouseEvent(dartboard, 20, SegmentType.OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
         dartboard.selectedSegments.shouldHaveSize(1)
@@ -70,10 +68,10 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val pt = dartboard.getPointsForSegment(20, SEGMENT_TYPE_OUTER_SINGLE).first()
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
         dartboard.dartThrown(pt)
 
-        val me = generateMouseEvent(dartboard, 19, SEGMENT_TYPE_OUTER_SINGLE)
+        val me = generateMouseEvent(dartboard, 19, SegmentType.OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
         dartboard.selectedSegments.shouldHaveSize(2)
@@ -85,18 +83,18 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val segment = DartboardSegment("10_$SEGMENT_TYPE_OUTER_SINGLE")
+        val segment = DartboardSegment(SegmentType.OUTER_SINGLE, 10)
         dartboard.initState(hashSetOf(segment))
 
         //Check state has initialised properly
         dartboard.selectedSegments.shouldHaveSize(1)
 
         val selectedSegment = dartboard.selectedSegments.first()
-        selectedSegment.type shouldBe SEGMENT_TYPE_OUTER_SINGLE
+        selectedSegment.type shouldBe SegmentType.OUTER_SINGLE
         selectedSegment.score shouldBe 10
 
         //Mock a mouse event
-        val me = generateMouseEvent(dartboard, 10, SEGMENT_TYPE_OUTER_SINGLE)
+        val me = generateMouseEvent(dartboard, 10, SegmentType.OUTER_SINGLE)
         dartboard.mouseDragged(me)
 
         dartboard.selectedSegments.shouldBeEmpty()
@@ -115,7 +113,7 @@ class TestDartboardSegmentSelector: AbstractTest()
 
         selectedSegment.points.shouldNotBeEmpty()
         selectedSegment.score shouldBe 19
-        selectedSegment.type shouldBe SEGMENT_TYPE_DOUBLE
+        selectedSegment.type shouldBe SegmentType.DOUBLE
     }
 
     @Test
@@ -124,7 +122,7 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val doubleNineteenSegment = dartboard.getSegment(19, SEGMENT_TYPE_DOUBLE)
+        val doubleNineteenSegment = dartboard.getSegment(19, SegmentType.DOUBLE)
         assertNotNull(doubleNineteenSegment)
 
         val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
@@ -147,7 +145,7 @@ class TestDartboardSegmentSelector: AbstractTest()
 
         dartboard.initState(hashSetOf(doubleNineteen))
 
-        val doubleNineteenSegment = dartboard.getSegment(19, SEGMENT_TYPE_DOUBLE)
+        val doubleNineteenSegment = dartboard.getSegment(19, SegmentType.DOUBLE)
         assertNotNull(doubleNineteenSegment)
 
         val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
@@ -162,7 +160,7 @@ class TestDartboardSegmentSelector: AbstractTest()
         }
     }
 
-    private fun generateMouseEvent(dartboard: Dartboard, score: Int, segmentType: Int): MouseEvent
+    private fun generateMouseEvent(dartboard: Dartboard, score: Int, segmentType: SegmentType): MouseEvent
     {
         val pt = dartboard.getPointsForSegment(score, segmentType).first()
 

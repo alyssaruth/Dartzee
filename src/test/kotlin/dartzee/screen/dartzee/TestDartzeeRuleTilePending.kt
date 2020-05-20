@@ -1,8 +1,6 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_MISS
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.doubleNineteen
 import dartzee.helper.*
@@ -43,10 +41,10 @@ class TestDartzeeRuleTilePending: AbstractTest()
             makeDartzeeRuleDto(makeScoreRule(15), allowMisses = false),
             5
         )
-        tile.updateState(listOf(makeDart(20, 0, SEGMENT_TYPE_MISS)))
+        tile.updateState(listOf(makeDart(20, 0, SegmentType.MISS)))
         tile.isVisible shouldBe false
 
-        tile.updateState(listOf(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE)))
+        tile.updateState(listOf(makeDart(20, 1, SegmentType.OUTER_SINGLE)))
         tile.isVisible shouldBe true
     }
 
@@ -68,12 +66,12 @@ class TestDartzeeRuleTilePending: AbstractTest()
         val rule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(18), makeScoreRule(19), inOrder = true)
         val tile = DartzeeRuleTilePending(rule, 2)
 
-        tile.getSegmentStatus(listOf(makeDart(18, 1, SEGMENT_TYPE_OUTER_SINGLE))).validSegments.shouldBeEmpty()
+        tile.getSegmentStatus(listOf(makeDart(18, 1, SegmentType.OUTER_SINGLE))).validSegments.shouldBeEmpty()
 
         val eighteenSegments = getAllPossibleSegments().filter { it.score == 18 && !it.isMiss()}.toTypedArray()
-        tile.getSegmentStatus(listOf(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))).validSegments.shouldContainExactlyInAnyOrder(*eighteenSegments)
+        tile.getSegmentStatus(listOf(makeDart(20, 1, SegmentType.OUTER_SINGLE))).validSegments.shouldContainExactlyInAnyOrder(*eighteenSegments)
 
-        val twoDarts = listOf(makeDart(20, 2, SEGMENT_TYPE_DOUBLE), makeDart(18, 2, SEGMENT_TYPE_DOUBLE))
+        val twoDarts = listOf(makeDart(20, 2, SegmentType.DOUBLE), makeDart(18, 2, SegmentType.DOUBLE))
         val nineteenSegments = getAllPossibleSegments().filter { it.score == 19 && !it.isMiss()}.toTypedArray()
         tile.getSegmentStatus(twoDarts).validSegments.shouldContainExactlyInAnyOrder(*nineteenSegments)
     }

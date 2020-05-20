@@ -10,7 +10,7 @@ open class Dart constructor(
         var score: Int,
         var multiplier: Int,
         var pt: Point? = null,
-        var segmentType: Int = -1)
+        var segmentType: SegmentType = SegmentType.MISS)
 {
     var ordinal = -1
 
@@ -66,13 +66,13 @@ open class Dart constructor(
         return ret
     }
 
-    fun getSegmentTypeToAimAt(): Int
+    fun getSegmentTypeToAimAt(): SegmentType
     {
         return when (multiplier)
         {
-            1 -> SEGMENT_TYPE_OUTER_SINGLE
-            2 -> SEGMENT_TYPE_DOUBLE
-            else -> SEGMENT_TYPE_TREBLE
+            1 -> SegmentType.OUTER_SINGLE
+            2 -> SegmentType.DOUBLE
+            else -> SegmentType.TREBLE
         }
     }
 
@@ -81,7 +81,7 @@ open class Dart constructor(
         return if (score != target)
         {
             5
-        } else getGolfScoreForSegment(segmentType)
+        } else segmentType.getGolfScore()
 
     }
 
@@ -169,9 +169,4 @@ fun factorySingle(score: Int): Dart
 fun factoryDouble(score: Int): Dart
 {
     return Dart(score, 2)
-}
-
-fun factoryTreble(score: Int): Dart
-{
-    return Dart(score, 3)
 }

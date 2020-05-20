@@ -31,9 +31,9 @@ class TestGamePanelGolf: AbstractTest()
         val panel = TestGamePanel(playerId)
 
         val darts = listOf(
-                Dart(1, 0, segmentType = SEGMENT_TYPE_MISS),
-                Dart(20, 3, segmentType = SEGMENT_TYPE_TREBLE),
-                Dart(1, 1, segmentType = SEGMENT_TYPE_OUTER_SINGLE))
+                Dart(1, 0, segmentType = SegmentType.MISS),
+                Dart(20, 3, segmentType = SegmentType.TREBLE),
+                Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE))
 
         panel.setDartsThrown(darts)
 
@@ -48,9 +48,9 @@ class TestGamePanelGolf: AbstractTest()
         val panel = TestGamePanel(playerId)
 
         val darts = listOf(
-                Dart(1, 3, segmentType = SEGMENT_TYPE_TREBLE),
-                Dart(1, 3, segmentType = SEGMENT_TYPE_OUTER_SINGLE),
-                Dart(1, 1, segmentType = SEGMENT_TYPE_TREBLE))
+                Dart(1, 3, segmentType = SegmentType.TREBLE),
+                Dart(1, 3, segmentType = SegmentType.OUTER_SINGLE),
+                Dart(1, 1, segmentType = SegmentType.TREBLE))
 
         panel.setDartsThrown(darts)
 
@@ -65,7 +65,7 @@ class TestGamePanelGolf: AbstractTest()
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
 
-        val darts = listOf(Dart(1, 1, segmentType = SEGMENT_TYPE_TREBLE))
+        val darts = listOf(Dart(1, 1, segmentType = SegmentType.TREBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
@@ -82,7 +82,7 @@ class TestGamePanelGolf: AbstractTest()
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
 
-        val darts = listOf(Dart(1, 3, segmentType = SEGMENT_TYPE_TREBLE))
+        val darts = listOf(Dart(1, 3, segmentType = SegmentType.TREBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
@@ -95,7 +95,7 @@ class TestGamePanelGolf: AbstractTest()
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
 
-        val darts = listOf(Dart(2, 2, segmentType = SEGMENT_TYPE_DOUBLE))
+        val darts = listOf(Dart(2, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
@@ -108,7 +108,7 @@ class TestGamePanelGolf: AbstractTest()
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
 
-        val darts = listOf(Dart(1, 2, segmentType = SEGMENT_TYPE_DOUBLE), Dart(1, 3, segmentType = SEGMENT_TYPE_TREBLE))
+        val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE), Dart(1, 3, segmentType = SegmentType.TREBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
@@ -122,7 +122,7 @@ class TestGamePanelGolf: AbstractTest()
         val panel = TestGamePanel(playerId)
         insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_GOLF_COURSE_MASTER, achievementDetail = "2")
 
-        val darts = listOf(Dart(1, 2, segmentType = SEGMENT_TYPE_DOUBLE))
+        val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
@@ -138,7 +138,7 @@ class TestGamePanelGolf: AbstractTest()
         val panel = TestGamePanel(playerId)
         val originalRow = insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_GOLF_COURSE_MASTER, achievementDetail = "1")
 
-        val darts = listOf(Dart(1, 2, segmentType = SEGMENT_TYPE_DOUBLE))
+        val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()

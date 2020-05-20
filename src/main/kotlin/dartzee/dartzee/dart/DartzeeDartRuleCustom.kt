@@ -42,27 +42,14 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
-        segments.forEach{
-            val element = doc.createElement("Segment")
-            element.setAttribute("Value", it.scoreAndType)
-
-            rootElement.appendChild(element)
-        }
+        segments.forEach { it.writeXml(rootElement, "Segment") }
 
         rootElement.setAttribute("Name", name)
     }
 
     override fun populate(rootElement: Element)
     {
-        val list = rootElement.getElementsByTagName("Segment")
-        for (i in 0 until list.length)
-        {
-            val node = list.item(i) as Element
-            val segment = DartboardSegment(node.getAttribute("Value"))
-
-            segments.add(segment)
-        }
-
+        segments.addAll(DartboardSegment.readList(rootElement, "Segment"))
         name = rootElement.getAttribute("Name")
         tfName.text = name
     }
@@ -89,5 +76,4 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
         //Propagate an action event to any other listeners
         btnConfigure.actionListeners.find { it != this }?.actionPerformed(e)
     }
-
 }

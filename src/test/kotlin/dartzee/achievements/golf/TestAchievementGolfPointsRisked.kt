@@ -1,9 +1,6 @@
 package dartzee.achievements.golf
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_TREBLE
+import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.achievements.AbstractAchievementTest
 import dartzee.db.AchievementEntity
@@ -24,12 +21,12 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
     @Test
     fun `Should map segment types correctly`()
     {
-        verifySegmentTypeScoredCorrectly(SEGMENT_TYPE_OUTER_SINGLE, 1)
-        verifySegmentTypeScoredCorrectly(SEGMENT_TYPE_INNER_SINGLE, 2)
-        verifySegmentTypeScoredCorrectly(SEGMENT_TYPE_TREBLE, 3)
-        verifySegmentTypeScoredCorrectly(SEGMENT_TYPE_DOUBLE, 4)
+        verifySegmentTypeScoredCorrectly(SegmentType.OUTER_SINGLE, 1)
+        verifySegmentTypeScoredCorrectly(SegmentType.INNER_SINGLE, 2)
+        verifySegmentTypeScoredCorrectly(SegmentType.TREBLE, 3)
+        verifySegmentTypeScoredCorrectly(SegmentType.DOUBLE, 4)
     }
-    private fun verifySegmentTypeScoredCorrectly(segmentType: Int, expectedScore: Int)
+    private fun verifySegmentTypeScoredCorrectly(segmentType: SegmentType, expectedScore: Int)
     {
         val p = insertPlayer()
         val g = insertRelevantGame()
@@ -42,12 +39,12 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
         a.achievementCounter shouldBe expectedScore
     }
 
-    fun insertRiskedDart(p: PlayerEntity, g: GameEntity, segmentType: Int = SEGMENT_TYPE_OUTER_SINGLE)
+    fun insertRiskedDart(p: PlayerEntity, g: GameEntity, segmentType: SegmentType = SegmentType.OUTER_SINGLE)
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
         insertDart(pt, roundNumber = 1, ordinal = 1, score = 1, multiplier = 1, segmentType = segmentType)
-        insertDart(pt, roundNumber = 1, ordinal = 2, score = 1, multiplier = 2, segmentType = SEGMENT_TYPE_DOUBLE)
+        insertDart(pt, roundNumber = 1, ordinal = 2, score = 1, multiplier = 2, segmentType = SegmentType.DOUBLE)
 
     }
 }

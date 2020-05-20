@@ -1,9 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_TREBLE
+import dartzee.`object`.*
 import dartzee.ai.AbstractDartsModel
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
@@ -15,7 +12,7 @@ import javax.swing.event.ChangeListener
 
 class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeListener
 {
-    private val comboBox = JComboBox<ComboBoxItem<Int>>()
+    private val comboBox = JComboBox<ComboBoxItem<SegmentType>>()
     private val panelStoppingPoint = JPanel()
     private val spinner = JSpinner()
     private val lblOrBelow = JLabel("or better")
@@ -46,10 +43,10 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
 
     private fun setModels()
     {
-        comboBox.addItem(ComboBoxItem(SEGMENT_TYPE_DOUBLE, "Double (1)"))
-        comboBox.addItem(ComboBoxItem(SEGMENT_TYPE_TREBLE, "Treble (2)"))
-        comboBox.addItem(ComboBoxItem(SEGMENT_TYPE_INNER_SINGLE, "Inner Single (3)"))
-        comboBox.addItem(ComboBoxItem(SEGMENT_TYPE_OUTER_SINGLE, "Outer Single (4)"))
+        comboBox.addItem(ComboBoxItem(SegmentType.DOUBLE, "Double (1)"))
+        comboBox.addItem(ComboBoxItem(SegmentType.TREBLE, "Treble (2)"))
+        comboBox.addItem(ComboBoxItem(SegmentType.INNER_SINGLE, "Inner Single (3)"))
+        comboBox.addItem(ComboBoxItem(SegmentType.OUTER_SINGLE, "Outer Single (4)"))
 
         spinner.model = SpinnerNumberModel(2, 1, 4, 1)
     }
