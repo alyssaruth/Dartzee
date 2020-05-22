@@ -145,7 +145,7 @@ object DartsDatabaseUtil
 
     private fun convertCustomDartzeeRules()
     {
-        val rules = DartzeeRuleEntity().retrieveEntities("dart1Rule LIKE '%custom%' OR dart2Rule LIKE '%custom%' OR dart3Rule LIKE '%custom%")
+        val rules = DartzeeRuleEntity().retrieveEntities("dart1Rule LIKE '%Custom%' OR dart2Rule LIKE '%Custom%' OR dart3Rule LIKE '%Custom%'")
         rules.forEach {
             if (it.dart1Rule.contains("custom", ignoreCase = true)) {
                 val customRule = DartzeeDartRuleCustom()
