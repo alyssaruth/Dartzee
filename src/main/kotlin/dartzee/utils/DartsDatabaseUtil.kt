@@ -5,6 +5,8 @@ import dartzee.ai.AbstractDartsModel
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
+import dartzee.core.util.toXmlDoc
+import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.db.*
 import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.logging.*
@@ -128,6 +130,7 @@ object DartsDatabaseUtil
         {
             runSqlScriptsForVersion(12)
             convertPlayerStrategies()
+            convertCustomDartzeeRules()
 
             //SegmentType enum
             DartzeeRuleConversion.convertDartzeeRules()
@@ -139,6 +142,33 @@ object DartsDatabaseUtil
         logger.addToContext(KEY_DB_VERSION, version.version)
         initialiseDatabase(version)
     }
+
+    private fun convertCustomDartzeeRules()
+    {
+        val rules = DartzeeRuleEntity().retrieveEntities("dart1Rule LIKE '%custom%' OR dart2Rule LIKE '%custom%' OR dart3Rule LIKE '%custom%")
+        rules.forEach {
+            if (it.dart1Rule.contains("custom", ignoreCase = true)) {
+                val customRule = DartzeeDartRuleCustom()
+                customRule.populateOldWay(it.dart1Rule.toXmlDoc()!!.documentElement)
+                it.dart1Rule = customRule.toDbString()
+            }
+
+            if (it.dart2Rule.contains("custom", ignoreCase = true)) {
+                val customRule = DartzeeDartRuleCustom()
+                customRule.populateOldWay(it.dart2Rule.toXmlDoc()!!.documentElement)
+                it.dart2Rule = customRule.toDbString()
+            }
+
+            if (it.dart3Rule.contains("custom", ignoreCase = true)) {
+                val customRule = DartzeeDartRuleCustom()
+                customRule.populateOldWay(it.dart3Rule.toXmlDoc()!!.documentElement)
+                it.dart3Rule = customRule.toDbString()
+            }
+
+            it.saveToDatabase()
+        }
+    }
+
 
     private fun convertPlayerStrategies()
     {
