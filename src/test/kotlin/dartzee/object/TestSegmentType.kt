@@ -1,5 +1,8 @@
 package dartzee.`object`
 
+import dartzee.db.CLOCK_TYPE_DOUBLES
+import dartzee.db.CLOCK_TYPE_STANDARD
+import dartzee.db.CLOCK_TYPE_TREBLES
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -27,4 +30,13 @@ class TestSegmentType: AbstractTest()
         SegmentType.MISS.getGolfScore() shouldBe 5
         SegmentType.MISSED_BOARD.getGolfScore() shouldBe 5
     }
+
+    @Test
+    fun `Should get the right segment type to aim for in RTC`()
+    {
+        getSegmentTypeForClockType(CLOCK_TYPE_STANDARD) shouldBe SegmentType.OUTER_SINGLE
+        getSegmentTypeForClockType(CLOCK_TYPE_DOUBLES) shouldBe SegmentType.DOUBLE
+        getSegmentTypeForClockType(CLOCK_TYPE_TREBLES) shouldBe SegmentType.TREBLE
+    }
+
 }
