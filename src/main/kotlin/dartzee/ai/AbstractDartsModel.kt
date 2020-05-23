@@ -3,11 +3,11 @@ package dartzee.ai
 import dartzee.`object`.*
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.*
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
+import dartzee.logging.LoggingCode
 import dartzee.screen.Dartboard
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.getAverage
 import org.w3c.dom.Element
@@ -23,7 +23,7 @@ abstract class AbstractDartsModel
     var mercyThreshold = -1
 
     //Golf
-    var hmDartNoToSegmentType = mutableMapOf<Int, Int>()
+    var hmDartNoToSegmentType = mutableMapOf<Int, SegmentType>()
     var hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
 
     /**
@@ -66,10 +66,56 @@ abstract class AbstractDartsModel
         }
 
         //Golf
-        hmDartNoToSegmentType = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
-        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP)
+        val hmDartNoToString = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
+        hmDartNoToSegmentType = hmDartNoToString.mapValues { SegmentType.valueOf(it.value) }.toMutableMap()
+        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
 
         readXmlSpecific(rootElement)
+    }
+
+    fun readXmlOldWay(xmlStr: String)
+    {
+        try
+        {
+            var fixed = xmlStr.replace("DartNumber", "Key", ignoreCase = true)
+            fixed = fixed.replace("SegmentType", "Value", ignoreCase = true)
+            fixed = fixed.replace("StopThreshold", "Value", ignoreCase = true)
+
+            val xmlDoc = fixed.toXmlDoc()
+            val rootElement = xmlDoc!!.documentElement
+
+            val scoringSingle = rootElement.getAttributeInt(ATTRIBUTE_SCORING_DART)
+            if (scoringSingle > 0)
+            {
+                this.scoringDart = scoringSingle
+            }
+
+            //X01
+            mercyThreshold = rootElement.getAttributeInt(ATTRIBUTE_MERCY_RULE, -1)
+
+            hmScoreToDart = mutableMapOf()
+            val setupDarts = rootElement.getElementsByTagName(TAG_SETUP_DART)
+            for (i in 0 until setupDarts.length)
+            {
+                val setupDart = setupDarts.item(i) as Element
+                val score = setupDart.getAttributeInt(ATTRIBUTE_SCORE)
+                val value = setupDart.getAttributeInt(ATTRIBUTE_DART_VALUE)
+                val multiplier = setupDart.getAttributeInt(ATTRIBUTE_DART_MULTIPLIER)
+
+                hmScoreToDart[score] = Dart(value, multiplier)
+            }
+
+            //Golf
+            val hmDartNoToSegmentInt = rootElement.readIntegerHashMap(TAG_GOLF_AIM).mapValues { it.value.toInt() }
+            hmDartNoToSegmentType = hmDartNoToSegmentInt.mapValues { DartsDatabaseUtil.convertOldSegmentType(it.value) }.toMutableMap()
+            hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
+
+            readXmlSpecific(rootElement)
+        }
+        catch (t: Throwable)
+        {
+            logger.error(LoggingCode("conversion.fucked"), xmlStr, t)
+        }
     }
 
     fun writeXml(): String
@@ -82,7 +128,7 @@ abstract class AbstractDartsModel
             rootElement.setAttribute(ATTRIBUTE_SCORING_DART, "" + scoringDart)
         }
 
-        hmScoreToDart.forEach { score, drt ->
+        hmScoreToDart.forEach { (score, drt) ->
             val child = xmlDoc.createElement(TAG_SETUP_DART)
             child.setAttribute(ATTRIBUTE_SCORE, "" + score)
             child.setAttribute(ATTRIBUTE_DART_VALUE, "" + drt.score)
@@ -143,7 +189,7 @@ abstract class AbstractDartsModel
 
     fun getScoringPoint(dartboard: Dartboard): Point
     {
-        val segmentType = if (scoringDart == 25) SEGMENT_TYPE_DOUBLE else SEGMENT_TYPE_TREBLE
+        val segmentType = if (scoringDart == 25) SegmentType.DOUBLE else SegmentType.TREBLE
         return getPointForScore(scoringDart, dartboard, segmentType)
     }
 
@@ -160,7 +206,7 @@ abstract class AbstractDartsModel
         dartboard.dartThrown(pt)
     }
 
-    private fun getDefaultSegmentType(dartNo: Int) = if (dartNo == 1) SEGMENT_TYPE_DOUBLE else SEGMENT_TYPE_TREBLE
+    private fun getDefaultSegmentType(dartNo: Int) = if (dartNo == 1) SegmentType.DOUBLE else SegmentType.TREBLE
     private fun getDefaultStopThreshold(dartNo: Int) = if (dartNo == 2) 3 else 2
 
     /**
@@ -175,16 +221,6 @@ abstract class AbstractDartsModel
         dartboard.dartThrown(pt)
     }
 
-    private fun getSegmentTypeForClockType(clockType: String): Int
-    {
-        return when (clockType)
-        {
-            CLOCK_TYPE_STANDARD -> SEGMENT_TYPE_OUTER_SINGLE
-            CLOCK_TYPE_DOUBLES -> SEGMENT_TYPE_DOUBLE
-            else -> SEGMENT_TYPE_TREBLE
-        }
-    }
-
     /**
      * Given the single/double/treble required, calculate the physical coordinates of the optimal place to aim
      */
@@ -195,7 +231,7 @@ abstract class AbstractDartsModel
         return getPointForScore(score, dartboard, segmentType)
     }
 
-    private fun getPointForScore(score: Int, dartboard: Dartboard, type: Int): Point
+    private fun getPointForScore(score: Int, dartboard: Dartboard, type: SegmentType): Point
     {
         val points = dartboard.getPointsForSegment(score, type)
         val avgPoint = getAverage(points)
@@ -250,7 +286,7 @@ abstract class AbstractDartsModel
         {
             val doubleToAimAt = rand.nextInt(20) + 1
 
-            val doublePtToAimAt = getPointForScore(doubleToAimAt, dartboard, SEGMENT_TYPE_DOUBLE)
+            val doublePtToAimAt = getPointForScore(doubleToAimAt, dartboard, SegmentType.DOUBLE)
 
             val pt = throwDartAtPoint(doublePtToAimAt, dartboard)
             val dart = dartboard.convertPointToDart(pt, true)
@@ -268,7 +304,7 @@ abstract class AbstractDartsModel
     }
 
     fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getOrDefault(dartNo, getDefaultSegmentType(dartNo))
-    fun setSegmentTypeForDartNo(dartNo: Int, segmentType: Int)
+    fun setSegmentTypeForDartNo(dartNo: Int, segmentType: SegmentType)
     {
         hmDartNoToSegmentType[dartNo] = segmentType
     }
@@ -335,19 +371,19 @@ abstract class AbstractDartsModel
             if (score > 40)
             {
                 val single = score - 40
-                return factorySingle(single)
+                return Dart(single, 1)
             }
 
             //Aim for the double
             if (score % 2 == 0)
             {
-                return factoryDouble(score / 2)
+                return Dart(score / 2, 2)
             }
 
             //On an odd number, less than 40. Aim to put ourselves on the highest possible power of 2.
             val scoreToLeaveRemaining = getHighestPowerOfTwoLessThan(score)
             val singleToAimFor = score - scoreToLeaveRemaining
-            return factorySingle(singleToAimFor)
+            return Dart(singleToAimFor, 1)
         }
 
         private fun getHighestPowerOfTwoLessThan(score: Int): Int

@@ -1,7 +1,8 @@
 package dartzee
 
 import com.github.alexburlton.swingtest.isEqual
-import dartzee.`object`.*
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
@@ -29,22 +30,22 @@ import java.util.*
 import javax.swing.Icon
 import javax.swing.JComponent
 
-val bullseye = DartboardSegment("25_$SEGMENT_TYPE_DOUBLE")
-val outerBull = DartboardSegment("25_$SEGMENT_TYPE_OUTER_SINGLE")
-val innerSingle = DartboardSegment("20_$SEGMENT_TYPE_INNER_SINGLE")
-val outerSingle = DartboardSegment("15_$SEGMENT_TYPE_OUTER_SINGLE")
-val missTwenty = DartboardSegment("20_$SEGMENT_TYPE_MISS")
-val missedBoard = DartboardSegment("15_$SEGMENT_TYPE_MISSED_BOARD")
+val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
+val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
+val innerSingle = DartboardSegment(SegmentType.INNER_SINGLE, 20)
+val outerSingle = DartboardSegment(SegmentType.OUTER_SINGLE, 15)
+val missTwenty = DartboardSegment(SegmentType.MISS, 20)
+val missedBoard = DartboardSegment(SegmentType.MISSED_BOARD, 15)
 
-val singleTwenty = DartboardSegment("20_$SEGMENT_TYPE_INNER_SINGLE")
-val doubleTwenty = DartboardSegment("20_$SEGMENT_TYPE_DOUBLE")
-val trebleTwenty = DartboardSegment("20_$SEGMENT_TYPE_TREBLE")
-val singleNineteen = DartboardSegment("19_$SEGMENT_TYPE_OUTER_SINGLE")
-val doubleNineteen = DartboardSegment("19_$SEGMENT_TYPE_DOUBLE")
-val trebleNineteen = DartboardSegment("19_$SEGMENT_TYPE_TREBLE")
-val singleEighteen = DartboardSegment("18_$SEGMENT_TYPE_OUTER_SINGLE")
-val singleTen = DartboardSegment("10_$SEGMENT_TYPE_INNER_SINGLE")
-val singleFive = DartboardSegment("5_$SEGMENT_TYPE_INNER_SINGLE")
+val singleTwenty = DartboardSegment(SegmentType.INNER_SINGLE, 20)
+val doubleTwenty = DartboardSegment(SegmentType.DOUBLE, 20)
+val trebleTwenty = DartboardSegment(SegmentType.TREBLE, 20)
+val singleNineteen = DartboardSegment(SegmentType.OUTER_SINGLE, 19)
+val doubleNineteen = DartboardSegment(SegmentType.DOUBLE, 19)
+val trebleNineteen = DartboardSegment(SegmentType.TREBLE, 19)
+val singleEighteen = DartboardSegment(SegmentType.OUTER_SINGLE, 18)
+val singleTen = DartboardSegment(SegmentType.INNER_SINGLE, 10)
+val singleFive = DartboardSegment(SegmentType.INNER_SINGLE, 5)
 
 val CURRENT_TIME: Instant = Instant.parse("2020-04-13T11:04:00.00Z")
 val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -140,4 +141,16 @@ private fun Icon.toBufferedImage(): BufferedImage
     paintIcon(null, g, 0, 0)
     g.dispose()
     return bi
+}
+
+/**
+ * TODO - improvements for swing-test
+ */
+fun Component.shouldBeVisible()
+{
+    isVisible shouldBe true
+}
+fun Component.shouldNotBeVisible()
+{
+    isVisible shouldBe false
 }

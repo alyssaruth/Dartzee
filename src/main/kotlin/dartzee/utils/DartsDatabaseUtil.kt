@@ -1,8 +1,12 @@
 package dartzee.utils
 
+import dartzee.`object`.SegmentType
+import dartzee.ai.AbstractDartsModel
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
+import dartzee.core.util.toXmlDoc
+import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.db.*
 import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.logging.*
@@ -125,6 +129,13 @@ object DartsDatabaseUtil
         else if (versionNumber == 11)
         {
             runSqlScriptsForVersion(12)
+            DartEntity().createIndexes()
+
+            convertPlayerStrategies()
+            convertCustomDartzeeRules()
+
+            //SegmentType enum
+            DartzeeRuleConversion.convertDartzeeRules()
         }
 
         version.version = versionNumber + 1
@@ -133,6 +144,58 @@ object DartsDatabaseUtil
         logger.addToContext(KEY_DB_VERSION, version.version)
         initialiseDatabase(version)
     }
+
+    private fun convertCustomDartzeeRules()
+    {
+        val rules = DartzeeRuleEntity().retrieveEntities("dart1Rule LIKE '%Custom%' OR dart2Rule LIKE '%Custom%' OR dart3Rule LIKE '%Custom%'")
+        rules.forEach {
+            if (it.dart1Rule.contains("custom", ignoreCase = true)) {
+                val customRule = DartzeeDartRuleCustom()
+                customRule.populateOldWay(it.dart1Rule.toXmlDoc()!!.documentElement)
+                it.dart1Rule = customRule.toDbString()
+            }
+
+            if (it.dart2Rule.contains("custom", ignoreCase = true)) {
+                val customRule = DartzeeDartRuleCustom()
+                customRule.populateOldWay(it.dart2Rule.toXmlDoc()!!.documentElement)
+                it.dart2Rule = customRule.toDbString()
+            }
+
+            if (it.dart3Rule.contains("custom", ignoreCase = true)) {
+                val customRule = DartzeeDartRuleCustom()
+                customRule.populateOldWay(it.dart3Rule.toXmlDoc()!!.documentElement)
+                it.dart3Rule = customRule.toDbString()
+            }
+
+            it.saveToDatabase()
+        }
+    }
+
+
+    private fun convertPlayerStrategies()
+    {
+        val players = PlayerEntity().retrieveEntities("Strategy > -1")
+        players.forEach {
+            val model = AbstractDartsModel.factoryForType(it.strategy)!!
+            model.readXmlOldWay(it.strategyXml)
+            it.strategyXml = model.writeXml()
+            it.saveToDatabase()
+        }
+    }
+
+    fun convertOldSegmentType(segmentType: Int): SegmentType
+    {
+        return when (segmentType)
+        {
+            1 -> SegmentType.DOUBLE
+            2 -> SegmentType.TREBLE
+            3 -> SegmentType.OUTER_SINGLE
+            4 -> SegmentType.INNER_SINGLE
+            5 -> SegmentType.MISS
+            else -> SegmentType.MISSED_BOARD
+        }
+    }
+
 
     private fun runConversions(version: Int, vararg conversions: (() -> Unit))
     {
@@ -171,7 +234,7 @@ object DartsDatabaseUtil
         {
             10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
             11 -> listOf("1. Game.sql")
-            12 -> listOf("1. DartsMatch.sql")
+            12 -> listOf("1. DartsMatch.sql", "2. Dart.sql")
             else -> listOf()
         }
     }

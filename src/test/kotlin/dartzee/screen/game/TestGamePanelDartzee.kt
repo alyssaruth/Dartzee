@@ -1,8 +1,6 @@
 package dartzee.screen.game
 
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_MISS
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 import dartzee.bullseye
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
@@ -34,12 +32,6 @@ class TestGamePanelDartzee: AbstractTest()
 {
     private val rules = listOf(twoBlackOneWhite, innerOuterInner)
     private val ruleResults = listOf(DartzeeRoundResult(2, true, 50), DartzeeRoundResult(1, false, -115))
-
-    override fun afterEachTest()
-    {
-        super.afterEachTest()
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-    }
 
     @Test
     fun `Should initialise totalRounds based on the number of rules`()
@@ -124,12 +116,12 @@ class TestGamePanelDartzee: AbstractTest()
         val expectedSegments = getAllPossibleSegments().filter { !it.isMiss() && !it.isDoubleExcludingBull() }
         panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
 
-        panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
         val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.scoringSegments.toTypedArray()
         panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
 
-        panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
+        panel.dartThrown(makeDart(20, 0, SegmentType.MISS))
         panel.dartboard.segmentStatus!!.scoringSegments.shouldBeEmpty()
 
         panel.btnReset.isEnabled = true
@@ -152,9 +144,9 @@ class TestGamePanelDartzee: AbstractTest()
 
         panel.btnConfirm.isVisible shouldBe true
 
-        panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
-        panel.dartThrown(makeDart(5, 1, SEGMENT_TYPE_OUTER_SINGLE))
-        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.OUTER_SINGLE))
 
         panel.btnConfirm.doClick()
 
@@ -162,9 +154,9 @@ class TestGamePanelDartzee: AbstractTest()
         getCountFromTable("DartzeeRoundResult") shouldBe 0
         panel.activeScorer.getTotalScore() shouldBe 26
 
-        panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_INNER_SINGLE))
-        panel.dartThrown(makeDart(5, 1, SEGMENT_TYPE_OUTER_SINGLE))
-        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.INNER_SINGLE))
+        panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
 
         carousel.getDisplayedTiles().first().doClick()
 
@@ -189,13 +181,13 @@ class TestGamePanelDartzee: AbstractTest()
         panel.hoverChanged(SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen)))
         panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen))
 
-        panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
-        panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
         panel.hoverChanged(SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty)))
         panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty))
 
-        panel.dartThrown(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
         panel.dartboard.segmentStatus shouldBe null
         panel.hoverChanged(SegmentStatus(listOf(bullseye), listOf(bullseye)))
         panel.dartboard.segmentStatus shouldBe null

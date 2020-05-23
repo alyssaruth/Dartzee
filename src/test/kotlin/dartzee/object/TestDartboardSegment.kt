@@ -9,28 +9,6 @@ import java.awt.Point
 class TestDartboardSegment: AbstractTest()
 {
     @Test
-    fun `Should return the correct multiplier based on segment type`()
-    {
-        getMultiplier(SEGMENT_TYPE_DOUBLE) shouldBe 2
-        getMultiplier(SEGMENT_TYPE_TREBLE) shouldBe 3
-        getMultiplier(SEGMENT_TYPE_OUTER_SINGLE) shouldBe 1
-        getMultiplier(SEGMENT_TYPE_INNER_SINGLE) shouldBe 1
-        getMultiplier(SEGMENT_TYPE_MISS) shouldBe 0
-        getMultiplier(SEGMENT_TYPE_MISSED_BOARD) shouldBe 0
-    }
-
-    @Test
-    fun `Should return the right golf score based on segment type`()
-    {
-        getGolfScoreForSegment(SEGMENT_TYPE_DOUBLE) shouldBe 1
-        getGolfScoreForSegment(SEGMENT_TYPE_TREBLE) shouldBe 2
-        getGolfScoreForSegment(SEGMENT_TYPE_INNER_SINGLE) shouldBe 3
-        getGolfScoreForSegment(SEGMENT_TYPE_OUTER_SINGLE) shouldBe 4
-        getGolfScoreForSegment(SEGMENT_TYPE_MISS) shouldBe 5
-        getGolfScoreForSegment(SEGMENT_TYPE_MISSED_BOARD) shouldBe 5
-    }
-
-    @Test
     fun `Should correctly report whether a segment type represents a miss`()
     {
         doubleNineteen.isMiss() shouldBe false

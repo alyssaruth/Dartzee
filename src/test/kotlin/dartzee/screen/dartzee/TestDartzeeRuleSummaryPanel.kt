@@ -1,8 +1,6 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
+import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.AbstractTest
 import dartzee.helper.getOuterSegments
@@ -35,7 +33,7 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val results = makeRoundResultEntities(DartzeeRoundResult(2, true, 35))
-        val darts = listOf(makeDart(19, 1, SEGMENT_TYPE_OUTER_SINGLE), makeDart(7, 1, SEGMENT_TYPE_DOUBLE), makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
+        val darts = listOf(makeDart(19, 1, SegmentType.OUTER_SINGLE), makeDart(7, 1, SegmentType.DOUBLE), makeDart(2, 1, SegmentType.INNER_SINGLE))
         summaryPanel.update(results, darts, 103, 2)
 
         summaryPanel.components.toList().shouldContainExactly(carousel)

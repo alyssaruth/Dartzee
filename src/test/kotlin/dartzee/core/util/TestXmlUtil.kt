@@ -1,7 +1,6 @@
 package dartzee.core.util
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -126,33 +125,10 @@ class TestXmlUtil: AbstractTest()
         val root = doc.createRootElement("Root")
 
         root.writeHashMap(map, "SomeMap")
-        val newMap = root.readIntegerHashMap("SomeMap")
+        val newMap = root.readIntegerHashMap("SomeMap").mapValues { it.value.toInt() }
         newMap.size shouldBe 3
         newMap[0] shouldBe 10
         newMap[1] shouldBe 20
         newMap[5] shouldBe -5
-    }
-
-    @Test
-    fun `Should read and write lists`()
-    {
-        val list = listOf("Foo", "Bar", "Baz")
-
-        val doc = XmlUtil.factoryNewDocument()
-        val root = doc.createRootElement("Root")
-
-        root.writeList(list, "SomeList")
-
-        val newList = root.readList("SomeList")
-        newList.shouldContainExactly("Foo", "Bar", "Baz")
-    }
-
-    @Test
-    fun `Should return null for a list that does not exist in the XML`()
-    {
-        val doc = XmlUtil.factoryNewDocument()
-        val root = doc.createRootElement("Root")
-
-        root.readList("Foo") shouldBe null
     }
 }

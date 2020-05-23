@@ -57,8 +57,8 @@ data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegme
         root.setAttributeAny("AllCombinations", allCombinations)
         root.setAttributeAny("ValidCombinationProbability", validCombinationProbability)
         root.setAttributeAny("AllCombinationsProbability", allCombinationsProbability)
-        root.writeList(scoringSegments.map { it.scoreAndType }, "ScoringSegments")
-        root.writeList(validSegments.map { it.scoreAndType }, "ValidSegments")
+        scoringSegments.forEach { it.writeXml(root, "ScoringSegment") }
+        validSegments.forEach { it.writeXml(root, "ValidSegment") }
 
         return doc.toXmlString()
     }
@@ -74,8 +74,8 @@ data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegme
             val allCombinations = root.getAttributeInt("AllCombinations")
             val validCombinationProbability = root.getAttributeDouble("ValidCombinationProbability")
             val allCombinationsProbability = root.getAttributeDouble("AllCombinationsProbability")
-            val validSegments = root.readList("ValidSegments")?.map { DartboardSegment(it) } ?: emptyList()
-            val scoringSegments = root.readList("ScoringSegments")?.map { DartboardSegment(it) } ?: emptyList()
+            val validSegments = DartboardSegment.readList(root, "ValidSegment")
+            val scoringSegments = DartboardSegment.readList(root, "ScoringSegment")
 
             return DartzeeRuleCalculationResult(scoringSegments, validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
         }

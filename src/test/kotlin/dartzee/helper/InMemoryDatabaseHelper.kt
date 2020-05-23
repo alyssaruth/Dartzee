@@ -1,9 +1,6 @@
 package dartzee.helper
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_MISS
-import dartzee.`object`.SEGMENT_TYPE_OUTER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_TREBLE
+import dartzee.`object`.*
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
@@ -125,7 +122,7 @@ fun insertDart(participant: ParticipantEntity,
                multiplier: Int = 3,
                posX: Int = 20,
                posY: Int = 20,
-               segmentType: Int = getSegmentTypeForMultiplier(multiplier),
+               segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
                dtCreation: Timestamp = getSqlDateNow(),
                dtLastUpdate: Timestamp = getSqlDateNow()): DartEntity
 {
@@ -147,12 +144,12 @@ fun insertDart(participant: ParticipantEntity,
 
     return drt
 }
-private fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
+fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
 {
-    1 -> SEGMENT_TYPE_OUTER_SINGLE
-    2 -> SEGMENT_TYPE_DOUBLE
-    3 -> SEGMENT_TYPE_TREBLE
-    else -> SEGMENT_TYPE_MISS
+    1 -> SegmentType.OUTER_SINGLE
+    2 -> SegmentType.DOUBLE
+    3 -> SegmentType.TREBLE
+    else -> SegmentType.MISS
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),

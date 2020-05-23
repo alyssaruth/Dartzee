@@ -53,8 +53,9 @@ abstract class AbstractTest
     {
         DialogUtil.init(dialogFactory)
 
+        Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
+
         InjectedThings.logger = logger
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
         InjectedThings.verificationDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 
@@ -78,6 +79,7 @@ abstract class AbstractTest
 
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
+        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
 
         logger.loggingContext.clear()
     }

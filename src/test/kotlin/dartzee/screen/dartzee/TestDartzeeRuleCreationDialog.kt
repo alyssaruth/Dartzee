@@ -178,13 +178,6 @@ class TestDartzeeRuleAmendment: AbstractTest()
 
 class TestDartzeeRuleCreationDialogValidation: AbstractTest()
 {
-    override fun afterEachTest()
-    {
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-
-        super.afterEachTest()
-    }
-
     @Test
     fun `Should validate all three dart selectors for an all darts rule`()
     {
@@ -344,13 +337,6 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
 
 class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 {
-    override fun afterEachTest()
-    {
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-
-        super.afterEachTest()
-    }
-
     @Test
     fun `Should not return a rule when cancelled`()
     {

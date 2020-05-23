@@ -10,6 +10,6 @@ abstract class AbstractDartzeeDartRule: AbstractDartzeeRule()
 
     fun isValidDart(dart: Dart): Boolean
     {
-        return isValidSegment(DartboardSegment("${dart.score}_${dart.segmentType}"))
+        return isValidSegment(DartboardSegment(dart.segmentType, dart.score))
     }
 }

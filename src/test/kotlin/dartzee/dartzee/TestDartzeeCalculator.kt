@@ -1,7 +1,8 @@
 package dartzee.dartzee
 
 import dartzee.*
-import dartzee.`object`.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.core.util.getAllPermutations
 import dartzee.dartzee.dart.DartzeeDartRuleAny
 import dartzee.dartzee.dart.DartzeeDartRuleEven
@@ -32,29 +33,26 @@ class TestAllPossibilities: AbstractTest()
     @Test
     fun `Should generate the right number of possibilities if given 1 starting dart`()
     {
-        val dart = Dart(20, 3)
-        dart.segmentType = SEGMENT_TYPE_TREBLE
+        val dart = Dart(20, 3, segmentType = SegmentType.TREBLE)
 
         val possibilities = DartzeeCalculator().generateAllPossibilities(listOf(dart))
         possibilities.size shouldBe 83 * 83
-        possibilities.all { it.size == 3} shouldBe true
-        possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
+        possibilities.all { it.size == 3 } shouldBe true
+        possibilities.forEach { it.first().score shouldBe 20 }
+        possibilities.forEach { it.first().type shouldBe SegmentType.TREBLE }
     }
 
     @Test
     fun `Should generate the right number of possibilities if given 2 starting darts`()
     {
-        val dartOne = Dart(20, 3)
-        dartOne.segmentType = SEGMENT_TYPE_TREBLE
-
-        val dartTwo = Dart(19, 2)
-        dartTwo.segmentType = SEGMENT_TYPE_DOUBLE
+        val dartOne = Dart(20, 3, segmentType = SegmentType.TREBLE)
+        val dartTwo = Dart(19, 2, segmentType = SegmentType.DOUBLE)
 
         val possibilities = DartzeeCalculator().generateAllPossibilities(listOf(dartOne, dartTwo))
         possibilities.size shouldBe 83
         possibilities.all { it.size == 3 } shouldBe true
-        possibilities.all { it.first().scoreAndType == "20_$SEGMENT_TYPE_TREBLE" } shouldBe true
-        possibilities.all { it[1].scoreAndType == "19_$SEGMENT_TYPE_DOUBLE" } shouldBe true
+        possibilities.all { it[0].score == 20 && it[0].type == SegmentType.TREBLE } shouldBe true
+        possibilities.all { it[1].score == 19 && it[1].type == SegmentType.DOUBLE } shouldBe true
     }
 }
 
@@ -88,7 +86,7 @@ class TestValidSegments: AbstractTest()
         )
 
         val expectedSegments = getAllPossibleSegments().filter { DartzeeDartRuleOdd().isValidSegment(it) }
-        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE)))
+        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(2, 1, SegmentType.OUTER_SINGLE)))
         secondSegments.validSegments.shouldContainExactlyInAnyOrder(expectedSegments)
         secondSegments.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments)
     }
@@ -103,7 +101,7 @@ class TestValidSegments: AbstractTest()
                 inOrder = true
         )
 
-        val dartsThrown = listOf(makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE), makeDart(3, 1, SEGMENT_TYPE_INNER_SINGLE))
+        val dartsThrown = listOf(makeDart(2, 1, SegmentType.OUTER_SINGLE), makeDart(3, 1, SegmentType.INNER_SINGLE))
         val expectedSegments = getAllPossibleSegments().filter { DartzeeDartRuleOuter().isValidSegment(it) }
         val thirdSegments = DartzeeCalculator().getValidSegments(rule, dartsThrown)
         thirdSegments.validSegments.shouldContainExactlyInAnyOrder(expectedSegments)
@@ -120,11 +118,11 @@ class TestValidSegments: AbstractTest()
                 inOrder = true
         )
 
-        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(3, 1, SEGMENT_TYPE_OUTER_SINGLE)))
+        val secondSegments = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(3, 1, SegmentType.OUTER_SINGLE)))
         secondSegments.validSegments.shouldBeEmpty()
         secondSegments.scoringSegments.shouldBeEmpty()
 
-        val invalidSecondDart = listOf(makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE), makeDart(2, 1, SEGMENT_TYPE_OUTER_SINGLE))
+        val invalidSecondDart = listOf(makeDart(2, 1, SegmentType.OUTER_SINGLE), makeDart(2, 1, SegmentType.OUTER_SINGLE))
         val thirdSegments = DartzeeCalculator().getValidSegments(rule, invalidSecondDart)
         thirdSegments.validSegments.shouldBeEmpty()
         thirdSegments.scoringSegments.shouldBeEmpty()
@@ -140,7 +138,7 @@ class TestValidSegments: AbstractTest()
                 inOrder = true
         )
 
-        val dartsThrown = listOf(makeDart(2, 1, SEGMENT_TYPE_DOUBLE), makeDart(19, 3, SEGMENT_TYPE_TREBLE), makeDart(20, 0, SEGMENT_TYPE_MISS))
+        val dartsThrown = listOf(makeDart(2, 1, SegmentType.DOUBLE), makeDart(19, 3, SegmentType.TREBLE), makeDart(20, 0, SegmentType.MISS))
         val result = DartzeeCalculator().getValidSegments(rule, dartsThrown)
 
         result.scoringSegments.shouldBeEmpty()
@@ -159,7 +157,7 @@ class TestValidSegments: AbstractTest()
                 inOrder = true
         )
 
-        val dartsThrown = listOf(makeDart(2, 1, SEGMENT_TYPE_DOUBLE), makeDart(19, 3, SEGMENT_TYPE_TREBLE), makeDart(20, 2, SEGMENT_TYPE_DOUBLE))
+        val dartsThrown = listOf(makeDart(2, 1, SegmentType.DOUBLE), makeDart(19, 3, SegmentType.TREBLE), makeDart(20, 2, SegmentType.DOUBLE))
         val result = DartzeeCalculator().getValidSegments(rule, dartsThrown)
 
         result.scoringSegments.shouldContainExactlyInAnyOrder(getOuterSegments())
@@ -176,7 +174,7 @@ class TestValidSegments: AbstractTest()
         result.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments)
         result.validSegments.shouldContainExactlyInAnyOrder(expectedSegments)
 
-        val resultTwo = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(20, 1, SEGMENT_TYPE_OUTER_SINGLE)))
+        val resultTwo = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(20, 1, SegmentType.OUTER_SINGLE)))
         resultTwo.validSegments.shouldContainExactlyInAnyOrder(expectedSegments.filter { it.score != 20 })
         resultTwo.scoringSegments.shouldContainExactlyInAnyOrder(expectedSegments.filter { it.score != 20 })
     }
@@ -189,7 +187,7 @@ class TestValidSegments: AbstractTest()
         val result = DartzeeCalculator().getValidSegments(rule, listOf())
         result.percentage.shouldBeBetween(49.0, 51.0, 0.0)
 
-        val resultTwo = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(13, 1, SEGMENT_TYPE_OUTER_SINGLE)))
+        val resultTwo = DartzeeCalculator().getValidSegments(rule, listOf(makeDart(13, 1, SegmentType.OUTER_SINGLE)))
         resultTwo.percentage.shouldBeExactly(100.0)
     }
 

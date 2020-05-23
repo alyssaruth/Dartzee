@@ -76,8 +76,8 @@ fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean 
 
 inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllTotalRules().find { it is T }.also { (it as T).target = score }
 
-fun getOuterSegments() = getAllPossibleSegments().filter { it.type == SEGMENT_TYPE_DOUBLE || it.type == SEGMENT_TYPE_OUTER_SINGLE }.filter { it.score != 25 }
-fun getInnerSegments() = getAllPossibleSegments().filter { (it.score == 25 && !it.isMiss()) || it.type == SEGMENT_TYPE_TREBLE || it.type == SEGMENT_TYPE_INNER_SINGLE }
+fun getOuterSegments() = getAllPossibleSegments().filter { it.type == SegmentType.DOUBLE || it.type == SegmentType.OUTER_SINGLE }.filter { it.score != 25 }
+fun getInnerSegments() = getAllPossibleSegments().filter { (it.score == 25 && !it.isMiss()) || it.type == SegmentType.TREBLE || it.type == SegmentType.INNER_SINGLE }
 
 fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<DartzeeRoundResultEntity> {
     val pt = insertParticipant()

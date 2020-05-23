@@ -47,7 +47,7 @@ class TestAbstractDartsModel: AbstractTest()
         model.scoringDart = 25
         model.hmScoreToDart[50] = Dart(25, 2)
         model.hmScoreToDart[60] = Dart(10, 1)
-        model.hmDartNoToSegmentType[1] = SEGMENT_TYPE_TREBLE
+        model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
         model.hmDartNoToStopThreshold[1] = 1
         model.hmDartNoToStopThreshold[2] = 2
         model.mercyThreshold = 18
@@ -198,7 +198,7 @@ class TestAbstractDartsModel: AbstractTest()
         dartboard.addDartboardListener(listener)
 
         model.throwX01Dart(7, dartboard)
-        verify { listener.dartThrown(Dart(3, 1))}
+        verify { listener.dartThrown(Dart(3, 1)) }
     }
 
     @Test
@@ -242,9 +242,9 @@ class TestAbstractDartsModel: AbstractTest()
     fun `Should respect overridden targets per dart`()
     {
         val model = DummyDartsModel()
-        model.hmDartNoToSegmentType[1] = SEGMENT_TYPE_TREBLE
-        model.hmDartNoToSegmentType[2] = SEGMENT_TYPE_OUTER_SINGLE
-        model.hmDartNoToSegmentType[3] = SEGMENT_TYPE_DOUBLE
+        model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
+        model.hmDartNoToSegmentType[2] = SegmentType.OUTER_SINGLE
+        model.hmDartNoToSegmentType[3] = SegmentType.DOUBLE
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
@@ -317,13 +317,12 @@ class TestAbstractDartsModel: AbstractTest()
         {
             super.paintDartboard(colourWrapper, listen, cached)
 
-            val segmentKey = "20_$SEGMENT_TYPE_TREBLE"
-            val segment = DartboardSegment(segmentKey)
+            val segment = DartboardSegment(SegmentType.TREBLE, 20)
             segment.addPoint(Point(1, 7))
             segment.addPoint(Point(3, 3))
             segment.addPoint(Point(5, 2))
 
-            hmSegmentKeyToSegment[segmentKey] = segment
+            hmSegmentKeyToSegment["20_${SegmentType.TREBLE}"] = segment
         }
     }
 

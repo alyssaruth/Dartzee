@@ -1,9 +1,6 @@
 package dartzee.screen
 
-import dartzee.`object`.ColourWrapper
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SEGMENT_TYPE_MISS
+import dartzee.`object`.*
 import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
 import dartzee.core.util.getParentWindow
@@ -178,7 +175,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             lbl.setSize(lblWidth, lblHeight)
 
             //Work out where to place the label
-            val points = getPointsForSegment(i, SEGMENT_TYPE_MISS)
+            val points = getPointsForSegment(i, SegmentType.MISS)
             val avgPoint = getAverage(points)
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2
@@ -319,30 +316,25 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private fun factoryAndCacheSegmentForPoint(pt: Point): DartboardSegment
     {
-        val segmentKey = factorySegmentKeyForPoint(pt, centerPoint, diameter)
-        var segment = hmSegmentKeyToSegment[segmentKey]
-        if (segment == null)
-        {
-            segment = DartboardSegment(segmentKey)
-            hmSegmentKeyToSegment[segmentKey] = segment
-        }
+        val newSegment = factorySegmentForPoint(pt, centerPoint, diameter)
+        val segmentKey = "${newSegment.score}_${newSegment.type}"
 
+        val segment = hmSegmentKeyToSegment.getOrPut(segmentKey) { newSegment }
         segment.addPoint(pt)
         hmPointToSegment[pt] = segment
-
         return segment
     }
 
     /**
      * Public methods
      */
-    fun getPointsForSegment(score: Int, type: Int): MutableList<Point>
+    fun getPointsForSegment(score: Int, type: SegmentType): MutableList<Point>
     {
         val segmentKey = score.toString() + "_" + type
         val segment = hmSegmentKeyToSegment[segmentKey]
         return segment?.points ?: mutableListOf()
     }
-    fun getSegment(score: Int, type: Int): DartboardSegment? = hmSegmentKeyToSegment["${score}_$type"]
+    fun getSegment(score: Int, type: SegmentType): DartboardSegment? = hmSegmentKeyToSegment["${score}_$type"]
 
     fun isDouble(pt: Point): Boolean
     {

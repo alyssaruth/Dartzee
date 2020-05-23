@@ -2,6 +2,7 @@ package dartzee.dartzee.dart
 
 import dartzee.`object`.DartboardSegment
 import dartzee.core.bean.addUpdateListener
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -42,24 +43,30 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
-        segments.forEach{
-            val element = doc.createElement("Segment")
-            element.setAttribute("Value", it.scoreAndType)
-
-            rootElement.appendChild(element)
-        }
+        segments.forEach { it.writeXml(rootElement, "Segment") }
 
         rootElement.setAttribute("Name", name)
     }
 
     override fun populate(rootElement: Element)
     {
+        segments.addAll(DartboardSegment.readList(rootElement, "Segment"))
+        name = rootElement.getAttribute("Name")
+        tfName.text = name
+    }
+
+    fun populateOldWay(rootElement: Element)
+    {
         val list = rootElement.getElementsByTagName("Segment")
         for (i in 0 until list.length)
         {
             val node = list.item(i) as Element
-            val segment = DartboardSegment(node.getAttribute("Value"))
+            val scoreAndType = node.getAttribute("Value")
+            val toks = scoreAndType.split("_")
 
+            val score = toks[0].toInt()
+            val type = toks[1].toInt()
+            val segment = DartboardSegment(DartsDatabaseUtil.convertOldSegmentType(type), score)
             segments.add(segment)
         }
 
@@ -89,5 +96,4 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
         //Propagate an action event to any other listeners
         btnConfigure.actionListeners.find { it != this }?.actionPerformed(e)
     }
-
 }

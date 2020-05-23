@@ -1,7 +1,6 @@
 package dartzee.achievements.golf
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_TREBLE
+import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.TestAbstractAchievementRowPerGame
 import dartzee.db.AchievementEntity
@@ -22,7 +21,7 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(pt, score = 1, roundNumber = 1, segmentType = SEGMENT_TYPE_DOUBLE)
+        insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
     }
 
     override fun insertAchievementRow(dtLastUpdate: Timestamp): AchievementEntity
@@ -35,8 +34,8 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
     {
         val pt = insertRelevantParticipant()
 
-        insertDart(pt, dtCreation = Timestamp(1000), score = 1, roundNumber = 1, segmentType = SEGMENT_TYPE_DOUBLE)
-        insertDart(pt, dtCreation = Timestamp(500), score = 1, roundNumber = 1, segmentType = SEGMENT_TYPE_DOUBLE)
+        insertDart(pt, dtCreation = Timestamp(1000), score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
+        insertDart(pt, dtCreation = Timestamp(500), score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
 
         factoryAchievement().populateForConversion("")
 
@@ -51,7 +50,7 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
     {
         val pt = insertRelevantParticipant()
 
-        insertDart(pt, score = 1, roundNumber = 1, segmentType = SEGMENT_TYPE_TREBLE)
+        insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.TREBLE)
 
         factoryAchievement().populateForConversion("")
         getAchievementCount() shouldBe 0
@@ -62,7 +61,7 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
     {
         val pt = insertRelevantParticipant()
 
-        insertDart(pt, score = 1, roundNumber = 2, segmentType = SEGMENT_TYPE_DOUBLE)
+        insertDart(pt, score = 1, roundNumber = 2, segmentType = SegmentType.DOUBLE)
 
         factoryAchievement().populateForConversion("")
         getAchievementCount() shouldBe 0
@@ -73,8 +72,8 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
     {
         val pt = insertRelevantParticipant()
 
-        insertDart(pt, score = 1, roundNumber = 1, segmentType = SEGMENT_TYPE_DOUBLE)
-        insertDart(pt, score = 3, roundNumber = 3, segmentType = SEGMENT_TYPE_DOUBLE)
+        insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
+        insertDart(pt, score = 3, roundNumber = 3, segmentType = SegmentType.DOUBLE)
 
         factoryAchievement().populateForConversion("")
 

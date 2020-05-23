@@ -6,11 +6,11 @@ import dartzee.db.CLOCK_TYPE_TREBLES
 import java.awt.Point
 import java.sql.Timestamp
 
-open class Dart constructor(
-        var score: Int,
-        var multiplier: Int,
-        var pt: Point? = null,
-        var segmentType: Int = -1)
+open class Dart(
+        val score: Int,
+        val multiplier: Int,
+        val pt: Point? = null,
+        val segmentType: SegmentType = SegmentType.MISS)
 {
     var ordinal = -1
 
@@ -20,7 +20,7 @@ open class Dart constructor(
     var startingScore = -1
 
     //Never set on the DB. Used for in-game stats, and is just set to the round number.
-    private var golfHole = -1
+    var golfHole = -1
     var participantId: String = ""
     var gameId: String = ""
     var dtThrown: Timestamp = DateStatics.END_OF_TIME
@@ -66,13 +66,13 @@ open class Dart constructor(
         return ret
     }
 
-    fun getSegmentTypeToAimAt(): Int
+    fun getSegmentTypeToAimAt(): SegmentType
     {
         return when (multiplier)
         {
-            1 -> SEGMENT_TYPE_OUTER_SINGLE
-            2 -> SEGMENT_TYPE_DOUBLE
-            else -> SEGMENT_TYPE_TREBLE
+            1 -> SegmentType.OUTER_SINGLE
+            2 -> SegmentType.DOUBLE
+            else -> SegmentType.TREBLE
         }
     }
 
@@ -81,13 +81,8 @@ open class Dart constructor(
         return if (score != target)
         {
             5
-        } else getGolfScoreForSegment(segmentType)
+        } else segmentType.getGolfScore()
 
-    }
-
-    fun setGolfHole(hole: Int)
-    {
-        this.golfHole = hole
     }
 
     override fun hashCode(): Int
@@ -117,61 +112,17 @@ open class Dart constructor(
 
     override fun toString() = getRendered()
 
-    fun hitClockTarget(clockType: String?): Boolean
+    fun hitClockTarget(clockType: String): Boolean
     {
+        if (score != startingScore) return false
+
         return when (clockType)
         {
-            CLOCK_TYPE_DOUBLES -> score == startingScore && isDouble()
-            CLOCK_TYPE_TREBLES -> score == startingScore && isTriple()
-            else -> score == startingScore && multiplier > 0
+            CLOCK_TYPE_DOUBLES -> isDouble()
+            CLOCK_TYPE_TREBLES -> isTriple()
+            else -> multiplier > 0
         }
-    }
-
-    operator fun compareTo(other: Dart): Int
-    {
-        //If there's a strict inequality in total, then it's simple
-        if (getTotal() > other.getTotal())
-        {
-            return 1
-        }
-
-        if (getTotal() < other.getTotal())
-        {
-            return -1
-        }
-
-        //Totals are equal. So now look at the multiplier.
-        //I.e. T12 > D18 even though the totals are both 36.
-        if (multiplier > other.multiplier)
-        {
-            return 1
-        }
-
-        return if (other.multiplier > multiplier)
-        {
-            -1
-        }
-        //Same total and same multiplier, so must be an equivalent dart
-        else 0
     }
 }
 
 class DartNotThrown : Dart(-1, -1)
-
-/**
- * Static methods
- */
-fun factorySingle(score: Int): Dart
-{
-    return Dart(score, 1)
-}
-
-fun factoryDouble(score: Int): Dart
-{
-    return Dart(score, 2)
-}
-
-fun factoryTreble(score: Int): Dart
-{
-    return Dart(score, 3)
-}

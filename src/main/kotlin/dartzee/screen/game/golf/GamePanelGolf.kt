@@ -46,7 +46,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         for (i in 1..totalRounds)
         {
             val darts = hmRoundToDarts[i]!!
-            darts.forEach { it.setGolfHole(i) }
+            darts.forEach { it.golfHole = i }
             scorer.addDarts(darts)
         }
     }

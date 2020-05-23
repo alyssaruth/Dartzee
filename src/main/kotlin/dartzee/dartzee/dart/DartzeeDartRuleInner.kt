@@ -1,15 +1,14 @@
 package dartzee.dartzee.dart
 
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_TREBLE
+import dartzee.`object`.SegmentType
 
 class DartzeeDartRuleInner : AbstractDartzeeDartRule()
 {
     override fun isValidSegment(segment: DartboardSegment): Boolean
     {
-        return segment.type == SEGMENT_TYPE_INNER_SINGLE
-            || segment.type == SEGMENT_TYPE_TREBLE
+        return segment.type == SegmentType.INNER_SINGLE
+            || segment.type == SegmentType.TREBLE
             || segment.score == 25
     }
 

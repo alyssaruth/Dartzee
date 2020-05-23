@@ -15,16 +15,21 @@ object DartzeeRuleConversion
 
             dlg.setVisibleLater()
 
-            allRules.forEach {
-                val dto = it.toDto(false)
-                val newResult = dto.runStrengthCalculation()
-                it.calculationResult = newResult.toDbString()
-                it.saveToDatabase()
+            try
+            {
+                allRules.forEach {
+                    val dto = it.toDto(false)
+                    val newResult = dto.runStrengthCalculation()
+                    it.calculationResult = newResult.toDbString()
+                    it.saveToDatabase()
 
-                dlg.incrementProgressLater()
+                    dlg.incrementProgressLater()
+                }
             }
-
-            dlg.disposeLater()
+            finally
+            {
+                dlg.disposeLater()
+            }
         }
 
         val t = Thread(r)

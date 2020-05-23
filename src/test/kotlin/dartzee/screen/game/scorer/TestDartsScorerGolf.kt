@@ -1,6 +1,7 @@
 package dartzee.screen.game.scorer
 
-import dartzee.`object`.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -10,8 +11,7 @@ class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
     override fun factoryScorerImpl() = DartsScorerGolf()
     override fun addRound(scorer: DartsScorerGolf, roundNumber: Int)
     {
-        val drt = Dart(roundNumber, 2)
-        drt.segmentType = SEGMENT_TYPE_DOUBLE
+        val drt = Dart(roundNumber, 2, segmentType = SegmentType.DOUBLE)
         scorer.addDarts(listOf(drt))
     }
 
@@ -82,13 +82,9 @@ class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
     @Test
     fun `Should compute the round score based on the last dart thrown`()
     {
-        val dartOne = Dart(1, 3)
-        val dartTwo = Dart(1, 0)
-        val dartThree = Dart(1, 1)
-
-        dartOne.segmentType = SEGMENT_TYPE_TREBLE
-        dartTwo.segmentType = SEGMENT_TYPE_MISS
-        dartThree.segmentType = SEGMENT_TYPE_OUTER_SINGLE
+        val dartOne = Dart(1, 3, segmentType = SegmentType.TREBLE)
+        val dartTwo = Dart(1, 0, segmentType = SegmentType.MISS)
+        val dartThree = Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE)
 
         val scorer = factoryScorer()
         scorer.addDart(dartOne)

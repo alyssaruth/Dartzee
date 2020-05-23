@@ -1,6 +1,7 @@
 package dartzee.screen.game
 
 import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
 import dartzee.achievements.getWinAchievementRef
@@ -355,7 +356,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
                         val multiplier = rs.getInt("Multiplier")
                         val posX = rs.getInt("PosX")
                         val posY = rs.getInt("PosY")
-                        val segmentType = rs.getInt("SegmentType")
+                        val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
                         val startingScore = rs.getInt("StartingScore")
 
                         val drt = Dart(score, multiplier, Point(posX, posY), segmentType)

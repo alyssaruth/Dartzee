@@ -1,8 +1,6 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.SEGMENT_TYPE_DOUBLE
-import dartzee.`object`.SEGMENT_TYPE_INNER_SINGLE
-import dartzee.`object`.SEGMENT_TYPE_MISS
+import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.doClick
 import dartzee.helper.*
@@ -17,19 +15,12 @@ import java.awt.Color
 
 class TestDartzeeRuleVerificationPanel: AbstractTest()
 {
-    override fun afterEachTest()
-    {
-        super.afterEachTest()
-
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-    }
-
     @Test
     fun `Should not re-run rule calculation if 0 darts thrown`()
     {
         val panel = DartzeeRuleVerificationPanel()
 
-        val d20 = panel.dartboard.getSegment(20, SEGMENT_TYPE_DOUBLE)!!
+        val d20 = panel.dartboard.getSegment(20, SegmentType.DOUBLE)!!
 
         val dto = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(listOf(d20)))
 
@@ -44,8 +35,8 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
         val panel = DartzeeRuleVerificationPanel()
         panel.updateRule(makeDartzeeRuleDto())
 
-        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
-        panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
+        panel.dartThrown(makeDart(2, 1, SegmentType.INNER_SINGLE))
         panel.tfResult.text shouldBe "1 → 2 → ?, Total: 3"
 
         panel.btnReset.doClick()
@@ -58,8 +49,8 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
         val panel = DartzeeRuleVerificationPanel()
         panel.updateRule(makeDartzeeRuleDto(dart1Rule = makeScoreRule(2)))
 
-        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
-        panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
+        panel.dartThrown(makeDart(2, 1, SegmentType.INNER_SINGLE))
         panel.tfResult.text shouldBe "1 → 2 → ?, Total: 2"
     }
 
@@ -75,13 +66,13 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
         panel.updateRule(rule)
 
         dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(0))
-        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
 
         dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(1))
-        panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(2, 1, SegmentType.INNER_SINGLE))
 
         dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
-        panel.dartThrown(makeDart(20, 2, SEGMENT_TYPE_DOUBLE))
+        panel.dartThrown(makeDart(20, 2, SegmentType.DOUBLE))
 
         //Shouldn't update on the last dart thrown
         dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
@@ -98,13 +89,13 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
         panel.updateRule(rule)
         panel.shouldBeBlue()
 
-        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
         panel.shouldBeBlue()
 
-        panel.dartThrown(makeDart(2, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(2, 1, SegmentType.INNER_SINGLE))
         panel.shouldBeBlue()
 
-        panel.dartThrown(makeDart(3, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(3, 1, SegmentType.INNER_SINGLE))
         panel.shouldBeGreen()
     }
 
@@ -118,7 +109,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(rule)
 
-        panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
+        panel.dartThrown(makeDart(20, 0, SegmentType.MISS))
         panel.shouldBeRed()
 
         panel.tfResult.text shouldBe "0 → ? → ?, Total: N/A"
@@ -134,7 +125,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(rule)
 
-        panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
+        panel.dartThrown(makeDart(20, 0, SegmentType.MISS))
         panel.shouldBeRed()
 
         val updatedRule = makeDartzeeRuleDto(allowMisses = true)
@@ -153,7 +144,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(rule)
 
-        panel.dartThrown(makeDart(20, 0, SEGMENT_TYPE_MISS))
+        panel.dartThrown(makeDart(20, 0, SegmentType.MISS))
         panel.shouldBeRed()
 
         panel.btnReset.doClick()
@@ -170,7 +161,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
         panel.updateRule(rule)
         panel.lblCombinations.text shouldBe "1 combinations (success%: 10.0%)"
 
-        panel.dartThrown(makeDart(1, 1, SEGMENT_TYPE_INNER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
         panel.lblCombinations.text shouldBe "1 combinations (success%: 20.0%)"
     }
 

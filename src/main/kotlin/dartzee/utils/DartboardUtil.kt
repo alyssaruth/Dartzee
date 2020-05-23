@@ -44,18 +44,18 @@ fun getAdjacentNumbers(number: Int): MutableList<Int>
     return mutableListOf(numberOrder[ix-1], numberOrder[ix+1])
 }
 
-fun factorySegmentKeyForPoint(dartPt: Point, centerPt: Point, diameter: Double): String
+fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
 {
     val radius = getDistance(dartPt, centerPt)
     val ratio = 2 * radius / diameter
 
     if (ratio < RATIO_INNER_BULL)
     {
-        return "25_$SEGMENT_TYPE_DOUBLE"
+        return DartboardSegment(SegmentType.DOUBLE, 25)
     }
     else if (ratio < RATIO_OUTER_BULL)
     {
-        return "25_$SEGMENT_TYPE_OUTER_SINGLE"
+        return DartboardSegment(SegmentType.OUTER_SINGLE, 25)
     }
 
     //We've not hit the bullseye, so do other calculations to work out score/multiplier
@@ -63,38 +63,23 @@ fun factorySegmentKeyForPoint(dartPt: Point, centerPt: Point, diameter: Double):
     val score = getScoreForAngle(angle)
     val type = calculateTypeForRatioNonBullseye(ratio)
 
-    return score.toString() + "_" + type
+    return DartboardSegment(type, score)
 }
 
 /**
  * 1) Calculate the radius from the center to our point
  * 2) Using the diameter, work out whether this makes us a miss, single, double or treble
  */
-private fun calculateTypeForRatioNonBullseye(ratioToDiameter: Double): Int
-{
-    if (ratioToDiameter < LOWER_BOUND_TRIPLE_RATIO)
+private fun calculateTypeForRatioNonBullseye(ratioToDiameter: Double) =
+    when
     {
-        return SEGMENT_TYPE_INNER_SINGLE
+        ratioToDiameter < LOWER_BOUND_TRIPLE_RATIO -> SegmentType.INNER_SINGLE
+        ratioToDiameter < UPPER_BOUND_TRIPLE_RATIO -> SegmentType.TREBLE
+        ratioToDiameter < LOWER_BOUND_DOUBLE_RATIO -> SegmentType.OUTER_SINGLE
+        ratioToDiameter < UPPER_BOUND_DOUBLE_RATIO -> SegmentType.DOUBLE
+        ratioToDiameter < UPPER_BOUND_OUTSIDE_BOARD_RATIO -> SegmentType.MISS
+        else -> SegmentType.MISSED_BOARD
     }
-    else if (ratioToDiameter < UPPER_BOUND_TRIPLE_RATIO)
-    {
-        return SEGMENT_TYPE_TREBLE
-    }
-    else if (ratioToDiameter < LOWER_BOUND_DOUBLE_RATIO)
-    {
-        return SEGMENT_TYPE_OUTER_SINGLE
-    }
-    else if (ratioToDiameter < UPPER_BOUND_DOUBLE_RATIO)
-    {
-        return SEGMENT_TYPE_DOUBLE
-    }
-    else if (ratioToDiameter < UPPER_BOUND_OUTSIDE_BOARD_RATIO)
-    {
-        return SEGMENT_TYPE_MISS
-    }
-
-    return SEGMENT_TYPE_MISSED_BOARD
-}
 
 private fun getScoreForAngle(angle: Double): Int
 {
@@ -127,12 +112,12 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, colourWra
 fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color
 {
     val type = segment.type
-    if (type == SEGMENT_TYPE_MISS)
+    if (type == SegmentType.MISS)
     {
         return colourWrapper.outerDartboardColour
     }
 
-    if (type == SEGMENT_TYPE_MISSED_BOARD)
+    if (type == SegmentType.MISSED_BOARD)
     {
         return colourWrapper.missedBoardColour
     }
@@ -201,16 +186,16 @@ fun getAllPossibleSegments(): List<DartboardSegment>
     val segments = mutableListOf<DartboardSegment>()
     for (i in 1..20)
     {
-        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_DOUBLE}"))
-        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_TREBLE}"))
-        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_OUTER_SINGLE}"))
-        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_INNER_SINGLE}"))
-        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_MISS}"))
-        segments.add(DartboardSegment("${i}_${SEGMENT_TYPE_MISSED_BOARD}"))
+        segments.add(DartboardSegment(SegmentType.DOUBLE, i))
+        segments.add(DartboardSegment(SegmentType.TREBLE, i))
+        segments.add(DartboardSegment(SegmentType.OUTER_SINGLE, i))
+        segments.add(DartboardSegment(SegmentType.INNER_SINGLE, i))
+        segments.add(DartboardSegment(SegmentType.MISS, i))
+        segments.add(DartboardSegment(SegmentType.MISSED_BOARD, i))
     }
 
-    segments.add(DartboardSegment("25_${SEGMENT_TYPE_OUTER_SINGLE}"))
-    segments.add(DartboardSegment("25_${SEGMENT_TYPE_DOUBLE}"))
+    segments.add(DartboardSegment(SegmentType.OUTER_SINGLE, 25))
+    segments.add(DartboardSegment(SegmentType.DOUBLE, 25))
 
     return segments.toList()
 }

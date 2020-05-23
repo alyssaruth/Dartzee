@@ -1,6 +1,7 @@
 package dartzee.db
 
 import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 
 class DartEntity : AbstractEntity<DartEntity>()
 {
@@ -16,7 +17,7 @@ class DartEntity : AbstractEntity<DartEntity>()
     var startingScore = -1
     var posX = -1
     var posY = -1
-    var segmentType = -1
+    var segmentType = SegmentType.MISS
 
     override fun getTableName() = "Dart"
 
@@ -31,7 +32,7 @@ class DartEntity : AbstractEntity<DartEntity>()
                 + "StartingScore INT NOT NULL, "
                 + "PosX INT NOT NULL, "
                 + "PosY INT NOT NULL, "
-                + "SegmentType INT NOT NULL")
+                + "SegmentType VARCHAR(255) NOT NULL")
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
