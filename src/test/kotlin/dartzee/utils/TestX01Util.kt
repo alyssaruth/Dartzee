@@ -3,6 +3,7 @@ package dartzee.utils
 import dartzee.`object`.Dart
 import dartzee.ai.AbstractDartsModel
 import dartzee.helper.AbstractTest
+import dartzee.helper.makeDart
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -79,16 +80,9 @@ class TestX01Util: AbstractTest()
     @Test
     fun testIsFinishRound()
     {
-        val d = Dart(20, 1)
-        d.startingScore = 20
-
-        val round = mutableListOf(Dart(2, 1), d)
-
-        isFinishRound(round).shouldBeFalse()
-        d.multiplier = 2
-        isFinishRound(round).shouldBeFalse()
-        d.score = 10
-        isFinishRound(round).shouldBeTrue()
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20))).shouldBeFalse()
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 2, startingScore = 20))).shouldBeFalse()
+        isFinishRound(listOf(Dart(2, 1), makeDart(10, 2, startingScore = 20))).shouldBeTrue()
     }
 
     @Test

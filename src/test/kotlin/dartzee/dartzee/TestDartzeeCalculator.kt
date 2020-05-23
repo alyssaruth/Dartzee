@@ -1,7 +1,8 @@
 package dartzee.dartzee
 
 import dartzee.*
-import dartzee.`object`.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.core.util.getAllPermutations
 import dartzee.dartzee.dart.DartzeeDartRuleAny
 import dartzee.dartzee.dart.DartzeeDartRuleEven
@@ -32,8 +33,7 @@ class TestAllPossibilities: AbstractTest()
     @Test
     fun `Should generate the right number of possibilities if given 1 starting dart`()
     {
-        val dart = Dart(20, 3)
-        dart.segmentType = SegmentType.TREBLE
+        val dart = Dart(20, 3, segmentType = SegmentType.TREBLE)
 
         val possibilities = DartzeeCalculator().generateAllPossibilities(listOf(dart))
         possibilities.size shouldBe 83 * 83
@@ -45,11 +45,8 @@ class TestAllPossibilities: AbstractTest()
     @Test
     fun `Should generate the right number of possibilities if given 2 starting darts`()
     {
-        val dartOne = Dart(20, 3)
-        dartOne.segmentType = SegmentType.TREBLE
-
-        val dartTwo = Dart(19, 2)
-        dartTwo.segmentType = SegmentType.DOUBLE
+        val dartOne = Dart(20, 3, segmentType = SegmentType.TREBLE)
+        val dartTwo = Dart(19, 2, segmentType = SegmentType.DOUBLE)
 
         val possibilities = DartzeeCalculator().generateAllPossibilities(listOf(dartOne, dartTwo))
         possibilities.size shouldBe 83

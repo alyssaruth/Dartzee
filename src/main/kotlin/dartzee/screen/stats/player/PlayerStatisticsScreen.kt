@@ -188,10 +188,9 @@ class PlayerStatisticsScreen : EmbeddedScreen()
                     val wrapper = hm[gameId] ?: GameWrapper(gameId, gameParams, dtStart, dtFinish, numberOfDarts)
                     hm[gameId] = wrapper
 
-                    val dart = Dart(score, multiplier)
+                    val dart = Dart(score, multiplier, segmentType = segmentType)
                     dart.ordinal = ordinal
                     dart.startingScore = startingScore
-                    dart.segmentType = segmentType
                     wrapper.addDart(roundNumber, dart)
                 }
             }

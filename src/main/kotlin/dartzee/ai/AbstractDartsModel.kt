@@ -371,19 +371,19 @@ abstract class AbstractDartsModel
             if (score > 40)
             {
                 val single = score - 40
-                return factorySingle(single)
+                return Dart(single, 1)
             }
 
             //Aim for the double
             if (score % 2 == 0)
             {
-                return factoryDouble(score / 2)
+                return Dart(score / 2, 2)
             }
 
             //On an odd number, less than 40. Aim to put ourselves on the highest possible power of 2.
             val scoreToLeaveRemaining = getHighestPowerOfTwoLessThan(score)
             val singleToAimFor = score - scoreToLeaveRemaining
-            return factorySingle(singleToAimFor)
+            return Dart(singleToAimFor, 1)
         }
 
         private fun getHighestPowerOfTwoLessThan(score: Int): Int

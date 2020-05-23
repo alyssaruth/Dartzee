@@ -1,6 +1,7 @@
 package dartzee.helper
 
-import dartzee.`object`.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.state.DefaultPlayerState
@@ -22,17 +23,15 @@ fun makeDart(score: Int = 20,
              startingScore: Int = -1,
              golfHole: Int = -1): Dart
 {
-    val dart = Dart(score, multiplier)
-    dart.segmentType = segmentType
-    dart.pt = pt
+    val dart = Dart(score, multiplier, pt, segmentType)
     dart.startingScore = startingScore
-    dart.setGolfHole(golfHole)
+    dart.golfHole = golfHole
     return dart
 }
 
 fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
 {
-    darts.forEach { it.setGolfHole(golfHole) }
+    darts.forEach { it.golfHole = golfHole }
     return darts
 }
 
