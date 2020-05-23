@@ -129,6 +129,8 @@ object DartsDatabaseUtil
         else if (versionNumber == 11)
         {
             runSqlScriptsForVersion(12)
+            DartEntity().createIndexes()
+
             convertPlayerStrategies()
             convertCustomDartzeeRules()
 

@@ -322,7 +322,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return createdTable
     }
 
-    private fun createIndexes()
+    fun createIndexes()
     {
         //Also create the indexes
         val indexes = mutableListOf<List<String>>()
