@@ -77,7 +77,11 @@ abstract class AbstractDartsModel
     {
         try
         {
-            val xmlDoc = xmlStr.toXmlDoc()
+            var fixed = xmlStr.replace("DartNumber", "Key", ignoreCase = true)
+            fixed = fixed.replace("SegmentType", "Value", ignoreCase = true)
+            fixed = fixed.replace("StopThreshold", "Value", ignoreCase = true)
+
+            val xmlDoc = fixed.toXmlDoc()
             val rootElement = xmlDoc!!.documentElement
 
             val scoringSingle = rootElement.getAttributeInt(ATTRIBUTE_SCORING_DART)
