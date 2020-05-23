@@ -33,12 +33,6 @@ class TestGamePanelDartzee: AbstractTest()
     private val rules = listOf(twoBlackOneWhite, innerOuterInner)
     private val ruleResults = listOf(DartzeeRoundResult(2, true, 50), DartzeeRoundResult(1, false, -115))
 
-    override fun afterEachTest()
-    {
-        super.afterEachTest()
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-    }
-
     @Test
     fun `Should initialise totalRounds based on the number of rules`()
     {

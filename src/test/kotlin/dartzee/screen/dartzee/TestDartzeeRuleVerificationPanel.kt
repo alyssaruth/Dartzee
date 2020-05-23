@@ -15,13 +15,6 @@ import java.awt.Color
 
 class TestDartzeeRuleVerificationPanel: AbstractTest()
 {
-    override fun afterEachTest()
-    {
-        super.afterEachTest()
-
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-    }
-
     @Test
     fun `Should not re-run rule calculation if 0 darts thrown`()
     {

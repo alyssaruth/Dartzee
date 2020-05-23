@@ -16,12 +16,6 @@ import java.awt.Color
 
 class TestDartzeeRuleTilePending: AbstractTest()
 {
-    override fun afterEachTest()
-    {
-        super.afterEachTest()
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-    }
-
     @Test
     fun `Should initially have no pending result or score`()
     {

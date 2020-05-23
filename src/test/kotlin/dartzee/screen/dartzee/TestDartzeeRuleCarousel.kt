@@ -27,13 +27,6 @@ class TestDartzeeRuleCarousel: AbstractTest()
 {
     private val dtos = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
 
-    override fun afterEachTest()
-    {
-        super.afterEachTest()
-
-        InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-    }
-
     @Test
     fun `Should display the correct initial state`()
     {
