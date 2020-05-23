@@ -1,7 +1,8 @@
 package dartzee
 
 import com.github.alexburlton.swingtest.isEqual
-import dartzee.`object`.*
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
@@ -140,4 +141,16 @@ private fun Icon.toBufferedImage(): BufferedImage
     paintIcon(null, g, 0, 0)
     g.dispose()
     return bi
+}
+
+/**
+ * TODO - improvements for swing-test
+ */
+fun Component.shouldBeVisible()
+{
+    isVisible shouldBe true
+}
+fun Component.shouldNotBeVisible()
+{
+    isVisible shouldBe false
 }
