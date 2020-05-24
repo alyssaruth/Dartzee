@@ -13,6 +13,7 @@ import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.*
 import dartzee.utils.DartsColour.DARTBOARD_BLACK
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.ResourceCache.BASE_FONT
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -190,8 +191,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     private fun getFontForDartboardLabels(lblHeight: Int): Font
     {
         //Start with a fontSize of 1
-        var fontSize = 1
-        var font = Font("Trebuchet MS", Font.PLAIN, fontSize)
+        var fontSize = 1f
+        var font = BASE_FONT.deriveFont(Font.PLAIN, fontSize)
 
         //We're going to increment our test font 1 at a time, and keep checking its height
         var testFont = font
@@ -205,7 +206,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
             //Create a new testFont, with incremented font size
             fontSize++
-            testFont = Font("Trebuchet MS", Font.PLAIN, fontSize)
+            testFont = BASE_FONT.deriveFont(Font.PLAIN, fontSize)
 
             //Get the updated font height
             metrics = factoryFontMetrics(testFont)
