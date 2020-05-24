@@ -1,5 +1,7 @@
 package dartzee.screen
 
+import com.github.alexburlton.swingtest.shouldMatchImage
+import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.core.helper.verifyNotCalled
@@ -84,6 +86,32 @@ class TestDartboard: AbstractTest()
         Color(doubleTwenty) shouldBe Color.RED
         Color(miss) shouldBe Color.BLACK
         Color(missBoard) shouldBe Color.BLACK
+    }
+
+    @Test
+    fun `Should match snapshot - default`()
+    {
+        val dartboard = Dartboard(250, 250)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.shouldMatchImage("default")
+    }
+
+    @Test
+    fun `Should match snapshot - with numbers`()
+    {
+        val dartboard = Dartboard(250, 250)
+        dartboard.renderScoreLabels = true
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.shouldMatchImage("scores")
+    }
+
+    @Test
+    fun `Should match snapshot - wireframe`()
+    {
+        val dartboard = Dartboard(250, 250)
+        val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
+        dartboard.paintDartboard(colourWrapper, false)
+        dartboard.shouldMatchImage("wireframe")
     }
 }
 
