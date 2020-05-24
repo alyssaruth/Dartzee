@@ -1,6 +1,7 @@
 --------- v4.3.0 ---------
 
 + Improvements to player summaries in Player Management
+= 71.0% test coverage (8540 / 12,017 lines covered by 1482 tests)
 
 --------- v4.2.1 ---------
 
