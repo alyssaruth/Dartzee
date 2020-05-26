@@ -117,10 +117,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), colourWrapper) }
         }
 
+        addScoreLabels()
+
         dartboardLabel.icon = ImageIcon(dartboardImage!!)
         dartboardLabel.repaint()
-
-        addScoreLabels()
 
         if (cached
           && dartboardTemplate == null)
@@ -165,8 +165,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             //Create a label with standard properties
             val lbl = JLabel("" + i)
             lbl.foreground = scoreLabelColor
-            lbl.background = DartsColour.TRANSPARENT
-            lbl.isOpaque = true
             lbl.horizontalAlignment = SwingConstants.CENTER
             lbl.font = fontToUse
 
@@ -180,11 +178,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             val avgPoint = getAverage(points)
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2
-            lbl.setLocation(lblX, lblY)
 
-            //Add to the screen
-            add(lbl)
-            setLayer(lbl, LAYER_NUMBERS)
+            val g = dartboardImage!!.graphics
+            g.translate(lblX, lblY)
+            lbl.paint(g)
         }
     }
 
