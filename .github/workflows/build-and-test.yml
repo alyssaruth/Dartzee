@@ -17,4 +17,4 @@ jobs:
       if: failure()
       with:
         name: snapshots
-        path: /**/*.failed.png
+        path: /home/runner/**/*.failed.png
