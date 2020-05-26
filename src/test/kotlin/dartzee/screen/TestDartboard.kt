@@ -99,7 +99,7 @@ class TestDartboard: AbstractTest()
     @Test
     fun `Should match snapshot - with numbers`()
     {
-        val dartboard = Dartboard(250, 250)
+        val dartboard = Dartboard(500, 500)
         dartboard.renderScoreLabels = true
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.shouldMatchImage("scores")
