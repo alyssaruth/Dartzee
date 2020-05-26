@@ -1,5 +1,6 @@
 package dartzee
 
+import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.isEqual
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -70,11 +71,7 @@ fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, p
 
 fun Dartboard.doClick(x: Int, y: Int)
 {
-    val me = makeMouseEvent(x = x, y = y)
-
-    dartboardLabel.mouseListeners.forEach {
-        it.mouseReleased(me)
-    }
+    dartboardLabel.doClick(x, y)
 }
 
 fun makeLogRecord(timestamp: Instant = CURRENT_TIME,

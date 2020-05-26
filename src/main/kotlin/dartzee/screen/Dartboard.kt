@@ -13,6 +13,7 @@ import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.*
 import dartzee.utils.DartsColour.DARTBOARD_BLACK
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.ResourceCache.BASE_FONT
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -116,10 +117,10 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), colourWrapper) }
         }
 
+        addScoreLabels()
+
         dartboardLabel.icon = ImageIcon(dartboardImage!!)
         dartboardLabel.repaint()
-
-        addScoreLabels()
 
         if (cached
           && dartboardTemplate == null)
@@ -164,8 +165,6 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             //Create a label with standard properties
             val lbl = JLabel("" + i)
             lbl.foreground = scoreLabelColor
-            lbl.background = DartsColour.TRANSPARENT
-            lbl.isOpaque = true
             lbl.horizontalAlignment = SwingConstants.CENTER
             lbl.font = fontToUse
 
@@ -179,19 +178,19 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             val avgPoint = getAverage(points)
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2
-            lbl.setLocation(lblX, lblY)
 
-            //Add to the screen
-            add(lbl)
-            setLayer(lbl, LAYER_NUMBERS)
+            val g = dartboardImage!!.graphics as Graphics2D
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+            g.translate(lblX, lblY)
+            lbl.paint(g)
         }
     }
 
     private fun getFontForDartboardLabels(lblHeight: Int): Font
     {
         //Start with a fontSize of 1
-        var fontSize = 1
-        var font = Font("Trebuchet MS", Font.PLAIN, fontSize)
+        var fontSize = 1f
+        var font = BASE_FONT.deriveFont(Font.PLAIN, fontSize)
 
         //We're going to increment our test font 1 at a time, and keep checking its height
         var testFont = font
@@ -205,7 +204,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
             //Create a new testFont, with incremented font size
             fontSize++
-            testFont = Font("Trebuchet MS", Font.PLAIN, fontSize)
+            testFont = BASE_FONT.deriveFont(Font.PLAIN, fontSize)
 
             //Get the updated font height
             metrics = factoryFontMetrics(testFont)
