@@ -179,7 +179,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2
 
-            val g = dartboardImage!!.graphics
+            val g = dartboardImage!!.graphics as Graphics2D
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
             g.translate(lblX, lblY)
             lbl.paint(g)
         }
