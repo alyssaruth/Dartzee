@@ -3,6 +3,7 @@ package dartzee.logging
 import dartzee.core.util.MathsUtil
 import dartzee.utils.InjectedThings
 import java.sql.SQLException
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeUnit
@@ -12,13 +13,13 @@ private const val LOGGER_THREAD = "Logger"
 
 class Logger(private val destinations: List<ILogDestination>)
 {
-    val loggingContext = mutableMapOf<String, Any?>()
+    val loggingContext = ConcurrentHashMap<String, Any?>()
     private val loggerFactory = ThreadFactory { r -> Thread(r, LOGGER_THREAD) }
     private var logService = Executors.newFixedThreadPool(1, loggerFactory)
 
     fun addToContext(loggingKey: String, value: Any?)
     {
-        loggingContext[loggingKey] = value
+        loggingContext[loggingKey] = value ?: ""
         destinations.forEach { it.contextUpdated(loggingContext.toMap()) }
     }
 

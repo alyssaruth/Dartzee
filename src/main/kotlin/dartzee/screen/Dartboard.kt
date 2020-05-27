@@ -26,7 +26,6 @@ import javax.swing.JLayeredPane
 import javax.swing.SwingConstants
 
 
-const val LAYER_NUMBERS = 1
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 const val LAYER_SLIDER = 4
@@ -239,10 +238,13 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
-        val actuallyHighlight = highlight && !segment.isMiss() && shouldActuallyHighlight(segment)
+        if (segment.isMiss())
+        {
+            return
+        }
 
         val colour = getInitialColourForSegment(segment)
-        val hoveredColour = if (actuallyHighlight) getHighlightedColour(colour) else colour
+        val hoveredColour = if (highlight && shouldActuallyHighlight(segment)) getHighlightedColour(colour) else colour
 
         colourSegment(segment, hoveredColour)
     }
