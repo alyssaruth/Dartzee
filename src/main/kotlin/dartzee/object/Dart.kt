@@ -20,7 +20,8 @@ open class Dart(
     var startingScore = -1
 
     //Never set on the DB. Used for in-game stats, and is just set to the round number.
-    var golfHole = -1
+    var roundNumber = -1
+
     var participantId: String = ""
     var gameId: String = ""
     var dtThrown: Timestamp = DateStatics.END_OF_TIME
@@ -31,7 +32,7 @@ open class Dart(
     fun isDouble() = multiplier == 2
     fun isTriple() = multiplier == 3
     fun getTotal() = score * multiplier
-    fun getGolfScore() = getGolfScore(golfHole)
+    fun getGolfScore() = getGolfScore(roundNumber)
     fun getX() = pt?.x
     fun getY() = pt?.y
 

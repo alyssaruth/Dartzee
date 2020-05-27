@@ -51,8 +51,12 @@ class MessageDialogFactory: AbstractMessageDialogFactory()
 
     override fun dismissLoading()
     {
+        if (loadingDialog.isVisible)
+        {
+            logDialogClosed("Loading", null)
+        }
+
         loadingDialog.dismissDialog()
-        logDialogClosed("Loading", null)
     }
 
     private fun logDialogShown(type: String, title: String, message: String)

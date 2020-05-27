@@ -361,6 +361,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
                         val drt = Dart(score, multiplier, Point(posX, posY), segmentType)
                         drt.startingScore = startingScore
+                        drt.roundNumber = roundNumber
 
                         hmRoundToDarts.putInList(roundNumber, drt)
 
@@ -511,6 +512,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     override fun dartThrown(dart: Dart)
     {
+        dart.roundNumber = currentRoundNumber
+
         dartsThrown.add(dart)
         activeScorer.addDart(dart)
 

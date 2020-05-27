@@ -25,13 +25,13 @@ fun makeDart(score: Int = 20,
 {
     val dart = Dart(score, multiplier, pt, segmentType)
     dart.startingScore = startingScore
-    dart.golfHole = golfHole
+    dart.roundNumber = golfHole
     return dart
 }
 
 fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
 {
-    darts.forEach { it.golfHole = golfHole }
+    darts.forEach { it.roundNumber = golfHole }
     return darts
 }
 
