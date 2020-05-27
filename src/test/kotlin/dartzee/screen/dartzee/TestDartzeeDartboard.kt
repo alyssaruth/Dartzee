@@ -1,11 +1,13 @@
 package dartzee.screen.dartzee
 
+import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.*
 import dartzee.`object`.*
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeSegmentStatus
 import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
+import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
@@ -126,6 +128,22 @@ class TestDartzeeDartboard: AbstractTest()
         val validPt = dartboard.getNonEdgePointForSegment(20, SegmentType.INNER_SINGLE)
         dartboard.highlightDartboard(validPt)
         dartboard.getColor(validPt) shouldBe DartsColour.getDarkenedColour(GREY_COLOUR_WRAPPER.getColour(1, 20))
+    }
+
+    @Test
+    fun `Snapshot test`()
+    {
+        val scoringSegments = getAllPossibleSegments().filter { it.score == 20 && !it.isMiss() }
+        val validSegments = scoringSegments + getAllPossibleSegments().filter { it.score % 5 == 0 && !it.isMiss() }
+        val segmentStatus = makeSegmentStatus(
+            scoringSegments = scoringSegments,
+            validSegments = validSegments
+        )
+
+        val dartboard = DartzeeDartboard(300, 300)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.refreshValidSegments(segmentStatus)
+        dartboard.shouldMatchImage("dartzee")
     }
 
     private fun Dartboard.getEdgePointForSegment(score: Int, segmentType: SegmentType): Point
