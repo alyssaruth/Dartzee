@@ -19,7 +19,7 @@ class Logger(private val destinations: List<ILogDestination>)
 
     fun addToContext(loggingKey: String, value: Any?)
     {
-        loggingContext[loggingKey] = value
+        loggingContext[loggingKey] = value ?: ""
         destinations.forEach { it.contextUpdated(loggingContext.toMap()) }
     }
 
