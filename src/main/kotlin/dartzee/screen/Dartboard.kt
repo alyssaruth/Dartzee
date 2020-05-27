@@ -238,13 +238,13 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
-        if (segment.isMiss() || !shouldActuallyHighlight(segment))
+        if (segment.isMiss())
         {
             return
         }
 
         val colour = getInitialColourForSegment(segment)
-        val hoveredColour = if (highlight) getHighlightedColour(colour) else colour
+        val hoveredColour = if (highlight && shouldActuallyHighlight(segment)) getHighlightedColour(colour) else colour
 
         colourSegment(segment, hoveredColour)
     }
