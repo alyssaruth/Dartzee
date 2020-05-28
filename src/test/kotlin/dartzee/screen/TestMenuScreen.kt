@@ -76,7 +76,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the dartzee template setup screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>("Dartzee Templates")
+        scrn.clickChild<JButton>("Dartzee")
         ScreenCache.currentScreen().shouldBeInstanceOf<DartzeeTemplateSetupScreen>()
     }
 }

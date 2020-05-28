@@ -202,6 +202,4 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     }
 
     override fun getScreenName() = "Dartzee Templates"
-
-    override fun getBackTarget() = ScreenCache.get<UtilitiesScreen>()
 }
