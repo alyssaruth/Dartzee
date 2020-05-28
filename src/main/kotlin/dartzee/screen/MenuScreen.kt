@@ -2,6 +2,7 @@ package dartzee.screen
 
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.main.exitApplication
+import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
@@ -22,6 +23,7 @@ class MenuScreen : EmbeddedScreen()
     private val btnLeaderboards = JButton("Leaderboards")
     private val btnPreferences = JButton("Preferences")
     private val btnAbout = JButton("About...")
+    private val btnDartzeeTemplates = JButton("Dartzee Templates")
     private val btnUtilities = JButton("Utilities")
     private val btnExit = JButton("Exit")
     private val btnGameReport = JButton("Game Report")
@@ -52,6 +54,9 @@ class MenuScreen : EmbeddedScreen()
         btnUtilities.font = buttonFont
         btnUtilities.setBounds(615, 240, 150, 50)
         panel.add(btnUtilities)
+        btnDartzeeTemplates.font = buttonFont
+        btnDartzeeTemplates.setBounds(590, 340, 150, 50)
+        panel.add(btnDartzeeTemplates)
         btnExit.font = buttonFont
         btnExit.setBounds(325, 465, 150, 50)
         panel.add(btnExit)
@@ -94,6 +99,7 @@ class MenuScreen : EmbeddedScreen()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()
             btnLeaderboards -> ScreenCache.switch<LeaderboardsScreen>()
             btnUtilities -> ScreenCache.switch<UtilitiesScreen>()
+            btnDartzeeTemplates -> ScreenCache.switch<DartzeeTemplateSetupScreen>()
             else -> super.actionPerformed(arg0)
         }
     }

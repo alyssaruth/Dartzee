@@ -4,7 +4,6 @@ import dartzee.`object`.DartsClient
 import dartzee.core.util.dumpThreadStacks
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.sanity.DatabaseSanityCheck
-import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
@@ -27,7 +26,6 @@ class UtilitiesScreen : EmbeddedScreen()
     private val btnViewLogs = JButton("View Logs")
     private val btnThreadStacks = JButton("Thread Stacks")
     private val btnAchievementConversion = JButton("Run Achievement Conversion")
-    private val btnDartzeeTemplates = JButton("Dartzee Templates")
 
     init
     {
@@ -42,7 +40,6 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnCheckForUpdates, "cell 0 8,alignx center")
         panel.add(btnViewLogs, "cell 0 10,alignx center")
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
-        panel.add(btnDartzeeTemplates, "cell 0 13, alignx center")
 
         val buttons = panel.getAllChildComponentsForType<AbstractButton>()
         for (button in buttons)
@@ -71,7 +68,6 @@ class UtilitiesScreen : EmbeddedScreen()
                             loggingDialog.toFront()}
             btnThreadStacks -> dumpThreadStacks()
             btnAchievementConversion -> runAchievementConversion()
-            btnDartzeeTemplates -> ScreenCache.switch<DartzeeTemplateSetupScreen>()
             else -> super.actionPerformed(arg0)
         }
     }

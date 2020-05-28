@@ -3,7 +3,9 @@ package dartzee.screen
 import com.github.alexburlton.swingtest.clickChild
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertExits
+import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
+import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -60,5 +62,21 @@ class TestMenuScreen: AbstractTest()
         val scrn = MenuScreen()
         scrn.clickChild<JButton>("Utilities")
         ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
+    }
+
+    @Test
+    fun `Should go to the preferences screen`()
+    {
+        val scrn = MenuScreen()
+        scrn.clickChild<JButton>("Preferences")
+        ScreenCache.currentScreen().shouldBeInstanceOf<PreferencesScreen>()
+    }
+
+    @Test
+    fun `Should go to the dartzee template setup screen`()
+    {
+        val scrn = MenuScreen()
+        scrn.clickChild<JButton>("Dartzee Templates")
+        ScreenCache.currentScreen().shouldBeInstanceOf<DartzeeTemplateSetupScreen>()
     }
 }

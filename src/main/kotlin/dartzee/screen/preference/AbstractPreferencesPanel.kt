@@ -1,13 +1,14 @@
 package dartzee.screen.preference
 
+import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 import javax.swing.JPanel
 
 abstract class AbstractPreferencesPanel : JPanel(), ActionListener
 {
-    val btnApply = JButton("Apply")
-    val btnRestoreDefaults = JButton("Restore Defaults")
+    private val btnApply = JButton("Apply")
+    private val btnRestoreDefaults = JButton("Restore Defaults")
 
     init
     {
@@ -15,6 +16,14 @@ abstract class AbstractPreferencesPanel : JPanel(), ActionListener
         btnRestoreDefaults.addActionListener(this)
     }
 
+    override fun actionPerformed(e: ActionEvent?)
+    {
+        when (e?.source)
+        {
+            btnApply -> save()
+            btnRestoreDefaults -> refresh(true)
+        }
+    }
 
     /**
      * Refresh this panel
