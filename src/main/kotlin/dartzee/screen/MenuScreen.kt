@@ -3,7 +3,7 @@ package dartzee.screen
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.main.exitApplication
 import dartzee.screen.player.PlayerManagementScreen
-import dartzee.screen.preference.PreferencesDialog
+import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.utils.ResourceCache
@@ -87,13 +87,7 @@ class MenuScreen : EmbeddedScreen()
                 dialog.isVisible = true
             }
 
-            btnPreferences -> {
-                val dialog = PreferencesDialog()
-                dialog.setLocationRelativeTo(this)
-                dialog.init()
-                dialog.isVisible = true
-            }
-
+            btnPreferences -> ScreenCache.switch<PreferencesScreen>()
             btnExit -> exitApplication()
             btnNewGame -> ScreenCache.switch<GameSetupScreen>()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
