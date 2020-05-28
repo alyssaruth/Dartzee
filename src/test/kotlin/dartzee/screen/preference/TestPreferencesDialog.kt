@@ -35,27 +35,11 @@ class TestPreferencesDialog: AbstractTest()
     }
 
     @Test
-    fun `Shouldn't call save if a panel is invalid`()
+    fun `Should call save on ok`()
     {
-        every { mockPanel.valid() } returns false
-
-        dialog.btnOk.doClick()
-
-        verify { mockPanel.valid() }
-        verifyNotCalled { mockPanel.save() }
-
-        dialog.tabbedPane.selectedComponent shouldBe mockPanel
-    }
-
-    @Test
-    fun `Should call save if all panels are valid`()
-    {
-        every { mockPanel.valid() } returns true
-
         dialog.init()
         dialog.btnOk.doClick()
 
-        verify { mockPanel.valid() }
         verify { mockPanel.save() }
     }
 
@@ -79,8 +63,6 @@ class TestPreferencesDialog: AbstractTest()
     @Test
     fun `Should reset cached application values when successfully okayed`()
     {
-        every { mockPanel.valid() } returns true
-
         Dartboard.dartboardTemplate = mockk(relaxed = true)
         val mockGameScreen = mockk<DartsGameScreen>(relaxed = true)
         ScreenCache.addDartsGameScreen("1", mockGameScreen)
@@ -93,11 +75,10 @@ class TestPreferencesDialog: AbstractTest()
     }
 
     @Test
-    fun `Should not call valid or save when cancelled`()
+    fun `Should not call save when cancelled`()
     {
         dialog.btnCancel.doClick()
 
-        verifyNotCalled { mockPanel.valid() }
         verifyNotCalled { mockPanel.save() }
     }
 }

@@ -55,11 +55,6 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
 
     }
 
-    override fun valid(): Boolean
-    {
-        return true
-    }
-
     override fun save()
     {
         val aiSpd = slider.value

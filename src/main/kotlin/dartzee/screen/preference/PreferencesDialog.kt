@@ -53,20 +53,6 @@ class PreferencesDialog : JDialog(), ActionListener
         }
     }
 
-    private fun valid(): Boolean
-    {
-        for (panel in getPreferencePanels())
-        {
-            if (!panel.valid())
-            {
-                tabbedPane.selectedComponent = panel
-                return false
-            }
-        }
-
-        return true
-    }
-
     private fun save()
     {
         //Tell all the panels to save
@@ -103,11 +89,8 @@ class PreferencesDialog : JDialog(), ActionListener
         {
             btnOk ->
             {
-                if (valid())
-                {
-                    save()
-                    dispose()
-                }
+                save()
+                dispose()
             }
             btnRestoreDefaults -> resetPreferencesForSelectedTab()
             btnCancel -> dispose()

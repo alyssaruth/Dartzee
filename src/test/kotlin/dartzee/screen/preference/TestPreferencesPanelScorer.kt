@@ -11,30 +11,6 @@ import org.junit.Test
 
 class TestPreferencesPanelScorer: AbstractPreferencePanelTest<PreferencesPanelScorer>()
 {
-    @Test
-    fun `Should fail validation if FG and BG hues are the same`()
-    {
-        val panel = PreferencesPanelScorer()
-        panel.spinnerFgBrightness.value = 0.5
-        panel.spinnerBgBrightness.value = 0.5
-
-        panel.valid() shouldBe false
-
-        dialogFactory.errorsShown.shouldContainExactly("BG and FG brightness cannot have the same value.")
-    }
-
-    @Test
-    fun `Should pass validation if FG and BG hues are different`()
-    {
-        val panel = PreferencesPanelScorer()
-        panel.spinnerFgBrightness.value = 0.5
-        panel.spinnerBgBrightness.value = 0.8
-
-        panel.valid() shouldBe true
-
-        dialogFactory.errorsShown.shouldBeEmpty()
-    }
-
     override fun getPreferencesAffected(): MutableList<String>
     {
         return mutableListOf(PREFERENCES_DOUBLE_HUE_FACTOR,

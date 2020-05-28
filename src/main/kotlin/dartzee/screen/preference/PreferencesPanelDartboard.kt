@@ -103,8 +103,6 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         dartboardPreview.paintDartboard(wrapper, true)
     }
 
-    override fun valid() = true
-
     override fun save()
     {
         val oddSingle = cpOddSingle.selectedColour

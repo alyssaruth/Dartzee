@@ -145,20 +145,6 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         }
     }
 
-    override fun valid(): Boolean
-    {
-        val fgBrightness = spinnerFgBrightness.value as Double
-        val bgBrightness = spinnerBgBrightness.value as Double
-
-        if (fgBrightness == bgBrightness)
-        {
-            DialogUtil.showError("BG and FG brightness cannot have the same value.")
-            return false
-        }
-
-        return true
-    }
-
     override fun save()
     {
         val hueFactor = spinnerHueFactor.value as Double
