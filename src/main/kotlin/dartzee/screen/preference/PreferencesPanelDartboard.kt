@@ -5,53 +5,62 @@ import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
 import dartzee.screen.Dartboard
 import dartzee.utils.*
+import net.miginfocom.swing.MigLayout
+import java.awt.BorderLayout
 import java.awt.Color
-import java.awt.Font
+import java.awt.Dimension
+import java.awt.FlowLayout
 import javax.swing.JLabel
-import javax.swing.SwingConstants
+import javax.swing.JPanel
+import javax.swing.border.LineBorder
 
 class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionListener
 {
+    private val panelCenter = JPanel()
+    private val panelEast = JPanel()
     val cpOddSingle = ColourPicker()
     val cpOddDouble = ColourPicker()
     val cpOddTreble = ColourPicker()
     val cpEvenSingle = ColourPicker()
     val cpEvenDouble = ColourPicker()
     val cpEvenTreble = ColourPicker()
-    private val dartboardPreview = Dartboard(200, 200)
+    private val dartboardPreview = Dartboard(400, 400)
 
     init
     {
-        layout = null
-        cpOddSingle.setBounds(110, 90, 30, 20)
-        add(cpOddSingle)
-        cpOddDouble.setBounds(110, 120, 30, 20)
-        add(cpOddDouble)
-        cpOddTreble.setBounds(110, 150, 30, 20)
-        add(cpOddTreble)
-        cpEvenSingle.setBounds(150, 90, 30, 20)
-        add(cpEvenSingle)
-        cpEvenDouble.setBounds(150, 120, 30, 20)
-        add(cpEvenDouble)
-        cpEvenTreble.setBounds(150, 150, 30, 20)
-        add(cpEvenTreble)
-        dartboardPreview.setBounds(250, 50, 200, 200)
-        dartboardPreview.renderScoreLabels = true
-        add(dartboardPreview)
+        dartboardPreview.border = LineBorder(Color.BLACK)
+
+        panelCenter.layout = FlowLayout(FlowLayout.CENTER)
+        panelCenter.preferredSize = Dimension(400, 400)
+        panelCenter.border = LineBorder(Color.RED)
+        panelEast.border = LineBorder(Color.BLUE)
+        add(panelCenter, BorderLayout.CENTER)
+        add(panelEast, BorderLayout.EAST)
+        panelCenter.add(dartboardPreview, BorderLayout.CENTER)
+
+        panelEast.layout = MigLayout("al center center, wrap, gapy 20")
+        val panelSingles = JPanel()
         val lblSingleColours = JLabel("Single Colours")
-        lblSingleColours.setBounds(15, 90, 91, 20)
-        add(lblSingleColours)
+        panelSingles.add(lblSingleColours)
+        panelSingles.add(cpOddSingle)
+        panelSingles.add(cpEvenSingle)
+        panelEast.add(panelSingles)
+
+        val panelDoubles = JPanel()
         val lblDoubleColours = JLabel("Double Colours")
-        lblDoubleColours.setBounds(15, 120, 91, 20)
-        add(lblDoubleColours)
+        panelDoubles.add(lblDoubleColours)
+        panelDoubles.add(cpOddDouble)
+        panelDoubles.add(cpEvenDouble)
+        panelEast.add(panelDoubles)
+
+        val panelTrebles = JPanel()
         val lblTrebleColours = JLabel("Treble Colours")
-        lblTrebleColours.setBounds(15, 150, 91, 20)
-        add(lblTrebleColours)
-        val lblPreview = JLabel("Preview:")
-        lblPreview.font = Font("Tahoma", Font.PLAIN, 14)
-        lblPreview.horizontalAlignment = SwingConstants.CENTER
-        lblPreview.setBounds(250, 20, 200, 24)
-        add(lblPreview)
+        panelTrebles.add(lblTrebleColours)
+        panelTrebles.add(cpOddTreble)
+        panelTrebles.add(cpEvenTreble)
+        panelEast.add(panelTrebles)
+
+        dartboardPreview.renderScoreLabels = true
 
         cpOddSingle.addColourSelectionListener(this)
         cpOddDouble.addColourSelectionListener(this)
