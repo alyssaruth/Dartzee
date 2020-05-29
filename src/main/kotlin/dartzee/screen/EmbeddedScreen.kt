@@ -29,12 +29,12 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
         panelNavigation.layout = BorderLayout(0, 0)
 
         panelNavigation.add(panelNext, BorderLayout.EAST)
-        btnNext.font = Font("Tahoma", Font.PLAIN, 16)
+        btnNext.font = Font("Tahoma", Font.PLAIN, 20)
 
         panelNext.add(btnNext)
 
         panelNavigation.add(panelBack, BorderLayout.WEST)
-        btnBack.font = Font("Tahoma", Font.PLAIN, 16)
+        btnBack.font = Font("Tahoma", Font.PLAIN, 20)
         panelBack.add(btnBack)
 
         btnBack.addActionListener(this)

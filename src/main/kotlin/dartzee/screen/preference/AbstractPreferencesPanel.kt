@@ -1,5 +1,6 @@
 package dartzee.screen.preference
 
+import dartzee.core.util.setFontSize
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -18,6 +19,9 @@ abstract class AbstractPreferencesPanel : JPanel()
         add(panelOptions, BorderLayout.SOUTH)
         panelOptions.add(btnApply)
         panelOptions.add(btnRestoreDefaults)
+
+        btnApply.setFontSize(18)
+        btnRestoreDefaults.setFontSize(18)
 
         val listener = PreferencesPanelListener()
         btnApply.addActionListener(listener)

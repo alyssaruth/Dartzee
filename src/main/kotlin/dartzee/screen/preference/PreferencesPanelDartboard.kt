@@ -3,16 +3,14 @@ package dartzee.screen.preference
 import dartzee.`object`.ColourWrapper
 import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
+import dartzee.core.util.setFontSize
 import dartzee.screen.Dartboard
 import dartzee.utils.*
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Color
-import java.awt.Dimension
-import java.awt.FlowLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.border.LineBorder
 
 class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionListener
 {
@@ -24,41 +22,33 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
     val cpEvenSingle = ColourPicker()
     val cpEvenDouble = ColourPicker()
     val cpEvenTreble = ColourPicker()
-    private val dartboardPreview = Dartboard(400, 400)
+    private val dartboardPreview = Dartboard(450, 450)
 
     init
     {
-        dartboardPreview.border = LineBorder(Color.BLACK)
-
-        panelCenter.layout = FlowLayout(FlowLayout.CENTER)
-        panelCenter.preferredSize = Dimension(400, 400)
-        panelCenter.border = LineBorder(Color.RED)
-        panelEast.border = LineBorder(Color.BLUE)
+        panelCenter.layout = MigLayout("al center center, gapy 20")
         add(panelCenter, BorderLayout.CENTER)
-        add(panelEast, BorderLayout.EAST)
-        panelCenter.add(dartboardPreview, BorderLayout.CENTER)
+        panelCenter.add(dartboardPreview)
+        panelCenter.add(panelEast)
 
-        panelEast.layout = MigLayout("al center center, wrap, gapy 20")
-        val panelSingles = JPanel()
+        panelEast.layout = MigLayout("", "[][][]", "[][][]")
         val lblSingleColours = JLabel("Single Colours")
-        panelSingles.add(lblSingleColours)
-        panelSingles.add(cpOddSingle)
-        panelSingles.add(cpEvenSingle)
-        panelEast.add(panelSingles)
+        lblSingleColours.setFontSize(16)
+        panelEast.add(lblSingleColours, "cell 0 0")
+        panelEast.add(cpOddSingle, "cell 1 0")
+        panelEast.add(cpEvenSingle, "cell 2 0")
 
-        val panelDoubles = JPanel()
         val lblDoubleColours = JLabel("Double Colours")
-        panelDoubles.add(lblDoubleColours)
-        panelDoubles.add(cpOddDouble)
-        panelDoubles.add(cpEvenDouble)
-        panelEast.add(panelDoubles)
+        lblDoubleColours.setFontSize(16)
+        panelEast.add(lblDoubleColours, "cell 0 1")
+        panelEast.add(cpOddDouble, "cell 1 1")
+        panelEast.add(cpEvenDouble, "cell 2 1")
 
-        val panelTrebles = JPanel()
         val lblTrebleColours = JLabel("Treble Colours")
-        panelTrebles.add(lblTrebleColours)
-        panelTrebles.add(cpOddTreble)
-        panelTrebles.add(cpEvenTreble)
-        panelEast.add(panelTrebles)
+        lblTrebleColours.setFontSize(16)
+        panelEast.add(lblTrebleColours, "cell 0 2")
+        panelEast.add(cpOddTreble, "cell 1 2")
+        panelEast.add(cpEvenTreble, "cell 2 2")
 
         dartboardPreview.renderScoreLabels = true
 
