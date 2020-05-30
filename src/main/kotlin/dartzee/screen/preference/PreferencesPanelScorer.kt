@@ -1,8 +1,9 @@
 package dartzee.screen.preference
 
-import dartzee.core.util.DialogUtil
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.utils.*
+import net.miginfocom.swing.MigLayout
+import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
 import javax.swing.*
@@ -12,7 +13,8 @@ import javax.swing.event.ChangeListener
 
 class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
 {
-
+    private val panelOops = JPanel()
+    private val panelCenter = JPanel()
     private val panelScorerPreview = JPanel()
     val spinnerHueFactor = JSpinner()
     val spinnerFgBrightness = JSpinner()
@@ -20,18 +22,19 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
 
     init
     {
-        layout = null
-        val panel_1 = JPanel()
-        panel_1.border = TitledBorder(null, "Colour Scheme", TitledBorder.LEADING, TitledBorder.TOP, null, null)
-        panel_1.setBounds(10, 11, 449, 116)
-        add(panel_1)
-        panel_1.layout = null
+        add(panelOops, BorderLayout.CENTER)
+        panelOops.layout = MigLayout("al center center, gapy 20")
+        panelOops.add(panelCenter)
+        panelCenter.border = TitledBorder(null, "Colour Scheme", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        panelCenter.preferredSize = Dimension(450, 120)
+
+        panelCenter.layout = null
         val label = JLabel("0")
         label.font = Font("Trebuchet MS", Font.BOLD, 15)
         label.horizontalAlignment = SwingConstants.CENTER
         label.preferredSize = Dimension(30, 30)
         panelScorerPreview.setBounds(20, 20, 408, 40)
-        panel_1.add(panelScorerPreview)
+        panelCenter.add(panelScorerPreview)
         panelScorerPreview.add(label)
         val label_1 = JLabel("10")
         label_1.preferredSize = Dimension(30, 30)
@@ -85,23 +88,23 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         panelScorerPreview.add(label_10)
         val lblHueFactor = JLabel("Hue Factor")
         lblHueFactor.setBounds(48, 70, 65, 29)
-        panel_1.add(lblHueFactor)
+        panelCenter.add(lblHueFactor)
         spinnerHueFactor.setBounds(113, 72, 60, 25)
-        panel_1.add(spinnerHueFactor)
+        panelCenter.add(spinnerHueFactor)
         spinnerHueFactor.preferredSize = Dimension(60, 25)
         spinnerHueFactor.model = SpinnerNumberModel(0.8, -1.0, 1.0, 0.05)
         val lblBrightnessFg = JLabel("FG")
         lblBrightnessFg.setBounds(193, 70, 25, 29)
-        panel_1.add(lblBrightnessFg)
+        panelCenter.add(lblBrightnessFg)
         spinnerFgBrightness.setBounds(218, 72, 60, 25)
-        panel_1.add(spinnerFgBrightness)
+        panelCenter.add(spinnerFgBrightness)
         spinnerFgBrightness.preferredSize = Dimension(60, 25)
         spinnerFgBrightness.model = SpinnerNumberModel(0.3, 0.1, 1.0, 0.05)
         val lblBgBrightness = JLabel("BG")
         lblBgBrightness.setBounds(298, 70, 25, 29)
-        panel_1.add(lblBgBrightness)
+        panelCenter.add(lblBgBrightness)
         spinnerBgBrightness.setBounds(323, 72, 60, 25)
-        panel_1.add(spinnerBgBrightness)
+        panelCenter.add(spinnerBgBrightness)
         spinnerBgBrightness.preferredSize = Dimension(60, 25)
         spinnerBgBrightness.model = SpinnerNumberModel(1.0, 0.1, 1.0, 0.05)
 
@@ -110,7 +113,7 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         spinnerFgBrightness.addChangeListener(this)
     }
 
-    override fun refresh(useDefaults: Boolean)
+    override fun refreshImpl(useDefaults: Boolean)
     {
         val hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR, useDefaults)
         val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS, useDefaults)
@@ -145,7 +148,7 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         }
     }
 
-    override fun save()
+    override fun saveImpl()
     {
         val hueFactor = spinnerHueFactor.value as Double
         val fgBrightness = spinnerFgBrightness.value as Double
@@ -156,5 +159,14 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
         PreferenceUtil.saveDouble(PREFERENCES_DOUBLE_HUE_FACTOR, hueFactor)
     }
 
-    override fun stateChanged(arg0: ChangeEvent) = repaintScorerPreview()
+    override fun hasOutstandingChanges() =
+            spinnerHueFactor.value != PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR)
+                || spinnerBgBrightness.value != PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
+                || spinnerFgBrightness.value != PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
+
+    override fun stateChanged(arg0: ChangeEvent)
+    {
+        repaintScorerPreview()
+        stateChanged()
+    }
 }
