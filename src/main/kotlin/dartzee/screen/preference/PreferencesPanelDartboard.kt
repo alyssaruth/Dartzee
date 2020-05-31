@@ -71,13 +71,13 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR, useDefaults)
         val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR, useDefaults)
 
-        val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr, DartsColour.DARTBOARD_BLACK)
-        val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr, DartsColour.DARTBOARD_RED)
-        val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr, DartsColour.DARTBOARD_RED)
+        val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr)
+        val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr)
+        val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr)
 
-        val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr, DartsColour.DARTBOARD_WHITE)
-        val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr, DartsColour.DARTBOARD_GREEN)
-        val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr, DartsColour.DARTBOARD_GREEN)
+        val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr)
+        val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr)
+        val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr)
 
         cpOddSingle.updateSelectedColor(oddSingle)
         cpOddDouble.updateSelectedColor(oddDouble)

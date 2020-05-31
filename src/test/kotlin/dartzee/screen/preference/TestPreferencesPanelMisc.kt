@@ -1,5 +1,6 @@
 package dartzee.screen.preference
 
+import dartzee.unCheck
 import dartzee.utils.*
 import io.kotlintest.shouldBe
 
@@ -23,9 +24,10 @@ class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc
     {
         panel.slider.value = 20
         panel.nfLeaderboardSize.value = 100
-        panel.chckbxAiAutomaticallyFinish.isSelected = false
-        panel.chckbxCheckForUpdates.isSelected = false
-        panel.chckbxShowAnimations.isSelected = false
+
+        panel.chckbxAiAutomaticallyFinish.unCheck()
+        panel.chckbxCheckForUpdates.unCheck()
+        panel.chckbxShowAnimations.unCheck()
     }
 
     override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelMisc)

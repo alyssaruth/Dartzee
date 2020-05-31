@@ -16,6 +16,11 @@ object DartsColour
     val DARTBOARD_BLACK: Color = Color.getHSBColor(0f, 0f, 0.1.toFloat())
     val DARTBOARD_WHITE: Color = Color.white
 
+    val DARTBOARD_BLACK_STR = toPrefStr(DARTBOARD_BLACK)
+    val DARTBOARD_GREEN_STR = toPrefStr(DARTBOARD_GREEN)
+    val DARTBOARD_RED_STR = toPrefStr(DARTBOARD_RED)
+    val DARTBOARD_WHITE_STR = toPrefStr(DARTBOARD_WHITE)
+
     val DARTBOARD_LIGHTEST_GREY: Color = Color.getHSBColor(0f, 0f, 0.9.toFloat())
     val DARTBOARD_LIGHTER_GREY: Color = Color.getHSBColor(0f, 0f, 0.75.toFloat())
     val DARTBOARD_LIGHT_GREY: Color = Color.getHSBColor(0f, 0f, 0.6.toFloat())
@@ -55,8 +60,7 @@ object DartsColour
         return "$r;$g;$b;$a"
     }
 
-    fun getColorFromPrefStr(prefsStr: String, defaultColor: Color): Color = if (prefsStr.isEmpty()) defaultColor else fromPrefStr(prefsStr)
-    private fun fromPrefStr(prefStr: String) =
+    fun getColorFromPrefStr(prefStr: String): Color =
         try
         {
             val colours = prefStr.split(";").map{ it.toInt() }
