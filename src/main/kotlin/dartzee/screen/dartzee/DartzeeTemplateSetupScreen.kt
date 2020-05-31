@@ -9,8 +9,6 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.screen.ScreenCache
-import dartzee.screen.UtilitiesScreen
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings
 import net.miginfocom.swing.MigLayout
@@ -202,6 +200,4 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     }
 
     override fun getScreenName() = "Dartzee Templates"
-
-    override fun getBackTarget() = ScreenCache.get<UtilitiesScreen>()
 }

@@ -1,5 +1,6 @@
 package dartzee.core.bean
 
+import com.github.alexburlton.swingtest.doClick
 import dartzee.core.helper.getIconImage
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.util.InjectedDesktopCore
@@ -46,7 +47,7 @@ class TestColourPicker: AbstractTest()
 
         val cp = ColourPicker()
         cp.updateSelectedColor(Color.RED)
-        cp.mouseClicked(makeMouseEvent())
+        cp.doClick()
 
         verify { mockSelector.selectColour(Color.RED) }
 
@@ -66,7 +67,7 @@ class TestColourPicker: AbstractTest()
 
         val cp = ColourPicker()
         cp.addColourSelectionListener(listener)
-        cp.mouseClicked(makeMouseEvent())
+        cp.doClick()
 
         verify { listener.colourSelected(Color.BLUE) }
     }

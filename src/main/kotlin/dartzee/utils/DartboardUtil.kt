@@ -1,11 +1,10 @@
 package dartzee.utils
 
-import dartzee.`object`.*
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
-import dartzee.utils.DartsColour.DARTBOARD_BLACK
-import dartzee.utils.DartsColour.DARTBOARD_GREEN
-import dartzee.utils.DartsColour.DARTBOARD_RED
-import dartzee.utils.DartsColour.DARTBOARD_WHITE
 import java.awt.Color
 import java.awt.Point
 
@@ -147,13 +146,13 @@ private fun getColourWrapperFromPrefs(): ColourWrapper
     val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
     val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
-    val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr, DARTBOARD_BLACK)
-    val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr, DARTBOARD_RED)
-    val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr, DARTBOARD_RED)
+    val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr)
+    val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr)
+    val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr)
 
-    val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr, DARTBOARD_WHITE)
-    val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr, DARTBOARD_GREEN)
-    val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr, DARTBOARD_GREEN)
+    val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr)
+    val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr)
+    val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr)
 
     colourWrapperFromPrefs = ColourWrapper(evenSingle, evenDouble, evenTreble,
             oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)

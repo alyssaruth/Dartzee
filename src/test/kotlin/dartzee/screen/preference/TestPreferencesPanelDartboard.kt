@@ -38,6 +38,8 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
         panel.cpEvenSingle.selectedColour = Color.YELLOW
         panel.cpEvenDouble.selectedColour = Color.MAGENTA
         panel.cpEvenTreble.selectedColour = Color.CYAN
+
+        panel.colourSelected(Color.CYAN)
     }
 
     override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelDartboard)
@@ -60,14 +62,11 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
         val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
         val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
 
-        DartsColour.getColorFromPrefStr(oddSingleStr, DartsColour.TRANSPARENT) shouldBe Color.BLUE
-        DartsColour.getColorFromPrefStr(oddDoubleStr, DartsColour.TRANSPARENT) shouldBe Color(200, 50, 128)
-        DartsColour.getColorFromPrefStr(oddTrebleStr, DartsColour.TRANSPARENT) shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
-
-        DartsColour.getColorFromPrefStr(evenSingleStr, DartsColour.TRANSPARENT) shouldBe Color.YELLOW
-        DartsColour.getColorFromPrefStr(evenDoubleStr, DartsColour.TRANSPARENT) shouldBe Color.MAGENTA
-        DartsColour.getColorFromPrefStr(evenTrebleStr, DartsColour.TRANSPARENT) shouldBe Color.CYAN
-
-
+        DartsColour.getColorFromPrefStr(oddSingleStr) shouldBe Color.BLUE
+        DartsColour.getColorFromPrefStr(oddDoubleStr) shouldBe Color(200, 50, 128)
+        DartsColour.getColorFromPrefStr(oddTrebleStr) shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
+        DartsColour.getColorFromPrefStr(evenSingleStr) shouldBe Color.YELLOW
+        DartsColour.getColorFromPrefStr(evenDoubleStr) shouldBe Color.MAGENTA
+        DartsColour.getColorFromPrefStr(evenTrebleStr) shouldBe Color.CYAN
     }
 }

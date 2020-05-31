@@ -12,10 +12,7 @@ object PreferenceUtil
      */
     private fun getPrefAndDefault(prefStr: String): Pair<String, String>
     {
-        val prefAndDefault = prefStr.split(PREFERENCE_DELIM_CHAR)
-        if (prefAndDefault.size != 2) {
-            throw Exception("Unexpected preference format: $prefStr")
-        }
+        val prefAndDefault = prefStr.split(PREFERENCE_DELIM_CHAR, limit = 2)
         return Pair(prefAndDefault[0], prefAndDefault[1])
     }
 

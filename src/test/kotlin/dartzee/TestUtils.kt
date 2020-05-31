@@ -29,6 +29,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.swing.Icon
+import javax.swing.JCheckBox
 import javax.swing.JComponent
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
@@ -150,4 +151,11 @@ fun Component.shouldBeVisible()
 fun Component.shouldNotBeVisible()
 {
     isVisible shouldBe false
+}
+fun JCheckBox.unCheck()
+{
+    if (isSelected)
+    {
+        doClick()
+    }
 }

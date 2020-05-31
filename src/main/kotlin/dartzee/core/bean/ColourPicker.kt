@@ -1,6 +1,7 @@
 package dartzee.core.bean
 
 import dartzee.core.util.InjectedDesktopCore
+import dartzee.utils.DartsColour
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.event.MouseEvent
@@ -15,12 +16,12 @@ class ColourPicker : JLabel(), MouseListener
     var selectedColour: Color = Color.BLACK
 
     private var listener: ColourSelectionListener? = null
-    private var img: BufferedImage = BufferedImage(30, 20, BufferedImage.TYPE_INT_ARGB)
+    private var img: BufferedImage = BufferedImage(45, 30, BufferedImage.TYPE_INT_ARGB)
 
     init
     {
         border = LineBorder(Color(0, 0, 0))
-        setSize(30, 20)
+        setSize(45, 30)
         isOpaque = true
         addMouseListener(this)
     }
@@ -41,7 +42,9 @@ class ColourPicker : JLabel(), MouseListener
         repaint()
     }
 
-    override fun mouseClicked(arg0: MouseEvent)
+    fun getPrefString() = DartsColour.toPrefStr(selectedColour)
+
+    override fun mouseReleased(arg0: MouseEvent)
     {
         val newColour = InjectedDesktopCore.colourSelector.selectColour(selectedColour)
         updateSelectedColor(newColour)
@@ -60,5 +63,5 @@ class ColourPicker : JLabel(), MouseListener
     }
 
     override fun mousePressed(arg0: MouseEvent) {}
-    override fun mouseReleased(arg0: MouseEvent) {}
+    override fun mouseClicked(arg0: MouseEvent) {}
 }

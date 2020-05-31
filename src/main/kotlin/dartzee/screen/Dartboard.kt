@@ -1,6 +1,9 @@
 package dartzee.screen
 
-import dartzee.`object`.*
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
 import dartzee.core.util.getParentWindow
@@ -70,6 +73,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     constructor(width: Int, height: Int)
     {
         setSize(width, height)
+        preferredSize = Dimension(width, height)
         dartboardLabel.setSize(width, height)
         layout = null
         add(dartboardLabel, Integer.valueOf(-1))

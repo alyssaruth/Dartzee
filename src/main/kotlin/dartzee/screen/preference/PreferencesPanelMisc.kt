@@ -2,14 +2,25 @@ package dartzee.screen.preference
 
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.bean.NumberField
+import dartzee.core.util.setFontSize
 import dartzee.utils.*
 import net.miginfocom.swing.MigLayout
+import java.awt.BorderLayout
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
 import javax.swing.JCheckBox
 import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
 
-class PreferencesPanelMisc : AbstractPreferencesPanel()
+class PreferencesPanelMisc : AbstractPreferencesPanel(), ActionListener, PropertyChangeListener, ChangeListener
 {
+    override val title = "Misc"
 
+    private val panelCenter = JPanel()
     private val lblDefaultAiSpeed = JLabel("Default AI speed")
     val slider = SliderAiSpeed(false)
     val chckbxAiAutomaticallyFinish = JCheckBox("AI automatically finish")
@@ -20,47 +31,42 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
 
     init
     {
+        add(panelCenter, BorderLayout.CENTER)
         nfLeaderboardSize.columns = 10
-        layout = MigLayout("", "[][grow][]", "[][][][][][]")
+        panelCenter.layout = MigLayout("", "[][grow][]", "[][][][][][]")
 
-        add(lblDefaultAiSpeed, "cell 0 0")
-        add(slider, "cell 1 0")
+        lblDefaultAiSpeed.setFontSize(16)
+        lblRowsToShow.setFontSize(16)
+        nfLeaderboardSize.setFontSize(16)
+        chckbxAiAutomaticallyFinish.setFontSize(16)
+        chckbxCheckForUpdates.setFontSize(16)
+        chckbxShowAnimations.setFontSize(16)
 
-        add(lblRowsToShow, "cell 0 1,alignx leading")
+        panelCenter.add(lblDefaultAiSpeed, "cell 0 0")
+        panelCenter.add(slider, "cell 1 0")
+        panelCenter.add(lblRowsToShow, "cell 0 1,alignx leading")
+        panelCenter.add(nfLeaderboardSize, "cell 1 1,alignx leading")
+        panelCenter.add(chckbxAiAutomaticallyFinish, "flowx,cell 0 2")
+        panelCenter.add(chckbxCheckForUpdates, "flowx,cell 0 3")
+        panelCenter.add(chckbxShowAnimations, "cell 0 4")
 
-        add(nfLeaderboardSize, "cell 1 1,alignx leading")
-        add(chckbxAiAutomaticallyFinish, "flowx,cell 0 2")
-
-        add(chckbxCheckForUpdates, "flowx,cell 0 3")
-
-        add(chckbxShowAnimations, "cell 0 4")
+        slider.addChangeListener(this)
+        nfLeaderboardSize.addPropertyChangeListener(this)
+        chckbxAiAutomaticallyFinish.addActionListener(this)
+        chckbxCheckForUpdates.addActionListener(this)
+        chckbxShowAnimations.addActionListener(this)
     }
 
-    override fun refresh(useDefaults: Boolean)
+    override fun refreshImpl(useDefaults: Boolean)
     {
-        val aiSpd = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED, useDefaults)
-        slider.value = aiSpd
-
-        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE, useDefaults)
-        nfLeaderboardSize.value = leaderboardSize
-
-        val aiAuto = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, useDefaults)
-        chckbxAiAutomaticallyFinish.isSelected = aiAuto
-
-        val checkForUpdates = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, useDefaults)
-        chckbxCheckForUpdates.isSelected = checkForUpdates
-
-        val showAnimations = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults)
-        chckbxShowAnimations.isSelected = showAnimations
-
+        slider.value = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED, useDefaults)
+        nfLeaderboardSize.value = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE, useDefaults)
+        chckbxAiAutomaticallyFinish.isSelected = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, useDefaults)
+        chckbxCheckForUpdates.isSelected = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, useDefaults)
+        chckbxShowAnimations.isSelected = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults)
     }
 
-    override fun valid(): Boolean
-    {
-        return true
-    }
-
-    override fun save()
+    override fun saveImpl()
     {
         val aiSpd = slider.value
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, aiSpd)
@@ -78,4 +84,15 @@ class PreferencesPanelMisc : AbstractPreferencesPanel()
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, showAnimations)
     }
 
+    override fun hasOutstandingChanges() =
+            slider.value != PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED)
+                || nfLeaderboardSize.value != PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
+                || chckbxAiAutomaticallyFinish.isSelected != PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
+                || chckbxCheckForUpdates.isSelected != PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES)
+                || chckbxShowAnimations.isSelected != PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
+
+
+    override fun stateChanged(e: ChangeEvent?) = stateChanged()
+    override fun propertyChange(evt: PropertyChangeEvent?) = stateChanged()
+    override fun actionPerformed(e: ActionEvent?) = stateChanged()
 }

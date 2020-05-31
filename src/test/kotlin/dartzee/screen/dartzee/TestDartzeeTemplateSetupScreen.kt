@@ -10,13 +10,10 @@ import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.helper.*
-import dartzee.screen.ScreenCache
-import dartzee.screen.UtilitiesScreen
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.event.KeyEvent
@@ -266,16 +263,6 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
 
         dialogFactory.inputsShown.shouldContainExactly("Rename Template")
         scrn.getTemplate(0).name shouldBe "ABC"
-    }
-
-    @Test
-    fun `Pressing back should take you to the Utilities screen`()
-    {
-        val scrn = DartzeeTemplateSetupScreen()
-        scrn.showNextButton() shouldBe false
-        scrn.btnBack.doClick()
-
-        ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
     }
 
     @Test

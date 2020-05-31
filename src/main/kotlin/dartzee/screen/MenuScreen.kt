@@ -2,8 +2,9 @@ package dartzee.screen
 
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.main.exitApplication
+import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
-import dartzee.screen.preference.PreferencesDialog
+import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.utils.ResourceCache
@@ -22,6 +23,7 @@ class MenuScreen : EmbeddedScreen()
     private val btnLeaderboards = JButton("Leaderboards")
     private val btnPreferences = JButton("Preferences")
     private val btnAbout = JButton("About...")
+    private val btnDartzeeTemplates = JButton("Dartzee")
     private val btnUtilities = JButton("Utilities")
     private val btnExit = JButton("Exit")
     private val btnGameReport = JButton("Game Report")
@@ -46,11 +48,14 @@ class MenuScreen : EmbeddedScreen()
         btnPreferences.font = buttonFont
         btnPreferences.setBounds(505, 40, 150, 50)
         panel.add(btnPreferences)
+        btnDartzeeTemplates.font = buttonFont
+        btnDartzeeTemplates.setBounds(590, 140, 150, 50)
+        panel.add(btnDartzeeTemplates)
         btnAbout.font = buttonFont
-        btnAbout.setBounds(590, 140, 150, 50)
+        btnAbout.setBounds(615, 240, 150, 50)
         panel.add(btnAbout)
         btnUtilities.font = buttonFont
-        btnUtilities.setBounds(615, 240, 150, 50)
+        btnUtilities.setBounds(590, 340, 150, 50)
         panel.add(btnUtilities)
         btnExit.font = buttonFont
         btnExit.setBounds(325, 465, 150, 50)
@@ -87,19 +92,14 @@ class MenuScreen : EmbeddedScreen()
                 dialog.isVisible = true
             }
 
-            btnPreferences -> {
-                val dialog = PreferencesDialog()
-                dialog.setLocationRelativeTo(this)
-                dialog.init()
-                dialog.isVisible = true
-            }
-
+            btnPreferences -> ScreenCache.switch<PreferencesScreen>()
             btnExit -> exitApplication()
             btnNewGame -> ScreenCache.switch<GameSetupScreen>()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()
             btnLeaderboards -> ScreenCache.switch<LeaderboardsScreen>()
             btnUtilities -> ScreenCache.switch<UtilitiesScreen>()
+            btnDartzeeTemplates -> ScreenCache.switch<DartzeeTemplateSetupScreen>()
             else -> super.actionPerformed(arg0)
         }
     }

@@ -1,9 +1,11 @@
 --------- v4.3.0 ---------
 
 + Improvements to player summaries in Player Management
++ Replace preferences dialog with screen, and enlarge the previews/options
+= Move Dartzee Templates into main menu (from Utilities)
 = Fix bug where Golf stats didn't work for fresh games
 = Fix start-up race condition in new logging
-= 71.0% test coverage (8540 / 12,017 lines covered by 1482 tests)
+= 70.4% test coverage (8446 / 11,989 lines covered by 1482 tests)
 
 --------- v4.2.1 ---------
 

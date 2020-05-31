@@ -1,6 +1,7 @@
 package dartzee.core.screen
 
 import dartzee.core.bean.IColourSelector
+import dartzee.screen.ScreenCache
 import java.awt.Color
 import java.awt.event.ActionListener
 import javax.swing.JColorChooser
@@ -41,6 +42,7 @@ class ColourChooserDialog : SimpleDialog(), ActionListener, IColourSelector
         this.initialColour = initialColour
         colourChooser.color = initialColour
 
+        setLocationRelativeTo(ScreenCache.mainScreen)
         isVisible = true
 
         return selectedColour
