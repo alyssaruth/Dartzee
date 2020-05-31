@@ -18,10 +18,8 @@ class TestPreferencesScreen: AbstractTest()
     @Test
     fun `Should refresh panels on init`()
     {
-        val screen = PreferencesScreen()
         val mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
-
-        screen.tabbedPane.add(mockPanel)
+        val screen = PreferencesScreen(listOf(mockPanel))
         screen.initialise()
 
         verify { mockPanel.refresh(false) }
@@ -34,8 +32,7 @@ class TestPreferencesScreen: AbstractTest()
         val mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
         every { mockPanel.hasOutstandingChanges() } returns true
 
-        val screen = PreferencesScreen()
-        screen.tabbedPane.add(mockPanel)
+        val screen = PreferencesScreen(listOf(mockPanel))
 
         ScreenCache.switch(screen, true)
 
@@ -52,8 +49,7 @@ class TestPreferencesScreen: AbstractTest()
         val mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
         every { mockPanel.hasOutstandingChanges() } returns true
 
-        val screen = PreferencesScreen()
-        screen.tabbedPane.add(mockPanel)
+        val screen = PreferencesScreen(listOf(mockPanel))
 
         ScreenCache.switch(screen, true)
 
@@ -69,8 +65,7 @@ class TestPreferencesScreen: AbstractTest()
         val mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
         every { mockPanel.hasOutstandingChanges() } returns false
 
-        val screen = PreferencesScreen()
-        screen.tabbedPane.add(mockPanel)
+        val screen = PreferencesScreen(listOf(mockPanel))
 
         ScreenCache.switch(screen, true)
 

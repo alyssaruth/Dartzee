@@ -14,6 +14,8 @@ import javax.swing.event.ChangeListener
 
 class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener
 {
+    override val title = "Scorer"
+
     private val panelCenter = JPanel()
     private val panelX01Colours = JPanel()
     private val panelScorerPreview = JPanel()

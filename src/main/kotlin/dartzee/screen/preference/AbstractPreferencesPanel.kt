@@ -11,6 +11,8 @@ import javax.swing.JPanel
 
 abstract class AbstractPreferencesPanel : JPanel()
 {
+    abstract val title: String
+
     private val panelOptions = JPanel()
     protected val btnApply = JButton("Apply")
     private val btnRestoreDefaults = JButton("Restore Defaults")

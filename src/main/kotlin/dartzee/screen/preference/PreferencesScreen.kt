@@ -1,31 +1,29 @@
 package dartzee.screen.preference
 
 import dartzee.core.util.DialogUtil
-import dartzee.core.util.getAllChildComponentsForType
 import dartzee.screen.EmbeddedScreen
 import java.awt.BorderLayout
 import javax.swing.JOptionPane
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
 
-class PreferencesScreen: EmbeddedScreen()
+private fun getPreferenceTabs() = listOf(PreferencesPanelDartboard(), PreferencesPanelScorer(), PreferencesPanelMisc())
+
+class PreferencesScreen(private val tabs: List<AbstractPreferencesPanel> = getPreferenceTabs()) : EmbeddedScreen()
 {
-    val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    private val dartboardTab = PreferencesPanelDartboard()
-    private val scorerTab = PreferencesPanelScorer()
-    private val miscTab = PreferencesPanelMisc()
+    private val tabbedPane = JTabbedPane(SwingConstants.TOP)
 
     init
     {
         add(tabbedPane, BorderLayout.CENTER)
-        tabbedPane.addTab("Dartboard", dartboardTab)
-        tabbedPane.addTab("Scorer", scorerTab)
-        tabbedPane.addTab("Misc", miscTab)
+        tabs.forEach {
+            tabbedPane.addTab(it.title, it)
+        }
     }
 
     override fun initialise()
     {
-        getAllChildComponentsForType<AbstractPreferencesPanel>().forEach{
+        tabs.forEach{
             it.refresh(false)
         }
     }
@@ -34,7 +32,7 @@ class PreferencesScreen: EmbeddedScreen()
 
     override fun backPressed()
     {
-        val outstandingChanges = getAllChildComponentsForType<AbstractPreferencesPanel>().any { it.hasOutstandingChanges() }
+        val outstandingChanges = tabs.any { it.hasOutstandingChanges() }
         if (outstandingChanges)
         {
             val ans = DialogUtil.showQuestion("Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded.")

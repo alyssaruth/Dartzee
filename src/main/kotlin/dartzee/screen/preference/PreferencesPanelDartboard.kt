@@ -14,6 +14,8 @@ import javax.swing.JPanel
 
 class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionListener
 {
+    override val title = "Dartboard"
+
     private val panelCenter = JPanel()
     private val panelEast = JPanel()
     val cpOddSingle = ColourPicker()

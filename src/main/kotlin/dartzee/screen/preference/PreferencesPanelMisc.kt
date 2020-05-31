@@ -18,6 +18,8 @@ import javax.swing.event.ChangeListener
 
 class PreferencesPanelMisc : AbstractPreferencesPanel(), ActionListener, PropertyChangeListener, ChangeListener
 {
+    override val title = "Misc"
+
     private val panelCenter = JPanel()
     private val lblDefaultAiSpeed = JLabel("Default AI speed")
     val slider = SliderAiSpeed(false)
