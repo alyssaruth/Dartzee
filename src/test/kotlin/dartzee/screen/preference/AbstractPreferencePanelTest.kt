@@ -1,7 +1,9 @@
 package dartzee.screen.preference
 
+import com.github.alexburlton.swingtest.clickChild
 import dartzee.helper.AbstractRegistryTest
 import org.junit.Test
+import javax.swing.JButton
 
 abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: AbstractRegistryTest()
 {
@@ -41,7 +43,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
 
         val panel = factory()
         setUiFieldValuesToNonDefaults(panel)
-        panel.save()
+        panel.clickChild<JButton>("Apply")
 
         checkPreferencesAreSetToNonDefaults()
     }
@@ -51,7 +53,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     {
         val panel = factory()
         setUiFieldValuesToNonDefaults(panel)
-        panel.save()
+        panel.clickChild<JButton>("Apply")
 
         panel.refresh(true)
         panel.refresh(false)

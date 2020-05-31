@@ -79,7 +79,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     }
 
 
-    private fun backPressed()
+    open fun backPressed()
     {
         ScreenCache.switch(getBackTarget(), false)
     }

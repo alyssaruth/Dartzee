@@ -1,8 +1,10 @@
 package dartzee.screen.preference
 
+import dartzee.core.util.DialogUtil
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.screen.EmbeddedScreen
 import java.awt.BorderLayout
+import javax.swing.JOptionPane
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
 
@@ -29,4 +31,19 @@ class PreferencesScreen: EmbeddedScreen()
     }
 
     override fun getScreenName() = "Preferences"
+
+    override fun backPressed()
+    {
+        val outstandingChanges = getAllChildComponentsForType<AbstractPreferencesPanel>().any { it.hasOutstandingChanges() }
+        if (outstandingChanges)
+        {
+            val ans = DialogUtil.showQuestion("Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded.")
+            if (ans != JOptionPane.YES_OPTION)
+            {
+                return
+            }
+        }
+
+        super.backPressed()
+    }
 }
