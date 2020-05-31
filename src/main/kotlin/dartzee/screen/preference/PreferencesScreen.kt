@@ -23,7 +23,7 @@ class PreferencesScreen(private val tabs: List<AbstractPreferencesPanel> = getPr
 
     override fun initialise()
     {
-        tabs.forEach{
+        tabs.forEach {
             it.refresh(false)
         }
     }
