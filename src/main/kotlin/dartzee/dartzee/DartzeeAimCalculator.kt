@@ -18,10 +18,11 @@ class DartzeeAimCalculator
 
     fun getSegmentToAimFor(segmentStatus: SegmentStatus): DartboardSegment?
     {
-        val validSegments = segmentStatus.validSegments
+        val validSegments = segmentStatus.validSegments.map { dartboard.getSegment(it.score, it.type)!! }
         val validPointSet = validSegments.flatMap { dartboard.getPointsForSegment(it.score, it.type) }.toSet()
 
         val radiusToSegments = validSegments.groupBy { it.getMaxCircleSize(validPointSet) }
+        println(radiusToSegments)
         val contendingSegments = radiusToSegments.entries.maxBy { it.key }?.value
 
         return contendingSegments?.maxBy { it.getTotal() }
