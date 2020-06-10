@@ -15,7 +15,7 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
 {
     //The Points this segment contains
     val points = mutableListOf<Point>()
-    val edgePoints = mutableListOf<Point>()
+    val edgePoints = mutableSetOf<Point>()
 
     //For tracking edge points
     private val hmXCoordToPoints = HashMapList<Int, Point>()
