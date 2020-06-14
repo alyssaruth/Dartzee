@@ -28,7 +28,6 @@ import javax.swing.JLabel
 import javax.swing.JLayeredPane
 import javax.swing.SwingConstants
 
-
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 const val LAYER_SLIDER = 4
@@ -302,7 +301,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun getAllSegments() = hmSegmentKeyToSegment.values.toList()
 
-    protected fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): DartboardSegment
+    fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): DartboardSegment
     {
         val segment = hmPointToSegment[pt]
         if (segment != null)
@@ -346,6 +345,9 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         val seg = getSegmentForPoint(pt)
         return seg.isDoubleExcludingBull()
     }
+
+    fun getPotentialAimPoints() = getPotentialAimPoints(centerPoint, diameter)
+    fun translateAimPoint(aimPoint: AimPoint) = AimPoint(centerPoint, diameter / 2, aimPoint.angle, aimPoint.ratio).point
 
     open fun dartThrown(pt: Point)
     {
@@ -416,7 +418,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         lastHoveredSegment?.let { colourSegment(it, false) }
     }
 
-    private fun addDart(pt: Point)
+    fun addDart(pt: Point)
     {
         if (dartLabels.isEmpty())
         {

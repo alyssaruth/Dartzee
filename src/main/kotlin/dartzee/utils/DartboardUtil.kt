@@ -93,6 +93,27 @@ private fun getScoreForAngle(angle: Double): Int
     return numberOrder[index]
 }
 
+data class AimPoint(val centerPoint: Point, val radius: Double, val angle: Int, val ratio: Double)
+{
+    val point = translatePoint(centerPoint, radius * ratio, angle.toDouble())
+}
+fun getPotentialAimPoints(centerPt: Point, diameter: Double): Set<AimPoint>
+{
+    val radius = diameter / 2
+
+    val points = mutableSetOf<AimPoint>()
+    for (angle in 0 until 360 step 9)
+    {
+        points.add(AimPoint(centerPt, radius, angle, (RATIO_OUTER_BULL + LOWER_BOUND_TRIPLE_RATIO)/2))
+        points.add(AimPoint(centerPt, radius, angle, (LOWER_BOUND_TRIPLE_RATIO + UPPER_BOUND_TRIPLE_RATIO)/2))
+        points.add(AimPoint(centerPt, radius, angle, (UPPER_BOUND_TRIPLE_RATIO + LOWER_BOUND_DOUBLE_RATIO)/2))
+        points.add(AimPoint(centerPt, radius, angle, (LOWER_BOUND_DOUBLE_RATIO + UPPER_BOUND_DOUBLE_RATIO)/2))
+    }
+
+    points.add(AimPoint(centerPt, radius, 0, 0.0))
+    return points.toSet()
+}
+
 fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, colourWrapper: ColourWrapper?): Color
 {
     val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()

@@ -6,13 +6,14 @@ import dartzee.screen.DartboardSegmentSelector
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DartsColour
+import dartzee.utils.getAllPossibleSegments
 import java.awt.BorderLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 
 class DartzeeAimCalculatorTest: SimpleDialog()
 {
-    private val segments: HashSet<DartboardSegment> = HashSet()
+    private val segments: HashSet<DartboardSegment> = getAllPossibleSegments().filter { !it.isMiss() }.toHashSet()
 
     private val lblResult = JLabel()
     private val dartboard = DartboardSegmentSelector()
@@ -43,10 +44,14 @@ class DartzeeAimCalculatorTest: SimpleDialog()
 
     override fun okPressed()
     {
-        val segmentStatus = SegmentStatus(dartboard.selectedSegments, dartboard.selectedSegments)
-        val segment = calculator.getSegmentToAimFor(segmentStatus)
+        dartboard.clearDarts()
 
-        lblResult.text = "$segment"
+        val segmentStatus = SegmentStatus(dartboard.selectedSegments, dartboard.selectedSegments)
+        val point = calculator.getPointToAimFor(dartboard, segmentStatus)
+
+        point?.let { dartboard.addDart(it) }
+
+        lblResult.text = "$point"
         lblResult.repaint()
     }
 
