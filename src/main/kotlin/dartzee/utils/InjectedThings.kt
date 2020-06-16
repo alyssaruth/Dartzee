@@ -24,4 +24,5 @@ object InjectedThings
     var gameLauncher: GameLauncher = GameLauncher()
     var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true }}
     var playerManager: PlayerManager = PlayerManager()
+    var dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
 }

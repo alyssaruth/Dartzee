@@ -160,7 +160,7 @@ class GameSetupScreen : EmbeddedScreen()
     {
         val selectedPlayers = playerSelector.getSelectedPlayers()
         val match = factoryMatch(selectedPlayers)
-        if (!playerSelector.valid(match != null, gameTypeComboBox.getGameType()))
+        if (!playerSelector.valid(match != null))
         {
             return
         }
@@ -221,7 +221,7 @@ class GameSetupScreen : EmbeddedScreen()
     {
         val selectedPlayers = playerSelector.getSelectedPlayers()
         val match = factoryMatch(selectedPlayers)
-        if (!playerSelector.valid(match != null, GameType.DARTZEE))
+        if (!playerSelector.valid(match != null))
         {
             return
         }

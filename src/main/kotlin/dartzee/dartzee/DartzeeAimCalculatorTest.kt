@@ -47,9 +47,8 @@ class DartzeeAimCalculatorTest: SimpleDialog()
         dartboard.clearDarts()
 
         val segmentStatus = SegmentStatus(dartboard.selectedSegments, dartboard.selectedSegments)
-        val point = calculator.getPointToAimFor(dartboard, segmentStatus)
-
-        point?.let { dartboard.addDart(it) }
+        val point = calculator.getPointToAimFor(dartboard, segmentStatus, false)
+        dartboard.addDart(point)
 
         lblResult.text = "$point"
         lblResult.repaint()

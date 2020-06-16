@@ -6,7 +6,6 @@ import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
 import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
-import dartzee.game.GameType
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
 import java.awt.Dimension
@@ -99,7 +98,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
     /**
      * Is this selection valid for a game/match?
      */
-    fun valid(match: Boolean, gameType: GameType): Boolean
+    fun valid(match: Boolean): Boolean
     {
         val selectedPlayers = getSelectedPlayers()
         val rowCount = selectedPlayers.size
@@ -118,13 +117,6 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         if (rowCount > MAX_PLAYERS)
         {
             DialogUtil.showError("You cannot select more than $MAX_PLAYERS players.")
-            return false
-        }
-
-        //Temporary measure until https://trello.com/c/T89Kqmxj is implemented
-        if (gameType == GameType.DARTZEE && selectedPlayers.any { it.isAi() })
-        {
-            DialogUtil.showError("You cannot select AI opponents for Dartzee.")
             return false
         }
 

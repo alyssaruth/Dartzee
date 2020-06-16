@@ -17,20 +17,24 @@ class DartzeeAimCalculator
         miniDartboard.paintDartboard()
     }
 
-    fun getPointToAimFor(dartboard: Dartboard, segmentStatus: SegmentStatus): Point?
+    fun getPointToAimFor(dartboard: Dartboard, segmentStatus: SegmentStatus, aggressive: Boolean): Point
     {
+        val scoringSegments = segmentStatus.scoringSegments.map { miniDartboard.getSegment(it.score, it.type)!! }
         val validSegments = segmentStatus.validSegments.map { miniDartboard.getSegment(it.score, it.type)!! }
+
+        val segmentsToConsiderAimingFor = if (aggressive) scoringSegments else validSegments
 
         //Shortcut straight to the bullseye if all outer singles, inner singles, trebles and bull are valid
         val innerSegments = getAllPossibleSegments().filter { !it.isMiss() && it.type != SegmentType.DOUBLE }
-        if (validSegments.containsAll(innerSegments))
+        if (segmentsToConsiderAimingFor.containsAll(innerSegments))
         {
             return dartboard.centerPoint
         }
 
+        val aimingPointSet = segmentsToConsiderAimingFor.flatMap { miniDartboard.getPointsForSegment(it.score, it.type) }.toSet()
         val validPointSet = validSegments.flatMap { miniDartboard.getPointsForSegment(it.score, it.type) }.toSet()
 
-        val potentialPointsToAimFor = miniDartboard.getPotentialAimPoints().filter { validPointSet.contains(it.point) }
+        val potentialPointsToAimFor = miniDartboard.getPotentialAimPoints().filter { aimingPointSet.contains(it.point) }
         val circleSizeToPoints = potentialPointsToAimFor.groupBy { it.getMaxCircleSize(validPointSet) }
         val contendingPoints = circleSizeToPoints.entries.maxBy { it.key }?.value
 

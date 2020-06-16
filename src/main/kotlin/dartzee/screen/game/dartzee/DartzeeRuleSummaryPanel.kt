@@ -1,9 +1,7 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.utils.getAllPossibleSegments
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
@@ -65,6 +63,8 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
             components.contains(panelHighScore) -> null
             else -> carousel.getSegmentStatus()
         }
+
+    fun getPendingTiles(): List<DartzeeRuleTilePending> = carousel.pendingTiles
 
     fun gameFinished()
     {
