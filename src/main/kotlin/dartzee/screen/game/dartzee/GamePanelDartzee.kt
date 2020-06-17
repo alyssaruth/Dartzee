@@ -43,12 +43,14 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         val segmentStatus = summaryPanel.getSegmentStatus()
         if (segmentStatus == null)
         {
-            model.throwScoringDart(dartboard)
-            return
+            val pt = model.throwScoringDart(dartboard)
+            dartboard.dartThrown(pt)
         }
-
-        // Past the scoring round
-        model.throwDartzeeDart(dartsThrown.size, dartboard, segmentStatus)
+        else
+        {
+            // Past the scoring round
+            model.throwDartzeeDart(dartsThrown.size, dartboard, segmentStatus)
+        }
     }
 
     override fun setGameReadOnly()
@@ -105,7 +107,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         return dartsThrown.size == 3 || failedAllRules
     }
 
-    override fun shouldAIStop() = shouldStopAfterDartThrown()
+    override fun shouldAIStop() = false
 
     override fun readyForThrow()
     {
