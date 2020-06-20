@@ -9,6 +9,7 @@ import dartzee.helper.makeRoundResultEntities
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -45,7 +46,7 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
     {
         val summaryPanel = makeSummaryPanel()
 
-        summaryPanel.getSegmentStatus() shouldBe null
+        summaryPanel.getSegmentStatus() shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test

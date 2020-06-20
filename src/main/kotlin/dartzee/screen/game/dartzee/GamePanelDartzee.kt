@@ -40,17 +40,16 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
-        summaryPanel.ensureReady()
-        
-        val segmentStatus = summaryPanel.getSegmentStatus()
-        if (segmentStatus == null)
+        if (isScoringRound())
         {
             val pt = model.throwScoringDart(dartboard)
             dartboard.dartThrown(pt)
         }
         else
         {
-            // Past the scoring round
+            summaryPanel.ensureReady()
+
+            val segmentStatus = summaryPanel.getSegmentStatus()
             model.throwDartzeeDart(dartsThrown.size, dartboard, segmentStatus)
         }
     }
@@ -105,7 +104,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun shouldStopAfterDartThrown(): Boolean
     {
         val segmentStatus = summaryPanel.getSegmentStatus()
-        val failedAllRules = segmentStatus?.validSegments?.isEmpty() ?: false
+        val failedAllRules = segmentStatus.validSegments.isEmpty()
         return dartsThrown.size == 3 || failedAllRules
     }
 

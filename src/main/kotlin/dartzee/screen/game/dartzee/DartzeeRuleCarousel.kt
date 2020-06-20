@@ -26,7 +26,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
     val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
     val completeTiles = mutableListOf<DartzeeRuleTile>()
 
-    @Volatile var initialised = true
+    @Volatile var initialised = false
 
     var listener: IDartzeeCarouselListener? = null
 

@@ -2,6 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.db.DartzeeRoundResultEntity
+import dartzee.utils.getAllPossibleSegments
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
@@ -57,10 +58,10 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
         repaint()
     }
 
-    fun getSegmentStatus(): SegmentStatus? =
+    fun getSegmentStatus(): SegmentStatus =
         when
         {
-            components.contains(panelHighScore) -> null
+            components.contains(panelHighScore) -> SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
             else -> carousel.getSegmentStatus()
         }
 
