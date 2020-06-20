@@ -40,6 +40,8 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
+        summaryPanel.ensureReady()
+        
         val segmentStatus = summaryPanel.getSegmentStatus()
         if (segmentStatus == null)
         {

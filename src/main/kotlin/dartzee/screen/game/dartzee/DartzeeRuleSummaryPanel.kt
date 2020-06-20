@@ -64,6 +64,14 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
             else -> carousel.getSegmentStatus()
         }
 
+    fun ensureReady()
+    {
+        while (!carousel.initialised)
+        {
+            Thread.sleep(500)
+        }
+    }
+
     fun getPendingTiles(): List<DartzeeRuleTilePending> = carousel.pendingTiles.filter { it.isVisible }
 
     fun gameFinished()
