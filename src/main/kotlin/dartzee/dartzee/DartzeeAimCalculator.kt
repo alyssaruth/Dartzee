@@ -1,6 +1,7 @@
 package dartzee.dartzee
 
 import dartzee.`object`.SegmentType
+import dartzee.core.util.maxOrZero
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.AimPoint
@@ -10,7 +11,7 @@ import java.awt.Point
 
 class DartzeeAimCalculator
 {
-    private val miniDartboard = Dartboard(300, 300)
+    private val miniDartboard = Dartboard(350, 350)
 
     init
     {
@@ -35,26 +36,59 @@ class DartzeeAimCalculator
         val validPointSet = validSegments.flatMap { miniDartboard.getPointsForSegment(it.score, it.type) }.toSet()
 
         val potentialPointsToAimFor = miniDartboard.getPotentialAimPoints().filter { aimingPointSet.contains(it.point) }
-        val circleSizeToPoints = potentialPointsToAimFor.groupBy { it.getMaxCircleSize(validPointSet) }
-        val contendingPoints = circleSizeToPoints.entries.maxBy { it.key }?.value
+        val contendingPoints = getMaxCirclePoints(validPointSet, potentialPointsToAimFor)
 
-        val bestPoint = contendingPoints?.maxBy { miniDartboard.getSegmentForPoint(it.point).getTotal() }!!
+        val bestScore = contendingPoints.map { miniDartboard.getSegmentForPoint(it.point).getTotal() }.maxOrZero()
+        val contendingHighScorePoints = contendingPoints.filter { miniDartboard.getSegmentForPoint(it.point).getTotal() == bestScore }
+
+        //Prefer even angles to odd ones
+        val bestPoint = contendingHighScorePoints.minBy { it.angle % 2 }!!
         return dartboard.translateAimPoint(bestPoint)
     }
-    private fun AimPoint.getMaxCircleSize(validPoints: Set<Point>): Double
-    {
-        val pointsInCircle = mutableSetOf(this.point)
-        var radius = 1.0
-        while (validPoints.containsAll(pointsInCircle))
-        {
-            for (i in 0..359)
-            {
-                pointsInCircle.add(translatePoint(this.point, radius, i.toDouble()))
-            }
 
-            radius += 1
+    /**
+     * Optimisation - rather than do a groupBy for all potential points, iterating the circle size up, instead loop
+     * over them and keep track of the max circle size so far. Iterate down from this -> 0 to rule out most points
+     * more quickly.
+     */
+    private fun getMaxCirclePoints(validPointSet: Set<Point>, potentialPointsToAimFor: List<AimPoint>): List<AimPoint>
+    {
+        var currentMax = 1
+        val maxPoints = mutableListOf<AimPoint>()
+        potentialPointsToAimFor.forEach { candidatePt ->
+            val myMax = candidatePt.getMaxCircleSize(validPointSet, currentMax)
+            if (myMax > currentMax)
+            {
+                currentMax = myMax
+                maxPoints.clear()
+                maxPoints.add(candidatePt)
+            }
+            else if (myMax == currentMax)
+            {
+                maxPoints.add(candidatePt)
+            }
         }
 
-        return radius
+        return maxPoints
     }
+    private fun AimPoint.getMaxCircleSize(validPoints: Set<Point>, currentMax: Int): Int
+    {
+        val range = (currentMax downTo 1)
+        val bigEnough = range.all { validPoints.containsAll(makeCircle(point, it)) }
+        if (!bigEnough) {
+            return 1
+        }
+
+        var radius = currentMax + 1
+        var pointsInCircle = makeCircle(this.point, radius)
+        while (validPoints.containsAll(pointsInCircle))
+        {
+            radius += 1
+            pointsInCircle = makeCircle(this.point, radius)
+        }
+
+        return radius - 1
+    }
+    private fun makeCircle(centerPt: Point, radius: Int) =
+            (0..359).map { translatePoint(centerPt, radius.toDouble(), it.toDouble()) }.toSet()
 }

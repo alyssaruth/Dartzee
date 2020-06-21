@@ -6,7 +6,9 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
+import io.kotlintest.matchers.numerics.shouldBeLessThan
 import org.junit.Test
 import java.awt.BasicStroke
 import java.awt.Color
@@ -18,6 +20,7 @@ import javax.swing.JLabel
 class TestDartzeeAimCalculator: AbstractTest()
 {
     private val allNonMisses = getAllPossibleSegments().filter { !it.isMiss() }
+    private val calculator = DartzeeAimCalculator()
 
     @Test
     fun `Should aim at the bullseye for a fully valid dartboard`()
@@ -61,13 +64,33 @@ class TestDartzeeAimCalculator: AbstractTest()
         verifyAim(SegmentStatus(treblesWithoutTwenty, treblesWithoutTwenty), "Trebles (no 20)")
     }
 
+    @Test
+    fun `Should be performant`()
+    {
+        val awkward = allNonMisses.filter { it.score != 25 }
+        val segmentStatus = SegmentStatus(awkward, awkward)
+
+        val dartboard = DartzeeDartboard(400, 400)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.refreshValidSegments(segmentStatus)
+
+        val timer = DurationTimer()
+        for (i in 1..10)
+        {
+            calculator.getPointToAimFor(dartboard, segmentStatus, true)
+        }
+
+        val timeElapsed = timer.getDuration()
+        timeElapsed shouldBeLessThan 5000
+    }
+
     private fun verifyAim(segmentStatus: SegmentStatus, screenshotName: String, aggressive: Boolean = false)
     {
         val dartboard = DartzeeDartboard(400, 400)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.refreshValidSegments(segmentStatus)
 
-        val pt = DartzeeAimCalculator().getPointToAimFor(dartboard, segmentStatus, aggressive)
+        val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
         val img = dartboard.dartboardImage!!
 
         val g = img.graphics as Graphics2D
