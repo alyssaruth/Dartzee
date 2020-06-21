@@ -188,9 +188,9 @@ class TestGamePanelDartzee: AbstractTest()
         panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
-        panel.dartboard.segmentStatus shouldBe null
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
         panel.hoverChanged(SegmentStatus(listOf(bullseye), listOf(bullseye)))
-        panel.dartboard.segmentStatus shouldBe null
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test
