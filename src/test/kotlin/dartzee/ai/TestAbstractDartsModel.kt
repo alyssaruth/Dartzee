@@ -1,12 +1,18 @@
 package dartzee.ai
 
-import dartzee.`object`.*
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.CLOCK_TYPE_TREBLES
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
+import dartzee.screen.dartzee.DartzeeDartboard
+import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -38,6 +44,7 @@ class TestAbstractDartsModel: AbstractTest()
         model.hmDartNoToStopThreshold shouldContainExactly newModel.hmDartNoToStopThreshold
         model.mercyThreshold shouldBe newModel.mercyThreshold
         model.foo shouldBe newModel.foo
+        model.dartzeePlayStyle shouldBe DartzeePlayStyle.CAUTIOUS
     }
 
     @Test
@@ -52,6 +59,7 @@ class TestAbstractDartsModel: AbstractTest()
         model.hmDartNoToStopThreshold[2] = 2
         model.mercyThreshold = 18
         model.foo = "bar"
+        model.dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
 
         val xml = model.writeXml()
 
@@ -61,6 +69,7 @@ class TestAbstractDartsModel: AbstractTest()
         newModel.scoringDart shouldBe 25
         newModel.mercyThreshold shouldBe 18
         newModel.foo shouldBe "bar"
+        newModel.dartzeePlayStyle shouldBe DartzeePlayStyle.AGGRESSIVE
         model.hmScoreToDart shouldContainExactly newModel.hmScoreToDart
         model.hmDartNoToSegmentType shouldContainExactly newModel.hmDartNoToSegmentType
         model.hmDartNoToStopThreshold shouldContainExactly newModel.hmDartNoToStopThreshold
@@ -297,6 +306,59 @@ class TestAbstractDartsModel: AbstractTest()
 
         verifySequence { listener.dartThrown(Dart(1, 1)); listener.dartThrown(Dart(13, 2)); listener.dartThrown(Dart(11, 3)) }
     }
+
+    /**
+     * Dartzee
+     */
+    @Test
+    fun `Should aim aggressively if less than 2 darts thrown, and cautiously for the final one`()
+    {
+        val model = DummyDartsModel()
+        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+
+        val dartboard = DartzeeDartboard(100, 100)
+        dartboard.paintDartboard()
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        dartboard.addDartboardListener(listener)
+
+        val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
+        model.throwDartzeeDart(0, dartboard, segmentStatus)
+        model.throwDartzeeDart(1, dartboard, segmentStatus)
+        model.throwDartzeeDart(2, dartboard, segmentStatus)
+
+        verifySequence {
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(25, 2))
+        }
+    }
+
+    @Test
+    fun `Should throw aggressively for the final dart if player is aggressive`()
+    {
+        val model = DummyDartsModel()
+        model.dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
+
+        val dartboard = DartzeeDartboard(100, 100)
+        dartboard.paintDartboard()
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        dartboard.addDartboardListener(listener)
+
+        val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
+        model.throwDartzeeDart(0, dartboard, segmentStatus)
+        model.throwDartzeeDart(1, dartboard, segmentStatus)
+        model.throwDartzeeDart(2, dartboard, segmentStatus)
+
+        verifySequence {
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(20, 3))
+        }
+    }
+
+
 
     /**
      * Misc
