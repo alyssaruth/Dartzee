@@ -9,7 +9,6 @@ import dartzee.dartzee.markPoints
 import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
-import dartzee.utils.AimPoint
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
