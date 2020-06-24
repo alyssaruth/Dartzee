@@ -65,6 +65,22 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    fun `Should aim correctly if bullseye is missing`()
+    {
+        val nonBull = allNonMisses.filter { it.getTotal() != 50 }
+        val segmentStatus = SegmentStatus(nonBull, nonBull)
+        verifyAim(segmentStatus, "No bullseye")
+    }
+
+    @Test
+    fun `Should aim correctly for some missing trebles`()
+    {
+        val segments = allNonMisses.filterNot { it.getMultiplier() == 3 && (it.score == 20 || it.score == 3) }
+        val segmentStatus = SegmentStatus(segments, segments)
+        verifyAim(segmentStatus, "Missing trebles")
+    }
+
+    @Test
     fun `Should be performant`()
     {
         val awkward = allNonMisses.filter { it.score != 25 }
