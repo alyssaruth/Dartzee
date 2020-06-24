@@ -1,5 +1,7 @@
 package dartzee.screen.game
 
+import DummyDartsModel
+import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.bullseye
 import dartzee.core.util.DateStatics
@@ -14,6 +16,7 @@ import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
 import dartzee.helper.*
+import dartzee.listener.DartboardListener
 import dartzee.screen.game.dartzee.*
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.InjectedThings
@@ -213,6 +216,32 @@ class TestGamePanelDartzee: AbstractTest()
         panel.scorersOrdered[0].lblName.foreground shouldBe Color.BLACK
         panel.scorersOrdered[1].lblName.foreground shouldBe Color.RED
         verify { summaryPanel.update(listOf(), listOf(), 0, 1) }
+    }
+
+    @Test
+    fun `AI should throw scoring darts during the scoring round`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val game = insertGame(gameType = GameType.DARTZEE)
+        val player = insertPlayer(strategy = -1)
+
+
+
+
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.startNewGame(listOf(player))
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+
+        val model = DummyDartsModel()
+        panel.doAiTurn(model)
+
+        verify { listener.dartThrown(Dart(20, 3)) }
     }
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
