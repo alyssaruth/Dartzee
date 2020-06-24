@@ -11,6 +11,7 @@ import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
+import io.mockk.mockk
 import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After
 import org.junit.Before
@@ -68,6 +69,7 @@ abstract class AbstractTest
     open fun doClassSetup()
     {
         DialogUtil.init(dialogFactory)
+        InjectedThings.esDestination = mockk(relaxed = true)
     }
 
     open fun beforeEachTest()
