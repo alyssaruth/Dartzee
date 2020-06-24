@@ -6,6 +6,7 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.DartzeeRoundResult
+import dartzee.db.DartzeeRoundResultEntity
 import dartzee.helper.*
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
@@ -18,10 +19,12 @@ import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import java.awt.Color
+import java.util.concurrent.locks.ReentrantLock
 
 class TestDartzeeRuleCarousel: AbstractTest()
 {
@@ -246,6 +249,39 @@ class TestDartzeeRuleCarousel: AbstractTest()
 
         carousel.mouseExited(makeMouseEvent())
         listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
+    }
+
+    @Test
+    fun `Should correctly report whether or not it is initialised`()
+    {
+        val lock = ReentrantLock()
+
+        // Mock up a result which will block until we release our hold on the lock
+        val result = mockk<DartzeeRoundResultEntity>(relaxed = true)
+        every { result.ruleNumber } answers {
+            lock.lock()
+            1
+        }
+
+        // Initial value should be false
+        val carousel = makeCarousel()
+        carousel.initialised shouldBe false
+
+        // Prepare a thread to update
+        val updateRunnable = Runnable { carousel.update(listOf(result), emptyList(), 20) }
+        val updateThread = Thread(updateRunnable)
+
+        lock.lock()
+        updateThread.start()
+
+        carousel.initialised shouldBe false
+        Thread.sleep(1000)
+        carousel.initialised shouldBe false
+
+        // Let the other thread go and wait for it to complete. We should see initialised update immediately.
+        lock.unlock()
+        updateThread.join()
+        carousel.initialised shouldBe true
     }
 
     private class TrackingCarouselListener: IDartzeeCarouselListener

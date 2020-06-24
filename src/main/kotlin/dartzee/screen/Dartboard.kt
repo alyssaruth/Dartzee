@@ -422,7 +422,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         lastHoveredSegment?.let { colourSegment(it, false) }
     }
 
-    fun addDart(pt: Point)
+    private fun addDart(pt: Point)
     {
         if (dartLabels.isEmpty())
         {
