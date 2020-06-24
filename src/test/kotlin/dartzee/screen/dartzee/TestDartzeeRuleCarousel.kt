@@ -304,5 +304,5 @@ class TestDartzeeRuleCarousel: AbstractTest()
     private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true)) = DartzeeRuleCarousel(
         dtos
     ).also { it.listener = listener }
-    private fun DartzeeRuleCarousel.getPendingRules() = pendingTiles.filter { it.isVisible }.map { it.dto }
+    private fun DartzeeRuleCarousel.getPendingRules() = getAvailableRuleTiles().map { it.dto }
 }

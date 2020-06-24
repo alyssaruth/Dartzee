@@ -2,15 +2,16 @@ package dartzee.screen.dartzee
 
 import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
-import dartzee.helper.AbstractTest
-import dartzee.helper.getOuterSegments
-import dartzee.helper.makeDart
-import dartzee.helper.makeRoundResultEntities
+import dartzee.helper.*
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
+import dartzee.screen.game.dartzee.DartzeeRuleTilePending
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.numerics.shouldBeGreaterThan
+import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -71,6 +72,38 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
 
         summaryPanel.components.toList().shouldContainExactly(carousel)
         verify { carousel.gameFinished() }
+    }
+
+    @Test
+    fun `Should get available rule tiles from the carousel`()
+    {
+        val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
+        val tiles = listOf(DartzeeRuleTilePending(makeDartzeeRuleDto(), 1))
+        every { carousel.getAvailableRuleTiles() } returns tiles
+
+        val panel = DartzeeRuleSummaryPanel(carousel)
+        panel.getPendingTiles() shouldBe tiles
+    }
+
+    @Test
+    fun `Should wait for the carousel to be initialised`()
+    {
+        val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
+
+        var repetitions = 0
+        every { carousel.initialised } answers {
+            repetitions++
+            repetitions == 6
+        }
+
+        val panel = DartzeeRuleSummaryPanel(carousel)
+
+        val timer = DurationTimer()
+        panel.ensureReady()
+
+        val duration = timer.getDuration()
+        duration.shouldBeGreaterThan(1000)
+        duration.shouldBeLessThan(2000)
     }
 
     private fun makeSummaryPanel() =

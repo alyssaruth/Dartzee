@@ -154,6 +154,8 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         return SegmentStatus(statuses.flatMap { it.scoringSegments }, statuses.flatMap { it.validSegments })
     }
 
+    fun getAvailableRuleTiles() = pendingTiles.filter { it.isVisible }
+
     private fun displayTiles(tiles: List<DartzeeRuleTile>)
     {
         tilePanel.removeAll()
