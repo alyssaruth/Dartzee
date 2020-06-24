@@ -6,6 +6,7 @@ import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.db.LocalIdGenerator
 import dartzee.logging.*
+import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
@@ -82,6 +83,9 @@ abstract class AbstractTest
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
+
+        //Clear cached dartboards
+        Dartboard.appearancePreferenceChanged()
 
         logger.loggingContext.clear()
     }

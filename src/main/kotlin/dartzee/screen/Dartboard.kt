@@ -131,8 +131,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
 
         val duration = timer.getDuration()
-        logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
-                KEY_DURATION to duration, KEY_CACHED to usingCache)
+        logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms (cached: $usingCache)",
+            KEY_DURATION to duration, KEY_CACHED to usingCache)
 
         //Now the dartboard is painted, add the mouse listeners
         if (listen)
