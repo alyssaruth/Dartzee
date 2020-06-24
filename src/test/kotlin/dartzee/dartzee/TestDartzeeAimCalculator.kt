@@ -4,16 +4,14 @@ import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
+import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.numerics.shouldBeLessThan
 import org.junit.Test
-import java.awt.BasicStroke
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Graphics2D
+import java.awt.*
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
@@ -107,17 +105,25 @@ class TestDartzeeAimCalculator: AbstractTest()
         dartboard.refreshValidSegments(segmentStatus)
 
         val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
-        val img = dartboard.dartboardImage!!
-
-        val g = img.graphics as Graphics2D
-        g.color = Color.BLUE
-        g.stroke = BasicStroke(3f)
-        g.drawLine(pt.x - 5, pt.y - 5, pt.x + 5, pt.y + 5)
-        g.drawLine(pt.x - 5, pt.y + 5, pt.x + 5, pt.y - 5)
-
-        val lbl = JLabel(ImageIcon(img))
-        lbl.size = Dimension(500, 500)
-        lbl.repaint()
+        val lbl = dartboard.markPoints(listOf(pt))
         lbl.shouldMatchImage(screenshotName)
     }
+}
+
+fun Dartboard.markPoints(points: List<Point>): JLabel
+{
+    val img = dartboardImage!!
+
+    val g = img.graphics as Graphics2D
+    g.color = Color.BLUE
+    g.stroke = BasicStroke(3f)
+    points.forEach { pt ->
+        g.drawLine(pt.x - 5, pt.y - 5, pt.x + 5, pt.y + 5)
+        g.drawLine(pt.x - 5, pt.y + 5, pt.x + 5, pt.y - 5)
+    }
+
+    val lbl = JLabel(ImageIcon(img))
+    lbl.size = Dimension(500, 500)
+    lbl.repaint()
+    return lbl
 }

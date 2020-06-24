@@ -5,9 +5,11 @@ import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.core.helper.verifyNotCalled
+import dartzee.dartzee.markPoints
 import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
+import dartzee.utils.AimPoint
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -112,6 +114,35 @@ class TestDartboard: AbstractTest()
         val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
         dartboard.paintDartboard(colourWrapper, false)
         dartboard.shouldMatchImage("wireframe")
+    }
+
+    @Test
+    fun `Should get all the correct aim points`()
+    {
+        val dartboard = Dartboard(400, 400)
+        val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
+        dartboard.paintDartboard(colourWrapper, false)
+
+        val pts = dartboard.getPotentialAimPoints().map { it.point }
+        val lbl = dartboard.markPoints(pts)
+        lbl.shouldMatchImage("aim points")
+    }
+
+    @Test
+    fun `Should correctly scale up an AimPoint calculated from a smaller dartboard`()
+    {
+        val smallBoard = Dartboard(200, 200)
+        smallBoard.paintDartboard()
+
+        val bigBoard = Dartboard(400, 400)
+        val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
+        bigBoard.paintDartboard(colourWrapper, false)
+
+        val smallPoints = smallBoard.getPotentialAimPoints()
+
+        val bigPoints = smallPoints.map { bigBoard.translateAimPoint(it) }
+        val lbl = bigBoard.markPoints(bigPoints)
+        lbl.shouldMatchImage("aim points")
     }
 }
 
