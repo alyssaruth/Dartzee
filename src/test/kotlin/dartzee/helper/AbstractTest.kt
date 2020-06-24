@@ -6,11 +6,13 @@ import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.db.LocalIdGenerator
 import dartzee.logging.*
+import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
+import io.mockk.mockk
 import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After
 import org.junit.Before
@@ -68,6 +70,7 @@ abstract class AbstractTest
     open fun doClassSetup()
     {
         DialogUtil.init(dialogFactory)
+        InjectedThings.esDestination = mockk(relaxed = true)
     }
 
     open fun beforeEachTest()
@@ -80,6 +83,9 @@ abstract class AbstractTest
         LocalIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntities().forEach { wipeTable(it.getTableName()) }
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
+
+        //Clear cached dartboards
+        Dartboard.appearancePreferenceChanged()
 
         logger.loggingContext.clear()
     }

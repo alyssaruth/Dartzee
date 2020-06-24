@@ -26,7 +26,7 @@ class DartzeeAimCalculator
         val segmentsToConsiderAimingFor = if (aggressive) scoringSegments else validSegments
 
         //Shortcut straight to the bullseye if all outer singles, inner singles, trebles and bull are valid
-        val innerSegments = getAllPossibleSegments().filter { !it.isMiss() && it.type != SegmentType.DOUBLE }
+        val innerSegments = getAllPossibleSegments().filter { !it.isMiss() && (it.type != SegmentType.DOUBLE || it.score == 25) }
         if (segmentsToConsiderAimingFor.containsAll(innerSegments))
         {
             return dartboard.centerPoint
