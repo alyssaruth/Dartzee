@@ -3,6 +3,7 @@ package dartzee.screen.game
 import DummyDartsModel
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.ai.DartzeePlayStyle
 import dartzee.bullseye
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
@@ -19,15 +20,13 @@ import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.dartzee.*
 import dartzee.screen.game.scorer.DartsScorerDartzee
+import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import io.mockk.clearAllMocks
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.junit.Test
 import java.awt.Color
 
@@ -226,9 +225,6 @@ class TestGamePanelDartzee: AbstractTest()
         val game = insertGame(gameType = GameType.DARTZEE)
         val player = insertPlayer(strategy = -1)
 
-
-
-
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         val panel = makeGamePanel(rules, summaryPanel, game)
@@ -237,11 +233,41 @@ class TestGamePanelDartzee: AbstractTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         panel.dartboard.addDartboardListener(listener)
 
-
         val model = DummyDartsModel()
         panel.doAiTurn(model)
 
         verify { listener.dartThrown(Dart(20, 3)) }
+    }
+
+    @Test
+    fun `AI should throw based on segment status, and adjust correctly for number of darts thrown`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val game = setUpDartzeeGameOnDatabase(1)
+
+        val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
+        every { carousel.getSegmentStatus() } returns SegmentStatus(listOf(singleTwenty), getAllPossibleSegments())
+        every { carousel.initialised } returns true
+
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.loadGame()
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+        val model = DummyDartsModel()
+        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+
+        verifySequence {
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(25, 2))
+        }
     }
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }

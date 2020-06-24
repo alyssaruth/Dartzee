@@ -39,7 +39,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private val dartLabels = mutableListOf<JLabel>()
 
-    private var listener: DartboardListener? = null
+    private val listeners: MutableList<DartboardListener> = mutableListOf()
     var centerPoint = Point(200, 200)
         private set
 
@@ -80,7 +80,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun addDartboardListener(listener: DartboardListener)
     {
-        this.listener = listener
+        listeners.add(listener)
     }
 
     fun paintDartboardCached()
@@ -353,8 +353,12 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     {
         val dart = convertPointToDart(pt, true)
 
-        listener?.let {
+        if (listeners.isNotEmpty())
+        {
             addDart(pt)
+        }
+
+        listeners.forEach {
             it.dartThrown(dart)
         }
     }
