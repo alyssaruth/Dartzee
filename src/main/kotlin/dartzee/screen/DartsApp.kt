@@ -6,7 +6,6 @@ import dartzee.achievements.convertEmptyAchievements
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
 import dartzee.core.util.DialogUtil
-import dartzee.dartzee.DartzeeAimCalculatorTest
 import dartzee.db.GameEntity
 import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.logging.CODE_SCREEN_LOAD_ERROR
@@ -211,11 +210,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == "stacktrace")
         {
             logger.error(LoggingCode("test"), "Testing stack trace")
-        }
-        else if (cmd == "ai")
-        {
-            val dlg = DartzeeAimCalculatorTest()
-            dlg.isVisible = true
         }
 
         return textToShow
