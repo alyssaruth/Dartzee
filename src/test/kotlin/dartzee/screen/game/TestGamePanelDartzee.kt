@@ -13,6 +13,7 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
+import dartzee.db.PlayerEntity
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
@@ -26,6 +27,7 @@ import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.mockk.*
 import org.junit.Test
 import java.awt.Color
@@ -270,6 +272,101 @@ class TestGamePanelDartzee: AbstractTest()
         }
     }
 
+    @Test
+    fun `AI turn should complete normally, and the highest passed rule should be selected`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val game = setUpDartzeeGameOnDatabase(1)
+
+        val carousel = DartzeeRuleCarousel(rules)
+
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.loadGame()
+
+        val model = DummyDartsModel()
+        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+
+        panel.saveDartsAndProceed()
+
+        val results = DartzeeRoundResultEntity().retrieveEntities()
+        results.size shouldBe 1
+
+        val result = results.first()
+        result.ruleNumber shouldBe 2
+        result.success shouldBe true
+
+        summaryPanel.getPendingTiles().size shouldBe 1
+        summaryPanel.getPendingTiles().first().dto shouldBe twoBlackOneWhite
+    }
+
+    @Test
+    fun `Should play a full game correctly`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val game = insertGame(gameType = GameType.DARTZEE)
+
+        val model = DummyDartsModel()
+        val player = mockk<PlayerEntity>(relaxed = true)
+        every { player.isAi() } returns true
+        every { player.isHuman() } returns false
+        every { player.getModel() } returns model
+        every { player.rowId } returns "foo"
+
+        val rules = listOf(scoreEighteens, allTwenties)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+        panel.startNewGame(listOf(player))
+
+        while (!game.isFinished()) {
+            Thread.sleep(200)
+        }
+
+        verifySequence {
+            // Scoring round
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(20, 3))
+
+            // All twenties
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(20, 1))
+
+            // Score eighteens
+            listener.dartThrown(Dart(18, 1))
+            listener.dartThrown(Dart(18, 1))
+            listener.dartThrown(Dart(25, 2))
+        }
+
+        val pt = retrieveParticipant()
+        pt.finalScore shouldBe 276
+        pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
+
+        val results = DartzeeRoundResultEntity().retrieveEntities().sortedBy { it.roundNumber }
+        val roundOne = results.first()
+        roundOne.success shouldBe true
+        roundOne.ruleNumber shouldBe 2
+        roundOne.score shouldBe 60
+        roundOne.participantId shouldBe pt.rowId
+
+        val roundTwo = results[1]
+        roundTwo.success shouldBe true
+        roundTwo.ruleNumber shouldBe 1
+        roundTwo.score shouldBe 36
+        roundTwo.participantId shouldBe pt.rowId
+    }
+
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
     private fun setUpDartzeeGameOnDatabase(rounds: Int): GameEntity
@@ -314,8 +411,11 @@ class TestGamePanelDartzee: AbstractTest()
                               game: GameEntity = insertGame(),
                               totalPlayers: Int = 1): GamePanelDartzee
     {
+        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
+        every { parentWindow.isVisible } returns true
+
         return GamePanelDartzee(
-            mockk(relaxed = true),
+            parentWindow,
             game,
             totalPlayers,
             dtos,

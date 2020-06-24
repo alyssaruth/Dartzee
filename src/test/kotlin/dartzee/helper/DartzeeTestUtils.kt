@@ -1,6 +1,8 @@
 package dartzee.helper
 
-import dartzee.`object`.*
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
@@ -22,7 +24,8 @@ val twoBlackOneWhite = makeDartzeeRuleDto(makeColourRule(black = true), makeColo
         calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.getMultiplier() == 1 && it.score != 25 }))
 
 val scoreEighteens = makeDartzeeRuleDto(makeScoreRule(18),
-        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
+        calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() && it.score == 18 },
+                getAllPossibleSegments().filter { !it.isMiss() }))
 
 val innerOuterInner = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRuleOuter(), DartzeeDartRuleInner(),
         inOrder = true,

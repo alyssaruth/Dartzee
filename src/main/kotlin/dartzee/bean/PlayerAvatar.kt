@@ -43,8 +43,8 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
             this.player = player
         }
 
-        avatarId = player?.playerImageId ?: ""
-        icon = player?.getAvatar() ?: AVATAR_UNSET
+        avatarId = this.player?.playerImageId ?: ""
+        icon = this.player?.getAvatar() ?: AVATAR_UNSET
     }
 
     /**
