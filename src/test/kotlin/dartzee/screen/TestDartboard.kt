@@ -140,6 +140,7 @@ class TestDartboard: AbstractTest()
 
         val smallPoints = smallBoard.getPotentialAimPoints()
 
+        // Should be an identical image to the one from the above test
         val bigPoints = smallPoints.map { bigBoard.translateAimPoint(it) }
         val lbl = bigBoard.markPoints(bigPoints)
         lbl.shouldMatchImage("aim points")
