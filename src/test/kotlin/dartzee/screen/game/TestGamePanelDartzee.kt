@@ -305,7 +305,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should play a full game correctly`()
+    fun `E2E - Should play a full game correctly`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
@@ -321,7 +321,10 @@ class TestGamePanelDartzee: AbstractTest()
         val rules = listOf(scoreEighteens, allTwenties)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
-        val panel = makeGamePanel(rules, summaryPanel, game)
+        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
+        every { parentWindow.isVisible } returns true
+
+        val panel = makeGamePanel(rules, summaryPanel, game, parentWindow = parentWindow)
 
         val listener = mockk<DartboardListener>(relaxed = true)
         panel.dartboard.addDartboardListener(listener)
@@ -409,11 +412,9 @@ class TestGamePanelDartzee: AbstractTest()
     private fun makeGamePanel(dtos: List<DartzeeRuleDto>,
                               summaryPanel: DartzeeRuleSummaryPanel = mockk(relaxed = true),
                               game: GameEntity = insertGame(),
-                              totalPlayers: Int = 1): GamePanelDartzee
+                              totalPlayers: Int = 1,
+                              parentWindow: AbstractDartsGameScreen = mockk(relaxed = true)): GamePanelDartzee
     {
-        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
-        every { parentWindow.isVisible } returns true
-
         return GamePanelDartzee(
             parentWindow,
             game,
