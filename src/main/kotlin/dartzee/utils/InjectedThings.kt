@@ -8,6 +8,8 @@ import dartzee.logging.LoggerFactory
 import dartzee.logging.LoggingConsole
 import dartzee.player.PlayerManager
 import dartzee.screen.ChangeLog
+import dartzee.screen.IPlayerImageSelector
+import dartzee.screen.PlayerImageDialog
 import java.time.Clock
 
 object InjectedThings
@@ -17,6 +19,7 @@ object InjectedThings
     var dartzeeRuleFactory: AbstractDartzeeRuleFactory = DartzeeRuleFactory()
     var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
+    var playerImageSelector: IPlayerImageSelector = PlayerImageDialog()
     var clock: Clock = Clock.systemUTC()
     val loggingConsole = LoggingConsole()
     var esDestination = LoggerFactory.constructElasticsearchDestination()

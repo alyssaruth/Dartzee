@@ -17,10 +17,13 @@ import javax.swing.*
 import javax.swing.border.TitledBorder
 import javax.swing.filechooser.FileNameExtensionFilter
 
-class PlayerImageDialog : SimpleDialog(), IFileUploadListener
+interface IPlayerImageSelector
 {
-    var playerImageIdSelected = ""
+    fun selectImage(): String?
+}
 
+class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelector
+{
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val panelPreset = JPanel()
     private val panelUpload = JPanel()
@@ -61,6 +64,14 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener
         fs.addFileUploadListener(this)
 
         init()
+    }
+
+    override fun selectImage(): String?
+    {
+        setLocationRelativeTo(ScreenCache.mainScreen)
+        isVisible = true
+
+        return getPlayerImageIdFromSelection()
     }
 
     private fun init()
@@ -114,7 +125,6 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener
             return
         }
 
-        playerImageIdSelected = playerImageId
         dispose()
     }
 

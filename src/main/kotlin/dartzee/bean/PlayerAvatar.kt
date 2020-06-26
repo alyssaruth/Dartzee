@@ -2,7 +2,7 @@ package dartzee.bean
 
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
-import dartzee.screen.PlayerImageDialog
+import dartzee.utils.InjectedThings.playerImageSelector
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
@@ -59,12 +59,10 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
                 return
             }
 
-            val dlg = PlayerImageDialog()
-            dlg.isVisible = true
-
-            if (dlg.playerImageIdSelected.isNotEmpty())
+            val playerImageId = playerImageSelector.selectImage()
+            if (playerImageId != null)
             {
-                avatarId = dlg.playerImageIdSelected
+                avatarId = playerImageId
                 val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
                 icon = newIcon
 
