@@ -257,13 +257,12 @@ fun insertAchievement(uuid: String = randomGuid(),
     return a
 }
 
-private val fileBytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
-private val serialBlob = SerialBlob(fileBytes)
 fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
 {
+    val fileBytes = FileUtil.getByteArrayForResource("/avatars/$resource.png")
     val pi = PlayerImageEntity()
     pi.assignRowId()
-    pi.blobData = serialBlob
+    pi.blobData = SerialBlob(fileBytes)
     pi.filepath = "rsrc:/avatars/$resource.png"
     pi.bytes = fileBytes
     pi.preset = false

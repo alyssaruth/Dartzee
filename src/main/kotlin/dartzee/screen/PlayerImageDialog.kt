@@ -62,13 +62,12 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelec
         panelUploadOptions.add(fs)
 
         fs.addFileUploadListener(this)
-
-        init()
     }
 
     override fun selectImage(): String?
     {
         setLocationRelativeTo(ScreenCache.mainScreen)
+        init()
         isVisible = true
 
         return getPlayerImageIdFromSelection()
