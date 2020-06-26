@@ -48,7 +48,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         return model
     }
 
-    fun getAvatar() = PlayerImageEntity.retrieveImageIconForId(playerImageId)
+    fun getAvatar() = if (playerImageId.isEmpty()) null else PlayerImageEntity.retrieveImageIconForId(playerImageId)
     fun getFlag() = getPlayerFlag(isHuman())
 
     companion object

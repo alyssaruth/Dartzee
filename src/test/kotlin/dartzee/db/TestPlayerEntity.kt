@@ -10,6 +10,7 @@ import dartzee.shouldMatch
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
+import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -69,8 +70,15 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
 
         val expected = ImageIcon(javaClass.getResource("/avatars/BaboOne.png"))
 
-        val imageIcon = player.getAvatar()
+        val imageIcon = player.getAvatar()!!
         imageIcon.shouldMatch(expected)
+    }
+
+    @Test
+    fun `Should return a null avatar for a player who does not have playerImageId set`()
+    {
+        val player = insertPlayer(playerImageId = "")
+        player.getAvatar().shouldBeNull()
     }
 
     @Test
