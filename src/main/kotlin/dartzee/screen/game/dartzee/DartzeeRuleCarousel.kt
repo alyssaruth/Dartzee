@@ -1,6 +1,8 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
+import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartzeePlayStyle
 import dartzee.core.util.ceilDiv
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
@@ -155,6 +157,24 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
     }
 
     fun getAvailableRuleTiles() = pendingTiles.filter { it.isVisible }
+
+    fun selectRule(model: AbstractDartsModel)
+    {
+        val aggressive = model.dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE
+
+        val availableTiles = getAvailableRuleTiles()
+        val selectedTile = if (aggressive)
+        {
+            val sortedTiles = availableTiles.sortedWith(compareBy( { it.pendingScore }, { it.ruleNumber }))
+            sortedTiles.last()
+        }
+        else
+        {
+            availableTiles.maxBy { it.ruleNumber }
+        }
+
+        selectedTile!!.doClick()
+    }
 
     private fun displayTiles(tiles: List<DartzeeRuleTile>)
     {

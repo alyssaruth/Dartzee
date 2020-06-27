@@ -1,6 +1,7 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
+import dartzee.ai.AbstractDartsModel
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.utils.getAllPossibleSegments
 import java.awt.BorderLayout
@@ -73,7 +74,10 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
         }
     }
 
-    fun getPendingTiles(): List<DartzeeRuleTilePending> = carousel.getAvailableRuleTiles()
+    fun selectRule(model: AbstractDartsModel)
+    {
+        carousel.selectRule(model)
+    }
 
     fun gameFinished()
     {
