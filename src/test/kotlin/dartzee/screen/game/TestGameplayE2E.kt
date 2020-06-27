@@ -9,10 +9,7 @@ import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
-import dartzee.utils.InjectedThings
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PreferenceUtil
-import dartzee.utils.insertDartzeeRules
+import dartzee.utils.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -114,6 +111,9 @@ class TestGameplayE2E: AbstractRegistryTest()
         val pt = retrieveParticipant()
         pt.finalScore shouldBe 9
         pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
+
+        panel.activeScorer.getTotalScore() shouldBe 9
+        panel.activeScorer.getRowCount() shouldBe 3
     }
 
     @Test
@@ -177,8 +177,15 @@ class TestGameplayE2E: AbstractRegistryTest()
 
     private fun awaitGameFinish(game: GameEntity)
     {
+        val maxWait = 20000
+
+        val timer = DurationTimer()
         while (!game.isFinished()) {
             Thread.sleep(200)
+
+            if (timer.getDuration() > maxWait) {
+                throw AssertionError("Timed out waiting for game to complete")
+            }
         }
     }
 }
