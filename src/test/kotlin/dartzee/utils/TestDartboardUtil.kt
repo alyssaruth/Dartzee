@@ -1,6 +1,8 @@
 package dartzee.utils
 
-import dartzee.`object`.*
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.helper.AbstractRegistryTest
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldHaveSize

@@ -1,6 +1,8 @@
 package dartzee.screen.game
 
+import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.ai.DartzeePlayStyle
 import dartzee.bullseye
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
@@ -10,21 +12,22 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
+import dartzee.db.PlayerEntity
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
 import dartzee.helper.*
+import dartzee.listener.DartboardListener
 import dartzee.screen.game.dartzee.*
 import dartzee.screen.game.scorer.DartsScorerDartzee
+import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import io.mockk.clearAllMocks
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.kotlintest.shouldNotBe
+import io.mockk.*
 import org.junit.Test
 import java.awt.Color
 
@@ -188,9 +191,9 @@ class TestGamePanelDartzee: AbstractTest()
         panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
-        panel.dartboard.segmentStatus shouldBe null
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
         panel.hoverChanged(SegmentStatus(listOf(bullseye), listOf(bullseye)))
-        panel.dartboard.segmentStatus shouldBe null
+        panel.dartboard.segmentStatus shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test
@@ -215,9 +218,157 @@ class TestGamePanelDartzee: AbstractTest()
         verify { summaryPanel.update(listOf(), listOf(), 0, 1) }
     }
 
+    @Test
+    fun `AI should throw scoring darts during the scoring round`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val game = insertGame(gameType = GameType.DARTZEE)
+        val player = insertPlayer(strategy = -1)
+
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.startNewGame(listOf(player))
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+        panel.doAiTurn(beastDartsModel())
+
+        verify { listener.dartThrown(Dart(20, 3)) }
+    }
+
+    @Test
+    fun `AI should throw based on segment status, and adjust correctly for number of darts thrown`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val game = setUpDartzeeGameOnDatabase(1)
+
+        val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
+        every { carousel.getSegmentStatus() } returns SegmentStatus(listOf(singleTwenty), getAllPossibleSegments())
+        every { carousel.initialised } returns true
+
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.loadGame()
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+        val model = beastDartsModel()
+        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+
+        verifySequence {
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(25, 2))
+        }
+    }
+
+    @Test
+    fun `AI turn should complete normally, and the highest passed rule should be selected`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val model = beastDartsModel()
+        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+
+        val player = insertPlayer(model = beastDartsModel())
+        val game = setUpDartzeeGameOnDatabase(1, player)
+
+        val carousel = DartzeeRuleCarousel(rules)
+
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.loadGame()
+
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+        panel.doAiTurn(model)
+
+        panel.saveDartsAndProceed()
+
+        val results = DartzeeRoundResultEntity().retrieveEntities()
+        results.size shouldBe 1
+
+        val result = results.first()
+        result.ruleNumber shouldBe 2
+        result.success shouldBe true
+
+        carousel.getAvailableRuleTiles().size shouldBe 1
+        carousel.getAvailableRuleTiles().first().dto shouldBe twoBlackOneWhite
+    }
+
+    @Test
+    fun `E2E - Should play a full game correctly`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val game = insertGame(gameType = GameType.DARTZEE)
+
+        val model = beastDartsModel()
+        val player = insertPlayer(model = model)
+
+        val rules = listOf(scoreEighteens, allTwenties)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
+        every { parentWindow.isVisible } returns true
+
+        val panel = makeGamePanel(rules, summaryPanel, game, parentWindow = parentWindow)
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+        panel.startNewGame(listOf(player))
+
+        while (!game.isFinished()) {
+            Thread.sleep(200)
+        }
+
+        verifySequence {
+            // Scoring round
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(20, 3))
+            listener.dartThrown(Dart(20, 3))
+
+            // All twenties
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(20, 1))
+            listener.dartThrown(Dart(20, 1))
+
+            // Score eighteens
+            listener.dartThrown(Dart(18, 1))
+            listener.dartThrown(Dart(18, 1))
+            listener.dartThrown(Dart(25, 2))
+        }
+
+        val pt = retrieveParticipant()
+        pt.finalScore shouldBe 276
+        pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
+
+        val results = DartzeeRoundResultEntity().retrieveEntities().sortedBy { it.roundNumber }
+        val roundOne = results.first()
+        roundOne.success shouldBe true
+        roundOne.ruleNumber shouldBe 2
+        roundOne.score shouldBe 60
+        roundOne.participantId shouldBe pt.rowId
+
+        val roundTwo = results[1]
+        roundTwo.success shouldBe true
+        roundTwo.ruleNumber shouldBe 1
+        roundTwo.score shouldBe 36
+        roundTwo.participantId shouldBe pt.rowId
+    }
+
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
-    private fun setUpDartzeeGameOnDatabase(rounds: Int): GameEntity
+    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null): GameEntity
     {
         val dtFinish = if (rounds > 2) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
@@ -227,7 +378,7 @@ class TestGamePanelDartzee: AbstractTest()
             entity.saveToDatabase()
         }
 
-        val participant = insertParticipant(insertPlayer = true, gameId = game.rowId, ordinal = 0)
+        val participant = insertParticipant(insertPlayer = (player == null), gameId = game.rowId, ordinal = 0, playerId = player?.rowId ?: "")
 
         if (rounds > 0)
         {
@@ -257,10 +408,11 @@ class TestGamePanelDartzee: AbstractTest()
     private fun makeGamePanel(dtos: List<DartzeeRuleDto>,
                               summaryPanel: DartzeeRuleSummaryPanel = mockk(relaxed = true),
                               game: GameEntity = insertGame(),
-                              totalPlayers: Int = 1): GamePanelDartzee
+                              totalPlayers: Int = 1,
+                              parentWindow: AbstractDartsGameScreen = mockk(relaxed = true)): GamePanelDartzee
     {
         return GamePanelDartzee(
-            mockk(relaxed = true),
+            parentWindow,
             game,
             totalPlayers,
             dtos,

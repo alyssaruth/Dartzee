@@ -2,11 +2,9 @@ package dartzee.ai
 
 import dartzee.`object`.SegmentType
 import dartzee.borrowTestDartboard
-import dartzee.core.obj.HashMapCount
 import dartzee.core.util.XmlUtil
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.doubles.shouldBeBetween
-import io.kotlintest.matchers.numerics.shouldBeBetween
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -14,6 +12,7 @@ import io.mockk.mockk
 import org.apache.commons.math3.distribution.NormalDistribution
 import org.junit.Test
 import java.awt.Point
+import kotlin.math.floor
 
 class TestDartsModelNormalDistribution: AbstractTest()
 {
@@ -218,18 +217,15 @@ class TestDartsModelNormalDistribution: AbstractTest()
         val dartboard = borrowTestDartboard()
         val pt = Point(0, 0)
 
-        val hmAngleToCount = HashMapCount<Double>()
+        val hsAngles = HashSet<Double>()
         for (i in 0..100000)
         {
             val (_, theta) = model.calculateRadiusAndAngle(pt, dartboard)
             theta.shouldBeBetween(0.0, 360.0, 0.0)
 
-            hmAngleToCount.incrementCount(Math.floor(theta))
+            hsAngles.add(floor(theta))
         }
 
-        hmAngleToCount.size shouldBe 360
-        hmAngleToCount.values.forEach {
-            it.shouldBeBetween(200, 350)
-        }
+        hsAngles.size shouldBe 360
     }
 }

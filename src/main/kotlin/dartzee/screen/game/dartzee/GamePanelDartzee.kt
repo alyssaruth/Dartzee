@@ -40,7 +40,18 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun doAiTurn(model: AbstractDartsModel)
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (isScoringRound())
+        {
+            val pt = model.throwScoringDart(dartboard)
+            dartboard.dartThrown(pt)
+        }
+        else
+        {
+            summaryPanel.ensureReady()
+
+            val segmentStatus = summaryPanel.getSegmentStatus()
+            model.throwDartzeeDart(dartsThrown.size, dartboard, segmentStatus)
+        }
     }
 
     override fun setGameReadOnly()
@@ -93,7 +104,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun shouldStopAfterDartThrown(): Boolean
     {
         val segmentStatus = summaryPanel.getSegmentStatus()
-        val failedAllRules = segmentStatus?.validSegments?.isEmpty() ?: false
+        val failedAllRules = segmentStatus.validSegments.isEmpty()
         return dartsThrown.size == 3 || failedAllRules
     }
 
@@ -105,7 +116,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
         updateCarouselAndDartboard()
 
-        if (currentRoundNumber > 1)
+        if (!isScoringRound())
         {
             btnConfirm.isVisible = false
         }
@@ -127,15 +138,25 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
      */
     override fun saveDartsAndProceed()
     {
-        completeRound(factoryHighScoreResult(dartsThrown))
+        if (isScoringRound())
+        {
+            completeRound(factoryHighScoreResult(dartsThrown))
+        }
+        else
+        {
+            //AI has finished a Dartzee round
+            summaryPanel.selectRule(getCurrentPlayerStrategy())
+        }
     }
+
+    private fun isScoringRound() = currentRoundNumber == 1
 
     private fun completeRound(result: DartzeeRoundResult)
     {
         val pt = getCurrentParticipant()
 
         activeScorer.setResult(result)
-        if (currentRoundNumber > 1)
+        if (!isScoringRound())
         {
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
             getCurrentPlayerState().addRoundResult(entity)

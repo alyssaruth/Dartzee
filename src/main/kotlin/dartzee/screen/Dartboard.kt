@@ -28,7 +28,6 @@ import javax.swing.JLabel
 import javax.swing.JLayeredPane
 import javax.swing.SwingConstants
 
-
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 const val LAYER_SLIDER = 4
@@ -40,7 +39,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     private val dartLabels = mutableListOf<JLabel>()
 
-    private var listener: DartboardListener? = null
+    private val listeners: MutableList<DartboardListener> = mutableListOf()
     var centerPoint = Point(200, 200)
         private set
 
@@ -81,7 +80,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun addDartboardListener(listener: DartboardListener)
     {
-        this.listener = listener
+        listeners.add(listener)
     }
 
     fun paintDartboardCached()
@@ -132,8 +131,8 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         }
 
         val duration = timer.getDuration()
-        logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
-                KEY_DURATION to duration, KEY_CACHED to usingCache)
+        logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms (cached: $usingCache)",
+            KEY_DURATION to duration, KEY_CACHED to usingCache)
 
         //Now the dartboard is painted, add the mouse listeners
         if (listen)
@@ -302,7 +301,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
 
     fun getAllSegments() = hmSegmentKeyToSegment.values.toList()
 
-    protected fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): DartboardSegment
+    fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): DartboardSegment
     {
         val segment = hmPointToSegment[pt]
         if (segment != null)
@@ -347,12 +346,19 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
         return seg.isDoubleExcludingBull()
     }
 
+    fun getPotentialAimPoints() = getPotentialAimPoints(centerPoint, diameter)
+    fun translateAimPoint(aimPoint: AimPoint) = AimPoint(centerPoint, diameter / 2, aimPoint.angle, aimPoint.ratio).point
+
     open fun dartThrown(pt: Point)
     {
         val dart = convertPointToDart(pt, true)
 
-        listener?.let {
+        if (listeners.isNotEmpty())
+        {
             addDart(pt)
+        }
+
+        listeners.forEach {
             it.dartThrown(dart)
         }
     }

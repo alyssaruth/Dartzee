@@ -229,17 +229,14 @@ class TestGameSetupScreen: AbstractTest()
     @Test
     fun `Should perform validation on Dartzee mode when trying to hit Next`()
     {
-        val p1 = insertPlayer(strategy = 1)
-        val p2 = insertPlayer(strategy = 1)
-
         val setupScreen = GameSetupScreen()
         setupScreen.initialise()
-        setupScreen.playerSelector.init(listOf(p1, p2))
+        setupScreen.playerSelector.init(listOf())
 
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
         setupScreen.btnNext.doClick()
 
-        dialogFactory.errorsShown.shouldContainExactly("You cannot select AI opponents for Dartzee.")
+        dialogFactory.errorsShown.shouldContainExactly("You must select at least 1 player.")
     }
 
     @Test

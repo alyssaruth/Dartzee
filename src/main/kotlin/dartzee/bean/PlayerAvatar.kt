@@ -2,7 +2,7 @@ package dartzee.bean
 
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
-import dartzee.screen.PlayerImageDialog
+import dartzee.utils.InjectedThings.playerImageSelector
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
@@ -35,7 +35,7 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
         border = if (selected) LineBorder(Color.RED, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
     }
 
-    fun init(player: PlayerEntity?, saveChanges: Boolean)
+    fun init(player: PlayerEntity, saveChanges: Boolean)
     {
         //Only set the player variable if we want to allow the label to directly make changes to it.
         if (saveChanges)
@@ -43,8 +43,8 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
             this.player = player
         }
 
-        avatarId = player?.playerImageId ?: ""
-        icon = player?.getAvatar() ?: AVATAR_UNSET
+        avatarId = player.playerImageId
+        icon = player.getAvatar() ?: AVATAR_UNSET
     }
 
     /**
@@ -59,17 +59,14 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
                 return
             }
 
-            val dlg = PlayerImageDialog()
-            dlg.isVisible = true
-
-            avatarId = dlg.playerImageIdSelected
-
-            if (!avatarId.isEmpty())
+            val playerImageId = playerImageSelector.selectImage()
+            if (playerImageId != null)
             {
+                avatarId = playerImageId
                 val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
                 icon = newIcon
 
-                player?.let{
+                player?.let {
                     it.playerImageId = avatarId
                     it.saveToDatabase()
                 }

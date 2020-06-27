@@ -1,7 +1,8 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
+import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartzeePlayStyle
 import dartzee.core.util.ceilDiv
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
@@ -26,6 +27,8 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
     val dartsThrown = mutableListOf<Dart>()
     val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
     val completeTiles = mutableListOf<DartzeeRuleTile>()
+
+    @Volatile var initialised = false
 
     var listener: IDartzeeCarouselListener? = null
 
@@ -65,6 +68,8 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, currentScore: Int)
     {
+        initialised = false
+
         hoveredTile = null
         dartsThrown.clear()
         dartsThrown.addAll(darts)
@@ -76,6 +81,8 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
             toggleButtonComplete.isSelected -> displayTiles(completeTiles)
             else -> displayTiles(pendingTiles)
         }
+
+        initialised = true
     }
     private fun initialiseTiles(results: List<DartzeeRoundResultEntity>, currentScore: Int)
     {
@@ -147,6 +154,26 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
     {
         val statuses = pendingTiles.map { it.getSegmentStatus(dartsThrown) }
         return SegmentStatus(statuses.flatMap { it.scoringSegments }, statuses.flatMap { it.validSegments })
+    }
+
+    fun getAvailableRuleTiles() = pendingTiles.filter { it.isVisible }
+
+    fun selectRule(model: AbstractDartsModel)
+    {
+        val aggressive = model.dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE
+
+        val availableTiles = getAvailableRuleTiles()
+        val selectedTile = if (aggressive)
+        {
+            val sortedTiles = availableTiles.sortedWith(compareBy( { it.pendingScore }, { it.ruleNumber }))
+            sortedTiles.last()
+        }
+        else
+        {
+            availableTiles.maxBy { it.ruleNumber }
+        }
+
+        selectedTile!!.doClick()
     }
 
     private fun displayTiles(tiles: List<DartzeeRuleTile>)

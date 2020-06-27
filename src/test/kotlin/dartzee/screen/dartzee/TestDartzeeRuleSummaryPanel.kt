@@ -2,14 +2,15 @@ package dartzee.screen.dartzee
 
 import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
-import dartzee.helper.AbstractTest
-import dartzee.helper.getOuterSegments
-import dartzee.helper.makeDart
-import dartzee.helper.makeRoundResultEntities
+import dartzee.helper.*
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.DurationTimer
+import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.numerics.shouldBeGreaterThan
+import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -45,7 +46,7 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
     {
         val summaryPanel = makeSummaryPanel()
 
-        summaryPanel.getSegmentStatus() shouldBe null
+        summaryPanel.getSegmentStatus() shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test
@@ -70,6 +71,41 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
 
         summaryPanel.components.toList().shouldContainExactly(carousel)
         verify { carousel.gameFinished() }
+    }
+
+    @Test
+    fun `Should call through to the carousel to select a tile`()
+    {
+        val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
+        val model = beastDartsModel()
+
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        summaryPanel.selectRule(model)
+
+        verify { carousel.selectRule(model) }
+    }
+
+    @Test
+    fun `Should wait for the carousel to be initialised`()
+    {
+        val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
+
+        var repetitions = 0
+        every { carousel.initialised } answers {
+            repetitions++
+            repetitions == 6
+        }
+
+        val panel = DartzeeRuleSummaryPanel(carousel)
+
+        val timer = DurationTimer()
+        panel.ensureReady()
+
+        val duration = timer.getDuration()
+        duration.shouldBeGreaterThan(1000)
+        duration.shouldBeLessThan(2000)
+
+        repetitions shouldBe 6
     }
 
     private fun makeSummaryPanel() =

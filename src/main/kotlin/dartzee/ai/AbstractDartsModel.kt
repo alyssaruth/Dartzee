@@ -1,18 +1,28 @@
 package dartzee.ai
 
-import dartzee.`object`.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
+import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.*
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
 import dartzee.logging.LoggingCode
 import dartzee.screen.Dartboard
+import dartzee.screen.dartzee.DartzeeDartboard
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.getAverage
 import org.w3c.dom.Element
 import java.awt.Point
 import java.util.*
+
+enum class DartzeePlayStyle {
+    CAUTIOUS,
+    AGGRESSIVE
+}
 
 abstract class AbstractDartsModel
 {
@@ -25,6 +35,9 @@ abstract class AbstractDartsModel
     //Golf
     var hmDartNoToSegmentType = mutableMapOf<Int, SegmentType>()
     var hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
+
+    //Dartzee
+    var dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
 
     /**
      * Abstract methods
@@ -69,6 +82,10 @@ abstract class AbstractDartsModel
         val hmDartNoToString = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
         hmDartNoToSegmentType = hmDartNoToString.mapValues { SegmentType.valueOf(it.value) }.toMutableMap()
         hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
+
+        //Dartzee
+        val dartzeePlayStyleStr = rootElement.getAttribute(ATTRIBUTE_DARTZEE_PLAY_STYLE)
+        dartzeePlayStyle = if (dartzeePlayStyleStr.isEmpty()) DartzeePlayStyle.CAUTIOUS else DartzeePlayStyle.valueOf(dartzeePlayStyleStr)
 
         readXmlSpecific(rootElement)
     }
@@ -144,6 +161,8 @@ abstract class AbstractDartsModel
             rootElement.setAttribute(ATTRIBUTE_MERCY_RULE, "" + mercyThreshold)
         }
 
+        rootElement.setAttribute(ATTRIBUTE_DARTZEE_PLAY_STYLE, "$dartzeePlayStyle")
+
         writeXmlSpecific(rootElement)
 
         return xmlDoc.toXmlString()
@@ -181,7 +200,7 @@ abstract class AbstractDartsModel
         }
     }
 
-    private fun throwScoringDart(dartboard: Dartboard): Point
+    fun throwScoringDart(dartboard: Dartboard): Point
     {
         val ptToAimAt = getScoringPoint(dartboard)
         return throwDartAtPoint(ptToAimAt, dartboard)
@@ -217,6 +236,17 @@ abstract class AbstractDartsModel
         val segmentType = getSegmentTypeForClockType(clockType)
 
         val ptToAimAt = getPointForScore(clockTarget, dartboard, segmentType)
+        val pt = throwDartAtPoint(ptToAimAt, dartboard)
+        dartboard.dartThrown(pt)
+    }
+
+    /**
+     * Dartzee
+     */
+    fun throwDartzeeDart(dartsThrownSoFar: Int, dartboard: DartzeeDartboard, segmentStatus: SegmentStatus)
+    {
+        val aggressive = (dartsThrownSoFar < 2 || dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE)
+        val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
         val pt = throwDartAtPoint(ptToAimAt, dartboard)
         dartboard.dartThrown(pt)
     }
@@ -329,6 +359,7 @@ abstract class AbstractDartsModel
         const val ATTRIBUTE_SCORE = "Score"
         const val ATTRIBUTE_DART_VALUE = "DartValue"
         const val ATTRIBUTE_DART_MULTIPLIER = "DartMultiplier"
+        const val ATTRIBUTE_DARTZEE_PLAY_STYLE = "DartzeePlayStyle"
 
         private const val SCORING_DARTS_TO_THROW = 20000
         private const val DOUBLE_DARTS_TO_THROW = 20000

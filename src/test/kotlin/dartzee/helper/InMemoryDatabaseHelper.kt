@@ -1,6 +1,7 @@
 package dartzee.helper
 
-import dartzee.`object`.*
+import dartzee.`object`.SegmentType
+import dartzee.ai.AbstractDartsModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
@@ -65,6 +66,8 @@ fun insertGameForPlayer(player: PlayerEntity,
     insertParticipant(playerId = player.rowId, gameId = game.rowId, finalScore = finalScore, dtFinished = dtFinished)
 }
 
+fun insertPlayer(model: AbstractDartsModel) =
+        insertPlayer(strategy = model.getType(), strategyXml = model.writeXml())
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
@@ -257,13 +260,12 @@ fun insertAchievement(uuid: String = randomGuid(),
     return a
 }
 
-private val fileBytes = FileUtil.getByteArrayForResource("/avatars/BaboOne.png")
-private val serialBlob = SerialBlob(fileBytes)
 fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
 {
+    val fileBytes = FileUtil.getByteArrayForResource("/avatars/$resource.png")
     val pi = PlayerImageEntity()
     pi.assignRowId()
-    pi.blobData = serialBlob
+    pi.blobData = SerialBlob(fileBytes)
     pi.filepath = "rsrc:/avatars/$resource.png"
     pi.bytes = fileBytes
     pi.preset = false

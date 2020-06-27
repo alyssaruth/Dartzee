@@ -26,7 +26,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
 object DartsDatabaseUtil
 {
     const val MIN_DB_VERSION_FOR_CONVERSION = 8
-    const val DATABASE_VERSION = 12
+    const val DATABASE_VERSION = 13
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -137,6 +137,10 @@ object DartsDatabaseUtil
             //SegmentType enum
             DartzeeRuleConversion.convertDartzeeRules()
         }
+        else if (versionNumber == 12)
+        {
+            updatePlayerStrategies()
+        }
 
         version.version = versionNumber + 1
         version.saveToDatabase()
@@ -178,6 +182,17 @@ object DartsDatabaseUtil
         players.forEach {
             val model = AbstractDartsModel.factoryForType(it.strategy)!!
             model.readXmlOldWay(it.strategyXml)
+            it.strategyXml = model.writeXml()
+            it.saveToDatabase()
+        }
+    }
+
+    private fun updatePlayerStrategies()
+    {
+        val players = PlayerEntity().retrieveEntities("Strategy > -1")
+        players.forEach {
+            val model = AbstractDartsModel.factoryForType(it.strategy)!!
+            model.readXml(it.strategyXml)
             it.strategyXml = model.writeXml()
             it.saveToDatabase()
         }
