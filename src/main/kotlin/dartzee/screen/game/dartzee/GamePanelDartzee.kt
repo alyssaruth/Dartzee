@@ -2,6 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartzeePlayStyle
 import dartzee.core.obj.HashMapList
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
@@ -146,11 +147,20 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         {
             //AI has finished a Dartzee round
             val pendingTiles = summaryPanel.getPendingTiles()
+            val model = getCurrentPlayerStrategy()
+            val aggressive = model.dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE
 
-            //TODO - aggressive player should prioritise score first
-            //val model = getCurrentPlayerStrategy()
+            val selectedTile = if (aggressive)
+            {
+                val sortedTiles = pendingTiles.sortedWith(compareBy( { it.pendingScore }, { it.ruleNumber }))
+                sortedTiles.last()
+            }
+            else
+            {
+                pendingTiles.maxBy { it.ruleNumber }
+            }
 
-            pendingTiles.maxBy { it.ruleNumber }!!.doClick()
+            selectedTile!!.doClick()
         }
     }
 
