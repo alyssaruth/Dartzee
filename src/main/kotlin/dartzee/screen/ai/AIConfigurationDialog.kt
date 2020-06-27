@@ -25,6 +25,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     private val tabbedPaneGameSpecifics = JTabbedPane()
     private val panelX01Config = AIConfigurationSubPanelX01()
     private val panelGolfConfig = AIConfigurationSubPanelGolf()
+    private val panelDartzeeConfig = AIConfigurationSubPanelDartzee()
     private val panelSouth = JPanel()
     private val panelCalculateStats = JPanel()
     private val textFieldAverageScore = JTextField()
@@ -112,6 +113,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
         tabbedPaneGameSpecifics.addTab("X01", panelX01Config)
         tabbedPaneGameSpecifics.addTab("Golf", panelGolfConfig)
+        tabbedPaneGameSpecifics.addTab("Dartzee", panelDartzeeConfig)
 
         //Listeners
         comboBox.addActionListener(this)
@@ -137,6 +139,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
             panelX01Config.reset()
             panelGolfConfig.reset()
+            panelDartzeeConfig.reset()
             panelAIConfig.reset()
         }
         else
@@ -157,6 +160,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             panelAIConfig.initialiseFromModel(model)
             panelX01Config.initialiseFromModel(model)
             panelGolfConfig.initialiseFromModel(model)
+            panelDartzeeConfig.initialiseFromModel(model)
         }
     }
 
@@ -193,6 +197,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         val model = panelAIConfig.initialiseModel()
         panelX01Config.populateModel(model)
         panelGolfConfig.populateModel(model)
+        panelDartzeeConfig.populateModel(model)
 
         return model
     }
