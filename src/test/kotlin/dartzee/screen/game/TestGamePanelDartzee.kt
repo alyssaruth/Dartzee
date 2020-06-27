@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import DummyDartsModel
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.ai.DartzeePlayStyle
@@ -235,8 +234,7 @@ class TestGamePanelDartzee: AbstractTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         panel.dartboard.addDartboardListener(listener)
 
-        val model = DummyDartsModel()
-        panel.doAiTurn(model)
+        panel.doAiTurn(beastDartsModel())
 
         verify { listener.dartThrown(Dart(20, 3)) }
     }
@@ -259,7 +257,7 @@ class TestGamePanelDartzee: AbstractTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         panel.dartboard.addDartboardListener(listener)
 
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
         panel.doAiTurn(model)
         panel.doAiTurn(model)
@@ -277,7 +275,11 @@ class TestGamePanelDartzee: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val game = setUpDartzeeGameOnDatabase(1)
+        val model = beastDartsModel()
+        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+
+        val player = insertPlayer(model = beastDartsModel())
+        val game = setUpDartzeeGameOnDatabase(1, player)
 
         val carousel = DartzeeRuleCarousel(rules)
 
@@ -285,8 +287,6 @@ class TestGamePanelDartzee: AbstractTest()
         val panel = makeGamePanel(rules, summaryPanel, game)
         panel.loadGame()
 
-        val model = DummyDartsModel()
-        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
         panel.doAiTurn(model)
         panel.doAiTurn(model)
         panel.doAiTurn(model)
@@ -300,8 +300,8 @@ class TestGamePanelDartzee: AbstractTest()
         result.ruleNumber shouldBe 2
         result.success shouldBe true
 
-        summaryPanel.getPendingTiles().size shouldBe 1
-        summaryPanel.getPendingTiles().first().dto shouldBe twoBlackOneWhite
+        carousel.getAvailableRuleTiles().size shouldBe 1
+        carousel.getAvailableRuleTiles().first().dto shouldBe twoBlackOneWhite
     }
 
     @Test
@@ -311,12 +311,8 @@ class TestGamePanelDartzee: AbstractTest()
 
         val game = insertGame(gameType = GameType.DARTZEE)
 
-        val model = DummyDartsModel()
-        val player = mockk<PlayerEntity>(relaxed = true)
-        every { player.isAi() } returns true
-        every { player.isHuman() } returns false
-        every { player.getModel() } returns model
-        every { player.rowId } returns "foo"
+        val model = beastDartsModel()
+        val player = insertPlayer(model = model)
 
         val rules = listOf(scoreEighteens, allTwenties)
         val carousel = DartzeeRuleCarousel(rules)
@@ -372,7 +368,7 @@ class TestGamePanelDartzee: AbstractTest()
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
-    private fun setUpDartzeeGameOnDatabase(rounds: Int): GameEntity
+    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null): GameEntity
     {
         val dtFinish = if (rounds > 2) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
@@ -382,7 +378,7 @@ class TestGamePanelDartzee: AbstractTest()
             entity.saveToDatabase()
         }
 
-        val participant = insertParticipant(insertPlayer = true, gameId = game.rowId, ordinal = 0)
+        val participant = insertParticipant(insertPlayer = (player == null), gameId = game.rowId, ordinal = 0, playerId = player?.rowId ?: "")
 
         if (rounds > 0)
         {

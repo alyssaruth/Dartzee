@@ -5,7 +5,6 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.*
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
-import dartzee.screen.game.dartzee.DartzeeRuleTilePending
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
@@ -75,14 +74,15 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
     }
 
     @Test
-    fun `Should get available rule tiles from the carousel`()
+    fun `Should call through to the carousel to select a tile`()
     {
         val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
-        val tiles = listOf(DartzeeRuleTilePending(makeDartzeeRuleDto(), 1))
-        every { carousel.getAvailableRuleTiles() } returns tiles
+        val model = beastDartsModel()
 
-        val panel = DartzeeRuleSummaryPanel(carousel)
-        panel.getPendingTiles() shouldBe tiles
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        summaryPanel.selectRule(model)
+
+        verify { carousel.selectRule(model) }
     }
 
     @Test
