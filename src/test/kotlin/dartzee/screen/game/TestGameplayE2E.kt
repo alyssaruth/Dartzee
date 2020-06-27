@@ -141,7 +141,7 @@ class TestGameplayE2E: AbstractRegistryTest()
 
     private fun awaitGameFinish(game: GameEntity)
     {
-        val maxWait = 20000
+        val maxWait = 10000
 
         val timer = DurationTimer()
         while (!game.isFinished()) {
