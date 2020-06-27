@@ -30,19 +30,6 @@ class TestGameplayE2E: AbstractRegistryTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
     }
 
-    data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
-    private fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
-    {
-        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
-        every { parentWindow.isVisible } returns true
-
-        val panel = DartsGamePanel.factory(parentWindow, game, 1)
-        val listener = mockk<DartboardListener>(relaxed = true)
-        panel.dartboard.addDartboardListener(listener)
-
-        return GamePanelTestSetup(panel, listener)
-    }
-
     @Test
     fun `E2E - Dartzee`()
     {
@@ -97,13 +84,13 @@ class TestGameplayE2E: AbstractRegistryTest()
     }
 
     @Test
-    fun `E2E - X01`()
+    fun `E2E - 501`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")
 
-        val model = beastDartsModel()
-        model.hmScoreToDart[81] = Dart(19, 3)
-        val player = insertPlayer(model = model)
+        val aiModel = beastDartsModel()
+        aiModel.hmScoreToDart[81] = Dart(19, 3)
+        val player = insertPlayer(model = aiModel)
 
         val (panel, listener) = setUpGamePanel(game)
 
@@ -173,6 +160,19 @@ class TestGameplayE2E: AbstractRegistryTest()
         val pt = retrieveParticipant()
         pt.finalScore shouldBe 20
         pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
+    }
+
+    data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
+    private fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
+    {
+        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
+        every { parentWindow.isVisible } returns true
+
+        val panel = DartsGamePanel.factory(parentWindow, game, 1)
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+        return GamePanelTestSetup(panel, listener)
     }
 
     private fun awaitGameFinish(game: GameEntity)
