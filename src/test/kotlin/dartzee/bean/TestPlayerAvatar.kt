@@ -1,6 +1,8 @@
 package dartzee.bean
 
 import com.github.alexburlton.swingtest.doClick
+import com.github.alexburlton.swingtest.doHover
+import com.github.alexburlton.swingtest.doHoverAway
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
@@ -12,6 +14,7 @@ import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
+import java.awt.Cursor
 import javax.swing.Icon
 import javax.swing.ImageIcon
 
@@ -101,6 +104,41 @@ class TestPlayerAvatar: AbstractTest()
         verifyNotCalled {
             imageSelector.selectImage()
         }
+    }
+
+    @Test
+    fun `Should default to an unset avatar when initialised with a new player`()
+    {
+        val avatar = PlayerAvatar()
+        avatar.init(PlayerEntity(), false)
+        avatar.icon.shouldMatchAvatar("Unset")
+    }
+
+    @Test
+    fun `Should update cursor on hover`()
+    {
+        val avatar = PlayerAvatar()
+        avatar.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
+        avatar.doHover()
+        avatar.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+
+        avatar.doHoverAway()
+        avatar.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+    }
+
+    @Test
+    fun `Should not respond to hover if read only`()
+    {
+        val avatar = PlayerAvatar()
+        avatar.readOnly = true
+        avatar.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
+        avatar.doHover()
+        avatar.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
+        avatar.doHoverAway()
+        avatar.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
     }
 
     private fun Icon.shouldMatchAvatar(avatarName: String)
