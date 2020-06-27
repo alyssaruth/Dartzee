@@ -104,6 +104,8 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
         val duration = timer.getDuration()
         duration.shouldBeGreaterThan(1000)
         duration.shouldBeLessThan(2000)
+
+        repetitions shouldBe 6
     }
 
     private fun makeSummaryPanel() =

@@ -66,12 +66,13 @@ fun insertGameForPlayer(player: PlayerEntity,
     insertParticipant(playerId = player.rowId, gameId = game.rowId, finalScore = finalScore, dtFinished = dtFinished)
 }
 
+fun insertPlayer(model: AbstractDartsModel) =
+        insertPlayer(strategy = model.getType(), strategyXml = model.writeXml())
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
-                 model: AbstractDartsModel? = null,
-                 strategy: Int = model?.getType() ?: 1,
-                 strategyXml: String = model?.writeXml() ?: "",
+                 strategy: Int = 1,
+                 strategyXml: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
                  playerImageId: String? = null): PlayerEntity
 {
