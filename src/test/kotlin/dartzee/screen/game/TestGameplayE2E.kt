@@ -3,17 +3,16 @@ package dartzee.screen.game
 import dartzee.`object`.Dart
 import dartzee.core.util.DateStatics
 import dartzee.dartzee.DartzeeCalculator
+import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.DartzeeRoundResultEntity
+import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
-import dartzee.screen.game.dartzee.DartzeeRuleCarousel
-import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
-import dartzee.screen.game.dartzee.GamePanelDartzee
-import dartzee.screen.game.x01.GamePanelX01
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import dartzee.utils.insertDartzeeRules
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -31,6 +30,19 @@ class TestGameplayE2E: AbstractRegistryTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
     }
 
+    data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
+    private fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
+    {
+        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
+        every { parentWindow.isVisible } returns true
+
+        val panel = DartsGamePanel.factory(parentWindow, game, 1)
+        val listener = mockk<DartboardListener>(relaxed = true)
+        panel.dartboard.addDartboardListener(listener)
+
+        return GamePanelTestSetup(panel, listener)
+    }
+
     @Test
     fun `E2E - Dartzee`()
     {
@@ -42,21 +54,12 @@ class TestGameplayE2E: AbstractRegistryTest()
         val player = insertPlayer(model = model)
 
         val rules = listOf(scoreEighteens, allTwenties)
-        val carousel = DartzeeRuleCarousel(rules)
-        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
-        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
-        every { parentWindow.isVisible } returns true
+        insertDartzeeRules(game, rules)
 
-        val panel = GamePanelDartzee(parentWindow, game, 1, rules, summaryPanel)
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        panel.dartboard.addDartboardListener(listener)
+        val (panel, listener) = setUpGamePanel(game)
 
         panel.startNewGame(listOf(player))
-
-        while (!game.isFinished()) {
-            Thread.sleep(200)
-        }
+        awaitGameFinish(game)
 
         verifySequence {
             // Scoring round
@@ -102,19 +105,10 @@ class TestGameplayE2E: AbstractRegistryTest()
         model.hmScoreToDart[81] = Dart(19, 3)
         val player = insertPlayer(model = model)
 
-        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
-        every { parentWindow.isVisible } returns true
-
-        val panel = GamePanelX01(parentWindow, game, 1)
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        panel.dartboard.addDartboardListener(listener)
+        val (panel, listener) = setUpGamePanel(game)
 
         panel.startNewGame(listOf(player))
-
-        while (!game.isFinished()) {
-            Thread.sleep(200)
-        }
+        awaitGameFinish(game)
 
         verifySequence {
             listener.dartThrown(Dart(20, 3))
@@ -133,5 +127,58 @@ class TestGameplayE2E: AbstractRegistryTest()
         val pt = retrieveParticipant()
         pt.finalScore shouldBe 9
         pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
+    }
+
+    @Test
+    fun `E2E - Golf`()
+    {
+        val game = insertGame(gameType = GameType.GOLF, gameParams = "18")
+
+        val model = beastDartsModel()
+        val player = insertPlayer(model = model)
+
+        val (panel, listener) = setUpGamePanel(game)
+        panel.startNewGame(listOf(player))
+        awaitGameFinish(game)
+
+        verifySequence {
+            for (i in 1..18) {
+                listener.dartThrown(Dart(i, 2))
+            }
+        }
+
+        val pt = retrieveParticipant()
+        pt.finalScore shouldBe 18
+        pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
+    }
+
+    @Test
+    fun `E2E - RTC`()
+    {
+        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_STANDARD)
+
+        val model = beastDartsModel()
+        val player = insertPlayer(model = model)
+
+        val (panel, listener) = setUpGamePanel(game)
+        panel.startNewGame(listOf(player))
+        awaitGameFinish(game)
+
+        verifySequence {
+            for (i in 1..20) {
+                listener.dartThrown(Dart(i, 1))
+            }
+        }
+
+        val pt = retrieveParticipant()
+        pt.finalScore shouldBe 20
+        pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
+    }
+
+    private fun awaitGameFinish(game: GameEntity)
+    {
+        while (!game.isFinished()) {
+            Thread.sleep(200)
+        }
     }
 }
