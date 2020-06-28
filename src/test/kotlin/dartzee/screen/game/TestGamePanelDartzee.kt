@@ -26,7 +26,6 @@ import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.mockk.*
 import org.junit.Test
 import java.awt.Color
@@ -302,68 +301,6 @@ class TestGamePanelDartzee: AbstractTest()
 
         carousel.getAvailableRuleTiles().size shouldBe 1
         carousel.getAvailableRuleTiles().first().dto shouldBe twoBlackOneWhite
-    }
-
-    @Test
-    fun `E2E - Should play a full game correctly`()
-    {
-        InjectedThings.dartzeeCalculator = DartzeeCalculator()
-
-        val game = insertGame(gameType = GameType.DARTZEE)
-
-        val model = beastDartsModel()
-        val player = insertPlayer(model = model)
-
-        val rules = listOf(scoreEighteens, allTwenties)
-        val carousel = DartzeeRuleCarousel(rules)
-        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
-        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
-        every { parentWindow.isVisible } returns true
-
-        val panel = makeGamePanel(rules, summaryPanel, game, parentWindow = parentWindow)
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        panel.dartboard.addDartboardListener(listener)
-
-        panel.startNewGame(listOf(player))
-
-        while (!game.isFinished()) {
-            Thread.sleep(200)
-        }
-
-        verifySequence {
-            // Scoring round
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-
-            // All twenties
-            listener.dartThrown(Dart(20, 1))
-            listener.dartThrown(Dart(20, 1))
-            listener.dartThrown(Dart(20, 1))
-
-            // Score eighteens
-            listener.dartThrown(Dart(18, 1))
-            listener.dartThrown(Dart(18, 1))
-            listener.dartThrown(Dart(25, 2))
-        }
-
-        val pt = retrieveParticipant()
-        pt.finalScore shouldBe 276
-        pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
-
-        val results = DartzeeRoundResultEntity().retrieveEntities().sortedBy { it.roundNumber }
-        val roundOne = results.first()
-        roundOne.success shouldBe true
-        roundOne.ruleNumber shouldBe 2
-        roundOne.score shouldBe 60
-        roundOne.participantId shouldBe pt.rowId
-
-        val roundTwo = results[1]
-        roundTwo.success shouldBe true
-        roundTwo.ruleNumber shouldBe 1
-        roundTwo.score shouldBe 36
-        roundTwo.participantId shouldBe pt.rowId
     }
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }

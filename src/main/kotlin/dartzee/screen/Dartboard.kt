@@ -32,7 +32,7 @@ const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 const val LAYER_SLIDER = 4
 
-open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
+open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), MouseListener, MouseMotionListener
 {
     private var hmPointToSegment = mutableMapOf<Point, DartboardSegment>()
     protected var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegment>()
@@ -63,13 +63,7 @@ open class Dartboard : JLayeredPane, MouseListener, MouseMotionListener
     val dartboardLabel = JLabel()
      //You know what this is...
 
-    constructor()
-    {
-        layout = null
-        add(dartboardLabel, Integer.valueOf(-1))
-    }
-
-    constructor(width: Int, height: Int)
+    init
     {
         setSize(width, height)
         preferredSize = Dimension(width, height)

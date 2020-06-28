@@ -15,7 +15,7 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
 {
     //The Points this segment contains
     val points = mutableListOf<Point>()
-    val edgePoints = mutableSetOf<Point>()
+    val edgePoints: Set<Point> by lazy { makeEdgePoints() }
 
     //For tracking edge points
     private val hmXCoordToPoints = HashMapList<Int, Point>()
@@ -42,22 +42,16 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
     fun isEdgePoint(pt: Point?): Boolean
     {
         pt ?: return false
-
-        if (edgePoints.isEmpty())
-        {
-            cacheEdgePoints()
-        }
-
         return edgePoints.contains(pt)
     }
 
-    private fun cacheEdgePoints()
+    private fun makeEdgePoints(): Set<Point>
     {
         val yMins: List<Point> = hmXCoordToPoints.values.map { points -> points.minBy { it.y }!! }
         val yMaxes: List<Point> = hmXCoordToPoints.values.map { points -> points.maxBy { it.y }!! }
         val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minBy { it.x }!! }
         val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxBy { it.x }!! }
-        edgePoints.addAll(yMins + yMaxes + xMins + xMaxes)
+        return (yMins + yMaxes + xMins + xMaxes).toSet()
     }
 
     fun getRoughProbability(): Double {

@@ -8,6 +8,7 @@ import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
+import dartzee.core.util.dumpThreadStacks
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.game.GameType
 import dartzee.logging.LogRecord
@@ -28,7 +29,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.swing.Icon
-import javax.swing.ImageIcon
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
@@ -139,6 +139,18 @@ private fun Icon.toBufferedImage(): BufferedImage
     paintIcon(null, g, 0, 0)
     g.dispose()
     return bi
+}
+
+fun startThreadMonitoring()
+{
+    val threadStackRunnable = Runnable {
+        while (true)
+        {
+            dumpThreadStacks()
+            Thread.sleep(1000)
+        }
+    }
+    Thread(threadStackRunnable).start()
 }
 
 /**
