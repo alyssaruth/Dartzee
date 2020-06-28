@@ -2,6 +2,7 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.core.util.DateStatics
+import dartzee.core.util.dumpThreadStacks
 import dartzee.core.util.getSortedValues
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.CLOCK_TYPE_STANDARD
@@ -43,7 +44,6 @@ class TestGameplayE2E: AbstractRegistryTest()
         insertDartzeeRules(game, rules)
 
         val (panel, listener) = setUpGamePanel(game)
-
         panel.startNewGame(listOf(player))
         awaitGameFinish(game)
 
