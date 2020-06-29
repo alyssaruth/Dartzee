@@ -8,7 +8,9 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.JCheckBox
+import javax.swing.JLabel
+import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 
@@ -21,8 +23,6 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
     private val nfStandardDeviationDoubles = NumberField(1)
     private val nfCentralBias = NumberField(1, 200)
     private val cbCenterBias = JCheckBox("Standard Deviation (skew towards center)")
-    private val cbRadiusAverage = JCheckBox("Radius as average of multiple throws")
-    private val spinnerAverageCount = JSpinner()
 
     init
     {
@@ -42,13 +42,9 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
         panelNorth.add(cbCenterBias, "cell 0 2")
         nfCentralBias.preferredSize = Dimension(100, 25)
         panelNorth.add(nfCentralBias, "cell 1 2")
-        panelNorth.add(cbRadiusAverage, "cell 0 3")
-        panelNorth.add(spinnerAverageCount, "cell 1 3")
-        spinnerAverageCount.model = SpinnerNumberModel(2, 2, 5, 1)
 
         cbStandardDeviationDoubles.addActionListener(this)
         cbCenterBias.addActionListener(this)
-        cbRadiusAverage.addActionListener(this)
     }
 
     override fun valid() = true
@@ -61,9 +57,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
         val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else 0.0
         val sdCentral = if(cbCenterBias.isSelected) nfCentralBias.getDouble() else 0.0
 
-        val averageCount = if (cbRadiusAverage.isSelected) spinnerAverageCount.value as Int else 1
-
-        model.populate(sd, sdDoubles, sdCentral, averageCount)
+        model.populate(sd, sdDoubles, sdCentral)
         return model
     }
 
@@ -100,11 +94,6 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
             nfCentralBias.isEnabled = false
             nfCentralBias.value = 50
         }
-
-        val avgCount = normalModel.radiusAverageCount
-        cbRadiusAverage.isSelected = avgCount > 1
-        spinnerAverageCount.isEnabled = avgCount > 1
-        spinnerAverageCount.value = Math.max(2, avgCount)
     }
 
     override fun actionPerformed(arg0: ActionEvent)
@@ -113,7 +102,6 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
         {
             cbStandardDeviationDoubles -> nfStandardDeviationDoubles.isEnabled = cbStandardDeviationDoubles.isSelected
             cbCenterBias -> nfCentralBias.isEnabled = cbCenterBias.isSelected
-            cbRadiusAverage -> spinnerAverageCount.isEnabled = cbRadiusAverage.isSelected
         }
     }
 

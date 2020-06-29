@@ -11,11 +11,11 @@ import dartzee.utils.translatePoint
 import org.apache.commons.math3.distribution.NormalDistribution
 import org.w3c.dom.Element
 import java.awt.Point
+import kotlin.math.abs
 
 const val ATTRIBUTE_STANDARD_DEVIATION = "StandardDeviation"
 const val ATTRIBUTE_STANDARD_DEVIATION_DOUBLES = "StandardDeviationDoubles"
 const val ATTRIBUTE_STANDARD_DEVIATION_CENTRAL = "StandardDeviationCentral"
-const val ATTRIBUTE_RADIUS_AVERAGE_COUNT = "RadiusAverageCount"
 
 class DartsModelNormalDistribution : AbstractDartsModel()
 {
@@ -24,7 +24,6 @@ class DartsModelNormalDistribution : AbstractDartsModel()
     var standardDeviation = 50.0
     var standardDeviationDoubles = -1.0
     var standardDeviationCentral = -1.0
-    var radiusAverageCount = 1
 
     var distribution: NormalDistribution? = null
     var distributionDoubles: NormalDistribution? = null
@@ -56,14 +55,8 @@ class DartsModelNormalDistribution : AbstractDartsModel()
     }
     private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
     {
-        var radius = 0.0
-        for (i in 0 until radiusAverageCount)
-        {
-            val distribution = getDistributionToUse(pt, dartboard)
-            radius += Math.abs(distribution!!.sample())
-        }
-
-        return radius / radiusAverageCount
+        val distribution = getDistributionToUse(pt, dartboard)
+        return abs(distribution!!.sample())
     }
     private fun sanitiseAngle(angle: Double): Double
     {
@@ -111,8 +104,6 @@ class DartsModelNormalDistribution : AbstractDartsModel()
         {
             rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL, "" + standardDeviationCentral)
         }
-
-        rootElement.setAttribute(ATTRIBUTE_RADIUS_AVERAGE_COUNT, "" + radiusAverageCount)
     }
 
     override fun readXmlSpecific(root: Element)
@@ -120,9 +111,8 @@ class DartsModelNormalDistribution : AbstractDartsModel()
         val sd = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION)
         val sdDoubles = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
         val sdCentral = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
-        val radiusAverageCount = root.getAttributeInt(ATTRIBUTE_RADIUS_AVERAGE_COUNT, 1)
 
-        populate(sd, sdDoubles, sdCentral, radiusAverageCount)
+        populate(sd, sdDoubles, sdCentral)
     }
 
     override fun getProbabilityWithinRadius(radius: Double): Double
@@ -130,13 +120,11 @@ class DartsModelNormalDistribution : AbstractDartsModel()
         return distribution!!.probability(-radius, radius)
     }
 
-    fun populate(standardDeviation: Double, standardDeviationDoubles: Double, standardDeviationCentral: Double,
-                 radiusAverageCount: Int)
+    fun populate(standardDeviation: Double, standardDeviationDoubles: Double, standardDeviationCentral: Double)
     {
         this.standardDeviation = standardDeviation
         this.standardDeviationDoubles = standardDeviationDoubles
         this.standardDeviationCentral = standardDeviationCentral
-        this.radiusAverageCount = radiusAverageCount
 
         distribution = NormalDistribution(mean.toDouble(), standardDeviation)
         if (standardDeviationDoubles > 0)
