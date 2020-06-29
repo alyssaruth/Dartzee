@@ -2,6 +2,7 @@
 
 + Ability to include computer opponents in Dartzee games
 = Fix bug where you couldn't create new players
+= 73.3% test coverage (8849 / 12,081 lines covered by 1515 tests)
 
 --------- v4.3.0 ---------
 
