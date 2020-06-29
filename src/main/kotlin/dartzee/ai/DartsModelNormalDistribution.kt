@@ -1,7 +1,6 @@
 package dartzee.ai
 
 import dartzee.core.util.getAttributeDouble
-import dartzee.core.util.getAttributeInt
 import dartzee.logging.CODE_AI_ERROR
 import dartzee.screen.Dartboard
 import dartzee.utils.InjectedThings.logger
@@ -55,8 +54,14 @@ class DartsModelNormalDistribution : AbstractDartsModel()
     }
     private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
     {
-        val distribution = getDistributionToUse(pt, dartboard)
-        return abs(distribution!!.sample())
+        val distribution = getDistributionToUse(pt, dartboard)!!
+        var sample = distribution.sample()
+        while (abs(sample) > distribution.standardDeviation)
+        {
+            sample = distribution.sample()
+        }
+
+        return abs(sample)
     }
     private fun sanitiseAngle(angle: Double): Double
     {
