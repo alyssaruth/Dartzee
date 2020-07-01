@@ -27,12 +27,10 @@ class TestDartsModelNormalDistribution: AbstractTest()
 
         val model = DartsModelNormalDistribution()
         model.standardDeviation = 25.6
-        model.radiusAverageCount = 2
 
         model.writeXmlSpecific(rootElement)
 
         rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION) shouldBe "25.6"
-        rootElement.getAttribute(ATTRIBUTE_RADIUS_AVERAGE_COUNT) shouldBe "2"
         rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL) shouldBe ""
         rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES) shouldBe ""
     }
@@ -45,14 +43,12 @@ class TestDartsModelNormalDistribution: AbstractTest()
 
         val model = DartsModelNormalDistribution()
         model.standardDeviation = 13.0
-        model.radiusAverageCount = 1
         model.standardDeviationCentral = 19.2
         model.standardDeviationDoubles = 3.7
 
         model.writeXmlSpecific(rootElement)
 
         rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION) shouldBe "13.0"
-        rootElement.getAttribute(ATTRIBUTE_RADIUS_AVERAGE_COUNT) shouldBe "1"
         rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL) shouldBe "19.2"
         rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES) shouldBe "3.7"
     }
@@ -64,13 +60,11 @@ class TestDartsModelNormalDistribution: AbstractTest()
         val rootElement = xmlDoc.createElement("Test")
 
         rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "100.4")
-        rootElement.setAttribute(ATTRIBUTE_RADIUS_AVERAGE_COUNT, "3")
 
         val model = DartsModelNormalDistribution()
         model.readXmlSpecific(rootElement)
 
         model.standardDeviation shouldBe 100.4
-        model.radiusAverageCount shouldBe 3
         model.standardDeviationDoubles shouldBe 0.0
         model.standardDeviationCentral shouldBe 0.0
 
@@ -88,7 +82,6 @@ class TestDartsModelNormalDistribution: AbstractTest()
         val rootElement = xmlDoc.createElement("Test")
 
         rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "100.4")
-        rootElement.setAttribute(ATTRIBUTE_RADIUS_AVERAGE_COUNT, "3")
         rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES, "50.2")
         rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL, "43.5")
 
@@ -96,7 +89,6 @@ class TestDartsModelNormalDistribution: AbstractTest()
         model.readXmlSpecific(rootElement)
 
         model.standardDeviation shouldBe 100.4
-        model.radiusAverageCount shouldBe 3
         model.standardDeviationDoubles shouldBe 50.2
         model.standardDeviationCentral shouldBe 43.5
 
@@ -116,7 +108,7 @@ class TestDartsModelNormalDistribution: AbstractTest()
     fun `Should return the correct density based on the standard deviation`()
     {
         val model = DartsModelNormalDistribution()
-        model.populate(20.0, 0.0, 0.0, 1)
+        model.populate(20.0, 0.0, 0.0)
 
         //P(within 0.5 SD)
         model.getProbabilityWithinRadius(10.0).shouldBeBetween(0.3829, 0.3831, 0.0)
@@ -186,33 +178,10 @@ class TestDartsModelNormalDistribution: AbstractTest()
     }
 
     @Test
-    fun `Should sample the specified number of times and take an average`()
-    {
-        val model = DartsModelNormalDistribution()
-
-        val distribution = mockk<NormalDistribution>(relaxed = true)
-
-        var ix = 0
-        val values = listOf(3.0, 10.0, 5.0)
-        every { distribution.sample() } answers { values[ix++] }
-
-        model.standardDeviationCentral = 0.0
-        model.distribution = distribution
-        model.radiusAverageCount = 3
-
-        val dartboard = borrowTestDartboard()
-
-        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
-
-        val (radius) = model.calculateRadiusAndAngle(pt, dartboard)
-        radius shouldBe 6.0
-    }
-
-    @Test
     fun `Should generate a random angle between 0 - 360 by default`()
     {
         val model = DartsModelNormalDistribution()
-        model.populate(3.0, 0.0, 0.0, 1)
+        model.populate(3.0, 0.0, 0.0)
 
         val dartboard = borrowTestDartboard()
         val pt = Point(0, 0)
