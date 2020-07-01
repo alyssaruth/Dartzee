@@ -10,7 +10,6 @@ import dartzee.utils.translatePoint
 import org.apache.commons.math3.distribution.NormalDistribution
 import org.w3c.dom.Element
 import java.awt.Point
-import kotlin.math.abs
 
 const val ATTRIBUTE_STANDARD_DEVIATION = "StandardDeviation"
 const val ATTRIBUTE_STANDARD_DEVIATION_DOUBLES = "StandardDeviationDoubles"
@@ -55,13 +54,7 @@ class DartsModelNormalDistribution : AbstractDartsModel()
     private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
     {
         val distribution = getDistributionToUse(pt, dartboard)!!
-        var sample = distribution.sample()
-        while (abs(sample) > distribution.standardDeviation)
-        {
-            sample = distribution.sample()
-        }
-
-        return abs(sample)
+        return distribution.sample()
     }
     private fun sanitiseAngle(angle: Double): Double
     {
