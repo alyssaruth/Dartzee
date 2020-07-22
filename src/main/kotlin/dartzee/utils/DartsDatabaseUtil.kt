@@ -178,9 +178,9 @@ object DartsDatabaseUtil
 
     private fun convertPlayerStrategies()
     {
-        val players = PlayerEntity().retrieveEntities("Strategy > -1")
+        val players = PlayerEntity().retrieveEntities("StrategyXml <> ''")
         players.forEach {
-            val model = AbstractDartsModel.factoryForType(it.strategy)!!
+            val model = AbstractDartsModel()
             model.readXmlOldWay(it.strategyXml)
             it.strategyXml = model.writeXml()
             it.saveToDatabase()
@@ -191,7 +191,7 @@ object DartsDatabaseUtil
     {
         val players = PlayerEntity().retrieveEntities("Strategy > -1")
         players.forEach {
-            val model = AbstractDartsModel.factoryForType(it.strategy)!!
+            val model = AbstractDartsModel()
             model.readXml(it.strategyXml)
             it.strategyXml = model.writeXml()
             it.saveToDatabase()

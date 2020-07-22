@@ -43,7 +43,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
     fun isAi() = (strategy > -1)
     fun getModel(): AbstractDartsModel
     {
-        val model = AbstractDartsModel.factoryForType(strategy)!!
+        val model = AbstractDartsModel()
         model.readXml(strategyXml)
         return model
     }

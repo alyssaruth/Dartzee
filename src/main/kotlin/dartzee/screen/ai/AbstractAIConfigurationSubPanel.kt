@@ -1,7 +1,6 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AbstractDartsModel
-import dartzee.ai.DartsModelNormalDistribution
 import javax.swing.JPanel
 
 abstract class AbstractAIConfigurationSubPanel : JPanel()
@@ -12,6 +11,6 @@ abstract class AbstractAIConfigurationSubPanel : JPanel()
 
     fun reset()
     {
-        initialiseFromModel(DartsModelNormalDistribution())
+        initialiseFromModel(AbstractDartsModel())
     }
 }

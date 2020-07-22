@@ -1,7 +1,6 @@
 package dartzee.db
 
 import dartzee.ai.AbstractDartsModel
-import dartzee.ai.DartsModelNormalDistribution
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
@@ -32,14 +31,14 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     fun `Should correctly identify human vs AI`()
     {
         val human = PlayerEntity()
-        human.strategy = -1
+        human.strategyXml = ""
 
         human.isAi() shouldBe false
         human.isHuman() shouldBe true
         human.getFlag() shouldBe PlayerEntity.ICON_HUMAN
 
         val ai = PlayerEntity()
-        ai.strategy = AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION
+        ai.strategyXml = "foo"
 
         ai.isAi() shouldBe true
         ai.isHuman() shouldBe false
@@ -49,16 +48,15 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     @Test
     fun `Should correctly construct the AI model`()
     {
-        val model = DartsModelNormalDistribution()
+        val model = AbstractDartsModel()
         model.scoringDart = 15
         val xml = model.writeXml()
 
         val player = PlayerEntity()
-        player.strategy = AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION
         player.strategyXml = xml
 
         val recoveredModel = player.getModel()
-        recoveredModel.shouldBeInstanceOf<DartsModelNormalDistribution>()
+        recoveredModel.shouldBeInstanceOf<AbstractDartsModel>()
         recoveredModel.scoringDart shouldBe 15
     }
 

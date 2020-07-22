@@ -67,7 +67,7 @@ fun insertGameForPlayer(player: PlayerEntity,
 }
 
 fun insertPlayer(model: AbstractDartsModel) =
-        insertPlayer(strategy = model.getType(), strategyXml = model.writeXml())
+        insertPlayer(strategyXml = model.writeXml())
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",

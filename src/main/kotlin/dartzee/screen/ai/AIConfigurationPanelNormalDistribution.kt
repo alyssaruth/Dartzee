@@ -1,7 +1,6 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AbstractDartsModel
-import dartzee.ai.DartsModelNormalDistribution
 import dartzee.core.bean.NumberField
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -14,7 +13,7 @@ import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 
-class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), ActionListener
+class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel(), ActionListener
 {
     private val panelNorth = JPanel()
     private val lblStandardDeviation = JLabel("Standard Deviation")
@@ -49,9 +48,9 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
 
     override fun valid() = true
 
-    override fun initialiseModel(): AbstractDartsModel
+    fun initialiseModel(): AbstractDartsModel
     {
-        val model = DartsModelNormalDistribution()
+        val model = AbstractDartsModel()
 
         val sd = nfStandardDeviation.getDouble()
         val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else 0.0
@@ -61,13 +60,17 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
         return model
     }
 
+    override fun populateModel(model: AbstractDartsModel)
+    {
+        //Do nothing (we initialise the model instead)
+    }
+
     override fun initialiseFromModel(model: AbstractDartsModel)
     {
-        val normalModel = model as DartsModelNormalDistribution
-        val standardDeviation = normalModel.standardDeviation
+        val standardDeviation = model.standardDeviation
         nfStandardDeviation.value = standardDeviation
 
-        val standardDeviationDoubles = normalModel.standardDeviationDoubles
+        val standardDeviationDoubles = model.standardDeviationDoubles
         if (standardDeviationDoubles > 0)
         {
             cbStandardDeviationDoubles.isSelected = true
@@ -81,7 +84,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationPanel(), A
             nfStandardDeviationDoubles.value = 50
         }
 
-        val sdCentral = normalModel.standardDeviationCentral
+        val sdCentral = model.standardDeviationCentral
         if (sdCentral > 0)
         {
             cbCenterBias.isSelected = true
