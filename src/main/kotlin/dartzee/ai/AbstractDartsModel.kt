@@ -30,8 +30,8 @@ class AbstractDartsModel
     private val mean = 0
 
     var standardDeviation = 50.0
-    var standardDeviationDoubles = -1.0
-    var standardDeviationCentral = -1.0
+    var standardDeviationDoubles = 0.0
+    var standardDeviationCentral = 0.0
 
     var distribution: NormalDistribution? = null
     var distributionDoubles: NormalDistribution? = null

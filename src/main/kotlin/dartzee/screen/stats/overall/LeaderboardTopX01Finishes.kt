@@ -32,7 +32,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
         val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
 
         val sb = StringBuilder()
-        sb.append(" SELECT p.Strategy, p.Name, g.LocalId, xf.Finish")
+        sb.append(" SELECT p.StrategyXml, p.Name, g.LocalId, xf.Finish")
         sb.append(" FROM X01Finish xf, Player p, Game g")
         sb.append(" WHERE xf.PlayerId = p.RowId")
         sb.append(" AND xf.GameId = g.RowId")

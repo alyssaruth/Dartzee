@@ -23,9 +23,9 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
-fun insertPlayerForGame(name: String, gameId: String, strategy: Int = 1): PlayerEntity
+fun insertPlayerForGame(name: String, gameId: String, strategyXml: String = "foo"): PlayerEntity
 {
-    val player = insertPlayer(name = name, strategy = strategy)
+    val player = insertPlayer(name = name, strategyXml = strategyXml)
     insertParticipant(playerId = player.rowId, gameId = gameId)
     return player
 }
@@ -71,7 +71,6 @@ fun insertPlayer(model: AbstractDartsModel) =
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
-                 strategy: Int = 1,
                  strategyXml: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
                  playerImageId: String? = null): PlayerEntity
@@ -79,7 +78,6 @@ fun insertPlayer(uuid: String = randomGuid(),
     val p = PlayerEntity()
     p.rowId = uuid
     p.name = name
-    p.strategy = strategy
     p.strategyXml = strategyXml
     p.dtDeleted = dtDeleted
     p.playerImageId = playerImageId ?: insertPlayerImage().rowId

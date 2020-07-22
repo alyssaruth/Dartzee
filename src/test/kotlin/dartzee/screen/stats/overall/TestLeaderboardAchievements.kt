@@ -78,8 +78,8 @@ class TestLeaderboardAchievements: AbstractTest()
     @Test
     fun `Should respond to changing player filters`()
     {
-        val alice = insertPlayer(name = "Alice", strategy = -1)
-        val bob = insertPlayer(name = "Bob", strategy = 1)
+        val alice = insertPlayer(name = "Alice", strategyXml = "")
+        val bob = insertPlayer(name = "Bob", strategyXml = "foo")
 
         val bestFinish = AchievementX01BestFinish()
         insertAchievement(achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH,

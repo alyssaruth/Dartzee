@@ -18,7 +18,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     @Test
     fun `Should cache the player on first query then use it from then on`()
     {
-        val playerId = insertPlayer(name = "Bob", strategy = -1).rowId
+        val playerId = insertPlayer(name = "Bob", strategyXml = "").rowId
 
         val pt = ParticipantEntity()
         pt.playerId = playerId
@@ -54,7 +54,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     {
         val player = PlayerEntity()
         player.name = "Bob"
-        player.strategy = -1
+        player.strategyXml = ""
 
         val pt = ParticipantEntity()
         pt.setPlayer(player)

@@ -83,7 +83,7 @@ abstract class AbstractScorer : JPanel()
             lblAvatar.init(player, false)
             playerId = player.rowId
 
-            human = player.strategy == -1
+            human = player.isHuman()
         }
 
         lblResult.text = ""
