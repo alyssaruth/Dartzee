@@ -139,6 +139,7 @@ object DartsDatabaseUtil
         }
         else if (versionNumber == 12)
         {
+            DatabaseUtil.executeUpdate("ALTER TABLE Player DROP COLUMN Strategy")
             updatePlayerStrategies()
         }
 
@@ -189,7 +190,7 @@ object DartsDatabaseUtil
 
     private fun updatePlayerStrategies()
     {
-        val players = PlayerEntity().retrieveEntities("Strategy > -1")
+        val players = PlayerEntity().retrieveEntities("StrategyXml <> ''")
         players.forEach {
             val model = AbstractDartsModel()
             model.readXml(it.strategyXml)

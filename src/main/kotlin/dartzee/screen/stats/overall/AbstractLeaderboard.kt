@@ -58,7 +58,7 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
                 val strategyXml = rs.getString("StrategyXml")
                 val playerName = rs.getString("Name")
                 val localId = rs.getLong("LocalId")
-                val score = rs.getInt("Finish")
+                val score = rs.getInt(4)
 
                 val playerFlag = PlayerEntity.getPlayerFlag(strategyXml.isEmpty())
 
