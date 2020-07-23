@@ -4,9 +4,9 @@ import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.ai.AbstractDartsModel.Companion.ATTRIBUTE_STANDARD_DEVIATION
-import dartzee.ai.AbstractDartsModel.Companion.ATTRIBUTE_STANDARD_DEVIATION_CENTRAL
-import dartzee.ai.AbstractDartsModel.Companion.ATTRIBUTE_STANDARD_DEVIATION_DOUBLES
+import dartzee.ai.DartsAiModel.Companion.ATTRIBUTE_STANDARD_DEVIATION
+import dartzee.ai.DartsAiModel.Companion.ATTRIBUTE_STANDARD_DEVIATION_CENTRAL
+import dartzee.ai.DartsAiModel.Companion.ATTRIBUTE_STANDARD_DEVIATION_DOUBLES
 import dartzee.borrowTestDartboard
 import dartzee.core.util.XmlUtil
 import dartzee.db.CLOCK_TYPE_DOUBLES
@@ -33,7 +33,7 @@ import org.junit.Test
 import java.awt.Point
 import kotlin.math.floor
 
-class TestAbstractDartsModel: AbstractTest()
+class TestDartsAiModel: AbstractTest()
 {
     /**
      * Serialisation
@@ -41,11 +41,11 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should serialise and deserialise correctly with default values`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
 
         val xml = model.writeXml()
 
-        val newModel = AbstractDartsModel()
+        val newModel = DartsAiModel()
         newModel.readXml(xml)
 
         model.scoringDart shouldBe newModel.scoringDart
@@ -62,7 +62,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should serialise and deserialise non-defaults correctly`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.scoringDart = 25
         model.hmScoreToDart[50] = Dart(25, 2)
         model.hmScoreToDart[60] = Dart(10, 1)
@@ -77,7 +77,7 @@ class TestAbstractDartsModel: AbstractTest()
 
         val xml = model.writeXml()
 
-        val newModel = AbstractDartsModel()
+        val newModel = DartsAiModel()
         newModel.readXml(xml)
 
         newModel.scoringDart shouldBe 25
@@ -86,9 +86,17 @@ class TestAbstractDartsModel: AbstractTest()
         newModel.standardDeviation shouldBe 25.6
         newModel.standardDeviationDoubles shouldBe 50.2
         newModel.standardDeviationCentral shouldBe 80.5
-        model.hmScoreToDart shouldContainExactly newModel.hmScoreToDart
-        model.hmDartNoToSegmentType shouldContainExactly newModel.hmDartNoToSegmentType
-        model.hmDartNoToStopThreshold shouldContainExactly newModel.hmDartNoToStopThreshold
+        newModel.hmScoreToDart shouldContainExactly model.hmScoreToDart
+        newModel.hmDartNoToSegmentType shouldContainExactly model.hmDartNoToSegmentType
+        newModel.hmDartNoToStopThreshold shouldContainExactly model.hmDartNoToStopThreshold
+
+        newModel.distribution shouldNotBe null
+        newModel.distribution!!.standardDeviation shouldBe 25.6
+        newModel.distribution!!.mean shouldBe 0.0
+
+        newModel.distributionDoubles shouldNotBe null
+        newModel.distributionDoubles!!.standardDeviation shouldBe 50.2
+        newModel.distributionDoubles!!.mean shouldBe 0.0
     }
 
     /**
@@ -100,7 +108,7 @@ class TestAbstractDartsModel: AbstractTest()
         val xmlDoc = XmlUtil.factoryNewDocument()
         val rootElement = xmlDoc.createElement("Test")
 
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.standardDeviation = 25.6
 
         model.writeXmlSpecific(rootElement)
@@ -116,7 +124,7 @@ class TestAbstractDartsModel: AbstractTest()
         val xmlDoc = XmlUtil.factoryNewDocument()
         val rootElement = xmlDoc.createElement("Test")
 
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.standardDeviation = 13.0
         model.standardDeviationCentral = 19.2
         model.standardDeviationDoubles = 3.7
@@ -128,61 +136,13 @@ class TestAbstractDartsModel: AbstractTest()
         rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES) shouldBe "3.7"
     }
 
-    @Test
-    fun `Should handle optional values not being present in XML`()
-    {
-        val xmlDoc = XmlUtil.factoryNewDocument()
-        val rootElement = xmlDoc.createElement("Test")
-
-        rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "100.4")
-
-        val model = AbstractDartsModel()
-        model.readXmlSpecific(rootElement)
-
-        model.standardDeviation shouldBe 100.4
-        model.standardDeviationDoubles shouldBe 0.0
-        model.standardDeviationCentral shouldBe 0.0
-
-        model.distribution shouldNotBe null
-        model.distribution!!.standardDeviation shouldBe 100.4
-        model.distribution!!.mean shouldBe 0.0
-
-        model.distributionDoubles shouldBe null
-    }
-
-    @Test
-    fun `Should read optional values if present in XML`()
-    {
-        val xmlDoc = XmlUtil.factoryNewDocument()
-        val rootElement = xmlDoc.createElement("Test")
-
-        rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "100.4")
-        rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES, "50.2")
-        rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL, "43.5")
-
-        val model = AbstractDartsModel()
-        model.readXmlSpecific(rootElement)
-
-        model.standardDeviation shouldBe 100.4
-        model.standardDeviationDoubles shouldBe 50.2
-        model.standardDeviationCentral shouldBe 43.5
-
-        model.distribution shouldNotBe null
-        model.distribution!!.standardDeviation shouldBe 100.4
-        model.distribution!!.mean shouldBe 0.0
-
-        model.distributionDoubles shouldNotBe null
-        model.distributionDoubles!!.standardDeviation shouldBe 50.2
-        model.distributionDoubles!!.mean shouldBe 0.0
-    }
-
     /**
      * Verified against standard Normal Dist z-tables
      */
     @Test
     fun `Should return the correct density based on the standard deviation`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.populate(20.0, 0.0, 0.0)
 
         //P(within 0.5 SD)
@@ -204,7 +164,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
 
         val distribution = mockk<NormalDistribution>(relaxed = true)
         every { distribution.sample() } returns 3.0
@@ -231,7 +191,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should revert to the regular distribution for doubles`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
 
         val distribution = mockk<NormalDistribution>(relaxed = true)
         every { distribution.sample() } returns 3.0
@@ -255,7 +215,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should generate a random angle between 0 - 360 by default`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.populate(3.0, 0.0, 0.0)
 
         val dartboard = borrowTestDartboard()

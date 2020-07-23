@@ -2,7 +2,7 @@ package dartzee.screen.ai
 
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
@@ -14,7 +14,7 @@ class TestAIConfigurationSubPanelDartzee: AbstractTest()
     @Test
     fun `Should initialise from model correctly`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
 
         val panel = AIConfigurationSubPanelDartzee()
@@ -31,7 +31,7 @@ class TestAIConfigurationSubPanelDartzee: AbstractTest()
     @Test
     fun `Should populate model correctly`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         val panel = AIConfigurationSubPanelDartzee()
 
         panel.clickChild<JRadioButton>("Cautious")

@@ -1,7 +1,7 @@
 package dartzee.utils
 
 import dartzee.`object`.SegmentType
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
@@ -181,7 +181,7 @@ object DartsDatabaseUtil
     {
         val players = PlayerEntity().retrieveEntities("StrategyXml <> ''")
         players.forEach {
-            val model = AbstractDartsModel()
+            val model = DartsAiModel()
             model.readXmlOldWay(it.strategyXml)
             it.strategyXml = model.writeXml()
             it.saveToDatabase()
@@ -192,7 +192,7 @@ object DartsDatabaseUtil
     {
         val players = PlayerEntity().retrieveEntities("StrategyXml <> ''")
         players.forEach {
-            val model = AbstractDartsModel()
+            val model = DartsAiModel()
             model.readXml(it.strategyXml)
             it.strategyXml = model.writeXml()
             it.saveToDatabase()

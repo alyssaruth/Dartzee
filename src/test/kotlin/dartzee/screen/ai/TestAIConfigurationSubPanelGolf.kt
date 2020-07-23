@@ -2,7 +2,7 @@ package dartzee.screen.ai
 
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.SegmentType
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
@@ -18,7 +18,7 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
     @Test
     fun `Should initialise from a model correctly`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
         model.hmDartNoToSegmentType[2] = SegmentType.INNER_SINGLE
         model.hmDartNoToSegmentType[3] = SegmentType.OUTER_SINGLE
@@ -53,7 +53,7 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
         panel.getPanelForDartNo(1).getChild<JSpinner>().value = 1
         panel.getPanelForDartNo(2).getChild<JSpinner>().value = 2
 
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         panel.populateModel(model)
 
         model.hmDartNoToStopThreshold[1] shouldBe 1

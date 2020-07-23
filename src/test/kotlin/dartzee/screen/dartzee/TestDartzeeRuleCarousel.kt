@@ -1,7 +1,7 @@
 package dartzee.screen.dartzee
 
 import dartzee.`object`.SegmentType
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.helper.verifyNotCalled
@@ -304,7 +304,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
         carousel.update(emptyList(), darts, 50)
         carousel.getPendingRules().shouldContainExactly(twoBlackOneWhite, innerOuterInner, scoreEighteens)
 
-        val ai = AbstractDartsModel()
+        val ai = DartsAiModel()
         ai.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
         carousel.selectRule(ai)
 
@@ -331,7 +331,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
         carousel.update(emptyList(), darts, 50)
         carousel.getPendingRules().shouldContainExactly(twoBlackOneWhite, innerOuterInner, scoreEighteens)
 
-        val ai = AbstractDartsModel()
+        val ai = DartsAiModel()
         ai.dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
         carousel.selectRule(ai)
 

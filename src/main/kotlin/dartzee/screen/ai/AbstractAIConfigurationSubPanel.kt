@@ -1,16 +1,16 @@
 package dartzee.screen.ai
 
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import javax.swing.JPanel
 
 abstract class AbstractAIConfigurationSubPanel : JPanel()
 {
     abstract fun valid(): Boolean
-    abstract fun populateModel(model: AbstractDartsModel)
-    abstract fun initialiseFromModel(model: AbstractDartsModel)
+    abstract fun populateModel(model: DartsAiModel)
+    abstract fun initialiseFromModel(model: DartsAiModel)
 
     fun reset()
     {
-        initialiseFromModel(AbstractDartsModel())
+        initialiseFromModel(DartsAiModel())
     }
 }

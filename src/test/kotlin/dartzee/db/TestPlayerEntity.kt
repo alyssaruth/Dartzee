@@ -1,6 +1,6 @@
 package dartzee.db
 
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
@@ -48,7 +48,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     @Test
     fun `Should correctly construct the AI model`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.scoringDart = 15
         val xml = model.writeXml()
 
@@ -56,7 +56,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
         player.strategyXml = xml
 
         val recoveredModel = player.getModel()
-        recoveredModel.shouldBeInstanceOf<AbstractDartsModel>()
+        recoveredModel.shouldBeInstanceOf<DartsAiModel>()
         recoveredModel.scoringDart shouldBe 15
     }
 

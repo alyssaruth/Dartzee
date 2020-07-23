@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.db.PlayerEntity
 import dartzee.screen.AbstractPlayerCreationDialog
 import dartzee.screen.ScreenCache
@@ -143,7 +143,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             textFieldName.text = name
 
             val xmlStr = aiPlayer.strategyXml
-            val model = AbstractDartsModel()
+            val model = DartsAiModel()
             model.readXml(xmlStr)
 
             panelAIConfig.initialiseFromModel(model)
@@ -159,7 +159,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         textFieldName.isEditable = editable
     }
 
-    private fun factoryModelFromPanels(): AbstractDartsModel
+    private fun factoryModelFromPanels(): DartsAiModel
     {
         val model = panelAIConfig.initialiseModel()
         panelX01Config.populateModel(model)

@@ -1,6 +1,6 @@
 package dartzee.db
 
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
 import javax.swing.ImageIcon
@@ -39,9 +39,9 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
      */
     fun isHuman() = strategyXml.isEmpty()
     fun isAi() = strategyXml.isNotEmpty()
-    fun getModel(): AbstractDartsModel
+    fun getModel(): DartsAiModel
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.readXml(strategyXml)
         return model
     }

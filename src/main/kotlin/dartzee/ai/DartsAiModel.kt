@@ -24,7 +24,7 @@ enum class DartzeePlayStyle {
     AGGRESSIVE
 }
 
-class AbstractDartsModel
+class DartsAiModel
 {
     //Modelling
     private val mean = 0
@@ -86,7 +86,11 @@ class AbstractDartsModel
         val dartzeePlayStyleStr = rootElement.getAttribute(ATTRIBUTE_DARTZEE_PLAY_STYLE)
         dartzeePlayStyle = if (dartzeePlayStyleStr.isEmpty()) DartzeePlayStyle.CAUTIOUS else DartzeePlayStyle.valueOf(dartzeePlayStyleStr)
 
-        readXmlSpecific(rootElement)
+        val sd = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION)
+        val sdDoubles = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
+        val sdCentral = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
+
+        populate(sd, sdDoubles, sdCentral)
     }
 
     fun readXmlOldWay(xmlStr: String)
@@ -126,7 +130,11 @@ class AbstractDartsModel
             hmDartNoToSegmentType = hmDartNoToSegmentInt.mapValues { DartsDatabaseUtil.convertOldSegmentType(it.value) }.toMutableMap()
             hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
 
-            readXmlSpecific(rootElement)
+            val sd = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION)
+            val sdDoubles = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
+            val sdCentral = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
+
+            populate(sd, sdDoubles, sdCentral)
         }
         catch (t: Throwable)
         {
@@ -419,15 +427,6 @@ class AbstractDartsModel
         }
     }
 
-    fun readXmlSpecific(root: Element)
-    {
-        val sd = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION)
-        val sdDoubles = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
-        val sdCentral = root.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
-
-        populate(sd, sdDoubles, sdCentral)
-    }
-
     fun getProbabilityWithinRadius(radius: Double): Double
     {
         return distribution!!.probability(-radius, radius)
@@ -452,8 +451,6 @@ class AbstractDartsModel
 
     companion object
     {
-        const val DARTS_MODEL_NORMAL_DISTRIBUTION = "Simple Gaussian"
-
         const val ATTRIBUTE_STANDARD_DEVIATION = "StandardDeviation"
         const val ATTRIBUTE_STANDARD_DEVIATION_DOUBLES = "StandardDeviationDoubles"
         const val ATTRIBUTE_STANDARD_DEVIATION_CENTRAL = "StandardDeviationCentral"

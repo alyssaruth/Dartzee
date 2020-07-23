@@ -4,7 +4,7 @@ import com.github.alexburlton.swingtest.getChild
 import com.github.alexburlton.swingtest.shouldBeDisabled
 import com.github.alexburlton.swingtest.shouldBeEnabled
 import dartzee.`object`.SegmentType
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
@@ -41,7 +41,7 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     @Test
     fun `Should initialise from a model correctly`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
         model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
         model.hmDartNoToSegmentType[2] = SegmentType.INNER_SINGLE
 
@@ -62,7 +62,7 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     @Test
     fun `Should populate model correctly`()
     {
-        val model = AbstractDartsModel()
+        val model = DartsAiModel()
 
         val panel = AIConfigurationGolfDartPanel(1)
         panel.getChild<JSpinner>().value = 2
