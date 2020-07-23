@@ -55,25 +55,6 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
         tfName.text = name
     }
 
-    fun populateOldWay(rootElement: Element)
-    {
-        val list = rootElement.getElementsByTagName("Segment")
-        for (i in 0 until list.length)
-        {
-            val node = list.item(i) as Element
-            val scoreAndType = node.getAttribute("Value")
-            val toks = scoreAndType.split("_")
-
-            val score = toks[0].toInt()
-            val type = toks[1].toInt()
-            val segment = DartboardSegment(DartsDatabaseUtil.convertOldSegmentType(type), score)
-            segments.add(segment)
-        }
-
-        name = rootElement.getAttribute("Name")
-        tfName.text = name
-    }
-
     override fun validate(): String
     {
         if (segments.isEmpty())

@@ -8,12 +8,12 @@ import dartzee.core.util.*
 import dartzee.logging.CODE_AI_ERROR
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
-import dartzee.logging.LoggingCode
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.*
 import dartzee.utils.InjectedThings.logger
+import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import org.w3c.dom.Element
 import java.awt.Point
@@ -91,55 +91,6 @@ class DartsAiModel
         val sdCentral = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
 
         populate(sd, sdDoubles, sdCentral)
-    }
-
-    fun readXmlOldWay(xmlStr: String)
-    {
-        try
-        {
-            var fixed = xmlStr.replace("DartNumber", "Key", ignoreCase = true)
-            fixed = fixed.replace("SegmentType", "Value", ignoreCase = true)
-            fixed = fixed.replace("StopThreshold", "Value", ignoreCase = true)
-
-            val xmlDoc = fixed.toXmlDoc()
-            val rootElement = xmlDoc!!.documentElement
-
-            val scoringSingle = rootElement.getAttributeInt(ATTRIBUTE_SCORING_DART)
-            if (scoringSingle > 0)
-            {
-                this.scoringDart = scoringSingle
-            }
-
-            //X01
-            mercyThreshold = rootElement.getAttributeInt(ATTRIBUTE_MERCY_RULE, -1)
-
-            hmScoreToDart = mutableMapOf()
-            val setupDarts = rootElement.getElementsByTagName(TAG_SETUP_DART)
-            for (i in 0 until setupDarts.length)
-            {
-                val setupDart = setupDarts.item(i) as Element
-                val score = setupDart.getAttributeInt(ATTRIBUTE_SCORE)
-                val value = setupDart.getAttributeInt(ATTRIBUTE_DART_VALUE)
-                val multiplier = setupDart.getAttributeInt(ATTRIBUTE_DART_MULTIPLIER)
-
-                hmScoreToDart[score] = Dart(value, multiplier)
-            }
-
-            //Golf
-            val hmDartNoToSegmentInt = rootElement.readIntegerHashMap(TAG_GOLF_AIM).mapValues { it.value.toInt() }
-            hmDartNoToSegmentType = hmDartNoToSegmentInt.mapValues { DartsDatabaseUtil.convertOldSegmentType(it.value) }.toMutableMap()
-            hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
-
-            val sd = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION)
-            val sdDoubles = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
-            val sdCentral = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
-
-            populate(sd, sdDoubles, sdCentral)
-        }
-        catch (t: Throwable)
-        {
-            logger.error(LoggingCode("conversion.fucked"), xmlStr, t)
-        }
     }
 
     fun writeXml(): String
@@ -256,28 +207,6 @@ class DartsAiModel
         val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
         val pt = throwDartAtPoint(ptToAimAt, dartboard)
         dartboard.dartThrown(pt)
-    }
-
-    /**
-     * Given the single/double/treble required, calculate the physical coordinates of the optimal place to aim
-     */
-    fun getPointForScore(drt: Dart, dartboard: Dartboard): Point
-    {
-        val score = drt.score
-        val segmentType = drt.getSegmentTypeToAimAt()
-        return getPointForScore(score, dartboard, segmentType)
-    }
-
-    private fun getPointForScore(score: Int, dartboard: Dartboard, type: SegmentType): Point
-    {
-        val points = dartboard.getPointsForSegment(score, type)
-        val avgPoint = getAverage(points)
-
-        //Need to rationalise here as we may have adjusted outside of the bounds
-        //Shouldn't need this anymore, but can't hurt to leave it here anyway!
-        dartboard.rationalisePoint(avgPoint)
-
-        return avgPoint
     }
 
     fun runSimulation(dartboard: Dartboard): SimulationWrapper
