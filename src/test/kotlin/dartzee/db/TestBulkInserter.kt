@@ -121,9 +121,8 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert("InsertTest", rows, 300, 50)
 
-        getLogRecords().size shouldBe 1
-        val log = getLastLog()
-        log.loggingCode shouldBe CODE_BULK_SQL
+        getLogRecords().filter { it.loggingCode == CODE_SQL }.shouldBeEmpty()
+        val log = getLogRecords().last { it.loggingCode == CODE_BULK_SQL }
         log.message shouldBe "Inserting 501 rows into InsertTest (2 threads @ 50 rows per insert)"
         getCountFromTable("InsertTest") shouldBe 501
 
