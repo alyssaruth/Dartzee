@@ -11,8 +11,11 @@ import dartzee.logging.CODE_SIMULATION_STARTED
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
-import dartzee.utils.*
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.generateRandomAngle
+import dartzee.utils.getAngleForPoint
+import dartzee.utils.translatePoint
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import org.w3c.dom.Element
@@ -121,7 +124,17 @@ class DartsAiModel
 
         rootElement.setAttribute(ATTRIBUTE_DARTZEE_PLAY_STYLE, "$dartzeePlayStyle")
 
-        writeXmlSpecific(rootElement)
+        rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "" + standardDeviation)
+
+        if (standardDeviationDoubles > 0)
+        {
+            rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES, "" + standardDeviationDoubles)
+        }
+
+        if (standardDeviationCentral > 0)
+        {
+            rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL, "" + standardDeviationCentral)
+        }
 
         return xmlDoc.toXmlString()
     }
@@ -339,21 +352,6 @@ class DartsAiModel
         val angleTowardsCenter = (angleToAvoid + 180) % 360
         val angleDistribution = NormalDistribution(angleTowardsCenter, standardDeviationCentral)
         return angleDistribution.sample()
-    }
-
-    fun writeXmlSpecific(rootElement: Element)
-    {
-        rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "" + standardDeviation)
-
-        if (standardDeviationDoubles > 0)
-        {
-            rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES, "" + standardDeviationDoubles)
-        }
-
-        if (standardDeviationCentral > 0)
-        {
-            rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL, "" + standardDeviationCentral)
-        }
     }
 
     fun getProbabilityWithinRadius(radius: Double): Double

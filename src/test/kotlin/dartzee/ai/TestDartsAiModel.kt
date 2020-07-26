@@ -99,43 +99,6 @@ class TestDartsAiModel: AbstractTest()
     }
 
     /**
-     * Read / write XML etc
-     */
-    @Test
-    fun `Should not write optional values that are unset`()
-    {
-        val xmlDoc = XmlUtil.factoryNewDocument()
-        val rootElement = xmlDoc.createElement("Test")
-
-        val model = DartsAiModel()
-        model.standardDeviation = 25.6
-
-        model.writeXmlSpecific(rootElement)
-
-        rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION) shouldBe "25.6"
-        rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL) shouldBe ""
-        rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES) shouldBe ""
-    }
-
-    @Test
-    fun `Should write optional values that have been set`()
-    {
-        val xmlDoc = XmlUtil.factoryNewDocument()
-        val rootElement = xmlDoc.createElement("Test")
-
-        val model = DartsAiModel()
-        model.standardDeviation = 13.0
-        model.standardDeviationCentral = 19.2
-        model.standardDeviationDoubles = 3.7
-
-        model.writeXmlSpecific(rootElement)
-
-        rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION) shouldBe "13.0"
-        rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL) shouldBe "19.2"
-        rootElement.getAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES) shouldBe "3.7"
-    }
-
-    /**
      * Verified against standard Normal Dist z-tables
      */
     @Test
