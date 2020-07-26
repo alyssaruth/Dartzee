@@ -3,11 +3,7 @@ package dartzee.ai
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.ai.DartsAiModel.Companion.ATTRIBUTE_STANDARD_DEVIATION
-import dartzee.ai.DartsAiModel.Companion.ATTRIBUTE_STANDARD_DEVIATION_CENTRAL
-import dartzee.ai.DartsAiModel.Companion.ATTRIBUTE_STANDARD_DEVIATION_DOUBLES
 import dartzee.borrowTestDartboard
-import dartzee.core.util.XmlUtil
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.CLOCK_TYPE_TREBLES
