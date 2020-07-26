@@ -516,19 +516,6 @@ class TestDartsAiModel: AbstractTest()
         }
     }
 
-    /**
-     * Misc
-     */
-    @Test
-    fun `Should aim at the average point for the relevant segment`()
-    {
-        val dartboard = FudgedDartboard()
-        dartboard.paintDartboard()
-
-        val model = beastDartsModel()
-        model.getPointForScore(Dart(20, 3), dartboard) shouldBe Point(3, 4)
-    }
-
     class FudgedDartboard : Dartboard(100, 100)
     {
         override fun paintDartboard(colourWrapper: ColourWrapper?, listen: Boolean, cached: Boolean)
