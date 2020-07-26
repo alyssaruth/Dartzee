@@ -160,9 +160,7 @@ object DartsDatabaseUtil
     {
         return when(version)
         {
-            10 -> listOf("1. DartzeeRule.sql", "2. Game.sql")
-            11 -> listOf("1. Game.sql")
-            12 -> listOf("1. DartsMatch.sql", "2. Dart.sql")
+            13 -> listOf("1. Player.sql")
             else -> listOf()
         }
     }
