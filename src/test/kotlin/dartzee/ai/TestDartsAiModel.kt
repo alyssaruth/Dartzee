@@ -1,6 +1,5 @@
 package dartzee.ai
 
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -513,21 +512,6 @@ class TestDartsAiModel: AbstractTest()
             listener.dartThrown(Dart(20, 3))
             listener.dartThrown(Dart(20, 3))
             listener.dartThrown(Dart(20, 3))
-        }
-    }
-
-    class FudgedDartboard : Dartboard(100, 100)
-    {
-        override fun paintDartboard(colourWrapper: ColourWrapper?, listen: Boolean, cached: Boolean)
-        {
-            super.paintDartboard(colourWrapper, listen, cached)
-
-            val segment = DartboardSegment(SegmentType.TREBLE, 20)
-            segment.addPoint(Point(1, 7))
-            segment.addPoint(Point(3, 3))
-            segment.addPoint(Point(5, 2))
-
-            hmSegmentKeyToSegment["20_${SegmentType.TREBLE}"] = segment
         }
     }
 }
