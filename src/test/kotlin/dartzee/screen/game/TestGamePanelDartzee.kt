@@ -137,7 +137,7 @@ class TestGamePanelDartzee: AbstractTest()
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val game = insertGame(gameType = GameType.DARTZEE)
-        val player = insertPlayer(strategy = -1)
+        val player = insertPlayer(strategyXml = "")
 
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
@@ -178,7 +178,7 @@ class TestGamePanelDartzee: AbstractTest()
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         val panel = makeGamePanel(rules, summaryPanel)
-        panel.startNewGame(listOf(insertPlayer(strategy = -1)))
+        panel.startNewGame(listOf(insertPlayer(strategyXml = "")))
 
         panel.hoverChanged(SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen)))
         panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen))
@@ -200,7 +200,7 @@ class TestGamePanelDartzee: AbstractTest()
     {
         val summaryPanel = mockk<DartzeeRuleSummaryPanel>(relaxed = true)
         val panel = makeGamePanel(rules, summaryPanel, totalPlayers = 2)
-        panel.startNewGame(listOf(insertPlayer(strategy = -1), insertPlayer(strategy = -1)))
+        panel.startNewGame(listOf(insertPlayer(strategyXml = ""), insertPlayer(strategyXml = "")))
 
         panel.scorerSelected(panel.scorersOrdered[0])
         panel.currentPlayerNumber shouldBe 0
@@ -223,7 +223,7 @@ class TestGamePanelDartzee: AbstractTest()
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val game = insertGame(gameType = GameType.DARTZEE)
-        val player = insertPlayer(strategy = -1)
+        val player = insertPlayer(strategyXml = "")
 
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)

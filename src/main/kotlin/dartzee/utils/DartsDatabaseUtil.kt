@@ -1,12 +1,9 @@
 package dartzee.utils
 
-import dartzee.`object`.SegmentType
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
-import dartzee.core.util.toXmlDoc
-import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.db.*
 import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.logging.*
@@ -25,7 +22,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    const val MIN_DB_VERSION_FOR_CONVERSION = 8
+    const val MIN_DB_VERSION_FOR_CONVERSION = 12
     const val DATABASE_VERSION = 13
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
@@ -104,41 +101,9 @@ object DartsDatabaseUtil
 
         logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${versionNumber + 1}")
 
-        if (versionNumber == 8)
+        if (versionNumber == 12)
         {
-            DartzeeRuleEntity().createTable()
-            DartzeeTemplateEntity().createTable()
-            DartzeeRoundResultEntity().createTable()
-        }
-        else if (versionNumber == 9)
-        {
-            val scripts = getScripts(10).map { { runScript(10, it)} }.toTypedArray()
-            runConversions(10,
-                    *scripts,
-                    { X01FinishConversion.convertX01Finishes() })
-        }
-        else if (versionNumber == 10)
-        {
-            runSqlScriptsForVersion(11)
-
-            PendingLogsEntity().createTable()
-
-            //Added "ScoringSegments"
-            DartzeeRuleConversion.convertDartzeeRules()
-        }
-        else if (versionNumber == 11)
-        {
-            runSqlScriptsForVersion(12)
-            DartEntity().createIndexes()
-
-            convertPlayerStrategies()
-            convertCustomDartzeeRules()
-
-            //SegmentType enum
-            DartzeeRuleConversion.convertDartzeeRules()
-        }
-        else if (versionNumber == 12)
-        {
+            runSqlScriptsForVersion(13)
             updatePlayerStrategies()
         }
 
@@ -149,68 +114,16 @@ object DartsDatabaseUtil
         initialiseDatabase(version)
     }
 
-    private fun convertCustomDartzeeRules()
-    {
-        val rules = DartzeeRuleEntity().retrieveEntities("dart1Rule LIKE '%Custom%' OR dart2Rule LIKE '%Custom%' OR dart3Rule LIKE '%Custom%'")
-        rules.forEach {
-            if (it.dart1Rule.contains("custom", ignoreCase = true)) {
-                val customRule = DartzeeDartRuleCustom()
-                customRule.populateOldWay(it.dart1Rule.toXmlDoc()!!.documentElement)
-                it.dart1Rule = customRule.toDbString()
-            }
-
-            if (it.dart2Rule.contains("custom", ignoreCase = true)) {
-                val customRule = DartzeeDartRuleCustom()
-                customRule.populateOldWay(it.dart2Rule.toXmlDoc()!!.documentElement)
-                it.dart2Rule = customRule.toDbString()
-            }
-
-            if (it.dart3Rule.contains("custom", ignoreCase = true)) {
-                val customRule = DartzeeDartRuleCustom()
-                customRule.populateOldWay(it.dart3Rule.toXmlDoc()!!.documentElement)
-                it.dart3Rule = customRule.toDbString()
-            }
-
-            it.saveToDatabase()
-        }
-    }
-
-
-    private fun convertPlayerStrategies()
-    {
-        val players = PlayerEntity().retrieveEntities("Strategy > -1")
-        players.forEach {
-            val model = AbstractDartsModel.factoryForType(it.strategy)!!
-            model.readXmlOldWay(it.strategyXml)
-            it.strategyXml = model.writeXml()
-            it.saveToDatabase()
-        }
-    }
-
     private fun updatePlayerStrategies()
     {
-        val players = PlayerEntity().retrieveEntities("Strategy > -1")
+        val players = PlayerEntity().retrieveEntities("StrategyXml <> ''")
         players.forEach {
-            val model = AbstractDartsModel.factoryForType(it.strategy)!!
+            val model = DartsAiModel()
             model.readXml(it.strategyXml)
             it.strategyXml = model.writeXml()
             it.saveToDatabase()
         }
     }
-
-    fun convertOldSegmentType(segmentType: Int): SegmentType
-    {
-        return when (segmentType)
-        {
-            1 -> SegmentType.DOUBLE
-            2 -> SegmentType.TREBLE
-            3 -> SegmentType.OUTER_SINGLE
-            4 -> SegmentType.INNER_SINGLE
-            5 -> SegmentType.MISS
-            else -> SegmentType.MISSED_BOARD
-        }
-    }
-
 
     private fun runConversions(version: Int, vararg conversions: (() -> Unit))
     {

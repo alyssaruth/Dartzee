@@ -1,7 +1,6 @@
 package dartzee.db
 
-import dartzee.ai.AbstractDartsModel
-import dartzee.ai.DartsModelNormalDistribution
+import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
@@ -19,7 +18,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     @Test
     fun `Should cache the player on first query then use it from then on`()
     {
-        val playerId = insertPlayer(name = "Bob", strategy = -1).rowId
+        val playerId = insertPlayer(name = "Bob", strategyXml = "").rowId
 
         val pt = ParticipantEntity()
         pt.playerId = playerId
@@ -40,8 +39,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     fun `Should return correct values for an AI player`()
     {
         val aiId = insertPlayer(name = "Robot",
-                strategy = AbstractDartsModel.TYPE_NORMAL_DISTRIBUTION,
-                strategyXml = DartsModelNormalDistribution().writeXml()).rowId
+                strategyXml = DartsAiModel().writeXml()).rowId
 
         val pt = ParticipantEntity()
         pt.playerId = aiId
@@ -56,7 +54,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     {
         val player = PlayerEntity()
         player.name = "Bob"
-        player.strategy = -1
+        player.strategyXml = ""
 
         val pt = ParticipantEntity()
         pt.setPlayer(player)

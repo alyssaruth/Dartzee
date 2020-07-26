@@ -2,9 +2,9 @@ package dartzee.screen.stats.overall
 
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.GameType
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
@@ -60,8 +60,8 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     @Test
     fun `Should respond to changing player filters, and pull through player names`()
     {
-        val robot = insertPlayer(name = "Robot", strategy = 1)
-        val human = insertPlayer(name = "Human", strategy = -1)
+        val robot = insertPlayer(name = "Robot", strategyXml = "foo")
+        val human = insertPlayer(name = "Human", strategyXml = "")
 
         insertFinishForPlayer(robot, 75)
         insertFinishForPlayer(human, 83)

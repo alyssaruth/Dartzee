@@ -1,7 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.ai.AbstractDartsModel
-import dartzee.core.bean.selectedItemTyped
+import dartzee.ai.DartsAiModel
 import dartzee.db.PlayerEntity
 import dartzee.screen.AbstractPlayerCreationDialog
 import dartzee.screen.ScreenCache
@@ -21,7 +20,6 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     private val panelNorth = JPanel()
     private val panelSetup = JPanel()
     private val lblName = JLabel("Name")
-    private val comboBox = JComboBox<String>()
     private val tabbedPaneGameSpecifics = JTabbedPane()
     private val panelX01Config = AIConfigurationSubPanelX01()
     private val panelGolfConfig = AIConfigurationSubPanelGolf()
@@ -36,7 +34,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     private val scatterTab = VisualisationPanelScatter()
     private val densityTab = VisualisationPanelDensity()
 
-    private var panelAIConfig: AbstractAIConfigurationPanel = AIConfigurationPanelNormalDistribution()
+    private val panelAIConfig = AIConfigurationPanelNormalDistribution()
     private val btnRunSimulation = JButton("Run Simulation...")
     private val textFieldMissPercent = JTextField()
     private val lblTreble = JLabel("Treble %")
@@ -99,7 +97,6 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         val lblModel = JLabel("Model")
         lblModel.preferredSize = Dimension(120, 25)
         panelSetup.add(lblModel, "cell 0 1,alignx left,aligny top")
-        panelSetup.add(comboBox, "cell 1 1,grow")
         panelSetup.add(lblName, "cell 0 0,grow")
         panelSetup.add(textFieldName, "cell 1 0,grow")
         textFieldName.columns = 10
@@ -116,11 +113,9 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         tabbedPaneGameSpecifics.addTab("Dartzee", panelDartzeeConfig)
 
         //Listeners
-        comboBox.addActionListener(this)
         btnCalculate.addActionListener(this)
         btnRunSimulation.addActionListener(this)
 
-        populateComboBox()
         initFields()
         setFieldsEditable()
 
@@ -133,9 +128,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
         if (!aiPlayer.retrievedFromDb)
         {
-            comboBox.selectedItem = AbstractDartsModel.DARTS_MODEL_NORMAL_DISTRIBUTION
             avatar.readOnly = false
-            setPanelBasedOnModel(AbstractDartsModel.DARTS_MODEL_NORMAL_DISTRIBUTION)
 
             panelX01Config.reset()
             panelGolfConfig.reset()
@@ -149,13 +142,9 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             val name = aiPlayer.name
             textFieldName.text = name
 
-            val strategy = aiPlayer.strategy
-            val strategyDesc = AbstractDartsModel.getStrategyDesc(strategy)
-            comboBox.selectedItem = strategyDesc
-
             val xmlStr = aiPlayer.strategyXml
-            val model = AbstractDartsModel.factoryForType(strategy)
-            model!!.readXml(xmlStr)
+            val model = DartsAiModel()
+            model.readXml(xmlStr)
 
             panelAIConfig.initialiseFromModel(model)
             panelX01Config.initialiseFromModel(model)
@@ -167,32 +156,10 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     private fun setFieldsEditable()
     {
         val editable = !aiPlayer.retrievedFromDb
-
-        comboBox.isEnabled = editable
         textFieldName.isEditable = editable
     }
 
-    private fun populateComboBox()
-    {
-        val models = AbstractDartsModel.getModelDescriptions()
-        val model = DefaultComboBoxModel(models)
-        comboBox.model = model
-    }
-
-    private fun setPanelBasedOnModel(model: String)
-    {
-        panelNorth.remove(panelAIConfig)
-
-        if (model == AbstractDartsModel.DARTS_MODEL_NORMAL_DISTRIBUTION)
-        {
-            panelAIConfig = AIConfigurationPanelNormalDistribution()
-        }
-
-        panelNorth.add(panelAIConfig, BorderLayout.SOUTH)
-        revalidate()
-    }
-
-    private fun factoryModelFromPanels(): AbstractDartsModel
+    private fun factoryModelFromPanels(): DartsAiModel
     {
         val model = panelAIConfig.initialiseModel()
         panelX01Config.populateModel(model)
@@ -206,7 +173,6 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     {
         when (arg0.source)
         {
-            comboBox -> setPanelBasedOnModel(comboBox.selectedItemTyped())
             btnCalculate -> if (validModel()) calculateStats()
             btnRunSimulation -> runSimulation()
             else -> super.actionPerformed(arg0)
@@ -242,10 +208,8 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         aiPlayer.name = name
 
         val model = factoryModelFromPanels()
-        val type = model.getType()
         val xmlStr = model.writeXml()
 
-        aiPlayer.strategy = type
         aiPlayer.strategyXml = xmlStr
 
         val avatarId = avatar.avatarId

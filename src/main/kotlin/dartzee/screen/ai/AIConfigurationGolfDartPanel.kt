@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.*
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
@@ -59,7 +59,7 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
         lblOrBelow.isEnabled = value > 1
     }
 
-    fun initialiseFromModel(model: AbstractDartsModel)
+    fun initialiseFromModel(model: DartsAiModel)
     {
         //Combo box selection
         val segmentType = model.getSegmentTypeForDartNo(dartNo)
@@ -73,7 +73,7 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
         }
     }
 
-    fun populateModel(model: AbstractDartsModel)
+    fun populateModel(model: DartsAiModel)
     {
         val item = comboBox.selectedItemTyped()
         val segmentType = item.hiddenData

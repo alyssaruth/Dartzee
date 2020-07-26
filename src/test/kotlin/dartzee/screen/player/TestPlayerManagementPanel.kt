@@ -91,7 +91,7 @@ class TestPlayerManagementPanel: AbstractTest()
     fun `Should initialise correctly for a human player`()
     {
         val image = insertPlayerImage(resource = "Sid")
-        val player = insertPlayer(name = "Alex", playerImageId = image.rowId, strategy = -1)
+        val player = insertPlayer(name = "Alex", playerImageId = image.rowId, strategyXml = "")
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -107,7 +107,7 @@ class TestPlayerManagementPanel: AbstractTest()
     fun `Should initialise correctly for an AI player`()
     {
         val image = insertPlayerImage(resource = "Dennis")
-        val player = insertPlayer(name = "Dennis", playerImageId = image.rowId, strategy = 2)
+        val player = insertPlayer(name = "Dennis", playerImageId = image.rowId, strategyXml = "foo")
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -206,7 +206,7 @@ class TestPlayerManagementPanel: AbstractTest()
         val playerManager = mockk<PlayerManager>(relaxed = true)
         InjectedThings.playerManager = playerManager
 
-        val player = insertPlayer(strategy = 2)
+        val player = insertPlayer(strategyXml = "foo")
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -221,7 +221,7 @@ class TestPlayerManagementPanel: AbstractTest()
         val playerManager = mockk<PlayerManager>(relaxed = true)
         InjectedThings.playerManager = playerManager
 
-        val player = insertPlayer(strategy = 2)
+        val player = insertPlayer(strategyXml = "foo")
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)

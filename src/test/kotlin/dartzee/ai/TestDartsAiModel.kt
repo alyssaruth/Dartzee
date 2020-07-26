@@ -1,30 +1,34 @@
 package dartzee.ai
 
-import DummyDartsModel
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.borrowTestDartboard
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.CLOCK_TYPE_TREBLES
 import dartzee.helper.AbstractTest
+import dartzee.helper.beastDartsModel
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores
+import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
+import org.apache.commons.math3.distribution.NormalDistribution
 import org.junit.Test
-import org.w3c.dom.Element
 import java.awt.Point
+import kotlin.math.floor
 
-class TestAbstractDartsModel: AbstractTest()
+class TestDartsAiModel: AbstractTest()
 {
     /**
      * Serialisation
@@ -32,11 +36,11 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should serialise and deserialise correctly with default values`()
     {
-        val model = DummyDartsModel()
+        val model = DartsAiModel()
 
         val xml = model.writeXml()
 
-        val newModel = DummyDartsModel()
+        val newModel = DartsAiModel()
         newModel.readXml(xml)
 
         model.scoringDart shouldBe newModel.scoringDart
@@ -44,14 +48,16 @@ class TestAbstractDartsModel: AbstractTest()
         model.hmDartNoToSegmentType shouldContainExactly newModel.hmDartNoToSegmentType
         model.hmDartNoToStopThreshold shouldContainExactly newModel.hmDartNoToStopThreshold
         model.mercyThreshold shouldBe newModel.mercyThreshold
-        model.foo shouldBe newModel.foo
+        model.standardDeviation shouldBe newModel.standardDeviation
+        model.standardDeviationDoubles shouldBe newModel.standardDeviationDoubles
+        model.standardDeviationCentral shouldBe newModel.standardDeviationCentral
         model.dartzeePlayStyle shouldBe DartzeePlayStyle.CAUTIOUS
     }
 
     @Test
     fun `Should serialise and deserialise non-defaults correctly`()
     {
-        val model = DummyDartsModel()
+        val model = DartsAiModel()
         model.scoringDart = 25
         model.hmScoreToDart[50] = Dart(25, 2)
         model.hmScoreToDart[60] = Dart(10, 1)
@@ -59,21 +65,130 @@ class TestAbstractDartsModel: AbstractTest()
         model.hmDartNoToStopThreshold[1] = 1
         model.hmDartNoToStopThreshold[2] = 2
         model.mercyThreshold = 18
-        model.foo = "bar"
         model.dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
+        model.standardDeviation = 25.6
+        model.standardDeviationDoubles = 50.2
+        model.standardDeviationCentral = 80.5
 
         val xml = model.writeXml()
 
-        val newModel = DummyDartsModel()
+        val newModel = DartsAiModel()
         newModel.readXml(xml)
 
         newModel.scoringDart shouldBe 25
         newModel.mercyThreshold shouldBe 18
-        newModel.foo shouldBe "bar"
         newModel.dartzeePlayStyle shouldBe DartzeePlayStyle.AGGRESSIVE
-        model.hmScoreToDart shouldContainExactly newModel.hmScoreToDart
-        model.hmDartNoToSegmentType shouldContainExactly newModel.hmDartNoToSegmentType
-        model.hmDartNoToStopThreshold shouldContainExactly newModel.hmDartNoToStopThreshold
+        newModel.standardDeviation shouldBe 25.6
+        newModel.standardDeviationDoubles shouldBe 50.2
+        newModel.standardDeviationCentral shouldBe 80.5
+        newModel.hmScoreToDart shouldContainExactly model.hmScoreToDart
+        newModel.hmDartNoToSegmentType shouldContainExactly model.hmDartNoToSegmentType
+        newModel.hmDartNoToStopThreshold shouldContainExactly model.hmDartNoToStopThreshold
+
+        newModel.distribution shouldNotBe null
+        newModel.distribution!!.standardDeviation shouldBe 25.6
+        newModel.distribution!!.mean shouldBe 0.0
+
+        newModel.distributionDoubles shouldNotBe null
+        newModel.distributionDoubles!!.standardDeviation shouldBe 50.2
+        newModel.distributionDoubles!!.mean shouldBe 0.0
+    }
+
+    /**
+     * Verified against standard Normal Dist z-tables
+     */
+    @Test
+    fun `Should return the correct density based on the standard deviation`()
+    {
+        val model = DartsAiModel()
+        model.populate(20.0, 0.0, 0.0)
+
+        //P(within 0.5 SD)
+        model.getProbabilityWithinRadius(10.0).shouldBeBetween(0.3829, 0.3831, 0.0)
+
+        //P(within 1 SD)
+        model.getProbabilityWithinRadius(20.0).shouldBeBetween(0.6826, 0.6827, 0.0)
+
+        //P(within 2 SD)
+        model.getProbabilityWithinRadius(40.0).shouldBeBetween(0.9543, 0.9545, 0.0)
+
+        //P(within 3 SD)
+        model.getProbabilityWithinRadius(60.0).shouldBeBetween(0.9973, 0.9975, 0.0)
+    }
+
+    /**
+     * Actual sampling behaviour
+     */
+    @Test
+    fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`()
+    {
+        val model = DartsAiModel()
+
+        val distribution = mockk<NormalDistribution>(relaxed = true)
+        every { distribution.sample() } returns 3.0
+
+        val distributionDoubles = mockk<NormalDistribution>(relaxed = true)
+        every { distributionDoubles.sample() } returns 6.0
+
+        model.standardDeviationCentral = 0.0
+        model.distribution = distribution
+        model.distributionDoubles = distributionDoubles
+
+        val dartboard = borrowTestDartboard()
+
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
+        val ptDouble = dartboard.getPointsForSegment(20, SegmentType.DOUBLE).first()
+
+        val (radiusNonDouble) = model.calculateRadiusAndAngle(pt, dartboard)
+        radiusNonDouble shouldBe 3.0
+
+        val (radiusDouble) = model.calculateRadiusAndAngle(ptDouble, dartboard)
+        radiusDouble shouldBe 6.0
+    }
+
+    @Test
+    fun `Should revert to the regular distribution for doubles`()
+    {
+        val model = DartsAiModel()
+
+        val distribution = mockk<NormalDistribution>(relaxed = true)
+        every { distribution.sample() } returns 3.0
+
+        model.standardDeviationCentral = 0.0
+        model.distribution = distribution
+        model.distributionDoubles = null
+
+        val dartboard = borrowTestDartboard()
+
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
+        val ptDouble = dartboard.getPointsForSegment(20, SegmentType.DOUBLE).first()
+
+        val (radiusNonDouble) = model.calculateRadiusAndAngle(pt, dartboard)
+        radiusNonDouble shouldBe 3.0
+
+        val (radiusDouble) = model.calculateRadiusAndAngle(ptDouble, dartboard)
+        radiusDouble shouldBe 3.0
+    }
+
+    @Test
+    fun `Should generate a random angle between 0 - 360 by default`()
+    {
+        val model = DartsAiModel()
+        model.populate(3.0, 0.0, 0.0)
+
+        val dartboard = borrowTestDartboard()
+        val pt = Point(0, 0)
+
+        val hsAngles = HashSet<Double>()
+        for (i in 0..100000)
+        {
+            val (_, theta) = model.calculateRadiusAndAngle(pt, dartboard)
+            theta.shouldBeBetween(0.0, 360.0, 0.0)
+
+            hsAngles.add(floor(theta))
+        }
+
+        hsAngles.size shouldBe 360
     }
 
     /**
@@ -82,7 +197,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim for the overridden value if one is set for the current setup score`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.hmScoreToDart[77] = Dart(17, 2)
 
         val dartboard = Dartboard(100, 100)
@@ -99,7 +214,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim for the scoring dart when the score is over 60`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.scoringDart = 18
 
         val dartboard = Dartboard(100, 100)
@@ -116,7 +231,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should throw at inner bull if the scoring dart is 25`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.scoringDart = 25
 
         val dartboard = Dartboard(100, 100)
@@ -133,7 +248,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim to reduce down to D20 when in the 41 - 60 range`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.scoringDart = 25
 
         val dartboard = Dartboard(100, 100)
@@ -154,7 +269,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim to reduce to 32 when the score is less than 40`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
@@ -169,7 +284,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim to reduce to 16 when the score is less than 32`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
@@ -184,7 +299,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim to reduce to 8 when the score is less than 16`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
@@ -199,7 +314,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim to reduce to 4 when the score is less than 8`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
@@ -214,7 +329,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim for the double when on an even number`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         val scores = getCheckoutScores().filter{ it <= 40 }
         scores.forEach {
@@ -235,7 +350,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim for double, treble, treble by default`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
@@ -251,7 +366,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should respect overridden targets per dart`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
         model.hmDartNoToSegmentType[2] = SegmentType.OUTER_SINGLE
         model.hmDartNoToSegmentType[3] = SegmentType.DOUBLE
@@ -270,7 +385,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Stop thresholds should be 2 then 3 by default`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         model.getStopThresholdForDartNo(1) shouldBe 2
         model.getStopThresholdForDartNo(2) shouldBe 3
@@ -279,7 +394,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Overridden stop thresholds should be adhered to`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.hmDartNoToStopThreshold[1] = 3
         model.hmDartNoToStopThreshold[2] = 4
 
@@ -293,7 +408,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim for the right segmentType and target number`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
@@ -314,7 +429,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should aim aggressively if less than 2 darts thrown, and cautiously for the final one`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
 
         val dartboard = DartzeeDartboard(100, 100)
@@ -338,7 +453,7 @@ class TestAbstractDartsModel: AbstractTest()
     @Test
     fun `Should throw aggressively for the final dart if player is aggressive`()
     {
-        val model = DummyDartsModel()
+        val model = beastDartsModel()
         model.dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
 
         val dartboard = DartzeeDartboard(100, 100)
@@ -356,36 +471,6 @@ class TestAbstractDartsModel: AbstractTest()
             listener.dartThrown(Dart(20, 3))
             listener.dartThrown(Dart(20, 3))
             listener.dartThrown(Dart(20, 3))
-        }
-    }
-
-
-
-    /**
-     * Misc
-     */
-    @Test
-    fun `Should aim at the average point for the relevant segment`()
-    {
-        val dartboard = FudgedDartboard()
-        dartboard.paintDartboard()
-
-        val model = DummyDartsModel()
-        model.getPointForScore(Dart(20, 3), dartboard) shouldBe Point(3, 4)
-    }
-
-    class FudgedDartboard : Dartboard(100, 100)
-    {
-        override fun paintDartboard(colourWrapper: ColourWrapper?, listen: Boolean, cached: Boolean)
-        {
-            super.paintDartboard(colourWrapper, listen, cached)
-
-            val segment = DartboardSegment(SegmentType.TREBLE, 20)
-            segment.addPoint(Point(1, 7))
-            segment.addPoint(Point(3, 3))
-            segment.addPoint(Point(5, 2))
-
-            hmSegmentKeyToSegment["20_${SegmentType.TREBLE}"] = segment
         }
     }
 }

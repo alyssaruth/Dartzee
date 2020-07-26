@@ -1,6 +1,6 @@
 package dartzee.db
 
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
 import javax.swing.ImageIcon
@@ -9,7 +9,6 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
 {
     //DB Fields
     var name = ""
-    var strategy = -1
     var strategyXml = ""
     var dtDeleted = END_OF_TIME
     var playerImageId = ""
@@ -19,7 +18,6 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
     override fun getCreateTableSqlSpecific(): String
     {
         return ("Name varchar(25) NOT NULL, "
-                + "Strategy int NOT NULL, "
                 + "StrategyXml varchar(1000) NOT NULL, "
                 + "DtDeleted timestamp NOT NULL, "
                 + "PlayerImageId VARCHAR(36) NOT NULL")
@@ -28,7 +26,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
         val nameIndex = listOf("Name")
-        val strategyDtDeletedIndex = listOf("Strategy", "DtDeleted")
+        val strategyDtDeletedIndex = listOf("StrategyXml", "DtDeleted")
 
         indexes.add(nameIndex)
         indexes.add(strategyDtDeletedIndex)
@@ -39,11 +37,11 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
     /**
      * Helpers
      */
-    fun isHuman() = (strategy == -1)
-    fun isAi() = (strategy > -1)
-    fun getModel(): AbstractDartsModel
+    fun isHuman() = strategyXml.isEmpty()
+    fun isAi() = strategyXml.isNotEmpty()
+    fun getModel(): DartsAiModel
     {
-        val model = AbstractDartsModel.factoryForType(strategy)!!
+        val model = DartsAiModel()
         model.readXml(strategyXml)
         return model
     }
@@ -56,7 +54,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
         val ICON_AI = ImageIcon(PlayerEntity::class.java.getResource("/flags/aiFlag.png"))
         val ICON_HUMAN = ImageIcon(PlayerEntity::class.java.getResource("/flags/humanFlag.png"))
 
-        fun getPlayerFlag(human:Boolean) = if (human) ICON_HUMAN else ICON_AI
+        fun getPlayerFlag(human: Boolean) = if (human) ICON_HUMAN else ICON_AI
 
         /**
          * Retrieval methods

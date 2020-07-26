@@ -1,5 +1,5 @@
 package dartzee.helper
 
-import dartzee.ai.DartsModelNormalDistribution
+import dartzee.ai.DartsAiModel
 
-fun beastDartsModel() = DartsModelNormalDistribution().also { it.populate(0.1, 0.0, 0.0) }
+fun beastDartsModel() = DartsAiModel().also { it.populate(0.1, 0.0, 0.0) }

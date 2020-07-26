@@ -30,8 +30,8 @@ class TestPlayerSelectDialog: AbstractTest()
     @Test
     fun `Should respond to radio button selection`()
     {
-        insertPlayer(name = "AI", strategy = 1)
-        insertPlayer(name = "Bob", strategy = -1)
+        insertPlayer(name = "AI", strategyXml = "foo")
+        insertPlayer(name = "Bob", strategyXml = "")
 
         val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
         dlg.buildTable()

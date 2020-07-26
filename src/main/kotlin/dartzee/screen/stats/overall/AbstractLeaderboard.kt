@@ -55,12 +55,12 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
         DatabaseUtil.executeQuery(sqlStr).use { rs ->
             while (rs.next())
             {
-                val strategy = rs.getInt(1)
-                val playerName = rs.getString(2)
-                val localId = rs.getLong(3)
+                val strategyXml = rs.getString("StrategyXml")
+                val playerName = rs.getString("Name")
+                val localId = rs.getLong("LocalId")
                 val score = rs.getInt(4)
 
-                val playerFlag = PlayerEntity.getPlayerFlag(strategy == -1)
+                val playerFlag = PlayerEntity.getPlayerFlag(strategyXml.isEmpty())
 
                 val row = arrayOf<Any>(playerFlag, playerName, localId, score)
                 rows.add(row)

@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.Dart
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.bean.SpinnerSingleSelector
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -43,7 +43,7 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
 
     override fun valid() = true
 
-    override fun populateModel(model: AbstractDartsModel)
+    override fun populateModel(model: DartsAiModel)
     {
         model.hmScoreToDart = hmScoreToDart
         model.scoringDart = spinnerScoringDart.value as Int
@@ -56,7 +56,7 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         }
     }
 
-    override fun initialiseFromModel(model: AbstractDartsModel)
+    override fun initialiseFromModel(model: DartsAiModel)
     {
         spinnerScoringDart.value = model.scoringDart
 

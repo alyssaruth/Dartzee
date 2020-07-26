@@ -1,7 +1,7 @@
 package dartzee.helper
 
 import dartzee.`object`.SegmentType
-import dartzee.ai.AbstractDartsModel
+import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
@@ -23,9 +23,9 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
-fun insertPlayerForGame(name: String, gameId: String, strategy: Int = 1): PlayerEntity
+fun insertPlayerForGame(name: String, gameId: String, strategyXml: String = "foo"): PlayerEntity
 {
-    val player = insertPlayer(name = name, strategy = strategy)
+    val player = insertPlayer(name = name, strategyXml = strategyXml)
     insertParticipant(playerId = player.rowId, gameId = gameId)
     return player
 }
@@ -66,12 +66,11 @@ fun insertGameForPlayer(player: PlayerEntity,
     insertParticipant(playerId = player.rowId, gameId = game.rowId, finalScore = finalScore, dtFinished = dtFinished)
 }
 
-fun insertPlayer(model: AbstractDartsModel) =
-        insertPlayer(strategy = model.getType(), strategyXml = model.writeXml())
+fun insertPlayer(model: DartsAiModel) =
+        insertPlayer(strategyXml = model.writeXml())
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
-                 strategy: Int = 1,
                  strategyXml: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
                  playerImageId: String? = null): PlayerEntity
@@ -79,7 +78,6 @@ fun insertPlayer(uuid: String = randomGuid(),
     val p = PlayerEntity()
     p.rowId = uuid
     p.name = name
-    p.strategy = strategy
     p.strategyXml = strategyXml
     p.dtDeleted = dtDeleted
     p.playerImageId = playerImageId ?: insertPlayerImage().rowId

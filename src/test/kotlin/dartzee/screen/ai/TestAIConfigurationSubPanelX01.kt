@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.Dart
-import dartzee.ai.DartsModelNormalDistribution
+import dartzee.ai.DartsAiModel
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -14,7 +14,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
         val panel = AIConfigurationSubPanelX01()
         panel.spinnerScoringDart.value = 18
 
-        val model = DartsModelNormalDistribution()
+        val model = DartsAiModel()
         panel.populateModel(model)
 
         model.scoringDart shouldBe 18
@@ -27,7 +27,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
         panel.chckbxMercyRule.isSelected = true
         panel.spinnerMercyThreshold.value = 13
 
-        val model = DartsModelNormalDistribution()
+        val model = DartsAiModel()
         panel.populateModel(model)
 
         model.mercyThreshold shouldBe 13
@@ -40,7 +40,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
         panel.chckbxMercyRule.isSelected = false
         panel.spinnerMercyThreshold.value = 13
 
-        val model = DartsModelNormalDistribution()
+        val model = DartsAiModel()
         panel.populateModel(model)
 
         model.mercyThreshold shouldBe -1
@@ -52,7 +52,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
         val panel = AIConfigurationSubPanelX01()
         panel.hmScoreToDart[20] = Dart(10, 2)
 
-        val model = DartsModelNormalDistribution()
+        val model = DartsAiModel()
         panel.populateModel(model)
 
         model.hmScoreToDart[20] shouldBe Dart(10, 2)
@@ -61,7 +61,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     @Test
     fun `Should initialise the scoringDart from the model`()
     {
-        val model = DartsModelNormalDistribution()
+        val model = DartsAiModel()
         model.scoringDart = 15
 
         val panel = AIConfigurationSubPanelX01()
@@ -73,7 +73,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     @Test
     fun `Should initialise the mercy threshold from the model`()
     {
-        val model = DartsModelNormalDistribution()
+        val model = DartsAiModel()
         model.mercyThreshold = 11
 
         val panel = AIConfigurationSubPanelX01()
@@ -87,7 +87,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     @Test
     fun `Should initialise an unset mercy threshold from the model`()
     {
-        val model = DartsModelNormalDistribution()
+        val model = DartsAiModel()
         model.mercyThreshold = -1
 
         val panel = AIConfigurationSubPanelX01()
