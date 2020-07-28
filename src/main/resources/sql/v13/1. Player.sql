@@ -1,1 +1,1 @@
-ALTER TABLE Player DROP COLUMN Strategy;
+ALTER TABLE Player DROP COLUMN Strategy
