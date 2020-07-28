@@ -28,10 +28,10 @@ class TestHyperlinkAdaptor: AbstractTest()
         val listener = mockk<TestHyperlinkListener>(relaxed = true)
 
         val adaptor = HyperlinkAdaptor(listener)
-        adaptor.mouseReleased(MOUSE_EVENT_SINGLE_CLICK)
-        adaptor.mouseReleased(makeMouseEvent())
+        adaptor.mouseClicked(MOUSE_EVENT_SINGLE_CLICK)
+        adaptor.mouseClicked(makeMouseEvent())
 
-        verifySequence{ listener.linkClicked(MOUSE_EVENT_SINGLE_CLICK); listener.linkClicked(any()) }
+        verifySequence { listener.linkClicked(MOUSE_EVENT_SINGLE_CLICK); listener.linkClicked(any()) }
     }
 
     @Test
