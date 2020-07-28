@@ -28,10 +28,10 @@ class TestHyperlinkAdaptor: AbstractTest()
         val listener = mockk<TestHyperlinkListener>(relaxed = true)
 
         val adaptor = HyperlinkAdaptor(listener)
-        adaptor.mouseReleased(MOUSE_EVENT_SINGLE_CLICK)
-        adaptor.mouseReleased(makeMouseEvent())
+        adaptor.mouseClicked(MOUSE_EVENT_SINGLE_CLICK)
+        adaptor.mouseClicked(makeMouseEvent())
 
-        verifySequence{ listener.linkClicked(MOUSE_EVENT_SINGLE_CLICK); listener.linkClicked(any()) }
+        verifySequence { listener.linkClicked(MOUSE_EVENT_SINGLE_CLICK); listener.linkClicked(any()) }
     }
 
     @Test
@@ -60,6 +60,19 @@ class TestHyperlinkAdaptor: AbstractTest()
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
 
         adaptor.mouseExited(null)
+        listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+    }
+
+    @Test
+    fun `Should revert the cursor on mouseDragged`()
+    {
+        val listener = TestHyperlinkListener()
+        val adaptor = HyperlinkAdaptor(listener)
+
+        adaptor.mouseMoved(MOUSE_EVENT_SINGLE_CLICK)
+        listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+
+        adaptor.mouseDragged(null)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
     }
 }
