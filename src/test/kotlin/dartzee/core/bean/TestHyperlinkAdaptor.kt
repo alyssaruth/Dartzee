@@ -62,6 +62,19 @@ class TestHyperlinkAdaptor: AbstractTest()
         adaptor.mouseExited(null)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
     }
+
+    @Test
+    fun `Should revert the cursor on mouseDragged`()
+    {
+        val listener = TestHyperlinkListener()
+        val adaptor = HyperlinkAdaptor(listener)
+
+        adaptor.mouseMoved(MOUSE_EVENT_SINGLE_CLICK)
+        listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+
+        adaptor.mouseDragged(null)
+        listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+    }
 }
 
 private class TestHyperlinkListener: JPanel(), IHyperlinkListener
