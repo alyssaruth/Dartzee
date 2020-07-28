@@ -9,7 +9,7 @@ class HyperlinkAdaptor(private val listener: IHyperlinkListener) : MouseAdapter(
 {
     private val listenerWindow = listener as Component
 
-    override fun mouseReleased(arg0: MouseEvent) = listener.linkClicked(arg0)
+    override fun mouseClicked(arg0: MouseEvent) = listener.linkClicked(arg0)
 
     override fun mouseMoved(arg0: MouseEvent)
     {
@@ -18,6 +18,14 @@ class HyperlinkAdaptor(private val listener: IHyperlinkListener) : MouseAdapter(
             listenerWindow.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
         }
         else
+        {
+            listenerWindow.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+        }
+    }
+
+    override fun mouseDragged(e: MouseEvent?)
+    {
+        if (listenerWindow.cursor.type == Cursor.HAND_CURSOR)
         {
             listenerWindow.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
         }
