@@ -1,10 +1,11 @@
 package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
+import dartzee.core.bean.addGhostText
+import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
 import dartzee.screen.AbstractPlayerCreationDialog
 import dartzee.screen.ScreenCache
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -18,8 +19,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 {
     private val panelScreen = JPanel()
     private val panelNorth = JPanel()
-    private val panelSetup = JPanel()
-    private val lblName = JLabel("Name")
+    private val panelName = JPanel()
     private val tabbedPaneGameSpecifics = JTabbedPane()
     private val panelX01Config = AIConfigurationSubPanelX01()
     private val panelGolfConfig = AIConfigurationSubPanelGolf()
@@ -89,17 +89,16 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         panelScreen.layout = BorderLayout(0, 0)
         panelScreen.add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = BorderLayout(0, 0)
-        panelSetup.preferredSize = Dimension(10, 100)
-        panelSetup.border = TitledBorder(null, "Setup", TitledBorder.LEADING, TitledBorder.TOP, null, null)
-        panelNorth.add(panelSetup, BorderLayout.CENTER)
+        panelName.preferredSize = Dimension(10, 100)
+        panelNorth.add(panelName, BorderLayout.CENTER)
         panelNorth.add(panelAIConfig, BorderLayout.SOUTH)
-        panelSetup.layout = MigLayout("", "[120px][150px]", "[25px][25px]")
-        val lblModel = JLabel("Model")
-        lblModel.preferredSize = Dimension(120, 25)
-        panelSetup.add(lblModel, "cell 0 1,alignx left,aligny top")
-        panelSetup.add(lblName, "cell 0 0,grow")
-        panelSetup.add(textFieldName, "cell 1 0,grow")
+        panelName.layout = BorderLayout()
+        panelName.add(textFieldName)
+        panelName.border = EmptyBorder(40, 15, 40, 15)
         textFieldName.columns = 10
+        textFieldName.preferredSize = Dimension(10, 50)
+        textFieldName.setFontSize(20)
+        textFieldName.addGhostText("Player name")
 
         val panelAvatar = JPanel()
         panelNorth.add(panelAvatar, BorderLayout.WEST)
