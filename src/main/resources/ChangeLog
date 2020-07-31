@@ -1,3 +1,10 @@
+--------- v4.4.1 ---------
+
+= Fix bug clicking links in tables
+- Concept of different AI models (have only ever had Gaussian)
+- "Radius as average of multiple throws" AI option (never used)
+= 73.5% test coverage (8730 / 11,880 lines covered by 1505 tests)
+
 --------- v4.4.0 ---------
 
 + Ability to include computer opponents in Dartzee games
