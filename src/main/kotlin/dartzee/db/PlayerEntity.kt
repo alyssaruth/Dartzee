@@ -9,7 +9,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
 {
     //DB Fields
     var name = ""
-    var strategyXml = ""
+    var strategy = ""
     var dtDeleted = END_OF_TIME
     var playerImageId = ""
 
@@ -18,7 +18,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
     override fun getCreateTableSqlSpecific(): String
     {
         return ("Name varchar(25) NOT NULL, "
-                + "StrategyXml varchar(1000) NOT NULL, "
+                + "Strategy varchar(1000) NOT NULL, "
                 + "DtDeleted timestamp NOT NULL, "
                 + "PlayerImageId VARCHAR(36) NOT NULL")
     }
@@ -26,7 +26,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
         val nameIndex = listOf("Name")
-        val strategyDtDeletedIndex = listOf("StrategyXml", "DtDeleted")
+        val strategyDtDeletedIndex = listOf("Strategy", "DtDeleted")
 
         indexes.add(nameIndex)
         indexes.add(strategyDtDeletedIndex)
@@ -37,12 +37,12 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
     /**
      * Helpers
      */
-    fun isHuman() = strategyXml.isEmpty()
-    fun isAi() = strategyXml.isNotEmpty()
+    fun isHuman() = strategy.isEmpty()
+    fun isAi() = strategy.isNotEmpty()
     fun getModel(): DartsAiModel
     {
         val model = DartsAiModel()
-        model.readXml(strategyXml)
+        model.readXml(strategy)
         return model
     }
 

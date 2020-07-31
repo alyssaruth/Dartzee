@@ -40,6 +40,6 @@ class TestHumanCreationDialog: AbstractTest()
 
         val player = PlayerEntity.retrieveForName("Barry")!!
         player.playerImageId shouldBe avatarId
-        player.strategyXml shouldBe ""
+        player.strategy shouldBe ""
     }
 }

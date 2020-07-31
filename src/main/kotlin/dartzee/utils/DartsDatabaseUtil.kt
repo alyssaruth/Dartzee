@@ -23,7 +23,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
 object DartsDatabaseUtil
 {
     const val MIN_DB_VERSION_FOR_CONVERSION = 12
-    const val DATABASE_VERSION = 13
+    const val DATABASE_VERSION = 14
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -101,9 +101,11 @@ object DartsDatabaseUtil
 
         logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${versionNumber + 1}")
 
-        if (versionNumber == 12)
+        if (versionNumber == 13)
         {
-            runSqlScriptsForVersion(13)
+            runSqlScriptsForVersion(14)
+
+
             updatePlayerStrategies()
         }
 
@@ -116,11 +118,11 @@ object DartsDatabaseUtil
 
     private fun updatePlayerStrategies()
     {
-        val players = PlayerEntity().retrieveEntities("StrategyXml <> ''")
+        val players = PlayerEntity().retrieveEntities("Strategy <> ''")
         players.forEach {
             val model = DartsAiModel()
-            model.readXml(it.strategyXml)
-            it.strategyXml = model.writeXml()
+            model.readXml(it.strategy)
+            it.strategy = model.writeXml()
             it.saveToDatabase()
         }
     }

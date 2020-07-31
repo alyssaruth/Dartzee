@@ -20,8 +20,8 @@ class PlayerTypeFilterPanel : RadioButtonPanel()
     {
         return when
         {
-            rdbtnHuman.isSelected -> "StrategyXml = ''"
-            rdbtnAi.isSelected -> "StrategyXml <> ''"
+            rdbtnHuman.isSelected -> "Strategy = ''"
+            rdbtnAi.isSelected -> "Strategy <> ''"
             else -> ""
         }
     }

@@ -109,7 +109,7 @@ class ReportParameters
             sb.append(" SELECT 1 FROM Participant z, Player p")
             sb.append(" WHERE z.PlayerId = p.RowId")
             sb.append(" AND z.GameId = g.RowId")
-            sb.append(" AND p.StrategyXml = '')")
+            sb.append(" AND p.Strategy = '')")
         }
 
         return sb.toString()

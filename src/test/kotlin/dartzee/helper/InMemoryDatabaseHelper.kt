@@ -23,9 +23,9 @@ fun wipeTable(tableName: String)
 
 fun randomGuid() = UUID.randomUUID().toString()
 
-fun insertPlayerForGame(name: String, gameId: String, strategyXml: String = "foo"): PlayerEntity
+fun insertPlayerForGame(name: String, gameId: String, strategy: String = "foo"): PlayerEntity
 {
-    val player = insertPlayer(name = name, strategyXml = strategyXml)
+    val player = insertPlayer(name = name, strategy = strategy)
     insertParticipant(playerId = player.rowId, gameId = gameId)
     return player
 }
@@ -67,18 +67,18 @@ fun insertGameForPlayer(player: PlayerEntity,
 }
 
 fun insertPlayer(model: DartsAiModel) =
-        insertPlayer(strategyXml = model.writeXml())
+        insertPlayer(strategy = model.writeXml())
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
-                 strategyXml: String = "",
+                 strategy: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
                  playerImageId: String? = null): PlayerEntity
 {
     val p = PlayerEntity()
     p.rowId = uuid
     p.name = name
-    p.strategyXml = strategyXml
+    p.strategy = strategy
     p.dtDeleted = dtDeleted
     p.playerImageId = playerImageId ?: insertPlayerImage().rowId
 

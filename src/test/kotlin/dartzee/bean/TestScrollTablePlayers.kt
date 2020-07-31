@@ -16,8 +16,8 @@ class TestScrollTablePlayers: AbstractTest()
     {
         val table = ScrollTable()
 
-        val bob = insertPlayer(name = "Bob", strategyXml = "")
-        val robot = insertPlayer(name = "Robot", strategyXml = "foo")
+        val bob = insertPlayer(name = "Bob", strategy = "")
+        val robot = insertPlayer(name = "Robot", strategy = "foo")
         val players = listOf(bob, robot)
         table.initPlayerTableModel(players)
 
@@ -38,7 +38,7 @@ class TestScrollTablePlayers: AbstractTest()
     {
         val table = ScrollTable()
 
-        val players = listOf(insertPlayer(name = "Bob", strategyXml = ""), insertPlayer(name = "Robot", strategyXml = "foo"))
+        val players = listOf(insertPlayer(name = "Bob", strategy = ""), insertPlayer(name = "Robot", strategy = "foo"))
         table.initPlayerTableModel(players)
 
         table.getAllPlayers() shouldBe players
@@ -49,7 +49,7 @@ class TestScrollTablePlayers: AbstractTest()
     {
         val table = ScrollTable()
 
-        val players = listOf(insertPlayer(name = "Bob", strategyXml = ""), insertPlayer(name = "Robot", strategyXml = "foo"))
+        val players = listOf(insertPlayer(name = "Bob", strategy = ""), insertPlayer(name = "Robot", strategy = "foo"))
         table.initPlayerTableModel(players)
 
         table.getSelectedPlayer() shouldBe null
@@ -61,8 +61,8 @@ class TestScrollTablePlayers: AbstractTest()
     {
         val table = ScrollTable()
 
-        val playerTwo = insertPlayer(name = "Robot", strategyXml = "foo")
-        val players = listOf(insertPlayer(name = "Bob", strategyXml = ""), playerTwo)
+        val playerTwo = insertPlayer(name = "Robot", strategy = "foo")
+        val players = listOf(insertPlayer(name = "Bob", strategy = ""), playerTwo)
         table.initPlayerTableModel(players)
 
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)

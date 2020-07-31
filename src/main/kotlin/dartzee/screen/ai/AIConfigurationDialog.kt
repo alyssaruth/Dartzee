@@ -142,7 +142,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             val name = aiPlayer.name
             textFieldName.text = name
 
-            val xmlStr = aiPlayer.strategyXml
+            val xmlStr = aiPlayer.strategy
             val model = DartsAiModel()
             model.readXml(xmlStr)
 
@@ -210,7 +210,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         val model = factoryModelFromPanels()
         val xmlStr = model.writeXml()
 
-        aiPlayer.strategyXml = xmlStr
+        aiPlayer.strategy = xmlStr
 
         val avatarId = avatar.avatarId
         aiPlayer.playerImageId = avatarId

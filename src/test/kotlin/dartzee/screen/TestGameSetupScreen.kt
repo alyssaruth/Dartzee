@@ -242,8 +242,8 @@ class TestGameSetupScreen: AbstractTest()
     @Test
     fun `Should switch to the DartzeeRuleSetupScreen on Next, passing through the right parameters`()
     {
-        val p1 = insertPlayer(strategyXml = "")
-        val p2 = insertPlayer(strategyXml = "")
+        val p1 = insertPlayer(strategy = "")
+        val p2 = insertPlayer(strategy = "")
 
         val setupScreen = GameSetupScreen()
         setupScreen.initialise()
@@ -266,8 +266,8 @@ class TestGameSetupScreen: AbstractTest()
     @Test
     fun `Should switch to the DartzeeRuleSetupScreen for a match`()
     {
-        val p1 = insertPlayer(strategyXml = "")
-        val p2 = insertPlayer(strategyXml = "")
+        val p1 = insertPlayer(strategy = "")
+        val p2 = insertPlayer(strategy = "")
 
         val setupScreen = GameSetupScreen()
         setupScreen.initialise()
@@ -296,8 +296,8 @@ class TestGameSetupScreen: AbstractTest()
 
     private fun makeGameSetupScreenReadyToLaunch(): GameSetupScreen
     {
-        val p1 = insertPlayer(strategyXml = "")
-        val p2 = insertPlayer(strategyXml = "")
+        val p1 = insertPlayer(strategy = "")
+        val p2 = insertPlayer(strategy = "")
 
         val setupScreen = GameSetupScreen()
         setupScreen.initialise()

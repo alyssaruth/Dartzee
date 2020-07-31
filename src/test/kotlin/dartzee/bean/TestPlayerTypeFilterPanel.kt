@@ -23,8 +23,8 @@ class TestPlayerTypeFilterPanel: AbstractTest()
     {
         wipeTable("Player")
 
-        val ai = insertPlayer(strategyXml = "foo")
-        val human = insertPlayer(strategyXml = "")
+        val ai = insertPlayer(strategy = "foo")
+        val human = insertPlayer(strategy = "")
 
         val panel = PlayerTypeFilterPanel()
 

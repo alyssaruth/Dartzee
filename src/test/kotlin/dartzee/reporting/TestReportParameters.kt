@@ -213,9 +213,9 @@ class TestReportParameters: AbstractTest()
     fun `Should only include games with at least one human player if specified`()
     {
         val gAllPlayers = insertGame()
-        val ai = insertPlayerForGame("AI", gAllPlayers.rowId, strategyXml = "foo")
-        val aiTwo = insertPlayerForGame("AI2", gAllPlayers.rowId, strategyXml = "foo")
-        val human = insertPlayerForGame("Human", gAllPlayers.rowId, strategyXml = "")
+        val ai = insertPlayerForGame("AI", gAllPlayers.rowId, strategy = "foo")
+        val aiTwo = insertPlayerForGame("AI2", gAllPlayers.rowId, strategy = "foo")
+        val human = insertPlayerForGame("Human", gAllPlayers.rowId, strategy = "")
 
         val gBothAi = insertGame()
         insertParticipant(playerId = ai.rowId, gameId = gBothAi.rowId)

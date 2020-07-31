@@ -31,14 +31,14 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     fun `Should correctly identify human vs AI`()
     {
         val human = PlayerEntity()
-        human.strategyXml = ""
+        human.strategy = ""
 
         human.isAi() shouldBe false
         human.isHuman() shouldBe true
         human.getFlag() shouldBe PlayerEntity.ICON_HUMAN
 
         val ai = PlayerEntity()
-        ai.strategyXml = "foo"
+        ai.strategy = "foo"
 
         ai.isAi() shouldBe true
         ai.isHuman() shouldBe false
@@ -53,7 +53,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
         val xml = model.writeXml()
 
         val player = PlayerEntity()
-        player.strategyXml = xml
+        player.strategy = xml
 
         val recoveredModel = player.getModel()
         recoveredModel.shouldBeInstanceOf<DartsAiModel>()
@@ -111,7 +111,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
         p.rowId.shouldNotBeEmpty()
         p.name shouldBe "Clive"
         p.playerImageId shouldBe "foo"
-        p.strategyXml shouldBe ""
+        p.strategy shouldBe ""
 
         PlayerEntity().retrieveForId(p.rowId).shouldNotBeNull()
     }

@@ -60,8 +60,8 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     @Test
     fun `Should respond to changing player filters, and pull through player names`()
     {
-        val robot = insertPlayer(name = "Robot", strategyXml = "foo")
-        val human = insertPlayer(name = "Human", strategyXml = "")
+        val robot = insertPlayer(name = "Robot", strategy = "foo")
+        val human = insertPlayer(name = "Human", strategy = "")
 
         insertFinishForPlayer(robot, 75)
         insertFinishForPlayer(human, 83)

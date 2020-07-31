@@ -63,7 +63,7 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
         val playerWhereSql = panelPlayerFilters.getWhereSql()
 
         val sb = StringBuilder()
-        sb.append("SELECT p.StrategyXml, p.Name, g.LocalId, pt.FinalScore")
+        sb.append("SELECT p.Strategy, p.Name, g.LocalId, pt.FinalScore")
         sb.append(" FROM Participant pt, Game g, Player p")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND pt.PlayerId = p.RowId")
