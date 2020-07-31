@@ -162,7 +162,7 @@ object DartsDatabaseUtil
     {
         return when(version)
         {
-            13 -> listOf("1. Player.sql")
+            14 -> listOf("1. Player.sql")
             else -> listOf()
         }
     }
