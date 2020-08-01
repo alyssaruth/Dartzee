@@ -1,6 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.Dart
+import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
@@ -50,7 +51,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     fun `Should populate the model with the setup darts`()
     {
         val panel = AIConfigurationSubPanelX01()
-        panel.hmScoreToDart[20] = Dart(10, 2)
+        panel.hmScoreToDart[20] = AimDart(10, 2)
 
         val model = DartsAiModel()
         panel.populateModel(model)

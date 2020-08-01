@@ -1,9 +1,10 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
+import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.core.obj.HashMapCount
+import dartzee.core.util.jsonMapper
 import dartzee.logging.CODE_AI_ERROR
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
@@ -15,6 +16,7 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
+import getDefaultDartToAimAt
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import java.awt.Point
@@ -24,7 +26,7 @@ data class DartsAiModelMk2(val standardDeviation: Double,
                            val standardDeviationDoubles: Double?,
                            val standardDeviationCentral: Double?,
                            val scoringDart: Int,
-                           val hmScoreToDart: Map<Int, Dart>,
+                           val hmScoreToDart: Map<Int, AimDart>,
                            val mercyThreshold: Int,
                            val hmDartNoToSegmentType: Map<Int, SegmentType>,
                            val hmDartNoToStopThreshold: Map<Int, Int>,
@@ -245,44 +247,13 @@ data class DartsAiModelMk2(val standardDeviation: Double,
         return distribution.probability(-radius, radius)
     }
 
+    fun toJson() = jsonMapper().writeValueAsString(this)
+
     companion object
     {
         private const val SCORING_DARTS_TO_THROW = 20000
         private const val DOUBLE_DARTS_TO_THROW = 20000
 
-        /**
-         * Get the application-wide default thing to aim for, which applies to any score of 60 or less
-         */
-        fun getDefaultDartToAimAt(score: Int): Dart
-        {
-            //Aim for the single that puts you on double top
-            if (score > 40)
-            {
-                val single = score - 40
-                return Dart(single, 1)
-            }
-
-            //Aim for the double
-            if (score % 2 == 0)
-            {
-                return Dart(score / 2, 2)
-            }
-
-            //On an odd number, less than 40. Aim to put ourselves on the highest possible power of 2.
-            val scoreToLeaveRemaining = getHighestPowerOfTwoLessThan(score)
-            val singleToAimFor = score - scoreToLeaveRemaining
-            return Dart(singleToAimFor, 1)
-        }
-
-        private fun getHighestPowerOfTwoLessThan(score: Int): Int
-        {
-            var i = 2
-            while (i < score)
-            {
-                i *= 2
-            }
-
-            return i / 2
-        }
+        fun fromJson(json: String) = jsonMapper().readValue<DartsAiModelMk2>(json)
     }
 }

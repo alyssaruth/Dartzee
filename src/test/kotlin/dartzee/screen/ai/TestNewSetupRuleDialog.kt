@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.Dart
+import dartzee.ai.AimDart
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -80,7 +80,7 @@ class TestNewSetupRuleDialog: AbstractTest()
     @Test
     fun `Should add a valid rule to the HashMap`()
     {
-        val hm = mutableMapOf<Int, Dart>()
+        val hm = mutableMapOf<Int, AimDart>()
         val dlg = NewSetupRuleDialog(hm)
 
         dlg.nfScore.value = 50
@@ -89,14 +89,14 @@ class TestNewSetupRuleDialog: AbstractTest()
 
         dlg.btnOk.doClick()
         dialogFactory.errorsShown.shouldBeEmpty()
-        hm.shouldContain(50, Dart(25, 2))
+        hm.shouldContain(50, AimDart(25, 2))
         hm.size shouldBe 1
     }
 
     @Test
     fun `Should not add to the HashMap when cancelled`()
     {
-        val hm = mutableMapOf<Int, Dart>()
+        val hm = mutableMapOf<Int, AimDart>()
         val dlg = NewSetupRuleDialog(hm)
 
         dlg.nfScore.value = 50
@@ -117,7 +117,7 @@ class TestNewSetupRuleDialog: AbstractTest()
     }
     private fun verifyDart(rdbtn: String, multiplier: Int)
     {
-        val hm = mutableMapOf<Int, Dart>()
+        val hm = mutableMapOf<Int, AimDart>()
         val dlg = NewSetupRuleDialog(hm)
 
         dlg.nfScore.value = 60
@@ -126,7 +126,7 @@ class TestNewSetupRuleDialog: AbstractTest()
 
         dlg.btnOk.doClick()
         dialogFactory.errorsShown.shouldBeEmpty()
-        hm.shouldContain(60, Dart(10, multiplier))
+        hm.shouldContain(60, AimDart(10, multiplier))
         hm.size shouldBe 1
     }
 }

@@ -1,7 +1,6 @@
 package dartzee.ai
 
 import dartzee.`object`.ColourWrapper
-import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.helper.AbstractTest
@@ -19,7 +18,7 @@ class TestStrategyUtils: AbstractTest()
         val dartboard = FudgedDartboard()
         dartboard.paintDartboard()
 
-        getPointForScore(Dart(20, 3), dartboard) shouldBe Point(3, 4)
+        getPointForScore(AimDart(20, 3), dartboard) shouldBe Point(3, 4)
     }
 
     class FudgedDartboard : Dartboard(100, 100)

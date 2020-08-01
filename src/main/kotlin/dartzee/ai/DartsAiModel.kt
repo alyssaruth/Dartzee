@@ -1,6 +1,5 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.core.obj.HashMapCount
@@ -16,6 +15,7 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
+import getDefaultDartToAimAt
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import org.w3c.dom.Element
@@ -41,7 +41,7 @@ class DartsAiModel
 
     //X01
     var scoringDart = 20
-    var hmScoreToDart = mutableMapOf<Int, Dart>()
+    var hmScoreToDart = mutableMapOf<Int, AimDart>()
     var mercyThreshold = -1
 
     //Golf
@@ -77,7 +77,7 @@ class DartsAiModel
             val value = setupDart.getAttributeInt(ATTRIBUTE_DART_VALUE)
             val multiplier = setupDart.getAttributeInt(ATTRIBUTE_DART_MULTIPLIER)
 
-            hmScoreToDart[score] = Dart(value, multiplier)
+            hmScoreToDart[score] = AimDart(value, multiplier)
         }
 
         //Golf
@@ -394,40 +394,5 @@ class DartsAiModel
 
         private const val SCORING_DARTS_TO_THROW = 20000
         private const val DOUBLE_DARTS_TO_THROW = 20000
-
-        /**
-         * Get the application-wide default thing to aim for, which applies to any score of 60 or less
-         */
-        fun getDefaultDartToAimAt(score: Int): Dart
-        {
-            //Aim for the single that puts you on double top
-            if (score > 40)
-            {
-                val single = score - 40
-                return Dart(single, 1)
-            }
-
-            //Aim for the double
-            if (score % 2 == 0)
-            {
-                return Dart(score / 2, 2)
-            }
-
-            //On an odd number, less than 40. Aim to put ourselves on the highest possible power of 2.
-            val scoreToLeaveRemaining = getHighestPowerOfTwoLessThan(score)
-            val singleToAimFor = score - scoreToLeaveRemaining
-            return Dart(singleToAimFor, 1)
-        }
-
-        private fun getHighestPowerOfTwoLessThan(score: Int): Int
-        {
-            var i = 2
-            while (i < score)
-            {
-                i *= 2
-            }
-
-            return i / 2
-        }
     }
 }

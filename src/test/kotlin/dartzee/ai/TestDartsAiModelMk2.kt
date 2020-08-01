@@ -1,7 +1,5 @@
 package dartzee.ai
 
-import com.fasterxml.jackson.module.kotlin.readValue
-import dartzee.core.util.jsonMapper
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -9,16 +7,16 @@ import org.junit.Test
 class TestDartsAiModelMk2: AbstractTest()
 {
     @Test
-    fun `See what serialization does`()
+    fun `Should successfully serialize and deserialize`()
     {
-        val model = DartsAiModelMk2(50.0, 40.0, null, 20, mapOf(), 17, mapOf(), mapOf(), DartzeePlayStyle.CAUTIOUS)
+        val setupDarts = mapOf(57 to AimDart(17, 1), 97 to AimDart(19, 3))
+        val model = DartsAiModelMk2(50.0, 40.0, null, 20, setupDarts, 17, mapOf(), mapOf(), DartzeePlayStyle.CAUTIOUS)
 
-        val mapper = jsonMapper()
-        val result = mapper.writeValueAsString(model)
+        val result = model.toJson()
 
         println(result)
 
-        val model2 = mapper.readValue<DartsAiModelMk2>(result)
+        val model2 = DartsAiModelMk2.fromJson(result)
         model shouldBe model2
     }
 }

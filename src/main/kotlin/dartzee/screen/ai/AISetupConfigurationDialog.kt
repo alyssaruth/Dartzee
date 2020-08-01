@@ -1,6 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.Dart
+import dartzee.ai.AimDart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
@@ -25,7 +26,7 @@ import javax.swing.text.StyleConstants
  */
 class AISetupConfigurationDialog : SimpleDialog()
 {
-    private var hmScoreToSingle = mutableMapOf<Int, Dart>()
+    private var hmScoreToSingle = mutableMapOf<Int, AimDart>()
 
     private val info = JTextPane()
     private val tableScores = ScrollTable()
@@ -60,7 +61,7 @@ class AISetupConfigurationDialog : SimpleDialog()
         btnRemove.addActionListener(this)
     }
 
-    private fun init(hmScoreToSingle: MutableMap<Int, Dart>)
+    private fun init(hmScoreToSingle: MutableMap<Int, AimDart>)
     {
         this.hmScoreToSingle = hmScoreToSingle
 
@@ -115,7 +116,7 @@ class AISetupConfigurationDialog : SimpleDialog()
         info.append("Below you can further configure the dart aimed at for any individual score.")
     }
 
-    private fun buildTable(hmRules: Map<Int, Dart>)
+    private fun buildTable(hmRules: Map<Int, AimDart>)
     {
         val allValues = hmRules.keys
 
@@ -137,7 +138,7 @@ class AISetupConfigurationDialog : SimpleDialog()
         when (arg0.source)
         {
             btnAddRule -> {
-                val hmCurrentRules = mutableMapOf<Int, Dart>()
+                val hmCurrentRules = mutableMapOf<Int, AimDart>()
                 fillHashMapFromTable(hmCurrentRules)
                 NewSetupRuleDialog.addNewSetupRule(hmCurrentRules)
 
@@ -157,7 +158,7 @@ class AISetupConfigurationDialog : SimpleDialog()
             return
         }
 
-        val hmCurrentRules = mutableMapOf<Int, Dart>()
+        val hmCurrentRules = mutableMapOf<Int, AimDart>()
         fillHashMapFromTable(hmCurrentRules)
 
         rows.forEach{ hmCurrentRules.remove(tableScores.getValueAt(it, 0)) }
@@ -173,14 +174,14 @@ class AISetupConfigurationDialog : SimpleDialog()
         dispose()
     }
 
-    private fun fillHashMapFromTable(hm: MutableMap<Int, Dart>)
+    private fun fillHashMapFromTable(hm: MutableMap<Int, AimDart>)
     {
         val tm = tableScores.model
         val rows = tm.rowCount
         for (i in 0 until rows)
         {
             val score = tm.getValueAt(i, 0) as Int
-            val drt = tm.getValueAt(i, 1) as Dart
+            val drt = tm.getValueAt(i, 1) as AimDart
 
             hm[score] = drt
         }
@@ -198,7 +199,7 @@ class AISetupConfigurationDialog : SimpleDialog()
 
     companion object
     {
-        fun configureSetups(hmScoreToSingle: MutableMap<Int, Dart>)
+        fun configureSetups(hmScoreToSingle: MutableMap<Int, AimDart>)
         {
             val dlg = AISetupConfigurationDialog()
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)

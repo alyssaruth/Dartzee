@@ -59,8 +59,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = DartsAiModel()
         model.scoringDart = 25
-        model.hmScoreToDart[50] = Dart(25, 2)
-        model.hmScoreToDart[60] = Dart(10, 1)
+        model.hmScoreToDart[50] = AimDart(25, 2)
+        model.hmScoreToDart[60] = AimDart(10, 1)
         model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
         model.hmDartNoToStopThreshold[1] = 1
         model.hmDartNoToStopThreshold[2] = 2
@@ -198,7 +198,7 @@ class TestDartsAiModel: AbstractTest()
     fun `Should aim for the overridden value if one is set for the current setup score`()
     {
         val model = beastDartsModel()
-        model.hmScoreToDart[77] = Dart(17, 2)
+        model.hmScoreToDart[77] = AimDart(17, 2)
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()

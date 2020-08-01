@@ -1,6 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.Dart
+import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.bean.SpinnerSingleSelector
 import java.awt.event.ActionEvent
@@ -9,7 +10,7 @@ import javax.swing.*
 
 class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener
 {
-    var hmScoreToDart = mutableMapOf<Int, Dart>()
+    var hmScoreToDart = mutableMapOf<Int, AimDart>()
 
     val spinnerScoringDart = SpinnerSingleSelector()
     private val btnConfigureSetupDarts = JButton("Configure Setup...")
