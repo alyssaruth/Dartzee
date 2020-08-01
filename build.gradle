@@ -20,6 +20,8 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-elasticsearch:1.11.762'
     implementation 'com.github.awslabs:aws-request-signing-apache-interceptor:b3772780da'
     implementation 'org.elasticsearch.client:elasticsearch-rest-client:7.6.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1'
 
     testImplementation "io.mockk:mockk:1.9.3"
     testImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
