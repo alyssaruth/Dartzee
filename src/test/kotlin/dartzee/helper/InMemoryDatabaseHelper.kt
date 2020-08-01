@@ -1,7 +1,7 @@
 package dartzee.helper
 
 import dartzee.`object`.SegmentType
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
@@ -66,8 +66,8 @@ fun insertGameForPlayer(player: PlayerEntity,
     insertParticipant(playerId = player.rowId, gameId = game.rowId, finalScore = finalScore, dtFinished = dtFinished)
 }
 
-fun insertPlayer(model: DartsAiModel) =
-        insertPlayer(strategy = model.writeXml())
+fun insertPlayer(model: DartsAiModelMk2) =
+        insertPlayer(strategy = model.toJson())
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",

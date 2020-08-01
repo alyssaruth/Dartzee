@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadLuck
@@ -19,7 +20,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     private val clockType = game.gameParams
     val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
 
-    override fun doAiTurn(model: DartsAiModel)
+    override fun doAiTurn(model: DartsAiModelMk2)
     {
         val currentTarget = activeScorer.currentClockTarget
         model.throwClockDart(currentTarget, clockType, dartboard)

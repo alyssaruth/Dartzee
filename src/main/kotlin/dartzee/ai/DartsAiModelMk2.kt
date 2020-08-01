@@ -27,7 +27,7 @@ data class DartsAiModelMk2(val standardDeviation: Double,
                            val standardDeviationCentral: Double?,
                            val scoringDart: Int,
                            val hmScoreToDart: Map<Int, AimDart>,
-                           val mercyThreshold: Int,
+                           val mercyThreshold: Int?,
                            val hmDartNoToSegmentType: Map<Int, SegmentType>,
                            val hmDartNoToStopThreshold: Map<Int, Int>,
                            val dartzeePlayStyle: DartzeePlayStyle)
@@ -211,7 +211,7 @@ data class DartsAiModelMk2(val standardDeviation: Double,
     }
     private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
     {
-        val distribution = getDistributionToUse(pt, dartboard)!!
+        val distribution = getDistributionToUse(pt, dartboard)
         return distribution.sample()
     }
     private fun sanitiseAngle(angle: Double): Double
@@ -255,5 +255,7 @@ data class DartsAiModelMk2(val standardDeviation: Double,
         private const val DOUBLE_DARTS_TO_THROW = 20000
 
         fun fromJson(json: String) = jsonMapper().readValue<DartsAiModelMk2>(json)
+
+        fun new() = DartsAiModelMk2(50.0, null, null, 20, emptyMap(), null, mapOf(), mapOf(), DartzeePlayStyle.CAUTIOUS)
     }
 }

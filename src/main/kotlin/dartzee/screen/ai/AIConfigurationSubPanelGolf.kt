@@ -1,6 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import net.miginfocom.swing.MigLayout
 
 class AIConfigurationSubPanelGolf : AbstractAIConfigurationSubPanel()
@@ -20,14 +21,14 @@ class AIConfigurationSubPanelGolf : AbstractAIConfigurationSubPanel()
 
     override fun valid() = true
 
-    override fun populateModel(model: DartsAiModel)
+    override fun populateModel(model: DartsAiModelMk2): DartsAiModelMk2
     {
         panelDartOne.populateModel(model)
         panelDartTwo.populateModel(model)
         panelDartThree.populateModel(model)
     }
 
-    override fun initialiseFromModel(model: DartsAiModel)
+    override fun initialiseFromModel(model: DartsAiModelMk2)
     {
         panelDartOne.initialiseFromModel(model)
         panelDartTwo.initialiseFromModel(model)

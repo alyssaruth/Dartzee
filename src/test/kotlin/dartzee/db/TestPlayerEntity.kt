@@ -1,10 +1,11 @@
 package dartzee.db
 
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
+import dartzee.helper.makeDartsModel
 import dartzee.shouldMatch
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldNotBeEmpty
@@ -48,15 +49,13 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     @Test
     fun `Should correctly construct the AI model`()
     {
-        val model = DartsAiModel()
-        model.scoringDart = 15
-        val xml = model.writeXml()
+        val model = makeDartsModel(scoringDart = 15)
 
         val player = PlayerEntity()
-        player.strategy = xml
+        player.strategy = model.toJson()
 
         val recoveredModel = player.getModel()
-        recoveredModel.shouldBeInstanceOf<DartsAiModel>()
+        recoveredModel.shouldBeInstanceOf<DartsAiModelMk2>()
         recoveredModel.scoringDart shouldBe 15
     }
 

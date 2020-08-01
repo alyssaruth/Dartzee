@@ -2,6 +2,7 @@ package dartzee.screen.ai
 
 import dartzee.`object`.ColourWrapper
 import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.bean.paint
 import dartzee.utils.DartsColour
 import dartzee.utils.getDistance
@@ -30,7 +31,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         panelKey.icon = ImageIcon(keyImg)
     }
 
-    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
+    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModelMk2)
     {
         val centerPt = model.getScoringPoint(dartboard)
 

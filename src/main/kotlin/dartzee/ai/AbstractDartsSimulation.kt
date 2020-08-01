@@ -13,7 +13,7 @@ import java.sql.Timestamp
 
 abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
                                        protected var player: PlayerEntity,
-                                       protected var model: DartsAiModel) : DartboardListener
+                                       protected var model: DartsAiModelMk2) : DartboardListener
 {
     //Transient things
     protected var dtStart: Timestamp? = null

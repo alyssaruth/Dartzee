@@ -2,6 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.obj.HashMapList
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
@@ -38,7 +39,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun factoryDartboard() = DartzeeDartboard()
     override fun factoryState(pt: ParticipantEntity, scorer: DartsScorerDartzee) = DartzeePlayerState(pt, scorer)
 
-    override fun doAiTurn(model: DartsAiModel)
+    override fun doAiTurn(model: DartsAiModelMk2)
     {
         if (isScoringRound())
         {

@@ -1,10 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.DartsClient
-import dartzee.ai.DartsAiModel
-import dartzee.ai.AbstractDartsSimulation
-import dartzee.ai.DartsSimulationGolf
-import dartzee.ai.DartsSimulationX01
+import dartzee.ai.*
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.ProgressDialog
@@ -26,7 +23,7 @@ import java.awt.Window
 import javax.swing.*
 
 class AISimulationSetup constructor(private val player: PlayerEntity,
-                                    private var model: DartsAiModel? = null,
+                                    private var model: DartsAiModelMk2? = null,
                                     private val modal: Boolean = false) : SimpleDialog()
 {
     private val panelCenter = JPanel()

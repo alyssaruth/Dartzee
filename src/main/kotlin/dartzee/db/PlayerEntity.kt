@@ -1,6 +1,6 @@
 package dartzee.db
 
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
 import javax.swing.ImageIcon
@@ -39,12 +39,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
      */
     fun isHuman() = strategy.isEmpty()
     fun isAi() = strategy.isNotEmpty()
-    fun getModel(): DartsAiModel
-    {
-        val model = DartsAiModel()
-        model.readXml(strategy)
-        return model
-    }
+    fun getModel() = DartsAiModelMk2.fromJson(strategy)
 
     fun getAvatar() = if (playerImageId.isEmpty()) null else PlayerImageEntity.retrieveImageIconForId(playerImageId)
     fun getFlag() = getPlayerFlag(isHuman())

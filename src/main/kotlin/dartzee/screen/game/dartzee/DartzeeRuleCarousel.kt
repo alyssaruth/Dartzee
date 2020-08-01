@@ -1,7 +1,7 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.ai.DartzeePlayStyle
 import dartzee.core.util.ceilDiv
 import dartzee.dartzee.DartzeeRoundResult
@@ -158,7 +158,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     fun getAvailableRuleTiles() = pendingTiles.filter { it.isVisible }
 
-    fun selectRule(model: DartsAiModel)
+    fun selectRule(model: DartsAiModelMk2)
     {
         val aggressive = model.dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE
 

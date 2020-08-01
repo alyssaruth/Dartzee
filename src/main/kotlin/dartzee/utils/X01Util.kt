@@ -1,7 +1,7 @@
 package dartzee.utils
 
 import dartzee.`object`.Dart
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 
 fun isBust(score: Int, lastDart: Dart): Boolean
 {
@@ -16,7 +16,7 @@ fun isBust(score: Int, lastDart: Dart): Boolean
  * - The starting score was odd and < the threshold (configurable per AI)
  * - The current score is even, meaing we have bailed ourselves out in some way
  */
-fun shouldStopForMercyRule(model: DartsAiModel, startingScore: Int, currentScore: Int): Boolean
+fun shouldStopForMercyRule(model: DartsAiModelMk2, startingScore: Int, currentScore: Int): Boolean
 {
     val mercyThreshold = model.mercyThreshold
     return if (mercyThreshold == -1) {
