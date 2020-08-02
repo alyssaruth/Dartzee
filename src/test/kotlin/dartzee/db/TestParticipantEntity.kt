@@ -1,6 +1,6 @@
 package dartzee.db
 
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.util.DateStatics
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
@@ -39,7 +39,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     fun `Should return correct values for an AI player`()
     {
         val aiId = insertPlayer(name = "Robot",
-                strategy = DartsAiModel().writeXml()).rowId
+                strategy = DartsAiModelMk2.new().toJson()).rowId
 
         val pt = ParticipantEntity()
         pt.playerId = aiId

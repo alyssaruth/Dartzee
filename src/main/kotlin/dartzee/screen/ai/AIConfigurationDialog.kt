@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.bean.addGhostText
 import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
@@ -141,9 +141,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             val name = aiPlayer.name
             textFieldName.text = name
 
-            val xmlStr = aiPlayer.strategy
-            val model = DartsAiModel()
-            model.readXml(xmlStr)
+            val model = DartsAiModelMk2.fromJson(aiPlayer.strategy)
 
             panelAIConfig.initialiseFromModel(model)
             panelX01Config.initialiseFromModel(model)
@@ -158,12 +156,12 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         textFieldName.isEditable = editable
     }
 
-    private fun factoryModelFromPanels(): DartsAiModel
+    private fun factoryModelFromPanels(): DartsAiModelMk2
     {
-        val model = panelAIConfig.initialiseModel()
-        panelX01Config.populateModel(model)
-        panelGolfConfig.populateModel(model)
-        panelDartzeeConfig.populateModel(model)
+        var model = panelAIConfig.initialiseModel()
+        model = panelX01Config.populateModel(model)
+        model = panelGolfConfig.populateModel(model)
+        model = panelDartzeeConfig.populateModel(model)
 
         return model
     }
@@ -207,9 +205,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         aiPlayer.name = name
 
         val model = factoryModelFromPanels()
-        val xmlStr = model.writeXml()
-
-        aiPlayer.strategy = xmlStr
+        aiPlayer.strategy = model.toJson()
 
         val avatarId = avatar.avatarId
         aiPlayer.playerImageId = avatarId

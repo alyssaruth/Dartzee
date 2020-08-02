@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.bean.NumberField
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -48,30 +48,26 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
 
     override fun valid() = true
 
-    fun initialiseModel(): DartsAiModel
+    fun initialiseModel(): DartsAiModelMk2
     {
-        val model = DartsAiModel()
+        val model = DartsAiModelMk2.new()
 
         val sd = nfStandardDeviation.getDouble()
-        val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else 0.0
-        val sdCentral = if(cbCenterBias.isSelected) nfCentralBias.getDouble() else 0.0
+        val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else null
+        val sdCentral = if(cbCenterBias.isSelected) nfCentralBias.getDouble() else null
 
-        model.populate(sd, sdDoubles, sdCentral)
-        return model
+        return model.copy(standardDeviation = sd, standardDeviationDoubles = sdDoubles, standardDeviationCentral = sdCentral)
     }
 
-    override fun populateModel(model: DartsAiModel)
-    {
-        //Do nothing (we initialise the model instead)
-    }
+    override fun populateModel(model: DartsAiModelMk2) = model
 
-    override fun initialiseFromModel(model: DartsAiModel)
+    override fun initialiseFromModel(model: DartsAiModelMk2)
     {
         val standardDeviation = model.standardDeviation
         nfStandardDeviation.value = standardDeviation
 
         val standardDeviationDoubles = model.standardDeviationDoubles
-        if (standardDeviationDoubles > 0)
+        if (standardDeviationDoubles != null)
         {
             cbStandardDeviationDoubles.isSelected = true
             nfStandardDeviationDoubles.isEnabled = true
@@ -85,7 +81,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         }
 
         val sdCentral = model.standardDeviationCentral
-        if (sdCentral > 0)
+        if (sdCentral != null)
         {
             cbCenterBias.isSelected = true
             nfCentralBias.isEnabled = true

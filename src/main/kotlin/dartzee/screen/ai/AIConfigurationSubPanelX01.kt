@@ -1,8 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.Dart
 import dartzee.ai.AimDart
-import dartzee.ai.DartsAiModel
 import dartzee.ai.DartsAiModelMk2
 import dartzee.bean.SpinnerSingleSelector
 import java.awt.event.ActionEvent
@@ -57,14 +55,14 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         spinnerScoringDart.value = model.scoringDart
 
         val mercyThreshold = model.mercyThreshold
-        val mercyRule = mercyThreshold > -1
+        val mercyRule = mercyThreshold != null
         chckbxMercyRule.isSelected = mercyRule
         spinnerMercyThreshold.isEnabled = mercyRule
         lblWhenScoreLess.isEnabled = mercyRule
 
         spinnerMercyThreshold.value = if (mercyRule) mercyThreshold else 10
 
-        hmScoreToDart = model.hmScoreToDart
+        hmScoreToDart = model.hmScoreToDart.toMutableMap()
     }
 
     override fun actionPerformed(arg0: ActionEvent)

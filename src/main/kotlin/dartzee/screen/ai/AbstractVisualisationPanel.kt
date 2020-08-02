@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelMk2
 import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
 import java.awt.Point
@@ -35,7 +35,7 @@ abstract class AbstractVisualisationPanel : JPanel()
     /**
      * Abstract fns
      */
-    abstract fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
+    abstract fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModelMk2)
     abstract fun paintKey()
 
     fun reset()
@@ -45,7 +45,7 @@ abstract class AbstractVisualisationPanel : JPanel()
         overlay.background = DartsColour.TRANSPARENT
     }
 
-    fun populate(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
+    fun populate(hmPointToCount: Map<Point, Int>, model: DartsAiModelMk2)
     {
         showVisualisation(hmPointToCount, model)
 

@@ -1,7 +1,6 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.ColourWrapper
-import dartzee.ai.DartsAiModel
 import dartzee.ai.DartsAiModelMk2
 import dartzee.core.bean.paint
 import dartzee.utils.DartsColour

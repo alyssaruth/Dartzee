@@ -14,14 +14,12 @@ fun isBust(score: Int, lastDart: Dart): Boolean
  * Apply the Mercy Rule if:
  * - It has been enabled for this AI
  * - The starting score was odd and < the threshold (configurable per AI)
- * - The current score is even, meaing we have bailed ourselves out in some way
+ * - The current score is even, meaning we have bailed ourselves out in some way
  */
 fun shouldStopForMercyRule(model: DartsAiModelMk2, startingScore: Int, currentScore: Int): Boolean
 {
-    val mercyThreshold = model.mercyThreshold
-    return if (mercyThreshold == -1) {
-        false
-    } else startingScore < mercyThreshold
+    val mercyThreshold = model.mercyThreshold ?: return false
+    return startingScore < mercyThreshold
             && startingScore % 2 != 0
             && currentScore % 2 == 0
 

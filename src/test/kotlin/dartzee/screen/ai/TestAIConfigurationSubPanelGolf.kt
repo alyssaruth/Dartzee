@@ -2,11 +2,11 @@ package dartzee.screen.ai
 
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.SegmentType
-import dartzee.ai.DartsAiModel
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
 import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartsModel
 import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JComboBox
@@ -18,13 +18,9 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
     @Test
     fun `Should initialise from a model correctly`()
     {
-        val model = DartsAiModel()
-        model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
-        model.hmDartNoToSegmentType[2] = SegmentType.INNER_SINGLE
-        model.hmDartNoToSegmentType[3] = SegmentType.OUTER_SINGLE
-
-        model.hmDartNoToStopThreshold[1] = 2
-        model.hmDartNoToStopThreshold[2] = 4
+        val hmDartNoToSegmentType = mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.INNER_SINGLE, 3 to SegmentType.OUTER_SINGLE)
+        val hmDartNoToStopThreshold = mapOf(1 to 2, 2 to 4)
+        val model = makeDartsModel(hmDartNoToSegmentType = hmDartNoToSegmentType, hmDartNoToStopThreshold = hmDartNoToStopThreshold)
 
         val panel = AIConfigurationSubPanelGolf()
         panel.initialiseFromModel(model)
@@ -53,8 +49,7 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
         panel.getPanelForDartNo(1).getChild<JSpinner>().value = 1
         panel.getPanelForDartNo(2).getChild<JSpinner>().value = 2
 
-        val model = DartsAiModel()
-        panel.populateModel(model)
+        val model = panel.populateModel(makeDartsModel())
 
         model.hmDartNoToStopThreshold[1] shouldBe 1
         model.hmDartNoToStopThreshold[2] shouldBe 2

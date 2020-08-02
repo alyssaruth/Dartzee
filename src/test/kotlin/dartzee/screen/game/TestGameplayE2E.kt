@@ -76,8 +76,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")
 
-        val aiModel = beastDartsModel()
-        aiModel.hmScoreToDart[81] = AimDart(19, 3)
+        val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
         val player = insertPlayer(model = aiModel)
 
         val (panel, listener) = setUpGamePanel(game)

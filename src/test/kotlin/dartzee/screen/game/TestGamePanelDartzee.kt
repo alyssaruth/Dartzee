@@ -256,8 +256,7 @@ class TestGamePanelDartzee: AbstractTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         panel.dartboard.addDartboardListener(listener)
 
-        val model = beastDartsModel()
-        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+        val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
         panel.doAiTurn(model)
         panel.doAiTurn(model)
         panel.doAiTurn(model)
@@ -274,8 +273,7 @@ class TestGamePanelDartzee: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val model = beastDartsModel()
-        model.dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+        val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
 
         val player = insertPlayer(model = beastDartsModel())
         val game = setUpDartzeeGameOnDatabase(1, player)

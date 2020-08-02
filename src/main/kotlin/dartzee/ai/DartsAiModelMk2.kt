@@ -22,6 +22,11 @@ import org.apache.commons.math3.distribution.NormalDistribution
 import java.awt.Point
 import java.util.*
 
+enum class DartzeePlayStyle {
+    CAUTIOUS,
+    AGGRESSIVE
+}
+
 data class DartsAiModelMk2(val standardDeviation: Double,
                            val standardDeviationDoubles: Double?,
                            val standardDeviationCentral: Double?,

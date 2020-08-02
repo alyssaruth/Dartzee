@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.*
-import dartzee.ai.DartsAiModel
+import dartzee.`object`.SegmentType
+import dartzee.ai.DartsAiModelMk2
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
@@ -59,7 +59,7 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
         lblOrBelow.isEnabled = value > 1
     }
 
-    fun initialiseFromModel(model: DartsAiModel)
+    fun initialiseFromModel(model: DartsAiModelMk2)
     {
         //Combo box selection
         val segmentType = model.getSegmentTypeForDartNo(dartNo)
@@ -73,17 +73,17 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
         }
     }
 
-    fun populateModel(model: DartsAiModel)
+    fun populateMaps(hmDartNoToSegmentType: MutableMap<Int, SegmentType>, hmDartNoToStopThreshold: MutableMap<Int, Int>)
     {
         val item = comboBox.selectedItemTyped()
         val segmentType = item.hiddenData
 
-        model.setSegmentTypeForDartNo(dartNo, segmentType)
+        hmDartNoToSegmentType[dartNo] = segmentType
 
         if (spinner.isVisible)
         {
             val stopThreshold = spinner.value as Int
-            model.setStopThresholdForDartNo(dartNo, stopThreshold)
+            hmDartNoToStopThreshold[dartNo] = stopThreshold
         }
     }
 

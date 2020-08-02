@@ -22,11 +22,6 @@ import org.w3c.dom.Element
 import java.awt.Point
 import java.util.*
 
-enum class DartzeePlayStyle {
-    CAUTIOUS,
-    AGGRESSIVE
-}
-
 class DartsAiModel
 {
     //Modelling
