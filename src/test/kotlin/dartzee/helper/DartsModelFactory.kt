@@ -2,7 +2,7 @@ package dartzee.helper
 
 import dartzee.`object`.SegmentType
 import dartzee.ai.AimDart
-import dartzee.ai.DartsAiModelMk2
+import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 
 fun beastDartsModel(standardDeviationDoubles: Double? = null,
@@ -12,9 +12,9 @@ fun beastDartsModel(standardDeviationDoubles: Double? = null,
                     mercyThreshold: Int? = null,
                     hmDartNoToSegmentType: Map<Int, SegmentType> = emptyMap(),
                     hmDartNoToStopThreshold: Map<Int, Int> = emptyMap(),
-                    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModelMk2
+                    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModel
 {
-    return DartsAiModelMk2(
+    return DartsAiModel(
             0.1,
             standardDeviationDoubles,
             standardDeviationCentral,
@@ -34,9 +34,9 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
                    mercyThreshold: Int? = null,
                    hmDartNoToSegmentType: Map<Int, SegmentType> = emptyMap(),
                    hmDartNoToStopThreshold: Map<Int, Int> = emptyMap(),
-                   dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModelMk2
+                   dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModel
 {
-    return DartsAiModelMk2(
+    return DartsAiModel(
             standardDeviation,
             standardDeviationDoubles,
             standardDeviationCentral,

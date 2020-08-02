@@ -5,7 +5,7 @@ import dartzee.`object`.SegmentType
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
 import dartzee.achievements.getWinAchievementRef
-import dartzee.ai.DartsAiModelMk2
+import dartzee.ai.DartsAiModel
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.*
@@ -84,7 +84,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         return totalPlayers - getActiveCount() + 1
     }
 
-    protected fun getCurrentPlayerStrategy(): DartsAiModelMk2
+    protected fun getCurrentPlayerStrategy(): DartsAiModel
     {
         val participant = getCurrentParticipant()
         return participant.getModel()
@@ -163,7 +163,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
      * Abstract methods
      */
     abstract fun factoryState(pt: ParticipantEntity, scorer: S): PlayerState
-    abstract fun doAiTurn(model: DartsAiModelMk2)
+    abstract fun doAiTurn(model: DartsAiModel)
 
     abstract fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     abstract fun updateVariablesForNewRound()

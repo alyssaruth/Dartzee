@@ -12,7 +12,7 @@ private const val X01 = 501
 /**
  * Simulate a single game of X01 for an AI
  */
-class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: DartsAiModelMk2) : AbstractDartsSimulation(dartboard, player, model)
+class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: DartsAiModel) : AbstractDartsSimulation(dartboard, player, model)
 {
     //Transient things
     protected var startingScore = -1

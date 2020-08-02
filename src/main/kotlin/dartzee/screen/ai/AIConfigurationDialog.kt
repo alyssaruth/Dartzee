@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.ai.DartsAiModelMk2
+import dartzee.ai.DartsAiModel
 import dartzee.core.bean.addGhostText
 import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
@@ -141,7 +141,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             val name = aiPlayer.name
             textFieldName.text = name
 
-            val model = DartsAiModelMk2.fromJson(aiPlayer.strategy)
+            val model = DartsAiModel.fromJson(aiPlayer.strategy)
 
             panelAIConfig.initialiseFromModel(model)
             panelX01Config.initialiseFromModel(model)
@@ -156,7 +156,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         textFieldName.isEditable = editable
     }
 
-    private fun factoryModelFromPanels(): DartsAiModelMk2
+    private fun factoryModelFromPanels(): DartsAiModel
     {
         var model = panelAIConfig.initialiseModel()
         model = panelX01Config.populateModel(model)

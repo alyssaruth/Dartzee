@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.ai.DartsAiModelMk2
+import dartzee.ai.DartsAiModel
 import dartzee.core.bean.NumberField
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -48,9 +48,9 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
 
     override fun valid() = true
 
-    fun initialiseModel(): DartsAiModelMk2
+    fun initialiseModel(): DartsAiModel
     {
-        val model = DartsAiModelMk2.new()
+        val model = DartsAiModel.new()
 
         val sd = nfStandardDeviation.getDouble()
         val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else null
@@ -59,9 +59,9 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         return model.copy(standardDeviation = sd, standardDeviationDoubles = sdDoubles, standardDeviationCentral = sdCentral)
     }
 
-    override fun populateModel(model: DartsAiModelMk2) = model
+    override fun populateModel(model: DartsAiModel) = model
 
-    override fun initialiseFromModel(model: DartsAiModelMk2)
+    override fun initialiseFromModel(model: DartsAiModel)
     {
         val standardDeviation = model.standardDeviation
         nfStandardDeviation.value = standardDeviation

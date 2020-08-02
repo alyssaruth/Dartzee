@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.ColourWrapper
-import dartzee.ai.DartsAiModelMk2
+import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
 import dartzee.utils.DartsColour
 import java.awt.Color
@@ -63,7 +63,7 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         return wrapper
     }
 
-    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModelMk2)
+    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
     {
         overlayImg.paint { getColorForPoint(it, hmPointToCount) }
         repaint()

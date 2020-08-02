@@ -2,7 +2,6 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
-import dartzee.ai.DartsAiModelMk2
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.utils.getAllPossibleSegments
 import java.awt.BorderLayout
@@ -75,7 +74,7 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
         }
     }
 
-    fun selectRule(model: DartsAiModelMk2)
+    fun selectRule(model: DartsAiModel)
     {
         carousel.selectRule(model)
     }

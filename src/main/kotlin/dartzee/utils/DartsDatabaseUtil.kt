@@ -1,7 +1,7 @@
 package dartzee.utils
 
+import dartzee.ai.DartsAiModelOLD
 import dartzee.ai.DartsAiModel
-import dartzee.ai.DartsAiModelMk2
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
@@ -123,10 +123,10 @@ object DartsDatabaseUtil
     {
         val players = PlayerEntity().retrieveEntities("Strategy <> ''")
         players.forEach {
-            val model = DartsAiModel()
+            val model = DartsAiModelOLD()
             model.readXml(it.strategy)
 
-            val newModel = DartsAiModelMk2(model.standardDeviation,
+            val newModel = DartsAiModel(model.standardDeviation,
                     if (model.standardDeviationDoubles > 0.0) model.standardDeviationDoubles else null,
                     if (model.standardDeviationCentral > 0.0) model.standardDeviationCentral else null,
                     model.scoringDart,
@@ -145,7 +145,7 @@ object DartsDatabaseUtil
     {
         val players = PlayerEntity().retrieveEntities("Strategy <> ''")
         players.forEach {
-            val model = DartsAiModel()
+            val model = DartsAiModelOLD()
             model.readXml(it.strategy)
             it.strategy = model.writeXml()
             it.saveToDatabase()

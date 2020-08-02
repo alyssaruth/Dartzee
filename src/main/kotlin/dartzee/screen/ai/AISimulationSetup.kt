@@ -23,7 +23,7 @@ import java.awt.Window
 import javax.swing.*
 
 class AISimulationSetup constructor(private val player: PlayerEntity,
-                                    private var model: DartsAiModelMk2? = null,
+                                    private var model: DartsAiModel? = null,
                                     private val modal: Boolean = false) : SimpleDialog()
 {
     private val panelCenter = JPanel()

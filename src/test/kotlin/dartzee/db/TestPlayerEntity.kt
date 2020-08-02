@@ -1,6 +1,6 @@
 package dartzee.db
 
-import dartzee.ai.DartsAiModelMk2
+import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
@@ -55,7 +55,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
         player.strategy = model.toJson()
 
         val recoveredModel = player.getModel()
-        recoveredModel.shouldBeInstanceOf<DartsAiModelMk2>()
+        recoveredModel.shouldBeInstanceOf<DartsAiModel>()
         recoveredModel.scoringDart shouldBe 15
     }
 

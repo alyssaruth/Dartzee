@@ -4,7 +4,6 @@ import dartzee.`object`.CheckoutSuggester
 import dartzee.`object`.Dart
 import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
-import dartzee.ai.DartsAiModelMk2
 import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadLuck
@@ -215,7 +214,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     }
 
-    override fun doAiTurn(model: DartsAiModelMk2)
+    override fun doAiTurn(model: DartsAiModel)
     {
         if (shouldStopForMercyRule(model, startingScore, currentScore))
         {

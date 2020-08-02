@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AimDart
-import dartzee.ai.DartsAiModelMk2
+import dartzee.ai.DartsAiModel
 import dartzee.bean.SpinnerSingleSelector
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -43,14 +43,14 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
 
     override fun valid() = true
 
-    override fun populateModel(model: DartsAiModelMk2): DartsAiModelMk2
+    override fun populateModel(model: DartsAiModel): DartsAiModel
     {
         return model.copy(hmScoreToDart = hmScoreToDart,
                 scoringDart = spinnerScoringDart.value as Int,
                 mercyThreshold = if (chckbxMercyRule.isSelected) spinnerMercyThreshold.value as Int else null)
     }
 
-    override fun initialiseFromModel(model: DartsAiModelMk2)
+    override fun initialiseFromModel(model: DartsAiModel)
     {
         spinnerScoringDart.value = model.scoringDart
 
