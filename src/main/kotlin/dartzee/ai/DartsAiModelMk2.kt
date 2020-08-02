@@ -252,7 +252,7 @@ data class DartsAiModelMk2(val standardDeviation: Double,
         return distribution.probability(-radius, radius)
     }
 
-    fun toJson() = jsonMapper().writeValueAsString(this)
+    fun toJson(): String = jsonMapper().writeValueAsString(this)
 
     companion object
     {

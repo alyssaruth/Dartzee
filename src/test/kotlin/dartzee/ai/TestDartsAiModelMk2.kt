@@ -3,37 +3,105 @@ package dartzee.ai
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.borrowTestDartboard
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.CLOCK_TYPE_TREBLES
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
+import dartzee.helper.makeDartsModel
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores
+import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
 import org.junit.Test
+import java.awt.Point
+import kotlin.math.floor
 
 class TestDartsAiModelMk2: AbstractTest()
 {
     @Test
-    fun `Should successfully serialize and deserialize`()
+    fun `Should serialize and deserialize with default values`()
+    {
+        val model = DartsAiModelMk2.new()
+        val result = model.toJson()
+
+        val model2 = DartsAiModelMk2.fromJson(result)
+        model shouldBe model2
+    }
+
+    @Test
+    fun `Should serialize and deserialize with populated values`()
     {
         val setupDarts = mapOf(57 to AimDart(17, 1), 97 to AimDart(19, 3))
         val model = DartsAiModelMk2(50.0, 40.0, null, 20, setupDarts, 17, mapOf(), mapOf(), DartzeePlayStyle.CAUTIOUS)
 
         val result = model.toJson()
-
-        println(result)
-
         val model2 = DartsAiModelMk2.fromJson(result)
         model shouldBe model2
+    }
+
+    /**
+     * Verified against standard Normal Dist z-tables
+     */
+    @Test
+    fun `Should return the correct density based on the standard deviation`()
+    {
+        val model = makeDartsModel(standardDeviation = 20.0)
+
+        //P(within 0.5 SD)
+        model.getProbabilityWithinRadius(10.0).shouldBeBetween(0.3829, 0.3831, 0.0)
+
+        //P(within 1 SD)
+        model.getProbabilityWithinRadius(20.0).shouldBeBetween(0.6826, 0.6827, 0.0)
+
+        //P(within 2 SD)
+        model.getProbabilityWithinRadius(40.0).shouldBeBetween(0.9543, 0.9545, 0.0)
+
+        //P(within 3 SD)
+        model.getProbabilityWithinRadius(60.0).shouldBeBetween(0.9973, 0.9975, 0.0)
+    }
+
+    /**
+     * Actual sampling behaviour
+     */
+    @Test
+    fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`()
+    {
+        //TODO - Another way to test this?
+    }
+
+    @Test
+    fun `Should revert to the regular distribution for doubles`()
+    {
+        //TODO - another way to test this?
+    }
+
+    @Test
+    fun `Should generate a random angle between 0 - 360 by default`()
+    {
+        val model = makeDartsModel(standardDeviation = 3.0)
+
+        val dartboard = borrowTestDartboard()
+        val pt = Point(0, 0)
+
+        val hsAngles = HashSet<Double>()
+        for (i in 0..100000)
+        {
+            val (_, theta) = model.calculateRadiusAndAngle(pt, dartboard)
+            theta.shouldBeBetween(0.0, 360.0, 0.0)
+
+            hsAngles.add(floor(theta))
+        }
+
+        hsAngles.size shouldBe 360
     }
 
     /**
