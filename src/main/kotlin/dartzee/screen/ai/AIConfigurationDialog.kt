@@ -185,7 +185,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             //If the player hasn't actually been created yet, then we need to instantiate a PlayerEntity just to hold stuff like the name
             aiPlayer.name = textFieldName.text
 
-            val dlg = AISimulationSetup(aiPlayer, model, true)
+            val dlg = AISimulationSetupDialog(aiPlayer, model, true)
             dlg.isVisible = true
         }
     }

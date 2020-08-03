@@ -10,7 +10,6 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.ScreenCache
-import dartzee.screen.ai.AISimulationSetup
 import dartzee.stats.getGameCounts
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache

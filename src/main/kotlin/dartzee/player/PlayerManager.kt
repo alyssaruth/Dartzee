@@ -4,7 +4,7 @@ import dartzee.db.PlayerEntity
 import dartzee.screen.HumanCreationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
-import dartzee.screen.ai.AISimulationSetup
+import dartzee.screen.ai.AISimulationSetupDialog
 
 class PlayerManager
 {
@@ -32,6 +32,6 @@ class PlayerManager
 
     fun runSimulation(player: PlayerEntity)
     {
-        AISimulationSetup(player).isVisible = true
+        AISimulationSetupDialog(player).isVisible = true
     }
 }
