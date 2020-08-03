@@ -17,11 +17,11 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
 {
     private val panelNorth = JPanel()
     private val lblStandardDeviation = JLabel("Standard Deviation")
-    private val nfStandardDeviation = NumberField(1)
+    val nfStandardDeviation = NumberField(1)
     private val cbStandardDeviationDoubles = JCheckBox("Standard Deviation (Doubles)")
-    private val nfStandardDeviationDoubles = NumberField(1)
-    private val nfCentralBias = NumberField(1, 200)
+    val nfStandardDeviationDoubles = NumberField(1)
     private val cbCenterBias = JCheckBox("Standard Deviation (skew towards center)")
+    val nfCentralBias = NumberField(1, 200)
 
     init
     {
@@ -54,7 +54,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
 
         val sd = nfStandardDeviation.getDouble()
         val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else null
-        val sdCentral = if(cbCenterBias.isSelected) nfCentralBias.getDouble() else null
+        val sdCentral = if (cbCenterBias.isSelected) nfCentralBias.getDouble() else null
 
         return model.copy(standardDeviation = sd, standardDeviationDoubles = sdDoubles, standardDeviationCentral = sdCentral)
     }
