@@ -40,12 +40,37 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should serialize and deserialize with populated values`()
     {
-        val setupDarts = mapOf(57 to AimDart(17, 1), 97 to AimDart(19, 3))
-        val model = DartsAiModel(50.0, 40.0, null, 20, setupDarts, 17, mapOf(), mapOf(), DartzeePlayStyle.CAUTIOUS)
+        val model = makePopulatedAiModel()
 
         val result = model.toJson()
         val model2 = DartsAiModel.fromJson(result)
         model shouldBe model2
+    }
+
+    @Test
+    fun `Should deserialize from static JSON`()
+    {
+        val jsonString = javaClass.getResource("/aiModel.json").readText()
+        val model = DartsAiModel.fromJson(jsonString)
+
+        model shouldBe makePopulatedAiModel()
+    }
+
+    private fun makePopulatedAiModel(): DartsAiModel
+    {
+        val setupDarts = mapOf(57 to AimDart(17, 1), 97 to AimDart(19, 3))
+        val hmDartNoToSegmentType = mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.TREBLE, 3 to SegmentType.OUTER_SINGLE)
+        val hmDartNoToThreshold = mapOf(1 to 2, 2 to 3)
+        return DartsAiModel(
+            50.0,
+            40.0,
+            35.0,
+            20,
+            setupDarts,
+            17,
+            hmDartNoToSegmentType,
+            hmDartNoToThreshold,
+            DartzeePlayStyle.CAUTIOUS)
     }
 
     /**

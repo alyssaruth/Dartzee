@@ -1,0 +1,27 @@
+{
+  "standardDeviation": 50,
+  "standardDeviationDoubles": 40,
+  "standardDeviationCentral": 35,
+  "scoringDart": 20,
+  "hmScoreToDart": {
+    "57": {
+      "score": 17,
+      "multiplier": 1
+    },
+    "97": {
+      "score": 19,
+      "multiplier": 3
+    }
+  },
+  "mercyThreshold": 17,
+  "hmDartNoToSegmentType": {
+    "1": "TREBLE",
+    "2": "TREBLE",
+    "3": "OUTER_SINGLE"
+  },
+  "hmDartNoToStopThreshold": {
+    "1": 2,
+    "2": 3
+  },
+  "dartzeePlayStyle": "CAUTIOUS"
+}

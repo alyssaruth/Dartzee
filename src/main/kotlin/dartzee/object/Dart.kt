@@ -1,5 +1,6 @@
 package dartzee.`object`
 
+import dartzee.ai.IDart
 import dartzee.core.util.DateStatics
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_TREBLES
@@ -7,10 +8,10 @@ import java.awt.Point
 import java.sql.Timestamp
 
 open class Dart(
-        val score: Int,
-        val multiplier: Int,
+        override val score: Int,
+        override  val multiplier: Int,
         val pt: Point? = null,
-        val segmentType: SegmentType = SegmentType.MISS)
+        val segmentType: SegmentType = SegmentType.MISS): IDart
 {
     var ordinal = -1
 
@@ -29,9 +30,7 @@ open class Dart(
     /**
      * Helpers
      */
-    fun isDouble() = multiplier == 2
-    fun isTriple() = multiplier == 3
-    fun getTotal() = score * multiplier
+
     fun getGolfScore() = getGolfScore(roundNumber)
     fun getX() = pt?.x
     fun getY() = pt?.y
@@ -43,28 +42,6 @@ open class Dart(
             0 -> 0
             else -> score
         }
-    }
-
-    fun getRendered(): String
-    {
-        if (multiplier == 0)
-        {
-            return "0"
-        }
-
-        var ret = ""
-        if (isDouble())
-        {
-            ret += "D"
-        }
-        else if (isTriple())
-        {
-            ret += "T"
-        }
-
-        ret += score
-
-        return ret
     }
 
     fun getSegmentTypeToAimAt(): SegmentType
@@ -111,7 +88,7 @@ open class Dart(
         return (score == other.score)
     }
 
-    override fun toString() = getRendered()
+    override fun toString() = format()
 
     fun hitClockTarget(clockType: String): Boolean
     {
@@ -120,7 +97,7 @@ open class Dart(
         return when (clockType)
         {
             CLOCK_TYPE_DOUBLES -> isDouble()
-            CLOCK_TYPE_TREBLES -> isTriple()
+            CLOCK_TYPE_TREBLES -> isTreble()
             else -> multiplier > 0
         }
     }

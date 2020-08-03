@@ -32,6 +32,6 @@ class PlayerManager
 
     fun runSimulation(player: PlayerEntity)
     {
-        AISimulationSetupDialog(player).isVisible = true
+        AISimulationSetupDialog(player, player.getModel()).isVisible = true
     }
 }

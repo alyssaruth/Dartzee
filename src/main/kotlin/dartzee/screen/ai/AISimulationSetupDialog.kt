@@ -23,7 +23,7 @@ import java.awt.Window
 import javax.swing.*
 
 class AISimulationSetupDialog(private val player: PlayerEntity,
-                              private var model: DartsAiModel? = null,
+                              private val model: DartsAiModel,
                               private val modal: Boolean = false) : SimpleDialog()
 {
     private val panelCenter = JPanel()
@@ -63,12 +63,6 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
 
     override fun okPressed()
     {
-        //Do the simulation...
-        if (model == null)
-        {
-            model = player.getModel()
-        }
-
         val dartboard = Dartboard(500, 500)
         dartboard.simulation = true //Don't do animations etc
         dartboard.paintDartboard()
@@ -81,8 +75,8 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
     {
         return when (panel_1.selection)
         {
-            rdbtn501 -> DartsSimulationX01(dartboard, player, model!!)
-            else -> DartsSimulationGolf(dartboard, player, model!!)
+            rdbtn501 -> DartsSimulationX01(dartboard, player, model)
+            else -> DartsSimulationGolf(dartboard, player, model)
         }
     }
 

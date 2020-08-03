@@ -124,5 +124,5 @@ fun isShanghai(darts: MutableList<Dart>): Boolean
 fun getSortedDartStr(darts: List<Dart>): String
 {
     val sortedDarts = darts.sortedWith(compareByDescending<Dart>{ it.getTotal() }.thenByDescending{ it.multiplier })
-    return sortedDarts.joinToString { it.getRendered() }
+    return sortedDarts.joinToString { it.format() }
 }
