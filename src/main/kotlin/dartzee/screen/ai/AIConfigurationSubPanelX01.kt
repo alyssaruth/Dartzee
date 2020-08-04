@@ -41,8 +41,6 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         chckbxMercyRule.addActionListener(this)
     }
 
-    override fun valid() = true
-
     override fun populateModel(model: DartsAiModel): DartsAiModel
     {
         return model.copy(hmScoreToDart = hmScoreToDart,

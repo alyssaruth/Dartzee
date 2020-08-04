@@ -59,12 +59,6 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
         model.hmDartNoToSegmentType[3] shouldBe SegmentType.TREBLE
     }
 
-    @Test
-    fun `Should always be valid`()
-    {
-        AIConfigurationSubPanelGolf().valid() shouldBe true
-    }
-
 
     private fun AIConfigurationSubPanelGolf.getPanelForDartNo(dartNo: Int)
             = getChild<AIConfigurationGolfDartPanel> { (it.border as TitledBorder).title == "Dart #$dartNo" }

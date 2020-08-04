@@ -19,8 +19,6 @@ class AIConfigurationSubPanelGolf : AbstractAIConfigurationSubPanel()
         add(panelDartThree, "cell 0 2,grow")
     }
 
-    override fun valid() = true
-
     override fun populateModel(model: DartsAiModel): DartsAiModel
     {
         val hmDartNoToSegmentType =  mutableMapOf<Int, SegmentType>()

@@ -28,7 +28,7 @@ abstract class AbstractPlayerCreationDialog : SimpleDialog()
     /**
      * Basic validation on the player name and avatar selections
      */
-    protected open fun valid(): Boolean
+    protected fun valid(): Boolean
     {
         val name = textFieldName.text
         if (!isValidName(name, doExistenceCheck()))

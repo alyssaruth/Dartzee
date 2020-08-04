@@ -5,7 +5,6 @@ import javax.swing.JPanel
 
 abstract class AbstractAIConfigurationSubPanel : JPanel()
 {
-    abstract fun valid(): Boolean
     abstract fun populateModel(model: DartsAiModel): DartsAiModel
     abstract fun initialiseFromModel(model: DartsAiModel)
 

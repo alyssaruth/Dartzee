@@ -46,8 +46,6 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         cbCenterBias.addActionListener(this)
     }
 
-    override fun valid() = true
-
     fun initialiseModel(): DartsAiModel
     {
         val model = DartsAiModel.new()

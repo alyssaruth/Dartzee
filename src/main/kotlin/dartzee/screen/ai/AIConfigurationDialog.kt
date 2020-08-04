@@ -170,7 +170,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     {
         when (arg0.source)
         {
-            btnCalculate -> if (validModel()) calculateStats()
+            btnCalculate -> calculateStats()
             btnRunSimulation -> runSimulation()
             else -> super.actionPerformed(arg0)
         }
@@ -178,26 +178,19 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
     private fun runSimulation()
     {
-        if (validModel())
-        {
-            val model = factoryModelFromPanels()
+        val model = factoryModelFromPanels()
 
-            //If the player hasn't actually been created yet, then we need to instantiate a PlayerEntity just to hold stuff like the name
-            aiPlayer.name = textFieldName.text
+        //If the player hasn't actually been created yet, then we need to instantiate a PlayerEntity just to hold stuff like the name
+        aiPlayer.name = textFieldName.text
 
-            val dlg = AISimulationSetupDialog(aiPlayer, model, true)
-            dlg.isVisible = true
-        }
+        val dlg = AISimulationSetupDialog(aiPlayer, model, true)
+        dlg.isVisible = true
     }
-
-    override fun valid() = super.valid() && validModel()
 
     override fun doExistenceCheck(): Boolean
     {
         return !aiPlayer.retrievedFromDb
     }
-
-    private fun validModel() = panelAIConfig.valid() && panelX01Config.valid()
 
     override fun savePlayer()
     {
