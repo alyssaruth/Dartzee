@@ -64,9 +64,9 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
         //Combo box selection
         val segmentType = model.getSegmentTypeForDartNo(dartNo)
         val item = comboBox.items().find { it.hiddenData == segmentType }
-        item?.let{ comboBox.selectedItem = it }
+        item?.let { comboBox.selectedItem = it }
 
-        if (spinner.isVisible)
+        if (panelStoppingPoint.isVisible)
         {
             val stopThreshold = model.getStopThresholdForDartNo(dartNo)
             spinner.value = stopThreshold
@@ -80,7 +80,7 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
 
         hmDartNoToSegmentType[dartNo] = segmentType
 
-        if (spinner.isVisible)
+        if (panelStoppingPoint.isVisible)
         {
             val stopThreshold = spinner.value as Int
             hmDartNoToStopThreshold[dartNo] = stopThreshold

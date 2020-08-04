@@ -295,6 +295,10 @@ class TestDartsAiModel: AbstractTest()
         for (i in 1..3) { model.throwGolfDart(1, i, dartboard) }
 
         verifySequence { listener.dartThrown(Dart(1, 2)); listener.dartThrown(Dart(1, 3)); listener.dartThrown(Dart(1, 3)) }
+
+        model.getSegmentTypeForDartNo(1) shouldBe SegmentType.DOUBLE
+        model.getSegmentTypeForDartNo(2) shouldBe SegmentType.TREBLE
+        model.getSegmentTypeForDartNo(3) shouldBe SegmentType.TREBLE
     }
 
     @Test

@@ -116,7 +116,6 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         btnRunSimulation.addActionListener(this)
 
         initFields()
-        setFieldsEditable()
 
         tabbedPane.isEnabled = false
     }
@@ -128,6 +127,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         if (!aiPlayer.retrievedFromDb)
         {
             avatar.readOnly = false
+            textFieldName.isEditable = true
 
             panelX01Config.reset()
             panelGolfConfig.reset()
@@ -137,6 +137,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         else
         {
             avatar.readOnly = true
+            textFieldName.isEditable = false
 
             val name = aiPlayer.name
             textFieldName.text = name
@@ -148,12 +149,6 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
             panelGolfConfig.initialiseFromModel(model)
             panelDartzeeConfig.initialiseFromModel(model)
         }
-    }
-
-    private fun setFieldsEditable()
-    {
-        val editable = !aiPlayer.retrievedFromDb
-        textFieldName.isEditable = editable
     }
 
     private fun factoryModelFromPanels(): DartsAiModel

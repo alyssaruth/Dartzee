@@ -61,3 +61,7 @@ private fun getHighestPowerOfTwoLessThan(score: Int): Int
 
     return i / 2
 }
+
+
+fun getDefaultGolfSegmentType(dartNo: Int) = if (dartNo == 1) SegmentType.DOUBLE else SegmentType.TREBLE
+fun getDefaultGolfStopThreshold(dartNo: Int) = if (dartNo == 2) 3 else 2

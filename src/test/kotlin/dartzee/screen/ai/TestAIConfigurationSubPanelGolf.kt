@@ -59,10 +59,6 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
         model.hmDartNoToSegmentType[3] shouldBe SegmentType.TREBLE
     }
 
-
-    private fun AIConfigurationSubPanelGolf.getPanelForDartNo(dartNo: Int)
-            = getChild<AIConfigurationGolfDartPanel> { (it.border as TitledBorder).title == "Dart #$dartNo" }
-
     private fun AIConfigurationSubPanelGolf.selectSegmentType(dartNo: Int, segmentType: SegmentType)
     {
         val panel = getPanelForDartNo(dartNo)
@@ -70,3 +66,6 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
         comboBox.items().find { it.hiddenData == segmentType }?.let { comboBox.selectedItem = it }
     }
 }
+
+fun AIConfigurationSubPanelGolf.getPanelForDartNo(dartNo: Int)
+        = getChild<AIConfigurationGolfDartPanel> { (it.border as TitledBorder).title == "Dart #$dartNo" }

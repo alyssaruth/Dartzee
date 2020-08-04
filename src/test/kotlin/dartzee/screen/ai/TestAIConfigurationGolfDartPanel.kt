@@ -28,6 +28,17 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     }
 
     @Test
+    fun `Should not populate the map for stop threshold if dart 3`()
+    {
+        val panel = AIConfigurationGolfDartPanel(3)
+        panel.getChild<JSpinner>().value = 2
+
+        val hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
+        panel.populateMaps(mutableMapOf(), hmDartNoToStopThreshold)
+        hmDartNoToStopThreshold.size shouldBe 0
+    }
+
+    @Test
     fun `Should disable the 'or better' label appropriately`()
     {
         val panel = AIConfigurationGolfDartPanel(1)

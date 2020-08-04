@@ -17,6 +17,8 @@ import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
 import getDefaultDartToAimAt
+import getDefaultGolfSegmentType
+import getDefaultGolfStopThreshold
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import java.awt.Point
@@ -98,9 +100,6 @@ data class DartsAiModel(val standardDeviation: Double,
         val pt = throwDartAtPoint(ptToAimAt, dartboard)
         dartboard.dartThrown(pt)
     }
-
-    private fun getDefaultSegmentType(dartNo: Int) = if (dartNo == 1) SegmentType.DOUBLE else SegmentType.TREBLE
-    private fun getDefaultStopThreshold(dartNo: Int) = if (dartNo == 2) 3 else 2
 
     /**
      * Clock
@@ -185,9 +184,9 @@ data class DartsAiModel(val standardDeviation: Double,
         return SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount)
     }
 
-    fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getOrDefault(dartNo, getDefaultSegmentType(dartNo))
+    fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getOrDefault(dartNo, getDefaultGolfSegmentType(dartNo))
 
-    fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getOrDefault(dartNo, getDefaultStopThreshold(dartNo))
+    fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getOrDefault(dartNo, getDefaultGolfStopThreshold(dartNo))
 
     fun throwDartAtPoint(pt: Point, dartboard: Dartboard): Point
     {
