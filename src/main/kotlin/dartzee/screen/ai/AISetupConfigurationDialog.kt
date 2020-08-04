@@ -7,6 +7,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil
 import dartzee.core.util.TableUtil.SimpleRenderer
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.aiSetupRuleFactory
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import javax.swing.JButton
@@ -126,7 +127,7 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
             btnAddRule -> {
                 val hmCurrentRules = mutableMapOf<Int, AimDart>()
                 fillHashMapFromTable(hmCurrentRules)
-                NewSetupRuleDialog.addNewSetupRule(hmCurrentRules)
+                aiSetupRuleFactory.newSetupRule(hmCurrentRules)
 
                 buildTable(hmCurrentRules)
             }

@@ -5,8 +5,10 @@ import com.github.alexburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest
+import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JButton
@@ -54,6 +56,58 @@ class TestAISetupConfigurationDialog: AbstractTest()
 
         dialogFactory.errorsShown.shouldContainExactly("You must select row(s) to remove.")
         dlg.getChild<ScrollTable>().rowCount shouldBe 1
+    }
+
+    @Test
+    fun `Should support adding a new rule to the table`()
+    {
+        InjectedThings.aiSetupRuleFactory = MockAiSetupRuleFactory()
+        val dlg = AISetupConfigurationDialog(mutableMapOf(48 to AimDart(16, 1)))
+
+        dlg.clickChild<JButton>("Add Rule...")
+
+
+        val table = dlg.getChild<ScrollTable>()
+        table.rowCount shouldBe 2
+
+        val rows = table.getRows()
+        rows.shouldContainExactlyInAnyOrder(
+            listOf(48, AimDart(16, 1), 32),
+            listOf(10, AimDart(2, 1), 8)
+        )
+    }
+
+    @Test
+    fun `Should commit modifications to the hash map when Ok is pressed`()
+    {
+        InjectedThings.aiSetupRuleFactory = MockAiSetupRuleFactory()
+        val map = mutableMapOf(48 to AimDart(16, 1))
+        val dlg = AISetupConfigurationDialog(map)
+
+        dlg.clickChild<JButton>("Add Rule...")
+        dlg.clickChild<JButton>("Ok")
+
+        map.shouldContainExactly(mapOf(48 to AimDart(16, 1), 10 to AimDart(2, 1)))
+    }
+
+    @Test
+    fun `Should discard modifications when cancelled`()
+    {
+        InjectedThings.aiSetupRuleFactory = MockAiSetupRuleFactory()
+        val map = mutableMapOf(48 to AimDart(16, 1))
+        val dlg = AISetupConfigurationDialog(map)
+
+        dlg.clickChild<JButton>("Add Rule...")
+        dlg.clickChild<JButton>("Cancel")
+
+        map.shouldContainExactly(mapOf(48 to AimDart(16, 1)))
+    }
+
+    private class MockAiSetupRuleFactory: AbstractAISetupRuleFactory()
+    {
+        override fun newSetupRule(currentRules: MutableMap<Int, AimDart>) {
+            currentRules[10] = AimDart(2, 1)
+        }
     }
 
     private fun ScrollTable.getRows(): List<List<Any?>>
