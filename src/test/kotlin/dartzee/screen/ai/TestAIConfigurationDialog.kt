@@ -1,5 +1,6 @@
 package dartzee.screen.ai
 
+import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.SegmentType
 import dartzee.ai.DartsAiModel
@@ -15,6 +16,7 @@ import getDefaultGolfSegmentType
 import getDefaultGolfStopThreshold
 import io.kotlintest.shouldBe
 import org.junit.Test
+import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JRadioButton
 
@@ -53,9 +55,7 @@ class TestAIConfigurationDialog: AbstractTest()
                 hmDartNoToSegmentType = mapOf(1 to SegmentType.INNER_SINGLE))
 
         val player = insertPlayer(strategy = strategy.toJson())
-
-        val reretrieved = PlayerEntity().retrieveForId(player.rowId)!!
-        val dlg = AIConfigurationDialog(reretrieved)
+        val dlg = AIConfigurationDialog(player)
 
         dlg.getChild<PlayerAvatar>().readOnly shouldBe true
         dlg.textFieldName.isEditable shouldBe false
@@ -71,5 +71,22 @@ class TestAIConfigurationDialog: AbstractTest()
 
         val golfPanel = dlg.getChild<AIConfigurationSubPanelGolf>().getPanelForDartNo(1)
         golfPanel.getChild<JComboBox<ComboBoxItem<SegmentType>>>().selectedItemTyped().hiddenData shouldBe SegmentType.INNER_SINGLE
+    }
+
+    @Test
+    fun `Should successfully save changes to an AI player`()
+    {
+        val player = insertPlayer(strategy = DartsAiModel.new().toJson())
+
+        val dlg = AIConfigurationDialog(player)
+        val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
+        normalDistPanel.nfStandardDeviation.value = 75.0
+
+        dlg.clickChild<JButton>("Ok")
+
+        val reretrievedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
+        val model = reretrievedPlayer.getModel()
+
+        model shouldBe DartsAiModel.new().copy(standardDeviation = 75.0)
     }
 }
