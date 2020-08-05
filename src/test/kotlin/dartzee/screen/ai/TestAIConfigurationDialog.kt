@@ -12,8 +12,6 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
-import getDefaultGolfSegmentType
-import getDefaultGolfStopThreshold
 import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JButton
