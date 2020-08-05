@@ -110,5 +110,8 @@ class TestAIConfigurationDialog: AbstractTest()
         dlg.avatar.avatarId = "foo"
         dlg.clickChild<JButton>("Ok")
         dialogFactory.errorsShown.shouldBeEmpty()
+
+        val player = PlayerEntity.retrieveForName("Valid")!!
+        player.playerImageId shouldBe "foo"
     }
 }
