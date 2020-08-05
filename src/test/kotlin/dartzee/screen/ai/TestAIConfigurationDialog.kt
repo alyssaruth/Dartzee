@@ -40,9 +40,7 @@ class TestAIConfigurationDialog: AbstractTest()
         x01Panel.populateModel(DartsAiModel.new()) shouldBe DartsAiModel.new()
 
         val golfPanel = dlg.getChild<AIConfigurationSubPanelGolf>()
-        val modelWithGolf = golfPanel.populateModel(DartsAiModel.new())
-        modelWithGolf.hmDartNoToSegmentType.entries.forEach { it.value shouldBe getDefaultGolfSegmentType(it.key) }
-        modelWithGolf.hmDartNoToStopThreshold.entries.forEach { it.value shouldBe getDefaultGolfStopThreshold(it.key) }
+        golfPanel.populateModel(DartsAiModel.new()) shouldBe DartsAiModel.new()
     }
 
     @Test
@@ -86,7 +84,6 @@ class TestAIConfigurationDialog: AbstractTest()
 
         val reretrievedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
         val model = reretrievedPlayer.getModel()
-
         model shouldBe DartsAiModel.new().copy(standardDeviation = 75.0)
     }
 }

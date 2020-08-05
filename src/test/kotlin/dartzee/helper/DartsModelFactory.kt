@@ -10,8 +10,8 @@ fun beastDartsModel(standardDeviationDoubles: Double? = null,
                     scoringDart: Int = 20,
                     hmScoreToDart: Map<Int, AimDart> = emptyMap(),
                     mercyThreshold: Int? = null,
-                    hmDartNoToSegmentType: Map<Int, SegmentType> = emptyMap(),
-                    hmDartNoToStopThreshold: Map<Int, Int> = emptyMap(),
+                    hmDartNoToSegmentType: Map<Int, SegmentType> = DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
+                    hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
                     dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModel
 {
     return DartsAiModel(
@@ -32,8 +32,8 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
                    scoringDart: Int = 20,
                    hmScoreToDart: Map<Int, AimDart> = emptyMap(),
                    mercyThreshold: Int? = null,
-                   hmDartNoToSegmentType: Map<Int, SegmentType> = emptyMap(),
-                   hmDartNoToStopThreshold: Map<Int, Int> = emptyMap(),
+                   hmDartNoToSegmentType: Map<Int, SegmentType> = DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
+                   hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
                    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModel
 {
     return DartsAiModel(

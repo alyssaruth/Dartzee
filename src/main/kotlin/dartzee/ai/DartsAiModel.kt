@@ -17,8 +17,6 @@ import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
 import getDefaultDartToAimAt
-import getDefaultGolfSegmentType
-import getDefaultGolfStopThreshold
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import java.awt.Point
@@ -184,9 +182,9 @@ data class DartsAiModel(val standardDeviation: Double,
         return SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount)
     }
 
-    fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getOrDefault(dartNo, getDefaultGolfSegmentType(dartNo))
+    fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getValue(dartNo)
 
-    fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getOrDefault(dartNo, getDefaultGolfStopThreshold(dartNo))
+    fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getValue(dartNo)
 
     fun throwDartAtPoint(pt: Point, dartboard: Dartboard): Point
     {
@@ -258,8 +256,16 @@ data class DartsAiModel(val standardDeviation: Double,
         private const val SCORING_DARTS_TO_THROW = 20000
         private const val DOUBLE_DARTS_TO_THROW = 20000
 
+        val DEFAULT_GOLF_SEGMENT_TYPES = mapOf(1 to SegmentType.DOUBLE, 2 to SegmentType.TREBLE, 3 to SegmentType.TREBLE)
+        val DEFAULT_GOLF_STOP_THRESHOLDS = mapOf(1 to 2, 2 to 3)
+
         fun fromJson(json: String) = jsonMapper().readValue<DartsAiModel>(json)
 
-        fun new() = DartsAiModel(50.0, null, null, 20, emptyMap(), null, mapOf(), mapOf(), DartzeePlayStyle.CAUTIOUS)
+        fun new(): DartsAiModel
+        {
+            val hmDartNoToSegmentType = DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap()
+            val hmDartNoToStopThreshold = DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap()
+            return DartsAiModel(50.0, null, null, 20, emptyMap(), null, hmDartNoToSegmentType, hmDartNoToStopThreshold, DartzeePlayStyle.CAUTIOUS)
+        }
     }
 }
