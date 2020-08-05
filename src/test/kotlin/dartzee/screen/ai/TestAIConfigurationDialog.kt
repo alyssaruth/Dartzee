@@ -12,6 +12,8 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JButton
@@ -48,7 +50,7 @@ class TestAIConfigurationDialog: AbstractTest()
                 standardDeviation = 75.0,
                 dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE,
                 mercyThreshold = 17,
-                hmDartNoToSegmentType = mapOf(1 to SegmentType.INNER_SINGLE))
+                hmDartNoToSegmentType = mapOf(1 to SegmentType.INNER_SINGLE, 2 to SegmentType.INNER_SINGLE, 3 to SegmentType.INNER_SINGLE))
 
         val player = insertPlayer(strategy = strategy.toJson())
         val dlg = AIConfigurationDialog(player)
@@ -83,5 +85,30 @@ class TestAIConfigurationDialog: AbstractTest()
         val reretrievedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
         val model = reretrievedPlayer.getModel()
         model shouldBe DartsAiModel.new().copy(standardDeviation = 75.0)
+    }
+
+    @Test
+    fun `Should enforce name and avatar for a new player`()
+    {
+        insertPlayer(name = "Duplicate")
+
+        val dlg = AIConfigurationDialog()
+        dlg.clickChild<JButton>("Ok")
+        dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
+
+        dialogFactory.errorsShown.clear()
+        dlg.textFieldName.text = "Duplicate"
+        dlg.clickChild<JButton>("Ok")
+        dialogFactory.errorsShown.shouldContainExactly("A player with the name Duplicate already exists.")
+
+        dialogFactory.errorsShown.clear()
+        dlg.textFieldName.text = "Valid"
+        dlg.clickChild<JButton>("Ok")
+        dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
+
+        dialogFactory.errorsShown.clear()
+        dlg.avatar.avatarId = "foo"
+        dlg.clickChild<JButton>("Ok")
+        dialogFactory.errorsShown.shouldBeEmpty()
     }
 }

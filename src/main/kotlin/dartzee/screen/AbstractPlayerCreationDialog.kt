@@ -48,7 +48,7 @@ abstract class AbstractPlayerCreationDialog : SimpleDialog()
 
     protected open fun doExistenceCheck() = true
 
-    protected fun isValidName(name: String?, checkForExistence: Boolean): Boolean
+    private fun isValidName(name: String?, checkForExistence: Boolean): Boolean
     {
         if (name == null || name.isEmpty())
         {
