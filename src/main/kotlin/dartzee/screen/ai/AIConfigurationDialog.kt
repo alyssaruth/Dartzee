@@ -26,8 +26,8 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     private val panelDartzeeConfig = AIConfigurationSubPanelDartzee()
     private val panelSouth = JPanel()
     private val panelCalculateStats = JPanel()
-    private val textFieldAverageScore = JTextField()
-    private val textFieldFinishPercent = JTextField()
+    val textFieldAverageScore = JTextField()
+    val textFieldFinishPercent = JTextField()
     private val btnCalculate = JButton("Calculate")
 
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
@@ -36,9 +36,9 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
     private val panelAIConfig = AIConfigurationPanelNormalDistribution()
     private val btnRunSimulation = JButton("Run Simulation...")
-    private val textFieldMissPercent = JTextField()
+    val textFieldMissPercent = JTextField()
     private val lblTreble = JLabel("Treble %")
-    private val textFieldTreblePercent = JTextField()
+    val textFieldTreblePercent = JTextField()
 
     init
     {

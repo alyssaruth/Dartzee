@@ -114,4 +114,26 @@ class TestAIConfigurationDialog: AbstractTest()
         val player = PlayerEntity.retrieveForName("Valid")!!
         player.playerImageId shouldBe "foo"
     }
+
+    @Test
+    fun `Should calculate stats for the configured model`()
+    {
+        val dlg = AIConfigurationDialog()
+
+        val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
+        normalDistPanel.nfStandardDeviation.value = 0.1
+
+        dlg.clickChild<JButton>("Calculate")
+        dlg.textFieldAverageScore.text shouldBe "60.0"
+        dlg.textFieldFinishPercent.text shouldBe "100.0"
+        dlg.textFieldMissPercent.text shouldBe "0.0"
+        dlg.textFieldTreblePercent.text shouldBe "100.0"
+
+        dlg.getChild<AIConfigurationSubPanelX01>().spinnerScoringDart.value = 19
+        dlg.clickChild<JButton>("Re-calculate")
+        dlg.textFieldAverageScore.text shouldBe "57.0"
+        dlg.textFieldFinishPercent.text shouldBe "100.0"
+        dlg.textFieldMissPercent.text shouldBe "0.0"
+        dlg.textFieldTreblePercent.text shouldBe "100.0"
+    }
 }

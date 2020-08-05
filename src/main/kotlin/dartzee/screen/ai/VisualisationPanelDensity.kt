@@ -52,7 +52,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
 
         //Add labels at 10% increments
         val lblXPosition = panel.width / 2 - LABEL_WIDTH / 2
-        val yPositions = (1 until panel.height).filter { it % (height/10) == 0 }
+        val yPositions = (1 until 500).filter { it % (500/10) == 0 }
         yPositions.forEach {
             val probInt = 10 * it / 50
             val label = JLabel("-   $probInt%   -")
