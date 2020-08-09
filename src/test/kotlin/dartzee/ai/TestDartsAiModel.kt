@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.borrowTestDartboard
+import dartzee.core.helper.verifyNotCalled
 import dartzee.db.CLOCK_TYPE_DOUBLES
 import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.CLOCK_TYPE_TREBLES
@@ -100,13 +101,34 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`()
     {
-        //TODO - Another way to test this?
+        val model = beastDartsModel(standardDeviationDoubles = 100000.0)
+
+        val dartboard = Dartboard(100, 100)
+        dartboard.paintDartboard()
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        dartboard.addDartboardListener(listener)
+
+        model.throwX01Dart(40, dartboard)
+
+        verify { listener.dartThrown(any()) }
+        verifyNotCalled { listener.dartThrown(Dart(20, 2)) }
     }
 
     @Test
     fun `Should revert to the regular distribution for doubles`()
     {
-        //TODO - another way to test this?
+        val model = beastDartsModel(standardDeviationDoubles = null)
+
+        val dartboard = Dartboard(100, 100)
+        dartboard.paintDartboard()
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        dartboard.addDartboardListener(listener)
+
+        model.throwX01Dart(40, dartboard)
+
+        verify { listener.dartThrown(Dart(20, 2)) }
     }
 
     @Test
