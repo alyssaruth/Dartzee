@@ -4,6 +4,7 @@ import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.core.bean.ScrollTable
+import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -108,16 +109,5 @@ class TestAISetupConfigurationDialog: AbstractTest()
         override fun newSetupRule(currentRules: MutableMap<Int, AimDart>) {
             currentRules[10] = AimDart(2, 1)
         }
-    }
-
-    private fun ScrollTable.getRows(): List<List<Any?>>
-    {
-        val result = mutableListOf<List<Any?>>()
-        for (rowIx in 0 until rowCount) {
-            val row = (0 until columnCount).map { getValueAt(rowIx, it) }
-            result.add(row)
-        }
-
-        return result.toList()
     }
 }
