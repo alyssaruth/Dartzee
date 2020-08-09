@@ -1,6 +1,8 @@
 package dartzee.utils
 
 import dartzee.`object`.GameLauncher
+import dartzee.ai.AbstractSimulationRunner
+import dartzee.ai.SimulationRunner
 import dartzee.dartzee.*
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
@@ -31,4 +33,5 @@ object InjectedThings
     var playerManager: PlayerManager = PlayerManager()
     val dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
+    var simulationRunner: AbstractSimulationRunner = SimulationRunner()
 }

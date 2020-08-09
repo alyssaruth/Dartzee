@@ -11,9 +11,9 @@ import dartzee.screen.Dartboard
 import dartzee.stats.GameWrapper
 import java.sql.Timestamp
 
-abstract class AbstractDartsSimulation(protected var dartboard: Dartboard,
-                                       protected var player: PlayerEntity,
-                                       protected var model: DartsAiModel) : DartboardListener
+abstract class AbstractDartsSimulation(val dartboard: Dartboard,
+                                       val player: PlayerEntity,
+                                       val model: DartsAiModel) : DartboardListener
 {
     //Transient things
     protected var dtStart: Timestamp? = null
