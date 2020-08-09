@@ -4,9 +4,9 @@ import dartzee.`object`.ColourWrapper
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
 import dartzee.utils.DartsColour
+import dartzee.utils.ResourceCache
 import dartzee.utils.getDistance
-import java.awt.Color
-import java.awt.Point
+import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
@@ -56,9 +56,14 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         yPositions.forEach {
             val probInt = 10 * it / 50
             val label = JLabel("-   $probInt%   -")
-            label.setBounds(lblXPosition, it - LABEL_HEIGHT / 2, LABEL_WIDTH, LABEL_HEIGHT)
+            label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 14f)
+            label.setSize(LABEL_WIDTH, LABEL_HEIGHT)
             label.horizontalAlignment = SwingConstants.CENTER
-            panelKey.add(label)
+
+            val g = keyImg.graphics as Graphics2D
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+            g.translate(lblXPosition, it - LABEL_HEIGHT / 2)
+            label.paint(g)
         }
 
         repaint()
@@ -73,6 +78,6 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
     companion object
     {
         private const val LABEL_WIDTH = 60
-        private const val LABEL_HEIGHT = 30
+        private const val LABEL_HEIGHT = 40
     }
 }
