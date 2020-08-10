@@ -4,6 +4,7 @@ import dartzee.`object`.ColourWrapper
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
 import dartzee.utils.DartsColour
+import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
 import java.awt.Point
@@ -25,13 +26,13 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         label.isOpaque = true
         label.background = Color.YELLOW
         label.horizontalAlignment = SwingConstants.CENTER
-        label.font = Font("Tahoma", Font.PLAIN, 18)
+        label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
         label.setBounds(16, 133, 64, 35)
         panel.add(label)
         val label_1 = JLabel("5 - 19")
         label_1.isOpaque = true
         label_1.horizontalAlignment = SwingConstants.CENTER
-        label_1.font = Font("Tahoma", Font.PLAIN, 18)
+        label_1.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
         label_1.border = LineBorder(Color(0, 0, 0))
         label_1.background = Color.ORANGE
         label_1.setBounds(16, 233, 64, 35)
@@ -39,7 +40,7 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         val label_2 = JLabel("1 - 4")
         label_2.isOpaque = true
         label_2.horizontalAlignment = SwingConstants.CENTER
-        label_2.font = Font("Tahoma", Font.PLAIN, 18)
+        label_2.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
         label_2.border = LineBorder(Color(0, 0, 0))
         label_2.background = Color.RED
         label_2.setBounds(16, 333, 64, 35)

@@ -4,11 +4,11 @@ import com.github.alexburlton.swingtest.getChild
 import com.github.alexburlton.swingtest.shouldBeDisabled
 import com.github.alexburlton.swingtest.shouldBeEnabled
 import dartzee.`object`.SegmentType
-import dartzee.ai.DartsAiModel
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
 import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartsModel
 import dartzee.shouldBeVisible
 import dartzee.shouldNotBeVisible
 import io.kotlintest.shouldBe
@@ -28,6 +28,17 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     }
 
     @Test
+    fun `Should not populate the map for stop threshold if dart 3`()
+    {
+        val panel = AIConfigurationGolfDartPanel(3)
+        panel.getChild<JSpinner>().value = 2
+
+        val hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
+        panel.populateMaps(mutableMapOf(), hmDartNoToStopThreshold)
+        hmDartNoToStopThreshold.size shouldBe 0
+    }
+
+    @Test
     fun `Should disable the 'or better' label appropriately`()
     {
         val panel = AIConfigurationGolfDartPanel(1)
@@ -41,12 +52,9 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     @Test
     fun `Should initialise from a model correctly`()
     {
-        val model = DartsAiModel()
-        model.hmDartNoToSegmentType[1] = SegmentType.TREBLE
-        model.hmDartNoToSegmentType[2] = SegmentType.INNER_SINGLE
-
-        model.hmDartNoToStopThreshold[1] = 2
-        model.hmDartNoToStopThreshold[2] = 4
+        val hmDartNoToSegmentType = mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.INNER_SINGLE)
+        val hmDartNoToStopThreshold = mapOf(1 to 2, 2 to 4)
+        val model = makeDartsModel(hmDartNoToSegmentType = hmDartNoToSegmentType, hmDartNoToStopThreshold = hmDartNoToStopThreshold)
 
         val dartOnePanel = AIConfigurationGolfDartPanel(1)
         dartOnePanel.initialiseFromModel(model)
@@ -62,21 +70,22 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     @Test
     fun `Should populate model correctly`()
     {
-        val model = DartsAiModel()
-
         val panel = AIConfigurationGolfDartPanel(1)
         panel.getChild<JSpinner>().value = 2
         panel.selectSegmentType(SegmentType.DOUBLE)
 
-        panel.populateModel(model)
-        model.hmDartNoToSegmentType[1] shouldBe SegmentType.DOUBLE
-        model.hmDartNoToStopThreshold[1] shouldBe 2
+        val hmDartNoToSegmentType =  mutableMapOf<Int, SegmentType>()
+        val hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
+
+        panel.populateMaps(hmDartNoToSegmentType, hmDartNoToStopThreshold)
+        hmDartNoToSegmentType[1] shouldBe SegmentType.DOUBLE
+        hmDartNoToStopThreshold[1] shouldBe 2
 
         panel.getChild<JSpinner>().value = 3
         panel.selectSegmentType(SegmentType.TREBLE)
-        panel.populateModel(model)
-        model.hmDartNoToSegmentType[1] shouldBe SegmentType.TREBLE
-        model.hmDartNoToStopThreshold[1] shouldBe 3
+        panel.populateMaps(hmDartNoToSegmentType, hmDartNoToStopThreshold)
+        hmDartNoToSegmentType[1] shouldBe SegmentType.TREBLE
+        hmDartNoToStopThreshold[1] shouldBe 3
     }
 
 

@@ -40,7 +40,7 @@ class TestRoundTheClockUtil: AbstractTest()
 
         val streak = getLongestStreak(darts)
         streak shouldHaveSize 3
-        streak.joinToString{ it.getRendered() } shouldBe "3, 4, 5"
+        streak.joinToString{ it.format() } shouldBe "3, 4, 5"
     }
 
     @Test
@@ -57,7 +57,7 @@ class TestRoundTheClockUtil: AbstractTest()
 
         val streak = getLongestStreak(darts)
         streak shouldHaveSize 2
-        streak.joinToString{ it.getRendered() } shouldBe "1, 2"
+        streak.joinToString{ it.format() } shouldBe "1, 2"
     }
 
     @Test

@@ -67,7 +67,7 @@ fun insertGameForPlayer(player: PlayerEntity,
 }
 
 fun insertPlayer(model: DartsAiModel) =
-        insertPlayer(strategy = model.writeXml())
+        insertPlayer(strategy = model.toJson())
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",

@@ -39,12 +39,7 @@ class PlayerEntity:AbstractEntity<PlayerEntity>()
      */
     fun isHuman() = strategy.isEmpty()
     fun isAi() = strategy.isNotEmpty()
-    fun getModel(): DartsAiModel
-    {
-        val model = DartsAiModel()
-        model.readXml(strategy)
-        return model
-    }
+    fun getModel() = DartsAiModel.fromJson(strategy)
 
     fun getAvatar() = if (playerImageId.isEmpty()) null else PlayerImageEntity.retrieveImageIconForId(playerImageId)
     fun getFlag() = getPlayerFlag(isHuman())

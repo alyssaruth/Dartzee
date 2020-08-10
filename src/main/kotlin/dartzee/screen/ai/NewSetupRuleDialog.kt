@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.`object`.Dart
-import dartzee.ai.DartsAiModel
+import dartzee.ai.AimDart
 import dartzee.bean.SpinnerSingleSelector
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
@@ -9,6 +9,7 @@ import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
 import dartzee.screen.ScreenCache
 import dartzee.utils.isBust
+import getDefaultDartToAimAt
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -16,7 +17,7 @@ import java.awt.event.ActionEvent
 import javax.swing.JLabel
 import javax.swing.JRadioButton
 
-class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : SimpleDialog()
+class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : SimpleDialog()
 {
     val panel = RadioButtonPanel()
     private val lblScore = JLabel("Score")
@@ -54,11 +55,11 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
         pack()
     }
 
-    private fun getDartFromSelections(): Dart
+    private fun getDartFromSelections(): AimDart
     {
         val multiplier = getMultiplier()
         val value = spinner.value as Int
-        return Dart(value, multiplier)
+        return AimDart(value, multiplier)
     }
     private fun getMultiplier(): Int
     {
@@ -116,7 +117,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
             return false
         }
 
-        if (isBust(score - drt.getTotal(), drt))
+        if (isBust(score - drt.getTotal(), Dart(drt.score, drt.multiplier)))
         {
             DialogUtil.showError("This target would bust the player")
             return false
@@ -126,7 +127,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
         //already the default
         if (score <= 60)
         {
-            val defaultDart = DartsAiModel.getDefaultDartToAimAt(score)
+            val defaultDart = getDefaultDartToAimAt(score)
             if (defaultDart == drt)
             {
                 DialogUtil.showError("The selected dart is already the default for this starting score.")
@@ -139,7 +140,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, Dart>) : Sim
 
     companion object
     {
-        fun addNewSetupRule(hmScoreToDart: MutableMap<Int, Dart>)
+        fun addNewSetupRule(hmScoreToDart: MutableMap<Int, AimDart>)
         {
             val dlg = NewSetupRuleDialog(hmScoreToDart)
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)

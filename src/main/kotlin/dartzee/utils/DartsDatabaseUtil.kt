@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.ai.DartsAiModelOLD
 import dartzee.ai.DartsAiModel
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
@@ -23,7 +24,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
 object DartsDatabaseUtil
 {
     const val MIN_DB_VERSION_FOR_CONVERSION = 12
-    const val DATABASE_VERSION = 14
+    const val DATABASE_VERSION = 15
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
@@ -104,9 +105,11 @@ object DartsDatabaseUtil
         if (versionNumber == 13)
         {
             runSqlScriptsForVersion(14)
-
-
             updatePlayerStrategies()
+        }
+        else if (versionNumber == 14)
+        {
+            updatePlayerStrategiesToJson()
         }
 
         version.version = versionNumber + 1
@@ -116,11 +119,33 @@ object DartsDatabaseUtil
         initialiseDatabase(version)
     }
 
+    private fun updatePlayerStrategiesToJson()
+    {
+        val players = PlayerEntity().retrieveEntities("Strategy <> ''")
+        players.forEach {
+            val model = DartsAiModelOLD()
+            model.readXml(it.strategy)
+
+            val newModel = DartsAiModel(model.standardDeviation,
+                    if (model.standardDeviationDoubles > 0.0) model.standardDeviationDoubles else null,
+                    if (model.standardDeviationCentral > 0.0) model.standardDeviationCentral else null,
+                    model.scoringDart,
+                    model.hmScoreToDart.toMap(),
+                    if (model.mercyThreshold > -1) model.mercyThreshold else null,
+                    model.hmDartNoToSegmentType.toMap(),
+                    model.hmDartNoToStopThreshold.toMap(),
+                    model.dartzeePlayStyle)
+
+            it.strategy = newModel.toJson()
+            it.saveToDatabase()
+        }
+    }
+
     private fun updatePlayerStrategies()
     {
         val players = PlayerEntity().retrieveEntities("Strategy <> ''")
         players.forEach {
-            val model = DartsAiModel()
+            val model = DartsAiModelOLD()
             model.readXml(it.strategy)
             it.strategy = model.writeXml()
             it.saveToDatabase()

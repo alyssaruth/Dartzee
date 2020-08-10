@@ -18,11 +18,10 @@ class AIConfigurationSubPanelDartzee : AbstractAIConfigurationSubPanel()
         radioButtonPanel.add(rdbtnAggressive)
     }
 
-    override fun valid() = true
-
-    override fun populateModel(model: DartsAiModel)
+    override fun populateModel(model: DartsAiModel): DartsAiModel
     {
-        model.dartzeePlayStyle = if (rdbtnCautious.isSelected) DartzeePlayStyle.CAUTIOUS else DartzeePlayStyle.AGGRESSIVE
+        val dartzeePlayStyle = if (rdbtnCautious.isSelected) DartzeePlayStyle.CAUTIOUS else DartzeePlayStyle.AGGRESSIVE
+        return model.copy(dartzeePlayStyle = dartzeePlayStyle)
     }
 
     override fun initialiseFromModel(model: DartsAiModel)

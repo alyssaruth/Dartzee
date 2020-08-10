@@ -4,9 +4,9 @@ import dartzee.`object`.ColourWrapper
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
 import dartzee.utils.DartsColour
+import dartzee.utils.ResourceCache
 import dartzee.utils.getDistance
-import java.awt.Color
-import java.awt.Point
+import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
@@ -15,7 +15,7 @@ import javax.swing.SwingConstants
 class VisualisationPanelDensity: AbstractVisualisationPanel()
 {
     private val keyImg = BufferedImage(100, 500, BufferedImage.TYPE_INT_ARGB)
-    private val panelKey = JLabel()
+    val panelKey = JLabel()
 
     init
     {
@@ -52,13 +52,18 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
 
         //Add labels at 10% increments
         val lblXPosition = panel.width / 2 - LABEL_WIDTH / 2
-        val yPositions = (1 until panel.height).filter { it % (height/10) == 0 }
+        val yPositions = (1 until 500).filter { it % (500/10) == 0 }
         yPositions.forEach {
             val probInt = 10 * it / 50
             val label = JLabel("-   $probInt%   -")
-            label.setBounds(lblXPosition, it - LABEL_HEIGHT / 2, LABEL_WIDTH, LABEL_HEIGHT)
+            label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 14f)
+            label.setSize(LABEL_WIDTH, LABEL_HEIGHT)
             label.horizontalAlignment = SwingConstants.CENTER
-            panelKey.add(label)
+
+            val g = keyImg.graphics as Graphics2D
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+            g.translate(lblXPosition, it - LABEL_HEIGHT / 2)
+            label.paint(g)
         }
 
         repaint()
@@ -73,6 +78,6 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
     companion object
     {
         private const val LABEL_WIDTH = 60
-        private const val LABEL_HEIGHT = 30
+        private const val LABEL_HEIGHT = 40
     }
 }

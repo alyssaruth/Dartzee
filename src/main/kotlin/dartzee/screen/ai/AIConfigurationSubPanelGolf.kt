@@ -1,5 +1,6 @@
 package dartzee.screen.ai
 
+import dartzee.`object`.SegmentType
 import dartzee.ai.DartsAiModel
 import net.miginfocom.swing.MigLayout
 
@@ -18,13 +19,16 @@ class AIConfigurationSubPanelGolf : AbstractAIConfigurationSubPanel()
         add(panelDartThree, "cell 0 2,grow")
     }
 
-    override fun valid() = true
-
-    override fun populateModel(model: DartsAiModel)
+    override fun populateModel(model: DartsAiModel): DartsAiModel
     {
-        panelDartOne.populateModel(model)
-        panelDartTwo.populateModel(model)
-        panelDartThree.populateModel(model)
+        val hmDartNoToSegmentType =  mutableMapOf<Int, SegmentType>()
+        val hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
+
+        panelDartOne.populateMaps(hmDartNoToSegmentType, hmDartNoToStopThreshold)
+        panelDartTwo.populateMaps(hmDartNoToSegmentType, hmDartNoToStopThreshold)
+        panelDartThree.populateMaps(hmDartNoToSegmentType, hmDartNoToStopThreshold)
+
+        return model.copy(hmDartNoToSegmentType = hmDartNoToSegmentType.toMap(), hmDartNoToStopThreshold = hmDartNoToStopThreshold.toMap())
     }
 
     override fun initialiseFromModel(model: DartsAiModel)

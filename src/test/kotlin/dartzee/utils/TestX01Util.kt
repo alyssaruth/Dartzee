@@ -1,9 +1,9 @@
 package dartzee.utils
 
 import dartzee.`object`.Dart
-import dartzee.ai.DartsAiModel
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
+import dartzee.helper.makeDartsModel
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -36,8 +36,7 @@ class TestX01Util: AbstractTest()
     @Test
     fun testShouldStopForMercyRule()
     {
-        val model = DartsAiModel()
-        model.mercyThreshold = 19
+        var model = makeDartsModel(mercyThreshold = 19)
 
         shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
         shouldStopForMercyRule(model, 17, 16).shouldBeTrue()
@@ -46,7 +45,7 @@ class TestX01Util: AbstractTest()
         shouldStopForMercyRule(model, 17, 13).shouldBeFalse()
         shouldStopForMercyRule(model, 17, 17).shouldBeFalse()
 
-        model.mercyThreshold = -1
+        model = makeDartsModel(mercyThreshold = null)
 
         shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
         shouldStopForMercyRule(model, 17, 16).shouldBeFalse()

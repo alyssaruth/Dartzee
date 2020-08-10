@@ -1,8 +1,8 @@
 package dartzee.screen.game
 
 import dartzee.`object`.Dart
+import dartzee.ai.AimDart
 import dartzee.core.util.DateStatics
-import dartzee.core.util.dumpThreadStacks
 import dartzee.core.util.getSortedValues
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.CLOCK_TYPE_STANDARD
@@ -76,8 +76,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")
 
-        val aiModel = beastDartsModel()
-        aiModel.hmScoreToDart[81] = Dart(19, 3)
+        val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
         val player = insertPlayer(model = aiModel)
 
         val (panel, listener) = setUpGamePanel(game)

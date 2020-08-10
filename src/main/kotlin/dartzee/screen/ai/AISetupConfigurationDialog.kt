@@ -1,12 +1,13 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.Dart
+import dartzee.ai.AimDart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil
 import dartzee.core.util.TableUtil.SimpleRenderer
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.aiSetupRuleFactory
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import javax.swing.JButton
@@ -23,10 +24,8 @@ import javax.swing.text.StyleConstants
  * - On 10, the default is to aim for D5. But if an AI is bad, you might want to override this to aim for 2.
  * - On 35, the default is to aim for 3 (D16). But you might want to aim for 19 (D8).
  */
-class AISetupConfigurationDialog : SimpleDialog()
+class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, AimDart>): SimpleDialog()
 {
-    private var hmScoreToSingle = mutableMapOf<Int, Dart>()
-
     private val info = JTextPane()
     private val tableScores = ScrollTable()
     private val btnAddRule = JButton("Add Rule...")
@@ -58,11 +57,6 @@ class AISetupConfigurationDialog : SimpleDialog()
 
         btnAddRule.addActionListener(this)
         btnRemove.addActionListener(this)
-    }
-
-    private fun init(hmScoreToSingle: MutableMap<Int, Dart>)
-    {
-        this.hmScoreToSingle = hmScoreToSingle
 
         initInfo()
         buildTable(hmScoreToSingle)
@@ -70,12 +64,6 @@ class AISetupConfigurationDialog : SimpleDialog()
 
     private fun initInfo()
     {
-        val txt = info.text
-        if (!txt.isEmpty())
-        {
-            return
-        }
-
         info.append("By default, the AI strategy is as follows:")
         info.append("\n\n")
 
@@ -115,16 +103,16 @@ class AISetupConfigurationDialog : SimpleDialog()
         info.append("Below you can further configure the dart aimed at for any individual score.")
     }
 
-    private fun buildTable(hmRules: Map<Int, Dart>)
+    private fun buildTable(hmRules: Map<Int, AimDart>)
     {
-        val allValues = hmRules.keys
+        val allValues = hmRules.entries
 
         val tm = TableUtil.DefaultModel()
         tm.addColumn("Score")
         tm.addColumn("Dart to aim for")
         tm.addColumn("Result")
 
-        val rows = allValues.map{ arrayOf(it, hmRules[it]!!, it - hmRules[it]!!.getTotal()) }
+        val rows = allValues.map { arrayOf(it.key, it.value, it.key - it.value.getTotal()) }
         tm.addRows(rows)
 
         tableScores.model = tm
@@ -137,9 +125,9 @@ class AISetupConfigurationDialog : SimpleDialog()
         when (arg0.source)
         {
             btnAddRule -> {
-                val hmCurrentRules = mutableMapOf<Int, Dart>()
+                val hmCurrentRules = mutableMapOf<Int, AimDart>()
                 fillHashMapFromTable(hmCurrentRules)
-                NewSetupRuleDialog.addNewSetupRule(hmCurrentRules)
+                aiSetupRuleFactory.newSetupRule(hmCurrentRules)
 
                 buildTable(hmCurrentRules)
             }
@@ -157,10 +145,10 @@ class AISetupConfigurationDialog : SimpleDialog()
             return
         }
 
-        val hmCurrentRules = mutableMapOf<Int, Dart>()
+        val hmCurrentRules = mutableMapOf<Int, AimDart>()
         fillHashMapFromTable(hmCurrentRules)
 
-        rows.forEach{ hmCurrentRules.remove(tableScores.getValueAt(it, 0)) }
+        rows.forEach { hmCurrentRules.remove(tableScores.getValueAt(it, 0)) }
 
         buildTable(hmCurrentRules)
     }
@@ -173,14 +161,14 @@ class AISetupConfigurationDialog : SimpleDialog()
         dispose()
     }
 
-    private fun fillHashMapFromTable(hm: MutableMap<Int, Dart>)
+    private fun fillHashMapFromTable(hm: MutableMap<Int, AimDart>)
     {
         val tm = tableScores.model
         val rows = tm.rowCount
         for (i in 0 until rows)
         {
             val score = tm.getValueAt(i, 0) as Int
-            val drt = tm.getValueAt(i, 1) as Dart
+            val drt = tm.getValueAt(i, 1) as AimDart
 
             hm[score] = drt
         }
@@ -198,11 +186,10 @@ class AISetupConfigurationDialog : SimpleDialog()
 
     companion object
     {
-        fun configureSetups(hmScoreToSingle: MutableMap<Int, Dart>)
+        fun configureSetups(hmScoreToSingle: MutableMap<Int, AimDart>)
         {
-            val dlg = AISetupConfigurationDialog()
+            val dlg = AISetupConfigurationDialog(hmScoreToSingle)
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
-            dlg.init(hmScoreToSingle)
             dlg.isVisible = true
         }
     }

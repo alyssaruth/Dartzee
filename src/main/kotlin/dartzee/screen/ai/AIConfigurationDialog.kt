@@ -26,8 +26,8 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     private val panelDartzeeConfig = AIConfigurationSubPanelDartzee()
     private val panelSouth = JPanel()
     private val panelCalculateStats = JPanel()
-    private val textFieldAverageScore = JTextField()
-    private val textFieldFinishPercent = JTextField()
+    val textFieldAverageScore = JTextField()
+    val textFieldFinishPercent = JTextField()
     private val btnCalculate = JButton("Calculate")
 
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
@@ -36,9 +36,9 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
     private val panelAIConfig = AIConfigurationPanelNormalDistribution()
     private val btnRunSimulation = JButton("Run Simulation...")
-    private val textFieldMissPercent = JTextField()
+    val textFieldMissPercent = JTextField()
     private val lblTreble = JLabel("Treble %")
-    private val textFieldTreblePercent = JTextField()
+    val textFieldTreblePercent = JTextField()
 
     init
     {
@@ -116,7 +116,6 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         btnRunSimulation.addActionListener(this)
 
         initFields()
-        setFieldsEditable()
 
         tabbedPane.isEnabled = false
     }
@@ -128,6 +127,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         if (!aiPlayer.retrievedFromDb)
         {
             avatar.readOnly = false
+            textFieldName.isEditable = true
 
             panelX01Config.reset()
             panelGolfConfig.reset()
@@ -137,13 +137,12 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         else
         {
             avatar.readOnly = true
+            textFieldName.isEditable = false
 
             val name = aiPlayer.name
             textFieldName.text = name
 
-            val xmlStr = aiPlayer.strategy
-            val model = DartsAiModel()
-            model.readXml(xmlStr)
+            val model = DartsAiModel.fromJson(aiPlayer.strategy)
 
             panelAIConfig.initialiseFromModel(model)
             panelX01Config.initialiseFromModel(model)
@@ -152,18 +151,12 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         }
     }
 
-    private fun setFieldsEditable()
-    {
-        val editable = !aiPlayer.retrievedFromDb
-        textFieldName.isEditable = editable
-    }
-
     private fun factoryModelFromPanels(): DartsAiModel
     {
-        val model = panelAIConfig.initialiseModel()
-        panelX01Config.populateModel(model)
-        panelGolfConfig.populateModel(model)
-        panelDartzeeConfig.populateModel(model)
+        var model = panelAIConfig.initialiseModel()
+        model = panelX01Config.populateModel(model)
+        model = panelGolfConfig.populateModel(model)
+        model = panelDartzeeConfig.populateModel(model)
 
         return model
     }
@@ -172,7 +165,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
     {
         when (arg0.source)
         {
-            btnCalculate -> if (validModel()) calculateStats()
+            btnCalculate -> calculateStats()
             btnRunSimulation -> runSimulation()
             else -> super.actionPerformed(arg0)
         }
@@ -180,26 +173,19 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
     private fun runSimulation()
     {
-        if (validModel())
-        {
-            val model = factoryModelFromPanels()
+        val model = factoryModelFromPanels()
 
-            //If the player hasn't actually been created yet, then we need to instantiate a PlayerEntity just to hold stuff like the name
-            aiPlayer.name = textFieldName.text
+        //If the player hasn't actually been created yet, then we need to instantiate a PlayerEntity just to hold stuff like the name
+        aiPlayer.name = textFieldName.text
 
-            val dlg = AISimulationSetup(aiPlayer, model, true)
-            dlg.isVisible = true
-        }
+        val dlg = AISimulationSetupDialog(aiPlayer, model, true)
+        dlg.isVisible = true
     }
-
-    override fun valid() = super.valid() && validModel()
 
     override fun doExistenceCheck(): Boolean
     {
         return !aiPlayer.retrievedFromDb
     }
-
-    private fun validModel() = panelAIConfig.valid() && panelX01Config.valid()
 
     override fun savePlayer()
     {
@@ -207,9 +193,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         aiPlayer.name = name
 
         val model = factoryModelFromPanels()
-        val xmlStr = model.writeXml()
-
-        aiPlayer.strategy = xmlStr
+        aiPlayer.strategy = model.toJson()
 
         val avatarId = avatar.avatarId
         aiPlayer.playerImageId = avatarId

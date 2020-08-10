@@ -1,10 +1,10 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
+import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.core.obj.HashMapCount
-import dartzee.core.util.*
+import dartzee.core.util.jsonMapper
 import dartzee.logging.CODE_AI_ERROR
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
@@ -16,9 +16,9 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
+import getDefaultDartToAimAt
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
-import org.w3c.dom.Element
 import java.awt.Point
 import java.util.*
 
@@ -27,117 +27,20 @@ enum class DartzeePlayStyle {
     AGGRESSIVE
 }
 
-class DartsAiModel
+data class DartsAiModel(val standardDeviation: Double,
+                        val standardDeviationDoubles: Double?,
+                        val standardDeviationCentral: Double?,
+                        val scoringDart: Int,
+                        val hmScoreToDart: Map<Int, AimDart>,
+                        val mercyThreshold: Int?,
+                        val hmDartNoToSegmentType: Map<Int, SegmentType>,
+                        val hmDartNoToStopThreshold: Map<Int, Int>,
+                        val dartzeePlayStyle: DartzeePlayStyle)
 {
     //Modelling
     private val mean = 0
 
-    var standardDeviation = 50.0
-    var standardDeviationDoubles = 0.0
-    var standardDeviationCentral = 0.0
-
-    var distribution: NormalDistribution? = null
-    var distributionDoubles: NormalDistribution? = null
-
-    //X01
-    var scoringDart = 20
-    var hmScoreToDart = mutableMapOf<Int, Dart>()
-    var mercyThreshold = -1
-
-    //Golf
-    var hmDartNoToSegmentType = mutableMapOf<Int, SegmentType>()
-    var hmDartNoToStopThreshold = mutableMapOf<Int, Int>()
-
-    //Dartzee
-    var dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
-
-    /**
-     * Non-abstract stuff
-     */
-    fun readXml(xmlStr: String)
-    {
-        val xmlDoc = xmlStr.toXmlDoc()
-        val rootElement = xmlDoc!!.documentElement
-
-        val scoringSingle = rootElement.getAttributeInt(ATTRIBUTE_SCORING_DART)
-        if (scoringSingle > 0)
-        {
-            this.scoringDart = scoringSingle
-        }
-
-        //X01
-        mercyThreshold = rootElement.getAttributeInt(ATTRIBUTE_MERCY_RULE, -1)
-
-        hmScoreToDart = mutableMapOf()
-        val setupDarts = rootElement.getElementsByTagName(TAG_SETUP_DART)
-        for (i in 0 until setupDarts.length)
-        {
-            val setupDart = setupDarts.item(i) as Element
-            val score = setupDart.getAttributeInt(ATTRIBUTE_SCORE)
-            val value = setupDart.getAttributeInt(ATTRIBUTE_DART_VALUE)
-            val multiplier = setupDart.getAttributeInt(ATTRIBUTE_DART_MULTIPLIER)
-
-            hmScoreToDart[score] = Dart(value, multiplier)
-        }
-
-        //Golf
-        val hmDartNoToString = rootElement.readIntegerHashMap(TAG_GOLF_AIM)
-        hmDartNoToSegmentType = hmDartNoToString.mapValues { SegmentType.valueOf(it.value) }.toMutableMap()
-        hmDartNoToStopThreshold = rootElement.readIntegerHashMap(TAG_GOLF_STOP).mapValues { it.value.toInt() }.toMutableMap()
-
-        //Dartzee
-        val dartzeePlayStyleStr = rootElement.getAttribute(ATTRIBUTE_DARTZEE_PLAY_STYLE)
-        dartzeePlayStyle = if (dartzeePlayStyleStr.isEmpty()) DartzeePlayStyle.CAUTIOUS else DartzeePlayStyle.valueOf(dartzeePlayStyleStr)
-
-        val sd = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION)
-        val sdDoubles = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES)
-        val sdCentral = rootElement.getAttributeDouble(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL)
-
-        populate(sd, sdDoubles, sdCentral)
-    }
-
-    fun writeXml(): String
-    {
-        val xmlDoc = XmlUtil.factoryNewDocument()
-        val rootElement = xmlDoc.createRootElement("Gaussian")
-
-        if (scoringDart != 20)
-        {
-            rootElement.setAttribute(ATTRIBUTE_SCORING_DART, "" + scoringDart)
-        }
-
-        hmScoreToDart.forEach { (score, drt) ->
-            val child = xmlDoc.createElement(TAG_SETUP_DART)
-            child.setAttribute(ATTRIBUTE_SCORE, "" + score)
-            child.setAttribute(ATTRIBUTE_DART_VALUE, "" + drt.score)
-            child.setAttribute(ATTRIBUTE_DART_MULTIPLIER, "" + drt.multiplier)
-            rootElement.appendChild(child)
-        }
-
-        rootElement.writeHashMap(hmDartNoToSegmentType, TAG_GOLF_AIM)
-        rootElement.writeHashMap(hmDartNoToStopThreshold, TAG_GOLF_STOP)
-
-        if (mercyThreshold > -1)
-        {
-            rootElement.setAttribute(ATTRIBUTE_MERCY_RULE, "" + mercyThreshold)
-        }
-
-        rootElement.setAttribute(ATTRIBUTE_DARTZEE_PLAY_STYLE, "$dartzeePlayStyle")
-
-        rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION, "" + standardDeviation)
-
-        if (standardDeviationDoubles > 0)
-        {
-            rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_DOUBLES, "" + standardDeviationDoubles)
-        }
-
-        if (standardDeviationCentral > 0)
-        {
-            rootElement.setAttribute(ATTRIBUTE_STANDARD_DEVIATION_CENTRAL, "" + standardDeviationCentral)
-        }
-
-        return xmlDoc.toXmlString()
-    }
+    private val distribution = NormalDistribution(mean.toDouble(), standardDeviation)
 
     /**
      * X01
@@ -195,9 +98,6 @@ class DartsAiModel
         val pt = throwDartAtPoint(ptToAimAt, dartboard)
         dartboard.dartThrown(pt)
     }
-
-    private fun getDefaultSegmentType(dartNo: Int) = if (dartNo == 1) SegmentType.DOUBLE else SegmentType.TREBLE
-    private fun getDefaultStopThreshold(dartNo: Int) = if (dartNo == 2) 3 else 2
 
     /**
      * Clock
@@ -282,17 +182,9 @@ class DartsAiModel
         return SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount)
     }
 
-    fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getOrDefault(dartNo, getDefaultSegmentType(dartNo))
-    fun setSegmentTypeForDartNo(dartNo: Int, segmentType: SegmentType)
-    {
-        hmDartNoToSegmentType[dartNo] = segmentType
-    }
+    fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getValue(dartNo)
 
-    fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getOrDefault(dartNo, getDefaultStopThreshold(dartNo))
-    fun setStopThresholdForDartNo(dartNo: Int, stopThreshold: Int)
-    {
-        hmDartNoToStopThreshold[dartNo] = stopThreshold
-    }
+    fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getValue(dartNo)
 
     fun throwDartAtPoint(pt: Point, dartboard: Dartboard): Point
     {
@@ -321,7 +213,7 @@ class DartsAiModel
     }
     private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
     {
-        val distribution = getDistributionToUse(pt, dartboard)!!
+        val distribution = getDistributionToUse(pt, dartboard)
         return distribution.sample()
     }
     private fun sanitiseAngle(angle: Double): Double
@@ -334,14 +226,12 @@ class DartsAiModel
         }
     }
 
-    private fun getDistributionToUse(pt: Point, dartboard: Dartboard): NormalDistribution?
-    {
-        return if (dartboard.isDouble(pt) && distributionDoubles != null) distributionDoubles else distribution
-    }
+    private fun getDistributionToUse(pt: Point, dartboard: Dartboard) =
+        if (dartboard.isDouble(pt) && standardDeviationDoubles != null) NormalDistribution(mean.toDouble(), standardDeviationDoubles) else distribution
 
     private fun generateAngle(pt: Point, dartboard: Dartboard): Double
     {
-        if (dartboard.isDouble(pt) || standardDeviationCentral == 0.0)
+        if (dartboard.isDouble(pt) || standardDeviationCentral == null)
         {
             //Just pluck a number from 0-360.
             return generateRandomAngle()
@@ -356,78 +246,26 @@ class DartsAiModel
 
     fun getProbabilityWithinRadius(radius: Double): Double
     {
-        return distribution!!.probability(-radius, radius)
+        return distribution.probability(-radius, radius)
     }
 
-    fun populate(standardDeviation: Double, standardDeviationDoubles: Double, standardDeviationCentral: Double)
-    {
-        this.standardDeviation = standardDeviation
-        this.standardDeviationDoubles = standardDeviationDoubles
-        this.standardDeviationCentral = standardDeviationCentral
-
-        distribution = NormalDistribution(mean.toDouble(), standardDeviation)
-        if (standardDeviationDoubles > 0)
-        {
-            distributionDoubles = NormalDistribution(mean.toDouble(), standardDeviationDoubles)
-        }
-        else
-        {
-            distributionDoubles = null
-        }
-    }
+    fun toJson(): String = jsonMapper().writeValueAsString(this)
 
     companion object
     {
-        const val ATTRIBUTE_STANDARD_DEVIATION = "StandardDeviation"
-        const val ATTRIBUTE_STANDARD_DEVIATION_DOUBLES = "StandardDeviationDoubles"
-        const val ATTRIBUTE_STANDARD_DEVIATION_CENTRAL = "StandardDeviationCentral"
-
-        const val TAG_SETUP_DART = "SetupDart"
-        const val TAG_GOLF_AIM = "GolfAim"
-        const val TAG_GOLF_STOP = "GolfStop"
-        const val ATTRIBUTE_SCORING_DART = "ScoringDart"
-        const val ATTRIBUTE_MERCY_RULE = "MercyRule"
-        const val ATTRIBUTE_SCORE = "Score"
-        const val ATTRIBUTE_DART_VALUE = "DartValue"
-        const val ATTRIBUTE_DART_MULTIPLIER = "DartMultiplier"
-        const val ATTRIBUTE_DARTZEE_PLAY_STYLE = "DartzeePlayStyle"
-
         private const val SCORING_DARTS_TO_THROW = 20000
         private const val DOUBLE_DARTS_TO_THROW = 20000
 
-        /**
-         * Get the application-wide default thing to aim for, which applies to any score of 60 or less
-         */
-        fun getDefaultDartToAimAt(score: Int): Dart
+        val DEFAULT_GOLF_SEGMENT_TYPES = mapOf(1 to SegmentType.DOUBLE, 2 to SegmentType.TREBLE, 3 to SegmentType.TREBLE)
+        val DEFAULT_GOLF_STOP_THRESHOLDS = mapOf(1 to 2, 2 to 3)
+
+        fun fromJson(json: String) = jsonMapper().readValue<DartsAiModel>(json)
+
+        fun new(): DartsAiModel
         {
-            //Aim for the single that puts you on double top
-            if (score > 40)
-            {
-                val single = score - 40
-                return Dart(single, 1)
-            }
-
-            //Aim for the double
-            if (score % 2 == 0)
-            {
-                return Dart(score / 2, 2)
-            }
-
-            //On an odd number, less than 40. Aim to put ourselves on the highest possible power of 2.
-            val scoreToLeaveRemaining = getHighestPowerOfTwoLessThan(score)
-            val singleToAimFor = score - scoreToLeaveRemaining
-            return Dart(singleToAimFor, 1)
-        }
-
-        private fun getHighestPowerOfTwoLessThan(score: Int): Int
-        {
-            var i = 2
-            while (i < score)
-            {
-                i *= 2
-            }
-
-            return i / 2
+            val hmDartNoToSegmentType = DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap()
+            val hmDartNoToStopThreshold = DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap()
+            return DartsAiModel(50.0, null, null, 20, emptyMap(), null, hmDartNoToSegmentType, hmDartNoToStopThreshold, DartzeePlayStyle.CAUTIOUS)
         }
     }
 }

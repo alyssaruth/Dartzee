@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.Dart
+import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.bean.SpinnerSingleSelector
 import java.awt.event.ActionEvent
@@ -9,7 +9,7 @@ import javax.swing.*
 
 class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener
 {
-    var hmScoreToDart = mutableMapOf<Int, Dart>()
+    var hmScoreToDart = mutableMapOf<Int, AimDart>()
 
     val spinnerScoringDart = SpinnerSingleSelector()
     private val btnConfigureSetupDarts = JButton("Configure Setup...")
@@ -41,19 +41,11 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         chckbxMercyRule.addActionListener(this)
     }
 
-    override fun valid() = true
-
-    override fun populateModel(model: DartsAiModel)
+    override fun populateModel(model: DartsAiModel): DartsAiModel
     {
-        model.hmScoreToDart = hmScoreToDart
-        model.scoringDart = spinnerScoringDart.value as Int
-
-        val mercyRule = chckbxMercyRule.isSelected
-        if (mercyRule)
-        {
-            val mercyThreshold = spinnerMercyThreshold.value as Int
-            model.mercyThreshold = mercyThreshold
-        }
+        return model.copy(hmScoreToDart = hmScoreToDart,
+                scoringDart = spinnerScoringDart.value as Int,
+                mercyThreshold = if (chckbxMercyRule.isSelected) spinnerMercyThreshold.value as Int else null)
     }
 
     override fun initialiseFromModel(model: DartsAiModel)
@@ -61,14 +53,14 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         spinnerScoringDart.value = model.scoringDart
 
         val mercyThreshold = model.mercyThreshold
-        val mercyRule = mercyThreshold > -1
+        val mercyRule = mercyThreshold != null
         chckbxMercyRule.isSelected = mercyRule
         spinnerMercyThreshold.isEnabled = mercyRule
         lblWhenScoreLess.isEnabled = mercyRule
 
         spinnerMercyThreshold.value = if (mercyRule) mercyThreshold else 10
 
-        hmScoreToDart = model.hmScoreToDart
+        hmScoreToDart = model.hmScoreToDart.toMutableMap()
     }
 
     override fun actionPerformed(arg0: ActionEvent)

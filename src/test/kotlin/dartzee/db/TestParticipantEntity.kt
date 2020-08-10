@@ -39,7 +39,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     fun `Should return correct values for an AI player`()
     {
         val aiId = insertPlayer(name = "Robot",
-                strategy = DartsAiModel().writeXml()).rowId
+                strategy = DartsAiModel.new().toJson()).rowId
 
         val pt = ParticipantEntity()
         pt.playerId = aiId

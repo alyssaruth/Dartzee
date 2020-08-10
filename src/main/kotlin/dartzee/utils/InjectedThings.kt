@@ -1,6 +1,8 @@
 package dartzee.utils
 
 import dartzee.`object`.GameLauncher
+import dartzee.ai.AbstractSimulationRunner
+import dartzee.ai.SimulationRunner
 import dartzee.dartzee.*
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
@@ -10,6 +12,8 @@ import dartzee.player.PlayerManager
 import dartzee.screen.ChangeLog
 import dartzee.screen.IPlayerImageSelector
 import dartzee.screen.PlayerImageDialog
+import dartzee.screen.ai.AISetupRuleFactory
+import dartzee.screen.ai.AbstractAISetupRuleFactory
 import java.time.Clock
 
 object InjectedThings
@@ -28,4 +32,6 @@ object InjectedThings
     var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true }}
     var playerManager: PlayerManager = PlayerManager()
     val dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
+    var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
+    var simulationRunner: AbstractSimulationRunner = SimulationRunner()
 }

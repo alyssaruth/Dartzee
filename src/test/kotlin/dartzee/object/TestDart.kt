@@ -24,9 +24,9 @@ class TestDart: AbstractTest()
     @Test
     fun `Should correctly report a treble`()
     {
-        Dart(1, 1).isTriple() shouldBe false
-        Dart(1, 2).isTriple() shouldBe false
-        Dart(1, 3).isTriple() shouldBe true
+        Dart(1, 1).isTreble() shouldBe false
+        Dart(1, 2).isTreble() shouldBe false
+        Dart(1, 3).isTreble() shouldBe true
     }
 
     @Test
@@ -74,10 +74,10 @@ class TestDart: AbstractTest()
     @Test
     fun `Should render correctly`()
     {
-        Dart(19, 0).getRendered() shouldBe "0"
-        Dart(19, 1).getRendered() shouldBe "19"
-        Dart(20, 2).getRendered() shouldBe "D20"
-        Dart(15, 3).getRendered() shouldBe "T15"
+        Dart(19, 0).format() shouldBe "0"
+        Dart(19, 1).format() shouldBe "19"
+        Dart(20, 2).format() shouldBe "D20"
+        Dart(15, 3).format() shouldBe "T15"
 
         "${Dart(15, 3)}" shouldBe "T15"
     }
