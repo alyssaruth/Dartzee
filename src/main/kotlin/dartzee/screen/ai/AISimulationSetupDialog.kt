@@ -59,6 +59,7 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
 
         val sim = factorySimulationForSelection(dartboard)
         simulationRunner.runSimulation(sim, nfNumberOfGames.getNumber(), modal)
+        dispose()
     }
 
     private fun factorySimulationForSelection(dartboard: Dartboard): AbstractDartsSimulation

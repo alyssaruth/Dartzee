@@ -1,6 +1,5 @@
 package dartzee.ai
 
-import com.sun.deploy.uitoolkit.ToolkitStore.dispose
 import dartzee.`object`.DartsClient
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
@@ -13,7 +12,6 @@ import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.stats.GameWrapper
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
-import sun.audio.AudioPlayer.player
 import java.awt.BorderLayout
 import java.awt.Window
 import javax.swing.JDialog
@@ -94,7 +92,7 @@ class SimulationRunner: AbstractSimulationRunner()
             handleSavingEntities(ans == JOptionPane.YES_OPTION, hmGameIdToWrapper)
         }
 
-        val title = "Simulation Results - ${player.name} (${hmGameIdToWrapper.size} games)"
+        val title = "Simulation Results - ${sim.player.name} (${hmGameIdToWrapper.size} games)"
         val parentWindow = getParentWindowForResults(title, modal)
         parentWindow.setSize(1200, 800)
         parentWindow.layout = BorderLayout(0, 0)
@@ -104,8 +102,6 @@ class SimulationRunner: AbstractSimulationRunner()
         scrn.initFake(hmGameIdToWrapper)
         parentWindow.add(scrn)
         parentWindow.isVisible = true
-
-        dispose()
     }
 
     private fun handleSavingEntities(save: Boolean, hmGameIdToWrapper: Map<Long, GameWrapper>)
