@@ -26,7 +26,7 @@ class TestVisualisationPanelScatter: AbstractTest()
         val scatterPreset = mapper.readValue<ScatterPreset>(jsonString)
 
         val panel = VisualisationPanelScatter()
-        panel.size = Dimension(600, 500)
+        panel.size = Dimension(500, 500)
         panel.populate(scatterPreset.hmPointToCount, makeDartsModel())
 
         panel.shouldMatchImage("scatter")

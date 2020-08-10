@@ -14,7 +14,7 @@ class TestVisualisationPanelDensity: AbstractTest()
         val model = makeDartsModel(scoringDart = 20)
 
         val panel = VisualisationPanelDensity()
-        panel.size = Dimension(600, 500)
+        panel.size = Dimension(500, 500)
         panel.populate(mapOf(), model)
 
         panel.shouldMatchImage("T20")
@@ -26,9 +26,21 @@ class TestVisualisationPanelDensity: AbstractTest()
         val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0)
 
         val panel = VisualisationPanelDensity()
-        panel.size = Dimension(600, 500)
+        panel.size = Dimension(500, 500)
         panel.populate(mapOf(), model)
 
         panel.shouldMatchImage("Bullseye")
+    }
+
+    @Test
+    fun `Should match snapshot - key`()
+    {
+        val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0)
+
+        val panel = VisualisationPanelDensity()
+        panel.size = Dimension(500, 500)
+        panel.populate(mapOf(), model)
+
+        panel.panelKey.shouldMatchImage("Key")
     }
 }

@@ -15,7 +15,7 @@ import javax.swing.SwingConstants
 class VisualisationPanelDensity: AbstractVisualisationPanel()
 {
     private val keyImg = BufferedImage(100, 500, BufferedImage.TYPE_INT_ARGB)
-    private val panelKey = JLabel()
+    val panelKey = JLabel()
 
     init
     {
