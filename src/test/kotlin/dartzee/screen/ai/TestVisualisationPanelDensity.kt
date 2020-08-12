@@ -33,6 +33,18 @@ class TestVisualisationPanelDensity: AbstractTest()
     }
 
     @Test
+    fun `Should adjust for low erraticness`()
+    {
+        val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0, maxOutlierRatio = 1.5)
+
+        val panel = VisualisationPanelDensity()
+        panel.size = Dimension(500, 500)
+        panel.populate(mapOf(), model)
+
+        panel.shouldMatchImage("Erraticness")
+    }
+
+    @Test
     fun `Should match snapshot - key`()
     {
         val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0)

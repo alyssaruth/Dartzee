@@ -19,6 +19,7 @@ import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
@@ -84,16 +85,25 @@ class TestDartsAiModel: AbstractTest()
         val model = makeDartsModel(standardDeviation = 20.0)
 
         //P(within 0.5 SD)
-        model.getProbabilityWithinRadius(10.0).shouldBeBetween(0.3829, 0.3831, 0.0)
+        model.getProbabilityWithinRadius(10.0)!!.shouldBeBetween(0.3829, 0.3831, 0.0)
 
         //P(within 1 SD)
-        model.getProbabilityWithinRadius(20.0).shouldBeBetween(0.6826, 0.6827, 0.0)
+        model.getProbabilityWithinRadius(20.0)!!.shouldBeBetween(0.6826, 0.6827, 0.0)
 
         //P(within 2 SD)
-        model.getProbabilityWithinRadius(40.0).shouldBeBetween(0.9543, 0.9545, 0.0)
+        model.getProbabilityWithinRadius(40.0)!!.shouldBeBetween(0.9543, 0.9545, 0.0)
 
         //P(within 3 SD)
-        model.getProbabilityWithinRadius(60.0).shouldBeBetween(0.9973, 0.9975, 0.0)
+        model.getProbabilityWithinRadius(60.0)!!.shouldBeBetween(0.9973, 0.9975, 0.0)
+    }
+
+    @Test
+    fun `Should return null density if maxOutlierRatio prevents darts going there`()
+    {
+        val model = makeDartsModel(standardDeviation = 3.0, maxOutlierRatio = 2.0)
+
+        model.getProbabilityWithinRadius(7.0) shouldBe null
+        model.getProbabilityWithinRadius(6.0) shouldNotBe null
     }
 
     /**

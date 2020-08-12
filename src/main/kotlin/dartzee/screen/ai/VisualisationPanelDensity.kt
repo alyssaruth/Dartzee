@@ -34,10 +34,12 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
     {
         val centerPt = model.getScoringPoint(dartboard)
 
+        val divisor = model.getProbabilityDensityDivisor()
+
         overlayImg.paint {
             val radius = getDistance(it, centerPt)
             val probability = model.getProbabilityWithinRadius(radius)
-            getColorForProbability(probability)
+            getColorForProbability(probability?.div(divisor))
         }
 
         repaint()
@@ -69,8 +71,10 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         repaint()
     }
 
-    private fun getColorForProbability(probability: Double): Color
+    private fun getColorForProbability(probability: Double?): Color
     {
+        probability ?: return Color.BLACK
+
         val hue = (probability / 1.2).toFloat()
         return Color.getHSBColor(hue, 1f, 1f)
     }
