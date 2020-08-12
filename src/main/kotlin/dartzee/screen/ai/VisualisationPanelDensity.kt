@@ -34,7 +34,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
     {
         val centerPt = model.getScoringPoint(dartboard)
 
-        val divisor = model.getProbabilityDensityDivisor()
+        val divisor = model.computeProbabilityDensityDivisor()
 
         overlayImg.paint {
             val radius = getDistance(it, centerPt)

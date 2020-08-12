@@ -2,6 +2,7 @@
   "standardDeviation": 50,
   "standardDeviationDoubles": 40,
   "standardDeviationCentral": 35,
+  "maxOutlierRatio": 2.4,
   "scoringDart": 20,
   "hmScoreToDart": {
     "57": {

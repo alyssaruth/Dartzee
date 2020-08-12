@@ -260,7 +260,7 @@ data class DartsAiModel(val standardDeviation: Double,
         return distribution.probability(-radius, radius)
     }
 
-    fun getProbabilityDensityDivisor(): Double
+    fun computeProbabilityDensityDivisor(): Double
     {
         val maxPossible = standardDeviation * maxOutlierRatio
         return distribution.probability(-maxPossible, maxPossible)
