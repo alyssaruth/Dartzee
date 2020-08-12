@@ -263,7 +263,7 @@ data class DartsAiModel(val standardDeviation: Double,
     fun getProbabilityDensityDivisor(): Double
     {
         val maxPossible = standardDeviation * maxOutlierRatio
-        return getProbabilityWithinRadius(maxPossible)!!
+        return distribution.probability(-maxPossible, maxPossible)
     }
 
     fun toJson(): String = jsonMapper().writeValueAsString(this)
