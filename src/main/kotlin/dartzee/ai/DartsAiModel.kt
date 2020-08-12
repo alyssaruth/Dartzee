@@ -21,6 +21,7 @@ import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import java.awt.Point
 import java.util.*
+import kotlin.math.abs
 
 enum class DartzeePlayStyle {
     CAUTIOUS,
@@ -30,6 +31,7 @@ enum class DartzeePlayStyle {
 data class DartsAiModel(val standardDeviation: Double,
                         val standardDeviationDoubles: Double?,
                         val standardDeviationCentral: Double?,
+                        val maxOutlierRatio: Double,
                         val scoringDart: Int,
                         val hmScoreToDart: Map<Int, AimDart>,
                         val mercyThreshold: Int?,
@@ -214,7 +216,14 @@ data class DartsAiModel(val standardDeviation: Double,
     private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
     {
         val distribution = getDistributionToUse(pt, dartboard)
-        return distribution.sample()
+
+        var radius = distribution.sample()
+        while (abs(radius) > maxOutlierRatio * distribution.standardDeviation)
+        {
+            radius = distribution.sample()
+        }
+
+        return radius
     }
     private fun sanitiseAngle(angle: Double): Double
     {
@@ -265,7 +274,16 @@ data class DartsAiModel(val standardDeviation: Double,
         {
             val hmDartNoToSegmentType = DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap()
             val hmDartNoToStopThreshold = DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap()
-            return DartsAiModel(50.0, null, null, 20, emptyMap(), null, hmDartNoToSegmentType, hmDartNoToStopThreshold, DartzeePlayStyle.CAUTIOUS)
+            return DartsAiModel(50.0,
+                null,
+                null,
+                3.0,
+                20,
+                emptyMap(),
+                null,
+                hmDartNoToSegmentType,
+                hmDartNoToStopThreshold,
+                DartzeePlayStyle.CAUTIOUS)
         }
     }
 }

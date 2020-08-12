@@ -66,6 +66,7 @@ class TestDartsAiModel: AbstractTest()
             50.0,
             40.0,
             35.0,
+            2.4,
             20,
             setupDarts,
             17,
@@ -149,6 +150,21 @@ class TestDartsAiModel: AbstractTest()
         }
 
         hsAngles.size shouldBe 360
+    }
+
+    @Test
+    fun `Should not allow the radius to exceed the max outlier ratio`()
+    {
+        val dartboard = borrowTestDartboard()
+        val pt = Point(0, 0)
+
+        val model = makeDartsModel(standardDeviation = 3.0, maxOutlierRatio = 2.0)
+        val radii = (1..1000).map { model.calculateRadiusAndAngle(pt, dartboard).radius }
+        radii.forEach { it.shouldBeBetween(-6.0, 6.0, 0.0) }
+
+        val erraticModel = makeDartsModel(standardDeviation = 3.0, maxOutlierRatio = 5.0)
+        val moreRadii = (1..1000).map { erraticModel.calculateRadiusAndAngle(pt, dartboard).radius }
+        moreRadii.forEach { it.shouldBeBetween(-15.0, 15.0, 0.0) }
     }
 
     /**
