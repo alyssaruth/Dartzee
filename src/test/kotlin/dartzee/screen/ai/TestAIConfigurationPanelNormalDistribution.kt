@@ -10,6 +10,7 @@ import dartzee.helper.makeDartsModel
 import io.kotlintest.shouldBe
 import org.junit.Test
 import javax.swing.JCheckBox
+import javax.swing.JSlider
 
 class TestAIConfigurationPanelNormalDistribution: AbstractTest()
 {
@@ -44,7 +45,10 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
     @Test
     fun `Should populate correctly from populated model`()
     {
-        val model = makeDartsModel(standardDeviation = 100.0, standardDeviationDoubles = 17.5, standardDeviationCentral = 5.2)
+        val model = makeDartsModel(standardDeviation = 100.0,
+            standardDeviationDoubles = 17.5,
+            standardDeviationCentral = 5.2,
+            maxOutlierRatio = 3.2)
 
         val panel = AIConfigurationPanelNormalDistribution()
         panel.initialiseFromModel(model)
@@ -54,6 +58,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         panel.nfStandardDeviationDoubles.value shouldBe 17.5
         panel.getChild<JCheckBox>("Standard Deviation (skew towards center)").isSelected shouldBe true
         panel.nfCentralBias.value shouldBe 5.2
+        panel.getChild<JSlider>().value shouldBe 320
     }
 
     @Test
@@ -71,6 +76,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         panel.getChild<JCheckBox>("Standard Deviation (skew towards center)").isSelected shouldBe false
         panel.nfCentralBias.value shouldBe 50.0
         panel.nfCentralBias.shouldBeDisabled()
+        panel.getChild<JSlider>().value shouldBe 500
     }
 
     @Test
@@ -84,11 +90,13 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
 
         panel.clickChild<JCheckBox>("Standard Deviation (skew towards center)")
         panel.nfCentralBias.value = 2.5
+        panel.getChild<JSlider>().value = 275
 
         val model = panel.initialiseModel()
         model.standardDeviation shouldBe 57.5
         model.standardDeviationDoubles shouldBe 100.0
         model.standardDeviationCentral shouldBe 2.5
+        model.maxOutlierRatio shouldBe 2.75
     }
 
     @Test

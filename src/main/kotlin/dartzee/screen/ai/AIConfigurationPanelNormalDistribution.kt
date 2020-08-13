@@ -10,6 +10,7 @@ import java.awt.event.ActionListener
 import javax.swing.JCheckBox
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.JSlider
 import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 
@@ -22,6 +23,10 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
     val nfStandardDeviationDoubles = NumberField(1)
     private val cbCenterBias = JCheckBox("Standard Deviation (skew towards center)")
     val nfCentralBias = NumberField(1, 200)
+    private val sliderPanel = JPanel()
+    private val lblConsistent = JLabel("Consistent")
+    private val lblErratic = JLabel("Erratic")
+    private val slider = JSlider()
 
     init
     {
@@ -42,6 +47,13 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         nfCentralBias.preferredSize = Dimension(100, 25)
         panelNorth.add(nfCentralBias, "cell 1 2")
 
+        slider.minimum = 50
+        slider.maximum = 500
+        panelNorth.add(sliderPanel, "cell 0 3, spanx, growx")
+        sliderPanel.add(lblConsistent)
+        sliderPanel.add(slider)
+        sliderPanel.add(lblErratic)
+
         cbStandardDeviationDoubles.addActionListener(this)
         cbCenterBias.addActionListener(this)
     }
@@ -53,8 +65,12 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         val sd = nfStandardDeviation.getDouble()
         val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else null
         val sdCentral = if (cbCenterBias.isSelected) nfCentralBias.getDouble() else null
+        val maxOutlierRatio = slider.value.toDouble() / 100
 
-        return model.copy(standardDeviation = sd, standardDeviationDoubles = sdDoubles, standardDeviationCentral = sdCentral)
+        return model.copy(standardDeviation = sd,
+            standardDeviationDoubles = sdDoubles,
+            standardDeviationCentral = sdCentral,
+            maxOutlierRatio = maxOutlierRatio)
     }
 
     override fun populateModel(model: DartsAiModel) = model
@@ -91,6 +107,8 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
             nfCentralBias.isEnabled = false
             nfCentralBias.value = 50
         }
+
+        slider.value = (model.maxOutlierRatio * 100).toInt()
     }
 
     override fun actionPerformed(arg0: ActionEvent)

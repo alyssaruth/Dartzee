@@ -2,6 +2,7 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.addGhostText
+import dartzee.core.util.MathsUtil
 import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
 import dartzee.screen.AbstractPlayerCreationDialog
@@ -213,7 +214,7 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         val dartboard = scatterTab.dartboard
         val simulationWrapper = model.runSimulation(dartboard)
 
-        val averageDart = simulationWrapper.averageDart
+        val averageDart = MathsUtil.round(simulationWrapper.averageDart, 2)
         textFieldAverageScore.text = "" + averageDart
 
         val missPercent = simulationWrapper.missPercent
