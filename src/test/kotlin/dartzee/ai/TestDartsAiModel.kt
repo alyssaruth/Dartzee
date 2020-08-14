@@ -67,7 +67,7 @@ class TestDartsAiModel: AbstractTest()
             50.0,
             40.0,
             35.0,
-            2.4,
+            345,
             20,
             setupDarts,
             17,
@@ -100,10 +100,10 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should return null density if maxOutlierRatio prevents darts going there`()
     {
-        val model = makeDartsModel(standardDeviation = 3.0, maxOutlierRatio = 2.0)
+        val model = makeDartsModel(standardDeviation = 3.0, maxRadius = 50)
 
-        model.getProbabilityWithinRadius(7.0) shouldBe null
-        model.getProbabilityWithinRadius(6.0) shouldNotBe null
+        model.getProbabilityWithinRadius(51.0) shouldBe null
+        model.getProbabilityWithinRadius(50.0) shouldNotBe null
     }
 
     /**
@@ -168,13 +168,13 @@ class TestDartsAiModel: AbstractTest()
         val dartboard = borrowTestDartboard()
         val pt = Point(0, 0)
 
-        val model = makeDartsModel(standardDeviation = 3.0, maxOutlierRatio = 2.0)
+        val model = makeDartsModel(standardDeviation = 50.0, maxRadius = 50)
         val radii = (1..1000).map { model.calculateRadiusAndAngle(pt, dartboard).radius }
-        radii.forEach { it.shouldBeBetween(-6.0, 6.0, 0.0) }
+        radii.forEach { it.shouldBeBetween(-50.0, 50.0, 0.0) }
 
-        val erraticModel = makeDartsModel(standardDeviation = 3.0, maxOutlierRatio = 5.0)
+        val erraticModel = makeDartsModel(standardDeviation = 50.0, maxRadius = 75)
         val moreRadii = (1..1000).map { erraticModel.calculateRadiusAndAngle(pt, dartboard).radius }
-        moreRadii.forEach { it.shouldBeBetween(-15.0, 15.0, 0.0) }
+        moreRadii.forEach { it.shouldBeBetween(-75.0, 75.0, 0.0) }
     }
 
     /**

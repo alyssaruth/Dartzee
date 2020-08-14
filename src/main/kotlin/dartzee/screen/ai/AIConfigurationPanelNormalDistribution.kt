@@ -47,8 +47,8 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         nfCentralBias.preferredSize = Dimension(100, 25)
         panelNorth.add(nfCentralBias, "cell 1 2")
 
-        slider.minimum = 50
-        slider.maximum = 500
+        slider.minimum = 10
+        slider.maximum = 350
         panelNorth.add(sliderPanel, "cell 0 3, spanx, growx")
         sliderPanel.add(lblConsistent)
         sliderPanel.add(slider)
@@ -65,12 +65,11 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         val sd = nfStandardDeviation.getDouble()
         val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else null
         val sdCentral = if (cbCenterBias.isSelected) nfCentralBias.getDouble() else null
-        val maxOutlierRatio = slider.value.toDouble() / 100
 
         return model.copy(standardDeviation = sd,
             standardDeviationDoubles = sdDoubles,
             standardDeviationCentral = sdCentral,
-            maxOutlierRatio = maxOutlierRatio)
+            maxRadius = slider.value)
     }
 
     override fun populateModel(model: DartsAiModel) = model
@@ -108,7 +107,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
             nfCentralBias.value = 50
         }
 
-        slider.value = (model.maxOutlierRatio * 100).toInt()
+        slider.value = model.maxRadius
     }
 
     override fun actionPerformed(arg0: ActionEvent)

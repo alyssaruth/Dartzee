@@ -31,7 +31,7 @@ enum class DartzeePlayStyle {
 data class DartsAiModel(val standardDeviation: Double,
                         val standardDeviationDoubles: Double?,
                         val standardDeviationCentral: Double?,
-                        val maxOutlierRatio: Double,
+                        val maxRadius: Int,
                         val scoringDart: Int,
                         val hmScoreToDart: Map<Int, AimDart>,
                         val mercyThreshold: Int?,
@@ -218,7 +218,7 @@ data class DartsAiModel(val standardDeviation: Double,
         val distribution = getDistributionToUse(pt, dartboard)
 
         var radius = distribution.sample()
-        while (abs(radius) > maxOutlierRatio * distribution.standardDeviation)
+        while (abs(radius) > maxRadius)
         {
             radius = distribution.sample()
         }
@@ -255,14 +255,14 @@ data class DartsAiModel(val standardDeviation: Double,
 
     fun getProbabilityWithinRadius(radius: Double): Double?
     {
-        if (radius > standardDeviation * maxOutlierRatio) return null
+        if (radius > maxRadius) return null
 
         return distribution.probability(-radius, radius)
     }
 
     fun computeProbabilityDensityDivisor(): Double
     {
-        val maxPossible = standardDeviation * maxOutlierRatio
+        val maxPossible = maxRadius.toDouble()
         return distribution.probability(-maxPossible, maxPossible)
     }
 
@@ -285,7 +285,7 @@ data class DartsAiModel(val standardDeviation: Double,
             return DartsAiModel(50.0,
                 null,
                 null,
-                3.0,
+                150,
                 20,
                 emptyMap(),
                 null,

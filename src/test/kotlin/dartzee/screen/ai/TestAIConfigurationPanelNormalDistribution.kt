@@ -48,7 +48,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         val model = makeDartsModel(standardDeviation = 100.0,
             standardDeviationDoubles = 17.5,
             standardDeviationCentral = 5.2,
-            maxOutlierRatio = 3.2)
+            maxRadius = 270)
 
         val panel = AIConfigurationPanelNormalDistribution()
         panel.initialiseFromModel(model)
@@ -58,7 +58,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         panel.nfStandardDeviationDoubles.value shouldBe 17.5
         panel.getChild<JCheckBox>("Standard Deviation (skew towards center)").isSelected shouldBe true
         panel.nfCentralBias.value shouldBe 5.2
-        panel.getChild<JSlider>().value shouldBe 320
+        panel.getChild<JSlider>().value shouldBe 270
     }
 
     @Test
@@ -96,7 +96,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         model.standardDeviation shouldBe 57.5
         model.standardDeviationDoubles shouldBe 100.0
         model.standardDeviationCentral shouldBe 2.5
-        model.maxOutlierRatio shouldBe 2.75
+        model.maxRadius shouldBe 275
     }
 
     @Test
