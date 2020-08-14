@@ -23,9 +23,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
     val nfStandardDeviationDoubles = NumberField(1)
     private val cbCenterBias = JCheckBox("Standard Deviation (skew towards center)")
     val nfCentralBias = NumberField(1, 200)
-    private val sliderPanel = JPanel()
-    private val lblConsistent = JLabel("Consistent")
-    private val lblErratic = JLabel("Erratic")
+    private val lblConsistent = JLabel("Max radius")
     private val slider = JSlider()
 
     init
@@ -46,13 +44,11 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         panelNorth.add(cbCenterBias, "cell 0 2")
         nfCentralBias.preferredSize = Dimension(100, 25)
         panelNorth.add(nfCentralBias, "cell 1 2")
+        panelNorth.add(lblConsistent, "cell 0 3")
+        panelNorth.add(slider, "cell 1 3")
 
         slider.minimum = 10
-        slider.maximum = 350
-        panelNorth.add(sliderPanel, "cell 0 3, spanx, growx")
-        sliderPanel.add(lblConsistent)
-        sliderPanel.add(slider)
-        sliderPanel.add(lblErratic)
+        slider.maximum = 400
 
         cbStandardDeviationDoubles.addActionListener(this)
         cbCenterBias.addActionListener(this)
