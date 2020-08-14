@@ -48,7 +48,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         panelNorth.add(slider, "cell 1 3")
 
         slider.minimum = 10
-        slider.maximum = 400
+        slider.maximum = 450
 
         cbStandardDeviationDoubles.addActionListener(this)
         cbCenterBias.addActionListener(this)
