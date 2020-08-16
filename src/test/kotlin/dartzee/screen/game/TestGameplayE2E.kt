@@ -2,6 +2,7 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.ai.AimDart
+import dartzee.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
 import dartzee.dartzee.DartzeeCalculator
@@ -12,7 +13,10 @@ import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
-import dartzee.utils.*
+import dartzee.utils.InjectedThings
+import dartzee.utils.PREFERENCES_INT_AI_SPEED
+import dartzee.utils.PreferenceUtil
+import dartzee.utils.insertDartzeeRules
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -126,6 +130,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     }
 
     data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
+
     private fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
     {
         val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
@@ -140,16 +145,7 @@ class TestGameplayE2E: AbstractRegistryTest()
 
     private fun awaitGameFinish(game: GameEntity)
     {
-        val maxWait = 10000
-
-        val timer = DurationTimer()
-        while (!game.isFinished()) {
-            Thread.sleep(200)
-
-            if (timer.getDuration() > maxWait) {
-                throw AssertionError("Timed out waiting for game to complete")
-            }
-        }
+        awaitCondition { game.isFinished() }
     }
 
     private fun verifyState(panel: DartsGamePanel<*, *, *>,

@@ -15,6 +15,7 @@ import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.screen.Dartboard
+import dartzee.utils.DurationTimer
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -180,5 +181,16 @@ fun JCheckBox.unCheck()
     if (isSelected)
     {
         doClick()
+    }
+}
+fun awaitCondition(timeout: Int = 10000, condition: (() -> Boolean))
+{
+    val timer = DurationTimer()
+    while (!condition()) {
+        Thread.sleep(200)
+
+        if (timer.getDuration() > timeout) {
+            throw AssertionError("Timed out waiting for condition")
+        }
     }
 }
