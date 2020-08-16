@@ -21,9 +21,10 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<*>>(private val
                                                                      players: List<PlayerEntity>):
         AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
-    private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, PlayerState>>()
     override val windowName = match.getMatchDesc()
+
+    private val tabbedPane = JTabbedPane(SwingConstants.TOP)
+    private val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, PlayerState>>()
 
     init
     {
