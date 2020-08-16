@@ -23,7 +23,7 @@ class TestVisualisationPanelDensity: AbstractTest()
     @Test
     fun `Should match snapshot - bullseye`()
     {
-        val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0)
+        val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0, maxRadius = 500)
 
         val panel = VisualisationPanelDensity()
         panel.size = Dimension(500, 500)
@@ -35,7 +35,7 @@ class TestVisualisationPanelDensity: AbstractTest()
     @Test
     fun `Should adjust for low erraticness`()
     {
-        val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0, maxRadius = 250)
+        val model = makeDartsModel(scoringDart = 25, standardDeviation = 100.0, maxRadius = 150)
 
         val panel = VisualisationPanelDensity()
         panel.size = Dimension(500, 500)
