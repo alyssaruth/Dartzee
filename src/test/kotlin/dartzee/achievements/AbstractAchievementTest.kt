@@ -1,7 +1,10 @@
 package dartzee.achievements
 
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.utils.DatabaseUtil
@@ -39,12 +42,11 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         return insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate)
     }
 
-    fun insertRelevantParticipant(): ParticipantEntity
+    fun insertRelevantParticipant(player: PlayerEntity = insertPlayer()): ParticipantEntity
     {
-        val p = insertPlayer()
         val g = insertRelevantGame()
 
-        return insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        return insertParticipant(playerId = player.rowId, gameId = g.rowId)
     }
 
     @Test
