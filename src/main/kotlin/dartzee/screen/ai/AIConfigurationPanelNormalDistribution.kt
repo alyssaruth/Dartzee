@@ -10,6 +10,7 @@ import java.awt.event.ActionListener
 import javax.swing.JCheckBox
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.JSlider
 import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 
@@ -22,6 +23,8 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
     val nfStandardDeviationDoubles = NumberField(1)
     private val cbCenterBias = JCheckBox("Standard Deviation (skew towards center)")
     val nfCentralBias = NumberField(1, 200)
+    private val lblConsistent = JLabel("Max radius")
+    private val slider = JSlider()
 
     init
     {
@@ -41,6 +44,11 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         panelNorth.add(cbCenterBias, "cell 0 2")
         nfCentralBias.preferredSize = Dimension(100, 25)
         panelNorth.add(nfCentralBias, "cell 1 2")
+        panelNorth.add(lblConsistent, "cell 0 3")
+        panelNorth.add(slider, "cell 1 3")
+
+        slider.minimum = 10
+        slider.maximum = 450
 
         cbStandardDeviationDoubles.addActionListener(this)
         cbCenterBias.addActionListener(this)
@@ -54,7 +62,10 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else null
         val sdCentral = if (cbCenterBias.isSelected) nfCentralBias.getDouble() else null
 
-        return model.copy(standardDeviation = sd, standardDeviationDoubles = sdDoubles, standardDeviationCentral = sdCentral)
+        return model.copy(standardDeviation = sd,
+            standardDeviationDoubles = sdDoubles,
+            standardDeviationCentral = sdCentral,
+            maxRadius = slider.value)
     }
 
     override fun populateModel(model: DartsAiModel) = model
@@ -91,6 +102,8 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
             nfCentralBias.isEnabled = false
             nfCentralBias.value = 50
         }
+
+        slider.value = model.maxRadius
     }
 
     override fun actionPerformed(arg0: ActionEvent)

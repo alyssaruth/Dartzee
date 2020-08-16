@@ -1,7 +1,7 @@
 package dartzee.utils
 
-import dartzee.ai.DartsAiModelOLD
 import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiModelOLD
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
@@ -129,6 +129,7 @@ object DartsDatabaseUtil
             val newModel = DartsAiModel(model.standardDeviation,
                     if (model.standardDeviationDoubles > 0.0) model.standardDeviationDoubles else null,
                     if (model.standardDeviationCentral > 0.0) model.standardDeviationCentral else null,
+                    450,
                     model.scoringDart,
                     model.hmScoreToDart.toMap(),
                     if (model.mercyThreshold > -1) model.mercyThreshold else null,
