@@ -64,7 +64,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
     @Test
     fun `Should populate from empty model`()
     {
-        val model = makeDartsModel(standardDeviation = 100.0, standardDeviationDoubles = null, standardDeviationCentral = null)
+        val model = makeDartsModel(standardDeviation = 100.0, standardDeviationDoubles = null, standardDeviationCentral = null, maxRadius = 250)
 
         val panel = AIConfigurationPanelNormalDistribution()
         panel.initialiseFromModel(model)
@@ -76,7 +76,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         panel.getChild<JCheckBox>("Standard Deviation (skew towards center)").isSelected shouldBe false
         panel.nfCentralBias.value shouldBe 50.0
         panel.nfCentralBias.shouldBeDisabled()
-        panel.getChild<JSlider>().value shouldBe 500
+        panel.getChild<JSlider>().value shouldBe 250
     }
 
     @Test
