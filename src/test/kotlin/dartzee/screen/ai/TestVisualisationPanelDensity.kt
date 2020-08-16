@@ -11,7 +11,7 @@ class TestVisualisationPanelDensity: AbstractTest()
     @Test
     fun `Should match snapshot - T20`()
     {
-        val model = makeDartsModel(scoringDart = 20)
+        val model = makeDartsModel(scoringDart = 20, standardDeviation = 50.0, maxRadius = 250)
 
         val panel = VisualisationPanelDensity()
         panel.size = Dimension(500, 500)
