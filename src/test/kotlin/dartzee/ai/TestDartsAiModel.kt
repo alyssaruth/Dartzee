@@ -112,7 +112,7 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`()
     {
-        val model = beastDartsModel(standardDeviationDoubles = 100000.0)
+        val model = beastDartsModel(standardDeviationDoubles = 100000.0, maxRadius = 1000)
 
         val dartboard = Dartboard(100, 100)
         dartboard.paintDartboard()
