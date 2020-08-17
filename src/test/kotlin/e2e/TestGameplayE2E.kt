@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package e2e
 
 import dartzee.`object`.Dart
 import dartzee.ai.AimDart
@@ -13,6 +13,8 @@ import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
+import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.DartsGamePanel
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil

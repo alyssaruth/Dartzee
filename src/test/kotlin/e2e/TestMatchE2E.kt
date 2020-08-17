@@ -1,4 +1,4 @@
-package dartzee.screen.game
+package e2e
 
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.GameLauncher
@@ -12,16 +12,27 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
+import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.MatchScorer
 import dartzee.screen.game.x01.X01MatchScreen
+import dartzee.utils.PREFERENCES_INT_AI_SPEED
+import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
 
-class TestMatchE2E: AbstractTest()
+class TestMatchE2E: AbstractRegistryTest()
 {
+    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
+
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
+    }
+
     @Test
     fun `E2E - Two game match`()
     {
