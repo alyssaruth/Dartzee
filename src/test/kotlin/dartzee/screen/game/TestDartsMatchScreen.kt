@@ -57,7 +57,7 @@ class TestDartsMatchScreen: AbstractTest()
     @Test
     fun `Should update title based on selected tab`()
     {
-        val match = insertDartsMatch()
+        val match = insertDartsMatch(gameParams = "501")
         val scrn = setUpMatchScreen(match)
 
         val g1 = insertGame()
@@ -142,8 +142,7 @@ class TestDartsMatchScreen: AbstractTest()
         val p1 = insertPlayer()
         val p2 = insertPlayer()
 
-        val match = insertDartsMatch()
-        match.gameParams = "501"
+        val match = insertDartsMatch(gameParams = "501")
         match.players = mutableListOf(p1, p2)
 
         val scrn = setUpMatchScreen(match = match)
@@ -160,12 +159,10 @@ class TestDartsMatchScreen: AbstractTest()
         verify { gamePanel.startNewGame(listOf(p2, p1)) }
     }
 
-    private fun setUpMatchScreen(match: DartsMatchEntity = insertDartsMatch(),
+    private fun setUpMatchScreen(match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
                                  matchSummaryPanel: MatchSummaryPanel<DefaultPlayerState<DartsScorerX01>> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
     {
         PlayerImageEntity.createPresets()
-
-        match.gameParams = "501"
         return FakeMatchScreen(match, listOf(insertPlayer(), insertPlayer()), matchSummaryPanel)
     }
 }
