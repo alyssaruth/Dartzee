@@ -21,6 +21,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import javax.swing.JTabbedPane
+import javax.swing.SwingUtilities
 
 class TestDartsMatchScreen: AbstractTest()
 {
@@ -32,8 +33,8 @@ class TestDartsMatchScreen: AbstractTest()
         val g1 = insertGame()
         val g2 = insertGame()
 
-        val panelOne = scrn.addGameToMatch(g1)
-        val panelTwo = scrn.addGameToMatch(g2)
+        val panelOne = scrn.addGameToMatchOnEdt(g1)
+        val panelTwo = scrn.addGameToMatchOnEdt(g2)
 
         val achievement = AchievementX01BestFinish()
         scrn.achievementUnlocked(g2.rowId, "player", achievement)
@@ -48,7 +49,7 @@ class TestDartsMatchScreen: AbstractTest()
         val scrn = setUpMatchScreen()
         val game = insertGame()
 
-        val tab = scrn.addGameToMatch(game)
+        val tab = scrn.addGameToMatchOnEdt(game)
         tab.shouldBeInstanceOf<GamePanelX01>()
 
         ScreenCache.getDartsGameScreen(game.rowId) shouldBe scrn
@@ -63,8 +64,8 @@ class TestDartsMatchScreen: AbstractTest()
         val g1 = insertGame()
         val g2 = insertGame()
 
-        scrn.addGameToMatch(g1)
-        scrn.addGameToMatch(g2)
+        scrn.addGameToMatchOnEdt(g1)
+        scrn.addGameToMatchOnEdt(g2)
 
         val tabbedPane = scrn.getChild<JTabbedPane>()
         tabbedPane.selectedIndex = 1
@@ -83,7 +84,7 @@ class TestDartsMatchScreen: AbstractTest()
         val scrn = setUpMatchScreen()
 
         val g = insertGame()
-        val panel = scrn.addGameToMatch(g)
+        val panel = scrn.addGameToMatchOnEdt(g)
 
         scrn.fireAppearancePreferencesChanged()
         verify { panel.fireAppearancePreferencesChanged() }
@@ -97,8 +98,8 @@ class TestDartsMatchScreen: AbstractTest()
 
         val g1 = insertGame()
         val g2 = insertGame()
-        val panel1 = scrn.addGameToMatch(g1)
-        val panel2 = scrn.addGameToMatch(g2)
+        val panel1 = scrn.addGameToMatchOnEdt(g1)
+        val panel2 = scrn.addGameToMatchOnEdt(g2)
 
         scrn.displayGame(g1.rowId)
         tabbedPane.selectedComponent shouldBe panel1
@@ -147,7 +148,7 @@ class TestDartsMatchScreen: AbstractTest()
 
         val scrn = setUpMatchScreen(match = match)
         val firstGame = insertGame()
-        scrn.addGameToMatch(firstGame)
+        scrn.addGameToMatchOnEdt(firstGame)
 
         scrn.startNextGameIfNecessary()
 
@@ -178,5 +179,15 @@ private class FakeMatchScreen(match: DartsMatchEntity,
         every { panel.gameEntity } returns game
         every { panel.gameTitle } returns "${game.localId}"
         return panel
+    }
+
+    fun addGameToMatchOnEdt(gameEntity: GameEntity): DartsGamePanel<*, *, *>
+    {
+        var panel: DartsGamePanel<*, *, *>? = null
+        SwingUtilities.invokeAndWait {
+            panel = addGameToMatch(gameEntity)
+        }
+
+        return panel!!
     }
 }
