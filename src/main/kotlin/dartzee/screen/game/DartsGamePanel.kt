@@ -699,12 +699,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         {
             panelCenter.remove(statsPanel)
             panelCenter.add(dartboard, BorderLayout.CENTER)
-
-            //We might not have painted it if this is a complete, loaded game
-            if (dartboard.dartboardImage == null)
-            {
-                dartboard.paintDartboardCached()
-            }
         }
 
         panelCenter.revalidate()
