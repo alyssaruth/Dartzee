@@ -5,7 +5,6 @@ import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_LOADED_RESOURCES
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.CODE_RESOURCE_LOAD_ERROR
-import dartzee.screen.game.scorer.DartsScorer
 import dartzee.utils.InjectedThings.logger
 import java.awt.Font
 import java.io.BufferedInputStream
