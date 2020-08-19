@@ -15,6 +15,7 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.MatchScorer
 import dartzee.screen.game.x01.X01MatchScreen
+import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContain
@@ -31,6 +32,7 @@ class TestMatchE2E: AbstractRegistryTest()
     {
         super.beforeEachTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
+        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
     }
 
     @Test
