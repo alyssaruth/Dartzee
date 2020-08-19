@@ -1,13 +1,15 @@
 package dartzee.screen.game.scorer
 
+import dartzee.logging.CODE_PLAYER_PAUSED
+import dartzee.logging.CODE_PLAYER_UNPAUSED
 import dartzee.screen.game.GamePanelPausable
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.ImageIcon
 import javax.swing.JButton
 
 abstract class DartsScorerPausable(private val parent: GamePanelPausable<out DartsScorerPausable>) : DartsScorer(), ActionListener
@@ -35,11 +37,13 @@ abstract class DartsScorerPausable(private val parent: GamePanelPausable<out Dar
     {
         if (btnResume.icon === ICON_PAUSE)
         {
+            logger.info(CODE_PLAYER_PAUSED, "Paused player $playerId")
             btnResume.icon = ICON_RESUME
             finalisePlayerResult(finishPos)
         }
         else
         {
+            logger.info(CODE_PLAYER_UNPAUSED, "Unpaused player $playerId")
             btnResume.icon = ICON_PAUSE
             lblResult.text = ""
             lblResult.background = null

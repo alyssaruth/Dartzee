@@ -25,6 +25,7 @@ import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import dartzee.utils.ResourceCache.ICON_STATS_LARGE
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Point
@@ -134,7 +135,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         panelButtons.add(btnReset)
         btnStats.toolTipText = "View stats"
         btnStats.preferredSize = Dimension(80, 80)
-        btnStats.icon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
+        btnStats.icon = ICON_STATS_LARGE
 
         panelButtons.add(btnStats)
         btnSlider.icon = ImageIcon(javaClass.getResource("/buttons/aiSpeed.png"))

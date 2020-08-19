@@ -1,6 +1,5 @@
 package e2e
 
-import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.Dart
 import dartzee.`object`.GameLauncher
 import dartzee.awaitCondition
@@ -9,7 +8,6 @@ import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.retrieveGame
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.shouldBeVisible
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
@@ -39,9 +37,12 @@ class TestGameLoadE2E: AbstractRegistryTest()
 
         awaitCondition { retrieveGame().isFinished() }
 
+        val gameId = retrieveGame().rowId
+        val originalGameScreen = ScreenCache.getDartsGameScreen(gameId)!!
+        val loserProgress = originalGameScreen.getScorer("Loser").getLatestScoreRemaining()
+
         closeOpenGames()
 
-        val gameId = retrieveGame().rowId
         SwingUtilities.invokeAndWait { GameLauncher().loadAndDisplayGame(gameId) }
 
         val gameScreen = ScreenCache.getDartsGameScreen(gameId)!!
@@ -49,7 +50,10 @@ class TestGameLoadE2E: AbstractRegistryTest()
 
         verifyGameLoadedCorrectly(gameScreen)
 
-        val loserScorer = gameScreen.getChild<DartsScorerX01> { it.playerName == "Loser" }
+        gameScreen.toggleStats()
+
+        val loserScorer = gameScreen.getScorer("Loser")
+        loserScorer.getLatestScoreRemaining() shouldBe loserProgress
         loserScorer.shouldBePaused()
         loserScorer.resume()
 
@@ -58,7 +62,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
 
     private fun verifyGameLoadedCorrectly(gameScreen: AbstractDartsGameScreen)
     {
-        val winnerScorer = gameScreen.getChild<DartsScorerX01> { it.playerName == "Winner" }
+        val winnerScorer = gameScreen.getScorer("Winner")
         winnerScorer.lblResult.text shouldBe "9 Darts"
         winnerScorer.getDartsForRow(0).shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
         winnerScorer.getDartsForRow(1).shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
