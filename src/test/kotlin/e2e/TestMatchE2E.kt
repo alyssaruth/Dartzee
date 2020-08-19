@@ -2,7 +2,6 @@ package e2e
 
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.GameLauncher
-import dartzee.ai.AimDart
 import dartzee.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
@@ -10,7 +9,8 @@ import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.helper.*
+import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.insertDartsMatch
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.MatchScorer
