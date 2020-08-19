@@ -5,6 +5,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_LOADED_RESOURCES
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.CODE_RESOURCE_LOAD_ERROR
+import dartzee.screen.game.scorer.DartsScorer
 import dartzee.utils.InjectedThings.logger
 import java.awt.Font
 import java.io.BufferedInputStream
@@ -24,6 +25,8 @@ object ResourceCache
     val IMG_MITCHELL = ImageIcon(javaClass.getResource("/horrific/mitchell.png"))
     val IMG_SPENCER = ImageIcon(javaClass.getResource("/horrific/spencer.png"))
     val IMG_BASIL = ImageIcon(javaClass.getResource("/horrific/basil.png"))
+    val ICON_RESUME = ImageIcon(javaClass.getResource("/buttons/resume.png"))
+    val ICON_PAUSE = ImageIcon(javaClass.getResource("/buttons/pause.png"))
 
     val URL_ACHIEVEMENT_LOCKED: URL = javaClass.getResource("/achievements/locked.png")
     val URL_ACHIEVEMENT_BEST_FINISH: URL = javaClass.getResource("/achievements/bestFinish.png")

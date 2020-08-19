@@ -253,6 +253,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         loadParticipants(gameId)
         loadScoresAndCurrentPlayer(gameId)
 
+        //Paint the dartboard - always do this, in case of resuming with stats open
+        dartboard.paintDartboardCached()
+
         //If the game is over, do some extra stuff to sort the screen out
         val dtFinish = gameEntity.dtFinish
         if (!isEndOfTime(dtFinish))
@@ -261,9 +264,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         }
         else
         {
-            //Paint the dartboard
-            dartboard.paintDartboardCached()
-
             nextTurn()
         }
     }

@@ -27,7 +27,7 @@ import javax.swing.JTabbedPane
 
 class TestMatchE2E: AbstractRegistryTest()
 {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
+    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
 
     override fun beforeEachTest()
     {
@@ -43,12 +43,7 @@ class TestMatchE2E: AbstractRegistryTest()
         match.gameType = GameType.X01
         match.gameParams = "501"
 
-        val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
-        val winner = insertPlayer(model = aiModel, name = "Winner")
-
-        val loserModel = makeDartsModel(standardDeviation = 200.0)
-        val loser = insertPlayer(model = loserModel, name = "Loser")
-
+        val (winner, loser) = createPlayers()
         match.players = mutableListOf(winner, loser)
 
         GameLauncher().launchNewMatch(match)

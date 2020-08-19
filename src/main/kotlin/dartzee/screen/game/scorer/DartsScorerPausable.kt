@@ -1,6 +1,8 @@
 package dartzee.screen.game.scorer
 
 import dartzee.screen.game.GamePanelPausable
+import dartzee.utils.ResourceCache.ICON_PAUSE
+import dartzee.utils.ResourceCache.ICON_RESUME
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -89,11 +91,5 @@ abstract class DartsScorerPausable(private val parent: GamePanelPausable<out Dar
         }
 
         toggleResume()
-    }
-
-    companion object
-    {
-        private val ICON_RESUME = ImageIcon(DartsScorer::class.java.getResource("/buttons/resume.png"))
-        private val ICON_PAUSE = ImageIcon(DartsScorer::class.java.getResource("/buttons/pause.png"))
     }
 }
