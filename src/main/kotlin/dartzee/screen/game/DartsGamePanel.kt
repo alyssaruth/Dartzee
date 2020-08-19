@@ -25,6 +25,7 @@ import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import dartzee.utils.ResourceCache.ICON_STATS_LARGE
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Point
@@ -134,7 +135,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         panelButtons.add(btnReset)
         btnStats.toolTipText = "View stats"
         btnStats.preferredSize = Dimension(80, 80)
-        btnStats.icon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
+        btnStats.icon = ICON_STATS_LARGE
 
         panelButtons.add(btnStats)
         btnSlider.icon = ImageIcon(javaClass.getResource("/buttons/aiSpeed.png"))
@@ -253,6 +254,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         loadParticipants(gameId)
         loadScoresAndCurrentPlayer(gameId)
 
+        //Paint the dartboard - always do this, in case of resuming with stats open
+        dartboard.paintDartboardCached()
+
         //If the game is over, do some extra stuff to sort the screen out
         val dtFinish = gameEntity.dtFinish
         if (!isEndOfTime(dtFinish))
@@ -261,9 +265,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         }
         else
         {
-            //Paint the dartboard
-            dartboard.paintDartboardCached()
-
             nextTurn()
         }
     }
@@ -699,12 +700,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         {
             panelCenter.remove(statsPanel)
             panelCenter.add(dartboard, BorderLayout.CENTER)
-
-            //We might not have painted it if this is a complete, loaded game
-            if (dartboard.dartboardImage == null)
-            {
-                dartboard.paintDartboardCached()
-            }
         }
 
         panelCenter.revalidate()

@@ -28,10 +28,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
     @Test
     fun `Should ignore busts`()
     {
-        val g = insertRelevantGame()
-        val p = insertPlayer()
-
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertRelevantParticipant()
 
         insertDart(pt, ordinal = 1, startingScore = 100, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 1)

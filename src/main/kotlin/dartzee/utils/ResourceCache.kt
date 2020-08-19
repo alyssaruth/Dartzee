@@ -24,6 +24,9 @@ object ResourceCache
     val IMG_MITCHELL = ImageIcon(javaClass.getResource("/horrific/mitchell.png"))
     val IMG_SPENCER = ImageIcon(javaClass.getResource("/horrific/spencer.png"))
     val IMG_BASIL = ImageIcon(javaClass.getResource("/horrific/basil.png"))
+    val ICON_RESUME = ImageIcon(javaClass.getResource("/buttons/resume.png"))
+    val ICON_PAUSE = ImageIcon(javaClass.getResource("/buttons/pause.png"))
+    val ICON_STATS_LARGE = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
 
     val URL_ACHIEVEMENT_LOCKED: URL = javaClass.getResource("/achievements/locked.png")
     val URL_ACHIEVEMENT_BEST_FINISH: URL = javaClass.getResource("/achievements/bestFinish.png")

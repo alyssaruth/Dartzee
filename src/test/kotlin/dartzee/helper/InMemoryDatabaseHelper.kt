@@ -43,7 +43,8 @@ fun insertDartsMatch(uuid: String = randomGuid(),
                      games: Int = 3,
                      mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
-                     matchParams: String = ""): DartsMatchEntity
+                     matchParams: String = "",
+                     gameParams: String = ""): DartsMatchEntity
 {
     val m = DartsMatchEntity()
     m.rowId = uuid
@@ -52,6 +53,7 @@ fun insertDartsMatch(uuid: String = randomGuid(),
     m.mode = mode
     m.dtFinish = dtFinish
     m.matchParams = matchParams
+    m.gameParams = gameParams
 
     m.saveToDatabase()
     return m
@@ -66,8 +68,8 @@ fun insertGameForPlayer(player: PlayerEntity,
     insertParticipant(playerId = player.rowId, gameId = game.rowId, finalScore = finalScore, dtFinished = dtFinished)
 }
 
-fun insertPlayer(model: DartsAiModel) =
-        insertPlayer(strategy = model.toJson())
+fun insertPlayer(model: DartsAiModel, name: String = "Clive") =
+        insertPlayer(strategy = model.toJson(), name = name)
 
 fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",

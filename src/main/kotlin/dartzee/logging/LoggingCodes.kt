@@ -33,6 +33,8 @@ val CODE_LOADED_RESOURCES = LoggingCode("loadedResources")
 val CODE_STARTING_BACKUP = LoggingCode("startingBackup")
 val CODE_STARTING_RESTORE = LoggingCode("startingRestore")
 val CODE_RENDERED_DARTBOARD = LoggingCode("renderedDartboard")
+val CODE_PLAYER_PAUSED = LoggingCode("playerPaused")
+val CODE_PLAYER_UNPAUSED = LoggingCode("playerUnpaused")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
