@@ -23,6 +23,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
+import javax.swing.JTabbedPane
 
 class TestMatchE2E: AbstractRegistryTest()
 {
@@ -94,10 +95,18 @@ class TestMatchE2E: AbstractRegistryTest()
     private fun verifyUi()
     {
         val matchScreen = ScreenCache.getDartsGameScreens().first() as X01MatchScreen
-        matchScreen.windowName shouldBe "Match #1 (First to 2 - 501, 2 players)"
+        matchScreen.title shouldBe "Match #1 (First to 2 - 501, 2 players)"
 
         val summaryPanel = matchScreen.getChild<MatchSummaryPanel<*>>()
         val winnerScorer = summaryPanel.getChild<MatchScorer> { it.playerName == "Winner" }
         winnerScorer.lblResult.text shouldBe "2"
+
+        val loserScorer = summaryPanel.getChild<MatchScorer> { it.playerName == "Loser" }
+        loserScorer.lblResult.text shouldBe "0"
+
+        // Select the first game
+        val tabbedPane = matchScreen.getChild<JTabbedPane>()
+        tabbedPane.selectedIndex = 1
+        matchScreen.title shouldBe "Game #1 (501 - 2 players)"
     }
 }
