@@ -21,7 +21,7 @@ enum class GameType
         {
             X01 -> gameParams
             GOLF -> "Golf - $gameParams holes"
-            ROUND_THE_CLOCK -> "Round the Clock - $gameParams"
+            ROUND_THE_CLOCK -> "Round the Clock - ${RoundTheClockConfig.fromJson(gameParams).getDescription()}"
             DARTZEE -> "Dartzee"
         }
 }

@@ -49,8 +49,7 @@ class GameParamFilterPanelRoundTheClock : GameParamFilterPanel()
     override fun getFilterDesc(): String
     {
         val config = getConfigFromSelection()
-        val orderStr = if (config.inOrder) "in order" else "any order"
-        return "${config.clockType} games ($orderStr)"
+        return "${config.clockType} games (${config.getOrderStr()})"
     }
 
     override fun enableChildren(enabled: Boolean)

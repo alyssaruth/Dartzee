@@ -1,6 +1,5 @@
 package dartzee.game
 
-import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -21,7 +20,7 @@ class TestGameType: AbstractTest()
     {
         GameType.X01.getDescription("701") shouldBe "701"
         GameType.GOLF.getDescription("18") shouldBe "Golf - 18 holes"
-        GameType.ROUND_THE_CLOCK.getDescription(CLOCK_TYPE_STANDARD) shouldBe "Round the Clock - Standard"
+        GameType.ROUND_THE_CLOCK.getDescription(RoundTheClockConfig(ClockType.Trebles, true).toJson()) shouldBe "Round the Clock - Trebles - in order"
         GameType.DARTZEE.getDescription("ZZZZ") shouldBe "Dartzee"
     }
 }
