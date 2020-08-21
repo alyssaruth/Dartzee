@@ -151,9 +151,9 @@ object DartsDatabaseUtil
         games.forEach {
             val clockType = when (it.gameParams)
             {
-                CLOCK_TYPE_STANDARD -> ClockType.STANDARD
-                CLOCK_TYPE_DOUBLES -> ClockType.DOUBLE
-                else -> ClockType.TREBLE
+                CLOCK_TYPE_STANDARD -> ClockType.Standard
+                CLOCK_TYPE_DOUBLES -> ClockType.Doubles
+                else -> ClockType.Trebles
             }
 
             val config = RoundTheClockConfig(clockType, true)

@@ -5,9 +5,9 @@ import dartzee.core.util.jsonMapper
 
 enum class ClockType
 {
-    STANDARD,
-    DOUBLE,
-    TREBLE
+    Standard,
+    Doubles,
+    Trebles
 }
 
 data class RoundTheClockConfig(val clockType: ClockType, val inOrder: Boolean)
