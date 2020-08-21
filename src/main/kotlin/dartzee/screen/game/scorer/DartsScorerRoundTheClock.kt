@@ -19,14 +19,6 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable
     var currentClockTarget = 1
         private set
 
-    init
-    {
-        for (i in 0..BONUS_COLUMN)
-        {
-            tableScores.getColumn(i).cellRenderer = DartRenderer()
-        }
-    }
-
     override fun confirmCurrentRound()
     {
         clockTarget = currentClockTarget
@@ -78,7 +70,13 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable
         return getNumberOfColumns() //They're all for containing darts
     }
 
-    override fun initImpl() {}
+    override fun initImpl()
+    {
+        for (i in 0..BONUS_COLUMN)
+        {
+            tableScores.getColumn(i).cellRenderer = DartRenderer()
+        }
+    }
 
     fun incrementCurrentClockTarget()
     {

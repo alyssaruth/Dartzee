@@ -191,7 +191,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         return activeScorer.currentClockTarget > 20
     }
 
-    override fun factoryScorer() = DartsScorerRoundTheClock(this, config.clockType)
+    override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams).clockType)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelRoundTheClock(gameParams)
 
