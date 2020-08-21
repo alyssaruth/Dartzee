@@ -149,13 +149,7 @@ object DartsDatabaseUtil
     {
         val games = GameEntity().retrieveEntities("GameType = 'ROUND_THE_CLOCK'")
         games.forEach {
-            val clockType = when (it.gameParams)
-            {
-                CLOCK_TYPE_STANDARD -> ClockType.Standard
-                CLOCK_TYPE_DOUBLES -> ClockType.Doubles
-                else -> ClockType.Trebles
-            }
-
+            val clockType = ClockType.valueOf(it.gameParams)
             val config = RoundTheClockConfig(clockType, true)
             it.gameParams = config.toJson()
             it.saveToDatabase()
