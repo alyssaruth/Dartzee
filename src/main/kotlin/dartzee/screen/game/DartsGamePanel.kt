@@ -186,7 +186,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             val participant = ParticipantEntity.factoryAndSave(gameId, player, ix)
             addParticipant(participant)
 
-            val scorer = assignScorer(player, gameEntity.gameParams)
+            val scorer = assignScorer(player)
             addState(ix, factoryState(participant, scorer))
         }
 
@@ -317,7 +317,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             val pt = participants[i]
             addParticipant(pt)
 
-            val scorer = assignScorer(pt.getPlayer(), gameEntity.gameParams)
+            val scorer = assignScorer(pt.getPlayer())
             addState(i, factoryState(pt, scorer))
         }
 

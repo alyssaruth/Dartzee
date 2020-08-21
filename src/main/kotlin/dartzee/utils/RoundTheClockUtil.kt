@@ -2,12 +2,12 @@ package dartzee.utils
 
 import dartzee.`object`.Dart
 import dartzee.core.util.getLongestStreak
-import dartzee.db.CLOCK_TYPE_STANDARD
+import dartzee.game.ClockType
 
-fun getLongestStreak(allDarts: List<Dart>, gameParams: String = CLOCK_TYPE_STANDARD): List<Dart>
+fun getLongestStreak(allDarts: List<Dart>, clockType: ClockType = ClockType.Standard): List<Dart>
 {
     val groupedByPt = allDarts.groupBy { it.participantId }.values
 
-    val streaks = groupedByPt.map { darts -> darts.getLongestStreak { it.hitClockTarget(gameParams) } }
+    val streaks = groupedByPt.map { darts -> darts.getLongestStreak { it.hitClockTarget(clockType) } }
     return streaks.maxBy { it.size } ?: listOf()
 }

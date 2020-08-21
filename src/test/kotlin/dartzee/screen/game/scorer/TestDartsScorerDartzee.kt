@@ -56,7 +56,7 @@ class TestDartsScorerDartzee: AbstractTest()
     fun `Should cope with partial rounds`()
     {
         val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer(), "")
+        scorer.init(insertPlayer())
 
         scorer.addDart(Dart(20, 1))
         scorer.addDart(Dart(20, 2))
@@ -81,7 +81,7 @@ class TestDartsScorerDartzee: AbstractTest()
     fun `Should correctly report whether a row is complete`()
     {
         val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer(), "")
+        scorer.init(insertPlayer())
 
         scorer.addDart(Dart(20, 1))
         scorer.addDart(Dart(20, 2))
@@ -96,7 +96,7 @@ class TestDartsScorerDartzee: AbstractTest()
     fun `Should update the result renderer based on the current maximum score`()
     {
         val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer(), "")
+        scorer.init(insertPlayer())
 
         scorer.addDart(Dart(20, 1))
         scorer.addDart(Dart(20, 2))
@@ -121,7 +121,7 @@ class TestDartsScorerDartzee: AbstractTest()
     fun `Table should have the right columns and renderers`()
     {
         val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer(), "")
+        scorer.init(insertPlayer())
 
         scorer.getNumberOfColumns() shouldBe 5
 

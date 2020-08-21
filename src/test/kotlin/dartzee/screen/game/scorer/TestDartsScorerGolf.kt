@@ -7,7 +7,6 @@ import org.junit.Test
 
 class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
 {
-    override fun getValidGameParams() = "18"
     override fun factoryScorerImpl() = DartsScorerGolf()
     override fun addRound(scorer: DartsScorerGolf, roundNumber: Int)
     {

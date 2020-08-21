@@ -3,9 +3,7 @@ package dartzee.achievements.rtc
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.achievements.AbstractAchievement
 import dartzee.db.AchievementEntity
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_STANDARD
-import dartzee.db.CLOCK_TYPE_TREBLES
+import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings.logger
@@ -42,9 +40,9 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
         sb.append(" AND drt.Ordinal = 4")
         sb.append(" AND drt.Score = drt.StartingScore")
         sb.append(" AND (")
-        sb.append("        (g.GameParams = '$CLOCK_TYPE_STANDARD' AND drt.Multiplier > 0)")
-        sb.append("     OR (g.GameParams = '$CLOCK_TYPE_DOUBLES' AND drt.Multiplier = 2)")
-        sb.append("     OR (g.GameParams = '$CLOCK_TYPE_TREBLES' AND drt.Multiplier = 3)")
+        sb.append("        (g.GameParams LIKE '%${ClockType.Standard}%' AND drt.Multiplier > 0)")
+        sb.append("     OR (g.GameParams = '%${ClockType.Doubles}%' AND drt.Multiplier = 2)")
+        sb.append("     OR (g.GameParams = '%${ClockType.Trebles}%' AND drt.Multiplier = 3)")
         sb.append(" )")
 
         if (!playerIds.isEmpty())

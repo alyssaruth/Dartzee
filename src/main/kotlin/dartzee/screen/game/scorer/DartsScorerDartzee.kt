@@ -27,7 +27,7 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
 
     override fun getNumberOfColumns() = 5
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl()
     {
         for (i in 0 until RULE_COLUMN)
         {

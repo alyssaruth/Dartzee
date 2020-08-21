@@ -5,9 +5,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.borrowTestDartboard
 import dartzee.core.helper.verifyNotCalled
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_STANDARD
-import dartzee.db.CLOCK_TYPE_TREBLES
+import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.makeDartsModel
@@ -399,9 +397,9 @@ class TestDartsAiModel: AbstractTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         dartboard.addDartboardListener(listener)
 
-        model.throwClockDart(1, CLOCK_TYPE_STANDARD, dartboard)
-        model.throwClockDart(13, CLOCK_TYPE_DOUBLES, dartboard)
-        model.throwClockDart(11, CLOCK_TYPE_TREBLES, dartboard)
+        model.throwClockDart(1, ClockType.Standard, dartboard)
+        model.throwClockDart(13, ClockType.Doubles, dartboard)
+        model.throwClockDart(11, ClockType.Trebles, dartboard)
 
         verifySequence { listener.dartThrown(Dart(1, 1)); listener.dartThrown(Dart(13, 2)); listener.dartThrown(Dart(11, 3)) }
     }

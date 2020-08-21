@@ -46,11 +46,11 @@ class TestPanelWithScorers: AbstractTest()
         val scrn = FakeDartsScreen()
         scrn.initScorers(2)
 
-        scrn.assignScorer(insertPlayer(), "")
-        scrn.assignScorer(insertPlayer(), "")
+        scrn.assignScorer(insertPlayer())
+        scrn.assignScorer(insertPlayer())
 
         val e = shouldThrowExactly<Exception> {
-            scrn.assignScorer(insertPlayer(name = "Richard"), "")
+            scrn.assignScorer(insertPlayer(name = "Richard"))
         }
 
         e.message shouldBe "Unable to assign scorer for player Richard"
@@ -62,9 +62,9 @@ class TestPanelWithScorers: AbstractTest()
         val scrn = FakeDartsScreen()
         scrn.initScorers(3)
 
-        scrn.assignScorer(insertPlayer(name = "Player One"), "")
-        scrn.assignScorer(insertPlayer(name = "Player Two"), "")
-        scrn.assignScorer(insertPlayer(name = "Player Three"), "")
+        scrn.assignScorer(insertPlayer(name = "Player One"))
+        scrn.assignScorer(insertPlayer(name = "Player Two"))
+        scrn.assignScorer(insertPlayer(name = "Player Three"))
 
         scrn.getScorer(0).lblName.text shouldBe "Player One"
         scrn.getScorer(1).lblName.text shouldBe "Player Two"
@@ -75,7 +75,7 @@ class TestPanelWithScorers: AbstractTest()
     inner class FakeScorer: AbstractScorer()
     {
         override fun getNumberOfColumns() = 4
-        override fun initImpl(gameParams: String) {}
+        override fun initImpl() {}
     }
 
     inner class FakeDartsScreen: PanelWithScorers<FakeScorer>()

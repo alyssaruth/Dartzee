@@ -14,9 +14,9 @@ import javax.swing.SwingConstants
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
 
-class DartsScorerX01(parent: GamePanelPausable<out DartsScorerPausable>) : DartsScorerPausable(parent)
+class DartsScorerX01(parent: GamePanelPausable<out DartsScorerPausable>, gameParams: String) : DartsScorerPausable(parent)
 {
-    private val lblStartingScore = JLabel("X01")
+    private val lblStartingScore = JLabel(gameParams)
 
     fun getLatestScoreRemaining(): Int
     {
@@ -46,11 +46,8 @@ class DartsScorerX01(parent: GamePanelPausable<out DartsScorerPausable>) : Darts
     }
 
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl()
     {
-        val startingScore = Integer.parseInt(gameParams)
-        lblStartingScore.text = "$startingScore"
-
         tableScores.getColumn(SCORE_COLUMN).cellRenderer = ScorerRenderer()
         for (i in 0 until SCORE_COLUMN)
         {

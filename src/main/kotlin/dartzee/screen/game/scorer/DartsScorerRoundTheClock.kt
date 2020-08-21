@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
 import dartzee.core.bean.AbstractTableRenderer
+import dartzee.game.ClockType
 import dartzee.screen.game.GamePanelPausable
 import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
@@ -11,14 +12,20 @@ import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants
 
-class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable>) : DartsScorerPausable(parent)
+class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable>, private val clockType: ClockType) : DartsScorerPausable(parent)
 {
-    private var clockType = ""
-
     //Always start at 1. Bit of an abuse to stick this here, it just avoids having another hmPlayerNumber->X.
     private var clockTarget = 1
     var currentClockTarget = 1
         private set
+
+    init
+    {
+        for (i in 0..BONUS_COLUMN)
+        {
+            tableScores.getColumn(i).cellRenderer = DartRenderer()
+        }
+    }
 
     override fun confirmCurrentRound()
     {
@@ -71,15 +78,7 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable
         return getNumberOfColumns() //They're all for containing darts
     }
 
-    override fun initImpl(gameParams: String)
-    {
-        this.clockType = gameParams
-
-        for (i in 0..BONUS_COLUMN)
-        {
-            tableScores.getColumn(i).cellRenderer = DartRenderer()
-        }
-    }
+    override fun initImpl() {}
 
     fun incrementCurrentClockTarget()
     {

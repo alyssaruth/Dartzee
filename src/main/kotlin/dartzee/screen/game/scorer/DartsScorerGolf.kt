@@ -34,7 +34,7 @@ class DartsScorerGolf : DartsScorer()
         return 5 + if (showGameId) 1 else 0
     }
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl()
     {
         for (i in 0..SCORE_COLUMN)
         {

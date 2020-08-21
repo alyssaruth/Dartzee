@@ -7,7 +7,6 @@ import org.junit.Test
 
 abstract class AbstractScorerTest<S: DartsScorer> : AbstractTest()
 {
-    abstract fun getValidGameParams(): String
     abstract fun factoryScorerImpl(): S
     abstract fun addRound(scorer: S, roundNumber: Int)
 
@@ -40,7 +39,7 @@ abstract class AbstractScorerTest<S: DartsScorer> : AbstractTest()
     protected fun factoryScorer(): S
     {
         val s = factoryScorerImpl()
-        s.init(null, getValidGameParams())
+        s.init(null)
         return s
     }
 }

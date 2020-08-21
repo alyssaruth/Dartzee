@@ -67,9 +67,9 @@ abstract class AbstractScorer : JPanel()
     }
 
     abstract fun getNumberOfColumns(): Int
-    abstract fun initImpl(gameParams: String)
+    abstract fun initImpl()
 
-    fun init(player: PlayerEntity?, gameParams: String)
+    fun init(player: PlayerEntity?)
     {
         lblName.isVisible = player != null
         lblAvatar.isVisible = player != null
@@ -96,7 +96,7 @@ abstract class AbstractScorer : JPanel()
         }
         tableScores.model = model
 
-        initImpl(gameParams)
+        initImpl()
     }
 
     fun addRow(row: Array<*>)

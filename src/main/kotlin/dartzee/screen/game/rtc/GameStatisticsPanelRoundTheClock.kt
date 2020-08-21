@@ -3,13 +3,16 @@ package dartzee.screen.game.rtc
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
+import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 import dartzee.utils.getLongestStreak
 
-open class GameStatisticsPanelRoundTheClock(private val gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>()
+open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>()
 {
+    private val config = RoundTheClockConfig.fromJson(gameParams)
+
     override fun getRankedRowsHighestWins() = listOf("Best Streak", "Brucey chances", "Bruceys executed")
     override fun getRankedRowsLowestWins() = listOf("Most darts", "Avg darts", "Fewest darts")
     override fun getHistogramRows() = listOf("1", "2 - 3", "4 - 6", "7 - 10", "11 - 15", "16 - 20", "21+")
@@ -38,7 +41,7 @@ open class GameStatisticsPanelRoundTheClock(private val gameParams: String): Abs
 
     private fun getLongestStreak() = prepareRow("Best Streak") { playerName ->
         val darts = getFlattenedDarts(playerName)
-        getLongestStreak(darts, gameParams).size
+        getLongestStreak(darts, config.clockType).size
     }
 
     private fun getAverageDartsForAnyRound(darts: List<Int>) =
@@ -46,19 +49,19 @@ open class GameStatisticsPanelRoundTheClock(private val gameParams: String): Abs
 
     private fun getBruceys(desc: String, enforceSuccess: Boolean) = prepareRow(desc) { playerName ->
         val rounds = hmPlayerToDarts[playerName] ?: listOf()
-        rounds.filter { it.size == 4 }.count { it.last().hitClockTarget(gameParams) || !enforceSuccess }
+        rounds.filter { it.size == 4 }.count { it.last().hitClockTarget(config.clockType) || !enforceSuccess }
     }
 
     private fun getDartsPerNumber(min: Int, max: Int, desc: String = "$min - $max") = prepareRow(desc) { playerName ->
         val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-        dartsGrouped.filter { it.last().hitClockTarget(gameParams) }.count { it.size in min..max }
+        dartsGrouped.filter { it.last().hitClockTarget(config.clockType) }.count { it.size in min..max }
     }
 
     private fun getDartsPerNumber(desc: String,
                                   includeUnfinished: Boolean,
                                   fn: (stream: List<Int>) -> Any?) = prepareRow(desc) { playerName ->
         val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-        val sizes = dartsGrouped.filter { it.last().hitClockTarget(gameParams) || includeUnfinished }.map { it.size }
+        val sizes = dartsGrouped.filter { it.last().hitClockTarget(config.clockType) || includeUnfinished }.map { it.size }
         fn(sizes)
     }
 
