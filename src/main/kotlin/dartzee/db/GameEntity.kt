@@ -6,10 +6,6 @@ import dartzee.game.GameType
 import dartzee.utils.DatabaseUtil
 import java.util.*
 
-const val CLOCK_TYPE_STANDARD = "Standard"
-const val CLOCK_TYPE_DOUBLES = "Doubles"
-const val CLOCK_TYPE_TREBLES = "Trebles"
-
 const val MAX_PLAYERS = 6
 
 /**

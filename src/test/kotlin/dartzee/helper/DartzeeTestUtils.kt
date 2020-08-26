@@ -103,7 +103,7 @@ fun makeDartzeePlayerState(name: String = "Bob",
 fun makeDartzeeScorer(firstRound: List<Dart> = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1))): DartsScorerDartzee
 {
     val scorer = DartsScorerDartzee(mockk(relaxed = true))
-    scorer.init(insertPlayer(), "")
+    scorer.init(insertPlayer())
     firstRound.forEach { scorer.addDart(it) }
     scorer.setResult(factoryHighScoreResult(firstRound))
 

@@ -45,7 +45,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<*>>(val match: DartsMat
 
         for (player in playersInStartingOrder)
         {
-            val scorer = assignScorer(player, "")
+            val scorer = assignScorer(player)
             hmPlayerIdToScorer[player.rowId] = scorer
             scorer.setMatch(match)
         }

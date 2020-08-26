@@ -143,7 +143,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
     private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel)
     {
         val scorer = DartsScorerGolf()
-        scorer.init(null, game.gameParams)
+        scorer.init(null)
         if (mode == MODE_BACK_9)
         {
             scorer.fudgeFactor = 9

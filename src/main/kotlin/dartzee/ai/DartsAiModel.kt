@@ -5,6 +5,7 @@ import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.jsonMapper
+import dartzee.game.ClockType
 import dartzee.logging.CODE_AI_ERROR
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
@@ -104,7 +105,7 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * Clock
      */
-    fun throwClockDart(clockTarget: Int, clockType: String, dartboard: Dartboard)
+    fun throwClockDart(clockTarget: Int, clockType: ClockType, dartboard: Dartboard)
     {
         val segmentType = getSegmentTypeForClockType(clockType)
 

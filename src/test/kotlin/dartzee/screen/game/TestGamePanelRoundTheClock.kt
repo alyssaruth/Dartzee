@@ -3,8 +3,13 @@ package dartzee.screen.game
 import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.core.obj.HashMapList
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
+import dartzee.db.TestAchievementEntity
+import dartzee.game.ClockType
 import dartzee.game.GameType
+import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.DefaultPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -115,13 +120,13 @@ class TestGamePanelRoundTheClock: AbstractTest()
     }
 
     class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, CLOCK_TYPE_STANDARD), 1)
+        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, RoundTheClockConfig(ClockType.Standard, true).toJson()), 1)
     {
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = DartsScorerRoundTheClock(this)
-            scorer.init(player, CLOCK_TYPE_STANDARD)
+            val scorer = DartsScorerRoundTheClock(this, ClockType.Standard)
+            scorer.init(player)
 
             activeScorer = scorer
             currentPlayerNumber = 0

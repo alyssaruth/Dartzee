@@ -1,7 +1,6 @@
 package dartzee.`object`
 
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_STANDARD
+import dartzee.game.ClockType
 
 enum class SegmentType
 {
@@ -46,13 +45,13 @@ enum class SegmentType
     }
 }
 
-fun getSegmentTypeForClockType(clockType: String): SegmentType
+fun getSegmentTypeForClockType(clockType: ClockType): SegmentType
 {
     return when (clockType)
     {
-        CLOCK_TYPE_STANDARD -> SegmentType.OUTER_SINGLE
-        CLOCK_TYPE_DOUBLES -> SegmentType.DOUBLE
-        else -> SegmentType.TREBLE
+        ClockType.Standard -> SegmentType.OUTER_SINGLE
+        ClockType.Doubles -> SegmentType.DOUBLE
+        ClockType.Trebles -> SegmentType.TREBLE
     }
 }
 

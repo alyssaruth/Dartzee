@@ -1,7 +1,7 @@
 package dartzee.utils
 
 import dartzee.`object`.Dart
-import dartzee.db.CLOCK_TYPE_DOUBLES
+import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.factoryClockHit
 import dartzee.helper.randomGuid
@@ -21,8 +21,8 @@ class TestRoundTheClockUtil: AbstractTest()
     @Test
     fun `getLongestStreak should take into account the game params`()
     {
-        getLongestStreak(listOf(factoryClockHit(1, 1)), CLOCK_TYPE_DOUBLES) shouldHaveSize 0
-        getLongestStreak(listOf(factoryClockHit(1, 2)), CLOCK_TYPE_DOUBLES) shouldHaveSize 1
+        getLongestStreak(listOf(factoryClockHit(1, 1)), ClockType.Doubles) shouldHaveSize 0
+        getLongestStreak(listOf(factoryClockHit(1, 2)), ClockType.Doubles) shouldHaveSize 1
     }
 
     @Test

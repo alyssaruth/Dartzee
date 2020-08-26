@@ -6,11 +6,12 @@ import dartzee.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
 import dartzee.dartzee.DartzeeCalculator
-import dartzee.db.CLOCK_TYPE_STANDARD
 import dartzee.db.DartEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
+import dartzee.game.ClockType
 import dartzee.game.GameType
+import dartzee.game.RoundTheClockConfig
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -118,7 +119,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     @Test
     fun `E2E - RTC`()
     {
-        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = CLOCK_TYPE_STANDARD)
+        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
 
         val model = beastDartsModel()
         val player = insertPlayer(model = model)

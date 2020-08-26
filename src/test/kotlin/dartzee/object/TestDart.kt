@@ -1,8 +1,6 @@
 package dartzee.`object`
 
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_STANDARD
-import dartzee.db.CLOCK_TYPE_TREBLES
+import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
 import io.kotlintest.matchers.types.shouldBeNull
@@ -115,33 +113,33 @@ class TestDart: AbstractTest()
     @Test
     fun `hit clock target - single`()
     {
-        makeDart(1, 0, startingScore = 1).hitClockTarget(CLOCK_TYPE_STANDARD) shouldBe false
-        makeDart(1, 1, startingScore = 1).hitClockTarget(CLOCK_TYPE_STANDARD) shouldBe true
-        makeDart(1, 2, startingScore = 1).hitClockTarget(CLOCK_TYPE_STANDARD) shouldBe true
-        makeDart(1, 3, startingScore = 1).hitClockTarget(CLOCK_TYPE_STANDARD) shouldBe true
+        makeDart(1, 0, startingScore = 1).hitClockTarget(ClockType.Standard) shouldBe false
+        makeDart(1, 1, startingScore = 1).hitClockTarget(ClockType.Standard) shouldBe true
+        makeDart(1, 2, startingScore = 1).hitClockTarget(ClockType.Standard) shouldBe true
+        makeDart(1, 3, startingScore = 1).hitClockTarget(ClockType.Standard) shouldBe true
 
-        makeDart(1, 1, startingScore = 2).hitClockTarget(CLOCK_TYPE_STANDARD) shouldBe false
+        makeDart(1, 1, startingScore = 2).hitClockTarget(ClockType.Standard) shouldBe false
     }
 
     @Test
     fun `hit clock target - double`()
     {
-        makeDart(1, 0, startingScore = 1).hitClockTarget(CLOCK_TYPE_DOUBLES) shouldBe false
-        makeDart(1, 1, startingScore = 1).hitClockTarget(CLOCK_TYPE_DOUBLES) shouldBe false
-        makeDart(1, 2, startingScore = 1).hitClockTarget(CLOCK_TYPE_DOUBLES) shouldBe true
-        makeDart(1, 3, startingScore = 1).hitClockTarget(CLOCK_TYPE_DOUBLES) shouldBe false
+        makeDart(1, 0, startingScore = 1).hitClockTarget(ClockType.Doubles) shouldBe false
+        makeDart(1, 1, startingScore = 1).hitClockTarget(ClockType.Doubles) shouldBe false
+        makeDart(1, 2, startingScore = 1).hitClockTarget(ClockType.Doubles) shouldBe true
+        makeDart(1, 3, startingScore = 1).hitClockTarget(ClockType.Doubles) shouldBe false
 
-        makeDart(1, 2, startingScore = 2).hitClockTarget(CLOCK_TYPE_DOUBLES) shouldBe false
+        makeDart(1, 2, startingScore = 2).hitClockTarget(ClockType.Doubles) shouldBe false
     }
 
     @Test
     fun `hit clock target - treble`()
     {
-        makeDart(1, 0, startingScore = 1).hitClockTarget(CLOCK_TYPE_TREBLES) shouldBe false
-        makeDart(1, 1, startingScore = 1).hitClockTarget(CLOCK_TYPE_TREBLES) shouldBe false
-        makeDart(1, 2, startingScore = 1).hitClockTarget(CLOCK_TYPE_TREBLES) shouldBe false
-        makeDart(1, 3, startingScore = 1).hitClockTarget(CLOCK_TYPE_TREBLES) shouldBe true
+        makeDart(1, 0, startingScore = 1).hitClockTarget(ClockType.Trebles) shouldBe false
+        makeDart(1, 1, startingScore = 1).hitClockTarget(ClockType.Trebles) shouldBe false
+        makeDart(1, 2, startingScore = 1).hitClockTarget(ClockType.Trebles) shouldBe false
+        makeDart(1, 3, startingScore = 1).hitClockTarget(ClockType.Trebles) shouldBe true
 
-        makeDart(1, 3, startingScore = 2).hitClockTarget(CLOCK_TYPE_TREBLES) shouldBe false
+        makeDart(1, 3, startingScore = 2).hitClockTarget(ClockType.Trebles) shouldBe false
     }
 }

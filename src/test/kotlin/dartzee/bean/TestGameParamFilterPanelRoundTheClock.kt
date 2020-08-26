@@ -1,9 +1,12 @@
 package dartzee.bean
 
+import com.github.alexburlton.swingtest.clickChild
+import com.github.alexburlton.swingtest.getChild
+import com.github.alexburlton.swingtest.shouldBeDisabled
+import com.github.alexburlton.swingtest.shouldBeEnabled
 import dartzee.core.helper.verifyNotCalled
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_STANDARD
-import dartzee.db.CLOCK_TYPE_TREBLES
+import dartzee.game.ClockType
+import dartzee.game.RoundTheClockConfig
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
@@ -11,33 +14,37 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import java.awt.event.ActionListener
+import javax.swing.JCheckBox
+import javax.swing.JRadioButton
 
 class TestGameParamFilterPanelRoundTheClock: AbstractTest()
 {
     @Test
-    fun `Should select Standard by default`()
+    fun `Should select the correct defaults`()
     {
         val panel = GameParamFilterPanelRoundTheClock()
 
-        panel.rdbtnStandard.isSelected shouldBe true
+        panel.getChild<JRadioButton>("Standard").isSelected shouldBe true
+        panel.getChild<JCheckBox>("In order").isSelected shouldBe true
     }
 
     @Test
-    fun `Should return game params based on the radio selection`()
+    fun `Should return game params based on the radio & checkbox selection`()
     {
         val panel = GameParamFilterPanelRoundTheClock()
 
-        panel.rdbtnStandard.doClick()
-        panel.getGameParams() shouldBe CLOCK_TYPE_STANDARD
-        panel.getFilterDesc() shouldBe "Standard games"
+        panel.clickChild<JRadioButton>("Standard")
+        panel.getConfig() shouldBe RoundTheClockConfig(ClockType.Standard, true)
+        panel.getFilterDesc() shouldBe "Standard games (in order)"
 
-        panel.rdbtnDoubles.doClick()
-        panel.getGameParams() shouldBe CLOCK_TYPE_DOUBLES
-        panel.getFilterDesc() shouldBe "Doubles games"
+        panel.clickChild<JRadioButton>("Doubles")
+        panel.clickChild<JCheckBox>("In order")
+        panel.getConfig() shouldBe RoundTheClockConfig(ClockType.Doubles, false)
+        panel.getFilterDesc() shouldBe "Doubles games (any order)"
 
-        panel.rdbtnTrebles.doClick()
-        panel.getGameParams() shouldBe CLOCK_TYPE_TREBLES
-        panel.getFilterDesc() shouldBe "Trebles games"
+        panel.clickChild<JRadioButton>("Trebles")
+        panel.getConfig() shouldBe RoundTheClockConfig(ClockType.Trebles, false)
+        panel.getFilterDesc() shouldBe "Trebles games (any order)"
     }
 
     @Test
@@ -45,30 +52,38 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
     {
         val panel = GameParamFilterPanelRoundTheClock()
 
-        panel.setGameParams(CLOCK_TYPE_DOUBLES)
-        panel.rdbtnDoubles.isSelected shouldBe true
+        val doublesInOrder = RoundTheClockConfig(ClockType.Doubles, true)
+        panel.setGameParams(doublesInOrder.toJson())
+        panel.getChild<JRadioButton>("Doubles").isSelected shouldBe true
+        panel.getChild<JCheckBox>("In order").isSelected shouldBe true
 
-        panel.setGameParams(CLOCK_TYPE_TREBLES)
-        panel.rdbtnTrebles.isSelected shouldBe true
+        val treblesAnyOrder = RoundTheClockConfig(ClockType.Trebles, false)
+        panel.setGameParams(treblesAnyOrder.toJson())
+        panel.getChild<JRadioButton>("Trebles").isSelected shouldBe true
+        panel.getChild<JCheckBox>("In order").isSelected shouldBe false
 
-        panel.setGameParams(CLOCK_TYPE_STANDARD)
-        panel.rdbtnStandard.isSelected shouldBe true
+        val standardInOrder = RoundTheClockConfig(ClockType.Standard, true)
+        panel.setGameParams(standardInOrder.toJson())
+        panel.getChild<JRadioButton>("Standard").isSelected shouldBe true
+        panel.getChild<JCheckBox>("In order").isSelected shouldBe true
     }
 
     @Test
-    fun `Should enable and disable its radio buttons correctly`()
+    fun `Should enable and disable its children correctly`()
     {
         val panel = GameParamFilterPanelRoundTheClock()
 
         panel.enableChildren(false)
-        panel.rdbtnStandard.isEnabled shouldBe false
-        panel.rdbtnDoubles.isEnabled shouldBe false
-        panel.rdbtnTrebles.isEnabled shouldBe false
+        panel.getChild<JRadioButton>("Standard").shouldBeDisabled()
+        panel.getChild<JRadioButton>("Doubles").shouldBeDisabled()
+        panel.getChild<JRadioButton>("Trebles").shouldBeDisabled()
+        panel.getChild<JCheckBox>("In order").shouldBeDisabled()
 
         panel.enableChildren(true)
-        panel.rdbtnStandard.isEnabled shouldBe true
-        panel.rdbtnDoubles.isEnabled shouldBe true
-        panel.rdbtnTrebles.isEnabled shouldBe true
+        panel.getChild<JRadioButton>("Standard").shouldBeEnabled()
+        panel.getChild<JRadioButton>("Doubles").shouldBeEnabled()
+        panel.getChild<JRadioButton>("Trebles").shouldBeEnabled()
+        panel.getChild<JCheckBox>("In order").shouldBeEnabled()
     }
 
     @Test
@@ -79,15 +94,37 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
         val listener = mockk<ActionListener>(relaxed = true)
 
         panel.addActionListener(listener)
-        panel.rdbtnDoubles.doClick()
+        panel.clickChild<JRadioButton>("Doubles")
 
         verify { listener.actionPerformed(any()) }
 
         clearAllMocks()
 
         panel.removeActionListener(listener)
-        panel.rdbtnTrebles.doClick()
+        panel.clickChild<JRadioButton>("Trebles")
 
         verifyNotCalled { listener.actionPerformed(any()) }
     }
+
+    @Test
+    fun `Should add and remove action listeners on the checkbox`()
+    {
+        val panel = GameParamFilterPanelRoundTheClock()
+
+        val listener = mockk<ActionListener>(relaxed = true)
+
+        panel.addActionListener(listener)
+        panel.clickChild<JCheckBox>("In order")
+
+        verify { listener.actionPerformed(any()) }
+
+        clearAllMocks()
+
+        panel.removeActionListener(listener)
+        panel.clickChild<JCheckBox>("In order")
+
+        verifyNotCalled { listener.actionPerformed(any()) }
+    }
+
+    private fun GameParamFilterPanelRoundTheClock.getConfig() = RoundTheClockConfig.fromJson(getGameParams())
 }

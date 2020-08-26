@@ -7,6 +7,8 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
 import dartzee.db.VersionEntity.Companion.insertVersion
+import dartzee.game.ClockType
+import dartzee.game.RoundTheClockConfig
 import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.logger
@@ -110,6 +112,7 @@ object DartsDatabaseUtil
         else if (versionNumber == 14)
         {
             updatePlayerStrategiesToJson()
+            updateRoundTheClockParams()
         }
 
         version.version = versionNumber + 1
@@ -141,6 +144,18 @@ object DartsDatabaseUtil
             it.saveToDatabase()
         }
     }
+
+    private fun updateRoundTheClockParams()
+    {
+        val games = GameEntity().retrieveEntities("GameType = 'ROUND_THE_CLOCK'")
+        games.forEach {
+            val clockType = ClockType.valueOf(it.gameParams)
+            val config = RoundTheClockConfig(clockType, true)
+            it.gameParams = config.toJson()
+            it.saveToDatabase()
+        }
+    }
+
 
     private fun updatePlayerStrategies()
     {

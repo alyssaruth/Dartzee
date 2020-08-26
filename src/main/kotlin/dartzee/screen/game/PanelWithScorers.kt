@@ -59,10 +59,10 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         westScorers.forEach { panelWest.add(it, "growy") }
     }
 
-    fun assignScorer(player: PlayerEntity, gameParams: String): S
+    fun assignScorer(player: PlayerEntity): S
     {
         val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player")
-        scorer.init(player, gameParams)
+        scorer.init(player)
         return scorer
     }
 }

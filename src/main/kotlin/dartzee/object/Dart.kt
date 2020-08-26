@@ -2,8 +2,7 @@ package dartzee.`object`
 
 import dartzee.ai.IDart
 import dartzee.core.util.DateStatics
-import dartzee.db.CLOCK_TYPE_DOUBLES
-import dartzee.db.CLOCK_TYPE_TREBLES
+import dartzee.game.ClockType
 import java.awt.Point
 import java.sql.Timestamp
 
@@ -90,15 +89,15 @@ open class Dart(
 
     override fun toString() = format()
 
-    fun hitClockTarget(clockType: String): Boolean
+    fun hitClockTarget(clockType: ClockType): Boolean
     {
         if (score != startingScore) return false
 
         return when (clockType)
         {
-            CLOCK_TYPE_DOUBLES -> isDouble()
-            CLOCK_TYPE_TREBLES -> isTreble()
-            else -> multiplier > 0
+            ClockType.Doubles -> isDouble()
+            ClockType.Trebles -> isTreble()
+            ClockType.Standard -> multiplier > 0
         }
     }
 }

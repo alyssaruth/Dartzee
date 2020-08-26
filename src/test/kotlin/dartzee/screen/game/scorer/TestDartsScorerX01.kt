@@ -11,8 +11,7 @@ import org.junit.Test
 
 class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
 {
-    override fun getValidGameParams() = "501"
-    override fun factoryScorerImpl() = DartsScorerX01(mockk(relaxed = true))
+    override fun factoryScorerImpl() = DartsScorerX01(mockk(relaxed = true), "501")
     override fun addRound(scorer: DartsScorerX01, roundNumber: Int)
     {
         scorer.addDart(Dart(20, 1))

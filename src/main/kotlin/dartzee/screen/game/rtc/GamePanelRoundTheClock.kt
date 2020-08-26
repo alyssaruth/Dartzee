@@ -10,19 +10,20 @@ import dartzee.core.util.doBadLuck
 import dartzee.core.util.doForsyth
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.game.RoundTheClockConfig
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
 open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game, totalPlayers)
 {
-    private val clockType = game.gameParams
+    private val config = RoundTheClockConfig.fromJson(game.gameParams)
     val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
 
     override fun doAiTurn(model: DartsAiModel)
     {
         val currentTarget = activeScorer.currentClockTarget
-        model.throwClockDart(currentTarget, clockType, dartboard)
+        model.throwClockDart(currentTarget, config.clockType, dartboard)
     }
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
@@ -51,7 +52,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         val dartsLatestFirst = hmRoundToDarts.getFlattenedValuesSortedByKey().reversed()
         for (drt in dartsLatestFirst)
         {
-            if (!drt.hitClockTarget(clockType)) { break }
+            if (!drt.hitClockTarget(config.clockType)) { break }
 
             currentStreak++
         }
@@ -68,7 +69,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             dart.startingScore = clockTarget
             scorer.addDart(dart)
 
-            if (dart.hitClockTarget(clockType))
+            if (dart.hitClockTarget(config.clockType))
             {
                 scorer.incrementCurrentClockTarget()
                 clockTarget = scorer.currentClockTarget
@@ -93,7 +94,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         val currentClockTarget = activeScorer.currentClockTarget
         dart.startingScore = currentClockTarget
 
-        if (dart.hitClockTarget(clockType))
+        if (dart.hitClockTarget(config.clockType))
         {
             activeScorer.incrementCurrentClockTarget()
 
@@ -133,7 +134,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         var allHits = true
         for (dart in dartsThrown)
         {
-            allHits = allHits and dart.hitClockTarget(clockType)
+            allHits = allHits and dart.hitClockTarget(config.clockType)
         }
 
         return dartsThrown.size == 3 && !allHits
@@ -147,8 +148,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun saveDartsAndProceed()
     {
-        if (dartsThrown.size == 4
-                && dartsThrown.last().hitClockTarget(clockType))
+        if (dartsThrown.size == 4 && dartsThrown.last().hitClockTarget(config.clockType))
         {
             AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId())
         }
@@ -162,7 +162,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     {
         var currentStreak = hmPlayerNumberToCurrentStreak.getCount(currentPlayerNumber)
         dartsThrown.forEach {
-            if (it.hitClockTarget(clockType))
+            if (it.hitClockTarget(config.clockType))
             {
                 currentStreak++
             }
@@ -191,7 +191,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         return activeScorer.currentClockTarget > 20
     }
 
-    override fun factoryScorer() = DartsScorerRoundTheClock(this)
+    override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams).clockType)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelRoundTheClock(gameParams)
 

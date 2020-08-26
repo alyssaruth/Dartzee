@@ -2,19 +2,11 @@ package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
-import dartzee.core.bean.AbstractTableRenderer
+import dartzee.game.ClockType
 import dartzee.screen.game.GamePanelPausable
-import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
-import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
-import dartzee.utils.PreferenceUtil
-import java.awt.Color
-import java.awt.Font
-import javax.swing.SwingConstants
 
-class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable>) : DartsScorerPausable(parent)
+class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable>, private val clockType: ClockType) : DartsScorerPausable(parent)
 {
-    private var clockType = ""
-
     //Always start at 1. Bit of an abuse to stick this here, it just avoids having another hmPlayerNumber->X.
     private var clockTarget = 1
     var currentClockTarget = 1
@@ -71,13 +63,11 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable
         return getNumberOfColumns() //They're all for containing darts
     }
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl()
     {
-        this.clockType = gameParams
-
         for (i in 0..BONUS_COLUMN)
         {
-            tableScores.getColumn(i).cellRenderer = DartRenderer()
+            tableScores.getColumn(i).cellRenderer = RoundTheClockDartRenderer(clockType)
         }
     }
 
@@ -90,51 +80,6 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable
     {
         val row = model.rowCount - 1
         model.setValueAt(DartNotThrown(), row, BONUS_COLUMN)
-    }
-
-    private inner class DartRenderer : AbstractTableRenderer<Dart>()
-    {
-        override fun setFontsAndAlignment()
-        {
-            horizontalAlignment = SwingConstants.CENTER
-            font = Font("Trebuchet MS", Font.BOLD, 15)
-        }
-
-        override fun setCellColours(typedValue: Dart?, isSelected: Boolean)
-        {
-            if (typedValue == null)
-            {
-                foreground = null
-                background = null
-            }
-            else if (typedValue is DartNotThrown)
-            {
-                foreground = Color.BLACK
-                background = Color.BLACK
-            }
-            else
-            {
-                val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
-                val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
-
-                var hue = 0f //Red
-                if (typedValue.hitClockTarget(clockType))
-                {
-                    hue = 0.3.toFloat() //Green
-                }
-
-                foreground = Color.getHSBColor(hue, 1f, fgBrightness.toFloat())
-                background = Color.getHSBColor(hue, 1f, bgBrightness.toFloat())
-            }
-        }
-
-        override fun getReplacementValue(value: Dart) =
-            if (!value.hitClockTarget(clockType))
-            {
-                "X"
-            } else "$value"
-
-        override fun allowNulls() = true
     }
 
     companion object

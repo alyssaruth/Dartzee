@@ -227,10 +227,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     }
 
-    override fun factoryScorer(): DartsScorerX01
-    {
-        return DartsScorerX01(this)
-    }
+    override fun factoryScorer() = DartsScorerX01(this, gameEntity.gameParams)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 

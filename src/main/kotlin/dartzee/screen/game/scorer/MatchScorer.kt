@@ -17,7 +17,7 @@ class MatchScorer : AbstractScorer()
      */
     override fun getNumberOfColumns() = 4
 
-    override fun initImpl(gameParams: String)
+    override fun initImpl()
     {
         tableScores.setLinkColumnIndex(0)
 

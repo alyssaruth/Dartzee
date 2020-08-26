@@ -1,6 +1,7 @@
 package dartzee.screen.game
 
-import dartzee.`object`.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.db.AchievementEntity
@@ -154,7 +155,7 @@ class TestGamePanelGolf: AbstractTest()
         {
             val player = insertPlayer(currentPlayerId)
             val scorer = DartsScorerGolf()
-            scorer.init(player, "18")
+            scorer.init(player)
 
             activeScorer = scorer
             currentPlayerNumber = 0

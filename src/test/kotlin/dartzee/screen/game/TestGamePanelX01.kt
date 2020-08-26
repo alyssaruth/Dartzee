@@ -134,8 +134,8 @@ class TestGamePanelX01: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = DartsScorerX01(this)
-            scorer.init(player, "501")
+            val scorer = DartsScorerX01(this, "501")
+            scorer.init(player)
 
             activeScorer = scorer
             currentPlayerNumber = 0
