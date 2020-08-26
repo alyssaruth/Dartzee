@@ -15,15 +15,18 @@ class GameParamFilterPanelRoundTheClock : GameParamFilterPanel()
     private val rdbtnStandard = JRadioButton("${ClockType.Standard}")
     private val rdbtnDoubles = JRadioButton("${ClockType.Doubles}")
     private val rdbtnTrebles = JRadioButton("${ClockType.Trebles}")
+    private val separator = Box.createHorizontalStrut(20)
     private val checkBoxInOrder = JCheckBox("In order")
 
     init
     {
         checkBoxInOrder.isSelected = true
+        checkBoxInOrder.isVisible = false
+        separator.isVisible = false
 
         add(panel, BorderLayout.CENTER)
         panel.add(checkBoxInOrder)
-        panel.add(Box.createHorizontalStrut(20))
+        panel.add(separator)
         panel.add(rdbtnStandard)
         panel.add(rdbtnDoubles)
         panel.add(rdbtnTrebles)
