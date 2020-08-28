@@ -1,7 +1,9 @@
 package dartzee.screen.stats.player
 
 import dartzee.bean.ScrollTableDartsGame
+import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.NumberField
+import dartzee.core.bean.selectedItemTyped
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.stats.GameWrapper
@@ -51,7 +53,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
     private val panelRawDataTable = JPanel()
     private val table = ScrollTableDartsGame()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    private val comboBox = JComboBox<String>()
+    private val comboBox = JComboBox<ComboBoxItem<String>>()
     private val nfMeanOther = NumberField()
     private val nfMedianOther = NumberField()
     private val panelLine = JPanel()
@@ -136,12 +138,13 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         populateStatsWithoutChangingFields(gameParams)
     }
 
-    private fun populateStatsWithoutChangingFields(gameParams: String)
+    private fun populateStatsWithoutChangingFields(selectedParams: ComboBoxItem<String>)
     {
-        lineChartPanel.reset("$graphTitle ($gameParams)", graphTitle)
+        val paramDesc = "$selectedParams"
+        lineChartPanel.reset("$graphTitle ($paramDesc)", graphTitle)
 
         //Filter out unfinished games and games with the wrong params
-        val filter = { g: GameWrapper -> g.gameParams == gameParams && (g.isFinished() || chckbxIncludeUnfinishedGames.isSelected) }
+        val filter = { g: GameWrapper -> g.gameParams == selectedParams.hiddenData && (g.isFinished() || chckbxIncludeUnfinishedGames.isSelected) }
         val gamesToGraph = filteredGames.filter(filter).sortedBy{ it.dtStart }
         val otherGamesToGraph = filteredGamesOther.filter(filter).sortedBy{ it.dtStart }
         val includeOther = !otherGamesToGraph.isEmpty()
@@ -161,8 +164,8 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             addValuesToDataset(otherGamesToGraph, "Other", nfMedianOther, nfMeanOther)
         }
 
-        finaliseBarChart(gameParams)
-        finaliseBoxPlot(gameParams)
+        finaliseBarChart(paramDesc)
+        finaliseBoxPlot(paramDesc)
 
         nfMeanOther.isVisible = includeOther
         nfMedianOther.isVisible = includeOther
@@ -170,11 +173,11 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         lineChartPanel.finalise()
     }
 
-    private fun initialiseFields(): String
+    private fun initialiseFields(): ComboBoxItem<String>
     {
         val gameParams = initialiseGameTypeComboBox()
 
-        initialiseOutlierCutOffAndGrouping(gameParams)
+        initialiseOutlierCutOffAndGrouping(gameParams.hiddenData)
 
         return gameParams
     }
@@ -278,7 +281,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
      * No more mentalness with radio buttons (though it was fun...)
      * Now just have a combo box that we populate. Still try to preserve the previous selection if we can.
      */
-    private fun initialiseGameTypeComboBox(): String
+    private fun initialiseGameTypeComboBox(): ComboBoxItem<String>
     {
         //Remember what was selected previously.
         val selectedItem = comboBox.selectedItem
@@ -292,7 +295,8 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             startingScores.add("N/A")
         }
 
-        comboBox.model = DefaultComboBoxModel(startingScores.toTypedArray())
+        val comboOptions = startingScores.map { ComboBoxItem(it, getGameType().getParamsDescription(it)) }.toTypedArray()
+        comboBox.model = DefaultComboBoxModel(comboOptions)
         comboBox.selectedItem = selectedItem
 
         var ix = comboBox.selectedIndex
@@ -427,7 +431,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         val propertyName = arg0.propertyName
         if (propertyName == "value")
         {
-            val selectedGameParams = comboBox.selectedItem as String
+            val selectedGameParams = comboBox.selectedItemTyped()
             populateStatsWithoutChangingFields(selectedGameParams)
         }
     }

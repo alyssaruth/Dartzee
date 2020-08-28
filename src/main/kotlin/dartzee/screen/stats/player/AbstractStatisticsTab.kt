@@ -1,6 +1,7 @@
 package dartzee.screen.stats.player
 
 import dartzee.core.util.containsComponent
+import dartzee.screen.ScreenCache
 import dartzee.stats.GameWrapper
 import java.awt.Component
 import java.awt.Container
@@ -51,6 +52,7 @@ abstract class AbstractStatisticsTab : JPanel(), PropertyChangeListener
      * Helpers
      */
     fun getDistinctGameParams() = filteredGames.map{ it.gameParams }.distinct()
+    fun getGameType() = ScreenCache.get<PlayerStatisticsScreen>().gameType
 
     /**
      * Gets / sets
