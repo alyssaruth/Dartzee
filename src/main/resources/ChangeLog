@@ -1,3 +1,10 @@
+--------- v4.5.0 ---------
+
++ Max radius setting for AI to make them less erratic
+= More background simplifications to AI modelling
+= Background prep work for Round the Clock improvements
+= 80.7% test coverage (9638 / 11,946 lines covered by 1552 tests)
+
 --------- v4.4.1 ---------
 
 = Fix bug clicking links in tables

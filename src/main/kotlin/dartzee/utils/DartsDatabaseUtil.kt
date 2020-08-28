@@ -25,7 +25,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    const val MIN_DB_VERSION_FOR_CONVERSION = 12
+    const val MIN_DB_VERSION_FOR_CONVERSION = 13
     const val DATABASE_VERSION = 15
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
