@@ -16,6 +16,7 @@ import io.mockk.mockk
 import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After
 import org.junit.Before
+import java.awt.Window
 import java.sql.DriverManager
 import java.time.Clock
 import java.time.ZoneId
@@ -97,6 +98,8 @@ abstract class AbstractTest
         {
             errorLogged() shouldBe false
         }
+
+        Window.getWindows().forEach { it.dispose() }
 
         checkedForExceptions = false
     }
