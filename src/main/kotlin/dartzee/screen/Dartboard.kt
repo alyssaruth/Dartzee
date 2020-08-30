@@ -7,7 +7,7 @@ import dartzee.`object`.SegmentType
 import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
 import dartzee.core.util.getParentWindow
-import dartzee.core.util.runOnEventThread
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
 import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.logging.CODE_RENDER_ERROR
@@ -350,7 +350,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         if (listeners.isNotEmpty())
         {
-            runOnEventThread { addDart(pt) }
+            runOnEventThreadBlocking { addDart(pt) }
         }
 
         listeners.forEach {

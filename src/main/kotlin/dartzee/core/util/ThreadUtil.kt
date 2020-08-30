@@ -36,3 +36,15 @@ fun runOnEventThread(r: (() -> Unit))
         SwingUtilities.invokeLater(r)
     }
 }
+
+fun runOnEventThreadBlocking(r: (() -> Unit))
+{
+    if (SwingUtilities.isEventDispatchThread())
+    {
+        r.invoke()
+    }
+    else
+    {
+        SwingUtilities.invokeAndWait(r)
+    }
+}
