@@ -5,7 +5,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
 import dartzee.utils.InjectedThings.gameLauncher
 
-class ScrollTableDartsGame(linkColumnName: String = "Game") : ScrollTableHyperlink(linkColumnName)
+class ScrollTableDartsGame(linkColumnName: String = "Game", testId: String = "") : ScrollTableHyperlink(linkColumnName)
 {
     override fun linkClicked(value: Any)
     {
