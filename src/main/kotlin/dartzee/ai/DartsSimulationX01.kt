@@ -60,8 +60,6 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Dart
 
     override fun dartThrown(dart: Dart)
     {
-        println("Thrown $dart")
-
         dartsThrown.add(dart)
         dart.startingScore = currentScore
 

@@ -32,7 +32,7 @@ class SimulationE2E: AbstractTest()
         dlg.getChild<NumberField>().value = 500
         dlg.clickChild<JButton>("Ok")
 
-        awaitCondition { getWindow { it.findChild<PlayerStatisticsScreen>() != null } != null }
+        awaitCondition { getWindow { it.findChild<PlayerStatisticsScreen>() != null }?.isVisible ?: false }
 
         val statsScrn = getWindow { it.findChild<PlayerStatisticsScreen>() != null }!!.getChild<PlayerStatisticsScreen>()
         statsScrn.gameType shouldBe GameType.X01
