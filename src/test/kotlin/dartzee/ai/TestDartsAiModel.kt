@@ -3,7 +3,7 @@ package dartzee.ai
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.borrowTestDartboard
+import dartzee.makeTestDartboard
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
@@ -145,7 +145,7 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = makeDartsModel(standardDeviation = 3.0)
 
-        val dartboard = borrowTestDartboard()
+        val dartboard = makeTestDartboard()
         val pt = Point(0, 0)
 
         val hsAngles = HashSet<Double>()
@@ -163,7 +163,7 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should not allow the radius to exceed the max outlier ratio`()
     {
-        val dartboard = borrowTestDartboard()
+        val dartboard = makeTestDartboard()
         val pt = Point(0, 0)
 
         val model = makeDartsModel(standardDeviation = 50.0, maxRadius = 50)

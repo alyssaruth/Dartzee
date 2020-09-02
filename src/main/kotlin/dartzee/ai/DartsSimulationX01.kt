@@ -27,10 +27,7 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Dart
         return (totalRounds - 1) * 3 + dartsThrown.size
     }
 
-    override fun shouldPlayCurrentRound(): Boolean
-    {
-        return currentScore > 0
-    }
+    override fun shouldPlayCurrentRound() = currentScore > 0
 
     override fun resetVariables()
     {
@@ -63,6 +60,8 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Dart
 
     override fun dartThrown(dart: Dart)
     {
+        println("Thrown $dart")
+
         dartsThrown.add(dart)
         dart.startingScore = currentScore
 
