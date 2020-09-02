@@ -100,7 +100,7 @@ abstract class AbstractTest
             errorLogged() shouldBe false
         }
 
-        SwingUtilities.invokeAndWait { Window.getWindows().forEach { it.dispose() } }
+        //SwingUtilities.invokeAndWait { Window.getWindows().forEach { it.dispose() } }
 
         checkedForExceptions = false
     }
