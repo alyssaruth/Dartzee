@@ -58,7 +58,7 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
 }
 
 
-fun predictableDartsModel(dartboard: Dartboard, mercyThreshold: Int? = null, fn: (startingScore: Int, dartsThrown: Int) -> AimDart): DartsAiModel
+fun predictableX01Model(dartboard: Dartboard, mercyThreshold: Int? = null, fn: (startingScore: Int, dartsThrown: Int) -> AimDart): DartsAiModel
 {
     val model = mockk<DartsAiModel>(relaxed = true)
     every { model.mercyThreshold } returns mercyThreshold
@@ -70,6 +70,24 @@ fun predictableDartsModel(dartboard: Dartboard, mercyThreshold: Int? = null, fn:
         val pt = getPointForScore(aimDart, dartboard)
         dartboard.dartThrown(pt)
         dartsThrown++
+    }
+
+    return model
+}
+
+data class ScoreAndSegmentType(val score: Int, val segmentType: SegmentType)
+fun predictableGolfModel(dartboard: Dartboard, hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(), fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType): DartsAiModel
+{
+    val model = mockk<DartsAiModel>(relaxed = true)
+    val stopThresholdSlot = slot<Int>()
+    every { model.getStopThresholdForDartNo(capture(stopThresholdSlot)) } answers { hmDartNoToStopThreshold.getValue(stopThresholdSlot.captured) }
+
+    val holeSlot = slot<Int>()
+    val dartNoSlot = slot<Int>()
+    every { model.throwGolfDart(capture(holeSlot), capture(dartNoSlot), dartboard) } answers {
+        val result = fn(holeSlot.captured, dartNoSlot.captured)
+        val pt = getPointForScore(result.score, dartboard, result.segmentType)
+        dartboard.dartThrown(pt)
     }
 
     return model

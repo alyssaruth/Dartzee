@@ -5,7 +5,7 @@ import dartzee.makeTestDartboard
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertPlayer
-import dartzee.helper.predictableDartsModel
+import dartzee.helper.predictableX01Model
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -44,7 +44,7 @@ class TestDartsSimulationX01: AbstractTest()
         // T20, T20,  18 (on 3)
         //   1 (mercy)
         //  D1
-        val model = predictableDartsModel(dartboard, mercyThreshold = 7) { startingScore, _ ->
+        val model = predictableX01Model(dartboard, mercyThreshold = 7) { startingScore, _ ->
             when (startingScore)
             {
                 21 -> AimDart(18, 1)
@@ -70,7 +70,7 @@ class TestDartsSimulationX01: AbstractTest()
         // T20, T20,   1 (on 20)
         // D15 (bust)
         // D10
-        val model = predictableDartsModel(dartboard, mercyThreshold = 7) { startingScore, dartsThrown ->
+        val model = predictableX01Model(dartboard, mercyThreshold = 7) { startingScore, dartsThrown ->
             when (startingScore)
             {
                 21 -> AimDart(1, 1)

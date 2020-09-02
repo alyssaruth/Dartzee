@@ -50,9 +50,8 @@ class DartsSimulationGolf(dartboard: Dartboard, player: PlayerEntity, model: Dar
         dartsThrown.add(dart)
 
         val noDarts = dartsThrown.size
-        val stopThreshold = model.getStopThresholdForDartNo(noDarts)
 
-        if (noDarts == 3 || dart.getGolfScore(currentRound) <= stopThreshold)
+        if (noDarts == 3 || dart.getGolfScore(currentRound) <= model.getStopThresholdForDartNo(noDarts))
         {
             finishedRound()
         }
