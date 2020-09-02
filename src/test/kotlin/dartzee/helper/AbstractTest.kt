@@ -20,6 +20,7 @@ import java.awt.Window
 import java.sql.DriverManager
 import java.time.Clock
 import java.time.ZoneId
+import javax.swing.SwingUtilities
 import javax.swing.UIManager
 import kotlin.test.assertNotNull
 
@@ -99,7 +100,7 @@ abstract class AbstractTest
             errorLogged() shouldBe false
         }
 
-        Window.getWindows().forEach { it.dispose() }
+        SwingUtilities.invokeAndWait { Window.getWindows().forEach { it.dispose() } }
 
         checkedForExceptions = false
     }
