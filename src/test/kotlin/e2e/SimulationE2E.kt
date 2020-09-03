@@ -1,20 +1,22 @@
 package e2e
 
 import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.findChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.ai.AimDart
-import dartzee.awaitCondition
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
+import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertPlayer
 import dartzee.screen.ai.AISimulationSetupDialog
-import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.screen.stats.player.StatisticsTabTotalScore
+import dartzee.screen.stats.player.x01.StatisticsTabFinishBreakdown
+import dartzee.screen.stats.player.x01.StatisticsTabX01ThreeDartScores
+import dartzee.screen.stats.player.x01.StatisticsTabX01TopFinishes
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -32,9 +34,7 @@ class SimulationE2E: AbstractTest()
         dlg.getChild<NumberField>().value = 500
         dlg.clickChild<JButton>("Ok")
 
-        awaitCondition { getWindow { it.findChild<PlayerStatisticsScreen>() != null }?.isVisible ?: false }
-
-        val statsScrn = getWindow { it.findChild<PlayerStatisticsScreen>() != null }!!.getChild<PlayerStatisticsScreen>()
+        val statsScrn = awaitStatisticsScreen()
         statsScrn.gameType shouldBe GameType.X01
 
         val totalScorePanel = statsScrn.getChild<StatisticsTabTotalScore>()
@@ -43,11 +43,27 @@ class SimulationE2E: AbstractTest()
         val allScoreRows = totalScorePanel.getChild<ScrollTableDartsGame>().getRows()
         allScoreRows.shouldHaveSize(500)
         allScoreRows.forEachIndexed { ix, row ->
-            row[0] shouldBe ix + 1
+            val gameNo = ix + 1
+            row[0] shouldBe gameNo
             row[1] shouldBe 9
-            row[2] shouldBe -(ix + 1)
+            row[2] shouldBe -gameNo
         }
 
+        val doublesPanel = statsScrn.getChild<StatisticsTabFinishBreakdown>()
+        val tableDoubles = doublesPanel.getChild<ScrollTable> { it.testId == "DoublesMine" }
+        tableDoubles.getRows().shouldContainExactly(listOf(listOf(12, 500, 100.0)))
 
+        val topFinishesPanel = statsScrn.getChild<StatisticsTabX01TopFinishes>()
+        val tableTopFinishes = topFinishesPanel.getChild<ScrollTable> { it.testId == "TopFinishesMine" }
+        val rows = tableTopFinishes.getRows()
+        rows.first().shouldContainExactly(141, "T20, T19, D12", -1L)
+
+        val threeDartScoresPanel = statsScrn.getChild<StatisticsTabX01ThreeDartScores>()
+        val tableScores = threeDartScoresPanel.getChild<ScrollTable> { it.testId == "PlayerScores" }
+        tableScores.rowCount shouldBe 1
+        tableScores.getRows().first().shouldContainExactly(180, 1000)
+        val tableBreakdown = threeDartScoresPanel.getChild<ScrollTable> { it.testId == "PlayerBreakdown" }
+        tableBreakdown.rowCount shouldBe 1
+        tableBreakdown.getRows().first().shouldContainExactly("T20, T20, T20", 1000, -1L)
     }
 }
