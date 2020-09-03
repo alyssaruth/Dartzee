@@ -11,7 +11,7 @@ import javax.swing.SwingConstants
 
 class StatisticsTabX01TopFinishes : AbstractStatisticsTab()
 {
-    private val tableTopFinishesMine = ScrollTableDartsGame()
+    private val tableTopFinishesMine = ScrollTableDartsGame(testId = "TopFinishesMine")
     private val tableTopFinishesOther = ScrollTableDartsGame()
 
     init

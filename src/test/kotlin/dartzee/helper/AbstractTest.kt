@@ -20,6 +20,7 @@ import java.awt.Window
 import java.sql.DriverManager
 import java.time.Clock
 import java.time.ZoneId
+import javax.swing.SwingUtilities
 import javax.swing.UIManager
 import kotlin.test.assertNotNull
 
@@ -99,7 +100,11 @@ abstract class AbstractTest
             errorLogged() shouldBe false
         }
 
-        Window.getWindows().forEach { it.dispose() }
+        val visibleWindows = Window.getWindows().filter { it.isVisible }
+        if (visibleWindows.isNotEmpty())
+        {
+            SwingUtilities.invokeLater { visibleWindows.forEach { it.dispose() } }
+        }
 
         checkedForExceptions = false
     }

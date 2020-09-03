@@ -119,6 +119,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         panelCenter.add(dartboard, BorderLayout.CENTER)
         dartboard.addDartboardListener(this)
+        dartboard.renderDarts = true
         panelCenter.add(panelSouth, BorderLayout.SOUTH)
         panelSouth.layout = BorderLayout(0, 0)
         slider.value = 1000

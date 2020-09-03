@@ -12,6 +12,7 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.scorer.DartsScorerPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.ResourceCache.ICON_RESUME
+import java.awt.Window
 import javax.swing.JButton
 import javax.swing.JToggleButton
 import javax.swing.SwingUtilities
@@ -52,3 +53,5 @@ fun closeOpenGames()
 {
     ScreenCache.getDartsGameScreens().forEach { it.dispose() }
 }
+
+fun getWindow(fn: (window: Window) -> Boolean) = Window.getWindows().find(fn)

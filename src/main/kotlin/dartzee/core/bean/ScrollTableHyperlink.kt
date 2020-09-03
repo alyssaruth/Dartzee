@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel
  * A scroll table with a 'Game' column.
  * Handles rendering this column as a hyperlink to launch it on click.
  */
-abstract class ScrollTableHyperlink(private val linkColumnName: String) : ScrollTable(), IHyperlinkListener
+abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: String = "") : ScrollTable(testId), IHyperlinkListener
 {
     private var linkColumn = -1
     private var adaptor: HyperlinkAdaptor? = null

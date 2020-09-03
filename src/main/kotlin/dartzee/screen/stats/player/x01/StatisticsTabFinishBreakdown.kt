@@ -23,7 +23,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
 {
     private var selectedScore: Int? = null
 
-    private val tableFavouriteDoubles = ScrollTable()
+    private val tableFavouriteDoubles = ScrollTable(testId = "DoublesMine")
     private val tableFavouriteDoublesOther = ScrollTable()
     private val tablePanel = JPanel()
     private val pieChartPanel = ChartPanel(null)

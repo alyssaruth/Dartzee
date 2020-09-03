@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.event.*
 import javax.swing.table.*
 
-open class ScrollTable : JPanel(), TableColumnModelListener,
+open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelListener,
     ListSelectionListener, MouseListener
 {
     private var rowNameSingular = "row"

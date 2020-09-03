@@ -41,6 +41,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     private val dartLabels = mutableListOf<JLabel>()
 
     private val listeners: MutableList<DartboardListener> = mutableListOf()
+    var renderDarts = false
     var centerPoint = Point(200, 200)
         private set
 
@@ -348,7 +349,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     {
         val dart = convertPointToDart(pt, true)
 
-        if (listeners.isNotEmpty())
+        if (renderDarts)
         {
             runOnEventThreadBlocking { addDart(pt) }
         }

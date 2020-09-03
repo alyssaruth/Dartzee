@@ -37,6 +37,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         dartboard.renderScoreLabels = true
         dartboard.paintDartboard()
         dartboard.addDartboardListener(this)
+        dartboard.renderDarts = true
         add(panelNorth, BorderLayout.NORTH)
         add(dartboard, BorderLayout.CENTER)
         add(lblCombinations, BorderLayout.SOUTH)

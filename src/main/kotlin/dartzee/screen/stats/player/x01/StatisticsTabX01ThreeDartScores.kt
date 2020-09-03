@@ -21,13 +21,13 @@ import javax.swing.SwingConstants
 class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionListener
 {
     private val panelTables = JPanel()
-    private val tableBreakdownMine = ScrollTableDartsGame("Example Game")
-    private val tableBreakdownOther = ScrollTableDartsGame("Example Game")
+    private val tableBreakdownMine = ScrollTableDartsGame("Example Game", testId = "PlayerBreakdown")
+    private val tableBreakdownOther = ScrollTableDartsGame("Example Game", testId = "OtherBreakdown")
     private val panelConfig = JPanel()
     private val lblScoreThreshold = JLabel("Score Threshold")
     private val nfScoreThreshold = NumberField(62, 300)
-    private val tableScoresMine = ScrollTable()
-    private val tableScoresOther = ScrollTable()
+    private val tableScoresMine = ScrollTable(testId = "PlayerScores")
+    private val tableScoresOther = ScrollTable(testId = "OtherScores")
 
     init
     {
