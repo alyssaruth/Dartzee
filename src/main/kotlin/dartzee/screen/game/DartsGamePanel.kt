@@ -202,8 +202,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         activeScorer = getCurrentScorer()
         selectScorer(activeScorer)
 
-        dartsThrown.clear()
-
         updateVariablesForNewRound()
 
         val lastRoundForThisPlayer = getLastRoundNumber()
@@ -516,7 +514,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         dart.roundNumber = currentRoundNumber
 
-        dartsThrown.add(dart)
+        getCurrentPlayerState().dartThrown(dart)
         activeScorer.addDart(dart)
 
         //We've clicked on the dartboard, so dismiss the slider
@@ -608,7 +606,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         dartboard.clearDarts()
         activeScorer.clearRound(currentRoundNumber)
         activeScorer.updatePlayerResult()
-        dartsThrown.clear()
+        getCurrentPlayerState().resetRound()
 
         //If we're resetting, disable the buttons
         btnConfirm.isEnabled = false
@@ -624,17 +622,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
      */
     protected fun saveDartsToDatabase()
     {
-        val pt = getCurrentParticipant()
-        val darts = mutableListOf<DartEntity>()
-        for (i in dartsThrown.indices)
-        {
-            val dart = dartsThrown[i]
-            darts.add(DartEntity.factory(dart, pt.playerId, pt.rowId, currentRoundNumber, i + 1, dart.startingScore))
-        }
-
-        BulkInserter.insert(darts)
-
-        getCurrentPlayerState().addDarts(dartsThrown)
+        getCurrentPlayerState().commitRound()
     }
 
     open fun readyForThrow()

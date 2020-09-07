@@ -42,7 +42,7 @@ class DartEntity : AbstractEntity<DartEntity>()
 
     companion object
     {
-        fun factory(dart: Dart, playerId: String, participantId: String, roundNumber: Int, ordinal: Int, startingScore: Int): DartEntity
+        fun factory(dart: Dart, playerId: String, participantId: String, roundNumber: Int, ordinal: Int): DartEntity
         {
             val de = DartEntity()
             de.assignRowId()
@@ -52,7 +52,7 @@ class DartEntity : AbstractEntity<DartEntity>()
             de.score = dart.score
             de.multiplier = dart.multiplier
             de.ordinal = ordinal
-            de.startingScore = startingScore
+            de.startingScore = dart.startingScore
             de.posX = dart.getX()!!
             de.posY = dart.getY()!!
             de.segmentType = dart.segmentType
