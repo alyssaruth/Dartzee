@@ -140,7 +140,8 @@ class TestGamePanelRoundTheClock: AbstractTest()
 
         fun setDartsThrown(dartsThrown: List<Dart>)
         {
-            this.dartsThrown.addAll(dartsThrown)
+            getCurrentPlayerState().resetRound()
+            dartsThrown.forEach { getCurrentPlayerState().dartThrown(it) }
         }
     }
 }

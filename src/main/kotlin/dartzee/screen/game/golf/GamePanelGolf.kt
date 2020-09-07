@@ -27,7 +27,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
 
     private fun getScoreForMostRecentDart() : Int
     {
-        val lastDart = dartsThrown.last()
+        val lastDart = getDartsThrown().last()
 
         val targetHole = currentRoundNumber
         return lastDart.getGolfScore(targetHole)
@@ -36,7 +36,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
     override fun doAiTurn(model: DartsAiModel)
     {
         val targetHole = currentRoundNumber
-        val dartNo = dartsThrown.size + 1
+        val dartNo = dartsThrownCount() + 1
         model.throwGolfDart(targetHole, dartNo, dartboard)
     }
 
@@ -56,7 +56,8 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
 
     override fun shouldStopAfterDartThrown(): Boolean
     {
-        if (dartsThrown.size == 3)
+        val dartsThrownCount = dartsThrownCount()
+        if (dartsThrownCount == 3)
         {
             return true
         }
@@ -68,10 +69,8 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         }
         else
         {
-            val noDarts = dartsThrown.size
-
             val model = getCurrentPlayerStrategy()
-            val stopThreshold = model.getStopThresholdForDartNo(noDarts)
+            val stopThreshold = model.getStopThresholdForDartNo(dartsThrownCount)
 
             return score <= stopThreshold
         }
@@ -90,7 +89,8 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
 
     fun unlockAchievements()
     {
-        val dartsRisked = dartsThrown - dartsThrown.last()
+        val lastDart = getDartsThrown().last()
+        val dartsRisked = getDartsThrown() - lastDart
         val pointsRisked = dartsRisked.map{ 5 - it.getGolfScore(currentRoundNumber) }.sum()
 
         if (pointsRisked > 0)
@@ -98,7 +98,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
             AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, pointsRisked)
         }
 
-        val lastDart = dartsThrown.last()
         if (lastDart.getGolfScore(currentRoundNumber) == 1
          && retrieveAchievementForDetail(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, getCurrentPlayerId(), "$currentRoundNumber") == null)
         {

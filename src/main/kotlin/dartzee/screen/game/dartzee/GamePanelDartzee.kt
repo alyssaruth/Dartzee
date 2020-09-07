@@ -50,7 +50,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
             summaryPanel.ensureReady()
 
             val segmentStatus = summaryPanel.getSegmentStatus()
-            model.throwDartzeeDart(dartsThrown.size, dartboard, segmentStatus)
+            model.throwDartzeeDart(dartsThrownCount(), dartboard, segmentStatus)
         }
     }
 
@@ -105,7 +105,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     {
         val segmentStatus = summaryPanel.getSegmentStatus()
         val failedAllRules = segmentStatus.validSegments.isEmpty()
-        return dartsThrown.size == 3 || failedAllRules
+        return dartsThrownCount() == 3 || failedAllRules
     }
 
     override fun shouldAIStop() = false
@@ -130,7 +130,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     private fun updateCarousel()
     {
         val ruleResults = getCurrentPlayerState().roundResults
-        summaryPanel.update(ruleResults, dartsThrown, lastRoundScore, currentRoundNumber)
+        summaryPanel.update(ruleResults, getDartsThrown(), lastRoundScore, currentRoundNumber)
     }
 
     /**
@@ -140,7 +140,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     {
         if (isScoringRound())
         {
-            completeRound(factoryHighScoreResult(dartsThrown))
+            completeRound(factoryHighScoreResult(getDartsThrown()))
         }
         else
         {
@@ -188,7 +188,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun hoverChanged(segmentStatus: SegmentStatus)
     {
-        if (dartsThrown.size < 3)
+        if (dartsThrownCount() < 3)
         {
             dartboard.refreshValidSegments(segmentStatus)
         }

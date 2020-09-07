@@ -49,7 +49,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     //Transitive things
     var currentPlayerNumber = 0
     var activeScorer: S = factoryScorer()
-    protected var dartsThrown = ArrayList<Dart>()
     protected var currentRoundNumber = -1
 
     //For AI turns
@@ -105,6 +104,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         val state = getPlayerState(playerNumber)
         state.lastRoundNumber = newRoundNumber
     }
+    fun getDartsThrown() = getCurrentPlayerState().dartsThrown
+    fun dartsThrownCount() = getDartsThrown().size
 
     protected fun addState(playerNumber: Int, state: PlayerState) {
         hmPlayerNumberToState[playerNumber] = state
