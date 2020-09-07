@@ -97,7 +97,7 @@ fun makeDartzeePlayerState(name: String = "Bob",
     val pt = insertParticipant(playerId = p.rowId)
 
     val resultEntities = makeRoundResultEntities(*roundResults.toTypedArray())
-    return DartzeePlayerState(pt, scorer, lastRoundNumber, dartsThrown.toMutableList(), resultEntities.toMutableList())
+    return DartzeePlayerState(pt, scorer, lastRoundNumber, dartsThrown.toMutableList(), mutableListOf(), resultEntities.toMutableList())
 }
 
 fun makeDartzeeScorer(firstRound: List<Dart> = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1))): DartsScorerDartzee
