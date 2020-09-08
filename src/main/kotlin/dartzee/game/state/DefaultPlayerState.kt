@@ -27,7 +27,7 @@ sealed class AbstractPlayerState<S: DartsScorer>
     fun commitRound()
     {
         val entities = dartsThrown.mapIndexed { ix, drt ->
-            DartEntity.factory(drt, pt.playerId, pt.rowId, lastRoundNumber + 1, ix + 1)
+            DartEntity.factory(drt, pt.playerId, pt.rowId, lastRoundNumber, ix + 1)
         }
 
         BulkInserter.insert(entities)
