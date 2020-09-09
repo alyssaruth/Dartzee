@@ -368,7 +368,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
             val darts = hmRoundNumberToDarts[i]!!
 
             darts.forEachIndexed { ix, drt ->
-                val de = DartEntity.factory(drt, player.rowId, pt.rowId, i, ix+1, drt.startingScore)
+                val de = DartEntity.factory(drt, player.rowId, pt.rowId, i, ix+1)
                 dartEntities.add(de)
             }
         }

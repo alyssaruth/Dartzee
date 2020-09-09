@@ -46,10 +46,10 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
     override fun saveDartsAndProceed()
     {
         //Finalise the scorer
-        val lastDart = dartsThrown.last()
+        val lastDart = getDartsThrown().last()
         val bust = isBust(currentScore, lastDart)
 
-        updateNearMisses(dartsThrown, currentPlayerNumber)
+        updateNearMisses(getDartsThrown(), currentPlayerNumber)
 
         val count = hmPlayerNumberToBadLuckCount.getCount(currentPlayerNumber)
         if (count > 0)
@@ -59,7 +59,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
         if (!bust)
         {
-            val totalScore = sumScore(dartsThrown)
+            val totalScore = sumScore(getDartsThrown())
             if (totalScore == 26)
             {
                 dartboard.doFawlty()
@@ -67,14 +67,14 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
                 updateHotelInspector()
             }
 
-            if (isShanghai(dartsThrown))
+            if (isShanghai(getDartsThrown()))
             {
                 AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_SHANGHAI, getCurrentPlayerId(), getGameId())
             }
 
             dartboard.playDodgySound("" + totalScore)
 
-            val total = sumScore(dartsThrown)
+            val total = sumScore(getDartsThrown())
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total)
         }
         else
@@ -101,13 +101,13 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
     private fun updateHotelInspector()
     {
         //Need to have thrown 3 darts, all of which didn't miss.
-        if (dartsThrown.any { d -> d.multiplier == 0 }
-          || dartsThrown.size < 3)
+        if (getDartsThrown().any { d -> d.multiplier == 0 }
+          || dartsThrownCount() < 3)
         {
             return
         }
 
-        val methodStr = getSortedDartStr(dartsThrown)
+        val methodStr = getSortedDartStr(getDartsThrown())
         val existingRow = retrieveAchievementForDetail(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, getCurrentPlayerId(), methodStr)
         if (existingRow == null)
         {
@@ -117,7 +117,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     override fun currentPlayerHasFinished(): Boolean
     {
-        val lastDart = dartsThrown.last()
+        val lastDart = getDartsThrown().last()
         return currentScore == 0 && lastDart.isDouble()
     }
 
@@ -125,13 +125,13 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
     {
         super.updateAchievementsForFinish(playerId, finishingPosition, score)
 
-        val sum = sumScore(dartsThrown)
+        val sum = sumScore(getDartsThrown())
         AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, getGameId(), sum)
 
         //Insert into the X01Finishes table for the leaderboard
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
 
-        val checkout = dartsThrown.last().score
+        val checkout = getDartsThrown().last().score
         insertForCheckoutCompleteness(playerId, getGameId(), checkout)
 
         if (sum in listOf(3, 5, 7, 9))
@@ -196,7 +196,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     private fun suggestCheckout()
     {
-        val dartsRemaining = 3 - dartsThrown.size
+        val dartsRemaining = 3 - dartsThrownCount()
         val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
 
         checkout.forEach {
@@ -204,15 +204,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
     }
 
-    override fun shouldStopAfterDartThrown(): Boolean
-    {
-        return if (dartsThrown.size == 3)
-        {
-            true
-        }
-        else currentScore <= 1
-
-    }
+    override fun shouldStopAfterDartThrown() = dartsThrownCount() == 3 || currentScore <= 1
 
     override fun doAiTurn(model: DartsAiModel)
     {

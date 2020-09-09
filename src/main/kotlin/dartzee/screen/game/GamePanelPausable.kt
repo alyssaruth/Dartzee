@@ -26,13 +26,13 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
     {
         activeScorer.updatePlayerResult()
 
-        saveDartsToDatabase()
-
         //This player has finished. The game isn't necessarily over though...
         if (currentPlayerHasFinished())
         {
             handlePlayerFinish()
         }
+
+        commitRound()
 
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
 

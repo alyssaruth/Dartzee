@@ -98,12 +98,12 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         {
             activeScorer.incrementCurrentClockTarget()
 
-            if (dartsThrown.size == 4)
+            if (dartsThrownCount() == 4)
             {
                 dartboard.doForsyth()
             }
         }
-        else if (dartsThrown.size == 4)
+        else if (dartsThrownCount() == 4)
         {
             dartboard.doBadLuck()
         }
@@ -115,12 +115,12 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun shouldAnimateMiss(dart: Dart): Boolean
     {
-        return dartsThrown.size < 4
+        return dartsThrownCount() < 4
     }
 
     override fun shouldStopAfterDartThrown(): Boolean
     {
-        if (dartsThrown.size == 4)
+        if (dartsThrownCount() == 4)
         {
             return true
         }
@@ -131,13 +131,8 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        var allHits = true
-        for (dart in dartsThrown)
-        {
-            allHits = allHits and dart.hitClockTarget(config.clockType)
-        }
-
-        return dartsThrown.size == 3 && !allHits
+        val allHits = getDartsThrown().all { it.hitClockTarget(config.clockType) }
+        return dartsThrownCount() == 3 && !allHits
 
     }
 
@@ -148,7 +143,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun saveDartsAndProceed()
     {
-        if (dartsThrown.size == 4 && dartsThrown.last().hitClockTarget(config.clockType))
+        if (dartsThrownCount() == 4 && getDartsThrown().last().hitClockTarget(config.clockType))
         {
             AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId())
         }
@@ -161,7 +156,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     fun updateBestStreakAchievement()
     {
         var currentStreak = hmPlayerNumberToCurrentStreak.getCount(currentPlayerNumber)
-        dartsThrown.forEach {
+        getDartsThrown().forEach {
             if (it.hitClockTarget(config.clockType))
             {
                 currentStreak++

@@ -49,7 +49,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     //Transitive things
     var currentPlayerNumber = 0
     var activeScorer: S = factoryScorer()
-    protected var dartsThrown = ArrayList<Dart>()
     protected var currentRoundNumber = -1
 
     //For AI turns
@@ -105,6 +104,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         val state = getPlayerState(playerNumber)
         state.lastRoundNumber = newRoundNumber
     }
+    fun getDartsThrown() = getCurrentPlayerState().dartsThrown
+    fun dartsThrownCount() = getDartsThrown().size
 
     protected fun addState(playerNumber: Int, state: PlayerState) {
         hmPlayerNumberToState[playerNumber] = state
@@ -201,8 +202,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         activeScorer = getCurrentScorer()
         selectScorer(activeScorer)
-
-        dartsThrown.clear()
 
         updateVariablesForNewRound()
 
@@ -516,7 +515,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     {
         dart.roundNumber = currentRoundNumber
 
-        dartsThrown.add(dart)
+        getCurrentPlayerState().dartThrown(dart)
         activeScorer.addDart(dart)
 
         //We've clicked on the dartboard, so dismiss the slider
@@ -608,7 +607,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         dartboard.clearDarts()
         activeScorer.clearRound(currentRoundNumber)
         activeScorer.updatePlayerResult()
-        dartsThrown.clear()
+        getCurrentPlayerState().resetRound()
 
         //If we're resetting, disable the buttons
         btnConfirm.isEnabled = false
@@ -620,21 +619,11 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     }
 
     /**
-     * Loop through the darts thrown, saving them to the database.
+     * Commit round to current player state and the database
      */
-    protected fun saveDartsToDatabase()
+    protected fun commitRound()
     {
-        val pt = getCurrentParticipant()
-        val darts = mutableListOf<DartEntity>()
-        for (i in dartsThrown.indices)
-        {
-            val dart = dartsThrown[i]
-            darts.add(DartEntity.factory(dart, pt.playerId, pt.rowId, currentRoundNumber, i + 1, dart.startingScore))
-        }
-
-        BulkInserter.insert(darts)
-
-        getCurrentPlayerState().addDarts(dartsThrown)
+        getCurrentPlayerState().commitRound()
     }
 
     open fun readyForThrow()

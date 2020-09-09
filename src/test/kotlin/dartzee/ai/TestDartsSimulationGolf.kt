@@ -36,7 +36,7 @@ class TestDartsSimulationGolf: AbstractTest()
         val dartboard = makeTestDartboard()
 
         val hmDartNoToStopThreshold = mutableMapOf(1 to 2, 2 to 3)
-        val model = predictableGolfModel(dartboard, hmDartNoToStopThreshold) { hole, dartNo ->
+        val model = predictableGolfModel(dartboard, hmDartNoToStopThreshold) { hole, _ ->
             when
             {
                 hole == 1 -> ScoreAndSegmentType(1, SegmentType.TREBLE)
