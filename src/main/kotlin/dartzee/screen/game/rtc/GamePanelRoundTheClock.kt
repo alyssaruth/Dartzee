@@ -131,12 +131,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        var allHits = true
-        for (dart in getDartsThrown())
-        {
-            allHits = allHits and dart.hitClockTarget(config.clockType)
-        }
-
+        val allHits = getDartsThrown().all { it.hitClockTarget(config.clockType) }
         return dartsThrownCount() == 3 && !allHits
 
     }
