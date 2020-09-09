@@ -619,9 +619,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     }
 
     /**
-     * Loop through the darts thrown, saving them to the database.
+     * Commit round to current player state and the database
      */
-    protected fun saveDartsToDatabase()
+    protected fun commitRound()
     {
         getCurrentPlayerState().commitRound()
     }

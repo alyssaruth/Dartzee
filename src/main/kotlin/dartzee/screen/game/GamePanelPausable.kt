@@ -32,7 +32,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
             handlePlayerFinish()
         }
 
-        saveDartsToDatabase()
+        commitRound()
 
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
 

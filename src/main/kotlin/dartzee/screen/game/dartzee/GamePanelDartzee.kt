@@ -165,7 +165,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         disableInputButtons()
         dartboard.clearDarts()
 
-        saveDartsToDatabase()
+        commitRound()
 
         finishRound()
 

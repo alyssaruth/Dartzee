@@ -79,7 +79,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
     override fun saveDartsAndProceed()
     {
         unlockAchievements()
-        saveDartsToDatabase()
+        commitRound()
 
         activeScorer.finaliseRoundScore()
 
