@@ -1,13 +1,17 @@
 package dartzee.game.state
 
 import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
+import dartzee.db.DartEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.screen.game.scorer.DartsScorer
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
+import java.awt.Point
 
 class TestAbstractPlayerState: AbstractTest()
 {
@@ -35,5 +39,59 @@ class TestAbstractPlayerState: AbstractTest()
         state.addDarts(mutableListOf(dart))
 
         dart.participantId shouldBe pt.rowId
+    }
+
+    @Test
+    fun `Should support resetting the currently thrown darts`()
+    {
+        val state = DefaultPlayerState(insertParticipant(), mockk<DartsScorer>())
+
+        state.dartThrown(Dart(20, 1))
+        state.dartsThrown.shouldContainExactly(Dart(20, 1))
+
+        state.resetRound()
+        state.dartsThrown.shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should support committing a round of darts and saving them to the database`()
+    {
+        val pt = insertParticipant(insertPlayer = true)
+        val dartOne = Dart(20, 1, Point(50, 50), SegmentType.OUTER_SINGLE)
+        val dartTwo = Dart(5, 1, Point(40, 45), SegmentType.OUTER_SINGLE)
+        val dartThree = Dart(1, 1, Point(60, 45), SegmentType.OUTER_SINGLE)
+
+        val state = DefaultPlayerState(pt, mockk<DartsScorer>())
+        state.dartThrown(dartOne)
+        state.dartThrown(dartTwo)
+        state.dartThrown(dartThree)
+
+        state.commitRound()
+        state.dartsThrown.shouldBeEmpty()
+        state.darts.shouldContainExactly(listOf(listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1))))
+
+        val entities = DartEntity().retrieveEntities()
+        entities.forEach {
+            it.playerId shouldBe pt.playerId
+            it.participantId shouldBe pt.rowId
+            it.roundNumber shouldBe state.lastRoundNumber
+        }
+
+        val entityOne = entities.find { it.ordinal == 1 }!!
+        validateDartEntity(entityOne, dartOne)
+
+        val entityTwo = entities.find { it.ordinal == 2 }!!
+        validateDartEntity(entityTwo, dartTwo)
+
+        val entityThree = entities.find { it.ordinal == 3 }!!
+        validateDartEntity(entityThree, dartThree)
+    }
+    private fun validateDartEntity(dartEntity: DartEntity, originalDart: Dart)
+    {
+        dartEntity.multiplier shouldBe originalDart.multiplier
+        dartEntity.score shouldBe originalDart.score
+        dartEntity.posX shouldBe originalDart.getX()
+        dartEntity.posY shouldBe originalDart.getY()
+        dartEntity.segmentType shouldBe originalDart.segmentType
     }
 }
