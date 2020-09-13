@@ -14,7 +14,7 @@ import javax.swing.SwingConstants
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
 
-class DartsScorerX01(parent: GamePanelPausable<out DartsScorerPausable>, gameParams: String) : DartsScorerPausable(parent)
+class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : DartsScorerPausable(parent)
 {
     private val lblStartingScore = JLabel(gameParams)
 

@@ -2,15 +2,14 @@ package dartzee.screen.game
 
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.Dartboard
 import dartzee.screen.game.scorer.DartsScorerPausable
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PreferenceUtil
 
-abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
-        DartsGamePanel<S, Dartboard, DefaultPlayerState>(parent, game, totalPlayers)
+abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractPlayerState>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+        DartsGamePanel<S, Dartboard, PlayerState>(parent, game, totalPlayers)
 {
     private var aiShouldPause = false
 
@@ -20,7 +19,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
     abstract fun currentPlayerHasFinished(): Boolean
 
     override fun factoryDartboard() = Dartboard()
-    override fun factoryState(pt: ParticipantEntity) = DefaultPlayerState(pt)
 
     override fun saveDartsAndProceed()
     {

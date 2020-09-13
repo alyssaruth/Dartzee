@@ -10,19 +10,23 @@ import dartzee.core.util.doBadLuck
 import dartzee.core.util.doForsyth
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.state.ClockPlayerState
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
-open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerRoundTheClock>(parent, game, totalPlayers)
+open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerRoundTheClock, ClockPlayerState>(parent, game, totalPlayers)
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
     val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
 
+    override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(pt)
+
     override fun doAiTurn(model: DartsAiModel)
     {
-        val currentTarget = activeScorer.currentClockTarget
+        val currentTarget = getCurrentPlayerState().currentTarget
         model.throwClockDart(currentTarget, config.clockType, dartboard)
     }
 
@@ -62,7 +66,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
     {
-        var clockTarget = scorer.currentClockTarget
+        var clockTarget = getCurrentPlayerState().currentTarget
 
         for (dart in darts)
         {
@@ -71,8 +75,9 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
             if (dart.hitClockTarget(config.clockType))
             {
+                getCurrentPlayerState().incrementCurrentTarget()
                 scorer.incrementCurrentClockTarget()
-                clockTarget = scorer.currentClockTarget
+                clockTarget = getCurrentPlayerState().currentTarget
             }
         }
 
@@ -91,11 +96,12 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
-        val currentClockTarget = activeScorer.currentClockTarget
+        val currentClockTarget = getCurrentPlayerState().currentTarget
         dart.startingScore = currentClockTarget
 
         if (dart.hitClockTarget(config.clockType))
         {
+            getCurrentPlayerState().incrementCurrentTarget()
             activeScorer.incrementCurrentClockTarget()
 
             if (dartsThrownCount() == 4)
@@ -125,7 +131,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        if (activeScorer.currentClockTarget > 20)
+        if (getCurrentPlayerState().currentTarget > 20)
         {
             //Finished.
             return true
@@ -181,10 +187,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     }
 
 
-    override fun currentPlayerHasFinished(): Boolean
-    {
-        return activeScorer.currentClockTarget > 20
-    }
+    override fun currentPlayerHasFinished() = getCurrentPlayerState().currentTarget > 20
 
     override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams).clockType)
 

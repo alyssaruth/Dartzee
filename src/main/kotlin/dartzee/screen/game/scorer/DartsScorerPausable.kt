@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 
-abstract class DartsScorerPausable(private val parent: GamePanelPausable<out DartsScorerPausable>) : DartsScorer(), ActionListener
+abstract class DartsScorerPausable(private val parent: GamePanelPausable<*, *>) : DartsScorer(), ActionListener
 {
     private val btnResume = JButton("")
 

@@ -5,12 +5,11 @@ import dartzee.`object`.DartNotThrown
 import dartzee.game.ClockType
 import dartzee.screen.game.GamePanelPausable
 
-class DartsScorerRoundTheClock(parent: GamePanelPausable<out DartsScorerPausable>, private val clockType: ClockType) : DartsScorerPausable(parent)
+class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : DartsScorerPausable(parent)
 {
     //Always start at 1. Bit of an abuse to stick this here, it just avoids having another hmPlayerNumber->X.
     private var clockTarget = 1
-    var currentClockTarget = 1
-        private set
+    private var currentClockTarget = 1
 
     override fun confirmCurrentRound()
     {
