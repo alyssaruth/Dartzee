@@ -30,7 +30,7 @@ open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayer
     private fun getPeakScore(playerName: String): Any?
     {
         val states = hmPlayerToStates[playerName] ?: return null
-        return states.mapNotNull { it.scorer.getMaxScoreSoFar() }.max()
+        return states.mapNotNull { it.getPeakScore() }.max()
     }
 
     private fun getScoreRow(desc: String, f: (i: List<Int>) -> Number) = prepareRow(desc) { playerName ->

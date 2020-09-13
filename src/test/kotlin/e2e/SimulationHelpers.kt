@@ -7,6 +7,6 @@ import dartzee.screen.stats.player.PlayerStatisticsScreen
 
 fun awaitStatisticsScreen(): PlayerStatisticsScreen
 {
-    awaitCondition(20000) { getWindow { it.findChild<PlayerStatisticsScreen>() != null }?.isVisible == true }
+    awaitCondition { getWindow { it.findChild<PlayerStatisticsScreen>() != null }?.isVisible == true }
     return getWindow { it.findChild<PlayerStatisticsScreen>() != null }!!.getChild()
 }

@@ -34,15 +34,15 @@ import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.sql.SQLException
-import java.util.*
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState<S>>(
+abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState>(
         protected val parentWindow: AbstractDartsGameScreen,
         val gameEntity: GameEntity,
         protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener
 {
     private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
+    private val hmPlayerNumberToScorer = mutableMapOf<Int, S>()
 
     val gameTitle = makeGameTitle()
 
@@ -107,13 +107,14 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     fun getDartsThrown() = getCurrentPlayerState().dartsThrown
     fun dartsThrownCount() = getDartsThrown().size
 
-    protected fun addState(playerNumber: Int, state: PlayerState) {
+    protected fun addState(playerNumber: Int, state: PlayerState, scorer: S) {
         hmPlayerNumberToState[playerNumber] = state
+        hmPlayerNumberToScorer[playerNumber] = scorer
     }
 
-    protected fun getCurrentScorer() = getCurrentPlayerState().scorer
-    protected fun getScorer(playerNumber: Int) = getPlayerState(playerNumber).scorer
-    protected fun getPlayerNumberForScorer(scorer: S): Int = hmPlayerNumberToState.filter { it.value.scorer == scorer }.keys.first()
+    protected fun getCurrentScorer() = hmPlayerNumberToScorer.getValue(currentPlayerNumber)
+    protected fun getScorer(playerNumber: Int) = hmPlayerNumberToScorer.getValue(playerNumber)
+    protected fun getPlayerNumberForScorer(scorer: S): Int = hmPlayerNumberToScorer.filter { it.value == scorer }.keys.first()
 
 
     init
@@ -165,7 +166,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     /**
      * Abstract methods
      */
-    abstract fun factoryState(pt: ParticipantEntity, scorer: S): PlayerState
+    abstract fun factoryState(pt: ParticipantEntity): PlayerState
     abstract fun doAiTurn(model: DartsAiModel)
 
     abstract fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
@@ -189,7 +190,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             addParticipant(participant)
 
             val scorer = assignScorer(player)
-            addState(ix, factoryState(participant, scorer))
+            addState(ix, factoryState(participant), scorer)
         }
 
         initForAi(hasAi())
@@ -298,9 +299,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     protected fun updateScorersWithFinishingPositions()
     {
-        hmPlayerNumberToState.keys.forEach {
-            val state = getPlayerState(it)
-            state.scorer.updateResultColourForPosition(state.pt.finishingPosition)
+        hmPlayerNumberToState.keys.forEach { playerNumber ->
+            val state = getPlayerState(playerNumber)
+            val scorer = getScorer(playerNumber)
+            scorer.updateResultColourForPosition(state.pt.finishingPosition)
         }
     }
 
@@ -318,7 +320,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             addParticipant(pt)
 
             val scorer = assignScorer(pt.getPlayer())
-            addState(i, factoryState(pt, scorer))
+            addState(i, factoryState(pt), scorer)
         }
 
         initForAi(hasAi())

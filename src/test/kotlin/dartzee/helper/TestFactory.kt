@@ -5,8 +5,6 @@ import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.state.DefaultPlayerState
-import dartzee.screen.game.scorer.DartsScorer
-import io.mockk.mockk
 import java.awt.Point
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
@@ -51,19 +49,19 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>
     return darts.toList().chunked(3)
 }
 
-inline fun <reified S: DartsScorer> makeDefaultPlayerState(player: PlayerEntity = insertPlayer(),
+fun makeDefaultPlayerState(player: PlayerEntity = insertPlayer(),
                            participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
                            dartsThrown: List<Dart> = listOf(makeDart()),
-                           lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState<S>
+                           lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState
 {
-    return DefaultPlayerState(participant, mockk(relaxed = true), lastRoundNumber, mutableListOf(dartsThrown))
+    return DefaultPlayerState(participant, lastRoundNumber, mutableListOf(dartsThrown))
 }
 
-inline fun <reified S: DartsScorer> makeDefaultPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
-                                                           participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                                                           dartsThrown: List<List<Dart>> = emptyList(),
-                                                           lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState<S>
+fun makeDefaultPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
+                                     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                                     dartsThrown: List<List<Dart>> = emptyList(),
+                                     lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState
 {
     dartsThrown.flatten().forEach { it.participantId = participant.rowId }
-    return DefaultPlayerState(participant, mockk(relaxed = true), lastRoundNumber, dartsThrown.toMutableList())
+    return DefaultPlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
 }

@@ -16,7 +16,7 @@ import javax.swing.JPanel
 /**
  * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
  */
-class MatchSummaryPanel<PlayerState: AbstractPlayerState<*>>(val match: DartsMatchEntity,
+class MatchSummaryPanel<PlayerState: AbstractPlayerState>(val match: DartsMatchEntity,
                                                              private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) :
     PanelWithScorers<MatchScorer>(), ActionListener
 {

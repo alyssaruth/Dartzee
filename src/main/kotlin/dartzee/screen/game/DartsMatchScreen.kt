@@ -16,7 +16,7 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<*>>(private val matchPanel: MatchSummaryPanel<PlayerState>,
+abstract class DartsMatchScreen<PlayerState: AbstractPlayerState>(private val matchPanel: MatchSummaryPanel<PlayerState>,
                                                                      val match: DartsMatchEntity,
                                                                      players: List<PlayerEntity>):
         AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener

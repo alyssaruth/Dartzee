@@ -21,7 +21,7 @@ import javax.swing.JPanel
 /**
  * Shows running stats for X01 games - three-dart average, checkout % etc.
  */
-open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerX01>>(), PropertyChangeListener
+open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState>(), PropertyChangeListener
 {
     private val panel = JPanel()
     private val lblSetupThreshold = JLabel("Setup Threshold")

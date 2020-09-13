@@ -5,11 +5,9 @@ import dartzee.`object`.SegmentType
 import dartzee.db.DartEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
-import dartzee.screen.game.scorer.DartsScorer
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import io.mockk.mockk
 import org.junit.Test
 import java.awt.Point
 
@@ -18,7 +16,7 @@ class TestAbstractPlayerState: AbstractTest()
     @Test
     fun `it should take a copy of the darts that are added`()
     {
-        val state = DefaultPlayerState(insertParticipant(), mockk<DartsScorer>())
+        val state = DefaultPlayerState(insertParticipant())
         val darts = mutableListOf(Dart(20, 1))
 
         state.addDarts(darts)
@@ -31,7 +29,7 @@ class TestAbstractPlayerState: AbstractTest()
     fun `It should populate the darts with the ParticipantId`()
     {
         val pt = insertParticipant()
-        val state = DefaultPlayerState(pt, mockk<DartsScorer>())
+        val state = DefaultPlayerState(pt)
 
         val dart = Dart(20, 1)
         dart.participantId shouldBe ""
@@ -44,7 +42,7 @@ class TestAbstractPlayerState: AbstractTest()
     @Test
     fun `Should support resetting the currently thrown darts`()
     {
-        val state = DefaultPlayerState(insertParticipant(), mockk<DartsScorer>())
+        val state = DefaultPlayerState(insertParticipant())
 
         state.dartThrown(Dart(20, 1))
         state.dartsThrown.shouldContainExactly(Dart(20, 1))
@@ -61,7 +59,7 @@ class TestAbstractPlayerState: AbstractTest()
         val dartTwo = Dart(5, 1, Point(40, 45), SegmentType.OUTER_SINGLE)
         val dartThree = Dart(1, 1, Point(60, 45), SegmentType.OUTER_SINGLE)
 
-        val state = DefaultPlayerState(pt, mockk<DartsScorer>())
+        val state = DefaultPlayerState(pt)
         state.dartThrown(dartOne)
         state.dartThrown(dartTwo)
         state.dartThrown(dartThree)
