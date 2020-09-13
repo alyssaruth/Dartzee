@@ -3,6 +3,7 @@ package e2e
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.ai.AimDart
+import dartzee.ai.SimulationRunner
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
@@ -16,6 +17,7 @@ import dartzee.screen.stats.player.StatisticsTabTotalScore
 import dartzee.screen.stats.player.x01.StatisticsTabFinishBreakdown
 import dartzee.screen.stats.player.x01.StatisticsTabX01ThreeDartScores
 import dartzee.screen.stats.player.x01.StatisticsTabX01TopFinishes
+import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
@@ -24,6 +26,13 @@ import javax.swing.JButton
 
 class SimulationE2E: AbstractTest()
 {
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+
+        InjectedThings.simulationRunner = SimulationRunner()
+    }
+
     @Test
     fun `Should be able to run a simulation of 500 games`()
     {
