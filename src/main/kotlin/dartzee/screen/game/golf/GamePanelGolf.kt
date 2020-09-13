@@ -63,7 +63,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         }
 
         val score = getScoreForMostRecentDart()
-        if (activeScorer.human)
+        if (getCurrentPlayerState().isHuman())
         {
             return score == 1
         }

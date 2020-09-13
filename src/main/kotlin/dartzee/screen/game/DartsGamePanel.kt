@@ -521,7 +521,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         activeScorer.addDart(dart)
 
         //We've clicked on the dartboard, so dismiss the slider
-        if (activeScorer.human)
+        if (getCurrentPlayerState().isHuman())
         {
             dismissSlider()
         }
@@ -532,10 +532,10 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         doAnimations(dart)
 
         //Enable both of these
-        btnReset.isEnabled = activeScorer.human
+        btnReset.isEnabled = getCurrentPlayerState().isHuman()
         if (!mustContinueThrowing())
         {
-            btnConfirm.isEnabled = activeScorer.human
+            btnConfirm.isEnabled = getCurrentPlayerState().isHuman()
         }
 
         //If we've thrown three or should stop for other reasons (bust in X01), then stop throwing
@@ -575,7 +575,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     protected fun stopThrowing()
     {
-        if (activeScorer.human)
+        if (getCurrentPlayerState().isHuman())
         {
             dartboard.stopListening()
         }
@@ -616,7 +616,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         btnReset.isEnabled = false
 
         //Might need to re-enable the dartboard for listening if we're a human player
-        val human = activeScorer.human
+        val human = getCurrentPlayerState().isHuman()
         dartboard.listen(human)
     }
 
@@ -630,7 +630,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     open fun readyForThrow()
     {
-        if (activeScorer.human)
+        if (getCurrentPlayerState().isHuman())
         {
             //Human player
             dartboard.ensureListening()

@@ -12,6 +12,8 @@ abstract class AbstractPlayerState
     abstract val darts: MutableList<List<Dart>>
     abstract val dartsThrown: MutableList<Dart>
 
+    fun isHuman() = !pt.isAi()
+
     fun dartThrown(dart: Dart)
     {
         dart.participantId = pt.rowId
