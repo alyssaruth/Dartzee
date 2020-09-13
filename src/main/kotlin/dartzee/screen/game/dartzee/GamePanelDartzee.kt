@@ -36,7 +36,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     }
 
     override fun factoryDartboard() = DartzeeDartboard()
-    override fun factoryState(pt: ParticipantEntity, scorer: DartsScorerDartzee) = DartzeePlayerState(pt, scorer)
+    override fun factoryState(pt: ParticipantEntity) = DartzeePlayerState(pt)
 
     override fun doAiTurn(model: DartsAiModel)
     {

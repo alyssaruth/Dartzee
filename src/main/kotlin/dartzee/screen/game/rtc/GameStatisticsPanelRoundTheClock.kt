@@ -6,10 +6,9 @@ import dartzee.core.util.maxOrZero
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
-import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 import dartzee.utils.getLongestStreak
 
-open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState<DartsScorerRoundTheClock>>()
+open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState>()
 {
     private val config = RoundTheClockConfig.fromJson(gameParams)
 

@@ -10,7 +10,7 @@ import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PreferenceUtil
 
 abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
-        DartsGamePanel<S, Dartboard, DefaultPlayerState<S>>(parent, game, totalPlayers)
+        DartsGamePanel<S, Dartboard, DefaultPlayerState>(parent, game, totalPlayers)
 {
     private var aiShouldPause = false
 
@@ -20,7 +20,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable>(parent: AbstractDartsG
     abstract fun currentPlayerHasFinished(): Boolean
 
     override fun factoryDartboard() = Dartboard()
-    override fun factoryState(pt: ParticipantEntity, scorer: S) = DefaultPlayerState(pt, scorer)
+    override fun factoryState(pt: ParticipantEntity) = DefaultPlayerState(pt)
 
     override fun saveDartsAndProceed()
     {

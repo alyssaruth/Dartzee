@@ -4,7 +4,6 @@ import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.game.state.DartzeePlayerState
 import dartzee.helper.makeDartzeePlayerState
-import dartzee.helper.makeDartzeeScorer
 import dartzee.helper.makeRoundResultEntities
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getValueForRow
@@ -17,21 +16,16 @@ class TestGameStatisticsPanelDartzee: AbstractGameStatisticsPanelTest<DartzeePla
     {
         //Initial score of 26
         val firstRound = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1))
-        val scorer = makeDartzeeScorer(firstRound)
 
         //Score of 83
         val secondRound = listOf(Dart(19, 3), Dart(17, 1), Dart(3, 1))
-        secondRound.forEach { scorer.addDart(it) }
         val secondResult = DartzeeRoundResult(4, true, 57)
-        scorer.setResult(secondResult)
 
         //Score of 42
         val thirdRound = listOf(Dart(20, 3), Dart(20, 0), Dart(5, 1))
-        thirdRound.forEach { scorer.addDart(it) }
         val thirdResult = DartzeeRoundResult(1, false, -41)
-        scorer.setResult(thirdResult)
 
-        return makeDartzeePlayerState(scorer = scorer, dartsThrown = listOf(firstRound, secondRound, thirdRound), roundResults = listOf(secondResult, thirdResult))
+        return makeDartzeePlayerState(dartsThrown = listOf(firstRound, secondRound, thirdRound), roundResults = listOf(secondResult, thirdResult))
     }
 
     override fun factoryStatsPanel() = GameStatisticsPanelDartzee()

@@ -16,7 +16,7 @@ import javax.swing.table.DefaultTableModel
 /**
  * Shows statistics for each player in a particular game, based on the PlayerStates
  */
-abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<*>>: JPanel()
+abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState>: JPanel()
 {
     protected val playerNamesOrdered = mutableListOf<String>()
     protected var participants: List<ParticipantEntity> = emptyList()

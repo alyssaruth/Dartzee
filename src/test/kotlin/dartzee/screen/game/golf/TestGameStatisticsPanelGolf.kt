@@ -8,15 +8,14 @@ import dartzee.helper.makeDefaultPlayerStateWithRounds
 import dartzee.helper.makeGolfRound
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getValueForRow
-import dartzee.screen.game.scorer.DartsScorerGolf
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayerState<DartsScorerGolf>, GameStatisticsPanelGolf>()
+class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayerState, GameStatisticsPanelGolf>()
 {
     override fun factoryStatsPanel() = GameStatisticsPanelGolf()
 
-    override fun makePlayerState(): DefaultPlayerState<DartsScorerGolf>
+    override fun makePlayerState(): DefaultPlayerState
     {
         val roundOne = makeGolfRound(1, listOf(makeDart(1, 1), makeDart(1, 1)))
         val roundTwo = makeGolfRound(2, listOf(makeDart(17, 1), makeDart(2, 3)))
@@ -29,7 +28,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     {
         val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.OUTER_SINGLE)))
 
-        val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
+        val state = makeDefaultPlayerState(dartsThrown = roundOne)
 
         //4
         val statsPanel = factoryStatsPanel()
@@ -68,7 +67,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     {
         val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.OUTER_SINGLE)))
 
-        val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
+        val state = makeDefaultPlayerState(dartsThrown = roundOne)
 
         // [Hit]
         val statsPanel = factoryStatsPanel()
@@ -93,7 +92,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     {
         // 3-5-4
         val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.INNER_SINGLE), makeDart(20, 1), makeDart(1, 1)))
-        val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
+        val state = makeDefaultPlayerState(dartsThrown = roundOne)
 
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(state))
@@ -120,7 +119,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     {
         //4-3-2. You've gambled twice, and gained 1 each time. 2 points improved.
         val roundOne = makeGolfRound(1, listOf(makeDart(1, 1), makeDart(1, 1, SegmentType.INNER_SINGLE), makeDart(1, 3)))
-        val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
+        val state = makeDefaultPlayerState(dartsThrown = roundOne)
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 2
@@ -161,7 +160,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<DefaultPlayer
     {
         val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.OUTER_SINGLE)))
 
-        val state = makeDefaultPlayerState<DartsScorerGolf>(dartsThrown = roundOne)
+        val state = makeDefaultPlayerState(dartsThrown = roundOne)
 
         //4
         val statsPanel = factoryStatsPanel()

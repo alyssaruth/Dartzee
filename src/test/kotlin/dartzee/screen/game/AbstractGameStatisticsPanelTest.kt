@@ -8,7 +8,7 @@ import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState<*>, S: AbstractGameStatisticsPanel<PlayerState>>: AbstractTest()
+abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState, S: AbstractGameStatisticsPanel<PlayerState>>: AbstractTest()
 {
     abstract fun factoryStatsPanel(): S
     abstract fun makePlayerState(): PlayerState
