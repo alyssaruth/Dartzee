@@ -10,7 +10,7 @@ import dartzee.db.TestAchievementEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.ClockPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
@@ -133,7 +133,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
 
-            addState(0, DefaultPlayerState(pt, 0), scorer)
+            addState(0, ClockPlayerState(pt, 0), scorer)
 
             currentRoundNumber = 1
         }

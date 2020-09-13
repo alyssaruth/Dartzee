@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.DefaultPlayerState
 import java.awt.Point
 
@@ -64,4 +65,13 @@ fun makeDefaultPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
 {
     dartsThrown.flatten().forEach { it.participantId = participant.rowId }
     return DefaultPlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
+}
+
+fun makeClockPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
+                                   participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                                   dartsThrown: List<List<Dart>> = emptyList(),
+                                   lastRoundNumber: Int = dartsThrown.size): ClockPlayerState
+{
+    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
+    return ClockPlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
 }

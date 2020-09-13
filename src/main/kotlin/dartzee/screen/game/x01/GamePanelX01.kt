@@ -11,19 +11,23 @@ import dartzee.core.util.doFawlty
 import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.state.DefaultPlayerState
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 
-open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerX01>(parent, game, totalPlayers)
+open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerX01, DefaultPlayerState>(parent, game, totalPlayers)
 {
     //Transient variables for each round
     private var startingScore = -1
     private var currentScore = -1
 
     private val hmPlayerNumberToBadLuckCount = HashMapCount<Int>()
+
+    override fun factoryState(pt: ParticipantEntity) = DefaultPlayerState(pt)
 
     override fun updateVariablesForNewRound()
     {

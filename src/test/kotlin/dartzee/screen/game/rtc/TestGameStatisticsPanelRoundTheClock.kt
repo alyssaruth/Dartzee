@@ -2,25 +2,25 @@ package dartzee.screen.game.rtc
 
 import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.ClockPlayerState
 import dartzee.helper.insertPlayer
+import dartzee.helper.makeClockPlayerStateWithRounds
 import dartzee.helper.makeDart
-import dartzee.helper.makeDefaultPlayerStateWithRounds
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getValueForRow
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<DefaultPlayerState, GameStatisticsPanelRoundTheClock>()
+class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<ClockPlayerState, GameStatisticsPanelRoundTheClock>()
 {
     override fun factoryStatsPanel() = GameStatisticsPanelRoundTheClock(RoundTheClockConfig(ClockType.Standard, true).toJson())
 
-    override fun makePlayerState(): DefaultPlayerState
+    override fun makePlayerState(): ClockPlayerState
     {
         val roundOne = listOf(makeDart(5, 1, startingScore = 1), makeDart(1, 1, startingScore = 1), makeDart(2, 3, startingScore = 2))
         val roundTwo = listOf(makeDart(3, 1, startingScore = 3), makeDart(4, 1, startingScore = 4), makeDart(5, 1, startingScore = 5), makeDart(6, 0, startingScore = 6))
 
-        return makeDefaultPlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo))
+        return makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo))
     }
 
     @Test
@@ -28,7 +28,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
     {
         val roundOne = listOf(makeDart(5, 1, startingScore = 1), makeDart(1, 1, startingScore = 1), makeDart(3, 1, startingScore = 2))
 
-        val state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(roundOne))
+        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne))
         val statsPanel = factoryStatsPanel()
 
         statsPanel.showStats(listOf(state))
@@ -46,8 +46,8 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
         val roundOneOther = listOf(makeDart(1, 1, startingScore = 1), makeDart(2, 0, startingScore = 2), makeDart(17, 1, startingScore = 2))
 
         val player = insertPlayer()
-        val stateOne = makeDefaultPlayerStateWithRounds(player, dartsThrown = listOf(roundOne))
-        val stateTwo = makeDefaultPlayerStateWithRounds(player, dartsThrown = listOf(roundOneOther))
+        val stateOne = makeClockPlayerStateWithRounds(player, dartsThrown = listOf(roundOne))
+        val stateTwo = makeClockPlayerStateWithRounds(player, dartsThrown = listOf(roundOneOther))
 
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(stateOne, stateTwo))
@@ -62,7 +62,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
     {
         val roundOne = listOf(makeDart(5, 1, startingScore = 1), makeDart(1, 0, startingScore = 1), makeDart(20, 3, startingScore = 1))
 
-        val state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(roundOne))
+        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne))
         val statsPanel = factoryStatsPanel()
 
         // [-]
@@ -94,7 +94,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
     {
         val roundOne = listOf(makeDart(5, 1, startingScore = 1), makeDart(1, 0, startingScore = 1), makeDart(20, 3, startingScore = 1))
 
-        val state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(roundOne))
+        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne))
         val statsPanel = factoryStatsPanel()
 
         // [-]
@@ -122,7 +122,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
     {
         val roundOne = listOf(makeDart(1, 1, startingScore = 1), makeDart(1, 2, startingScore = 1), makeDart(2, 1, startingScore = 2))
 
-        val state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(roundOne))
+        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne))
         val statsPanel = GameStatisticsPanelRoundTheClock(RoundTheClockConfig(ClockType.Doubles, true).toJson())
 
         // [2, -]
@@ -140,7 +140,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
     {
         val roundOne = listOf(makeDart(5, 1, startingScore = 1), makeDart(1, 1, startingScore = 1), makeDart(17, 3, startingScore = 2))
 
-        val state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(roundOne))
+        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne))
         val statsPanel = factoryStatsPanel()
 
         // [-]
@@ -168,13 +168,13 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Defa
         val hitRound = listOf(makeDart(5, 1, startingScore = 1), makeDart(1, 0, startingScore = 1), makeDart(1, 1, startingScore = 1))
 
         //3
-        var state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(hitRound))
+        var state = makeClockPlayerStateWithRounds(dartsThrown = listOf(hitRound))
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("2 - 3" to 1))
 
         //6
-        state = makeDefaultPlayerStateWithRounds(dartsThrown = listOf(missRound, hitRound))
+        state = makeClockPlayerStateWithRounds(dartsThrown = listOf(missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4 - 6" to 1))
 
