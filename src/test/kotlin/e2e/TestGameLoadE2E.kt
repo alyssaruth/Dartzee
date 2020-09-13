@@ -57,7 +57,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
         loserScorer.shouldBePaused()
         loserScorer.resume()
 
-        awaitCondition { loserScorer.playerIsFinished() }
+        awaitCondition(10000) { loserScorer.playerIsFinished() }
     }
 
     private fun verifyGameLoadedCorrectly(gameScreen: AbstractDartsGameScreen)

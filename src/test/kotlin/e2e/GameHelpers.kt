@@ -43,7 +43,7 @@ fun createPlayers(): TwoPlayers
     val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
     val winner = insertPlayer(model = aiModel, name = "Winner")
 
-    val loserModel = makeDartsModel(standardDeviation = 200.0)
+    val loserModel = makeDartsModel(standardDeviation = 150.0)
     val loser = insertPlayer(model = loserModel, name = "Loser")
 
     return TwoPlayers(winner, loser)
