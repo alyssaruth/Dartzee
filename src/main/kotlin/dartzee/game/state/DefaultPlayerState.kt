@@ -57,11 +57,10 @@ data class DartzeePlayerState(override val pt: ParticipantEntity,
         roundResults.add(result)
     }
 
+    fun getPeakScore() = (1..lastRoundNumber).map(::getCumulativeScore).max()
     fun getCumulativeScore(roundNumber: Int): Int
     {
         val roundResultTotal = roundResults.filter { it.roundNumber <= roundNumber }.sumBy { it.score }
         return roundResultTotal + sumScore(darts.first())
     }
-
-    fun getPeakScore() = (1..lastRoundNumber).map(::getCumulativeScore).max()
 }

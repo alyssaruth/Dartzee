@@ -81,7 +81,7 @@ fun getInnerSegments() = getAllPossibleSegments().filter { (it.score == 25 && !i
 
 fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<DartzeeRoundResultEntity> {
     val pt = insertParticipant()
-    return roundResult.mapIndexed { index, result -> DartzeeRoundResultEntity.factoryAndSave(result, pt, index + 1) }
+    return roundResult.mapIndexed { index, result -> DartzeeRoundResultEntity.factoryAndSave(result, pt, index + 2) }
 }
 
 fun makeDartzeePlayerState(name: String = "Bob",
