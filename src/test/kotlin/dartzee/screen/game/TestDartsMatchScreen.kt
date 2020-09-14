@@ -7,7 +7,7 @@ import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.X01PlayerState
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
@@ -110,7 +110,7 @@ class TestDartsMatchScreen: AbstractTest()
     @Test
     fun `Should pass certain fns through to the match summary panel`()
     {
-        val matchSummaryPanel = mockk<MatchSummaryPanel<DefaultPlayerState>>(relaxed = true)
+        val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
         val scrn = setUpMatchScreen(matchSummaryPanel = matchSummaryPanel)
 
         scrn.updateTotalScores()
@@ -127,7 +127,7 @@ class TestDartsMatchScreen: AbstractTest()
         val matchEntity = mockk<DartsMatchEntity>(relaxed = true)
         every { matchEntity.isComplete() } returns true
 
-        val matchSummaryPanel = mockk<MatchSummaryPanel<DefaultPlayerState>>(relaxed = true)
+        val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
         val scrn = setUpMatchScreen(match = matchEntity, matchSummaryPanel = matchSummaryPanel)
         scrn.startNextGameIfNecessary()
 
@@ -160,7 +160,7 @@ class TestDartsMatchScreen: AbstractTest()
     }
 
     private fun setUpMatchScreen(match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
-                                 matchSummaryPanel: MatchSummaryPanel<DefaultPlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
+                                 matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
     {
         PlayerImageEntity.createPresets()
         return FakeMatchScreen(match, listOf(insertPlayer(), insertPlayer()), matchSummaryPanel)
@@ -169,8 +169,8 @@ class TestDartsMatchScreen: AbstractTest()
 
 private class FakeMatchScreen(match: DartsMatchEntity,
                               players: List<PlayerEntity>,
-                              matchSummaryPanel: MatchSummaryPanel<DefaultPlayerState>):
-        DartsMatchScreen<DefaultPlayerState>(matchSummaryPanel, match, players)
+                              matchSummaryPanel: MatchSummaryPanel<X01PlayerState>):
+        DartsMatchScreen<X01PlayerState>(matchSummaryPanel, match, players)
 {
     override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelX01
     {

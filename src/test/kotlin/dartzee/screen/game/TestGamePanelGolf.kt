@@ -9,7 +9,7 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.TestAchievementEntity
 import dartzee.game.GameType
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.GolfPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
@@ -162,7 +162,7 @@ class TestGamePanelGolf: AbstractTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
 
-            addState(0, DefaultPlayerState(pt, 0), scorer)
+            addState(0, GolfPlayerState(pt, 0), scorer)
 
             currentRoundNumber = 1
         }

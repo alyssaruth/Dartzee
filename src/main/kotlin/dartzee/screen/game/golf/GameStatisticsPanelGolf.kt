@@ -2,10 +2,10 @@ package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.GolfPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 
-open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<DefaultPlayerState>()
+open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<GolfPlayerState>()
 {
     override fun getRankedRowsHighestWins() = listOf("Points Improved")
     override fun getRankedRowsLowestWins() = listOf("Best Hole", "Avg. Hole", "Worst Hole", "Miss %", "Points Squandered")

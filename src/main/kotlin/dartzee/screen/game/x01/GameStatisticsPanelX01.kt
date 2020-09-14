@@ -5,9 +5,8 @@ import dartzee.core.bean.NumberField
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
-import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
 import dartzee.utils.isCheckoutDart
@@ -21,7 +20,7 @@ import javax.swing.JPanel
 /**
  * Shows running stats for X01 games - three-dart average, checkout % etc.
  */
-open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPanel<DefaultPlayerState>(), PropertyChangeListener
+open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPanel<X01PlayerState>(), PropertyChangeListener
 {
     private val panel = JPanel()
     private val lblSetupThreshold = JLabel("Setup Threshold")

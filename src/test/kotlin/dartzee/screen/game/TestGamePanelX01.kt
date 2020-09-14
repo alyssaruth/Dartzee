@@ -6,7 +6,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.db.*
 import dartzee.game.GameType
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
@@ -142,7 +142,7 @@ class TestGamePanelX01: AbstractTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
 
-            addState(0, DefaultPlayerState(pt, 0), scorer)
+            addState(0, X01PlayerState(pt, 0), scorer)
 
             currentRoundNumber = 1
         }
