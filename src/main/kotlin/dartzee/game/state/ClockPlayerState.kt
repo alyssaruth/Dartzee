@@ -13,4 +13,6 @@ data class ClockPlayerState(override val pt: ParticipantEntity,
     {
         currentTarget++
     }
+
+    override fun getScoreSoFar() = -1
 }

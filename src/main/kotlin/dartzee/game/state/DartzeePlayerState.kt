@@ -22,4 +22,6 @@ data class DartzeePlayerState(override val pt: ParticipantEntity,
         val roundResultTotal = roundResults.filter { it.roundNumber <= roundNumber }.sumBy { it.score }
         return roundResultTotal + sumScore(darts.first())
     }
+
+    override fun getScoreSoFar() = getCumulativeScore(lastRoundNumber)
 }
