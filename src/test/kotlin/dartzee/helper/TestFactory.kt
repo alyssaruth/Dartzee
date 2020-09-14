@@ -6,6 +6,7 @@ import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.X01PlayerState
 import java.awt.Point
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
@@ -74,4 +75,21 @@ fun makeClockPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
 {
     dartsThrown.flatten().forEach { it.participantId = participant.rowId }
     return ClockPlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
+}
+
+fun makeX01PlayerState(player: PlayerEntity = insertPlayer(),
+                           participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                           dartsThrown: List<Dart> = listOf(makeDart()),
+                           lastRoundNumber: Int = dartsThrown.size): X01PlayerState
+{
+    return X01PlayerState(participant, lastRoundNumber, mutableListOf(dartsThrown))
+}
+
+fun makeX01PlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
+                                   participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                                   dartsThrown: List<List<Dart>> = emptyList(),
+                                   lastRoundNumber: Int = dartsThrown.size): X01PlayerState
+{
+    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
+    return X01PlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
 }
