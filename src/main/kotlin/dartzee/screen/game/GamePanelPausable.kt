@@ -103,7 +103,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
 
     fun pauseLastPlayer()
     {
-        if (!activeScorer.human && cpuThread != null)
+        if (!getCurrentPlayerState().isHuman() && cpuThread != null)
         {
             aiShouldPause = true
             cpuThread!!.join()

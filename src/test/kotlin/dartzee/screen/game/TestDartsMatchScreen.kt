@@ -149,7 +149,7 @@ class TestDartsMatchScreen: AbstractTest()
         val firstGame = insertGame()
         scrn.addGameToMatchOnEdt(firstGame)
 
-        scrn.startNextGameIfNecessary()
+        scrn.startNextGameIfNecessaryOnEdt()
 
         //Players should have been shuffled
         match.players.shouldContainExactly(p2, p1)
@@ -189,4 +189,10 @@ private class FakeMatchScreen(match: DartsMatchEntity,
 
         return panel!!
     }
+
+    fun startNextGameIfNecessaryOnEdt()
+    {
+        SwingUtilities.invokeAndWait { startNextGameIfNecessary() }
+    }
+
 }
