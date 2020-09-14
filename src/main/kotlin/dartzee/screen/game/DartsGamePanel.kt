@@ -114,7 +114,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     protected fun getCurrentScorer() = hmPlayerNumberToScorer.getValue(currentPlayerNumber)
     protected fun getScorer(playerNumber: Int) = hmPlayerNumberToScorer.getValue(playerNumber)
-    protected fun getPlayerNumberForScorer(scorer: S): Int = hmPlayerNumberToScorer.filter { it.value == scorer }.keys.first()
+    protected fun getPlayerNumberForScorer(scorer: S): Int = scorersOrdered.indexOf(scorer)
 
 
     init
