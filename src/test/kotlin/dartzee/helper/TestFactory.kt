@@ -5,7 +5,7 @@ import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.state.ClockPlayerState
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.X01PlayerState
 import java.awt.Point
 
@@ -51,23 +51,6 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>
     return darts.toList().chunked(3)
 }
 
-fun makeDefaultPlayerState(player: PlayerEntity = insertPlayer(),
-                           participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                           dartsThrown: List<Dart> = listOf(makeDart()),
-                           lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState
-{
-    return DefaultPlayerState(participant, lastRoundNumber, mutableListOf(dartsThrown))
-}
-
-fun makeDefaultPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
-                                     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                                     dartsThrown: List<List<Dart>> = emptyList(),
-                                     lastRoundNumber: Int = dartsThrown.size): DefaultPlayerState
-{
-    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
-    return DefaultPlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
-}
-
 fun makeClockPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
                                    participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
                                    dartsThrown: List<List<Dart>> = emptyList(),
@@ -92,4 +75,21 @@ fun makeX01PlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
 {
     dartsThrown.flatten().forEach { it.participantId = participant.rowId }
     return X01PlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
+}
+
+fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
+                       participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                       dartsThrown: List<Dart> = listOf(makeDart()),
+                       lastRoundNumber: Int = dartsThrown.size): GolfPlayerState
+{
+    return GolfPlayerState(participant, lastRoundNumber, mutableListOf(dartsThrown))
+}
+
+fun makeGolfPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
+                                 participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                                 dartsThrown: List<List<Dart>> = emptyList(),
+                                 lastRoundNumber: Int = dartsThrown.size): GolfPlayerState
+{
+    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
+    return GolfPlayerState(participant, lastRoundNumber, dartsThrown.toMutableList())
 }

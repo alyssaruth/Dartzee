@@ -6,7 +6,6 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.db.*
 import dartzee.game.GameType
-import dartzee.game.state.DefaultPlayerState
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

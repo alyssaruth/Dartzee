@@ -41,8 +41,5 @@ abstract class AbstractPlayerState
     }
 }
 
-data class DefaultPlayerState(override val pt: ParticipantEntity,
-                              override var lastRoundNumber: Int = 0,
-                              override val darts: MutableList<List<Dart>> = mutableListOf(),
-                              override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
+
 

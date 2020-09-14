@@ -10,20 +10,20 @@ import dartzee.core.util.doGolfMiss
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
-import dartzee.game.state.DefaultPlayerState
+import dartzee.game.state.GolfPlayerState
 import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
 
 open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
-        GamePanelFixedLength<DartsScorerGolf, Dartboard, DefaultPlayerState>(parent, game, totalPlayers)
+        GamePanelFixedLength<DartsScorerGolf, Dartboard, GolfPlayerState>(parent, game, totalPlayers)
 {
     //Number of rounds - 9 holes or 18?
     override val totalRounds = Integer.parseInt(game.gameParams)
 
     override fun factoryDartboard() = Dartboard()
-    override fun factoryState(pt: ParticipantEntity) = DefaultPlayerState(pt)
+    override fun factoryState(pt: ParticipantEntity) = GolfPlayerState(pt)
 
     private fun getScoreForMostRecentDart() : Int
     {

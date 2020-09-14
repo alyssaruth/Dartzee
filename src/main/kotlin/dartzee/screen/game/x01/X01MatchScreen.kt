@@ -3,7 +3,6 @@ package dartzee.screen.game.x01
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.game.state.DefaultPlayerState
 import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.DartsMatchScreen

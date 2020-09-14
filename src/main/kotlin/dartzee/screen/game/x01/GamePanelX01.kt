@@ -13,7 +13,6 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.X01FinishEntity
-import dartzee.game.state.DefaultPlayerState
 import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable

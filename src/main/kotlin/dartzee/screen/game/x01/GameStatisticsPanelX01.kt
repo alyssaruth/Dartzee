@@ -5,10 +5,8 @@ import dartzee.core.bean.NumberField
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
-import dartzee.game.state.DefaultPlayerState
 import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
-import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
 import dartzee.utils.isCheckoutDart

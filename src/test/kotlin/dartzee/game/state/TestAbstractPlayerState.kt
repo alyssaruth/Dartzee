@@ -3,6 +3,7 @@ package dartzee.game.state
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.db.DartEntity
+import dartzee.db.ParticipantEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -92,4 +93,9 @@ class TestAbstractPlayerState: AbstractTest()
         dartEntity.posY shouldBe originalDart.getY()
         dartEntity.segmentType shouldBe originalDart.segmentType
     }
+
+    data class DefaultPlayerState(override val pt: ParticipantEntity,
+                                  override var lastRoundNumber: Int = 0,
+                                  override val darts: MutableList<List<Dart>> = mutableListOf(),
+                                  override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
 }
