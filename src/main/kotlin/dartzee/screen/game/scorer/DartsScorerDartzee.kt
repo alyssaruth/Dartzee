@@ -15,7 +15,7 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
         lblAvatar.addMouseListener(this)
     }
 
-    fun getTotalScore(): Int
+    private fun getTotalScore(): Int
     {
         val scores = model.getColumnValues(SCORE_COLUMN)
 
