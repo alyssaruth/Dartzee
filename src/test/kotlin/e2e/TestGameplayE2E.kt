@@ -34,7 +34,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     override fun beforeEachTest()
     {
         super.beforeEachTest()
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
+        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
     @Test
