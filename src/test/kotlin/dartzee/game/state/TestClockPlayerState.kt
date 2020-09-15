@@ -1,5 +1,6 @@
 package dartzee.game.state
 
+import dartzee.`object`.Dart
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeClockPlayerStateWithRounds
@@ -45,5 +46,27 @@ class TestClockPlayerState: AbstractTest()
         state.getCurrentTarget(ClockType.Standard) shouldBe 3
     }
 
+    @Test
+    fun `Should report a score of 0 when no darts thrown`()
+    {
+        val state = makeClockPlayerStateWithRounds()
+        state.getScoreSoFar() shouldBe 0
+    }
+
+    @Test
+    fun `Should report a score based on how many darts have been thrown, including uncommitted ones`()
+    {
+        val roundOne = listOf(Dart(1, 1), Dart(2, 1), Dart(3, 1), Dart(4, 1))
+        val roundTwo = listOf(Dart(5, 0), Dart(5, 0), Dart(5, 0))
+
+        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo))
+        state.getScoreSoFar() shouldBe 7
+
+        state.dartThrown(Dart(5, 1))
+        state.getScoreSoFar() shouldBe 8
+
+        state.resetRound()
+        state.getScoreSoFar() shouldBe 7
+    }
 
 }

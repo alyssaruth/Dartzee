@@ -8,5 +8,5 @@ data class GolfPlayerState(override val pt: ParticipantEntity,
                            override val darts: MutableList<List<Dart>> = mutableListOf(),
                            override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
 {
-    override fun getScoreSoFar() = -1
+    override fun getScoreSoFar() = darts.sumBy { it.lastOrNull()?.getGolfScore() ?: 0 }
 }

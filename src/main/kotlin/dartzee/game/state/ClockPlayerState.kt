@@ -17,5 +17,5 @@ data class ClockPlayerState(override val pt: ParticipantEntity,
         return lastHit + 1
     }
 
-    override fun getScoreSoFar() = -1
+    override fun getScoreSoFar() = (darts.flatten() + dartsThrown).size
 }
