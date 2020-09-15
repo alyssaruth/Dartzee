@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.core.util.maxOrZero
 import dartzee.db.ParticipantEntity
 import dartzee.game.ClockType
+import dartzee.utils.getLongestStreak
 
 data class ClockPlayerState(override val pt: ParticipantEntity,
                             override var lastRoundNumber: Int = 0,
@@ -12,10 +13,11 @@ data class ClockPlayerState(override val pt: ParticipantEntity,
 {
     fun getCurrentTarget(clockType: ClockType): Int
     {
-        val allDarts = darts.flatten() + dartsThrown
-        val lastHit = allDarts.filter { it.hitClockTarget(clockType) }.map { it.score }.maxOrZero()
+        val lastHit = getAllDartsFlattened().filter { it.hitClockTarget(clockType) }.map { it.score }.maxOrZero()
         return lastHit + 1
     }
 
-    override fun getScoreSoFar() = (darts.flatten() + dartsThrown).size
+    override fun getScoreSoFar() = getAllDartsFlattened().size
+
+    fun getLongestStreak(clockType: ClockType) = getLongestStreak(getAllDartsFlattened(), clockType).size
 }

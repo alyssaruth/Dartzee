@@ -2,7 +2,6 @@ package dartzee.game.state
 
 import dartzee.`object`.Dart
 import dartzee.helper.AbstractTest
-import dartzee.helper.makeX01PlayerState
 import dartzee.helper.makeX01PlayerStateWithRounds
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -12,7 +11,7 @@ class TestX01PlayerState: AbstractTest()
     @Test
     fun `should report correct score if no darts thrown`()
     {
-        val state = makeX01PlayerState(dartsThrown = listOf())
+        val state = makeX01PlayerStateWithRounds(dartsThrown = listOf())
         state.getScoreSoFar() shouldBe 0
     }
 

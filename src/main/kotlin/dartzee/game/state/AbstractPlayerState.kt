@@ -14,6 +14,8 @@ abstract class AbstractPlayerState
 
     abstract fun getScoreSoFar(): Int
 
+    fun getAllDartsFlattened() = darts.flatten() + dartsThrown
+
     fun isHuman() = !pt.isAi()
 
     fun dartThrown(dart: Dart)
