@@ -19,7 +19,6 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.dartzee.*
-import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -76,7 +75,7 @@ class TestGamePanelDartzee: AbstractTest()
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame()
 
-        gamePanel.scorersOrdered.first().getTotalScore() shouldBe 115
+        gamePanel.getPlayerState().getScoreSoFar() shouldBe 115
 
         val tiles = carousel.completeTiles
         tiles[0].dto shouldBe innerOuterInner
@@ -89,14 +88,13 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should set lastScore to be the total score on the scorer when starting a new round`()
+    fun `Should set lastScore to be the score so far when starting a new round`()
     {
         val panel = makeGamePanel(rules)
 
-        val scorer = mockk<DartsScorerDartzee>()
-        every { scorer.getTotalScore() } returns 35
+        val playerState = panel.getPlayerState()
+        playerState.addDarts(listOf(Dart(20, 1), Dart(5, 3), Dart(20, 0)))
 
-        panel.activeScorer = scorer
         panel.updateVariablesForNewRound()
         panel.lastRoundScore shouldBe 35
     }
@@ -154,7 +152,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         panel.btnConfirm.isVisible shouldBe false
         getCountFromTable("DartzeeRoundResult") shouldBe 0
-        panel.activeScorer.getTotalScore() shouldBe 26
+        panel.getPlayerState().getScoreSoFar() shouldBe 26
 
         panel.dartThrown(makeDart(20, 1, SegmentType.INNER_SINGLE))
         panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
@@ -162,7 +160,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         carousel.getDisplayedTiles().first().doClick()
 
-        panel.activeScorer.getTotalScore() shouldBe 52
+        panel.getPlayerState().getScoreSoFar() shouldBe 52
 
         val rr = DartzeeRoundResultEntity().retrieveEntities().first()
         rr.score shouldBe 26
@@ -300,6 +298,8 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.getAvailableRuleTiles().size shouldBe 1
         carousel.getAvailableRuleTiles().first().dto shouldBe twoBlackOneWhite
     }
+
+    private fun GamePanelDartzee.getPlayerState() = getPlayerStates().first()
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 

@@ -70,12 +70,12 @@ class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
 
         scorer.getRowCount() shouldBe 10
         scorer.getValueAt(9, 4) shouldBe 9
-        scorer.getTotalScore() shouldBe 9
+        scorer.lblResult.text shouldBe "9"
 
         addRound(scorer, 10)
 
         scorer.getValueAt(9, 4) shouldBe 9
-        scorer.getTotalScore() shouldBe 10
+        scorer.lblResult.text shouldBe "10"
     }
 
     @Test

@@ -104,7 +104,6 @@ abstract class DartsScorer : AbstractScorer() {
     /**
      * Abstract Methods
      */
-    abstract fun getTotalScore(): Int
     abstract fun rowIsComplete(rowNumber: Int): Boolean
 
     open fun clearRound(roundNumber: Int)

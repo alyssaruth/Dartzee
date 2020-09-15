@@ -484,7 +484,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         val participant = getCurrentParticipant()
 
         val finishingPosition = getFinishingPositionFromPlayersRemaining()
-        val numberOfDarts = activeScorer.getTotalScore()
+        val numberOfDarts = getCurrentPlayerState().getScoreSoFar()
 
         participant.finishingPosition = finishingPosition
         participant.finalScore = numberOfDarts
