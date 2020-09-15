@@ -87,7 +87,7 @@ fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<Dartze
 fun makeDartzeePlayerState(name: String = "Bob",
                            dartsThrown: List<List<Dart>> = emptyList(),
                            roundResults: List<DartzeeRoundResult> = emptyList(),
-                           lastRoundNumber: Int = roundResults.size): DartzeePlayerState
+                           lastRoundNumber: Int = roundResults.size + 1): DartzeePlayerState
 {
     val p = insertPlayer(name = name)
     val pt = insertParticipant(playerId = p.rowId)

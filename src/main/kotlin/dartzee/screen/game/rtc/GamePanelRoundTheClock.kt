@@ -26,7 +26,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun doAiTurn(model: DartsAiModel)
     {
-        val currentTarget = getCurrentPlayerState().currentTarget
+        val currentTarget = getCurrentPlayerState().getCurrentTarget(config.clockType)
         model.throwClockDart(currentTarget, config.clockType, dartboard)
     }
 
@@ -66,7 +66,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
     {
-        var clockTarget = getCurrentPlayerState().currentTarget
+        var clockTarget = 1
 
         for (dart in darts)
         {
@@ -75,9 +75,8 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
             if (dart.hitClockTarget(config.clockType))
             {
-                getCurrentPlayerState().incrementCurrentTarget()
                 scorer.incrementCurrentClockTarget()
-                clockTarget = getCurrentPlayerState().currentTarget
+                clockTarget++
             }
         }
 
@@ -94,14 +93,18 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun resetRoundVariables() {}
 
-    override fun updateVariablesForDartThrown(dart: Dart)
+    override fun dartThrown(dart: Dart)
     {
-        val currentClockTarget = getCurrentPlayerState().currentTarget
+        val currentClockTarget = getCurrentPlayerState().getCurrentTarget(config.clockType)
         dart.startingScore = currentClockTarget
 
+        super.dartThrown(dart)
+    }
+
+    override fun updateVariablesForDartThrown(dart: Dart)
+    {
         if (dart.hitClockTarget(config.clockType))
         {
-            getCurrentPlayerState().incrementCurrentTarget()
             activeScorer.incrementCurrentClockTarget()
 
             if (dartsThrownCount() == 4)
@@ -131,7 +134,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        if (getCurrentPlayerState().currentTarget > 20)
+        if (getCurrentPlayerState().getCurrentTarget(config.clockType) > 20)
         {
             //Finished.
             return true
@@ -187,7 +190,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     }
 
 
-    override fun currentPlayerHasFinished() = getCurrentPlayerState().currentTarget > 20
+    override fun currentPlayerHasFinished() = getCurrentPlayerState().getCurrentTarget(config.clockType) > 20
 
     override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams).clockType)
 

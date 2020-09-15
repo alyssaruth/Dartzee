@@ -25,5 +25,6 @@ class TestDartzeePlayerState: AbstractTest()
         state.getCumulativeScore(4) shouldBe 53
         state.getCumulativeScore(5) shouldBe 103
         state.getPeakScore() shouldBe 105
+        state.getScoreSoFar() shouldBe 103
     }
 }
