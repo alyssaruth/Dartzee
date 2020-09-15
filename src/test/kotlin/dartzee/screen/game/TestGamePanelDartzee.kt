@@ -90,7 +90,9 @@ class TestGamePanelDartzee: AbstractTest()
     @Test
     fun `Should set lastScore to be the score so far when starting a new round`()
     {
-        val panel = makeGamePanel(rules)
+        val game = setUpDartzeeGameOnDatabase(0)
+        val panel = makeGamePanel(rules, game = game)
+        panel.loadGame()
 
         val playerState = panel.getPlayerState()
         playerState.addDarts(listOf(Dart(20, 1), Dart(5, 3), Dart(20, 0)))
