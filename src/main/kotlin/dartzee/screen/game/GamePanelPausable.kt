@@ -24,13 +24,13 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
     {
         activeScorer.updatePlayerResult()
 
+        commitRound()
+
         //This player has finished. The game isn't necessarily over though...
         if (currentPlayerHasFinished())
         {
             handlePlayerFinish()
         }
-
-        commitRound()
 
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
 

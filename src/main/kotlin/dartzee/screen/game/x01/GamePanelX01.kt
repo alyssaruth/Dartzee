@@ -56,6 +56,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
         }
 
+        val startingScoreForRound = getCurrentPlayerState().getRemainingScore(startingScore)
         if (!bust)
         {
             val totalScore = sumScore(getDartsThrown())
@@ -78,11 +79,10 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
         else
         {
-            val total = startingScore
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), total)
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), startingScoreForRound)
         }
 
-        activeScorer.finaliseRoundScore(startingScore, bust)
+        activeScorer.finaliseRoundScore(startingScoreForRound, bust)
 
         super.saveDartsAndProceed()
     }
@@ -104,23 +104,21 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
     }
 
-    override fun currentPlayerHasFinished(): Boolean
-    {
-        val lastDart = getDartsThrown().last()
-        return currentScore == 0 && lastDart.isDouble()
-    }
+    override fun currentPlayerHasFinished() = getCurrentPlayerState().getRemainingScore(startingScore) == 0
 
     override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
     {
         super.updateAchievementsForFinish(playerId, finishingPosition, score)
 
-        val sum = sumScore(getDartsThrown())
+        val finalRound = getCurrentPlayerState().getLastRound()
+
+        val sum = sumScore(finalRound)
         AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, getGameId(), sum)
 
         //Insert into the X01Finishes table for the leaderboard
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
 
-        val checkout = getDartsThrown().last().score
+        val checkout = finalRound.last().score
         insertForCheckoutCompleteness(playerId, getGameId(), checkout)
 
         if (sum in listOf(3, 5, 7, 9))

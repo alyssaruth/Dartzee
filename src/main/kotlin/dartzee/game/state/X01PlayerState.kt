@@ -14,7 +14,7 @@ data class X01PlayerState(override val pt: ParticipantEntity,
 
     fun getRemainingScoreForRound(startingScore: Int, roundNumber: Int): Int
     {
-        val roundSubSet = darts.subList(0, roundNumber - 1)
+        val roundSubSet = darts.subList(0, roundNumber)
 
         val nonBustRounds = roundSubSet.filterNot { round ->
             val lastDart = round.last()
@@ -24,7 +24,9 @@ data class X01PlayerState(override val pt: ParticipantEntity,
         return startingScore - nonBustRounds.sumBy { sumScore(it) }
     }
 
-    fun getRemainingScore(startingScore: Int) = getRemainingScoreForRound(startingScore, currentRoundNumber())
+    fun getRemainingScore(startingScore: Int) = getRemainingScoreForRound(startingScore, currentRoundNumber() - 1)
 
     fun getBadLuckCount() = getAllDartsFlattened().count { isNearMissDouble(it) }
+
+    fun getLastRound() = darts.last()
 }
