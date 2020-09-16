@@ -67,7 +67,6 @@ class TestX01PlayerState: AbstractTest()
         val rounds = makeX01Rounds(301, roundOne, roundTwo, roundThree, roundFour, roundFive, roundSix)
 
         val state = makeX01PlayerStateWithRounds(dartsThrown = rounds)
-        state.getRemainingScoreForRound(301, 0) shouldBe 301
         state.getRemainingScoreForRound(301, 1) shouldBe 121
         state.getRemainingScoreForRound(301, 2) shouldBe 121
         state.getRemainingScoreForRound(301, 3) shouldBe 40

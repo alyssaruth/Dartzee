@@ -114,7 +114,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
 
         //Set the current round number back to the previous round
         currentRoundNumber--
-        updateLastRoundNumber(currentPlayerNumber, currentRoundNumber)
 
         dartboard.stopListening()
     }

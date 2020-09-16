@@ -73,7 +73,7 @@ class TestAbstractPlayerState: AbstractTest()
         entities.forEach {
             it.playerId shouldBe pt.playerId
             it.participantId shouldBe pt.rowId
-            it.roundNumber shouldBe state.lastRoundNumber
+            it.roundNumber shouldBe 1
         }
 
         val entityOne = entities.find { it.ordinal == 1 }!!
@@ -95,7 +95,6 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     data class DefaultPlayerState(override val pt: ParticipantEntity,
-                                  override var lastRoundNumber: Int = 0,
                                   override val darts: MutableList<List<Dart>> = mutableListOf(),
                                   override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
     {

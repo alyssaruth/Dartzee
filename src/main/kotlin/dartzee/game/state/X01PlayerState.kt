@@ -7,7 +7,6 @@ import dartzee.utils.isNearMissDouble
 import dartzee.utils.sumScore
 
 data class X01PlayerState(override val pt: ParticipantEntity,
-                          override var lastRoundNumber: Int = 0,
                           override val darts: MutableList<List<Dart>> = mutableListOf(),
                           override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
 {
@@ -15,7 +14,7 @@ data class X01PlayerState(override val pt: ParticipantEntity,
 
     fun getRemainingScoreForRound(startingScore: Int, roundNumber: Int): Int
     {
-        val roundSubSet = darts.subList(0, roundNumber)
+        val roundSubSet = darts.subList(0, roundNumber - 1)
 
         val nonBustRounds = roundSubSet.filterNot { round ->
             val lastDart = round.last()
@@ -25,7 +24,7 @@ data class X01PlayerState(override val pt: ParticipantEntity,
         return startingScore - nonBustRounds.sumBy { sumScore(it) }
     }
 
-    fun getRemainingScore(startingScore: Int) = getRemainingScoreForRound(startingScore, lastRoundNumber)
+    fun getRemainingScore(startingScore: Int) = getRemainingScoreForRound(startingScore, currentRoundNumber())
 
     fun getBadLuckCount() = getAllDartsFlattened().count { isNearMissDouble(it) }
 }

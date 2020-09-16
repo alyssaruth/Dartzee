@@ -142,7 +142,7 @@ class TestGamePanelX01: AbstractTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
 
-            addState(0, X01PlayerState(pt, 0), scorer)
+            addState(0, X01PlayerState(pt), scorer)
 
             currentRoundNumber = 1
         }

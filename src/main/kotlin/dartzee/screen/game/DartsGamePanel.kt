@@ -68,7 +68,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     private val btnStats = JToggleButton("")
     private val btnSlider = JToggleButton("")
 
-    private fun getLastRoundNumber() =  getCurrentPlayerState().lastRoundNumber
     private fun getPlayersDesc() = if (totalPlayers == 1) "practice game" else "$totalPlayers players"
     protected fun getActiveCount() = getParticipants().count{ it.isActive() }
 
@@ -100,10 +99,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     protected fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
     protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).pt
     protected fun getCurrentParticipant() = getCurrentPlayerState().pt
-    protected fun updateLastRoundNumber(playerNumber: Int, newRoundNumber: Int) {
-        val state = getPlayerState(playerNumber)
-        state.lastRoundNumber = newRoundNumber
-    }
     fun getDartsThrown() = getCurrentPlayerState().dartsThrown
     fun dartsThrownCount() = getDartsThrown().size
 
@@ -207,17 +202,13 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
         updateVariablesForNewRound()
 
-        val lastRoundForThisPlayer = getLastRoundNumber()
-
         //Create a new round for this player
-        val newRoundNo = lastRoundForThisPlayer + 1
-        currentRoundNumber = newRoundNo
-        updateLastRoundNumber(currentPlayerNumber, newRoundNo)
+        currentRoundNumber = getCurrentPlayerState().currentRoundNumber()
 
         btnReset.isEnabled = false
         btnConfirm.isEnabled = false
 
-        btnStats.isEnabled = newRoundNo > 1
+        btnStats.isEnabled = currentRoundNumber > 1
 
         readyForThrow()
     }
@@ -385,8 +376,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             }
 
             loadDartsForParticipant(i, hmRoundToDarts, lastRound)
-
-            updateLastRoundNumber(i, lastRound)
 
             maxRounds = maxOf(maxRounds, lastRound)
         }

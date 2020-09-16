@@ -86,14 +86,13 @@ fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<Dartze
 
 fun makeDartzeePlayerState(name: String = "Bob",
                            dartsThrown: List<List<Dart>> = emptyList(),
-                           roundResults: List<DartzeeRoundResult> = emptyList(),
-                           lastRoundNumber: Int = roundResults.size + 1): DartzeePlayerState
+                           roundResults: List<DartzeeRoundResult> = emptyList()): DartzeePlayerState
 {
     val p = insertPlayer(name = name)
     val pt = insertParticipant(playerId = p.rowId)
 
     val resultEntities = makeRoundResultEntities(*roundResults.toTypedArray())
-    return DartzeePlayerState(pt, lastRoundNumber, dartsThrown.toMutableList(), mutableListOf(), resultEntities.toMutableList())
+    return DartzeePlayerState(pt, dartsThrown.toMutableList(), mutableListOf(), resultEntities.toMutableList())
 }
 
 fun makeSegmentStatus(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),

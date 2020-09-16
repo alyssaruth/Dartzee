@@ -24,7 +24,7 @@ class TestDartzeePlayerState: AbstractTest()
         val resultThree = DartzeeRoundResult(7, true, 75)
         val resultFour = DartzeeRoundResult(2, false, -52)
         val resultFive = DartzeeRoundResult(3, true, 50)
-        val state = makeDartzeePlayerState(dartsThrown = listOf(scoringRound), roundResults = listOf(resultTwo, resultThree, resultFour, resultFive))
+        val state = makeDartzeePlayerState(dartsThrown = listOf(scoringRound, emptyList(), emptyList(), emptyList(), emptyList()), roundResults = listOf(resultTwo, resultThree, resultFour, resultFive))
 
         state.getCumulativeScore(1) shouldBe 60
         state.getCumulativeScore(2) shouldBe 30
