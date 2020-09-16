@@ -4,7 +4,6 @@ import dartzee.`object`.CheckoutSuggester
 import dartzee.`object`.Dart
 import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
-import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadLuck
 import dartzee.core.util.doFawlty
@@ -21,23 +20,21 @@ import dartzee.utils.*
 
 open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerX01, X01PlayerState>(parent, game, totalPlayers)
 {
-    //Transient variables for each round
-    private var startingScore = -1
-    private var currentScore = -1
+    private val startingScore = Integer.parseInt(game.gameParams)
 
-    private val hmPlayerNumberToBadLuckCount = HashMapCount<Int>()
+    //Transient variables for each round
+    private var currentScore = -1
 
     override fun factoryState(pt: ParticipantEntity) = X01PlayerState(pt)
 
     override fun updateVariablesForNewRound()
     {
-        startingScore = activeScorer.getLatestScoreRemaining()
         resetRoundVariables()
     }
 
     override fun resetRoundVariables()
     {
-        currentScore = startingScore
+        currentScore = getCurrentPlayerState().getRemainingScore(startingScore)
     }
 
     override fun readyForThrow()
@@ -53,9 +50,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         val lastDart = getDartsThrown().last()
         val bust = isBust(currentScore, lastDart)
 
-        updateNearMisses(getDartsThrown(), currentPlayerNumber)
-
-        val count = hmPlayerNumberToBadLuckCount.getCount(currentPlayerNumber)
+        val count = getCurrentPlayerState().getBadLuckCount()
         if (count > 0)
         {
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
@@ -90,16 +85,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         activeScorer.finaliseRoundScore(startingScore, bust)
 
         super.saveDartsAndProceed()
-    }
-
-    private fun updateNearMisses(darts: MutableList<Dart>, playerNumber: Int)
-    {
-        darts.forEach{
-            if (isNearMissDouble(it))
-            {
-                hmPlayerNumberToBadLuckCount.incrementCount(playerNumber)
-            }
-        }
     }
 
     private fun updateHotelInspector()
@@ -156,8 +141,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         {
             val darts = hmRoundToDarts[i]!!
             addDartsToScorer(darts, scorer)
-
-            updateNearMisses(darts, playerNumber)
         }
 
         val pt = getParticipant(playerNumber)

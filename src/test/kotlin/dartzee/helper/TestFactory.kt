@@ -7,6 +7,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.X01PlayerState
+import dartzee.utils.isBust
 import java.awt.Point
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
@@ -37,8 +38,22 @@ fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
 
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
 {
-    val allDarts = darts.toList().flatten()
-    return makeX01Rounds(startingScore, *allDarts.toTypedArray())
+    var currentScore = startingScore
+    darts.forEach {
+        var roundScore = currentScore
+        it.forEach { dart ->
+            dart.startingScore = roundScore
+            roundScore -= dart.getTotal()
+        }
+
+        val lastDartForRound = it.last()
+        if (!isBust(roundScore, lastDartForRound))
+        {
+            currentScore = roundScore
+        }
+    }
+
+    return darts.toList()
 }
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>>
 {
