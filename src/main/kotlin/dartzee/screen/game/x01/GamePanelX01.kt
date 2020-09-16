@@ -190,7 +190,8 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     override fun doAiTurn(model: DartsAiModel)
     {
-        if (shouldStopForMercyRule(model, startingScore, currentScore))
+        val startOfRoundScore = getCurrentPlayerState().getRemainingScore(startingScore)
+        if (shouldStopForMercyRule(model, startOfRoundScore, currentScore))
         {
             stopThrowing()
         }
