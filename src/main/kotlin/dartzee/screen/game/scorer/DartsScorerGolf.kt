@@ -126,11 +126,6 @@ class DartsScorerGolf : DartsScorer()
         return ret
     }
 
-    override fun getTotalScore(): Int
-    {
-        return currentScore
-    }
-
     /**
      * Static methods
      */

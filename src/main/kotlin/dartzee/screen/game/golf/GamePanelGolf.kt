@@ -52,7 +52,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
 
     override fun updateVariablesForNewRound() {}
     override fun resetRoundVariables() {}
-    override fun updateVariablesForDartThrown(dart: Dart) {}
 
     override fun shouldStopAfterDartThrown(): Boolean
     {

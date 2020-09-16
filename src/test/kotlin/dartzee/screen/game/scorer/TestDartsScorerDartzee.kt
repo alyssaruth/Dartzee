@@ -49,7 +49,7 @@ class TestDartsScorerDartzee: AbstractTest()
     fun `Should return 0 for score so far when no entries`()
     {
         val scorer = DartsScorerDartzee(mockk())
-        scorer.getTotalScore() shouldBe 0
+        scorer.lblResult.text shouldBe ""
     }
 
     @Test
@@ -62,18 +62,15 @@ class TestDartsScorerDartzee: AbstractTest()
         scorer.addDart(Dart(20, 2))
         scorer.addDart(Dart(20, 3))
 
-        scorer.getTotalScore() shouldBe 0
         scorer.lblResult.text shouldBe ""
 
         scorer.setResult(DartzeeRoundResult(2, true, 120))
-        scorer.getTotalScore() shouldBe 120
         scorer.lblResult.text shouldBe "120"
 
         scorer.addDart(Dart(20, 1))
-        scorer.getTotalScore() shouldBe 120
+        scorer.lblResult.text shouldBe "120"
 
         scorer.setResult(DartzeeRoundResult(3, false, -60))
-        scorer.getTotalScore() shouldBe 60
         scorer.lblResult.text shouldBe "60"
     }
 

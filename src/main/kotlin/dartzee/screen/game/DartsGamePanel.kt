@@ -172,12 +172,13 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     abstract fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     abstract fun updateVariablesForNewRound()
     abstract fun resetRoundVariables()
-    abstract fun updateVariablesForDartThrown(dart: Dart)
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
     abstract fun saveDartsAndProceed()
     abstract fun factoryStatsPanel(gameParams: String): AbstractGameStatisticsPanel<PlayerState>
     abstract fun factoryDartboard(): D
+
+    open fun updateVariablesForDartThrown(dart: Dart) {}
 
     /**
      * Regular methods
@@ -483,7 +484,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         val participant = getCurrentParticipant()
 
         val finishingPosition = getFinishingPositionFromPlayersRemaining()
-        val numberOfDarts = activeScorer.getTotalScore()
+        val numberOfDarts = getCurrentPlayerState().getScoreSoFar()
 
         participant.finishingPosition = finishingPosition
         participant.finalScore = numberOfDarts
@@ -520,14 +521,14 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         getCurrentPlayerState().dartThrown(dart)
         activeScorer.addDart(dart)
 
+        //If there are any specific variables we need to update (e.g. current score for X01), do it now
+        updateVariablesForDartThrown(dart)
+
         //We've clicked on the dartboard, so dismiss the slider
         if (getCurrentPlayerState().isHuman())
         {
             dismissSlider()
         }
-
-        //If there are any specific variables we need to update (e.g. current score for X01), do it now
-        updateVariablesForDartThrown(dart)
 
         doAnimations(dart)
 

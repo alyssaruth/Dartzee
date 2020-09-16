@@ -30,6 +30,7 @@ abstract class DartsScorerPausable(private val parent: GamePanelPausable<*, *>) 
      * Abstract Methods
      */
     abstract fun playerIsFinished(): Boolean
+    protected abstract fun getTotalScore(): Int
 
     fun getPaused() = btnResume.icon === ICON_RESUME
 

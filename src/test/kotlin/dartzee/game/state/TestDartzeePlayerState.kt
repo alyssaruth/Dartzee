@@ -10,6 +10,13 @@ import org.junit.Test
 class TestDartzeePlayerState: AbstractTest()
 {
     @Test
+    fun `Should report a score of 0 when no darts have been thrown`()
+    {
+        val state = makeDartzeePlayerState(dartsThrown = emptyList())
+        state.getScoreSoFar() shouldBe 0
+    }
+
+    @Test
     fun `Should correctly calculate the cumulative score for a given round`()
     {
         val scoringRound = listOf(Dart(20, 1), Dart(7, 3), Dart(19, 1))
@@ -25,5 +32,6 @@ class TestDartzeePlayerState: AbstractTest()
         state.getCumulativeScore(4) shouldBe 53
         state.getCumulativeScore(5) shouldBe 103
         state.getPeakScore() shouldBe 105
+        state.getScoreSoFar() shouldBe 103
     }
 }

@@ -4,7 +4,6 @@ import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.ai.DartsAiModel
-import dartzee.core.obj.HashMapCount
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadLuck
 import dartzee.core.util.doForsyth
@@ -20,13 +19,12 @@ import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerRoundTheClock, ClockPlayerState>(parent, game, totalPlayers)
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
-    val hmPlayerNumberToCurrentStreak = HashMapCount<Int>()
 
     override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(pt)
 
     override fun doAiTurn(model: DartsAiModel)
     {
-        val currentTarget = getCurrentPlayerState().currentTarget
+        val currentTarget = getCurrentPlayerState().getCurrentTarget(config.clockType)
         model.throwClockDart(currentTarget, config.clockType, dartboard)
     }
 
@@ -45,28 +43,11 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         {
             scorer.finalisePlayerResult(finishPos)
         }
-
-        loadCurrentStreak(playerNumber, hmRoundToDarts)
-    }
-
-    private fun loadCurrentStreak(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>)
-    {
-        var currentStreak = 0
-
-        val dartsLatestFirst = hmRoundToDarts.getFlattenedValuesSortedByKey().reversed()
-        for (drt in dartsLatestFirst)
-        {
-            if (!drt.hitClockTarget(config.clockType)) { break }
-
-            currentStreak++
-        }
-
-        hmPlayerNumberToCurrentStreak[playerNumber] = currentStreak
     }
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
     {
-        var clockTarget = getCurrentPlayerState().currentTarget
+        var clockTarget = 1
 
         for (dart in darts)
         {
@@ -75,9 +56,8 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
             if (dart.hitClockTarget(config.clockType))
             {
-                getCurrentPlayerState().incrementCurrentTarget()
                 scorer.incrementCurrentClockTarget()
-                clockTarget = getCurrentPlayerState().currentTarget
+                clockTarget++
             }
         }
 
@@ -94,14 +74,18 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun resetRoundVariables() {}
 
-    override fun updateVariablesForDartThrown(dart: Dart)
+    override fun dartThrown(dart: Dart)
     {
-        val currentClockTarget = getCurrentPlayerState().currentTarget
+        val currentClockTarget = getCurrentPlayerState().getCurrentTarget(config.clockType)
         dart.startingScore = currentClockTarget
 
+        super.dartThrown(dart)
+    }
+
+    override fun updateVariablesForDartThrown(dart: Dart)
+    {
         if (dart.hitClockTarget(config.clockType))
         {
-            getCurrentPlayerState().incrementCurrentTarget()
             activeScorer.incrementCurrentClockTarget()
 
             if (dartsThrownCount() == 4)
@@ -131,7 +115,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        if (getCurrentPlayerState().currentTarget > 20)
+        if (getCurrentPlayerState().getCurrentTarget(config.clockType) > 20)
         {
             //Finished.
             return true
@@ -161,33 +145,15 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     fun updateBestStreakAchievement()
     {
-        var currentStreak = hmPlayerNumberToCurrentStreak.getCount(currentPlayerNumber)
-        getDartsThrown().forEach {
-            if (it.hitClockTarget(config.clockType))
-            {
-                currentStreak++
-            }
-            else
-            {
-                if (currentStreak > 1)
-                {
-                    AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), currentStreak)
-                }
-
-                currentStreak = 0
-            }
-        }
-
-        if (currentStreak > 1)
+        val longestStreakThisGame = getCurrentPlayerState().getLongestStreak(config.clockType)
+        if (longestStreakThisGame > 1)
         {
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), currentStreak)
+            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), longestStreakThisGame)
         }
-
-        hmPlayerNumberToCurrentStreak[currentPlayerNumber] = currentStreak
     }
 
 
-    override fun currentPlayerHasFinished() = getCurrentPlayerState().currentTarget > 20
+    override fun currentPlayerHasFinished() = getCurrentPlayerState().getCurrentTarget(config.clockType) > 20
 
     override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams).clockType)
 

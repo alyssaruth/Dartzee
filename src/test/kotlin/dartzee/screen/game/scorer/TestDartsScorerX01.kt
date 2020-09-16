@@ -41,9 +41,10 @@ class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
         scorer.getRowCount() shouldBe 2
 
         scorer.clearRound(2)
+        scorer.updatePlayerResult()
 
         scorer.getRowCount() shouldBe 1
-        scorer.getTotalScore() shouldBe 3
+        scorer.lblResult.text shouldBe "3 Darts"
     }
 
     @Test
@@ -124,20 +125,22 @@ class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
     {
         val scorer = factoryScorer()
 
-        scorer.getTotalScore() shouldBe 0
+        scorer.lblResult.text shouldBe ""
 
         scorer.addDart(Dart(20, 1))
         scorer.addDart(Dart(20, 1))
-        scorer.getTotalScore() shouldBe 2
+        scorer.lblResult.text shouldBe "2 Darts"
 
         scorer.finaliseRoundScore(501, false)
-        scorer.getTotalScore() shouldBe 3
+        scorer.updatePlayerResult()
+        scorer.lblResult.text shouldBe "3 Darts"
 
         scorer.addDart(Dart(19, 3))
-        scorer.getTotalScore() shouldBe 4
+        scorer.lblResult.text shouldBe "4 Darts"
 
         scorer.finaliseRoundScore(461, false)
-        scorer.getTotalScore() shouldBe 6
+        scorer.updatePlayerResult()
+        scorer.lblResult.text shouldBe "6 Darts"
     }
 
     @Test
@@ -161,7 +164,7 @@ class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
         scorer.addHint(DartHint(20, 1))
         scorer.addHint(DartHint(10, 2))
 
-        scorer.getTotalScore() shouldBe 0
+        scorer.lblResult.text shouldBe ""
     }
 
     @Test
@@ -174,7 +177,6 @@ class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
 
         scorer.addDart(Dart(10, 2))
 
-        val dartCount = scorer.getTotalScore()
-        dartCount shouldBe 1
+        scorer.lblResult.text shouldBe "1 Darts"
     }
 }

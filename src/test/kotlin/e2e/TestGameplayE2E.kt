@@ -34,7 +34,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     override fun beforeEachTest()
     {
         super.beforeEachTest()
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
+        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
     @Test
@@ -97,7 +97,7 @@ class TestGameplayE2E: AbstractRegistryTest()
                 listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
         )
 
-        verifyState(panel, listener, expectedRounds, finalScore = 9)
+        verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
     }
 
     @Test
@@ -129,7 +129,7 @@ class TestGameplayE2E: AbstractRegistryTest()
         awaitGameFinish(game)
 
         val expectedDarts = (1..20).map { Dart(it, 1) }.chunked(4)
-        verifyState(panel, listener, expectedDarts, 20)
+        verifyState(panel, listener, expectedDarts, 20, scoreSuffix = " Darts")
     }
 
     data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
@@ -155,6 +155,7 @@ class TestGameplayE2E: AbstractRegistryTest()
                             listener: DartboardListener,
                             dartRounds: List<List<Dart>>,
                             finalScore: Int,
+                            scoreSuffix: String = "",
                             expectedScorerRows: Int = dartRounds.size)
     {
         // ParticipantEntity on the database
@@ -166,7 +167,7 @@ class TestGameplayE2E: AbstractRegistryTest()
         pt.ordinal shouldBe 0
 
         // Screen state
-        panel.activeScorer.getTotalScore() shouldBe finalScore
+        panel.activeScorer.lblResult.text shouldBe "$finalScore$scoreSuffix"
         panel.activeScorer.getRowCount() shouldBe expectedScorerRows
 
         // Use our dartboardListener to verify that the right throws were registered

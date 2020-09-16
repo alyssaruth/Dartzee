@@ -91,7 +91,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun updateVariablesForNewRound()
     {
-        lastRoundScore = activeScorer.getTotalScore()
+        lastRoundScore = getCurrentPlayerState().getScoreSoFar()
     }
 
     override fun resetRoundVariables() {}
