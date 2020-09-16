@@ -48,7 +48,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
     {
         //Finalise the scorer
         val lastDart = getDartsThrown().last()
-        val bust = isBust(currentScore, lastDart)
+        val bust = isBust(lastDart)
 
         val count = getCurrentPlayerState().getBadLuckCount()
         if (count > 0)
@@ -155,16 +155,13 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
     {
         val startingScore = scorer.getLatestScoreRemaining()
 
-        var score = startingScore
         for (dart in darts)
         {
             scorer.addDart(dart)
-
-            score -= dart.getTotal()
         }
 
         val lastDart = darts.last()
-        val bust = isBust(score, lastDart)
+        val bust = isBust(lastDart)
         scorer.finaliseRoundScore(startingScore, bust)
     }
 

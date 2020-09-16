@@ -47,7 +47,7 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List
         }
 
         val lastDartForRound = it.last()
-        if (!isBust(roundScore, lastDartForRound))
+        if (!isBust(lastDartForRound))
         {
             currentScore = roundScore
         }

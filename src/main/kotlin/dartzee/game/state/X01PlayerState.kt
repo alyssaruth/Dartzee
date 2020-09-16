@@ -19,7 +19,7 @@ data class X01PlayerState(override val pt: ParticipantEntity,
 
         val nonBustRounds = roundSubSet.filterNot { round ->
             val lastDart = round.last()
-            isBust(lastDart.startingScore - lastDart.getTotal(), lastDart)
+            isBust(lastDart)
         }
 
         return startingScore - nonBustRounds.sumBy { sumScore(it) }

@@ -16,21 +16,17 @@ class TestX01Util: AbstractTest()
     @Test
     fun testIsBust()
     {
-        isBust(-5, Dart(2, 2)).shouldBeTrue()
-        isBust(-5, Dart(2, 2)).shouldBeTrue()
-        isBust(-5, Dart(2, 0)).shouldBeTrue()
-        isBust(-8, Dart(4, 2)).shouldBeTrue()
+        isBust(5, Dart(3, 2)).shouldBeTrue()
+        isBust(10, Dart(10, 1)).shouldBeTrue()
+        isBust(60, Dart(20, 3)).shouldBeTrue()
 
-        isBust(0, Dart(10, 1)).shouldBeTrue()
-        isBust(0, Dart(20, 3)).shouldBeTrue()
+        isBust(41, Dart(20, 2)).shouldBeTrue()
 
-        isBust(1, Dart(20, 2)).shouldBeTrue()
+        isBust(40, Dart(20, 2)).shouldBeFalse()
+        isBust(50, Dart(25, 2)).shouldBeFalse()
 
-        isBust(0, Dart(20, 2)).shouldBeFalse()
-        isBust(0, Dart(25, 2)).shouldBeFalse()
-
-        isBust(20, Dart(20, 2)).shouldBeFalse()
-        isBust(20, Dart(20, 1)).shouldBeFalse()
+        isBust(60, Dart(20, 2)).shouldBeFalse()
+        isBust(40, Dart(20, 1)).shouldBeFalse()
     }
 
     @Test
