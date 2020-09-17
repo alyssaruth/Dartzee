@@ -25,6 +25,7 @@ import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
+import javax.swing.SwingUtilities
 
 class TestDartzeeRuleAmendment: AbstractTest()
 {
@@ -183,24 +184,30 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     {
         val dlg = showRuleCreationDialog()
 
-        dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-        dlg.btnOk.doClick()
+        SwingUtilities.invokeAndWait {
+            dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
+            dlg.btnOk.doClick()
+        }
         dialogFactory.errorsShown.shouldContainExactly("Dart 1: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
 
         dialogFactory.errorsShown.clear()
-        dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
-        dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-        dlg.btnOk.doClick()
+        SwingUtilities.invokeAndWait {
+            dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
+            dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
+            dlg.btnOk.doClick()
+        }
         dialogFactory.errorsShown.shouldContainExactly("Dart 2: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
 
         dialogFactory.errorsShown.clear()
-        dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
-        dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-        dlg.btnOk.doClick()
+        SwingUtilities.invokeAndWait {
+            dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
+            dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
+            dlg.btnOk.doClick()
+        }
         dialogFactory.errorsShown.shouldContainExactly("Dart 3: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -211,9 +218,11 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     {
         val dlg = showRuleCreationDialog()
 
-        dlg.rdbtnAtLeastOne.doClick()
-        dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-        dlg.btnOk.doClick()
+        SwingUtilities.invokeAndWait {
+            dlg.rdbtnAtLeastOne.doClick()
+            dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
+            dlg.btnOk.doClick()
+        }
 
         dialogFactory.errorsShown.shouldContainExactly("Target: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
@@ -226,14 +235,15 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val dlg = showRuleCreationDialog()
-        dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
-        dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
-        dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
 
-        dlg.totalSelector.cbDesc.doClick()
-        dlg.totalSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
-
-        dlg.btnOk.doClick()
+        SwingUtilities.invokeAndWait {
+            dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
+            dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
+            dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
+            dlg.totalSelector.cbDesc.doClick()
+            dlg.totalSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
+            dlg.btnOk.doClick()
+        }
 
         dialogFactory.errorsShown.shouldContainExactly("This rule is impossible!")
         dlg.dartzeeRule shouldBe null
@@ -244,7 +254,10 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     fun `Should dispose if valid`()
     {
         val dlg = showRuleCreationDialog()
-        dlg.btnOk.doClick()
+
+        SwingUtilities.invokeAndWait {
+            dlg.btnOk.doClick()
+        }
 
         dialogFactory.errorsShown.shouldBeEmpty()
         dlg.shouldNotBeVisible()
