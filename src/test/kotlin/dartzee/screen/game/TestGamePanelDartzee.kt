@@ -95,7 +95,7 @@ class TestGamePanelDartzee: AbstractTest()
         panel.loadGame()
 
         val playerState = panel.getPlayerState()
-        playerState.addDarts(listOf(Dart(20, 1), Dart(5, 3), Dart(20, 0)))
+        playerState.addCompletedRound(listOf(Dart(20, 1), Dart(5, 3), Dart(20, 0)))
 
         panel.updateVariablesForNewRound()
         panel.lastRoundScore shouldBe 35

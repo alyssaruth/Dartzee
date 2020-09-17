@@ -149,7 +149,7 @@ class TestGamePanelX01: AbstractTest()
 
         fun setDartsThrown(dartsThrown: List<Dart>)
         {
-            getCurrentPlayerState().addDarts(dartsThrown)
+            getCurrentPlayerState().addCompletedRound(dartsThrown)
         }
     }
 }

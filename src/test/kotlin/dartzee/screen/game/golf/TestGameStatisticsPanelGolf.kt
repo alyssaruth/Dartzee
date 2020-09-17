@@ -39,7 +39,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
 
         //4, 2
         val roundTwo = makeGolfRound(2, listOf(makeDart(5, 1), makeDart(2, 3)))
-        state.addDarts(roundTwo)
+        state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Hole") shouldBe 2
         statsPanel.getValueForRow("Worst Hole") shouldBe 4
@@ -47,7 +47,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
 
         //4, 2, 5
         val roundThree = makeGolfRound(3, listOf(makeDart(3, 1), makeDart(2, 1), makeDart(3, 0)))
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Hole") shouldBe 2
         statsPanel.getValueForRow("Worst Hole") shouldBe 5
@@ -55,7 +55,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
 
         //4, 2, 5, 1
         val roundFour = makeGolfRound(4, listOf(makeDart(4, 2)))
-        state.addDarts(roundFour)
+        state.addCompletedRound(roundFour)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Hole") shouldBe 1
         statsPanel.getValueForRow("Worst Hole") shouldBe 5
@@ -76,13 +76,13 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
 
         // [Hit, Miss, Hit]
         val roundTwo = makeGolfRound(2, listOf(makeDart(5, 1), makeDart(2, 3)))
-        state.addDarts(roundTwo)
+        state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Miss %") shouldBe 33.3
 
         // [Hit, Miss, Hit, Hit Miss, Miss]
         val roundThree = makeGolfRound(3, listOf(makeDart(3, 1), makeDart(2, 1), makeDart(3, 0)))
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Miss %") shouldBe 50.0
     }
@@ -100,13 +100,13 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
 
         // 4-5-4, no change
         val roundTwo = makeGolfRound(2, listOf(makeDart(2, 1), makeDart(20, 1), makeDart(2, 1)))
-        state.addDarts(roundTwo)
+        state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Squandered") shouldBe 1
 
         // 2-5-5, another 3 squandered
         val roundThree = makeGolfRound(3, listOf(makeDart(3, 3), makeDart(3, 0), makeDart(19, 2)))
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Squandered") shouldBe 4
     }
@@ -126,31 +126,31 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
 
         //5-4-3. You didn't gamble the first one, so have only gained 1.
         val roundTwo = makeGolfRound(2, listOf(makeDart(2, 0), makeDart(2, 1), makeDart(2, 1, SegmentType.INNER_SINGLE)))
-        state.addDarts(roundTwo)
+        state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 3
 
         //3-5-2. You've gambled the 3, stuffed it, then clawed it back. Improved by 1
         val roundThree = makeGolfRound(3, listOf(makeDart(3, 1, SegmentType.INNER_SINGLE), makeDart(3, 0), makeDart(3, 3)))
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 4
 
         //5-5-1. You've not gambled anything. Method should return 0.
         val roundFour = makeGolfRound(4, listOf(makeDart(4, 0), makeDart(4, 0), makeDart(4, 2)))
-        state.addDarts(roundFour)
+        state.addCompletedRound(roundFour)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 4
 
         //4-2-5. You've stuffed it - there was a gain but it's gone. Method should return 0.
         val roundFive = makeGolfRound(5, listOf(makeDart(5, 1), makeDart(5, 3), makeDart(5, 0)))
-        state.addDarts(roundFive)
+        state.addCompletedRound(roundFive)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 4
 
         //4-2-3. You've gained 1 (and also lost 1). 0.
         val roundSix = makeGolfRound(6, listOf(makeDart(6, 1), makeDart(6, 3), makeDart(6, 1, SegmentType.INNER_SINGLE)))
-        state.addDarts(roundSix)
+        state.addCompletedRound(roundSix)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Points Improved") shouldBe 4
     }
@@ -169,31 +169,31 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
 
         //4, 2
         val roundTwo = makeGolfRound(2, listOf(makeDart(2, 3)))
-        state.addDarts(roundTwo)
+        state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4" to 1, "2" to 1))
 
         //4, 2, 5
         val roundThree = makeGolfRound(3, listOf(makeDart(3, 0)))
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4" to 1, "2" to 1, "5" to 1))
 
         //4, 2, 5, 5
         val roundFour = makeGolfRound(4, listOf(makeDart(4, 0)))
-        state.addDarts(roundFour)
+        state.addCompletedRound(roundFour)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4" to 1, "2" to 1, "5" to 2))
 
         //4, 2, 5, 5, 3
         val roundFive = makeGolfRound(5, listOf(makeDart(5, 1, SegmentType.INNER_SINGLE)))
-        state.addDarts(roundFive)
+        state.addCompletedRound(roundFive)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4" to 1, "2" to 1, "5" to 2, "3" to 1))
 
         //4, 2, 5, 5, 3, 1
         val roundSix = makeGolfRound(6, listOf(makeDart(6, 2)))
-        state.addDarts(roundSix)
+        state.addCompletedRound(roundSix)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("4" to 1, "2" to 1, "5" to 2, "3" to 1, "1" to 1))
     }

@@ -35,11 +35,11 @@ abstract class AbstractPlayerState
 
         BulkInserter.insert(entities)
 
-        addDarts(currentRound.toList())
+        addCompletedRound(currentRound.toList())
         currentRound.clear()
     }
 
-    fun addDarts(darts: List<Dart>)
+    fun addCompletedRound(darts: List<Dart>)
     {
         darts.forEach { it.participantId = pt.rowId }
         this.completedRounds.add(darts.toList())

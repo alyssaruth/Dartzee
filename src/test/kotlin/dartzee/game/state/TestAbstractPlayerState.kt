@@ -20,7 +20,7 @@ class TestAbstractPlayerState: AbstractTest()
         val state = DefaultPlayerState(insertParticipant())
         val darts = mutableListOf(Dart(20, 1))
 
-        state.addDarts(darts)
+        state.addCompletedRound(darts)
 
         darts.clear()
         state.completedRounds.first().shouldContainExactly(Dart(20, 1))
@@ -35,7 +35,7 @@ class TestAbstractPlayerState: AbstractTest()
         val dart = Dart(20, 1)
         dart.participantId shouldBe ""
 
-        state.addDarts(mutableListOf(dart))
+        state.addCompletedRound(mutableListOf(dart))
 
         dart.participantId shouldBe pt.rowId
     }

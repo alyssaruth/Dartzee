@@ -111,7 +111,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
 
         fun addDartRound(darts: List<Dart>)
         {
-            getCurrentPlayerState().addDarts(darts)
+            getCurrentPlayerState().addCompletedRound(darts)
         }
 
         fun setDartsThrown(dartsThrown: List<Dart>)

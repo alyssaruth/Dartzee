@@ -31,7 +31,7 @@ class TestMatchStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerStat
 
         val finishThree = listOf(makeDart(18, 3), makeDart(20, 1), makeDart(13, 2))
         makeX01Rounds(100, finishThree)
-        state.addDarts(finishThree)
+        state.addCompletedRound(finishThree)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Finish") shouldBe 100
     }
