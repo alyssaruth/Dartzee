@@ -5,7 +5,7 @@ import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
 import javax.swing.ImageIcon
 
-class PlayerEntity:AbstractEntity<PlayerEntity>()
+class PlayerEntity: AbstractEntity<PlayerEntity>()
 {
     //DB Fields
     var name = ""

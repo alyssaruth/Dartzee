@@ -42,6 +42,7 @@ data class AimDart(override val score: Int, override val multiplier: Int): IDart
     fun getSegmentType() =
         when (multiplier)
         {
+            0 -> SegmentType.MISS
             1 -> SegmentType.OUTER_SINGLE
             2 -> SegmentType.DOUBLE
             else -> SegmentType.TREBLE

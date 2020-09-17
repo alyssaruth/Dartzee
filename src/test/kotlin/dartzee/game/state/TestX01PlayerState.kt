@@ -29,6 +29,17 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
+    fun `Should not count the finishing round as 3 darts if it contains less`()
+    {
+        val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
+        val roundTwo = listOf(Dart(20, 3))
+        val roundThree = listOf(Dart(20, 1), makeDart(20, 2, startingScore = 40))
+
+        val state = makeX01PlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo, roundThree))
+        state.getScoreSoFar() shouldBe 8
+    }
+
+    @Test
     fun `should add on darts from the in progress round`()
     {
         val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))

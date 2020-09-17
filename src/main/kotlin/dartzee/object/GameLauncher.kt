@@ -16,7 +16,7 @@ import dartzee.screen.game.x01.X01MatchScreen
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.insertDartzeeRules
 
-class GameLauncher()
+class GameLauncher
 {
     fun launchNewMatch(match: DartsMatchEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
     {
