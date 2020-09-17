@@ -1,24 +1,17 @@
 package e2e
 
 import dartzee.`object`.Dart
-import dartzee.ai.AimDart
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.db.GameEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.helper.*
-import dartzee.listener.DartboardListener
-import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.screen.game.DartsGamePanel
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.shouldBe
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.Test
 
 class TestGameplayE2E: AbstractRegistryTest()
@@ -70,28 +63,6 @@ class TestGameplayE2E: AbstractRegistryTest()
         roundTwo.ruleNumber shouldBe 1
         roundTwo.score shouldBe 36
         roundTwo.participantId shouldBe participantId
-    }
-
-    @Test
-    fun `E2E - 501`()
-    {
-        val game = insertGame(gameType = GameType.X01, gameParams = "501")
-
-        val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
-        val player = insertPlayer(model = aiModel)
-
-        val (panel, listener) = setUpGamePanel(game)
-
-        panel.startNewGame(listOf(player))
-        awaitGameFinish(game)
-
-        val expectedRounds = listOf(
-                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-                listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
-        )
-
-        verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
     }
 
     @Test

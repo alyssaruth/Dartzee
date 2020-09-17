@@ -4,9 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.ai.AimDart
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.helper.AbstractRegistryTest
-import dartzee.helper.insertGame
-import dartzee.helper.predictableX01Model
+import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
@@ -27,7 +25,29 @@ class TestX01E2E: AbstractRegistryTest()
     }
 
     @Test
-    fun `E2E - 501 - bust and mercy rule`()
+    fun `E2E - 501 - 9 dart game`()
+    {
+        val game = insertGame(gameType = GameType.X01, gameParams = "501")
+
+        val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
+        val player = insertPlayer(model = aiModel)
+
+        val (panel, listener) = setUpGamePanel(game)
+
+        panel.startNewGame(listOf(player))
+        awaitGameFinish(game)
+
+        val expectedRounds = listOf(
+            listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
+            listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
+            listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
+        )
+
+        verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
+    }
+
+    @Test
+    fun `E2E - 301 - bust and mercy rule`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "301")
 
