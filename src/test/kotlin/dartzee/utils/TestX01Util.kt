@@ -23,7 +23,6 @@ class TestX01Util: AbstractTest()
         isBust(makeDart(2, 2, startingScore = 5)) shouldBe true
         isBust(makeDart(2, 2, startingScore = 4)) shouldBe false
         isBust(makeDart(2, 2, startingScore = 3)) shouldBe true
-
     }
 
     @Test
