@@ -1,6 +1,7 @@
 package e2e
 
 import dartzee.`object`.Dart
+import dartzee.achievements.*
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.ClockType
@@ -11,6 +12,7 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.insertDartzeeRules
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -79,6 +81,11 @@ class TestGameplayE2E: AbstractRegistryTest()
 
         val expectedDarts = (1..18).map { listOf(Dart(it, 2)) }
         verifyState(panel, listener, expectedDarts, finalScore = 18, expectedScorerRows = 20)
+
+        val expectedAchievementRows = (1..18).map { AchievementSummary(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, -1, game.rowId, "$it") } +
+                AchievementSummary(ACHIEVEMENT_REF_GOLF_BEST_GAME, 18, game.rowId)
+
+        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
     }
 
     @Test
@@ -95,5 +102,11 @@ class TestGameplayE2E: AbstractRegistryTest()
 
         val expectedDarts = (1..20).map { Dart(it, 1) }.chunked(4)
         verifyState(panel, listener, expectedDarts, 20, scoreSuffix = " Darts")
+
+        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_GAME, 20, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, 20, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, 5, "")
+        )
     }
 }
