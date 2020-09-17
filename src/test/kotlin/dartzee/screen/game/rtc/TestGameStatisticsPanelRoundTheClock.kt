@@ -179,22 +179,22 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Cloc
         statsPanel.shouldHaveBreakdownState(mapOf("4 - 6" to 1))
 
         //9
-        state = state.copy(darts = mutableListOf(missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("7 - 10" to 1))
 
         //12
-        state = state.copy(darts = mutableListOf(missRound, missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("11 - 15" to 1))
 
         //18
-        state = state.copy(darts = mutableListOf(missRound, missRound, missRound, missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, missRound, missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("16 - 20" to 1))
 
         //21
-        state = state.copy(darts = mutableListOf(missRound, missRound, missRound, missRound, missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, missRound, missRound, missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("21+" to 1))
     }

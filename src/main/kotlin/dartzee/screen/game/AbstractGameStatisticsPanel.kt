@@ -58,7 +58,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState>: JP
         val hm = playerStates.groupBy { it.pt.getPlayerName() }
         hmPlayerToStates.putAll(hm)
 
-        hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.darts }})
+        hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.completedRounds }})
 
         if (isSufficientData())
         {

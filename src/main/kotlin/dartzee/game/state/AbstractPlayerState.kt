@@ -8,41 +8,41 @@ import dartzee.db.ParticipantEntity
 abstract class AbstractPlayerState
 {
     abstract val pt: ParticipantEntity
-    abstract val darts: MutableList<List<Dart>>
-    abstract val dartsThrown: MutableList<Dart>
+    abstract val completedRounds: MutableList<List<Dart>>
+    abstract val currentRound: MutableList<Dart>
 
     abstract fun getScoreSoFar(): Int
 
-    fun currentRoundNumber() = darts.size + 1
+    fun currentRoundNumber() = completedRounds.size + 1
 
-    fun getAllDartsFlattened() = darts.flatten() + dartsThrown
+    fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
 
     fun isHuman() = !pt.isAi()
 
     fun dartThrown(dart: Dart)
     {
         dart.participantId = pt.rowId
-        dartsThrown.add(dart)
+        currentRound.add(dart)
     }
 
-    fun resetRound() = dartsThrown.clear()
+    fun resetRound() = currentRound.clear()
 
     fun commitRound()
     {
-        val entities = dartsThrown.mapIndexed { ix, drt ->
+        val entities = currentRound.mapIndexed { ix, drt ->
             DartEntity.factory(drt, pt.playerId, pt.rowId, currentRoundNumber(), ix + 1)
         }
 
         BulkInserter.insert(entities)
 
-        addDarts(dartsThrown.toList())
-        dartsThrown.clear()
+        addDarts(currentRound.toList())
+        currentRound.clear()
     }
 
     fun addDarts(darts: List<Dart>)
     {
         darts.forEach { it.participantId = pt.rowId }
-        this.darts.add(darts.toList())
+        this.completedRounds.add(darts.toList())
     }
 }
 

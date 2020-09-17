@@ -99,7 +99,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     protected fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
     protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).pt
     protected fun getCurrentParticipant() = getCurrentPlayerState().pt
-    fun getDartsThrown() = getCurrentPlayerState().dartsThrown
+    fun getDartsThrown() = getCurrentPlayerState().currentRound
     fun dartsThrownCount() = getDartsThrown().size
 
     protected fun addState(playerNumber: Int, state: PlayerState, scorer: S) {
