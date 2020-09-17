@@ -3,10 +3,7 @@ package dartzee.utils
 import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
 
-fun isBust(dart: Dart): Boolean
-{
-    return isBust(dart.startingScore, dart)
-}
+fun isBust(dart: Dart) =  isBust(dart.startingScore, dart)
 fun isBust(score: Int, lastDart: Dart): Boolean
 {
     val scoreRemaining = score - lastDart.getTotal()

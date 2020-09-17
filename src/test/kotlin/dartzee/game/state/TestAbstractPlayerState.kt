@@ -92,6 +92,7 @@ class TestAbstractPlayerState: AbstractTest()
         dartEntity.posX shouldBe originalDart.getX()
         dartEntity.posY shouldBe originalDart.getY()
         dartEntity.segmentType shouldBe originalDart.segmentType
+        dartEntity.roundNumber shouldBe 1
     }
 
     @Test

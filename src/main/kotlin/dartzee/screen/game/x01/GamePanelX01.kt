@@ -153,10 +153,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
     {
         val startingScore = scorer.getLatestScoreRemaining()
 
-        for (dart in darts)
-        {
-            scorer.addDart(dart)
-        }
+        darts.forEach(scorer::addDart)
 
         val lastDart = darts.last()
         val bust = isBust(lastDart)

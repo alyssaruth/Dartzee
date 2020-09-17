@@ -121,4 +121,15 @@ class TestX01PlayerState: AbstractTest()
         state.resetRound()
         state.getBadLuckCount() shouldBe 2
     }
+
+    @Test
+    fun `Should return the last committed round`()
+    {
+        val roundOne = listOf(Dart(20, 1))
+        val roundTwo = listOf(Dart(5, 1), Dart(1, 1))
+        val roundThree = listOf(Dart(20, 1), Dart(20, 1), Dart(5, 1))
+
+        val state = makeX01PlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo, roundThree))
+        state.getLastRound() shouldBe roundThree
+    }
 }

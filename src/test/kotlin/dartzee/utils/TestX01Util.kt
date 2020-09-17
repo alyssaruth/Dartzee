@@ -14,6 +14,19 @@ import org.junit.Test
 class TestX01Util: AbstractTest()
 {
     @Test
+    fun `isBust should return the right values when just passed a dart`()
+    {
+        isBust(makeDart(3, 1, startingScore = 5)) shouldBe false
+        isBust(makeDart(3, 1, startingScore = 4)) shouldBe true
+        isBust(makeDart(3, 1, startingScore = 3)) shouldBe true
+
+        isBust(makeDart(2, 2, startingScore = 5)) shouldBe true
+        isBust(makeDart(2, 2, startingScore = 4)) shouldBe false
+        isBust(makeDart(2, 2, startingScore = 3)) shouldBe true
+
+    }
+
+    @Test
     fun testIsBust()
     {
         isBust(5, Dart(3, 2)).shouldBeTrue()
