@@ -1,6 +1,7 @@
 package e2e
 
 import dartzee.`object`.Dart
+import dartzee.achievements.*
 import dartzee.ai.AimDart
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -9,6 +10,7 @@ import dartzee.listener.DartboardListener
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
@@ -44,6 +46,13 @@ class TestX01E2E: AbstractRegistryTest()
         )
 
         verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
+
+        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
+                AchievementSummary(ACHIEVEMENT_REF_X01_BEST_GAME, 9, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_X01_BEST_FINISH, 141, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, 12, game.rowId)
+        )
     }
 
     @Test
@@ -97,5 +106,13 @@ class TestX01E2E: AbstractRegistryTest()
         )
 
         verifyState(parentWindow.gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 19)
+
+        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
+                AchievementSummary(ACHIEVEMENT_REF_X01_BEST_FINISH, 4, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, 2, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_X01_HIGHEST_BUST, 20, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, 1, game.rowId)
+        )
     }
 }
