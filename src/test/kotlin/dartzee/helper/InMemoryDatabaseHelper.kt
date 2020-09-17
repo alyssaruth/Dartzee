@@ -318,3 +318,10 @@ fun retrieveGame() = GameEntity().retrieveEntities().first()
 fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
+
+data class AchievementSummary(val achievementRef: Int, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
+fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
+{
+    val achievements = AchievementEntity.retrieveAchievements(playerId)
+    return achievements.map { AchievementSummary(it.achievementRef, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
+}

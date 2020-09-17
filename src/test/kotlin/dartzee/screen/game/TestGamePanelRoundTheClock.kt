@@ -104,7 +104,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
 
-            addState(0, ClockPlayerState(pt, 0), scorer)
+            addState(0, ClockPlayerState(pt), scorer)
 
             currentRoundNumber = 1
         }

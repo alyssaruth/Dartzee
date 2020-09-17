@@ -73,7 +73,7 @@ class TestAbstractPlayerState: AbstractTest()
         entities.forEach {
             it.playerId shouldBe pt.playerId
             it.participantId shouldBe pt.rowId
-            it.roundNumber shouldBe state.lastRoundNumber
+            it.roundNumber shouldBe 1
         }
 
         val entityOne = entities.find { it.ordinal == 1 }!!
@@ -92,10 +92,29 @@ class TestAbstractPlayerState: AbstractTest()
         dartEntity.posX shouldBe originalDart.getX()
         dartEntity.posY shouldBe originalDart.getY()
         dartEntity.segmentType shouldBe originalDart.segmentType
+        dartEntity.roundNumber shouldBe 1
+    }
+
+    @Test
+    fun `Should correctly compute the current round number`()
+    {
+        val state = DefaultPlayerState(insertParticipant())
+        state.currentRoundNumber() shouldBe 1
+
+        state.dartThrown(Dart(1, 1, Point(0, 0)))
+        state.currentRoundNumber() shouldBe 1
+
+        state.commitRound()
+        state.currentRoundNumber() shouldBe 2
+
+        state.dartThrown(Dart(20, 1, Point(0, 0)))
+        state.currentRoundNumber() shouldBe 2
+
+        state.resetRound()
+        state.currentRoundNumber() shouldBe 2
     }
 
     data class DefaultPlayerState(override val pt: ParticipantEntity,
-                                  override var lastRoundNumber: Int = 0,
                                   override val darts: MutableList<List<Dart>> = mutableListOf(),
                                   override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
     {

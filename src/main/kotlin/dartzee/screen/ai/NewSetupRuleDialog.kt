@@ -117,7 +117,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
             return false
         }
 
-        if (isBust(score - drt.getTotal(), Dart(drt.score, drt.multiplier)))
+        if (isBust(score, Dart(drt.score, drt.multiplier)))
         {
             DialogUtil.showError("This target would bust the player")
             return false

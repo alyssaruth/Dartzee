@@ -8,11 +8,12 @@ import dartzee.db.ParticipantEntity
 abstract class AbstractPlayerState
 {
     abstract val pt: ParticipantEntity
-    abstract var lastRoundNumber: Int
     abstract val darts: MutableList<List<Dart>>
     abstract val dartsThrown: MutableList<Dart>
 
     abstract fun getScoreSoFar(): Int
+
+    fun currentRoundNumber() = darts.size + 1
 
     fun getAllDartsFlattened() = darts.flatten() + dartsThrown
 
@@ -29,7 +30,7 @@ abstract class AbstractPlayerState
     fun commitRound()
     {
         val entities = dartsThrown.mapIndexed { ix, drt ->
-            DartEntity.factory(drt, pt.playerId, pt.rowId, lastRoundNumber, ix + 1)
+            DartEntity.factory(drt, pt.playerId, pt.rowId, currentRoundNumber(), ix + 1)
         }
 
         BulkInserter.insert(entities)

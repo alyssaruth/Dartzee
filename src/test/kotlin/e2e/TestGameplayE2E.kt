@@ -1,30 +1,19 @@
 package e2e
 
 import dartzee.`object`.Dart
-import dartzee.ai.AimDart
-import dartzee.awaitCondition
-import dartzee.core.util.DateStatics
-import dartzee.core.util.getSortedValues
+import dartzee.achievements.*
 import dartzee.dartzee.DartzeeCalculator
-import dartzee.db.DartEntity
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.db.GameEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.helper.*
-import dartzee.listener.DartboardListener
-import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.screen.game.DartsGamePanel
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.insertDartzeeRules
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verifySequence
 import org.junit.Test
 
 class TestGameplayE2E: AbstractRegistryTest()
@@ -79,28 +68,6 @@ class TestGameplayE2E: AbstractRegistryTest()
     }
 
     @Test
-    fun `E2E - 501`()
-    {
-        val game = insertGame(gameType = GameType.X01, gameParams = "501")
-
-        val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
-        val player = insertPlayer(model = aiModel)
-
-        val (panel, listener) = setUpGamePanel(game)
-
-        panel.startNewGame(listOf(player))
-        awaitGameFinish(game)
-
-        val expectedRounds = listOf(
-                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-                listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
-        )
-
-        verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
-    }
-
-    @Test
     fun `E2E - Golf`()
     {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "18")
@@ -114,6 +81,11 @@ class TestGameplayE2E: AbstractRegistryTest()
 
         val expectedDarts = (1..18).map { listOf(Dart(it, 2)) }
         verifyState(panel, listener, expectedDarts, finalScore = 18, expectedScorerRows = 20)
+
+        val expectedAchievementRows = (1..18).map { AchievementSummary(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, -1, game.rowId, "$it") } +
+                AchievementSummary(ACHIEVEMENT_REF_GOLF_BEST_GAME, 18, game.rowId)
+
+        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
     }
 
     @Test
@@ -130,63 +102,11 @@ class TestGameplayE2E: AbstractRegistryTest()
 
         val expectedDarts = (1..20).map { Dart(it, 1) }.chunked(4)
         verifyState(panel, listener, expectedDarts, 20, scoreSuffix = " Darts")
-    }
 
-    data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
-
-    private fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
-    {
-        val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
-        every { parentWindow.isVisible } returns true
-
-        val panel = DartsGamePanel.factory(parentWindow, game, 1)
-        val listener = mockk<DartboardListener>(relaxed = true)
-        panel.dartboard.addDartboardListener(listener)
-
-        return GamePanelTestSetup(panel, listener)
-    }
-
-    private fun awaitGameFinish(game: GameEntity)
-    {
-        awaitCondition { game.isFinished() }
-    }
-
-    private fun verifyState(panel: DartsGamePanel<*, *, *>,
-                            listener: DartboardListener,
-                            dartRounds: List<List<Dart>>,
-                            finalScore: Int,
-                            scoreSuffix: String = "",
-                            expectedScorerRows: Int = dartRounds.size)
-    {
-        // ParticipantEntity on the database
-        val pt = retrieveParticipant()
-        pt.finalScore shouldBe finalScore
-        pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
-        pt.gameId shouldBe panel.gameEntity.rowId
-        pt.finishingPosition shouldBe -1
-        pt.ordinal shouldBe 0
-
-        // Screen state
-        panel.activeScorer.lblResult.text shouldBe "$finalScore$scoreSuffix"
-        panel.activeScorer.getRowCount() shouldBe expectedScorerRows
-
-        // Use our dartboardListener to verify that the right throws were registered
-        val darts = dartRounds.flatten()
-        verifySequence {
-            darts.forEach {
-                listener.dartThrown(it)
-            }
-        }
-
-        // Check that the dart entities on the database line up
-        val dartEntities = DartEntity().retrieveEntities().sortedWith(compareBy( { it.roundNumber }, { it.ordinal }))
-        dartEntities.forEach {
-            it.participantId shouldBe pt.rowId
-            it.playerId shouldBe pt.playerId
-        }
-
-        val chunkedDartEntities: List<List<DartEntity>> = dartEntities.groupBy { it.roundNumber }.getSortedValues().map { it.sortedBy { drt -> drt.ordinal } }
-        val retrievedDartRounds = chunkedDartEntities.map { rnd -> rnd.map { drt -> Dart(drt.score, drt.multiplier) } }
-        retrievedDartRounds shouldBe dartRounds
+        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_GAME, 20, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, 20, game.rowId),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, 5, "")
+        )
     }
 }
