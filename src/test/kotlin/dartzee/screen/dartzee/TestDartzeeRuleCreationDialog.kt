@@ -4,7 +4,6 @@ import com.github.alexburlton.swingtest.flushEdt
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.helper.makeActionEvent
-import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.dart.*
@@ -12,6 +11,8 @@ import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.dartzee.total.DartzeeTotalRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.helper.*
+import dartzee.shouldBeVisible
+import dartzee.shouldNotBeVisible
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -22,7 +23,6 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
-import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Test
 
@@ -181,13 +181,13 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     @Test
     fun `Should validate all three dart selectors for an all darts rule`()
     {
-        val dlg = spyk<DartzeeRuleCreationDialog>()
+        val dlg = showRuleCreationDialog()
 
         dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         dlg.btnOk.doClick()
         dialogFactory.errorsShown.shouldContainExactly("Dart 1: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
-        verifyNotCalled { dlg.dispose() }
+        dlg.shouldBeVisible()
 
         dialogFactory.errorsShown.clear()
         dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
@@ -195,7 +195,7 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         dlg.btnOk.doClick()
         dialogFactory.errorsShown.shouldContainExactly("Dart 2: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
-        verifyNotCalled { dlg.dispose() }
+        dlg.shouldBeVisible()
 
         dialogFactory.errorsShown.clear()
         dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
@@ -203,21 +203,21 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         dlg.btnOk.doClick()
         dialogFactory.errorsShown.shouldContainExactly("Dart 3: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
-        verifyNotCalled { dlg.dispose() }
+        dlg.shouldBeVisible()
     }
 
     @Test
     fun `Should validate the target selector for an 'at least one' dart rule`()
     {
-        val dlg = spyk<DartzeeRuleCreationDialog>()
-        dlg.rdbtnAtLeastOne.doClick()
+        val dlg = showRuleCreationDialog()
 
+        dlg.rdbtnAtLeastOne.doClick()
         dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         dlg.btnOk.doClick()
 
         dialogFactory.errorsShown.shouldContainExactly("Target: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
-        verifyNotCalled { dlg.dispose() }
+        dlg.shouldBeVisible()
     }
 
     @Test
@@ -225,7 +225,7 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val dlg = spyk<DartzeeRuleCreationDialog>()
+        val dlg = showRuleCreationDialog()
         dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
         dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
         dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
@@ -237,17 +237,26 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
 
         dialogFactory.errorsShown.shouldContainExactly("This rule is impossible!")
         dlg.dartzeeRule shouldBe null
-        verifyNotCalled { dlg.dispose() }
+        dlg.shouldBeVisible()
     }
 
     @Test
     fun `Should dispose if valid`()
     {
-        val dlg = spyk<DartzeeRuleCreationDialog>()
+        val dlg = showRuleCreationDialog()
         dlg.btnOk.doClick()
 
         dialogFactory.errorsShown.shouldBeEmpty()
-        verify { dlg.dispose() }
+        dlg.shouldNotBeVisible()
+    }
+
+    private fun showRuleCreationDialog(): DartzeeRuleCreationDialog
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.isModal = false
+        dlg.isVisible = true
+
+        return dlg
     }
 }
 
