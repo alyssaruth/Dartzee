@@ -22,7 +22,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
 
     override fun saveDartsAndProceed()
     {
-        activeScorer.updatePlayerResult()
+        getCurrentScorer().updatePlayerResult()
 
         commitRound()
 
@@ -42,12 +42,10 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
         }
         else if (activePlayers == 1)
         {
-            activeScorer = getCurrentScorer()
-
             //Finish the game and set the last player's finishing position if we haven't already
             finishGameIfNecessary()
 
-            if (!activeScorer.getPaused())
+            if (!getCurrentScorer().getPaused())
             {
                 nextTurn()
             }
@@ -61,7 +59,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
     override fun handlePlayerFinish(): Int
     {
         val finishPos = super.handlePlayerFinish()
-        activeScorer.finalisePlayerResult(finishPos)
+        getCurrentScorer().finalisePlayerResult(finishPos)
         return finishPos
     }
 
@@ -94,10 +92,10 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
 
         //Display this player's result. If they're an AI and we have the preference, then
         //automatically play on.
-        activeScorer.finalisePlayerResult(totalPlayers)
+        getCurrentScorer().finalisePlayerResult(totalPlayers)
         if (loser.isAi() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
         {
-            activeScorer.toggleResume()
+            getCurrentScorer().toggleResume()
         }
     }
 

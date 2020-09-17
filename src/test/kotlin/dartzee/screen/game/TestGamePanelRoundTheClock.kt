@@ -14,7 +14,6 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
-import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -96,10 +95,8 @@ class TestGamePanelRoundTheClock: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = DartsScorerRoundTheClock(this, ClockType.Standard)
-            scorer.init(player)
+            val scorer = assignScorer(player)
 
-            activeScorer = scorer
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId

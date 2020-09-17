@@ -11,7 +11,6 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.helper.wipeTable
-import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.screen.game.x01.GamePanelX01
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -134,10 +133,8 @@ class TestGamePanelX01: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = DartsScorerX01(this, "501")
-            scorer.init(player)
+            val scorer = assignScorer(player)
 
-            activeScorer = scorer
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId
