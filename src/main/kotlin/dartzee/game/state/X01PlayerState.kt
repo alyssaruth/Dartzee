@@ -9,7 +9,7 @@ import dartzee.utils.sumScore
 
 data class X01PlayerState(override val pt: ParticipantEntity,
                           override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                          override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
+                          override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<X01PlayerState>()
 {
     override fun getScoreSoFar(): Int
     {

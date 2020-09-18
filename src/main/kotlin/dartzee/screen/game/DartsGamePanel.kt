@@ -36,7 +36,7 @@ import java.awt.event.MouseListener
 import java.sql.SQLException
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState>(
+abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
         val gameEntity: GameEntity,
         protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener

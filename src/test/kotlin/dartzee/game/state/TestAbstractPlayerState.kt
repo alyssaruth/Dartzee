@@ -116,7 +116,7 @@ class TestAbstractPlayerState: AbstractTest()
 
     data class DefaultPlayerState(override val pt: ParticipantEntity,
                                   override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                                  override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
+                                  override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<DefaultPlayerState>()
     {
         override fun getScoreSoFar() = -1
     }
