@@ -13,6 +13,7 @@ data class DartzeePlayerState(override val pt: ParticipantEntity,
     fun addRoundResult(result: DartzeeRoundResultEntity)
     {
         roundResults.add(result)
+        fireStateChanged()
     }
 
     fun getPeakScore() = (1 until currentRoundNumber()).map(::getCumulativeScore).max()

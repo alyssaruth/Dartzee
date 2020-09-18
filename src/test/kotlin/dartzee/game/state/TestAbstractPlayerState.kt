@@ -9,6 +9,8 @@ import dartzee.helper.insertParticipant
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Test
 import java.awt.Point
 
@@ -114,10 +116,32 @@ class TestAbstractPlayerState: AbstractTest()
         state.currentRoundNumber() shouldBe 2
     }
 
+    @Test
+    fun `Should fire state changed`()
+    {
+        val state = DefaultPlayerState(insertParticipant())
+
+        state.shouldFireStateChange { it.dartThrown(Dart(1, 1)) }
+        state.shouldFireStateChange { it.resetRound() }
+        state.shouldFireStateChange { it.commitRound() }
+        state.shouldFireStateChange { it.addCompletedRound(listOf(Dart(1, 1))) }
+    }
+
     data class DefaultPlayerState(override val pt: ParticipantEntity,
                                   override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                                   override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<DefaultPlayerState>()
     {
         override fun getScoreSoFar() = -1
     }
+}
+
+fun <S: AbstractPlayerState<S>> S.shouldFireStateChange(fn: (state: S) -> Unit)
+{
+    val listener = mockk<PlayerStateListener<S>>(relaxed = true)
+    addListener(listener)
+
+    fn(this)
+
+    val state = this
+    verify { listener.stateChanged(state) }
 }

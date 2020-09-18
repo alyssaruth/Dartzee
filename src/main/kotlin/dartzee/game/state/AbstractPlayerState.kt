@@ -36,9 +36,15 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
     {
         dart.participantId = pt.rowId
         currentRound.add(dart)
+
+        fireStateChanged()
     }
 
-    fun resetRound() = currentRound.clear()
+    fun resetRound()
+    {
+        currentRound.clear()
+        fireStateChanged()
+    }
 
     fun commitRound()
     {
@@ -50,17 +56,21 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
         addCompletedRound(currentRound.toList())
         currentRound.clear()
+
+        fireStateChanged()
     }
 
     fun addCompletedRound(darts: List<Dart>)
     {
         darts.forEach { it.participantId = pt.rowId }
         this.completedRounds.add(darts.toList())
+
+        fireStateChanged()
     }
 
-    fun fireStateChanged()
+    protected fun fireStateChanged()
     {
-        listeners.forEach { it.stateChanged(this) }
+        listeners.forEach { it.stateChanged(this as S) }
     }
 }
 

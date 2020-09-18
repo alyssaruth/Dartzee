@@ -2,6 +2,7 @@ package dartzee.game.state
 
 import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRoundResult
+import dartzee.db.DartzeeRoundResultEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeePlayerState
 import io.kotlintest.shouldBe
@@ -33,5 +34,12 @@ class TestDartzeePlayerState: AbstractTest()
         state.getCumulativeScore(5) shouldBe 103
         state.getPeakScore() shouldBe 105
         state.getScoreSoFar() shouldBe 103
+    }
+
+    @Test
+    fun `Should fire state changed`()
+    {
+        val state = makeDartzeePlayerState()
+        state.shouldFireStateChange { it.addRoundResult(DartzeeRoundResultEntity()) }
     }
 }

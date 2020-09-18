@@ -1,6 +1,9 @@
 package dartzee.screen.game.scorer
 
 import dartzee.dartzee.DartzeeRoundResult
+import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.DartzeePlayerState
+import dartzee.game.state.PlayerStateListener
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -8,7 +11,7 @@ import java.awt.event.MouseListener
 private const val RULE_COLUMN = 3
 private const val SCORE_COLUMN = 4
 
-class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), MouseListener
+class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), MouseListener, PlayerStateListener<DartzeePlayerState>
 {
     init
     {
@@ -21,6 +24,11 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
 
         val lastScore = scores.findLast { it != null } ?: 0
         return lastScore as Int
+    }
+
+    override fun stateChanged(state: DartzeePlayerState)
+    {
+
     }
 
     override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, RULE_COLUMN) != null
