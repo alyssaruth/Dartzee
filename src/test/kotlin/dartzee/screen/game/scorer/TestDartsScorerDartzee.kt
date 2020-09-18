@@ -64,13 +64,11 @@ class TestDartsScorerDartzee: AbstractTest()
 
         scorer.lblResult.text shouldBe ""
 
-        scorer.setResult(DartzeeRoundResult(2, true, 120))
         scorer.lblResult.text shouldBe "120"
 
         scorer.addDart(Dart(20, 1))
         scorer.lblResult.text shouldBe "120"
 
-        scorer.setResult(DartzeeRoundResult(3, false, -60))
         scorer.lblResult.text shouldBe "60"
     }
 
@@ -85,7 +83,6 @@ class TestDartsScorerDartzee: AbstractTest()
         scorer.addDart(Dart(20, 3))
         scorer.rowIsComplete(0) shouldBe false
 
-        scorer.setResult(DartzeeRoundResult(2, true, 120))
         scorer.rowIsComplete(0) shouldBe true
     }
 
@@ -99,18 +96,15 @@ class TestDartsScorerDartzee: AbstractTest()
         scorer.addDart(Dart(20, 2))
         scorer.addDart(Dart(20, 3))
 
-        scorer.setResult(DartzeeRoundResult(2, true, 50))
         scorer.getRendererMaximum() shouldBe 50
 
         scorer.addDart(Dart(20, 1))
 
-        scorer.setResult(DartzeeRoundResult(3, false, -25))
         scorer.getRendererMaximum() shouldBe 50
 
         scorer.addDart(Dart(15, 1))
         scorer.addDart(Dart(15, 1))
         scorer.addDart(Dart(15, 1))
-        scorer.setResult(DartzeeRoundResult(4, true, 45))
         scorer.getRendererMaximum() shouldBe 70
     }
 

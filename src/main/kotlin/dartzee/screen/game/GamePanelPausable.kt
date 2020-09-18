@@ -22,8 +22,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
 
     override fun saveDartsAndProceed()
     {
-        getCurrentScorer().updatePlayerResult()
-
         commitRound()
 
         //This player has finished. The game isn't necessarily over though...

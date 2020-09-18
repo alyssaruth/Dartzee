@@ -67,26 +67,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         val pt = getParticipant(playerNumber)
 
         val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '${pt.playerId}' AND ParticipantId = '${pt.rowId}'")
-
         roundResults.forEach { getPlayerState(playerNumber).addRoundResult(it) }
-
-        val scorer = getScorer(playerNumber)
-        for (i in 1..totalRounds)
-        {
-            val darts = hmRoundToDarts[i]!!
-            darts.forEach { scorer.addDart(it) }
-
-            if (i == 1)
-            {
-                val result = factoryHighScoreResult(darts)
-                scorer.setResult(result)
-            }
-            else
-            {
-                val result = roundResults.find { it.roundNumber == i }!!
-                scorer.setResult(result.toDto())
-            }
-        }
     }
 
     override fun updateVariablesForNewRound()
@@ -155,7 +136,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     {
         val pt = getCurrentParticipant()
 
-        getCurrentScorer().setResult(result)
         if (!isScoringRound())
         {
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)

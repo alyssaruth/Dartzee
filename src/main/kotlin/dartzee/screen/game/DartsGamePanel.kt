@@ -12,6 +12,7 @@ import dartzee.core.util.*
 import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.PlayerStateListener
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
@@ -185,7 +186,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             addParticipant(participant)
 
             val scorer = assignScorer(player)
-            addState(ix, factoryState(participant), scorer)
+            val state = factoryState(participant)
+            state.addListener(scorer as PlayerStateListener<PlayerState>) //TODO - will sort this
+            addState(ix, state, scorer)
         }
 
         initForAi(hasAi())
@@ -211,14 +214,14 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         readyForThrow()
     }
 
-    private fun selectScorer(selectedScorer: S?)
+    private fun selectScorer(selectedScorer: S)
     {
         for (scorer in scorersOrdered)
         {
             scorer.setSelected(false)
         }
 
-        selectedScorer!!.setSelected(true)
+        selectedScorer.setSelected(true)
     }
 
     private fun initForAi(hasAi: Boolean)
@@ -283,17 +286,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             btnStats.isSelected = true
             viewStats()
         }
-
-        updateScorersWithFinishingPositions()
-    }
-
-    protected fun updateScorersWithFinishingPositions()
-    {
-        hmPlayerNumberToState.keys.forEach { playerNumber ->
-            val state = getPlayerState(playerNumber)
-            val scorer = getScorer(playerNumber)
-            scorer.updateResultColourForPosition(state.pt.finishingPosition)
-        }
     }
 
     /**
@@ -310,7 +302,9 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
             addParticipant(pt)
 
             val scorer = assignScorer(pt.getPlayer())
-            addState(i, factoryState(pt), scorer)
+            val state = factoryState(pt)
+            state.addListener(scorer as PlayerStateListener<PlayerState>) //TODO - will sort this
+            addState(i, state, scorer)
         }
 
         initForAi(hasAi())
@@ -506,7 +500,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         dart.roundNumber = currentRoundNumber
 
         getCurrentPlayerState().dartThrown(dart)
-        getCurrentScorer().addDart(dart)
 
         //If there are any specific variables we need to update (e.g. current score for X01), do it now
         updateVariablesForDartThrown(dart)
@@ -585,7 +578,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         btnReset.isEnabled = false
 
         dartboard.clearDarts()
-        getCurrentScorer().confirmCurrentRound()
 
         saveDartsAndProceed()
     }
@@ -595,8 +587,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         resetRoundVariables()
 
         dartboard.clearDarts()
-        getCurrentScorer().clearRound(currentRoundNumber)
-        getCurrentScorer().updatePlayerResult()
         getCurrentPlayerState().resetRound()
 
         //If we're resetting, disable the buttons

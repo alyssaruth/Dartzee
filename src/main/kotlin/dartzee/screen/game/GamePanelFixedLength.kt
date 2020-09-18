@@ -38,8 +38,6 @@ abstract class GamePanelFixedLength<S : DartsScorer, D: Dartboard, PlayerState: 
         //Get the participants sorted by score so we can assign finishing positions
         setFinishingPositions(getParticipants(), gameEntity)
 
-        updateScorersWithFinishingPositions()
-
         allPlayersFinished()
 
         parentWindow.startNextGameIfNecessary()

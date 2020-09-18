@@ -31,7 +31,6 @@ abstract class DartsScorer : AbstractScorer() {
         panelAvatar.border = EmptyBorder(5, 30, 5, 30)
     }
 
-
     /**
      * Add a dart to the scorer.
      */
@@ -46,8 +45,6 @@ abstract class DartsScorer : AbstractScorer() {
         }
 
         addDartToRow(rowCount - 1, drt)
-
-        updatePlayerResult()
     }
 
     private fun shouldAddRow(rowCount: Int): Boolean
