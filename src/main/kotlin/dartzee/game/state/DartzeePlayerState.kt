@@ -6,8 +6,8 @@ import dartzee.db.ParticipantEntity
 import dartzee.utils.sumScore
 
 data class DartzeePlayerState(override val pt: ParticipantEntity,
-                              override val darts: MutableList<List<Dart>> = mutableListOf(),
-                              override val dartsThrown: MutableList<Dart> = mutableListOf(),
+                              override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+                              override val currentRound: MutableList<Dart> = mutableListOf(),
                               val roundResults: MutableList<DartzeeRoundResultEntity> = mutableListOf()): AbstractPlayerState()
 {
     fun addRoundResult(result: DartzeeRoundResultEntity)
@@ -19,7 +19,7 @@ data class DartzeePlayerState(override val pt: ParticipantEntity,
     fun getCumulativeScore(roundNumber: Int): Int
     {
         val roundResultTotal = roundResults.filter { it.roundNumber <= roundNumber }.sumBy { it.score }
-        return roundResultTotal + sumScore(darts.firstOrNull() ?: emptyList())
+        return roundResultTotal + sumScore(completedRounds.firstOrNull() ?: emptyList())
     }
 
     override fun getScoreSoFar() = getCumulativeScore(currentRoundNumber())

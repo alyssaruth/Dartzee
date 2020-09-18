@@ -86,7 +86,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     {
         if (dart.hitClockTarget(config.clockType))
         {
-            activeScorer.incrementCurrentClockTarget()
+            getCurrentScorer().incrementCurrentClockTarget()
 
             if (dartsThrownCount() == 4)
             {
@@ -99,7 +99,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         }
         else
         {
-            activeScorer.disableBrucey()
+            getCurrentScorer().disableBrucey()
         }
     }
 

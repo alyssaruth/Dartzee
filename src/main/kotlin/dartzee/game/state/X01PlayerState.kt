@@ -8,20 +8,20 @@ import dartzee.utils.isNearMissDouble
 import dartzee.utils.sumScore
 
 data class X01PlayerState(override val pt: ParticipantEntity,
-                          override val darts: MutableList<List<Dart>> = mutableListOf(),
-                          override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
+                          override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+                          override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
 {
     override fun getScoreSoFar(): Int
     {
-        val hasFinished = darts.isNotEmpty() && isFinishRound(darts.last())
+        val hasFinished = completedRounds.isNotEmpty() && isFinishRound(completedRounds.last())
         if (!hasFinished)
         {
-            return (darts.size * 3) + dartsThrown.size
+            return (completedRounds.size * 3) + currentRound.size
         }
         else
         {
-            val lastRound = darts.last()
-            val earlierRounds = darts.subList(0, darts.size - 1)
+            val lastRound = completedRounds.last()
+            val earlierRounds = completedRounds.subList(0, completedRounds.size - 1)
             return (earlierRounds.size * 3) + lastRound.size
         }
 
@@ -29,7 +29,7 @@ data class X01PlayerState(override val pt: ParticipantEntity,
 
     fun getRemainingScoreForRound(startingScore: Int, roundNumber: Int): Int
     {
-        val roundSubSet = darts.subList(0, roundNumber)
+        val roundSubSet = completedRounds.subList(0, roundNumber)
 
         val nonBustRounds = roundSubSet.filterNot { round ->
             val lastDart = round.last()
@@ -43,5 +43,5 @@ data class X01PlayerState(override val pt: ParticipantEntity,
 
     fun getBadLuckCount() = getAllDartsFlattened().count { isNearMissDouble(it) }
 
-    fun getLastRound() = darts.last()
+    fun getLastRound() = completedRounds.last()
 }

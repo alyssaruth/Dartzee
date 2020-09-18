@@ -34,7 +34,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Cloc
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Most darts") shouldBe 2
 
-        state.addDarts(listOf(makeDart(15, 1, startingScore = 2), makeDart(17, 1, startingScore = 2), makeDart(2, 0, startingScore = 2)))
+        state.addCompletedRound(listOf(makeDart(15, 1, startingScore = 2), makeDart(17, 1, startingScore = 2), makeDart(2, 0, startingScore = 2)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Most darts") shouldBe 4
     }
@@ -71,19 +71,19 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Cloc
         statsPanel.getValueForRow("Fewest darts") shouldBe "N/A"
 
         // [4, -]
-        state.addDarts(listOf(makeDart(1, 1, startingScore = 1), makeDart(2, 0, startingScore = 2), makeDart(17, 1, startingScore = 2)))
+        state.addCompletedRound(listOf(makeDart(1, 1, startingScore = 1), makeDart(2, 0, startingScore = 2), makeDart(17, 1, startingScore = 2)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Avg darts") shouldBe 4.0
         statsPanel.getValueForRow("Fewest darts") shouldBe 4
 
         // [4, 3, 2]
-        state.addDarts(listOf(makeDart(2, 1, startingScore = 2), makeDart(3, 0, startingScore = 3), makeDart(3, 1, startingScore = 3)))
+        state.addCompletedRound(listOf(makeDart(2, 1, startingScore = 2), makeDart(3, 0, startingScore = 3), makeDart(3, 1, startingScore = 3)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Avg darts") shouldBe 3.0
         statsPanel.getValueForRow("Fewest darts") shouldBe 2
 
         // [4, 3, 2, 1, 2]
-        state.addDarts(listOf(makeDart(4, 1, startingScore = 4), makeDart(5, 0, startingScore = 5), makeDart(5, 1, startingScore = 5)))
+        state.addCompletedRound(listOf(makeDart(4, 1, startingScore = 4), makeDart(5, 0, startingScore = 5), makeDart(5, 1, startingScore = 5)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Avg darts") shouldBe 2.4
         statsPanel.getValueForRow("Fewest darts") shouldBe 1
@@ -102,17 +102,17 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Cloc
         statsPanel.getValueForRow("Best Streak") shouldBe 0
 
         // [4, 2] (streak of 1)
-        state.addDarts(listOf(makeDart(1, 1, startingScore = 1), makeDart(2, 0, startingScore = 2), makeDart(2, 1, startingScore = 2)))
+        state.addCompletedRound(listOf(makeDart(1, 1, startingScore = 1), makeDart(2, 0, startingScore = 2), makeDart(2, 1, startingScore = 2)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Streak") shouldBe 1
 
         // [4, 2, 1, 1, -] (streak of 3)
-        state.addDarts(listOf(makeDart(3, 1, startingScore = 3), makeDart(4, 1, startingScore = 4), makeDart(5, 0, startingScore = 5)))
+        state.addCompletedRound(listOf(makeDart(3, 1, startingScore = 3), makeDart(4, 1, startingScore = 4), makeDart(5, 0, startingScore = 5)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Streak") shouldBe 3
 
         // [4, 2, 1, 1, 2, 1, 1, 1] (streak of 4)
-        state.addDarts(listOf(makeDart(5, 1, startingScore = 5), makeDart(6, 1, startingScore = 6), makeDart(7, 1, startingScore = 7), makeDart(8, 1, startingScore = 8)))
+        state.addCompletedRound(listOf(makeDart(5, 1, startingScore = 5), makeDart(6, 1, startingScore = 6), makeDart(7, 1, startingScore = 7), makeDart(8, 1, startingScore = 8)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Streak") shouldBe 4
     }
@@ -130,7 +130,7 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Cloc
         statsPanel.getValueForRow("Best Streak") shouldBe 1
 
         // [2, 2, 1, -] (streak of 2)
-        state.addDarts(listOf(makeDart(2, 2, startingScore = 2), makeDart(3, 2, startingScore = 3), makeDart(4, 3, startingScore = 4)))
+        state.addCompletedRound(listOf(makeDart(2, 2, startingScore = 2), makeDart(3, 2, startingScore = 3), makeDart(4, 3, startingScore = 4)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Best Streak") shouldBe 2
     }
@@ -149,13 +149,13 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Cloc
         statsPanel.getValueForRow("Bruceys executed") shouldBe 0
 
         // [4, 2] (streak of 1)
-        state.addDarts(listOf(makeDart(2, 1, startingScore = 2), makeDart(3, 1, startingScore = 3), makeDart(4, 1, startingScore = 4), makeDart(20, 1, startingScore = 5)))
+        state.addCompletedRound(listOf(makeDart(2, 1, startingScore = 2), makeDart(3, 1, startingScore = 3), makeDart(4, 1, startingScore = 4), makeDart(20, 1, startingScore = 5)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Brucey chances") shouldBe 1
         statsPanel.getValueForRow("Bruceys executed") shouldBe 0
 
         // [4, 2, 1, 1, -] (streak of 3)
-        state.addDarts(listOf(makeDart(5, 1, startingScore = 5), makeDart(6, 1, startingScore = 6), makeDart(7, 1, startingScore = 7), makeDart(8, 1, startingScore = 8)))
+        state.addCompletedRound(listOf(makeDart(5, 1, startingScore = 5), makeDart(6, 1, startingScore = 6), makeDart(7, 1, startingScore = 7), makeDart(8, 1, startingScore = 8)))
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Brucey chances") shouldBe 2
         statsPanel.getValueForRow("Bruceys executed") shouldBe 1
@@ -179,22 +179,22 @@ class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<Cloc
         statsPanel.shouldHaveBreakdownState(mapOf("4 - 6" to 1))
 
         //9
-        state = state.copy(darts = mutableListOf(missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("7 - 10" to 1))
 
         //12
-        state = state.copy(darts = mutableListOf(missRound, missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("11 - 15" to 1))
 
         //18
-        state = state.copy(darts = mutableListOf(missRound, missRound, missRound, missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, missRound, missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("16 - 20" to 1))
 
         //21
-        state = state.copy(darts = mutableListOf(missRound, missRound, missRound, missRound, missRound, missRound, hitRound))
+        state = state.copy(completedRounds = mutableListOf(missRound, missRound, missRound, missRound, missRound, missRound, hitRound))
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(mapOf("21+" to 1))
     }

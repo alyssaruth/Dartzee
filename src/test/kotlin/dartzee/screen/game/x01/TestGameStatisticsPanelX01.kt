@@ -94,18 +94,18 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("20 - 39" to 1))
 
-        state.addDarts(roundTwo)
-        state.addDarts(roundThree)
-        state.addDarts(roundFour)
+        state.addCompletedRound(roundTwo)
+        state.addCompletedRound(roundThree)
+        state.addCompletedRound(roundFour)
 
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("20 - 39" to 1, "60 - 79" to 1, "40 - 59" to 1, "0 - 19" to 1))
 
-        state.addDarts(roundFive)
+        state.addCompletedRound(roundFive)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("20 - 39" to 2, "60 - 79" to 1, "40 - 59" to 1, "0 - 19" to 1))
 
-        state.addDarts(roundSix)
+        state.addCompletedRound(roundSix)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("20 - 39" to 2, "60 - 79" to 1, "40 - 59" to 1, "0 - 19" to 1, "100 - 139" to 1))
 
@@ -129,15 +129,15 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("180" to 1))
 
-        state.addDarts(roundTwo)
+        state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("140 - 179" to 1, "180" to 1))
 
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("140 - 179" to 2, "180" to 1))
 
-        state.addDarts(roundFour)
+        state.addCompletedRound(roundFour)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("140 - 179" to 2, "180" to 1, "80 - 99" to 1))
     }
@@ -165,7 +165,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         statsPanel.getValueForRow(sectionStart + 2) shouldBe "N/A [0%]"
 
         // [20, 20, 20, 18, 5, 1]
-        state.addDarts(roundTwo)
+        state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow(sectionStart) shouldBe "20 [50%]"
         statsPanel.getValueForRow(sectionStart + 1) shouldBe "18 [17%]"
@@ -174,7 +174,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         statsPanel.getValueForRow(sectionStart + 4) shouldBe "N/A [0%]"
 
         // [20, 20, 20, 18, 18, 12, 5, 1, 1], still no remainder
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow(sectionStart) shouldBe "20 [33%]"
         statsPanel.getValueForRow(sectionStart + 1) shouldBe "18 [22%]"
@@ -184,7 +184,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         statsPanel.getValueForRow(sectionStart + 5) shouldBe "0%"
 
         // [20, 20, 20, 18, 18, 5, 5, 1, 1, 12] [7, 3]
-        state.addDarts(roundFour)
+        state.addCompletedRound(roundFour)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow(sectionStart) shouldBe "20 [25%]"
         statsPanel.getValueForRow(sectionStart + 1) shouldBe "18 [17%]"
@@ -194,7 +194,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         statsPanel.getValueForRow(sectionStart + 5) shouldBe "17%"
 
         // [1, 1, 1, 1, 20, 20, 20, 18, 18, 5, 5, 19] [12, 7, 3]
-        state.addDarts(roundFive)
+        state.addCompletedRound(roundFive)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow(sectionStart) shouldBe "1 [27%]"
         statsPanel.getValueForRow(sectionStart + 1) shouldBe "20 [20%]"
@@ -232,13 +232,13 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Checkout %") shouldBe "N/A" //not finished yet
 
-        state.addDarts(roundTwo)
-        state.addDarts(roundThree)
+        state.addCompletedRound(roundTwo)
+        state.addCompletedRound(roundThree)
 
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Checkout %") shouldBe 16.7
 
-        state.addDarts(separateGameFinish)
+        state.addCompletedRound(separateGameFinish)
         statsPanel.showStats(listOf(state))
         statsPanel.getValueForRow("Checkout %") shouldBe 25.0
     }

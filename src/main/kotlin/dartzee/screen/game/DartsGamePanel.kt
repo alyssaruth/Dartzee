@@ -48,7 +48,6 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     //Transitive things
     var currentPlayerNumber = 0
-    var activeScorer: S = factoryScorer()
     protected var currentRoundNumber = -1
 
     //For AI turns
@@ -99,7 +98,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     protected fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
     protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).pt
     protected fun getCurrentParticipant() = getCurrentPlayerState().pt
-    fun getDartsThrown() = getCurrentPlayerState().dartsThrown
+    fun getDartsThrown() = getCurrentPlayerState().currentRound
     fun dartsThrownCount() = getDartsThrown().size
 
     protected fun addState(playerNumber: Int, state: PlayerState, scorer: S) {
@@ -197,8 +196,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
     protected fun nextTurn()
     {
-        activeScorer = getCurrentScorer()
-        selectScorer(activeScorer)
+        selectScorer(getCurrentScorer())
 
         updateVariablesForNewRound()
 
@@ -372,7 +370,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
 
             val state = getPlayerState(i)
             hmRoundToDarts.getSortedValues().forEach {
-                state.addDarts(it)
+                state.addCompletedRound(it)
             }
 
             loadDartsForParticipant(i, hmRoundToDarts, lastRound)
@@ -508,7 +506,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         dart.roundNumber = currentRoundNumber
 
         getCurrentPlayerState().dartThrown(dart)
-        activeScorer.addDart(dart)
+        getCurrentScorer().addDart(dart)
 
         //If there are any specific variables we need to update (e.g. current score for X01), do it now
         updateVariablesForDartThrown(dart)
@@ -587,7 +585,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         btnReset.isEnabled = false
 
         dartboard.clearDarts()
-        activeScorer.confirmCurrentRound()
+        getCurrentScorer().confirmCurrentRound()
 
         saveDartsAndProceed()
     }
@@ -597,8 +595,8 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         resetRoundVariables()
 
         dartboard.clearDarts()
-        activeScorer.clearRound(currentRoundNumber)
-        activeScorer.updatePlayerResult()
+        getCurrentScorer().clearRound(currentRoundNumber)
+        getCurrentScorer().updatePlayerResult()
         getCurrentPlayerState().resetRound()
 
         //If we're resetting, disable the buttons

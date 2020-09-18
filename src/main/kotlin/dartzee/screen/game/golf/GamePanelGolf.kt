@@ -80,7 +80,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         unlockAchievements()
         commitRound()
 
-        activeScorer.finaliseRoundScore()
+        getCurrentScorer().finaliseRoundScore()
 
         finishRound()
     }

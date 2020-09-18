@@ -20,10 +20,10 @@ class TestAbstractPlayerState: AbstractTest()
         val state = DefaultPlayerState(insertParticipant())
         val darts = mutableListOf(Dart(20, 1))
 
-        state.addDarts(darts)
+        state.addCompletedRound(darts)
 
         darts.clear()
-        state.darts.first().shouldContainExactly(Dart(20, 1))
+        state.completedRounds.first().shouldContainExactly(Dart(20, 1))
     }
 
     @Test
@@ -35,7 +35,7 @@ class TestAbstractPlayerState: AbstractTest()
         val dart = Dart(20, 1)
         dart.participantId shouldBe ""
 
-        state.addDarts(mutableListOf(dart))
+        state.addCompletedRound(mutableListOf(dart))
 
         dart.participantId shouldBe pt.rowId
     }
@@ -46,10 +46,10 @@ class TestAbstractPlayerState: AbstractTest()
         val state = DefaultPlayerState(insertParticipant())
 
         state.dartThrown(Dart(20, 1))
-        state.dartsThrown.shouldContainExactly(Dart(20, 1))
+        state.currentRound.shouldContainExactly(Dart(20, 1))
 
         state.resetRound()
-        state.dartsThrown.shouldBeEmpty()
+        state.currentRound.shouldBeEmpty()
     }
 
     @Test
@@ -66,8 +66,8 @@ class TestAbstractPlayerState: AbstractTest()
         state.dartThrown(dartThree)
 
         state.commitRound()
-        state.dartsThrown.shouldBeEmpty()
-        state.darts.shouldContainExactly(listOf(listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1))))
+        state.currentRound.shouldBeEmpty()
+        state.completedRounds.shouldContainExactly(listOf(listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1))))
 
         val entities = DartEntity().retrieveEntities()
         entities.forEach {
@@ -115,8 +115,8 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     data class DefaultPlayerState(override val pt: ParticipantEntity,
-                                  override val darts: MutableList<List<Dart>> = mutableListOf(),
-                                  override val dartsThrown: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
+                                  override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+                                  override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
     {
         override fun getScoreSoFar() = -1
     }

@@ -155,7 +155,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     {
         val pt = getCurrentParticipant()
 
-        activeScorer.setResult(result)
+        getCurrentScorer().setResult(result)
         if (!isScoringRound())
         {
             val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)

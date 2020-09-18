@@ -105,8 +105,8 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
     pt.ordinal shouldBe 0
 
     // Screen state
-    panel.activeScorer.lblResult.text shouldBe "$finalScore$scoreSuffix"
-    panel.activeScorer.getRowCount() shouldBe expectedScorerRows
+    panel.scorersOrdered[0].lblResult.text shouldBe "$finalScore$scoreSuffix"
+    panel.scorersOrdered[0].getRowCount() shouldBe expectedScorerRows
 
     // Use our dartboardListener to verify that the right throws were registered
     val darts = dartRounds.flatten()

@@ -15,7 +15,6 @@ import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.game.golf.GamePanelGolf
-import dartzee.screen.game.scorer.DartsScorerGolf
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -154,10 +153,9 @@ class TestGamePanelGolf: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = DartsScorerGolf()
-            scorer.init(player)
 
-            activeScorer = scorer
+            val scorer = assignScorer(player)
+
             currentPlayerNumber = 0
             val pt = ParticipantEntity()
             pt.playerId = currentPlayerId

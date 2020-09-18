@@ -82,7 +82,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), startingScoreForRound)
         }
 
-        activeScorer.finaliseRoundScore(startingScoreForRound, bust)
+        getCurrentScorer().finaliseRoundScore(startingScoreForRound, bust)
 
         super.saveDartsAndProceed()
     }
@@ -179,7 +179,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
 
         checkout.forEach {
-            activeScorer.addHint(it)
+            getCurrentScorer().addHint(it)
         }
     }
 
