@@ -7,7 +7,7 @@ data class GolfPlayerState(override val pt: ParticipantEntity,
                            override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                            override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<GolfPlayerState>()
 {
-    override fun getScoreSoFar() = if (completedRounds.isEmpty()) 0 else getCumulativeScoreForRound(completedRounds.size)
+    override fun getScoreSoFar() = getCumulativeScoreForRound(completedRounds.size)
 
     fun getCumulativeScoreForRound(roundNumber: Int) = (1..roundNumber).map(::getScoreForRound).sum()
 

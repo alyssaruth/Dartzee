@@ -93,7 +93,7 @@ fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
                        participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
                        dartsThrown: List<Dart> = emptyList()): GolfPlayerState
 {
-    return GolfPlayerState(participant, mutableListOf(dartsThrown))
+    return GolfPlayerState(participant, mutableListOf(), dartsThrown.toMutableList())
 }
 
 fun makeGolfPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),

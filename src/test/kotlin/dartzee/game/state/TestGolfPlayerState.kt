@@ -35,4 +35,28 @@ class TestGolfPlayerState: AbstractTest()
         state.getScoreSoFar() shouldBe 7
     }
 
+    @Test
+    fun `Should correctly report the score for each individual round`()
+    {
+        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1), makeDart(1, 3)))
+        val roundTwo = makeGolfRound(2, listOf(makeDart(2, 0), makeDart(2, 1), makeDart(17, 1)))
+
+        val state = makeGolfPlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo))
+        state.getScoreForRound(1) shouldBe 2
+        state.getScoreForRound(2) shouldBe 5
+    }
+
+    @Test
+    fun `Should calculate subtotals correctly`()
+    {
+        val roundOne = makeGolfRound(1, listOf(makeDart(1, 1), makeDart(1, 3)))
+        val roundTwo = makeGolfRound(2, listOf(makeDart(2, 0), makeDart(2, 1), makeDart(17, 1)))
+        val roundThree = makeGolfRound(3, listOf(makeDart(3, 2)))
+
+        val state = makeGolfPlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo, roundThree))
+        state.getCumulativeScoreForRound(1) shouldBe 2
+        state.getCumulativeScoreForRound(2) shouldBe 7
+        state.getCumulativeScoreForRound(3) shouldBe 8
+    }
+
 }
