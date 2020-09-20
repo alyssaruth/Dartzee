@@ -1,11 +1,12 @@
 package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
+import dartzee.game.state.AbstractPlayerState
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-abstract class AbstractScorerTest<S: DartsScorer> : AbstractTest()
+abstract class AbstractScorerTest<S: DartsScorer<out AbstractPlayerState<*>>> : AbstractTest()
 {
     abstract fun factoryScorerImpl(): S
     abstract fun addRound(scorer: S, roundNumber: Int)

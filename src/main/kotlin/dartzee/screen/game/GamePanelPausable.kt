@@ -8,7 +8,7 @@ import dartzee.screen.game.scorer.DartsScorerPausable
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PreferenceUtil
 
-abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractPlayerState<PlayerState>>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+abstract class GamePanelPausable<S : DartsScorerPausable<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
         DartsGamePanel<S, Dartboard, PlayerState>(parent, game, totalPlayers)
 {
     private var aiShouldPause = false

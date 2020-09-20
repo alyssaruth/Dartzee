@@ -1,5 +1,6 @@
 package dartzee.screen.game.scorer
 
+import dartzee.game.state.AbstractPlayerState
 import dartzee.logging.CODE_PLAYER_PAUSED
 import dartzee.logging.CODE_PLAYER_UNPAUSED
 import dartzee.screen.game.GamePanelPausable
@@ -12,7 +13,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 
-abstract class DartsScorerPausable(private val parent: GamePanelPausable<*, *>) : DartsScorer(), ActionListener
+abstract class DartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>>(private val parent: GamePanelPausable<*, *>) : DartsScorer<PlayerState>(), ActionListener
 {
     private val btnResume = JButton("")
 

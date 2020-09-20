@@ -31,12 +31,12 @@ import javax.swing.JButton
 import javax.swing.JToggleButton
 import javax.swing.SwingUtilities
 
-fun DartsScorerPausable.shouldBePaused()
+fun DartsScorerPausable<*>.shouldBePaused()
 {
     getChild<JButton> { it.icon == ICON_RESUME }
 }
 
-fun DartsScorerPausable.resume()
+fun DartsScorerPausable<*>.resume()
 {
     SwingUtilities.invokeAndWait { clickChild<JButton> { it.icon == ICON_RESUME } }
 }

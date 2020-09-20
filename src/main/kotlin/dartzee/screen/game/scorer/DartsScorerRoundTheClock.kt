@@ -3,9 +3,10 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
 import dartzee.game.ClockType
+import dartzee.game.state.ClockPlayerState
 import dartzee.screen.game.GamePanelPausable
 
-class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : DartsScorerPausable(parent)
+class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : DartsScorerPausable<ClockPlayerState>(parent)
 {
     //Always start at 1. Bit of an abuse to stick this here, it just avoids having another hmPlayerNumber->X.
     private var clockTarget = 1

@@ -3,6 +3,8 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
+import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.PlayerStateListener
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -21,7 +23,7 @@ import javax.swing.border.LineBorder
 
 const val SCORER_WIDTH = 210
 
-abstract class DartsScorer : AbstractScorer() {
+abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: AbstractScorer(), PlayerStateListener<PlayerState> {
 
     private val overlays = mutableListOf<AchievementOverlay>()
 
@@ -29,6 +31,37 @@ abstract class DartsScorer : AbstractScorer() {
     {
         preferredSize = Dimension(SCORER_WIDTH, 600)
         panelAvatar.border = EmptyBorder(5, 30, 5, 30)
+    }
+
+    override fun stateChanged(state: PlayerState)
+    {
+        model.clear()
+
+        state.completedRounds.forEach(::addDartRound)
+        if (state.currentRound.isNotEmpty())
+        {
+            addDartRound(state.currentRound)
+        }
+
+        tableScores.scrollToBottom()
+
+        // Misc (will probably live below on DartsScorer eventually)
+        val scoreSoFar = state.getScoreSoFar()
+        lblResult.text = if (scoreSoFar > 0) "$scoreSoFar" else ""
+        updateResultColourForPosition(state.pt.finishingPosition)
+
+        tableScores.repaint()
+        lblResult.repaint()
+        repaint()
+    }
+
+    private fun addDartRound(darts: List<Dart>)
+    {
+        addRow(makeEmptyRow())
+
+        darts.forEachIndexed { ix, dart ->
+            model.setValueAt(dart, model.rowCount - 1, ix)
+        }
     }
 
     /**

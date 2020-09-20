@@ -2,6 +2,7 @@ package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
+import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.GamePanelPausable
 import dartzee.utils.DartsColour
 import dartzee.utils.sumScore
@@ -14,7 +15,7 @@ import javax.swing.SwingConstants
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
 
-class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : DartsScorerPausable(parent)
+class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : DartsScorerPausable<X01PlayerState>(parent)
 {
     private val lblStartingScore = JLabel(gameParams)
 
