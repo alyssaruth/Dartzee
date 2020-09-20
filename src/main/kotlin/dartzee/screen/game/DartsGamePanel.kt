@@ -12,7 +12,6 @@ import dartzee.core.util.*
 import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
-import dartzee.game.state.PlayerStateListener
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
@@ -187,7 +186,7 @@ abstract class DartsGamePanel<S : DartsScorer<PlayerState>, D: Dartboard, Player
 
             val scorer = assignScorer(player)
             val state = factoryState(participant)
-            state.addListener(scorer as PlayerStateListener<PlayerState>) //TODO - will sort this
+            state.addListener(scorer)
             addState(ix, state, scorer)
         }
 
@@ -303,7 +302,7 @@ abstract class DartsGamePanel<S : DartsScorer<PlayerState>, D: Dartboard, Player
 
             val scorer = assignScorer(pt.getPlayer())
             val state = factoryState(pt)
-            state.addListener(scorer as PlayerStateListener<PlayerState>) //TODO - will sort this
+            state.addListener(scorer)
             addState(i, state, scorer)
         }
 

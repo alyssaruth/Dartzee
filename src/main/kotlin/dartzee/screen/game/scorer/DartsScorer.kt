@@ -37,31 +37,24 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
     {
         model.clear()
 
-        state.completedRounds.forEach(::addDartRound)
-        if (state.currentRound.isNotEmpty())
-        {
-            addDartRound(state.currentRound)
-        }
-
-        tableScores.scrollToBottom()
-
-        // Misc (will probably live below on DartsScorer eventually)
         val scoreSoFar = state.getScoreSoFar()
         lblResult.text = if (scoreSoFar > 0) "$scoreSoFar" else ""
         updateResultColourForPosition(state.pt.finishingPosition)
 
+        stateChangedImpl(state)
+
+        tableScores.scrollToBottom()
         tableScores.repaint()
         lblResult.repaint()
         repaint()
     }
+    protected open fun stateChangedImpl(state: PlayerState) {}
 
-    private fun addDartRound(darts: List<Dart>)
+    protected fun addDartRound(darts: List<Dart>)
     {
         addRow(makeEmptyRow())
 
-        darts.forEachIndexed { ix, dart ->
-            model.setValueAt(dart, model.rowCount - 1, ix)
-        }
+        darts.forEach(::addDart)
     }
 
     /**
@@ -69,24 +62,7 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
      */
     open fun addDart(drt: Dart)
     {
-        var rowCount = model.rowCount
-        if (shouldAddRow(rowCount))
-        {
-            val row = makeEmptyRow()
-            addRow(row)
-            rowCount++
-        }
-
-        addDartToRow(rowCount - 1, drt)
-    }
-
-    private fun shouldAddRow(rowCount: Int): Boolean
-    {
-        if (rowCount == 0) {
-            return true
-        }
-
-        return rowIsComplete(rowCount - 1)
+        addDartToRow(model.rowCount - 1, drt)
     }
 
     /**
@@ -102,7 +78,6 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
             if (currentVal == null)
             {
                 model.setValueAt(drt, rowNumber, i)
-                repaint()
                 return
             }
         }

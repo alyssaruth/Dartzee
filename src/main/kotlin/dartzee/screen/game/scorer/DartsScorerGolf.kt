@@ -48,6 +48,29 @@ class DartsScorerGolf : DartsScorer<GolfPlayerState>()
         }
     }
 
+    override fun stateChangedImpl(state: GolfPlayerState)
+    {
+        state.completedRounds.forEachIndexed { ix, round ->
+            val roundNumber = ix + 1
+
+            addDartRound(round)
+
+            val score = state.getScoreForRound(roundNumber)
+            model.setValueAt(score, model.rowCount - 1, SCORE_COLUMN)
+
+            if (roundNumber == 9 || roundNumber == 18)
+            {
+                val totalRow = arrayOf<Any?>(null, null, null, null, state.getCumulativeScoreForRound(roundNumber))
+                addRow(totalRow)
+            }
+        }
+
+        if (state.currentRound.isNotEmpty())
+        {
+            addDartRound(state.currentRound)
+        }
+    }
+
     override fun makeEmptyRow(): Array<Any?>
     {
         val emptyRow = super.makeEmptyRow()

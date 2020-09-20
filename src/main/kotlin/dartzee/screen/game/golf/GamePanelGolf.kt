@@ -42,12 +42,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val scorer = getScorer(playerNumber)
-        for (i in 1..totalRounds)
-        {
-            val darts = hmRoundToDarts[i]!!
-            scorer.addDarts(darts)
-        }
+
     }
 
     override fun updateVariablesForNewRound() {}
@@ -79,8 +74,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
     {
         unlockAchievements()
         commitRound()
-
-        getCurrentScorer().finaliseRoundScore()
 
         finishRound()
     }

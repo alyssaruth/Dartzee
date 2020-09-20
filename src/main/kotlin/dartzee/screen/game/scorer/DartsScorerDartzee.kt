@@ -16,17 +16,22 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer<Dart
         lblAvatar.addMouseListener(this)
     }
 
-    override fun stateChanged(state: DartzeePlayerState)
+    override fun stateChangedImpl(state: DartzeePlayerState)
     {
-        super.stateChanged(state)
-
         state.completedRounds.forEachIndexed { ix, round ->
+            addDartRound(round)
+
             val roundNumber = ix + 1
             val roundResult = state.roundResults.find { it.roundNumber == roundNumber }?.toDto()
             val cumulativeScore = state.getCumulativeScore(roundNumber)
 
             model.setValueAt(roundResult ?: factoryHighScoreResult(round), ix, RULE_COLUMN)
             model.setValueAt(cumulativeScore, ix, SCORE_COLUMN)
+        }
+
+        if (state.currentRound.isNotEmpty())
+        {
+            addDartRound(state.currentRound)
         }
 
         tableScores.getColumn(SCORE_COLUMN).cellRenderer = DartzeeScoreRenderer(state.getPeakScore() ?: 0)
