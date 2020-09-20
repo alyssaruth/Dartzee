@@ -48,6 +48,7 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
         updateResultColourForPosition(state.pt.finishingPosition)
 
         tableScores.repaint()
+        lblResult.repaint()
         repaint()
     }
 

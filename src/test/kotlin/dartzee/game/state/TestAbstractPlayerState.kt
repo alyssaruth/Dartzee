@@ -2,6 +2,7 @@ package dartzee.game.state
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.core.util.DateStatics
 import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
 import dartzee.helper.AbstractTest
@@ -9,6 +10,7 @@ import dartzee.helper.insertParticipant
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
@@ -117,6 +119,40 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
+    fun `Should mark a participant as finished`()
+    {
+        val participant = insertParticipant(dtFinished = DateStatics.END_OF_TIME, finalScore = -1, finishingPosition = -1)
+        val state = DefaultPlayerState(participant)
+
+        state.participantFinished(1, 100)
+        participant.finalScore shouldBe 100
+        participant.finishingPosition shouldBe 1
+        participant.dtFinished shouldNotBe DateStatics.END_OF_TIME
+
+        val reretrieved = ParticipantEntity().retrieveForId(participant.rowId)!!
+        reretrieved.finalScore shouldBe 100
+        reretrieved.finishingPosition shouldBe 1
+        reretrieved.dtFinished shouldNotBe DateStatics.END_OF_TIME
+    }
+
+    @Test
+    fun `Should update the finishing position`()
+    {
+        val participant = insertParticipant(dtFinished = DateStatics.END_OF_TIME, finalScore = -1, finishingPosition = -1)
+        val state = DefaultPlayerState(participant)
+
+        state.setParticipantFinishPosition(4)
+        participant.finalScore shouldBe -1
+        participant.finishingPosition shouldBe 4
+        participant.dtFinished shouldBe DateStatics.END_OF_TIME
+
+        val reretrieved = ParticipantEntity().retrieveForId(participant.rowId)!!
+        reretrieved.finalScore shouldBe -1
+        reretrieved.finishingPosition shouldBe 4
+        reretrieved.dtFinished shouldBe DateStatics.END_OF_TIME
+    }
+
+    @Test
     fun `Should fire state changed`()
     {
         val state = DefaultPlayerState(insertParticipant())
@@ -125,6 +161,8 @@ class TestAbstractPlayerState: AbstractTest()
         state.shouldFireStateChange { it.resetRound() }
         state.shouldFireStateChange { it.commitRound() }
         state.shouldFireStateChange { it.addCompletedRound(listOf(Dart(1, 1))) }
+        state.shouldFireStateChange { it.participantFinished(3, 10) }
+        state.shouldFireStateChange { it.setParticipantFinishPosition(4) }
     }
 
     data class DefaultPlayerState(override val pt: ParticipantEntity,

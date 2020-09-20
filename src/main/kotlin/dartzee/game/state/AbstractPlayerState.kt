@@ -1,6 +1,7 @@
 package dartzee.game.state
 
 import dartzee.`object`.Dart
+import dartzee.core.util.getSqlDateNow
 import dartzee.db.BulkInserter
 import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
@@ -21,7 +22,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
     }
 
     /**
-     *
+     * Helpers
      */
     fun currentRoundNumber() = completedRounds.size + 1
 
@@ -64,6 +65,24 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
     {
         darts.forEach { it.participantId = pt.rowId }
         this.completedRounds.add(darts.toList())
+
+        fireStateChanged()
+    }
+
+    fun setParticipantFinishPosition(finishingPosition: Int)
+    {
+        pt.finishingPosition = finishingPosition
+        pt.saveToDatabase()
+
+        fireStateChanged()
+    }
+
+    fun participantFinished(finishingPosition: Int, finalScore: Int)
+    {
+        pt.finishingPosition = finishingPosition
+        pt.finalScore = finalScore
+        pt.dtFinished = getSqlDateNow()
+        pt.saveToDatabase()
 
         fireStateChanged()
     }

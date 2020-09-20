@@ -98,7 +98,7 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
     protected fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
     protected fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
     protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).pt
-    protected fun getCurrentParticipant() = getCurrentPlayerState().pt
+    private fun getCurrentParticipant() = getCurrentPlayerState().pt
     fun getDartsThrown() = getCurrentPlayerState().currentRound
     fun dartsThrownCount() = getDartsThrown().size
 
@@ -460,20 +460,14 @@ abstract class DartsGamePanel<S : DartsScorer, D: Dartboard, PlayerState: Abstra
         }
     }
 
-    protected open fun handlePlayerFinish(): Int
+    protected fun handlePlayerFinish(): Int
     {
-        val participant = getCurrentParticipant()
-
+        val state = getCurrentPlayerState()
         val finishingPosition = getFinishingPositionFromPlayersRemaining()
-        val numberOfDarts = getCurrentPlayerState().getScoreSoFar()
+        val numberOfDarts = state.getScoreSoFar()
+        state.participantFinished(finishingPosition, numberOfDarts)
 
-        participant.finishingPosition = finishingPosition
-        participant.finalScore = numberOfDarts
-        participant.dtFinished = getSqlDateNow()
-        participant.saveToDatabase()
-
-        val playerId = participant.playerId
-        updateAchievementsForFinish(playerId, finishingPosition, numberOfDarts)
+        updateAchievementsForFinish(getCurrentPlayerId(), finishingPosition, numberOfDarts)
 
         return finishingPosition
     }

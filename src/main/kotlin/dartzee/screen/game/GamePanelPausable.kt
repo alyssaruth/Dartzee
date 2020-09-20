@@ -54,13 +54,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
         }
     }
 
-    override fun handlePlayerFinish(): Int
-    {
-        val finishPos = super.handlePlayerFinish()
-        getCurrentScorer().finalisePlayerResult(finishPos)
-        return finishPos
-    }
-
     override fun shouldAIStop(): Boolean
     {
         if (aiShouldPause)
@@ -79,9 +72,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
             return
         }
 
-        val loser = getCurrentParticipant()
-        loser.finishingPosition = totalPlayers
-        loser.saveToDatabase()
+        getCurrentPlayerState().setParticipantFinishPosition(totalPlayers)
 
         gameEntity.dtFinish = getSqlDateNow()
         gameEntity.saveToDatabase()
@@ -91,7 +82,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
         //Display this player's result. If they're an AI and we have the preference, then
         //automatically play on.
         getCurrentScorer().finalisePlayerResult(totalPlayers)
-        if (loser.isAi() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
+        if (!getCurrentPlayerState().isHuman() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
         {
             getCurrentScorer().toggleResume()
         }

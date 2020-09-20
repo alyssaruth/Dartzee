@@ -134,12 +134,9 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     private fun completeRound(result: DartzeeRoundResult)
     {
-        val pt = getCurrentParticipant()
-
         if (!isScoringRound())
         {
-            val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
-            getCurrentPlayerState().addRoundResult(entity)
+            getCurrentPlayerState().saveRoundResult(result)
         }
 
         disableInputButtons()
