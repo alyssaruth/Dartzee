@@ -81,7 +81,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable<PlayerState>, PlayerSta
 
         //Display this player's result. If they're an AI and we have the preference, then
         //automatically play on.
-        getCurrentScorer().finalisePlayerResult(totalPlayers)
         if (!getCurrentPlayerState().isHuman() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
         {
             getCurrentScorer().toggleResume()

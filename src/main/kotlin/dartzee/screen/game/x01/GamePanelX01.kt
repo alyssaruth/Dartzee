@@ -1,6 +1,5 @@
 package dartzee.screen.game.x01
 
-import dartzee.`object`.CheckoutSuggester
 import dartzee.`object`.Dart
 import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
@@ -34,14 +33,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     override fun resetRoundVariables()
     {
-        currentScore = getCurrentPlayerState().getRemainingScore(startingScore)
-    }
-
-    override fun readyForThrow()
-    {
-        super.readyForThrow()
-
-        suggestCheckout()
+        currentScore = getCurrentPlayerState().getRemainingScoreForRound(startingScore, currentRoundNumber - 1)
     }
 
     override fun saveDartsAndProceed()
@@ -81,8 +73,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         {
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), startingScoreForRound)
         }
-
-        getCurrentScorer().finaliseRoundScore(startingScoreForRound, bust)
 
         super.saveDartsAndProceed()
     }
@@ -134,30 +124,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val scorer = getScorer(playerNumber)
-        for (i in 1..totalRounds)
-        {
-            val darts = hmRoundToDarts[i]!!
-            addDartsToScorer(darts, scorer)
-        }
 
-        val pt = getParticipant(playerNumber)
-        val finishPos = pt.finishingPosition
-        if (finishPos > -1)
-        {
-            scorer.finalisePlayerResult(finishPos)
-        }
-    }
-
-    private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerX01)
-    {
-        val startingScore = scorer.getLatestScoreRemaining()
-
-        darts.forEach(scorer::addDart)
-
-        val lastDart = darts.last()
-        val bust = isBust(lastDart)
-        scorer.finaliseRoundScore(startingScore, bust)
     }
 
     override fun updateVariablesForDartThrown(dart: Dart)
@@ -170,16 +137,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         if (isNearMissDouble(dart))
         {
             dartboard.doBadLuck()
-        }
-    }
-
-    private fun suggestCheckout()
-    {
-        val dartsRemaining = 3 - dartsThrownCount()
-        val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
-
-        checkout.forEach {
-            getCurrentScorer().addHint(it)
         }
     }
 

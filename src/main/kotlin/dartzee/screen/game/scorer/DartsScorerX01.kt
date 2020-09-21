@@ -1,11 +1,11 @@
 package dartzee.screen.game.scorer
 
+import dartzee.`object`.CheckoutSuggester
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.GamePanelPausable
 import dartzee.utils.DartsColour
-import dartzee.utils.sumScore
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Font
@@ -17,27 +17,8 @@ import javax.swing.table.TableModel
 
 class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : DartsScorerPausable<X01PlayerState>(parent)
 {
+    private val startingScore = Integer.parseInt(gameParams)
     private val lblStartingScore = JLabel(gameParams)
-
-    fun getLatestScoreRemaining(): Int
-    {
-        val model = tableScores.model
-
-        val rowCount = model.rowCount
-        return getLatestScoreRemaining(rowCount)
-    }
-    private fun getLatestScoreRemaining(rowCount: Int): Int
-    {
-        return if (rowCount == 0)
-        {
-            Integer.parseInt(lblStartingScore.text)
-        }
-        else
-        {
-            val currentRow = model.getValueAt(rowCount - 1, SCORE_COLUMN) as Int?
-            currentRow ?: getLatestScoreRemaining(rowCount - 1)
-        }
-    }
 
     init
     {
@@ -46,6 +27,38 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
         panelNorth.add(lblStartingScore, BorderLayout.SOUTH)
     }
 
+    override fun stateChangedImpl(state: X01PlayerState)
+    {
+        state.completedRounds.forEachIndexed { ix, round ->
+            addDartRound(round)
+
+            val roundNumber = ix + 1
+            val scoreRemaining = state.getRemainingScoreForRound(startingScore, roundNumber)
+
+            model.setValueAt(scoreRemaining, ix, SCORE_COLUMN)
+        }
+
+        if (state.currentRound.isNotEmpty())
+        {
+            addDartRound(state.currentRound)
+        }
+
+        addCheckoutSuggestion(state)
+    }
+
+    private fun addCheckoutSuggestion(state: X01PlayerState)
+    {
+        val dartsRemaining = 3 - state.currentRound.size
+        val currentScore = state.getRemainingScore(startingScore)
+        val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
+
+        if (state.currentRound.isEmpty())
+        {
+            addRow(makeEmptyRow())
+        }
+
+        checkout.forEach(::addDart)
+    }
 
     override fun initImpl()
     {
@@ -54,33 +67,6 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
         {
             tableScores.getColumn(i).cellRenderer = DartRenderer()
         }
-    }
-
-    override fun playerIsFinished() = getLatestScoreRemaining() == 0
-
-    /**
-     * How many darts have been thrown?
-     *
-     * 3 * (rows - 1) + #(darts in the last row)
-     */
-    override fun getTotalScore(): Int
-    {
-        val rowCount = model.rowCount
-        if (rowCount == 0)
-        {
-            return 0
-        }
-
-        var dartCount = Math.max((model.rowCount - 1) * 3, 0)
-
-        //We now use this mid-game
-        if (rowIsComplete(rowCount - 1) && !playerIsFinished())
-        {
-            return dartCount + 3
-        }
-
-        dartCount += getDartsForRow(rowCount - 1).size
-        return dartCount
     }
 
     fun getDartsForRow(row: Int): List<Dart>
@@ -101,52 +87,6 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
     override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, SCORE_COLUMN) != null
 
     override fun getNumberOfColumns() = SCORE_COLUMN + 1
-
-    fun finaliseRoundScore(startingScore: Int, bust: Boolean)
-    {
-        removeHints()
-
-        val row = model.rowCount - 1
-
-        if (bust)
-        {
-            model.setValueAt(startingScore, row, SCORE_COLUMN)
-        }
-        else
-        {
-            val dartScore = sumScore(getDartsForRow(row))
-            model.setValueAt(startingScore - dartScore, row, SCORE_COLUMN)
-        }
-    }
-
-    override fun addDart(drt: Dart)
-    {
-        removeHints()
-
-        super.addDart(drt)
-    }
-
-    fun addHint(drt: DartHint)
-    {
-        super.addDart(drt)
-    }
-
-    private fun removeHints()
-    {
-        val row = model.rowCount - 1
-        if (row < 0)
-        {
-            return
-        }
-
-        for (i in 0 until SCORE_COLUMN)
-        {
-            if (model.getValueAt(row, i) is DartHint)
-            {
-                model.setValueAt(null, row, i)
-            }
-        }
-    }
 
     private inner class ScorerRenderer : DefaultTableCellRenderer()
     {

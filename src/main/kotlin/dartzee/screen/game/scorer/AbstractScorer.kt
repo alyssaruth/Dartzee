@@ -17,7 +17,6 @@ import javax.swing.border.EmptyBorder
 abstract class AbstractScorer : JPanel()
 {
     var human = false
-    var finishPos = -1
     var playerId = ""
 
     val model = DefaultModel()
@@ -120,6 +119,8 @@ abstract class AbstractScorer : JPanel()
         lblName.foreground = if (selected) Color.RED else Color.BLACK
         lblAvatar.setSelected(selected)
     }
+
+    fun isSelected() = lblName.foreground == Color.RED
 
     fun updateResultColourForPosition(pos: Int)
     {

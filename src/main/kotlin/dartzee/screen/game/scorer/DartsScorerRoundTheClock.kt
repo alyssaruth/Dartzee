@@ -1,6 +1,5 @@
 package dartzee.screen.game.scorer
 
-import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
 import dartzee.game.ClockType
 import dartzee.game.state.ClockPlayerState
@@ -21,31 +20,6 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val cloc
     {
         super.clearRound(roundNumber)
         currentClockTarget = clockTarget
-    }
-
-    override fun playerIsFinished(): Boolean
-    {
-        return clockTarget > 20
-    }
-
-    override fun getTotalScore(): Int
-    {
-        val rowCount = model.rowCount
-        var dartCount = 0
-
-        for (i in 0 until rowCount)
-        {
-            for (j in 0..BONUS_COLUMN)
-            {
-                val drt = model.getValueAt(i, j) as Dart?
-                if (drt != null && drt !is DartNotThrown)
-                {
-                    dartCount++
-                }
-            }
-        }
-
-        return dartCount
     }
 
     override fun rowIsComplete(rowNumber: Int): Boolean

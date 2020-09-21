@@ -36,13 +36,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             val darts = hmRoundToDarts[i]!!
             addDartsToScorer(darts, scorer)
         }
-
-        val pt = getParticipant(playerNumber)
-        val finishPos = pt.finishingPosition
-        if (finishPos > -1)
-        {
-            scorer.finalisePlayerResult(finishPos)
-        }
     }
 
     private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)

@@ -3,9 +3,11 @@ package e2e
 import dartzee.`object`.Dart
 import dartzee.`object`.GameLauncher
 import dartzee.awaitCondition
+import dartzee.core.util.DateStatics
 import dartzee.game.GameType
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.retrieveGame
+import dartzee.helper.retrieveParticipant
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.shouldBeVisible
@@ -39,7 +41,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
 
         val gameId = retrieveGame().rowId
         val originalGameScreen = ScreenCache.getDartsGameScreen(gameId)!!
-        val loserProgress = originalGameScreen.getScorer("Loser").getLatestScoreRemaining()
+        val loserProgress = originalGameScreen.getScorer("Loser").lblResult.text
 
         closeOpenGames()
 
@@ -53,11 +55,11 @@ class TestGameLoadE2E: AbstractRegistryTest()
         gameScreen.toggleStats()
 
         val loserScorer = gameScreen.getScorer("Loser")
-        loserScorer.getLatestScoreRemaining() shouldBe loserProgress
+        loserScorer.lblResult.text shouldBe loserProgress
         loserScorer.shouldBePaused()
         loserScorer.resume()
 
-        awaitCondition(10000) { loserScorer.playerIsFinished() }
+        awaitCondition(10000) { retrieveParticipant().dtFinished != DateStatics.END_OF_TIME }
     }
 
     private fun verifyGameLoadedCorrectly(gameScreen: AbstractDartsGameScreen)
