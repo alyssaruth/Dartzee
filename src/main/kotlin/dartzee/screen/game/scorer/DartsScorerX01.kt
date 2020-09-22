@@ -17,7 +17,6 @@ import javax.swing.table.TableModel
 
 class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : DartsScorerPausable<X01PlayerState>(parent)
 {
-    private val startingScore = Integer.parseInt(gameParams)
     private val lblStartingScore = JLabel(gameParams)
 
     init
@@ -33,7 +32,7 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
             addDartRound(round)
 
             val roundNumber = ix + 1
-            val scoreRemaining = state.getRemainingScoreForRound(startingScore, roundNumber)
+            val scoreRemaining = state.getRemainingScoreForRound(roundNumber)
 
             model.setValueAt(scoreRemaining, ix, SCORE_COLUMN)
         }
@@ -49,7 +48,7 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
     private fun addCheckoutSuggestion(state: X01PlayerState)
     {
         val dartsRemaining = 3 - state.currentRound.size
-        val currentScore = state.getRemainingScore(startingScore)
+        val currentScore = state.getRemainingScore()
         val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
 
         if (state.currentRound.isEmpty())

@@ -21,10 +21,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 {
     private val startingScore = Integer.parseInt(game.gameParams)
 
-    //Transient variables for each round
-    private var currentScore = -1
-
-    override fun factoryState(pt: ParticipantEntity) = X01PlayerState(pt)
+    override fun factoryState(pt: ParticipantEntity) = X01PlayerState(startingScore, pt)
 
     override fun updateVariablesForNewRound()
     {
@@ -33,7 +30,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     override fun resetRoundVariables()
     {
-        currentScore = getCurrentPlayerState().getRemainingScoreForRound(startingScore, currentRoundNumber - 1)
+
     }
 
     override fun saveDartsAndProceed()
@@ -48,7 +45,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
         }
 
-        val startingScoreForRound = getCurrentPlayerState().getRemainingScore(startingScore)
+        val startingScoreForRound = getCurrentPlayerState().getRemainingScore()
         if (!bust)
         {
             val totalScore = sumScore(getDartsThrown())
@@ -94,7 +91,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
     }
 
-    override fun currentPlayerHasFinished() = getCurrentPlayerState().getRemainingScore(startingScore) == 0
+    override fun currentPlayerHasFinished() = getCurrentPlayerState().getRemainingScore() == 0
 
     override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
     {
@@ -129,22 +126,18 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
-        dart.startingScore = currentScore
-
-        val dartTotal = dart.getTotal()
-        currentScore -= dartTotal
-
         if (isNearMissDouble(dart))
         {
             dartboard.doBadLuck()
         }
     }
 
-    override fun shouldStopAfterDartThrown() = dartsThrownCount() == 3 || currentScore <= 1
+    override fun shouldStopAfterDartThrown() = getCurrentPlayerState().currentRoundIsComplete()
 
     override fun doAiTurn(model: DartsAiModel)
     {
-        val startOfRoundScore = getCurrentPlayerState().getRemainingScore(startingScore)
+        val startOfRoundScore = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
+        val currentScore = getCurrentPlayerState().getRemainingScore()
         if (shouldStopForMercyRule(model, startOfRoundScore, currentScore))
         {
             stopThrowing()
@@ -160,8 +153,5 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 
-    override fun shouldAnimateMiss(dart: Dart): Boolean
-    {
-        return !isCheckoutScore(currentScore)
-    }
+    override fun shouldAnimateMiss(dart: Dart) = !isCheckoutScore(dart.startingScore)
 }

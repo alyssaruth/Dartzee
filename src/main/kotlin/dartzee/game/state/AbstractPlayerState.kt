@@ -33,7 +33,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
     /**
      * Modifiers
      */
-    fun dartThrown(dart: Dart)
+    open fun dartThrown(dart: Dart)
     {
         dart.participantId = pt.rowId
         currentRound.add(dart)

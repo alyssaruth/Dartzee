@@ -7,7 +7,8 @@ import dartzee.utils.isFinishRound
 import dartzee.utils.isNearMissDouble
 import dartzee.utils.sumScore
 
-data class X01PlayerState(override val pt: ParticipantEntity,
+data class X01PlayerState(val startingScore: Int,
+                          override val pt: ParticipantEntity,
                           override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                           override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<X01PlayerState>()
 {
@@ -24,24 +25,32 @@ data class X01PlayerState(override val pt: ParticipantEntity,
             val earlierRounds = completedRounds.subList(0, completedRounds.size - 1)
             return (earlierRounds.size * 3) + lastRound.size
         }
-
     }
 
-    fun getRemainingScoreForRound(startingScore: Int, roundNumber: Int): Int
+    fun getRemainingScoreForRound(roundNumber: Int): Int
     {
-        val roundSubSet = completedRounds.subList(0, roundNumber)
+        val allRounds = completedRounds + listOf(currentRound.toList())
+        val roundSubSet = allRounds.subList(0, roundNumber)
 
         val nonBustRounds = roundSubSet.filterNot { round ->
-            val lastDart = round.last()
-            isBust(lastDart)
+            val lastDart = round.lastOrNull()
+            lastDart?.let(::isBust) ?: false
         }
 
         return startingScore - nonBustRounds.sumBy { sumScore(it) }
     }
 
-    fun getRemainingScore(startingScore: Int) = getRemainingScoreForRound(startingScore, currentRoundNumber() - 1)
+    fun getRemainingScore() = getRemainingScoreForRound(currentRoundNumber())
 
     fun getBadLuckCount() = getAllDartsFlattened().count { isNearMissDouble(it) }
 
     fun getLastRound() = completedRounds.last()
+
+    fun currentRoundIsComplete() = currentRound.size == 3 || getRemainingScore() <= 1
+
+    override fun dartThrown(dart: Dart)
+    {
+        dart.startingScore = getRemainingScore()
+        super.dartThrown(dart)
+    }
 }

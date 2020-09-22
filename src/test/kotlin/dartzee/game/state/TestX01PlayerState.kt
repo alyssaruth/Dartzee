@@ -61,8 +61,11 @@ class TestX01PlayerState: AbstractTest()
     @Test
     fun `The remaining score should be the starting score if no darts have been thrown`()
     {
-        val state = makeX01PlayerStateWithRounds(dartsThrown = listOf())
-        state.getRemainingScore(501) shouldBe 501
+        val state = makeX01PlayerStateWithRounds(501, dartsThrown = listOf())
+        state.getRemainingScore() shouldBe 501
+
+        val state301 = makeX01PlayerStateWithRounds(301, dartsThrown = listOf())
+        state301.getRemainingScore() shouldBe 301
     }
 
     @Test
@@ -77,15 +80,15 @@ class TestX01PlayerState: AbstractTest()
 
         val rounds = makeX01Rounds(301, roundOne, roundTwo, roundThree, roundFour, roundFive, roundSix)
 
-        val state = makeX01PlayerStateWithRounds(dartsThrown = rounds)
-        state.getRemainingScoreForRound(301, 1) shouldBe 121
-        state.getRemainingScoreForRound(301, 2) shouldBe 121
-        state.getRemainingScoreForRound(301, 3) shouldBe 40
-        state.getRemainingScoreForRound(301, 4) shouldBe 5
-        state.getRemainingScoreForRound(301, 5) shouldBe 5
-        state.getRemainingScoreForRound(301, 6) shouldBe 4
+        val state = makeX01PlayerStateWithRounds(301, dartsThrown = rounds)
+        state.getRemainingScoreForRound(1) shouldBe 121
+        state.getRemainingScoreForRound(2) shouldBe 121
+        state.getRemainingScoreForRound(3) shouldBe 40
+        state.getRemainingScoreForRound(4) shouldBe 5
+        state.getRemainingScoreForRound(5) shouldBe 5
+        state.getRemainingScoreForRound(6) shouldBe 4
 
-        state.getRemainingScore(301) shouldBe 4
+        state.getRemainingScore() shouldBe 4
     }
 
     @Test
