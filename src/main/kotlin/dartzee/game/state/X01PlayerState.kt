@@ -29,12 +29,17 @@ data class X01PlayerState(val startingScore: Int,
 
     fun getRemainingScoreForRound(roundNumber: Int): Int
     {
-        val allRounds = completedRounds + listOf(currentRound.toList())
-        val roundSubSet = allRounds.subList(0, roundNumber)
+        val lastCompleted = if (roundNumber == currentRoundNumber()) roundNumber - 1 else roundNumber
+        val roundSubSet = completedRounds.subList(0, lastCompleted)
 
         val nonBustRounds = roundSubSet.filterNot { round ->
             val lastDart = round.lastOrNull()
             lastDart?.let(::isBust) ?: false
+        }.toMutableList()
+
+        if (roundNumber == currentRoundNumber())
+        {
+            nonBustRounds.add(currentRound.toList())
         }
 
         return startingScore - nonBustRounds.sumBy { sumScore(it) }

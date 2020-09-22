@@ -1,10 +1,7 @@
 package dartzee.game.state
 
 import dartzee.`object`.Dart
-import dartzee.helper.AbstractTest
-import dartzee.helper.makeDart
-import dartzee.helper.makeX01PlayerStateWithRounds
-import dartzee.helper.makeX01Rounds
+import dartzee.helper.*
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -92,6 +89,27 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
+    fun `Should take into account current round when computing the remaining score`()
+    {
+        val state = X01PlayerState(301, insertParticipant())
+        state.dartThrown(makeDart(20, 3))
+        state.dartThrown(makeDart(20, 3))
+        state.dartThrown(makeDart(20, 3))
+
+        state.getRemainingScore() shouldBe 121
+        state.commitRound()
+        state.getRemainingScore() shouldBe 121
+
+        state.dartThrown(makeDart(20, 3))
+        state.dartThrown(makeDart(20, 3))
+        state.getRemainingScore() shouldBe 1
+        state.currentRoundIsComplete() shouldBe true
+
+        state.commitRound()
+        state.getRemainingScore() shouldBe 121
+    }
+
+    @Test
     fun `Should return a bad luck count of 0 if no darts thrown`()
     {
         val state = makeX01PlayerStateWithRounds(dartsThrown = emptyList())
@@ -118,7 +136,9 @@ class TestX01PlayerState: AbstractTest()
         val state = makeX01PlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo, roundThree))
         state.getBadLuckCount() shouldBe 2
 
-        state.dartThrown(makeDart(startingScore = 20, score = 6, multiplier = 2))
+        val dart = makeDart(score = 6, multiplier = 2)
+        state.dartThrown(dart)
+        dart.startingScore = 20
         state.getBadLuckCount() shouldBe 3
 
         state.resetRound()
@@ -134,5 +154,23 @@ class TestX01PlayerState: AbstractTest()
 
         val state = makeX01PlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo, roundThree))
         state.getLastRound() shouldBe roundThree
+    }
+
+    @Test
+    fun `Should set startingScore on darts as they are added`()
+    {
+        val state = X01PlayerState(301, insertParticipant())
+
+        val dartOne = makeDart(20, 1)
+        val dartTwo = makeDart(25, 2)
+        val dartThree = makeDart(1, 1)
+
+        state.dartThrown(dartOne)
+        state.dartThrown(dartTwo)
+        state.dartThrown(dartThree)
+
+        dartOne.startingScore shouldBe 301
+        dartTwo.startingScore shouldBe 281
+        dartThree.startingScore shouldBe 231
     }
 }
