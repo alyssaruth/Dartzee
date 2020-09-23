@@ -5,7 +5,6 @@ import dartzee.`object`.Dart
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
-import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
@@ -70,20 +69,6 @@ class TestDartsScorerDartzee: AbstractTest()
         scorer.lblResult.text shouldBe "120"
 
         scorer.lblResult.text shouldBe "60"
-    }
-
-    @Test
-    fun `Should correctly report whether a row is complete`()
-    {
-        val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer())
-
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 2))
-        scorer.addDart(Dart(20, 3))
-        scorer.rowIsComplete(0) shouldBe false
-
-        scorer.rowIsComplete(0) shouldBe true
     }
 
     @Test

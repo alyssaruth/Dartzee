@@ -25,41 +25,6 @@ class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
     }
 
     @Test
-    fun `Should not clear the halfway score row`()
-    {
-        val scorer = factoryScorer()
-        for (i in 1..9)
-        {
-            addRound(scorer, i)
-        }
-
-        scorer.getRowCount() shouldBe 10
-
-        scorer.clearRound(10)
-        scorer.getRowCount() shouldBe 10
-
-        addRound(scorer, 10)
-        scorer.getRowCount() shouldBe 11
-
-        scorer.clearRound(10)
-        scorer.getRowCount() shouldBe 10
-    }
-
-    @Test
-    fun `Should correctly report whether a row is complete`()
-    {
-        val scorer = factoryScorer()
-
-        scorer.addDart(Dart(1, 0))
-        scorer.addDart(Dart(1, 0))
-        scorer.addDart(Dart(1, 0))
-
-        scorer.rowIsComplete(0) shouldBe false
-        scorer.finaliseRoundScore()
-        scorer.rowIsComplete(0) shouldBe true
-    }
-
-    @Test
     fun `Should add a subtotal row after 9 holes`()
     {
         val scorer = factoryScorer()
@@ -90,13 +55,11 @@ class TestDartsScorerGolf: AbstractScorerTest<DartsScorerGolf>()
         scorer.finaliseRoundScore()
         scorer.getValueAt(0, 4) shouldBe 2
 
-        scorer.clearRound(1)
         scorer.addDart(dartOne)
         scorer.addDart(dartTwo)
         scorer.finaliseRoundScore()
         scorer.getValueAt(0, 4) shouldBe 5
 
-        scorer.clearRound(1)
         scorer.addDart(dartOne)
         scorer.addDart(dartTwo)
         scorer.addDart(dartThree)

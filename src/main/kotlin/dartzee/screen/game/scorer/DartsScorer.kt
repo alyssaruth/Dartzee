@@ -60,7 +60,7 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
     /**
      * Add a dart to the scorer.
      */
-    open fun addDart(drt: Dart)
+    fun addDart(drt: Dart)
     {
         addDartToRow(model.rowCount - 1, drt)
     }
@@ -104,23 +104,6 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
      * Default Methods
      */
     open fun confirmCurrentRound() {}
-    open fun updatePlayerResult() {}
-
-    /**
-     * Abstract Methods
-     */
-    abstract fun rowIsComplete(rowNumber: Int): Boolean
-
-    open fun clearRound(roundNumber: Int)
-    {
-        if (roundNumber > model.rowCount)
-        {
-            return
-        }
-
-        val row = roundNumber - 1
-        model.removeRow(row)
-    }
 
     fun getRowCount() = model.rowCount
     fun getValueAt(row: Int, col: Int): Any? = model.getValueAt(row, col)

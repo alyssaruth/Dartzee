@@ -21,15 +21,6 @@ class DartsScorerGolf : DartsScorer<GolfPlayerState>()
     var fudgeFactor = 0 //For when we're displaying only a back 9, we need to shift everything up
     var showGameId = false
 
-    override fun clearRound(roundNumber: Int)
-    {
-        when (roundNumber)
-        {
-            in 1..ROUNDS_HALFWAY -> super.clearRound(roundNumber)
-            else -> super.clearRound(roundNumber + 1)
-        }
-    }
-
     override fun getNumberOfColumns(): Int
     {
         return 5 + if (showGameId) 1 else 0
@@ -80,11 +71,6 @@ class DartsScorerGolf : DartsScorer<GolfPlayerState>()
         emptyRow[0] = getTargetForRowNumber(rowCount)
 
         return emptyRow
-    }
-
-    override fun rowIsComplete(rowNumber: Int): Boolean
-    {
-        return model.getValueAt(rowNumber, SCORE_COLUMN) != null
     }
 
     fun setTableForeground(color: Color)

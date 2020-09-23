@@ -16,17 +16,6 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val cloc
         clockTarget = currentClockTarget
     }
 
-    override fun clearRound(roundNumber: Int)
-    {
-        super.clearRound(roundNumber)
-        currentClockTarget = clockTarget
-    }
-
-    override fun rowIsComplete(rowNumber: Int): Boolean
-    {
-        return model.getValueAt(rowNumber, BONUS_COLUMN - 1) != null && model.getValueAt(rowNumber, BONUS_COLUMN) != null
-    }
-
     override fun getNumberOfColumns(): Int
     {
         return 4 //3 darts, plus bonus for hitting three consecutive

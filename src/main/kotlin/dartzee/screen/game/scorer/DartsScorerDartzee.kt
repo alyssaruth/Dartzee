@@ -37,8 +37,6 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer<Dart
         tableScores.getColumn(SCORE_COLUMN).cellRenderer = DartzeeScoreRenderer(state.getPeakScore() ?: 0)
     }
 
-    override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, RULE_COLUMN) != null
-
     override fun getNumberOfColumns() = 5
 
     override fun initImpl()

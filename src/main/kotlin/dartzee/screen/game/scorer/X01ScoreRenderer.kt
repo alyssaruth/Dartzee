@@ -13,12 +13,12 @@ import javax.swing.table.TableModel
 
 class X01ScoreRenderer : DefaultTableCellRenderer()
 {
-    override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
+    override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
     {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         horizontalAlignment = SwingConstants.CENTER
         font = Font("Trebuchet MS", Font.BOLD, 15)
-        val modelRow = table!!.convertRowIndexToModel(row)
+        val modelRow = table.convertRowIndexToModel(row)
 
         setColours(table, modelRow)
         return this

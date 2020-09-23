@@ -19,6 +19,15 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
         panelNorth.add(lblStartingScore, BorderLayout.SOUTH)
     }
 
+    override fun initImpl()
+    {
+        tableScores.getColumn(SCORE_COLUMN).cellRenderer = X01ScoreRenderer()
+        for (i in 0 until SCORE_COLUMN)
+        {
+            tableScores.getColumn(i).cellRenderer = DartRenderer()
+        }
+    }
+
     override fun stateChangedImpl(state: X01PlayerState)
     {
         state.completedRounds.forEachIndexed { ix, round ->
@@ -51,17 +60,6 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
 
         checkout.forEach(::addDart)
     }
-
-    override fun initImpl()
-    {
-        tableScores.getColumn(SCORE_COLUMN).cellRenderer = X01ScoreRenderer()
-        for (i in 0 until SCORE_COLUMN)
-        {
-            tableScores.getColumn(i).cellRenderer = DartRenderer()
-        }
-    }
-
-    override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, SCORE_COLUMN) != null
 
     override fun getNumberOfColumns() = SCORE_COLUMN + 1
 
