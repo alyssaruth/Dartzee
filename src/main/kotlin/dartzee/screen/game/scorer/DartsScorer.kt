@@ -37,10 +37,6 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
     {
         model.clear()
 
-        val scoreSoFar = state.getScoreSoFar()
-        lblResult.text = if (scoreSoFar > 0) "$scoreSoFar" else ""
-        updateResultColourForPosition(state.pt.finishingPosition)
-
         stateChangedImpl(state)
 
         tableScores.scrollToBottom()
@@ -48,6 +44,14 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
         lblResult.repaint()
         repaint()
     }
+
+    protected fun setScoreAndFinishingPosition(state: PlayerState)
+    {
+        val scoreSoFar = state.getScoreSoFar()
+        lblResult.text = if (scoreSoFar > 0) "$scoreSoFar" else ""
+        updateResultColourForPosition(state.pt.finishingPosition)
+    }
+
     protected open fun stateChangedImpl(state: PlayerState) {}
 
     protected fun addDartRound(darts: List<Dart>)

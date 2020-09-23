@@ -44,11 +44,18 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Dart
             addDartRound(state.currentRound)
         }
 
+        finalisePlayerResult(state)
+
         addCheckoutSuggestion(state)
     }
 
     private fun addCheckoutSuggestion(state: X01PlayerState)
     {
+        if (getPaused())
+        {
+            return
+        }
+
         val dartsRemaining = 3 - state.currentRound.size
         val currentScore = state.getRemainingScore()
         val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return

@@ -18,6 +18,8 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer<Dart
 
     override fun stateChangedImpl(state: DartzeePlayerState)
     {
+        setScoreAndFinishingPosition(state)
+
         state.completedRounds.forEachIndexed { ix, round ->
             addDartRound(round)
 

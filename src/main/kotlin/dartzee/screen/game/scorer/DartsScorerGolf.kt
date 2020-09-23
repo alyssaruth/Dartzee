@@ -41,6 +41,8 @@ class DartsScorerGolf : DartsScorer<GolfPlayerState>()
 
     override fun stateChangedImpl(state: GolfPlayerState)
     {
+        setScoreAndFinishingPosition(state)
+
         state.completedRounds.forEachIndexed { ix, round ->
             val roundNumber = ix + 1
 

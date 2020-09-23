@@ -29,9 +29,10 @@ abstract class DartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>
         btnResume.addActionListener(this)
     }
 
-    fun getPaused() = btnResume.icon === ICON_RESUME
+    fun getPaused() = btnResume.icon === ICON_RESUME && btnResume.isVisible
 
-    override fun stateChanged(state: PlayerState) {
+    override fun stateChanged(state: PlayerState)
+    {
         super.stateChanged(state)
         latestState = state
     }
@@ -42,35 +43,39 @@ abstract class DartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>
         {
             logger.info(CODE_PLAYER_PAUSED, "Paused player $playerId")
             btnResume.icon = ICON_RESUME
-            finalisePlayerResult()
         }
         else
         {
             logger.info(CODE_PLAYER_UNPAUSED, "Unpaused player $playerId")
             btnResume.icon = ICON_PAUSE
-            lblResult.text = ""
-            lblResult.background = null
+            updateResultColourForPosition(-1)
         }
+
+        latestState?.let(::stateChanged)
     }
 
-    fun finalisePlayerResult()
+    protected fun finalisePlayerResult(state: PlayerState)
     {
-        val state = latestState ?: return
+        val dartCount = state.getScoreSoFar()
+        lblResult.text = "$dartCount Darts"
 
+        if (state.pt.finishingPosition == -1)
+        {
+            return
+        }
 
-        if (state.pt.dtFinished == DateStatics.END_OF_TIME)
+        val playerHasFinished = state.pt.dtFinished != DateStatics.END_OF_TIME
+        btnResume.isVisible = !playerHasFinished
+
+        if (getPaused() && !playerHasFinished)
         {
             lblResult.text = "Unfinished"
-            btnResume.isVisible = true
-        }
-        else
-        {
-            val dartCount = state.getScoreSoFar()
-            lblResult.text = "$dartCount Darts"
-            btnResume.isVisible = false
         }
 
-        updateResultColourForPosition(state.pt.finishingPosition)
+        if (getPaused() || playerHasFinished)
+        {
+            updateResultColourForPosition(state.pt.finishingPosition)
+        }
     }
 
     override fun actionPerformed(arg0: ActionEvent)
