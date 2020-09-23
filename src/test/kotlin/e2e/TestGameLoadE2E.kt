@@ -5,6 +5,7 @@ import dartzee.`object`.GameLauncher
 import dartzee.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.game.GameType
+import dartzee.getRows
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.retrieveGame
 import dartzee.helper.retrieveParticipant
@@ -66,8 +67,9 @@ class TestGameLoadE2E: AbstractRegistryTest()
     {
         val winnerScorer = gameScreen.getScorer("Winner")
         winnerScorer.lblResult.text shouldBe "9 Darts"
-        winnerScorer.getDartsForRow(0).shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
-        winnerScorer.getDartsForRow(1).shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
-        winnerScorer.getDartsForRow(2).shouldContainExactly(Dart(20, 3), Dart(19, 3), Dart(12, 2))
+        val rows = winnerScorer.tableScores.getRows()
+        rows[0].shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
+        rows[1].shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
+        rows[2].shouldContainExactly(Dart(20, 3), Dart(19, 3), Dart(12, 2))
     }
 }
