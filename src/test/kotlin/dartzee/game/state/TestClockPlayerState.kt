@@ -14,18 +14,17 @@ class TestClockPlayerState: AbstractTest()
     fun `should correctly compute the current target based on clockType`()
     {
         val roundOne = listOf(makeDart(1, 2, startingScore = 1))
-        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne))
 
-        state.getCurrentTarget(ClockType.Standard) shouldBe 2
-        state.getCurrentTarget(ClockType.Doubles) shouldBe 2
-        state.getCurrentTarget(ClockType.Trebles) shouldBe 1
+        makeClockPlayerStateWithRounds(ClockType.Standard, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
+        makeClockPlayerStateWithRounds(ClockType.Doubles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
+        makeClockPlayerStateWithRounds(ClockType.Trebles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 1
     }
 
     @Test
     fun `Should report a target of one when no darts thrown`()
     {
         val state = makeClockPlayerStateWithRounds()
-        state.getCurrentTarget(ClockType.Standard) shouldBe 1
+        state.getCurrentTarget() shouldBe 1
     }
 
     @Test
@@ -36,14 +35,14 @@ class TestClockPlayerState: AbstractTest()
             makeDart(2, 0, startingScore = 2),
             makeDart(2, 3, startingScore = 2))
 
-        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne))
-        state.getCurrentTarget(ClockType.Standard) shouldBe 3
+        val state = makeClockPlayerStateWithRounds(completedRounds = listOf(roundOne))
+        state.getCurrentTarget() shouldBe 3
 
         state.dartThrown(makeDart(3, 1, startingScore = 3))
-        state.getCurrentTarget(ClockType.Standard) shouldBe 4
+        state.getCurrentTarget() shouldBe 4
 
         state.resetRound()
-        state.getCurrentTarget(ClockType.Standard) shouldBe 3
+        state.getCurrentTarget() shouldBe 3
     }
 
     @Test
@@ -59,7 +58,7 @@ class TestClockPlayerState: AbstractTest()
         val roundOne = listOf(Dart(1, 1), Dart(2, 1), Dart(3, 1), Dart(4, 1))
         val roundTwo = listOf(Dart(5, 0), Dart(5, 0), Dart(5, 0))
 
-        val state = makeClockPlayerStateWithRounds(dartsThrown = listOf(roundOne, roundTwo))
+        val state = makeClockPlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo))
         state.getScoreSoFar() shouldBe 7
 
         state.dartThrown(Dart(5, 1))
@@ -67,6 +66,25 @@ class TestClockPlayerState: AbstractTest()
 
         state.resetRound()
         state.getScoreSoFar() shouldBe 7
+    }
+
+    @Test
+    fun `Should update darts that are thrown with their starting score`()
+    {
+        val roundOne = listOf(
+            makeDart(1, 1, startingScore = 1),
+            makeDart(2, 0, startingScore = 2),
+            makeDart(2, 3, startingScore = 2))
+
+        val state = makeClockPlayerStateWithRounds(completedRounds = listOf(roundOne))
+        state.getCurrentTarget() shouldBe 3
+
+        val dart = Dart(3, 1)
+        val dartTwo = Dart(4, 0)
+        state.dartThrown(dart)
+        state.dartThrown(dartTwo)
+        dart.startingScore shouldBe 3
+        dartTwo.startingScore shouldBe 4
     }
 
 }

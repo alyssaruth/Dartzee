@@ -20,86 +20,36 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
 
-    override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(pt)
+    override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(config.clockType, pt)
 
     override fun doAiTurn(model: DartsAiModel)
     {
-        val currentTarget = getCurrentPlayerState().getCurrentTarget(config.clockType)
+        val currentTarget = getCurrentPlayerState().getCurrentTarget()
         model.throwClockDart(currentTarget, config.clockType, dartboard)
     }
 
     override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     {
-        val scorer = getScorer(playerNumber)
-        for (i in 1..totalRounds)
-        {
-            val darts = hmRoundToDarts[i]!!
-            addDartsToScorer(darts, scorer)
-        }
-    }
 
-    private fun addDartsToScorer(darts: MutableList<Dart>, scorer: DartsScorerRoundTheClock)
-    {
-        var clockTarget = 1
-
-        for (dart in darts)
-        {
-            dart.startingScore = clockTarget
-            scorer.addDart(dart)
-
-            if (dart.hitClockTarget(config.clockType))
-            {
-                scorer.incrementCurrentClockTarget()
-                clockTarget++
-            }
-        }
-
-        //Need to take brucey into account
-        if (darts.size < 4)
-        {
-            scorer.disableBrucey()
-        }
-
-        scorer.confirmCurrentRound()
     }
 
     override fun updateVariablesForNewRound() {}
 
     override fun resetRoundVariables() {}
 
-    override fun dartThrown(dart: Dart)
-    {
-        val currentClockTarget = getCurrentPlayerState().getCurrentTarget(config.clockType)
-        dart.startingScore = currentClockTarget
-
-        super.dartThrown(dart)
-    }
-
     override fun updateVariablesForDartThrown(dart: Dart)
     {
-        if (dart.hitClockTarget(config.clockType))
+        if (dart.hitClockTarget(config.clockType) && dartsThrownCount() == 4)
         {
-            getCurrentScorer().incrementCurrentClockTarget()
-
-            if (dartsThrownCount() == 4)
-            {
-                dartboard.doForsyth()
-            }
+            dartboard.doForsyth()
         }
         else if (dartsThrownCount() == 4)
         {
             dartboard.doBadLuck()
         }
-        else
-        {
-            getCurrentScorer().disableBrucey()
-        }
     }
 
-    override fun shouldAnimateMiss(dart: Dart): Boolean
-    {
-        return dartsThrownCount() < 4
-    }
+    override fun shouldAnimateMiss(dart: Dart) = dartsThrownCount() < 4
 
     override fun shouldStopAfterDartThrown(): Boolean
     {
@@ -108,7 +58,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        if (getCurrentPlayerState().getCurrentTarget(config.clockType) > 20)
+        if (getCurrentPlayerState().getCurrentTarget() > 20)
         {
             //Finished.
             return true
@@ -138,15 +88,14 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     fun updateBestStreakAchievement()
     {
-        val longestStreakThisGame = getCurrentPlayerState().getLongestStreak(config.clockType)
+        val longestStreakThisGame = getCurrentPlayerState().getLongestStreak()
         if (longestStreakThisGame > 1)
         {
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), longestStreakThisGame)
         }
     }
 
-
-    override fun currentPlayerHasFinished() = getCurrentPlayerState().getCurrentTarget(config.clockType) > 20
+    override fun currentPlayerHasFinished() = getCurrentPlayerState().getCurrentTarget() > 20
 
     override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams).clockType)
 

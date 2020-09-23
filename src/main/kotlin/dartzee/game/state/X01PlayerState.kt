@@ -7,7 +7,7 @@ import dartzee.utils.isFinishRound
 import dartzee.utils.isNearMissDouble
 import dartzee.utils.sumScore
 
-data class X01PlayerState(val startingScore: Int,
+data class X01PlayerState(private val startingScore: Int,
                           override val pt: ParticipantEntity,
                           override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                           override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<X01PlayerState>()

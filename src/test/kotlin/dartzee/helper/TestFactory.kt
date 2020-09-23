@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.ClockType
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.X01PlayerState
@@ -66,12 +67,13 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>
     return darts.toList().chunked(3)
 }
 
-fun makeClockPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
+fun makeClockPlayerStateWithRounds(clockType: ClockType = ClockType.Standard,
+                                   player: PlayerEntity = insertPlayer(),
                                    participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                                   dartsThrown: List<List<Dart>> = emptyList()): ClockPlayerState
+                                   completedRounds: List<List<Dart>> = emptyList()): ClockPlayerState
 {
-    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
-    return ClockPlayerState(participant, dartsThrown.toMutableList())
+    completedRounds.flatten().forEach { it.participantId = participant.rowId }
+    return ClockPlayerState(clockType, participant, completedRounds.toMutableList())
 }
 
 fun makeX01PlayerState(startingScore: Int = 501,

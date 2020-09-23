@@ -103,12 +103,6 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
         layeredPane.repaint()
     }
 
-
-    /**
-     * Default Methods
-     */
-    open fun confirmCurrentRound() {}
-
     fun getRowCount() = model.rowCount
     fun getValueAt(row: Int, col: Int): Any? = model.getValueAt(row, col)
 
