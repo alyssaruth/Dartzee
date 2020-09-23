@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.utils.DartsColour
+import dartzee.utils.sumScore
 import java.awt.Component
 import java.awt.Font
 import javax.swing.JTable
@@ -26,16 +27,15 @@ class X01ScoreRenderer : DefaultTableCellRenderer()
     private fun setColours(table: JTable, modelRow: Int)
     {
         val tm = table.model
-        if (getDartsForRow(tm, modelRow).isEmpty())
+        val darts = getDartsForRow(tm, modelRow)
+        if (darts.isEmpty())
         {
             foreground = null
             background = null
             return
         }
 
-        val totalScore = (getScoreAt(tm, modelRow, 0)
-                + getScoreAt(tm, modelRow, 1)
-                + getScoreAt(tm, modelRow, 2))
+        val totalScore = sumScore(darts)
 
         val fg = DartsColour.getScorerForegroundColour(totalScore.toDouble())
         val bg = DartsColour.getScorerBackgroundColour(totalScore.toDouble())
@@ -57,16 +57,5 @@ class X01ScoreRenderer : DefaultTableCellRenderer()
         }
 
         return ret
-    }
-
-    private fun getScoreAt(tm: TableModel, row: Int, col: Int): Int
-    {
-        val value = tm.getValueAt(row, col) as Dart? ?: return 0
-        if (value is DartHint)
-        {
-            return 0
-        }
-
-        return value.getTotal()
     }
 }
