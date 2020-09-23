@@ -132,7 +132,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
     }
 
-    override fun shouldStopAfterDartThrown() = getCurrentPlayerState().currentRoundIsComplete()
+    override fun shouldStopAfterDartThrown() = getCurrentPlayerState().isCurrentRoundComplete()
 
     override fun doAiTurn(model: DartsAiModel)
     {

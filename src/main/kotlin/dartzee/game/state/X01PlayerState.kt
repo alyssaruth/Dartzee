@@ -51,7 +51,7 @@ data class X01PlayerState(val startingScore: Int,
 
     fun getLastRound() = completedRounds.last()
 
-    fun currentRoundIsComplete() = currentRound.size == 3 || getRemainingScore() <= 1
+    fun isCurrentRoundComplete() = currentRound.size == 3 || getRemainingScore() <= 1
 
     override fun dartThrown(dart: Dart)
     {

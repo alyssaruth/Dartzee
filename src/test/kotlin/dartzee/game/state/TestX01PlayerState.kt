@@ -103,7 +103,7 @@ class TestX01PlayerState: AbstractTest()
         state.dartThrown(makeDart(20, 3))
         state.dartThrown(makeDart(20, 3))
         state.getRemainingScore() shouldBe 1
-        state.currentRoundIsComplete() shouldBe true
+        state.isCurrentRoundComplete() shouldBe true
 
         state.commitRound()
         state.getRemainingScore() shouldBe 121
@@ -172,5 +172,26 @@ class TestX01PlayerState: AbstractTest()
         dartOne.startingScore shouldBe 301
         dartTwo.startingScore shouldBe 281
         dartThree.startingScore shouldBe 231
+    }
+
+    @Test
+    fun `Should correctly determine whether the current round is completed`()
+    {
+        val threeDartRound = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
+        val bustRound = listOf(Dart(20, 3), Dart(20, 3))
+        val finishedRound = listOf(Dart(17, 3), Dart(25, 2))
+        val incompleteRound = listOf(Dart(20, 1), Dart(20, 1))
+
+        stateWithCurrentRound(threeDartRound).isCurrentRoundComplete() shouldBe true
+        stateWithCurrentRound(bustRound).isCurrentRoundComplete() shouldBe true
+        stateWithCurrentRound(finishedRound).isCurrentRoundComplete() shouldBe true
+        stateWithCurrentRound(incompleteRound).isCurrentRoundComplete() shouldBe false
+        stateWithCurrentRound(emptyList()).isCurrentRoundComplete() shouldBe false
+    }
+    private fun stateWithCurrentRound(darts: List<Dart>): X01PlayerState
+    {
+        val state = X01PlayerState(101, insertParticipant())
+        darts.forEach { state.dartThrown(it) }
+        return state
     }
 }
