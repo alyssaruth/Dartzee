@@ -67,30 +67,31 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>
     return darts.toList().chunked(3)
 }
 
-fun makeClockPlayerStateWithRounds(clockType: ClockType = ClockType.Standard,
-                                   player: PlayerEntity = insertPlayer(),
-                                   participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                                   completedRounds: List<List<Dart>> = emptyList()): ClockPlayerState
+fun makeClockPlayerState(clockType: ClockType = ClockType.Standard,
+                         player: PlayerEntity = insertPlayer(),
+                         participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                         completedRounds: List<List<Dart>> = emptyList(),
+                         currentRound: List<Dart> = emptyList()): ClockPlayerState
 {
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
-    return ClockPlayerState(clockType, participant, completedRounds.toMutableList())
+    return ClockPlayerState(clockType, participant, completedRounds.toMutableList(), currentRound.toMutableList())
 }
 
 fun makeX01PlayerState(startingScore: Int = 501,
                        player: PlayerEntity = insertPlayer(),
                        participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                       dartsThrown: List<Dart> = listOf(makeDart())): X01PlayerState
+                       completedRound: List<Dart> = listOf()): X01PlayerState
 {
-    return X01PlayerState(startingScore, participant, mutableListOf(dartsThrown))
+    return X01PlayerState(startingScore, participant, mutableListOf(completedRound))
 }
 
 fun makeX01PlayerStateWithRounds(startingScore: Int = 501,
                                  player: PlayerEntity = insertPlayer(),
                                  participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                                 dartsThrown: List<List<Dart>> = emptyList()): X01PlayerState
+                                 completedRounds: List<List<Dart>> = emptyList()): X01PlayerState
 {
-    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
-    return X01PlayerState(startingScore, participant, dartsThrown.toMutableList())
+    completedRounds.flatten().forEach { it.participantId = participant.rowId }
+    return X01PlayerState(startingScore, participant, completedRounds.toMutableList())
 }
 
 fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),

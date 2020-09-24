@@ -3,7 +3,7 @@ package dartzee.game.state
 import dartzee.`object`.Dart
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
-import dartzee.helper.makeClockPlayerStateWithRounds
+import dartzee.helper.makeClockPlayerState
 import dartzee.helper.makeDart
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -15,15 +15,15 @@ class TestClockPlayerState: AbstractTest()
     {
         val roundOne = listOf(makeDart(1, 2, startingScore = 1))
 
-        makeClockPlayerStateWithRounds(ClockType.Standard, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
-        makeClockPlayerStateWithRounds(ClockType.Doubles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
-        makeClockPlayerStateWithRounds(ClockType.Trebles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 1
+        makeClockPlayerState(ClockType.Standard, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
+        makeClockPlayerState(ClockType.Doubles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
+        makeClockPlayerState(ClockType.Trebles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 1
     }
 
     @Test
     fun `Should report a target of one when no darts thrown`()
     {
-        val state = makeClockPlayerStateWithRounds()
+        val state = makeClockPlayerState()
         state.getCurrentTarget() shouldBe 1
     }
 
@@ -35,7 +35,7 @@ class TestClockPlayerState: AbstractTest()
             makeDart(2, 0, startingScore = 2),
             makeDart(2, 3, startingScore = 2))
 
-        val state = makeClockPlayerStateWithRounds(completedRounds = listOf(roundOne))
+        val state = makeClockPlayerState(completedRounds = listOf(roundOne))
         state.getCurrentTarget() shouldBe 3
 
         state.dartThrown(makeDart(3, 1, startingScore = 3))
@@ -48,7 +48,7 @@ class TestClockPlayerState: AbstractTest()
     @Test
     fun `Should report a score of 0 when no darts thrown`()
     {
-        val state = makeClockPlayerStateWithRounds()
+        val state = makeClockPlayerState()
         state.getScoreSoFar() shouldBe 0
     }
 
@@ -58,7 +58,7 @@ class TestClockPlayerState: AbstractTest()
         val roundOne = listOf(Dart(1, 1), Dart(2, 1), Dart(3, 1), Dart(4, 1))
         val roundTwo = listOf(Dart(5, 0), Dart(5, 0), Dart(5, 0))
 
-        val state = makeClockPlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo))
+        val state = makeClockPlayerState(completedRounds = listOf(roundOne, roundTwo))
         state.getScoreSoFar() shouldBe 7
 
         state.dartThrown(Dart(5, 1))
@@ -76,7 +76,7 @@ class TestClockPlayerState: AbstractTest()
             makeDart(2, 0, startingScore = 2),
             makeDart(2, 3, startingScore = 2))
 
-        val state = makeClockPlayerStateWithRounds(completedRounds = listOf(roundOne))
+        val state = makeClockPlayerState(completedRounds = listOf(roundOne))
         state.getCurrentTarget() shouldBe 3
 
         val dart = Dart(3, 1)

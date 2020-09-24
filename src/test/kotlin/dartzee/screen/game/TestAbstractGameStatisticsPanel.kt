@@ -18,10 +18,10 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
         val clive = insertPlayer(name = "Clive")
         val alice = insertPlayer(name = "Alice")
 
-        val cliveState1 = makeX01PlayerState(player = clive, dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
-        val aliceState1 = makeX01PlayerState(player = alice, dartsThrown = listOf(makeDart()))
-        val aliceState2 = makeX01PlayerState(player = alice, dartsThrown = listOf(makeDart(), makeDart()))
-        val cliveState2 = makeX01PlayerState(player = clive, dartsThrown = listOf(makeDart(), makeDart(), makeDart(), makeDart(), makeDart()))
+        val cliveState1 = makeX01PlayerState(player = clive, completedRound = listOf(makeDart(), makeDart(), makeDart()))
+        val aliceState1 = makeX01PlayerState(player = alice, completedRound = listOf(makeDart()))
+        val aliceState2 = makeX01PlayerState(player = alice, completedRound = listOf(makeDart(), makeDart()))
+        val cliveState2 = makeX01PlayerState(player = clive, completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart(), makeDart()))
 
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(cliveState1, aliceState1, aliceState2, cliveState2))
@@ -39,12 +39,12 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
     fun `Should clear down previous stats`()
     {
         val clive = insertPlayer(name = "Clive")
-        val cliveState1 = makeX01PlayerState(player = clive, dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
+        val cliveState1 = makeX01PlayerState(player = clive, completedRound = listOf(makeDart(), makeDart(), makeDart()))
 
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(cliveState1))
 
-        val cliveState2 = makeX01PlayerState(player = clive, dartsThrown = listOf(makeDart()))
+        val cliveState2 = makeX01PlayerState(player = clive, completedRound = listOf(makeDart()))
         panel.showStats(listOf(cliveState2))
 
         panel.getValueForRow("Darts Thrown", 1) shouldBe 1
@@ -57,8 +57,8 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
 
-        val aliceState = makeX01PlayerState(player = alice, dartsThrown = listOf(makeDart()))
-        val bobState = makeX01PlayerState(player = bob, dartsThrown = listOf())
+        val aliceState = makeX01PlayerState(player = alice, completedRound = listOf(makeDart()))
+        val bobState = makeX01PlayerState(player = bob, completedRound = listOf())
 
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(aliceState, bobState))
@@ -122,10 +122,10 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
     @Test
     fun `Should colour highest wins rows correctly`()
     {
-        val state1 = makeX01PlayerState(player = insertPlayer(name = "Alice"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
-        val state2 = makeX01PlayerState(player = insertPlayer(name = "Bob"), dartsThrown = listOf(makeDart()))
-        val state3 = makeX01PlayerState(player = insertPlayer(name = "Clive"), dartsThrown = listOf(makeDart(), makeDart()))
-        val state4 = makeX01PlayerState(player = insertPlayer(name = "Derek"), dartsThrown = listOf(makeDart(), makeDart(), makeDart(), makeDart()))
+        val state1 = makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = listOf(makeDart(), makeDart(), makeDart()))
+        val state2 = makeX01PlayerState(player = insertPlayer(name = "Bob"), completedRound = listOf(makeDart()))
+        val state3 = makeX01PlayerState(player = insertPlayer(name = "Clive"), completedRound = listOf(makeDart(), makeDart()))
+        val state4 = makeX01PlayerState(player = insertPlayer(name = "Derek"), completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart()))
 
         val panel = FakeGameStatisticsPanel(highestWins = listOf("Darts Thrown"))
         panel.showStats(listOf(state1, state2, state3, state4))
@@ -139,10 +139,10 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
     @Test
     fun `Should colour lowest wins rows correctly`()
     {
-        val state1 = makeX01PlayerState(player = insertPlayer(name = "Alice"), dartsThrown = listOf(makeDart(), makeDart(), makeDart()))
-        val state2 = makeX01PlayerState(player = insertPlayer(name = "Bob"), dartsThrown = listOf(makeDart()))
-        val state3 = makeX01PlayerState(player = insertPlayer(name = "Clive"), dartsThrown = listOf(makeDart(), makeDart()))
-        val state4 = makeX01PlayerState(player = insertPlayer(name = "Derek"), dartsThrown = listOf(makeDart(), makeDart(), makeDart(), makeDart()))
+        val state1 = makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = listOf(makeDart(), makeDart(), makeDart()))
+        val state2 = makeX01PlayerState(player = insertPlayer(name = "Bob"), completedRound = listOf(makeDart()))
+        val state3 = makeX01PlayerState(player = insertPlayer(name = "Clive"), completedRound = listOf(makeDart(), makeDart()))
+        val state4 = makeX01PlayerState(player = insertPlayer(name = "Derek"), completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart()))
 
         val panel = FakeGameStatisticsPanel(lowestWins = listOf("Darts Thrown"))
         panel.showStats(listOf(state1, state2, state3, state4))
