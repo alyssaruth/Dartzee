@@ -213,7 +213,7 @@ abstract class DartsGamePanel<S : DartsScorer<PlayerState>, D: Dartboard, Player
         readyForThrow()
     }
 
-    private fun selectScorer(selectedScorer: S)
+    protected fun selectScorer(selectedScorer: S)
     {
         for (scorer in scorersOrdered)
         {

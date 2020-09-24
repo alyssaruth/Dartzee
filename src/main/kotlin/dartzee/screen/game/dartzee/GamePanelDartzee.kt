@@ -178,8 +178,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     fun scorerSelected(scorer: DartsScorerDartzee)
     {
-        scorersOrdered.forEach { it.setSelected(false) }
-        scorer.setSelected(true)
+        selectScorer(scorer)
 
         currentPlayerNumber = getPlayerNumberForScorer(scorer)
         updateCarousel()
