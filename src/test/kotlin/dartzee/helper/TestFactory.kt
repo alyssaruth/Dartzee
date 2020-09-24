@@ -94,16 +94,9 @@ fun makeX01PlayerStateWithRounds(startingScore: Int = 501,
 }
 
 fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
-                       participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                       dartsThrown: List<Dart> = emptyList()): GolfPlayerState
+                        participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
+                        completedRounds: List<List<Dart>> = emptyList(),
+                        currentRound: List<Dart> = emptyList()): GolfPlayerState
 {
-    return GolfPlayerState(participant, mutableListOf(), dartsThrown.toMutableList())
-}
-
-fun makeGolfPlayerStateWithRounds(player: PlayerEntity = insertPlayer(),
-                                 participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                                 dartsThrown: List<List<Dart>> = emptyList()): GolfPlayerState
-{
-    dartsThrown.flatten().forEach { it.participantId = participant.rowId }
-    return GolfPlayerState(participant, dartsThrown.toMutableList())
+    return GolfPlayerState(participant, completedRounds.toMutableList(), currentRound.toMutableList())
 }
