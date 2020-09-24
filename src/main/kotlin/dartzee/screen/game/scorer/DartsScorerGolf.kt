@@ -84,12 +84,9 @@ class DartsScorerGolf : DartsScorer<GolfPlayerState>()
     /**
      * Helper to add a full round at a time, for when we're viewing stats or loading a game
      */
-    fun addDarts(darts: Collection<Dart>, localGameId: Long = -1)
+    fun addDarts(darts: List<Dart>, localGameId: Long = -1)
     {
-        for (dart in darts)
-        {
-            addDart(dart)
-        }
+        addDartRound(darts)
 
         if (localGameId > -1)
         {

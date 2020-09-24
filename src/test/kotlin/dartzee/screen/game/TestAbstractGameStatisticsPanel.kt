@@ -72,12 +72,12 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
 
-        val aliceState1 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 50))
-        val aliceState2 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 35))
+        val aliceState1 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 50), completedRound = listOf(makeDart()))
+        val aliceState2 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 35), completedRound = listOf(makeDart()))
 
-        val bobState1 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 28))
-        val bobState2 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 70))
-        val bobState3 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = -1))
+        val bobState1 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 28), completedRound = listOf(makeDart()))
+        val bobState2 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 70), completedRound = listOf(makeDart()))
+        val bobState3 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = -1), completedRound = listOf(makeDart()))
 
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(aliceState1, bobState1, bobState2, aliceState2, bobState3))
@@ -92,11 +92,11 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
 
-        val aliceState1 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 50))
-        val aliceState2 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 35))
+        val aliceState1 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 50), completedRound = listOf(makeDart()))
+        val aliceState2 = makeX01PlayerState(player = alice, participant = insertParticipant(playerId = alice.rowId, finalScore = 35), completedRound = listOf(makeDart()))
 
-        val bobState1 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 28))
-        val bobState2 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 70))
+        val bobState1 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 28), completedRound = listOf(makeDart()))
+        val bobState2 = makeX01PlayerState(player = bob, participant = insertParticipant(playerId = bob.rowId, finalScore = 70), completedRound = listOf(makeDart()))
 
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(aliceState1, bobState1, bobState2, aliceState2))
@@ -108,7 +108,7 @@ class TestAbstractGameStatisticsPanel: AbstractTest()
     @Test
     fun `Should replace NULL values with NA`()
     {
-        val state = makeX01PlayerState()
+        val state = makeX01PlayerState(completedRound = listOf(makeDart()))
 
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(state))
