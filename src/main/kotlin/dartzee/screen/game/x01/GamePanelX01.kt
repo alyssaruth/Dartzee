@@ -45,7 +45,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
         }
 
-        val startingScoreForRound = getCurrentPlayerState().getRemainingScore()
         if (!bust)
         {
             val totalScore = sumScore(getDartsThrown())
@@ -68,6 +67,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
         else
         {
+            val startingScoreForRound = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
             AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), startingScoreForRound)
         }
 

@@ -68,8 +68,8 @@ class TestGameLoadE2E: AbstractRegistryTest()
         val winnerScorer = gameScreen.getScorer("Winner")
         winnerScorer.lblResult.text shouldBe "9 Darts"
         val rows = winnerScorer.tableScores.getRows()
-        rows[0].shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
-        rows[1].shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3))
-        rows[2].shouldContainExactly(Dart(20, 3), Dart(19, 3), Dart(12, 2))
+        rows[0].shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3), 321)
+        rows[1].shouldContainExactly(Dart(20, 3), Dart(20, 3), Dart(20, 3), 141)
+        rows[2].shouldContainExactly(Dart(20, 3), Dart(19, 3), Dart(12, 2), 0)
     }
 }
