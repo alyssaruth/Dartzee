@@ -6,10 +6,13 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRoundResult
+import dartzee.getRows
 import dartzee.helper.*
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
+import dartzee.utils.factoryHighScoreResult
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -71,25 +74,65 @@ class TestDartsScorerDartzee: AbstractTest()
     }
 
     @Test
+    fun `Table should contain the correct darts and results for completed rounds`()
+    {
+        val scorer = DartsScorerDartzee(mockk())
+        scorer.init(insertPlayer())
+
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3)) //120
+        val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1)) //60
+        val roundThree = listOf(Dart(25, 2), Dart(10, 1), Dart(12, 1)) //110
+        val resultOne = DartzeeRoundResult(1, false, -60)
+        val resultTwo = DartzeeRoundResult(7, true, 50)
+
+        val state = makeDartzeePlayerState(insertParticipant(), listOf(roundOne, roundTwo, roundThree), listOf(resultOne, resultTwo))
+        scorer.stateChanged(state)
+
+        val rows = scorer.tableScores.getRows()
+        rows.shouldContainExactly(
+                roundOne + factoryHighScoreResult(roundOne) + 120,
+                roundTwo + resultOne + 60,
+                roundThree + resultTwo + 110
+        )
+    }
+
+    @Test
+    fun `Should include the in progress round`()
+    {
+        val scorer = DartsScorerDartzee(mockk())
+        scorer.init(insertPlayer())
+
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3)) //120
+        val state = makeDartzeePlayerState(insertParticipant(), listOf(roundOne))
+        state.dartThrown(Dart(5, 1))
+        state.dartThrown(Dart(10, 1))
+        scorer.stateChanged(state)
+
+        val rows = scorer.tableScores.getRows()
+        rows.shouldContainExactly(
+                roundOne + factoryHighScoreResult(roundOne) + 120,
+                listOf(Dart(5, 1), Dart(10, 1), null, null, null)
+        )
+    }
+
+    @Test
     fun `Should update the result renderer based on the current maximum score`()
     {
         val scorer = DartsScorerDartzee(mockk())
         scorer.init(insertPlayer())
 
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 2))
-        scorer.addDart(Dart(20, 3))
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
+        val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1))
+        val resultOne = DartzeeRoundResult(1, false, -60)
 
-        scorer.getRendererMaximum() shouldBe 50
+        val state = makeDartzeePlayerState(insertParticipant(), listOf(roundOne, roundTwo), listOf(resultOne))
+        scorer.stateChanged(state)
+        scorer.getRendererMaximum() shouldBe 120
 
-        scorer.addDart(Dart(20, 1))
-
-        scorer.getRendererMaximum() shouldBe 50
-
-        scorer.addDart(Dart(15, 1))
-        scorer.addDart(Dart(15, 1))
-        scorer.addDart(Dart(15, 1))
-        scorer.getRendererMaximum() shouldBe 70
+        val otherResult = DartzeeRoundResult(5, true, 60)
+        val improvedState = makeDartzeePlayerState(insertParticipant(), listOf(roundOne, roundTwo), listOf(otherResult))
+        scorer.stateChanged(improvedState)
+        scorer.getRendererMaximum() shouldBe 180
     }
 
     @Test
