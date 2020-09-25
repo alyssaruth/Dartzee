@@ -149,6 +149,17 @@ class TestDartsScorerDartzee: AbstractTest()
         scorer.tableScores.getColumn(3).cellRenderer.shouldBeInstanceOf<DartzeeRoundResultRenderer>()
     }
 
+    @Test
+    fun `Should cope with empty state`()
+    {
+        val scorer = DartsScorerDartzee(mockk())
+        scorer.init(insertPlayer())
+
+        val state = makeDartzeePlayerState()
+        scorer.stateChanged(state)
+        scorer.tableScores.rowCount shouldBe 0
+    }
+
     private fun DartsScorerDartzee.getRendererMaximum(): Int
     {
         val renderer = tableScores.getColumn(4).cellRenderer
