@@ -21,10 +21,7 @@ class DartsScorerGolf : DartsScorer<GolfPlayerState>()
     var fudgeFactor = 0 //For when we're displaying only a back 9, we need to shift everything up
     var showGameId = false
 
-    override fun getNumberOfColumns(): Int
-    {
-        return 5 + if (showGameId) 1 else 0
-    }
+    override fun getNumberOfColumns() = if (showGameId) 6 else 5
 
     override fun initImpl()
     {
