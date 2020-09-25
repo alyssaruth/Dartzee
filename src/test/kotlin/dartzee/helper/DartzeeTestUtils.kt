@@ -12,6 +12,7 @@ import dartzee.dartzee.total.AbstractDartzeeRuleTotalSize
 import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.db.DartzeeRoundResultEntity
+import dartzee.db.ParticipantEntity
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getAllPossibleSegments
@@ -84,15 +85,21 @@ fun makeRoundResultEntities(vararg roundResult: DartzeeRoundResult): List<Dartze
     return roundResult.mapIndexed { index, result -> DartzeeRoundResultEntity.factoryAndSave(result, pt, index + 2) }
 }
 
-fun makeDartzeePlayerState(name: String = "Bob",
-                           dartsThrown: List<List<Dart>> = emptyList(),
-                           roundResults: List<DartzeeRoundResult> = emptyList()): DartzeePlayerState
+fun makeDartzeePlayerStateForName(name: String = "Bob",
+                                  completedRounds: List<List<Dart>> = emptyList(),
+                                  roundResults: List<DartzeeRoundResult> = emptyList()): DartzeePlayerState
 {
     val p = insertPlayer(name = name)
     val pt = insertParticipant(playerId = p.rowId)
+    return makeDartzeePlayerState(pt, completedRounds, roundResults)
+}
 
+fun makeDartzeePlayerState(participant: ParticipantEntity = insertParticipant(),
+                           completedRounds: List<List<Dart>> = emptyList(),
+                           roundResults: List<DartzeeRoundResult> = emptyList()): DartzeePlayerState
+{
     val resultEntities = makeRoundResultEntities(*roundResults.toTypedArray())
-    return DartzeePlayerState(pt, dartsThrown.toMutableList(), mutableListOf(), resultEntities.toMutableList())
+    return DartzeePlayerState(participant, completedRounds.toMutableList(), mutableListOf(), resultEntities.toMutableList())
 }
 
 fun makeSegmentStatus(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),

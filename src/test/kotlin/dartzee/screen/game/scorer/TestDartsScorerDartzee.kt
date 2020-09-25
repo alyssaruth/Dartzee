@@ -5,10 +5,11 @@ import dartzee.`object`.Dart
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertGame
-import dartzee.helper.insertPlayer
+import dartzee.dartzee.DartzeeRoundResult
+import dartzee.helper.*
 import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.shouldHaveColours
+import dartzee.utils.DartsColour
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -52,23 +53,21 @@ class TestDartsScorerDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should cope with partial rounds`()
+    fun `Should set the score and finishing position`()
     {
         val scorer = DartsScorerDartzee(mockk())
         scorer.init(insertPlayer())
+        val pt = insertParticipant(finishingPosition = 2)
 
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 2))
-        scorer.addDart(Dart(20, 3))
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
+        val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1))
+        val resultOne = DartzeeRoundResult(1, false, -60)
 
-        scorer.lblResult.text shouldBe ""
-
-        scorer.lblResult.text shouldBe "120"
-
-        scorer.addDart(Dart(20, 1))
-        scorer.lblResult.text shouldBe "120"
+        val state = makeDartzeePlayerState(pt, listOf(roundOne, roundTwo), listOf(resultOne))
+        scorer.stateChanged(state)
 
         scorer.lblResult.text shouldBe "60"
+        scorer.lblResult.shouldHaveColours(DartsColour.SECOND_COLOURS)
     }
 
     @Test

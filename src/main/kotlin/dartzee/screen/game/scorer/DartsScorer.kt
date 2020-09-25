@@ -96,7 +96,7 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
         overlays.add(overlay)
 
         //Let's just only ever have one thing at a time on display. Actually layering them sometimes worked but
-        //sometimes caused weird bollucks when things happened close together
+        //sometimes caused weird bollocks when things happened close together
         layeredPane.removeAll()
         layeredPane.add(overlay, BorderLayout.CENTER)
         layeredPane.revalidate()
