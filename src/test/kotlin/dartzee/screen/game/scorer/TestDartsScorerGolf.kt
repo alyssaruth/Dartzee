@@ -24,7 +24,7 @@ class TestDartsScorerGolf: AbstractTest()
     }
 
     @Test
-    fun `Should add a subtotal row after 9 holes`()
+    fun `Should add a subtotal row after 9 and 18 holes`()
     {
         val scorer = factoryScorer()
         val state = makeGolfPlayerState()
@@ -34,15 +34,25 @@ class TestDartsScorerGolf: AbstractTest()
         }
 
         scorer.stateChanged(state)
-        scorer.getRowCount() shouldBe 10
-        scorer.getValueAt(9, 4) shouldBe 9
+        scorer.tableScores.rowCount shouldBe 10
+        scorer.tableScores.getValueAt(9, 4) shouldBe 9
         scorer.lblResult.text shouldBe "9"
 
         addRound(state, 10)
 
         scorer.stateChanged(state)
-        scorer.getValueAt(9, 4) shouldBe 9
+        scorer.tableScores.getValueAt(9, 4) shouldBe 9
         scorer.lblResult.text shouldBe "10"
+
+        for (i in 11..18)
+        {
+            addRound(state, i)
+        }
+
+        scorer.stateChanged(state)
+        scorer.tableScores.getValueAt(9, 4) shouldBe 9
+        scorer.tableScores.getValueAt(19, 4) shouldBe 18
+        scorer.lblResult.text shouldBe "18"
     }
     private fun addRound(state: GolfPlayerState, hole: Int)
     {
