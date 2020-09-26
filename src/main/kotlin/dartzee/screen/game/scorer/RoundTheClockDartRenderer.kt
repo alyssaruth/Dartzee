@@ -47,12 +47,7 @@ class RoundTheClockDartRenderer(private val clockType: ClockType): AbstractTable
         }
     }
 
-    override fun getReplacementValue(value: Dart) =
-        if (!value.hitClockTarget(clockType))
-        {
-            "X"
-        } else "$value"
-
+    override fun getReplacementValue(value: Dart) = if (!value.hitClockTarget(clockType)) "X" else "$value"
     override fun allowNulls() = true
 }
 
