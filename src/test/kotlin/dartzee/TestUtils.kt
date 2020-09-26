@@ -159,6 +159,8 @@ fun ScrollTable.getRows(): List<List<Any?>>
     return result.toList()
 }
 
+fun ScrollTable.firstRow(): List<Any?> = getRows().first()
+
 /**
  * TODO - improvements for swing-test
  */
