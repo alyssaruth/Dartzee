@@ -121,6 +121,20 @@ class TestClockPlayerState: AbstractTest()
         state.dartThrown(Dart(4, 3))
         state.onTrackForBrucey() shouldBe true
     }
+    
+    @Test
+    fun `Longest streak should take into account previous rounds`()
+    {
+        val roundOne = listOf(makeDart(1, 0, startingScore = 1), makeDart(1, 1, startingScore = 1), makeDart(2, 1, startingScore = 2))
+        val state = makeClockPlayerState(completedRounds = listOf(roundOne))
+        state.getLongestStreak() shouldBe 2
+
+        state.dartThrown(Dart(3, 1))
+        state.getLongestStreak() shouldBe 3
+
+        state.resetRound()
+        state.getLongestStreak() shouldBe 2
+    }
 
     @Test
     fun `Should report not on track for Brucey as soon as there has been a miss, taking into account clockType`()
