@@ -41,5 +41,6 @@ class TestDartzeePlayerState: AbstractTest()
     {
         val state = makeDartzeePlayerState()
         state.shouldFireStateChange { it.addRoundResult(DartzeeRoundResultEntity()) }
+        state.shouldFireStateChange { it.saveRoundResult(DartzeeRoundResult(1, true, 100)) }
     }
 }
