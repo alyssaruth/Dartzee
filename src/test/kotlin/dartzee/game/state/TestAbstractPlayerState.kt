@@ -7,6 +7,7 @@ import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -163,6 +164,19 @@ class TestAbstractPlayerState: AbstractTest()
         state.shouldFireStateChange { it.addCompletedRound(listOf(Dart(1, 1))) }
         state.shouldFireStateChange { it.participantFinished(3, 10) }
         state.shouldFireStateChange { it.setParticipantFinishPosition(4) }
+    }
+
+    @Test
+    fun `Should identify human vs ai`()
+    {
+        val ai = insertPlayer(strategy = "foo")
+        val human = insertPlayer(strategy = "")
+
+        val aiPt = insertParticipant(playerId = ai.rowId)
+        val humanPt = insertParticipant(playerId = human.rowId)
+
+        DefaultPlayerState(aiPt).isHuman() shouldBe false
+        DefaultPlayerState(humanPt).isHuman() shouldBe true
     }
 
     data class DefaultPlayerState(override val pt: ParticipantEntity,

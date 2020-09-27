@@ -26,7 +26,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
      */
     fun currentRoundNumber() = completedRounds.size + 1
 
-    fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
+    protected fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
 
     fun isHuman() = !pt.isAi()
 
@@ -87,6 +87,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         fireStateChanged()
     }
 
+    @Suppress("UNCHECKED_CAST")
     protected fun fireStateChanged()
     {
         listeners.forEach { it.stateChanged(this as S) }

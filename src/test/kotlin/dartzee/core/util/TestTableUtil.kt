@@ -48,4 +48,25 @@ class TestTableUtil: AbstractTest()
         model.getValueAt(0, 0) shouldBe "1"
         model.getValueAt(1, 0) shouldBe "2"
     }
+
+    @Test
+    fun `Should be able to clear all rows`()
+    {
+        val model = TableUtil.DefaultModel()
+        model.addColumn("Foo")
+
+        val rowOne = arrayOf<Any>("1")
+        model.addRow(rowOne)
+        model.clear()
+        model.rowCount shouldBe 0
+    }
+
+    @Test
+    fun `Should be able to clear an empty table model`()
+    {
+        val model = TableUtil.DefaultModel()
+        model.addColumn("Foo")
+        model.clear()
+        model.rowCount shouldBe 0
+    }
 }
