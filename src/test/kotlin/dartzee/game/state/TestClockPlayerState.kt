@@ -87,4 +87,55 @@ class TestClockPlayerState: AbstractTest()
         dartTwo.startingScore shouldBe 4
     }
 
+    @Test
+    fun `Should correctly count the longest streak, taking into account clockType`()
+    {
+        val standardState = makeClockPlayerState(clockType = ClockType.Standard)
+        standardState.getLongestStreak() shouldBe 0
+        standardState.dartThrown(Dart(1, 1))
+        standardState.dartThrown(Dart(2, 1))
+        standardState.dartThrown(Dart(3, 0))
+        standardState.getLongestStreak() shouldBe 2
+
+        val doublesState = makeClockPlayerState(clockType = ClockType.Doubles)
+        doublesState.dartThrown(Dart(1, 2))
+        doublesState.dartThrown(Dart(2, 1))
+        doublesState.getLongestStreak() shouldBe 1
+    }
+
+    @Test
+    fun `Should correctly report on track for Brucey throughout a successful round`()
+    {
+        val state = makeClockPlayerState()
+        state.onTrackForBrucey() shouldBe true
+
+        state.dartThrown(Dart(1, 1))
+        state.onTrackForBrucey() shouldBe true
+
+        state.dartThrown(Dart(2, 2))
+        state.onTrackForBrucey() shouldBe true
+
+        state.dartThrown(Dart(3, 1))
+        state.onTrackForBrucey() shouldBe true
+
+        state.dartThrown(Dart(4, 3))
+        state.onTrackForBrucey() shouldBe true
+    }
+
+    @Test
+    fun `Should report not on track for Brucey as soon as there has been a miss, taking into account clockType`()
+    {
+        val state = makeClockPlayerState(clockType = ClockType.Doubles)
+
+        state.dartThrown(Dart(1, 1))
+        state.onTrackForBrucey() shouldBe false
+
+        state.resetRound()
+        state.dartThrown(Dart(1, 2))
+        state.onTrackForBrucey() shouldBe true
+
+        state.dartThrown(Dart(2, 3))
+        state.onTrackForBrucey() shouldBe false
+    }
+
 }
