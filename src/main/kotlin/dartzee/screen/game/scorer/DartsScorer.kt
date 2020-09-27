@@ -64,7 +64,7 @@ abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: Abstr
     /**
      * Add a dart to the scorer.
      */
-    fun addDart(drt: Dart)
+    protected fun addDart(drt: Dart)
     {
         addDartToRow(model.rowCount - 1, drt)
     }
