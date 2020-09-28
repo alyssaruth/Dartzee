@@ -40,11 +40,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         model.throwGolfDart(targetHole, dartNo, dartboard)
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
-    {
-
-    }
-
     override fun updateVariablesForNewRound() {}
     override fun resetRoundVariables() {}
 

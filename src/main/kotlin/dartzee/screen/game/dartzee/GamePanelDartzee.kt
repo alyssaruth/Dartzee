@@ -62,12 +62,13 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         scorerSelected(scorersOrdered.first())
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
+    override fun loadAdditionalEntities(state: DartzeePlayerState)
     {
-        val pt = getParticipant(playerNumber)
+        val playerId = state.pt.playerId
+        val participantId = state.pt.rowId
 
-        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '${pt.playerId}' AND ParticipantId = '${pt.rowId}'")
-        roundResults.forEach { getPlayerState(playerNumber).addRoundResult(it) }
+        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '$playerId' AND ParticipantId = '$participantId'")
+        roundResults.forEach { state.addRoundResult(it) }
     }
 
     override fun updateVariablesForNewRound()

@@ -28,11 +28,6 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         model.throwClockDart(currentTarget, config.clockType, dartboard)
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
-    {
-
-    }
-
     override fun updateVariablesForNewRound() {}
 
     override fun resetRoundVariables() {}
