@@ -51,7 +51,6 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         }
     }
 
-
     fun addParticipant(localId: Long, participant: ParticipantEntity)
     {
         val playerId = participant.playerId

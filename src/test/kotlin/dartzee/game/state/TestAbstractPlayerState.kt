@@ -22,7 +22,7 @@ class TestAbstractPlayerState: AbstractTest()
     @Test
     fun `it should take a copy of the darts that are added`()
     {
-        val state = DefaultPlayerState(insertParticipant())
+        val state = TestPlayerState(insertParticipant())
         val darts = mutableListOf(Dart(20, 1))
 
         state.addCompletedRound(darts)
@@ -35,7 +35,7 @@ class TestAbstractPlayerState: AbstractTest()
     fun `It should populate the darts with the ParticipantId`()
     {
         val pt = insertParticipant()
-        val state = DefaultPlayerState(pt)
+        val state = TestPlayerState(pt)
 
         val dart = Dart(20, 1)
         dart.participantId shouldBe ""
@@ -48,7 +48,7 @@ class TestAbstractPlayerState: AbstractTest()
     @Test
     fun `Should support resetting the currently thrown darts`()
     {
-        val state = DefaultPlayerState(insertParticipant())
+        val state = TestPlayerState(insertParticipant())
 
         state.dartThrown(Dart(20, 1))
         state.currentRound.shouldContainExactly(Dart(20, 1))
@@ -65,7 +65,7 @@ class TestAbstractPlayerState: AbstractTest()
         val dartTwo = Dart(5, 1, Point(40, 45), SegmentType.OUTER_SINGLE)
         val dartThree = Dart(1, 1, Point(60, 45), SegmentType.OUTER_SINGLE)
 
-        val state = DefaultPlayerState(pt)
+        val state = TestPlayerState(pt)
         state.dartThrown(dartOne)
         state.dartThrown(dartTwo)
         state.dartThrown(dartThree)
@@ -103,7 +103,7 @@ class TestAbstractPlayerState: AbstractTest()
     @Test
     fun `Should correctly compute the current round number`()
     {
-        val state = DefaultPlayerState(insertParticipant())
+        val state = TestPlayerState(insertParticipant())
         state.currentRoundNumber() shouldBe 1
 
         state.dartThrown(Dart(1, 1, Point(0, 0)))
@@ -123,7 +123,7 @@ class TestAbstractPlayerState: AbstractTest()
     fun `Should mark a participant as finished`()
     {
         val participant = insertParticipant(dtFinished = DateStatics.END_OF_TIME, finalScore = -1, finishingPosition = -1)
-        val state = DefaultPlayerState(participant)
+        val state = TestPlayerState(participant)
 
         state.participantFinished(1, 100)
         participant.finalScore shouldBe 100
@@ -140,7 +140,7 @@ class TestAbstractPlayerState: AbstractTest()
     fun `Should update the finishing position`()
     {
         val participant = insertParticipant(dtFinished = DateStatics.END_OF_TIME, finalScore = -1, finishingPosition = -1)
-        val state = DefaultPlayerState(participant)
+        val state = TestPlayerState(participant)
 
         state.setParticipantFinishPosition(4)
         participant.finalScore shouldBe -1
@@ -156,7 +156,7 @@ class TestAbstractPlayerState: AbstractTest()
     @Test
     fun `Should fire state changed`()
     {
-        val state = DefaultPlayerState(insertParticipant())
+        val state = TestPlayerState(insertParticipant())
 
         state.shouldFireStateChange { it.dartThrown(Dart(1, 1)) }
         state.shouldFireStateChange { it.resetRound() }
@@ -175,16 +175,17 @@ class TestAbstractPlayerState: AbstractTest()
         val aiPt = insertParticipant(playerId = ai.rowId)
         val humanPt = insertParticipant(playerId = human.rowId)
 
-        DefaultPlayerState(aiPt).isHuman() shouldBe false
-        DefaultPlayerState(humanPt).isHuman() shouldBe true
+        TestPlayerState(aiPt).isHuman() shouldBe false
+        TestPlayerState(humanPt).isHuman() shouldBe true
     }
+}
 
-    data class DefaultPlayerState(override val pt: ParticipantEntity,
-                                  override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                                  override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<DefaultPlayerState>()
-    {
-        override fun getScoreSoFar() = -1
-    }
+data class TestPlayerState(override val pt: ParticipantEntity,
+                           override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+                           override val currentRound: MutableList<Dart> = mutableListOf(),
+                           private val scoreSoFar: Int = -1): AbstractPlayerState<TestPlayerState>()
+{
+    override fun getScoreSoFar() = scoreSoFar
 }
 
 fun <S: AbstractPlayerState<S>> S.shouldFireStateChange(fn: (state: S) -> Unit)

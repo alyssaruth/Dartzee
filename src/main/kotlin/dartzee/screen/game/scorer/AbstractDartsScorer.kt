@@ -23,8 +23,8 @@ import javax.swing.border.LineBorder
 
 const val SCORER_WIDTH = 210
 
-abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: AbstractScorer(), PlayerStateListener<PlayerState> {
-
+abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: AbstractScorer(), PlayerStateListener<PlayerState>
+{
     private val overlays = mutableListOf<AchievementOverlay>()
 
     init
@@ -97,10 +97,10 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
 
         //Let's just only ever have one thing at a time on display. Actually layering them sometimes worked but
         //sometimes caused weird bollocks when things happened close together
-        layeredPane.removeAll()
-        layeredPane.add(overlay, BorderLayout.CENTER)
-        layeredPane.revalidate()
-        layeredPane.repaint()
+        achievementPanel.removeAll()
+        achievementPanel.add(overlay, BorderLayout.CENTER)
+        achievementPanel.revalidate()
+        achievementPanel.repaint()
     }
 
     private inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
@@ -170,21 +170,21 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
 
         override fun actionPerformed(e: ActionEvent)
         {
-            layeredPane.removeAll()
+            achievementPanel.removeAll()
             overlays.remove(this)
 
             //If there are more overlays stacked 'beneath', show the next one of them now
             if (!overlays.isEmpty())
             {
-                layeredPane.add(overlays.last(), BorderLayout.CENTER)
+                achievementPanel.add(overlays.last(), BorderLayout.CENTER)
             }
             else
             {
-                layeredPane.add(tableScores)
+                achievementPanel.add(tableScores)
             }
 
-            layeredPane.revalidate()
-            layeredPane.repaint()
+            achievementPanel.revalidate()
+            achievementPanel.repaint()
             revalidate()
             repaint()
         }
