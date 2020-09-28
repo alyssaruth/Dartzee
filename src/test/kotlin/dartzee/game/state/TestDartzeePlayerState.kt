@@ -4,7 +4,9 @@ import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertParticipant
 import dartzee.helper.makeDartzeePlayerState
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -41,5 +43,35 @@ class TestDartzeePlayerState: AbstractTest()
     {
         val state = makeDartzeePlayerState()
         state.shouldFireStateChange { it.addRoundResult(DartzeeRoundResultEntity()) }
+    }
+
+    @Test
+    fun `Should save a round result`()
+    {
+        val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1))
+        val roundTwo = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1))
+        val state = makeDartzeePlayerState(completedRounds = listOf(roundOne, roundTwo))
+
+        state.saveRoundResult(DartzeeRoundResult(2, true, 50))
+
+        val results = state.roundResults
+        results.size shouldBe 1
+        val result = results.first()
+        result.ruleNumber shouldBe 2
+        result.success shouldBe true
+        result.score shouldBe 50
+        result.roundNumber shouldBe 3
+        result.retrievedFromDb shouldBe true
+    }
+
+    @Test
+    fun `Should add loaded round results`()
+    {
+        val result = DartzeeRoundResult(2, true, 50)
+        val entity = DartzeeRoundResultEntity.factoryAndSave(result, insertParticipant(), 2)
+
+        val state = makeDartzeePlayerState()
+        state.addRoundResult(entity)
+        state.roundResults.shouldContainExactly(entity)
     }
 }
