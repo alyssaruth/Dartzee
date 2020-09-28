@@ -15,7 +15,7 @@ import javax.swing.border.Border
 import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableCellRenderer
 
-class DartsScorerGolf : DartsScorer<GolfPlayerState>()
+class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
 {
     private var currentScore = 0
     var fudgeFactor = 0 //For when we're displaying only a back 9, we need to shift everything up

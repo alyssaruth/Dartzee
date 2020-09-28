@@ -8,7 +8,7 @@ import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 
-class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : DartsScorerPausable<X01PlayerState>(parent)
+class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : AbstractDartsScorerPausable<X01PlayerState>(parent)
 {
     private val lblStartingScore = JLabel(gameParams)
 

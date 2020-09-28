@@ -23,7 +23,7 @@ import javax.swing.border.LineBorder
 
 const val SCORER_WIDTH = 210
 
-abstract class DartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: AbstractScorer(), PlayerStateListener<PlayerState> {
+abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: AbstractScorer(), PlayerStateListener<PlayerState> {
 
     private val overlays = mutableListOf<AchievementOverlay>()
 

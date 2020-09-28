@@ -3,11 +3,11 @@ package dartzee.screen.game
 import dartzee.db.GameEntity
 import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.Dartboard
-import dartzee.screen.game.scorer.DartsScorer
+import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.utils.doesHighestWin
 import dartzee.utils.setFinishingPositions
 
-abstract class GamePanelFixedLength<S : DartsScorer<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
+abstract class GamePanelFixedLength<S : AbstractDartsScorer<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
     parent: AbstractDartsGameScreen,
     game: GameEntity,
     totalPlayers: Int): DartsGamePanel<S, D, PlayerState>(parent, game, totalPlayers)

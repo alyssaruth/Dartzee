@@ -5,7 +5,7 @@ import dartzee.game.ClockType
 import dartzee.game.state.ClockPlayerState
 import dartzee.screen.game.GamePanelPausable
 
-class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : DartsScorerPausable<ClockPlayerState>(parent)
+class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : AbstractDartsScorerPausable<ClockPlayerState>(parent)
 {
     override fun getNumberOfColumns() = 4
 

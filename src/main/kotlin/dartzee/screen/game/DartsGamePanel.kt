@@ -19,7 +19,7 @@ import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
-import dartzee.screen.game.scorer.DartsScorer
+import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.utils.DatabaseUtil
 import dartzee.utils.InjectedThings.logger
@@ -36,7 +36,7 @@ import java.awt.event.MouseListener
 import java.sql.SQLException
 import javax.swing.*
 
-abstract class DartsGamePanel<S : DartsScorer<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
+abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
         val gameEntity: GameEntity,
         protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener

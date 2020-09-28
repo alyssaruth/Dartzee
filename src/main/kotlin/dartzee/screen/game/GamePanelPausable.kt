@@ -4,11 +4,11 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.Dartboard
-import dartzee.screen.game.scorer.DartsScorerPausable
+import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PreferenceUtil
 
-abstract class GamePanelPausable<S : DartsScorerPausable<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+abstract class GamePanelPausable<S : AbstractDartsScorerPausable<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
         DartsGamePanel<S, Dartboard, PlayerState>(parent, game, totalPlayers)
 {
     private var aiShouldPause = false
