@@ -16,7 +16,6 @@ import javax.swing.border.EmptyBorder
 
 abstract class AbstractScorer : JPanel()
 {
-    var human = false
     var playerId = ""
 
     val model = DefaultModel()
@@ -81,8 +80,6 @@ abstract class AbstractScorer : JPanel()
             lblName.text = playerName
             lblAvatar.init(player, false)
             playerId = player.rowId
-
-            human = player.isHuman()
         }
 
         lblResult.text = ""
@@ -108,7 +105,6 @@ abstract class AbstractScorer : JPanel()
 
     fun reset()
     {
-        human = false
         lblName.text = ""
     }
 
