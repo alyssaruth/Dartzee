@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
+import dartzee.core.bean.SwingLabel
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.PlayerStateListener
 import net.miginfocom.swing.MigLayout
@@ -103,7 +104,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
         achievementPanel.repaint()
     }
 
-    private inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
+    inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
     {
         private val btnClose = JButton("X")
         private val fillColor = achievement.getColor(false).brighter()
@@ -149,22 +150,21 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
             lblUnlocked.verticalAlignment = JLabel.TOP
             panelCenter.add(lblUnlocked, "cell 0 1")
 
-            val lbName = factoryTextLabel(achievement.name, 20)
+            val lbName = factoryTextLabel(achievement.name, 20, "achievementName")
             panelCenter.add(lbName, "cell 0 3")
 
             btnClose.addMouseListener(this)
             btnClose.addActionListener(this)
         }
 
-        private fun factoryTextLabel(text: String, fontSize: Int = 24) : JLabel
+        private fun factoryTextLabel(text: String, fontSize: Int = 24, testId: String = "") : JLabel
         {
-            val lbl = JLabel(text)
+            val lbl = SwingLabel(text, testId)
             lbl.background = fillColor
             lbl.foreground = borderColor.darker()
             lbl.horizontalAlignment = JLabel.CENTER
             lbl.font = Font("Trebuchet MS", Font.BOLD, fontSize)
             lbl.preferredSize = Dimension(200, 30)
-
             return lbl
         }
 
@@ -174,7 +174,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
             overlays.remove(this)
 
             //If there are more overlays stacked 'beneath', show the next one of them now
-            if (!overlays.isEmpty())
+            if (overlays.isNotEmpty())
             {
                 achievementPanel.add(overlays.last(), BorderLayout.CENTER)
             }
@@ -188,7 +188,6 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
             revalidate()
             repaint()
         }
-
 
         override fun mousePressed(e: MouseEvent?)
         {
@@ -211,5 +210,4 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
         override fun mouseEntered(e: MouseEvent?) {}
         override fun mouseExited(e: MouseEvent?) {}
     }
-
 }
