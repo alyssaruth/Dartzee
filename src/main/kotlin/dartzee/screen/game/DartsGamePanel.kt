@@ -107,9 +107,7 @@ abstract class DartsGamePanel<S : DartsScorer<PlayerState>, D: Dartboard, Player
     }
 
     protected fun getCurrentScorer() = hmPlayerNumberToScorer.getValue(currentPlayerNumber)
-    protected fun getScorer(playerNumber: Int) = hmPlayerNumberToScorer.getValue(playerNumber)
     protected fun getPlayerNumberForScorer(scorer: S): Int = scorersOrdered.indexOf(scorer)
-
 
     init
     {
@@ -163,7 +161,6 @@ abstract class DartsGamePanel<S : DartsScorer<PlayerState>, D: Dartboard, Player
     abstract fun factoryState(pt: ParticipantEntity): PlayerState
     abstract fun doAiTurn(model: DartsAiModel)
 
-    abstract fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
     abstract fun updateVariablesForNewRound()
     abstract fun resetRoundVariables()
     abstract fun shouldStopAfterDartThrown(): Boolean
@@ -366,13 +363,14 @@ abstract class DartsGamePanel<S : DartsScorer<PlayerState>, D: Dartboard, Player
                 state.addCompletedRound(it)
             }
 
-            loadDartsForParticipant(i, hmRoundToDarts, lastRound)
+            loadAdditionalEntities(state)
 
             maxRounds = maxOf(maxRounds, lastRound)
         }
 
         setCurrentPlayer(maxRounds, gameId)
     }
+    protected open fun loadAdditionalEntities(state: PlayerState) {}
 
     /**
      * 1) Get the MAX(Ordinal) of the person who's played the maxRounds, i.e. the last player to have a turn.

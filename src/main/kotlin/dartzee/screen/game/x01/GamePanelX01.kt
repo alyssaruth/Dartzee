@@ -119,11 +119,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
-    {
-
-    }
-
     override fun updateVariablesForDartThrown(dart: Dart)
     {
         if (isNearMissDouble(dart))
