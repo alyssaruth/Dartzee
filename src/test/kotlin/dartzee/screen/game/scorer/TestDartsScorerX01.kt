@@ -1,26 +1,24 @@
 package dartzee.screen.game.scorer
 
+import com.github.alexburlton.swingtest.clickChild
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
+import dartzee.core.util.DateStatics
+import dartzee.getRows
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertParticipant
+import dartzee.helper.makeX01PlayerStateWithRounds
+import dartzee.helper.makeX01Rounds
+import dartzee.utils.ResourceCache.ICON_PAUSE
+import dartzee.utils.ResourceCache.ICON_RESUME
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
+import javax.swing.JButton
 
-class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
+class TestDartsScorerX01: AbstractTest()
 {
-    override fun factoryScorerImpl() = DartsScorerX01(mockk(relaxed = true), "501")
-    override fun addRound(scorer: DartsScorerX01, roundNumber: Int)
-    {
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 2))
-        scorer.addDart(Dart(20, 1))
-
-        scorer.finaliseRoundScore(501 - (roundNumber - 1) * 60, false)
-    }
-
     @Test
     fun `should have 4 columns`()
     {
@@ -29,154 +27,111 @@ class TestDartsScorerX01: AbstractScorerTest<DartsScorerX01>()
     }
 
     @Test
-    fun `should clear the current round`()
+    fun `Should cope with empty state`()
     {
         val scorer = factoryScorer()
 
-        addRound(scorer, 1)
-
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 1))
-
-        scorer.getRowCount() shouldBe 2
-
-        scorer.clearRound(2)
-        scorer.updatePlayerResult()
-
-        scorer.getRowCount() shouldBe 1
-        scorer.lblResult.text shouldBe "3 Darts"
+        val state = makeX01PlayerStateWithRounds()
+        scorer.stateChanged(state)
+        scorer.tableScores.rowCount shouldBe 0
     }
 
     @Test
-    fun `should only report finalised rows as completed`()
+    fun `Should render historic rounds correctly`()
     {
         val scorer = factoryScorer()
 
-        scorer.addDart(Dart(20, 1))
-        scorer.rowIsComplete(0).shouldBeFalse()
+        val roundOne = listOf(Dart(20, 1), Dart(1, 1), Dart(20, 0))
+        val roundTwo = listOf(Dart(20, 3), Dart(20, 1), Dart(20, 1))
 
-        scorer.finaliseRoundScore(501, false)
-        scorer.rowIsComplete(0).shouldBeTrue()
-    }
+        val rounds = makeX01Rounds(501, roundOne, roundTwo)
+        val state = makeX01PlayerStateWithRounds(501, completedRounds = rounds)
+        scorer.stateChanged(state)
 
-    @Test
-    fun `should correctly report when a player is finished`()
-    {
-        val scorer = factoryScorer()
+        val rows = scorer.tableScores.getRows()
+        rows.shouldContainExactly(
+                roundOne + 480,
+                roundTwo + 380
+        )
 
-        scorer.playerIsFinished().shouldBeFalse()
-
-        scorer.addDart(Dart(20, 3))
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 0))
-
-        scorer.finaliseRoundScore(120, false)
-
-        scorer.playerIsFinished().shouldBeFalse()
-
-        scorer.addDart(Dart(20, 2))
-
-        scorer.finaliseRoundScore(40, false)
-        scorer.playerIsFinished().shouldBeTrue()
-    }
-
-    @Test
-    fun `should not update the score if bust`()
-    {
-        val scorer = factoryScorer()
-
-        scorer.addDart(Dart(20, 3))
-
-        scorer.finaliseRoundScore(50, true)
-
-        scorer.getLatestScoreRemaining() shouldBe 50
-    }
-
-    @Test
-    fun `should return the latest score remaining`()
-    {
-        val scorer = factoryScorer()
-
-        scorer.addDart(Dart(20, 3))
-        scorer.addDart(Dart(20, 3))
-        scorer.addDart(Dart(20, 3))
-
-        scorer.finaliseRoundScore(501, false)
-
-        scorer.getLatestScoreRemaining() shouldBe 321
-
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(1, 1))
-        scorer.addDart(Dart(1, 0))
-        scorer.finaliseRoundScore(321, false)
-
-        scorer.getLatestScoreRemaining() shouldBe 300
-    }
-
-    @Test
-    fun `should return the starting score if no darts thrown`()
-    {
-        val scorer = factoryScorer()
-        scorer.getLatestScoreRemaining() shouldBe 501
-    }
-
-    @Test
-    fun `should include unthrown darts in the total score`()
-    {
-        val scorer = factoryScorer()
-
-        scorer.lblResult.text shouldBe ""
-
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 1))
-        scorer.lblResult.text shouldBe "2 Darts"
-
-        scorer.finaliseRoundScore(501, false)
-        scorer.updatePlayerResult()
-        scorer.lblResult.text shouldBe "3 Darts"
-
-        scorer.addDart(Dart(19, 3))
-        scorer.lblResult.text shouldBe "4 Darts"
-
-        scorer.finaliseRoundScore(461, false)
-        scorer.updatePlayerResult()
         scorer.lblResult.text shouldBe "6 Darts"
     }
 
     @Test
-    fun `should remove hints when score is confirmed`()
+    fun `Should include the current round`()
     {
         val scorer = factoryScorer()
-        scorer.addDart(Dart(1, 1))
-        scorer.addHint(DartHint(1, 2))
 
-        scorer.finaliseRoundScore(3, false)
+        val roundOne = listOf(Dart(20, 1), Dart(1, 1), Dart(20, 0))
 
-        scorer.getDartsForRow(0).shouldContainExactly(Dart(1, 1))
-        scorer.getLatestScoreRemaining() shouldBe 2
+        val rounds = makeX01Rounds(501, roundOne)
+        val state = makeX01PlayerStateWithRounds(501, completedRounds = rounds)
+        state.dartThrown(Dart(20, 1))
+        state.dartThrown(Dart(20, 1))
+        scorer.stateChanged(state)
+
+        val rows = scorer.tableScores.getRows()
+        rows.shouldContainExactly(
+                roundOne + 480,
+                listOf(Dart(20, 1), Dart(20, 1), null, null)
+        )
+
+        scorer.lblResult.text shouldBe "5 Darts"
     }
 
     @Test
-    fun `should not count hints in the dart total`()
+    fun `Should include checkout suggestions when appropriate`()
     {
         val scorer = factoryScorer()
+        val state = makeX01PlayerStateWithRounds(101)
+        scorer.stateChanged(state)
 
-        scorer.addHint(DartHint(20, 1))
-        scorer.addHint(DartHint(10, 2))
+        scorer.tableScores.getRows().first().shouldContainExactly(
+                DartHint(17, 3), DartHint(25, 2), null, null
+        )
 
-        scorer.lblResult.text shouldBe ""
+        state.dartThrown(Dart(20, 3))
+        scorer.stateChanged(state)
+        scorer.tableScores.getRows().first().shouldContainExactly(
+                Dart(20, 3), DartHint(1, 1), DartHint(20, 2), null
+        )
+
+        state.dartThrown(Dart(20, 1))
+        scorer.stateChanged(state)
+        scorer.tableScores.getRows().first().shouldContainExactly(
+                Dart(20, 3), Dart(20, 1), null, null
+        )
     }
 
     @Test
-    fun `should remove hints when a real dart is added`()
+    fun `Should toggle checkout suggestions on pause`()
     {
+        val participant = insertParticipant(finishingPosition = 4, dtFinished = DateStatics.END_OF_TIME)
+        val state = makeX01PlayerStateWithRounds(101, participant = participant)
+
         val scorer = factoryScorer()
+        scorer.stateChanged(state)
 
-        scorer.addHint(DartHint(20, 1))
-        scorer.addHint(DartHint(10, 2))
+        scorer.getPaused() shouldBe true
+        scorer.tableScores.rowCount shouldBe 0
 
-        scorer.addDart(Dart(10, 2))
+        //Unpause
+        scorer.clickChild<JButton> { it.icon == ICON_RESUME }
+        scorer.getPaused() shouldBe false
+        scorer.tableScores.getRows().first().shouldContainExactly(
+                DartHint(17, 3), DartHint(25, 2), null, null
+        )
 
-        scorer.lblResult.text shouldBe "1 Darts"
+        //Pause again
+        scorer.clickChild<JButton> { it.icon == ICON_PAUSE }
+        scorer.getPaused() shouldBe true
+        scorer.tableScores.rowCount shouldBe 0
+    }
+
+    private fun factoryScorer(): DartsScorerX01
+    {
+        val scorer = DartsScorerX01(mockk(relaxed = true), "501")
+        scorer.init(null)
+        return scorer
     }
 }

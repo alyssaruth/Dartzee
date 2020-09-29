@@ -1,29 +1,43 @@
 package dartzee.screen.game.scorer
 
-import dartzee.dartzee.DartzeeRoundResult
+import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.utils.factoryHighScoreResult
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 
 private const val RULE_COLUMN = 3
 private const val SCORE_COLUMN = 4
 
-class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), MouseListener
+class DartsScorerDartzee(private val parent: GamePanelDartzee): AbstractDartsScorer<DartzeePlayerState>(), MouseListener
 {
     init
     {
         lblAvatar.addMouseListener(this)
     }
 
-    private fun getTotalScore(): Int
+    override fun stateChangedImpl(state: DartzeePlayerState)
     {
-        val scores = model.getColumnValues(SCORE_COLUMN)
+        setScoreAndFinishingPosition(state)
 
-        val lastScore = scores.findLast { it != null } ?: 0
-        return lastScore as Int
+        state.completedRounds.forEachIndexed { ix, round ->
+            addDartRound(round)
+
+            val roundNumber = ix + 1
+            val roundResult = state.roundResults.find { it.roundNumber == roundNumber }?.toDto()
+            val cumulativeScore = state.getCumulativeScore(roundNumber)
+
+            model.setValueAt(roundResult ?: factoryHighScoreResult(round), ix, RULE_COLUMN)
+            model.setValueAt(cumulativeScore, ix, SCORE_COLUMN)
+        }
+
+        if (state.currentRound.isNotEmpty())
+        {
+            addDartRound(state.currentRound)
+        }
+
+        tableScores.getColumn(SCORE_COLUMN).cellRenderer = DartzeeScoreRenderer(state.getPeakScore() ?: 0)
     }
-
-    override fun rowIsComplete(rowNumber: Int) = model.getValueAt(rowNumber, RULE_COLUMN) != null
 
     override fun getNumberOfColumns() = 5
 
@@ -36,21 +50,6 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): DartsScorer(), M
 
         tableScores.getColumn(RULE_COLUMN).cellRenderer = DartzeeRoundResultRenderer()
     }
-
-    fun setResult(dartzeeRoundResult: DartzeeRoundResult)
-    {
-        model.setValueAt(dartzeeRoundResult, model.rowCount - 1, RULE_COLUMN)
-
-        val newScore = dartzeeRoundResult.score + getTotalScore()
-        model.setValueAt(newScore, model.rowCount - 1, SCORE_COLUMN)
-        lblResult.text = "$newScore"
-
-        val maxScore = getMaxScoreSoFar() ?: dartzeeRoundResult.score
-        tableScores.getColumn(SCORE_COLUMN).cellRenderer = DartzeeScoreRenderer(maxScore)
-        tableScores.repaint()
-    }
-
-    private fun getMaxScoreSoFar() = model.getColumnValues(SCORE_COLUMN).filterIsInstance<Int>().max()
 
     override fun mouseReleased(e: MouseEvent?)
     {

@@ -4,11 +4,11 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.Dartboard
-import dartzee.screen.game.scorer.DartsScorerPausable
+import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PreferenceUtil
 
-abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractPlayerState>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+abstract class GamePanelPausable<S : AbstractDartsScorerPausable<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
         DartsGamePanel<S, Dartboard, PlayerState>(parent, game, totalPlayers)
 {
     private var aiShouldPause = false
@@ -22,8 +22,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
 
     override fun saveDartsAndProceed()
     {
-        getCurrentScorer().updatePlayerResult()
-
         commitRound()
 
         //This player has finished. The game isn't necessarily over though...
@@ -56,13 +54,6 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
         }
     }
 
-    override fun handlePlayerFinish(): Int
-    {
-        val finishPos = super.handlePlayerFinish()
-        getCurrentScorer().finalisePlayerResult(finishPos)
-        return finishPos
-    }
-
     override fun shouldAIStop(): Boolean
     {
         if (aiShouldPause)
@@ -81,9 +72,7 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
             return
         }
 
-        val loser = getCurrentParticipant()
-        loser.finishingPosition = totalPlayers
-        loser.saveToDatabase()
+        getCurrentPlayerState().setParticipantFinishPosition(totalPlayers)
 
         gameEntity.dtFinish = getSqlDateNow()
         gameEntity.saveToDatabase()
@@ -92,8 +81,8 @@ abstract class GamePanelPausable<S : DartsScorerPausable, PlayerState: AbstractP
 
         //Display this player's result. If they're an AI and we have the preference, then
         //automatically play on.
-        getCurrentScorer().finalisePlayerResult(totalPlayers)
-        if (loser.isAi() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
+        selectScorer(getCurrentScorer())
+        if (!getCurrentPlayerState().isHuman() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
         {
             getCurrentScorer().toggleResume()
         }

@@ -5,7 +5,11 @@ import dartzee.db.ParticipantEntity
 
 data class GolfPlayerState(override val pt: ParticipantEntity,
                            override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                           override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
+                           override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<GolfPlayerState>()
 {
-    override fun getScoreSoFar() = completedRounds.sumBy { it.lastOrNull()?.getGolfScore() ?: 0 }
+    override fun getScoreSoFar() = getCumulativeScoreForRound(completedRounds.size)
+
+    fun getCumulativeScoreForRound(roundNumber: Int) = (1..roundNumber).map(::getScoreForRound).sum()
+
+    fun getScoreForRound(roundNumber: Int) = completedRounds[roundNumber - 1].last().getGolfScore()
 }

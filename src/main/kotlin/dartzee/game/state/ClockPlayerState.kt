@@ -6,11 +6,12 @@ import dartzee.db.ParticipantEntity
 import dartzee.game.ClockType
 import dartzee.utils.getLongestStreak
 
-data class ClockPlayerState(override val pt: ParticipantEntity,
+data class ClockPlayerState(private val clockType: ClockType,
+                            override val pt: ParticipantEntity,
                             override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                            override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState()
+                            override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<ClockPlayerState>()
 {
-    fun getCurrentTarget(clockType: ClockType): Int
+    fun getCurrentTarget(): Int
     {
         val lastHit = getAllDartsFlattened().filter { it.hitClockTarget(clockType) }.map { it.score }.maxOrZero()
         return lastHit + 1
@@ -18,5 +19,13 @@ data class ClockPlayerState(override val pt: ParticipantEntity,
 
     override fun getScoreSoFar() = getAllDartsFlattened().size
 
-    fun getLongestStreak(clockType: ClockType) = getLongestStreak(getAllDartsFlattened(), clockType).size
+    fun getLongestStreak() = getLongestStreak(getAllDartsFlattened(), clockType).size
+
+    fun onTrackForBrucey() = currentRound.all { it.hitClockTarget(clockType) }
+
+    override fun dartThrown(dart: Dart)
+    {
+        dart.startingScore = getCurrentTarget()
+        super.dartThrown(dart)
+    }
 }

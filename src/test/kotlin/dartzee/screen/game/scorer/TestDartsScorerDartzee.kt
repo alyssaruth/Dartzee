@@ -6,10 +6,13 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRoundResult
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertGame
-import dartzee.helper.insertPlayer
+import dartzee.getRows
+import dartzee.helper.*
 import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.shouldHaveColours
+import dartzee.utils.DartsColour
+import dartzee.utils.factoryHighScoreResult
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -53,40 +56,63 @@ class TestDartsScorerDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should cope with partial rounds`()
+    fun `Should set the score and finishing position`()
     {
         val scorer = DartsScorerDartzee(mockk())
         scorer.init(insertPlayer())
+        val pt = insertParticipant(finishingPosition = 2)
 
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 2))
-        scorer.addDart(Dart(20, 3))
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
+        val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1))
+        val resultOne = DartzeeRoundResult(1, false, -60)
 
-        scorer.lblResult.text shouldBe ""
+        val state = makeDartzeePlayerState(pt, listOf(roundOne, roundTwo), listOf(resultOne))
+        scorer.stateChanged(state)
 
-        scorer.setResult(DartzeeRoundResult(2, true, 120))
-        scorer.lblResult.text shouldBe "120"
-
-        scorer.addDart(Dart(20, 1))
-        scorer.lblResult.text shouldBe "120"
-
-        scorer.setResult(DartzeeRoundResult(3, false, -60))
         scorer.lblResult.text shouldBe "60"
+        scorer.lblResult.shouldHaveColours(DartsColour.SECOND_COLOURS)
     }
 
     @Test
-    fun `Should correctly report whether a row is complete`()
+    fun `Table should contain the correct darts and results for completed rounds`()
     {
         val scorer = DartsScorerDartzee(mockk())
         scorer.init(insertPlayer())
 
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 2))
-        scorer.addDart(Dart(20, 3))
-        scorer.rowIsComplete(0) shouldBe false
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3)) //120
+        val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1)) //60
+        val roundThree = listOf(Dart(25, 2), Dart(10, 1), Dart(12, 1)) //110
+        val resultOne = DartzeeRoundResult(1, false, -60)
+        val resultTwo = DartzeeRoundResult(7, true, 50)
 
-        scorer.setResult(DartzeeRoundResult(2, true, 120))
-        scorer.rowIsComplete(0) shouldBe true
+        val state = makeDartzeePlayerState(insertParticipant(), listOf(roundOne, roundTwo, roundThree), listOf(resultOne, resultTwo))
+        scorer.stateChanged(state)
+
+        val rows = scorer.tableScores.getRows()
+        rows.shouldContainExactly(
+                roundOne + factoryHighScoreResult(roundOne) + 120,
+                roundTwo + resultOne + 60,
+                roundThree + resultTwo + 110
+        )
+    }
+
+    @Test
+    fun `Should include the in progress round`()
+    {
+        val scorer = DartsScorerDartzee(mockk())
+        scorer.init(insertPlayer())
+
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3)) //120
+        val state = makeDartzeePlayerState(insertParticipant(), listOf(roundOne))
+        state.dartThrown(Dart(5, 1))
+        state.dartThrown(Dart(10, 1))
+        scorer.stateChanged(state)
+
+        val rows = scorer.tableScores.getRows()
+        rows.shouldContainExactly(
+                roundOne + factoryHighScoreResult(roundOne) + 120,
+                listOf(Dart(5, 1), Dart(10, 1), null, null, null)
+        )
     }
 
     @Test
@@ -95,23 +121,18 @@ class TestDartsScorerDartzee: AbstractTest()
         val scorer = DartsScorerDartzee(mockk())
         scorer.init(insertPlayer())
 
-        scorer.addDart(Dart(20, 1))
-        scorer.addDart(Dart(20, 2))
-        scorer.addDart(Dart(20, 3))
+        val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
+        val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1))
+        val resultOne = DartzeeRoundResult(1, false, -60)
 
-        scorer.setResult(DartzeeRoundResult(2, true, 50))
-        scorer.getRendererMaximum() shouldBe 50
+        val state = makeDartzeePlayerState(insertParticipant(), listOf(roundOne, roundTwo), listOf(resultOne))
+        scorer.stateChanged(state)
+        scorer.getRendererMaximum() shouldBe 120
 
-        scorer.addDart(Dart(20, 1))
-
-        scorer.setResult(DartzeeRoundResult(3, false, -25))
-        scorer.getRendererMaximum() shouldBe 50
-
-        scorer.addDart(Dart(15, 1))
-        scorer.addDart(Dart(15, 1))
-        scorer.addDart(Dart(15, 1))
-        scorer.setResult(DartzeeRoundResult(4, true, 45))
-        scorer.getRendererMaximum() shouldBe 70
+        val otherResult = DartzeeRoundResult(5, true, 60)
+        val improvedState = makeDartzeePlayerState(insertParticipant(), listOf(roundOne, roundTwo), listOf(otherResult))
+        scorer.stateChanged(improvedState)
+        scorer.getRendererMaximum() shouldBe 180
     }
 
     @Test
@@ -126,6 +147,17 @@ class TestDartsScorerDartzee: AbstractTest()
         scorer.tableScores.getColumn(1).cellRenderer.shouldBeInstanceOf<DartRenderer>()
         scorer.tableScores.getColumn(2).cellRenderer.shouldBeInstanceOf<DartRenderer>()
         scorer.tableScores.getColumn(3).cellRenderer.shouldBeInstanceOf<DartzeeRoundResultRenderer>()
+    }
+
+    @Test
+    fun `Should cope with empty state`()
+    {
+        val scorer = DartsScorerDartzee(mockk())
+        scorer.init(insertPlayer())
+
+        val state = makeDartzeePlayerState()
+        scorer.stateChanged(state)
+        scorer.tableScores.rowCount shouldBe 0
     }
 
     private fun DartsScorerDartzee.getRendererMaximum(): Int

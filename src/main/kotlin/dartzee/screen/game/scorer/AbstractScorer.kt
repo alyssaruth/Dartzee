@@ -16,19 +16,17 @@ import javax.swing.border.EmptyBorder
 
 abstract class AbstractScorer : JPanel()
 {
-    var human = false
-    var finishPos = -1
     var playerId = ""
 
     val model = DefaultModel()
 
     val lblName = JLabel()
-    protected val layeredPane = JPanel()
+    protected val achievementPanel = JPanel()
     val tableScores = ScrollTableDartsGame()
     val lblResult = JLabel("")
     protected val panelNorth = JPanel()
     val lblAvatar = PlayerAvatar()
-    protected val panelAvatar = JPanel()
+    val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
 
     val playerName: String
@@ -39,10 +37,10 @@ abstract class AbstractScorer : JPanel()
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(180, 600)
 
-        layeredPane.layout = BorderLayout(0, 0)
+        achievementPanel.layout = BorderLayout(0, 0)
 
-        layeredPane.add(tableScores, BorderLayout.CENTER)
-        add(layeredPane, BorderLayout.CENTER)
+        achievementPanel.add(tableScores, BorderLayout.CENTER)
+        add(achievementPanel, BorderLayout.CENTER)
         add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = BorderLayout(0, 0)
         panelNorth.add(lblName, BorderLayout.NORTH)
@@ -82,8 +80,6 @@ abstract class AbstractScorer : JPanel()
             lblName.text = playerName
             lblAvatar.init(player, false)
             playerId = player.rowId
-
-            human = player.isHuman()
         }
 
         lblResult.text = ""
@@ -105,13 +101,7 @@ abstract class AbstractScorer : JPanel()
         tableScores.scrollToBottom()
     }
 
-    open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
-
-    fun reset()
-    {
-        human = false
-        lblName.text = ""
-    }
+    protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
 
     fun canBeAssigned() = isVisible && playerName.isEmpty()
 
@@ -121,7 +111,9 @@ abstract class AbstractScorer : JPanel()
         lblAvatar.setSelected(selected)
     }
 
-    fun updateResultColourForPosition(pos: Int)
+    fun isSelected() = lblName.foreground == Color.RED
+
+    protected fun updateResultColourForPosition(pos: Int)
     {
         DartsColour.setFgAndBgColoursForPosition(lblResult, pos)
     }

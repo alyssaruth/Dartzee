@@ -1,5 +1,7 @@
 package dartzee.screen.game.scorer
 
+import dartzee.core.util.DateStatics
+import dartzee.game.state.AbstractPlayerState
 import dartzee.logging.CODE_PLAYER_PAUSED
 import dartzee.logging.CODE_PLAYER_UNPAUSED
 import dartzee.screen.game.GamePanelPausable
@@ -12,9 +14,10 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 
-abstract class DartsScorerPausable(private val parent: GamePanelPausable<*, *>) : DartsScorer(), ActionListener
+abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>>(private val parent: GamePanelPausable<*, *>) : AbstractDartsScorer<PlayerState>(), ActionListener
 {
     private val btnResume = JButton("")
+    private var latestState: PlayerState? = null
 
     init
     {
@@ -26,13 +29,13 @@ abstract class DartsScorerPausable(private val parent: GamePanelPausable<*, *>) 
         btnResume.addActionListener(this)
     }
 
-    /**
-     * Abstract Methods
-     */
-    abstract fun playerIsFinished(): Boolean
-    protected abstract fun getTotalScore(): Int
+    fun getPaused() = btnResume.icon === ICON_RESUME && btnResume.isVisible
 
-    fun getPaused() = btnResume.icon === ICON_RESUME
+    override fun stateChanged(state: PlayerState)
+    {
+        super.stateChanged(state)
+        latestState = state
+    }
 
     fun toggleResume()
     {
@@ -40,47 +43,38 @@ abstract class DartsScorerPausable(private val parent: GamePanelPausable<*, *>) 
         {
             logger.info(CODE_PLAYER_PAUSED, "Paused player $playerId")
             btnResume.icon = ICON_RESUME
-            finalisePlayerResult(finishPos)
         }
         else
         {
             logger.info(CODE_PLAYER_UNPAUSED, "Unpaused player $playerId")
             btnResume.icon = ICON_PAUSE
-            lblResult.text = ""
-            lblResult.background = null
+            updateResultColourForPosition(-1)
         }
+
+        latestState?.let(::stateChanged)
     }
 
-    fun finalisePlayerResult(finishPos: Int)
+    protected fun finalisePlayerResult(state: PlayerState)
     {
-        this.finishPos = finishPos
+        val dartCount = state.getScoreSoFar()
+        lblResult.text = "$dartCount Darts"
 
-        if (!playerIsFinished())
+        if (state.pt.finishingPosition == -1)
+        {
+            return
+        }
+
+        val playerHasFinished = state.pt.dtFinished != DateStatics.END_OF_TIME
+        btnResume.isVisible = !playerHasFinished
+
+        if (getPaused() && !playerHasFinished)
         {
             lblResult.text = "Unfinished"
-            btnResume.isVisible = true
-        }
-        else
-        {
-            val dartCount = getTotalScore()
-            lblResult.text = "$dartCount Darts"
-            btnResume.isVisible = false
         }
 
-        updateResultColourForPosition(finishPos)
-    }
-
-    override fun updatePlayerResult()
-    {
-        val dartCount = getTotalScore()
-        if (dartCount == 0)
+        if (getPaused() || playerHasFinished)
         {
-            lblResult.isVisible = false
-        }
-        else
-        {
-            lblResult.isVisible = true
-            lblResult.text = "$dartCount Darts"
+            updateResultColourForPosition(state.pt.finishingPosition)
         }
     }
 

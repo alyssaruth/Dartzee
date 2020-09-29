@@ -2,7 +2,6 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
-import dartzee.core.obj.HashMapList
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
@@ -25,9 +24,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     IDartzeeCarouselListener
 {
     override val totalRounds = dtos.size + 1
-
-    //Transient things
-    var lastRoundScore = -1
 
     init
     {
@@ -62,39 +58,14 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         scorerSelected(scorersOrdered.first())
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
+    override fun loadAdditionalEntities(state: DartzeePlayerState)
     {
-        val pt = getParticipant(playerNumber)
+        val playerId = state.pt.playerId
+        val participantId = state.pt.rowId
 
-        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '${pt.playerId}' AND ParticipantId = '${pt.rowId}'")
-
-        roundResults.forEach { getPlayerState(playerNumber).addRoundResult(it) }
-
-        val scorer = getScorer(playerNumber)
-        for (i in 1..totalRounds)
-        {
-            val darts = hmRoundToDarts[i]!!
-            darts.forEach { scorer.addDart(it) }
-
-            if (i == 1)
-            {
-                val result = factoryHighScoreResult(darts)
-                scorer.setResult(result)
-            }
-            else
-            {
-                val result = roundResults.find { it.roundNumber == i }!!
-                scorer.setResult(result.toDto())
-            }
-        }
+        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '$playerId' AND ParticipantId = '$participantId'")
+        roundResults.forEach { state.addRoundResult(it) }
     }
-
-    override fun updateVariablesForNewRound()
-    {
-        lastRoundScore = getCurrentPlayerState().getScoreSoFar()
-    }
-
-    override fun resetRoundVariables() {}
 
     override fun updateVariablesForDartThrown(dart: Dart)
     {
@@ -130,6 +101,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     private fun updateCarousel()
     {
         val ruleResults = getCurrentPlayerState().roundResults
+        val lastRoundScore = getCurrentPlayerState().getCumulativeScore(currentRoundNumber - 1)
         summaryPanel.update(ruleResults, getDartsThrown(), lastRoundScore, currentRoundNumber)
     }
 
@@ -153,13 +125,9 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     private fun completeRound(result: DartzeeRoundResult)
     {
-        val pt = getCurrentParticipant()
-
-        getCurrentScorer().setResult(result)
         if (!isScoringRound())
         {
-            val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber)
-            getCurrentPlayerState().addRoundResult(entity)
+            getCurrentPlayerState().saveRoundResult(result)
         }
 
         disableInputButtons()
@@ -201,8 +169,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     fun scorerSelected(scorer: DartsScorerDartzee)
     {
-        scorersOrdered.forEach { it.setSelected(false) }
-        scorer.setSelected(true)
+        selectScorer(scorer)
 
         currentPlayerNumber = getPlayerNumberForScorer(scorer)
         updateCarousel()

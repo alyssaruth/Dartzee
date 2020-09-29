@@ -69,5 +69,13 @@ object TableUtil
         {
             rows.forEach { addRow(it) }
         }
+
+        fun clear()
+        {
+            while (rowCount > 0)
+            {
+                removeRow(0)
+            }
+        }
     }
 }

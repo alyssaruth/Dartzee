@@ -14,7 +14,7 @@ import org.junit.Test
 class TestMatchStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState, MatchStatisticsPanelX01>()
 {
     override fun factoryStatsPanel() = MatchStatisticsPanelX01("501")
-    override fun makePlayerState() = makeX01PlayerState(dartsThrown = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
+    override fun makePlayerState() = makeX01PlayerState(completedRound = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
 
     @Test
     fun `Should get the correct value for best finish`()
@@ -23,7 +23,7 @@ class TestMatchStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerStat
         makeX01Rounds(57, finishOne)
 
         val finishTwo = listOf(makeDart(19, 2, startingScore = 38))
-        val state = makeX01PlayerStateWithRounds(dartsThrown = listOf(finishOne, finishTwo))
+        val state = makeX01PlayerStateWithRounds(completedRounds = listOf(finishOne, finishTwo))
 
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(state))

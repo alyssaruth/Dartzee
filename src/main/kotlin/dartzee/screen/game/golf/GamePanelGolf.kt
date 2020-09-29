@@ -1,11 +1,9 @@
 package dartzee.screen.game.golf
 
-import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartsAiModel
-import dartzee.core.obj.HashMapList
 import dartzee.core.util.doGolfMiss
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -40,19 +38,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         model.throwGolfDart(targetHole, dartNo, dartboard)
     }
 
-    override fun loadDartsForParticipant(playerNumber: Int, hmRoundToDarts: HashMapList<Int, Dart>, totalRounds: Int)
-    {
-        val scorer = getScorer(playerNumber)
-        for (i in 1..totalRounds)
-        {
-            val darts = hmRoundToDarts[i]!!
-            scorer.addDarts(darts)
-        }
-    }
-
-    override fun updateVariablesForNewRound() {}
-    override fun resetRoundVariables() {}
-
     override fun shouldStopAfterDartThrown(): Boolean
     {
         val dartsThrownCount = dartsThrownCount()
@@ -79,8 +64,6 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
     {
         unlockAchievements()
         commitRound()
-
-        getCurrentScorer().finaliseRoundScore()
 
         finishRound()
     }

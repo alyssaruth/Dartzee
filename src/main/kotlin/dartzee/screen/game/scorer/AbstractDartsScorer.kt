@@ -3,6 +3,10 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
+import dartzee.core.bean.SwingLabel
+import dartzee.core.util.runOnEventThreadBlocking
+import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.PlayerStateListener
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -21,8 +25,8 @@ import javax.swing.border.LineBorder
 
 const val SCORER_WIDTH = 210
 
-abstract class DartsScorer : AbstractScorer() {
-
+abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: AbstractScorer(), PlayerStateListener<PlayerState>
+{
     private val overlays = mutableListOf<AchievementOverlay>()
 
     init
@@ -31,32 +35,42 @@ abstract class DartsScorer : AbstractScorer() {
         panelAvatar.border = EmptyBorder(5, 30, 5, 30)
     }
 
+    override fun stateChanged(state: PlayerState)
+    {
+        runOnEventThreadBlocking {
+            model.clear()
+
+            stateChangedImpl(state)
+
+            tableScores.scrollToBottom()
+            tableScores.repaint()
+            lblResult.repaint()
+            repaint()
+        }
+    }
+
+    protected fun setScoreAndFinishingPosition(state: PlayerState)
+    {
+        val scoreSoFar = state.getScoreSoFar()
+        lblResult.text = if (scoreSoFar > 0) "$scoreSoFar" else ""
+        updateResultColourForPosition(state.pt.finishingPosition)
+    }
+
+    protected open fun stateChangedImpl(state: PlayerState) {}
+
+    protected fun addDartRound(darts: List<Dart>)
+    {
+        addRow(makeEmptyRow())
+
+        darts.forEach(::addDart)
+    }
 
     /**
      * Add a dart to the scorer.
      */
-    open fun addDart(drt: Dart)
+    protected fun addDart(drt: Dart)
     {
-        var rowCount = model.rowCount
-        if (shouldAddRow(rowCount))
-        {
-            val row = makeEmptyRow()
-            addRow(row)
-            rowCount++
-        }
-
-        addDartToRow(rowCount - 1, drt)
-
-        updatePlayerResult()
-    }
-
-    private fun shouldAddRow(rowCount: Int): Boolean
-    {
-        if (rowCount == 0) {
-            return true
-        }
-
-        return rowIsComplete(rowCount - 1)
+        addDartToRow(model.rowCount - 1, drt)
     }
 
     /**
@@ -72,7 +86,6 @@ abstract class DartsScorer : AbstractScorer() {
             if (currentVal == null)
             {
                 model.setValueAt(drt, rowNumber, i)
-                repaint()
                 return
             }
         }
@@ -87,40 +100,14 @@ abstract class DartsScorer : AbstractScorer() {
         overlays.add(overlay)
 
         //Let's just only ever have one thing at a time on display. Actually layering them sometimes worked but
-        //sometimes caused weird bollucks when things happened close together
-        layeredPane.removeAll()
-        layeredPane.add(overlay, BorderLayout.CENTER)
-        layeredPane.revalidate()
-        layeredPane.repaint()
+        //sometimes caused weird bollocks when things happened close together
+        achievementPanel.removeAll()
+        achievementPanel.add(overlay, BorderLayout.CENTER)
+        achievementPanel.revalidate()
+        achievementPanel.repaint()
     }
 
-
-    /**
-     * Default Methods
-     */
-    open fun confirmCurrentRound() {}
-    open fun updatePlayerResult() {}
-
-    /**
-     * Abstract Methods
-     */
-    abstract fun rowIsComplete(rowNumber: Int): Boolean
-
-    open fun clearRound(roundNumber: Int)
-    {
-        if (roundNumber > model.rowCount)
-        {
-            return
-        }
-
-        val row = roundNumber - 1
-        model.removeRow(row)
-    }
-
-    fun getRowCount() = model.rowCount
-    fun getValueAt(row: Int, col: Int): Any? = model.getValueAt(row, col)
-
-    private inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
+    inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
     {
         private val btnClose = JButton("X")
         private val fillColor = achievement.getColor(false).brighter()
@@ -166,46 +153,44 @@ abstract class DartsScorer : AbstractScorer() {
             lblUnlocked.verticalAlignment = JLabel.TOP
             panelCenter.add(lblUnlocked, "cell 0 1")
 
-            val lbName = factoryTextLabel(achievement.name, 20)
+            val lbName = factoryTextLabel(achievement.name, 20, "achievementName")
             panelCenter.add(lbName, "cell 0 3")
 
             btnClose.addMouseListener(this)
             btnClose.addActionListener(this)
         }
 
-        private fun factoryTextLabel(text: String, fontSize: Int = 24) : JLabel
+        private fun factoryTextLabel(text: String, fontSize: Int = 24, testId: String = "") : JLabel
         {
-            val lbl = JLabel(text)
+            val lbl = SwingLabel(text, testId)
             lbl.background = fillColor
             lbl.foreground = borderColor.darker()
             lbl.horizontalAlignment = JLabel.CENTER
             lbl.font = Font("Trebuchet MS", Font.BOLD, fontSize)
             lbl.preferredSize = Dimension(200, 30)
-
             return lbl
         }
 
         override fun actionPerformed(e: ActionEvent)
         {
-            layeredPane.removeAll()
+            achievementPanel.removeAll()
             overlays.remove(this)
 
             //If there are more overlays stacked 'beneath', show the next one of them now
-            if (!overlays.isEmpty())
+            if (overlays.isNotEmpty())
             {
-                layeredPane.add(overlays.last(), BorderLayout.CENTER)
+                achievementPanel.add(overlays.last(), BorderLayout.CENTER)
             }
             else
             {
-                layeredPane.add(tableScores)
+                achievementPanel.add(tableScores)
             }
 
-            layeredPane.revalidate()
-            layeredPane.repaint()
+            achievementPanel.revalidate()
+            achievementPanel.repaint()
             revalidate()
             repaint()
         }
-
 
         override fun mousePressed(e: MouseEvent?)
         {
@@ -228,5 +213,4 @@ abstract class DartsScorer : AbstractScorer() {
         override fun mouseEntered(e: MouseEvent?) {}
         override fun mouseExited(e: MouseEvent?) {}
     }
-
 }

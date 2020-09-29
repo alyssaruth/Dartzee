@@ -15,7 +15,7 @@ import org.junit.Test
 class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState, GameStatisticsPanelX01>()
 {
     override fun factoryStatsPanel() = GameStatisticsPanelX01("501")
-    override fun makePlayerState() = makeX01PlayerState(dartsThrown = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
+    override fun makePlayerState() = makeX01PlayerState(completedRound = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
 
     @Test
     fun `Should set the maximum setupThreshold to be 1 less than the starting score`()
@@ -36,8 +36,8 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         //Bob - 19, 40
         val bobDarts = makeX01Rounds(501, Dart(19, 1), Dart(3, 0), Dart(19, 0), Dart(17, 2), Dart(3, 1), Dart(3, 1))
 
-        val aliceState = makeX01PlayerStateWithRounds(insertPlayer(name = "Alice"), dartsThrown = aliceDarts)
-        val bobState = makeX01PlayerStateWithRounds(insertPlayer(name = "Bob"), dartsThrown = bobDarts)
+        val aliceState = makeX01PlayerStateWithRounds(player = insertPlayer(name = "Alice"), completedRounds = aliceDarts)
+        val bobState = makeX01PlayerStateWithRounds(player = insertPlayer(name = "Bob"), completedRounds = bobDarts)
 
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(aliceState, bobState))
@@ -56,7 +56,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
     {
         //100, 120
         val aliceDarts = makeX01Rounds(501, Dart(20, 3), Dart(20, 1), Dart(20, 1), Dart(20, 3), Dart(20, 3), Dart(1, 0))
-        val aliceState = makeX01PlayerStateWithRounds(insertPlayer(name = "Alice"), dartsThrown = aliceDarts)
+        val aliceState = makeX01PlayerStateWithRounds(player = insertPlayer(name = "Alice"), completedRounds = aliceDarts)
 
         val statsPanel = factoryStatsPanel()
         statsPanel.showStats(listOf(aliceState))
@@ -89,7 +89,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         //Sort out the startingScores
         makeX01Rounds(501, roundOne, roundTwo, roundThree, roundFour, roundFive, roundSix)
 
-        val state = makeX01PlayerState(insertPlayer(name = "Alice"), dartsThrown = roundOne)
+        val state = makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = roundOne)
         val statsPanel = GameStatisticsPanelX01("501")
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("20 - 39" to 1))
@@ -124,7 +124,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         //Sort out the startingScores
         makeX01Rounds(701, roundOne, roundTwo, roundThree, roundFour)
 
-        val state = makeX01PlayerState(insertPlayer(name = "Alice"), dartsThrown = roundOne)
+        val state = makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = roundOne)
         val statsPanel = GameStatisticsPanelX01("701")
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("180" to 1))
@@ -154,7 +154,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         //Sort out the startingScores
         makeX01Rounds(501, roundOne, roundTwo, roundThree, roundFour, roundFive)
 
-        val state = makeX01PlayerState(insertPlayer(name = "Alice"), dartsThrown = roundOne)
+        val state = makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = roundOne)
         val statsPanel = GameStatisticsPanelX01("501")
         statsPanel.showStats(listOf(state))
 
@@ -226,7 +226,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
         makeX01Rounds(57, roundOne, roundTwo, roundThree)
         makeX01Rounds(40, separateGameFinish)
 
-        val state = makeX01PlayerState(dartsThrown = roundOne)
+        val state = makeX01PlayerState(completedRound = roundOne)
         val statsPanel = factoryStatsPanel()
 
         statsPanel.showStats(listOf(state))

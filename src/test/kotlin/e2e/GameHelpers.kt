@@ -18,7 +18,7 @@ import dartzee.listener.DartboardListener
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.DartsGamePanel
-import dartzee.screen.game.scorer.DartsScorerPausable
+import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.ResourceCache.ICON_RESUME
 import io.kotlintest.shouldBe
@@ -31,12 +31,12 @@ import javax.swing.JButton
 import javax.swing.JToggleButton
 import javax.swing.SwingUtilities
 
-fun DartsScorerPausable.shouldBePaused()
+fun AbstractDartsScorerPausable<*>.shouldBePaused()
 {
     getChild<JButton> { it.icon == ICON_RESUME }
 }
 
-fun DartsScorerPausable.resume()
+fun AbstractDartsScorerPausable<*>.resume()
 {
     SwingUtilities.invokeAndWait { clickChild<JButton> { it.icon == ICON_RESUME } }
 }
@@ -106,7 +106,7 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
 
     // Screen state
     panel.scorersOrdered[0].lblResult.text shouldBe "$finalScore$scoreSuffix"
-    panel.scorersOrdered[0].getRowCount() shouldBe expectedScorerRows
+    panel.scorersOrdered[0].tableScores.rowCount shouldBe expectedScorerRows
 
     // Use our dartboardListener to verify that the right throws were registered
     val darts = dartRounds.flatten()

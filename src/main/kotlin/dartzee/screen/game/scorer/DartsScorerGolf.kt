@@ -1,6 +1,7 @@
 package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
+import dartzee.game.state.GolfPlayerState
 import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import dartzee.utils.PreferenceUtil
@@ -14,25 +15,13 @@ import javax.swing.border.Border
 import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableCellRenderer
 
-class DartsScorerGolf : DartsScorer()
+class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
 {
     private var currentScore = 0
     var fudgeFactor = 0 //For when we're displaying only a back 9, we need to shift everything up
     var showGameId = false
 
-    override fun clearRound(roundNumber: Int)
-    {
-        when (roundNumber)
-        {
-            in 1..ROUNDS_HALFWAY -> super.clearRound(roundNumber)
-            else -> super.clearRound(roundNumber + 1)
-        }
-    }
-
-    override fun getNumberOfColumns(): Int
-    {
-        return 5 + if (showGameId) 1 else 0
-    }
+    override fun getNumberOfColumns() = if (showGameId) 6 else 5
 
     override fun initImpl()
     {
@@ -47,6 +36,31 @@ class DartsScorerGolf : DartsScorer()
         }
     }
 
+    override fun stateChangedImpl(state: GolfPlayerState)
+    {
+        setScoreAndFinishingPosition(state)
+
+        state.completedRounds.forEachIndexed { ix, round ->
+            val roundNumber = ix + 1
+
+            addDartRound(round)
+
+            val score = state.getScoreForRound(roundNumber)
+            model.setValueAt(score, model.rowCount - 1, SCORE_COLUMN)
+
+            if (roundNumber == 9 || roundNumber == 18)
+            {
+                val totalRow = arrayOf<Any?>(null, null, null, null, state.getCumulativeScoreForRound(roundNumber))
+                addRow(totalRow)
+            }
+        }
+
+        if (state.currentRound.isNotEmpty())
+        {
+            addDartRound(state.currentRound)
+        }
+    }
+
     override fun makeEmptyRow(): Array<Any?>
     {
         val emptyRow = super.makeEmptyRow()
@@ -58,11 +72,6 @@ class DartsScorerGolf : DartsScorer()
         return emptyRow
     }
 
-    override fun rowIsComplete(rowNumber: Int): Boolean
-    {
-        return model.getValueAt(rowNumber, SCORE_COLUMN) != null
-    }
-
     fun setTableForeground(color: Color)
     {
         tableScores.tableForeground = color
@@ -72,12 +81,9 @@ class DartsScorerGolf : DartsScorer()
     /**
      * Helper to add a full round at a time, for when we're viewing stats or loading a game
      */
-    fun addDarts(darts: Collection<Dart>, localGameId: Long = -1)
+    fun addDarts(darts: List<Dart>, localGameId: Long = -1)
     {
-        for (dart in darts)
-        {
-            addDart(dart)
-        }
+        addDartRound(darts)
 
         if (localGameId > -1)
         {
