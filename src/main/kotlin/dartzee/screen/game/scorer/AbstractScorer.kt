@@ -26,7 +26,7 @@ abstract class AbstractScorer : JPanel()
     val lblResult = JLabel("")
     protected val panelNorth = JPanel()
     val lblAvatar = PlayerAvatar()
-    protected val panelAvatar = JPanel()
+    val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
 
     val playerName: String
@@ -101,12 +101,7 @@ abstract class AbstractScorer : JPanel()
         tableScores.scrollToBottom()
     }
 
-    open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
-
-    fun reset()
-    {
-        lblName.text = ""
-    }
+    protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
 
     fun canBeAssigned() = isVisible && playerName.isEmpty()
 
@@ -118,7 +113,7 @@ abstract class AbstractScorer : JPanel()
 
     fun isSelected() = lblName.foreground == Color.RED
 
-    fun updateResultColourForPosition(pos: Int)
+    protected fun updateResultColourForPosition(pos: Int)
     {
         DartsColour.setFgAndBgColoursForPosition(lblResult, pos)
     }
