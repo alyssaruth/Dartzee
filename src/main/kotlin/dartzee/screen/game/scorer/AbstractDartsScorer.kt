@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
 import dartzee.core.bean.SwingLabel
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.PlayerStateListener
 import net.miginfocom.swing.MigLayout
@@ -36,14 +37,16 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
 
     override fun stateChanged(state: PlayerState)
     {
-        model.clear()
+        runOnEventThreadBlocking {
+            model.clear()
 
-        stateChangedImpl(state)
+            stateChangedImpl(state)
 
-        tableScores.scrollToBottom()
-        tableScores.repaint()
-        lblResult.repaint()
-        repaint()
+            tableScores.scrollToBottom()
+            tableScores.repaint()
+            lblResult.repaint()
+            repaint()
+        }
     }
 
     protected fun setScoreAndFinishingPosition(state: PlayerState)
