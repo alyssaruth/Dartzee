@@ -3,7 +3,6 @@ package dartzee.screen.game.x01
 import dartzee.`object`.Dart
 import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
-import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadLuck
 import dartzee.core.util.doFawlty
 import dartzee.core.util.playDodgySound
@@ -22,16 +21,6 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
     private val startingScore = Integer.parseInt(game.gameParams)
 
     override fun factoryState(pt: ParticipantEntity) = X01PlayerState(startingScore, pt)
-
-    override fun updateVariablesForNewRound()
-    {
-        resetRoundVariables()
-    }
-
-    override fun resetRoundVariables()
-    {
-
-    }
 
     override fun saveDartsAndProceed()
     {

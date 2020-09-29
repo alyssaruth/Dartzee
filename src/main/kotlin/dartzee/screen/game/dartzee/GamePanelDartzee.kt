@@ -2,7 +2,6 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
-import dartzee.core.obj.HashMapList
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
@@ -25,9 +24,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     IDartzeeCarouselListener
 {
     override val totalRounds = dtos.size + 1
-
-    //Transient things
-    var lastRoundScore = -1
 
     init
     {
@@ -71,13 +67,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         roundResults.forEach { state.addRoundResult(it) }
     }
 
-    override fun updateVariablesForNewRound()
-    {
-        lastRoundScore = getCurrentPlayerState().getScoreSoFar()
-    }
-
-    override fun resetRoundVariables() {}
-
     override fun updateVariablesForDartThrown(dart: Dart)
     {
         updateCarouselAndDartboard()
@@ -112,6 +101,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     private fun updateCarousel()
     {
         val ruleResults = getCurrentPlayerState().roundResults
+        val lastRoundScore = getCurrentPlayerState().getCumulativeScore(currentRoundNumber - 1)
         summaryPanel.update(ruleResults, getDartsThrown(), lastRoundScore, currentRoundNumber)
     }
 

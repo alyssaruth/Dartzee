@@ -161,8 +161,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     abstract fun factoryState(pt: ParticipantEntity): PlayerState
     abstract fun doAiTurn(model: DartsAiModel)
 
-    abstract fun updateVariablesForNewRound()
-    abstract fun resetRoundVariables()
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
     abstract fun saveDartsAndProceed()
@@ -196,8 +194,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     protected fun nextTurn()
     {
         selectScorer(getCurrentScorer())
-
-        updateVariablesForNewRound()
 
         //Create a new round for this player
         currentRoundNumber = getCurrentPlayerState().currentRoundNumber()
@@ -575,8 +571,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     protected fun resetRound()
     {
-        resetRoundVariables()
-
         dartboard.clearDarts()
         getCurrentPlayerState().resetRound()
 
