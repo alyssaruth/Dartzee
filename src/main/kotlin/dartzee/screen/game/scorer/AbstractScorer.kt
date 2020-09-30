@@ -46,6 +46,7 @@ abstract class AbstractScorer : JPanel()
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
+        lblName.foreground = Color.BLACK
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
         panelAvatar.layout = BorderLayout(0, 0)
@@ -104,14 +105,6 @@ abstract class AbstractScorer : JPanel()
     protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
 
     fun canBeAssigned() = isVisible && playerName.isEmpty()
-
-    fun setSelected(selected: Boolean)
-    {
-        lblName.foreground = if (selected) Color.RED else Color.BLACK
-        lblAvatar.setSelected(selected)
-    }
-
-    fun isSelected() = lblName.foreground == Color.RED
 
     protected fun updateResultColourForPosition(pos: Int)
     {

@@ -12,11 +12,13 @@ import dartzee.game.state.TestPlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.awt.Color
 import javax.swing.JButton
 
 class TestAbstractDartsScorer: AbstractTest()
@@ -51,6 +53,21 @@ class TestAbstractDartsScorer: AbstractTest()
 
         scorer.lblResult.shouldHaveColours(DartsColour.THIRD_COLOURS)
         scorer.lblResult.text shouldBe "30"
+    }
+
+    @Test
+    fun `Should correctly update colours when selected and deselected`()
+    {
+        val scorer = TestDartsScorer()
+        scorer.init(insertPlayer())
+
+        val state = TestPlayerState(insertParticipant(), isActive = false)
+        scorer.stateChanged(state)
+        scorer.lblName.foreground shouldBe Color.BLACK
+
+        state.updateActive(true)
+        scorer.stateChanged(state)
+        scorer.lblName.foreground shouldBe Color.RED
     }
 
     @Test

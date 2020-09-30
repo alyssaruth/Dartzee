@@ -13,6 +13,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
     abstract val pt: ParticipantEntity
     abstract val completedRounds: MutableList<List<Dart>>
     abstract val currentRound: MutableList<Dart>
+    abstract var isActive: Boolean
 
     abstract fun getScoreSoFar(): Int
 
@@ -85,6 +86,16 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         pt.saveToDatabase()
 
         fireStateChanged()
+    }
+
+    fun updateActive(active: Boolean)
+    {
+        val changing = active != isActive
+        isActive = active
+        if (changing)
+        {
+            fireStateChanged()
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
