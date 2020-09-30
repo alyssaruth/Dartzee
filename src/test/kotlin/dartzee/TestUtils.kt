@@ -198,6 +198,7 @@ fun JComponent.wrapInFrame(): JComponent
     frame.add(this, BorderLayout.CENTER)
     frame.size = Dimension(getWidthForSnapshot(), getHeightForSnapshot())
     frame.isVisible = true
+    frame.pack()
     return this
 }
 private fun JComponent.getWidthForSnapshot(): Int = when {

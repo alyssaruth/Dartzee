@@ -146,6 +146,7 @@ class TestDartsScorerGolf: AbstractTest()
 
         val table = scorer.tableScores
         table.size = Dimension(200, 300)
+        table.preferredSize = Dimension(200, 300)
         table.wrapInFrame().shouldMatchImage("in progress")
     }
 
