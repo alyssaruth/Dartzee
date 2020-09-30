@@ -194,9 +194,10 @@ fun awaitCondition(timeout: Int = 10000, condition: (() -> Boolean))
 fun JComponent.wrapInFrame(): JComponent
 {
     val frame = JFrame()
-    frame.layout = BorderLayout(0, 0)
-    frame.add(this, BorderLayout.CENTER)
-    frame.size = Dimension(getWidthForSnapshot(), getHeightForSnapshot())
+    frame.layout = null
+    location = Point(0, 0)
+    frame.add(this)
+    frame.size = Dimension(getWidthForSnapshot() + 100, getHeightForSnapshot() + 100)
     frame.isVisible = true
     frame.pack()
     return this
