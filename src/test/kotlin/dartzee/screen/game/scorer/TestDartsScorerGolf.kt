@@ -12,6 +12,7 @@ import dartzee.wrapInFrame
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
+import java.awt.Dimension
 
 class TestDartsScorerGolf: AbstractTest()
 {
@@ -143,7 +144,9 @@ class TestDartsScorerGolf: AbstractTest()
         state.dartThrown(Dart(20, 1))
         scorer.stateChanged(state)
 
-        scorer.tableScores.wrapInFrame().shouldMatchImage("in progress")
+        val table = scorer.tableScores
+        table.size = Dimension(200, 300)
+        table.wrapInFrame().shouldMatchImage("in progress")
     }
 
     private fun factoryScorer(): DartsScorerGolf

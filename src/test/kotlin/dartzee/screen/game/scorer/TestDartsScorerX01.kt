@@ -14,6 +14,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
+import java.awt.Dimension
 import javax.swing.JButton
 
 class TestDartsScorerX01: AbstractTest()
@@ -150,9 +151,9 @@ class TestDartsScorerX01: AbstractTest()
         state.dartThrown(Dart(20, 1))
         scorer.stateChanged(state)
 
-        scorer.validate()
-        scorer.repaint()
-        scorer.tableScores.wrapInFrame().shouldMatchImage("in progress")
+        val table = scorer.tableScores
+        table.size = Dimension(200, 300)
+        table.wrapInFrame().shouldMatchImage("in progress")
     }
 
     private fun factoryScorer(): DartsScorerX01
