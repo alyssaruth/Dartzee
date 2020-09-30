@@ -152,7 +152,7 @@ class TestDartsScorerX01: AbstractTest()
 
         scorer.validate()
         scorer.repaint()
-        scorer.wrapInFrame().shouldMatchImage("in progress")
+        scorer.tableScores.wrapInFrame().shouldMatchImage("in progress")
     }
 
     private fun factoryScorer(): DartsScorerX01

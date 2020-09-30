@@ -143,7 +143,7 @@ class TestDartsScorerGolf: AbstractTest()
         state.dartThrown(Dart(20, 1))
         scorer.stateChanged(state)
 
-        scorer.wrapInFrame().shouldMatchImage("in progress")
+        scorer.tableScores.wrapInFrame().shouldMatchImage("in progress")
     }
 
     private fun factoryScorer(): DartsScorerGolf
