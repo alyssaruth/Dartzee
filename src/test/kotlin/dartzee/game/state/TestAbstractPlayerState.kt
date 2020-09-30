@@ -2,6 +2,7 @@ package dartzee.game.state
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
@@ -164,6 +165,9 @@ class TestAbstractPlayerState: AbstractTest()
         state.shouldFireStateChange { it.addCompletedRound(listOf(Dart(1, 1))) }
         state.shouldFireStateChange { it.participantFinished(3, 10) }
         state.shouldFireStateChange { it.setParticipantFinishPosition(4) }
+        state.shouldFireStateChange { it.updateActive(true) }
+        state.shouldFireStateChange { it.updateActive(false) }
+        state.shouldNotFireStateChange { it.updateActive(false) }
     }
 
     @Test
@@ -183,6 +187,7 @@ class TestAbstractPlayerState: AbstractTest()
 data class TestPlayerState(override val pt: ParticipantEntity,
                            override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                            override val currentRound: MutableList<Dart> = mutableListOf(),
+                           override var isActive: Boolean = false,
                            private val scoreSoFar: Int = -1): AbstractPlayerState<TestPlayerState>()
 {
     override fun getScoreSoFar() = scoreSoFar
@@ -197,4 +202,15 @@ fun <S: AbstractPlayerState<S>> S.shouldFireStateChange(fn: (state: S) -> Unit)
 
     val state = this
     verify { listener.stateChanged(state) }
+}
+
+fun <S: AbstractPlayerState<S>> S.shouldNotFireStateChange(fn: (state: S) -> Unit)
+{
+    val listener = mockk<PlayerStateListener<S>>(relaxed = true)
+    addListener(listener)
+
+    fn(this)
+
+    val state = this
+    verifyNotCalled { listener.stateChanged(state) }
 }

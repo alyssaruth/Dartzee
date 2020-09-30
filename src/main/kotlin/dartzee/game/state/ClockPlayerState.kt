@@ -9,7 +9,8 @@ import dartzee.utils.getLongestStreak
 data class ClockPlayerState(private val clockType: ClockType,
                             override val pt: ParticipantEntity,
                             override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                            override val currentRound: MutableList<Dart> = mutableListOf()): AbstractPlayerState<ClockPlayerState>()
+                            override val currentRound: MutableList<Dart> = mutableListOf(),
+                            override var isActive: Boolean = false): AbstractPlayerState<ClockPlayerState>()
 {
     fun getCurrentTarget(): Int
     {
