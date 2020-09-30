@@ -51,7 +51,7 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Abst
 
     private fun addCheckoutSuggestion(state: X01PlayerState)
     {
-        if (getPaused())
+        if (getPaused() || !state.isActive)
         {
             return
         }

@@ -193,7 +193,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     protected fun nextTurn()
     {
-        selectScorer(getCurrentScorer())
+        updateActivePlayer()
 
         //Create a new round for this player
         currentRoundNumber = getCurrentPlayerState().currentRoundNumber()
@@ -206,14 +206,11 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         readyForThrow()
     }
 
-    protected fun selectScorer(selectedScorer: S)
+    protected fun updateActivePlayer()
     {
-        for (scorer in scorersOrdered)
-        {
-            scorer.setSelected(false)
+        hmPlayerNumberToState.values.forEach {
+            it.updateActive(it == getCurrentPlayerState())
         }
-
-        selectedScorer.setSelected(true)
     }
 
     private fun initForAi(hasAi: Boolean)

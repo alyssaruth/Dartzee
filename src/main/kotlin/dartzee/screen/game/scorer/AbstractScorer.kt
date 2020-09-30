@@ -6,7 +6,6 @@ import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.Font
 import javax.swing.JLabel
@@ -104,14 +103,6 @@ abstract class AbstractScorer : JPanel()
     protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
 
     fun canBeAssigned() = isVisible && playerName.isEmpty()
-
-    fun setSelected(selected: Boolean)
-    {
-        lblName.foreground = if (selected) Color.RED else Color.BLACK
-        lblAvatar.setSelected(selected)
-    }
-
-    fun isSelected() = lblName.foreground == Color.RED
 
     protected fun updateResultColourForPosition(pos: Int)
     {

@@ -6,7 +6,6 @@ import dartzee.shouldBeVisible
 import dartzee.shouldNotBeVisible
 import io.kotlintest.shouldBe
 import org.junit.Test
-import java.awt.Color
 
 class TestAbstractScorer: AbstractTest()
 {
@@ -48,22 +47,6 @@ class TestAbstractScorer: AbstractTest()
         val fourCols = TestScorer(4)
         fourCols.init(null)
         fourCols.tableScores.model.columnCount shouldBe 4
-    }
-    
-    @Test
-    fun `Should correctly update colours when selected and deselected`()
-    {
-        val scorer = TestScorer()
-        scorer.init(insertPlayer())
-        scorer.isSelected() shouldBe false
-
-        scorer.setSelected(true)
-        scorer.lblName.foreground shouldBe Color.RED
-        scorer.isSelected() shouldBe true
-
-        scorer.setSelected(false)
-        scorer.lblName.foreground shouldBe Color.BLACK
-        scorer.isSelected() shouldBe false
     }
 
     @Test

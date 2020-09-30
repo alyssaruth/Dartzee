@@ -83,7 +83,7 @@ class TestDartsScorerX01: AbstractTest()
     fun `Should include checkout suggestions when appropriate`()
     {
         val scorer = factoryScorer()
-        val state = makeX01PlayerStateWithRounds(101)
+        val state = makeX01PlayerStateWithRounds(101, isActive = true)
         scorer.stateChanged(state)
 
         scorer.tableScores.getRows().first().shouldContainExactly(
@@ -104,10 +104,20 @@ class TestDartsScorerX01: AbstractTest()
     }
 
     @Test
+    fun `Should not include checkout suggestions if player is inactive`()
+    {
+        val scorer = factoryScorer()
+        val state = makeX01PlayerStateWithRounds(101, isActive = false)
+        scorer.stateChanged(state)
+
+        scorer.tableScores.rowCount shouldBe 0
+    }
+
+    @Test
     fun `Should toggle checkout suggestions on pause`()
     {
         val participant = insertParticipant(finishingPosition = 4, dtFinished = DateStatics.END_OF_TIME)
-        val state = makeX01PlayerStateWithRounds(101, participant = participant)
+        val state = makeX01PlayerStateWithRounds(101, participant = participant, isActive = true)
 
         val scorer = factoryScorer()
         scorer.stateChanged(state)

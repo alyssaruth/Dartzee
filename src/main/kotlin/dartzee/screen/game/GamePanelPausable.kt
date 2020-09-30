@@ -81,7 +81,7 @@ abstract class GamePanelPausable<S : AbstractDartsScorerPausable<PlayerState>, P
 
         //Display this player's result. If they're an AI and we have the preference, then
         //automatically play on.
-        selectScorer(getCurrentScorer())
+        updateActivePlayer()
         if (!getCurrentPlayerState().isHuman() && PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE))
         {
             getCurrentScorer().toggleResume()
