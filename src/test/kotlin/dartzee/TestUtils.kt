@@ -2,6 +2,7 @@ package dartzee
 
 import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.isEqual
+import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.bean.ComboBoxGameType
@@ -20,9 +21,7 @@ import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.MockKMatcherScope
-import java.awt.Color
-import java.awt.Component
-import java.awt.Point
+import java.awt.*
 import java.awt.image.BufferedImage
 import java.time.Instant
 import java.time.LocalDate
@@ -32,6 +31,7 @@ import java.util.*
 import javax.swing.Icon
 import javax.swing.JCheckBox
 import javax.swing.JComponent
+import javax.swing.JFrame
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
 val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
@@ -189,4 +189,24 @@ fun awaitCondition(timeout: Int = 10000, condition: (() -> Boolean))
             throw AssertionError("Timed out waiting for condition")
         }
     }
+}
+
+fun JComponent.wrapInFrame(): JComponent
+{
+    val frame = JFrame()
+    frame.layout = BorderLayout(0, 0)
+    frame.add(this, BorderLayout.CENTER)
+    frame.size = Dimension(getWidthForSnapshot(), getHeightForSnapshot())
+    frame.isVisible = true
+    return this
+}
+private fun JComponent.getWidthForSnapshot(): Int = when {
+    width > 0 -> width
+    preferredSize.width > 0 -> preferredSize.width
+    else -> 200
+}
+private fun JComponent.getHeightForSnapshot(): Int = when {
+    height > 0 -> height
+    preferredSize.height > 0 -> preferredSize.height
+    else -> 200
 }

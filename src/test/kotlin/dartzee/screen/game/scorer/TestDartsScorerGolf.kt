@@ -1,5 +1,6 @@
 package dartzee.screen.game.scorer
 
+import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.game.state.GolfPlayerState
@@ -7,6 +8,7 @@ import dartzee.getRows
 import dartzee.helper.*
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
+import dartzee.wrapInFrame
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -127,10 +129,27 @@ class TestDartsScorerGolf: AbstractTest()
         scorer.tableScores.rowCount shouldBe 0
     }
 
+    @Test
+    fun `Should match screenshot - in progress`()
+    {
+        val scorer = factoryScorer()
+
+        val roundOne = makeGolfRound(1, listOf(Dart(1, 3, segmentType = SegmentType.TREBLE)))
+        val roundTwo = makeGolfRound(2, listOf(Dart(2, 0, segmentType = SegmentType.MISS), Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE)))
+        val roundThree = makeGolfRound(3, listOf(Dart(3, 0, segmentType = SegmentType.MISS), Dart(3, 0, segmentType = SegmentType.MISS), Dart(3, 0, segmentType = SegmentType.MISS)))
+
+        val state = makeGolfPlayerState(completedRounds = listOf(roundOne, roundTwo, roundThree))
+        state.dartThrown(Dart(20, 1))
+        state.dartThrown(Dart(20, 1))
+        scorer.stateChanged(state)
+
+        scorer.wrapInFrame().shouldMatchImage("in progress")
+    }
+
     private fun factoryScorer(): DartsScorerGolf
     {
         val scorer = DartsScorerGolf()
-        scorer.init(null)
+        scorer.init(insertPlayer())
         return scorer
     }
 }

@@ -9,14 +9,12 @@ import dartzee.getRows
 import dartzee.helper.*
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
+import dartzee.wrapInFrame
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
-import java.awt.BorderLayout
-import java.awt.Dimension
 import javax.swing.JButton
-import javax.swing.JPanel
 
 class TestDartsScorerX01: AbstractTest()
 {
@@ -143,9 +141,6 @@ class TestDartsScorerX01: AbstractTest()
     fun `Should match screenshot - in progress`()
     {
         val scorer = factoryScorer()
-        scorer.size = Dimension(210, 550)
-        scorer.preferredSize = Dimension(210, 550)
-        scorer.isVisible = true
 
         val roundOne = listOf(Dart(20, 1), Dart(1, 1), Dart(20, 1))
 
@@ -157,7 +152,7 @@ class TestDartsScorerX01: AbstractTest()
 
         scorer.validate()
         scorer.repaint()
-        scorer.tableScores.shouldMatchImage("in progress")
+        scorer.wrapInFrame().shouldMatchImage("in progress")
     }
 
     private fun factoryScorer(): DartsScorerX01
