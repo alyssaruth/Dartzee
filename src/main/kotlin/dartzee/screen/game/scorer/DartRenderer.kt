@@ -3,9 +3,11 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.core.bean.AbstractTableRenderer
+import dartzee.core.bean.enableAntiAliasing
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
+import java.awt.Graphics
 
 class DartRenderer : AbstractTableRenderer<Dart>()
 {
@@ -16,6 +18,12 @@ class DartRenderer : AbstractTableRenderer<Dart>()
             is DartHint -> "($value)"
             else -> "$value"
         }
+    }
+
+    override fun paint(g: Graphics?)
+    {
+        enableAntiAliasing(g)
+        super.paint(g)
     }
 
     override fun setCellColours(typedValue: Dart?, isSelected: Boolean)

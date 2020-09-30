@@ -2,6 +2,7 @@ package dartzee.screen.game.scorer
 
 import dartzee.bean.PlayerAvatar
 import dartzee.bean.ScrollTableDartsGame
+import dartzee.core.bean.SwingLabel
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
@@ -24,7 +25,7 @@ abstract class AbstractScorer : JPanel()
     val lblName = JLabel()
     protected val achievementPanel = JPanel()
     val tableScores = ScrollTableDartsGame()
-    val lblResult = JLabel("")
+    val lblResult = SwingLabel("", "result")
     protected val panelNorth = JPanel()
     val lblAvatar = PlayerAvatar()
     val panelAvatar = JPanel()

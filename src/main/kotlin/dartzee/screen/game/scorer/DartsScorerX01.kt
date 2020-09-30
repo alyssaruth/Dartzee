@@ -1,6 +1,7 @@
 package dartzee.screen.game.scorer
 
 import dartzee.`object`.CheckoutSuggester
+import dartzee.core.bean.SwingLabel
 import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.GamePanelPausable
 import dartzee.utils.ResourceCache
@@ -11,7 +12,7 @@ import javax.swing.SwingConstants
 
 class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : AbstractDartsScorerPausable<X01PlayerState>(parent)
 {
-    private val lblStartingScore = JLabel(gameParams)
+    private val lblStartingScore = SwingLabel(gameParams)
 
     init
     {

@@ -1,8 +1,6 @@
 package dartzee.core.bean
 
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.Point
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusEvent
@@ -75,6 +73,14 @@ fun getPointList(width: Int, height: Int): List<Point>
     val xRange = 0 until width
 
     return yRange.map { y -> xRange.map { x -> Point(x, y)} }.flatten()
+}
+
+fun enableAntiAliasing(g: Graphics?)
+{
+    if (g is Graphics2D)
+    {
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    }
 }
 
 fun AbstractButton.isSelectedAndEnabled() = isEnabled && isSelected

@@ -2,11 +2,13 @@ package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
+import dartzee.core.bean.enableAntiAliasing
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
 import dartzee.utils.sumScore
 import java.awt.Component
 import java.awt.Font
+import java.awt.Graphics
 import javax.swing.JTable
 import javax.swing.SwingConstants
 import javax.swing.table.DefaultTableCellRenderer
@@ -23,6 +25,12 @@ class X01ScoreRenderer : DefaultTableCellRenderer()
 
         setColours(table, modelRow)
         return this
+    }
+
+    override fun paint(g: Graphics?)
+    {
+        enableAntiAliasing(g)
+        super.paint(g)
     }
 
     private fun setColours(table: JTable, modelRow: Int)

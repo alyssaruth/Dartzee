@@ -1,6 +1,7 @@
 package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
+import dartzee.core.bean.enableAntiAliasing
 import dartzee.game.state.GolfPlayerState
 import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
@@ -9,6 +10,7 @@ import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
+import java.awt.Graphics
 import javax.swing.JComponent
 import javax.swing.JTable
 import javax.swing.SwingConstants
@@ -158,6 +160,12 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
      */
     private class DartRenderer(private val showGameId: Boolean) : DefaultTableCellRenderer()
     {
+        override fun paint(g: Graphics?)
+        {
+            enableAntiAliasing(g)
+            super.paint(g)
+        }
+
         override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
         {
             val newValue = getReplacementValue(table, value, row)
