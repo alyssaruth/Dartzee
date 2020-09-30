@@ -1,3 +1,8 @@
+--------- v4.5.2 ---------
+
+= Substantial refactors to make gameplay logic simpler and more testable
+= 82.6% test coverage (9820 / 11,893 lines covered by 1621 tests)
+
 --------- v4.5.1 ---------
 
 = Fix bug causing AI simulations to crash
