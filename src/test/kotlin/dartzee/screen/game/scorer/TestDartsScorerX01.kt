@@ -1,21 +1,22 @@
 package dartzee.screen.game.scorer
 
 import com.github.alexburlton.swingtest.clickChild
+import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.core.util.DateStatics
 import dartzee.getRows
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertParticipant
-import dartzee.helper.makeX01PlayerStateWithRounds
-import dartzee.helper.makeX01Rounds
+import dartzee.helper.*
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
+import java.awt.BorderLayout
+import java.awt.Dimension
 import javax.swing.JButton
+import javax.swing.JPanel
 
 class TestDartsScorerX01: AbstractTest()
 {
@@ -138,10 +139,31 @@ class TestDartsScorerX01: AbstractTest()
         scorer.tableScores.rowCount shouldBe 0
     }
 
+    @Test
+    fun `Should match screenshot - in progress`()
+    {
+        val scorer = factoryScorer()
+        scorer.size = Dimension(210, 550)
+        scorer.preferredSize = Dimension(210, 550)
+        scorer.isVisible = true
+
+        val roundOne = listOf(Dart(20, 1), Dart(1, 1), Dart(20, 1))
+
+        val rounds = makeX01Rounds(501, roundOne)
+        val state = makeX01PlayerStateWithRounds(501, completedRounds = rounds)
+        state.dartThrown(Dart(20, 1))
+        state.dartThrown(Dart(20, 1))
+        scorer.stateChanged(state)
+
+        scorer.validate()
+        scorer.repaint()
+        scorer.tableScores.shouldMatchImage("in progress")
+    }
+
     private fun factoryScorer(): DartsScorerX01
     {
         val scorer = DartsScorerX01(mockk(relaxed = true), "501")
-        scorer.init(null)
+        scorer.init(insertPlayer())
         return scorer
     }
 }
