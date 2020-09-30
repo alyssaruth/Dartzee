@@ -5,6 +5,7 @@ import dartzee.game.state.GolfPlayerState
 import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import dartzee.utils.PreferenceUtil
+import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
@@ -95,7 +96,7 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
         finaliseRoundScore()
     }
 
-    fun finaliseRoundScore()
+    private fun finaliseRoundScore()
     {
         val rowNumber = model.rowCount - 1
         val target = getTargetForRowNumber(rowNumber)
@@ -163,7 +164,7 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
             val cell = super.getTableCellRendererComponent(table, newValue, isSelected, hasFocus, row, column) as JComponent
 
             horizontalAlignment = SwingConstants.CENTER
-            font = Font("Trebuchet MS", Font.BOLD, 15)
+            font = ResourceCache.BASE_FONT.deriveFont(Font.BOLD, 15f)
 
             val border = getBorderForCell(row, column)
             cell.border = border

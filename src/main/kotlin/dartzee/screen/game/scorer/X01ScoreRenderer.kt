@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.utils.DartsColour
+import dartzee.utils.ResourceCache
 import dartzee.utils.sumScore
 import java.awt.Component
 import java.awt.Font
@@ -17,7 +18,7 @@ class X01ScoreRenderer : DefaultTableCellRenderer()
     {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         horizontalAlignment = SwingConstants.CENTER
-        font = Font("Trebuchet MS", Font.BOLD, 15)
+        font = ResourceCache.BASE_FONT.deriveFont(Font.BOLD, 15f)
         val modelRow = table.convertRowIndexToModel(row)
 
         setColours(table, modelRow)

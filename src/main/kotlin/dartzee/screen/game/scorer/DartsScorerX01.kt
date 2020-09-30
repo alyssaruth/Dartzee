@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.CheckoutSuggester
 import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.GamePanelPausable
+import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Font
 import javax.swing.JLabel
@@ -15,7 +16,7 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String) : Abst
     init
     {
         lblStartingScore.horizontalAlignment = SwingConstants.CENTER
-        lblStartingScore.font = Font("Trebuchet MS", Font.PLAIN, 16)
+        lblStartingScore.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 16f)
         panelNorth.add(lblStartingScore, BorderLayout.SOUTH)
     }
 

@@ -5,6 +5,7 @@ import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
+import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -45,7 +46,7 @@ abstract class AbstractScorer : JPanel()
         panelNorth.layout = BorderLayout(0, 0)
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
-        lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
+        lblName.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 16f)
         lblName.foreground = Color.BLACK
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
@@ -55,7 +56,7 @@ abstract class AbstractScorer : JPanel()
         panelSouth.layout = BorderLayout(0, 0)
         panelSouth.add(lblResult)
         lblResult.isOpaque = true
-        lblResult.font = Font("Trebuchet MS", Font.PLAIN, 22)
+        lblResult.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 22f)
         lblResult.horizontalAlignment = SwingConstants.CENTER
 
         tableScores.setFillsViewportHeight(false)

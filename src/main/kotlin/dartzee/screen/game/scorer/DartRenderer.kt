@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.core.bean.AbstractTableRenderer
+import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
 
@@ -29,8 +30,7 @@ class DartRenderer : AbstractTableRenderer<Dart>()
         }
 
         val style = if (typedValue is DartHint) Font.ITALIC else Font.PLAIN
-
-        font = Font(font.name, style, font.size)
+        font = ResourceCache.BASE_FONT.deriveFont(style, font.size.toFloat())
     }
 
     override fun allowNulls(): Boolean
