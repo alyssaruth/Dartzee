@@ -17,7 +17,6 @@ import javax.swing.table.DefaultTableCellRenderer
 
 class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
 {
-    private var currentScore = 0
     var fudgeFactor = 0 //For when we're displaying only a back 9, we need to shift everything up
     var showGameId = false
 
@@ -61,6 +60,14 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
         }
     }
 
+    fun addGameIds(localGameIds: List<Long>)
+    {
+        localGameIds.forEachIndexed { ix, gameId ->
+            val row = if (ix >= 9) ix + 1 else ix
+            model.setValueAt(gameId, row, GAME_ID_COLUMN)
+        }
+    }
+
     override fun makeEmptyRow(): Array<Any?>
     {
         val emptyRow = super.makeEmptyRow()
@@ -76,60 +83,6 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
     {
         tableScores.tableForeground = color
         lblResult.foreground = color
-    }
-
-    /**
-     * Helper to add a full round at a time, for when we're viewing stats or loading a game
-     */
-    fun addDarts(darts: List<Dart>, localGameId: Long = -1)
-    {
-        addDartRound(darts)
-
-        if (localGameId > -1)
-        {
-            val row = tableScores.rowCount - 1
-            val column = tableScores.columnCount - 1
-            model.setValueAt(localGameId, row, column)
-        }
-
-        finaliseRoundScore()
-    }
-
-    fun finaliseRoundScore()
-    {
-        val rowNumber = model.rowCount - 1
-        val target = getTargetForRowNumber(rowNumber)
-        val drt = getLastDartThrown(rowNumber)
-
-        val score = drt!!.getGolfScore(target)
-
-        model.setValueAt(score, rowNumber, SCORE_COLUMN)
-
-        currentScore += score
-
-        if (target == ROUNDS_HALFWAY || target == ROUNDS_FULL)
-        {
-            val totalRow = arrayOf<Any?>(null, null, null, null, Integer.valueOf(currentScore))
-            addRow(totalRow)
-        }
-
-        lblResult.text = "" + currentScore
-        lblResult.isVisible = true
-    }
-
-    private fun getLastDartThrown(rowNumber: Int): Dart?
-    {
-        var ret: Dart? = null
-        for (i in 1 until SCORE_COLUMN)
-        {
-            val drt = model.getValueAt(rowNumber, i)
-            if (drt != null)
-            {
-                ret = drt as Dart
-            }
-        }
-
-        return ret
     }
 
     /**
@@ -243,6 +196,7 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
         private const val ROUNDS_HALFWAY = 9
         private const val ROUNDS_FULL = 18
         private const val SCORE_COLUMN = 4
+        private const val GAME_ID_COLUMN = 5
 
         fun isScoreRow(row: Int): Boolean
         {
