@@ -7,6 +7,7 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.game.state.GolfPlayerState
 import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.HoleBreakdownWrapper
 import dartzee.utils.calculateThreeDartAverage
@@ -50,14 +51,14 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         return hmRoundNumberToDarts.getAllValues()
     }
 
-    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<MutableList<Dart>>?
+    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<List<Dart>>?
     {
         if (scoreCutOff < 62)
         {
             throw Exception("Calculating scoring darts with cutoff that makes busts possible: $scoreCutOff")
         }
 
-        val allDartsInRounds = mutableListOf<MutableList<Dart>>()
+        val allDartsInRounds = mutableListOf<List<Dart>>()
 
         var score = Integer.parseInt(gameParams)
         for (i in 1..totalRounds)
@@ -101,9 +102,9 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         hmRoundNumberToDarts.putInList(roundNumber, dart)
     }
 
-    private fun getDartsForRound(roundNumber: Int): MutableList<Dart>
+    private fun getDartsForRound(roundNumber: Int): List<Dart>
     {
-        return hmRoundNumberToDarts[roundNumber] ?: mutableListOf()
+        return hmRoundNumberToDarts[roundNumber] ?: emptyList()
     }
 
     private fun getScoreForRound(roundNumber: Int): Int
@@ -237,11 +238,10 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     {
         val startHole = getStartHoleForMode(mode)
         val endHole = getEndHoleForMode(mode)
-        for (i in startHole..endHole)
-        {
-            val darts = getDartsForRound(i)
-            scorer.addDarts(darts)
-        }
+
+        val rounds = (startHole..endHole).map(::getDartsForRound).toMutableList()
+        val state = GolfPlayerState(ParticipantEntity(), rounds)
+        scorer.stateChanged(state)
     }
 
     private fun getStartHoleForMode(mode: Int): Int
@@ -262,7 +262,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
     }
 
-    fun populateOptimalScorecardMaps(hmHoleToBestDarts: HashMapList<Int, Dart>, hmHoleToBestGameId: MutableMap<Int, Long>)
+    fun populateOptimalScorecardMaps(hmHoleToBestDarts: MutableMap<Int, List<Dart>>, hmHoleToBestGameId: MutableMap<Int, Long>)
     {
         for (i in 1..totalRounds)
         {
@@ -277,7 +277,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         }
     }
 
-    private fun isBetterGolfRound(hole: Int, dartsNew: MutableList<Dart>, dartsCurrent: MutableList<Dart>?): Boolean
+    private fun isBetterGolfRound(hole: Int, dartsNew: List<Dart>, dartsCurrent: List<Dart>?): Boolean
     {
         if (dartsCurrent == null)
         {

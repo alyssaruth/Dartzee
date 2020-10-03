@@ -1,7 +1,9 @@
 package dartzee.screen.stats.player.golf
 
 import dartzee.`object`.Dart
-import dartzee.core.obj.HashMapList
+import dartzee.core.util.getSortedValues
+import dartzee.db.ParticipantEntity
+import dartzee.game.state.GolfPlayerState
 import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
@@ -51,7 +53,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
 
     private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, color: Color?)
     {
-        val hmHoleToBestDarts = HashMapList<Int, Dart>()
+        val hmHoleToBestDarts = mutableMapOf<Int, List<Dart>>()
         val hmHoleToBestGameId = mutableMapOf<Int, Long>()
 
         val sortedGames = filteredGames.sortedBy { it.dtStart }
@@ -69,15 +71,10 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         scorer.showGameId = true
         scorer.init(null)
 
-        for (i in 1..18)
-        {
-            val darts = hmHoleToBestDarts[i]
-            if (darts != null)
-            {
-                val gameId = hmHoleToBestGameId[i]
-                scorer.addDarts(darts, gameId!!)
-            }
-        }
+        val state = GolfPlayerState(ParticipantEntity(), hmHoleToBestDarts.values.toMutableList())
+        scorer.stateChanged(state)
+
+        scorer.addGameIds(hmHoleToBestGameId.getSortedValues())
 
         panel.removeAll()
         panel.add(scorer, BorderLayout.CENTER)
