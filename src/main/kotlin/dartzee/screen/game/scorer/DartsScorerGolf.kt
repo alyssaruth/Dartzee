@@ -121,13 +121,12 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
             val border = getBorderForCell(row, column)
             cell.border = border
 
-            if (column == 0
-                    || newValue == null
-                    || isScoreRow(row))
+            if (column == 0 || newValue == null || isScoreRow(row))
             {
                 foreground = null
                 background = null
-            } else
+            }
+            else
             {
                 val score = newValue as Int
 
@@ -153,10 +152,8 @@ class DartsScorerGolf : AbstractDartsScorer<GolfPlayerState>()
                 return obj
             }
 
-            val drt = obj as Dart?
             val target = table!!.getValueAt(row, 0) as Int
-
-            return drt!!.getGolfScore(target)
+            return obj.getGolfScore(target)
         }
 
         private fun getBorderForCell(row: Int, col: Int): Border
