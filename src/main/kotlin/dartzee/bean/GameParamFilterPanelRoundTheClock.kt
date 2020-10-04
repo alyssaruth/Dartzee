@@ -21,8 +21,6 @@ class GameParamFilterPanelRoundTheClock : GameParamFilterPanel()
     init
     {
         checkBoxInOrder.isSelected = true
-        checkBoxInOrder.isVisible = false
-        separator.isVisible = false
 
         add(panel, BorderLayout.CENTER)
         panel.add(checkBoxInOrder)
