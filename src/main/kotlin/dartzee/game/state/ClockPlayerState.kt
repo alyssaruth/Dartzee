@@ -24,6 +24,8 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
 
     fun onTrackForBrucey() = currentRound.all { it.hitClockTarget(config.clockType) }
 
+    fun hasHitTarget(target: Int) = getAllDartsFlattened().any { it.hitClockTarget(config.clockType) && it.score == target }
+
     override fun dartThrown(dart: Dart)
     {
         dart.startingScore = getCurrentTarget()

@@ -100,6 +100,10 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
             refreshRowCount()
         }
 
+    fun addRow(row: List<*>)
+    {
+        addRow(row.toTypedArray())
+    }
     fun addRow(row: Array<*>)
     {
         model.addRow(row)

@@ -1,12 +1,15 @@
-package dartzee.screen.game.scorer
+ package dartzee.screen.game.scorer
 
 import dartzee.`object`.DartNotThrown
 import dartzee.game.ClockType
 import dartzee.game.state.ClockPlayerState
 import dartzee.screen.game.GamePanelPausable
+import java.awt.BorderLayout
 
-class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : AbstractDartsScorerPausable<ClockPlayerState>(parent)
+ class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : AbstractDartsScorerPausable<ClockPlayerState>(parent)
 {
+    private val tableRemaining = RoundTheClockScorecard()
+
     override fun getNumberOfColumns() = 4
 
     override fun getNumberOfColumnsForAddingNewDart() = getNumberOfColumns()
@@ -17,10 +20,14 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val cloc
         {
             tableScores.getColumn(i).cellRenderer = RoundTheClockDartRenderer(clockType)
         }
+
+        panelCenter.add(tableRemaining, BorderLayout.NORTH)
     }
 
     override fun stateChangedImpl(state: ClockPlayerState)
     {
+        tableRemaining.stateChanged(state)
+
         state.completedRounds.forEach { round ->
             addDartRound(round)
 
