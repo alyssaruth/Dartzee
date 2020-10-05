@@ -17,9 +17,11 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     abstract fun getScoreSoFar(): Int
 
+    @Suppress("UNCHECKED_CAST")
     fun addListener(listener: PlayerStateListener<S>)
     {
         listeners.add(listener)
+        listener.stateChanged(this as S)
     }
 
     /**

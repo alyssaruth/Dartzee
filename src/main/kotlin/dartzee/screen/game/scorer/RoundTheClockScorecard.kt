@@ -4,7 +4,6 @@ import dartzee.core.bean.AbstractTableRenderer
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
 import dartzee.game.state.ClockPlayerState
-import dartzee.utils.DartsColour
 import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import dartzee.utils.PreferenceUtil
@@ -39,7 +38,7 @@ class RoundTheClockScorecard: ScrollTable()
     private fun makeClockResult(target: Int, state: ClockPlayerState): ClockResult
     {
         val hit = state.hasHitTarget(target)
-        val bruceyChance = state.onTrackForBrucey() && state.getCurrentTarget() == target
+        val bruceyChance = state.onTrackForBrucey() && state.getCurrentTarget() == target && state.isActive
         return ClockResult(target, hit, bruceyChance)
     }
 }
@@ -61,21 +60,17 @@ private class ClockResultRenderer: AbstractTableRenderer<ClockResult>()
         val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
         val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
 
-        if (typedValue.bruceyChance)
-        {
-            DartsColour.setFgAndBgColoursForPosition(this, 1)
-        }
-        else if (typedValue.hit)
-        {
-            foreground = Color.getHSBColor(0.3f, 1f, fgBrightness.toFloat())
-            background = Color.getHSBColor(0.3f, 1f, bgBrightness.toFloat())
-        }
-        else
-        {
-            foreground = Color.getHSBColor(0.0f, 1f, fgBrightness.toFloat())
-            background = Color.getHSBColor(0.0f, 1f, bgBrightness.toFloat())
-        }
+        val hue = getHue(typedValue)
+        foreground = Color.getHSBColor(hue, 1f, fgBrightness.toFloat())
+        background = Color.getHSBColor(hue, 1f, bgBrightness.toFloat())
     }
+    private fun getHue(value: ClockResult): Float =
+        when
+        {
+            value.hit -> 0.3f
+            value.bruceyChance -> 0.18f
+            else -> 0.0f
+        }
 
     override fun getReplacementValue(value: ClockResult) = "${value.value}"
 }
