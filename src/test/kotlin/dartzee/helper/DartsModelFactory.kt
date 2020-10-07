@@ -59,7 +59,7 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
 
 fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mercyThreshold: Int? = null): DartsAiModel
 {
-    val model = mockk<DartsAiModel>(relaxed = true)
+    val model = mockk<DartsAiModel>()
     every { model.mercyThreshold } returns mercyThreshold
 
     val remainingDarts = dartsToThrow.toMutableList()
@@ -71,6 +71,7 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
     }
 
     every { model.throwX01Dart(any(), any()) } answers { throwDartFn() }
+    every { model.throwClockDart(any(), any(), any()) } answers { throwDartFn() }
     return model
 }
 

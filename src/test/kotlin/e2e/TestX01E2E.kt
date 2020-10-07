@@ -3,7 +3,6 @@ package e2e
 import dartzee.`object`.Dart
 import dartzee.achievements.*
 import dartzee.ai.AimDart
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
@@ -11,10 +10,8 @@ import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
-import java.util.*
 
 class TestX01E2E: AbstractRegistryTest()
 {
@@ -79,12 +76,7 @@ class TestX01E2E: AbstractRegistryTest()
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier) }
         val aiModel = predictableDartsModel(parentWindow.gamePanel.dartboard, aimDarts, mercyThreshold = 7)
 
-        val player = mockk<PlayerEntity>(relaxed = true)
-        every { player.getModel() } returns aiModel
-        every { player.rowId } returns UUID.randomUUID().toString()
-        every { player.isAi() } returns true
-        every { player.isHuman() } returns false
-
+        val player = makePlayerWithModel(aiModel)
         parentWindow.gamePanel.startNewGame(listOf(player))
         awaitGameFinish(game)
 

@@ -43,7 +43,7 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
         addCompletedRound(darts)
     }
 
-    fun getRemainingTargets(): List<Int>
+    private fun getRemainingTargets(): List<Int>
     {
         val targetsHit = getAllDartsFlattened().filter { it.hitAnyClockTarget(config.clockType) }.map { it.score }
         return (1..20).filterNot { targetsHit.contains(it) }
