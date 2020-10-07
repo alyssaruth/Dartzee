@@ -6,7 +6,7 @@ import dartzee.game.state.ClockPlayerState
 import dartzee.screen.game.GamePanelPausable
 import java.awt.BorderLayout
 
- class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : AbstractDartsScorerPausable<ClockPlayerState>(parent)
+class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val clockType: ClockType) : AbstractDartsScorerPausable<ClockPlayerState>(parent)
 {
     private val tableRemaining = RoundTheClockScorecard()
 

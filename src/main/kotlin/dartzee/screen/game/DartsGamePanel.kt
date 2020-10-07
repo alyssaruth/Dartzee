@@ -353,7 +353,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
             val state = getPlayerState(i)
             hmRoundToDarts.getSortedValues().forEach {
-                state.addCompletedRound(it)
+                state.addLoadedRound(it)
             }
 
             loadAdditionalEntities(state)

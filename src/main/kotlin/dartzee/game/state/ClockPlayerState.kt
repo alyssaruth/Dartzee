@@ -35,12 +35,12 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
         super.dartThrown(dart)
     }
 
-    override fun addCompletedRound(darts: List<Dart>)
+    override fun addLoadedRound(darts: List<Dart>)
     {
         darts.forEach(::dartThrown)
         resetRound()
 
-        super.addCompletedRound(darts)
+        addCompletedRound(darts)
     }
 
     fun getRemainingTargets(): List<Int>

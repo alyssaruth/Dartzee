@@ -267,7 +267,7 @@ class TestClockPlayerState: AbstractTest()
         val darts = listOf(Dart(2, 1), Dart(1, 1), Dart(4, 1))
         val state = makeClockPlayerState(inOrder = false)
 
-        state.addCompletedRound(darts)
+        state.addLoadedRound(darts)
 
         darts[0].startingScore shouldBe 1
         darts[0].clockTargets shouldBe (1..20).toList()
