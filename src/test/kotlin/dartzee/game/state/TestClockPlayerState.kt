@@ -6,6 +6,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeClockPlayerState
 import dartzee.helper.makeDart
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import org.junit.Test
 
 class TestClockPlayerState: AbstractTest()
@@ -15,16 +16,16 @@ class TestClockPlayerState: AbstractTest()
     {
         val roundOne = listOf(makeDart(1, 2, startingScore = 1))
 
-        makeClockPlayerState(ClockType.Standard, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
-        makeClockPlayerState(ClockType.Doubles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 2
-        makeClockPlayerState(ClockType.Trebles, completedRounds = listOf(roundOne)).getCurrentTarget() shouldBe 1
+        makeClockPlayerState(ClockType.Standard, completedRounds = listOf(roundOne)).findCurrentTarget() shouldBe 2
+        makeClockPlayerState(ClockType.Doubles, completedRounds = listOf(roundOne)).findCurrentTarget() shouldBe 2
+        makeClockPlayerState(ClockType.Trebles, completedRounds = listOf(roundOne)).findCurrentTarget() shouldBe 1
     }
 
     @Test
     fun `Should report a target of one when no darts thrown`()
     {
         val state = makeClockPlayerState()
-        state.getCurrentTarget() shouldBe 1
+        state.findCurrentTarget() shouldBe 1
     }
 
     @Test
@@ -36,13 +37,13 @@ class TestClockPlayerState: AbstractTest()
             makeDart(2, 3, startingScore = 2))
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
-        state.getCurrentTarget() shouldBe 3
+        state.findCurrentTarget() shouldBe 3
 
         state.dartThrown(makeDart(3, 1, startingScore = 3))
-        state.getCurrentTarget() shouldBe 4
+        state.findCurrentTarget() shouldBe 4
 
         state.resetRound()
-        state.getCurrentTarget() shouldBe 3
+        state.findCurrentTarget() shouldBe 3
     }
 
     @Test
@@ -77,7 +78,7 @@ class TestClockPlayerState: AbstractTest()
             makeDart(2, 3, startingScore = 2))
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
-        state.getCurrentTarget() shouldBe 3
+        state.findCurrentTarget() shouldBe 3
 
         val dart = Dart(3, 1)
         val dartTwo = Dart(4, 0)
@@ -152,4 +153,111 @@ class TestClockPlayerState: AbstractTest()
         state.onTrackForBrucey() shouldBe false
     }
 
+    @Test
+    fun `Should report a current target of null for a finished player, and throw an exception if another dart is thrown`()
+    {
+        val rounds = (1..20).map { makeDart(it, 1, startingScore = it) }.chunked(4)
+        val state = makeClockPlayerState(completedRounds = rounds)
+        state.findCurrentTarget() shouldBe null
+
+        shouldThrow<Exception> {
+            state.dartThrown(Dart(1, 1))
+        }
+
+        shouldThrow<Exception> {
+            state.getCurrentTarget()
+        }
+    }
+
+    @Test
+    fun `For out of order games, it should populate thrown darts with all remaining targets`()
+    {
+        val state = makeClockPlayerState(inOrder = false)
+
+        val dartOne = Dart(5, 1)
+        state.dartThrown(dartOne)
+        dartOne.clockTargets shouldBe (1..20).toList()
+
+        val dartTwo = Dart(1, 1)
+        state.dartThrown(dartTwo)
+        dartTwo.clockTargets shouldBe (1..20).filterNot { it == 5 }.toList()
+    }
+
+    @Test
+    fun `For in order games, it should not populate thrown darts with all remaining targets`()
+    {
+        val state = makeClockPlayerState(inOrder = true)
+
+        val dartOne = Dart(5, 1)
+        state.dartThrown(dartOne)
+        dartOne.clockTargets shouldBe emptyList()
+
+        val dartTwo = Dart(1, 1)
+        state.dartThrown(dartTwo)
+        dartTwo.clockTargets shouldBe emptyList()
+    }
+
+    @Test
+    fun `Should correctly report out of order targets as hit`()
+    {
+        val state = makeClockPlayerState(inOrder = false)
+        state.dartThrown(Dart(5, 1))
+        state.hasHitTarget(5) shouldBe true
+    }
+
+    @Test
+    fun `Should not report out of order targets if in ordered mode`()
+    {
+        val state = makeClockPlayerState(inOrder = true)
+
+        val dartOne = Dart(5, 1)
+        state.dartThrown(dartOne)
+        state.hasHitTarget(5) shouldBe false
+
+        state.dartThrown(Dart(1, 1))
+        state.hasHitTarget(1) shouldBe true
+    }
+
+    @Test
+    fun `Should report the correct current target in out of order mode`()
+    {
+        val state = makeClockPlayerState(inOrder = false)
+
+        state.dartThrown(Dart(2, 1))
+        state.dartThrown(Dart(4, 1))
+        state.dartThrown(Dart(6, 1))
+        state.commitRound()
+
+        state.getCurrentTarget() shouldBe 1
+
+        state.dartThrown(Dart(1, 1))
+        state.getCurrentTarget() shouldBe 3
+
+        state.dartThrown(Dart(3, 1))
+        state.getCurrentTarget() shouldBe 5
+    }
+
+    @Test
+    fun `Should only report on track for brucey if hit in the right order`()
+    {
+        val state = makeClockPlayerState(inOrder = false)
+
+        state.dartThrown(Dart(2, 1))
+        state.dartThrown(Dart(5, 1))
+        state.dartThrown(Dart(20, 1))
+        state.commitRound()
+
+        state.dartThrown(Dart(6, 1))
+        state.onTrackForBrucey() shouldBe false
+
+        state.resetRound()
+        state.dartThrown(Dart(1, 1))
+        state.onTrackForBrucey() shouldBe true
+
+        state.dartThrown(Dart(3, 1))
+        state.onTrackForBrucey() shouldBe true
+
+        state.dartThrown(Dart(4, 1))
+        state.onTrackForBrucey() shouldBe true
+    }
 }

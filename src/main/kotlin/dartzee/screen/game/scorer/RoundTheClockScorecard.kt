@@ -38,7 +38,7 @@ class RoundTheClockScorecard: ScrollTable()
     private fun makeClockResult(target: Int, state: ClockPlayerState): ClockResult
     {
         val hit = state.hasHitTarget(target)
-        val bruceyChance = state.onTrackForBrucey() && state.getCurrentTarget() == target && state.isActive
+        val bruceyChance = state.onTrackForBrucey() && state.findCurrentTarget() == target && state.isActive
         return ClockResult(target, hit, bruceyChance)
     }
 }

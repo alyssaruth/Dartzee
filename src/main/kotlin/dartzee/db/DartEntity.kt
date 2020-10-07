@@ -53,8 +53,8 @@ class DartEntity : AbstractEntity<DartEntity>()
             de.multiplier = dart.multiplier
             de.ordinal = ordinal
             de.startingScore = dart.startingScore
-            de.posX = dart.getX()!!
-            de.posY = dart.getY()!!
+            de.posX = dart.getX() ?: 0
+            de.posY = dart.getY() ?: 0
             de.segmentType = dart.segmentType
             return de
         }
