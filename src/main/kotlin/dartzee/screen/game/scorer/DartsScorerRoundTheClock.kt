@@ -26,7 +26,7 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val cloc
 
     override fun stateChangedImpl(state: ClockPlayerState)
     {
-        tableRemaining.stateChanged(state)
+        tableRemaining.stateChanged(state, getPaused())
 
         state.completedRounds.forEach { round ->
             addDartRound(round)
