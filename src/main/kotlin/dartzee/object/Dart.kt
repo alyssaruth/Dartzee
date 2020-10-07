@@ -19,6 +19,9 @@ open class Dart(
     //For Round the Clock, this'll be what they were to aim for
     var startingScore = -1
 
+    //For RTC again
+    var clockTargets: List<Int> = emptyList()
+
     //Never set on the DB. Used for in-game stats, and is just set to the round number.
     var roundNumber = -1
 
@@ -89,17 +92,19 @@ open class Dart(
 
     override fun toString() = format()
 
-    fun hitClockTarget(clockType: ClockType): Boolean
+    fun hitClockTarget(clockType: ClockType) = score == startingScore && isRightClockMultiplier(clockType)
+    fun hitAnyClockTarget(clockType: ClockType): Boolean
     {
-        if (score != startingScore) return false
+        return hitClockTarget(clockType) || (clockTargets.contains(score) && isRightClockMultiplier(clockType))
+    }
 
-        return when (clockType)
+    private fun isRightClockMultiplier(clockType: ClockType): Boolean =
+        when (clockType)
         {
             ClockType.Doubles -> isDouble()
             ClockType.Trebles -> isTreble()
             ClockType.Standard -> multiplier > 0
         }
-    }
 }
 
 class DartNotThrown : Dart(-1, -1)

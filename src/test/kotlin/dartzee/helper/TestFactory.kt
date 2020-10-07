@@ -24,11 +24,13 @@ fun makeDart(score: Int = 20,
              segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
              pt: Point = Point(0, 0),
              startingScore: Int = -1,
-             golfHole: Int = -1): Dart
+             golfHole: Int = -1,
+             clockTargets: List<Int> = emptyList()): Dart
 {
     val dart = Dart(score, multiplier, pt, segmentType)
     dart.startingScore = startingScore
     dart.roundNumber = golfHole
+    dart.clockTargets = clockTargets
     return dart
 }
 

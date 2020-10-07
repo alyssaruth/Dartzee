@@ -142,4 +142,31 @@ class TestDart: AbstractTest()
 
         makeDart(1, 3, startingScore = 2).hitClockTarget(ClockType.Trebles) shouldBe false
     }
+
+    @Test
+    fun `hit any clock target should be true if hit clock target`()
+    {
+        makeDart(1, 1, startingScore = 1).hitAnyClockTarget(ClockType.Standard) shouldBe true
+    }
+
+    @Test
+    fun `hit any clock target should take into account all targets`()
+    {
+        val targets = listOf(5, 8)
+
+        makeDart(5, 1, clockTargets = targets).hitAnyClockTarget(ClockType.Standard) shouldBe true
+        makeDart(8, 1, clockTargets = targets).hitAnyClockTarget(ClockType.Standard) shouldBe true
+        makeDart(10, 1, clockTargets = targets).hitAnyClockTarget(ClockType.Standard) shouldBe false
+    }
+
+    @Test
+    fun `hit any clock target should take multiplier into account`()
+    {
+        val targets = listOf(5, 8)
+
+        val dart = makeDart(5, 3, clockTargets = targets)
+        dart.hitAnyClockTarget(ClockType.Standard) shouldBe true
+        dart.hitAnyClockTarget(ClockType.Trebles) shouldBe true
+        dart.hitAnyClockTarget(ClockType.Doubles) shouldBe false
+    }
 }
