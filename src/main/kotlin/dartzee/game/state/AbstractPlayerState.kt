@@ -64,7 +64,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         fireStateChanged()
     }
 
-    fun addCompletedRound(darts: List<Dart>)
+    open fun addCompletedRound(darts: List<Dart>)
     {
         darts.forEach { it.participantId = pt.rowId }
         this.completedRounds.add(darts.toList())

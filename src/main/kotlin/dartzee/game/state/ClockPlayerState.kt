@@ -35,6 +35,14 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
         super.dartThrown(dart)
     }
 
+    override fun addCompletedRound(darts: List<Dart>)
+    {
+        darts.forEach(::dartThrown)
+        resetRound()
+
+        super.addCompletedRound(darts)
+    }
+
     fun getRemainingTargets(): List<Int>
     {
         val targetsHit = getAllDartsFlattened().filter { it.hitAnyClockTarget(config.clockType) }.map { it.score }

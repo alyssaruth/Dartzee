@@ -260,4 +260,22 @@ class TestClockPlayerState: AbstractTest()
         state.dartThrown(Dart(4, 1))
         state.onTrackForBrucey() shouldBe true
     }
+
+    @Test
+    fun `when loading completed rounds, startingScore and clockTargets should be correctly set`()
+    {
+        val darts = listOf(Dart(2, 1), Dart(1, 1), Dart(4, 1))
+        val state = makeClockPlayerState(inOrder = false)
+
+        state.addCompletedRound(darts)
+
+        darts[0].startingScore shouldBe 1
+        darts[0].clockTargets shouldBe (1..20).toList()
+
+        darts[1].startingScore shouldBe 1
+        darts[1].clockTargets shouldBe listOf(1) + (3..20).toList()
+
+        darts[2].startingScore shouldBe 3
+        darts[2].clockTargets shouldBe (3..20).toList()
+    }
 }
