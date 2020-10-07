@@ -1,13 +1,17 @@
 package dartzee.screen.game.scorer
 
+import com.github.alexburlton.swingtest.findChild
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
 import dartzee.firstRow
 import dartzee.game.ClockType
+import dartzee.game.RoundTheClockConfig
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeClockPlayerState
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.types.shouldBeNull
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import org.junit.Test
@@ -96,9 +100,19 @@ class TestDartsScorerRoundTheClock: AbstractTest()
         )
     }
 
-    private fun factoryScorer(): DartsScorerRoundTheClock
+    @Test
+    fun `Should only add the scorecard if not in order`()
     {
-        val scorer = DartsScorerRoundTheClock(mockk(relaxed = true), ClockType.Standard)
+        val scorerInOrder = factoryScorer(inOrder = true)
+        scorerInOrder.findChild<RoundTheClockScorecard>().shouldBeNull()
+
+        val scorerAnyOrder = factoryScorer(inOrder = false)
+        scorerAnyOrder.findChild<RoundTheClockScorecard>().shouldNotBeNull()
+    }
+
+    private fun factoryScorer(clockType: ClockType = ClockType.Standard, inOrder: Boolean = true): DartsScorerRoundTheClock
+    {
+        val scorer = DartsScorerRoundTheClock(mockk(relaxed = true), RoundTheClockConfig(clockType, inOrder))
         scorer.init(null)
         return scorer
     }
