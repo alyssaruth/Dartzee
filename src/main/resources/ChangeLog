@@ -1,3 +1,8 @@
+--------- v4.6.0 ---------
+
++ Round the Clock mode where targets can be hit in any order
+= 82.9% test coverage (9890 / 11,925 lines covered by 1650 tests)
+
 --------- v4.5.2 ---------
 
 = Substantial refactors to make gameplay logic simpler and more testable
