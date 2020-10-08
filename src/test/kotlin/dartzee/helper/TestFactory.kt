@@ -72,6 +72,7 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>
 
 fun makeClockPlayerState(clockType: ClockType = ClockType.Standard,
                          inOrder: Boolean = true,
+                         isActive: Boolean = false,
                          player: PlayerEntity = insertPlayer(),
                          participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
                          completedRounds: List<List<Dart>> = emptyList(),
@@ -79,7 +80,7 @@ fun makeClockPlayerState(clockType: ClockType = ClockType.Standard,
 {
     val config = RoundTheClockConfig(clockType, inOrder)
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
-    return ClockPlayerState(config, participant, completedRounds.toMutableList(), currentRound.toMutableList())
+    return ClockPlayerState(config, participant, completedRounds.toMutableList(), currentRound.toMutableList(), isActive)
 }
 
 fun makeX01PlayerState(startingScore: Int = 501,
