@@ -63,6 +63,7 @@ class TestRoundTheClockScorecard: AbstractTest()
             makeClockResult(4, hit = true)
         )
     }
-    private fun makeClockResult(value: Int = 1, hit: Boolean = false, isCurrentTarget: Boolean = false) =
-        ClockResult(value, hit, isCurrentTarget)
 }
+
+fun makeClockResult(value: Int = 1, hit: Boolean = false, isCurrentTarget: Boolean = false) =
+    ClockResult(value, hit, isCurrentTarget)
