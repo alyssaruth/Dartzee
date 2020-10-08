@@ -19,7 +19,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
 
-    override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(config.clockType, pt)
+    override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(config, pt)
 
     override fun doAiTurn(model: DartsAiModel)
     {
@@ -48,7 +48,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
             return true
         }
 
-        if (getCurrentPlayerState().getCurrentTarget() > 20)
+        if (getCurrentPlayerState().findCurrentTarget() == null)
         {
             //Finished.
             return true
@@ -85,9 +85,9 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         }
     }
 
-    override fun currentPlayerHasFinished() = getCurrentPlayerState().getCurrentTarget() > 20
+    override fun currentPlayerHasFinished() = getCurrentPlayerState().findCurrentTarget() == null
 
-    override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams).clockType)
+    override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams))
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelRoundTheClock(gameParams)
 

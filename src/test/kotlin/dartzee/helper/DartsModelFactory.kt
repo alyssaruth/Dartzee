@@ -57,21 +57,21 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
             dartzeePlayStyle)
 }
 
-
-fun predictableX01Model(dartboard: Dartboard, mercyThreshold: Int? = null, fn: (startingScore: Int, dartsThrown: Int) -> AimDart): DartsAiModel
+fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mercyThreshold: Int? = null): DartsAiModel
 {
-    val model = mockk<DartsAiModel>(relaxed = true)
+    val model = mockk<DartsAiModel>()
     every { model.mercyThreshold } returns mercyThreshold
 
-    var dartsThrown = 0
-    val slot = slot<Int>()
-    every { model.throwX01Dart(capture(slot), any()) } answers {
-        val aimDart = fn(slot.captured, dartsThrown)
-        val pt = getPointForScore(aimDart, dartboard)
+    val remainingDarts = dartsToThrow.toMutableList()
+
+    val throwDartFn = {
+        val dart = remainingDarts.removeAt(0)
+        val pt = getPointForScore(dart, dartboard)
         dartboard.dartThrown(pt)
-        dartsThrown++
     }
 
+    every { model.throwX01Dart(any(), any()) } answers { throwDartFn() }
+    every { model.throwClockDart(any(), any(), any()) } answers { throwDartFn() }
     return model
 }
 

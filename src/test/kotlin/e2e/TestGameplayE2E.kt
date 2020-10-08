@@ -1,12 +1,11 @@
 package e2e
 
 import dartzee.`object`.Dart
-import dartzee.achievements.*
+import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
+import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.game.ClockType
 import dartzee.game.GameType
-import dartzee.game.RoundTheClockConfig
 import dartzee.helper.*
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
@@ -86,27 +85,5 @@ class TestGameplayE2E: AbstractRegistryTest()
                 AchievementSummary(ACHIEVEMENT_REF_GOLF_BEST_GAME, 18, game.rowId)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
-    }
-
-    @Test
-    fun `E2E - RTC`()
-    {
-        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
-
-        val model = beastDartsModel()
-        val player = insertPlayer(model = model)
-
-        val (panel, listener) = setUpGamePanel(game)
-        panel.startNewGame(listOf(player))
-        awaitGameFinish(game)
-
-        val expectedDarts = (1..20).map { Dart(it, 1) }.chunked(4)
-        verifyState(panel, listener, expectedDarts, 20, scoreSuffix = " Darts")
-
-        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_GAME, 20, game.rowId),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, 20, game.rowId),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, 5, "")
-        )
     }
 }

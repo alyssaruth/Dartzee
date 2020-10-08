@@ -36,6 +36,14 @@ class TestRoundTheClockDartRenderer: AbstractRegistryTest()
     }
 
     @Test
+    fun `Should render out of order hits as normal darts`()
+    {
+        val renderer = RoundTheClockDartRenderer(ClockType.Standard)
+        val dart = makeDart(2, 1, startingScore = 1, clockTargets = (1..20).toList())
+        renderer.getReplacementValue(dart) shouldBe "2"
+    }
+
+    @Test
     fun `Should take into account clockType when rendering darts`()
     {
         val renderer = RoundTheClockDartRenderer(ClockType.Doubles)
@@ -65,15 +73,20 @@ class TestRoundTheClockDartRenderer: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should render misses in red, and hits in green`()
+    fun `Should render misses in red, hits in green and out of order hits in yellow`()
     {
         val renderer = RoundTheClockDartRenderer(ClockType.Standard)
         val hit = makeDart(1, 1, startingScore = 1)
+        val outOfOrderHit = makeDart(2, 1, startingScore = 1, clockTargets = (1..20).toList())
         val miss = makeDart(20, 1, startingScore = 3)
 
         renderer.setCellColours(hit, false)
         renderer.foreground shouldBe Color.getHSBColor(0.3f, 1f, 0.5f)
         renderer.background shouldBe Color.getHSBColor(0.3f, 1f, 1f)
+
+        renderer.setCellColours(outOfOrderHit, false)
+        renderer.foreground shouldBe Color.getHSBColor(0.15f, 1f, 0.5f)
+        renderer.background shouldBe Color.getHSBColor(0.15f, 1f, 1f)
 
         renderer.setCellColours(miss, false)
         renderer.foreground shouldBe Color.getHSBColor(0f, 1f, 0.5f)

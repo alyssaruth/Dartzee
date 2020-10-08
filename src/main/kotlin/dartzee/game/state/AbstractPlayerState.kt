@@ -17,9 +17,11 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     abstract fun getScoreSoFar(): Int
 
+    @Suppress("UNCHECKED_CAST")
     fun addListener(listener: PlayerStateListener<S>)
     {
         listeners.add(listener)
+        listener.stateChanged(this as S)
     }
 
     /**
@@ -60,6 +62,11 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         currentRound.clear()
 
         fireStateChanged()
+    }
+
+    open fun addLoadedRound(darts: List<Dart>)
+    {
+        addCompletedRound(darts)
     }
 
     fun addCompletedRound(darts: List<Dart>)

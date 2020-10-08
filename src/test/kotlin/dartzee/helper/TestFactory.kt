@@ -5,6 +5,7 @@ import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
+import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.X01PlayerState
@@ -23,11 +24,13 @@ fun makeDart(score: Int = 20,
              segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
              pt: Point = Point(0, 0),
              startingScore: Int = -1,
-             golfHole: Int = -1): Dart
+             golfHole: Int = -1,
+             clockTargets: List<Int> = emptyList()): Dart
 {
     val dart = Dart(score, multiplier, pt, segmentType)
     dart.startingScore = startingScore
     dart.roundNumber = golfHole
+    dart.clockTargets = clockTargets
     return dart
 }
 
@@ -68,13 +71,16 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>
 }
 
 fun makeClockPlayerState(clockType: ClockType = ClockType.Standard,
+                         inOrder: Boolean = true,
+                         isActive: Boolean = false,
                          player: PlayerEntity = insertPlayer(),
                          participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
                          completedRounds: List<List<Dart>> = emptyList(),
                          currentRound: List<Dart> = emptyList()): ClockPlayerState
 {
+    val config = RoundTheClockConfig(clockType, inOrder)
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
-    return ClockPlayerState(clockType, participant, completedRounds.toMutableList(), currentRound.toMutableList())
+    return ClockPlayerState(config, participant, completedRounds.toMutableList(), currentRound.toMutableList(), isActive)
 }
 
 fun makeX01PlayerState(startingScore: Int = 501,

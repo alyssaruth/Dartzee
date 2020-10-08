@@ -39,7 +39,11 @@ class RoundTheClockDartRenderer(private val clockType: ClockType): AbstractTable
             var hue = 0f //Red
             if (typedValue.hitClockTarget(clockType))
             {
-                hue = 0.3.toFloat() //Green
+                hue = 0.3f //Green
+            }
+            else if (typedValue.hitAnyClockTarget(clockType))
+            {
+                hue = 0.15f //orangey
             }
 
             foreground = Color.getHSBColor(hue, 1f, fgBrightness.toFloat())
@@ -47,7 +51,7 @@ class RoundTheClockDartRenderer(private val clockType: ClockType): AbstractTable
         }
     }
 
-    override fun getReplacementValue(value: Dart) = if (!value.hitClockTarget(clockType)) "X" else "$value"
+    override fun getReplacementValue(value: Dart) = if (!value.hitAnyClockTarget(clockType)) "X" else "$value"
     override fun allowNulls() = true
 }
 

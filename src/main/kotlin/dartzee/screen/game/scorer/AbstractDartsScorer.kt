@@ -105,10 +105,10 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
 
         //Let's just only ever have one thing at a time on display. Actually layering them sometimes worked but
         //sometimes caused weird bollocks when things happened close together
-        achievementPanel.removeAll()
-        achievementPanel.add(overlay, BorderLayout.CENTER)
-        achievementPanel.revalidate()
-        achievementPanel.repaint()
+        panelCenter.removeAll()
+        panelCenter.add(overlay, BorderLayout.CENTER)
+        panelCenter.revalidate()
+        panelCenter.repaint()
     }
 
     inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
@@ -177,21 +177,21 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
 
         override fun actionPerformed(e: ActionEvent)
         {
-            achievementPanel.removeAll()
+            panelCenter.removeAll()
             overlays.remove(this)
 
             //If there are more overlays stacked 'beneath', show the next one of them now
             if (overlays.isNotEmpty())
             {
-                achievementPanel.add(overlays.last(), BorderLayout.CENTER)
+                panelCenter.add(overlays.last(), BorderLayout.CENTER)
             }
             else
             {
-                achievementPanel.add(tableScores)
+                panelCenter.add(tableScores)
             }
 
-            achievementPanel.revalidate()
-            achievementPanel.repaint()
+            panelCenter.revalidate()
+            panelCenter.repaint()
             revalidate()
             repaint()
         }

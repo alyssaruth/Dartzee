@@ -13,6 +13,7 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
@@ -171,6 +172,16 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
+    fun `Should fire state changed at the point a listener is added`()
+    {
+        val state = TestPlayerState(insertParticipant())
+        val listener = mockk<PlayerStateListener<TestPlayerState>>(relaxed = true)
+        state.addListener(listener)
+
+        verify { listener.stateChanged(state) }
+    }
+
+    @Test
     fun `Should identify human vs ai`()
     {
         val ai = insertPlayer(strategy = "foo")
@@ -197,6 +208,7 @@ fun <S: AbstractPlayerState<S>> S.shouldFireStateChange(fn: (state: S) -> Unit)
 {
     val listener = mockk<PlayerStateListener<S>>(relaxed = true)
     addListener(listener)
+    clearMocks(listener)
 
     fn(this)
 
@@ -208,6 +220,7 @@ fun <S: AbstractPlayerState<S>> S.shouldNotFireStateChange(fn: (state: S) -> Uni
 {
     val listener = mockk<PlayerStateListener<S>>(relaxed = true)
     addListener(listener)
+    clearMocks(listener)
 
     fn(this)
 

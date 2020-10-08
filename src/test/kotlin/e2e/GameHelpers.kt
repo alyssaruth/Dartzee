@@ -4,6 +4,7 @@ import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.Dart
 import dartzee.ai.AimDart
+import dartzee.ai.DartsAiModel
 import dartzee.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
@@ -27,6 +28,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
 import java.awt.Window
+import java.util.*
 import javax.swing.JButton
 import javax.swing.JToggleButton
 import javax.swing.SwingUtilities
@@ -87,6 +89,17 @@ fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
 fun awaitGameFinish(game: GameEntity)
 {
     awaitCondition { game.isFinished() }
+}
+
+fun makePlayerWithModel(model: DartsAiModel): PlayerEntity
+{
+    val player = mockk<PlayerEntity>(relaxed = true)
+    every { player.getModel() } returns model
+    every { player.rowId } returns UUID.randomUUID().toString()
+    every { player.isAi() } returns true
+    every { player.isHuman() } returns false
+    return player
+
 }
 
 fun verifyState(panel: DartsGamePanel<*, *, *>,
