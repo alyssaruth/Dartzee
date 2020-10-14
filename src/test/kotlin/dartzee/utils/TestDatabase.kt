@@ -1,29 +1,23 @@
 package dartzee.utils
 
 import dartzee.helper.AbstractTest
-import dartzee.helper.dropUnexpectedTables
 import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
-import dartzee.utils.InjectedThings.database
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotThrowAny
 import org.junit.Test
+import java.util.*
 
-class TestDatabaseUtil: AbstractTest()
+class TestDatabase: AbstractTest()
 {
-    override fun afterEachTest()
-    {
-        super.afterEachTest()
-
-        dropUnexpectedTables()
-    }
-
     @Test
     fun `Should create a new connection if the pool is depleted`()
     {
+        val database = makeInMemoryDatabase()
         database.initialiseConnectionPool(1)
         clearLogs()
 
@@ -49,6 +43,7 @@ class TestDatabaseUtil: AbstractTest()
     {
         clearLogs()
 
+        val database = makeInMemoryDatabase()
         val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
         database.executeUpdates(updates) shouldBe true
 
@@ -65,6 +60,7 @@ class TestDatabaseUtil: AbstractTest()
     @Test
     fun `Should abort if any updates fail`()
     {
+        val database = makeInMemoryDatabase()
         val updates = listOf("bollucks", "CREATE TABLE zzUpdateTest(str VARCHAR(50))")
 
         database.executeUpdates(updates) shouldBe false
@@ -76,6 +72,7 @@ class TestDatabaseUtil: AbstractTest()
     @Test
     fun `Should log SQLExceptions for failed updates`()
     {
+        val database = makeInMemoryDatabase()
         val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
         database.executeUpdate(update) shouldBe false
 
@@ -87,6 +84,7 @@ class TestDatabaseUtil: AbstractTest()
     @Test
     fun `Should execute queries and log them to the console`()
     {
+        val database = makeInMemoryDatabase()
         val updates = listOf("CREATE TABLE zzQueryTest(str VARCHAR(50))",
                 "INSERT INTO zzQueryTest VALUES ('RowOne')",
                 "INSERT INTO zzQueryTest VALUES ('RowTwo')")
@@ -111,11 +109,30 @@ class TestDatabaseUtil: AbstractTest()
     @Test
     fun `Should log SQLExceptions (and show an error) for failed queries`()
     {
+        val database = makeInMemoryDatabase()
         val query = "SELECT * FROM zzQueryTest"
         database.executeQuery(query)
 
         val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
         log.message shouldBe "Caught SQLException for statement: $query"
-        log.errorObject?.message shouldContain "Table/View 'ZZQUERYTEST' does not exist."
+        log.errorObject?.message shouldContain "does not exist"
+    }
+
+    @Test
+    fun `Should be possible to connect to separate databases concurrently`()
+    {
+        val dbOne = makeInMemoryDatabase("TestOne")
+        val dbTwo = makeInMemoryDatabase("TestTwo")
+
+        shouldNotThrowAny {
+            dbOne.initialiseConnectionPool(5)
+            dbTwo.initialiseConnectionPool(5)
+        }
+    }
+
+    private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()): Database
+    {
+        val fullName = "jdbc:derby:memory:$dbName;create=true"
+        return Database(dbName = fullName).also { it.initialiseConnectionPool(5) }
     }
 }
