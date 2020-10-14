@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import dartzee.achievements.AbstractAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
 import dartzee.utils.getAdjacentNumbers
@@ -30,7 +30,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override fun populateForConversion(playerIds: String)
     {
         val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
-        val tempTable = DatabaseUtil.createTempTable("CheckoutDarts", cols)
+        val tempTable = database.createTempTable("CheckoutDarts", cols)
 
         tempTable ?: return
 
@@ -50,9 +50,9 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!DatabaseUtil.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
-            DatabaseUtil.dropTable(tempTable)
+            database.dropTable(tempTable)
             return
         }
 
@@ -74,8 +74,8 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
         try
         {
-            val rs = DatabaseUtil.executeQuery(sb)
-            rs.use{
+            val rs = database.executeQuery(sb)
+            rs.use {
                 while (rs.next())
                 {
                     val playerId = rs.getString("PlayerId")
@@ -100,7 +100,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         }
         finally
         {
-            DatabaseUtil.dropTable(tempTable)
+            database.dropTable(tempTable)
         }
     }
 

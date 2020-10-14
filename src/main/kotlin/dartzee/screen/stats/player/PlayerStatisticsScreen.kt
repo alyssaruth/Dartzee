@@ -15,7 +15,7 @@ import dartzee.screen.stats.player.golf.StatisticsTabGolfScorecards
 import dartzee.screen.stats.player.rtc.StatisticsTabRoundTheClockHitRate
 import dartzee.screen.stats.player.x01.*
 import dartzee.stats.GameWrapper
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -170,7 +170,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 
         try
         {
-            DatabaseUtil.executeQuery(sb).use { rs ->
+            database.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val gameId = rs.getLong("LocalId")
@@ -202,14 +202,14 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         }
         finally
         {
-            DatabaseUtil.dropTable(zzParticipants)
+            database.dropTable(zzParticipants)
         }
 
         return hm
     }
     private fun buildParticipantTable(playerId: String): String?
     {
-        val tmp = DatabaseUtil.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT")
+        val tmp = database.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT")
         tmp ?: return null
 
         val sb = StringBuilder()
@@ -220,9 +220,9 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         sb.append(" AND pt.PlayerId = '$playerId'")
         sb.append(" AND g.GameType = '$gameType'")
 
-        DatabaseUtil.executeUpdate("" + sb)
+        database.executeUpdate("" + sb)
 
-        DatabaseUtil.executeUpdate("CREATE INDEX ${tmp}_PlayerId_ParticipantId ON $tmp(PlayerId, ParticipantId)")
+        database.executeUpdate("CREATE INDEX ${tmp}_PlayerId_ParticipantId ON $tmp(PlayerId, ParticipantId)")
         return tmp
     }
 

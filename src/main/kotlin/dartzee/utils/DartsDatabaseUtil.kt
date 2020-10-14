@@ -11,6 +11,7 @@ import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
 import dartzee.logging.*
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.InjectedThings.logger
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
@@ -29,7 +30,7 @@ object DartsDatabaseUtil
     const val DATABASE_VERSION = 15
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
-    private val DATABASE_FILE_PATH_TEMP = DatabaseUtil.DATABASE_FILE_PATH + "_copying"
+    private val DATABASE_FILE_PATH_TEMP = DATABASE_FILE_PATH + "_copying"
 
     fun getAllEntities(): MutableList<AbstractEntity<*>>
     {
@@ -60,10 +61,10 @@ object DartsDatabaseUtil
 
         DialogUtil.showLoadingDialog("Checking database status...")
 
-        DatabaseUtil.doDuplicateInstanceCheck()
+        database.doDuplicateInstanceCheck()
 
         //Pool the db connections now. Initialise with 5 to begin with?
-        DatabaseUtil.initialiseConnectionPool(5)
+        database.initialiseConnectionPool(5)
 
         //Ensure this exists
         VersionEntity().createTable()
@@ -197,7 +198,7 @@ object DartsDatabaseUtil
 
         val batches = rsrc.split(";")
 
-        DatabaseUtil.executeUpdates(batches)
+        database.executeUpdates(batches)
     }
     private fun getScripts(version: Int): List<String>
     {
@@ -233,7 +234,7 @@ object DartsDatabaseUtil
      */
     fun backupCurrentDatabase()
     {
-        val dbFolder = File(DatabaseUtil.DATABASE_FILE_PATH)
+        val dbFolder = File(DATABASE_FILE_PATH)
 
         logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
@@ -281,7 +282,7 @@ object DartsDatabaseUtil
         }
 
         //Issue a shutdown command to derby so we no longer have a handle on the old files
-        val shutdown = DatabaseUtil.shutdownDerby()
+        val shutdown = database.shutdownDerby()
         if (!shutdown)
         {
             DialogUtil.showError("Failed to shut down current database connection, unable to restore new database.")
@@ -289,7 +290,7 @@ object DartsDatabaseUtil
         }
 
         //Now switch it in
-        val error = FileUtil.swapInFile(DatabaseUtil.DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
+        val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
         if (error != null)
         {
             DialogUtil.showError("Failed to restore database. Error: $error")
@@ -316,8 +317,8 @@ object DartsDatabaseUtil
         }
 
         //Test we can connect
-        val filePath = directoryFrom.absolutePath
-        val testSuccess = DatabaseUtil.testConnection(filePath)
+        val otherDatabase = Database(filePath = directoryFrom.absolutePath)
+        val testSuccess = otherDatabase.testConnection()
         if (!testSuccess)
         {
             DialogUtil.showError("Testing conection failed for the selected database. Cannot restore from this location.")

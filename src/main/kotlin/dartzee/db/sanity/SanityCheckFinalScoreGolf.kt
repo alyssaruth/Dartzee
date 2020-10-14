@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.achievements.getGolfSegmentCases
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 
 class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()
 {
@@ -36,6 +36,6 @@ class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()
         sb.append(" GROUP BY pt.RowID, pt.FinalScore")
 
         val sql = sb.toString()
-        DatabaseUtil.executeUpdate(sql)
+        database.executeUpdate(sql)
     }
 }

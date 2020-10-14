@@ -10,15 +10,14 @@ import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.utils.DartsDatabaseUtil
-import dartzee.utils.DatabaseUtil
-import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
+import dartzee.utils.InjectedThings.database
 import java.sql.Timestamp
 import java.util.*
 import javax.sql.rowset.serial.SerialBlob
 
 fun wipeTable(tableName: String)
 {
-    DatabaseUtil.executeUpdate("DELETE FROM $tableName")
+    database.executeUpdate("DELETE FROM $tableName")
 }
 
 fun randomGuid() = UUID.randomUUID().toString()
@@ -39,7 +38,7 @@ fun factoryPlayer(name: String): PlayerEntity
 }
 
 fun insertDartsMatch(uuid: String = randomGuid(),
-                     localId: Long = LocalIdGenerator.generateLocalId("DartsMatch"),
+                     localId: Long = LocalIdGenerator.generateLocalId(database, "DartsMatch"),
                      games: Int = 3,
                      mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -156,7 +155,7 @@ fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),
-                        localId: Long = LocalIdGenerator.generateLocalId("Game"),
+                        localId: Long = LocalIdGenerator.generateLocalId(database, "Game"),
                         gameType: GameType = GameType.X01,
                         gameParams: String = "501",
                         dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -172,7 +171,7 @@ fun insertGameForReport(uuid: String = randomGuid(),
 }
 
 fun insertGame(uuid: String = randomGuid(),
-               localId: Long = LocalIdGenerator.generateLocalId("Game"),
+               localId: Long = LocalIdGenerator.generateLocalId(database, "Game"),
                gameType: GameType = GameType.X01,
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -277,7 +276,7 @@ fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
 
 fun getCountFromTable(table: String): Int
 {
-    return executeQueryAggregate("SELECT COUNT(1) FROM $table")
+    return database.executeQueryAggregate("SELECT COUNT(1) FROM $table")
 }
 
 fun dropAllTables() = dropTables(false)
@@ -299,14 +298,14 @@ fun dropTables(onlyUnexpected: Boolean): List<String>
     }
 
     val list = mutableListOf<String>()
-    DatabaseUtil.executeQuery(sb).use{ rs ->
+    database.executeQuery(sb).use{ rs ->
         while (rs.next())
         {
             list.add(rs.getString("TableName"))
         }
     }
 
-    list.forEach{ DatabaseUtil.executeUpdate("DROP TABLE $it")}
+    list.forEach{ database.executeUpdate("DROP TABLE $it")}
 
     return list
 }

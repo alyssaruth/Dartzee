@@ -5,7 +5,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.ResourceCache
 import java.net.URL
 
@@ -31,7 +31,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("PlayerHolesInOne", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
+        val tempTable = database.createTempTable("PlayerHolesInOne", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                 ?: return
 
         var sb = StringBuilder()
@@ -50,7 +50,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!DatabaseUtil.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
             return
 
         sb = StringBuilder()
@@ -64,7 +64,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
         sb.append("     AND zz2.DtAchieved < zz1.DtAchieved")
         sb.append(")")
 
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -76,6 +76,6 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
             }
         }
 
-        DatabaseUtil.dropTable(tempTable)
+        database.dropTable(tempTable)
     }
 }

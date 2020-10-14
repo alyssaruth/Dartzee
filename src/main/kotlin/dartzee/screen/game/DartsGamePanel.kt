@@ -21,7 +21,7 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.x01.GamePanelX01
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
@@ -324,7 +324,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
             try
             {
-                DatabaseUtil.executeQuery(sql).use { rs ->
+                database.executeQuery(sql).use { rs ->
                     while (rs.next())
                     {
                         val roundNumber = rs.getInt("RoundNumber")
@@ -390,7 +390,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         sb.append(gameId)
         sb.append("'")
 
-        val lastPlayerNumber = DatabaseUtil.executeQueryAggregate(sb)
+        val lastPlayerNumber = database.executeQueryAggregate(sb)
         currentPlayerNumber = getNextPlayerNumber(lastPlayerNumber)
     }
 

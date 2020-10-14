@@ -5,7 +5,7 @@ import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
 import java.net.URL
 
@@ -47,7 +47,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")

@@ -1,7 +1,7 @@
 package dartzee.reporting
 
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import java.sql.ResultSet
 import java.sql.Timestamp
 
@@ -16,7 +16,7 @@ fun runReport(rp: ReportParameters?): List<ReportResultWrapper>
     sql += rp.getExtraWhereSql()
 
     val hm = mutableMapOf<Long, ReportResultWrapper>()
-    DatabaseUtil.executeQuery(sql).use { rs ->
+    database.executeQuery(sql).use { rs ->
         while (rs.next())
         {
             val localId = rs.getLong("LocalId")

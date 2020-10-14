@@ -8,7 +8,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DartsColour
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.awt.Color
@@ -51,7 +51,7 @@ abstract class AbstractAchievement
             sb.append(" AND PlayerId IN ($keys)" )
         }
 
-        if (!DatabaseUtil.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
             return
         }

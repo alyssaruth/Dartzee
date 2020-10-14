@@ -5,6 +5,7 @@ import dartzee.db.DartEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.database
 import javax.swing.JOptionPane
 
 object DevUtilities
@@ -23,7 +24,7 @@ object DevUtilities
     }
     private fun getAllGameIds(): Array<Long>?
     {
-        val gameCount = DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM Game")
+        val gameCount = database.executeQueryAggregate("SELECT COUNT(1) FROM Game")
         if (gameCount == 0)
         {
             return null
@@ -31,7 +32,7 @@ object DevUtilities
 
         val gameIds = mutableListOf<Long>()
 
-        DatabaseUtil.executeQuery("SELECT LocalId FROM Game").use { rs ->
+        database.executeQuery("SELECT LocalId FROM Game").use { rs ->
             while (rs.next())
             {
                 val rowId = rs.getLong("LocalId")
@@ -72,7 +73,7 @@ object DevUtilities
             participants.forEach{ it.deleteFromDatabase() }
 
             val gameDeleteSql = "DELETE FROM Game WHERE RowId = '$gameId'"
-            DatabaseUtil.executeUpdate(gameDeleteSql)
+            database.executeUpdate(gameDeleteSql)
 
             DialogUtil.showInfo("Game #$localId has been purged.")
         }

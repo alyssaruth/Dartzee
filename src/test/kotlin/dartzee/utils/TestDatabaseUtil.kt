@@ -6,6 +6,7 @@ import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
+import dartzee.utils.InjectedThings.database
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -23,23 +24,23 @@ class TestDatabaseUtil: AbstractTest()
     @Test
     fun `Should create a new connection if the pool is depleted`()
     {
-        DatabaseUtil.initialiseConnectionPool(1)
+        database.initialiseConnectionPool(1)
         clearLogs()
 
         //Should borrow from the pool when non-empty
-        val conn = DatabaseUtil.borrowConnection()
+        val conn = database.borrowConnection()
         verifyNoLogs(CODE_NEW_CONNECTION)
 
         //Should create a new one now that there are none left
-        val conn2 = DatabaseUtil.borrowConnection()
+        val conn2 = database.borrowConnection()
         verifyLog(CODE_NEW_CONNECTION)
 
-        DatabaseUtil.returnConnection(conn2)
-        DatabaseUtil.returnConnection(conn)
+        database.returnConnection(conn2)
+        database.returnConnection(conn)
 
         //Should have returned the connection successfully
         clearLogs()
-        DatabaseUtil.borrowConnection()
+        database.borrowConnection()
         verifyNoLogs(CODE_NEW_CONNECTION)
     }
 
@@ -49,16 +50,16 @@ class TestDatabaseUtil: AbstractTest()
         clearLogs()
 
         val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
-        DatabaseUtil.executeUpdates(updates) shouldBe true
+        database.executeUpdates(updates) shouldBe true
 
         val records = getLogRecords().filter { it.loggingCode == CODE_SQL }
         records.size shouldBe 2
         records.first().message shouldContain "CREATE TABLE zzUpdateTest(str VARCHAR(50))"
         records.last().message shouldContain "INSERT INTO zzUpdateTest VALUES ('5')"
 
-        DatabaseUtil.executeQueryAggregate("SELECT COUNT(1) FROM zzUpdateTest") shouldBe 1
+        database.executeQueryAggregate("SELECT COUNT(1) FROM zzUpdateTest") shouldBe 1
 
-        DatabaseUtil.dropTable("zzUpdateTest")
+        database.dropTable("zzUpdateTest")
     }
 
     @Test
@@ -66,17 +67,17 @@ class TestDatabaseUtil: AbstractTest()
     {
         val updates = listOf("bollucks", "CREATE TABLE zzUpdateTest(str VARCHAR(50))")
 
-        DatabaseUtil.executeUpdates(updates) shouldBe false
+        database.executeUpdates(updates) shouldBe false
         verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
 
-        DatabaseUtil.createTableIfNotExists("zzUpdateTest", "str VARCHAR(50)") shouldBe true
+        database.createTableIfNotExists("zzUpdateTest", "str VARCHAR(50)") shouldBe true
     }
 
     @Test
     fun `Should log SQLExceptions for failed updates`()
     {
         val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
-        DatabaseUtil.executeUpdate(update) shouldBe false
+        database.executeUpdate(update) shouldBe false
 
         val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
         log.message.shouldContain("Caught SQLException for statement: $update")
@@ -90,10 +91,10 @@ class TestDatabaseUtil: AbstractTest()
                 "INSERT INTO zzQueryTest VALUES ('RowOne')",
                 "INSERT INTO zzQueryTest VALUES ('RowTwo')")
 
-        DatabaseUtil.executeUpdates(updates)
+        database.executeUpdates(updates)
 
         val retrievedValues = mutableListOf<String>()
-        DatabaseUtil.executeQuery("SELECT * FROM zzQueryTest").use { rs ->
+        database.executeQuery("SELECT * FROM zzQueryTest").use { rs ->
             while (rs.next())
             {
                 retrievedValues.add(rs.getString(1))
@@ -111,7 +112,7 @@ class TestDatabaseUtil: AbstractTest()
     fun `Should log SQLExceptions (and show an error) for failed queries`()
     {
         val query = "SELECT * FROM zzQueryTest"
-        DatabaseUtil.executeQuery(query)
+        database.executeQuery(query)
 
         val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
         log.message shouldBe "Caught SQLException for statement: $query"

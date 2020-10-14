@@ -3,6 +3,7 @@ package dartzee.db
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.wipeTable
+import dartzee.utils.InjectedThings.database
 import io.kotlintest.matchers.collections.shouldBeUnique
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
@@ -15,7 +16,7 @@ class TestLocalIdGenerator: AbstractTest()
     {
         wipeTable("Game")
 
-        LocalIdGenerator.generateLocalId("Game") shouldBe 1
+        LocalIdGenerator.generateLocalId(database, "Game") shouldBe 1
     }
 
     @Test
@@ -25,7 +26,7 @@ class TestLocalIdGenerator: AbstractTest()
 
         insertGame(localId = 5)
 
-        LocalIdGenerator.generateLocalId("Game") shouldBe 6
+        LocalIdGenerator.generateLocalId(database, "Game") shouldBe 6
     }
 
     @Test
@@ -33,9 +34,9 @@ class TestLocalIdGenerator: AbstractTest()
     {
         LocalIdGenerator.hmLastAssignedIdByTableName["Test"] = 25
 
-        val idOne = LocalIdGenerator.generateLocalId("Test")
-        val idTwo = LocalIdGenerator.generateLocalId("Test")
-        val idThree = LocalIdGenerator.generateLocalId("Test")
+        val idOne = LocalIdGenerator.generateLocalId(database, "Test")
+        val idTwo = LocalIdGenerator.generateLocalId(database, "Test")
+        val idThree = LocalIdGenerator.generateLocalId(database, "Test")
 
         idOne shouldBe 26
         idTwo shouldBe 27
@@ -48,8 +49,8 @@ class TestLocalIdGenerator: AbstractTest()
         LocalIdGenerator.hmLastAssignedIdByTableName["foo"] = 5
         LocalIdGenerator.hmLastAssignedIdByTableName["bar"] = 25
 
-        LocalIdGenerator.generateLocalId("foo") shouldBe 6
-        LocalIdGenerator.generateLocalId("bar") shouldBe 26
+        LocalIdGenerator.generateLocalId(database, "foo") shouldBe 6
+        LocalIdGenerator.generateLocalId(database, "bar") shouldBe 26
     }
 
     @Test
@@ -90,7 +91,7 @@ class TestLocalIdGenerator: AbstractTest()
         {
             for (i in 1..20)
             {
-                val id = LocalIdGenerator.generateLocalId("foo")
+                val id = LocalIdGenerator.generateLocalId(database, "foo")
                 list.add(id)
             }
         }

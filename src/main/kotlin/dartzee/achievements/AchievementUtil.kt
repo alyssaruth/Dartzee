@@ -14,7 +14,7 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
@@ -85,7 +85,7 @@ private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchiev
 fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 {
     val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementRef = ${achievement.achievementRef}"
-    val count = DatabaseUtil.executeQueryAggregate(sql)
+    val count = database.executeQueryAggregate(sql)
 
     return count > 0
 }
@@ -134,7 +134,7 @@ fun getWinAchievementRef(gameType : GameType): Int
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int)
 {
-    val tempTable = DatabaseUtil.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
+    val tempTable = database.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
             ?: return
 
     var sb = StringBuilder()
@@ -155,9 +155,9 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     sb.append(" AND pt.GameId = g.RowId")
     sb.append(" AND g.GameType = '${GameType.X01}'")
 
-    if (!DatabaseUtil.executeUpdate("" + sb))
+    if (!database.executeUpdate("" + sb))
     {
-        DatabaseUtil.dropTable(tempTable)
+        database.dropTable(tempTable)
         return
     }
 
@@ -174,7 +174,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
 
     try
     {
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -192,7 +192,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
     finally
     {
-        DatabaseUtil.dropTable(tempTable)
+        database.dropTable(tempTable)
     }
 }
 

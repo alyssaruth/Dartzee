@@ -1,7 +1,7 @@
 package dartzee.db.sanity
 
 import dartzee.core.util.TableUtil
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 
 class SanityCheckColumnsThatAllowDefaults: AbstractSanityCheck()
 {
@@ -18,7 +18,7 @@ class SanityCheckColumnsThatAllowDefaults: AbstractSanityCheck()
         model.addColumn("TableName")
         model.addColumn("ColumnName")
 
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val tableName = rs.getString("TableName")

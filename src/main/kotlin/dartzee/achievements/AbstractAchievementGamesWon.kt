@@ -1,7 +1,7 @@
 package dartzee.achievements
 
 import dartzee.db.AchievementEntity
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 
 abstract class AbstractAchievementGamesWon : AbstractAchievement()
 {
@@ -27,7 +27,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
         }
         sb.append(" GROUP BY PlayerId")
 
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")

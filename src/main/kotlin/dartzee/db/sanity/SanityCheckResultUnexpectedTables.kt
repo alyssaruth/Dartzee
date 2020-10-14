@@ -3,7 +3,7 @@ package dartzee.db.sanity
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil.DefaultModel
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.database
 import javax.swing.JOptionPane
 
 class SanityCheckResultUnexpectedTables(model: DefaultModel) : SanityCheckResultSimpleTableModel(model, "Unexpected Tables")
@@ -32,7 +32,7 @@ class SanityCheckResultUnexpectedTables(model: DefaultModel) : SanityCheckResult
         var success = true
         for (tableName in tableNames)
         {
-            success = DatabaseUtil.dropTable(tableName) && success
+            success = database.dropTable(tableName) && success
         }
 
         return success

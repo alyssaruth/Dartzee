@@ -3,7 +3,6 @@ package dartzee.db
 import dartzee.core.util.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.utils.DatabaseUtil
 
 /**
  * Simple entity to join multiple 'games' together into a 'match'.
@@ -39,7 +38,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
 
     override fun assignRowId(): String
     {
-        localId = LocalIdGenerator.generateLocalId(getTableName())
+        localId = LocalIdGenerator.generateLocalId(database, getTableName())
         return super.assignRowId()
     }
 
@@ -65,7 +64,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         sb.append(" ORDER BY COUNT(1) DESC")
         sb.append(" FETCH FIRST 1 ROWS ONLY")
 
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             if (rs.next())
             {
                 val count = rs.getInt("WinCount")
@@ -84,7 +83,7 @@ class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
         sb.append(" AND DtFinish < ")
         sb.append(getEndOfTimeSqlString())
 
-        val count = DatabaseUtil.executeQueryAggregate(sb)
+        val count = database.executeQueryAggregate(sb)
         return count == games
     }
 
