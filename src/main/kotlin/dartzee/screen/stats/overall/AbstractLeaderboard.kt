@@ -4,7 +4,7 @@ import dartzee.bean.PlayerTypeFilterPanel
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil
 import dartzee.db.PlayerEntity
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JPanel
@@ -52,7 +52,7 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
     {
         val rows = mutableListOf<Array<Any>>()
 
-        DatabaseUtil.executeQuery(sqlStr).use { rs ->
+        mainDatabase.executeQuery(sqlStr).use { rs ->
             while (rs.next())
             {
                 val strategy = rs.getString("Strategy")

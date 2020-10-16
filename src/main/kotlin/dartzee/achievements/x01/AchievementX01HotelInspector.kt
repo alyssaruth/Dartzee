@@ -5,7 +5,7 @@ import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.getNotBustSql
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
@@ -34,7 +34,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
+        val tempTable = mainDatabase.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
         tempTable ?: return
 
         var sb = StringBuilder()
@@ -67,14 +67,14 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!DatabaseUtil.executeUpdate("" + sb))
+        if (!mainDatabase.executeUpdate("" + sb))
         {
-            DatabaseUtil.dropTable(tempTable)
+            mainDatabase.dropTable(tempTable)
             return
         }
 
-        DatabaseUtil.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
-        val tempTableTwo = DatabaseUtil.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
+        mainDatabase.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
+        val tempTableTwo = mainDatabase.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
 
         sb = StringBuilder()
         sb.append(" INSERT INTO $tempTableTwo")
@@ -90,10 +90,10 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
         sb.append(" GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}")
 
-        if (!DatabaseUtil.executeUpdate("" + sb))
+        if (!mainDatabase.executeUpdate("" + sb))
         {
-            DatabaseUtil.dropTable(tempTable)
-            DatabaseUtil.dropTable(tempTableTwo)
+            mainDatabase.dropTable(tempTable)
+            mainDatabase.dropTable(tempTableTwo)
             return
         }
 
@@ -111,7 +111,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
 
         try
         {
-            val rs = DatabaseUtil.executeQuery(sb)
+            val rs = mainDatabase.executeQuery(sb)
             rs.use{
                 while (rs.next())
                 {
@@ -130,8 +130,8 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         }
         finally
         {
-            DatabaseUtil.dropTable(tempTable)
-            DatabaseUtil.dropTable(tempTableTwo)
+            mainDatabase.dropTable(tempTable)
+            mainDatabase.dropTable(tempTableTwo)
         }
     }
 

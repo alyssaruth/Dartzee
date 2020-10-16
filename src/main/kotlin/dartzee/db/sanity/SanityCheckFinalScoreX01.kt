@@ -1,9 +1,7 @@
 package dartzee.db.sanity
 
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
-import dartzee.utils.DatabaseUtil.Companion.dropTable
-import dartzee.utils.DatabaseUtil.Companion.executeUpdate
+import dartzee.utils.InjectedThings.mainDatabase
 
 /**
  * Should be (totalRounds - 1) * 3 + (# darts in final round)
@@ -14,7 +12,7 @@ class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
 
     override fun populateParticipantToFinalScoreTable(tempTable: String)
     {
-        val tempTable1 = DatabaseUtil.createTempTable("ParticipantToRoundCount", "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT")
+        val tempTable1 = mainDatabase.createTempTable("ParticipantToRoundCount", "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT")
 
         var sb = StringBuilder()
         sb.append("INSERT INTO $tempTable1")
@@ -27,7 +25,7 @@ class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
         sb.append(" AND pt.FinalScore > -1")
         sb.append(" GROUP BY pt.RowId, pt.PlayerId")
 
-        executeUpdate("" + sb)
+        mainDatabase.executeUpdate("" + sb)
 
         sb = StringBuilder()
         sb.append("INSERT INTO $tempTable")
@@ -38,7 +36,7 @@ class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
         sb.append(" AND zz.FinalRoundNumber = drt.RoundNumber")
         sb.append(" GROUP BY zz.ParticipantId, zz.RoundCount")
 
-        executeUpdate("" + sb)
-        dropTable(tempTable1)
+        mainDatabase.executeUpdate("" + sb)
+        mainDatabase.dropTable(tempTable1)
     }
 }

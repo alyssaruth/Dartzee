@@ -18,6 +18,7 @@ import java.time.Clock
 
 object InjectedThings
 {
+    var mainDatabase: Database = Database()
     var dartzeeCalculator: AbstractDartzeeCalculator = DartzeeCalculator()
     var verificationDartboardSize = 400
     var dartzeeRuleFactory: AbstractDartzeeRuleFactory = DartzeeRuleFactory()

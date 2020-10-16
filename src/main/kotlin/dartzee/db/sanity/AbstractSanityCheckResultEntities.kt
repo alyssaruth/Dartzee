@@ -4,7 +4,7 @@ import dartzee.bean.TableModelEntity
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DialogUtil
 import dartzee.db.AbstractEntity
-import dartzee.utils.DatabaseUtil.Companion.deleteRowsFromTable
+import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.JOptionPane
 
 abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEntity<*>>): AbstractSanityCheckResult()
@@ -37,7 +37,7 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
             rowIds.add(rowId)
         }
 
-        return deleteRowsFromTable(entityName, rowIds)
+        return mainDatabase.deleteRowsFromTable(entityName, rowIds)
     }
 
     override fun getCount() = entities.size

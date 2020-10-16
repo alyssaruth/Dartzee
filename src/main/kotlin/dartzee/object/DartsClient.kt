@@ -10,7 +10,6 @@ import java.util.*
 
 object DartsClient
 {
-    var derbyDbName = DartsDatabaseUtil.DATABASE_NAME
     var devMode = false
     var trueLaunch = false
     var operatingSystem = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)

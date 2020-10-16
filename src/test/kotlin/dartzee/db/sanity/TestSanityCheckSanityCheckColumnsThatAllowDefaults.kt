@@ -1,7 +1,7 @@
 package dartzee.db.sanity
 
 import dartzee.helper.AbstractTest
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -22,7 +22,7 @@ class TestSanityCheckSanityCheckColumnsThatAllowDefaults: AbstractTest()
     {
         val sql = "CREATE TABLE BadTable(Id INT PRIMARY KEY, OtherField VARCHAR(50) DEFAULT 'foo')"
 
-        DatabaseUtil.executeUpdate(sql)
+        mainDatabase.executeUpdate(sql)
 
         val results = SanityCheckColumnsThatAllowDefaults().runCheck()
 
@@ -31,6 +31,6 @@ class TestSanityCheckSanityCheckColumnsThatAllowDefaults: AbstractTest()
         tm.getValueAt(0, 0) shouldBe "BADTABLE"
         tm.getValueAt(0, 1) shouldBe "OTHERFIELD"
 
-        DatabaseUtil.dropTable("BadTable")
+        mainDatabase.dropTable("BadTable")
     }
 }

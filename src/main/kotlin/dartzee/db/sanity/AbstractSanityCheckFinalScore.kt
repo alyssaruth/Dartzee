@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.game.GameType
 import dartzee.db.ParticipantEntity
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 
 abstract class AbstractSanityCheckFinalScore: AbstractSanityCheck()
 {
@@ -12,7 +12,7 @@ abstract class AbstractSanityCheckFinalScore: AbstractSanityCheck()
 
     override fun runCheck(): List<AbstractSanityCheckResult>
     {
-        val tempTable = DatabaseUtil.createTempTable("ParticipantToFinalScore_$gameType", "ParticipantId VARCHAR(36), FinalScoreCalculated INT")
+        val tempTable = mainDatabase.createTempTable("ParticipantToFinalScore_$gameType", "ParticipantId VARCHAR(36), FinalScoreCalculated INT")
         tempTable ?: return listOf()
 
         populateParticipantToFinalScoreTable(tempTable)
@@ -25,7 +25,7 @@ abstract class AbstractSanityCheckFinalScore: AbstractSanityCheck()
         sb.append(" AND pt.FinalScore <> zz.FinalScoreCalculated")
 
         val hmParticipantToActualCount = mutableMapOf<ParticipantEntity, Int>()
-            DatabaseUtil.executeQuery(sb).use { rs ->
+        mainDatabase.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val pt = ParticipantEntity().factoryFromResultSet(rs)
@@ -35,10 +35,10 @@ abstract class AbstractSanityCheckFinalScore: AbstractSanityCheck()
                 }
             }
 
-        DatabaseUtil.dropTable(tempTable)
+        mainDatabase.dropTable(tempTable)
 
         //Add the sanity error
-        if (!hmParticipantToActualCount.isEmpty())
+        if (hmParticipantToActualCount.isNotEmpty())
         {
             return listOf(SanityCheckResultFinalScoreMismatch(gameType, hmParticipantToActualCount))
         }

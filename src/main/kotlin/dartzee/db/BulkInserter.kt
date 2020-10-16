@@ -3,7 +3,7 @@ package dartzee.db
 import dartzee.core.util.getSqlDateNow
 import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import java.sql.SQLException
@@ -50,7 +50,7 @@ object BulkInserter
             batch.chunked(rowsPerInsert).forEach { entities ->
                 val genericInsert = "INSERT INTO $tableName VALUES ${entities.joinToString{it.getInsertBlockForStatement()}}"
                 var insertQuery = genericInsert
-                val conn = DatabaseUtil.borrowConnection()
+                val conn = mainDatabase.borrowConnection()
 
                 try
                 {
@@ -75,7 +75,7 @@ object BulkInserter
                 }
                 finally
                 {
-                    DatabaseUtil.returnConnection(conn)
+                    mainDatabase.returnConnection(conn)
                 }
             }
         }
@@ -108,7 +108,7 @@ object BulkInserter
                     s += rowValues
                 }
 
-                DatabaseUtil.executeUpdate(s, logInserts)
+                mainDatabase.executeUpdate(s, logInserts)
             }
         }
     }

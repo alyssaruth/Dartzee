@@ -7,7 +7,7 @@ import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -38,7 +38,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
+        val tempTable = mainDatabase.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                       ?: return
 
         var sb = StringBuilder()
@@ -57,7 +57,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!DatabaseUtil.executeUpdate("" + sb))
+        if (!mainDatabase.executeUpdate("" + sb))
             return
 
         sb = StringBuilder()
@@ -71,7 +71,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
         sb.append("     AND zz2.DtAchieved < zz1.DtAchieved")
         sb.append(")")
 
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -83,7 +83,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
             }
         }
 
-        DatabaseUtil.dropTable(tempTable)
+        mainDatabase.dropTable(tempTable)
     }
 
     override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)

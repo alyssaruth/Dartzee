@@ -1,7 +1,7 @@
 package dartzee.achievements
 
 import dartzee.db.AchievementEntity
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.doesHighestWin
 
 abstract class AbstractAchievementBestGame : AbstractAchievement()
@@ -33,7 +33,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append("     AND (pt2.FinalScore < pt.FinalScore OR (pt2.FinalScore = pt.FinalScore AND pt2.DtFinished < pt.DtFinished))")
         sb.append(")")
 
-        DatabaseUtil.executeQuery(sb).use { rs ->
+        mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")

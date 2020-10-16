@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
@@ -34,7 +34,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
 
     override fun populateForConversion(playerIds: String)
     {
-        val tempTable = DatabaseUtil.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
+        val tempTable = mainDatabase.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
@@ -55,9 +55,9 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!DatabaseUtil.executeUpdate("" + sb))
+        if (!mainDatabase.executeUpdate("" + sb))
         {
-            DatabaseUtil.dropTable(tempTable)
+            mainDatabase.dropTable(tempTable)
             return
         }
 
@@ -83,7 +83,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
 
         try
         {
-            DatabaseUtil.executeQuery(sb).use { rs ->
+            mainDatabase.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val playerId = rs.getString("PlayerId")
@@ -100,7 +100,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
         }
         finally
         {
-            DatabaseUtil.dropTable(tempTable)
+            mainDatabase.dropTable(tempTable)
         }
     }
 }

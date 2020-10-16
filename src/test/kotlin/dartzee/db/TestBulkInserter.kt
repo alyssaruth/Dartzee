@@ -5,7 +5,7 @@ import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldBeSortedWith
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -20,14 +20,14 @@ class TestBulkInserter: AbstractTest()
     {
         super.beforeEachTest()
 
-        DatabaseUtil.executeUpdate("CREATE TABLE InsertTest (RowId INT)")
+        mainDatabase.executeUpdate("CREATE TABLE InsertTest (RowId INT)")
     }
 
     override fun afterEachTest()
     {
         super.afterEachTest()
 
-        DatabaseUtil.dropTable("InsertTest")
+        mainDatabase.dropTable("InsertTest")
     }
 
     @Test
@@ -138,7 +138,7 @@ class TestBulkInserter: AbstractTest()
     private fun retrieveValues(): List<Int>
     {
         val rows = mutableListOf<Int>()
-        DatabaseUtil.executeQuery("SELECT RowId FROM InsertTest").use{ rs ->
+        mainDatabase.executeQuery("SELECT RowId FROM InsertTest").use{ rs ->
             while (rs.next())
             {
                 rows.add(rs.getInt(1))

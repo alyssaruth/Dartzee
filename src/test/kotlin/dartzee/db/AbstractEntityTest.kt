@@ -12,8 +12,7 @@ import dartzee.helper.wipeTable
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
-import dartzee.utils.DatabaseUtil
-import dartzee.utils.DatabaseUtil.Companion.executeQueryAggregate
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
@@ -53,7 +52,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 
         getCountFromTable(tableName) shouldBe 2
 
-        executeQueryAggregate("SELECT COUNT(1) FROM $tableName WHERE DtLastUpdate = ${getEndOfTimeSqlString()}") shouldBe 0
+        mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM $tableName WHERE DtLastUpdate = ${getEndOfTimeSqlString()}") shouldBe 0
 
         e1.retrievedFromDb shouldBe true
         e2.retrievedFromDb shouldBe true
@@ -158,7 +157,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
         //Now go through and try to update each field to NULL
         getExpectedClassFields().forEach{
             val sql = "UPDATE ${dao.getTableName()} SET $it = NULL WHERE RowId = '$rowId'"
-            DatabaseUtil.executeUpdate(sql) shouldBe false
+            mainDatabase.executeUpdate(sql) shouldBe false
 
             val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
             log.message shouldBe "Caught SQLException for statement: $sql"

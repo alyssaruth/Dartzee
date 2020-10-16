@@ -3,7 +3,6 @@ package dartzee.db
 import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
 import dartzee.game.GameType
-import dartzee.utils.DatabaseUtil
 import java.util.*
 
 const val MAX_PLAYERS = 6
@@ -49,7 +48,7 @@ class GameEntity : AbstractEntity<GameEntity>()
 
     override fun assignRowId(): String
     {
-        localId = LocalIdGenerator.generateLocalId(getTableName())
+        localId = LocalIdGenerator.generateLocalId(database, getTableName())
         return super.assignRowId()
     }
 
@@ -63,7 +62,7 @@ class GameEntity : AbstractEntity<GameEntity>()
         sb.append(ParticipantEntity().getTableName())
         sb.append(" WHERE GameId = '$rowId'")
 
-        return DatabaseUtil.executeQueryAggregate(sb)
+        return database.executeQueryAggregate(sb)
     }
 
     fun isFinished() = !isEndOfTime(dtFinish)

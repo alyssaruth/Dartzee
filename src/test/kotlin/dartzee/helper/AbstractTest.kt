@@ -1,7 +1,6 @@
 package dartzee.helper
 
 import dartzee.CURRENT_TIME
-import dartzee.`object`.DartsClient
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.db.LocalIdGenerator
@@ -9,6 +8,7 @@ import dartzee.logging.*
 import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
@@ -64,7 +64,7 @@ abstract class AbstractTest
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-        DartsClient.derbyDbName = DATABASE_NAME_TEST
+        InjectedThings.mainDatabase = Database(dbName = DATABASE_NAME_TEST)
         DriverManager.registerDriver(EmbeddedDriver())
         DartsDatabaseUtil.initialiseDatabase()
     }

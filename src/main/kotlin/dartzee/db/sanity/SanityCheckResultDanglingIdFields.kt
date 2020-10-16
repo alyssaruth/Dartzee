@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.core.util.DialogUtil
 import dartzee.db.AbstractEntity
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.JOptionPane
 
 class SanityCheckResultDanglingIdFields(private val idColumn: String,
@@ -21,7 +21,7 @@ class SanityCheckResultDanglingIdFields(private val idColumn: String,
             return
         }
 
-        val success = DatabaseUtil.deleteRowsFromTable(entityName, rowIds)
+        val success = mainDatabase.deleteRowsFromTable(entityName, rowIds)
         if (success)
         {
             DialogUtil.showInfo("Rows deleted successfully. You should re-run the sanity check.")

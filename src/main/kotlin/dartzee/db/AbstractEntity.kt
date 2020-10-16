@@ -8,14 +8,15 @@ import dartzee.game.MatchMode
 import dartzee.logging.CODE_INSTANTIATION_ERROR
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.KEY_SQL
-import dartzee.utils.DatabaseUtil
+import dartzee.utils.Database
 import dartzee.utils.DurationTimer
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import java.sql.*
 import java.util.*
 import java.util.regex.Pattern
 
-abstract class AbstractEntity<E : AbstractEntity<E>>
+abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Database = InjectedThings.mainDatabase)
 {
     //DB Fields
     var rowId: String = ""
@@ -139,7 +140,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
         try
         {
-            DatabaseUtil.executeQuery(query).use { rs ->
+            database.executeQuery(query).use { rs ->
                 while (rs.next())
                 {
                     val entity = factoryFromResultSet(rs)
@@ -185,15 +186,15 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
     fun deleteFromDatabase(): Boolean
     {
         val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
-        return DatabaseUtil.executeUpdate(sql)
+        return database.executeUpdate(sql)
     }
 
-    fun deleteAll() = DatabaseUtil.executeUpdate("DELETE FROM ${getTableName()}")
+    fun deleteAll() = database.executeUpdate("DELETE FROM ${getTableName()}")
 
     fun deleteWhere(whereSql: String): Boolean
     {
         val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
-        return DatabaseUtil.executeUpdate(sql)
+        return database.executeUpdate(sql)
     }
 
     fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
@@ -215,7 +216,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val genericUpdate = buildUpdateQuery()
         var updateQuery = genericUpdate
 
-        val conn = DatabaseUtil.borrowConnection()
+        val conn = database.borrowConnection()
         try
         {
             conn.prepareStatement(updateQuery).use { psUpdate ->
@@ -243,7 +244,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
         finally
         {
-            DatabaseUtil.returnConnection(conn)
+            database.returnConnection(conn)
         }
     }
 
@@ -263,7 +264,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val genericInsert = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
         var insertQuery = genericInsert
 
-        val conn = DatabaseUtil.borrowConnection()
+        val conn = database.borrowConnection()
         try
         {
             conn.prepareStatement(insertQuery).use { psInsert ->
@@ -283,7 +284,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         }
         finally
         {
-            DatabaseUtil.returnConnection(conn)
+            database.returnConnection(conn)
         }
     }
 
@@ -298,7 +299,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         return insertQuery
     }
 
-    fun writeValuesToStatement(ps: PreparedStatement, startIx: Int, emptyStatement: String): String
+    private fun writeValuesToStatement(ps: PreparedStatement, startIx: Int, emptyStatement: String): String
     {
         var ix = startIx
         var statementStr = emptyStatement
@@ -313,7 +314,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
 
     open fun createTable(): Boolean
     {
-        val createdTable = DatabaseUtil.createTableIfNotExists(getTableName(), getCreateTableColumnSql())
+        val createdTable = database.createTableIfNotExists(getTableName(), getCreateTableColumnSql())
         if (createdTable)
         {
             createIndexes()
@@ -339,7 +340,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>
         val indexName = columnList.replace(", ", "_")
 
         val statement = "CREATE INDEX $indexName ON ${getTableName()}($columnList)"
-        DatabaseUtil.executeUpdate(statement)
+        database.executeUpdate(statement)
     }
 
     fun getColumnsForSelectStatement(alias: String = ""): String
