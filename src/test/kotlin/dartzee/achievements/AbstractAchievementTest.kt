@@ -7,7 +7,7 @@ import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.helper.*
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
@@ -34,7 +34,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     protected fun getAchievementCount(): Int
     {
         val ref = factoryAchievement().achievementRef
-        return database.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementRef = $ref")
+        return mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementRef = $ref")
     }
 
     open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity

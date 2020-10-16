@@ -5,7 +5,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getGolfSegmentCases
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
@@ -68,7 +68,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
 
         try
         {
-            database.executeQuery(sb).use { rs ->
+            mainDatabase.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val playerId = rs.getString("PlayerId")

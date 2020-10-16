@@ -1,7 +1,6 @@
 package dartzee.db
 
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.database
 
 object LocalIdGenerator
 {

@@ -3,7 +3,6 @@ package dartzee.db
 import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.database
 import java.util.*
 
 const val MAX_PLAYERS = 6

@@ -5,7 +5,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
@@ -54,7 +54,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
 
         try
         {
-            database.executeQuery(sb).use { rs ->
+            mainDatabase.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val playerId = rs.getString("PlayerId")

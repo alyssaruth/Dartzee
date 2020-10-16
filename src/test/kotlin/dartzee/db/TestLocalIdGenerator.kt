@@ -3,7 +3,7 @@ package dartzee.db
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.wipeTable
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeUnique
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
@@ -16,7 +16,7 @@ class TestLocalIdGenerator: AbstractTest()
     {
         wipeTable("Game")
 
-        LocalIdGenerator.generateLocalId(database, "Game") shouldBe 1
+        LocalIdGenerator.generateLocalId(mainDatabase, "Game") shouldBe 1
     }
 
     @Test
@@ -26,7 +26,7 @@ class TestLocalIdGenerator: AbstractTest()
 
         insertGame(localId = 5)
 
-        LocalIdGenerator.generateLocalId(database, "Game") shouldBe 6
+        LocalIdGenerator.generateLocalId(mainDatabase, "Game") shouldBe 6
     }
 
     @Test
@@ -34,9 +34,9 @@ class TestLocalIdGenerator: AbstractTest()
     {
         LocalIdGenerator.hmLastAssignedIdByTableName["Test"] = 25
 
-        val idOne = LocalIdGenerator.generateLocalId(database, "Test")
-        val idTwo = LocalIdGenerator.generateLocalId(database, "Test")
-        val idThree = LocalIdGenerator.generateLocalId(database, "Test")
+        val idOne = LocalIdGenerator.generateLocalId(mainDatabase, "Test")
+        val idTwo = LocalIdGenerator.generateLocalId(mainDatabase, "Test")
+        val idThree = LocalIdGenerator.generateLocalId(mainDatabase, "Test")
 
         idOne shouldBe 26
         idTwo shouldBe 27
@@ -49,8 +49,8 @@ class TestLocalIdGenerator: AbstractTest()
         LocalIdGenerator.hmLastAssignedIdByTableName["foo"] = 5
         LocalIdGenerator.hmLastAssignedIdByTableName["bar"] = 25
 
-        LocalIdGenerator.generateLocalId(database, "foo") shouldBe 6
-        LocalIdGenerator.generateLocalId(database, "bar") shouldBe 26
+        LocalIdGenerator.generateLocalId(mainDatabase, "foo") shouldBe 6
+        LocalIdGenerator.generateLocalId(mainDatabase, "bar") shouldBe 26
     }
 
     @Test
@@ -91,7 +91,7 @@ class TestLocalIdGenerator: AbstractTest()
         {
             for (i in 1..20)
             {
-                val id = LocalIdGenerator.generateLocalId(database, "foo")
+                val id = LocalIdGenerator.generateLocalId(mainDatabase, "foo")
                 list.add(id)
             }
         }

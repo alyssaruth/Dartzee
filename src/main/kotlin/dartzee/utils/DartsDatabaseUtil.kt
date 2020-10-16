@@ -11,7 +11,7 @@ import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
 import dartzee.logging.*
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
@@ -61,10 +61,10 @@ object DartsDatabaseUtil
 
         DialogUtil.showLoadingDialog("Checking database status...")
 
-        database.doDuplicateInstanceCheck()
+        mainDatabase.doDuplicateInstanceCheck()
 
         //Pool the db connections now. Initialise with 5 to begin with?
-        database.initialiseConnectionPool(5)
+        mainDatabase.initialiseConnectionPool(5)
 
         //Ensure this exists
         VersionEntity().createTable()
@@ -198,7 +198,7 @@ object DartsDatabaseUtil
 
         val batches = rsrc.split(";")
 
-        database.executeUpdates(batches)
+        mainDatabase.executeUpdates(batches)
     }
     private fun getScripts(version: Int): List<String>
     {
@@ -282,7 +282,7 @@ object DartsDatabaseUtil
         }
 
         //Issue a shutdown command to derby so we no longer have a handle on the old files
-        val shutdown = database.shutdownDerby()
+        val shutdown = mainDatabase.shutdownDerby()
         if (!shutdown)
         {
             DialogUtil.showError("Failed to shut down current database connection, unable to restore new database.")

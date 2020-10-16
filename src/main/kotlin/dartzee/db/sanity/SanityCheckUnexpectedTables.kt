@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.core.util.TableUtil
 import dartzee.utils.DartsDatabaseUtil
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 
 class SanityCheckUnexpectedTables: AbstractSanityCheck()
 {
@@ -23,7 +23,7 @@ class SanityCheckUnexpectedTables: AbstractSanityCheck()
         sb.append(" AND t.TableType = 'T'")
         sb.append(" AND t.TableName NOT IN ($tableNameSql)")
 
-        database.executeQuery(sb).use { rs ->
+        mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val schema = rs.getString("SchemaName")

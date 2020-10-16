@@ -1,7 +1,7 @@
 package dartzee.db.sanity
 
 import dartzee.core.util.TableUtil
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 
 class SanityCheckPlayerIdMismatch: AbstractSanityCheck()
 {
@@ -19,7 +19,7 @@ class SanityCheckPlayerIdMismatch: AbstractSanityCheck()
         tm.addColumn("ParticipantId")
         tm.addColumn("DartPlayerId")
         tm.addColumn("ParticipantPlayerId")
-        database.executeQuery(sb).use { rs ->
+        mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val dartId = rs.getString("DartId")

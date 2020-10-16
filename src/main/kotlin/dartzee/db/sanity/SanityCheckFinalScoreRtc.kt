@@ -1,7 +1,7 @@
 package dartzee.db.sanity
 
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 
 class SanityCheckFinalScoreRtc: AbstractSanityCheckFinalScore()
 {
@@ -21,6 +21,6 @@ class SanityCheckFinalScoreRtc: AbstractSanityCheckFinalScore()
         sb.append(" GROUP BY pt.RowId")
 
         val sql = sb.toString()
-        database.executeUpdate(sql)
+        mainDatabase.executeUpdate(sql)
     }
 }

@@ -4,7 +4,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getAchievementForRef
 import dartzee.core.util.getSqlDateNow
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
 
 /**
@@ -54,7 +54,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
             sb.append(" LEFT OUTER JOIN Game g ON (a.GameIdEarned = g.RowId)")
             sb.append(" WHERE PlayerId = '$playerId'")
 
-            database.executeQuery(sb).use { rs ->
+            mainDatabase.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val entity = dao.factoryFromResultSet(rs)
@@ -128,7 +128,7 @@ class AchievementEntity : AbstractEntity<AchievementEntity>()
         fun insertAchievement(achievementRef: Int, playerId: String, gameId: String, detail: String = "")
         {
             val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementRef = $achievementRef"
-            val count = database.executeQueryAggregate(sql)
+            val count = mainDatabase.executeQueryAggregate(sql)
 
             factoryAndSave(achievementRef, playerId, gameId, -1, detail)
             triggerAchievementUnlock(count, count + 1, achievementRef, playerId, gameId)

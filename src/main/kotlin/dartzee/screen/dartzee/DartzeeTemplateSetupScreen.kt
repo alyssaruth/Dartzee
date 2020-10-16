@@ -9,7 +9,7 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -103,7 +103,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         sb.append(" LEFT OUTER JOIN Game g ON (g.GameType = '${GameType.DARTZEE}' AND g.GameParams = t.RowId)")
         sb.append(" GROUP BY $cols")
 
-        database.executeQuery(sb).use { rs ->
+        mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next()) {
                 val template = DartzeeTemplateEntity().factoryFromResultSet(rs)
                 val gameCount = rs.getInt("GameCount")
@@ -169,7 +169,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         DartzeeRuleEntity().deleteForTemplate(selection.rowId)
 
         val gameSql = "UPDATE Game SET GameParams = '' WHERE GameType = '${GameType.DARTZEE}' AND GameParams = '${selection.rowId}'"
-        database.executeUpdate(gameSql)
+        mainDatabase.executeUpdate(gameSql)
 
         initialise()
     }

@@ -16,7 +16,7 @@ import java.sql.*
 import java.util.*
 import java.util.regex.Pattern
 
-abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Database = InjectedThings.database)
+abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Database = InjectedThings.mainDatabase)
 {
     //DB Fields
     var rowId: String = ""

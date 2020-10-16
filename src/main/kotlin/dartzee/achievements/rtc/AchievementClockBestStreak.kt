@@ -6,7 +6,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.database
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import dartzee.utils.getLongestStreak
 import java.net.URL
@@ -44,7 +44,7 @@ class AchievementClockBestStreak: AbstractAchievement()
         sb.append(" ORDER BY g.DtLastUpdate, pt.RowId, drt.RoundNumber, drt.Ordinal")
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()
-        database.executeQuery(sb).use { rs ->
+        mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
