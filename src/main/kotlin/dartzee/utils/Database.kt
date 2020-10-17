@@ -2,6 +2,7 @@ package dartzee.utils
 
 import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
+import dartzee.db.VersionEntity
 import dartzee.logging.*
 import dartzee.utils.InjectedThings.logger
 import java.sql.Connection
@@ -221,6 +222,22 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, private val db
         }
 
         return true
+    }
+
+    fun getDatabaseVersion(): Int? = getVersionRow()?.version
+
+    fun updateDatabaseVersion(version: Int)
+    {
+        val entity = getVersionRow() ?: VersionEntity(this).also { it.assignRowId() }
+        entity.version = version
+        entity.saveToDatabase()
+    }
+
+    private fun getVersionRow(): VersionEntity?
+    {
+        val versionEntity = VersionEntity(this)
+        versionEntity.createTable()
+        return VersionEntity(this).retrieveEntity("1 = 1")
     }
 
     fun createTempTable(tableName: String, colStr: String): String?

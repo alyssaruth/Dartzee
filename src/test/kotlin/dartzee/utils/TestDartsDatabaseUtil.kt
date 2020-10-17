@@ -1,11 +1,11 @@
 package dartzee.utils
 
-import dartzee.db.VersionEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertExits
 import dartzee.helper.dropAllTables
 import dartzee.logging.*
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -15,11 +15,8 @@ class TestDartsDatabaseUtil: AbstractTest()
     @Test
     fun `Should log a warning, show an error and exit if DB version is too old`()
     {
-        val version = VersionEntity()
-        version.version = DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION - 1
-
         assertExits(1) {
-            DartsDatabaseUtil.initialiseDatabase(version)
+            DartsDatabaseUtil.initialiseDatabase(DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION - 1)
         }
 
         dialogFactory.errorsShown.shouldHaveSize(1)
@@ -37,18 +34,14 @@ class TestDartsDatabaseUtil: AbstractTest()
         verifyLog(CODE_DATABASE_CREATING)
         verifyLog(CODE_DATABASE_CREATED)
 
-        val version = VersionEntity.retrieveCurrentDatabaseVersion()
-        version!!.version shouldBe DATABASE_VERSION
+        mainDatabase.getDatabaseVersion() shouldBe DATABASE_VERSION
     }
 
     @Test
     fun `Should do nothing if db already up to date`()
     {
-        val version = VersionEntity()
-        version.version = DATABASE_VERSION
-
         clearLogs()
-        DartsDatabaseUtil.initialiseDatabase(version)
+        DartsDatabaseUtil.initialiseDatabase(DATABASE_VERSION)
 
         verifyLog(CODE_DATABASE_UP_TO_DATE)
         verifyNoLogs(CODE_SQL)
