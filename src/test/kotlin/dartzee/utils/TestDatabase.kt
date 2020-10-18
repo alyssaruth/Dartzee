@@ -148,6 +148,6 @@ class TestDatabase: AbstractTest()
         database.updateDatabaseVersion(7)
         database.getDatabaseVersion() shouldBe 7
 
-        getCountFromTable("Version") shouldBe 1
+        getCountFromTable("Version", database) shouldBe 1
     }
 }
