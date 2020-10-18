@@ -1,6 +1,9 @@
 package dartzee.db
 
-class PendingLogsEntity: AbstractEntity<PendingLogsEntity>()
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
+
+class PendingLogsEntity(database: Database = mainDatabase): AbstractEntity<PendingLogsEntity>(database)
 {
     //DB Fields
     var logJson = ""

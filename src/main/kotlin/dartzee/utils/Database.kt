@@ -237,7 +237,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, private val db
     {
         val versionEntity = VersionEntity(this)
         versionEntity.createTable()
-        return VersionEntity(this).retrieveEntity("1 = 1")
+        return versionEntity.retrieveEntity("1 = 1")
     }
 
     fun createTempTable(tableName: String, colStr: String): String?

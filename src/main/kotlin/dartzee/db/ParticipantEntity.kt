@@ -3,12 +3,14 @@ package dartzee.db
 import dartzee.core.util.DateStatics
 import dartzee.core.util.StringUtil
 import dartzee.core.util.isEndOfTime
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 
 /**
  * Represents the participant of a game. This is a link between a player and a game, with additional information
  * such as play position and finishing position.
  */
-class ParticipantEntity : AbstractEntity<ParticipantEntity>()
+class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<ParticipantEntity>(database)
 {
     //DB Fields
     var gameId = ""

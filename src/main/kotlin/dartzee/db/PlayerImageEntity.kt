@@ -2,7 +2,9 @@ package dartzee.db
 
 import dartzee.core.util.FileUtil
 import dartzee.logging.CODE_FILE_ERROR
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.nio.file.Files
 import java.sql.Blob
@@ -11,7 +13,7 @@ import java.util.*
 import javax.sql.rowset.serial.SerialBlob
 import javax.swing.ImageIcon
 
-class PlayerImageEntity : AbstractEntity<PlayerImageEntity>()
+class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<PlayerImageEntity>(database)
 {
     //DB fields
     var blobData: Blob? = null

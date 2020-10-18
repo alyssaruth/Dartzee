@@ -1,6 +1,9 @@
 package dartzee.db
 
-class X01FinishEntity() : AbstractEntity<X01FinishEntity>()
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
+
+class X01FinishEntity(database: Database = mainDatabase) : AbstractEntity<X01FinishEntity>(database)
 {
     /**
      * DB fields

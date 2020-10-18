@@ -276,9 +276,9 @@ fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
 }
 
 
-fun getCountFromTable(table: String): Int
+fun getCountFromTable(table: String, database: Database = mainDatabase): Int
 {
-    return mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM $table")
+    return database.executeQueryAggregate("SELECT COUNT(1) FROM $table")
 }
 
 fun dropAllTables() = dropTables(false)

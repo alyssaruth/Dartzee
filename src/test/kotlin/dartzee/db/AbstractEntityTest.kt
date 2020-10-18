@@ -8,10 +8,11 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
-import dartzee.helper.wipeTable
+import dartzee.helper.makeInMemoryDatabase
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -33,8 +34,6 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     fun `Should be bulk insertable`()
     {
         val tableName = dao.getTableName()
-        wipeTable(tableName)
-
         val e1: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         val e2: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
 
@@ -69,8 +68,6 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     @Test
     fun `Delete individual row`()
     {
-        wipeTable(dao.getTableName())
-
         val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         entity.assignRowId()
         setValuesAndSaveToDatabase(entity, true)
@@ -83,8 +80,6 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     @Test
     fun `Insert and retrieve`()
     {
-        wipeTable(dao.getTableName())
-
         val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         entity.assignRowId()
         val rowId = entity.rowId
@@ -112,8 +107,6 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     @Test
     fun `Update and retrieve`()
     {
-        wipeTable(dao.getTableName())
-
         val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
         entity.assignRowId()
         val rowId = entity.rowId
@@ -163,6 +156,39 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
             log.message shouldBe "Caught SQLException for statement: $sql"
             log.errorObject?.message shouldContain "Column '${it.toUpperCase()}'  cannot accept a NULL value."
         }
+    }
+
+    @Test
+    fun `Should be able to insert and update in specified database instance`()
+    {
+        val database = makeInMemoryDatabase()
+
+        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor(Database::class.java).newInstance(database)
+        entity.createTable()
+        entity.assignRowId()
+        val rowId = entity.rowId
+
+        //Insert
+        setValuesAndSaveToDatabase(entity, true)
+        getCountFromTable(dao.getTableName(), database) shouldBe 1
+
+        val retrievedEntity = entity.retrieveEntity("1 = 1")!!
+
+        //Update
+        setValuesAndSaveToDatabase(retrievedEntity, false)
+        getCountFromTable(dao.getTableName(), database) shouldBe 1
+
+        //Retrieve to make sure updated values are set correctly
+        val finalEntity = retrievedEntity.retrieveEntity("RowId = '$rowId'")!!
+        getExpectedClassFields().forEach{
+            val fieldType = finalEntity.getFieldType(it)
+            val retrievedValue = finalEntity.getField(it)
+
+            retrievedValue shouldBe getValueForField(fieldType, false)
+        }
+
+        val entityInMainDatabase = dao.retrieveForId(finalEntity.rowId, false)
+        entityInMainDatabase shouldBe null
     }
 
     private fun setValuesAndSaveToDatabase(entity: AbstractEntity<E>, initial: Boolean)

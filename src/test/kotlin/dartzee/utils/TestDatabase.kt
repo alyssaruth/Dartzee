@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
 import dartzee.helper.makeInMemoryDatabase
 import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
@@ -128,5 +129,25 @@ class TestDatabase: AbstractTest()
             dbOne.initialiseConnectionPool(5)
             dbTwo.initialiseConnectionPool(5)
         }
+    }
+
+    @Test
+    fun `Should return null version if version has never been set`()
+    {
+        val database = makeInMemoryDatabase()
+        database.getDatabaseVersion() shouldBe null
+    }
+
+    @Test
+    fun `Should return the right existing version and support updating it`()
+    {
+        val database = makeInMemoryDatabase()
+        database.updateDatabaseVersion(5)
+
+        database.getDatabaseVersion() shouldBe 5
+        database.updateDatabaseVersion(7)
+        database.getDatabaseVersion() shouldBe 7
+
+        getCountFromTable("Version") shouldBe 1
     }
 }
