@@ -4,8 +4,10 @@ import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.parseDartRule
 import dartzee.dartzee.parseTotalRule
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 
-class DartzeeRuleEntity: AbstractEntity<DartzeeRuleEntity>()
+class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<DartzeeRuleEntity>(database)
 {
     var entityName = ""
     var entityId = ""

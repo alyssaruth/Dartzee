@@ -3,6 +3,8 @@ package dartzee.db
 import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
 import dartzee.game.GameType
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 import java.util.*
 
 const val MAX_PLAYERS = 6
@@ -10,7 +12,7 @@ const val MAX_PLAYERS = 6
 /**
  * Represents a single game of Darts, e.g. X01 or Dartzee.
  */
-class GameEntity : AbstractEntity<GameEntity>()
+class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(database)
 {
     /**
      * DB fields

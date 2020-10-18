@@ -4,6 +4,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getAchievementForRef
 import dartzee.core.util.getSqlDateNow
 import dartzee.screen.ScreenCache
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
 
@@ -12,7 +13,7 @@ import java.sql.Timestamp
  *
  * Points at a GameId if applicable, and uses DtCreation as the "date unlocked".
  */
-class AchievementEntity : AbstractEntity<AchievementEntity>()
+class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<AchievementEntity>(database)
 {
     //DB Fields
     var playerId: String = ""

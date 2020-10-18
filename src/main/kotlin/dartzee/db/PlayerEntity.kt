@@ -3,9 +3,11 @@ package dartzee.db
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.ImageIcon
 
-class PlayerEntity: AbstractEntity<PlayerEntity>()
+class PlayerEntity(database: Database = mainDatabase): AbstractEntity<PlayerEntity>(database)
 {
     //DB Fields
     var name = ""

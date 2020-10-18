@@ -9,7 +9,9 @@ import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
+import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
 import java.util.*
@@ -274,9 +276,9 @@ fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
 }
 
 
-fun getCountFromTable(table: String): Int
+fun getCountFromTable(table: String, database: Database = mainDatabase): Int
 {
-    return mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM $table")
+    return database.executeQueryAggregate("SELECT COUNT(1) FROM $table")
 }
 
 fun dropAllTables() = dropTables(false)
@@ -324,4 +326,10 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
 {
     val achievements = AchievementEntity.retrieveAchievements(playerId)
     return achievements.map { AchievementSummary(it.achievementRef, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
+}
+
+fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+{
+    val fullName = "jdbc:derby:memory:$dbName;create=true"
+    return Database(filePath = filePath, dbName = fullName).also { it.initialiseConnectionPool(5) }
 }

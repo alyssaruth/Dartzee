@@ -1,8 +1,10 @@
 package dartzee.db
 
 import dartzee.dartzee.DartzeeRoundResult
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 
-class DartzeeRoundResultEntity: AbstractEntity<DartzeeRoundResultEntity>()
+class DartzeeRoundResultEntity(database: Database = mainDatabase): AbstractEntity<DartzeeRoundResultEntity>(database)
 {
     var playerId: String = ""
     var participantId: String = ""

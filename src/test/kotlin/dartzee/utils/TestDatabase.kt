@@ -1,6 +1,8 @@
 package dartzee.utils
 
 import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
+import dartzee.helper.makeInMemoryDatabase
 import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
@@ -10,7 +12,6 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import org.junit.Test
-import java.util.*
 
 class TestDatabase: AbstractTest()
 {
@@ -130,9 +131,23 @@ class TestDatabase: AbstractTest()
         }
     }
 
-    private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()): Database
+    @Test
+    fun `Should return null version if version has never been set`()
     {
-        val fullName = "jdbc:derby:memory:$dbName;create=true"
-        return Database(dbName = fullName).also { it.initialiseConnectionPool(5) }
+        val database = makeInMemoryDatabase()
+        database.getDatabaseVersion() shouldBe null
+    }
+
+    @Test
+    fun `Should return the right existing version and support updating it`()
+    {
+        val database = makeInMemoryDatabase()
+        database.updateDatabaseVersion(5)
+
+        database.getDatabaseVersion() shouldBe 5
+        database.updateDatabaseVersion(7)
+        database.getDatabaseVersion() shouldBe 7
+
+        getCountFromTable("Version", database) shouldBe 1
     }
 }

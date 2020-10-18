@@ -6,13 +6,12 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
-import dartzee.db.VersionEntity.Companion.insertVersion
 import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
 import dartzee.logging.*
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
 import java.sql.DriverManager
@@ -66,18 +65,16 @@ object DartsDatabaseUtil
         //Pool the db connections now. Initialise with 5 to begin with?
         mainDatabase.initialiseConnectionPool(5)
 
-        //Ensure this exists
-        VersionEntity().createTable()
-        val version = VersionEntity.retrieveCurrentDatabaseVersion()
+        val version = mainDatabase.getDatabaseVersion()
 
-        logger.addToContext(KEY_DB_VERSION, version?.version)
+        logger.addToContext(KEY_DB_VERSION, version)
 
         DialogUtil.dismissLoadingDialog()
 
         initialiseDatabase(version)
     }
 
-    fun initialiseDatabase(version: VersionEntity?)
+    fun initialiseDatabase(version: Int?)
     {
         if (version == null)
         {
@@ -85,17 +82,16 @@ object DartsDatabaseUtil
             return
         }
 
-        val versionNumber = version.version
-        if (versionNumber == DATABASE_VERSION)
+        if (version == DATABASE_VERSION)
         {
             //nothing to do
             logger.info(CODE_DATABASE_UP_TO_DATE, "Database is up to date")
             return
         }
 
-        if (versionNumber < MIN_DB_VERSION_FOR_CONVERSION)
+        if (version < MIN_DB_VERSION_FOR_CONVERSION)
         {
-            val dbDetails = "Your version: $versionNumber, min supported: $MIN_DB_VERSION_FOR_CONVERSION, current: $DATABASE_VERSION"
+            val dbDetails = "Your version: $version, min supported: $MIN_DB_VERSION_FOR_CONVERSION, current: $DATABASE_VERSION"
             logger.warn(CODE_DATABASE_TOO_OLD, "Database too old, exiting. $dbDetails")
             DialogUtil.showError("Your database is too out-of-date to run this version of Dartzee. " +
                     "Please downgrade to an earlier version so that your data can be converted.\n\n$dbDetails")
@@ -103,24 +99,24 @@ object DartsDatabaseUtil
             exitProcess(1)
         }
 
-        logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${versionNumber + 1}")
+        logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${version + 1}")
 
-        if (versionNumber == 13)
+        if (version == 13)
         {
             runSqlScriptsForVersion(14)
             updatePlayerStrategies()
         }
-        else if (versionNumber == 14)
+        else if (version == 14)
         {
             updatePlayerStrategiesToJson()
             updateRoundTheClockParams()
         }
 
-        version.version = versionNumber + 1
-        version.saveToDatabase()
+        val newVersion = version + 1
+        mainDatabase.updateDatabaseVersion(newVersion)
 
-        logger.addToContext(KEY_DB_VERSION, version.version)
-        initialiseDatabase(version)
+        logger.addToContext(KEY_DB_VERSION, newVersion)
+        initialiseDatabase(newVersion)
     }
 
     private fun updatePlayerStrategiesToJson()
@@ -214,7 +210,7 @@ object DartsDatabaseUtil
         DialogUtil.showLoadingDialog("Initialising database, please wait...")
         logger.info(CODE_DATABASE_CREATING, "Initialising empty database")
 
-        insertVersion()
+        mainDatabase.updateDatabaseVersion(DATABASE_VERSION)
         createAllTables()
 
         logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)

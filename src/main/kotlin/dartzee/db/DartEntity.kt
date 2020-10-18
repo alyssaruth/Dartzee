@@ -2,8 +2,10 @@ package dartzee.db
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 
-class DartEntity : AbstractEntity<DartEntity>()
+class DartEntity(database: Database = mainDatabase) : AbstractEntity<DartEntity>(database)
 {
     /**
      * DB fields

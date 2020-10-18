@@ -86,7 +86,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     private fun factory(): E? =
         try
         {
-            javaClass.getDeclaredConstructor().newInstance() as E
+            javaClass.getDeclaredConstructor(Database::class.java).newInstance(database) as E
         }
         catch (t: Throwable)
         {

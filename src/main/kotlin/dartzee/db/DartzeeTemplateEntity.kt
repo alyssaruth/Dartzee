@@ -1,8 +1,11 @@
 package dartzee.db
 
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
+
 const val DARTZEE_TEMPLATE = "DartzeeTemplate"
 
-class DartzeeTemplateEntity: AbstractEntity<DartzeeTemplateEntity>()
+class DartzeeTemplateEntity(database: Database = mainDatabase): AbstractEntity<DartzeeTemplateEntity>(database)
 {
     var name = ""
 

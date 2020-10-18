@@ -3,12 +3,14 @@ package dartzee.db
 import dartzee.core.util.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 
 /**
  * Simple entity to join multiple 'games' together into a 'match'.
  * Table has to be called 'DartsMatch' because 'Match' is a derby keyword!
  */
-class DartsMatchEntity : AbstractEntity<DartsMatchEntity>()
+class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<DartsMatchEntity>(database)
 {
     /**
      * DB Fields
