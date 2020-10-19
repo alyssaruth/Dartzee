@@ -31,28 +31,24 @@ object DartsDatabaseUtil
 
     private val DATABASE_FILE_PATH_TEMP = DATABASE_FILE_PATH + "_copying"
 
-    fun getAllEntities(): MutableList<AbstractEntity<*>>
+    fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>>
     {
-        return mutableListOf(PlayerEntity(),
-                DartEntity(),
-                GameEntity(),
-                ParticipantEntity(),
-                PlayerImageEntity(),
-                DartsMatchEntity(),
-                AchievementEntity(),
-                DartzeeRuleEntity(),
-                DartzeeTemplateEntity(),
-                DartzeeRoundResultEntity(),
-                X01FinishEntity(),
-                PendingLogsEntity())
+        return listOf(PlayerEntity(database),
+                DartEntity(database),
+                GameEntity(database),
+                ParticipantEntity(database),
+                PlayerImageEntity(database),
+                DartsMatchEntity(database),
+                AchievementEntity(database),
+                DartzeeRuleEntity(database),
+                DartzeeTemplateEntity(database),
+                DartzeeRoundResultEntity(database),
+                X01FinishEntity(database),
+                PendingLogsEntity(database))
     }
 
-    fun getAllEntitiesIncludingVersion(): MutableList<AbstractEntity<*>>
-    {
-        val entities = getAllEntities()
-        entities.add(VersionEntity())
-        return entities
-    }
+    fun getAllEntitiesIncludingVersion(database: Database = mainDatabase) =
+        getAllEntities(database) + VersionEntity(database)
 
     fun initialiseDatabase()
     {
@@ -72,6 +68,8 @@ object DartsDatabaseUtil
         DialogUtil.dismissLoadingDialog()
 
         initialiseDatabase(version)
+
+        logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)
     }
 
     fun initialiseDatabase(version: Int?)
@@ -220,7 +218,7 @@ object DartsDatabaseUtil
 
     private fun createAllTables()
     {
-        getAllEntities().forEach{
+        getAllEntities().forEach {
             it.createTable()
         }
     }
