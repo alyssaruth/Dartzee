@@ -67,36 +67,24 @@ object DartsDatabaseUtil
 
         DialogUtil.dismissLoadingDialog()
 
-        initialiseDatabase(version)
+        val migrator = DatabaseMigrator(emptyMap())
+        migrateDatabase(migrator)
+    }
+
+    fun migrateDatabase(migrator: DatabaseMigrator)
+    {
+        val result = migrator.migrateToLatest(mainDatabase, "Your")
+        if (result == MigrationResult.TOO_OLD)
+        {
+            exitProcess(1)
+        }
 
         logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)
     }
 
-    fun initialiseDatabase(version: Int?)
+
+    fun initialiseDatabase(version: Int)
     {
-        if (version == null)
-        {
-            initDatabaseFirstTime()
-            return
-        }
-
-        if (version == DATABASE_VERSION)
-        {
-            //nothing to do
-            logger.info(CODE_DATABASE_UP_TO_DATE, "Database is up to date")
-            return
-        }
-
-        if (version < MIN_DB_VERSION_FOR_CONVERSION)
-        {
-            val dbDetails = "Your version: $version, min supported: $MIN_DB_VERSION_FOR_CONVERSION, current: $DATABASE_VERSION"
-            logger.warn(CODE_DATABASE_TOO_OLD, "Database too old, exiting. $dbDetails")
-            DialogUtil.showError("Your database is too out-of-date to run this version of Dartzee. " +
-                    "Please downgrade to an earlier version so that your data can be converted.\n\n$dbDetails")
-
-            exitProcess(1)
-        }
-
         logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${version + 1}")
 
         if (version == 13)
@@ -201,19 +189,6 @@ object DartsDatabaseUtil
             14 -> listOf("1. Player.sql")
             else -> listOf()
         }
-    }
-
-    private fun initDatabaseFirstTime()
-    {
-        DialogUtil.showLoadingDialog("Initialising database, please wait...")
-        logger.info(CODE_DATABASE_CREATING, "Initialising empty database")
-
-        mainDatabase.updateDatabaseVersion(DATABASE_VERSION)
-        createAllTables()
-
-        logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)
-        logger.info(CODE_DATABASE_CREATED, "Finished creating database")
-        DialogUtil.dismissLoadingDialog()
     }
 
     private fun createAllTables()

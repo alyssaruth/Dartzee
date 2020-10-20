@@ -1,26 +1,30 @@
 package dartzee.utils
 
+import dartzee.db.DatabaseMigrator
+import dartzee.db.MigrationResult
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertExits
 import dartzee.helper.dropAllTables
-import dartzee.logging.*
+import dartzee.logging.CODE_DATABASE_CREATED
+import dartzee.logging.CODE_DATABASE_CREATING
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Test
 
 class TestDartsDatabaseUtil: AbstractTest()
 {
     @Test
-    fun `Should log a warning, show an error and exit if DB version is too old`()
+    fun `Should exit if DB version is too old`()
     {
-        assertExits(1) {
-            DartsDatabaseUtil.initialiseDatabase(DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION - 1)
-        }
+        val migrator = mockk<DatabaseMigrator>(relaxed = true)
+        every { migrator.migrateToLatest(any(), any()) } returns MigrationResult.TOO_OLD
 
-        dialogFactory.errorsShown.shouldHaveSize(1)
-        verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
+        assertExits(1) {
+            DartsDatabaseUtil.migrateDatabase(migrator)
+        }
     }
 
     @Test
@@ -35,16 +39,5 @@ class TestDartsDatabaseUtil: AbstractTest()
         verifyLog(CODE_DATABASE_CREATED)
 
         mainDatabase.getDatabaseVersion() shouldBe DATABASE_VERSION
-    }
-
-    @Test
-    fun `Should do nothing if db already up to date`()
-    {
-        clearLogs()
-        DartsDatabaseUtil.initialiseDatabase(DATABASE_VERSION)
-
-        verifyLog(CODE_DATABASE_UP_TO_DATE)
-        verifyNoLogs(CODE_SQL)
-        verifyNoLogs(CODE_TABLE_CREATED)
     }
 }
