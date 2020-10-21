@@ -12,7 +12,7 @@ enum class MigrationResult {
     TOO_OLD
 }
 
-class DatabaseMigrator(private val migrations: Map<Int, List<((database: Database) -> Boolean)>>)
+class DatabaseMigrator(private val migrations: Map<Int, List<((database: Database) -> Any)>>)
 {
     fun migrateToLatest(database: Database, databaseDesc: String): MigrationResult
     {
@@ -30,9 +30,10 @@ class DatabaseMigrator(private val migrations: Map<Int, List<((database: Databas
             return MigrationResult.SUCCESS
         }
 
-        if (version < DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION)
+        val minSupported = getMinimumSupportedVersion()
+        if (version < minSupported)
         {
-            val dbDetails = "Your version: $version, min supported: ${DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
+            val dbDetails = "Your version: $version, min supported: ${minSupported}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
             logger.warn(CODE_DATABASE_TOO_OLD, "$databaseDesc database too old, exiting. $dbDetails")
             DialogUtil.showError("$databaseDesc database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails")
@@ -47,6 +48,8 @@ class DatabaseMigrator(private val migrations: Map<Int, List<((database: Databas
 
         return MigrationResult.SUCCESS
     }
+
+    private fun getMinimumSupportedVersion() = migrations.keys.min() ?: DartsDatabaseUtil.DATABASE_VERSION
 
     private fun runMigrationsForVersion(database: Database, databaseDesc: String, version: Int)
     {

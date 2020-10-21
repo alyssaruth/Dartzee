@@ -53,22 +53,24 @@ class TestDatabaseMigrator: AbstractTest()
     }
 
     @Test
-    fun `Should not carry out a migration if database version is too old`()
+    fun `Should not carry out a migration if database version is too old based on migrations passed in`()
     {
         clearLogs()
 
+        val migrations = mapOf(13 to listOf { _: Database -> true }, 14 to listOf { _: Database -> true })
+
         val database = makeInMemoryDatabase()
-        val oldVersion = DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION - 1
+        val oldVersion = 12
         database.updateDatabaseVersion(oldVersion)
 
-        val migrator = DatabaseMigrator(emptyMap())
+        val migrator = DatabaseMigrator(migrations)
         val result = migrator.migrateToLatest(database, "Test")
         result shouldBe MigrationResult.TOO_OLD
 
         verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
         getTableNames(database).shouldContainExactly("VERSION")
 
-        val dbDetails = "Your version: $oldVersion, min supported: ${DartsDatabaseUtil.MIN_DB_VERSION_FOR_CONVERSION}, current: $DATABASE_VERSION"
+        val dbDetails = "Your version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
 
         dialogFactory.errorsShown.shouldContainExactly("Test database is too out-of-date to be upgraded by this version of Dartzee. " +
                 "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails")
@@ -103,6 +105,5 @@ class TestDatabaseMigrator: AbstractTest()
         shouldNotThrowAny {
             database.executeQuery("SELECT RowId, IntCol2 FROM Test")
         }
-
     }
 }

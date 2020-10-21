@@ -1,14 +1,11 @@
 package dartzee.utils
 
-import dartzee.ai.DartsAiModel
-import dartzee.ai.DartsAiModelOLD
-import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
-import dartzee.game.ClockType
-import dartzee.game.RoundTheClockConfig
-import dartzee.logging.*
+import dartzee.logging.CODE_STARTING_BACKUP
+import dartzee.logging.CODE_STARTING_RESTORE
+import dartzee.logging.KEY_DB_VERSION
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
@@ -25,7 +22,6 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    const val MIN_DB_VERSION_FOR_CONVERSION = 13
     const val DATABASE_VERSION = 15
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
@@ -67,7 +63,7 @@ object DartsDatabaseUtil
 
         DialogUtil.dismissLoadingDialog()
 
-        val migrator = DatabaseMigrator(emptyMap())
+        val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
         migrateDatabase(migrator)
     }
 
@@ -80,122 +76,6 @@ object DartsDatabaseUtil
         }
 
         logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)
-    }
-
-
-    fun initialiseDatabase(version: Int)
-    {
-        logger.info(CODE_DATABASE_NEEDS_UPDATE, "Updating database to V${version + 1}")
-
-        if (version == 13)
-        {
-            runSqlScriptsForVersion(14)
-            updatePlayerStrategies()
-        }
-        else if (version == 14)
-        {
-            updatePlayerStrategiesToJson()
-            updateRoundTheClockParams()
-        }
-
-        val newVersion = version + 1
-        mainDatabase.updateDatabaseVersion(newVersion)
-
-        logger.addToContext(KEY_DB_VERSION, newVersion)
-        initialiseDatabase(newVersion)
-    }
-
-    private fun updatePlayerStrategiesToJson()
-    {
-        val players = PlayerEntity().retrieveEntities("Strategy <> ''")
-        players.forEach {
-            val model = DartsAiModelOLD()
-            model.readXml(it.strategy)
-
-            val newModel = DartsAiModel(model.standardDeviation,
-                    if (model.standardDeviationDoubles > 0.0) model.standardDeviationDoubles else null,
-                    if (model.standardDeviationCentral > 0.0) model.standardDeviationCentral else null,
-                    450,
-                    model.scoringDart,
-                    model.hmScoreToDart.toMap(),
-                    if (model.mercyThreshold > -1) model.mercyThreshold else null,
-                    model.hmDartNoToSegmentType.toMap(),
-                    model.hmDartNoToStopThreshold.toMap(),
-                    model.dartzeePlayStyle)
-
-            it.strategy = newModel.toJson()
-            it.saveToDatabase()
-        }
-    }
-
-    private fun updateRoundTheClockParams()
-    {
-        val games = GameEntity().retrieveEntities("GameType = 'ROUND_THE_CLOCK'")
-        games.forEach {
-            val clockType = ClockType.valueOf(it.gameParams)
-            val config = RoundTheClockConfig(clockType, true)
-            it.gameParams = config.toJson()
-            it.saveToDatabase()
-        }
-    }
-
-
-    private fun updatePlayerStrategies()
-    {
-        val players = PlayerEntity().retrieveEntities("Strategy <> ''")
-        players.forEach {
-            val model = DartsAiModelOLD()
-            model.readXml(it.strategy)
-            it.strategy = model.writeXml()
-            it.saveToDatabase()
-        }
-    }
-
-    private fun runConversions(version: Int, vararg conversions: (() -> Unit))
-    {
-        val t = Thread {
-            val dlg = ProgressDialog.factory("Upgrading to V$version", "scripts remaining", conversions.size)
-            dlg.setVisibleLater()
-
-            conversions.forEach {
-                it()
-                dlg.incrementProgressLater()
-            }
-
-            dlg.disposeLater()
-        }
-
-        t.start()
-        t.join()
-    }
-    private fun runSqlScriptsForVersion(version: Int)
-    {
-        val scripts = getScripts(version).map { { runScript(version, it)} }.toTypedArray()
-        runConversions(version, *scripts)
-    }
-    private fun runScript(version: Int, scriptName: String)
-    {
-        val resourcePath = "/sql/v$version/"
-        val rsrc = javaClass.getResource("$resourcePath$scriptName").readText()
-
-        val batches = rsrc.split(";")
-
-        mainDatabase.executeUpdates(batches)
-    }
-    private fun getScripts(version: Int): List<String>
-    {
-        return when(version)
-        {
-            14 -> listOf("1. Player.sql")
-            else -> listOf()
-        }
-    }
-
-    private fun createAllTables()
-    {
-        getAllEntities().forEach {
-            it.createTable()
-        }
     }
 
     /**
