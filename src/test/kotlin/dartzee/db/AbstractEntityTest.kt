@@ -165,6 +165,8 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 
         val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor(Database::class.java).newInstance(database)
         entity.createTable()
+        database.executeUpdate("DELETE FROM ${entity.getTableName()}")
+
         entity.assignRowId()
         val rowId = entity.rowId
 
