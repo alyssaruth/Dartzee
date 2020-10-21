@@ -162,7 +162,7 @@ class TestDartsMatchScreen: AbstractTest()
     private fun setUpMatchScreen(match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
                                  matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
     {
-        PlayerImageEntity.createPresets()
+        PlayerImageEntity().createPresets()
         return FakeMatchScreen(match, listOf(insertPlayer(), insertPlayer()), matchSummaryPanel)
     }
 }
