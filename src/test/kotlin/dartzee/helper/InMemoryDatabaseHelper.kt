@@ -312,6 +312,24 @@ fun dropTables(onlyUnexpected: Boolean): List<String>
     return list
 }
 
+fun getTableNames(database: Database): List<String>
+{
+    val sb = StringBuilder()
+    sb.append(" SELECT TableName")
+    sb.append(" FROM sys.systables")
+    sb.append(" WHERE TableType = 'T'")
+
+    val list = mutableListOf<String>()
+    database.executeQuery(sb).use { rs ->
+        while (rs.next())
+        {
+            list.add(rs.getString("TableName"))
+        }
+    }
+
+    return list.toList()
+}
+
 /**
  * Retrieve
  */

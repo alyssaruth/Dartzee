@@ -49,6 +49,15 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
         return createdTable
     }
 
+    fun createPresets()
+    {
+        avatarPresets.forEach {
+            val resourceLocation = "/avatars/$it.png"
+            val bytes = FileUtil.getByteArrayForResource(resourceLocation)
+            factoryAndSave("rsrc:$resourceLocation", bytes, true, database)
+        }
+    }
+
     fun asImageIcon() = ImageIcon(bytes)
 
     companion object
@@ -64,7 +73,7 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
             {
                 val path = file.toPath()
                 val bytes = Files.readAllBytes(path)
-                factoryAndSave(file.absolutePath, bytes, preset)
+                factoryAndSave(file.absolutePath, bytes, preset, mainDatabase)
             }
             catch (t: Throwable)
             {
@@ -74,11 +83,11 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
 
         }
 
-        private fun factoryAndSave(filepath: String, fileBytes: ByteArray?, preset: Boolean): PlayerImageEntity?
+        private fun factoryAndSave(filepath: String, fileBytes: ByteArray?, preset: Boolean, database: Database): PlayerImageEntity?
         {
             return try
             {
-                val pi = PlayerImageEntity()
+                val pi = PlayerImageEntity(database)
                 pi.assignRowId()
 
                 val blobData = SerialBlob(fileBytes!!)
@@ -112,15 +121,6 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
 
             hmRowIdToImageIcon[rowId] = icon
             return icon
-        }
-
-        fun createPresets()
-        {
-            avatarPresets.forEach{
-                val resourceLocation = "/avatars/$it.png"
-                val bytes = FileUtil.getByteArrayForResource(resourceLocation)
-                factoryAndSave("rsrc:$resourceLocation", bytes, true)
-            }
         }
     }
 }
