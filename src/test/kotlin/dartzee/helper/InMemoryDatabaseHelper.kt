@@ -351,3 +351,11 @@ fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath
     val fullName = "jdbc:derby:memory:$dbName;create=true"
     return Database(filePath = filePath, dbName = fullName).also { it.initialiseConnectionPool(5) }
 }
+
+fun makeInMemoryDatabaseWithSchema(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+{
+    val db = makeInMemoryDatabase(dbName, filePath)
+    val migrator = DatabaseMigrator(emptyMap())
+    migrator.migrateToLatest(db, "Test")
+    return db
+}
