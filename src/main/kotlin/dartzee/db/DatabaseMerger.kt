@@ -6,7 +6,7 @@ import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 
-class DatabaseMerger(private val localDatabase: Database, private val remoteDatabase: Database)
+class DatabaseMerger(private val localDatabase: Database, private val remoteDatabase: Database, private val migrator: DatabaseMigrator)
 {
     fun validateMerge(): Boolean
     {
@@ -32,5 +32,16 @@ class DatabaseMerger(private val localDatabase: Database, private val remoteData
         }
 
         return true
+    }
+
+    fun performMerge()
+    {
+        val result = migrator.migrateToLatest(remoteDatabase, "Remote")
+        if (result != MigrationResult.SUCCESS)
+        {
+            return
+        }
+
+
     }
 }
