@@ -22,7 +22,7 @@ const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.Startin
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 15
+    const val DATABASE_VERSION = 16
     const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
 
     private val DATABASE_FILE_PATH_TEMP = DATABASE_FILE_PATH + "_copying"
@@ -40,7 +40,8 @@ object DartsDatabaseUtil
                 DartzeeTemplateEntity(database),
                 DartzeeRoundResultEntity(database),
                 X01FinishEntity(database),
-                PendingLogsEntity(database))
+                PendingLogsEntity(database),
+                SyncAuditEntity(database))
     }
 
     fun getAllEntitiesIncludingVersion(database: Database = mainDatabase) =

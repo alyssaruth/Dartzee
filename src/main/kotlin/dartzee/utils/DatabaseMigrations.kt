@@ -4,6 +4,7 @@ import dartzee.ai.DartsAiModel
 import dartzee.ai.DartsAiModelOLD
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.db.SyncAuditEntity
 import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
 
@@ -14,17 +15,20 @@ object DatabaseMigrations
         return mapOf(
             13 to listOf(
                 { db -> runScript(db, 14, "1. Player.sql") },
-                { db -> updatePlayerStrategies(db) }),
+                { db -> updatePlayerStrategies(db) }
+            ),
             14 to listOf(
                 { db -> updatePlayerStrategiesToJson(db) },
-                { db -> updateRoundTheClockParams(db) })
+                { db -> updateRoundTheClockParams(db) }
+            ),
+            15 to listOf { db -> SyncAuditEntity(db).createTable() }
         )
     }
 
     /**
      * V14 -> V15
      */
-    fun updatePlayerStrategiesToJson(database: Database)
+    private fun updatePlayerStrategiesToJson(database: Database)
     {
         val players = PlayerEntity(database).retrieveEntities("Strategy <> ''")
         players.forEach {
@@ -47,7 +51,7 @@ object DatabaseMigrations
         }
     }
 
-    fun updateRoundTheClockParams(database: Database)
+    private fun updateRoundTheClockParams(database: Database)
     {
         val games = GameEntity(database).retrieveEntities("GameType = 'ROUND_THE_CLOCK'")
         games.forEach {
@@ -61,7 +65,7 @@ object DatabaseMigrations
     /**
      * V13 -> V14
      */
-    fun updatePlayerStrategies(database: Database)
+    private fun updatePlayerStrategies(database: Database)
     {
         val players = PlayerEntity(database).retrieveEntities("Strategy <> ''")
         players.forEach {
@@ -72,7 +76,7 @@ object DatabaseMigrations
         }
     }
 
-    fun runScript(database: Database, version: Int, scriptName: String): Boolean
+    private fun runScript(database: Database, version: Int, scriptName: String): Boolean
     {
         val resourcePath = "/sql/v$version/"
         val rsrc = javaClass.getResource("$resourcePath$scriptName").readText()

@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeInMemoryDatabase
+import dartzee.helper.makeInMemoryDatabaseWithSchema
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_TEST_CONNECTION_ERROR
 import dartzee.logging.Severity
@@ -9,6 +10,7 @@ import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -56,7 +58,7 @@ class TestDatabaseMerger: AbstractTest()
     fun `Should migrate remote database to latest version`()
     {
         val dbVersion = DartsDatabaseUtil.DATABASE_VERSION - 1
-        val remoteDatabase = makeInMemoryDatabase()
+        val remoteDatabase = makeInMemoryDatabaseWithSchema()
         remoteDatabase.updateDatabaseVersion(dbVersion)
 
         val migrations = mapOf(dbVersion to listOf
@@ -65,14 +67,25 @@ class TestDatabaseMerger: AbstractTest()
 
         val migrator = DatabaseMigrator(migrations)
         val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase, databaseMigrator = migrator)
-        merger.performMerge()
+        val result = merger.performMerge()!!
 
-        remoteDatabase.getDatabaseVersion() shouldBe DartsDatabaseUtil.DATABASE_VERSION
-        remoteDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Test") shouldBe 0
+        result.getDatabaseVersion() shouldBe DartsDatabaseUtil.DATABASE_VERSION
+        result.executeQueryAggregate("SELECT COUNT(1) FROM Test") shouldBe 0
+    }
+
+    @Test
+    fun `Should insert into SyncAudit`()
+    {
+        val remoteDatabase = makeInMemoryDatabaseWithSchema()
+        val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase, remoteName = "Goomba")
+        val result = merger.performMerge()!!
+
+        SyncAuditEntity.getLastSyncDate(result, "Goomba").shouldNotBeNull()
     }
 
     private fun makeDatabaseMerger(localDatabase: Database = mainDatabase,
                                    remoteDatabase: Database = makeInMemoryDatabase(),
-                                   databaseMigrator: DatabaseMigrator = DatabaseMigrator(emptyMap())) =
-        DatabaseMerger(localDatabase, remoteDatabase, databaseMigrator)
+                                   databaseMigrator: DatabaseMigrator = DatabaseMigrator(emptyMap()),
+                                   remoteName: String = "Goomba") =
+        DatabaseMerger(localDatabase, remoteDatabase, databaseMigrator, remoteName)
 }

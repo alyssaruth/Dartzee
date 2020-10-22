@@ -2,22 +2,39 @@ package dartzee.db
 
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
+import dartzee.helper.DATABASE_NAME_TEST
 import dartzee.helper.makeInMemoryDatabase
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotThrowAny
 import io.mockk.mockk
 import org.junit.Test
 
 class TestDatabaseMigrations: AbstractTest()
 {
-    val mainDb = InjectedThings.mainDatabase
-
-    override fun afterEachTest()
+    override fun beforeEachTest()
     {
-        super.afterEachTest()
-        InjectedThings.mainDatabase = mainDb
+        InjectedThings.mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        super.beforeEachTest()
+    }
+
+    @Test
+    fun `V15 - V16 should create SyncAudit table`()
+    {
+        val database = makeInMemoryDatabase()
+        database.updateDatabaseVersion(15)
+
+        val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
+        migrator.migrateToLatest(database, "Test")
+
+        database.getDatabaseVersion() shouldBe 16
+
+        shouldNotThrowAny {
+            SyncAuditEntity(database).retrieveForId("foo", false)
+        }
     }
 
     @Test
