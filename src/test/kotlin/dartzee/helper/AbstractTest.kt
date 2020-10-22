@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities
 import javax.swing.UIManager
 import kotlin.test.assertNotNull
 
-private const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
+const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
 private var doneOneTimeSetup = false
 private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))

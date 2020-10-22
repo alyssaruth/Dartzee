@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
+import dartzee.helper.DATABASE_NAME_TEST
 import dartzee.helper.makeInMemoryDatabase
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -14,12 +15,10 @@ import org.junit.Test
 
 class TestDatabaseMigrations: AbstractTest()
 {
-    val mainDb = InjectedThings.mainDatabase
-
     override fun beforeEachTest()
     {
+        InjectedThings.mainDatabase = Database(dbName = DATABASE_NAME_TEST)
         super.beforeEachTest()
-        InjectedThings.mainDatabase = mainDb
     }
 
     @Test
