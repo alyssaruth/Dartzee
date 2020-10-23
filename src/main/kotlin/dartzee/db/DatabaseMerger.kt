@@ -45,6 +45,12 @@ class DatabaseMerger(private val localDatabase: Database,
             return null
         }
 
+        val lastLocalSync = SyncAuditEntity.getLastSyncDate(localDatabase, remoteName)
+        DartsDatabaseUtil.getAllEntities(localDatabase).forEach { dao ->
+            val entities = dao.retrieveModifiedSince(lastLocalSync)
+
+        }
+
         SyncAuditEntity.insertSyncAudit(remoteDatabase, remoteName)
 
         return remoteDatabase

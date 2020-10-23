@@ -2,7 +2,9 @@ package dartzee.db
 
 import dartzee.`object`.SegmentType
 import dartzee.core.util.DateStatics
+import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.core.util.getSqlDateNow
+import dartzee.core.util.getSqlString
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.CODE_INSTANTIATION_ERROR
@@ -119,6 +121,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             null
         }
         else entities.first()
+    }
+
+    fun retrieveModifiedSince(dt: Timestamp?): List<E>
+    {
+        val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""
+        return retrieveEntities(whereSql)
     }
 
     fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E>
