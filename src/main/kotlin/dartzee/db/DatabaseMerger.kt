@@ -47,7 +47,7 @@ class DatabaseMerger(private val localDatabase: Database,
     fun performMerge(): Database
     {
         val lastLocalSync = SyncAuditEntity.getLastSyncDate(localDatabase, remoteName)
-        getSyncEntities().forEach { dao -> syncRowsFromTable(dao, lastLocalSync)}
+        getSyncEntities().forEach { dao -> syncRowsFromTable(dao, lastLocalSync) }
 
         SyncAuditEntity.insertSyncAudit(remoteDatabase, remoteName)
 

@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 
 fun getSqlDateNow() = Timestamp(System.currentTimeMillis())
 
-fun getEndOfTimeSqlString() = "'9999-12-31 00:00:00'"
+fun getEndOfTimeSqlString() = END_OF_TIME.getSqlString()
 
 fun isEndOfTime(dt: Timestamp?) = dt?.equals(END_OF_TIME) ?: false
 
