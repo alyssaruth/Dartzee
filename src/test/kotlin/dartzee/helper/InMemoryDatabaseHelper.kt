@@ -180,9 +180,10 @@ fun insertGame(uuid: String = randomGuid(),
                dartsMatchId: String = "",
                matchOrdinal: Int = -1,
                dtCreation: Timestamp = getSqlDateNow(),
-               dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
+               dtLastUpdate: Timestamp = getSqlDateNow(),
+               database: Database = mainDatabase): GameEntity
 {
-    val ge = GameEntity()
+    val ge = GameEntity(database)
     ge.rowId = uuid
     ge.localId = localId
     ge.gameType = gameType

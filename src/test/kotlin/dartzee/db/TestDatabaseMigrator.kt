@@ -70,7 +70,7 @@ class TestDatabaseMigrator: AbstractTest()
         verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
         getTableNames(database).shouldContainExactly("VERSION")
 
-        val dbDetails = "Your version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
+        val dbDetails = "Test version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
 
         dialogFactory.errorsShown.shouldContainExactly("Test database is too out-of-date to be upgraded by this version of Dartzee. " +
                 "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails")

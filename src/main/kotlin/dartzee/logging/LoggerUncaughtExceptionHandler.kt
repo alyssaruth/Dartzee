@@ -1,5 +1,6 @@
 package dartzee.logging
 
+import dartzee.logging.exceptions.ApplicationFault
 import dartzee.utils.InjectedThings.logger
 import java.lang.Thread.UncaughtExceptionHandler
 
@@ -11,6 +12,10 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler
         {
             //Still stack trace, but don't show an error message or email a log
             logger.warn(CODE_UNCAUGHT_EXCEPTION, "Suppressing uncaught exception: $arg1", KEY_THREAD to arg0.toString(), KEY_EXCEPTION_MESSAGE to arg1.message)
+        }
+        else if (arg1 is ApplicationFault)
+        {
+            logger.error(arg1.loggingCode, "Uncaught exception: ${arg1.message}", arg1, KEY_THREAD to arg0.toString())
         }
         else
         {
