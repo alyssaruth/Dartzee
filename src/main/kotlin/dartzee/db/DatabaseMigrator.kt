@@ -33,7 +33,7 @@ class DatabaseMigrator(private val migrations: Map<Int, List<((database: Databas
         val minSupported = getMinimumSupportedVersion()
         if (version < minSupported)
         {
-            val dbDetails = "Your version: $version, min supported: ${minSupported}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
+            val dbDetails = "$databaseDesc version: $version, min supported: ${minSupported}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
             logger.warn(CODE_DATABASE_TOO_OLD, "$databaseDesc database too old, exiting. $dbDetails")
             DialogUtil.showError("$databaseDesc database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails")

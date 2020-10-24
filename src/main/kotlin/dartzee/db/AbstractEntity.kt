@@ -2,7 +2,6 @@ package dartzee.db
 
 import dartzee.`object`.SegmentType
 import dartzee.core.util.DateStatics
-import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.getSqlString
 import dartzee.game.GameType
@@ -85,10 +84,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun factory(): E? =
+    private fun factory(db: Database = database): E? =
         try
         {
-            javaClass.getDeclaredConstructor(Database::class.java).newInstance(database) as E
+            javaClass.getDeclaredConstructor(Database::class.java).newInstance(db) as E
         }
         catch (t: Throwable)
         {
@@ -121,12 +120,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             null
         }
         else entities.first()
-    }
-
-    fun retrieveModifiedSince(dt: Timestamp?): List<E>
-    {
-        val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""
-        return retrieveEntities(whereSql)
     }
 
     fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E>
@@ -219,12 +212,36 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
     }
 
-    private fun updateDatabaseRow()
+    /**
+     * Merge helpers
+     */
+    fun retrieveModifiedSince(dt: Timestamp?): List<E>
+    {
+        val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""
+        return retrieveEntities(whereSql)
+    }
+
+    fun mergeIntoDatabase(otherDatabase: Database)
+    {
+        val otherDao = factory(otherDatabase)!!
+
+        val existingRow = otherDao.retrieveForId(rowId, false)
+        if (existingRow == null)
+        {
+            insertIntoDatabase(otherDatabase)
+        }
+        else if (dtLastUpdate.after(existingRow.dtLastUpdate))
+        {
+            updateDatabaseRow(otherDatabase)
+        }
+    }
+
+    private fun updateDatabaseRow(db: Database = database)
     {
         val genericUpdate = buildUpdateQuery()
         var updateQuery = genericUpdate
 
-        val conn = database.borrowConnection()
+        val conn = db.borrowConnection()
         try
         {
             conn.prepareStatement(updateQuery).use { psUpdate ->
@@ -252,7 +269,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
         finally
         {
-            database.returnConnection(conn)
+            db.returnConnection(conn)
         }
     }
 
@@ -267,12 +284,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return "UPDATE ${getTableName()} SET $columns WHERE RowId=?"
     }
 
-    private fun insertIntoDatabase()
+    private fun insertIntoDatabase(db: Database = database)
     {
         val genericInsert = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
         var insertQuery = genericInsert
 
-        val conn = database.borrowConnection()
+        val conn = db.borrowConnection()
         try
         {
             conn.prepareStatement(insertQuery).use { psInsert ->
@@ -292,7 +309,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
         finally
         {
-            database.returnConnection(conn)
+            db.returnConnection(conn)
         }
     }
 
