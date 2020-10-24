@@ -7,8 +7,10 @@ import dartzee.core.util.getSqlString
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.CODE_INSTANTIATION_ERROR
+import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.KEY_SQL
+import dartzee.logging.exceptions.ApplicationFault
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
@@ -223,7 +225,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     fun mergeIntoDatabase(otherDatabase: Database)
     {
-        val otherDao = factory(otherDatabase)!!
+        val otherDao = factory(otherDatabase) ?: throw ApplicationFault(CODE_MERGE_ERROR, "Failed to factory ${getTableName()} dao")
 
         val existingRow = otherDao.retrieveForId(rowId, false)
         if (existingRow == null)

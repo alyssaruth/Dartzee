@@ -1,6 +1,7 @@
 package dartzee.logging
 
 import dartzee.helper.AbstractTest
+import dartzee.logging.exceptions.ApplicationFault
 import dartzee.shouldContainKeyValues
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -49,5 +50,20 @@ class TestLoggerUncaughtExceptionHandler: AbstractTest()
         log.errorObject shouldBe ex
         log.shouldContainKeyValues(KEY_THREAD to t.toString(), KEY_EXCEPTION_MESSAGE to "Argh")
         log.message shouldBe "Uncaught exception: $ex"
+    }
+
+    @Test
+    fun `Should log the code and message from an ApplicationFault`()
+    {
+        val t = Thread("Foo")
+        val handler = LoggerUncaughtExceptionHandler()
+
+        val ex = ApplicationFault(LoggingCode("some.error"), "Argh")
+        handler.uncaughtException(t, ex)
+
+        val log = verifyLog(LoggingCode("some.error"), Severity.ERROR)
+        log.errorObject shouldBe ex
+        log.shouldContainKeyValues(KEY_THREAD to t.toString(), KEY_EXCEPTION_MESSAGE to "Argh")
+        log.message shouldBe "Uncaught exception: Argh"
     }
 }
