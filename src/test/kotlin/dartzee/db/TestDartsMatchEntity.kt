@@ -8,6 +8,7 @@ import dartzee.game.MatchMode
 import dartzee.helper.*
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
+import dartzee.logging.exceptions.WrappedSqlException
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeBetween
@@ -15,6 +16,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.kotlintest.shouldThrow
 import org.junit.Test
 
 class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
@@ -29,9 +31,12 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         insertDartsMatch(localId = 5)
         verifyNoLogs(CODE_SQL_EXCEPTION)
 
-        insertDartsMatch(localId = 5)
-        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-        log.errorObject?.message.shouldContain("duplicate key")
+        val ex = shouldThrow<WrappedSqlException> {
+            insertDartsMatch(localId = 5)
+        }
+
+        val sqle = ex.sqlException
+        sqle.message shouldContain "duplicate key"
 
         getCountFromTable("DartsMatch") shouldBe 1
     }
