@@ -7,10 +7,12 @@ import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
+import dartzee.logging.exceptions.WrappedSqlException
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
+import io.kotlintest.shouldThrow
 import org.junit.Test
 
 class TestDatabase: AbstractTest()
@@ -112,11 +114,13 @@ class TestDatabase: AbstractTest()
     {
         val database = makeInMemoryDatabase()
         val query = "SELECT * FROM zzQueryTest"
-        database.executeQuery(query)
 
-        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-        log.message shouldBe "Caught SQLException for statement: $query"
-        log.errorObject?.message shouldContain "does not exist"
+        val ex = shouldThrow<WrappedSqlException> {
+            database.executeQuery(query)
+        }
+
+        ex.sqlStatement shouldBe query
+        ex.sqlException.message shouldContain "does not exist"
     }
 
     @Test

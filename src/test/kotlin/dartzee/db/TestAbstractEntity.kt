@@ -18,7 +18,7 @@ import java.util.*
 
 class TestAbstractEntity: AbstractTest()
 {
-    var otherDatabase = makeInMemoryDatabase()
+    private var otherDatabase = makeInMemoryDatabase()
 
     override fun beforeEachTest()
     {
@@ -80,6 +80,18 @@ class TestAbstractEntity: AbstractTest()
         ex.genericStatement shouldBe "UPDATE TestTable SET DtCreation=?, DtLastUpdate=?, TestString=? WHERE RowId=?"
     }
 
+    @Test
+    fun `Should throw a wrapped SQL exception on retrieve`()
+    {
+        val dao = FakeEntity()
+
+        val ex = shouldThrow<WrappedSqlException> {
+            dao.retrieveEntities("butterfingers")
+        }
+
+        ex.sqlException.message shouldContain "BUTTERFINGERS"
+        ex.sqlStatement shouldBe "SELECT RowId, DtCreation, DtLastUpdate, TestString FROM TestTable WHERE butterfingers"
+    }
 
     @Test
     fun `Should retrieve all entities if passed a null date`()

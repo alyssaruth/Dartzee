@@ -82,30 +82,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should log a SQLException if SQL fails checking whether a FIRST_TO match is complete`()
-    {
-        val match = DartsMatchEntity()
-        match.mode = MatchMode.FIRST_TO
-        match.rowId = "'"
-
-        match.isComplete() shouldBe false
-
-        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-    }
-
-    @Test
-    fun `Should log a SQLException if SQL fails checking whether a POINTS match is complete`()
-    {
-        val match = DartsMatchEntity()
-        match.mode = MatchMode.POINTS
-        match.rowId = "'"
-        match.games = 2
-
-        match.isComplete() shouldBe false
-        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-    }
-
-    @Test
     fun `Should correctly report whether a POINTS match is complete`()
     {
         val match = DartsMatchEntity.factoryPoints(2, "")

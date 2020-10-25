@@ -58,10 +58,10 @@ class TestDatabaseMigrations: AbstractTest()
 
         val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
         conversionFns.forEach {
-            it(dbToRunOn)
+            try { it(dbToRunOn) } catch (e: Exception) {}
         }
 
-        //Conversions will likely fail since we've not set them up
+        //Will probably have one logged, which is fine
         errorLogged()
 
         verifyNotCalled { mainDbMock.borrowConnection() }

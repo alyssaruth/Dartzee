@@ -118,17 +118,18 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
                     KEY_SQL to whereSql)
         }
 
-        return if (entities.isEmpty())
-        {
-            null
-        }
-        else entities.first()
+        return if (entities.isEmpty()) null else entities.first()
     }
 
     fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E>
     {
-        var queryWithFrom = "FROM ${getTableName()} $alias"
-        if (!whereSql.isEmpty())
+        var queryWithFrom = "FROM ${getTableName()}"
+        if (alias.isNotEmpty())
+        {
+            queryWithFrom += " $alias"
+        }
+
+        if (whereSql.isNotEmpty())
         {
             queryWithFrom += " WHERE $whereSql"
         }
@@ -139,22 +140,14 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): MutableList<E>
     {
         val query = "SELECT " + getColumnsForSelectStatement(alias) + " " + whereSqlWithFrom
-
         val ret = mutableListOf<E>()
 
-        try
-        {
-            database.executeQuery(query).use { rs ->
-                while (rs.next())
-                {
-                    val entity = factoryFromResultSet(rs)
-                    ret.add(entity)
-                }
+        database.executeQuery(query).use { rs ->
+            while (rs.next())
+            {
+                val entity = factoryFromResultSet(rs)
+                ret.add(entity)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            throw WrappedSqlException(query, "", sqle)
         }
 
         return ret
@@ -162,29 +155,17 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E?
     {
-        val entities = retrieveEntities("RowId = '$rowId'")
-        if (entities.isEmpty())
-        {
-            if (stackTraceIfNotFound)
-            {
-                logger.error(CODE_SQL_EXCEPTION,
-                        "Failed to find ${getTableName()} for ID [$rowId]",
-                        Throwable(),
-                        KEY_SQL to "RowId = '$rowId'")
-            }
-
-            return null
-        }
-
-        if (entities.size > 1)
+        val entity = retrieveEntity("RowId = '$rowId'")
+        if (entity == null && stackTraceIfNotFound)
         {
             logger.error(CODE_SQL_EXCEPTION,
-                    "Found ${entities.size} ${getTableName()} rows for ID [$rowId]",
+                    "Failed to find ${getTableName()} for ID [$rowId]",
                     Throwable(),
                     KEY_SQL to "RowId = '$rowId'")
         }
 
-        return entities[0]
+
+        return entity
     }
 
     fun deleteFromDatabase(): Boolean
