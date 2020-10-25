@@ -80,7 +80,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
 
     fun executeUpdates(statements: List<String>): Boolean
     {
-        statements.forEach{
+        statements.forEach {
             if (!executeUpdate(it))
             {
                 return false

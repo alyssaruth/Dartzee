@@ -11,6 +11,7 @@ import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.KEY_SQL
 import dartzee.logging.exceptions.ApplicationFault
+import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
@@ -153,7 +154,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
         catch (sqle: SQLException)
         {
-            logger.logSqlException(query, "", sqle)
+            throw WrappedSqlException(query, "", sqle)
         }
 
         return ret
@@ -267,7 +268,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
         catch (sqle: SQLException)
         {
-            logger.logSqlException(updateQuery, genericUpdate, sqle)
+            throw WrappedSqlException(updateQuery, genericUpdate, sqle)
         }
         finally
         {
@@ -307,7 +308,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
         catch (sqle: SQLException)
         {
-            logger.logSqlException(insertQuery, genericInsert, sqle)
+            throw WrappedSqlException(insertQuery, genericInsert, sqle)
         }
         finally
         {
@@ -350,7 +351,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return createdTable
     }
 
-    fun createIndexes()
+    private fun createIndexes()
     {
         //Also create the indexes
         val indexes = mutableListOf<List<String>>()
