@@ -2,14 +2,14 @@ package dartzee.db
 
 import dartzee.utils.Database
 
-object LocalIdGenerator
+class LocalIdGenerator(private val database: Database)
 {
-    private val UNIQUE_ID_SYNCH_OBJECT = Any()
+    private val uniqueIdSyncObject = Any()
     val hmLastAssignedIdByTableName = mutableMapOf<String, Long>()
 
-    fun generateLocalId(database: Database, tableName: String): Long
+    fun generateLocalId(tableName: String): Long
     {
-        synchronized(UNIQUE_ID_SYNCH_OBJECT)
+        synchronized(uniqueIdSyncObject)
         {
             val lastAssignedId = hmLastAssignedIdByTableName[tableName] ?: retrieveLastAssignedId(database, tableName)
 
