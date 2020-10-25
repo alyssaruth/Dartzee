@@ -11,6 +11,7 @@ import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.KEY_SQL
 import dartzee.logging.exceptions.ApplicationFault
+import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
@@ -57,7 +58,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return cols.map{ getColumnNameFromCreateSql(it) }.toMutableList()
     }
 
-    fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String>
+    private fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String>
     {
         val columns = getColumns()
         columnsToExclude.forEach { columns.remove(it) }
@@ -117,17 +118,18 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
                     KEY_SQL to whereSql)
         }
 
-        return if (entities.isEmpty())
-        {
-            null
-        }
-        else entities.first()
+        return entities.firstOrNull()
     }
 
     fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E>
     {
-        var queryWithFrom = "FROM ${getTableName()} $alias"
-        if (!whereSql.isEmpty())
+        var queryWithFrom = "FROM ${getTableName()}"
+        if (alias.isNotEmpty())
+        {
+            queryWithFrom += " $alias"
+        }
+
+        if (whereSql.isNotEmpty())
         {
             queryWithFrom += " WHERE $whereSql"
         }
@@ -138,22 +140,14 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): MutableList<E>
     {
         val query = "SELECT " + getColumnsForSelectStatement(alias) + " " + whereSqlWithFrom
-
         val ret = mutableListOf<E>()
 
-        try
-        {
-            database.executeQuery(query).use { rs ->
-                while (rs.next())
-                {
-                    val entity = factoryFromResultSet(rs)
-                    ret.add(entity)
-                }
+        database.executeQuery(query).use { rs ->
+            while (rs.next())
+            {
+                val entity = factoryFromResultSet(rs)
+                ret.add(entity)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException(query, "", sqle)
         }
 
         return ret
@@ -161,29 +155,17 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E?
     {
-        val entities = retrieveEntities("RowId = '$rowId'")
-        if (entities.isEmpty())
-        {
-            if (stackTraceIfNotFound)
-            {
-                logger.error(CODE_SQL_EXCEPTION,
-                        "Failed to find ${getTableName()} for ID [$rowId]",
-                        Throwable(),
-                        KEY_SQL to "RowId = '$rowId'")
-            }
-
-            return null
-        }
-
-        if (entities.size > 1)
+        val entity = retrieveEntity("RowId = '$rowId'")
+        if (entity == null && stackTraceIfNotFound)
         {
             logger.error(CODE_SQL_EXCEPTION,
-                    "Found ${entities.size} ${getTableName()} rows for ID [$rowId]",
+                    "Failed to find ${getTableName()} for ID [$rowId]",
                     Throwable(),
                     KEY_SQL to "RowId = '$rowId'")
         }
 
-        return entities[0]
+
+        return entity
     }
 
     fun deleteFromDatabase(): Boolean
@@ -267,7 +249,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
         catch (sqle: SQLException)
         {
-            logger.logSqlException(updateQuery, genericUpdate, sqle)
+            throw WrappedSqlException(updateQuery, genericUpdate, sqle)
         }
         finally
         {
@@ -307,7 +289,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
         catch (sqle: SQLException)
         {
-            logger.logSqlException(insertQuery, genericInsert, sqle)
+            throw WrappedSqlException(insertQuery, genericInsert, sqle)
         }
         finally
         {
@@ -350,7 +332,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return createdTable
     }
 
-    fun createIndexes()
+    private fun createIndexes()
     {
         //Also create the indexes
         val indexes = mutableListOf<List<String>>()
@@ -373,7 +355,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun getColumnsForSelectStatement(alias: String = ""): String
     {
         var cols = getColumns().toList()
-        if (!alias.isEmpty())
+        if (alias.isNotEmpty())
         {
             cols = cols.map{ "$alias.$it" }
         }
@@ -455,16 +437,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return swapInValue(statementStr, value)
     }
 
-    private fun swapInValue(statementStr: String, value: Any): String
-    {
-        return statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
-    }
+    private fun swapInValue(statementStr: String, value: Any) = statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
 
     private fun writeValue(ps: PreparedStatement, ix: Int, columnName: String, statementStr: String): String
     {
         val value = getField(columnName)
-        val type = getFieldType(columnName)
-        return when (type)
+        return when (getFieldType(columnName))
         {
             String::class.java -> writeString(ps, ix, value as String, statementStr)
             Long::class.java -> writeLong(ps, ix, value as Long, statementStr)
@@ -477,10 +455,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
     }
 
-    private fun getFieldFromResultSet(rs: ResultSet, columnName: String): Any?
-    {
-        val type = getFieldType(columnName)
-        return when(type)
+    private fun getFieldFromResultSet(rs: ResultSet, columnName: String): Any? =
+        when(getFieldType(columnName))
         {
             String::class.java -> rs.getString(columnName)
             Long::class.java -> rs.getLong(columnName)
@@ -494,15 +470,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             SegmentType::class.java -> SegmentType.valueOf(rs.getString(columnName))
             else -> null
         }
-    }
 
-    private fun getValueForLogging(value: Any): String
-    {
-        return when (value.javaClass)
+    private fun getValueForLogging(value: Any) =
+        when (value.javaClass)
         {
             String::class.java, Timestamp::class.java -> "'$value'"
             Blob::class.java -> "BLOB:${(value as Blob).length()}"
             else -> "$value"
         }
-    }
 }

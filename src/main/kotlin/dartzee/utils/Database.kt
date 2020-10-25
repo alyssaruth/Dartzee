@@ -4,13 +4,13 @@ import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
 import dartzee.db.VersionEntity
 import dartzee.logging.*
+import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings.logger
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
-import javax.sql.rowset.CachedRowSet
 import javax.sql.rowset.RowSetProvider
 import kotlin.system.exitProcess
 
@@ -80,7 +80,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
 
     fun executeUpdates(statements: List<String>): Boolean
     {
-        statements.forEach{
+        statements.forEach {
             if (!executeUpdate(it))
             {
                 return false
@@ -134,31 +134,29 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
     fun executeQuery(query: String): ResultSet
     {
         val timer = DurationTimer()
-        var crs: CachedRowSet? = null
-
         val conn = borrowConnection()
+
         try
         {
             conn.createStatement().use { s ->
-                s.executeQuery(query).use { rs ->
-                    crs = RowSetProvider.newFactory().createCachedRowSet()
-                    crs!!.populate(rs)
+                val resultSet: ResultSet = s.executeQuery(query).use { rs ->
+                    val crs = RowSetProvider.newFactory().createCachedRowSet()
+                    crs.populate(rs)
+                    crs
                 }
+
+                logger.logSql(query, "", timer.getDuration())
+                return resultSet
             }
         }
         catch (sqle: SQLException)
         {
-            logger.logSqlException(query, "", sqle)
+            throw WrappedSqlException(query, "", sqle)
         }
         finally
         {
             returnConnection(conn)
         }
-
-        logger.logSql(query, "", timer.getDuration())
-
-        //Return an empty one if something's gone wrong
-        return crs ?: RowSetProvider.newFactory().createCachedRowSet()
     }
 
     fun executeQueryAggregate(sb: StringBuilder): Int
