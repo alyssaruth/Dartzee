@@ -5,10 +5,13 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.dropUnexpectedTables
 import dartzee.helper.getCountFromTable
 import dartzee.helper.makeInMemoryDatabase
+import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import org.junit.Test
 import java.sql.Timestamp
 import java.util.*
@@ -30,6 +33,53 @@ class TestAbstractEntity: AbstractTest()
         super.afterEachTest()
         dropUnexpectedTables()
     }
+
+    @Test
+    fun `Should throw wrapped SQL exception if an error occurs while preparing insert statement`()
+    {
+        mainDatabase.dropTable("TestTable")
+
+        val ex = shouldThrow<WrappedSqlException> {
+            insertFakeEntity()
+        }
+
+        ex.sqlException.message shouldContain "Table/View 'TESTTABLE' does not exist"
+        ex.sqlStatement shouldBe "INSERT INTO TestTable VALUES (?, ?, ?, ?)"
+        ex.genericStatement shouldBe "INSERT INTO TestTable VALUES (?, ?, ?, ?)"
+    }
+
+    @Test
+    fun `Should throw wrapped SQL exception with values if an error occurs whilst performing the insert`()
+    {
+        val rowId = UUID.randomUUID().toString()
+
+        val dtCreation = Timestamp(100)
+        val dtLastUpdate = Timestamp(10000)
+        val ex = shouldThrow<WrappedSqlException> {
+            insertFakeEntity(rowId = rowId, testString = "thisistoolong", dtCreation = dtCreation, dtLastUpdate = dtLastUpdate)
+        }
+
+        ex.sqlException.message shouldContain "truncation error"
+        ex.sqlStatement shouldBe "INSERT INTO TestTable VALUES ('$rowId', '$dtCreation', '$dtLastUpdate', 'thisistoolong')"
+        ex.genericStatement shouldBe "INSERT INTO TestTable VALUES (?, ?, ?, ?)"
+    }
+
+    @Test
+    fun `Should throw a wrapped SQL exception with values if an error occurs whilst performing an update`()
+    {
+        val entity = insertFakeEntity()
+        entity.testString = "thisistoolong"
+
+        val ex = shouldThrow<WrappedSqlException> {
+            entity.saveToDatabase()
+        }
+
+        ex.sqlException.message shouldContain "truncation error"
+        ex.sqlStatement shouldBe
+                "UPDATE TestTable SET DtCreation='${entity.dtCreation}', DtLastUpdate='${entity.dtLastUpdate}', TestString='thisistoolong' WHERE RowId='${entity.rowId}'"
+        ex.genericStatement shouldBe "UPDATE TestTable SET DtCreation=?, DtLastUpdate=?, TestString=? WHERE RowId=?"
+    }
+
 
     @Test
     fun `Should retrieve all entities if passed a null date`()
@@ -96,10 +146,15 @@ class TestAbstractEntity: AbstractTest()
         otherEntity.dtLastUpdate shouldBe Timestamp(501)
     }
 
-    private fun insertFakeEntity(rowId: String = UUID.randomUUID().toString(), testString: String = "", dtLastUpdate: Timestamp = getSqlDateNow(), database: Database = mainDatabase): FakeEntity
+    private fun insertFakeEntity(rowId: String = UUID.randomUUID().toString(),
+                                 testString: String = "",
+                                 dtCreation: Timestamp = getSqlDateNow(),
+                                 dtLastUpdate: Timestamp = getSqlDateNow(),
+                                 database: Database = mainDatabase): FakeEntity
     {
         val entity = FakeEntity(database)
         entity.rowId = rowId
+        entity.dtCreation = dtCreation
         entity.testString = testString
         entity.saveToDatabase(dtLastUpdate)
         return entity
@@ -111,5 +166,5 @@ class FakeEntity(database: Database = mainDatabase): AbstractEntity<FakeEntity>(
     var testString = ""
 
     override fun getTableName() = "TestTable"
-    override fun getCreateTableSqlSpecific() = "TestString VARCHAR(1000) NOT NULL"
+    override fun getCreateTableSqlSpecific() = "TestString VARCHAR(10) NOT NULL"
 }
