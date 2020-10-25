@@ -58,7 +58,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return cols.map{ getColumnNameFromCreateSql(it) }.toMutableList()
     }
 
-    fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String>
+    private fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String>
     {
         val columns = getColumns()
         columnsToExclude.forEach { columns.remove(it) }
@@ -118,7 +118,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
                     KEY_SQL to whereSql)
         }
 
-        return if (entities.isEmpty()) null else entities.first()
+        return entities.firstOrNull()
     }
 
     fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E>
@@ -355,7 +355,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun getColumnsForSelectStatement(alias: String = ""): String
     {
         var cols = getColumns().toList()
-        if (!alias.isEmpty())
+        if (alias.isNotEmpty())
         {
             cols = cols.map{ "$alias.$it" }
         }
@@ -437,16 +437,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return swapInValue(statementStr, value)
     }
 
-    private fun swapInValue(statementStr: String, value: Any): String
-    {
-        return statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
-    }
+    private fun swapInValue(statementStr: String, value: Any) = statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
 
     private fun writeValue(ps: PreparedStatement, ix: Int, columnName: String, statementStr: String): String
     {
         val value = getField(columnName)
-        val type = getFieldType(columnName)
-        return when (type)
+        return when (getFieldType(columnName))
         {
             String::class.java -> writeString(ps, ix, value as String, statementStr)
             Long::class.java -> writeLong(ps, ix, value as Long, statementStr)
@@ -459,10 +455,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
     }
 
-    private fun getFieldFromResultSet(rs: ResultSet, columnName: String): Any?
-    {
-        val type = getFieldType(columnName)
-        return when(type)
+    private fun getFieldFromResultSet(rs: ResultSet, columnName: String): Any? =
+        when(getFieldType(columnName))
         {
             String::class.java -> rs.getString(columnName)
             Long::class.java -> rs.getLong(columnName)
@@ -476,15 +470,12 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             SegmentType::class.java -> SegmentType.valueOf(rs.getString(columnName))
             else -> null
         }
-    }
 
-    private fun getValueForLogging(value: Any): String
-    {
-        return when (value.javaClass)
+    private fun getValueForLogging(value: Any) =
+        when (value.javaClass)
         {
             String::class.java, Timestamp::class.java -> "'$value'"
             Blob::class.java -> "BLOB:${(value as Blob).length()}"
             else -> "$value"
         }
-    }
 }
