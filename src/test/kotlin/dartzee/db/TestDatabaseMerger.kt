@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.core.helper.getFutureTime
 import dartzee.core.helper.getPastTime
+import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.*
 import dartzee.logging.CODE_MERGE_ERROR
@@ -14,6 +15,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
@@ -121,8 +123,7 @@ class TestDatabaseMerger: AbstractTest()
     @Test
     fun `Should only sync rows that were modified since the last sync`()
     {
-        SyncAuditEntity.insertSyncAudit(mainDatabase, "Goomba")
-        val dtLastSync = SyncAuditEntity.getLastSyncDate(mainDatabase, "Goomba")!!
+        val dtLastSync = setUpLastSync(mainDatabase)
 
         val oldGame = insertGame(dtLastUpdate = getPastTime(dtLastSync), database = mainDatabase)
         val newGame = insertGame(dtLastUpdate = getFutureTime(dtLastSync), database = mainDatabase)
@@ -149,6 +150,49 @@ class TestDatabaseMerger: AbstractTest()
         getCountFromTable("Game", resultingDatabase) shouldBe 2
         GameEntity(resultingDatabase).retrieveForId(oldGame.rowId, false).shouldNotBeNull()
         GameEntity(resultingDatabase).retrieveForId(newGame.rowId, false).shouldNotBeNull()
+    }
+
+    @Test
+    fun `Should reassign localIds in order for new games`()
+    {
+        val remoteDatabase = makeInMemoryDatabaseWithSchema()
+        insertGame(localId = 7, database = remoteDatabase)
+
+        val gameOne = insertGame(localId = 1, dtCreation = Timestamp(500), database = mainDatabase)
+        val gameTwo = insertGame(localId = 2, dtCreation = Timestamp(1000), database = mainDatabase)
+
+        val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+        val resultingDatabase = merger.performMerge()
+
+        val gameDao = GameEntity(resultingDatabase)
+        gameDao.retrieveForId(gameOne.rowId)!!.localId shouldBe 8
+        gameDao.retrieveForId(gameTwo.rowId)!!.localId shouldBe 9
+    }
+
+    @Test
+    fun `Should not reassign localId for a modified game`()
+    {
+        val dtLastSync = setUpLastSync(mainDatabase)
+
+        val remoteDatabase = makeInMemoryDatabaseWithSchema()
+        val oldGame = insertGame(localId = 4, dtFinish = DateStatics.END_OF_TIME, dtLastUpdate = getPastTime(dtLastSync), database = remoteDatabase)
+        insertGame(localId = 7, database = remoteDatabase)
+
+        insertGame(database = mainDatabase, uuid = oldGame.rowId, localId = 4, dtFinish = getSqlDateNow(), dtLastUpdate = getFutureTime(dtLastSync))
+
+        val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+        val resultingDb = merger.performMerge()
+
+        val dao = GameEntity(resultingDb)
+        val resultingGame = dao.retrieveForId(oldGame.rowId)!!
+        resultingGame.localId shouldBe 4
+        resultingGame.dtFinish shouldNotBe DateStatics.END_OF_TIME
+    }
+
+    private fun setUpLastSync(database: Database): Timestamp
+    {
+        SyncAuditEntity.insertSyncAudit(database, "Goomba")
+        return SyncAuditEntity.getLastSyncDate(database, "Goomba")!!
     }
 
     private fun makeDatabaseMerger(localDatabase: Database = mainDatabase,

@@ -40,14 +40,15 @@ fun factoryPlayer(name: String): PlayerEntity
 }
 
 fun insertDartsMatch(uuid: String = randomGuid(),
-                     localId: Long = mainDatabase.generateLocalId("DartsMatch"),
+                     database: Database = mainDatabase,
+                     localId: Long = database.generateLocalId("DartsMatch"),
                      games: Int = 3,
                      mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
                      matchParams: String = "",
                      gameParams: String = ""): DartsMatchEntity
 {
-    val m = DartsMatchEntity()
+    val m = DartsMatchEntity(database)
     m.rowId = uuid
     m.localId = localId
     m.games = games

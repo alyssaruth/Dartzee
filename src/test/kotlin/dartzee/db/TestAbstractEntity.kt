@@ -116,6 +116,17 @@ class TestAbstractEntity: AbstractTest()
     }
 
     @Test
+    fun `Should sort by dtCreation`()
+    {
+        val e1 = insertFakeEntity(dtCreation = Timestamp(500))
+        val e3 = insertFakeEntity(dtCreation = Timestamp(1000))
+        val e2 = insertFakeEntity(dtCreation = Timestamp(750))
+
+        val retrieved = FakeEntity().retrieveModifiedSince(null).map { it.rowId }
+        retrieved.shouldContainExactly(e1.rowId, e2.rowId, e3.rowId)
+    }
+
+    @Test
     fun `Should insert into other database if row does not already exist`()
     {
         val entity = insertFakeEntity(testString = "carrot", dtLastUpdate = Timestamp(500))

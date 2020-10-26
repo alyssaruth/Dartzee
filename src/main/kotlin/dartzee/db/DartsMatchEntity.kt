@@ -44,6 +44,11 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         return super.assignRowId()
     }
 
+    override fun reassignLocalId(otherDatabase: Database)
+    {
+        localId = otherDatabase.generateLocalId(getTableName())
+    }
+
     /**
      * Helpers
      */
