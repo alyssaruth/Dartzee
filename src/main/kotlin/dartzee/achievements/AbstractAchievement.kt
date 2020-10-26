@@ -8,6 +8,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DartsColour
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
@@ -61,6 +62,23 @@ abstract class AbstractAchievement
 
     abstract fun populateForConversion(playerIds : String)
     abstract fun getIconURL() : URL
+
+    /**
+     * Most achievements are one row per player. Assume that here, and override for special cases.
+     */
+    open fun mergeIntoOtherDatabase(achievementRow: AchievementEntity, otherDao: AchievementEntity, otherDatabase: Database)
+    {
+        val existingRow = AchievementEntity.retrieveAchievement(achievementRow.achievementRef, achievementRow.playerId, otherDatabase)
+        if (existingRow == null)
+        {
+            achievementRow.insertIntoDatabase(otherDatabase)
+        }
+        else
+        {
+
+        }
+    }
+
 
     /**
      * Basic init will be the same for most achievements - get the value from the single row

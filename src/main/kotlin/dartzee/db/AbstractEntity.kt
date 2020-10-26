@@ -274,7 +274,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return "UPDATE ${getTableName()} SET $columns WHERE RowId=?"
     }
 
-    private fun insertIntoDatabase(db: Database = database)
+    fun insertIntoDatabase(db: Database = database)
     {
         val genericInsert = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
         var insertQuery = genericInsert

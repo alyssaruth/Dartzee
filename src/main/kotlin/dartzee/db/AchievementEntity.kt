@@ -3,6 +3,8 @@ package dartzee.db
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getAchievementForRef
 import dartzee.core.util.getSqlDateNow
+import dartzee.logging.CODE_MERGE_ERROR
+import dartzee.logging.exceptions.ApplicationFault
 import dartzee.screen.ScreenCache
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -43,6 +45,8 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
 
     override fun mergeIntoDatabaseImpl(otherDao: AchievementEntity, otherDatabase: Database)
     {
+        val achievement = getAchievementForRef(achievementRef) ?: throw ApplicationFault(CODE_MERGE_ERROR, "No achievement class for ref $achievementRef")
+
 
     }
 
@@ -74,7 +78,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
         }
 
 
-        fun retrieveAchievement(achievementRef: Int, playerId: String): AchievementEntity?
+        fun retrieveAchievement(achievementRef: Int, playerId: String, database: Database = mainDatabase): AchievementEntity?
         {
             return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND AchievementRef = $achievementRef")
         }
