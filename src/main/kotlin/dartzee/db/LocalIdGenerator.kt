@@ -11,7 +11,7 @@ class LocalIdGenerator(private val database: Database)
     {
         synchronized(uniqueIdSyncObject)
         {
-            val lastAssignedId = hmLastAssignedIdByTableName[tableName] ?: retrieveLastAssignedId(database, tableName)
+            val lastAssignedId = hmLastAssignedIdByTableName[tableName] ?: retrieveLastAssignedId(tableName)
 
             val nextId = lastAssignedId + 1
             hmLastAssignedIdByTableName[tableName] = nextId
@@ -19,7 +19,7 @@ class LocalIdGenerator(private val database: Database)
             return nextId
         }
     }
-    private fun retrieveLastAssignedId(database: Database, tableName: String): Long
+    private fun retrieveLastAssignedId(tableName: String): Long
     {
         return database.executeQueryAggregate("SELECT MAX(LocalId) FROM $tableName").toLong()
     }
