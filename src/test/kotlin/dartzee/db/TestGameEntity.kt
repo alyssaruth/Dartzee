@@ -6,6 +6,7 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.exceptions.WrappedSqlException
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -186,5 +187,22 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         GameEntity.getGameId(1) shouldBe gameOne.rowId
         GameEntity.getGameId(2) shouldBe gameTwo.rowId
         GameEntity.getGameId(3) shouldBe null
+    }
+
+    @Test
+    fun `Should reassign localId when merging into another database`()
+    {
+        val otherDatabase = makeInMemoryDatabaseWithSchema()
+        insertGame(database = otherDatabase)
+        insertGame(database = otherDatabase)
+
+        val game = insertGame(database = mainDatabase)
+        game.localId shouldBe 1
+
+        game.mergeIntoDatabase(otherDatabase)
+        game.localId shouldBe 3
+
+        val retrieved = GameEntity(otherDatabase).retrieveForId(game.rowId)!!
+        retrieved.localId shouldBe 3
     }
 }

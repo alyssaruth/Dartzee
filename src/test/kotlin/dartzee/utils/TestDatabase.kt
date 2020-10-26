@@ -3,6 +3,7 @@ package dartzee.utils
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.makeInMemoryDatabase
+import dartzee.helper.makeInMemoryDatabaseWithSchema
 import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
@@ -153,5 +154,14 @@ class TestDatabase: AbstractTest()
         database.getDatabaseVersion() shouldBe 7
 
         getCountFromTable("Version", database) shouldBe 1
+    }
+
+    @Test
+    fun `Should support generating local IDs`()
+    {
+        val database = makeInMemoryDatabaseWithSchema()
+        database.generateLocalId("Game") shouldBe 1
+        database.generateLocalId("Game") shouldBe 2
+        database.generateLocalId("DartsMatch") shouldBe 1
     }
 }

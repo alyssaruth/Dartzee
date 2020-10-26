@@ -40,14 +40,15 @@ fun factoryPlayer(name: String): PlayerEntity
 }
 
 fun insertDartsMatch(uuid: String = randomGuid(),
-                     localId: Long = LocalIdGenerator.generateLocalId(mainDatabase, "DartsMatch"),
+                     database: Database = mainDatabase,
+                     localId: Long = database.generateLocalId("DartsMatch"),
                      games: Int = 3,
                      mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
                      matchParams: String = "",
                      gameParams: String = ""): DartsMatchEntity
 {
-    val m = DartsMatchEntity()
+    val m = DartsMatchEntity(database)
     m.rowId = uuid
     m.localId = localId
     m.games = games
@@ -157,7 +158,7 @@ fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),
-                        localId: Long = LocalIdGenerator.generateLocalId(mainDatabase, "Game"),
+                        localId: Long = mainDatabase.generateLocalId("Game"),
                         gameType: GameType = GameType.X01,
                         gameParams: String = "501",
                         dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -165,7 +166,7 @@ fun insertGameForReport(uuid: String = randomGuid(),
                         matchOrdinal: Int = -1,
                         dtCreation: Timestamp = getSqlDateNow()): GameEntity
 {
-    val game = insertGame(uuid, localId, gameType, gameParams, dtFinish, dartsMatchId, matchOrdinal, dtCreation)
+    val game = insertGame(uuid, mainDatabase, localId, gameType, gameParams, dtFinish, dartsMatchId, matchOrdinal, dtCreation)
     val player = insertPlayer()
     insertParticipant(gameId = game.rowId, playerId = player.rowId)
 
@@ -173,15 +174,15 @@ fun insertGameForReport(uuid: String = randomGuid(),
 }
 
 fun insertGame(uuid: String = randomGuid(),
-               localId: Long = LocalIdGenerator.generateLocalId(mainDatabase, "Game"),
+               database: Database = mainDatabase,
+               localId: Long = database.generateLocalId("Game"),
                gameType: GameType = GameType.X01,
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
                dartsMatchId: String = "",
                matchOrdinal: Int = -1,
                dtCreation: Timestamp = getSqlDateNow(),
-               dtLastUpdate: Timestamp = getSqlDateNow(),
-               database: Database = mainDatabase): GameEntity
+               dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
 {
     val ge = GameEntity(database)
     ge.rowId = uuid
@@ -338,7 +339,6 @@ fun retrieveGame() = GameEntity().retrieveEntities().first()
 fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
-fun retrieveParticipant(playerId: String) = ParticipantEntity().retrieveEntities("PlayerId = '$playerId'").first()
 
 data class AchievementSummary(val achievementRef: Int, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
 fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>

@@ -2,16 +2,16 @@ package dartzee.db
 
 import dartzee.utils.Database
 
-object LocalIdGenerator
+class LocalIdGenerator(private val database: Database)
 {
-    private val UNIQUE_ID_SYNCH_OBJECT = Any()
+    private val uniqueIdSyncObject = Any()
     val hmLastAssignedIdByTableName = mutableMapOf<String, Long>()
 
-    fun generateLocalId(database: Database, tableName: String): Long
+    fun generateLocalId(tableName: String): Long
     {
-        synchronized(UNIQUE_ID_SYNCH_OBJECT)
+        synchronized(uniqueIdSyncObject)
         {
-            val lastAssignedId = hmLastAssignedIdByTableName[tableName] ?: retrieveLastAssignedId(database, tableName)
+            val lastAssignedId = hmLastAssignedIdByTableName[tableName] ?: retrieveLastAssignedId(tableName)
 
             val nextId = lastAssignedId + 1
             hmLastAssignedIdByTableName[tableName] = nextId
@@ -19,7 +19,7 @@ object LocalIdGenerator
             return nextId
         }
     }
-    private fun retrieveLastAssignedId(database: Database, tableName: String): Long
+    private fun retrieveLastAssignedId(tableName: String): Long
     {
         return database.executeQueryAggregate("SELECT MAX(LocalId) FROM $tableName").toLong()
     }

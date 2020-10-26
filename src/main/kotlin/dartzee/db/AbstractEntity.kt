@@ -202,7 +202,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun retrieveModifiedSince(dt: Timestamp?): List<E>
     {
         val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""
-        return retrieveEntities(whereSql)
+        return retrieveEntities(whereSql).sortedBy { it.dtCreation }
     }
 
     fun mergeIntoDatabase(otherDatabase: Database)
@@ -212,6 +212,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         val existingRow = otherDao.retrieveForId(rowId, false)
         if (existingRow == null)
         {
+            reassignLocalId(otherDatabase)
             insertIntoDatabase(otherDatabase)
         }
         else if (dtLastUpdate.after(existingRow.dtLastUpdate))
@@ -219,6 +220,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             updateDatabaseRow(otherDatabase)
         }
     }
+    open fun reassignLocalId(otherDatabase: Database) {}
 
     private fun updateDatabaseRow(db: Database = database)
     {

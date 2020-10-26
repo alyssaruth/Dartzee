@@ -10,6 +10,7 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
@@ -82,7 +83,7 @@ abstract class AbstractTest
         clearLogs()
         clearAllMocks()
 
-        LocalIdGenerator.hmLastAssignedIdByTableName.clear()
+        mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
 

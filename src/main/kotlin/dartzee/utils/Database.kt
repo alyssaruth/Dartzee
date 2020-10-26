@@ -2,6 +2,7 @@ package dartzee.utils
 
 import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
+import dartzee.db.LocalIdGenerator
 import dartzee.db.VersionEntity
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
@@ -22,6 +23,7 @@ val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}\\Databases"
  */
 class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: String = DartsDatabaseUtil.DATABASE_NAME)
 {
+    val localIdGenerator = LocalIdGenerator(this)
     private val hsConnections = mutableListOf<Connection>()
     private val connectionPoolLock = Any()
     private var connectionCreateCount = 0
@@ -230,6 +232,8 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
         entity.version = version
         entity.saveToDatabase()
     }
+
+    fun generateLocalId(tableName: String) = localIdGenerator.generateLocalId(tableName)
 
     private fun getVersionRow(): VersionEntity?
     {
