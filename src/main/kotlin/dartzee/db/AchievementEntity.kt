@@ -41,6 +41,11 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
         indexes.add(listOf("PlayerId", "AchievementRef"))
     }
 
+    override fun mergeIntoDatabaseImpl(otherDao: AchievementEntity, otherDatabase: Database)
+    {
+
+    }
+
     companion object
     {
         fun retrieveAchievements(playerId: String): MutableList<AchievementEntity>

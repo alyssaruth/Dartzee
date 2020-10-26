@@ -8,8 +8,8 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DartsColour
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -88,8 +88,7 @@ abstract class AbstractAchievement
 
     fun getScore() : Int
     {
-        val color = getColor(false)
-        return when (color)
+        return when (getColor(false))
         {
             Color.MAGENTA -> 6
             Color.CYAN -> 5
@@ -244,8 +243,5 @@ abstract class AbstractAchievement
         return ret
     }
 
-    open fun retrieveAllRows(): List<AchievementEntity>
-    {
-        return AchievementEntity().retrieveEntities("AchievementRef = $achievementRef")
-    }
+    open fun retrieveAllRows() = AchievementEntity().retrieveEntities("AchievementRef = $achievementRef")
 }

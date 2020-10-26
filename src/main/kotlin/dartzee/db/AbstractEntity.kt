@@ -208,7 +208,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun mergeIntoDatabase(otherDatabase: Database)
     {
         val otherDao = factory(otherDatabase) ?: throw ApplicationFault(CODE_MERGE_ERROR, "Failed to factory ${getTableName()} dao")
-
+        mergeIntoDatabaseImpl(otherDao, otherDatabase)
+    }
+    protected open fun mergeIntoDatabaseImpl(otherDao: E, otherDatabase: Database)
+    {
         val existingRow = otherDao.retrieveForId(rowId, false)
         if (existingRow == null)
         {
@@ -220,7 +223,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             updateDatabaseRow(otherDatabase)
         }
     }
-    open fun reassignLocalId(otherDatabase: Database) {}
+
+    protected open fun reassignLocalId(otherDatabase: Database) {}
 
     private fun updateDatabaseRow(db: Database = database)
     {

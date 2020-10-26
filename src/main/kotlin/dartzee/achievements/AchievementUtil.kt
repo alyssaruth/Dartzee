@@ -14,8 +14,8 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.net.URL
 import java.sql.SQLException
@@ -31,45 +31,36 @@ fun getNotBustSql(): String
     return sb.toString()
 }
 
-fun getAchievementMaximum() : Int
-{
-    return getAllAchievements().size * 6
-}
+fun getAchievementMaximum() = getAllAchievements().size * 6
 
 fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
 {
-    val myAchievementRows = allAchievementRows.filter{it.playerId == player.rowId}
+    val myAchievementRows = allAchievementRows.filter { it.playerId == player.rowId }
 
-    var score = 0
-    for (achievement in getAllAchievements())
-    {
+    return getAllAchievements().sumBy { achievement ->
         val myRelevantRows = myAchievementRows.filter{ it.achievementRef == achievement.achievementRef }
         achievement.initialiseFromDb(myRelevantRows, player)
-
-        score += achievement.getScore()
+        achievement.getScore()
     }
-
-    return score
 }
 
 fun convertEmptyAchievements()
 {
     val emptyAchievements = getAllAchievements().filter{a -> !rowsExistForAchievement(a)}.toMutableList()
-
-    if (!emptyAchievements.isEmpty())
+    if (emptyAchievements.isNotEmpty())
     {
         runConversionsWithProgressBar(emptyAchievements, mutableListOf())
     }
 }
 
-fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
+fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val r = Runnable { runConversionsInOtherThread(achievements, players)}
     val t = Thread(r, "Conversion thread")
     t.start()
 }
 
-private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
+private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()
@@ -92,9 +83,8 @@ fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 
 fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter{ it.gameType == gameType }
 
-fun getAllAchievements() : MutableList<AbstractAchievement>
-{
-    return mutableListOf(AchievementX01GamesWon(),
+fun getAllAchievements() =
+    listOf(AchievementX01GamesWon(),
             AchievementGolfGamesWon(),
             AchievementClockGamesWon(),
             AchievementX01BestGame(),
@@ -114,7 +104,6 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
             AchievementX01NoMercy(),
             AchievementGolfCourseMaster(),
             AchievementDartzeeGamesWon())
-}
 
 fun getAchievementForRef(achievementRef : Int) = getAllAchievements().find { it.achievementRef == achievementRef }
 
