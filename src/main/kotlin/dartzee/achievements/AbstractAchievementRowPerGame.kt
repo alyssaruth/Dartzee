@@ -14,7 +14,7 @@ abstract class AbstractAchievementRowPerGame: AbstractAchievement()
 
         attainedValue = achievementRows.size
 
-        if (!achievementRows.isEmpty())
+        if (achievementRows.isNotEmpty())
         {
             val sortedRows = achievementRows.sortedBy {it.dtLastUpdate}
             val last = sortedRows.last()

@@ -54,6 +54,6 @@ private fun ParticipantEntity.saveFinishingPosition(game: GameEntity, position: 
     if (position == 1)
     {
         val achievementRef = getWinAchievementRef(game.gameType)
-        AchievementEntity.incrementAchievement(achievementRef, playerId, game.rowId)
+        AchievementEntity.insertAchievement(achievementRef, playerId, game.rowId)
     }
 }
