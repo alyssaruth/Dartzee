@@ -1,7 +1,9 @@
 package dartzee.db
 
 import dartzee.core.helper.verifyNotCalled
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.DATABASE_NAME_TEST
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings
@@ -56,12 +58,9 @@ class TestDatabaseMigrations: AbstractTest()
 
             usingInMemoryDatabase(withSchema = true) { dbToRunOn ->
                 val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
-                for (conversion in conversionFns) {
-                    println("Running conversion")
-                    try {
-                        conversion(dbToRunOn)
-                    } catch (e: Exception) {
-                    }
+                for (conversion in conversionFns)
+                {
+                    try { conversion(dbToRunOn) } catch (e: Exception) {}
                 }
 
                 //Will probably have one logged, which is fine
