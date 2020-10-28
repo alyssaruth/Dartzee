@@ -1,17 +1,13 @@
 package dartzee.db
 
 import dartzee.core.helper.verifyNotCalled
-import dartzee.helper.AbstractTest
-import dartzee.helper.DATABASE_NAME_TEST
-import dartzee.helper.makeInMemoryDatabase
-import dartzee.helper.makeInMemoryDatabaseWithSchema
+import dartzee.helper.*
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
-import io.mockk.mockk
 import io.mockk.spyk
 import org.junit.Test
 
@@ -26,16 +22,18 @@ class TestDatabaseMigrations: AbstractTest()
     @Test
     fun `V15 - V16 should create SyncAudit table`()
     {
-        val database = makeInMemoryDatabase()
-        database.updateDatabaseVersion(15)
+        usingInMemoryDatabase(withSchema = true) { database ->
+            database.dropTable("SyncAudit")
+            database.updateDatabaseVersion(15)
 
-        val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
-        migrator.migrateToLatest(database, "Test")
+            val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
+            migrator.migrateToLatest(database, "Test")
 
-        database.getDatabaseVersion() shouldBe 16
+            database.getDatabaseVersion() shouldBe 16
 
-        shouldNotThrowAny {
-            SyncAuditEntity(database).retrieveForId("foo", false)
+            shouldNotThrowAny {
+                SyncAuditEntity(database).retrieveForId("foo", false)
+            }
         }
     }
 
@@ -52,23 +50,25 @@ class TestDatabaseMigrations: AbstractTest()
     @Test
     fun `Conversions should all run on the specified database`()
     {
-        val database = makeInMemoryDatabaseWithSchema()
-        val spiedDatabase = spyk(database)
-        InjectedThings.mainDatabase = spiedDatabase
+        usingInMemoryDatabase(withSchema = true) { database ->
+            val spiedDatabase = spyk(database)
+            InjectedThings.mainDatabase = spiedDatabase
 
-        val dbToRunOn = makeInMemoryDatabase()
-        DatabaseMigrator(emptyMap()).migrateToLatest(dbToRunOn, "Test")
+            usingInMemoryDatabase(withSchema = true) { dbToRunOn ->
+                val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
+                for (conversion in conversionFns) {
+                    println("Running conversion")
+                    try {
+                        conversion(dbToRunOn)
+                    } catch (e: Exception) {
+                    }
+                }
 
-        val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
-        for (conversion in conversionFns)
-        {
-            println("Running conversion")
-            try { conversion(dbToRunOn) } catch (e: Exception) {}
+                //Will probably have one logged, which is fine
+                errorLogged()
+
+                verifyNotCalled { spiedDatabase.borrowConnection() }
+            }
         }
-
-        //Will probably have one logged, which is fine
-        errorLogged()
-
-        verifyNotCalled { spiedDatabase.borrowConnection() }
     }
 }

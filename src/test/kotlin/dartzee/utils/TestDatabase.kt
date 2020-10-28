@@ -162,9 +162,10 @@ class TestDatabase: AbstractTest()
     @Test
     fun `Should support generating local IDs`()
     {
-        val database = makeInMemoryDatabaseWithSchema()
-        database.generateLocalId("Game") shouldBe 1
-        database.generateLocalId("Game") shouldBe 2
-        database.generateLocalId("DartsMatch") shouldBe 1
+        usingInMemoryDatabase(withSchema = true) { database ->
+            database.generateLocalId("Game") shouldBe 1
+            database.generateLocalId("Game") shouldBe 2
+            database.generateLocalId("DartsMatch") shouldBe 1
+        }
     }
 }

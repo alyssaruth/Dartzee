@@ -12,7 +12,10 @@ import dartzee.game.MatchMode
 import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import java.sql.DriverManager
+import java.sql.SQLException
 import java.sql.Timestamp
 import java.util.*
 import javax.sql.rowset.serial.SerialBlob
@@ -350,26 +353,49 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
     return achievements.map { AchievementSummary(it.achievementRef, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
 }
 
-fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
 {
     val fullName = "jdbc:derby:memory:$dbName;create=true"
     return Database(filePath = filePath, dbName = fullName).also { it.initialiseConnectionPool(5) }
 }
 
-fun makeInMemoryDatabaseWithSchema(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
+                          filePath: String = DATABASE_FILE_PATH,
+                          withSchema: Boolean = false,
+                          testBlock: (inMemoryDatabase: Database) -> Unit)
 {
     val db = makeInMemoryDatabase(dbName, filePath)
-    val migrator = DatabaseMigrator(emptyMap())
-    migrator.migrateToLatest(db, "Test")
-    return db
+    try
+    {
+        if (withSchema)
+        {
+            val migrator = DatabaseMigrator(emptyMap())
+            migrator.migrateToLatest(db, "Test")
+        }
+
+        testBlock(db)
+    }
+    finally
+    {
+        db.closeConnectionsAndDrop(dbName)
+    }
 }
 
-fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH, testBlock: (inMemoryDatabase: Database) -> Unit)
+fun Database.closeConnectionsAndDrop(dbName: String)
 {
-    val db = makeInMemoryDatabase(dbName, filePath)
-    try {
-        testBlock(db)
-    } finally {
-        db.closeConnections()
+    hsConnections.forEach {
+        it.close()
+    }
+
+    try
+    {
+        DriverManager.getConnection("jdbc:derby:memory:$dbName;drop=true")
+    }
+    catch (sqle: SQLException)
+    {
+        if (sqle.message != "Database 'memory:$dbName' dropped.")
+        {
+            InjectedThings.logger.logSqlException("jdbc:derby:memory:$dbName;drop=true", "jdbc:derby:memory:$dbName;drop=true", sqle)
+        }
     }
 }

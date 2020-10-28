@@ -9,7 +9,6 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -139,18 +138,20 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     @Test
     fun `should run conversion on the right database`()
     {
-        val database = makeInMemoryDatabaseWithSchema()
-        val spiedDatabase = spyk(database)
-        mainDatabase = spiedDatabase
+        usingInMemoryDatabase(withSchema = true) { database ->
+            val spiedDatabase = spyk(database)
+            mainDatabase = spiedDatabase
 
-        val otherDatabase = makeInMemoryDatabaseWithSchema()
-        val alice = insertPlayer(name = "Alice", database = otherDatabase)
-        setUpAchievementRowForPlayer(alice, otherDatabase)
+            usingInMemoryDatabase(withSchema = true) { otherDatabase ->
+                val alice = insertPlayer(name = "Alice", database = otherDatabase)
+                setUpAchievementRowForPlayer(alice, otherDatabase)
 
-        factoryAchievement().populateForConversion("", otherDatabase)
-        getAchievementCount(otherDatabase) shouldBe 1
+                factoryAchievement().populateForConversion("", otherDatabase)
+                getAchievementCount(otherDatabase) shouldBe 1
 
-        verifyNotCalled { spiedDatabase.borrowConnection() }
+                verifyNotCalled { spiedDatabase.borrowConnection() }
+            }
+        }
     }
 
     @Test

@@ -56,18 +56,19 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     @Test
     fun `Should reassign localId when merging into another database`()
     {
-        val otherDatabase = makeInMemoryDatabaseWithSchema()
-        insertDartsMatch(database = otherDatabase)
-        insertDartsMatch(database = otherDatabase)
+        usingInMemoryDatabase(withSchema = true) { otherDatabase ->
+            insertDartsMatch(database = otherDatabase)
+            insertDartsMatch(database = otherDatabase)
 
-        val dartsMatch = insertDartsMatch(database = InjectedThings.mainDatabase)
-        dartsMatch.localId shouldBe 1
+            val dartsMatch = insertDartsMatch(database = InjectedThings.mainDatabase)
+            dartsMatch.localId shouldBe 1
 
-        dartsMatch.mergeIntoDatabase(otherDatabase)
-        dartsMatch.localId shouldBe 3
+            dartsMatch.mergeIntoDatabase(otherDatabase)
+            dartsMatch.localId shouldBe 3
 
-        val retrieved = DartsMatchEntity(otherDatabase).retrieveForId(dartsMatch.rowId)!!
-        retrieved.localId shouldBe 3
+            val retrieved = DartsMatchEntity(otherDatabase).retrieveForId(dartsMatch.rowId)!!
+            retrieved.localId shouldBe 3
+        }
     }
 
     @Test

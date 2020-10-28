@@ -1,10 +1,7 @@
 package dartzee.db
 
 import dartzee.core.util.getSqlDateNow
-import dartzee.helper.AbstractTest
-import dartzee.helper.dropUnexpectedTables
-import dartzee.helper.getCountFromTable
-import dartzee.helper.makeInMemoryDatabase
+import dartzee.helper.*
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -18,14 +15,10 @@ import java.util.*
 
 class TestAbstractEntity: AbstractTest()
 {
-    private var otherDatabase = makeInMemoryDatabase()
-
     override fun beforeEachTest()
     {
         super.beforeEachTest()
         FakeEntity().createTable()
-        otherDatabase = makeInMemoryDatabase()
-        FakeEntity(otherDatabase).createTable()
     }
 
     override fun afterEachTest()
@@ -129,44 +122,56 @@ class TestAbstractEntity: AbstractTest()
     @Test
     fun `Should insert into other database if row does not already exist`()
     {
-        val entity = insertFakeEntity(testString = "carrot", dtLastUpdate = Timestamp(500))
-        getCountFromTable("TestTable", mainDatabase) shouldBe 1
-        getCountFromTable("TestTable", otherDatabase) shouldBe 0
+        usingInMemoryDatabase { otherDatabase ->
+            FakeEntity(otherDatabase).createTable()
 
-        entity.mergeIntoDatabase(otherDatabase)
-        getCountFromTable("TestTable", otherDatabase) shouldBe 1
+            val entity = insertFakeEntity(testString = "carrot", dtLastUpdate = Timestamp(500))
+            getCountFromTable("TestTable", mainDatabase) shouldBe 1
+            getCountFromTable("TestTable", otherDatabase) shouldBe 0
 
-        val otherEntity = FakeEntity(otherDatabase).retrieveForId(entity.rowId)!!
-        otherEntity.testString shouldBe "carrot"
-        otherEntity.dtLastUpdate shouldBe Timestamp(500)
+            entity.mergeIntoDatabase(otherDatabase)
+            getCountFromTable("TestTable", otherDatabase) shouldBe 1
+
+            val otherEntity = FakeEntity(otherDatabase).retrieveForId(entity.rowId)!!
+            otherEntity.testString shouldBe "carrot"
+            otherEntity.dtLastUpdate shouldBe Timestamp(500)
+        }
+
     }
 
     @Test
     fun `Should update other database if dtLastUpdate is more recent`()
     {
-        val localEntity = insertFakeEntity(testString = "carrot", dtLastUpdate = Timestamp(500), database = mainDatabase)
-        insertFakeEntity(rowId = localEntity.rowId, testString = "banana", dtLastUpdate = Timestamp(499), database = otherDatabase)
+        usingInMemoryDatabase { otherDatabase ->
+            FakeEntity(otherDatabase).createTable()
 
-        localEntity.mergeIntoDatabase(otherDatabase)
-        getCountFromTable("TestTable", otherDatabase) shouldBe 1
+            val localEntity = insertFakeEntity(testString = "carrot", dtLastUpdate = Timestamp(500), database = mainDatabase)
+            insertFakeEntity(rowId = localEntity.rowId, testString = "banana", dtLastUpdate = Timestamp(499), database = otherDatabase)
 
-        val otherEntity = FakeEntity(otherDatabase).retrieveForId(localEntity.rowId)!!
-        otherEntity.testString shouldBe "carrot"
-        otherEntity.dtLastUpdate shouldBe Timestamp(500)
+            localEntity.mergeIntoDatabase(otherDatabase)
+            getCountFromTable("TestTable", otherDatabase) shouldBe 1
+
+            val otherEntity = FakeEntity(otherDatabase).retrieveForId(localEntity.rowId)!!
+            otherEntity.testString shouldBe "carrot"
+            otherEntity.dtLastUpdate shouldBe Timestamp(500)
+        }
     }
 
     @Test
     fun `Should not update other database if dtLastUpdate is older`()
     {
-        val localEntity = insertFakeEntity(testString = "carrot", dtLastUpdate = Timestamp(500), database = mainDatabase)
-        insertFakeEntity(rowId = localEntity.rowId, testString = "banana", dtLastUpdate = Timestamp(501), database = otherDatabase)
+        usingInMemoryDatabase { otherDatabase ->
+            FakeEntity(otherDatabase).createTable()
+            val localEntity = insertFakeEntity(testString = "carrot", dtLastUpdate = Timestamp(500), database = mainDatabase)
+            insertFakeEntity(rowId = localEntity.rowId, testString = "banana", dtLastUpdate = Timestamp(501), database = otherDatabase)
 
-        localEntity.mergeIntoDatabase(otherDatabase)
-        getCountFromTable("TestTable", otherDatabase) shouldBe 1
+            localEntity.mergeIntoDatabase(otherDatabase)
+            getCountFromTable("TestTable", otherDatabase) shouldBe 1
 
-        val otherEntity = FakeEntity(otherDatabase).retrieveForId(localEntity.rowId)!!
-        otherEntity.testString shouldBe "banana"
-        otherEntity.dtLastUpdate shouldBe Timestamp(501)
+            val otherEntity = FakeEntity(otherDatabase).retrieveForId(localEntity.rowId)!!
+            otherEntity.testString shouldBe "banana"
+            otherEntity.dtLastUpdate shouldBe Timestamp(501)
+        }
     }
 
     private fun insertFakeEntity(rowId: String = UUID.randomUUID().toString(),
