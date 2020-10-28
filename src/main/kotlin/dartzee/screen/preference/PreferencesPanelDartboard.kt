@@ -6,6 +6,7 @@ import dartzee.core.bean.ColourSelectionListener
 import dartzee.core.util.setFontSize
 import dartzee.screen.Dartboard
 import dartzee.utils.*
+import dartzee.utils.InjectedThings.preferencesDartboardSize
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Color
@@ -24,7 +25,7 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
     val cpEvenSingle = ColourPicker()
     val cpEvenDouble = ColourPicker()
     val cpEvenTreble = ColourPicker()
-    private val dartboardPreview = Dartboard(450, 450)
+    private val dartboardPreview = Dartboard(preferencesDartboardSize, preferencesDartboardSize)
 
     init
     {
