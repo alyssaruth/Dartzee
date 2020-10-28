@@ -129,17 +129,17 @@ class TestGameUtil: AbstractTest()
         val pt2 = insertParticipant(finalScore = 29)
         val pt3 = insertParticipant(finalScore = 50)
 
-        insertAchievement(achievementRef = ACHIEVEMENT_REF_GOLF_GAMES_WON, playerId = pt.playerId, achievementCounter = 1)
+        insertAchievement(achievementRef = ACHIEVEMENT_REF_GOLF_GAMES_WON, playerId = pt.playerId)
 
-        setFinishingPositions(listOf(pt, pt2, pt3), insertGame(gameType = GameType.GOLF))
+        val game = insertGame(gameType = GameType.GOLF)
+        setFinishingPositions(listOf(pt, pt2, pt3), game)
 
-        val a1 = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt.playerId)
-        assertNotNull(a1)
-        a1.achievementCounter shouldBe 2
+        val playerOneAchievements = AchievementEntity.retrieveAchievements(pt.playerId)
+        playerOneAchievements.size shouldBe 2
 
         val a2 = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt2.playerId)
         assertNotNull(a2)
-        a2.achievementCounter shouldBe 1
+        a2.gameIdEarned shouldBe game.rowId
 
         AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt3.playerId) shouldBe null
     }
