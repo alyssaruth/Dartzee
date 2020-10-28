@@ -5,11 +5,9 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.InjectedThings.logger
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
-import java.sql.SQLException
 
 class AchievementClockBruceyBonuses : AbstractAchievement()
 {
@@ -28,7 +26,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
 
     override fun isUnbounded() = true
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, COUNT(1) AS BruceCount, MAX(drt.DtCreation) AS DtLastUpdate")
@@ -52,22 +50,15 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
 
         sb.append(" GROUP BY pt.PlayerId")
 
-        try
-        {
-            mainDatabase.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val score = rs.getInt("BruceCount")
-                    val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
+        database.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val score = rs.getInt("BruceCount")
+                val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate, database)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException(sb.toString(), sb.toString(), sqle)
         }
     }
 

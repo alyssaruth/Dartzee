@@ -24,7 +24,7 @@ val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}\\Databases"
 class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: String = DartsDatabaseUtil.DATABASE_NAME)
 {
     val localIdGenerator = LocalIdGenerator(this)
-    private val hsConnections = mutableListOf<Connection>()
+    val hsConnections = mutableListOf<Connection>()
     private val connectionPoolLock = Any()
     private var connectionCreateCount = 0
 

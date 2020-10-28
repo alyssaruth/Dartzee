@@ -7,6 +7,7 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -14,13 +15,13 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
 {
     override fun factoryAchievement() = AchievementX01Shanghai()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, score = 20, multiplier = 2, ordinal = 1, startingScore = 400)
-        insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 360)
-        insertDart(pt, score = 20, multiplier = 1, ordinal = 3, startingScore = 300)
+        insertDart(pt, score = 20, multiplier = 2, ordinal = 1, startingScore = 400, database = database)
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 360, database = database)
+        insertDart(pt, score = 20, multiplier = 1, ordinal = 3, startingScore = 300, database = database)
     }
 
     @Test

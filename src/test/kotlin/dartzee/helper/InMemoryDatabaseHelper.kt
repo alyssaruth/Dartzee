@@ -12,7 +12,10 @@ import dartzee.game.MatchMode
 import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import java.sql.DriverManager
+import java.sql.SQLException
 import java.sql.Timestamp
 import java.util.*
 import javax.sql.rowset.serial.SerialBlob
@@ -77,14 +80,15 @@ fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
                  strategy: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
-                 playerImageId: String? = null): PlayerEntity
+                 playerImageId: String? = null,
+                 database: Database = mainDatabase): PlayerEntity
 {
-    val p = PlayerEntity()
+    val p = PlayerEntity(database)
     p.rowId = uuid
     p.name = name
     p.strategy = strategy
     p.dtDeleted = dtDeleted
-    p.playerImageId = playerImageId ?: insertPlayerImage().rowId
+    p.playerImageId = playerImageId ?: insertPlayerImage(database = database).rowId
 
     p.saveToDatabase()
     return p
@@ -97,9 +101,10 @@ fun insertParticipant(uuid: String = randomGuid(),
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
                       dtFinished: Timestamp = DateStatics.END_OF_TIME,
-                      insertPlayer: Boolean = false): ParticipantEntity
+                      insertPlayer: Boolean = false,
+                      database: Database = mainDatabase): ParticipantEntity
 {
-    val pe = ParticipantEntity()
+    val pe = ParticipantEntity(database)
     pe.rowId = uuid
     pe.gameId = gameId
     pe.playerId = playerId
@@ -129,9 +134,10 @@ fun insertDart(participant: ParticipantEntity,
                posY: Int = 20,
                segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
                dtCreation: Timestamp = getSqlDateNow(),
-               dtLastUpdate: Timestamp = getSqlDateNow()): DartEntity
+               dtLastUpdate: Timestamp = getSqlDateNow(),
+               database: Database = mainDatabase): DartEntity
 {
-    val drt = DartEntity()
+    val drt = DartEntity(database)
     drt.dtCreation = dtCreation
     drt.rowId = uuid
     drt.playerId = participant.playerId
@@ -263,10 +269,10 @@ fun insertAchievement(uuid: String = randomGuid(),
     return a
 }
 
-fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
+fun insertPlayerImage(resource: String = "BaboOne", database: Database = mainDatabase): PlayerImageEntity
 {
     val fileBytes = FileUtil.getByteArrayForResource("/avatars/$resource.png")
-    val pi = PlayerImageEntity()
+    val pi = PlayerImageEntity(database)
     pi.assignRowId()
     pi.blobData = SerialBlob(fileBytes)
     pi.filepath = "rsrc:/avatars/$resource.png"
@@ -347,16 +353,49 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
     return achievements.map { AchievementSummary(it.achievementRef, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
 }
 
-fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
 {
     val fullName = "jdbc:derby:memory:$dbName;create=true"
     return Database(filePath = filePath, dbName = fullName).also { it.initialiseConnectionPool(5) }
 }
 
-fun makeInMemoryDatabaseWithSchema(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
+                          filePath: String = DATABASE_FILE_PATH,
+                          withSchema: Boolean = false,
+                          testBlock: (inMemoryDatabase: Database) -> Unit)
 {
     val db = makeInMemoryDatabase(dbName, filePath)
-    val migrator = DatabaseMigrator(emptyMap())
-    migrator.migrateToLatest(db, "Test")
-    return db
+    try
+    {
+        if (withSchema)
+        {
+            val migrator = DatabaseMigrator(emptyMap())
+            migrator.migrateToLatest(db, "Test")
+        }
+
+        testBlock(db)
+    }
+    finally
+    {
+        db.closeConnectionsAndDrop(dbName)
+    }
+}
+
+fun Database.closeConnectionsAndDrop(dbName: String)
+{
+    hsConnections.forEach {
+        it.close()
+    }
+
+    try
+    {
+        DriverManager.getConnection("jdbc:derby:memory:$dbName;drop=true")
+    }
+    catch (sqle: SQLException)
+    {
+        if (sqle.message != "Database 'memory:$dbName' dropped.")
+        {
+            InjectedThings.logger.logSqlException("jdbc:derby:memory:$dbName;drop=true", "jdbc:derby:memory:$dbName;drop=true", sqle)
+        }
+    }
 }

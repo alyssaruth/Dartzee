@@ -192,17 +192,18 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `Should reassign localId when merging into another database`()
     {
-        val otherDatabase = makeInMemoryDatabaseWithSchema()
-        insertGame(database = otherDatabase)
-        insertGame(database = otherDatabase)
+        usingInMemoryDatabase(withSchema = true) { otherDatabase ->
+            insertGame(database = otherDatabase)
+            insertGame(database = otherDatabase)
 
-        val game = insertGame(database = mainDatabase)
-        game.localId shouldBe 1
+            val game = insertGame(database = mainDatabase)
+            game.localId shouldBe 1
 
-        game.mergeIntoDatabase(otherDatabase)
-        game.localId shouldBe 3
+            game.mergeIntoDatabase(otherDatabase)
+            game.localId shouldBe 3
 
-        val retrieved = GameEntity(otherDatabase).retrieveForId(game.rowId)!!
-        retrieved.localId shouldBe 3
+            val retrieved = GameEntity(otherDatabase).retrieveForId(game.rowId)!!
+            retrieved.localId shouldBe 3
+        }
     }
 }

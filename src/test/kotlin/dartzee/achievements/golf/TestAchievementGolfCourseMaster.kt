@@ -10,6 +10,7 @@ import dartzee.helper.insertAchievement
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.retrieveAchievement
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -17,11 +18,11 @@ import java.sql.Timestamp
 class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<AchievementGolfCourseMaster>()
 {
     override fun factoryAchievement() = AchievementGolfCourseMaster()
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
+        insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE, database = database)
     }
 
     override fun insertAchievementRow(dtLastUpdate: Timestamp): AchievementEntity

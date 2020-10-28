@@ -9,17 +9,7 @@ import java.awt.Window
 fun awaitStatisticsScreen(): PlayerStatisticsScreen
 {
     awaitCondition {
-
-        println("****************")
-        Window.getWindows().forEach {
-            val hasStatsScrn = it.findChild<PlayerStatisticsScreen>() != null
-            val isVisible = it.isVisible
-
-            println("Window $it: hasStatsScrn: $hasStatsScrn, isVisible: $isVisible")
-        }
-        println("****************")
-
-        getWindow { it.findChild<PlayerStatisticsScreen>() != null }?.isVisible == true
+        getWindow { it.findChild<PlayerStatisticsScreen>() != null } != null
     }
 
     return getWindow { it.findChild<PlayerStatisticsScreen>() != null }!!.getChild()

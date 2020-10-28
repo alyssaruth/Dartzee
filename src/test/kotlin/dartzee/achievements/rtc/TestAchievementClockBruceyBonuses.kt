@@ -7,6 +7,7 @@ import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.helper.*
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -15,16 +16,19 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
 {
     override fun factoryAchievement() = AchievementClockBruceyBonuses()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
+        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1, database = database)
     }
 
-    override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
+    override fun insertRelevantGame(dtLastUpdate: Timestamp, database: Database): GameEntity
     {
-        return insertGame(gameType = factoryAchievement().gameType, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(), dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType,
+            gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
+            dtLastUpdate = dtLastUpdate,
+            database = database)
     }
 
     @Test

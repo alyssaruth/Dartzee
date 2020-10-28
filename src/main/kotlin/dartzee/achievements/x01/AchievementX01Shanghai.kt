@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
@@ -32,9 +32,9 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
 
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
-        val tempTable = mainDatabase.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
+        val tempTable = database.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
@@ -55,9 +55,9 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
-            mainDatabase.dropTable(tempTable)
+            database.dropTable(tempTable)
             return
         }
 
@@ -83,14 +83,14 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
 
         try
         {
-            mainDatabase.executeQuery(sb).use { rs ->
+            database.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val playerId = rs.getString("PlayerId")
                     val gameId = rs.getString("GameId")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
                 }
             }
         }
@@ -100,7 +100,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
         }
         finally
         {
-            mainDatabase.dropTable(tempTable)
+            database.dropTable(tempTable)
         }
     }
 }

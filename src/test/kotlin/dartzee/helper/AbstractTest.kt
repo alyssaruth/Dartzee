@@ -3,7 +3,6 @@ package dartzee.helper
 import dartzee.CURRENT_TIME
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
-import dartzee.db.LocalIdGenerator
 import dartzee.logging.*
 import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
@@ -62,10 +61,11 @@ abstract class AbstractTest
 
         InjectedThings.logger = logger
         InjectedThings.verificationDartboardSize = 50
+        InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-        InjectedThings.mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        mainDatabase = Database(dbName = DATABASE_NAME_TEST)
         DriverManager.registerDriver(EmbeddedDriver())
         DartsDatabaseUtil.initialiseDatabase()
     }

@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartsAiModelOLD
 import dartzee.db.GameEntity
@@ -21,13 +22,23 @@ object DatabaseMigrations
                 { db -> updatePlayerStrategiesToJson(db) },
                 { db -> updateRoundTheClockParams(db) }
             ),
-            15 to listOf { db -> SyncAuditEntity(db).createTable() }
+            15 to listOf (
+                { db -> SyncAuditEntity(db).createTable() },
+                { db -> convertAchievement(ACHIEVEMENT_REF_X01_GAMES_WON, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_CLOCK_GAMES_WON, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_DARTZEE_GAMES_WON, db) }
+            )
         )
     }
 
     /**
      * V14 -> V15
      */
+    private fun convertAchievement(achievementRef: Int, database: Database)
+    {
+        getAchievementForRef(achievementRef)!!.runConversion(emptyList(), database)
+    }
     private fun updatePlayerStrategiesToJson(database: Database)
     {
         val players = PlayerEntity(database).retrieveEntities("Strategy <> ''")

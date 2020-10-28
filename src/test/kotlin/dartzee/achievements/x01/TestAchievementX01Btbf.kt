@@ -5,6 +5,8 @@ import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.helper.*
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -12,9 +14,9 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
 {
     override fun factoryAchievement() = AchievementX01Btbf()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        insertSuccessfulParticipant(g, p)
+        insertSuccessfulParticipant(g, p, database)
     }
 
     @Test
@@ -88,9 +90,9 @@ class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Bt
         getCountFromTable("Achievement") shouldBe 3
     }
 
-    private fun insertSuccessfulParticipant(game: GameEntity, player: PlayerEntity)
+    private fun insertSuccessfulParticipant(game: GameEntity, player: PlayerEntity, database: Database = mainDatabase)
     {
-        val pt = insertParticipant(gameId = game.rowId, playerId = player.rowId, finalScore = 3)
-        insertDart(pt, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2)
+        val pt = insertParticipant(gameId = game.rowId, playerId = player.rowId, finalScore = 3, database = database)
+        insertDart(pt, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2, database = database)
     }
 }

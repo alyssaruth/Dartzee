@@ -5,11 +5,9 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getGolfSegmentCases
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.InjectedThings.logger
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
-import java.sql.SQLException
 
 class AchievementGolfPointsRisked : AbstractAchievement()
 {
@@ -39,7 +37,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         return sb.toString()
     }
 
-    override fun populateForConversion(playerIds : String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
         val sb = StringBuilder()
 
@@ -66,22 +64,15 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         sb.append("     AND drtOther.Ordinal > drt.Ordinal)")
         sb.append(" GROUP BY pt.PlayerId")
 
-        try
-        {
-            mainDatabase.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val score = rs.getInt("PointsRisked")
-                    val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
+        database.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val score = rs.getInt("PointsRisked")
+                val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate, database)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException(sb.toString(), sb.toString(), sqle)
         }
     }
 }
