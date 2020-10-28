@@ -4,7 +4,7 @@ import dartzee.core.util.TableUtil
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 
-abstract class AbstractAchievementRowPerGame: AbstractAchievement()
+abstract class AbstractMultiRowAchievement: AbstractAchievement()
 {
     override fun isUnbounded() = true
 

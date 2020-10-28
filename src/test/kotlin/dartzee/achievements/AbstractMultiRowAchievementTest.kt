@@ -8,7 +8,7 @@ import io.kotlintest.shouldNotBe
 import org.junit.Test
 import java.sql.Timestamp
 
-abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGame>: AbstractAchievementTest<E>()
+abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: AbstractAchievementTest<E>()
 {
     fun getDtAchievedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
     fun getGameIdEarnedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Game")

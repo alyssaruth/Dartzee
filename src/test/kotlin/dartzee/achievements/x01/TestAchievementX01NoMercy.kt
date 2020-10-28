@@ -1,6 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
@@ -11,7 +11,7 @@ import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementX01NoMercy: TestAbstractAchievementRowPerGame<AchievementX01NoMercy>()
+class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01NoMercy>()
 {
     override fun factoryAchievement() = AchievementX01NoMercy()
 

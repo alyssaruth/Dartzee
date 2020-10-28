@@ -13,7 +13,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: TestAbstractAchievementRowPerGame<E>()
+abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractMultiRowAchievementTest<E>()
 {
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {

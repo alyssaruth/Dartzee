@@ -3,7 +3,7 @@ package dartzee.achievements
 import dartzee.db.AchievementEntity
 import dartzee.utils.Database
 
-abstract class AbstractAchievementGamesWon : AbstractAchievementRowPerGame()
+abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
 {
     override val redThreshold = 1
     override val orangeThreshold = 10

@@ -1,7 +1,7 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.core.bean.paint
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
@@ -13,7 +13,7 @@ import java.awt.Color
 import java.awt.image.BufferedImage
 import java.net.URL
 
-class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
+class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
 {
     override val name = "Completionist"
     override val desc = "Total unique doubles checked out on in X01"

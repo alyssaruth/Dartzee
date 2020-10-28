@@ -228,7 +228,7 @@ abstract class AbstractAchievement
 
     fun getExtraDetails() : String
     {
-        var ret = if (this is AbstractAchievementRowPerGame)
+        var ret = if (this is AbstractMultiRowAchievement)
         {
             "Last updated on ${dtLatestUpdate.formatAsDate()}"
         }

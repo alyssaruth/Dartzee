@@ -1,6 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.helper.getCountFromTable
@@ -11,7 +11,7 @@ import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX01Shanghai>()
+class TestAchievementX01Shanghai: AbstractMultiRowAchievementTest<AchievementX01Shanghai>()
 {
     override fun factoryAchievement() = AchievementX01Shanghai()
 

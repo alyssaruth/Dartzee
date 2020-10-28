@@ -1,7 +1,7 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -17,7 +17,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<AchievementX01CheckoutCompleteness>()
+class TestAchievementX01CheckoutCompleteness: AbstractMultiRowAchievementTest<AchievementX01CheckoutCompleteness>()
 {
     override fun factoryAchievement() = AchievementX01CheckoutCompleteness()
 

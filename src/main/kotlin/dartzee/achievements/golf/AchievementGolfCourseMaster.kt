@@ -2,14 +2,14 @@ package dartzee.achievements.golf
 
 import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
+class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
 {
     override val name = "Course Master"
     override val desc = "Unique holes where a hole-in-one has been achieved"

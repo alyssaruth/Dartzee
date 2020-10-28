@@ -1,16 +1,15 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-class AchievementX01NoMercy: AbstractAchievementRowPerGame()
+class AchievementX01NoMercy: AbstractMultiRowAchievement()
 {
     override val name = "No Mercy"
     override val desc = "Finishes from 3, 5, 7 or 9 in X01"

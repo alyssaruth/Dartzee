@@ -1,6 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.db.PlayerEntity
@@ -10,7 +10,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementX01Btbf: TestAbstractAchievementRowPerGame<AchievementX01Btbf>()
+class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf>()
 {
     override fun factoryAchievement() = AchievementX01Btbf()
 
