@@ -1,7 +1,7 @@
 package dartzee.achievements
 
 import dartzee.db.AchievementEntity
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 
 abstract class AbstractAchievementGamesWon : AbstractAchievementRowPerGame()
 {
@@ -13,7 +13,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievementRowPerGame()
     override val pinkThreshold = 200
     override val maxValue = 200
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, pt.GameId, pt.DtFinished AS DtLastUpdate")
@@ -26,14 +26,14 @@ abstract class AbstractAchievementGamesWon : AbstractAchievementRowPerGame()
             sb.append("AND PlayerId IN ($playerIds)")
         }
 
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
                 val gameId = rs.getString("GameId")
                 val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtLastUpdate)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtLastUpdate, database)
             }
         }
     }

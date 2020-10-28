@@ -7,7 +7,7 @@ import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.utils.DartsColour
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -36,9 +36,9 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementCounter, a.localGameIdEarned, a.dtLastUpdate)
     override fun isUnbounded() = false
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
-        val tempTable = mainDatabase.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
+        val tempTable = database.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                       ?: return
 
         var sb = StringBuilder()
@@ -57,7 +57,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
             return
 
         sb = StringBuilder()
@@ -71,7 +71,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
         sb.append("     AND zz2.DtAchieved < zz1.DtAchieved")
         sb.append(")")
 
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -79,11 +79,11 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
                 val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS, playerId, gameId, score, "", dtAchieved)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
             }
         }
 
-        mainDatabase.dropTable(tempTable)
+        database.dropTable(tempTable)
     }
 
     override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)

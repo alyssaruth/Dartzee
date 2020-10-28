@@ -10,6 +10,8 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -73,15 +75,15 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         scores.shouldContainExactlyInAnyOrder(1, 2, 5)
     }
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        insertCheckout(p, g, 1)
+        insertCheckout(p, g, 1, database = database)
     }
 
-    private fun insertCheckout(p: PlayerEntity, g: GameEntity, score: Int = 1, dtCreation: Timestamp = getSqlDateNow())
+    private fun insertCheckout(p: PlayerEntity, g: GameEntity, score: Int = 1, dtCreation: Timestamp = getSqlDateNow(), database: Database = mainDatabase)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation)
+        insertDart(pt, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation, database = database)
     }
 }

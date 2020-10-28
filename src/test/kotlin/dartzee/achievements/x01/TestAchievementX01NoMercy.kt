@@ -7,6 +7,7 @@ import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 
@@ -14,11 +15,11 @@ class TestAchievementX01NoMercy: TestAbstractAchievementRowPerGame<AchievementX0
 {
     override fun factoryAchievement() = AchievementX01NoMercy()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 21)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 21, database = database)
 
-        insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
+        insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1, database = database)
     }
 
     @Test

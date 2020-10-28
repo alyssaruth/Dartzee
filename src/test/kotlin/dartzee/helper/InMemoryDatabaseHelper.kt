@@ -77,14 +77,15 @@ fun insertPlayer(uuid: String = randomGuid(),
                  name: String = "Clive",
                  strategy: String = "",
                  dtDeleted: Timestamp = DateStatics.END_OF_TIME,
-                 playerImageId: String? = null): PlayerEntity
+                 playerImageId: String? = null,
+                 database: Database = mainDatabase): PlayerEntity
 {
-    val p = PlayerEntity()
+    val p = PlayerEntity(database)
     p.rowId = uuid
     p.name = name
     p.strategy = strategy
     p.dtDeleted = dtDeleted
-    p.playerImageId = playerImageId ?: insertPlayerImage().rowId
+    p.playerImageId = playerImageId ?: insertPlayerImage(database = database).rowId
 
     p.saveToDatabase()
     return p
@@ -97,9 +98,10 @@ fun insertParticipant(uuid: String = randomGuid(),
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
                       dtFinished: Timestamp = DateStatics.END_OF_TIME,
-                      insertPlayer: Boolean = false): ParticipantEntity
+                      insertPlayer: Boolean = false,
+                      database: Database = mainDatabase): ParticipantEntity
 {
-    val pe = ParticipantEntity()
+    val pe = ParticipantEntity(database)
     pe.rowId = uuid
     pe.gameId = gameId
     pe.playerId = playerId
@@ -129,9 +131,10 @@ fun insertDart(participant: ParticipantEntity,
                posY: Int = 20,
                segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
                dtCreation: Timestamp = getSqlDateNow(),
-               dtLastUpdate: Timestamp = getSqlDateNow()): DartEntity
+               dtLastUpdate: Timestamp = getSqlDateNow(),
+               database: Database = mainDatabase): DartEntity
 {
-    val drt = DartEntity()
+    val drt = DartEntity(database)
     drt.dtCreation = dtCreation
     drt.rowId = uuid
     drt.playerId = participant.playerId
@@ -263,10 +266,10 @@ fun insertAchievement(uuid: String = randomGuid(),
     return a
 }
 
-fun insertPlayerImage(resource: String = "BaboOne"): PlayerImageEntity
+fun insertPlayerImage(resource: String = "BaboOne", database: Database = mainDatabase): PlayerImageEntity
 {
     val fileBytes = FileUtil.getByteArrayForResource("/avatars/$resource.png")
-    val pi = PlayerImageEntity()
+    val pi = PlayerImageEntity(database)
     pi.assignRowId()
     pi.blobData = SerialBlob(fileBytes)
     pi.filepath = "rsrc:/avatars/$resource.png"

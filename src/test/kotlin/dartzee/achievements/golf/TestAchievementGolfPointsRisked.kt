@@ -9,13 +9,15 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.Test
 
 class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPointsRisked>()
 {
     override fun factoryAchievement() = AchievementGolfPointsRisked()
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity) = insertRiskedDart(p, g)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database) = insertRiskedDart(p, g, database = database)
 
     @Test
     fun `Should ignore rounds where no points were risked`()
@@ -69,12 +71,12 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
         a.achievementCounter shouldBe expectedScore
     }
 
-    fun insertRiskedDart(p: PlayerEntity, g: GameEntity, segmentType: SegmentType = SegmentType.OUTER_SINGLE, roundNumber: Int = 1)
+    private fun insertRiskedDart(p: PlayerEntity, g: GameEntity, segmentType: SegmentType = SegmentType.OUTER_SINGLE, roundNumber: Int = 1, database: Database = mainDatabase)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, roundNumber = roundNumber, ordinal = 1, score = roundNumber, multiplier = 1, segmentType = segmentType)
-        insertDart(pt, roundNumber = roundNumber, ordinal = 2, score = roundNumber, multiplier = 2, segmentType = SegmentType.DOUBLE)
+        insertDart(pt, roundNumber = roundNumber, ordinal = 1, score = roundNumber, multiplier = 1, segmentType = segmentType, database = database)
+        insertDart(pt, roundNumber = roundNumber, ordinal = 2, score = roundNumber, multiplier = 2, segmentType = SegmentType.DOUBLE, database = database)
 
     }
 }

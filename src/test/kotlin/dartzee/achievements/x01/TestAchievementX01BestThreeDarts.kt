@@ -8,6 +8,7 @@ import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -16,13 +17,13 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
 {
     override fun factoryAchievement() = AchievementX01BestThreeDarts()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
-        insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
-        insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3, database = database)
+        insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3, database = database)
+        insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3, database = database)
     }
 
     @Test

@@ -24,10 +24,10 @@ object DatabaseMigrations
             ),
             15 to listOf (
                 { db -> SyncAuditEntity(db).createTable() },
-                { _ -> convertAchievement(ACHIEVEMENT_REF_X01_GAMES_WON) },
-                { _ -> convertAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON) },
-                { _ -> convertAchievement(ACHIEVEMENT_REF_CLOCK_GAMES_WON) },
-                { _ -> convertAchievement(ACHIEVEMENT_REF_DARTZEE_GAMES_WON) }
+                { db -> convertAchievement(ACHIEVEMENT_REF_X01_GAMES_WON, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_CLOCK_GAMES_WON, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_DARTZEE_GAMES_WON, db) }
             )
         )
     }
@@ -35,9 +35,9 @@ object DatabaseMigrations
     /**
      * V14 -> V15
      */
-    private fun convertAchievement(achievementRef: Int)
+    private fun convertAchievement(achievementRef: Int, database: Database)
     {
-        getAchievementForRef(achievementRef)!!.runConversion(emptyList())
+        getAchievementForRef(achievementRef)!!.runConversion(emptyList(), database)
     }
     private fun updatePlayerStrategiesToJson(database: Database)
     {

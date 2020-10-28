@@ -4,6 +4,7 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
 import dartzee.helper.DATABASE_NAME_TEST
 import dartzee.helper.makeInMemoryDatabase
+import dartzee.helper.makeInMemoryDatabaseWithSchema
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings
@@ -11,6 +12,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import io.mockk.mockk
+import io.mockk.spyk
 import org.junit.Test
 
 class TestDatabaseMigrations: AbstractTest()
@@ -50,20 +52,23 @@ class TestDatabaseMigrations: AbstractTest()
     @Test
     fun `Conversions should all run on the specified database`()
     {
-        val mainDbMock = mockk<Database>(relaxed = true)
-        InjectedThings.mainDatabase = mainDbMock
+        val database = makeInMemoryDatabaseWithSchema()
+        val spiedDatabase = spyk(database)
+        InjectedThings.mainDatabase = spiedDatabase
 
         val dbToRunOn = makeInMemoryDatabase()
         DatabaseMigrator(emptyMap()).migrateToLatest(dbToRunOn, "Test")
 
         val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
-        conversionFns.forEach {
-            try { it(dbToRunOn) } catch (e: Exception) {}
+        for (conversion in conversionFns)
+        {
+            println("Running conversion")
+            try { conversion(dbToRunOn) } catch (e: Exception) {}
         }
 
         //Will probably have one logged, which is fine
         errorLogged()
 
-        verifyNotCalled { mainDbMock.borrowConnection() }
+        verifyNotCalled { spiedDatabase.borrowConnection() }
     }
 }

@@ -159,10 +159,15 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             }
         }
 
-        fun factoryAndSave(achievementRef: Int, playerId: String, gameId: String, counter: Int,
-                           achievementDetail: String = "", dtLastUpdate: Timestamp = getSqlDateNow()): AchievementEntity
+        fun factoryAndSave(achievementRef: Int,
+                           playerId: String,
+                           gameId: String,
+                           counter: Int,
+                           achievementDetail: String = "",
+                           dtLastUpdate: Timestamp = getSqlDateNow(),
+                           database: Database = mainDatabase): AchievementEntity
         {
-            val ae = AchievementEntity()
+            val ae = AchievementEntity(database)
             ae.assignRowId()
             ae.achievementRef = achievementRef
             ae.playerId = playerId
