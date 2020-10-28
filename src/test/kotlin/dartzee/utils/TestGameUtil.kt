@@ -140,6 +140,7 @@ class TestGameUtil: AbstractTest()
         val a2 = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt2.playerId)
         assertNotNull(a2)
         a2.gameIdEarned shouldBe game.rowId
+        a2.achievementDetail shouldBe "29"
 
         AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt3.playerId) shouldBe null
     }

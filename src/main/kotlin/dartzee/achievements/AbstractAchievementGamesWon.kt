@@ -16,7 +16,7 @@ abstract class AbstractAchievementGamesWon : AbstractAchievementRowPerGame()
     override fun populateForConversion(playerIds: String, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, pt.GameId, pt.DtFinished AS DtLastUpdate")
+        sb.append(" SELECT pt.PlayerId, pt.GameId, pt.FinalScore, pt.DtFinished AS DtLastUpdate")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '$gameType'")
@@ -31,13 +31,14 @@ abstract class AbstractAchievementGamesWon : AbstractAchievementRowPerGame()
             {
                 val playerId = rs.getString("PlayerId")
                 val gameId = rs.getString("GameId")
+                val finalScore = rs.getInt("FinalScore")
                 val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtLastUpdate, database)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$finalScore", dtLastUpdate, database)
             }
         }
     }
 
-    override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
+    override fun getBreakdownColumns() = listOf("Game", "Score", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtLastUpdate)
 }

@@ -467,7 +467,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         if (finishingPosition == 1)
         {
             val achievementRef = getWinAchievementRef(gameEntity.gameType)
-            AchievementEntity.insertAchievement(achievementRef, playerId, gameEntity.rowId)
+            AchievementEntity.insertAchievement(achievementRef, playerId, gameEntity.rowId, "$score")
         }
 
         //Update the 'best game' achievement
