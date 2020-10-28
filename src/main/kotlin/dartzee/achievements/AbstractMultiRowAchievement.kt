@@ -12,7 +12,7 @@ abstract class AbstractMultiRowAchievement: AbstractAchievement()
     {
         this.player = player
 
-        attainedValue = achievementRows.size
+        attainedValue = calculateAttainedValue(achievementRows)
 
         if (achievementRows.isNotEmpty())
         {
@@ -29,6 +29,11 @@ abstract class AbstractMultiRowAchievement: AbstractAchievement()
             tmBreakdown = tm
         }
     }
+
+    private fun calculateAttainedValue(achievementRows: List<AchievementEntity>) =
+        if (useCounter()) achievementRows.sumBy { it.achievementCounter } else achievementRows.size
+
+    open fun useCounter() = false
 
     abstract fun getBreakdownColumns(): List<String>
     abstract fun getBreakdownRow(a: AchievementEntity): Array<Any>

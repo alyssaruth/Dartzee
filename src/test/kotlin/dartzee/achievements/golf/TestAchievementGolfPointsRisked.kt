@@ -2,7 +2,7 @@ package dartzee.achievements.golf
 
 import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
-import dartzee.achievements.AbstractAchievementTest
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -14,7 +14,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPointsRisked>()
+class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<AchievementGolfPointsRisked>()
 {
     override fun factoryAchievement() = AchievementGolfPointsRisked()
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database) = insertRiskedDart(p, g, database = database)
