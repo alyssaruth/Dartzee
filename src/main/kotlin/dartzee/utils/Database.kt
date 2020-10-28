@@ -276,6 +276,13 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
         return true
     }
 
+    fun closeConnections()
+    {
+        hsConnections.forEach {
+            it.close()
+        }
+    }
+
     fun shutdownDerby(): Boolean
     {
         try

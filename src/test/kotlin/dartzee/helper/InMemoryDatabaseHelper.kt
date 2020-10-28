@@ -363,3 +363,13 @@ fun makeInMemoryDatabaseWithSchema(dbName: String = UUID.randomUUID().toString()
     migrator.migrateToLatest(db, "Test")
     return db
 }
+
+fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH, testBlock: (inMemoryDatabase: Database) -> Unit)
+{
+    val db = makeInMemoryDatabase(dbName, filePath)
+    try {
+        testBlock(db)
+    } finally {
+        db.closeConnections()
+    }
+}
