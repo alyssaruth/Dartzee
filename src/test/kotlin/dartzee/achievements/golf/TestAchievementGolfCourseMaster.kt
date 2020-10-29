@@ -3,10 +3,8 @@ package dartzee.achievements.golf
 import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.AbstractMultiRowAchievementTest
-import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.insertAchievement
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.retrieveAchievement

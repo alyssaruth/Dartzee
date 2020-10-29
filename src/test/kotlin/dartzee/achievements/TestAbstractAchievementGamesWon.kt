@@ -4,7 +4,6 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.helper.getCountFromTable
-import dartzee.helper.insertAchievement
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.utils.Database
