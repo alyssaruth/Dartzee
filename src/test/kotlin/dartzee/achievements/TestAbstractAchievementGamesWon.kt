@@ -20,8 +20,6 @@ abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: 
         insertParticipant(gameId = g.rowId, playerId = p.rowId, finishingPosition = 1, database = database)
     }
 
-    override fun insertAchievementRow(dtLastUpdate: Timestamp) = insertAchievement(dtLastUpdate = dtLastUpdate, achievementDetail = "20")
-
     @Test
     fun `Should ignore participants who did not come 1st`()
     {

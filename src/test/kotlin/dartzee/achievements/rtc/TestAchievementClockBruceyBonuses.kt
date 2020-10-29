@@ -19,8 +19,6 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
 {
     override fun factoryAchievement() = AchievementClockBruceyBonuses()
 
-    override fun insertAchievementRow(dtLastUpdate: Timestamp) = insertAchievement(dtLastUpdate = dtLastUpdate, achievementDetail = "5")
-
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)

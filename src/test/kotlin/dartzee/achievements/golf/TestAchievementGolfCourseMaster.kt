@@ -25,11 +25,6 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
         insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE, database = database)
     }
 
-    override fun insertAchievementRow(dtLastUpdate: Timestamp): AchievementEntity
-    {
-        return insertAchievement(dtLastUpdate = dtLastUpdate, achievementDetail = "2")
-    }
-
     @Test
     fun `Should only insert the earliest example per hole`()
     {
