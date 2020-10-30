@@ -4,7 +4,6 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.helper.getCountFromTable
-import dartzee.helper.insertAchievement
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.utils.Database
@@ -13,14 +12,12 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: TestAbstractAchievementRowPerGame<E>()
+abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractMultiRowAchievementTest<E>()
 {
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
         insertParticipant(gameId = g.rowId, playerId = p.rowId, finishingPosition = 1, database = database)
     }
-
-    override fun insertAchievementRow(dtLastUpdate: Timestamp) = insertAchievement(dtLastUpdate = dtLastUpdate, achievementDetail = "20")
 
     @Test
     fun `Should ignore participants who did not come 1st`()

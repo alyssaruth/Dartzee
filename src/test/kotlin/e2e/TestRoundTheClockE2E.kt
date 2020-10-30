@@ -45,7 +45,11 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
                 AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_GAME, 20, game.rowId),
                 AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, 20, game.rowId),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, 5, "")
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "1"),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "2"),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "3"),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4"),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "5")
         )
     }
 
@@ -82,7 +86,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
                 AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, 5, game.rowId),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, 1, "")
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4")
         )
     }
 }

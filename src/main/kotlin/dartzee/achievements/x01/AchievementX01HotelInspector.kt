@@ -1,19 +1,18 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.getNotBustSql
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 import java.sql.SQLException
 
-class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
+class AchievementX01HotelInspector : AbstractMultiRowAchievement()
 {
     override val name = "Hotel Inspector"
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"

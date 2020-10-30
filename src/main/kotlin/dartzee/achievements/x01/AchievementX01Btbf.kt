@@ -1,7 +1,7 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
@@ -9,7 +9,7 @@ import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
 import java.net.URL
 
-class AchievementX01Btbf: AbstractAchievementRowPerGame()
+class AchievementX01Btbf: AbstractMultiRowAchievement()
 {
     override val achievementRef = ACHIEVEMENT_REF_X01_BTBF
     override val name = "BTBF"

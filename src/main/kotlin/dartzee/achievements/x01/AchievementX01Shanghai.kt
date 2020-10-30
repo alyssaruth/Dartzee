@@ -1,17 +1,15 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
-import java.sql.SQLException
 
-class AchievementX01Shanghai : AbstractAchievementRowPerGame()
+class AchievementX01Shanghai : AbstractMultiRowAchievement()
 {
     override val name = "Shanghai"
     override val desc = "Total number of times player has scored T20, D20, 20 (in any order)"
@@ -93,10 +91,6 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
                     AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
                 }
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException(sb.toString(), sb.toString(), sqle)
         }
         finally
         {

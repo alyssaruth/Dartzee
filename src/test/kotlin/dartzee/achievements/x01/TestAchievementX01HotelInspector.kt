@@ -2,7 +2,7 @@ package dartzee.achievements.x01
 
 import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
-import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -17,7 +17,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<AchievementX01HotelInspector>()
+class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<AchievementX01HotelInspector>()
 {
     override fun factoryAchievement() = AchievementX01HotelInspector()
 

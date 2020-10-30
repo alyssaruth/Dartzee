@@ -1,7 +1,7 @@
 package dartzee.achievements.golf
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
-import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.getGolfSegmentCases
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
@@ -9,7 +9,7 @@ import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-class AchievementGolfPointsRisked : AbstractAchievement()
+class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
 {
     override val name = "Gambler"
     override val desc = "Total number of points risked (by continuing to throw) in Golf"
@@ -27,6 +27,10 @@ class AchievementGolfPointsRisked : AbstractAchievement()
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_POINTS_RISKED
     override fun isUnbounded() = true
 
+    override fun getBreakdownColumns() = listOf("Game", "Round", "Points risked", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.achievementCounter, a.dtLastUpdate)
+    override fun useCounter() = true
+
     private fun buildPointsRiskedSql(): String
     {
         val sb = StringBuilder()
@@ -41,7 +45,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
     {
         val sb = StringBuilder()
 
-        sb.append(" SELECT pt.PlayerId, SUM(${buildPointsRiskedSql()}) AS PointsRisked, MAX(drt.DtCreation) AS DtLastUpdate")
+        sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, SUM(${buildPointsRiskedSql()}) AS PointsRisked, MAX(drt.DtCreation) AS DtLastUpdate")
         sb.append(" FROM Dart drt, Participant pt, Game g")
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
@@ -49,8 +53,7 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         sb.append(" AND g.GameType = '${GameType.GOLF}'")
         sb.append(" AND drt.RoundNumber = drt.Score")
         sb.append(" AND drt.Multiplier > 0")
-
-        if (!playerIds.isEmpty())
+        if (playerIds.isNotEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
@@ -62,16 +65,18 @@ class AchievementGolfPointsRisked : AbstractAchievement()
         sb.append("     AND drtOther.PlayerId = drt.PlayerId")
         sb.append("     AND drtOther.RoundNumber = drt.RoundNumber")
         sb.append("     AND drtOther.Ordinal > drt.Ordinal)")
-        sb.append(" GROUP BY pt.PlayerId")
+        sb.append(" GROUP BY pt.PlayerId, pt.GameId, drt.RoundNumber")
 
         database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val roundNumber = rs.getInt("RoundNumber")
                 val score = rs.getInt("PointsRisked")
                 val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate, database)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "$roundNumber", dtLastUpdate, database)
             }
         }
     }

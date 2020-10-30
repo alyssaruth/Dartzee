@@ -2,11 +2,9 @@ package dartzee.achievements.golf
 
 import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
-import dartzee.achievements.TestAbstractAchievementRowPerGame
-import dartzee.db.AchievementEntity
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.insertAchievement
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.retrieveAchievement
@@ -15,7 +13,7 @@ import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<AchievementGolfCourseMaster>()
+class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<AchievementGolfCourseMaster>()
 {
     override fun factoryAchievement() = AchievementGolfCourseMaster()
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
@@ -23,11 +21,6 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
         insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE, database = database)
-    }
-
-    override fun insertAchievementRow(dtLastUpdate: Timestamp): AchievementEntity
-    {
-        return insertAchievement(dtLastUpdate = dtLastUpdate, achievementDetail = "2")
     }
 
     @Test

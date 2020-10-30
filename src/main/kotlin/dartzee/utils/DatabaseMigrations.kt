@@ -27,7 +27,9 @@ object DatabaseMigrations
                 { db -> convertAchievement(ACHIEVEMENT_REF_X01_GAMES_WON, db) },
                 { db -> convertAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, db) },
                 { db -> convertAchievement(ACHIEVEMENT_REF_CLOCK_GAMES_WON, db) },
-                { db -> convertAchievement(ACHIEVEMENT_REF_DARTZEE_GAMES_WON, db) }
+                { db -> convertAchievement(ACHIEVEMENT_REF_DARTZEE_GAMES_WON, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, db) },
+                { db -> convertAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, db) }
             )
         )
     }

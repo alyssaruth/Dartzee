@@ -68,7 +68,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     {
         if (dartsThrownCount() == 4 && getDartsThrown().last().hitClockTarget(config.clockType))
         {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId())
+            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
         }
 
         updateBestStreakAchievement()

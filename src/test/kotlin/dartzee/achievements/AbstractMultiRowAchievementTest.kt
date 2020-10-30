@@ -8,12 +8,14 @@ import io.kotlintest.shouldNotBe
 import org.junit.Test
 import java.sql.Timestamp
 
-abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGame>: AbstractAchievementTest<E>()
+abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: AbstractAchievementTest<E>()
 {
-    fun getDtAchievedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
+    private fun getDtAchievedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
     fun getGameIdEarnedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Game")
 
-    open fun insertAchievementRow(dtLastUpdate: Timestamp = getSqlDateNow()) = insertAchievement(dtLastUpdate = dtLastUpdate)
+    private fun insertAchievementRow(dtLastUpdate: Timestamp = getSqlDateNow(),
+                                  achievementCounter: Int = -1)
+            = insertAchievement(dtLastUpdate = dtLastUpdate, achievementCounter = achievementCounter, achievementDetail = "10")
 
     @Test
     fun `Breakdown column count should match row length`()
@@ -36,15 +38,28 @@ abstract class TestAbstractAchievementRowPerGame<E: AbstractAchievementRowPerGam
     }
 
     @Test
-    fun `Should set the attainedValue to the number of rows`()
+    fun `Should set the attainedValue correctly, taking into account all rows`()
     {
         val a = factoryAchievement()
+        if (a.useCounter())
+        {
+            a.initialiseFromDb(listOf(
+                insertAchievementRow(achievementCounter = 1),
+                insertAchievementRow(achievementCounter = 2),
+                insertAchievementRow(achievementCounter = 4)), null)
+            a.attainedValue shouldBe 7
 
-        a.initialiseFromDb(listOf(insertAchievementRow(), insertAchievementRow(), insertAchievementRow()), null)
-        a.attainedValue shouldBe 3
+            a.initialiseFromDb(listOf(insertAchievementRow(achievementCounter = 8)), null)
+            a.attainedValue shouldBe 8
+        }
+        else
+        {
+            a.initialiseFromDb(listOf(insertAchievementRow(), insertAchievementRow(), insertAchievementRow()), null)
+            a.attainedValue shouldBe 3
 
-        a.initialiseFromDb(listOf(insertAchievementRow()), null)
-        a.attainedValue shouldBe 1
+            a.initialiseFromDb(listOf(insertAchievementRow()), null)
+            a.attainedValue shouldBe 1
+        }
     }
 
     @Test
