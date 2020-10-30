@@ -1,7 +1,6 @@
 package dartzee.db
 
 import dartzee.achievements.*
-import dartzee.achievements.golf.AchievementGolfPointsRisked
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.game.GameType
@@ -267,6 +266,44 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         scrn.playerId shouldBe playerId
         scrn.achievementRef shouldBe ref
         scrn.attainedValue shouldBe 2
+        scrn.gameId shouldBe gameId
+    }
+
+    @Test
+    fun `insertAchievementWithCounter - Should insert a row with the specified values`()
+    {
+        val ref = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+        val playerId = randomGuid()
+        val gameId = randomGuid()
+
+        AchievementEntity.insertAchievementWithCounter(ref, playerId, gameId, "10", 5)
+
+        val a = retrieveAchievement()
+        a.achievementCounter shouldBe 5
+        a.achievementRef shouldBe ref
+        a.playerId shouldBe playerId
+        a.gameIdEarned shouldBe gameId
+        a.achievementDetail shouldBe "10"
+    }
+
+    @Test
+    fun `insertAchievementWithCounter - Should call into triggerAchievementUnlock`()
+    {
+        val ref = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+        val playerId = randomGuid()
+        val gameId = randomGuid()
+
+        //Start with 1 row for 6 points
+        insertAchievement(achievementRef = ref, playerId = playerId, achievementCounter = 6, achievementDetail = "2")
+
+        val scrn = FakeDartsScreen()
+        ScreenCache.addDartsGameScreen(gameId, scrn)
+
+        AchievementEntity.insertAchievementWithCounter(ref, playerId, gameId, "10", 5)
+
+        scrn.playerId shouldBe playerId
+        scrn.achievementRef shouldBe ref
+        scrn.attainedValue shouldBe 11
         scrn.gameId shouldBe gameId
     }
 

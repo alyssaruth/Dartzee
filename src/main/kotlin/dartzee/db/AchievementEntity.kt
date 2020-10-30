@@ -115,7 +115,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             triggerAchievementUnlock(count, count + 1, achievementRef, playerId, gameId)
         }
 
-        fun insertAchievementWithCounter(achievementRef: Int, playerId: String, gameId: String, detail: String = "", counter: Int = -1)
+        fun insertAchievementWithCounter(achievementRef: Int, playerId: String, gameId: String, detail: String, counter: Int)
         {
             val sql = "SELECT SUM(AchievementCounter) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementRef = $achievementRef"
             val count = mainDatabase.executeQueryAggregate(sql)
