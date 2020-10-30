@@ -46,8 +46,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
     override fun mergeIntoDatabaseImpl(otherDao: AchievementEntity, otherDatabase: Database)
     {
         val achievement = getAchievementForRef(achievementRef) ?: throw ApplicationFault(CODE_MERGE_ERROR, "No achievement class for ref $achievementRef")
-
-
+        achievement.mergeIntoOtherDatabase(this, otherDao, otherDatabase)
     }
 
     companion object

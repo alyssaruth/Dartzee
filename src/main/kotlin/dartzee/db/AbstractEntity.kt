@@ -226,7 +226,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     protected open fun reassignLocalId(otherDatabase: Database) {}
 
-    private fun updateDatabaseRow(db: Database = database)
+    fun updateDatabaseRow(db: Database = database)
     {
         val genericUpdate = buildUpdateQuery()
         var updateQuery = genericUpdate

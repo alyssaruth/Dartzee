@@ -254,9 +254,10 @@ fun insertAchievement(uuid: String = randomGuid(),
                       gameIdEarned: String = "",
                       achievementCounter: Int = -1,
                       achievementDetail: String = "",
-                      dtLastUpdate: Timestamp = getSqlDateNow()): AchievementEntity
+                      dtLastUpdate: Timestamp = getSqlDateNow(),
+                      database: Database = mainDatabase): AchievementEntity
 {
-    val a = AchievementEntity()
+    val a = AchievementEntity(database)
     a.rowId = uuid
     a.playerId = playerId
     a.achievementRef = achievementRef
@@ -344,7 +345,7 @@ fun getTableNames(database: Database): List<String>
 fun retrieveGame() = GameEntity().retrieveEntities().first()
 fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
-fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
+fun retrieveAchievement(database: Database = mainDatabase) = AchievementEntity(database).retrieveEntities().first()
 
 data class AchievementSummary(val achievementRef: Int, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
 fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>

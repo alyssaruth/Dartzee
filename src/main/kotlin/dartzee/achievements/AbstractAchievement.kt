@@ -75,7 +75,28 @@ abstract class AbstractAchievement
         }
         else
         {
+            val winningRow = calculateWinningRow(achievementRow, existingRow)
+            if (winningRow != existingRow)
+            {
+                winningRow.rowId = existingRow.rowId
+                winningRow.updateDatabaseRow(otherDatabase)
+            }
+        }
+    }
 
+    private fun calculateWinningRow(rowOne: AchievementEntity, rowTwo: AchievementEntity): AchievementEntity
+    {
+        return if (rowOne.achievementCounter == rowTwo.achievementCounter)
+        {
+            if (rowOne.dtLastUpdate < rowTwo.dtLastUpdate) rowOne else rowTwo
+        }
+        else if (rowOne.achievementCounter < rowTwo.achievementCounter == isDecreasing())
+        {
+            rowOne
+        }
+        else
+        {
+            rowTwo
         }
     }
 
