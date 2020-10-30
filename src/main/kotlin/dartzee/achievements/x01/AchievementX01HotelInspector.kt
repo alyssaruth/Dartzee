@@ -1,18 +1,18 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.getNotBustSql
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 import java.sql.SQLException
 
-class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
+class AchievementX01HotelInspector : AbstractMultiRowAchievement()
 {
     override val name = "Hotel Inspector"
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"
@@ -32,9 +32,9 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
     override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtLastUpdate)
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
-        val tempTable = mainDatabase.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
+        val tempTable = database.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
         tempTable ?: return
 
         var sb = StringBuilder()
@@ -67,14 +67,14 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
-            mainDatabase.dropTable(tempTable)
+            database.dropTable(tempTable)
             return
         }
 
-        mainDatabase.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
-        val tempTableTwo = mainDatabase.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
+        database.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
+        val tempTableTwo = database.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
 
         sb = StringBuilder()
         sb.append(" INSERT INTO $tempTableTwo")
@@ -90,10 +90,10 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
         sb.append(" GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}")
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
-            mainDatabase.dropTable(tempTable)
-            mainDatabase.dropTable(tempTableTwo)
+            database.dropTable(tempTable)
+            database.dropTable(tempTableTwo)
             return
         }
 
@@ -111,7 +111,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
 
         try
         {
-            val rs = mainDatabase.executeQuery(sb)
+            val rs = database.executeQuery(sb)
             rs.use{
                 while (rs.next())
                 {
@@ -120,7 +120,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
                     val method = rs.getString("Method")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved, database)
                 }
             }
         }
@@ -130,8 +130,8 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         }
         finally
         {
-            mainDatabase.dropTable(tempTable)
-            mainDatabase.dropTable(tempTableTwo)
+            database.dropTable(tempTable)
+            database.dropTable(tempTableTwo)
         }
     }
 

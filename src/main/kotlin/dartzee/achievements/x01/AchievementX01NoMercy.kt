@@ -1,15 +1,15 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-class AchievementX01NoMercy: AbstractAchievementRowPerGame()
+class AchievementX01NoMercy: AbstractMultiRowAchievement()
 {
     override val name = "No Mercy"
     override val desc = "Finishes from 3, 5, 7 or 9 in X01"
@@ -24,7 +24,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished")
@@ -42,7 +42,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -50,7 +50,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
                 val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtFinished")
 
-                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, gameId, -1, "$score", dtAchieved)
+                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, gameId, -1, "$score", dtAchieved, database)
             }
         }
     }

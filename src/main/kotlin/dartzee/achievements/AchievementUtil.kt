@@ -14,6 +14,7 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
@@ -121,9 +122,9 @@ fun getWinAchievementRef(gameType : GameType): Int
 }
 
 fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
-                               achievementScoreSql : String, achievementRef: Int)
+                               achievementScoreSql : String, achievementRef: Int, database: Database)
 {
-    val tempTable = mainDatabase.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
+    val tempTable = database.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
             ?: return
 
     var sb = StringBuilder()
@@ -144,9 +145,9 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     sb.append(" AND pt.GameId = g.RowId")
     sb.append(" AND g.GameType = '${GameType.X01}'")
 
-    if (!mainDatabase.executeUpdate("" + sb))
+    if (!database.executeUpdate("" + sb))
     {
-        mainDatabase.dropTable(tempTable)
+        database.dropTable(tempTable)
         return
     }
 
@@ -163,7 +164,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
 
     try
     {
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -171,7 +172,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
                 val dtAchieved = rs.getTimestamp("DtAchieved")
                 val score = rs.getInt("Score")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
             }
         }
     }
@@ -181,7 +182,7 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
     finally
     {
-        mainDatabase.dropTable(tempTable)
+        database.dropTable(tempTable)
     }
 }
 

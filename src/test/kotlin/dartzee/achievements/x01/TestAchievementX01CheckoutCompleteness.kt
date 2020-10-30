@@ -1,7 +1,7 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -10,12 +10,14 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<AchievementX01CheckoutCompleteness>()
+class TestAchievementX01CheckoutCompleteness: AbstractMultiRowAchievementTest<AchievementX01CheckoutCompleteness>()
 {
     override fun factoryAchievement() = AchievementX01CheckoutCompleteness()
 
@@ -73,15 +75,15 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         scores.shouldContainExactlyInAnyOrder(1, 2, 5)
     }
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        insertCheckout(p, g, 1)
+        insertCheckout(p, g, 1, database = database)
     }
 
-    private fun insertCheckout(p: PlayerEntity, g: GameEntity, score: Int = 1, dtCreation: Timestamp = getSqlDateNow())
+    private fun insertCheckout(p: PlayerEntity, g: GameEntity, score: Int = 1, dtCreation: Timestamp = getSqlDateNow(), database: Database = mainDatabase)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation)
+        insertDart(pt, startingScore = score*2, score = score, multiplier = 2, dtCreation = dtCreation, database = database)
     }
 }

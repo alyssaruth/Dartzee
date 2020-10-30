@@ -1,17 +1,15 @@
 package dartzee.achievements.rtc
 
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
-import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.InjectedThings.logger
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
-import java.sql.SQLException
 
-class AchievementClockBruceyBonuses : AbstractAchievement()
+class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
 {
     override val name = "Didn't he do well!?"
     override val desc = "Total number of 'Brucey Bonuses' executed in Round the Clock"
@@ -28,10 +26,13 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
 
     override fun isUnbounded() = true
 
-    override fun populateForConversion(playerIds: String)
+    override fun getBreakdownColumns() = listOf("Game", "Round", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtLastUpdate)
+
+    override fun populateForConversion(playerIds: String, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, COUNT(1) AS BruceCount, MAX(drt.DtCreation) AS DtLastUpdate")
+        sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, drt.DtCreation AS DtLastUpdate")
         sb.append(" FROM Dart drt, Participant pt, Game g")
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
@@ -45,29 +46,21 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Trebles}%' AND drt.Multiplier = 3)")
         sb.append(" )")
 
-        if (!playerIds.isEmpty())
+        if (playerIds.isNotEmpty())
         {
             sb.append(" AND pt.PlayerId IN($playerIds)")
         }
 
-        sb.append(" GROUP BY pt.PlayerId")
+        database.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val roundNumber = rs.getInt("RoundNumber")
+                val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-        try
-        {
-            mainDatabase.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val score = rs.getInt("BruceCount")
-                    val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
-
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$roundNumber", dtLastUpdate, database)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException(sb.toString(), sb.toString(), sqle)
         }
     }
 

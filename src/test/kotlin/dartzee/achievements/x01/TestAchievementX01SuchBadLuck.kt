@@ -8,6 +8,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -16,11 +17,11 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
 {
     override fun factoryAchievement() = AchievementX01SuchBadLuck()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
+        insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2, database = database)
     }
 
     @Test

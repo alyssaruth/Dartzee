@@ -2,14 +2,14 @@ package dartzee.achievements.golf
 
 import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
+class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
 {
     override val name = "Course Master"
     override val desc = "Unique holes where a hole-in-one has been achieved"
@@ -29,9 +29,9 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtLastUpdate)
     override fun isUnbounded() = false
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
-        val tempTable = mainDatabase.createTempTable("PlayerHolesInOne", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
+        val tempTable = database.createTempTable("PlayerHolesInOne", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                 ?: return
 
         var sb = StringBuilder()
@@ -50,7 +50,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
             return
 
         sb = StringBuilder()
@@ -64,7 +64,7 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
         sb.append("     AND zz2.DtAchieved < zz1.DtAchieved")
         sb.append(")")
 
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -72,10 +72,10 @@ class AchievementGolfCourseMaster : AbstractAchievementRowPerGame()
                 val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, playerId, gameId, -1, "$hole", dtAchieved)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$hole", dtAchieved, database)
             }
         }
 
-        mainDatabase.dropTable(tempTable)
+        database.dropTable(tempTable)
     }
 }

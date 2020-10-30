@@ -1,7 +1,6 @@
 package dartzee.db
 
 import dartzee.achievements.*
-import dartzee.achievements.golf.AchievementGolfPointsRisked
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.game.GameType
@@ -215,78 +214,6 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `incrementAchievement - Should insert a new row if none present`()
-    {
-        val ref = ACHIEVEMENT_REF_X01_BEST_GAME
-        val playerId = randomGuid()
-        val gameId = randomGuid()
-
-        val gameScreen = FakeDartsScreen()
-        ScreenCache.addDartsGameScreen(gameId, gameScreen)
-
-        AchievementEntity.incrementAchievement(ref, playerId, gameId)
-
-        val a = AchievementEntity.retrieveAchievement(ref, playerId)!!
-        a.achievementCounter shouldBe 1
-        a.playerId shouldBe playerId
-        a.gameIdEarned shouldBe ""
-        a.achievementRef shouldBe ref
-
-        gameScreen.playerId shouldBe playerId
-    }
-
-    @Test
-    fun `incrementAchievement - should increment by 1 by default`()
-    {
-        val ref = ACHIEVEMENT_REF_X01_BEST_GAME
-        val playerId = randomGuid()
-
-        insertAchievement(playerId = playerId, achievementRef = ref, achievementCounter = 5)
-
-        AchievementEntity.incrementAchievement(ref, playerId, randomGuid())
-
-        val a = AchievementEntity.retrieveAchievement(ref, playerId)!!
-        a.achievementCounter shouldBe 6
-    }
-
-    @Test
-    fun `incrementAchievement - should increment by the specified amount`()
-    {
-        val ref = ACHIEVEMENT_REF_X01_BEST_GAME
-        val playerId = randomGuid()
-
-        insertAchievement(playerId = playerId, achievementRef = ref, achievementCounter = 5)
-
-        AchievementEntity.incrementAchievement(ref, playerId, randomGuid(), 10)
-
-        val a = AchievementEntity.retrieveAchievement(ref, playerId)!!
-        a.achievementCounter shouldBe 15
-    }
-
-    @Test
-    fun `incrementAchievement - should call into triggerAchievementUnlock`()
-    {
-        val ref = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
-        val playerId = randomGuid()
-
-        val oldAmount = AchievementGolfPointsRisked().redThreshold
-        val increment = AchievementGolfPointsRisked().yellowThreshold - oldAmount
-
-        insertAchievement(playerId = playerId, achievementRef = ref, achievementCounter = oldAmount)
-
-        val gameId = randomGuid()
-        val screen = FakeDartsScreen()
-        ScreenCache.addDartsGameScreen(gameId, screen)
-
-        AchievementEntity.incrementAchievement(ref, playerId, gameId, increment)
-
-
-        screen.playerId shouldBe playerId
-        screen.achievementRef shouldBe ref
-        screen.attainedValue shouldBe AchievementGolfPointsRisked().yellowThreshold
-    }
-
-    @Test
     fun `insertAchievement - Should insert a row with the specified values`()
     {
         val ref = ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
@@ -339,6 +266,44 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         scrn.playerId shouldBe playerId
         scrn.achievementRef shouldBe ref
         scrn.attainedValue shouldBe 2
+        scrn.gameId shouldBe gameId
+    }
+
+    @Test
+    fun `insertAchievementWithCounter - Should insert a row with the specified values`()
+    {
+        val ref = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+        val playerId = randomGuid()
+        val gameId = randomGuid()
+
+        AchievementEntity.insertAchievementWithCounter(ref, playerId, gameId, "10", 5)
+
+        val a = retrieveAchievement()
+        a.achievementCounter shouldBe 5
+        a.achievementRef shouldBe ref
+        a.playerId shouldBe playerId
+        a.gameIdEarned shouldBe gameId
+        a.achievementDetail shouldBe "10"
+    }
+
+    @Test
+    fun `insertAchievementWithCounter - Should call into triggerAchievementUnlock`()
+    {
+        val ref = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+        val playerId = randomGuid()
+        val gameId = randomGuid()
+
+        //Start with 1 row for 6 points
+        insertAchievement(achievementRef = ref, playerId = playerId, achievementCounter = 6, achievementDetail = "2")
+
+        val scrn = FakeDartsScreen()
+        ScreenCache.addDartsGameScreen(gameId, scrn)
+
+        AchievementEntity.insertAchievementWithCounter(ref, playerId, gameId, "10", 5)
+
+        scrn.playerId shouldBe playerId
+        scrn.achievementRef shouldBe ref
+        scrn.attainedValue shouldBe 11
         scrn.gameId shouldBe gameId
     }
 

@@ -4,7 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import dartzee.achievements.AbstractAchievement
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
 import dartzee.utils.getAdjacentNumbers
@@ -27,10 +27,10 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(playerIds: String, database: Database)
     {
         val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
-        val tempTable = mainDatabase.createTempTable("CheckoutDarts", cols)
+        val tempTable = database.createTempTable("CheckoutDarts", cols)
 
         tempTable ?: return
 
@@ -50,9 +50,9 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
             sb.append(" AND pt.PlayerId IN ($playerIds)")
         }
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
-            mainDatabase.dropTable(tempTable)
+            database.dropTable(tempTable)
             return
         }
 
@@ -74,7 +74,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
         try
         {
-            val rs = mainDatabase.executeQuery(sb)
+            val rs = database.executeQuery(sb)
             rs.use {
                 while (rs.next())
                 {
@@ -90,7 +90,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
                     playersAlreadyDone.add(playerId)
 
-                    AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, playerId, gameId, total, "", dtAchieved)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
                 }
             }
         }
@@ -100,7 +100,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         }
         finally
         {
-            mainDatabase.dropTable(tempTable)
+            database.dropTable(tempTable)
         }
     }
 

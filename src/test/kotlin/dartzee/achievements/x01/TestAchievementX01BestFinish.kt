@@ -6,6 +6,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.helper.*
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -14,13 +15,12 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
 {
     override fun factoryAchievement() = AchievementX01BestFinish()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow())
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow(), database = database)
 
-
-        insertDart(pt, ordinal = 1, startingScore = 60, score = 20, multiplier = 1)
-        insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 2)
+        insertDart(pt, ordinal = 1, startingScore = 60, score = 20, multiplier = 1, database = database)
+        insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 2, database = database)
     }
 
     @Test

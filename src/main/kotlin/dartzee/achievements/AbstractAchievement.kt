@@ -40,7 +40,7 @@ abstract class AbstractAchievement
 
     var tmBreakdown : DefaultTableModel? = null
 
-    fun runConversion(players : List<PlayerEntity>)
+    fun runConversion(players : List<PlayerEntity>, database: Database = mainDatabase)
     {
         val keys = players.joinToString { p -> "'${p.rowId}'"}
 
@@ -52,15 +52,15 @@ abstract class AbstractAchievement
             sb.append(" AND PlayerId IN ($keys)" )
         }
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
             return
         }
 
-        populateForConversion(keys)
+        populateForConversion(keys, database)
     }
 
-    abstract fun populateForConversion(playerIds : String)
+    abstract fun populateForConversion(playerIds : String, database: Database = mainDatabase)
     abstract fun getIconURL() : URL
 
     /**
@@ -244,7 +244,7 @@ abstract class AbstractAchievement
 
     fun getExtraDetails() : String
     {
-        var ret = if (this is AbstractAchievementRowPerGame)
+        var ret = if (this is AbstractMultiRowAchievement)
         {
             "Last updated on ${dtLatestUpdate.formatAsDate()}"
         }
