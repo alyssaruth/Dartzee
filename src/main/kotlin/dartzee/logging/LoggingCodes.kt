@@ -35,6 +35,7 @@ val CODE_STARTING_RESTORE = LoggingCode("startingRestore")
 val CODE_RENDERED_DARTBOARD = LoggingCode("renderedDartboard")
 val CODE_PLAYER_PAUSED = LoggingCode("playerPaused")
 val CODE_PLAYER_UNPAUSED = LoggingCode("playerUnpaused")
+val CODE_MERGE_ROW_SKIPPED = LoggingCode("mergeRowSkipped")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
