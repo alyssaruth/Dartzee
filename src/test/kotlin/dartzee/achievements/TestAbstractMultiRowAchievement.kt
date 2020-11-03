@@ -33,8 +33,7 @@ class TestAbstractMultiRowAchievement: AbstractTest()
             existingAchievement.gameIdEarned = gameId
             existingAchievement.playerId = playerId
 
-            val achievementDto = ExampleAchievement()
-            achievementDto.mergeIntoOtherDatabase(existingAchievement, otherDao, otherDb)
+            ExampleAchievement().mergeIntoOtherDatabase(existingAchievement, otherDao, otherDb)
 
             getCountFromTable("Achievement", otherDb) shouldBe 1
 
@@ -47,6 +46,90 @@ class TestAbstractMultiRowAchievement: AbstractTest()
 
             val result = retrieveAchievement(otherDb)
             result.rowId shouldBe remoteRow.rowId
+        }
+    }
+
+    @Test
+    fun `Should insert a row if achievement detail is different`()
+    {
+        usingInMemoryDatabase(withSchema = true) { otherDb ->
+            val otherDao = AchievementEntity(otherDb)
+
+            insertAchievement(database = otherDb, achievementRef = ACHIEVEMENT_REF, achievementDetail = "detail", gameIdEarned = gameId, playerId = playerId)
+
+            val existingAchievement = AchievementEntity()
+            existingAchievement.assignRowId()
+            existingAchievement.achievementRef = ACHIEVEMENT_REF
+            existingAchievement.achievementDetail = "otherDetail"
+            existingAchievement.gameIdEarned = gameId
+            existingAchievement.playerId = playerId
+
+            ExampleAchievement().mergeIntoOtherDatabase(existingAchievement, otherDao, otherDb)
+
+            getCountFromTable("Achievement", otherDb) shouldBe 2
+        }
+    }
+
+    @Test
+    fun `Should insert a row if game ID is different`()
+    {
+        usingInMemoryDatabase(withSchema = true) { otherDb ->
+            val otherDao = AchievementEntity(otherDb)
+
+            insertAchievement(database = otherDb, achievementRef = ACHIEVEMENT_REF, achievementDetail = "detail", gameIdEarned = gameId, playerId = playerId)
+
+            val existingAchievement = AchievementEntity()
+            existingAchievement.assignRowId()
+            existingAchievement.achievementRef = ACHIEVEMENT_REF
+            existingAchievement.achievementDetail = "detail"
+            existingAchievement.gameIdEarned = UUID.randomUUID().toString()
+            existingAchievement.playerId = playerId
+
+            ExampleAchievement().mergeIntoOtherDatabase(existingAchievement, otherDao, otherDb)
+
+            getCountFromTable("Achievement", otherDb) shouldBe 2
+        }
+    }
+
+    @Test
+    fun `Should insert a row if achievement ref is different`()
+    {
+        usingInMemoryDatabase(withSchema = true) { otherDb ->
+            val otherDao = AchievementEntity(otherDb)
+
+            insertAchievement(database = otherDb, achievementRef = ACHIEVEMENT_REF + 1, achievementDetail = "detail", gameIdEarned = gameId, playerId = playerId)
+
+            val existingAchievement = AchievementEntity()
+            existingAchievement.assignRowId()
+            existingAchievement.achievementRef = ACHIEVEMENT_REF
+            existingAchievement.achievementDetail = "detail"
+            existingAchievement.gameIdEarned = gameId
+            existingAchievement.playerId = playerId
+
+            ExampleAchievement().mergeIntoOtherDatabase(existingAchievement, otherDao, otherDb)
+
+            getCountFromTable("Achievement", otherDb) shouldBe 2
+        }
+    }
+
+    @Test
+    fun `Should insert a row if playerId is different`()
+    {
+        usingInMemoryDatabase(withSchema = true) { otherDb ->
+            val otherDao = AchievementEntity(otherDb)
+
+            insertAchievement(database = otherDb, achievementRef = ACHIEVEMENT_REF, achievementDetail = "detail", gameIdEarned = gameId, playerId = playerId)
+
+            val existingAchievement = AchievementEntity()
+            existingAchievement.assignRowId()
+            existingAchievement.achievementRef = ACHIEVEMENT_REF
+            existingAchievement.achievementDetail = "detail"
+            existingAchievement.gameIdEarned = gameId
+            existingAchievement.playerId = UUID.randomUUID().toString()
+
+            ExampleAchievement().mergeIntoOtherDatabase(existingAchievement, otherDao, otherDb)
+
+            getCountFromTable("Achievement", otherDb) shouldBe 2
         }
     }
 
