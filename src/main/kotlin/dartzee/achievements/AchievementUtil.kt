@@ -14,12 +14,13 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.logging.LoggingCode
 import dartzee.utils.Database
+import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
-import java.sql.SQLException
 
 fun getTotalRoundScoreSql(drtFirstAlias: String): String
   = "($drtFirstAlias.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
@@ -78,10 +79,18 @@ private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchiev
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()
 
-    achievements.forEach{
+    val timings = mutableMapOf<String, Long>()
+    achievements.forEach {
+        val timer = DurationTimer()
         it.runConversion(players)
+
+        val timeElapsed = timer.getDuration()
+        timings[it.name] = timeElapsed
+
         dlg.incrementProgressLater()
     }
+
+    logger.info(LoggingCode("conversion.timings"), "Timings: $timings")
 
     dlg.disposeLater()
 }
@@ -139,60 +148,59 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, lastDartWhereSql: St
                                achievementScoreSql : String, achievementRef: Int, database: Database)
 {
     val x01Rounds = createX01RoundTempTable(players, database) ?: return
-    val tempTable = database.createTempTable("PlayerResults",
-        "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
-            ?: return
 
-    var sb = StringBuilder()
-    sb.append(" INSERT INTO $tempTable")
-    sb.append(" SELECT rnd.PlayerId, rnd.GameId, drtLast.DtCreation, $achievementScoreSql")
-    sb.append(" FROM $x01Rounds rnd, Dart drtLast")
-    sb.append(" WHERE rnd.ParticipantId = drtLast.ParticipantId")
-    sb.append(" AND rnd.PlayerId = drtLast.PlayerId")
-    sb.append(" AND rnd.RoundNumber = drtLast.RoundNumber")
-    sb.append(" AND $lastDartWhereSql")
+    players.forEach {
+        val tempTable = database.createTempTable("PlayerResults",
+            "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
 
-    if (!mainDatabase.executeUpdate("" + sb))
-    {
-        database.dropTable(tempTable)
-        database.dropTable(x01Rounds)
-        return
-    }
+        var sb = StringBuilder()
+        sb.append(" INSERT INTO $tempTable")
+        sb.append(" SELECT rnd.PlayerId, rnd.GameId, drtLast.DtCreation, $achievementScoreSql")
+        sb.append(" FROM $x01Rounds rnd, Dart drtLast")
+        sb.append(" WHERE rnd.ParticipantId = drtLast.ParticipantId")
+        sb.append(" AND rnd.PlayerId = drtLast.PlayerId")
+        sb.append(" AND rnd.RoundNumber = drtLast.RoundNumber")
+        sb.append(" AND $lastDartWhereSql")
+        sb.append(" AND rnd.PlayerId = '${it.rowId}'")
 
-    sb = StringBuilder()
-    sb.append(" SELECT PlayerId, GameId, DtAchieved, Score")
-    sb.append(" FROM $tempTable zz1")
-    sb.append(" WHERE NOT EXISTS (")
-    sb.append(" 	SELECT 1")
-    sb.append(" 	FROM $tempTable zz2")
-    sb.append(" 	WHERE zz2.PlayerId = zz1.PlayerId")
-    sb.append(" 	AND (zz2.Score > zz1.Score OR (zz2.Score = zz1.Score AND zz2.DtAchieved < zz1.DtAchieved))")
-    sb.append(" )")
-    sb.append(" ORDER BY PlayerId")
+        if (!mainDatabase.executeUpdate("" + sb))
+        {
+            database.dropTable(tempTable)
+            return
+        }
 
-    try
-    {
-        mainDatabase.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-                val score = rs.getInt("Score")
+        sb = StringBuilder()
+        sb.append(" SELECT PlayerId, GameId, DtAchieved, Score")
+        sb.append(" FROM $tempTable zz1")
+        sb.append(" WHERE NOT EXISTS (")
+        sb.append(" 	SELECT 1")
+        sb.append(" 	FROM $tempTable zz2")
+        sb.append(" 	WHERE zz2.PlayerId = zz1.PlayerId")
+        sb.append(" 	AND (zz2.Score > zz1.Score OR (zz2.Score = zz1.Score AND zz2.DtAchieved < zz1.DtAchieved))")
+        sb.append(" )")
+        sb.append(" ORDER BY PlayerId")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved)
+        try
+        {
+            mainDatabase.executeQuery(sb).use { rs ->
+                while (rs.next())
+                {
+                    val playerId = rs.getString("PlayerId")
+                    val gameId = rs.getString("GameId")
+                    val dtAchieved = rs.getTimestamp("DtAchieved")
+                    val score = rs.getInt("Score")
+
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved)
+                }
             }
         }
+        finally
+        {
+            database.dropTable(tempTable)
+        }
     }
-    catch (sqle: SQLException)
-    {
-        logger.logSqlException(sb.toString(), sb.toString(), sqle)
-    }
-    finally
-    {
-        database.dropTable(x01Rounds)
-        database.dropTable(tempTable)
-    }
+
+    database.dropTable(x01Rounds)
 }
 private fun createX01RoundTempTable(players: List<PlayerEntity>, database: Database): String?
 {
