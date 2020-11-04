@@ -39,6 +39,7 @@ object DatabaseMigrations
      */
     private fun convertAchievement(achievementRef: Int, database: Database)
     {
+        //TODO - make this clean up temp tables
         getAchievementForRef(achievementRef)!!.runConversion(emptyList(), database)
     }
     private fun updatePlayerStrategiesToJson(database: Database)
