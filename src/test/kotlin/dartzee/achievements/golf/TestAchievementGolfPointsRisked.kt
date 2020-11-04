@@ -62,7 +62,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         insertDart(pt, roundNumber = 1, ordinal = 2, score = 1, multiplier = 1, segmentType = SegmentType.INNER_SINGLE, dtCreation = Timestamp(1000))
         insertDart(pt, roundNumber = 1, ordinal = 3, score = 1, multiplier = 2, segmentType = SegmentType.DOUBLE, dtCreation = Timestamp(1500))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         val achievementRow = retrieveAchievement()
         achievementRow.playerId shouldBe p.rowId

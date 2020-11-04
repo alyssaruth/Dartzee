@@ -23,7 +23,6 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
         sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND pt.FinishingPosition = 1")
         appendPlayerSql(sb, players)
-        sb.append(" GROUP BY PlayerId")
 
         database.executeQuery(sb).use { rs ->
             while (rs.next())

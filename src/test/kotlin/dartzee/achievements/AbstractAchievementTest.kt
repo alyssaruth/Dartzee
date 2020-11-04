@@ -146,7 +146,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
                 val alice = insertPlayer(name = "Alice", database = otherDatabase)
                 setUpAchievementRowForPlayer(alice, otherDatabase)
 
-                factoryAchievement().populateForConversion("", otherDatabase)
+                factoryAchievement().populateForConversion(emptyList(), otherDatabase)
                 getAchievementCount(otherDatabase) shouldBe 1
 
                 verifyNotCalled { spiedDatabase.borrowConnection() }

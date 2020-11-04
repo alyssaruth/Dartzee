@@ -48,7 +48,6 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Trebles}%' AND drt.Multiplier = 3)")
         sb.append(" )")
         appendPlayerSql(sb, players)
-        sb.append(" GROUP BY pt.PlayerId")
 
         database.executeQuery(sb).use { rs ->
             while (rs.next())
