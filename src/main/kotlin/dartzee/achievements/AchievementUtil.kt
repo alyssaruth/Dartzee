@@ -67,28 +67,37 @@ fun convertEmptyAchievements()
     }
 }
 
-fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
+fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val r = Runnable { runConversionsInOtherThread(achievements, players)}
     val t = Thread(r, "Conversion thread")
     t.start()
 }
 
-private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
+private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()
 
     val timings = mutableMapOf<String, Long>()
-    achievements.forEach {
-        val timer = DurationTimer()
-        it.runConversion(players)
 
-        val timeElapsed = timer.getDuration()
-        timings[it.name] = timeElapsed
+    try
+    {
+        achievements.forEach {
+            val timer = DurationTimer()
+            it.runConversion(players)
 
-        dlg.incrementProgressLater()
+            val timeElapsed = timer.getDuration()
+            timings[it.name] = timeElapsed
+
+            dlg.incrementProgressLater()
+        }
     }
+    finally
+    {
+        mainDatabase.dropUnexpectedTables()
+    }
+
 
     logger.info(LoggingCode("conversion.timings"), "Timings: $timings")
 
