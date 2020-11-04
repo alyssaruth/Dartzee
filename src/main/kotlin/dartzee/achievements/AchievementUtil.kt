@@ -14,11 +14,15 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
 import java.sql.SQLException
+
+fun getTotalRoundScoreSql(drtFirstAlias: String): String
+  = "($drtFirstAlias.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
 
 fun getNotBustSql(): String
 {
@@ -131,33 +135,27 @@ fun getWinAchievementRef(gameType : GameType): Int
     return ref
 }
 
-fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
-                               achievementScoreSql : String, achievementRef: Int)
+fun unlockThreeDartAchievement(playerSql: String, lastDartWhereSql: String,
+                               achievementScoreSql : String, achievementRef: Int, database: Database)
 {
-    val tempTable = mainDatabase.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
+    val x01Rounds = createX01RoundTempTable(playerSql, database) ?: return
+    val tempTable = database.createTempTable("PlayerResults",
+        "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
             ?: return
 
     var sb = StringBuilder()
-    sb.append("INSERT INTO $tempTable")
-    sb.append(" SELECT pt.PlayerId, pt.GameId, $dtColumn, $achievementScoreSql")
-    sb.append(" FROM Dart drtFirst, Dart drtLast, Participant pt, Game g")
-    sb.append(" WHERE drtFirst.ParticipantId = pt.RowId")
-    sb.append(" AND drtFirst.PlayerId = pt.PlayerId")
-    sb.append(" AND drtLast.ParticipantId = pt.RowId")
-    sb.append(" AND drtLast.PlayerId = pt.PlayerId")
-    sb.append(" AND drtFirst.RoundNumber = drtLast.RoundNumber")
-    sb.append(" AND drtFirst.Ordinal = 1")
-    if (!playerSql.isEmpty())
-    {
-        sb.append(" AND pt.PlayerId IN ($playerSql)")
-    }
+    sb.append(" INSERT INTO $tempTable")
+    sb.append(" SELECT rnd.PlayerId, rnd.GameId, drtLast.DtCreation, $achievementScoreSql")
+    sb.append(" FROM $x01Rounds rnd, Dart drtLast")
+    sb.append(" WHERE rnd.ParticipantId = drtLast.ParticipantId")
+    sb.append(" AND rnd.PlayerId = drtLast.PlayerId")
+    sb.append(" AND rnd.RoundNumber = drtLast.RoundNumber")
     sb.append(" AND $lastDartWhereSql")
-    sb.append(" AND pt.GameId = g.RowId")
-    sb.append(" AND g.GameType = '${GameType.X01}'")
 
     if (!mainDatabase.executeUpdate("" + sb))
     {
-        mainDatabase.dropTable(tempTable)
+        database.dropTable(tempTable)
+        database.dropTable(x01Rounds)
         return
     }
 
@@ -192,8 +190,32 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     }
     finally
     {
-        mainDatabase.dropTable(tempTable)
+        database.dropTable(x01Rounds)
+        database.dropTable(tempTable)
     }
+}
+private fun createX01RoundTempTable(playerIdSql: String, database: Database): String?
+{
+    val tempTable = database.createTempTable("X01Rounds",
+        "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT")
+        ?: return null
+
+    val sb = StringBuilder()
+    sb.append(" INSERT INTO $tempTable")
+    sb.append(" SELECT pt.PlayerId, pt.GameId, pt.RowId, d.StartingScore, d.RoundNumber")
+    sb.append(" FROM Dart d, Participant pt, Game g")
+    sb.append(" WHERE d.ParticipantId = pt.RowId")
+    sb.append(" AND d.PlayerId = pt.PlayerId")
+    sb.append(" AND pt.GameId = g.RowId")
+    sb.append(" AND g.GameType = '${GameType.X01}'")
+    sb.append(" AND d.Ordinal = 1")
+    if (playerIdSql.isNotEmpty())
+    {
+        sb.append(" AND pt.PlayerId IN ($playerIdSql)")
+    }
+
+    database.executeUpdate(sb.toString())
+    return tempTable
 }
 
 fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)

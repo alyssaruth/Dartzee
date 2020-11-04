@@ -4,6 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_HIGHEST_BUST
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.unlockThreeDartAchievement
 import dartzee.game.GameType
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.net.URL
 
@@ -28,7 +29,7 @@ class AchievementX01HighestBust : AbstractAchievement()
                        "OR drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 1 " +
                        "OR ((drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0) AND drtLast.Multiplier <> 2))"
 
-        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", whereSql, "drtFirst.StartingScore", achievementRef)
+        unlockThreeDartAchievement(playerIds, whereSql, "rnd.StartingScore", achievementRef, mainDatabase)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_HIGHEST_BUST

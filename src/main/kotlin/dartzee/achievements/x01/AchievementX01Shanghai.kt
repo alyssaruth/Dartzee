@@ -2,12 +2,12 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
 import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
-import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 import java.sql.SQLException
 
@@ -49,7 +49,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtLast.Ordinal = 3")
         sb.append(" AND drtLast.RoundNumber = drtFirst.RoundNumber")
-        sb.append(" AND $TOTAL_ROUND_SCORE_SQL_STR = 120")
+        sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 120")
         if (!playerIds.isEmpty())
         {
             sb.append(" AND pt.PlayerId IN ($playerIds)")

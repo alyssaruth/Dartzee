@@ -24,21 +24,6 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
     }
 
     @Test
-    fun `Should ignore unfinished participants`()
-    {
-        val p = insertPlayer()
-        val g = insertRelevantGame()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = DateStatics.END_OF_TIME)
-
-        insertDart(pt, ordinal = 1, startingScore = 60, score = 20, multiplier = 1)
-        insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 2)
-
-        factoryAchievement().populateForConversion("")
-
-        getCountFromTable("Achievement") shouldBe 0
-    }
-
-    @Test
     fun `Should ignore darts that are not doubles`()
     {
         val p = insertPlayer()
@@ -76,12 +61,12 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         val g1 = insertRelevantGame()
         val g2 = insertRelevantGame()
 
-        val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId, dtFinished = Timestamp(500))
-        val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId, dtFinished = Timestamp(2000))
+        val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId)
+        val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId)
 
 
-        insertDart(pt1, ordinal = 1, startingScore = 30, score = 15, multiplier = 2)
-        insertDart(pt2, ordinal = 1, startingScore = 30, score = 15, multiplier = 2)
+        insertDart(pt1, ordinal = 1, startingScore = 30, score = 15, multiplier = 2, dtCreation = Timestamp(500))
+        insertDart(pt2, ordinal = 1, startingScore = 30, score = 15, multiplier = 2, dtCreation = Timestamp(2000))
 
         factoryAchievement().populateForConversion("")
 
@@ -101,18 +86,18 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         val g1 = insertRelevantGame()
         val g2 = insertRelevantGame()
 
-        val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId, dtFinished = Timestamp(500))
-        val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId, dtFinished = Timestamp(2000))
+        val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId)
+        val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId)
 
 
         //55 finish in two darts
         insertDart(pt1, ordinal = 1, startingScore = 55, score = 15, multiplier = 1)
-        insertDart(pt1, ordinal = 2, startingScore = 40, score = 20, multiplier = 2)
+        insertDart(pt1, ordinal = 2, startingScore = 40, score = 20, multiplier = 2, dtCreation = Timestamp(500))
 
         //68 finish in three darts
         insertDart(pt2, ordinal = 1, startingScore = 68, score = 18, multiplier = 1)
         insertDart(pt2, ordinal = 2, startingScore = 50, score = 3, multiplier = 0)
-        insertDart(pt2, ordinal = 3, startingScore = 50, score = 25, multiplier = 2)
+        insertDart(pt2, ordinal = 3, startingScore = 50, score = 25, multiplier = 2, dtCreation = Timestamp(2000))
 
 
         factoryAchievement().populateForConversion("")

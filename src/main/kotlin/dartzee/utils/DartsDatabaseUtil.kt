@@ -15,8 +15,6 @@ import java.sql.DriverManager
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
 
-const val TOTAL_ROUND_SCORE_SQL_STR = "(drtFirst.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
-
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
  */

@@ -3,12 +3,12 @@ package dartzee.achievements.x01
 import dartzee.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.getNotBustSql
+import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
-import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 import java.sql.SQLException
 
@@ -60,7 +60,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         sb.append(" AND drtFirst.Multiplier > 0")
         sb.append(" AND drtSecond.Multiplier > 0")
         sb.append(" AND drtLast.Multiplier > 0")
-        sb.append(" AND $TOTAL_ROUND_SCORE_SQL_STR = 26")
+        sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 26")
         sb.append(" AND ${getNotBustSql()}")
         if (!playerIds.isEmpty())
         {

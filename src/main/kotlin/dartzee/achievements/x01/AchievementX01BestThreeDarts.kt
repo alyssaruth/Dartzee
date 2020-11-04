@@ -1,12 +1,9 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
-import dartzee.achievements.AbstractAchievement
-import dartzee.achievements.getNotBustSql
-import dartzee.achievements.unlockThreeDartAchievement
+import dartzee.achievements.*
 import dartzee.game.GameType
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
-import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 
 class AchievementX01BestThreeDarts : AbstractAchievement()
@@ -27,7 +24,7 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
     override fun populateForConversion(playerIds: String)
     {
         val dartSql = "${getNotBustSql()} AND drtLast.Ordinal = 3"
-        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", dartSql, TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
+        unlockThreeDartAchievement(playerIds, dartSql, getTotalRoundScoreSql("rnd"), achievementRef, mainDatabase)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_SCORE

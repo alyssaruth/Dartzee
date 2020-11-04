@@ -2,11 +2,11 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.achievements.unlockThreeDartAchievement
-import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.game.GameType
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
-import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 
 class AchievementX01BestFinish : AbstractAchievement()
@@ -27,10 +27,9 @@ class AchievementX01BestFinish : AbstractAchievement()
     override fun populateForConversion(playerIds : String)
     {
         val whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0  " +
-                       "AND drtLast.Multiplier = 2 " +
-                       "AND pt.DtFinished < ${getEndOfTimeSqlString()}"
+                       "AND drtLast.Multiplier = 2"
 
-        unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, TOTAL_ROUND_SCORE_SQL_STR, achievementRef)
+        unlockThreeDartAchievement(playerIds, whereSql, getTotalRoundScoreSql("rnd"), achievementRef, mainDatabase)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH
