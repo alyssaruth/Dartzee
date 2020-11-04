@@ -31,7 +31,7 @@ class TestDatabaseMigrator: AbstractTest()
             db.getDatabaseVersion() shouldBe DATABASE_VERSION
 
             val expectedTableNames = DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableNameUpperCase() }
-            val tableNames = getTableNames(db)
+            val tableNames = db.getTableNames()
             tableNames.shouldContainExactlyInAnyOrder(expectedTableNames)
         }
     }
@@ -50,7 +50,7 @@ class TestDatabaseMigrator: AbstractTest()
 
             verifyLog(CODE_DATABASE_UP_TO_DATE)
 
-            getTableNames(db).shouldContainExactly("VERSION")
+            db.getTableNames().shouldContainExactly("VERSION")
         }
     }
 
@@ -70,7 +70,7 @@ class TestDatabaseMigrator: AbstractTest()
             result shouldBe MigrationResult.TOO_OLD
 
             verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
-            getTableNames(database).shouldContainExactly("VERSION")
+            database.getTableNames().shouldContainExactly("VERSION")
 
             val dbDetails = "Test version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
 

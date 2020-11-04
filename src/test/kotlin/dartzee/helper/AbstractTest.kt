@@ -13,11 +13,9 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
-import org.apache.derby.jdbc.EmbeddedDriver
 import org.junit.After
 import org.junit.Before
 import java.awt.Window
-import java.sql.DriverManager
 import java.time.Clock
 import java.time.ZoneId
 import javax.swing.SwingUtilities
@@ -66,8 +64,7 @@ abstract class AbstractTest
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
         mainDatabase = Database(dbName = DATABASE_NAME_TEST)
-        DriverManager.registerDriver(EmbeddedDriver())
-        DartsDatabaseUtil.initialiseDatabase()
+        DartsDatabaseUtil.initialiseDatabase(mainDatabase)
     }
 
     open fun doClassSetup()

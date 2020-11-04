@@ -24,7 +24,7 @@ class TestAbstractEntity: AbstractTest()
     override fun afterEachTest()
     {
         super.afterEachTest()
-        dropUnexpectedTables()
+        mainDatabase.dropUnexpectedTables()
     }
 
     @Test

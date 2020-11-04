@@ -28,7 +28,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     override fun beforeEachTest()
     {
         mainDatabase = Database(dbName = DATABASE_NAME_TEST)
-        dropUnexpectedTables()
+        mainDatabase.dropUnexpectedTables()
         super.beforeEachTest()
     }
 
@@ -66,7 +66,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         setUpAchievementRowForPlayer(alice)
         factoryAchievement().populateForConversion(emptyList())
 
-        dropUnexpectedTables().shouldBeEmpty()
+        mainDatabase.dropUnexpectedTables().shouldBeEmpty()
     }
 
     @Test

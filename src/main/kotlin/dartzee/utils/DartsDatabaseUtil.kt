@@ -45,30 +45,30 @@ object DartsDatabaseUtil
     fun getAllEntitiesIncludingVersion(database: Database = mainDatabase) =
         getAllEntities(database) + VersionEntity(database)
 
-    fun initialiseDatabase()
+    fun initialiseDatabase(database: Database)
     {
         DriverManager.registerDriver(EmbeddedDriver())
 
         DialogUtil.showLoadingDialog("Checking database status...")
 
-        mainDatabase.doDuplicateInstanceCheck()
+        database.doDuplicateInstanceCheck()
 
         //Pool the db connections now. Initialise with 5 to begin with?
-        mainDatabase.initialiseConnectionPool(5)
+        database.initialiseConnectionPool(5)
 
-        val version = mainDatabase.getDatabaseVersion()
+        val version = database.getDatabaseVersion()
 
         logger.addToContext(KEY_DB_VERSION, version)
 
         DialogUtil.dismissLoadingDialog()
 
         val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
-        migrateDatabase(migrator)
+        migrateDatabase(migrator, database)
     }
 
-    fun migrateDatabase(migrator: DatabaseMigrator)
+    fun migrateDatabase(migrator: DatabaseMigrator, database: Database)
     {
-        val result = migrator.migrateToLatest(mainDatabase, "Your")
+        val result = migrator.migrateToLatest(database, "Your")
         if (result == MigrationResult.TOO_OLD)
         {
             exitProcess(1)

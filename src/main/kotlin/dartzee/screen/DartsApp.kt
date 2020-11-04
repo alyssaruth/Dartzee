@@ -17,6 +17,7 @@ import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -56,7 +57,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
         ResourceCache.initialiseResources()
 
-        DartsDatabaseUtil.initialiseDatabase()
+        DartsDatabaseUtil.initialiseDatabase(mainDatabase)
 
         InjectedThings.esDestination.readOldLogs()
 

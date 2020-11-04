@@ -310,4 +310,27 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
 
         return success
     }
+
+    fun dropUnexpectedTables(): List<String>
+    {
+        val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
+        val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
+
+        val sb = StringBuilder()
+        sb.append(" SELECT TableName")
+        sb.append(" FROM sys.systables")
+        sb.append(" WHERE TableType = 'T'")
+        sb.append(" AND TableName NOT IN ($tableNameSql)")
+
+        val list = mutableListOf<String>()
+        executeQuery(sb).use{ rs ->
+            while (rs.next())
+            {
+                list.add(rs.getString("TableName"))
+            }
+        }
+
+        list.forEach{ executeUpdate("DROP TABLE $it")}
+        return list
+    }
 }
