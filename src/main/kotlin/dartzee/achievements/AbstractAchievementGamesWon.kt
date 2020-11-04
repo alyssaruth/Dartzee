@@ -2,9 +2,9 @@ package dartzee.achievements
 
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 
-abstract class AbstractAchievementGamesWon : AbstractAchievement()
+abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
 {
     override val redThreshold = 1
     override val orangeThreshold = 10
@@ -14,10 +14,10 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
     override val pinkThreshold = 200
     override val maxValue = 200
 
-    override fun populateForConversion(players: List<PlayerEntity>)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT PlayerId, COUNT(1) AS WinCount, MAX(pt.DtFinished) AS DtLastUpdate")
+        sb.append(" SELECT pt.PlayerId, pt.GameId, pt.FinalScore, pt.DtFinished AS DtLastUpdate")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '$gameType'")
@@ -25,20 +25,19 @@ abstract class AbstractAchievementGamesWon : AbstractAchievement()
         appendPlayerSql(sb, players)
         sb.append(" GROUP BY PlayerId")
 
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
-                val score = rs.getInt("WinCount")
+                val gameId = rs.getString("GameId")
+                val finalScore = rs.getInt("FinalScore")
                 val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, "", score, "", dtLastUpdate)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$finalScore", dtLastUpdate, database)
             }
         }
     }
 
-    override fun isUnbounded(): Boolean
-    {
-        return true
-    }
+    override fun getBreakdownColumns() = listOf("Game", "Score", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtLastUpdate)
 }

@@ -4,7 +4,7 @@ import dartzee.core.util.TableUtil
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 
-abstract class AbstractAchievementRowPerGame: AbstractAchievement()
+abstract class AbstractMultiRowAchievement: AbstractAchievement()
 {
     override fun isUnbounded() = true
 
@@ -12,9 +12,9 @@ abstract class AbstractAchievementRowPerGame: AbstractAchievement()
     {
         this.player = player
 
-        attainedValue = achievementRows.size
+        attainedValue = calculateAttainedValue(achievementRows)
 
-        if (!achievementRows.isEmpty())
+        if (achievementRows.isNotEmpty())
         {
             val sortedRows = achievementRows.sortedBy {it.dtLastUpdate}
             val last = sortedRows.last()
@@ -29,6 +29,11 @@ abstract class AbstractAchievementRowPerGame: AbstractAchievement()
             tmBreakdown = tm
         }
     }
+
+    private fun calculateAttainedValue(achievementRows: List<AchievementEntity>) =
+        if (useCounter()) achievementRows.sumBy { it.achievementCounter } else achievementRows.size
+
+    open fun useCounter() = false
 
     abstract fun getBreakdownColumns(): List<String>
     abstract fun getBreakdownRow(a: AchievementEntity): Array<Any>

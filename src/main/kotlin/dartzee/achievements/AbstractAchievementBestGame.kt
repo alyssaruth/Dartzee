@@ -1,15 +1,15 @@
 package dartzee.achievements
 
 import dartzee.db.AchievementEntity
+import dartzee.utils.Database
 import dartzee.db.PlayerEntity
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.doesHighestWin
 
 abstract class AbstractAchievementBestGame : AbstractAchievement()
 {
     abstract val gameParams: String
 
-    override fun populateForConversion(players: List<PlayerEntity>)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.FinalScore, pt.DtFinished")
@@ -29,7 +29,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append("     AND (pt2.FinalScore < pt.FinalScore OR (pt2.FinalScore = pt.FinalScore AND pt2.DtFinished < pt.DtFinished))")
         sb.append(")")
 
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -37,7 +37,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
                 val dtFinished = rs.getTimestamp("DtFinished")
                 val score = rs.getInt("FinalScore")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtFinished)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtFinished, database)
             }
         }
     }

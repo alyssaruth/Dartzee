@@ -40,8 +40,13 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
 
     override fun assignRowId(): String
     {
-        localId = LocalIdGenerator.generateLocalId(database, getTableName())
+        localId = database.generateLocalId(getTableName())
         return super.assignRowId()
+    }
+
+    override fun reassignLocalId(otherDatabase: Database)
+    {
+        localId = otherDatabase.generateLocalId(getTableName())
     }
 
     /**

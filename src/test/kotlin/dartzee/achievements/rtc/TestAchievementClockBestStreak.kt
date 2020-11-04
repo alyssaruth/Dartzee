@@ -7,6 +7,8 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
@@ -33,17 +35,17 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
         achievement.gameIdEarned shouldBe g.rowId
     }
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        insertOpeningStreak(p, g)
+        insertOpeningStreak(p, g, database)
     }
 
-    private fun insertOpeningStreak(p: PlayerEntity, g: GameEntity)
+    private fun insertOpeningStreak(p: PlayerEntity, g: GameEntity, database: Database = mainDatabase)
     {
-        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId)
+        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, database = database)
 
-        insertDart(pt, roundNumber = 1, ordinal = 1, startingScore = 1, score = 1, multiplier = 1)
-        insertDart(pt, roundNumber = 1, ordinal = 2, startingScore = 2, score = 2, multiplier = 1)
-        insertDart(pt, roundNumber = 1, ordinal = 3, startingScore = 3, score = 3, multiplier = 1)
+        insertDart(pt, roundNumber = 1, ordinal = 1, startingScore = 1, score = 1, multiplier = 1, database = database)
+        insertDart(pt, roundNumber = 1, ordinal = 2, startingScore = 2, score = 2, multiplier = 1, database = database)
+        insertDart(pt, roundNumber = 1, ordinal = 3, startingScore = 3, score = 3, multiplier = 1, database = database)
     }
 }

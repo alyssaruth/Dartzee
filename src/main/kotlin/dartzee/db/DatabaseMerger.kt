@@ -5,6 +5,7 @@ import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
+import java.sql.Timestamp
 
 class DatabaseMerger(private val localDatabase: Database,
                      private val remoteDatabase: Database,
@@ -34,19 +35,34 @@ class DatabaseMerger(private val localDatabase: Database,
             return false
         }
 
-        return true
-    }
-
-    fun performMerge(): Database?
-    {
         val result = migrator.migrateToLatest(remoteDatabase, "Remote")
         if (result != MigrationResult.SUCCESS)
         {
-            return null
+            return false
         }
+
+        return true
+    }
+
+    fun performMerge(): Database
+    {
+        val lastLocalSync = SyncAuditEntity.getLastSyncDate(localDatabase, remoteName)
+        getSyncEntities().forEach { dao -> syncRowsFromTable(dao, lastLocalSync) }
 
         SyncAuditEntity.insertSyncAudit(remoteDatabase, remoteName)
 
         return remoteDatabase
+    }
+
+    private fun syncRowsFromTable(localDao: AbstractEntity<*>, lastSync: Timestamp?)
+    {
+        val rows = localDao.retrieveModifiedSince(lastSync)
+        rows.forEach { it.mergeIntoDatabase(remoteDatabase) }
+    }
+
+    private fun getSyncEntities(): List<AbstractEntity<*>>
+    {
+        val entities = DartsDatabaseUtil.getAllEntities(localDatabase)
+        return entities.filterNot { it is PendingLogsEntity }
     }
 }

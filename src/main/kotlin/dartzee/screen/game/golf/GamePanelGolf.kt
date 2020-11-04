@@ -72,11 +72,11 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
     {
         val lastDart = getDartsThrown().last()
         val dartsRisked = getDartsThrown() - lastDart
-        val pointsRisked = dartsRisked.map{ 5 - it.getGolfScore(currentRoundNumber) }.sum()
+        val pointsRisked = dartsRisked.map { 5 - it.getGolfScore(currentRoundNumber) }.sum()
 
         if (pointsRisked > 0)
         {
-            AchievementEntity.incrementAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, pointsRisked)
+            AchievementEntity.insertAchievementWithCounter(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, "$currentRoundNumber", pointsRisked)
         }
 
         if (lastDart.getGolfScore(currentRoundNumber) == 1

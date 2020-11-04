@@ -1,24 +1,25 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.TestAbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestAchievementX01NoMercy: TestAbstractAchievementRowPerGame<AchievementX01NoMercy>()
+class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01NoMercy>()
 {
     override fun factoryAchievement() = AchievementX01NoMercy()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 21)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 21, database = database)
 
-        insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
+        insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1, database = database)
     }
 
     @Test

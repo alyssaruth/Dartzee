@@ -21,8 +21,8 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.x01.GamePanelX01
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache.ICON_STATS_LARGE
@@ -467,7 +467,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         if (finishingPosition == 1)
         {
             val achievementRef = getWinAchievementRef(gameEntity.gameType)
-            AchievementEntity.incrementAchievement(achievementRef, playerId, gameEntity.rowId, 1)
+            AchievementEntity.insertAchievement(achievementRef, playerId, gameEntity.rowId, "$score")
         }
 
         //Update the 'best game' achievement

@@ -3,6 +3,7 @@ package dartzee.achievements
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_LOCKED
 
 class DummyAchievementTotal: AbstractAchievement()
@@ -22,7 +23,7 @@ class DummyAchievementTotal: AbstractAchievement()
 
     override fun getIconURL() = URL_ACHIEVEMENT_LOCKED
 
-    override fun populateForConversion(players: List<PlayerEntity>){}
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database){}
 
     override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)
     {

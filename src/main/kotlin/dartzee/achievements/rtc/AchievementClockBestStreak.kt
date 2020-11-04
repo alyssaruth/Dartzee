@@ -8,7 +8,7 @@ import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import dartzee.utils.getLongestStreak
 import java.net.URL
@@ -30,7 +30,7 @@ class AchievementClockBestStreak: AbstractAchievement()
 
     override fun getIconURL(): URL = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 
-    override fun populateForConversion(players: List<PlayerEntity>)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate")
@@ -43,7 +43,7 @@ class AchievementClockBestStreak: AbstractAchievement()
         sb.append(" ORDER BY g.DtLastUpdate, pt.RowId, drt.RoundNumber, drt.Ordinal")
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
@@ -70,7 +70,7 @@ class AchievementClockBestStreak: AbstractAchievement()
             val streak = getLongestStreak(darts)
             val lastDart = streak.last()
 
-            AchievementEntity.factoryAndSave(achievementRef, playerId, lastDart.gameId, streak.size, "", lastDart.dtThrown)
+            AchievementEntity.factoryAndSave(achievementRef, playerId, lastDart.gameId, streak.size, "", lastDart.dtThrown, database)
         }
     }
 }

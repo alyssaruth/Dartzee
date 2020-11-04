@@ -2,6 +2,8 @@ package dartzee.core.util
 
 import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty
@@ -35,19 +37,6 @@ class TestDateUtil: AbstractTest()
     }
 
     @Test
-    fun testFormatHHMMSS()
-    {
-        val formattedOne = formatHHMMSS(18540000.4) //5h9m0s
-        val formattedRounded = formatHHMMSS(18540999.9) //5h9m0s (it floors it)
-
-        val formattedBigNumbers = formatHHMMSS(55751000.0) //15h29m11s
-
-        formattedOne shouldBe "05:09:00"
-        formattedRounded shouldBe "05:09:00"
-        formattedBigNumbers shouldBe "15:29:11"
-    }
-
-    @Test
     fun testIsEndOfTime()
     {
         isEndOfTime(null).shouldBeFalse()
@@ -56,27 +45,7 @@ class TestDateUtil: AbstractTest()
     }
 
     @Test
-    fun testIsOnOrAfter()
-    {
-        val nowMillis = System.currentTimeMillis()
-        val dtNow = Timestamp(nowMillis)
-        val slightlyLater = Timestamp(nowMillis + 1)
-        val slightlyBefore = Timestamp(nowMillis - 1)
-
-        isOnOrAfter(null, dtNow).shouldBeFalse()
-        isOnOrAfter(dtNow, null).shouldBeFalse()
-        isOnOrAfter(null, null).shouldBeFalse()
-
-        isOnOrAfter(dtNow, dtNow).shouldBeTrue()
-        isOnOrAfter(getSqlDateNow(), dtNow).shouldBeTrue()
-        isOnOrAfter(END_OF_TIME, dtNow).shouldBeTrue()
-        isOnOrAfter(dtNow, slightlyBefore).shouldBeTrue()
-
-        isOnOrAfter(dtNow, slightlyLater).shouldBeFalse()
-    }
-
-    @Test
-    fun testTimestampFormats()
+    fun `Should format a regular date as expected`()
     {
         val millis = 1545733545000 //25/12/2018 10:25:45
 
@@ -87,9 +56,22 @@ class TestDateUtil: AbstractTest()
     }
 
     @Test
-    fun testEndOfTimeFormats()
+    fun `Should format end of time correctly`()
     {
         END_OF_TIME.formatAsDate().shouldBeEmpty()
         END_OF_TIME.formatTimestamp().shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should return a valid string for running SQL`()
+    {
+        val millis = 1545733545000 //25/12/2018 10:25:45
+        val timestamp = Timestamp(millis)
+
+        insertGame(dtFinish = timestamp)
+
+        val sql = "SELECT COUNT(1) FROM Game WHERE dtFinish = ${timestamp.getSqlString()}"
+        val result = mainDatabase.executeQueryAggregate(sql)
+        result shouldBe 1
     }
 }

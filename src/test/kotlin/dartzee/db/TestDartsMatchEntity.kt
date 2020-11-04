@@ -7,7 +7,8 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.*
 import dartzee.logging.CODE_SQL_EXCEPTION
-import dartzee.logging.Severity
+import dartzee.logging.exceptions.WrappedSqlException
+import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeBetween
@@ -15,6 +16,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.kotlintest.shouldThrow
 import org.junit.Test
 
 class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
@@ -29,9 +31,12 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         insertDartsMatch(localId = 5)
         verifyNoLogs(CODE_SQL_EXCEPTION)
 
-        insertDartsMatch(localId = 5)
-        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-        log.errorObject?.message.shouldContain("duplicate key")
+        val ex = shouldThrow<WrappedSqlException> {
+            insertDartsMatch(localId = 5)
+        }
+
+        val sqle = ex.sqlException
+        sqle.message shouldContain "duplicate key"
 
         getCountFromTable("DartsMatch") shouldBe 1
     }
@@ -46,6 +51,24 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
 
         entity.rowId.shouldNotBeEmpty()
         entity.localId shouldBe 1
+    }
+
+    @Test
+    fun `Should reassign localId when merging into another database`()
+    {
+        usingInMemoryDatabase(withSchema = true) { otherDatabase ->
+            insertDartsMatch(database = otherDatabase)
+            insertDartsMatch(database = otherDatabase)
+
+            val dartsMatch = insertDartsMatch(database = InjectedThings.mainDatabase)
+            dartsMatch.localId shouldBe 1
+
+            dartsMatch.mergeIntoDatabase(otherDatabase)
+            dartsMatch.localId shouldBe 3
+
+            val retrieved = DartsMatchEntity(otherDatabase).retrieveForId(dartsMatch.rowId)!!
+            retrieved.localId shouldBe 3
+        }
     }
 
     @Test
@@ -74,30 +97,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
 
         insertParticipant(gameId = gameThree.rowId, finishingPosition = 1, playerId = playerOneId)
         match.isComplete() shouldBe true
-    }
-
-    @Test
-    fun `Should log a SQLException if SQL fails checking whether a FIRST_TO match is complete`()
-    {
-        val match = DartsMatchEntity()
-        match.mode = MatchMode.FIRST_TO
-        match.rowId = "'"
-
-        match.isComplete() shouldBe false
-
-        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-    }
-
-    @Test
-    fun `Should log a SQLException if SQL fails checking whether a POINTS match is complete`()
-    {
-        val match = DartsMatchEntity()
-        match.mode = MatchMode.POINTS
-        match.rowId = "'"
-        match.games = 2
-
-        match.isComplete() shouldBe false
-        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
     }
 
     @Test

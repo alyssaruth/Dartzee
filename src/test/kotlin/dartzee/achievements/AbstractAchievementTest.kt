@@ -1,5 +1,6 @@
 package dartzee.achievements
 
+import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -7,6 +8,7 @@ import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.helper.*
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -16,30 +18,37 @@ import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.matchers.numerics.shouldBeLessThanOrEqual
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.mockk.spyk
 import org.junit.Test
 import java.sql.Timestamp
 import javax.imageio.ImageIO
 
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
-    abstract fun factoryAchievement(): E
-    abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
-
-    protected fun setUpAchievementRowForPlayer(p: PlayerEntity)
+    override fun beforeEachTest()
     {
-        val g = insertRelevantGame()
-        setUpAchievementRowForPlayerAndGame(p, g)
+        mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        super.beforeEachTest()
     }
 
-    protected fun getAchievementCount(): Int
+    abstract fun factoryAchievement(): E
+    abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database = mainDatabase)
+
+    protected fun setUpAchievementRowForPlayer(p: PlayerEntity, database: Database = mainDatabase)
+    {
+        val g = insertRelevantGame(database = database)
+        setUpAchievementRowForPlayerAndGame(p, g, database)
+    }
+
+    protected fun getAchievementCount(database: Database = mainDatabase): Int
     {
         val ref = factoryAchievement().achievementRef
-        return mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementRef = $ref")
+        return database.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementRef = $ref")
     }
 
-    open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
+    open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow(), database: Database = mainDatabase): GameEntity
     {
-        return insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate, database = database)
     }
 
     fun insertRelevantParticipant(player: PlayerEntity = insertPlayer()): ParticipantEntity
@@ -123,6 +132,25 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         if (achievement.isUnbounded())
         {
             achievement.maxValue shouldBe achievement.pinkThreshold
+        }
+    }
+
+    @Test
+    fun `should run conversion on the right database`()
+    {
+        usingInMemoryDatabase(withSchema = true) { database ->
+            val spiedDatabase = spyk(database)
+            mainDatabase = spiedDatabase
+
+            usingInMemoryDatabase(withSchema = true) { otherDatabase ->
+                val alice = insertPlayer(name = "Alice", database = otherDatabase)
+                setUpAchievementRowForPlayer(alice, otherDatabase)
+
+                factoryAchievement().populateForConversion("", otherDatabase)
+                getAchievementCount(otherDatabase) shouldBe 1
+
+                verifyNotCalled { spiedDatabase.borrowConnection() }
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DartsColour
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
@@ -39,22 +40,22 @@ abstract class AbstractAchievement
 
     var tmBreakdown : DefaultTableModel? = null
 
-    fun runConversion(players : List<PlayerEntity>)
+    fun runConversion(players : List<PlayerEntity>, database: Database = mainDatabase)
     {
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")
         sb.append(" WHERE AchievementRef = $achievementRef")
         appendPlayerSql(sb, players, null)
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
             return
         }
 
-        populateForConversion(players)
+        populateForConversion(players, database)
     }
 
-    abstract fun populateForConversion(players: List<PlayerEntity>)
+    abstract fun populateForConversion(players: List<PlayerEntity>, database: Database = mainDatabase)
     abstract fun getIconURL() : URL
 
     /**
@@ -222,7 +223,7 @@ abstract class AbstractAchievement
 
     fun getExtraDetails() : String
     {
-        var ret = if (this is AbstractAchievementRowPerGame)
+        var ret = if (this is AbstractMultiRowAchievement)
         {
             "Last updated on ${dtLatestUpdate.formatAsDate()}"
         }

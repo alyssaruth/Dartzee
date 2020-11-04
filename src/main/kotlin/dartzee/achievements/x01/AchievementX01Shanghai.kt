@@ -1,19 +1,17 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.InjectedThings.logger
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
 import java.net.URL
-import java.sql.SQLException
 
-class AchievementX01Shanghai : AbstractAchievementRowPerGame()
+class AchievementX01Shanghai : AbstractMultiRowAchievement()
 {
     override val name = "Shanghai"
     override val desc = "Total number of times player has scored T20, D20, 20 (in any order)"
@@ -34,9 +32,9 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
 
 
-    override fun populateForConversion(players: List<PlayerEntity>)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val tempTable = mainDatabase.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
+        val tempTable = database.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
@@ -54,9 +52,9 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
         sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 120")
         appendPlayerSql(sb, players)
 
-        if (!mainDatabase.executeUpdate("" + sb))
+        if (!database.executeUpdate("" + sb))
         {
-            mainDatabase.dropTable(tempTable)
+            database.dropTable(tempTable)
             return
         }
 
@@ -82,24 +80,20 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
 
         try
         {
-            mainDatabase.executeQuery(sb).use { rs ->
+            database.executeQuery(sb).use { rs ->
                 while (rs.next())
                 {
                     val playerId = rs.getString("PlayerId")
                     val gameId = rs.getString("GameId")
                     val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved)
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
                 }
             }
         }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException(sb.toString(), sb.toString(), sqle)
-        }
         finally
         {
-            mainDatabase.dropTable(tempTable)
+            database.dropTable(tempTable)
         }
     }
 }

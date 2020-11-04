@@ -8,20 +8,24 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
 abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: AbstractAchievementTest<E>()
 {
-    override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
+    override fun insertRelevantGame(dtLastUpdate: Timestamp, database: Database): GameEntity
     {
-        return insertGame(gameType = factoryAchievement().gameType!!, gameParams = factoryAchievement().gameParams, dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType!!,
+            gameParams = factoryAchievement().gameParams,
+            dtLastUpdate = dtLastUpdate,
+            database = database)
     }
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 30)
+        insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 30, database = database)
     }
 
     @Test

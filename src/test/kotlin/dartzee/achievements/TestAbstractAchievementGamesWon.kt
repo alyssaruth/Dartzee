@@ -6,15 +6,17 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.utils.Database
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractAchievementTest<E>()
+abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractMultiRowAchievementTest<E>()
 {
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        insertParticipant(gameId = g.rowId, playerId = p.rowId, finishingPosition = 1)
+        insertParticipant(gameId = g.rowId, playerId = p.rowId, finishingPosition = 1, database = database)
     }
 
     @Test
@@ -30,34 +32,32 @@ abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: 
     }
 
     @Test
-    fun `Should group by player, and take their latest finish date as DtLastUpdate`()
+    fun `Should insert a row per player and game, and take their latest finish date as DtLastUpdate`()
     {
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
 
-        val game = insertRelevantGame()
+        val pt1 = insertParticipant(gameId = insertRelevantGame().rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(500), finalScore = 20)
+        val pt2 = insertParticipant(gameId = insertRelevantGame().rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1500), finalScore = 45)
+        val pt3 = insertParticipant(gameId = insertRelevantGame().rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1000), finalScore = 26)
 
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(500))
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1500))
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1000))
-
-        insertParticipant(gameId = game.rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(2000))
-        insertParticipant(gameId = game.rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(1000))
+        insertParticipant(gameId = insertRelevantGame().rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(2000))
+        insertParticipant(gameId = insertRelevantGame().rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(1000))
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 2
+        getCountFromTable("Achievement") shouldBe 5
         val achievementRows = AchievementEntity().retrieveEntities("")
-        val aliceRow = achievementRows.find{ it.playerId == alice.rowId }!!
-        aliceRow.achievementCounter shouldBe 3
-        aliceRow.dtLastUpdate shouldBe Timestamp(1500)
-        aliceRow.gameIdEarned shouldBe ""
-        aliceRow.achievementDetail shouldBe ""
+        val aliceRows = achievementRows.filter { it.playerId == alice.rowId }
+        aliceRows.size shouldBe 3
+        val gameIdAndScore = aliceRows.map { Pair(it.gameIdEarned, it.achievementDetail) }
+        gameIdAndScore.shouldContainExactlyInAnyOrder(
+            Pair(pt1.gameId, "20"),
+            Pair(pt2.gameId, "45"),
+            Pair(pt3.gameId, "26")
+        )
 
-        val bobRow = achievementRows.find{ it.playerId == bob.rowId }!!
-        bobRow.achievementCounter shouldBe 2
-        bobRow.dtLastUpdate shouldBe Timestamp(2000)
-        bobRow.gameIdEarned shouldBe ""
-        bobRow.achievementDetail shouldBe ""
+        val bobRow = achievementRows.filter { it.playerId == bob.rowId }
+        bobRow.size shouldBe 2
     }
 }

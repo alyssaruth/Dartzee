@@ -1,17 +1,17 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
-import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
 import dartzee.achievements.appendPlayerSql
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
 import java.net.URL
 
-class AchievementX01Btbf: AbstractAchievementRowPerGame()
+class AchievementX01Btbf: AbstractMultiRowAchievement()
 {
     override val achievementRef = ACHIEVEMENT_REF_X01_BTBF
     override val name = "BTBF"
@@ -31,7 +31,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
     override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
 
-    override fun populateForConversion(players: List<PlayerEntity>)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
 
@@ -46,14 +46,14 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
         sb.append(" AND drt.Score = 1")
         appendPlayerSql(sb, players)
 
-        mainDatabase.executeQuery(sb).use { rs ->
+        database.executeQuery(sb).use { rs ->
             while (rs.next())
             {
                 val playerId = rs.getString("PlayerId")
                 val gameId = rs.getString("GameId")
                 val dtAchieved = rs.getTimestamp("DtFinished")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved)
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
             }
         }
     }

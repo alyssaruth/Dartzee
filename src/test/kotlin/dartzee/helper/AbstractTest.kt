@@ -3,13 +3,13 @@ package dartzee.helper
 import dartzee.CURRENT_TIME
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
-import dartzee.db.LocalIdGenerator
 import dartzee.logging.*
 import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
@@ -61,10 +61,11 @@ abstract class AbstractTest
 
         InjectedThings.logger = logger
         InjectedThings.verificationDartboardSize = 50
+        InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-        InjectedThings.mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        mainDatabase = Database(dbName = DATABASE_NAME_TEST)
         DriverManager.registerDriver(EmbeddedDriver())
         DartsDatabaseUtil.initialiseDatabase()
     }
@@ -82,7 +83,7 @@ abstract class AbstractTest
         clearLogs()
         clearAllMocks()
 
-        LocalIdGenerator.hmLastAssignedIdByTableName.clear()
+        mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
         DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
 

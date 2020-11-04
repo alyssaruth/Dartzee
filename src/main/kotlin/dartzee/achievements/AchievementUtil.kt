@@ -163,7 +163,8 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, lastDartWhereSql: St
         sb.append(" AND $lastDartWhereSql")
         sb.append(" AND rnd.PlayerId = '${it.rowId}'")
 
-        if (!mainDatabase.executeUpdate("" + sb))
+
+        if (!database.executeUpdate("" + sb))
         {
             database.dropTable(tempTable)
             return

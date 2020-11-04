@@ -5,7 +5,8 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.logging.CODE_SQL_EXCEPTION
-import dartzee.logging.Severity
+import dartzee.logging.exceptions.WrappedSqlException
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -13,6 +14,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.kotlintest.shouldThrow
 import org.junit.Test
 import java.sql.Timestamp
 
@@ -28,9 +30,12 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         insertGame(localId = 5)
         verifyNoLogs(CODE_SQL_EXCEPTION)
 
-        insertGame(localId = 5)
-        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-        log.errorObject?.message shouldContain "duplicate key"
+        val ex = shouldThrow<WrappedSqlException> {
+            insertGame(localId = 5)
+        }
+
+        val sqle = ex.sqlException
+        sqle.message shouldContain "duplicate key"
 
         getCountFromTable("Game") shouldBe 1
     }
@@ -182,5 +187,23 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         GameEntity.getGameId(1) shouldBe gameOne.rowId
         GameEntity.getGameId(2) shouldBe gameTwo.rowId
         GameEntity.getGameId(3) shouldBe null
+    }
+
+    @Test
+    fun `Should reassign localId when merging into another database`()
+    {
+        usingInMemoryDatabase(withSchema = true) { otherDatabase ->
+            insertGame(database = otherDatabase)
+            insertGame(database = otherDatabase)
+
+            val game = insertGame(database = mainDatabase)
+            game.localId shouldBe 1
+
+            game.mergeIntoDatabase(otherDatabase)
+            game.localId shouldBe 3
+
+            val retrieved = GameEntity(otherDatabase).retrieveForId(game.rowId)!!
+            retrieved.localId shouldBe 3
+        }
     }
 }

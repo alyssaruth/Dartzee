@@ -1,30 +1,37 @@
 package dartzee.achievements.rtc
 
-import dartzee.achievements.AbstractAchievementTest
+import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
+import dartzee.achievements.AbstractMultiRowAchievementTest
+import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.helper.*
+import dartzee.utils.Database
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.sql.Timestamp
 
-class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementClockBruceyBonuses>()
+class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<AchievementClockBruceyBonuses>()
 {
     override fun factoryAchievement() = AchievementClockBruceyBonuses()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
+        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1, database = database)
     }
 
-    override fun insertRelevantGame(dtLastUpdate: Timestamp): GameEntity
+    override fun insertRelevantGame(dtLastUpdate: Timestamp, database: Database): GameEntity
     {
-        return insertGame(gameType = factoryAchievement().gameType, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(), dtLastUpdate = dtLastUpdate)
+        return insertGame(gameType = factoryAchievement().gameType,
+            gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
+            dtLastUpdate = dtLastUpdate,
+            database = database)
     }
 
     @Test
@@ -43,21 +50,27 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
     }
 
     @Test
-    fun `Should count all non-misses for a standard game`()
+    fun `Should count all non-misses for a standard game, and include the roundNumber`()
     {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
-        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 2)
-        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 3)
+        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1, roundNumber = 1)
+        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 2, roundNumber = 4)
+        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 3, roundNumber = 8)
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 1
-        retrieveAchievement().achievementCounter shouldBe 3
+        getCountFromTable("Achievement") shouldBe 3
+
+        val achievements = retrieveAchievementsForPlayer(p.rowId)
+        achievements.shouldContainExactlyInAnyOrder(
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, g.rowId, "1"),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, g.rowId, "4"),
+                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, g.rowId, "8")
+        )
     }
 
     @Test
@@ -73,7 +86,6 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
         factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 1
-        retrieveAchievement().achievementCounter shouldBe 1
     }
 
     @Test
@@ -89,7 +101,6 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
         factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 1
-        retrieveAchievement().achievementCounter shouldBe 1
     }
 
     @Test
@@ -157,7 +168,7 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
     }
 
     @Test
-    fun `Should add up the examples per player and set the correct DtLastUpdate`()
+    fun `Should use the dart DtCreation to set DtLastUpdate on the rows`()
     {
         val p = insertPlayer()
         val g = insertRelevantGame()
@@ -170,14 +181,9 @@ class TestAchievementClockBruceyBonuses: AbstractAchievementTest<AchievementCloc
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 1
-        val a = retrieveAchievement()
-
-        a.playerId shouldBe p.rowId
-        a.gameIdEarned shouldBe ""
-        a.achievementDetail shouldBe ""
-        a.achievementCounter shouldBe 3
-        a.dtLastUpdate shouldBe Timestamp(2000)
+        getCountFromTable("Achievement") shouldBe 3
+        val dtLastUpdates = AchievementEntity().retrieveEntities().map { it.dtLastUpdate }
+        dtLastUpdates.shouldContainExactlyInAnyOrder(Timestamp(500), Timestamp(2000), Timestamp(1500))
     }
 
 }
