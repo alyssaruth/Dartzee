@@ -26,7 +26,7 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
         insertOpeningStreak(p, g)
         insertOpeningStreak(p, g2)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         val achievement = AchievementEntity.retrieveAchievement(factoryAchievement().achievementRef, p.rowId)!!
         achievement.achievementCounter shouldBe 3

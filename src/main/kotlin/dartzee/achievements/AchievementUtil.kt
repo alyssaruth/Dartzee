@@ -135,10 +135,10 @@ fun getWinAchievementRef(gameType : GameType): Int
     return ref
 }
 
-fun unlockThreeDartAchievement(playerSql: String, lastDartWhereSql: String,
+fun unlockThreeDartAchievement(players: List<PlayerEntity>, lastDartWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int, database: Database)
 {
-    val x01Rounds = createX01RoundTempTable(playerSql, database) ?: return
+    val x01Rounds = createX01RoundTempTable(players, database) ?: return
     val tempTable = database.createTempTable("PlayerResults",
         "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
             ?: return
@@ -194,7 +194,7 @@ fun unlockThreeDartAchievement(playerSql: String, lastDartWhereSql: String,
         database.dropTable(tempTable)
     }
 }
-private fun createX01RoundTempTable(playerIdSql: String, database: Database): String?
+private fun createX01RoundTempTable(players: List<PlayerEntity>, database: Database): String?
 {
     val tempTable = database.createTempTable("X01Rounds",
         "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT")
@@ -209,10 +209,7 @@ private fun createX01RoundTempTable(playerIdSql: String, database: Database): St
     sb.append(" AND pt.GameId = g.RowId")
     sb.append(" AND g.GameType = '${GameType.X01}'")
     sb.append(" AND d.Ordinal = 1")
-    if (playerIdSql.isNotEmpty())
-    {
-        sb.append(" AND pt.PlayerId IN ($playerIdSql)")
-    }
+    appendPlayerSql(sb, players)
 
     database.executeUpdate(sb.toString())
     return tempTable

@@ -3,7 +3,9 @@ package dartzee.achievements.x01
 import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
+import dartzee.achievements.appendPlayerSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
@@ -24,7 +26,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val sb = StringBuilder()
         sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished")
@@ -37,10 +39,7 @@ class AchievementX01NoMercy: AbstractAchievementRowPerGame()
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         sb.append(" AND drt.Ordinal = 1")
         sb.append(" AND drt.StartingScore IN (3, 5, 7, 9)")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next())

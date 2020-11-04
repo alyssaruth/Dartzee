@@ -2,8 +2,10 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
 import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
@@ -32,7 +34,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
 
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val tempTable = mainDatabase.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 
@@ -50,10 +52,7 @@ class AchievementX01Shanghai : AbstractAchievementRowPerGame()
         sb.append(" AND drtLast.Ordinal = 3")
         sb.append(" AND drtLast.RoundNumber = drtFirst.RoundNumber")
         sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 120")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         if (!mainDatabase.executeUpdate("" + sb))
         {

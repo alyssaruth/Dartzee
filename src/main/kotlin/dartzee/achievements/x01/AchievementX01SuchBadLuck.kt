@@ -2,7 +2,9 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.appendPlayerSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
@@ -27,7 +29,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
         val tempTable = mainDatabase.createTempTable("CheckoutDarts", cols)
@@ -45,10 +47,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND d.StartingScore IN ($checkoutsStr)")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         if (!mainDatabase.executeUpdate("" + sb))
         {

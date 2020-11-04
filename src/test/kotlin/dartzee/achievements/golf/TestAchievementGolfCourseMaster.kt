@@ -37,7 +37,7 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
         insertDart(pt, dtCreation = Timestamp(1000), score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
         insertDart(pt, dtCreation = Timestamp(500), score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         val a = retrieveAchievement()
         a.achievementDetail shouldBe "1"
@@ -52,7 +52,7 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
 
         insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.TREBLE)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getAchievementCount() shouldBe 0
     }
 
@@ -63,7 +63,7 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
 
         insertDart(pt, score = 1, roundNumber = 2, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getAchievementCount() shouldBe 0
     }
 
@@ -75,7 +75,7 @@ class TestAchievementGolfCourseMaster: TestAbstractAchievementRowPerGame<Achieve
         insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
         insertDart(pt, score = 3, roundNumber = 3, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getAchievementCount() shouldBe 2
     }

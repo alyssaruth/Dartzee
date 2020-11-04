@@ -22,7 +22,7 @@ class DummyAchievementTotal: AbstractAchievement()
 
     override fun getIconURL() = URL_ACHIEVEMENT_LOCKED
 
-    override fun populateForConversion(playerIds: String){}
+    override fun populateForConversion(players: List<PlayerEntity>){}
 
     override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)
     {

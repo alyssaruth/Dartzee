@@ -2,6 +2,7 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
 import dartzee.achievements.AbstractAchievementRowPerGame
+import dartzee.achievements.appendPlayerSql
 import dartzee.core.bean.paint
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
@@ -36,7 +37,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementCounter, a.localGameIdEarned, a.dtLastUpdate)
     override fun isUnbounded() = false
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val tempTable = mainDatabase.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                       ?: return
@@ -52,10 +53,7 @@ class AchievementX01CheckoutCompleteness : AbstractAchievementRowPerGame()
         sb.append(" AND d.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.X01}'")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         if (!mainDatabase.executeUpdate("" + sb))
             return

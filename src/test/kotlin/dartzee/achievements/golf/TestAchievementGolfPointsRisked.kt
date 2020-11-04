@@ -26,7 +26,7 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
         insertDart(pt, roundNumber = 1, ordinal = 1, score = 1, multiplier = 1, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, p.rowId) shouldBe null
     }
@@ -40,7 +40,7 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
         insertRiskedDart(p, g, SegmentType.INNER_SINGLE, 1)
         insertRiskedDart(p, g, SegmentType.OUTER_SINGLE, 2)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, p.rowId)!!
         a.achievementCounter shouldBe 3
@@ -63,7 +63,7 @@ class TestAchievementGolfPointsRisked: AbstractAchievementTest<AchievementGolfPo
 
         insertRiskedDart(p, g, segmentType)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, p.rowId)!!
         a.achievementCounter shouldBe expectedScore

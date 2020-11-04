@@ -34,7 +34,7 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
         insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 340)
         insertDart(pt, score = 20, multiplier = 0, ordinal = 3, startingScore = 280)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getCountFromTable("Achievement") shouldBe 0
     }
 
@@ -49,7 +49,7 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
         insertDart(pt, score = 20, multiplier = 1, ordinal = 2, startingScore = 340)
         insertDart(pt, score = 20, multiplier = 2, ordinal = 3, startingScore = 320)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getCountFromTable("Achievement") shouldBe 1
     }
 
@@ -63,7 +63,7 @@ class TestAchievementX01Shanghai: TestAbstractAchievementRowPerGame<AchievementX
         insertDart(pt, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
         insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 340)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getCountFromTable("Achievement") shouldBe 0
     }
 }

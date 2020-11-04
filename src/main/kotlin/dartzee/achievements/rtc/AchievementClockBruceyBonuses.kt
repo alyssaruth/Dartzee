@@ -2,7 +2,9 @@ package dartzee.achievements.rtc
 
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.appendPlayerSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
@@ -28,7 +30,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
 
     override fun isUnbounded() = true
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, COUNT(1) AS BruceCount, MAX(drt.DtCreation) AS DtLastUpdate")
@@ -44,12 +46,7 @@ class AchievementClockBruceyBonuses : AbstractAchievement()
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Doubles}%' AND drt.Multiplier = 2)")
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Trebles}%' AND drt.Multiplier = 3)")
         sb.append(" )")
-
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN($playerIds)")
-        }
-
+        appendPlayerSql(sb, players)
         sb.append(" GROUP BY pt.PlayerId")
 
         try

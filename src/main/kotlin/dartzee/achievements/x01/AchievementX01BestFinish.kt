@@ -4,6 +4,7 @@ import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.achievements.unlockThreeDartAchievement
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
@@ -24,12 +25,12 @@ class AchievementX01BestFinish : AbstractAchievement()
     override val pinkThreshold = 170
     override val maxValue = 170
 
-    override fun populateForConversion(playerIds : String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0  " +
                        "AND drtLast.Multiplier = 2"
 
-        unlockThreeDartAchievement(playerIds, whereSql, getTotalRoundScoreSql("rnd"), achievementRef, mainDatabase)
+        unlockThreeDartAchievement(players, whereSql, getTotalRoundScoreSql("rnd"), achievementRef, mainDatabase)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH

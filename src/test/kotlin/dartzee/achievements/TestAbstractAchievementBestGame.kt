@@ -33,7 +33,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -46,7 +46,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -59,12 +59,12 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = -1)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -81,7 +81,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 15, dtFinished = Timestamp(1000))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -99,7 +99,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(800))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -116,7 +116,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1000))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]

@@ -3,7 +3,9 @@ package dartzee.achievements.x01
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
 import dartzee.achievements.AbstractAchievementRowPerGame
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
+import dartzee.achievements.appendPlayerSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
@@ -29,7 +31,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
     override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val sb = StringBuilder()
 
@@ -42,10 +44,7 @@ class AchievementX01Btbf: AbstractAchievementRowPerGame()
         sb.append(" AND pt.PlayerId = drt.PlayerId")
         sb.append(" AND (drt.StartingScore - (drt.Score * drt.Multiplier)) = 0")
         sb.append(" AND drt.Score = 1")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next())

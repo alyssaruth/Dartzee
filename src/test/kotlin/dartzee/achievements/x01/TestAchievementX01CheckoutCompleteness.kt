@@ -29,7 +29,7 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         insertDart(pt, roundNumber = 1, startingScore = 100, score = 1, multiplier = 2)
         insertDart(pt, roundNumber = 1, startingScore = 2, score = 2, multiplier = 1)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -44,7 +44,7 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         val g2 = insertRelevantGame()
         insertCheckout(p, g2, 5, Timestamp(1000))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         val a = AchievementEntity().retrieveEntity("PlayerId = '${p.rowId}'")!!
         a.gameIdEarned shouldBe g.rowId
@@ -65,7 +65,7 @@ class TestAchievementX01CheckoutCompleteness: TestAbstractAchievementRowPerGame<
         insertCheckout(p, g, 5, Timestamp(2500))
         insertCheckout(p, g, 2, Timestamp(3000))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         val achievements = AchievementEntity().retrieveEntities("PlayerId = '${p.rowId}'")
         val scores = achievements.map{ it.achievementCounter }

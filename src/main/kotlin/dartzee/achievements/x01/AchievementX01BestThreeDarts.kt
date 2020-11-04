@@ -1,6 +1,7 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.*
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
@@ -21,10 +22,10 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
     override val pinkThreshold = 171
     override val maxValue = 180
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val dartSql = "${getNotBustSql()} AND drtLast.Ordinal = 3"
-        unlockThreeDartAchievement(playerIds, dartSql, getTotalRoundScoreSql("rnd"), achievementRef, mainDatabase)
+        unlockThreeDartAchievement(players, dartSql, getTotalRoundScoreSql("rnd"), achievementRef, mainDatabase)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_SCORE

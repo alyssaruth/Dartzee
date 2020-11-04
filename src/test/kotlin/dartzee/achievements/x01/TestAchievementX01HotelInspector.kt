@@ -29,7 +29,7 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(1, 0), Dart(6, 1)))
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(6, 1), Dart(1, 0)))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -43,7 +43,7 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)), 26)
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)), 27)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -56,7 +56,7 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
 
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(5, 1), Dart(2, 1)))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -69,7 +69,7 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
 
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(6, 1)))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -90,7 +90,7 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
         insertDartsForPlayer(insertRelevantGame(), p, listOf(Dart(1, 1), Dart(20, 1), Dart(5, 1)))
         insertDartsForPlayer(insertRelevantGame(), p, listOf(Dart(1, 1), Dart(5, 1), Dart(20, 1)))
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 1
 
@@ -110,7 +110,7 @@ class TestAchievementX01HotelInspector: TestAbstractAchievementRowPerGame<Achiev
         insertDartsForPlayer(g, p, validOne)
         insertDartsForPlayer(g, p, validTwo)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 2
 

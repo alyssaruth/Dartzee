@@ -1,10 +1,8 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
-import dartzee.achievements.AbstractAchievementRowPerGame
-import dartzee.achievements.getNotBustSql
-import dartzee.achievements.getTotalRoundScoreSql
+import dartzee.achievements.*
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
@@ -32,7 +30,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
     override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtLastUpdate)
 
-    override fun populateForConversion(playerIds: String)
+    override fun populateForConversion(players: List<PlayerEntity>)
     {
         val tempTable = mainDatabase.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
         tempTable ?: return
@@ -62,10 +60,7 @@ class AchievementX01HotelInspector : AbstractAchievementRowPerGame()
         sb.append(" AND drtLast.Multiplier > 0")
         sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 26")
         sb.append(" AND ${getNotBustSql()}")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         if (!mainDatabase.executeUpdate("" + sb))
         {

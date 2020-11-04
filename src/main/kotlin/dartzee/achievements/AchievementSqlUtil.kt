@@ -1,6 +1,7 @@
 package dartzee.achievements
 
 import dartzee.`object`.*
+import dartzee.db.PlayerEntity
 
 const val LAST_ROUND_FROM_PARTICIPANT = "CEIL(CAST(pt.FinalScore AS DECIMAL)/3)"
 
@@ -14,4 +15,16 @@ fun getGolfSegmentCases(): String
     sb.append(" ELSE 5")
 
     return sb.toString()
+}
+
+fun appendPlayerSql(sb: StringBuilder, players: List<PlayerEntity>, alias: String? = "pt")
+{
+    if (players.isEmpty())
+    {
+        return
+    }
+
+    val keys = players.joinToString { p -> "'${p.rowId}'"}
+    val column = if (alias != null) "$alias.PlayerId" else "PlayerId"
+    sb.append(" AND $column IN ($keys)")
 }
