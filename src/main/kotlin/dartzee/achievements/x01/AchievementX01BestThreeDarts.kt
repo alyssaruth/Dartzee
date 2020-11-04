@@ -24,8 +24,8 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val dartSql = "${getNotBustSql()} AND drtLast.Ordinal = 3"
-        unlockThreeDartAchievement(players, dartSql, getTotalRoundScoreSql("rnd"), achievementRef, database)
+        val dartSql = "TotalDartsThrown = 3 AND (RemainingScore > 0 OR (RemainingScore = 0 AND LastDartMultiplier = 2))"
+        unlockThreeDartAchievement(players, dartSql, "StartingScore - RemainingScore", achievementRef, database)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_SCORE

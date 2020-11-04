@@ -26,11 +26,9 @@ class AchievementX01HighestBust : AbstractAchievement()
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val whereSql = "(drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) < 0  " +
-                       "OR drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 1 " +
-                       "OR ((drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0) AND drtLast.Multiplier <> 2))"
+        val whereSql = "RemainingScore < 0 OR RemainingSCore = 1 OR (RemainingScore = 0 AND LastDartMultiplier <> 2)"
 
-        unlockThreeDartAchievement(players, whereSql, "rnd.StartingScore", achievementRef, database)
+        unlockThreeDartAchievement(players, whereSql, "StartingScore", achievementRef, database)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_HIGHEST_BUST

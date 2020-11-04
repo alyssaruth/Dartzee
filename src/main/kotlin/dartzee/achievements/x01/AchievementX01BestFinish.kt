@@ -27,10 +27,8 @@ class AchievementX01BestFinish : AbstractAchievement()
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0  " +
-                       "AND drtLast.Multiplier = 2"
-
-        unlockThreeDartAchievement(players, whereSql, getTotalRoundScoreSql("rnd"), achievementRef, database)
+        val whereSql = "RemainingScore = 0 AND LastDartMultiplier = 2"
+        unlockThreeDartAchievement(players, whereSql, "StartingScore - RemainingScore", achievementRef, database)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH

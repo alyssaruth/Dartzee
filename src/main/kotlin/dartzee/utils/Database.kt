@@ -111,10 +111,12 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
     {
         val timer = DurationTimer()
         val conn = borrowConnection()
+        var updateCount = 0
         try
         {
-            conn.createStatement().use{
+            conn.createStatement().use {
                 s -> s.execute(statement)
+                updateCount = s.updateCount
             }
         }
         finally
@@ -124,7 +126,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
 
         if (log)
         {
-            logger.logSql(statement, "", timer.getDuration())
+            logger.logSql("($updateCount) $statement", "", timer.getDuration())
         }
     }
 

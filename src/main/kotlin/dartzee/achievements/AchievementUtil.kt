@@ -144,22 +144,19 @@ fun getWinAchievementRef(gameType : GameType): Int
     return ref
 }
 
-fun unlockThreeDartAchievement(players: List<PlayerEntity>, lastDartWhereSql: String,
+fun unlockThreeDartAchievement(players: List<PlayerEntity>, x01RoundWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int, database: Database)
 {
-    val x01Rounds = createX01RoundTempTable(players, database) ?: return
+    ensureX01RoundsTableExists(players, database)
 
     val tempTable = database.createTempTable("PlayerResults",
         "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
 
     var sb = StringBuilder()
     sb.append(" INSERT INTO $tempTable")
-    sb.append(" SELECT rnd.PlayerId, rnd.GameId, drtLast.DtCreation, $achievementScoreSql")
-    sb.append(" FROM $x01Rounds rnd, Dart drtLast")
-    sb.append(" WHERE rnd.ParticipantId = drtLast.ParticipantId")
-    sb.append(" AND rnd.PlayerId = drtLast.PlayerId")
-    sb.append(" AND rnd.RoundNumber = drtLast.RoundNumber")
-    sb.append(" AND $lastDartWhereSql")
+    sb.append(" SELECT PlayerId, GameId, DtRoundFinished, $achievementScoreSql")
+    sb.append(" FROM $X01_ROUNDS_TABLE")
+    sb.append(" WHERE $x01RoundWhereSql")
 
     if (!database.executeUpdate("" + sb))
     {
@@ -196,28 +193,6 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, lastDartWhereSql: St
     {
         database.dropTable(tempTable)
     }
-
-    database.dropTable(x01Rounds)
-}
-private fun createX01RoundTempTable(players: List<PlayerEntity>, database: Database): String?
-{
-    val tempTable = database.createTempTable("X01Rounds",
-        "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT")
-        ?: return null
-
-    val sb = StringBuilder()
-    sb.append(" INSERT INTO $tempTable")
-    sb.append(" SELECT pt.PlayerId, pt.GameId, pt.RowId, d.StartingScore, d.RoundNumber")
-    sb.append(" FROM Dart d, Participant pt, Game g")
-    sb.append(" WHERE d.ParticipantId = pt.RowId")
-    sb.append(" AND d.PlayerId = pt.PlayerId")
-    sb.append(" AND pt.GameId = g.RowId")
-    sb.append(" AND g.GameType = '${GameType.X01}'")
-    sb.append(" AND d.Ordinal = 1")
-    appendPlayerSql(sb, players)
-
-    database.executeUpdate(sb.toString())
-    return tempTable
 }
 
 fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
