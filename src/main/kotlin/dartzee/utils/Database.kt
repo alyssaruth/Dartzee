@@ -93,6 +93,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
         return true
     }
 
+    fun executeUpdate(sb: StringBuilder) = executeUpdate(sb.toString())
     fun executeUpdate(statement: String, log: Boolean = true): Boolean
     {
         try

@@ -75,7 +75,7 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         a.playerId shouldBe p.rowId
         a.achievementCounter shouldBe 30
         a.gameIdEarned shouldBe g1.rowId
-        a.dtLastUpdate shouldBe Timestamp(500)
+        a.dtAchieved shouldBe Timestamp(500)
     }
 
     @Test
@@ -107,6 +107,6 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         a.playerId shouldBe p.rowId
         a.achievementCounter shouldBe 68
         a.gameIdEarned shouldBe g2.rowId
-        a.dtLastUpdate shouldBe Timestamp(2000)
+        a.dtAchieved shouldBe Timestamp(2000)
     }
 }

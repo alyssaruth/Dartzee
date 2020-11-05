@@ -13,9 +13,9 @@ abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: 
     private fun getDtAchievedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
     fun getGameIdEarnedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Game")
 
-    private fun insertAchievementRow(dtLastUpdate: Timestamp = getSqlDateNow(),
-                                  achievementCounter: Int = -1)
-            = insertAchievement(dtLastUpdate = dtLastUpdate, achievementCounter = achievementCounter, achievementDetail = "10")
+    private fun insertAchievementRow(dtAchieved: Timestamp = getSqlDateNow(),
+                                     achievementCounter: Int = -1)
+            = insertAchievement(dtAchieved = dtAchieved, achievementCounter = achievementCounter, achievementDetail = "10")
 
     @Test
     fun `Breakdown column count should match row length`()
@@ -65,10 +65,10 @@ abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: 
     @Test
     fun `Should sort the rows by dtLastUpdate`()
     {
-        val achievementOne = insertAchievementRow(dtLastUpdate = Timestamp(500))
-        val achievementTwo = insertAchievementRow(dtLastUpdate = Timestamp(1000))
-        val achievementThree = insertAchievementRow(dtLastUpdate = Timestamp(1500))
-        val achievementFour = insertAchievementRow(dtLastUpdate = Timestamp(2000))
+        val achievementOne = insertAchievementRow(dtAchieved = Timestamp(500))
+        val achievementTwo = insertAchievementRow(dtAchieved = Timestamp(1000))
+        val achievementThree = insertAchievementRow(dtAchieved = Timestamp(1500))
+        val achievementFour = insertAchievementRow(dtAchieved = Timestamp(2000))
 
         val a = factoryAchievement()
         a.initialiseFromDb(listOf(achievementTwo, achievementFour, achievementThree, achievementOne), null)

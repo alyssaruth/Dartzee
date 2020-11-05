@@ -168,7 +168,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
     }
 
     @Test
-    fun `Should use the dart DtCreation to set DtLastUpdate on the rows`()
+    fun `Should use the dart DtCreation to set DtAchieved on the rows`()
     {
         val p = insertPlayer()
         val g = insertRelevantGame()
@@ -182,7 +182,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
         factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 3
-        val dtLastUpdates = AchievementEntity().retrieveEntities().map { it.dtLastUpdate }
+        val dtLastUpdates = AchievementEntity().retrieveEntities().map { it.dtAchieved }
         dtLastUpdates.shouldContainExactlyInAnyOrder(Timestamp(500), Timestamp(2000), Timestamp(1500))
     }
 

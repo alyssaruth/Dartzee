@@ -7,12 +7,10 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
 import dartzee.utils.getAdjacentNumbers
 import dartzee.utils.getCheckoutScores
 import java.net.URL
-import java.sql.SQLException
 
 class AchievementX01SuchBadLuck: AbstractAchievement()
 {
@@ -80,14 +78,10 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
                 val total = rs.getInt("GameTotal")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                if (playersAlreadyDone.contains(playerId))
+                if (playersAlreadyDone.add(playerId))
                 {
-                    continue
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
                 }
-
-                playersAlreadyDone.add(playerId)
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
             }
         }
     }

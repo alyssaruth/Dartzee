@@ -28,7 +28,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
     override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 
     override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtLastUpdate)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {

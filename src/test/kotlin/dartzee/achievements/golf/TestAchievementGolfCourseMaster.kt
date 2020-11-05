@@ -35,7 +35,7 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
 
         val a = retrieveAchievement()
         a.achievementDetail shouldBe "1"
-        a.dtLastUpdate shouldBe Timestamp(500)
+        a.dtAchieved shouldBe Timestamp(500)
         a.achievementRef shouldBe ACHIEVEMENT_REF_GOLF_COURSE_MASTER
     }
 

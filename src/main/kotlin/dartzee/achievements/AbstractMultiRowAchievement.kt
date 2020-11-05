@@ -16,10 +16,10 @@ abstract class AbstractMultiRowAchievement: AbstractAchievement()
 
         if (achievementRows.isNotEmpty())
         {
-            val sortedRows = achievementRows.sortedBy {it.dtLastUpdate}
+            val sortedRows = achievementRows.sortedBy { it.dtAchieved }
             val last = sortedRows.last()
 
-            dtLatestUpdate = last.dtLastUpdate
+            dtLatestUpdate = last.dtAchieved
 
             val tm = TableUtil.DefaultModel()
             tm.setColumnNames(getBreakdownColumns())

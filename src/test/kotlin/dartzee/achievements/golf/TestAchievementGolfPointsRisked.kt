@@ -69,7 +69,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         achievementRow.gameIdEarned shouldBe pt.gameId
         achievementRow.achievementCounter shouldBe 5
         achievementRow.achievementDetail shouldBe "1"
-        achievementRow.dtLastUpdate shouldBe Timestamp(1000)
+        achievementRow.dtAchieved shouldBe Timestamp(1000)
     }
 
     @Test

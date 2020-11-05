@@ -28,7 +28,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
 
     override fun getBreakdownColumns() = listOf("Hole", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtLastUpdate)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtAchieved)
     override fun isUnbounded() = false
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
