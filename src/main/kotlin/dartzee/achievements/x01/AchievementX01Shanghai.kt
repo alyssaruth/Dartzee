@@ -1,9 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
-import dartzee.achievements.AbstractMultiRowAchievement
-import dartzee.achievements.appendPlayerSql
-import dartzee.achievements.getTotalRoundScoreSql
+import dartzee.achievements.*
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -74,15 +71,6 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
         sb.append(" AND drtSingle.Multiplier = 1")
         sb.append(" AND drtSingle.Score = 20")
 
-        database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
-            }
-        }
+        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementRef) }
     }
 }
