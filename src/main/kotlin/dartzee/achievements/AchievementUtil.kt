@@ -36,32 +36,23 @@ fun getNotBustSql(): String
     return sb.toString()
 }
 
-fun getAchievementMaximum() : Int
-{
-    return getAllAchievements().size * 6
-}
+fun getAchievementMaximum() = getAllAchievements().size * 6
 
 fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
 {
-    val myAchievementRows = allAchievementRows.filter{it.playerId == player.rowId}
+    val myAchievementRows = allAchievementRows.filter{ it.playerId == player.rowId }
 
-    var score = 0
-    for (achievement in getAllAchievements())
-    {
+    return getAllAchievements().sumBy { achievement ->
         val myRelevantRows = myAchievementRows.filter{ it.achievementRef == achievement.achievementRef }
         achievement.initialiseFromDb(myRelevantRows, player)
-
-        score += achievement.getScore()
+        achievement.getScore()
     }
-
-    return score
 }
 
 fun convertEmptyAchievements()
 {
-    val emptyAchievements = getAllAchievements().filter{a -> !rowsExistForAchievement(a)}.toMutableList()
-
-    if (!emptyAchievements.isEmpty())
+    val emptyAchievements = getAllAchievements().filter{ !rowsExistForAchievement(it) }
+    if (emptyAchievements.isNotEmpty())
     {
         runConversionsWithProgressBar(emptyAchievements, mutableListOf())
     }
@@ -115,9 +106,8 @@ private fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 
 fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter { it.gameType == gameType }
 
-fun getAllAchievements() : MutableList<AbstractAchievement>
-{
-    return mutableListOf(AchievementX01GamesWon(),
+fun getAllAchievements() =
+    listOf(AchievementX01GamesWon(),
             AchievementGolfGamesWon(),
             AchievementClockGamesWon(),
             AchievementX01BestGame(),
@@ -137,7 +127,6 @@ fun getAllAchievements() : MutableList<AbstractAchievement>
             AchievementX01NoMercy(),
             AchievementGolfCourseMaster(),
             AchievementDartzeeGamesWon())
-}
 
 fun getAchievementForRef(achievementRef : Int) = getAllAchievements().find { it.achievementRef == achievementRef }
 
