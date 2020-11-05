@@ -4,7 +4,7 @@ import dartzee.db.DatabaseMigrator
 import dartzee.db.MigrationResult
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertExits
-import dartzee.helper.dropAllTables
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_DATABASE_CREATED
 import dartzee.logging.CODE_DATABASE_CREATING
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
@@ -23,7 +23,7 @@ class TestDartsDatabaseUtil: AbstractTest()
         every { migrator.migrateToLatest(any(), any()) } returns MigrationResult.TOO_OLD
 
         assertExits(1) {
-            DartsDatabaseUtil.migrateDatabase(migrator)
+            DartsDatabaseUtil.migrateDatabase(migrator, mainDatabase)
         }
     }
 
@@ -31,13 +31,14 @@ class TestDartsDatabaseUtil: AbstractTest()
     fun `Should initialise a fresh database if no version is found`()
     {
         clearLogs()
-        dropAllTables()
 
-        DartsDatabaseUtil.initialiseDatabase()
+        usingInMemoryDatabase { db ->
+            DartsDatabaseUtil.initialiseDatabase(db)
 
-        verifyLog(CODE_DATABASE_CREATING)
-        verifyLog(CODE_DATABASE_CREATED)
+            verifyLog(CODE_DATABASE_CREATING)
+            verifyLog(CODE_DATABASE_CREATED)
 
-        mainDatabase.getDatabaseVersion() shouldBe DATABASE_VERSION
+            db.getDatabaseVersion() shouldBe DATABASE_VERSION
+        }
     }
 }

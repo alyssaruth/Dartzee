@@ -2,7 +2,9 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.appendPlayerSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
@@ -27,7 +29,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
         val tempTable = database.createTempTable("CheckoutDarts", cols)
@@ -45,10 +47,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND d.StartingScore IN ($checkoutsStr)")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         if (!database.executeUpdate("" + sb))
         {
@@ -72,35 +71,24 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
         val playersAlreadyDone = mutableSetOf<String>()
 
-        try
-        {
-            val rs = database.executeQuery(sb)
-            rs.use {
-                while (rs.next())
+        val rs = database.executeQuery(sb)
+        rs.use {
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val total = rs.getInt("GameTotal")
+                val dtAchieved = rs.getTimestamp("DtAchieved")
+
+                if (playersAlreadyDone.contains(playerId))
                 {
-                    val playerId = rs.getString("PlayerId")
-                    val gameId = rs.getString("GameId")
-                    val total = rs.getInt("GameTotal")
-                    val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                    if (playersAlreadyDone.contains(playerId))
-                    {
-                        continue
-                    }
-
-                    playersAlreadyDone.add(playerId)
-
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
+                    continue
                 }
+
+                playersAlreadyDone.add(playerId)
+
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException("" + sb, "" + sb, sqle)
-        }
-        finally
-        {
-            database.dropTable(tempTable)
         }
     }
 

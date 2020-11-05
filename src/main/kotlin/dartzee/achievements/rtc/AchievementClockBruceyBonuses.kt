@@ -2,7 +2,9 @@ package dartzee.achievements.rtc
 
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.appendPlayerSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.utils.Database
@@ -29,7 +31,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
     override fun getBreakdownColumns() = listOf("Game", "Round", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtLastUpdate)
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, drt.DtCreation AS DtLastUpdate")
@@ -45,11 +47,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Doubles}%' AND drt.Multiplier = 2)")
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Trebles}%' AND drt.Multiplier = 3)")
         sb.append(" )")
-
-        if (playerIds.isNotEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
         database.executeQuery(sb).use { rs ->
             while (rs.next())

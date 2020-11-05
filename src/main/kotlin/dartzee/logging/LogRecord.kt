@@ -24,7 +24,12 @@ data class LogRecord(val timestamp: Instant,
             .withZone(ZoneId.systemDefault())
             .format(timestamp)
 
-    override fun toString() = "$dateStr   [$loggingCode] $message"
+    override fun toString(): String
+    {
+        val durationStr = keyValuePairs[KEY_DURATION]?.let { " (${it}ms) " } ?: ""
+        val rowCountStr = keyValuePairs[KEY_ROW_COUNT]?.let { " (${it} rows) " } ?: ""
+        return "$dateStr   [$loggingCode] $durationStr$rowCountStr$message"
+    }
 
     fun getThrowableStr() = errorObject?.let { "$dateStr   ${extractStackTrace(errorObject)}" }
 

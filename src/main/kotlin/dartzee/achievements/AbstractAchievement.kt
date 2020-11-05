@@ -42,25 +42,20 @@ abstract class AbstractAchievement
 
     fun runConversion(players : List<PlayerEntity>, database: Database = mainDatabase)
     {
-        val keys = players.joinToString { p -> "'${p.rowId}'"}
-
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")
         sb.append(" WHERE AchievementRef = $achievementRef")
-        if (!keys.isEmpty())
-        {
-            sb.append(" AND PlayerId IN ($keys)" )
-        }
+        appendPlayerSql(sb, players, null)
 
         if (!database.executeUpdate("" + sb))
         {
             return
         }
 
-        populateForConversion(keys, database)
+        populateForConversion(players, database)
     }
 
-    abstract fun populateForConversion(playerIds : String, database: Database = mainDatabase)
+    abstract fun populateForConversion(players: List<PlayerEntity>, database: Database = mainDatabase)
     abstract fun getIconURL() : URL
 
     /**

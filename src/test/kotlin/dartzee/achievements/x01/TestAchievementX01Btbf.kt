@@ -27,7 +27,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
         val game = insertGame(gameType = GameType.GOLF)
         insertSuccessfulParticipant(game, alice)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -41,7 +41,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 6)
         insertDart(pt, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -55,7 +55,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 3)
         insertDart(pt, roundNumber = 1, startingScore = 4, score = 2, multiplier = 2)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -69,7 +69,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 3)
         insertDart(pt, roundNumber = 1, startingScore = 4, score = 1, multiplier = 2)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -85,7 +85,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
         insertSuccessfulParticipant(game, alice)
         insertSuccessfulParticipant(game, alice)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 3
     }

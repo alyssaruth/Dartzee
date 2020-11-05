@@ -2,12 +2,12 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.achievements.unlockThreeDartAchievement
-import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
-import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 
 class AchievementX01BestFinish : AbstractAchievement()
@@ -25,13 +25,10 @@ class AchievementX01BestFinish : AbstractAchievement()
     override val pinkThreshold = 170
     override val maxValue = 170
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val whereSql = "drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0  " +
-                       "AND drtLast.Multiplier = 2 " +
-                       "AND pt.DtFinished < ${getEndOfTimeSqlString()}"
-
-        unlockThreeDartAchievement(playerIds, "pt.DtFinished", whereSql, TOTAL_ROUND_SCORE_SQL_STR, achievementRef, database)
+        val whereSql = "RemainingScore = 0 AND LastDartMultiplier = 2"
+        unlockThreeDartAchievement(players, whereSql, "StartingScore - RemainingScore", achievementRef, database)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH

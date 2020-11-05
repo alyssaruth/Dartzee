@@ -2,11 +2,13 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SHANGHAI
 import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
-import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 
 class AchievementX01Shanghai : AbstractMultiRowAchievement()
@@ -30,7 +32,7 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
 
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val tempTable = database.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 
@@ -47,17 +49,10 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtLast.Ordinal = 3")
         sb.append(" AND drtLast.RoundNumber = drtFirst.RoundNumber")
-        sb.append(" AND $TOTAL_ROUND_SCORE_SQL_STR = 120")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 120")
+        appendPlayerSql(sb, players)
 
-        if (!database.executeUpdate("" + sb))
-        {
-            database.dropTable(tempTable)
-            return
-        }
+        if (!database.executeUpdate("" + sb)) return
 
         //Cut down to where there is precisely 1 double, 1 treble and 1 single. Get the date achieved too.
         sb = StringBuilder()
@@ -79,22 +74,15 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
         sb.append(" AND drtSingle.Multiplier = 1")
         sb.append(" AND drtSingle.Score = 20")
 
-        try
-        {
-            database.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val gameId = rs.getString("GameId")
-                    val dtAchieved = rs.getTimestamp("DtAchieved")
+        database.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
             }
-        }
-        finally
-        {
-            database.dropTable(tempTable)
         }
     }
 }

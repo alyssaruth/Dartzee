@@ -1,14 +1,12 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
-import dartzee.achievements.AbstractMultiRowAchievement
-import dartzee.achievements.getNotBustSql
+import dartzee.achievements.*
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
-import dartzee.utils.TOTAL_ROUND_SCORE_SQL_STR
 import java.net.URL
 import java.sql.SQLException
 
@@ -32,7 +30,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
     override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtLastUpdate)
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val tempTable = database.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
         tempTable ?: return
@@ -60,18 +58,11 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append(" AND drtFirst.Multiplier > 0")
         sb.append(" AND drtSecond.Multiplier > 0")
         sb.append(" AND drtLast.Multiplier > 0")
-        sb.append(" AND $TOTAL_ROUND_SCORE_SQL_STR = 26")
+        sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 26")
         sb.append(" AND ${getNotBustSql()}")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
 
-        if (!database.executeUpdate("" + sb))
-        {
-            database.dropTable(tempTable)
-            return
-        }
+        if (!database.executeUpdate("" + sb)) return
 
         database.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
         val tempTableTwo = database.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
@@ -90,12 +81,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
         sb.append(" GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}")
 
-        if (!database.executeUpdate("" + sb))
-        {
-            database.dropTable(tempTable)
-            database.dropTable(tempTableTwo)
-            return
-        }
+        if (!database.executeUpdate("" + sb)) return
 
         sb = StringBuilder()
         sb.append(" SELECT PlayerId, GameId, DtAchieved, Method")
@@ -109,29 +95,17 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append("     AND zz2.DtAchieved < zz.DtAchieved")
         sb.append(" )")
 
-        try
-        {
-            val rs = database.executeQuery(sb)
-            rs.use{
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val gameId = rs.getString("GameId")
-                    val method = rs.getString("Method")
-                    val dtAchieved = rs.getTimestamp("DtAchieved")
+        val rs = database.executeQuery(sb)
+        rs.use {
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val method = rs.getString("Method")
+                val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved, database)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved, database)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException("" + sb, "" + sb, sqle)
-        }
-        finally
-        {
-            database.dropTable(tempTable)
-            database.dropTable(tempTableTwo)
         }
     }
 

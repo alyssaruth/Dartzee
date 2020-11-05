@@ -12,6 +12,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
+import javax.sql.rowset.CachedRowSet
 import javax.sql.rowset.RowSetProvider
 import kotlin.system.exitProcess
 
@@ -111,10 +112,12 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
     {
         val timer = DurationTimer()
         val conn = borrowConnection()
+        var updateCount = 0
         try
         {
-            conn.createStatement().use{
+            conn.createStatement().use {
                 s -> s.execute(statement)
+                updateCount = s.updateCount
             }
         }
         finally
@@ -124,7 +127,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
 
         if (log)
         {
-            logger.logSql(statement, "", timer.getDuration())
+            logger.logSql(statement, "", timer.getDuration(), updateCount)
         }
     }
 
@@ -141,13 +144,13 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
         try
         {
             conn.createStatement().use { s ->
-                val resultSet: ResultSet = s.executeQuery(query).use { rs ->
+                val resultSet: CachedRowSet = s.executeQuery(query).use { rs ->
                     val crs = RowSetProvider.newFactory().createCachedRowSet()
                     crs.populate(rs)
                     crs
                 }
 
-                logger.logSql(query, "", timer.getDuration())
+                logger.logSql(query, "", timer.getDuration(), resultSet.size())
                 return resultSet
             }
         }
@@ -307,5 +310,28 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
         }
 
         return success
+    }
+
+    fun dropUnexpectedTables(): List<String>
+    {
+        val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
+        val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
+
+        val sb = StringBuilder()
+        sb.append(" SELECT TableName")
+        sb.append(" FROM sys.systables")
+        sb.append(" WHERE TableType = 'T'")
+        sb.append(" AND TableName NOT IN ($tableNameSql)")
+
+        val list = mutableListOf<String>()
+        executeQuery(sb).use{ rs ->
+            while (rs.next())
+            {
+                list.add(rs.getString("TableName"))
+            }
+        }
+
+        list.forEach{ dropTable(it) }
+        return list
     }
 }

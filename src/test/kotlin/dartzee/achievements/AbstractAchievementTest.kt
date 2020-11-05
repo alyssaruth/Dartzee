@@ -10,7 +10,6 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.numerics.shouldBeGreaterThanOrEqual
@@ -28,6 +27,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     override fun beforeEachTest()
     {
         mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        mainDatabase.dropUnexpectedTables()
         super.beforeEachTest()
     }
 
@@ -59,16 +59,6 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     }
 
     @Test
-    fun `Should not leave any temp tables lying around`()
-    {
-        val alice = insertPlayer(name = "Alice")
-        setUpAchievementRowForPlayer(alice)
-        factoryAchievement().populateForConversion("")
-
-        dropUnexpectedTables().shouldBeEmpty()
-    }
-
-    @Test
     fun `Should ignore games of the wrong type`()
     {
         val otherType = GameType.values().find { it != factoryAchievement().gameType }!!
@@ -77,7 +67,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         val g = insertGame(gameType = otherType)
         setUpAchievementRowForPlayerAndGame(p, g)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getAchievementCount() shouldBe 0
     }
 
@@ -90,7 +80,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         setUpAchievementRowForPlayer(alice)
         setUpAchievementRowForPlayer(bob)
 
-        factoryAchievement().populateForConversion("'${alice.rowId}'")
+        factoryAchievement().populateForConversion(listOf(alice))
 
         getAchievementCount() shouldBe 1
 
@@ -107,7 +97,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         setUpAchievementRowForPlayer(alice)
         setUpAchievementRowForPlayer(bob)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getAchievementCount() shouldBe 2
 
@@ -146,7 +136,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
                 val alice = insertPlayer(name = "Alice", database = otherDatabase)
                 setUpAchievementRowForPlayer(alice, otherDatabase)
 
-                factoryAchievement().populateForConversion("", otherDatabase)
+                factoryAchievement().populateForConversion(emptyList(), otherDatabase)
                 getAchievementCount(otherDatabase) shouldBe 1
 
                 verifyNotCalled { spiedDatabase.borrowConnection() }

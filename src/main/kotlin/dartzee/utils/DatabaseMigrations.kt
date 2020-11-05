@@ -39,7 +39,14 @@ object DatabaseMigrations
      */
     private fun convertAchievement(achievementRef: Int, database: Database)
     {
-        getAchievementForRef(achievementRef)!!.runConversion(emptyList(), database)
+        try
+        {
+            getAchievementForRef(achievementRef)!!.runConversion(emptyList(), database)
+        }
+        finally
+        {
+            database.dropUnexpectedTables()
+        }
     }
     private fun updatePlayerStrategiesToJson(database: Database)
     {

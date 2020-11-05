@@ -3,8 +3,10 @@ package dartzee.achievements.rtc
 import dartzee.`object`.Dart
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.appendPlayerSql
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
@@ -28,7 +30,7 @@ class AchievementClockBestStreak: AbstractAchievement()
 
     override fun getIconURL(): URL = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate")
@@ -37,10 +39,7 @@ class AchievementClockBestStreak: AbstractAchievement()
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
-        if (!playerIds.isEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
+        appendPlayerSql(sb, players)
         sb.append(" ORDER BY g.DtLastUpdate, pt.RowId, drt.RoundNumber, drt.Ordinal")
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()

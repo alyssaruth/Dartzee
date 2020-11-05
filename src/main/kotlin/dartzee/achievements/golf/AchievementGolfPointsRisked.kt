@@ -2,8 +2,10 @@ package dartzee.achievements.golf
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
 import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.getGolfSegmentCases
 import dartzee.db.AchievementEntity
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
@@ -41,7 +43,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         return sb.toString()
     }
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
 
@@ -53,11 +55,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         sb.append(" AND g.GameType = '${GameType.GOLF}'")
         sb.append(" AND drt.RoundNumber = drt.Score")
         sb.append(" AND drt.Multiplier > 0")
-        if (playerIds.isNotEmpty())
-        {
-            sb.append(" AND pt.PlayerId IN ($playerIds)")
-        }
-
+        appendPlayerSql(sb, players)
         sb.append(" AND EXISTS (")
         sb.append("     SELECT 1")
         sb.append("     FROM Dart drtOther")

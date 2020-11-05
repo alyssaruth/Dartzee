@@ -289,55 +289,6 @@ fun getCountFromTable(table: String, database: Database = mainDatabase): Int
     return database.executeQueryAggregate("SELECT COUNT(1) FROM $table")
 }
 
-fun dropAllTables() = dropTables(false)
-fun dropUnexpectedTables() = dropTables(true)
-
-fun dropTables(onlyUnexpected: Boolean): List<String>
-{
-    val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
-    val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
-
-    val sb = StringBuilder()
-    sb.append(" SELECT TableName")
-    sb.append(" FROM sys.systables")
-    sb.append(" WHERE TableType = 'T'")
-
-    if (onlyUnexpected)
-    {
-        sb.append(" AND TableName NOT IN ($tableNameSql)")
-    }
-
-    val list = mutableListOf<String>()
-    mainDatabase.executeQuery(sb).use{ rs ->
-        while (rs.next())
-        {
-            list.add(rs.getString("TableName"))
-        }
-    }
-
-    list.forEach{ mainDatabase.executeUpdate("DROP TABLE $it")}
-
-    return list
-}
-
-fun getTableNames(database: Database): List<String>
-{
-    val sb = StringBuilder()
-    sb.append(" SELECT TableName")
-    sb.append(" FROM sys.systables")
-    sb.append(" WHERE TableType = 'T'")
-
-    val list = mutableListOf<String>()
-    database.executeQuery(sb).use { rs ->
-        while (rs.next())
-        {
-            list.add(rs.getString("TableName"))
-        }
-    }
-
-    return list.toList()
-}
-
 /**
  * Retrieve
  */
@@ -398,4 +349,22 @@ fun Database.closeConnectionsAndDrop(dbName: String)
             InjectedThings.logger.logSqlException("jdbc:derby:memory:$dbName;drop=true", "jdbc:derby:memory:$dbName;drop=true", sqle)
         }
     }
+}
+
+fun Database.getTableNames(): List<String>
+{
+    val sb = StringBuilder()
+    sb.append(" SELECT TableName")
+    sb.append(" FROM sys.systables")
+    sb.append(" WHERE TableType = 'T'")
+
+    val list = mutableListOf<String>()
+    executeQuery(sb).use { rs ->
+        while (rs.next())
+        {
+            list.add(rs.getString("TableName"))
+        }
+    }
+
+    return list.toList()
 }

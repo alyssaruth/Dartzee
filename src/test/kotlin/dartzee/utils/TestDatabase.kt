@@ -6,7 +6,10 @@ import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import dartzee.logging.exceptions.WrappedSqlException
+import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
@@ -167,5 +170,26 @@ class TestDatabase: AbstractTest()
             database.generateLocalId("Game") shouldBe 2
             database.generateLocalId("DartsMatch") shouldBe 1
         }
+    }
+
+    @Test
+    fun `Should not drop any schema tables`()
+    {
+        usingInMemoryDatabase(withSchema = true) { database ->
+            database.dropUnexpectedTables().shouldBeEmpty()
+
+            val expectedTableNames = DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableNameUpperCase() }
+            val tableNames = database.getTableNames()
+            tableNames.shouldContainExactlyInAnyOrder(expectedTableNames)
+        }
+    }
+
+    @Test
+    fun `Should drop unexpected tables`()
+    {
+        mainDatabase.createTableIfNotExists("SomeTable", "RowId INT")
+        val tmpName = mainDatabase.createTempTable("TempTable", "RowId INT")
+
+        mainDatabase.dropUnexpectedTables().shouldContainExactlyInAnyOrder("SOMETABLE", tmpName?.toUpperCase())
     }
 }

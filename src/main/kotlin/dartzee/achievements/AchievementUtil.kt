@@ -14,12 +14,16 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.logging.LoggingCode
 import dartzee.utils.Database
+import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
-import java.sql.SQLException
+
+fun getTotalRoundScoreSql(drtFirstAlias: String): String
+  = "($drtFirstAlias.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
 
 fun getNotBustSql(): String
 {
@@ -63,27 +67,45 @@ fun convertEmptyAchievements()
     }
 }
 
-fun runConversionsWithProgressBar(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
+fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val r = Runnable { runConversionsInOtherThread(achievements, players)}
     val t = Thread(r, "Conversion thread")
     t.start()
+    t.join()
 }
 
-private fun runConversionsInOtherThread(achievements: MutableList<AbstractAchievement>, players: List<PlayerEntity>)
+private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
 {
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()
 
-    achievements.forEach{
-        it.runConversion(players)
-        dlg.incrementProgressLater()
+    val timings = mutableMapOf<String, Long>()
+
+    try
+    {
+        achievements.forEach {
+            val timer = DurationTimer()
+            it.runConversion(players)
+
+            val timeElapsed = timer.getDuration()
+            timings[it.name] = timeElapsed
+
+            dlg.incrementProgressLater()
+        }
     }
+    finally
+    {
+        mainDatabase.dropUnexpectedTables()
+    }
+
+
+    logger.info(LoggingCode("conversion.timings"), "Timings: $timings")
 
     dlg.disposeLater()
 }
 
-fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
+private fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 {
     val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementRef = ${achievement.achievementRef}"
     val count = mainDatabase.executeQueryAggregate(sql)
@@ -91,7 +113,7 @@ fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
     return count > 0
 }
 
-fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter{ it.gameType == gameType }
+fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter { it.gameType == gameType }
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {
@@ -132,35 +154,21 @@ fun getWinAchievementRef(gameType : GameType): Int
     return ref
 }
 
-fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhereSql: String,
+fun unlockThreeDartAchievement(players: List<PlayerEntity>, x01RoundWhereSql: String,
                                achievementScoreSql : String, achievementRef: Int, database: Database)
 {
-    val tempTable = database.createTempTable("PlayerFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
-            ?: return
+    ensureX01RoundsTableExists(players, database)
+
+    val tempTable = database.createTempTable("PlayerResults",
+        "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
 
     var sb = StringBuilder()
-    sb.append("INSERT INTO $tempTable")
-    sb.append(" SELECT pt.PlayerId, pt.GameId, $dtColumn, $achievementScoreSql")
-    sb.append(" FROM Dart drtFirst, Dart drtLast, Participant pt, Game g")
-    sb.append(" WHERE drtFirst.ParticipantId = pt.RowId")
-    sb.append(" AND drtFirst.PlayerId = pt.PlayerId")
-    sb.append(" AND drtLast.ParticipantId = pt.RowId")
-    sb.append(" AND drtLast.PlayerId = pt.PlayerId")
-    sb.append(" AND drtFirst.RoundNumber = drtLast.RoundNumber")
-    sb.append(" AND drtFirst.Ordinal = 1")
-    if (!playerSql.isEmpty())
-    {
-        sb.append(" AND pt.PlayerId IN ($playerSql)")
-    }
-    sb.append(" AND $lastDartWhereSql")
-    sb.append(" AND pt.GameId = g.RowId")
-    sb.append(" AND g.GameType = '${GameType.X01}'")
+    sb.append(" INSERT INTO $tempTable")
+    sb.append(" SELECT PlayerId, GameId, DtRoundFinished, $achievementScoreSql")
+    sb.append(" FROM $X01_ROUNDS_TABLE")
+    sb.append(" WHERE $x01RoundWhereSql")
 
-    if (!database.executeUpdate("" + sb))
-    {
-        database.dropTable(tempTable)
-        return
-    }
+    if (!database.executeUpdate("" + sb)) return
 
     sb = StringBuilder()
     sb.append(" SELECT PlayerId, GameId, DtAchieved, Score")
@@ -173,27 +181,16 @@ fun unlockThreeDartAchievement(playerSql : String, dtColumn: String, lastDartWhe
     sb.append(" )")
     sb.append(" ORDER BY PlayerId")
 
-    try
-    {
-        database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-                val score = rs.getInt("Score")
+    database.executeQuery(sb).use { rs ->
+        while (rs.next())
+        {
+            val playerId = rs.getString("PlayerId")
+            val gameId = rs.getString("GameId")
+            val dtAchieved = rs.getTimestamp("DtAchieved")
+            val score = rs.getInt("Score")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
-            }
+            AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
         }
-    }
-    catch (sqle: SQLException)
-    {
-        logger.logSqlException(sb.toString(), sb.toString(), sqle)
-    }
-    finally
-    {
-        database.dropTable(tempTable)
     }
 }
 

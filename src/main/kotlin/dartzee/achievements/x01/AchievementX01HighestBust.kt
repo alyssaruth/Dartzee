@@ -3,6 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.ACHIEVEMENT_REF_X01_HIGHEST_BUST
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.unlockThreeDartAchievement
+import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
@@ -23,13 +24,11 @@ class AchievementX01HighestBust : AbstractAchievement()
     override val pinkThreshold = 100
     override val maxValue = 181
 
-    override fun populateForConversion(playerIds: String, database: Database)
+    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val whereSql = "(drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) < 0  " +
-                       "OR drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 1 " +
-                       "OR ((drtLast.StartingScore - (drtLast.Multiplier * drtLast.Score) = 0) AND drtLast.Multiplier <> 2))"
+        val whereSql = "RemainingScore < 0 OR RemainingSCore = 1 OR (RemainingScore = 0 AND LastDartMultiplier <> 2)"
 
-        unlockThreeDartAchievement(playerIds, "drtLast.DtCreation", whereSql, "drtFirst.StartingScore", achievementRef, database)
+        unlockThreeDartAchievement(players, whereSql, "StartingScore", achievementRef, database)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_HIGHEST_BUST

@@ -32,7 +32,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
 
         insertDart(pt, roundNumber = 1, startingScore = 7, ordinal = 1)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getAchievementCount() shouldBe 0
     }
 
@@ -46,7 +46,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         insertDart(pt, roundNumber = 7, ordinal = 1, startingScore = 12, score = 5, multiplier = 1)
         insertDart(pt, roundNumber = 7, ordinal = 2, startingScore = 7, score = 3, multiplier = 1)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
         getAchievementCount() shouldBe 0
     }
 
@@ -58,7 +58,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         setUpAchievementRowForPlayer(alice)
         setUpAchievementRowForPlayer(alice)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getAchievementCount() shouldBe 2
     }
@@ -73,7 +73,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         setUpFinishForPlayer(alice, 7)
         setUpFinishForPlayer(alice, 9)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getAchievementCount() shouldBe 4
     }
@@ -88,7 +88,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         setUpFinishForPlayer(alice, 11)
         setUpFinishForPlayer(alice, 13)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         getAchievementCount() shouldBe 0
     }
@@ -99,7 +99,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         val p = insertPlayer()
         setUpFinishForPlayer(p, 5)
 
-        factoryAchievement().populateForConversion("")
+        factoryAchievement().populateForConversion(emptyList())
 
         retrieveAchievement().achievementCounter shouldBe -1
         retrieveAchievement().achievementDetail shouldBe "5"

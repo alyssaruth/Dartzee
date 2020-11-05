@@ -59,7 +59,6 @@ class AchievementConversionDialog : SimpleDialog()
             return
         }
 
-
         if (rdbtnAll.isSelected)
         {
             val achievements = getAllAchievements()
@@ -70,7 +69,7 @@ class AchievementConversionDialog : SimpleDialog()
             val ix = cbConversionType.selectedIndex
             val achievement = cbConversionType.getItemAt(ix)
 
-            runConversionsWithProgressBar(mutableListOf(achievement), playerSelector.getSelectedPlayers())
+            runConversionsWithProgressBar(listOf(achievement), playerSelector.getSelectedPlayers())
         }
 
         dispose()
