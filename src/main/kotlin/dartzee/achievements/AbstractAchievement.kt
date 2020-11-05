@@ -77,7 +77,7 @@ abstract class AbstractAchievement
         attainedValue = achievementRow.achievementCounter
         gameIdEarned = achievementRow.gameIdEarned
         localGameIdEarned = achievementRow.localGameIdEarned
-        dtLatestUpdate = achievementRow.dtLastUpdate
+        dtLatestUpdate = achievementRow.dtAchieved
 
         this.player = player
     }

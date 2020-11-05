@@ -10,7 +10,6 @@ import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.utils.DATABASE_FILE_PATH
-import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
@@ -254,7 +253,7 @@ fun insertAchievement(uuid: String = randomGuid(),
                       gameIdEarned: String = "",
                       achievementCounter: Int = -1,
                       achievementDetail: String = "",
-                      dtLastUpdate: Timestamp = getSqlDateNow()): AchievementEntity
+                      dtAchieved: Timestamp = getSqlDateNow()): AchievementEntity
 {
     val a = AchievementEntity()
     a.rowId = uuid
@@ -263,8 +262,9 @@ fun insertAchievement(uuid: String = randomGuid(),
     a.gameIdEarned = gameIdEarned
     a.achievementCounter = achievementCounter
     a.achievementDetail = achievementDetail
+    a.dtAchieved = dtAchieved
 
-    a.saveToDatabase(dtLastUpdate)
+    a.saveToDatabase()
 
     return a
 }

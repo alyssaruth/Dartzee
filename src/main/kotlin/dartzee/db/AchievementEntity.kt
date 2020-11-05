@@ -21,6 +21,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
     var gameIdEarned = ""
     var achievementCounter = -1
     var achievementDetail = ""
+    var dtAchieved: Timestamp = getSqlDateNow()
 
     //Other stuff
     var localGameIdEarned = -1L
@@ -33,7 +34,8 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
                 + "AchievementRef INT NOT NULL, "
                 + "GameIdEarned VARCHAR(36) NOT NULL, "
                 + "AchievementCounter INT NOT NULL, "
-                + "AchievementDetail VARCHAR(255) NOT NULL")
+                + "AchievementDetail VARCHAR(255) NOT NULL, "
+                + "DtAchieved TIMESTAMP NOT NULL")
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
@@ -148,12 +150,29 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             }
         }
 
+        fun factory(achievementRef: Int,
+                    playerId: String,
+                    gameId: String,
+                    counter: Int,
+                    achievementDetail: String = "",
+                    database: Database = mainDatabase): AchievementEntity
+        {
+            val ae = AchievementEntity(database)
+            ae.assignRowId()
+            ae.achievementRef = achievementRef
+            ae.playerId = playerId
+            ae.gameIdEarned = gameId
+            ae.achievementCounter = counter
+            ae.achievementDetail = achievementDetail
+            return ae
+        }
+
         fun factoryAndSave(achievementRef: Int,
                            playerId: String,
                            gameId: String,
                            counter: Int,
                            achievementDetail: String = "",
-                           dtLastUpdate: Timestamp = getSqlDateNow(),
+                           dtAchieved: Timestamp = getSqlDateNow(),
                            database: Database = mainDatabase): AchievementEntity
         {
             val ae = AchievementEntity(database)
@@ -163,7 +182,8 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             ae.gameIdEarned = gameId
             ae.achievementCounter = counter
             ae.achievementDetail = achievementDetail
-            ae.saveToDatabase(dtLastUpdate)
+            ae.dtAchieved = dtAchieved
+            ae.saveToDatabase()
 
             return ae
         }

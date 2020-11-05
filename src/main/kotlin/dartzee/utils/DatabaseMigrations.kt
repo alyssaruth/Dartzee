@@ -24,6 +24,7 @@ object DatabaseMigrations
             ),
             15 to listOf (
                 { db -> SyncAuditEntity(db).createTable() },
+                { db -> runScript(db, 16, "1. Achievement.sql") },
                 { db -> convertAchievement(ACHIEVEMENT_REF_X01_GAMES_WON, db) },
                 { db -> convertAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, db) },
                 { db -> convertAchievement(ACHIEVEMENT_REF_CLOCK_GAMES_WON, db) },

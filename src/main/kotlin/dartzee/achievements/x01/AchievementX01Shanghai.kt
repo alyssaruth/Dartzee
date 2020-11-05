@@ -29,7 +29,7 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
     override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_SHANGHAI
 
     override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtLastUpdate)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtAchieved)
 
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)

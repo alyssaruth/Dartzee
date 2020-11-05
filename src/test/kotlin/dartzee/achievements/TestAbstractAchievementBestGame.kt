@@ -108,7 +108,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
         achievementRow.achievementCounter shouldBe 12
-        achievementRow.dtLastUpdate shouldBe Timestamp(800)
+        achievementRow.dtAchieved shouldBe Timestamp(800)
     }
 
     @Test
@@ -125,7 +125,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
         achievementRow.achievementCounter shouldBe 12
-        achievementRow.dtLastUpdate shouldBe Timestamp(1000)
+        achievementRow.dtAchieved shouldBe Timestamp(1000)
         achievementRow.playerId shouldBe alice.rowId
         achievementRow.gameIdEarned shouldBe game.rowId
         achievementRow.achievementRef shouldBe factoryAchievement().achievementRef

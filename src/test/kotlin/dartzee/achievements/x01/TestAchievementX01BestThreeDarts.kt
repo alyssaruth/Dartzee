@@ -77,7 +77,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
         a.gameIdEarned shouldBe pt2.gameId
         a.achievementCounter shouldBe 180
         a.achievementDetail shouldBe ""
-        a.dtLastUpdate shouldBe Timestamp(500)
+        a.dtAchieved shouldBe Timestamp(500)
     }
 
     @Test

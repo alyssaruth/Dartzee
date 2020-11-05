@@ -99,6 +99,6 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
         achievement.gameIdEarned shouldBe g2.rowId
         achievement.playerId shouldBe p.rowId
         achievement.achievementDetail shouldBe ""
-        achievement.dtLastUpdate shouldBe Timestamp(250)
+        achievement.dtAchieved shouldBe Timestamp(250)
     }
 }
