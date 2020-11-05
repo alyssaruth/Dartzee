@@ -237,9 +237,10 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
                 val timer = DurationTimer()
                 psUpdate.executeUpdate()
 
-                logger.logSql(updateQuery, genericUpdate, timer.getDuration())
-
                 val updateCount = psUpdate.updateCount
+
+                logger.logSql(updateQuery, genericUpdate, timer.getDuration(), updateCount)
+
                 if (updateCount == 0)
                 {
                     logger.error(CODE_SQL_EXCEPTION,
@@ -283,7 +284,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
                 val timer = DurationTimer()
                 psInsert.executeUpdate()
-                logger.logSql(insertQuery, genericInsert, timer.getDuration())
+                logger.logSql(insertQuery, genericInsert, timer.getDuration(), psInsert.updateCount)
 
                 //Set this so we can call save() again on the same object and get the right behaviour
                 retrievedFromDb = true

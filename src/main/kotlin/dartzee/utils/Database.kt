@@ -12,6 +12,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.*
+import javax.sql.rowset.CachedRowSet
 import javax.sql.rowset.RowSetProvider
 import kotlin.system.exitProcess
 
@@ -126,7 +127,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
 
         if (log)
         {
-            logger.logSql("($updateCount) $statement", "", timer.getDuration())
+            logger.logSql(statement, "", timer.getDuration(), updateCount)
         }
     }
 
@@ -143,13 +144,13 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
         try
         {
             conn.createStatement().use { s ->
-                val resultSet: ResultSet = s.executeQuery(query).use { rs ->
+                val resultSet: CachedRowSet = s.executeQuery(query).use { rs ->
                     val crs = RowSetProvider.newFactory().createCachedRowSet()
                     crs.populate(rs)
                     crs
                 }
 
-                logger.logSql(query, "", timer.getDuration())
+                logger.logSql(query, "", timer.getDuration(), resultSet.size())
                 return resultSet
             }
         }

@@ -23,9 +23,13 @@ class Logger(private val destinations: List<ILogDestination>)
         destinations.forEach { it.contextUpdated(loggingContext.toMap()) }
     }
 
-    fun logSql(sqlStatement: String, genericStatement: String, duration: Long)
+    fun logSql(sqlStatement: String, genericStatement: String, duration: Long, rowCount: Int? = null)
     {
-        info(CODE_SQL, sqlStatement, KEY_DURATION to duration, KEY_GENERIC_SQL to genericStatement, KEY_SQL to sqlStatement)
+        info(CODE_SQL, sqlStatement,
+            KEY_DURATION to duration,
+            KEY_GENERIC_SQL to genericStatement,
+            KEY_SQL to sqlStatement,
+            KEY_ROW_COUNT to rowCount)
     }
 
     fun logProgress(code: LoggingCode, workDone: Long, workToDo: Long, percentageToLogAt: Int = 10)
