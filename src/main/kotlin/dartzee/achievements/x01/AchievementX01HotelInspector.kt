@@ -5,10 +5,8 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 import java.net.URL
-import java.sql.SQLException
 
 class AchievementX01HotelInspector : AbstractMultiRowAchievement()
 {
@@ -95,18 +93,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append("     AND zz2.DtAchieved < zz.DtAchieved")
         sb.append(" )")
 
-        val rs = database.executeQuery(sb)
-        rs.use {
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val method = rs.getString("Method")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved, database)
-            }
-        }
+        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementRef) { rs -> rs.getString("Method") } }
     }
 
     private fun getDartHigherThanSql(hAlias: String, lAlias: String): String

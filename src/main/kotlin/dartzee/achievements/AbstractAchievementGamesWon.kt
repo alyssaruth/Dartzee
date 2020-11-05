@@ -17,24 +17,14 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, pt.GameId, pt.FinalScore, pt.DtFinished AS DtLastUpdate")
+        sb.append(" SELECT pt.PlayerId, pt.GameId, pt.FinalScore AS Score, pt.DtFinished AS DtAchieved")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND pt.FinishingPosition = 1")
         appendPlayerSql(sb, players)
 
-        database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val finalScore = rs.getInt("FinalScore")
-                val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$finalScore", dtLastUpdate, database)
-            }
-        }
+        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementRef) { rs -> rs.getInt("Score").toString() } }
     }
 
     override fun getBreakdownColumns() = listOf("Game", "Score", "Date Achieved")
