@@ -253,9 +253,10 @@ fun insertAchievement(uuid: String = randomGuid(),
                       gameIdEarned: String = "",
                       achievementCounter: Int = -1,
                       achievementDetail: String = "",
-                      dtAchieved: Timestamp = getSqlDateNow()): AchievementEntity
+                      dtAchieved: Timestamp = getSqlDateNow(),
+                      database: Database = mainDatabase): AchievementEntity
 {
-    val a = AchievementEntity()
+    val a = AchievementEntity(database)
     a.rowId = uuid
     a.playerId = playerId
     a.achievementRef = achievementRef

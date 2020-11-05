@@ -3,6 +3,7 @@ package dartzee.db
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
 import dartzee.helper.DATABASE_NAME_TEST
+import dartzee.helper.insertAchievement
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -22,10 +23,11 @@ class TestDatabaseMigrations: AbstractTest()
     }
 
     @Test
-    fun `V15 - V16 should create SyncAudit table`()
+    fun `V15 - V16 should create SyncAudit table and add DtAchieved column`()
     {
         usingInMemoryDatabase(withSchema = true) { database ->
             database.dropTable("SyncAudit")
+            database.executeUpdate("ALTER TABLE Achievement DROP COLUMN DtAchieved")
             database.updateDatabaseVersion(15)
 
             val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
@@ -35,6 +37,7 @@ class TestDatabaseMigrations: AbstractTest()
 
             shouldNotThrowAny {
                 SyncAuditEntity(database).retrieveForId("foo", false)
+                insertAchievement(database = database)
             }
         }
     }
