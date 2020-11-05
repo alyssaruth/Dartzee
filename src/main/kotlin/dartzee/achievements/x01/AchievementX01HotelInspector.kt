@@ -93,8 +93,8 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append("     AND zz2.DtAchieved < zz.DtAchieved")
         sb.append(" )")
 
-        database.executeQuery(sb).use {
-            bulkInsertFromResultSet(it, database, achievementRef, achievementDetailFn = { rs -> rs.getString("Method") } )
+        database.executeQuery(sb).use { rs ->
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getString("Method") } )
         }
     }
 

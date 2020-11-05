@@ -64,8 +64,8 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
         sb.append("     AND zz2.DtAchieved < zz1.DtAchieved")
         sb.append(")")
 
-        database.executeQuery(sb).use {
-            bulkInsertFromResultSet(it, database, achievementRef, achievementCounterFn = { rs -> rs.getInt("Score") })
+        database.executeQuery(sb).use { rs ->
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementCounterFn = { rs.getInt("Score") })
         }
     }
 

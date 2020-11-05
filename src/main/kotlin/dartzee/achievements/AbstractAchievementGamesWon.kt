@@ -24,8 +24,8 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
         sb.append(" AND pt.FinishingPosition = 1")
         appendPlayerSql(sb, players)
 
-        database.executeQuery(sb).use {
-            bulkInsertFromResultSet(it, database, achievementRef, achievementDetailFn = { rs -> rs.getInt("Score").toString() })
+        database.executeQuery(sb).use { rs ->
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("Score").toString() })
         }
     }
 

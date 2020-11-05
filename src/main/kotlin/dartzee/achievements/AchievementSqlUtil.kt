@@ -90,8 +90,8 @@ fun ensureX01RoundsTableExists(players: List<PlayerEntity>, database: Database)
 fun bulkInsertFromResultSet(rs: ResultSet,
                             database: Database,
                             achievementRef: Int,
-                            achievementDetailFn: ((rs: ResultSet) -> String)? = null,
-                            achievementCounterFn: ((rs: ResultSet) -> Int)? = null)
+                            achievementDetailFn: (() -> String)? = null,
+                            achievementCounterFn: (() -> Int)? = null)
 {
     val entities = mutableListOf<AchievementEntity>()
     while (rs.next())
@@ -99,8 +99,8 @@ fun bulkInsertFromResultSet(rs: ResultSet,
         val playerId = rs.getString("PlayerId")
         val gameId = rs.getString("GameId")
         val dtAchieved = rs.getTimestamp("DtAchieved")
-        val detail = achievementDetailFn?.invoke(rs) ?: ""
-        val counter = achievementCounterFn?.invoke(rs) ?: -1
+        val detail = achievementDetailFn?.invoke() ?: ""
+        val counter = achievementCounterFn?.invoke() ?: -1
 
         entities.add(AchievementEntity.factory(achievementRef, playerId, gameId, counter, detail, dtAchieved, database))
     }
