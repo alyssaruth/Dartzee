@@ -93,7 +93,9 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append("     AND zz2.DtAchieved < zz.DtAchieved")
         sb.append(" )")
 
-        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementRef) { rs -> rs.getString("Method") } }
+        database.executeQuery(sb).use {
+            bulkInsertFromResultSet(it, database, achievementRef, achievementDetailFn = { rs -> rs.getString("Method") } )
+        }
     }
 
     private fun getDartHigherThanSql(hAlias: String, lAlias: String): String
