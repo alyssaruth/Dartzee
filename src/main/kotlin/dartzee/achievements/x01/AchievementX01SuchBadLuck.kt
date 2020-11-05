@@ -80,14 +80,10 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
                 val total = rs.getInt("GameTotal")
                 val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                if (playersAlreadyDone.contains(playerId))
+                if (playersAlreadyDone.add(playerId))
                 {
-                    continue
+                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
                 }
-
-                playersAlreadyDone.add(playerId)
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
             }
         }
     }

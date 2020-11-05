@@ -1,6 +1,5 @@
 package dartzee.achievements
 
-import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings.mainDatabase
@@ -14,7 +13,8 @@ class TestAchievementUtil: AbstractTest()
     @Test
     fun `Running achievement conversion should leave no temp tables lying around`()
     {
-        runConversionsWithProgressBar(getAllAchievements(), emptyList())
+        val t = runConversionsWithProgressBar(getAllAchievements(), emptyList())
+        t.join()
 
         mainDatabase.dropUnexpectedTables().shouldBeEmpty()
     }

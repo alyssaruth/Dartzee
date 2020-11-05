@@ -58,12 +58,12 @@ fun convertEmptyAchievements()
     }
 }
 
-fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
+fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>, players: List<PlayerEntity>): Thread
 {
     val r = Runnable { runConversionsInOtherThread(achievements, players)}
     val t = Thread(r, "Conversion thread")
     t.start()
-    t.join()
+    return t
 }
 
 private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
@@ -90,8 +90,8 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
         mainDatabase.dropUnexpectedTables()
     }
 
-
-    logger.info(LoggingCode("conversion.timings"), "Timings: $timings")
+    val totalTime = timings.values.sum()
+    logger.info(LoggingCode("conversion.timings"), "Done in $totalTime. Breakdown: $timings")
 
     dlg.disposeLater()
 }
@@ -157,18 +157,26 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, x01RoundWhereSql: St
     sb.append(" FROM $X01_ROUNDS_TABLE")
     sb.append(" WHERE $x01RoundWhereSql")
 
-    if (!database.executeUpdate("" + sb)) return
+    if (!database.executeUpdate(sb)) return
+
+    val zzPlayerToScore = database.createTempTable("PlayerToThreeDartScore", "PlayerId VARCHAR(36), Score INT")
 
     sb = StringBuilder()
-    sb.append(" SELECT PlayerId, GameId, DtAchieved, Score")
-    sb.append(" FROM $tempTable zz1")
-    sb.append(" WHERE NOT EXISTS (")
-    sb.append(" 	SELECT 1")
-    sb.append(" 	FROM $tempTable zz2")
-    sb.append(" 	WHERE zz2.PlayerId = zz1.PlayerId")
-    sb.append(" 	AND (zz2.Score > zz1.Score OR (zz2.Score = zz1.Score AND zz2.DtAchieved < zz1.DtAchieved))")
-    sb.append(" )")
-    sb.append(" ORDER BY PlayerId")
+    sb.append(" INSERT INTO $zzPlayerToScore")
+    sb.append(" SELECT PlayerId, MAX(Score)")
+    sb.append(" FROM $tempTable")
+    sb.append(" GROUP BY PlayerId")
+
+    if (!database.executeUpdate(sb)) return
+
+    sb = StringBuilder()
+    sb.append(" SELECT rslt.*")
+    sb.append(" FROM $tempTable rslt, $zzPlayerToScore zz")
+    sb.append(" WHERE rslt.PlayerId = zz.PlayerId")
+    sb.append(" AND rslt.Score = zz.Score")
+    sb.append(" ORDER BY DtAchieved")
+
+    val playersAlreadyDone = mutableSetOf<String>()
 
     database.executeQuery(sb).use { rs ->
         while (rs.next())
@@ -178,7 +186,10 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, x01RoundWhereSql: St
             val dtAchieved = rs.getTimestamp("DtAchieved")
             val score = rs.getInt("Score")
 
-            AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
+            if (playersAlreadyDone.add(playerId))
+            {
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
+            }
         }
     }
 }
