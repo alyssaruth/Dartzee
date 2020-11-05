@@ -72,6 +72,7 @@ fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>, playe
     val r = Runnable { runConversionsInOtherThread(achievements, players)}
     val t = Thread(r, "Conversion thread")
     t.start()
+    t.join()
 }
 
 private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, players: List<PlayerEntity>)
@@ -104,7 +105,7 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
     dlg.disposeLater()
 }
 
-fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
+private fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 {
     val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementRef = ${achievement.achievementRef}"
     val count = mainDatabase.executeQueryAggregate(sql)
@@ -112,7 +113,7 @@ fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
     return count > 0
 }
 
-fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter{ it.gameType == gameType }
+fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter { it.gameType == gameType }
 
 fun getAllAchievements() : MutableList<AbstractAchievement>
 {

@@ -23,7 +23,7 @@ class Logger(private val destinations: List<ILogDestination>)
         destinations.forEach { it.contextUpdated(loggingContext.toMap()) }
     }
 
-    fun logSql(sqlStatement: String, genericStatement: String, duration: Long, rowCount: Int? = null)
+    fun logSql(sqlStatement: String, genericStatement: String, duration: Long, rowCount: Int)
     {
         info(CODE_SQL, sqlStatement,
             KEY_DURATION to duration,
