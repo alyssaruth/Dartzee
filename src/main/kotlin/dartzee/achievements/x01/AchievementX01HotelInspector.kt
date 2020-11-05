@@ -62,11 +62,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append(" AND ${getNotBustSql()}")
         appendPlayerSql(sb, players)
 
-        if (!database.executeUpdate("" + sb))
-        {
-            database.dropTable(tempTable)
-            return
-        }
+        if (!database.executeUpdate("" + sb)) return
 
         database.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
         val tempTableTwo = database.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
@@ -85,12 +81,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
         sb.append(" GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}")
 
-        if (!database.executeUpdate("" + sb))
-        {
-            database.dropTable(tempTable)
-            database.dropTable(tempTableTwo)
-            return
-        }
+        if (!database.executeUpdate("" + sb)) return
 
         sb = StringBuilder()
         sb.append(" SELECT PlayerId, GameId, DtAchieved, Method")
@@ -104,29 +95,17 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append("     AND zz2.DtAchieved < zz.DtAchieved")
         sb.append(" )")
 
-        try
-        {
-            val rs = database.executeQuery(sb)
-            rs.use{
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val gameId = rs.getString("GameId")
-                    val method = rs.getString("Method")
-                    val dtAchieved = rs.getTimestamp("DtAchieved")
+        val rs = database.executeQuery(sb)
+        rs.use {
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val method = rs.getString("Method")
+                val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved, database)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved, database)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException("" + sb, "" + sb, sqle)
-        }
-        finally
-        {
-            database.dropTable(tempTable)
-            database.dropTable(tempTableTwo)
         }
     }
 

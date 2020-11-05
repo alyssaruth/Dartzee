@@ -74,7 +74,5 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
                 AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$hole", dtAchieved, database)
             }
         }
-
-        database.dropTable(tempTable)
     }
 }

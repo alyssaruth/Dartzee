@@ -167,11 +167,7 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, x01RoundWhereSql: St
     sb.append(" FROM $X01_ROUNDS_TABLE")
     sb.append(" WHERE $x01RoundWhereSql")
 
-    if (!database.executeUpdate("" + sb))
-    {
-        database.dropTable(tempTable)
-        return
-    }
+    if (!database.executeUpdate("" + sb)) return
 
     sb = StringBuilder()
     sb.append(" SELECT PlayerId, GameId, DtAchieved, Score")
@@ -184,23 +180,16 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, x01RoundWhereSql: St
     sb.append(" )")
     sb.append(" ORDER BY PlayerId")
 
-    try
-    {
-        database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-                val score = rs.getInt("Score")
+    database.executeQuery(sb).use { rs ->
+        while (rs.next())
+        {
+            val playerId = rs.getString("PlayerId")
+            val gameId = rs.getString("GameId")
+            val dtAchieved = rs.getTimestamp("DtAchieved")
+            val score = rs.getInt("Score")
 
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
-            }
+            AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
         }
-    }
-    finally
-    {
-        database.dropTable(tempTable)
     }
 }
 

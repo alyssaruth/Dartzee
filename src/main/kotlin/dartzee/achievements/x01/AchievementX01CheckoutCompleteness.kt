@@ -80,8 +80,6 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
                 AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
             }
         }
-
-        database.dropTable(tempTable)
     }
 
     override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)

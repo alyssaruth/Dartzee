@@ -52,11 +52,7 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
         sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 120")
         appendPlayerSql(sb, players)
 
-        if (!database.executeUpdate("" + sb))
-        {
-            database.dropTable(tempTable)
-            return
-        }
+        if (!database.executeUpdate("" + sb)) return
 
         //Cut down to where there is precisely 1 double, 1 treble and 1 single. Get the date achieved too.
         sb = StringBuilder()
@@ -78,22 +74,15 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
         sb.append(" AND drtSingle.Multiplier = 1")
         sb.append(" AND drtSingle.Score = 20")
 
-        try
-        {
-            database.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val playerId = rs.getString("PlayerId")
-                    val gameId = rs.getString("GameId")
-                    val dtAchieved = rs.getTimestamp("DtAchieved")
+        database.executeQuery(sb).use { rs ->
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val dtAchieved = rs.getTimestamp("DtAchieved")
 
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
-                }
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "", dtAchieved, database)
             }
-        }
-        finally
-        {
-            database.dropTable(tempTable)
         }
     }
 }

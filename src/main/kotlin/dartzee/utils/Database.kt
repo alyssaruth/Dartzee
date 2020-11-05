@@ -330,7 +330,7 @@ class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: St
             }
         }
 
-        list.forEach{ executeUpdate("DROP TABLE $it")}
+        list.forEach{ dropTable(it) }
         return list
     }
 }

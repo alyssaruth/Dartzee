@@ -10,7 +10,6 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.numerics.shouldBeGreaterThanOrEqual
@@ -57,16 +56,6 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         val g = insertRelevantGame()
 
         return insertParticipant(playerId = player.rowId, gameId = g.rowId)
-    }
-
-    @Test
-    fun `Should not leave any temp tables lying around`()
-    {
-        val alice = insertPlayer(name = "Alice")
-        setUpAchievementRowForPlayer(alice)
-        factoryAchievement().populateForConversion(emptyList())
-
-        mainDatabase.dropUnexpectedTables().shouldBeEmpty()
     }
 
     @Test

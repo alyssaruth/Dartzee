@@ -71,35 +71,24 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 
         val playersAlreadyDone = mutableSetOf<String>()
 
-        try
-        {
-            val rs = database.executeQuery(sb)
-            rs.use {
-                while (rs.next())
+        val rs = database.executeQuery(sb)
+        rs.use {
+            while (rs.next())
+            {
+                val playerId = rs.getString("PlayerId")
+                val gameId = rs.getString("GameId")
+                val total = rs.getInt("GameTotal")
+                val dtAchieved = rs.getTimestamp("DtAchieved")
+
+                if (playersAlreadyDone.contains(playerId))
                 {
-                    val playerId = rs.getString("PlayerId")
-                    val gameId = rs.getString("GameId")
-                    val total = rs.getInt("GameTotal")
-                    val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                    if (playersAlreadyDone.contains(playerId))
-                    {
-                        continue
-                    }
-
-                    playersAlreadyDone.add(playerId)
-
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
+                    continue
                 }
+
+                playersAlreadyDone.add(playerId)
+
+                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
             }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException("" + sb, "" + sb, sqle)
-        }
-        finally
-        {
-            database.dropTable(tempTable)
         }
     }
 
