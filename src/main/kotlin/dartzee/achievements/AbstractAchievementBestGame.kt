@@ -1,6 +1,5 @@
 package dartzee.achievements
 
-import dartzee.db.AchievementEntity
 import dartzee.utils.Database
 import dartzee.db.PlayerEntity
 import dartzee.utils.doesHighestWin
@@ -12,7 +11,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.FinalScore, pt.DtFinished")
+        sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.FinalScore, pt.DtFinished AS DtAchieved")
         sb.append(" FROM Participant pt, Game g")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '$gameType'")
@@ -30,15 +29,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val dtFinished = rs.getTimestamp("DtFinished")
-                val score = rs.getInt("FinalScore")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtFinished, database)
-            }
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementCounterFn = { rs.getInt("FinalScore") })
         }
     }
 

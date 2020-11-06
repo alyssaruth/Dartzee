@@ -1,9 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
-import dartzee.achievements.AbstractMultiRowAchievement
-import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
-import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.*
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -29,7 +26,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished")
+        sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished AS DtAchieved")
         sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.X01}'")
@@ -42,15 +39,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
         appendPlayerSql(sb, players)
 
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val score = rs.getInt("StartingScore")
-                val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtFinished")
-
-                AchievementEntity.factoryAndSave(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, gameId, -1, "$score", dtAchieved, database)
-            }
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("StartingScore").toString() })
         }
     }
 
