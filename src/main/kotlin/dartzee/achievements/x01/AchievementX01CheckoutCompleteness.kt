@@ -1,8 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-import dartzee.achievements.AbstractMultiRowAchievement
-import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.*
 import dartzee.core.bean.paint
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
@@ -39,21 +37,18 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
+        ensureX01RoundsTableExists(players, database)
+
         val tempTable = database.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                       ?: return
 
         var sb = StringBuilder()
 
         sb.append(" INSERT INTO $tempTable")
-        sb.append(" SELECT pt.PlayerId, d.Score, g.RowId, d.DtCreation")
-        sb.append(" FROM Dart d, Participant pt, Game g")
-        sb.append(" WHERE d.Multiplier = 2")
-        sb.append(" AND d.StartingScore = (d.Score * d.Multiplier)")
-        sb.append(" AND d.ParticipantId = pt.RowId")
-        sb.append(" AND d.PlayerId = pt.PlayerId")
-        sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = '${GameType.X01}'")
-        appendPlayerSql(sb, players)
+        sb.append(" SELECT PlayerId, LastDartScore, GameId, DtRoundFinished")
+        sb.append(" FROM $X01_ROUNDS_TABLE")
+        sb.append(" WHERE LastDartMultiplier = 2")
+        sb.append(" AND RemainingScore = 0")
 
         if (!database.executeUpdate("" + sb))
             return
@@ -70,15 +65,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val score = rs.getInt("Score")
-                val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
-            }
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementCounterFn = { rs.getInt("Score") })
         }
     }
 

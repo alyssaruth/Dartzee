@@ -4,6 +4,7 @@ import dartzee.`object`.SegmentType
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
 import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -49,8 +50,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
         sb.append(" AND g.GameType = '${GameType.GOLF}'")
         appendPlayerSql(sb, players, "pt")
 
-        if (!database.executeUpdate("" + sb))
-            return
+        if (!database.executeUpdate(sb)) return
 
         sb = StringBuilder()
         sb.append(" SELECT PlayerId, Score, GameId, DtAchieved")
@@ -64,15 +64,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val hole = rs.getInt("Score")
-                val gameId = rs.getString("GameId")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$hole", dtAchieved, database)
-            }
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("Score").toString() })
         }
     }
 }

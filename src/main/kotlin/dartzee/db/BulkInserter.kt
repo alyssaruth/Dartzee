@@ -3,6 +3,7 @@ package dartzee.db
 import dartzee.core.util.getSqlDateNow
 import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -15,11 +16,11 @@ object BulkInserter
     /**
      * Entity insert
      */
-    fun insert(vararg entities: AbstractEntity<*>)
+    fun insert(vararg entities: AbstractEntity<*>, database: Database = mainDatabase)
     {
-        insert(entities.toList())
+        insert(entities.toList(), database = database)
     }
-    fun insert(entities: List<AbstractEntity<*>>, rowsPerThread: Int = 5000, rowsPerStatement: Int = 100)
+    fun insert(entities: List<AbstractEntity<*>>, rowsPerThread: Int = 5000, rowsPerStatement: Int = 100, database: Database = mainDatabase)
     {
         if (entities.isEmpty())
         {
@@ -36,7 +37,7 @@ object BulkInserter
         val threads = mutableListOf<Thread>()
         val entitiesBatched = entities.chunked(rowsPerThread)
         entitiesBatched.forEach{
-            val t = getInsertThreadForBatch(it, tableName, rowsPerStatement)
+            val t = getInsertThreadForBatch(it, tableName, rowsPerStatement, database)
             threads.add(t)
         }
 
@@ -44,13 +45,13 @@ object BulkInserter
 
         entities.forEach {it.retrievedFromDb = true}
     }
-    private fun getInsertThreadForBatch(batch: List<AbstractEntity<*>>, tableName: String, rowsPerInsert: Int): Thread
+    private fun getInsertThreadForBatch(batch: List<AbstractEntity<*>>, tableName: String, rowsPerInsert: Int, database: Database): Thread
     {
         return Thread {
             batch.chunked(rowsPerInsert).forEach { entities ->
                 val genericInsert = "INSERT INTO $tableName VALUES ${entities.joinToString{it.getInsertBlockForStatement()}}"
                 var insertQuery = genericInsert
-                val conn = mainDatabase.borrowConnection()
+                val conn = database.borrowConnection()
 
                 try
                 {
@@ -75,7 +76,7 @@ object BulkInserter
                 }
                 finally
                 {
-                    mainDatabase.returnConnection(conn)
+                    database.returnConnection(conn)
                 }
             }
         }

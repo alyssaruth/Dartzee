@@ -2,7 +2,6 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import dartzee.achievements.AbstractAchievement
-import dartzee.achievements.getTotalRoundScoreSql
 import dartzee.achievements.unlockThreeDartAchievement
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType

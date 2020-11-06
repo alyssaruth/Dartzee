@@ -154,7 +154,8 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
                     playerId: String,
                     gameId: String,
                     counter: Int,
-                    achievementDetail: String = "",
+                    achievementDetail: String,
+                    dtAchieved: Timestamp,
                     database: Database = mainDatabase): AchievementEntity
         {
             val ae = AchievementEntity(database)
@@ -164,6 +165,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             ae.gameIdEarned = gameId
             ae.achievementCounter = counter
             ae.achievementDetail = achievementDetail
+            ae.dtAchieved = dtAchieved
             return ae
         }
 
@@ -175,16 +177,8 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
                            dtAchieved: Timestamp = getSqlDateNow(),
                            database: Database = mainDatabase): AchievementEntity
         {
-            val ae = AchievementEntity(database)
-            ae.assignRowId()
-            ae.achievementRef = achievementRef
-            ae.playerId = playerId
-            ae.gameIdEarned = gameId
-            ae.achievementCounter = counter
-            ae.achievementDetail = achievementDetail
-            ae.dtAchieved = dtAchieved
+            val ae = factory(achievementRef, playerId, gameId, counter, achievementDetail, dtAchieved, database)
             ae.saveToDatabase()
-
             return ae
         }
     }

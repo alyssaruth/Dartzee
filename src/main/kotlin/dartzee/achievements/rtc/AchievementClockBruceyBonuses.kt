@@ -3,6 +3,7 @@ package dartzee.achievements.rtc
 import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
 import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
@@ -34,7 +35,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, drt.DtCreation AS DtLastUpdate")
+        sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, drt.DtCreation AS DtAchieved")
         sb.append(" FROM Dart drt, Participant pt, Game g")
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
@@ -50,15 +51,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
         appendPlayerSql(sb, players)
 
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val roundNumber = rs.getInt("RoundNumber")
-                val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, "$roundNumber", dtLastUpdate, database)
-            }
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("RoundNumber").toString() })
         }
     }
 

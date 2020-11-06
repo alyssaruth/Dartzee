@@ -1,9 +1,6 @@
 package dartzee.achievements.golf
 
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
-import dartzee.achievements.AbstractMultiRowAchievement
-import dartzee.achievements.appendPlayerSql
-import dartzee.achievements.getGolfSegmentCases
+import dartzee.achievements.*
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -47,7 +44,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
     {
         val sb = StringBuilder()
 
-        sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, SUM(${buildPointsRiskedSql()}) AS PointsRisked, MAX(drt.DtCreation) AS DtLastUpdate")
+        sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, SUM(${buildPointsRiskedSql()}) AS PointsRisked, MAX(drt.DtCreation) AS DtAchieved")
         sb.append(" FROM Dart drt, Participant pt, Game g")
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
@@ -66,16 +63,12 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         sb.append(" GROUP BY pt.PlayerId, pt.GameId, drt.RoundNumber")
 
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val roundNumber = rs.getInt("RoundNumber")
-                val score = rs.getInt("PointsRisked")
-                val dtLastUpdate = rs.getTimestamp("DtLastUpdate")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "$roundNumber", dtLastUpdate, database)
-            }
+            bulkInsertFromResultSet(rs,
+                database,
+                achievementRef,
+                achievementCounterFn = { rs.getInt("PointsRisked") },
+                achievementDetailFn = { rs.getInt("RoundNumber").toString() }
+            )
         }
     }
 }

@@ -3,7 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.appendPlayerSql
-import dartzee.db.AchievementEntity
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
@@ -30,9 +30,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
         val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
-        val tempTable = database.createTempTable("CheckoutDarts", cols)
-
-        tempTable ?: return
+        val tempTable = database.createTempTable("CheckoutDarts", cols) ?: return
 
         val checkoutsStr = getCheckoutScores().joinToString()
 
@@ -47,11 +45,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" AND d.StartingScore IN ($checkoutsStr)")
         appendPlayerSql(sb, players)
 
-        if (!database.executeUpdate("" + sb))
-        {
-            database.dropTable(tempTable)
-            return
-        }
+        if (!database.executeUpdate(sb)) return
 
         sb = StringBuilder()
         sb.append(" SELECT PlayerId, GameId, COUNT(1) AS GameTotal, MAX(DtLastUpdate) AS DtAchieved")
@@ -67,29 +61,11 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" GROUP BY PlayerId, GameId")
         sb.append(" ORDER BY COUNT(1) DESC, DtAchieved")
 
-        val playersAlreadyDone = mutableSetOf<String>()
-
-        val rs = database.executeQuery(sb)
-        rs.use {
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val total = rs.getInt("GameTotal")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                if (playersAlreadyDone.add(playerId))
-                {
-                    AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, total, "", dtAchieved, database)
-                }
-            }
+        database.executeQuery(sb).use { rs ->
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementCounterFn = { rs.getInt("GameTotal") }, oneRowPerPlayer = true)
         }
     }
 
     override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
-
-    override fun isUnbounded(): Boolean
-    {
-        return true
-    }
+    override fun isUnbounded() = true
 }

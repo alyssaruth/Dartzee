@@ -1,9 +1,12 @@
 package dartzee.achievements
 
 import dartzee.`object`.*
+import dartzee.db.AchievementEntity
+import dartzee.db.BulkInserter
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
+import java.sql.ResultSet
 
 const val X01_ROUNDS_TABLE = "X01Rounds"
 const val LAST_ROUND_FROM_PARTICIPANT = "CEIL(CAST(pt.FinalScore AS DECIMAL)/3)"
@@ -82,4 +85,31 @@ fun ensureX01RoundsTableExists(players: List<PlayerEntity>, database: Database)
     sb.append(" AND zz.RoundNumber = drt.RoundNumber")
     sb.append(" AND zz.LastDartOrdinal = drt.Ordinal")
     database.executeUpdate(sb.toString())
+}
+
+fun bulkInsertFromResultSet(rs: ResultSet,
+                            database: Database,
+                            achievementRef: Int,
+                            achievementDetailFn: (() -> String)? = null,
+                            achievementCounterFn: (() -> Int)? = null,
+                            oneRowPerPlayer: Boolean = false)
+{
+    val playerIdsSeen = mutableSetOf<String>()
+
+    val entities = mutableListOf<AchievementEntity>()
+    while (rs.next())
+    {
+        val playerId = rs.getString("PlayerId")
+        val gameId = rs.getString("GameId")
+        val dtAchieved = rs.getTimestamp("DtAchieved")
+        val detail = achievementDetailFn?.invoke() ?: ""
+        val counter = achievementCounterFn?.invoke() ?: -1
+
+        if (!oneRowPerPlayer || playerIdsSeen.add(playerId))
+        {
+            entities.add(AchievementEntity.factory(achievementRef, playerId, gameId, counter, detail, dtAchieved, database))
+        }
+    }
+
+    BulkInserter.insert(entities, database = database)
 }

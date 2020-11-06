@@ -5,10 +5,8 @@ import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 import java.net.URL
-import java.sql.SQLException
 
 class AchievementX01HotelInspector : AbstractMultiRowAchievement()
 {
@@ -32,37 +30,46 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
+        ensureX01RoundsTableExists(players, database)
+        val burltonConstantRounds = database.createTempTable("BurltonConstantRounds", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), RoundNumber INT")
+
+        var sb = StringBuilder()
+        sb.append(" INSERT INTO $burltonConstantRounds")
+        sb.append(" SELECT PlayerId, ParticipantId, GameId, RoundNumber")
+        sb.append(" FROM $X01_ROUNDS_TABLE")
+        sb.append(" WHERE StartingScore - RemainingScore = 26")
+        sb.append(" AND TotalDartsThrown = 3")
+        sb.append(" AND (RemainingScore > 1 OR RemainingScore = 0 AND LastDartMultiplier = 2)")
+
+        if (!database.executeUpdate(sb)) return
+
         val tempTable = database.createTempTable("BurltonConstants", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
         tempTable ?: return
 
-        var sb = StringBuilder()
+        sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
-        sb.append(" SELECT pt.PlayerId, pt.RowId, pt.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, d.DtCreation")
-        sb.append(" FROM Dart d, Dart drtFirst, Dart drtSecond, Dart drtLast, Participant pt, Game g")
-        sb.append(" WHERE drtFirst.ParticipantId = pt.RowId")
-        sb.append(" AND drtFirst.PlayerId = pt.PlayerId")
-        sb.append(" AND drtSecond.ParticipantId = pt.RowId")
-        sb.append(" AND drtSecond.PlayerId = pt.PlayerId")
-        sb.append(" AND drtLast.ParticipantId = pt.RowId")
-        sb.append(" AND drtLast.PlayerId = pt.PlayerId")
-        sb.append(" AND d.RoundNumber = drtFirst.RoundNumber")
-        sb.append(" AND drtFirst.RoundNumber = drtSecond.RoundNumber")
-        sb.append(" AND drtSecond.RoundNumber = drtLast.RoundNumber")
-        sb.append(" AND d.ParticipantId = pt.RowId")
-        sb.append(" AND d.PlayerId = pt.PlayerId")
-        sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND g.GameType = '${GameType.X01}'")
+        sb.append(" SELECT zz.PlayerId, zz.ParticipantId, zz.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, d.DtCreation")
+        sb.append(" FROM Dart d, Dart drtFirst, Dart drtSecond, Dart drtLast, $burltonConstantRounds zz")
+        sb.append(" WHERE drtFirst.ParticipantId = zz.ParticipantId")
+        sb.append(" AND drtFirst.PlayerId = zz.PlayerId")
+        sb.append(" AND drtFirst.RoundNumber = zz.RoundNumber")
+        sb.append(" AND drtSecond.ParticipantId = zz.ParticipantId")
+        sb.append(" AND drtSecond.PlayerId = zz.PlayerId")
+        sb.append(" AND drtSecond.RoundNumber = zz.RoundNumber")
+        sb.append(" AND drtLast.ParticipantId = zz.ParticipantId")
+        sb.append(" AND drtLast.PlayerId = zz.PlayerId")
+        sb.append(" AND drtLast.RoundNumber = zz.RoundNumber")
+        sb.append(" AND d.RoundNumber = zz.RoundNumber")
+        sb.append(" AND d.ParticipantId = zz.ParticipantId")
+        sb.append(" AND d.PlayerId = zz.PlayerId")
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtSecond.Ordinal = 2")
         sb.append(" AND drtLast.Ordinal = 3")
         sb.append(" AND drtFirst.Multiplier > 0")
         sb.append(" AND drtSecond.Multiplier > 0")
         sb.append(" AND drtLast.Multiplier > 0")
-        sb.append(" AND ${getTotalRoundScoreSql("drtFirst")} = 26")
-        sb.append(" AND ${getNotBustSql()}")
-        appendPlayerSql(sb, players)
 
-        if (!database.executeUpdate("" + sb)) return
+        if (!database.executeUpdate(sb)) return
 
         database.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
         val tempTableTwo = database.createTempTable("BurltonConstantsFlat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
@@ -81,7 +88,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
         sb.append(" GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}")
 
-        if (!database.executeUpdate("" + sb)) return
+        if (!database.executeUpdate(sb)) return
 
         sb = StringBuilder()
         sb.append(" SELECT PlayerId, GameId, DtAchieved, Method")
@@ -95,17 +102,8 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append("     AND zz2.DtAchieved < zz.DtAchieved")
         sb.append(" )")
 
-        val rs = database.executeQuery(sb)
-        rs.use {
-            while (rs.next())
-            {
-                val playerId = rs.getString("PlayerId")
-                val gameId = rs.getString("GameId")
-                val method = rs.getString("Method")
-                val dtAchieved = rs.getTimestamp("DtAchieved")
-
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, -1, method, dtAchieved, database)
-            }
+        database.executeQuery(sb).use { rs ->
+            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getString("Method") } )
         }
     }
 
