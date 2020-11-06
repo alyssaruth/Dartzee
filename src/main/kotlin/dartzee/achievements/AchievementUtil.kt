@@ -22,20 +22,6 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-fun getTotalRoundScoreSql(drtFirstAlias: String): String
-  = "($drtFirstAlias.StartingScore - drtLast.StartingScore) + (drtLast.score * drtLast.multiplier)"
-
-fun getNotBustSql(): String
-{
-    val sb = StringBuilder()
-    sb.append(" (")
-    sb.append("     (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) > 1)")
-    sb.append("     OR (drtLast.StartingScore - (drtLast.Score * drtLast.Multiplier) = 0 AND drtLast.Multiplier = 2)")
-    sb.append(" )")
-
-    return sb.toString()
-}
-
 fun getAchievementMaximum() = getAllAchievements().size * 6
 
 fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
@@ -176,21 +162,8 @@ fun unlockThreeDartAchievement(players: List<PlayerEntity>, x01RoundWhereSql: St
     sb.append(" AND rslt.Score = zz.Score")
     sb.append(" ORDER BY DtAchieved")
 
-    val playersAlreadyDone = mutableSetOf<String>()
-
     database.executeQuery(sb).use { rs ->
-        while (rs.next())
-        {
-            val playerId = rs.getString("PlayerId")
-            val gameId = rs.getString("GameId")
-            val dtAchieved = rs.getTimestamp("DtAchieved")
-            val score = rs.getInt("Score")
-
-            if (playersAlreadyDone.add(playerId))
-            {
-                AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, score, "", dtAchieved, database)
-            }
-        }
+        bulkInsertFromResultSet(rs, database, achievementRef, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Score") })
     }
 }
 
