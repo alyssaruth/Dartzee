@@ -91,8 +91,11 @@ fun bulkInsertFromResultSet(rs: ResultSet,
                             database: Database,
                             achievementRef: Int,
                             achievementDetailFn: (() -> String)? = null,
-                            achievementCounterFn: (() -> Int)? = null)
+                            achievementCounterFn: (() -> Int)? = null,
+                            oneRowPerPlayer: Boolean = false)
 {
+    val playerIdsSeen = mutableSetOf<String>()
+
     val entities = mutableListOf<AchievementEntity>()
     while (rs.next())
     {
@@ -102,7 +105,10 @@ fun bulkInsertFromResultSet(rs: ResultSet,
         val detail = achievementDetailFn?.invoke() ?: ""
         val counter = achievementCounterFn?.invoke() ?: -1
 
-        entities.add(AchievementEntity.factory(achievementRef, playerId, gameId, counter, detail, dtAchieved, database))
+        if (!oneRowPerPlayer || playerIdsSeen.add(playerId))
+        {
+            entities.add(AchievementEntity.factory(achievementRef, playerId, gameId, counter, detail, dtAchieved, database))
+        }
     }
 
     BulkInserter.insert(entities, database = database)
