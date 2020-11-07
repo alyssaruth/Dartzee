@@ -2,7 +2,7 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import dartzee.achievements.AbstractAchievement
-import dartzee.achievements.unlockThreeDartAchievement
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
@@ -26,8 +26,14 @@ class AchievementX01BestFinish : AbstractAchievement()
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val whereSql = "RemainingScore = 0 AND LastDartMultiplier = 2"
-        unlockThreeDartAchievement(players, whereSql, "StartingScore - RemainingScore", achievementRef, database)
+        val sb = StringBuilder()
+        sb.append(" SELECT finish.GameId, finish.PlayerId, finish.Finish, finish.DtCreation AS DtAchieved")
+        sb.append(" FROM X01Finish finish")
+        sb.append(" ORDER BY DtCreation")
+
+        database.executeQuery(sb).use { rs ->
+            bulkInsertFromResultSet(rs, database, achievementRef, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Finish") })
+        }
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH
