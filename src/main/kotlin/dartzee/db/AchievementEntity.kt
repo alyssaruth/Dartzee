@@ -38,6 +38,8 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
                 + "DtAchieved TIMESTAMP NOT NULL")
     }
 
+    override fun includeInSync() = false
+
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
         indexes.add(listOf("PlayerId", "AchievementRef"))

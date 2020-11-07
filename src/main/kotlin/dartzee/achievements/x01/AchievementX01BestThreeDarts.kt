@@ -22,10 +22,10 @@ class AchievementX01BestThreeDarts : AbstractAchievement()
     override val pinkThreshold = 171
     override val maxValue = 180
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val dartSql = "TotalDartsThrown = 3 AND (RemainingScore > 0 OR (RemainingScore = 0 AND LastDartMultiplier = 2))"
-        unlockThreeDartAchievement(players, dartSql, "StartingScore - RemainingScore", achievementRef, database)
+        unlockThreeDartAchievement(playerIds, dartSql, "StartingScore - RemainingScore", achievementRef, database)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_SCORE

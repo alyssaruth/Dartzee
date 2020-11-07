@@ -35,9 +35,9 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementCounter, a.localGameIdEarned, a.dtAchieved)
     override fun isUnbounded() = false
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
-        ensureX01RoundsTableExists(players, database)
+        ensureX01RoundsTableExists(playerIds, database)
 
         val tempTable = database.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                       ?: return

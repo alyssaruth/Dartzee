@@ -59,17 +59,18 @@ class AchievementConversionDialog : SimpleDialog()
             return
         }
 
+        val selectedPlayerIds = playerSelector.getSelectedPlayers().map { it.rowId }
         if (rdbtnAll.isSelected)
         {
             val achievements = getAllAchievements()
-            runConversionsWithProgressBar(achievements, playerSelector.getSelectedPlayers())
+            runConversionsWithProgressBar(achievements, selectedPlayerIds)
         }
         else
         {
             val ix = cbConversionType.selectedIndex
             val achievement = cbConversionType.getItemAt(ix)
 
-            runConversionsWithProgressBar(listOf(achievement), playerSelector.getSelectedPlayers())
+            runConversionsWithProgressBar(listOf(achievement), selectedPlayerIds)
         }
 
         dispose()

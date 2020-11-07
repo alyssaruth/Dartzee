@@ -82,7 +82,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         setUpAchievementRowForPlayer(alice)
         setUpAchievementRowForPlayer(bob)
 
-        factoryAchievement().populateForConversion(listOf(alice))
+        factoryAchievement().populateForConversion(listOf(alice.rowId))
 
         getAchievementCount() shouldBe 1
 

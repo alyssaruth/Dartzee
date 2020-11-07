@@ -8,7 +8,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
 {
     abstract val gameParams: String
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.FinalScore, pt.DtFinished AS DtAchieved")
@@ -17,7 +17,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND g.GameParams = '$gameParams'")
         sb.append(" AND pt.FinalScore > -1")
-        appendPlayerSql(sb, players)
+        appendPlayerSql(sb, playerIds)
         sb.append(" AND NOT EXISTS (")
         sb.append("     SELECT 1")
         sb.append("     FROM Participant pt2, Game g2")

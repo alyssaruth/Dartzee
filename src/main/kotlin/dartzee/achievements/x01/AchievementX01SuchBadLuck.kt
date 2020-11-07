@@ -27,7 +27,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val cols = "PlayerId VARCHAR(36), GameId VARCHAR(36), Score INT, Multiplier INT, StartingScore INT, DtLastUpdate TIMESTAMP"
         val tempTable = database.createTempTable("CheckoutDarts", cols) ?: return
@@ -43,7 +43,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND d.StartingScore IN ($checkoutsStr)")
-        appendPlayerSql(sb, players)
+        appendPlayerSql(sb, playerIds)
 
         if (!database.executeUpdate(sb)) return
 

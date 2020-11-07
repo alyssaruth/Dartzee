@@ -32,7 +32,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtAchieved)
     override fun isUnbounded() = false
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val tempTable = database.createTempTable("PlayerHolesInOne", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
                 ?: return
@@ -48,7 +48,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
         sb.append(" AND d.PlayerId = pt.PlayerId")
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.GOLF}'")
-        appendPlayerSql(sb, players, "pt")
+        appendPlayerSql(sb, playerIds, "pt")
 
         if (!database.executeUpdate(sb)) return
 

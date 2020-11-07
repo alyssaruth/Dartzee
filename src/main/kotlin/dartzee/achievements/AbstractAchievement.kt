@@ -41,22 +41,22 @@ abstract class AbstractAchievement
 
     var tmBreakdown : DefaultTableModel? = null
 
-    fun runConversion(players : List<PlayerEntity>, database: Database = mainDatabase)
+    fun runConversion(playerIds: List<String>, database: Database = mainDatabase)
     {
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")
         sb.append(" WHERE AchievementRef = $achievementRef")
-        appendPlayerSql(sb, players, null)
+        appendPlayerSql(sb, playerIds, null)
 
         if (!database.executeUpdate("" + sb))
         {
             return
         }
 
-        populateForConversion(players, database)
+        populateForConversion(playerIds, database)
     }
 
-    abstract fun populateForConversion(players: List<PlayerEntity>, database: Database = mainDatabase)
+    abstract fun populateForConversion(playerIds: List<String>, database: Database = mainDatabase)
     abstract fun getIconURL() : URL
 
     /**

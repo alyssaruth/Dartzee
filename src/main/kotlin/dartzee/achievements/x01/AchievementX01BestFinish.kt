@@ -27,12 +27,12 @@ class AchievementX01BestFinish : AbstractAchievement()
 
     override val usesTransactionalTablesForConversion = false
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT GameId, PlayerId, Finish, DtCreation AS DtAchieved")
         sb.append(" FROM X01Finish")
-        appendPlayerSql(sb, players, null, "WHERE")
+        appendPlayerSql(sb, playerIds, null, "WHERE")
         sb.append(" ORDER BY Finish DESC, DtCreation")
 
         database.executeQuery(sb).use { rs ->

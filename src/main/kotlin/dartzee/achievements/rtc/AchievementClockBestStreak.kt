@@ -30,7 +30,7 @@ class AchievementClockBestStreak: AbstractAchievement()
 
     override fun getIconURL(): URL = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate")
@@ -39,7 +39,7 @@ class AchievementClockBestStreak: AbstractAchievement()
         sb.append(" AND pt.GameId = g.RowId")
         sb.append(" AND drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
-        appendPlayerSql(sb, players)
+        appendPlayerSql(sb, playerIds)
         sb.append(" ORDER BY g.DtLastUpdate, pt.RowId, drt.RoundNumber, drt.Ordinal")
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()

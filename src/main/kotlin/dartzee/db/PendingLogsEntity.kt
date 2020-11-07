@@ -12,6 +12,8 @@ class PendingLogsEntity(database: Database = mainDatabase): AbstractEntity<Pendi
 
     override fun getCreateTableSqlSpecific() = "LogJson varchar(30000) NOT NULL"
 
+    override fun includeInSync() = false
+
     companion object
     {
         fun factory(logJson: String): PendingLogsEntity

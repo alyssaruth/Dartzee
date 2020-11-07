@@ -1,5 +1,7 @@
 package dartzee.db
 
+import dartzee.achievements.getAllAchievements
+import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.utils.DartsDatabaseUtil
@@ -49,6 +51,13 @@ class DatabaseMerger(private val localDatabase: Database,
         val lastLocalSync = SyncAuditEntity.getLastSyncDate(localDatabase, remoteName)
         getSyncEntities().forEach { dao -> syncRowsFromTable(dao, lastLocalSync) }
 
+        val playersAffected = DartEntity().retrieveModifiedSince(lastLocalSync).map { it.playerId }.distinct()
+        if (playersAffected.isNotEmpty())
+        {
+            val t = runConversionsWithProgressBar(getAllAchievements(), playersAffected, remoteDatabase)
+            t.join()
+        }
+
         SyncAuditEntity.insertSyncAudit(remoteDatabase, remoteName)
 
         return remoteDatabase
@@ -63,6 +72,6 @@ class DatabaseMerger(private val localDatabase: Database,
     private fun getSyncEntities(): List<AbstractEntity<*>>
     {
         val entities = DartsDatabaseUtil.getAllEntities(localDatabase)
-        return entities.filterNot { it is PendingLogsEntity }
+        return entities.filter { it.includeInSync() }
     }
 }
