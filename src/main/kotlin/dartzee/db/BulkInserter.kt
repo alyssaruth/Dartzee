@@ -119,7 +119,7 @@ object BulkInserter
      */
     private fun doBulkInsert(threads: List<Thread>, tableName: String, rowCount: Int, rowsPerStatement: Int)
     {
-        if (rowCount > 500)
+        if (rowCount > 100)
         {
             logInserts = false
             logger.info(CODE_BULK_SQL, "Inserting $rowCount rows into $tableName (${threads.size} threads @ $rowsPerStatement rows per insert)")

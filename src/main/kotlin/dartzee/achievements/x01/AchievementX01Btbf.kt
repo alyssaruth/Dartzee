@@ -30,18 +30,14 @@ class AchievementX01Btbf: AbstractMultiRowAchievement()
 
     override fun populateForConversion(players: List<PlayerEntity>, database: Database)
     {
-        val sb = StringBuilder()
+        ensureX01RoundsTableExists(players, database)
 
-        sb.append(" SELECT pt.PlayerId, pt.DtFinished AS DtAchieved, g.RowId AS GameId")
-        sb.append(" FROM Game g, Participant pt, Dart drt")
-        sb.append(" WHERE g.GameType = '${GameType.X01}'")
-        sb.append(" AND pt.GameId = g.RowId")
-        sb.append(" AND $LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber")
-        sb.append(" AND pt.RowId = drt.ParticipantId")
-        sb.append(" AND pt.PlayerId = drt.PlayerId")
-        sb.append(" AND (drt.StartingScore - (drt.Score * drt.Multiplier)) = 0")
-        sb.append(" AND drt.Score = 1")
-        appendPlayerSql(sb, players)
+        val sb = StringBuilder()
+        sb.append(" SELECT PlayerId, DtRoundFinished AS DtAchieved, GameId")
+        sb.append(" FROM $X01_ROUNDS_TABLE")
+        sb.append(" WHERE LastDartScore = 1")
+        sb.append(" AND LastDartMultiplier = 2")
+        sb.append(" AND RemainingScore = 0")
 
         database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementRef) }
     }
