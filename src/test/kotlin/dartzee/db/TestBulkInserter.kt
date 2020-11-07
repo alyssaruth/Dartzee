@@ -74,11 +74,11 @@ class TestBulkInserter: AbstractTest()
     @Test
     fun `Should insert the right number of rows per INSERT statement`()
     {
-        val rows = prepareRows(200)
+        val rows = prepareRows(80)
 
-        checkInsertBatching(rows, 1, 200)
-        checkInsertBatching(rows, 20, 10)
-        checkInsertBatching(rows, 21, 10)
+        checkInsertBatching(rows, 1, 80)
+        checkInsertBatching(rows, 20, 4)
+        checkInsertBatching(rows, 21, 4)
     }
     private fun checkInsertBatching(rows: List<String>, rowsPerInsert: Int, expectedNumberOfBatches: Int)
     {

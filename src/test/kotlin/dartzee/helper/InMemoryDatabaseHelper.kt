@@ -93,6 +93,18 @@ fun insertPlayer(uuid: String = randomGuid(),
     return p
 }
 
+fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timestamp = getSqlDateNow(), game: GameEntity = insertGame(gameType = GameType.X01), database: Database = mainDatabase): GameEntity
+{
+    val entity = X01FinishEntity(database)
+    entity.assignRowId()
+    entity.playerId = player.rowId
+    entity.gameId = game.rowId
+    entity.finish = finish
+    entity.dtCreation = dtCreation
+    entity.saveToDatabase()
+    return game
+}
+
 fun insertParticipant(uuid: String = randomGuid(),
                       gameId: String = randomGuid(),
                       playerId: String = randomGuid(),

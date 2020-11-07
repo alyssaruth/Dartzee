@@ -1,12 +1,7 @@
 package dartzee.screen.stats.overall
 
-import dartzee.core.util.getSqlDateNow
-import dartzee.db.GameEntity
-import dartzee.db.PlayerEntity
-import dartzee.db.X01FinishEntity
-import dartzee.game.GameType
 import dartzee.helper.AbstractRegistryTest
-import dartzee.helper.insertGame
+import dartzee.helper.insertFinishForPlayer
 import dartzee.helper.insertPlayer
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
@@ -99,18 +94,7 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
         leaderboard.getGameIdAt(2) shouldBe g3.localId
     }
 
-    private fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timestamp = getSqlDateNow(), game: GameEntity = insertGame(gameType = GameType.X01)): GameEntity
-    {
-        val entity = X01FinishEntity()
-        entity.assignRowId()
-        entity.playerId = player.rowId
-        entity.gameId = game.rowId
-        entity.finish = finish
-        entity.dtCreation = dtCreation
-        entity.saveToDatabase()
 
-        return game
-    }
 
     private fun LeaderboardTopX01Finishes.rowCount() = tableTopFinishes.rowCount
     private fun LeaderboardTopX01Finishes.getNameAt(row: Int) = tableTopFinishes.getValueAt(row, 1)

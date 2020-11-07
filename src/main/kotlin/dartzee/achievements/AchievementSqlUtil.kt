@@ -23,7 +23,7 @@ fun getGolfSegmentCases(): String
     return sb.toString()
 }
 
-fun appendPlayerSql(sb: StringBuilder, players: List<PlayerEntity>, alias: String? = "pt")
+fun appendPlayerSql(sb: StringBuilder, players: List<PlayerEntity>, alias: String? = "pt", whereOrAnd: String = "AND")
 {
     if (players.isEmpty())
     {
@@ -32,7 +32,7 @@ fun appendPlayerSql(sb: StringBuilder, players: List<PlayerEntity>, alias: Strin
 
     val keys = players.joinToString { p -> "'${p.rowId}'"}
     val column = if (alias != null) "$alias.PlayerId" else "PlayerId"
-    sb.append(" AND $column IN ($keys)")
+    sb.append(" $whereOrAnd $column IN ($keys)")
 }
 
 fun ensureX01RoundsTableExists(players: List<PlayerEntity>, database: Database)
