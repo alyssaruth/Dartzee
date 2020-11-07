@@ -137,13 +137,13 @@ private fun Icon.toBufferedImage(): BufferedImage
 }
 
 fun ScrollTable.getRows(): List<List<Any?>> =
-    model.getRows()
+    model.getRows(columnCount)
 
-fun DefaultTableModel.getRows(): List<List<Any?>>
+fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>>
 {
     val result = mutableListOf<List<Any?>>()
     for (rowIx in 0 until rowCount) {
-        val row = (0 until columnCount).map { getValueAt(rowIx, it) }
+        val row = (0 until columns).map { getValueAt(rowIx, it) }
         result.add(row)
     }
 
