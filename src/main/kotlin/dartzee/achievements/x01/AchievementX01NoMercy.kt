@@ -23,7 +23,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished AS DtAchieved")
@@ -36,7 +36,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         sb.append(" AND drt.Ordinal = 1")
         sb.append(" AND drt.StartingScore IN (3, 5, 7, 9)")
-        appendPlayerSql(sb, players)
+        appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->
             bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("StartingScore").toString() })

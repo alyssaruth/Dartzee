@@ -24,11 +24,11 @@ class AchievementX01HighestBust : AbstractAchievement()
     override val pinkThreshold = 100
     override val maxValue = 181
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val whereSql = "RemainingScore < 0 OR RemainingSCore = 1 OR (RemainingScore = 0 AND LastDartMultiplier <> 2)"
 
-        unlockThreeDartAchievement(players, whereSql, "StartingScore", achievementRef, database)
+        unlockThreeDartAchievement(playerIds, whereSql, "StartingScore", achievementRef, database)
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_HIGHEST_BUST

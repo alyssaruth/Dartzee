@@ -28,9 +28,9 @@ class AchievementX01Btbf: AbstractMultiRowAchievement()
     override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtAchieved)
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
-        ensureX01RoundsTableExists(players, database)
+        ensureX01RoundsTableExists(playerIds, database)
 
         val sb = StringBuilder()
         sb.append(" SELECT PlayerId, DtRoundFinished AS DtAchieved, GameId")

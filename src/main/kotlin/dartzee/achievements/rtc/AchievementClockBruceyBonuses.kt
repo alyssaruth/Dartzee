@@ -32,7 +32,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
     override fun getBreakdownColumns() = listOf("Game", "Round", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, drt.DtCreation AS DtAchieved")
@@ -48,7 +48,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Doubles}%' AND drt.Multiplier = 2)")
         sb.append("     OR (g.GameParams LIKE '%${ClockType.Trebles}%' AND drt.Multiplier = 3)")
         sb.append(" )")
-        appendPlayerSql(sb, players)
+        appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->
             bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("RoundNumber").toString() })

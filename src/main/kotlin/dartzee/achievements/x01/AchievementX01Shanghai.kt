@@ -2,7 +2,6 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.*
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SHANGHAI
@@ -29,9 +28,9 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.dtAchieved)
 
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
-        ensureX01RoundsTableExists(players, database)
+        ensureX01RoundsTableExists(playerIds, database)
 
         val tempTable = database.createTempTable("Shanghai", "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)")
 

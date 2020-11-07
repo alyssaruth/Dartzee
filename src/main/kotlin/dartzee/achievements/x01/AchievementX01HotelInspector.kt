@@ -28,9 +28,9 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
     override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
-        ensureX01RoundsTableExists(players, database)
+        ensureX01RoundsTableExists(playerIds, database)
         val burltonConstantRounds = database.createTempTable("BurltonConstantRounds", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), RoundNumber INT")
 
         var sb = StringBuilder()

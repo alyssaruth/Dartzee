@@ -3,7 +3,6 @@ package dartzee.achievements
 import dartzee.`object`.*
 import dartzee.db.AchievementEntity
 import dartzee.db.BulkInserter
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import java.sql.ResultSet
@@ -23,19 +22,19 @@ fun getGolfSegmentCases(): String
     return sb.toString()
 }
 
-fun appendPlayerSql(sb: StringBuilder, players: List<PlayerEntity>, alias: String? = "pt", whereOrAnd: String = "AND")
+fun appendPlayerSql(sb: StringBuilder, playerIds: List<String>, alias: String? = "pt", whereOrAnd: String = "AND")
 {
-    if (players.isEmpty())
+    if (playerIds.isEmpty())
     {
         return
     }
 
-    val keys = players.joinToString { p -> "'${p.rowId}'"}
+    val keys = playerIds.joinToString { "'$it'" }
     val column = if (alias != null) "$alias.PlayerId" else "PlayerId"
     sb.append(" $whereOrAnd $column IN ($keys)")
 }
 
-fun ensureX01RoundsTableExists(players: List<PlayerEntity>, database: Database)
+fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
 {
     val created = database.createTableIfNotExists(
         X01_ROUNDS_TABLE,
@@ -62,7 +61,7 @@ fun ensureX01RoundsTableExists(players: List<PlayerEntity>, database: Database)
     sb.append(" AND drtFirst.PlayerId = drt.PlayerId")
     sb.append(" AND drtFirst.ParticipantId = drt.ParticipantId")
     sb.append(" AND drtFirst.RoundNumber = drt.RoundNumber")
-    appendPlayerSql(sb, players)
+    appendPlayerSql(sb, playerIds)
     sb.append(" GROUP BY pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber")
     database.executeUpdate(sb.toString())
 

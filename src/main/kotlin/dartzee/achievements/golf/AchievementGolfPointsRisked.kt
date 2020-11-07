@@ -40,7 +40,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         return sb.toString()
     }
 
-    override fun populateForConversion(players: List<PlayerEntity>, database: Database)
+    override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val sb = StringBuilder()
 
@@ -52,7 +52,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         sb.append(" AND g.GameType = '${GameType.GOLF}'")
         sb.append(" AND drt.RoundNumber = drt.Score")
         sb.append(" AND drt.Multiplier > 0")
-        appendPlayerSql(sb, players)
+        appendPlayerSql(sb, playerIds)
         sb.append(" AND EXISTS (")
         sb.append("     SELECT 1")
         sb.append("     FROM Dart drtOther")
