@@ -1,7 +1,6 @@
 package dartzee.achievements.x01
 
 import dartzee.achievements.AbstractAchievementTest
-import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -17,10 +16,8 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow(), database = database)
-
-        insertDart(pt, ordinal = 1, startingScore = 60, score = 20, multiplier = 1, database = database)
-        insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 2, database = database)
+        insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow(), database = database)
+        insertFinishForPlayer(p, 60, game = g, database = database)
     }
 
     @Test
@@ -58,15 +55,8 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
     {
         val p = insertPlayer()
 
-        val g1 = insertRelevantGame()
-        val g2 = insertRelevantGame()
-
-        val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId)
-        val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId)
-
-
-        insertDart(pt1, ordinal = 1, startingScore = 30, score = 15, multiplier = 2, dtCreation = Timestamp(500))
-        insertDart(pt2, ordinal = 1, startingScore = 30, score = 15, multiplier = 2, dtCreation = Timestamp(2000))
+        val game = insertFinishForPlayer(p, 30, dtCreation = Timestamp(500))
+        insertFinishForPlayer(p, 30, dtCreation = Timestamp(2000))
 
         factoryAchievement().populateForConversion(emptyList())
 
@@ -74,7 +64,7 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         val a = retrieveAchievement()
         a.playerId shouldBe p.rowId
         a.achievementCounter shouldBe 30
-        a.gameIdEarned shouldBe g1.rowId
+        a.gameIdEarned shouldBe game.rowId
         a.dtAchieved shouldBe Timestamp(500)
     }
 
@@ -83,22 +73,8 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
     {
         val p = insertPlayer()
 
-        val g1 = insertRelevantGame()
-        val g2 = insertRelevantGame()
-
-        val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId)
-        val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId)
-
-
-        //55 finish in two darts
-        insertDart(pt1, ordinal = 1, startingScore = 55, score = 15, multiplier = 1)
-        insertDart(pt1, ordinal = 2, startingScore = 40, score = 20, multiplier = 2, dtCreation = Timestamp(500))
-
-        //68 finish in three darts
-        insertDart(pt2, ordinal = 1, startingScore = 68, score = 18, multiplier = 1)
-        insertDart(pt2, ordinal = 2, startingScore = 50, score = 3, multiplier = 0)
-        insertDart(pt2, ordinal = 3, startingScore = 50, score = 25, multiplier = 2, dtCreation = Timestamp(2000))
-
+        insertFinishForPlayer(p, 55, dtCreation = Timestamp(500))
+        val game = insertFinishForPlayer(p, 68, dtCreation = Timestamp(2000))
 
         factoryAchievement().populateForConversion(emptyList())
 
@@ -106,7 +82,7 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         val a = retrieveAchievement()
         a.playerId shouldBe p.rowId
         a.achievementCounter shouldBe 68
-        a.gameIdEarned shouldBe g2.rowId
+        a.gameIdEarned shouldBe game.rowId
         a.dtAchieved shouldBe Timestamp(2000)
     }
 }

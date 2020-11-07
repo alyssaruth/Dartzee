@@ -61,6 +61,8 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     @Test
     fun `Should ignore games of the wrong type`()
     {
+        if (!factoryAchievement().usesTransactionalTablesForConversion) return
+
         val otherType = GameType.values().find { it != factoryAchievement().gameType }!!
 
         val p = insertPlayer()

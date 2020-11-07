@@ -1,4 +1,6 @@
 ALTER TABLE Achievement ADD COLUMN DtAchieved TIMESTAMP NOT NULL DEFAULT '9999-12-31 00:00:00';
 
 UPDATE Achievement
-SET DtAchieved = DtLastUpdate
+SET DtAchieved = DtLastUpdate;
+
+ALTER TABLE Achievement ALTER COLUMN DtAchieved DROP DEFAULT

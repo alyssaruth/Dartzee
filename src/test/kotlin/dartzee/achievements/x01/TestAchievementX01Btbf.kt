@@ -20,33 +20,6 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
     }
 
     @Test
-    fun `Should ignore data for the wrong type of game`()
-    {
-        val alice = insertPlayer()
-
-        val game = insertGame(gameType = GameType.GOLF)
-        insertSuccessfulParticipant(game, alice)
-
-        factoryAchievement().populateForConversion(emptyList())
-
-        getCountFromTable("Achievement") shouldBe 0
-    }
-
-    @Test
-    fun `Should ignore rounds that arent the last one`()
-    {
-        val g = insertRelevantGame()
-        val p = insertPlayer()
-
-        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 6)
-        insertDart(pt, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2)
-
-        factoryAchievement().populateForConversion(emptyList())
-
-        getCountFromTable("Achievement") shouldBe 0
-    }
-
-    @Test
     fun `Should ignore games that were won on a different double`()
     {
         val g = insertRelevantGame()

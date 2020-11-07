@@ -31,6 +31,7 @@ abstract class AbstractAchievement
     abstract val pinkThreshold : Int
     abstract val maxValue : Int
     abstract val gameType: GameType?
+    open val usesTransactionalTablesForConversion = true
 
     var attainedValue = -1
     var gameIdEarned = ""

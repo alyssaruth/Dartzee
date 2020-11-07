@@ -10,6 +10,7 @@ import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel
@@ -26,7 +27,8 @@ fun getAllSanityChecks(): List<AbstractSanityCheck>
             SanityCheckFinalScoreX01(),
             SanityCheckFinalScoreGolf(),
             SanityCheckFinalScoreRtc(),
-            SanityCheckPlayerIdMismatch())
+            SanityCheckPlayerIdMismatch(),
+            SanityCheckX01Finishes())
 
     //Checks that run on all entities
     DartsDatabaseUtil.getAllEntities().forEach{
@@ -34,8 +36,6 @@ fun getAllSanityChecks(): List<AbstractSanityCheck>
         checks.add(SanityCheckUnsetIdFields(it))
     }
 
-    //Do this last in case we leave temp tables lying around from other checks
-    checks.add(SanityCheckUnexpectedTables())
     return checks
 }
 
@@ -64,14 +64,20 @@ object DatabaseSanityCheck
         val dlg = ProgressDialog.factory("Running Sanity Check", "checks remaining", checks.size)
         dlg.setVisibleLater()
 
-        getAllSanityChecks().forEach{
-            val results = it.runCheck()
-            sanityErrors.addAll(results)
+        try
+        {
+            getAllSanityChecks().forEach{
+                val results = it.runCheck()
+                sanityErrors.addAll(results)
 
-            dlg.incrementProgressLater()
+                dlg.incrementProgressLater()
+            }
         }
-
-        dlg.disposeLater()
+        finally
+        {
+            mainDatabase.dropUnexpectedTables()
+            dlg.disposeLater()
+        }
 
         runOnEventThread { sanityCheckComplete() }
     }
