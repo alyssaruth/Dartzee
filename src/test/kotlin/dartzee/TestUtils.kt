@@ -8,7 +8,6 @@ import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
-import dartzee.core.util.TableUtil
 import dartzee.core.util.dumpThreadStacks
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.game.GameType
@@ -136,18 +135,6 @@ private fun Icon.toBufferedImage(): BufferedImage
     paintIcon(null, g, 0, 0)
     g.dispose()
     return bi
-}
-
-fun startThreadMonitoring()
-{
-    val threadStackRunnable = Runnable {
-        while (true)
-        {
-            dumpThreadStacks()
-            Thread.sleep(1000)
-        }
-    }
-    Thread(threadStackRunnable).start()
 }
 
 fun ScrollTable.getRows(): List<List<Any?>> =
