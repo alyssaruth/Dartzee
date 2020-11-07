@@ -1,5 +1,6 @@
 package dartzee.db
 
+import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
 import dartzee.core.helper.getFutureTime
 import dartzee.core.helper.getPastTime
@@ -249,6 +250,58 @@ class TestDatabaseMerger: AbstractTest()
             remoteRow.achievementCounter shouldBe 140
             remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
             remoteRow.gameIdEarned shouldBe g.rowId
+        }
+    }
+
+    @Test
+    fun `Should not replace achievement rows for players whose darts have not changed`()
+    {
+        val p = insertPlayer()
+        val g = insertGame(gameType = GameType.X01)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+
+        insertDart(pt, startingScore = 501, roundNumber = 1, ordinal = 1, score = 20, multiplier = 3)
+        insertDart(pt, startingScore = 441, roundNumber = 1, ordinal = 2, score = 20, multiplier = 3)
+        insertDart(pt, startingScore = 381, roundNumber = 1, ordinal = 3, score = 20, multiplier = 1)
+
+        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
+            val remotePlayer = insertPlayer(database = remoteDatabase)
+            insertAchievement(playerId = remotePlayer.rowId,
+                achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME,
+                database = remoteDatabase,
+                achievementCounter = 18)
+
+            val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+            val resultingDb = merger.performMerge()
+
+            getCountFromTable("Achievement", mainDatabase) shouldBe 0
+            getCountFromTable("Achievement", resultingDb) shouldBe 2
+
+            val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '${remotePlayer.rowId}'")!!
+            remoteRow.achievementCounter shouldBe 18
+            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_GOLF_BEST_GAME
+        }
+    }
+
+    @Test
+    fun `Should not run achievement conversion at all if no darts changed`()
+    {
+        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
+            val remotePlayer = insertPlayer(database = remoteDatabase)
+            insertAchievement(playerId = remotePlayer.rowId,
+                achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME,
+                database = remoteDatabase,
+                achievementCounter = 18)
+
+            val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+            val resultingDb = merger.performMerge()
+
+            getCountFromTable("Achievement", mainDatabase) shouldBe 0
+            getCountFromTable("Achievement", resultingDb) shouldBe 1
+
+            val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '${remotePlayer.rowId}'")!!
+            remoteRow.achievementCounter shouldBe 18
+            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_GOLF_BEST_GAME
         }
     }
 
