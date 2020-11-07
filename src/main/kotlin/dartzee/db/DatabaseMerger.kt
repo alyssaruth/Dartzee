@@ -63,6 +63,6 @@ class DatabaseMerger(private val localDatabase: Database,
     private fun getSyncEntities(): List<AbstractEntity<*>>
     {
         val entities = DartsDatabaseUtil.getAllEntities(localDatabase)
-        return entities.filterNot { it is PendingLogsEntity }
+        return entities.filter { it.includeInSync() }
     }
 }

@@ -42,6 +42,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     open fun getColumnsAllowedToBeUnset() = listOf<String>()
     open fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>) {}
     open fun cacheValuesWhileResultSetActive() {}
+    open fun includeInSync() = true
 
     /**
      * Helpers

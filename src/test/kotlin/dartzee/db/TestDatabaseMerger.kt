@@ -128,6 +128,20 @@ class TestDatabaseMerger: AbstractTest()
     }
 
     @Test
+    fun `Should not sync the Achievement table`()
+    {
+        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
+            insertAchievement(database = mainDatabase)
+
+            val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase, remoteName = "Goomba")
+            val resultingDatabase = merger.performMerge()
+
+            getCountFromTable("Achievement", resultingDatabase) shouldBe 0
+            getCountFromTable("Achievement", mainDatabase) shouldBe 1
+        }
+    }
+
+    @Test
     fun `Should only sync rows that were modified since the last sync`()
     {
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
