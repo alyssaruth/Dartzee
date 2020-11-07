@@ -54,7 +54,8 @@ class DatabaseMerger(private val localDatabase: Database,
         val playersAffected = DartEntity().retrieveModifiedSince(lastLocalSync).map { it.playerId }.distinct()
         if (playersAffected.isNotEmpty())
         {
-            runConversionsWithProgressBar(getAllAchievements(), playersAffected)
+            val t = runConversionsWithProgressBar(getAllAchievements(), playersAffected, remoteDatabase)
+            t.join()
         }
 
         SyncAuditEntity.insertSyncAudit(remoteDatabase, remoteName)

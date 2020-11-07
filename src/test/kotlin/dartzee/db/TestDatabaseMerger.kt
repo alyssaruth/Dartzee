@@ -1,9 +1,11 @@
 package dartzee.db
 
+import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
 import dartzee.core.helper.getFutureTime
 import dartzee.core.helper.getPastTime
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
+import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_TEST_CONNECTION_ERROR
@@ -222,6 +224,31 @@ class TestDatabaseMerger: AbstractTest()
             val resultingGame = dao.retrieveForId(oldGame.rowId)!!
             resultingGame.localId shouldBe 4
             resultingGame.dtFinish shouldNotBe DateStatics.END_OF_TIME
+        }
+    }
+
+    @Test
+    fun `Should regenerate achievement rows for players whose darts have changed`()
+    {
+        val p = insertPlayer()
+        val g = insertGame(gameType = GameType.X01)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+
+        insertDart(pt, startingScore = 501, roundNumber = 1, ordinal = 1, score = 20, multiplier = 3)
+        insertDart(pt, startingScore = 441, roundNumber = 1, ordinal = 2, score = 20, multiplier = 3)
+        insertDart(pt, startingScore = 381, roundNumber = 1, ordinal = 3, score = 20, multiplier = 1)
+
+        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
+            val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+            val resultingDb = merger.performMerge()
+
+            getCountFromTable("Achievement", mainDatabase) shouldBe 0
+            getCountFromTable("Achievement", resultingDb) shouldBe 1
+
+            val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '${p.rowId}'")!!
+            remoteRow.achievementCounter shouldBe 140
+            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
+            remoteRow.gameIdEarned shouldBe g.rowId
         }
     }
 

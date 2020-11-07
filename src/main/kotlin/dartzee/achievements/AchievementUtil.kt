@@ -44,15 +44,17 @@ fun convertEmptyAchievements()
     }
 }
 
-fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>, playerIds: List<String>): Thread
+fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>,
+                                  playerIds: List<String>,
+                                  database: Database = mainDatabase): Thread
 {
-    val r = Runnable { runConversionsInOtherThread(achievements, playerIds)}
+    val r = Runnable { runConversionsInOtherThread(achievements, playerIds, database) }
     val t = Thread(r, "Conversion thread")
     t.start()
     return t
 }
 
-private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, playerIds: List<String>)
+private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, playerIds: List<String>, database: Database)
 {
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()
@@ -63,7 +65,7 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
     {
         achievements.forEach {
             val timer = DurationTimer()
-            it.runConversion(playerIds)
+            it.runConversion(playerIds, database)
 
             val timeElapsed = timer.getDuration()
             timings[it.name] = timeElapsed
