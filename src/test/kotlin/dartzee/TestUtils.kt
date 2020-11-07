@@ -8,6 +8,7 @@ import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
+import dartzee.core.util.TableUtil
 import dartzee.core.util.dumpThreadStacks
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.game.GameType
@@ -32,6 +33,7 @@ import java.util.*
 import javax.swing.Icon
 import javax.swing.JCheckBox
 import javax.swing.JComponent
+import javax.swing.table.DefaultTableModel
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
 val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
@@ -148,7 +150,10 @@ fun startThreadMonitoring()
     Thread(threadStackRunnable).start()
 }
 
-fun ScrollTable.getRows(): List<List<Any?>>
+fun ScrollTable.getRows(): List<List<Any?>> =
+    model.getRows()
+
+fun DefaultTableModel.getRows(): List<List<Any?>>
 {
     val result = mutableListOf<List<Any?>>()
     for (rowIx in 0 until rowCount) {
