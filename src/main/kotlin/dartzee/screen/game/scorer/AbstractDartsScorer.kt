@@ -111,6 +111,11 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
         panelCenter.repaint()
     }
 
+    open fun allAchievementsClosed()
+    {
+        panelCenter.add(tableScores)
+    }
+
     inner class AchievementOverlay(achievement: AbstractAchievement) : JPanel(), ActionListener, MouseListener
     {
         private val btnClose = JButton("X")
@@ -187,7 +192,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
             }
             else
             {
-                panelCenter.add(tableScores)
+                allAchievementsClosed()
             }
 
             panelCenter.revalidate()

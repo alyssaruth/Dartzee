@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import com.github.alexburlton.swingtest.findChild
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
+import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.firstRow
 import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
@@ -108,6 +109,17 @@ class TestDartsScorerRoundTheClock: AbstractTest()
 
         val scorerAnyOrder = factoryScorer(inOrder = false)
         scorerAnyOrder.findChild<RoundTheClockScorecard>().shouldNotBeNull()
+    }
+
+    @Test
+    fun `Should add back the scorecard when achievement popup is dismissed`()
+    {
+        val scorer = factoryScorer(inOrder = false)
+        scorer.achievementUnlocked(AchievementClockBestGame())
+
+        scorer.findChild<RoundTheClockScorecard>().shouldBeNull()
+        scorer.getAchievementOverlay()!!.close()
+        scorer.findChild<RoundTheClockScorecard>().shouldNotBeNull()
     }
 
     private fun factoryScorer(clockType: ClockType = ClockType.Standard, inOrder: Boolean = true): DartsScorerRoundTheClock
