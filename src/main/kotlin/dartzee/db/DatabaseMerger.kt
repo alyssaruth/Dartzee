@@ -55,7 +55,8 @@ class DatabaseMerger(private val localDatabase: Database,
         if (achievementsChanged.isNotEmpty())
         {
             val players = achievementsChanged.map { it.playerId }.distinct()
-            val achievements = achievementsChanged.mapNotNull { getAchievementForRef(it.achievementRef) }
+            val achievementRefs = achievementsChanged.map { it.achievementRef }.distinct()
+            val achievements = achievementRefs.mapNotNull(::getAchievementForRef)
             val t = runConversionsWithProgressBar(achievements, players, remoteDatabase)
             t.join()
         }
