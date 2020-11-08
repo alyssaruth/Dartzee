@@ -1,6 +1,7 @@
 package dartzee.db
 
 import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
+import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
 import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
 import dartzee.core.helper.getFutureTime
 import dartzee.core.helper.getPastTime
@@ -229,65 +230,73 @@ class TestDatabaseMerger: AbstractTest()
     }
 
     @Test
-    fun `Should regenerate achievement rows for players whose darts have changed`()
+    fun `Should regenerate achievement rows for players whose achievements have changed`()
     {
-        val p = insertPlayer()
-        val g = insertGame(gameType = GameType.X01)
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val (playerId, gameId) = setUpThreeDarterData()
 
-        insertDart(pt, startingScore = 501, roundNumber = 1, ordinal = 1, score = 20, multiplier = 3)
-        insertDart(pt, startingScore = 441, roundNumber = 1, ordinal = 2, score = 20, multiplier = 3)
-        insertDart(pt, startingScore = 381, roundNumber = 1, ordinal = 3, score = 20, multiplier = 1)
+        insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
             val resultingDb = merger.performMerge()
 
-            getCountFromTable("Achievement", mainDatabase) shouldBe 0
             getCountFromTable("Achievement", resultingDb) shouldBe 1
 
-            val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '${p.rowId}'")!!
+            val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '$playerId'")!!
             remoteRow.achievementCounter shouldBe 140
             remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
-            remoteRow.gameIdEarned shouldBe g.rowId
+            remoteRow.gameIdEarned shouldBe gameId
         }
     }
 
     @Test
-    fun `Should not replace achievement rows for players whose darts have not changed`()
+    fun `Should not replace achievement rows for players whose achievements have not changed`()
     {
-        val p = insertPlayer()
-        val g = insertGame(gameType = GameType.X01)
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val (playerId, _) = setUpThreeDarterData()
 
-        insertDart(pt, startingScore = 501, roundNumber = 1, ordinal = 1, score = 20, multiplier = 3)
-        insertDart(pt, startingScore = 441, roundNumber = 1, ordinal = 2, score = 20, multiplier = 3)
-        insertDart(pt, startingScore = 381, roundNumber = 1, ordinal = 3, score = 20, multiplier = 1)
+        insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val remotePlayer = insertPlayer(database = remoteDatabase)
             insertAchievement(playerId = remotePlayer.rowId,
-                achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME,
+                achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE,
                 database = remoteDatabase,
-                achievementCounter = 18)
+                achievementCounter = 25)
 
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
             val resultingDb = merger.performMerge()
 
-            getCountFromTable("Achievement", mainDatabase) shouldBe 0
+            getCountFromTable("Achievement", mainDatabase) shouldBe 1
             getCountFromTable("Achievement", resultingDb) shouldBe 2
 
             val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '${remotePlayer.rowId}'")!!
-            remoteRow.achievementCounter shouldBe 18
-            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_GOLF_BEST_GAME
+            remoteRow.achievementCounter shouldBe 25
+            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
         }
     }
 
     @Test
-    fun `Should not run achievement conversion at all if no darts changed`()
+    fun `Should only run achievement conversion for changed refs`()
     {
+        val (playerId, _) = setUpThreeDarterData()
+
+        insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH, achievementCounter = 60)
+
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
-            val remotePlayer = insertPlayer(database = remoteDatabase)
+            val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+            val resultingDb = merger.performMerge()
+
+            getCountFromTable("Achievement", resultingDb) shouldBe 0
+        }
+    }
+
+    @Test
+    fun `Should not run achievement conversion at all if no achievements changed`()
+    {
+        val (playerId, _) = setUpThreeDarterData()
+
+        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
+            val remotePlayer = insertPlayer(uuid = playerId, database = remoteDatabase)
             insertAchievement(playerId = remotePlayer.rowId,
                 achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME,
                 database = remoteDatabase,
@@ -303,6 +312,19 @@ class TestDatabaseMerger: AbstractTest()
             remoteRow.achievementCounter shouldBe 18
             remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_GOLF_BEST_GAME
         }
+    }
+
+    private fun setUpThreeDarterData(): Pair<String, String>
+    {
+        val p = insertPlayer()
+        val g = insertGame(gameType = GameType.X01)
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+
+        insertDart(pt, startingScore = 501, roundNumber = 1, ordinal = 1, score = 20, multiplier = 3)
+        insertDart(pt, startingScore = 441, roundNumber = 1, ordinal = 2, score = 20, multiplier = 3)
+        insertDart(pt, startingScore = 381, roundNumber = 1, ordinal = 3, score = 20, multiplier = 1)
+
+        return Pair(p.rowId, g.rowId)
     }
 
     private fun setUpLastSync(database: Database): Timestamp
