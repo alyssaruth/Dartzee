@@ -1,13 +1,9 @@
 package dartzee.screen.game.scorer
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.Dart
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.achievements.x01.AchievementX01GamesWon
-import dartzee.core.bean.SwingLabel
 import dartzee.game.state.TestPlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
@@ -19,7 +15,6 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
-import javax.swing.JButton
 
 class TestAbstractDartsScorer: AbstractTest()
 {
@@ -112,10 +107,6 @@ class TestAbstractDartsScorer: AbstractTest()
 
         scorer.getAchievementOverlay() shouldBe null
     }
-
-    private fun AbstractDartsScorer<*>.getAchievementOverlay() = findChild<AbstractDartsScorer<*>.AchievementOverlay>()
-    private fun AbstractDartsScorer<*>.AchievementOverlay.getAchievementName() = getChild<SwingLabel> { it.testId == "achievementName" }.text
-    private fun AbstractDartsScorer<*>.AchievementOverlay.close() = clickChild<JButton>("X")
 
     private class TestDartsScorer: AbstractDartsScorer<TestPlayerState>()
     {

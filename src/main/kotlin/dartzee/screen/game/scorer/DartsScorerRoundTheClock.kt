@@ -27,6 +27,16 @@ class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *>, private val cloc
         }
     }
 
+    override fun allAchievementsClosed()
+    {
+        super.allAchievementsClosed()
+
+        if (!clockConfig.inOrder)
+        {
+            panelCenter.add(tableRemaining, BorderLayout.NORTH)
+        }
+    }
+
     override fun stateChangedImpl(state: ClockPlayerState)
     {
         tableRemaining.stateChanged(state, getPaused())
