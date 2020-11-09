@@ -1,11 +1,10 @@
 package dartzee.achievements.rtc
 
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.utils.Database
@@ -16,7 +15,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
 {
     override val name = "Didn't he do well!?"
     override val desc = "Total number of 'Brucey Bonuses' executed in Round the Clock"
-    override val achievementRef = ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
+    override val achievementType = AchievementType.CLOCK_BRUCEY_BONUSES
     override val gameType = GameType.ROUND_THE_CLOCK
 
     override val redThreshold = 1
@@ -51,7 +50,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
         appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("RoundNumber").toString() })
+            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("RoundNumber").toString() })
         }
     }
 

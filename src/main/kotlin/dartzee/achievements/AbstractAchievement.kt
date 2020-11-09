@@ -22,7 +22,7 @@ abstract class AbstractAchievement
 {
     abstract val name : String
     abstract val desc : String
-    abstract val achievementRef : Int
+    abstract val achievementType : AchievementType
     abstract val redThreshold : Int
     abstract val orangeThreshold : Int
     abstract val yellowThreshold : Int
@@ -31,6 +31,7 @@ abstract class AbstractAchievement
     abstract val pinkThreshold : Int
     abstract val maxValue : Int
     abstract val gameType: GameType?
+
     open val usesTransactionalTablesForConversion = true
 
     var attainedValue = -1
@@ -45,7 +46,7 @@ abstract class AbstractAchievement
     {
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")
-        sb.append(" WHERE AchievementRef = $achievementRef")
+        sb.append(" WHERE AchievementRef = $achievementType")
         appendPlayerSql(sb, playerIds, null)
 
         if (!database.executeUpdate("" + sb))
@@ -71,7 +72,7 @@ abstract class AbstractAchievement
 
         if (achievementRows.size > 1)
         {
-            logger.error(CODE_SQL_EXCEPTION, "Got ${achievementRows.size} rows (expected 1) for achievement $achievementRef and player ${achievementRows.first().playerId}")
+            logger.error(CODE_SQL_EXCEPTION, "Got ${achievementRows.size} rows (expected 1) for achievement $achievementType and player ${achievementRows.first().playerId}")
         }
 
         val achievementRow = achievementRows.first()
@@ -243,6 +244,6 @@ abstract class AbstractAchievement
 
     open fun retrieveAllRows(): List<AchievementEntity>
     {
-        return AchievementEntity().retrieveEntities("AchievementRef = $achievementRef")
+        return AchievementEntity().retrieveEntities("AchievementRef = $achievementType")
     }
 }

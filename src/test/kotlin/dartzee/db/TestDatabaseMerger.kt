@@ -1,8 +1,6 @@
 package dartzee.db
 
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
+import dartzee.achievements.AchievementType
 import dartzee.core.helper.getFutureTime
 import dartzee.core.helper.getPastTime
 import dartzee.core.util.DateStatics
@@ -234,7 +232,7 @@ class TestDatabaseMerger: AbstractTest()
     {
         val (playerId, gameId) = setUpThreeDarterData()
 
-        insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
+        insertAchievement(playerId = playerId, achievementRef = AchievementType.X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
@@ -244,7 +242,7 @@ class TestDatabaseMerger: AbstractTest()
 
             val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '$playerId'")!!
             remoteRow.achievementCounter shouldBe 140
-            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
+            remoteRow.achievementType shouldBe AchievementType.X01_BEST_THREE_DART_SCORE
             remoteRow.gameIdEarned shouldBe gameId
         }
     }
@@ -254,12 +252,12 @@ class TestDatabaseMerger: AbstractTest()
     {
         val (playerId, _) = setUpThreeDarterData()
 
-        insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
+        insertAchievement(playerId = playerId, achievementRef = AchievementType.X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val remotePlayer = insertPlayer(database = remoteDatabase)
             insertAchievement(playerId = remotePlayer.rowId,
-                achievementRef = ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE,
+                achievementRef = AchievementType.X01_BEST_THREE_DART_SCORE,
                 database = remoteDatabase,
                 achievementCounter = 25)
 
@@ -271,7 +269,7 @@ class TestDatabaseMerger: AbstractTest()
 
             val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '${remotePlayer.rowId}'")!!
             remoteRow.achievementCounter shouldBe 25
-            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE
+            remoteRow.achievementType shouldBe AchievementType.X01_BEST_THREE_DART_SCORE
         }
     }
 
@@ -280,7 +278,7 @@ class TestDatabaseMerger: AbstractTest()
     {
         val (playerId, _) = setUpThreeDarterData()
 
-        insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH, achievementCounter = 60)
+        insertAchievement(playerId = playerId, achievementRef = AchievementType.X01_BEST_FINISH, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
@@ -298,7 +296,7 @@ class TestDatabaseMerger: AbstractTest()
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val remotePlayer = insertPlayer(uuid = playerId, database = remoteDatabase)
             insertAchievement(playerId = remotePlayer.rowId,
-                achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME,
+                achievementRef = AchievementType.GOLF_BEST_GAME,
                 database = remoteDatabase,
                 achievementCounter = 18)
 
@@ -310,7 +308,7 @@ class TestDatabaseMerger: AbstractTest()
 
             val remoteRow = AchievementEntity(resultingDb).retrieveEntity("PlayerId = '${remotePlayer.rowId}'")!!
             remoteRow.achievementCounter shouldBe 18
-            remoteRow.achievementRef shouldBe ACHIEVEMENT_REF_GOLF_BEST_GAME
+            remoteRow.achievementType shouldBe AchievementType.GOLF_BEST_GAME
         }
     }
 

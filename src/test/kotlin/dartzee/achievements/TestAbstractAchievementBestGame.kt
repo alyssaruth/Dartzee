@@ -128,6 +128,6 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         achievementRow.dtAchieved shouldBe Timestamp(1000)
         achievementRow.playerId shouldBe alice.rowId
         achievementRow.gameIdEarned shouldBe game.rowId
-        achievementRow.achievementRef shouldBe factoryAchievement().achievementRef
+        achievementRow.achievementType shouldBe factoryAchievement().achievementType
     }
 }

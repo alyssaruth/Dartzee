@@ -2,9 +2,7 @@ package dartzee.screen.player
 
 import com.github.alexburlton.swingtest.doHover
 import com.github.alexburlton.swingtest.doHoverAway
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_GAME
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_GAME
+import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.rtc.AchievementClockBestGame
@@ -25,9 +23,9 @@ class TestPlayerAchievementsButton: AbstractTest()
     {
         //6, 1, 0
         val player = insertPlayer()
-        val a1 = insertAchievement(playerId = player.rowId, achievementRef = ACHIEVEMENT_REF_X01_BEST_GAME, achievementCounter = AchievementX01BestGame().pinkThreshold)
-        val a2 = insertAchievement(playerId = player.rowId, achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME, achievementCounter = AchievementGolfBestGame().redThreshold)
-        val a3 = insertAchievement(playerId = player.rowId, achievementRef = ACHIEVEMENT_REF_CLOCK_BEST_GAME, achievementCounter = AchievementClockBestGame().redThreshold + 1)
+        val a1 = insertAchievement(playerId = player.rowId, achievementRef = AchievementType.X01_BEST_GAME, achievementCounter = AchievementX01BestGame().pinkThreshold)
+        val a2 = insertAchievement(playerId = player.rowId, achievementRef = AchievementType.GOLF_BEST_GAME, achievementCounter = AchievementGolfBestGame().redThreshold)
+        val a3 = insertAchievement(playerId = player.rowId, achievementRef = AchievementType.CLOCK_BEST_GAME, achievementCounter = AchievementClockBestGame().redThreshold + 1)
 
         val button = PlayerAchievementsButton(player, listOf(a1, a2, a3))
 

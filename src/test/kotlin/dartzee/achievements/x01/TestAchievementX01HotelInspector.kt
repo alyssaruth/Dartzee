@@ -1,7 +1,7 @@
 package dartzee.achievements.x01
 
 import dartzee.`object`.Dart
-import dartzee.achievements.ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -115,7 +115,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         getCountFromTable("Achievement") shouldBe 1
 
-        val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, p.rowId)!!
+        val a = AchievementEntity.retrieveAchievement(AchievementType.X01_HOTEL_INSPECTOR, p.rowId)!!
         a.gameIdEarned shouldBe g.rowId
     }
 

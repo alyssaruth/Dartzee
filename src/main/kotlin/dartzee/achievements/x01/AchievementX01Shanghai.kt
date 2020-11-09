@@ -11,7 +11,7 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
 {
     override val name = "Shanghai"
     override val desc = "Total number of times player has scored T20, D20, 20 (in any order)"
-    override val achievementRef = ACHIEVEMENT_REF_X01_SHANGHAI
+    override val achievementType = AchievementType.X01_SHANGHAI
     override val gameType = GameType.X01
 
     override val redThreshold = 1
@@ -63,6 +63,6 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement()
         sb.append(" AND drtSingle.Multiplier = 1")
         sb.append(" AND drtSingle.Score = 20")
 
-        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementRef) }
+        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementType) }
     }
 }

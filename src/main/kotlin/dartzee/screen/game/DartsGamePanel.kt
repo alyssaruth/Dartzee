@@ -475,7 +475,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         val gameParams = aa.gameParams
         if (gameParams == gameEntity.gameParams)
         {
-            AchievementEntity.updateAchievement(aa.achievementRef, playerId, gameEntity.rowId, score)
+            AchievementEntity.updateAchievement(aa.achievementType, playerId, gameEntity.rowId, score)
         }
     }
 

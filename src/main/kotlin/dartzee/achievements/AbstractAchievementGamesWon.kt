@@ -1,7 +1,6 @@
 package dartzee.achievements
 
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.utils.Database
 
 abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
@@ -25,7 +24,7 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
         appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("Score").toString() })
+            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("Score").toString() })
         }
     }
 

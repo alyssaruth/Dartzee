@@ -42,7 +42,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 
     protected fun getAchievementCount(database: Database = mainDatabase): Int
     {
-        val ref = factoryAchievement().achievementRef
+        val ref = factoryAchievement().achievementType
         return database.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementRef = $ref")
     }
 

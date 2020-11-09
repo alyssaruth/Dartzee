@@ -25,12 +25,12 @@ object DatabaseMigrations
             15 to listOf (
                 { db -> SyncAuditEntity(db).createTable() },
                 { db -> runScript(db, 16, "1. Achievement.sql") },
-                { db -> convertAchievement(ACHIEVEMENT_REF_X01_GAMES_WON, db) },
-                { db -> convertAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, db) },
-                { db -> convertAchievement(ACHIEVEMENT_REF_CLOCK_GAMES_WON, db) },
-                { db -> convertAchievement(ACHIEVEMENT_REF_DARTZEE_GAMES_WON, db) },
-                { db -> convertAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, db) },
-                { db -> convertAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, db) }
+                { db -> convertAchievement(AchievementType.X01_GAMES_WON, db) },
+                { db -> convertAchievement(AchievementType.GOLF_GAMES_WON, db) },
+                { db -> convertAchievement(AchievementType.CLOCK_GAMES_WON, db) },
+                { db -> convertAchievement(AchievementType.DARTZEE_GAMES_WON, db) },
+                { db -> convertAchievement(AchievementType.CLOCK_BRUCEY_BONUSES, db) },
+                { db -> convertAchievement(AchievementType.GOLF_POINTS_RISKED, db) }
             )
         )
     }
@@ -38,11 +38,11 @@ object DatabaseMigrations
     /**
      * V14 -> V15
      */
-    private fun convertAchievement(achievementRef: Int, database: Database)
+    private fun convertAchievement(type: AchievementType, database: Database)
     {
         try
         {
-            getAchievementForRef(achievementRef)!!.runConversion(emptyList(), database)
+            getAchievementForType(type)!!.runConversion(emptyList(), database)
         }
         finally
         {

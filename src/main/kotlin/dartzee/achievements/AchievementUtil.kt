@@ -29,7 +29,7 @@ fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, playe
     val myAchievementRows = allAchievementRows.filter{ it.playerId == player.rowId }
 
     return getAllAchievements().sumBy { achievement ->
-        val myRelevantRows = myAchievementRows.filter{ it.achievementRef == achievement.achievementRef }
+        val myRelevantRows = myAchievementRows.filter { it.achievementType == achievement.achievementType }
         achievement.initialiseFromDb(myRelevantRows, player)
         achievement.getScore()
     }
@@ -86,7 +86,7 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
 
 private fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 {
-    val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementRef = ${achievement.achievementRef}"
+    val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementRef = ${achievement.achievementType}"
     val count = mainDatabase.executeQueryAggregate(sql)
 
     return count > 0
@@ -116,7 +116,8 @@ fun getAllAchievements() =
             AchievementGolfCourseMaster(),
             AchievementDartzeeGamesWon())
 
-fun getAchievementForRef(achievementRef : Int) = getAllAchievements().find { it.achievementRef == achievementRef }
+fun getAchievementForType(achievementType: AchievementType)
+        = getAllAchievements().find { it.achievementType == achievementType }
 
 fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
 {
@@ -124,15 +125,15 @@ fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
     return ref as AbstractAchievementBestGame?
 }
 
-fun getWinAchievementRef(gameType : GameType): Int
+fun getWinAchievementRef(gameType : GameType): AchievementType
 {
-    val ref = getAllAchievements().find { it is AbstractAchievementGamesWon && it.gameType == gameType }?.achievementRef
-    ref ?: throw Exception("No total wins achievement found for GameType [$gameType]")
-    return ref
+    val type = getAllAchievements().find { it is AbstractAchievementGamesWon && it.gameType == gameType }?.achievementType
+    type ?: throw Exception("No total wins achievement found for GameType [$gameType]")
+    return type
 }
 
 fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String,
-                               achievementScoreSql : String, achievementRef: Int, database: Database)
+                               achievementScoreSql : String, achievementType: AchievementType, database: Database)
 {
     ensureX01RoundsTableExists(playerIds, database)
 
@@ -165,20 +166,20 @@ fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String
     sb.append(" ORDER BY DtAchieved")
 
     database.executeQuery(sb).use { rs ->
-        bulkInsertFromResultSet(rs, database, achievementRef, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Score") })
+        bulkInsertFromResultSet(rs, database, achievementType, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Score") })
     }
 }
 
 fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
 {
-    val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = '$playerId' AND AchievementRef = $achievementRef"
+    val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
+    val whereSql = "PlayerId = '$playerId' AND AchievementRef = '$achievementType'"
 
     val achievementRows = AchievementEntity().retrieveEntities(whereSql)
     val hitDoubles = achievementRows.map { it.achievementCounter }
     if (!hitDoubles.contains(counter))
     {
-        AchievementEntity.factoryAndSave(achievementRef, playerId, gameId, counter)
+        AchievementEntity.factoryAndSave(achievementType, playerId, gameId, counter)
 
         val template = AchievementX01CheckoutCompleteness()
         val arrayList = ArrayList(hitDoubles)
@@ -190,9 +191,9 @@ fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int
     }
 }
 
-fun retrieveAchievementForDetail(achievementRef: Int, playerId: String, achievementDetail: String): AchievementEntity?
+fun retrieveAchievementForDetail(achievementType: AchievementType, playerId: String, achievementDetail: String): AchievementEntity?
 {
-    val whereSql = "AchievementRef = $achievementRef AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
+    val whereSql = "AchievementRef = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
     return AchievementEntity().retrieveEntity(whereSql)
 }
 

@@ -1,7 +1,6 @@
 package dartzee.screen.game.golf
 
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.doGolfMiss
@@ -76,13 +75,13 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
 
         if (pointsRisked > 0)
         {
-            AchievementEntity.insertAchievementWithCounter(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, "$currentRoundNumber", pointsRisked)
+            AchievementEntity.insertAchievementWithCounter(AchievementType.GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, "$currentRoundNumber", pointsRisked)
         }
 
         if (lastDart.getGolfScore(currentRoundNumber) == 1
-         && retrieveAchievementForDetail(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, getCurrentPlayerId(), "$currentRoundNumber") == null)
+         && retrieveAchievementForDetail(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), "$currentRoundNumber") == null)
         {
-            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
+            AchievementEntity.insertAchievement(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
         }
     }
 

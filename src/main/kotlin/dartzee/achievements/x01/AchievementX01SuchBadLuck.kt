@@ -1,10 +1,9 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
@@ -16,7 +15,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
 {
     override val name = "Such Bad Luck"
     override val desc = "Most adjacent doubles hit when on a checkout in a game of X01"
-    override val achievementRef = ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
+    override val achievementType = AchievementType.X01_SUCH_BAD_LUCK
     override val gameType = GameType.X01
 
     override val redThreshold = 1
@@ -62,7 +61,7 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         sb.append(" ORDER BY COUNT(1) DESC, DtAchieved")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementCounterFn = { rs.getInt("GameTotal") }, oneRowPerPlayer = true)
+            bulkInsertFromResultSet(rs, database, achievementType, achievementCounterFn = { rs.getInt("GameTotal") }, oneRowPerPlayer = true)
         }
     }
 

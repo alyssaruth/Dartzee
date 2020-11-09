@@ -1,6 +1,6 @@
 package dartzee.db
 
-import dartzee.achievements.getAchievementForRef
+import dartzee.achievements.getAchievementForType
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_MERGE_ERROR
@@ -55,8 +55,8 @@ class DatabaseMerger(private val localDatabase: Database,
         if (achievementsChanged.isNotEmpty())
         {
             val players = achievementsChanged.map { it.playerId }.distinct()
-            val achievementRefs = achievementsChanged.map { it.achievementRef }.distinct()
-            val achievements = achievementRefs.mapNotNull(::getAchievementForRef)
+            val achievementTypes = achievementsChanged.map { it.achievementType }.distinct()
+            val achievements = achievementTypes.mapNotNull(::getAchievementForType)
             val t = runConversionsWithProgressBar(achievements, players, remoteDatabase)
             t.join()
         }

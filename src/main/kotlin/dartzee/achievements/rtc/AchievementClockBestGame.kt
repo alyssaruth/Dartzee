@@ -1,6 +1,6 @@
 package dartzee.achievements.rtc
 
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_GAME
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievementBestGame
 import dartzee.game.ClockType
 import dartzee.game.GameType
@@ -10,7 +10,7 @@ import java.net.URL
 
 class AchievementClockBestGame : AbstractAchievementBestGame()
 {
-    override val achievementRef = ACHIEVEMENT_REF_CLOCK_BEST_GAME
+    override val achievementType = AchievementType.CLOCK_BEST_GAME
     override val name = "Stop the Clock!"
     override val desc = "Best game of Round the Clock (Standard)"
     override val gameType = GameType.ROUND_THE_CLOCK

@@ -100,8 +100,8 @@ class PlayerAchievementsScreen : EmbeddedScreen()
 
     private fun addAchievement(aa: AbstractAchievement, achievementRows: List<AchievementEntity>, panel: JPanel)
     {
-        val ref = aa.achievementRef
-        val achievementRowsFiltered = achievementRows.filter { a -> a.achievementRef == ref }.toMutableList()
+        val type = aa.achievementType
+        val achievementRowsFiltered = achievementRows.filter { a -> a.achievementType == type }
 
         aa.initialiseFromDb(achievementRowsFiltered, player)
 

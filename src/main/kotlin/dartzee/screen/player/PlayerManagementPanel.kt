@@ -115,7 +115,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
     {
         val gamesPlayed = gameCounts.getCount(gameType)
 
-        val achievement = achievements.find { it.achievementRef == getBestGameAchievement(gameType)?.achievementRef }
+        val achievement = achievements.find { it.achievementType == getBestGameAchievement(gameType)?.achievementType }
         val bestScore: Int = achievement?.achievementCounter ?: 0
 
         return PlayerStatsButton(player, gameType, gamesPlayed, bestScore)

@@ -1,7 +1,8 @@
 package dartzee.db
 
 import dartzee.achievements.AbstractAchievement
-import dartzee.achievements.getAchievementForRef
+import dartzee.achievements.AchievementType
+import dartzee.achievements.getAchievementForType
 import dartzee.core.util.getSqlDateNow
 import dartzee.screen.ScreenCache
 import dartzee.utils.Database
@@ -17,7 +18,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
 {
     //DB Fields
     var playerId: String = ""
-    var achievementRef = -1
+    var achievementType: AchievementType = AchievementType.X01_BEST_FINISH
     var gameIdEarned = ""
     var achievementCounter = -1
     var achievementDetail = ""
@@ -31,7 +32,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
     override fun getCreateTableSqlSpecific(): String
     {
         return ("PlayerId VARCHAR(36) NOT NULL, "
-                + "AchievementRef INT NOT NULL, "
+                + "AchievementType VARCHAR(255) NOT NULL, "
                 + "GameIdEarned VARCHAR(36) NOT NULL, "
                 + "AchievementCounter INT NOT NULL, "
                 + "AchievementDetail VARCHAR(255) NOT NULL, "
@@ -42,7 +43,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
-        indexes.add(listOf("PlayerId", "AchievementRef"))
+        indexes.add(listOf("PlayerId", "AchievementType"))
     }
 
     companion object
@@ -73,29 +74,29 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
         }
 
 
-        fun retrieveAchievement(achievementRef: Int, playerId: String): AchievementEntity?
+        fun retrieveAchievement(achievementType: AchievementType, playerId: String): AchievementEntity?
         {
-            return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND AchievementRef = $achievementRef")
+            return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND achievementType = $achievementType")
         }
 
         /**
          * Methods for gameplay logic to update achievements
          */
-        fun updateAchievement(achievementRef: Int, playerId: String, gameId: String, counter: Int)
+        fun updateAchievement(achievementType: AchievementType, playerId: String, gameId: String, counter: Int)
         {
-            val existingAchievement = retrieveAchievement(achievementRef, playerId)
+            val existingAchievement = retrieveAchievement(achievementType, playerId)
 
             if (existingAchievement == null)
             {
-                factoryAndSave(achievementRef, playerId, gameId, counter)
+                factoryAndSave(achievementType, playerId, gameId, counter)
 
-                triggerAchievementUnlock(-1, counter, achievementRef, playerId, gameId)
+                triggerAchievementUnlock(-1, counter, achievementType, playerId, gameId)
             }
             else
             {
                 val existingCounter = existingAchievement.achievementCounter
 
-                val decreasing = getAchievementForRef(achievementRef)!!.isDecreasing()
+                val decreasing = getAchievementForType(achievementType)!!.isDecreasing()
 
                 //Update the achievement if appropriate
                 if (counter > existingCounter && !decreasing
@@ -105,32 +106,32 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
                     existingAchievement.gameIdEarned = gameId
                     existingAchievement.saveToDatabase()
 
-                    triggerAchievementUnlock(existingCounter, counter, achievementRef, playerId, gameId)
+                    triggerAchievementUnlock(existingCounter, counter, achievementType, playerId, gameId)
                 }
             }
         }
 
-        fun insertAchievement(achievementRef: Int, playerId: String, gameId: String, detail: String = "")
+        fun insertAchievement(achievementType: AchievementType, playerId: String, gameId: String, detail: String = "")
         {
-            val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementRef = $achievementRef"
+            val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND achievementType = $achievementType"
             val count = mainDatabase.executeQueryAggregate(sql)
 
-            factoryAndSave(achievementRef, playerId, gameId, -1, detail)
-            triggerAchievementUnlock(count, count + 1, achievementRef, playerId, gameId)
+            factoryAndSave(achievementType, playerId, gameId, -1, detail)
+            triggerAchievementUnlock(count, count + 1, achievementType, playerId, gameId)
         }
 
-        fun insertAchievementWithCounter(achievementRef: Int, playerId: String, gameId: String, detail: String, counter: Int)
+        fun insertAchievementWithCounter(achievementType: AchievementType, playerId: String, gameId: String, detail: String, counter: Int)
         {
-            val sql = "SELECT SUM(AchievementCounter) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementRef = $achievementRef"
+            val sql = "SELECT SUM(AchievementCounter) FROM Achievement WHERE PlayerId = '$playerId' AND achievementType = $achievementType"
             val count = mainDatabase.executeQueryAggregate(sql)
 
-            factoryAndSave(achievementRef, playerId, gameId, counter, detail)
-            triggerAchievementUnlock(count, count + counter, achievementRef, playerId, gameId)
+            factoryAndSave(achievementType, playerId, gameId, counter, detail)
+            triggerAchievementUnlock(count, count + counter, achievementType, playerId, gameId)
         }
 
-        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementRef: Int, playerId: String, gameId: String)
+        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementType: AchievementType, playerId: String, gameId: String)
         {
-            val achievementTemplate = getAchievementForRef(achievementRef)
+            val achievementTemplate = getAchievementForType(achievementType)
             triggerAchievementUnlock(oldValue, newValue, achievementTemplate!!, playerId, gameId)
         }
 
@@ -152,7 +153,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             }
         }
 
-        fun factory(achievementRef: Int,
+        fun factory(achievementType: AchievementType,
                     playerId: String,
                     gameId: String,
                     counter: Int,
@@ -162,7 +163,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
         {
             val ae = AchievementEntity(database)
             ae.assignRowId()
-            ae.achievementRef = achievementRef
+            ae.achievementType = achievementType
             ae.playerId = playerId
             ae.gameIdEarned = gameId
             ae.achievementCounter = counter
@@ -171,7 +172,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             return ae
         }
 
-        fun factoryAndSave(achievementRef: Int,
+        fun factoryAndSave(achievementType: AchievementType,
                            playerId: String,
                            gameId: String,
                            counter: Int,
@@ -179,7 +180,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
                            dtAchieved: Timestamp = getSqlDateNow(),
                            database: Database = mainDatabase): AchievementEntity
         {
-            val ae = factory(achievementRef, playerId, gameId, counter, achievementDetail, dtAchieved, database)
+            val ae = factory(achievementType, playerId, gameId, counter, achievementDetail, dtAchieved, database)
             ae.saveToDatabase()
             return ae
         }

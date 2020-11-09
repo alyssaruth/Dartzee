@@ -1,8 +1,7 @@
 package dartzee.screen.game.rtc
 
 import dartzee.`object`.Dart
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
+import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.doBadLuck
 import dartzee.core.util.doForsyth
@@ -68,7 +67,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     {
         if (dartsThrownCount() == 4 && getDartsThrown().last().hitClockTarget(config.clockType))
         {
-            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
+            AchievementEntity.insertAchievement(AchievementType.CLOCK_BRUCEY_BONUSES, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
         }
 
         updateBestStreakAchievement()
@@ -81,7 +80,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         val longestStreakThisGame = getCurrentPlayerState().getLongestStreak()
         if (longestStreakThisGame > 1)
         {
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), longestStreakThisGame)
+            AchievementEntity.updateAchievement(AchievementType.CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), longestStreakThisGame)
         }
     }
 

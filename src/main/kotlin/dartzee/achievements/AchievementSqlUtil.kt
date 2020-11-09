@@ -79,7 +79,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
 
 fun bulkInsertFromResultSet(rs: ResultSet,
                             database: Database,
-                            achievementRef: Int,
+                            achievementType: AchievementType,
                             achievementDetailFn: (() -> String)? = null,
                             achievementCounterFn: (() -> Int)? = null,
                             oneRowPerPlayer: Boolean = false)
@@ -97,7 +97,7 @@ fun bulkInsertFromResultSet(rs: ResultSet,
 
         if (!oneRowPerPlayer || playerIdsSeen.add(playerId))
         {
-            entities.add(AchievementEntity.factory(achievementRef, playerId, gameId, counter, detail, dtAchieved, database))
+            entities.add(AchievementEntity.factory(achievementType, playerId, gameId, counter, detail, dtAchieved, database))
         }
     }
 

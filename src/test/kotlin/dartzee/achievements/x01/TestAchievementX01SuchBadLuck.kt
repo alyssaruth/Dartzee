@@ -1,6 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievementTest
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -47,7 +47,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
 
         getAchievementCount() shouldBe 1
         val achievement = AchievementEntity().retrieveEntities("").first()
-        achievement.achievementRef shouldBe ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK
+        achievement.achievementType shouldBe AchievementType.X01_SUCH_BAD_LUCK
         achievement.achievementCounter shouldBe 3
         achievement.gameIdEarned shouldBe g2.rowId
         achievement.playerId shouldBe p.rowId

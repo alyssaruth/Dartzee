@@ -1,7 +1,6 @@
 package dartzee.achievements
 
 import dartzee.utils.Database
-import dartzee.db.PlayerEntity
 import dartzee.utils.doesHighestWin
 
 abstract class AbstractAchievementBestGame : AbstractAchievement()
@@ -29,7 +28,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementCounterFn = { rs.getInt("FinalScore") })
+            bulkInsertFromResultSet(rs, database, achievementType, achievementCounterFn = { rs.getInt("FinalScore") })
         }
     }
 

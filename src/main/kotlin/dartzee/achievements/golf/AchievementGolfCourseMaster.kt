@@ -1,12 +1,11 @@
 package dartzee.achievements.golf
 
 import dartzee.`object`.SegmentType
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
@@ -16,7 +15,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
 {
     override val name = "Course Master"
     override val desc = "Unique holes where a hole-in-one has been achieved"
-    override val achievementRef = ACHIEVEMENT_REF_GOLF_COURSE_MASTER
+    override val achievementType = AchievementType.GOLF_COURSE_MASTER
     override val redThreshold = 1
     override val orangeThreshold = 3
     override val yellowThreshold = 6
@@ -64,7 +63,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("Score").toString() })
+            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("Score").toString() })
         }
     }
 }

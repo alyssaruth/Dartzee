@@ -1,6 +1,7 @@
 package dartzee.helper
 
 import dartzee.`object`.SegmentType
+import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
@@ -261,7 +262,7 @@ fun insertTemplateAndRule(name: String = "Template"): DartzeeTemplateEntity
 
 fun insertAchievement(uuid: String = randomGuid(),
                       playerId: String = randomGuid(),
-                      achievementRef: Int = -1,
+                      achievementRef: AchievementType = AchievementType.X01_BEST_FINISH,
                       gameIdEarned: String = "",
                       achievementCounter: Int = -1,
                       achievementDetail: String = "",
@@ -271,7 +272,7 @@ fun insertAchievement(uuid: String = randomGuid(),
     val a = AchievementEntity(database)
     a.rowId = uuid
     a.playerId = playerId
-    a.achievementRef = achievementRef
+    a.achievementType = achievementRef
     a.gameIdEarned = gameIdEarned
     a.achievementCounter = achievementCounter
     a.achievementDetail = achievementDetail
@@ -310,11 +311,11 @@ fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 
-data class AchievementSummary(val achievementRef: Int, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
+data class AchievementSummary(val achievementRef: AchievementType, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
 fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
 {
     val achievements = AchievementEntity.retrieveAchievements(playerId)
-    return achievements.map { AchievementSummary(it.achievementRef, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
+    return achievements.map { AchievementSummary(it.achievementType, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
 }
 
 private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database

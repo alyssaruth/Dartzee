@@ -1,6 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_HIGHEST_BUST
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -39,7 +39,7 @@ class TestAchievementX01HighestBust: AbstractAchievementTest<AchievementX01Highe
         a.achievementCounter shouldBe 40
         a.gameIdEarned shouldBe pt.gameId
         a.playerId shouldBe pt.playerId
-        a.achievementRef shouldBe ACHIEVEMENT_REF_X01_HIGHEST_BUST
+        a.achievementType shouldBe AchievementType.X01_HIGHEST_BUST
     }
 
     @Test

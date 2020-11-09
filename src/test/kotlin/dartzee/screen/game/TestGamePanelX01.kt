@@ -1,9 +1,7 @@
 package dartzee.screen.game
 
 import dartzee.`object`.Dart
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BTBF
-import dartzee.achievements.ACHIEVEMENT_REF_X01_NO_MERCY
+import dartzee.achievements.AchievementType
 import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.state.X01PlayerState
@@ -28,7 +26,7 @@ class TestGamePanelX01: AbstractTest()
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
-        val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_BTBF, playerId)!!
+        val a = AchievementEntity.retrieveAchievement(AchievementType.X01_BTBF, playerId)!!
         a.gameIdEarned shouldBe panel.getGameId()
     }
 
@@ -43,7 +41,7 @@ class TestGamePanelX01: AbstractTest()
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_BTBF, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.X01_BTBF, playerId) shouldBe null
     }
 
     @Test
@@ -57,7 +55,7 @@ class TestGamePanelX01: AbstractTest()
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
-        val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId)!!
+        val a = AchievementEntity.retrieveAchievement(AchievementType.X01_BEST_FINISH, playerId)!!
         a.achievementCounter shouldBe 100
         a.gameIdEarned shouldBe panel.getGameId()
     }
@@ -93,7 +91,7 @@ class TestGamePanelX01: AbstractTest()
 
             panel.updateAchievementsForFinish(playerId, 1, 30)
 
-            val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_NO_MERCY, playerId)!!
+            val a = AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId)!!
             a.gameIdEarned shouldBe panel.getGameId()
             a.achievementDetail shouldBe "$i"
         }
@@ -110,7 +108,7 @@ class TestGamePanelX01: AbstractTest()
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_NO_MERCY, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId) shouldBe null
     }
 
     @Test
@@ -124,7 +122,7 @@ class TestGamePanelX01: AbstractTest()
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_X01_NO_MERCY, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId) shouldBe null
     }
 
     private class TestGamePanel(currentPlayerId: String = randomGuid())
