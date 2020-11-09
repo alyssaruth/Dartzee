@@ -76,7 +76,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
 
         fun retrieveAchievement(achievementType: AchievementType, playerId: String): AchievementEntity?
         {
-            return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND achievementType = $achievementType")
+            return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND achievementType = '$achievementType'")
         }
 
         /**
@@ -113,7 +113,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
 
         fun insertAchievement(achievementType: AchievementType, playerId: String, gameId: String, detail: String = "")
         {
-            val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND achievementType = $achievementType"
+            val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementType = '$achievementType'"
             val count = mainDatabase.executeQueryAggregate(sql)
 
             factoryAndSave(achievementType, playerId, gameId, -1, detail)
@@ -122,7 +122,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
 
         fun insertAchievementWithCounter(achievementType: AchievementType, playerId: String, gameId: String, detail: String, counter: Int)
         {
-            val sql = "SELECT SUM(AchievementCounter) FROM Achievement WHERE PlayerId = '$playerId' AND achievementType = $achievementType"
+            val sql = "SELECT SUM(AchievementCounter) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementType = '$achievementType'"
             val count = mainDatabase.executeQueryAggregate(sql)
 
             factoryAndSave(achievementType, playerId, gameId, counter, detail)
