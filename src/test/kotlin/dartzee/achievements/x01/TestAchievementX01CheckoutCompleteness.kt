@@ -1,6 +1,6 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
@@ -50,7 +50,7 @@ class TestAchievementX01CheckoutCompleteness: AbstractMultiRowAchievementTest<Ac
 
         val a = AchievementEntity().retrieveEntity("PlayerId = '${p.rowId}'")!!
         a.gameIdEarned shouldBe g.rowId
-        a.achievementRef shouldBe ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
+        a.achievementType shouldBe AchievementType.X01_CHECKOUT_COMPLETENESS
         a.achievementCounter shouldBe 5
     }
 

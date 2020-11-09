@@ -1,6 +1,6 @@
 package dartzee.achievements.rtc
 
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -67,9 +67,9 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
 
         val achievements = retrieveAchievementsForPlayer(p.rowId)
         achievements.shouldContainExactlyInAnyOrder(
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, g.rowId, "1"),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, g.rowId, "4"),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, g.rowId, "8")
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, g.rowId, "1"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, g.rowId, "4"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, g.rowId, "8")
         )
     }
 

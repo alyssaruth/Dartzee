@@ -1,6 +1,7 @@
 package dartzee.db
 
 import dartzee.`object`.SegmentType
+import dartzee.achievements.AchievementType
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.getSqlString
@@ -472,6 +473,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             GameType::class.java -> GameType.valueOf(rs.getString(columnName))
             MatchMode::class.java -> MatchMode.valueOf(rs.getString(columnName))
             SegmentType::class.java -> SegmentType.valueOf(rs.getString(columnName))
+            AchievementType::class.java -> AchievementType.valueOf(rs.getString(columnName))
             else -> null
         }
 

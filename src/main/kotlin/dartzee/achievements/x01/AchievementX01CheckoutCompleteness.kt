@@ -16,7 +16,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
 {
     override val name = "Completionist"
     override val desc = "Total unique doubles checked out on in X01"
-    override val achievementRef = ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS
+    override val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
     override val gameType = GameType.X01
 
     override val redThreshold = 1
@@ -65,7 +65,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementCounterFn = { rs.getInt("Score") })
+            bulkInsertFromResultSet(rs, database, achievementType, achievementCounterFn = { rs.getInt("Score") })
         }
     }
 

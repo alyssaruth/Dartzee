@@ -2,7 +2,6 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.*
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
@@ -12,7 +11,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
 {
     override val name = "Hotel Inspector"
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"
-    override val achievementRef = ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR
+    override val achievementType = AchievementType.X01_HOTEL_INSPECTOR
     override val gameType = GameType.X01
 
     override val redThreshold = 1
@@ -103,7 +102,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
         sb.append(" )")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getString("Method") } )
+            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getString("Method") } )
         }
     }
 

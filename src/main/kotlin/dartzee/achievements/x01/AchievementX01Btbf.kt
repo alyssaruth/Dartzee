@@ -2,7 +2,6 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.*
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
@@ -10,7 +9,7 @@ import java.net.URL
 
 class AchievementX01Btbf: AbstractMultiRowAchievement()
 {
-    override val achievementRef = ACHIEVEMENT_REF_X01_BTBF
+    override val achievementType = AchievementType.X01_BTBF
     override val name = "BTBF"
     override val desc = "Number of games of X01 finished on D1"
     override val gameType = GameType.X01
@@ -39,6 +38,6 @@ class AchievementX01Btbf: AbstractMultiRowAchievement()
         sb.append(" AND LastDartMultiplier = 2")
         sb.append(" AND RemainingScore = 0")
 
-        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementRef) }
+        database.executeQuery(sb).use { bulkInsertFromResultSet(it, database, achievementType) }
     }
 }

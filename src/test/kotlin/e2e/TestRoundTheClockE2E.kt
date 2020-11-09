@@ -1,9 +1,7 @@
 package e2e
 
 import dartzee.`object`.Dart
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_GAME
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES
+import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.ClockType
 import dartzee.game.GameType
@@ -43,13 +41,13 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         verifyState(panel, listener, expectedDarts, 20, scoreSuffix = " Darts")
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_GAME, 20, game.rowId),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, 20, game.rowId),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "1"),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "2"),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "3"),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4"),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "5")
+                AchievementSummary(AchievementType.CLOCK_BEST_GAME, 20, game.rowId),
+                AchievementSummary(AchievementType.CLOCK_BEST_STREAK, 20, game.rowId),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "1"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "2"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "3"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "5")
         )
     }
 
@@ -85,8 +83,8 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         verifyState(parentWindow.gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 24)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, 5, game.rowId),
-                AchievementSummary(ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4")
+                AchievementSummary(AchievementType.CLOCK_BEST_STREAK, 5, game.rowId),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4")
         )
     }
 }

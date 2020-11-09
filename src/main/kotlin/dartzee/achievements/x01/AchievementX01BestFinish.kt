@@ -1,10 +1,9 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
@@ -14,7 +13,7 @@ class AchievementX01BestFinish : AbstractAchievement()
 {
     override val name = "Finisher"
     override val desc = "Highest checkout in X01"
-    override val achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH
+    override val achievementType = AchievementType.X01_BEST_FINISH
     override val gameType = GameType.X01
 
     override val redThreshold = 2
@@ -36,7 +35,7 @@ class AchievementX01BestFinish : AbstractAchievement()
         sb.append(" ORDER BY Finish DESC, DtCreation")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Finish") })
+            bulkInsertFromResultSet(rs, database, achievementType, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Finish") })
         }
     }
 

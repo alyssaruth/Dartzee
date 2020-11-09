@@ -2,7 +2,6 @@ package dartzee.achievements.golf
 
 import dartzee.achievements.*
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
@@ -14,7 +13,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
     override val desc = "Total number of points risked (by continuing to throw) in Golf"
     override val gameType = GameType.GOLF
 
-    override val achievementRef = ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+    override val achievementType = AchievementType.GOLF_POINTS_RISKED
     override val redThreshold = 5
     override val orangeThreshold = 10
     override val yellowThreshold = 25
@@ -65,7 +64,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         database.executeQuery(sb).use { rs ->
             bulkInsertFromResultSet(rs,
                 database,
-                achievementRef,
+                achievementType,
                 achievementCounterFn = { rs.getInt("PointsRisked") },
                 achievementDetailFn = { rs.getInt("RoundNumber").toString() }
             )

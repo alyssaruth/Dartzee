@@ -31,7 +31,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         val count = getCurrentPlayerState().getBadLuckCount()
         if (count > 0)
         {
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
+            AchievementEntity.updateAchievement(AchievementType.X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
         }
 
         if (!bust)
@@ -46,18 +46,18 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
             if (isShanghai(getDartsThrown()))
             {
-                AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_SHANGHAI, getCurrentPlayerId(), getGameId())
+                AchievementEntity.insertAchievement(AchievementType.X01_SHANGHAI, getCurrentPlayerId(), getGameId())
             }
 
             dartboard.playDodgySound("" + totalScore)
 
             val total = sumScore(getDartsThrown())
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total)
+            AchievementEntity.updateAchievement(AchievementType.X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total)
         }
         else
         {
             val startingScoreForRound = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
-            AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), startingScoreForRound)
+            AchievementEntity.updateAchievement(AchievementType.X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), startingScoreForRound)
         }
 
         super.saveDartsAndProceed()
@@ -73,10 +73,10 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         }
 
         val methodStr = getSortedDartStr(getDartsThrown())
-        val existingRow = retrieveAchievementForDetail(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, getCurrentPlayerId(), methodStr)
+        val existingRow = retrieveAchievementForDetail(AchievementType.X01_HOTEL_INSPECTOR, getCurrentPlayerId(), methodStr)
         if (existingRow == null)
         {
-            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR, getCurrentPlayerId(), getGameId(), methodStr)
+            AchievementEntity.insertAchievement(AchievementType.X01_HOTEL_INSPECTOR, getCurrentPlayerId(), getGameId(), methodStr)
         }
     }
 
@@ -89,7 +89,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         val finalRound = getCurrentPlayerState().getLastRound()
 
         val sum = sumScore(finalRound)
-        AchievementEntity.updateAchievement(ACHIEVEMENT_REF_X01_BEST_FINISH, playerId, getGameId(), sum)
+        AchievementEntity.updateAchievement(AchievementType.X01_BEST_FINISH, playerId, getGameId(), sum)
 
         //Insert into the X01Finishes table for the leaderboard
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
@@ -99,12 +99,12 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
         if (sum in listOf(3, 5, 7, 9))
         {
-            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_NO_MERCY, playerId, getGameId(), "$sum")
+            AchievementEntity.insertAchievement(AchievementType.X01_NO_MERCY, playerId, getGameId(), "$sum")
         }
 
         if (checkout == 1)
         {
-            AchievementEntity.insertAchievement(ACHIEVEMENT_REF_X01_BTBF, getCurrentPlayerId(), getGameId())
+            AchievementEntity.insertAchievement(AchievementType.X01_BTBF, getCurrentPlayerId(), getGameId())
         }
     }
 

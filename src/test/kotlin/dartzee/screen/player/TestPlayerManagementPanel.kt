@@ -4,8 +4,7 @@ import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import com.github.alexburlton.swingtest.shouldBeVisible
 import com.github.alexburlton.swingtest.shouldNotBeVisible
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_GAME
+import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.x01.AchievementX01BestGame
@@ -168,8 +167,8 @@ class TestPlayerManagementPanel: AbstractTest()
     fun `Should pull through a players best game per type`()
     {
         val player = insertPlayer()
-        insertAchievement(playerId = player.rowId, achievementRef = ACHIEVEMENT_REF_X01_BEST_GAME, achievementCounter = 25)
-        insertAchievement(playerId = player.rowId, achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME, achievementCounter = 55)
+        insertAchievement(playerId = player.rowId, type = AchievementType.X01_BEST_GAME, achievementCounter = 25)
+        insertAchievement(playerId = player.rowId, type = AchievementType.GOLF_BEST_GAME, achievementCounter = 55)
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -190,8 +189,8 @@ class TestPlayerManagementPanel: AbstractTest()
         val player = insertPlayer()
 
         //1 pink, 1 green = 10 total
-        insertAchievement(playerId = player.rowId, achievementRef = ACHIEVEMENT_REF_X01_BEST_GAME, achievementCounter = AchievementX01BestGame().pinkThreshold)
-        insertAchievement(playerId = player.rowId, achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME, achievementCounter = AchievementGolfBestGame().greenThreshold)
+        insertAchievement(playerId = player.rowId, type = AchievementType.X01_BEST_GAME, achievementCounter = AchievementX01BestGame().pinkThreshold)
+        insertAchievement(playerId = player.rowId, type = AchievementType.GOLF_BEST_GAME, achievementCounter = AchievementGolfBestGame().greenThreshold)
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)

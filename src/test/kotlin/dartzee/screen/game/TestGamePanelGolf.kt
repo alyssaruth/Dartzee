@@ -2,8 +2,7 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -39,7 +38,7 @@ class TestGamePanelGolf: AbstractTest()
 
         panel.unlockAchievements()
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId) shouldBe null
     }
     @Test
     fun `It should sum up all the points gambled in that round`()
@@ -56,7 +55,7 @@ class TestGamePanelGolf: AbstractTest()
 
         panel.unlockAchievements()
 
-        val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, playerId)!!
+        val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId)!!
         a.achievementCounter shouldBe 4
     }
     @Test
@@ -70,7 +69,7 @@ class TestGamePanelGolf: AbstractTest()
 
         panel.unlockAchievements()
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId) shouldBe null
     }
 
     /**
@@ -87,7 +86,7 @@ class TestGamePanelGolf: AbstractTest()
 
         panel.unlockAchievements()
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
     @Test
     fun `Should not count darts for the wrong hole`()
@@ -100,7 +99,7 @@ class TestGamePanelGolf: AbstractTest()
 
         panel.unlockAchievements()
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
     @Test
     fun `Should only count the last dart thrown`()
@@ -113,21 +112,21 @@ class TestGamePanelGolf: AbstractTest()
 
         panel.unlockAchievements()
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
     @Test
     fun `Should insert a row for a new hole in one`()
     {
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
-        insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_GOLF_COURSE_MASTER, achievementDetail = "2")
+        insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "2")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
 
-        val rows = AchievementEntity().retrieveEntities("PlayerId = '$playerId' AND AchievementRef = $ACHIEVEMENT_REF_GOLF_COURSE_MASTER")
+        val rows = AchievementEntity().retrieveEntities("PlayerId = '$playerId' AND AchievementType = '${AchievementType.GOLF_COURSE_MASTER}'")
         rows.size shouldBe 2
         rows.map { it.achievementDetail }.shouldContainExactlyInAnyOrder("1", "2")
     }
@@ -136,14 +135,14 @@ class TestGamePanelGolf: AbstractTest()
     {
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
-        val originalRow = insertAchievement(playerId = playerId, achievementRef = ACHIEVEMENT_REF_GOLF_COURSE_MASTER, achievementDetail = "1")
+        val originalRow = insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "1")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
 
-        val newRow = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, playerId)!!
+        val newRow = AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId)!!
         newRow.rowId shouldBe originalRow.rowId
     }
 

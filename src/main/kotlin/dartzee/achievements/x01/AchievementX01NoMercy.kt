@@ -2,7 +2,6 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.*
 import dartzee.db.AchievementEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
@@ -12,7 +11,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
 {
     override val name = "No Mercy"
     override val desc = "Finishes from 3, 5, 7 or 9 in X01"
-    override val achievementRef = ACHIEVEMENT_REF_X01_NO_MERCY
+    override val achievementType = AchievementType.X01_NO_MERCY
     override val gameType = GameType.X01
 
     override val redThreshold = 1
@@ -39,7 +38,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
         appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementRef, achievementDetailFn = { rs.getInt("StartingScore").toString() })
+            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("StartingScore").toString() })
         }
     }
 

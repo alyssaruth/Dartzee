@@ -1,6 +1,6 @@
 package dartzee.utils
 
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_GAMES_WON
+import dartzee.achievements.AchievementType
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelRoundTheClock
@@ -129,7 +129,7 @@ class TestGameUtil: AbstractTest()
         val pt2 = insertParticipant(finalScore = 29)
         val pt3 = insertParticipant(finalScore = 50)
 
-        insertAchievement(achievementRef = ACHIEVEMENT_REF_GOLF_GAMES_WON, playerId = pt.playerId)
+        insertAchievement(type = AchievementType.GOLF_GAMES_WON, playerId = pt.playerId)
 
         val game = insertGame(gameType = GameType.GOLF)
         setFinishingPositions(listOf(pt, pt2, pt3), game)
@@ -137,11 +137,11 @@ class TestGameUtil: AbstractTest()
         val playerOneAchievements = AchievementEntity.retrieveAchievements(pt.playerId)
         playerOneAchievements.size shouldBe 2
 
-        val a2 = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt2.playerId)
+        val a2 = AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, pt2.playerId)
         assertNotNull(a2)
         a2.gameIdEarned shouldBe game.rowId
         a2.achievementDetail shouldBe "29"
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_GAMES_WON, pt3.playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, pt3.playerId) shouldBe null
     }
 }

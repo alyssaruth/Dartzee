@@ -10,7 +10,7 @@ class DummyAchievementTotal: AbstractAchievement()
 {
     override val name = "Total Achievements"
     override val desc = ""
-    override val achievementRef = -1
+    override val achievementType = AchievementType.DUMMY_TOTAL
     override val gameType: GameType? = null
 
     override val redThreshold = 1

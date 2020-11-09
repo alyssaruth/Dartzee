@@ -1,7 +1,7 @@
 package dartzee.achievements.golf
 
 import dartzee.`object`.SegmentType
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -36,7 +36,7 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
         val a = retrieveAchievement()
         a.achievementDetail shouldBe "1"
         a.dtAchieved shouldBe Timestamp(500)
-        a.achievementRef shouldBe ACHIEVEMENT_REF_GOLF_COURSE_MASTER
+        a.achievementType shouldBe AchievementType.GOLF_COURSE_MASTER
     }
 
     @Test

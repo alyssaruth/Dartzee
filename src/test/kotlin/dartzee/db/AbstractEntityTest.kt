@@ -1,6 +1,7 @@
 package dartzee.db
 
 import dartzee.`object`.SegmentType
+import dartzee.achievements.AchievementType
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getEndOfTimeSqlString
@@ -230,6 +231,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
             GameType::class.java -> if (initial) GameType.X01 else GameType.GOLF
             MatchMode::class.java -> if (initial) MatchMode.FIRST_TO else MatchMode.POINTS
             SegmentType::class.java -> if (initial) SegmentType.OUTER_SINGLE else SegmentType.DOUBLE
+            AchievementType::class.java -> if (initial) AchievementType.X01_BEST_FINISH else AchievementType.CLOCK_BEST_GAME
             else -> {
                 println(fieldType)
                 "uh oh"

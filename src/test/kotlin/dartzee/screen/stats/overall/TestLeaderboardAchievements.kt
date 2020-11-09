@@ -1,7 +1,6 @@
 package dartzee.screen.stats.overall
 
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
-import dartzee.achievements.ACHIEVEMENT_REF_X01_BEST_FINISH
+import dartzee.achievements.AchievementType
 import dartzee.achievements.DummyAchievementTotal
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.golf.AchievementGolfBestGame
@@ -49,15 +48,15 @@ class TestLeaderboardAchievements: AbstractTest()
         val bestFinish = AchievementX01BestFinish()
         val bestGolfGame = AchievementGolfBestGame()
 
-        insertAchievement(achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.pinkThreshold,
                 playerId = alice.rowId)
 
-        insertAchievement(achievementRef = ACHIEVEMENT_REF_GOLF_BEST_GAME,
+        insertAchievement(type = AchievementType.GOLF_BEST_GAME,
                 achievementCounter = bestGolfGame.blueThreshold,
                 playerId = alice.rowId)
 
-        insertAchievement(achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.greenThreshold,
                 playerId = bob.rowId)
 
@@ -82,11 +81,11 @@ class TestLeaderboardAchievements: AbstractTest()
         val bob = insertPlayer(name = "Bob", strategy = "foo")
 
         val bestFinish = AchievementX01BestFinish()
-        insertAchievement(achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.pinkThreshold,
                 playerId = alice.rowId)
 
-        insertAchievement(achievementRef = ACHIEVEMENT_REF_X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.greenThreshold,
                 playerId = bob.rowId)
 

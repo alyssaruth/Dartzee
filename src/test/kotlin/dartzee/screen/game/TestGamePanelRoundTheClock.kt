@@ -1,7 +1,7 @@
 package dartzee.screen.game
 
 import dartzee.`object`.Dart
-import dartzee.achievements.ACHIEVEMENT_REF_CLOCK_BEST_STREAK
+import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -57,7 +57,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
 
         val achievement = AchievementEntity().retrieveEntity("PlayerId = '$playerId'")!!
         achievement.achievementCounter shouldBe 2
-        achievement.achievementRef shouldBe ACHIEVEMENT_REF_CLOCK_BEST_STREAK
+        achievement.achievementType shouldBe AchievementType.CLOCK_BEST_STREAK
     }
 
     @Test
@@ -70,7 +70,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
         panel.addDartRound(dartsThrown)
         panel.updateBestStreakAchievement()
 
-        val achievement = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, playerId)!!
+        val achievement = AchievementEntity.retrieveAchievement(AchievementType.CLOCK_BEST_STREAK, playerId)!!
         achievement.achievementCounter shouldBe 3
         achievement.gameIdEarned shouldBe panel.getGameId()
 
@@ -78,7 +78,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
         panel.setDartsThrown(roundTwo)
         panel.updateBestStreakAchievement()
 
-        val updatedAchievement = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_CLOCK_BEST_STREAK, playerId)!!
+        val updatedAchievement = AchievementEntity.retrieveAchievement(AchievementType.CLOCK_BEST_STREAK, playerId)!!
         updatedAchievement.achievementCounter shouldBe 4
     }
 

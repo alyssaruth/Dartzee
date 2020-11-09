@@ -1,8 +1,7 @@
 package e2e
 
 import dartzee.`object`.Dart
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_BEST_GAME
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_COURSE_MASTER
+import dartzee.achievements.AchievementType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.GameType
@@ -81,8 +80,8 @@ class TestGameplayE2E: AbstractRegistryTest()
         val expectedDarts = (1..18).map { listOf(Dart(it, 2)) }
         verifyState(panel, listener, expectedDarts, finalScore = 18, expectedScorerRows = 20)
 
-        val expectedAchievementRows = (1..18).map { AchievementSummary(ACHIEVEMENT_REF_GOLF_COURSE_MASTER, -1, game.rowId, "$it") } +
-                AchievementSummary(ACHIEVEMENT_REF_GOLF_BEST_GAME, 18, game.rowId)
+        val expectedAchievementRows = (1..18).map { AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "$it") } +
+                AchievementSummary(AchievementType.GOLF_BEST_GAME, 18, game.rowId)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
     }

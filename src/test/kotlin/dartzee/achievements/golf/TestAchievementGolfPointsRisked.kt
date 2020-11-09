@@ -1,7 +1,7 @@
 package dartzee.achievements.golf
 
 import dartzee.`object`.SegmentType
-import dartzee.achievements.ACHIEVEMENT_REF_GOLF_POINTS_RISKED
+import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
@@ -31,7 +31,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
 
         factoryAchievement().populateForConversion(emptyList())
 
-        AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, p.rowId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, p.rowId) shouldBe null
     }
 
     @Test
@@ -47,8 +47,8 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
 
         val achievementRows = retrieveAchievementsForPlayer(p.rowId)
         achievementRows.shouldContainExactlyInAnyOrder(
-            AchievementSummary(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, 2, g.rowId, "1"),
-            AchievementSummary(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, 1, g.rowId, "2")
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, g.rowId, "1"),
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, g.rowId, "2")
         )
     }
 
@@ -90,7 +90,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
 
         factoryAchievement().populateForConversion(emptyList())
 
-        val a = AchievementEntity.retrieveAchievement(ACHIEVEMENT_REF_GOLF_POINTS_RISKED, p.rowId)!!
+        val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, p.rowId)!!
         a.achievementCounter shouldBe expectedScore
     }
 
