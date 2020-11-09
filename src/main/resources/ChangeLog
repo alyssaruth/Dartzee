@@ -1,3 +1,11 @@
+--------- v4.6.1 ---------
+
++ Game Winner, Gambler and Didn't he do well!? achievements will now show broken down results when clicked
+= Speed improvements for achievement conversions
+= Fix a bug where the scorecard disappeared in Round the Clock after an achievement was unlocked
+= Background changes ready for V5
+= 84.2% test coverage (9888 / 11,744 lines covered by 1753 tests)
+
 --------- v4.6.0 ---------
 
 + Round the Clock mode where targets can be hit in any order
