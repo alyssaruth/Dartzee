@@ -1,6 +1,6 @@
 package dartzee.utils
 
-import dartzee.achievements.getWinAchievementRef
+import dartzee.achievements.getWinAchievementType
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelRoundTheClock
@@ -53,7 +53,7 @@ private fun ParticipantEntity.saveFinishingPosition(game: GameEntity, position: 
 
     if (position == 1)
     {
-        val achievementRef = getWinAchievementRef(game.gameType)
-        AchievementEntity.insertAchievement(achievementRef, playerId, game.rowId, "$finalScore")
+        val type = getWinAchievementType(game.gameType)
+        AchievementEntity.insertAchievement(type, playerId, game.rowId, "$finalScore")
     }
 }

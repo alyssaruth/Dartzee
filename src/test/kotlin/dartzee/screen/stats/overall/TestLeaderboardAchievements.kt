@@ -48,15 +48,15 @@ class TestLeaderboardAchievements: AbstractTest()
         val bestFinish = AchievementX01BestFinish()
         val bestGolfGame = AchievementGolfBestGame()
 
-        insertAchievement(achievementRef = AchievementType.X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.pinkThreshold,
                 playerId = alice.rowId)
 
-        insertAchievement(achievementRef = AchievementType.GOLF_BEST_GAME,
+        insertAchievement(type = AchievementType.GOLF_BEST_GAME,
                 achievementCounter = bestGolfGame.blueThreshold,
                 playerId = alice.rowId)
 
-        insertAchievement(achievementRef = AchievementType.X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.greenThreshold,
                 playerId = bob.rowId)
 
@@ -81,11 +81,11 @@ class TestLeaderboardAchievements: AbstractTest()
         val bob = insertPlayer(name = "Bob", strategy = "foo")
 
         val bestFinish = AchievementX01BestFinish()
-        insertAchievement(achievementRef = AchievementType.X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.pinkThreshold,
                 playerId = alice.rowId)
 
-        insertAchievement(achievementRef = AchievementType.X01_BEST_FINISH,
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
                 achievementCounter = bestFinish.greenThreshold,
                 playerId = bob.rowId)
 

@@ -262,7 +262,7 @@ fun insertTemplateAndRule(name: String = "Template"): DartzeeTemplateEntity
 
 fun insertAchievement(uuid: String = randomGuid(),
                       playerId: String = randomGuid(),
-                      achievementRef: AchievementType = AchievementType.X01_BEST_FINISH,
+                      type: AchievementType = AchievementType.X01_BEST_FINISH,
                       gameIdEarned: String = "",
                       achievementCounter: Int = -1,
                       achievementDetail: String = "",
@@ -272,7 +272,7 @@ fun insertAchievement(uuid: String = randomGuid(),
     val a = AchievementEntity(database)
     a.rowId = uuid
     a.playerId = playerId
-    a.achievementType = achievementRef
+    a.achievementType = type
     a.gameIdEarned = gameIdEarned
     a.achievementCounter = achievementCounter
     a.achievementDetail = achievementDetail
@@ -311,7 +311,7 @@ fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 
-data class AchievementSummary(val achievementRef: AchievementType, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
+data class AchievementSummary(val achievementType: AchievementType, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
 fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
 {
     val achievements = AchievementEntity.retrieveAchievements(playerId)

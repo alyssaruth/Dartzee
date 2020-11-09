@@ -86,7 +86,7 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
 
 private fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 {
-    val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementRef = ${achievement.achievementType}"
+    val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementType = '${achievement.achievementType}'"
     val count = mainDatabase.executeQueryAggregate(sql)
 
     return count > 0
@@ -125,7 +125,7 @@ fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
     return ref as AbstractAchievementBestGame?
 }
 
-fun getWinAchievementRef(gameType : GameType): AchievementType
+fun getWinAchievementType(gameType : GameType): AchievementType
 {
     val type = getAllAchievements().find { it is AbstractAchievementGamesWon && it.gameType == gameType }?.achievementType
     type ?: throw Exception("No total wins achievement found for GameType [$gameType]")
@@ -173,7 +173,7 @@ fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String
 fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
 {
     val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = '$playerId' AND AchievementRef = '$achievementType'"
+    val whereSql = "PlayerId = '$playerId' AND AchievementType = '$achievementType'"
 
     val achievementRows = AchievementEntity().retrieveEntities(whereSql)
     val hitDoubles = achievementRows.map { it.achievementCounter }
@@ -193,7 +193,7 @@ fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int
 
 fun retrieveAchievementForDetail(achievementType: AchievementType, playerId: String, achievementDetail: String): AchievementEntity?
 {
-    val whereSql = "AchievementRef = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
+    val whereSql = "AchievementType = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
     return AchievementEntity().retrieveEntity(whereSql)
 }
 

@@ -232,7 +232,7 @@ class TestDatabaseMerger: AbstractTest()
     {
         val (playerId, gameId) = setUpThreeDarterData()
 
-        insertAchievement(playerId = playerId, achievementRef = AchievementType.X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
+        insertAchievement(playerId = playerId, type = AchievementType.X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
@@ -252,12 +252,12 @@ class TestDatabaseMerger: AbstractTest()
     {
         val (playerId, _) = setUpThreeDarterData()
 
-        insertAchievement(playerId = playerId, achievementRef = AchievementType.X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
+        insertAchievement(playerId = playerId, type = AchievementType.X01_BEST_THREE_DART_SCORE, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val remotePlayer = insertPlayer(database = remoteDatabase)
             insertAchievement(playerId = remotePlayer.rowId,
-                achievementRef = AchievementType.X01_BEST_THREE_DART_SCORE,
+                type = AchievementType.X01_BEST_THREE_DART_SCORE,
                 database = remoteDatabase,
                 achievementCounter = 25)
 
@@ -278,7 +278,7 @@ class TestDatabaseMerger: AbstractTest()
     {
         val (playerId, _) = setUpThreeDarterData()
 
-        insertAchievement(playerId = playerId, achievementRef = AchievementType.X01_BEST_FINISH, achievementCounter = 60)
+        insertAchievement(playerId = playerId, type = AchievementType.X01_BEST_FINISH, achievementCounter = 60)
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
@@ -296,7 +296,7 @@ class TestDatabaseMerger: AbstractTest()
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
             val remotePlayer = insertPlayer(uuid = playerId, database = remoteDatabase)
             insertAchievement(playerId = remotePlayer.rowId,
-                achievementRef = AchievementType.GOLF_BEST_GAME,
+                type = AchievementType.GOLF_BEST_GAME,
                 database = remoteDatabase,
                 achievementCounter = 18)
 

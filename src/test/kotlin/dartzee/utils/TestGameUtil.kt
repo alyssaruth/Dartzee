@@ -129,7 +129,7 @@ class TestGameUtil: AbstractTest()
         val pt2 = insertParticipant(finalScore = 29)
         val pt3 = insertParticipant(finalScore = 50)
 
-        insertAchievement(achievementRef = AchievementType.GOLF_GAMES_WON, playerId = pt.playerId)
+        insertAchievement(type = AchievementType.GOLF_GAMES_WON, playerId = pt.playerId)
 
         val game = insertGame(gameType = GameType.GOLF)
         setFinishingPositions(listOf(pt, pt2, pt3), game)

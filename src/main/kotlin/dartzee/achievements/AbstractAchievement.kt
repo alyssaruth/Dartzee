@@ -46,7 +46,7 @@ abstract class AbstractAchievement
     {
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")
-        sb.append(" WHERE AchievementRef = $achievementType")
+        sb.append(" WHERE AchievementType = '$achievementType'")
         appendPlayerSql(sb, playerIds, null)
 
         if (!database.executeUpdate("" + sb))
@@ -244,6 +244,6 @@ abstract class AbstractAchievement
 
     open fun retrieveAllRows(): List<AchievementEntity>
     {
-        return AchievementEntity().retrieveEntities("AchievementRef = $achievementType")
+        return AchievementEntity().retrieveEntities("AchievementType = '$achievementType'")
     }
 }

@@ -167,8 +167,8 @@ class TestPlayerManagementPanel: AbstractTest()
     fun `Should pull through a players best game per type`()
     {
         val player = insertPlayer()
-        insertAchievement(playerId = player.rowId, achievementRef = AchievementType.X01_BEST_GAME, achievementCounter = 25)
-        insertAchievement(playerId = player.rowId, achievementRef = AchievementType.GOLF_BEST_GAME, achievementCounter = 55)
+        insertAchievement(playerId = player.rowId, type = AchievementType.X01_BEST_GAME, achievementCounter = 25)
+        insertAchievement(playerId = player.rowId, type = AchievementType.GOLF_BEST_GAME, achievementCounter = 55)
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -189,8 +189,8 @@ class TestPlayerManagementPanel: AbstractTest()
         val player = insertPlayer()
 
         //1 pink, 1 green = 10 total
-        insertAchievement(playerId = player.rowId, achievementRef = AchievementType.X01_BEST_GAME, achievementCounter = AchievementX01BestGame().pinkThreshold)
-        insertAchievement(playerId = player.rowId, achievementRef = AchievementType.GOLF_BEST_GAME, achievementCounter = AchievementGolfBestGame().greenThreshold)
+        insertAchievement(playerId = player.rowId, type = AchievementType.X01_BEST_GAME, achievementCounter = AchievementX01BestGame().pinkThreshold)
+        insertAchievement(playerId = player.rowId, type = AchievementType.GOLF_BEST_GAME, achievementCounter = AchievementGolfBestGame().greenThreshold)
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)

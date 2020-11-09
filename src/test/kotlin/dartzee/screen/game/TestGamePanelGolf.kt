@@ -119,14 +119,14 @@ class TestGamePanelGolf: AbstractTest()
     {
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
-        insertAchievement(playerId = playerId, achievementRef = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "2")
+        insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "2")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)
 
         panel.unlockAchievements()
 
-        val rows = AchievementEntity().retrieveEntities("PlayerId = '$playerId' AND AchievementRef = '${AchievementType.GOLF_COURSE_MASTER}'")
+        val rows = AchievementEntity().retrieveEntities("PlayerId = '$playerId' AND AchievementType = '${AchievementType.GOLF_COURSE_MASTER}'")
         rows.size shouldBe 2
         rows.map { it.achievementDetail }.shouldContainExactlyInAnyOrder("1", "2")
     }
@@ -135,7 +135,7 @@ class TestGamePanelGolf: AbstractTest()
     {
         val playerId = randomGuid()
         val panel = TestGamePanel(playerId)
-        val originalRow = insertAchievement(playerId = playerId, achievementRef = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "1")
+        val originalRow = insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "1")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)

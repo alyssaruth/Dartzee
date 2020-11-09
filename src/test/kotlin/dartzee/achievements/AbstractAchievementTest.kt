@@ -42,8 +42,8 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 
     protected fun getAchievementCount(database: Database = mainDatabase): Int
     {
-        val ref = factoryAchievement().achievementType
-        return database.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementRef = $ref")
+        val type = factoryAchievement().achievementType
+        return database.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementType = '$type'")
     }
 
     open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow(), database: Database = mainDatabase): GameEntity

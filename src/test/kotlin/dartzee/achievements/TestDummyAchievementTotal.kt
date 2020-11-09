@@ -24,8 +24,8 @@ class TestDummyAchievementTotal: AbstractTest()
     {
         wipeTable("Achievement")
 
-        val a1 = insertAchievement(achievementRef = AchievementType.X01_BTBF)
-        val a2 = insertAchievement(achievementRef = AchievementType.X01_SUCH_BAD_LUCK)
+        val a1 = insertAchievement(type = AchievementType.X01_BTBF)
+        val a2 = insertAchievement(type = AchievementType.X01_SUCH_BAD_LUCK)
 
         val rows = DummyAchievementTotal().retrieveAllRows().map{ it.rowId }
 

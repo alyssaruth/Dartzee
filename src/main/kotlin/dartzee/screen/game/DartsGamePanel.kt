@@ -4,7 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
-import dartzee.achievements.getWinAchievementRef
+import dartzee.achievements.getWinAchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
@@ -466,8 +466,8 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     {
         if (finishingPosition == 1)
         {
-            val achievementRef = getWinAchievementRef(gameEntity.gameType)
-            AchievementEntity.insertAchievement(achievementRef, playerId, gameEntity.rowId, "$score")
+            val type = getWinAchievementType(gameEntity.gameType)
+            AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
         }
 
         //Update the 'best game' achievement

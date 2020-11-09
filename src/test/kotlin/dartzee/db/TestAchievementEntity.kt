@@ -76,8 +76,8 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     {
         val playerId = randomGuid()
 
-        insertAchievement(playerId = playerId, achievementRef = AchievementType.GOLF_BEST_GAME)
-        insertAchievement(playerId = randomGuid(), achievementRef = AchievementType.X01_BEST_GAME)
+        insertAchievement(playerId = playerId, type = AchievementType.GOLF_BEST_GAME)
+        insertAchievement(playerId = randomGuid(), type = AchievementType.X01_BEST_GAME)
 
         AchievementEntity.retrieveAchievement(AchievementType.X01_BEST_GAME, playerId) shouldBe null
     }
@@ -86,14 +86,14 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     fun `Should retrieve an achievement by playerId and ref`()
     {
         val playerId = randomGuid()
-        val achievementRef = AchievementType.GOLF_BEST_GAME
+        val type = AchievementType.GOLF_BEST_GAME
 
-        val a = insertAchievement(playerId = playerId, achievementRef = achievementRef)
+        val a = insertAchievement(playerId = playerId, type = type)
 
-        val a2 = AchievementEntity.retrieveAchievement(achievementRef, playerId)!!
+        val a2 = AchievementEntity.retrieveAchievement(type, playerId)!!
 
         a2.rowId shouldBe a.rowId
-        a2.achievementType shouldBe achievementRef
+        a2.achievementType shouldBe type
         a2.playerId shouldBe playerId
     }
 
@@ -131,7 +131,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(achievementRef = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = 100)
+        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = 100)
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 99)
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 100)
@@ -156,7 +156,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(achievementRef = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = oldValue)
+        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = oldValue)
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, newValue)
 
@@ -178,7 +178,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(achievementRef = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = 100)
+        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = 100)
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 101)
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 100)
@@ -203,7 +203,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(achievementRef = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = oldValue)
+        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = oldValue)
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, newValue)
 
@@ -256,7 +256,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         val gameId = randomGuid()
 
         //Start with 1 row
-        insertAchievement(achievementRef = ref, playerId = playerId)
+        insertAchievement(type = ref, playerId = playerId)
 
         val scrn = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(gameId, scrn)
@@ -294,7 +294,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         val gameId = randomGuid()
 
         //Start with 1 row for 6 points
-        insertAchievement(achievementRef = ref, playerId = playerId, achievementCounter = 6, achievementDetail = "2")
+        insertAchievement(type = ref, playerId = playerId, achievementCounter = 6, achievementDetail = "2")
 
         val scrn = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(gameId, scrn)
