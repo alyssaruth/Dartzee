@@ -1,7 +1,10 @@
 package dartzee.db
 
+import dartzee.achievements.AchievementType
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertAchievement
+import dartzee.helper.randomGuid
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -32,10 +35,33 @@ private const val ACHIEVEMENT_REF_X01_NO_MERCY = 17
 private const val ACHIEVEMENT_REF_GOLF_COURSE_MASTER = 18
 private const val ACHIEVEMENT_REF_DARTZEE_GAMES_WON = 19
 
+private val hmOldRefToNewType = mapOf(
+    ACHIEVEMENT_REF_X01_BEST_FINISH to AchievementType.X01_BEST_FINISH,
+    ACHIEVEMENT_REF_X01_BEST_THREE_DART_SCORE to AchievementType.X01_BEST_THREE_DART_SCORE,
+    ACHIEVEMENT_REF_X01_CHECKOUT_COMPLETENESS to AchievementType.X01_CHECKOUT_COMPLETENESS,
+    ACHIEVEMENT_REF_X01_HIGHEST_BUST to AchievementType.X01_HIGHEST_BUST,
+    ACHIEVEMENT_REF_GOLF_POINTS_RISKED to AchievementType.GOLF_POINTS_RISKED,
+    ACHIEVEMENT_REF_X01_GAMES_WON to AchievementType.X01_GAMES_WON,
+    ACHIEVEMENT_REF_GOLF_GAMES_WON to AchievementType.GOLF_GAMES_WON,
+    ACHIEVEMENT_REF_CLOCK_GAMES_WON to AchievementType.CLOCK_GAMES_WON,
+    ACHIEVEMENT_REF_X01_BEST_GAME to AchievementType.X01_BEST_GAME,
+    ACHIEVEMENT_REF_GOLF_BEST_GAME to AchievementType.GOLF_BEST_GAME,
+    ACHIEVEMENT_REF_CLOCK_BEST_GAME to AchievementType.CLOCK_BEST_GAME,
+    ACHIEVEMENT_REF_CLOCK_BRUCEY_BONUSES to AchievementType.CLOCK_BRUCEY_BONUSES,
+    ACHIEVEMENT_REF_X01_SHANGHAI to AchievementType.X01_SHANGHAI,
+    ACHIEVEMENT_REF_X01_HOTEL_INSPECTOR to AchievementType.X01_HOTEL_INSPECTOR,
+    ACHIEVEMENT_REF_X01_SUCH_BAD_LUCK to AchievementType.X01_SUCH_BAD_LUCK,
+    ACHIEVEMENT_REF_X01_BTBF to AchievementType.X01_BTBF,
+    ACHIEVEMENT_REF_CLOCK_BEST_STREAK to AchievementType.CLOCK_BEST_STREAK,
+    ACHIEVEMENT_REF_X01_NO_MERCY to AchievementType.X01_NO_MERCY,
+    ACHIEVEMENT_REF_GOLF_COURSE_MASTER to AchievementType.GOLF_COURSE_MASTER,
+    ACHIEVEMENT_REF_DARTZEE_GAMES_WON to AchievementType.DARTZEE_GAMES_WON
+)
+
 class TestDatabaseMigrationV15ToV16: AbstractTest()
 {
     @Test
-    fun `V15 - V16 should create SyncAudit table and add DtAchieved column`()
+    fun `V15 - V16 should create SyncAudit table and update Achievement schema`()
     {
         withV15Database { database ->
             val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
@@ -45,14 +71,35 @@ class TestDatabaseMigrationV15ToV16: AbstractTest()
 
             shouldNotThrowAny {
                 SyncAuditEntity(database).retrieveForId("foo", false)
+                insertAchievement(database = database)
             }
         }
     }
 
     @Test
-    fun `V15 - V16 should convert to new achievement schema`()
+    fun `V15 - V16 should convert old refs to new types correctly`()
     {
+        withV15Database { database ->
+            val oldRefs = hmOldRefToNewType.keys
+            val hmRefToOldAchievement = mutableMapOf<Int, AchievementEntityOld>()
+            oldRefs.forEach { ref ->
+                val oldEntity = AchievementEntityOld.factoryAndSave(ref, randomGuid(), randomGuid(), 10, database = database)
+                hmRefToOldAchievement[ref] = oldEntity
+            }
 
+            DatabaseMigrations.runScript(database, 16, "1. Achievement.sql")
+
+            oldRefs.forEach { ref ->
+                val oldEntity = hmRefToOldAchievement.getValue(ref)
+                val convertedAchievement = AchievementEntity(database).retrieveForId(oldEntity.rowId)!!
+                convertedAchievement.achievementType shouldBe hmOldRefToNewType[ref]
+                convertedAchievement.achievementCounter shouldBe oldEntity.achievementCounter
+                convertedAchievement.gameIdEarned shouldBe oldEntity.gameIdEarned
+                convertedAchievement.playerId shouldBe oldEntity.playerId
+                convertedAchievement.dtLastUpdate shouldBe oldEntity.dtLastUpdate
+                convertedAchievement.dtAchieved shouldBe oldEntity.dtLastUpdate
+            }
+        }
     }
 
     private fun withV15Database(testBlock: (inMemoryDatabase: Database) -> Unit)
@@ -101,32 +148,6 @@ private class AchievementEntityOld(database: Database = InjectedThings.mainDatab
 
     companion object
     {
-        fun retrieveAchievements(playerId: String): MutableList<AchievementEntityOld>
-        {
-            val achievements = mutableListOf<AchievementEntityOld>()
-            val dao = AchievementEntityOld()
-
-            val sb = StringBuilder()
-            sb.append("SELECT ${dao.getColumnsForSelectStatement("a")}, ")
-            sb.append(" CASE WHEN g.LocalId IS NULL THEN -1 ELSE g.LocalId END AS LocalGameId")
-            sb.append(" FROM Achievement a")
-            sb.append(" LEFT OUTER JOIN Game g ON (a.GameIdEarned = g.RowId)")
-            sb.append(" WHERE PlayerId = '$playerId'")
-
-            InjectedThings.mainDatabase.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val entity = dao.factoryFromResultSet(rs)
-                    entity.localGameIdEarned = rs.getLong("LocalGameId")
-
-                    achievements.add(entity)
-                }
-            }
-
-            return achievements
-        }
-
-
         fun retrieveAchievement(achievementRef: Int, playerId: String): AchievementEntityOld?
         {
             return AchievementEntityOld().retrieveEntity("PlayerId = '$playerId' AND AchievementRef = $achievementRef")

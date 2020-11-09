@@ -97,7 +97,7 @@ object DatabaseMigrations
         }
     }
 
-    private fun runScript(database: Database, version: Int, scriptName: String): Boolean
+    fun runScript(database: Database, version: Int, scriptName: String): Boolean
     {
         val resourcePath = "/sql/v$version/"
         val rsrc = javaClass.getResource("$resourcePath$scriptName").readText()
