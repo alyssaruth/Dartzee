@@ -121,12 +121,21 @@ object DartsDatabaseUtil
             return
         }
 
+        if (swapInDatabase(directoryFrom))
+        {
+            DialogUtil.showInfo("Database successfully restored. Application will now exit.")
+            exitProcess(0)
+        }
+    }
+
+    fun swapInDatabase(directoryFrom: File): Boolean
+    {
         //Copy the files to a temporary file path in the application directory - Databases_copying.
         val success = directoryFrom.copyRecursively(File(DATABASE_FILE_PATH_TEMP), true)
         if (!success)
         {
             DialogUtil.showError("Restore failed - failed to copy the new database files.")
-            return
+            return false
         }
 
         //Issue a shutdown command to derby so we no longer have a handle on the old files
@@ -134,7 +143,7 @@ object DartsDatabaseUtil
         if (!shutdown)
         {
             DialogUtil.showError("Failed to shut down current database connection, unable to restore new database.")
-            return
+            return false
         }
 
         //Now switch it in
@@ -142,11 +151,10 @@ object DartsDatabaseUtil
         if (error != null)
         {
             DialogUtil.showError("Failed to restore database. Error: $error")
-            return
+            return false
         }
 
-        DialogUtil.showInfo("Database successfully restored. Application will now exit.")
-        exitProcess(0)
+        return true
     }
 
     private fun selectAndValidateNewDatabase(): File?

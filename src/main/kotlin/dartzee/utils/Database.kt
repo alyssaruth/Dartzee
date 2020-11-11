@@ -22,7 +22,7 @@ val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}\\Databases"
 /**
  * Generic derby helper methods
  */
-class Database(private val filePath: String = DATABASE_FILE_PATH, val dbName: String = DartsDatabaseUtil.DATABASE_NAME)
+class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = DartsDatabaseUtil.DATABASE_NAME)
 {
     val localIdGenerator = LocalIdGenerator(this)
     val hsConnections = mutableListOf<Connection>()

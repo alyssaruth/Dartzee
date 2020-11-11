@@ -34,6 +34,19 @@ class MessageDialogFactory: AbstractMessageDialogFactory()
         logDialogClosed("Error", null)
     }
 
+    override fun showOption(title: String, message: String, options: List<String>): String?
+    {
+        logDialogShown("Option", title, message)
+
+        val typedArray = options.toTypedArray()
+        val selection = JOptionPane.showOptionDialog(
+            null, message, title, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, typedArray, options.first())
+
+        val selectionStr = if (selection > -1) typedArray[selection] else null
+        logDialogClosed("Option", selectionStr)
+        return selectionStr
+    }
+
     override fun showQuestion(text: String, allowCancel: Boolean): Int
     {
         logDialogShown("Question", "Question", text)
