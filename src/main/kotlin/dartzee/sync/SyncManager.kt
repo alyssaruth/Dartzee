@@ -11,14 +11,11 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
-import kotlin.system.exitProcess
 
-class SyncManager(private val configurer: SyncConfigurer, private val dbStore: IRemoteDatabaseStore)
+class SyncManager(private val syncMode: SyncMode, private val remoteName: String, private val dbStore: IRemoteDatabaseStore)
 {
     fun doSync()
     {
-        val (syncMode, remoteName) = configurer.validateAndConfigureSync() ?: return
-
         try
         {
             if (syncMode == SyncMode.CREATE_REMOTE)
@@ -48,7 +45,6 @@ class SyncManager(private val configurer: SyncConfigurer, private val dbStore: I
 
             saveRemoteName(remoteName)
             DialogUtil.showInfo("Sync completed successfully. Dartzee will now exit.")
-            exitProcess(0)
         }
         catch (e: Exception)
         {
