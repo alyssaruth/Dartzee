@@ -1,8 +1,8 @@
-name: 'CI'
+name: 'Terraform'
 on: push
 jobs:
-  fmt:
-    name: 'fmt'
+  terraform:
+    name: 'terraform'
     runs-on: ubuntu-latest
     steps:
       - uses: hashicorp/setup-terraform@v1
