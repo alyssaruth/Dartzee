@@ -1,0 +1,27 @@
+name: 'CI'
+on: push
+jobs:
+  fmt:
+    name: 'fmt'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.12.16
+      - name: 'Checkout'
+        uses: actions/checkout@master
+      - name: 'Unlock secrets'
+        uses: sliteteam/github-action-git-crypt-unlock@1.0.2
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+      - name: 'Terraform Format'
+        run: terraform fmt -check -recursive
+      - name: 'Terraform Init'
+        run: |
+          cd terraform && terraform init
+      - name: 'Terraform Validate'
+        run: |
+          cd terraform && terraform validate
+      - name: 'Terraform Plan'
+        run: |
+          cd terraform && terraform plan --lock=false
