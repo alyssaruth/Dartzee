@@ -60,6 +60,6 @@ data "aws_iam_policy_document" "elasticsearch_put" {
 }
 
 resource "aws_iam_user_policy" "elasticsearch" {
-  user = aws_iam_user.elasticsearch.name
+  user   = aws_iam_user.elasticsearch.name
   policy = data.aws_iam_policy_document.elasticsearch_put.json
 }

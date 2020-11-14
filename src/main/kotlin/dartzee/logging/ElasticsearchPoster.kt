@@ -85,7 +85,7 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
     {
         when (val statusCode = t.response.statusLine.statusCode)
         {
-            502, 503 -> logger.warn(CODE_ELASTICSEARCH_ERROR, "Elasticsearch currently unavailable - got $statusCode response", KEY_RESPONSE_BODY to t.response)
+            502, 503, 504 -> logger.warn(CODE_ELASTICSEARCH_ERROR, "Elasticsearch currently unavailable - got $statusCode response", KEY_RESPONSE_BODY to t.response)
             else -> logger.error(CODE_ELASTICSEARCH_ERROR, "Received status code $statusCode trying to post to ES", t, KEY_RESPONSE_BODY to t.response)
         }
     }
