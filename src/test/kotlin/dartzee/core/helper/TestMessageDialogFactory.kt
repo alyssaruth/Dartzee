@@ -14,6 +14,9 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
     var questionOption = JOptionPane.NO_OPTION
     val questionsShown = mutableListOf<String>()
 
+    val optionSequence = mutableListOf<String?>()
+    val optionsShown = mutableListOf<String>()
+
     var loadingVisible = false
 
     val infosShown = mutableListOf<String>()
@@ -54,6 +57,12 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         return questionOption
     }
 
+    override fun showOption(title: String, message: String, options: List<String>): String?
+    {
+        optionsShown.add(message)
+        return optionSequence.removeAt(0)
+    }
+
     override fun showLoading(text: String)
     {
         loadingsShown.add(text)
@@ -74,6 +83,8 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         questionsShown.clear()
         loadingsShown.clear()
         loadingVisible = false
+        optionSequence.clear()
+        optionsShown.clear()
     }
 
 }

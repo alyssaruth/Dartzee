@@ -10,6 +10,7 @@ import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
+import dartzee.logging.LoggingCode
 import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
@@ -360,7 +361,7 @@ fun Database.closeConnectionsAndDrop(dbName: String)
     {
         if (sqle.message != "Database 'memory:$dbName' dropped.")
         {
-            InjectedThings.logger.logSqlException("jdbc:derby:memory:$dbName;drop=true", "jdbc:derby:memory:$dbName;drop=true", sqle)
+            InjectedThings.logger.info(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
         }
     }
 }
