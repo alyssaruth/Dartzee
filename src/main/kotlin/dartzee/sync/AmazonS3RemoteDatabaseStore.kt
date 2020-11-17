@@ -29,6 +29,6 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
         val zipFilePath = File("$SYNC_DIR/current.zip")
 
         val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory) }
-        s3Client.putObject(bucketName, name, zip.file)
+        s3Client.putObject(bucketName, "$name/current.zip", zip.file)
     }
 }

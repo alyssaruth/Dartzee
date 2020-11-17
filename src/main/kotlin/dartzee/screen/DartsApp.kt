@@ -216,7 +216,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == "push")
         {
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
-            store.pushDatabase("Test", mainDatabase)
+            store.pushDatabase("AnotherTest", mainDatabase)
         }
 
         return textToShow
