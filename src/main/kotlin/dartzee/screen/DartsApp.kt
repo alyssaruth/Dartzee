@@ -12,6 +12,7 @@ import dartzee.logging.CODE_SCREEN_LOAD_ERROR
 import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
+import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -211,6 +212,11 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == "stacktrace")
         {
             logger.error(LoggingCode("test"), "Testing stack trace")
+        }
+        else if (cmd == "push")
+        {
+            val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
+            store.pushDatabase("Test", mainDatabase)
         }
 
         return textToShow
