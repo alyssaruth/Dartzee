@@ -10,5 +10,5 @@ build
 out
 .terraform/
 /terraform/terraform.tfstate.backup
-/src/main/resources/aws
+/src/main/resources/aws*
 *.failed.png
