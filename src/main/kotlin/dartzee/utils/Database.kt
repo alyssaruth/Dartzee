@@ -25,7 +25,8 @@ val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}/Databases"
 class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = DartsDatabaseUtil.DATABASE_NAME)
 {
     val localIdGenerator = LocalIdGenerator(this)
-    val hsConnections = mutableListOf<Connection>()
+
+    private val hsConnections = mutableListOf<Connection>()
     private val connectionPoolLock = Any()
     private var connectionCreateCount = 0
 
@@ -289,15 +290,15 @@ class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = D
         catch (sqle: SQLException)
         {
             val msg = sqle.message ?: ""
-            if (!msg.contains("shutdown"))
+            if (msg.contains("shutdown"))
             {
-                logger.logSqlException("jdbc:derby:Databases/Darts;shutdown=true", "jdbc:derby:Databases/Darts;shutdown=true", sqle)
+                return true
             }
 
-            return false
+            logger.logSqlException("jdbc:derby:Databases/Darts;shutdown=true", "jdbc:derby:Databases/Darts;shutdown=true", sqle)
         }
 
-        return true
+        return false
     }
 
     fun closeConnections()
