@@ -16,19 +16,21 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
     private val credentials = AwsUtils.readCredentials("aws-sync")
     private val s3Client = AmazonS3ClientBuilder.standard().withCredentials(AWSStaticCredentialsProvider(credentials)).build()
 
-    override fun databaseExists(name: String) = s3Client.doesObjectExist(bucketName, "$name/current.zip")
+    override fun databaseExists(name: String) = s3Client.doesObjectExist(bucketName, getCurrentDatabaseKey(name))
 
     override fun fetchDatabase(name: String): Database
     {
         logger.info(CODE_FETCHING_DATABASE, "Fetching database $name", KEY_REMOTE_NAME to name)
 
         val downloadPath = File("$SYNC_DIR/original.zip")
-        val request = GetObjectRequest(bucketName, "$name/current.zip")
+        val request = GetObjectRequest(bucketName, getCurrentDatabaseKey(name))
         s3Client.getObject(request, downloadPath)
+
+        logger.info(CODE_FETCHED_DATABASE, "Fetched database $name - saved to $downloadPath", KEY_REMOTE_NAME to name)
 
         ZipFile(downloadPath).extractAll("$SYNC_DIR/original")
 
-        logger.info(CODE_FETCHED_DATABASE, "Fetched database $name - saved to $downloadPath", KEY_REMOTE_NAME to name)
+        logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $name to $SYNC_DIR/original")
         return Database("$SYNC_DIR/original/Databases")
     }
 
@@ -45,10 +47,12 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         logger.info(CODE_ZIPPED_DATABASE, "Zipped up database to push to $name - $zipFilePath")
 
-        s3Client.putObject(bucketName, "$name/current.zip", zip.file)
+        s3Client.putObject(bucketName, getCurrentDatabaseKey(name), zip.file)
         logger.info(CODE_PUSHED_DATABASE, "Pushed database to $name/current.zip", KEY_REMOTE_NAME to name)
 
         s3Client.putObject(bucketName, "$name/backups/$backupName", zip.file)
         logger.info(CODE_PUSHED_DATABASE_BACKUP, "Pushed backup to $name/backups/$backupName", KEY_REMOTE_NAME to name)
     }
+
+    private fun getCurrentDatabaseKey(remoteName: String) = "$remoteName/current.zip"
 }
