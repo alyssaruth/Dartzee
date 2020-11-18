@@ -30,21 +30,21 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
             }
             else if (syncMode == SyncMode.OVERWRITE_LOCAL)
             {
-                val remote = dbStore.fetchDatabase(remoteName)
+                val remote = dbStore.fetchDatabase(remoteName).database
                 SyncAuditEntity.insertSyncAudit(remote, remoteName)
                 DartsDatabaseUtil.swapInDatabase(File(remote.filePath))
             }
             else
             {
-                val remoteDatabase = dbStore.fetchDatabase(remoteName)
-                val merger = makeDatabaseMerger(remoteDatabase, remoteName)
+                val fetchResult = dbStore.fetchDatabase(remoteName)
+                val merger = makeDatabaseMerger(fetchResult.database, remoteName)
                 if (!merger.validateMerge())
                 {
                     return
                 }
 
                 val resultingDatabase = merger.performMerge()
-                dbStore.pushDatabase(remoteName, resultingDatabase)
+                dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
                 DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
             }
 

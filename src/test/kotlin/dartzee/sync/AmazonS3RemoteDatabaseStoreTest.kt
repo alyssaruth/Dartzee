@@ -9,10 +9,12 @@ import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import io.kotlintest.matchers.file.shouldExist
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import org.junit.Assume
 import org.junit.Test
 import java.io.File
 import java.util.*
+import kotlin.ConcurrentModificationException
 
 class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
 {
@@ -43,11 +45,11 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
-            store.pushDatabase(remoteName, db)
+            store.pushDatabase(remoteName, db, null)
 
             store.databaseExists(remoteName) shouldBe true
 
-            val resultingDatabase = store.fetchDatabase(remoteName)
+            val resultingDatabase = store.fetchDatabase(remoteName).database
             resultingDatabase.filePath shouldBe "$SYNC_DIR/original/Databases"
 
             val copiedFile = File("$SYNC_DIR/original/Databases/Test.txt")
@@ -76,11 +78,37 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
-            store.pushDatabase(remoteName, db)
+            store.pushDatabase(remoteName, db, null)
 
             val objects = s3Client.listObjects("dartzee-unit-test", "$remoteName/backups/").objectSummaries
             objects.size shouldBe 1
             objects.first().key shouldContain "V${DATABASE_VERSION}.zip"
+        }
+    }
+
+    @Test
+    fun `Should throw an error if trying to overwrite database which has been modified since it was fetched`()
+    {
+        Assume.assumeNotNull(AwsUtils.readCredentials("aws-sync"))
+
+        usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
+            val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
+            val remoteName = UUID.randomUUID().toString()
+            store.pushDatabase(remoteName, db, null)
+
+            val lastModified = store.fetchDatabase(remoteName).lastModified
+
+            // Make a change and push it again
+            File("$SYNC_DIR/Databases/Test.txt").writeText("Modified text")
+            store.pushDatabase(remoteName, db, null)
+
+            val updatedModified = store.fetchDatabase(remoteName).lastModified
+
+            val e = shouldThrow<ConcurrentModificationException> {
+                store.pushDatabase(remoteName, db, lastModified)
+            }
+
+            e.message shouldBe "Remote database $remoteName was last modified $updatedModified, which is after $lastModified - aborting"
         }
     }
 }
