@@ -13,7 +13,6 @@ import org.apache.derby.jdbc.EmbeddedDriver
 import java.io.File
 import java.sql.DriverManager
 import javax.swing.JOptionPane
-import javax.swing.SwingUtilities
 import kotlin.system.exitProcess
 
 /**
@@ -125,9 +124,8 @@ object DartsDatabaseUtil
         if (swapInDatabase(directoryFrom))
         {
             mainDatabase.shutDown()
-            initialiseDatabase(mainDatabase)
-
-            SwingUtilities.invokeLater { DialogUtil.showInfo("Database successfully restored!") }
+            mainDatabase.initialiseConnectionPool(5)
+            DialogUtil.showInfo("Database successfully restored!")
         }
     }
 
@@ -175,7 +173,7 @@ object DartsDatabaseUtil
         val testSuccess = otherDatabase.testConnection()
         if (!testSuccess)
         {
-            DialogUtil.showError("Testing conection failed for the selected database. Cannot restore from this location.")
+            DialogUtil.showError("Testing connection failed for the selected database. Cannot restore from this location.")
             return null
         }
 
