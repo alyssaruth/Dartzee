@@ -1,11 +1,14 @@
 package dartzee.sync
 
 import dartzee.utils.Database
+import java.util.*
+
+data class FetchDatabaseResult(val database: Database, val lastModified: Date)
 
 interface IRemoteDatabaseStore
 {
-    fun databaseExists(name: String): Boolean
-    fun fetchDatabase(name: String): Database
+    fun databaseExists(remoteName: String): Boolean
+    fun fetchDatabase(remoteName: String): FetchDatabaseResult
 
-    fun pushDatabase(name: String, database: Database)
+    fun pushDatabase(remoteName: String, database: Database, lastModified: Date? = null)
 }

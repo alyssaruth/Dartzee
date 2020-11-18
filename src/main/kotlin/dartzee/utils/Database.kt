@@ -17,7 +17,7 @@ import javax.sql.rowset.RowSetProvider
 import kotlin.system.exitProcess
 
 const val TABLE_ALREADY_EXISTS = "X0Y32"
-val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}\\Databases"
+val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}/Databases"
 
 /**
  * Generic derby helper methods

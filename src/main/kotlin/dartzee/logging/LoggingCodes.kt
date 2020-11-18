@@ -35,6 +35,13 @@ val CODE_STARTING_RESTORE = LoggingCode("startingRestore")
 val CODE_RENDERED_DARTBOARD = LoggingCode("renderedDartboard")
 val CODE_PLAYER_PAUSED = LoggingCode("playerPaused")
 val CODE_PLAYER_UNPAUSED = LoggingCode("playerUnpaused")
+val CODE_FETCHING_DATABASE = LoggingCode("fetchingDatabase")
+val CODE_FETCHED_DATABASE = LoggingCode("fetchedDatabase")
+val CODE_UNZIPPED_DATABASE = LoggingCode("unzippedDatabase")
+val CODE_PUSHING_DATABASE = LoggingCode("pushingDatabase")
+val CODE_ZIPPED_DATABASE = LoggingCode("zippedDatabase")
+val CODE_PUSHED_DATABASE = LoggingCode("pushedDatabase")
+val CODE_PUSHED_DATABASE_BACKUP = LoggingCode("pushedDatabaseBackup")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")

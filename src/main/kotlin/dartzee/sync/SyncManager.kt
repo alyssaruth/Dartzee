@@ -12,12 +12,17 @@ import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
 
+val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
+
 class SyncManager(private val syncMode: SyncMode, private val remoteName: String, private val dbStore: IRemoteDatabaseStore)
 {
     fun doSync()
     {
         try
         {
+            File(SYNC_DIR).deleteRecursively()
+            File(SYNC_DIR).mkdirs()
+
             if (syncMode == SyncMode.CREATE_REMOTE)
             {
                 SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
@@ -25,21 +30,21 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
             }
             else if (syncMode == SyncMode.OVERWRITE_LOCAL)
             {
-                val remote = dbStore.fetchDatabase(remoteName)
+                val remote = dbStore.fetchDatabase(remoteName).database
                 SyncAuditEntity.insertSyncAudit(remote, remoteName)
                 DartsDatabaseUtil.swapInDatabase(File(remote.filePath))
             }
             else
             {
-                val remoteDatabase = dbStore.fetchDatabase(remoteName)
-                val merger = makeDatabaseMerger(remoteDatabase, remoteName)
+                val fetchResult = dbStore.fetchDatabase(remoteName)
+                val merger = makeDatabaseMerger(fetchResult.database, remoteName)
                 if (!merger.validateMerge())
                 {
                     return
                 }
 
                 val resultingDatabase = merger.performMerge()
-                dbStore.pushDatabase(remoteName, resultingDatabase)
+                dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
                 DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
             }
 
@@ -57,6 +62,11 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
 
             throw e
         }
+        finally
+        {
+            File(SYNC_DIR).deleteRecursively()
+        }
+
     }
 
     private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)

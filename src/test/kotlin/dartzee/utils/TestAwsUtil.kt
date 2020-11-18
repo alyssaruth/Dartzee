@@ -1,7 +1,6 @@
-package dartzee.logging
+package dartzee.utils
 
 import dartzee.helper.AbstractTest
-import dartzee.logging.LoggerFactory.readCredentials
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -10,7 +9,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
 
-class TestLoggerFactory: AbstractTest()
+class TestAwsUtil: AbstractTest()
 {
     private val rsrcPath = File(javaClass.getResource("/ChangeLog").file).absolutePath
     private val newRsrcPath = rsrcPath.replace("ChangeLog", "foo")
@@ -38,7 +37,7 @@ class TestLoggerFactory: AbstractTest()
     {
         clearLogs()
 
-        val credentials = readCredentials("foo")
+        val credentials = AwsUtils.readCredentials("foo")
         credentials shouldBe null
 
         getLogRecords().shouldBeEmpty()
@@ -51,11 +50,10 @@ class TestLoggerFactory: AbstractTest()
         testFile.writeText("foo")
         clearLogs()
 
-        val credentials = readCredentials("foo")
+        val credentials = AwsUtils.readCredentials("foo")
         credentials shouldBe null
 
         getLogRecords().shouldBeEmpty()
         newOut.toString().shouldContain("Failed to read in AWS credentials: java.lang.IndexOutOfBoundsException")
     }
-
 }

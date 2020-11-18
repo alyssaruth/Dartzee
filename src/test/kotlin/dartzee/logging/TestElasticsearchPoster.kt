@@ -2,7 +2,7 @@ package dartzee.logging
 
 import com.amazonaws.auth.BasicAWSCredentials
 import dartzee.helper.AbstractTest
-import dartzee.logging.LoggerFactory.readCredentials
+import dartzee.utils.AwsUtils
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
@@ -21,7 +21,7 @@ class TestElasticsearchPoster: AbstractTest()
     @Test
     fun `Should post a test log successfully`()
     {
-        Assume.assumeNotNull(readCredentials("aws"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("aws"))
 
         val poster = makePoster()
         poster.postLog("""{"message": "test"}""") shouldBe true
@@ -49,7 +49,7 @@ class TestElasticsearchPoster: AbstractTest()
     @Test
     fun `Should log an error when posting an individual log fails for something other than connection problems`()
     {
-        Assume.assumeNotNull(readCredentials("aws"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("aws"))
 
         val poster = makePoster(index = "denied")
         poster.postLog("""{"message": "test"}""") shouldBe false
@@ -63,7 +63,7 @@ class TestElasticsearchPoster: AbstractTest()
     @Test
     fun `Should just log a single warning line if posting a log flakes due to connection`()
     {
-        Assume.assumeNotNull(readCredentials("aws"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("aws"))
 
         val poster = makePoster(url = "172.16.0.0")
         poster.postLog("""{"message": "test"}""") shouldBe false
@@ -108,7 +108,7 @@ class TestElasticsearchPoster: AbstractTest()
         return response
     }
 
-    private fun makePoster(credentials: BasicAWSCredentials? = readCredentials("aws"),
+    private fun makePoster(credentials: BasicAWSCredentials? = AwsUtils.readCredentials("aws"),
                            url: String = ELASTICSEARCH_URL,
                            index: String = "unittest",
                            client: RestClient? = null): ElasticsearchPoster
