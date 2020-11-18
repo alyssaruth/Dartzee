@@ -349,9 +349,7 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
 
 fun Database.closeConnectionsAndDrop(dbName: String)
 {
-    hsConnections.forEach {
-        it.close()
-    }
+    closeConnections()
 
     try
     {

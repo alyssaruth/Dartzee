@@ -123,8 +123,9 @@ object DartsDatabaseUtil
 
         if (swapInDatabase(directoryFrom))
         {
-            DialogUtil.showInfo("Database successfully restored. Application will now exit.")
-            exitProcess(0)
+            mainDatabase.shutDown()
+            mainDatabase.initialiseConnectionPool(5)
+            DialogUtil.showInfo("Database successfully restored!")
         }
     }
 
@@ -138,13 +139,8 @@ object DartsDatabaseUtil
             return false
         }
 
-        //Issue a shutdown command to derby so we no longer have a handle on the old files
-        val shutdown = mainDatabase.shutdownDerby()
-        if (!shutdown)
-        {
-            DialogUtil.showError("Failed to shut down current database connection, unable to restore new database.")
-            return false
-        }
+        //Close down existing connections
+        mainDatabase.closeConnections()
 
         //Now switch it in
         val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
@@ -177,7 +173,7 @@ object DartsDatabaseUtil
         val testSuccess = otherDatabase.testConnection()
         if (!testSuccess)
         {
-            DialogUtil.showError("Testing conection failed for the selected database. Cannot restore from this location.")
+            DialogUtil.showError("Testing connection failed for the selected database. Cannot restore from this location.")
             return null
         }
 
