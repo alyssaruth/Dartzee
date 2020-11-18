@@ -6,12 +6,12 @@ class InMemoryRemoteDatabaseStore: IRemoteDatabaseStore
 {
     private val hmNameToDatabase = mutableMapOf<String, Database>()
 
-    override fun databaseExists(name: String) = hmNameToDatabase.containsKey(name)
+    override fun databaseExists(remoteName: String) = hmNameToDatabase.containsKey(remoteName)
 
-    override fun fetchDatabase(name: String) = hmNameToDatabase.getValue(name)
+    override fun fetchDatabase(remoteName: String) = hmNameToDatabase.getValue(remoteName)
 
-    override fun pushDatabase(name: String, database: Database)
+    override fun pushDatabase(remoteName: String, database: Database)
     {
-        hmNameToDatabase[name] = database
+        hmNameToDatabase[remoteName] = database
     }
 }
