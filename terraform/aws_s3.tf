@@ -8,6 +8,14 @@ resource "aws_iam_access_key" "dartzee_sync_user" {
 
 resource "aws_s3_bucket" "unit_test" {
   bucket = "dartzee-unit-test"
+
+  lifecycle_rule {
+    enabled = true
+
+    expiration {
+      days = 1
+    }
+  }
 }
 
 resource "aws_s3_bucket" "dartzee_databases" {
