@@ -1,9 +1,13 @@
 package dartzee.sync
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.AwsUtils
+import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import io.kotlintest.matchers.file.shouldExist
+import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.Assume
 import org.junit.Test
@@ -29,7 +33,6 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         super.afterEachTest()
 
         File(SYNC_DIR).deleteRecursively()
-        AmazonS3RemoteDatabaseStore("dartzee-unit-test")
     }
 
     @Test
@@ -60,5 +63,24 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
 
         val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
         store.databaseExists(UUID.randomUUID().toString()) shouldBe false
+    }
+
+    @Test
+    fun `Should create a backup version, with filename including schema version`()
+    {
+        Assume.assumeNotNull(AwsUtils.readCredentials("aws-sync"))
+
+        val credentials = AwsUtils.readCredentials("aws-sync")
+        val s3Client = AmazonS3ClientBuilder.standard().withCredentials(AWSStaticCredentialsProvider(credentials)).build()
+
+        usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
+            val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
+            val remoteName = UUID.randomUUID().toString()
+            store.pushDatabase(remoteName, db)
+
+            val objects = s3Client.listObjects("dartzee-unit-test", "$remoteName/backups/").objectSummaries
+            objects.size shouldBe 1
+            objects.first().key shouldContain "V${DATABASE_VERSION}.zip"
+        }
     }
 }
