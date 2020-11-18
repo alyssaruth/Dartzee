@@ -1,7 +1,5 @@
 package dartzee.sync
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.GetObjectRequest
 import dartzee.core.util.getFileTimeString
 import dartzee.logging.*
@@ -15,8 +13,7 @@ import kotlin.ConcurrentModificationException
 
 class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDatabaseStore
 {
-    private val credentials = AwsUtils.readCredentials("aws-sync")
-    private val s3Client = AmazonS3ClientBuilder.standard().withCredentials(AWSStaticCredentialsProvider(credentials)).build()
+    private val s3Client = AwsUtils.makeS3Client()
 
     override fun databaseExists(remoteName: String) = s3Client.doesObjectExist(bucketName, getCurrentDatabaseKey(remoteName))
 

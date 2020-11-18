@@ -1,7 +1,5 @@
 package dartzee.sync
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.AwsUtils
@@ -14,7 +12,6 @@ import org.junit.Assume
 import org.junit.Test
 import java.io.File
 import java.util.*
-import kotlin.ConcurrentModificationException
 
 class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
 {
@@ -72,8 +69,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     {
         Assume.assumeNotNull(AwsUtils.readCredentials("aws-sync"))
 
-        val credentials = AwsUtils.readCredentials("aws-sync")
-        val s3Client = AmazonS3ClientBuilder.standard().withCredentials(AWSStaticCredentialsProvider(credentials)).build()
+        val s3Client = AwsUtils.makeS3Client()
 
         usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
@@ -97,6 +93,8 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
             store.pushDatabase(remoteName, db, null)
 
             val lastModified = store.fetchDatabase(remoteName).lastModified
+
+            Thread.sleep(500)
 
             // Make a change and push it again
             File("$SYNC_DIR/Databases/Test.txt").writeText("Modified text")
