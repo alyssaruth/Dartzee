@@ -291,7 +291,7 @@ class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = D
             val msg = sqle.message ?: ""
             if (!msg.contains("shutdown"))
             {
-                logger.logSqlException("jdbc:derby:;shutdown=true", "jdbc:derby:;shutdown=true", sqle)
+                logger.logSqlException("jdbc:derby:Databases/Darts;shutdown=true", "jdbc:derby:Databases/Darts;shutdown=true", sqle)
             }
 
             return false
