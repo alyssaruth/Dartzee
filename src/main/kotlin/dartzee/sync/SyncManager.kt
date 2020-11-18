@@ -12,12 +12,17 @@ import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
 
+val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
+
 class SyncManager(private val syncMode: SyncMode, private val remoteName: String, private val dbStore: IRemoteDatabaseStore)
 {
     fun doSync()
     {
         try
         {
+            File(SYNC_DIR).deleteRecursively()
+            File(SYNC_DIR).mkdirs()
+
             if (syncMode == SyncMode.CREATE_REMOTE)
             {
                 SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
@@ -57,6 +62,11 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
 
             throw e
         }
+        finally
+        {
+            File(SYNC_DIR).deleteRecursively()
+        }
+
     }
 
     private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)

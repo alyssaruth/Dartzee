@@ -39,3 +39,10 @@ fun Timestamp.getSqlString(): String
     val formatted = dateFormat.format(this)
     return "'$formatted'"
 }
+
+fun getFileTimeString(): String
+{
+    val dt = getSqlDateNow()
+    val dateFormat = SimpleDateFormat("yyyyMMdd_HHmm")
+    return dateFormat.format(dt)
+}

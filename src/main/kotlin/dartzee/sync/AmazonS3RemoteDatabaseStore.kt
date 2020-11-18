@@ -2,33 +2,41 @@ package dartzee.sync
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import com.amazonaws.services.s3.model.GetObjectRequest
+import dartzee.core.util.getFileTimeString
 import dartzee.utils.AwsUtils
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.mainDatabase
 import net.lingala.zip4j.ZipFile
 import java.io.File
 
-val SYNC_DIR = "${System.getProperty("user.dir")}\\Sync"
-
 class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDatabaseStore
 {
-    val credentials = AwsUtils.readCredentials("aws-sync")
-    val s3Client = AmazonS3ClientBuilder.standard().withCredentials(AWSStaticCredentialsProvider(credentials)).build()
+    private val credentials = AwsUtils.readCredentials("aws-sync")
+    private val s3Client = AmazonS3ClientBuilder.standard().withCredentials(AWSStaticCredentialsProvider(credentials)).build()
 
-    override fun databaseExists(name: String) = s3Client.doesObjectExist(bucketName, name)
+    override fun databaseExists(name: String) = s3Client.doesObjectExist(bucketName, "$name/current.zip")
 
     override fun fetchDatabase(name: String): Database
     {
-        return mainDatabase
+        val downloadPath = File("$SYNC_DIR/original.zip")
+        val request = GetObjectRequest(bucketName, "$name/current.zip")
+        s3Client.getObject(request, downloadPath)
+
+        ZipFile(downloadPath).extractAll("$SYNC_DIR/original")
+
+        return Database("$SYNC_DIR/original/Databases")
     }
 
     override fun pushDatabase(name: String, database: Database)
     {
+        val dbVersion = database.getDatabaseVersion()
+        val backupName = "${getFileTimeString()}_V$dbVersion.zip"
+
         val dbDirectory = File(database.filePath)
-        File(SYNC_DIR).mkdirs()
-        val zipFilePath = File("$SYNC_DIR/current.zip")
+        val zipFilePath = File("$SYNC_DIR/new.zip")
 
         val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory) }
         s3Client.putObject(bucketName, "$name/current.zip", zip.file)
+        s3Client.putObject(bucketName, "$name/backups/$backupName", zip.file)
     }
 }
