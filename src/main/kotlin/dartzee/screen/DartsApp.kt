@@ -13,7 +13,6 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.sync.AmazonS3RemoteDatabaseStore
-import dartzee.sync.SYNC_DIR
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.utils.DartsDatabaseUtil

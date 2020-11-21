@@ -30,7 +30,7 @@ class SyncSummaryPanel: JButton(), MouseListener
     fun refreshSummary(syncSummary: SyncSummary)
     {
         val lineOne = "<h2>Sync Status</h2>"
-        val lineTwo = "<b>Remote name: </b> ${syncSummary.remoteName}"
+        val lineTwo = "<b>Syncing with: </b> ${syncSummary.remoteName}"
         val lineThree = "<b>Last synced: </b> ${syncSummary.lastSynced}"
         val lineFour = "<b>Pending games: </b> ${syncSummary.pendingGames}"
         summaryText = "<html><center>$lineOne $lineTwo<br>$lineThree<br>$lineFour</center></html>"

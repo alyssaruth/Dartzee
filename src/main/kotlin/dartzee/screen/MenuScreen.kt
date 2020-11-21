@@ -1,12 +1,12 @@
 package dartzee.screen
 
 import dartzee.core.util.addActionListenerToAllChildren
-import dartzee.main.exitApplication
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
+import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Font
@@ -92,7 +92,7 @@ class MenuScreen : EmbeddedScreen()
             }
 
             btnPreferences -> ScreenCache.switch<PreferencesScreen>()
-            syncSummary -> exitApplication()
+            syncSummary -> ScreenCache.switch<SyncManagementScreen>()
             btnNewGame -> ScreenCache.switch<GameSetupScreen>()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()

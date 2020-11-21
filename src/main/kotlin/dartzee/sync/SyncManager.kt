@@ -11,6 +11,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
+import javax.swing.SwingUtilities
 
 val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
@@ -18,8 +19,17 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
 {
     fun doSync()
     {
+        val r = { doSyncOnOtherThread() }
+        val t = Thread(r)
+        t.start()
+    }
+
+    private fun doSyncOnOtherThread()
+    {
         try
         {
+            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Performing sync...") }
+
             File(SYNC_DIR).deleteRecursively()
             File(SYNC_DIR).mkdirs()
 
@@ -49,7 +59,12 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
             }
 
             saveRemoteName(remoteName)
-            DialogUtil.showInfo("Sync completed successfully. Dartzee will now exit.")
+
+            SwingUtilities.invokeLater {
+                DialogUtil.dismissLoadingDialog()
+                DialogUtil.showInfo("Sync completed successfully!")
+            }
+
         }
         catch (e: Exception)
         {
@@ -65,10 +80,11 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
         finally
         {
             File(SYNC_DIR).deleteRecursively()
+            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
             refreshSyncSummary()
         }
-
     }
+
 
     private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)
       = DatabaseMerger(mainDatabase, remoteDatabase, DatabaseMigrator(DatabaseMigrations.getConversionsMap()), remoteName)

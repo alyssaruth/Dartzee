@@ -8,6 +8,8 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_STRING_REMOTE_DATABASE_NAME
 import dartzee.utils.PreferenceUtil
 
+const val SYNC_BUCKET_NAME = "dartzee-databases"
+
 fun getRemoteName() = PreferenceUtil.getStringValue(PREFERENCES_STRING_REMOTE_DATABASE_NAME)
 fun saveRemoteName(name: String)
 {
