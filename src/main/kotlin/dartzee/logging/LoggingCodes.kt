@@ -42,6 +42,10 @@ val CODE_PUSHING_DATABASE = LoggingCode("pushingDatabase")
 val CODE_ZIPPED_DATABASE = LoggingCode("zippedDatabase")
 val CODE_PUSHED_DATABASE = LoggingCode("pushedDatabase")
 val CODE_PUSHED_DATABASE_BACKUP = LoggingCode("pushedDatabaseBackup")
+val CODE_MERGE_STARTED = LoggingCode("mergeStarted")
+val CODE_MERGING_ENTITY = LoggingCode("mergingEntity")
+val CODE_ACHIEVEMENT_CONVERSION_STARTED = LoggingCode("achievementConversionStarted")
+val CODE_ACHIEVEMENT_CONVERSION_FINISHED = LoggingCode("achievementConversionFinished")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")

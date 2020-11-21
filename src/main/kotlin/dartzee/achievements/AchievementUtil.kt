@@ -14,7 +14,7 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.logging.LoggingCode
+import dartzee.logging.*
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.mainDatabase
@@ -59,6 +59,10 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
     val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
     dlg.setVisibleLater()
 
+    val playerCount = if (playerIds.isEmpty()) "all" else "${playerIds.size}"
+    logger.info(CODE_ACHIEVEMENT_CONVERSION_STARTED, "Regenerating ${achievements.size} achievements for $playerCount players",
+        KEY_PLAYER_IDS to playerIds, KEY_ACHIEVEMENT_TYPES to achievements.map { it.achievementType })
+
     val timings = mutableMapOf<String, Long>()
 
     try
@@ -79,7 +83,7 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
     }
 
     val totalTime = timings.values.sum()
-    logger.info(LoggingCode("conversion.timings"), "Done in $totalTime. Breakdown: $timings")
+    logger.info(CODE_ACHIEVEMENT_CONVERSION_FINISHED, "Done in $totalTime", KEY_ACHIEVEMENT_TIMINGS to timings)
 
     dlg.disposeLater()
 }
