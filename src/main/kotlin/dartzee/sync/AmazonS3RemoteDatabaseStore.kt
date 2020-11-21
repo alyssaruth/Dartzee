@@ -3,6 +3,7 @@ package dartzee.sync
 import com.amazonaws.services.s3.model.GetObjectRequest
 import dartzee.core.util.getFileTimeString
 import dartzee.logging.*
+import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.AwsUtils
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
@@ -37,6 +38,8 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
     override fun pushDatabase(remoteName: String, database: Database, lastModified: Date?)
     {
+        SyncProgressDialog.progressToStage(SyncStage.PUSH_TO_REMOTE)
+
         logger.info(CODE_PUSHING_DATABASE, "Pushing database to $remoteName", KEY_REMOTE_NAME to remoteName)
 
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
@@ -52,6 +55,8 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         s3Client.putObject(bucketName, getCurrentDatabaseKey(remoteName), zip.file)
         logger.info(CODE_PUSHED_DATABASE, "Pushed database to ${getCurrentDatabaseKey(remoteName)}", KEY_REMOTE_NAME to remoteName)
+
+        SyncProgressDialog.progressToStage(SyncStage.PUSH_BACKUP_TO_REMOTE)
 
         s3Client.putObject(bucketName, "$remoteName/backups/$backupName", zip.file)
         logger.info(CODE_PUSHED_DATABASE_BACKUP, "Pushed backup to $remoteName/backups/$backupName", KEY_REMOTE_NAME to remoteName)

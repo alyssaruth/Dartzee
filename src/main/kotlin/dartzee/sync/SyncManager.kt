@@ -4,6 +4,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.db.DatabaseMerger
 import dartzee.db.DatabaseMigrator
 import dartzee.db.SyncAuditEntity
+import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -11,7 +12,6 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
-import javax.swing.SwingUtilities
 
 val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
@@ -28,8 +28,6 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
     {
         try
         {
-            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Performing sync...") }
-
             File(SYNC_DIR).deleteRecursively()
             File(SYNC_DIR).mkdirs()
 
@@ -46,6 +44,8 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
             }
             else
             {
+                SyncProgressDialog.syncStarted()
+
                 val fetchResult = dbStore.fetchDatabase(remoteName)
                 val merger = makeDatabaseMerger(fetchResult.database, remoteName)
                 if (!merger.validateMerge())
@@ -53,18 +53,20 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
                     return
                 }
 
+                SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
+
                 val resultingDatabase = merger.performMerge()
                 dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
+
+                SyncProgressDialog.progressToStage(SyncStage.OVERWRITE_LOCAL)
+
                 DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
             }
 
             saveRemoteName(remoteName)
 
-            SwingUtilities.invokeLater {
-                DialogUtil.dismissLoadingDialog()
-                DialogUtil.showInfo("Sync completed successfully!")
-            }
-
+            SyncProgressDialog.dispose()
+            DialogUtil.showInfo("Sync completed successfully!")
         }
         catch (e: Exception)
         {
@@ -80,7 +82,7 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
         finally
         {
             File(SYNC_DIR).deleteRecursively()
-            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            SyncProgressDialog.dispose()
             refreshSyncSummary()
         }
     }
