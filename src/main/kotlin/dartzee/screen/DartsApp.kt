@@ -14,6 +14,8 @@ import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SYNC_DIR
+import dartzee.sync.SyncConfigurer
+import dartzee.sync.SyncManager
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -215,17 +217,15 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             logger.error(LoggingCode("test"), "Testing stack trace")
         }
-        else if (cmd == "push")
-        {
-            File(SYNC_DIR).deleteRecursively()
-            File(SYNC_DIR).mkdirs()
-            val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
-            store.pushDatabase("AnotherTest", mainDatabase)
-        }
-        else if (cmd == "pull")
+        else if (cmd == "sync")
         {
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
-            store.fetchDatabase("AnotherTest")
+            val config = SyncConfigurer(store).validateAndConfigureSync()
+            if (config != null)
+            {
+                val manager = SyncManager(config.mode, config.remoteName, store)
+                manager.doSync()
+            }
         }
 
         return textToShow

@@ -65,6 +65,7 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
         finally
         {
             File(SYNC_DIR).deleteRecursively()
+            refreshSyncSummary()
         }
 
     }

@@ -7,6 +7,7 @@ import dartzee.logging.CODE_STARTING_BACKUP
 import dartzee.logging.CODE_STARTING_RESTORE
 import dartzee.logging.KEY_DB_VERSION
 import dartzee.screen.ScreenCache
+import dartzee.sync.refreshSyncSummary
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -64,6 +65,8 @@ object DartsDatabaseUtil
 
         val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
         migrateDatabase(migrator, database)
+
+        refreshSyncSummary()
     }
 
     fun migrateDatabase(migrator: DatabaseMigrator, database: Database)
