@@ -2,12 +2,13 @@ package dartzee.screen
 
 import com.github.alexburlton.swingtest.clickChild
 import dartzee.helper.AbstractTest
-import dartzee.helper.assertExits
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
+import dartzee.screen.sync.SyncManagementScreen
+import dartzee.screen.sync.SyncSummaryPanel
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import org.junit.Test
 import javax.swing.JButton
@@ -15,13 +16,11 @@ import javax.swing.JButton
 class TestMenuScreen: AbstractTest()
 {
     @Test
-    fun `Should exit when exit pressed`()
+    fun `Should go to Sync Management screen`()
     {
         val scrn = MenuScreen()
-
-        assertExits(0) {
-            scrn.clickChild<JButton>("Exit")
-        }
+        scrn.clickChild<SyncSummaryPanel>()
+        ScreenCache.currentScreen().shouldBeInstanceOf<SyncManagementScreen>()
     }
 
     @Test
