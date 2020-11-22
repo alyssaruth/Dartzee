@@ -44,3 +44,10 @@ fun refreshSyncSummary()
 
     ScreenCache.syncSummaryPanel.refreshSummary(syncSummary)
 }
+
+fun resetRemote()
+{
+    saveRemoteName("")
+    SyncAuditEntity().deleteAll()
+    refreshSyncSummary()
+}

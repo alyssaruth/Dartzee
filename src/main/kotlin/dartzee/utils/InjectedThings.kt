@@ -14,6 +14,10 @@ import dartzee.screen.IPlayerImageSelector
 import dartzee.screen.PlayerImageDialog
 import dartzee.screen.ai.AISetupRuleFactory
 import dartzee.screen.ai.AbstractAISetupRuleFactory
+import dartzee.sync.AmazonS3RemoteDatabaseStore
+import dartzee.sync.IRemoteDatabaseStore
+import dartzee.sync.SYNC_BUCKET_NAME
+import dartzee.sync.SyncConfigurer
 import java.time.Clock
 
 object InjectedThings
@@ -36,4 +40,6 @@ object InjectedThings
     val dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: AbstractSimulationRunner = SimulationRunner()
+    var remoteDatabaseStore: IRemoteDatabaseStore = AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
+    var syncConfigurer: SyncConfigurer = SyncConfigurer(remoteDatabaseStore)
 }
