@@ -22,7 +22,7 @@ import kotlin.system.exitProcess
 object DartsDatabaseUtil
 {
     const val DATABASE_VERSION = 16
-    const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
+    const val DATABASE_NAME = "Darts"
 
     private val DATABASE_FILE_PATH_TEMP = DATABASE_FILE_PATH + "_copying"
 
@@ -132,7 +132,6 @@ object DartsDatabaseUtil
 
     fun swapInDatabase(directoryFrom: File): Boolean
     {
-        //Copy the files to a temporary file path in the application directory - Databases_copying.
         val success = directoryFrom.copyRecursively(File(DATABASE_FILE_PATH_TEMP), true)
         if (!success)
         {
@@ -173,15 +172,6 @@ object DartsDatabaseUtil
         if (name != "Databases")
         {
             DialogUtil.showError("Selected path is not valid - you must select a folder named 'Databases'")
-            return null
-        }
-
-        //Test we can connect
-        val otherDatabase = Database(filePath = directoryFrom.absolutePath)
-        val testSuccess = otherDatabase.testConnection()
-        if (!testSuccess)
-        {
-            DialogUtil.showError("Testing connection failed for the selected database. Cannot restore from this location.")
             return null
         }
 

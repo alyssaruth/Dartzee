@@ -5,6 +5,7 @@ import dartzee.core.util.getFileTimeString
 import dartzee.logging.*
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.AwsUtils
+import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import net.lingala.zip4j.ZipFile
@@ -32,8 +33,10 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         ZipFile(downloadPath).extractAll("$SYNC_DIR/original")
 
-        logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to $SYNC_DIR/original")
-        return FetchDatabaseResult(Database("$SYNC_DIR/original/Databases"), s3Obj.lastModified)
+        File("$SYNC_DIR/original/Databases/Darts").copyTo(File("$DATABASE_FILE_PATH/DartsOther"))
+
+        logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to $DATABASE_FILE_PATH/DartsOther")
+        return FetchDatabaseResult(Database("DartsOther"), s3Obj.lastModified)
     }
 
     override fun pushDatabase(remoteName: String, database: Database, lastModified: Date?)
@@ -44,7 +47,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
 
-        val dbDirectory = File(database.filePath)
+        val dbDirectory = File("$DATABASE_FILE_PATH/${database.dbName}")
         val zipFilePath = File("$SYNC_DIR/new.zip")
         val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory) }
 

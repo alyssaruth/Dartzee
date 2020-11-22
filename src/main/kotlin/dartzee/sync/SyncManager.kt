@@ -6,6 +6,7 @@ import dartzee.db.DatabaseMerger
 import dartzee.db.DatabaseMigrator
 import dartzee.db.SyncAuditEntity
 import dartzee.screen.sync.SyncProgressDialog
+import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -54,7 +55,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
             val remote = dbStore.fetchDatabase(remoteName).database
             SyncAuditEntity.insertSyncAudit(remote, remoteName)
-            DartsDatabaseUtil.swapInDatabase(File(remote.filePath))
+            DartsDatabaseUtil.swapInDatabase(remote.getDatabaseDirectory())
         }
         finally
         {
@@ -90,7 +91,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
             SyncProgressDialog.progressToStage(SyncStage.OVERWRITE_LOCAL)
 
-            val success = DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
+            val success = DartsDatabaseUtil.swapInDatabase(resultingDatabase.getDatabaseDirectory())
             SyncProgressDialog.dispose()
             if (success)
             {
@@ -111,6 +112,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         finally
         {
             File(SYNC_DIR).deleteRecursively()
+            File("$DATABASE_FILE_PATH/DartsOther").deleteRecursively()
             SyncProgressDialog.dispose()
             refreshSyncSummary()
         }

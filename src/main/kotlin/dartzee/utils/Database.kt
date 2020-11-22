@@ -7,6 +7,7 @@ import dartzee.db.VersionEntity
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings.logger
+import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -22,7 +23,7 @@ val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}/Databases"
 /**
  * Generic derby helper methods
  */
-class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = DartsDatabaseUtil.DATABASE_NAME)
+class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val inMemory: Boolean = false)
 {
     val localIdGenerator = LocalIdGenerator(this)
 
@@ -64,23 +65,39 @@ class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = D
         }
     }
 
-    private fun createDatabaseConnection(dbName: String = this.dbName): Connection
+    private fun createDatabaseConnection(): Connection
     {
         connectionCreateCount++
 
         val p = System.getProperties()
-        p.setProperty("derby.system.home", filePath)
+        p.setProperty("derby.system.home", DATABASE_FILE_PATH)
         p.setProperty("derby.language.logStatementText", "${DartsClient.devMode}")
         p.setProperty("derby.language.logQueryPlan", "${DartsClient.devMode}")
 
-        val props = Properties()
-        props["user"] = "administrator"
-        props["password"] = "wallace"
-
-        val connection = DriverManager.getConnection(dbName, props)
+        val connection = DriverManager.getConnection(getDbStringForNewConnection(), getProps())
         logger.info(CODE_NEW_CONNECTION, "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
         return connection
     }
+
+    private fun getDbStringForNewConnection() =
+        if (inMemory)
+        {
+            "jdbc:derby:memory:Databases/$dbName;create=true"
+        }
+        else
+        {
+            "jdbc:derby:Databases/$dbName;create=true"
+        }
+
+    private fun getProps(): Properties
+    {
+        val props = Properties()
+        props["user"] = "administrator"
+        props["password"] = "wallace"
+        return props
+    }
+
+    fun getDatabaseDirectory() = File("$DATABASE_FILE_PATH/$dbName")
 
     fun executeUpdates(statements: List<String>): Boolean
     {
@@ -274,7 +291,7 @@ class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = D
         }
         catch (t: Throwable)
         {
-            logger.error(CODE_TEST_CONNECTION_ERROR, "Failed to establish test connection for path $filePath", t)
+            logger.error(CODE_TEST_CONNECTION_ERROR, "Failed to establish test connection for path $DATABASE_FILE_PATH/$dbName", t)
             return false
         }
 
@@ -285,7 +302,7 @@ class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = D
     {
         try
         {
-            createDatabaseConnection(dbName = "jdbc:derby:Databases/Darts;shutdown=true")
+            DriverManager.getConnection("jdbc:derby:Databases/$dbName;shutdown=true", getProps())
         }
         catch (sqle: SQLException)
         {
@@ -295,7 +312,7 @@ class Database(val filePath: String = DATABASE_FILE_PATH, val dbName: String = D
                 return true
             }
 
-            logger.logSqlException("jdbc:derby:Databases/Darts;shutdown=true", "jdbc:derby:Databases/Darts;shutdown=true", sqle)
+            logger.logSqlException("jdbc:derby:Databases/$dbName;shutdown=true", "jdbc:derby:Databases/$dbName;shutdown=true", sqle)
         }
 
         return false

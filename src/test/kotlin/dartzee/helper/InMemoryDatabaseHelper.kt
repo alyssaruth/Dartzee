@@ -11,9 +11,7 @@ import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.LoggingCode
-import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -319,18 +317,16 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
     return achievements.map { AchievementSummary(it.achievementType, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
 }
 
-private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()): Database
 {
-    val fullName = "jdbc:derby:memory:$dbName;create=true"
-    return Database(filePath = filePath, dbName = fullName).also { it.initialiseConnectionPool(5) }
+    return Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(5) }
 }
 
 fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
-                          filePath: String = DATABASE_FILE_PATH,
                           withSchema: Boolean = false,
                           testBlock: (inMemoryDatabase: Database) -> Unit)
 {
-    val db = makeInMemoryDatabase(dbName, filePath)
+    val db = makeInMemoryDatabase(dbName)
     try
     {
         if (withSchema)
@@ -359,7 +355,7 @@ fun Database.closeConnectionsAndDrop(dbName: String)
     {
         if (sqle.message != "Database 'memory:$dbName' dropped.")
         {
-            InjectedThings.logger.info(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
+            logger.info(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
         }
     }
 }
