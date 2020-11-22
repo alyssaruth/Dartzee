@@ -40,15 +40,6 @@ class SyncProgressDialog() : JDialog()
         SwingUtilities.invokeLater { isVisible = true }
     }
 
-    fun resetProgress()
-    {
-        SwingUtilities.invokeLater {
-            progressBar.minimum = 0
-            progressBar.maximum = SyncStage.values().size
-            progressBar.value = 0
-        }
-    }
-
     fun progressToStage(stage: SyncStage)
     {
         val stageIndex = SyncStage.values().toList().indexOf(stage)

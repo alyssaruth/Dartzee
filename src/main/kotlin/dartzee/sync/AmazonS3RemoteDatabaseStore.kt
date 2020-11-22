@@ -44,9 +44,6 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
 
-        val dbVersion = database.getDatabaseVersion()
-        val backupName = "${getFileTimeString()}_V$dbVersion.zip"
-
         val dbDirectory = File(database.filePath)
         val zipFilePath = File("$SYNC_DIR/new.zip")
         val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory) }
@@ -58,7 +55,9 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         SyncProgressDialog.progressToStage(SyncStage.PUSH_BACKUP_TO_REMOTE)
 
-        s3Client.putObject(bucketName, "$remoteName/backups/$backupName", zip.file)
+        val dbVersion = database.getDatabaseVersion()
+        val backupName = "${getFileTimeString()}_V$dbVersion.zip"
+        s3Client.copyObject(bucketName, getCurrentDatabaseKey(remoteName), bucketName, "$remoteName/backups/$backupName")
         logger.info(CODE_PUSHED_DATABASE_BACKUP, "Pushed backup to $remoteName/backups/$backupName", KEY_REMOTE_NAME to remoteName)
     }
 

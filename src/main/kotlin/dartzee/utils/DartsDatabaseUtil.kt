@@ -126,8 +126,6 @@ object DartsDatabaseUtil
 
         if (swapInDatabase(directoryFrom))
         {
-            mainDatabase.shutDown()
-            mainDatabase.initialiseConnectionPool(5)
             DialogUtil.showInfo("Database successfully restored!")
         }
     }
@@ -142,15 +140,22 @@ object DartsDatabaseUtil
             return false
         }
 
-        //Close down existing connections
-        mainDatabase.closeConnections()
-
         //Now switch it in
-        val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
-        if (error != null)
+        try
         {
-            DialogUtil.showError("Failed to restore database. Error: $error")
-            return false
+            mainDatabase.closeConnections()
+            mainDatabase.shutDown()
+
+            val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
+            if (error != null)
+            {
+                DialogUtil.showError("Failed to restore database. Error: $error")
+                return false
+            }
+        }
+        finally
+        {
+            mainDatabase.initialiseConnectionPool(5)
         }
 
         return true

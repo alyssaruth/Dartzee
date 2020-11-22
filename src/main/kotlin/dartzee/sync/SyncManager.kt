@@ -90,12 +90,12 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
             SyncProgressDialog.progressToStage(SyncStage.OVERWRITE_LOCAL)
 
-            DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
-
-            saveRemoteName(remoteName)
-
+            val success = DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
             SyncProgressDialog.dispose()
-            DialogUtil.showInfo("Sync completed successfully!")
+            if (success)
+            {
+                DialogUtil.showInfo("Sync completed successfully!")
+            }
         }
         catch (e: Exception)
         {
