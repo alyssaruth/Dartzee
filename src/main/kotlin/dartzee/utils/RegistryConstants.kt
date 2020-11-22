@@ -5,9 +5,6 @@ import dartzee.utils.DartsColour.DARTBOARD_GREEN_STR
 import dartzee.utils.DartsColour.DARTBOARD_RED_STR
 import dartzee.utils.DartsColour.DARTBOARD_WHITE_STR
 
-//Node names
-const val NODE_PREFERENCES = "DartsPrefs"
-
 //Variable names
 val PREFERENCES_STRING_ODD_SINGLE_COLOUR = "oddsing;$DARTBOARD_WHITE_STR"
 val PREFERENCES_STRING_ODD_DOUBLE_COLOUR = "odddoub;$DARTBOARD_GREEN_STR"

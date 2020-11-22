@@ -5,7 +5,6 @@ import java.util.prefs.Preferences
 object PreferenceUtil
 {
     private const val PREFERENCE_DELIM_CHAR = ";"
-    private val preferences = Preferences.userRoot().node(NODE_PREFERENCES)
 
     /**
      * Helpers
@@ -21,7 +20,7 @@ object PreferenceUtil
     fun deleteSetting(prefStr: String)
     {
         val pref = getRawPref(prefStr)
-        preferences.remove(pref)
+        preferences().remove(pref)
     }
 
     /**
@@ -30,13 +29,13 @@ object PreferenceUtil
     fun getStringValue(prefStr: String, returnDefault: Boolean = false): String
     {
         val (pref, default) = getPrefAndDefault(prefStr)
-        return if (returnDefault) default else preferences[pref, default]
+        return if (returnDefault) default else preferences()[pref, default]
     }
 
     fun saveString(prefStr: String, value: String?)
     {
         val pref = getRawPref(prefStr)
-        preferences.put(pref, value)
+        preferences().put(pref, value)
     }
 
     /**
@@ -46,7 +45,7 @@ object PreferenceUtil
     fun saveInt(prefStr: String, value: Int)
     {
         val pref = getRawPref(prefStr)
-        preferences.putInt(pref, value)
+        preferences().putInt(pref, value)
     }
 
     /**
@@ -56,7 +55,7 @@ object PreferenceUtil
     fun saveDouble(prefStr: String, value: Double)
     {
         val pref = getRawPref(prefStr)
-        preferences.putDouble(pref, value)
+        preferences().putDouble(pref, value)
     }
 
     /**
@@ -65,6 +64,8 @@ object PreferenceUtil
     fun getBooleanValue(prefStr: String, returnDefault: Boolean = false) = getStringValue(prefStr, returnDefault).toBoolean()
     fun saveBoolean(prefStr: String, value: Boolean) {
         val pref = getRawPref(prefStr)
-        preferences.putBoolean(pref, value)
+        preferences().putBoolean(pref, value)
     }
+
+    private fun preferences() = Preferences.userRoot().node(InjectedThings.prefsNode)
 }
