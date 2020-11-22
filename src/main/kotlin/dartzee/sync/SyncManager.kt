@@ -1,8 +1,10 @@
 package dartzee.sync
 
 import dartzee.core.util.DialogUtil
+import dartzee.core.util.runInOtherThread
 import dartzee.db.DatabaseMerger
 import dartzee.db.DatabaseMigrator
+import dartzee.db.SyncAuditEntity
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
@@ -11,24 +13,66 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
+import javax.swing.SwingUtilities
 
 val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
-class SyncManager(private val remoteName: String, private val dbStore: IRemoteDatabaseStore)
+class SyncManager(private val dbStore: IRemoteDatabaseStore)
 {
-    fun doSync()
+    fun doPush(remoteName: String)
     {
-        val r = { doSyncOnOtherThread() }
-        val t = Thread(r)
-        t.start()
+        runInOtherThread { doPushOnOtherThread(remoteName) }
     }
-
-    private fun doSyncOnOtherThread()
+    private fun doPushOnOtherThread(remoteName: String)
     {
         try
         {
+            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pushing $remoteName...") }
+            setUpSyncDir()
+
+            SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
+            dbStore.pushDatabase(remoteName, mainDatabase)
+        }
+        finally
+        {
             File(SYNC_DIR).deleteRecursively()
-            File(SYNC_DIR).mkdirs()
+            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            refreshSyncSummary()
+        }
+    }
+
+    fun doPull(remoteName: String)
+    {
+        runInOtherThread { doPullOnOtherThread(remoteName) }
+    }
+    private fun doPullOnOtherThread(remoteName: String)
+    {
+        try
+        {
+            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pulling $remoteName...") }
+            setUpSyncDir()
+
+            val remote = dbStore.fetchDatabase(remoteName).database
+            SyncAuditEntity.insertSyncAudit(remote, remoteName)
+            DartsDatabaseUtil.swapInDatabase(File(remote.filePath))
+        }
+        finally
+        {
+            File(SYNC_DIR).deleteRecursively()
+            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            refreshSyncSummary()
+        }
+    }
+
+    fun doSync(remoteName: String)
+    {
+        runInOtherThread { doSyncOnOtherThread(remoteName) }
+    }
+    private fun doSyncOnOtherThread(remoteName: String)
+    {
+        try
+        {
+            setUpSyncDir()
 
             SyncProgressDialog.syncStarted()
 
@@ -70,6 +114,12 @@ class SyncManager(private val remoteName: String, private val dbStore: IRemoteDa
             SyncProgressDialog.dispose()
             refreshSyncSummary()
         }
+    }
+
+    private fun setUpSyncDir()
+    {
+        File(SYNC_DIR).deleteRecursively()
+        File(SYNC_DIR).mkdirs()
     }
 
 

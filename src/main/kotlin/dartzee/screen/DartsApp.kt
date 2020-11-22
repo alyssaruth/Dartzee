@@ -217,8 +217,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == "sync")
         {
-            val manager = SyncManager(getRemoteName(), AmazonS3RemoteDatabaseStore("dartzee-unit-test"))
-            manager.doSync()
+            val manager = SyncManager(AmazonS3RemoteDatabaseStore("dartzee-unit-test"))
+            manager.doSync(getRemoteName())
         }
 
         return textToShow

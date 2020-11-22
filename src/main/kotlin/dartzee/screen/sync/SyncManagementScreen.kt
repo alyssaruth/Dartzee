@@ -2,19 +2,21 @@ package dartzee.screen.sync
 
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.db.SyncAuditEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
-import dartzee.sync.*
-import dartzee.utils.DartsDatabaseUtil
+import dartzee.sync.SyncMode
+import dartzee.sync.getRemoteName
+import dartzee.sync.resetRemote
+import dartzee.sync.saveRemoteName
 import dartzee.utils.InjectedThings
-import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.InjectedThings.remoteDatabaseStore
+import dartzee.utils.InjectedThings.syncManager
 import dartzee.utils.ResourceCache.BASE_FONT
 import net.miginfocom.swing.MigLayout
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Dimension
+import java.awt.Font
+import java.awt.TextField
 import java.awt.event.ActionEvent
-import java.io.File
 import javax.swing.*
 import javax.swing.border.TitledBorder
 import javax.swing.border.TitledBorder.DEFAULT_POSITION
@@ -65,9 +67,6 @@ class SyncManagementScreen: EmbeddedScreen()
             button.addActionListener(this)
         }
 
-        btnReset.background = Color.RED.brighter().brighter()
-        btnReset.foreground = Color.RED
-
         tfRemoteName.columns = 20
         tfRemoteName.isEditable = false
         tfRemoteName.isFocusable = false
@@ -109,49 +108,43 @@ class SyncManagementScreen: EmbeddedScreen()
         val result = InjectedThings.syncConfigurer.doFirstTimeSetup() ?: return
         when (result.mode)
         {
-            SyncMode.CREATE_REMOTE -> pushPressed(false)
-            SyncMode.OVERWRITE_LOCAL -> pullPressed(false)
-            SyncMode.NORMAL_SYNC -> syncPressed(false)
+            SyncMode.CREATE_REMOTE -> pushPressed(false, result.remoteName)
+            SyncMode.OVERWRITE_LOCAL -> pullPressed(false, result.remoteName)
+            SyncMode.NORMAL_SYNC -> syncPressed(false, result.remoteName)
         }
 
         saveRemoteName(result.remoteName)
         initialise()
     }
 
-    private fun pushPressed(doValidation: Boolean = true)
+    private fun pushPressed(doValidation: Boolean = true, remoteName: String = getRemoteName())
     {
         if (doValidation && !validateSyncAction())
         {
             return
         }
 
-        val remoteName = getRemoteName()
-        SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
-        remoteDatabaseStore.pushDatabase(remoteName, mainDatabase)
+        syncManager.doPush(remoteName)
     }
 
-    private fun pullPressed(doValidation: Boolean = true)
+    private fun pullPressed(doValidation: Boolean = true, remoteName: String = getRemoteName())
     {
         if (doValidation && !validateSyncAction())
         {
             return
         }
 
-        val remoteName = getRemoteName()
-        val remote = remoteDatabaseStore.fetchDatabase(remoteName).database
-        SyncAuditEntity.insertSyncAudit(remote, remoteName)
-        DartsDatabaseUtil.swapInDatabase(File(remote.filePath))
+        syncManager.doPull(remoteName)
     }
 
-    private fun syncPressed(doValidation: Boolean = true)
+    private fun syncPressed(doValidation: Boolean = true, remoteName: String = getRemoteName())
     {
         if (doValidation && !validateSyncAction())
         {
             return
         }
 
-        val manager = SyncManager(getRemoteName(), remoteDatabaseStore)
-        manager.doSync()
+        syncManager.doSync(remoteName)
 
         initialise()
     }
