@@ -2,6 +2,7 @@ package dartzee.screen.sync
 
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.db.SyncAuditEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
 import dartzee.sync.SyncMode
@@ -9,6 +10,8 @@ import dartzee.sync.getRemoteName
 import dartzee.sync.resetRemote
 import dartzee.sync.saveRemoteName
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.InjectedThings.remoteDatabaseStore
 import dartzee.utils.InjectedThings.syncManager
 import dartzee.utils.ResourceCache.BASE_FONT
 import net.miginfocom.swing.MigLayout
@@ -119,9 +122,22 @@ class SyncManagementScreen: EmbeddedScreen()
 
     private fun pushPressed(doValidation: Boolean = true, remoteName: String = getRemoteName())
     {
-        if (doValidation && !validateSyncAction())
+        if (doValidation)
         {
-            return
+            if (!validateSyncAction())
+            {
+                return
+            }
+
+            if (remoteDatabaseStore.databaseExists(remoteName))
+            {
+                val q = "Are you sure you want to push to $remoteName? \n\nThis will overwrite any data that hasn't been synced to this device."
+                val ans = DialogUtil.showQuestion(q)
+                if (ans != JOptionPane.YES_OPTION)
+                {
+                    return
+                }
+            }
         }
 
         syncManager.doPush(remoteName)
@@ -129,9 +145,19 @@ class SyncManagementScreen: EmbeddedScreen()
 
     private fun pullPressed(doValidation: Boolean = true, remoteName: String = getRemoteName())
     {
-        if (doValidation && !validateSyncAction())
+        if (doValidation)
         {
-            return
+            if (!validateSyncAction())
+            {
+                return
+            }
+
+            val q = "Are you sure you want to pull from $remoteName? \n\nThis will overwrite any local data that hasn't been synced to $remoteName from this device."
+            val ans = DialogUtil.showQuestion(q)
+            if (ans != JOptionPane.YES_OPTION)
+            {
+                return
+            }
         }
 
         syncManager.doPull(remoteName)
@@ -139,9 +165,23 @@ class SyncManagementScreen: EmbeddedScreen()
 
     private fun syncPressed(doValidation: Boolean = true, remoteName: String = getRemoteName())
     {
-        if (doValidation && !validateSyncAction())
+        if (doValidation)
         {
-            return
+            if (!validateSyncAction())
+            {
+                return
+            }
+
+            if (SyncAuditEntity.getLastSyncDate(mainDatabase, remoteName) == null)
+            {
+                val q = "Are you sure you want to sync $remoteName with data on this device?\n\n" +
+                        "This device hasn't synced with $remoteName before - if there are no local changes you want to keep, it would be quicker to pull from it."
+                val ans = DialogUtil.showQuestion(q)
+                if (ans != JOptionPane.YES_OPTION)
+                {
+                    return
+                }
+            }
         }
 
         syncManager.doSync(remoteName)

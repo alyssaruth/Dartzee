@@ -37,7 +37,7 @@ object InjectedThings
     val dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: AbstractSimulationRunner = SimulationRunner()
-    private val remoteDatabaseStore: IRemoteDatabaseStore = AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
+    var remoteDatabaseStore: IRemoteDatabaseStore = AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
     var syncConfigurer: SyncConfigurer = SyncConfigurer(remoteDatabaseStore)
     var syncManager: SyncManager = SyncManager(remoteDatabaseStore)
 }
