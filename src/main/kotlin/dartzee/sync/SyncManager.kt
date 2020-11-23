@@ -1,9 +1,11 @@
 package dartzee.sync
 
 import dartzee.core.util.DialogUtil
+import dartzee.core.util.runInOtherThread
 import dartzee.db.DatabaseMerger
 import dartzee.db.DatabaseMigrator
 import dartzee.db.SyncAuditEntity
+import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -11,45 +13,89 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
+import javax.swing.SwingUtilities
 
 val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
-class SyncManager(private val syncMode: SyncMode, private val remoteName: String, private val dbStore: IRemoteDatabaseStore)
+class SyncManager(private val dbStore: IRemoteDatabaseStore)
 {
-    fun doSync()
+    fun doPush(remoteName: String)
+    {
+        runInOtherThread { doPushOnOtherThread(remoteName) }
+    }
+    private fun doPushOnOtherThread(remoteName: String)
     {
         try
         {
+            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pushing $remoteName...") }
+            setUpSyncDir()
+
+            SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
+            dbStore.pushDatabase(remoteName, mainDatabase)
+        }
+        finally
+        {
             File(SYNC_DIR).deleteRecursively()
-            File(SYNC_DIR).mkdirs()
+            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            refreshSyncSummary()
+        }
+    }
 
-            if (syncMode == SyncMode.CREATE_REMOTE)
-            {
-                SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
-                dbStore.pushDatabase(remoteName, mainDatabase)
-            }
-            else if (syncMode == SyncMode.OVERWRITE_LOCAL)
-            {
-                val remote = dbStore.fetchDatabase(remoteName).database
-                SyncAuditEntity.insertSyncAudit(remote, remoteName)
-                DartsDatabaseUtil.swapInDatabase(File(remote.filePath))
-            }
-            else
-            {
-                val fetchResult = dbStore.fetchDatabase(remoteName)
-                val merger = makeDatabaseMerger(fetchResult.database, remoteName)
-                if (!merger.validateMerge())
-                {
-                    return
-                }
+    fun doPull(remoteName: String)
+    {
+        runInOtherThread { doPullOnOtherThread(remoteName) }
+    }
+    private fun doPullOnOtherThread(remoteName: String)
+    {
+        try
+        {
+            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pulling $remoteName...") }
+            setUpSyncDir()
 
-                val resultingDatabase = merger.performMerge()
-                dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
-                DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
+            val remote = dbStore.fetchDatabase(remoteName).database
+            SyncAuditEntity.insertSyncAudit(remote, remoteName)
+            DartsDatabaseUtil.swapInDatabase(File(remote.filePath))
+        }
+        finally
+        {
+            File(SYNC_DIR).deleteRecursively()
+            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            refreshSyncSummary()
+        }
+    }
+
+    fun doSync(remoteName: String)
+    {
+        runInOtherThread { doSyncOnOtherThread(remoteName) }
+    }
+    private fun doSyncOnOtherThread(remoteName: String)
+    {
+        try
+        {
+            setUpSyncDir()
+
+            SyncProgressDialog.syncStarted()
+
+            val fetchResult = dbStore.fetchDatabase(remoteName)
+            val merger = makeDatabaseMerger(fetchResult.database, remoteName)
+            if (!merger.validateMerge())
+            {
+                return
             }
 
-            saveRemoteName(remoteName)
-            DialogUtil.showInfo("Sync completed successfully. Dartzee will now exit.")
+            SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
+
+            val resultingDatabase = merger.performMerge()
+            dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
+
+            SyncProgressDialog.progressToStage(SyncStage.OVERWRITE_LOCAL)
+
+            val success = DartsDatabaseUtil.swapInDatabase(File(resultingDatabase.filePath))
+            SyncProgressDialog.dispose()
+            if (success)
+            {
+                DialogUtil.showInfo("Sync completed successfully!")
+            }
         }
         catch (e: Exception)
         {
@@ -65,9 +111,17 @@ class SyncManager(private val syncMode: SyncMode, private val remoteName: String
         finally
         {
             File(SYNC_DIR).deleteRecursively()
+            SyncProgressDialog.dispose()
+            refreshSyncSummary()
         }
-
     }
+
+    private fun setUpSyncDir()
+    {
+        File(SYNC_DIR).deleteRecursively()
+        File(SYNC_DIR).mkdirs()
+    }
+
 
     private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)
       = DatabaseMerger(mainDatabase, remoteDatabase, DatabaseMigrator(DatabaseMigrations.getConversionsMap()), remoteName)

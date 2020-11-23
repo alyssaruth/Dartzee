@@ -184,7 +184,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return database.executeUpdate(sql)
     }
 
-    fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
+    open fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
     {
         this.dtLastUpdate = dtLastUpdate
 
@@ -201,6 +201,11 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     /**
      * Merge helpers
      */
+    fun countModifiedSince(dt: Timestamp?): Int
+    {
+        val whereSql = if (dt != null) "WHERE DtLastUpdate > ${dt.getSqlString()}" else ""
+        return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableName()} $whereSql")
+    }
     fun retrieveModifiedSince(dt: Timestamp?): List<E>
     {
         val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""

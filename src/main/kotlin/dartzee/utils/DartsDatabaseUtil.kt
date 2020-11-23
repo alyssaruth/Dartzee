@@ -7,6 +7,7 @@ import dartzee.logging.CODE_STARTING_BACKUP
 import dartzee.logging.CODE_STARTING_RESTORE
 import dartzee.logging.KEY_DB_VERSION
 import dartzee.screen.ScreenCache
+import dartzee.sync.refreshSyncSummary
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -64,6 +65,8 @@ object DartsDatabaseUtil
 
         val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
         migrateDatabase(migrator, database)
+
+        refreshSyncSummary()
     }
 
     fun migrateDatabase(migrator: DatabaseMigrator, database: Database)
@@ -123,8 +126,6 @@ object DartsDatabaseUtil
 
         if (swapInDatabase(directoryFrom))
         {
-            mainDatabase.shutDown()
-            mainDatabase.initialiseConnectionPool(5)
             DialogUtil.showInfo("Database successfully restored!")
         }
     }
@@ -139,15 +140,22 @@ object DartsDatabaseUtil
             return false
         }
 
-        //Close down existing connections
-        mainDatabase.closeConnections()
-
         //Now switch it in
-        val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
-        if (error != null)
+        try
         {
-            DialogUtil.showError("Failed to restore database. Error: $error")
-            return false
+            mainDatabase.closeConnections()
+            mainDatabase.shutDown()
+
+            val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
+            if (error != null)
+            {
+                DialogUtil.showError("Failed to restore database. Error: $error")
+                return false
+            }
+        }
+        finally
+        {
+            mainDatabase.initialiseConnectionPool(5)
         }
 
         return true

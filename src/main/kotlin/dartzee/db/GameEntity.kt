@@ -3,8 +3,10 @@ package dartzee.db
 import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
 import dartzee.game.GameType
+import dartzee.sync.refreshSyncSummary
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
+import java.sql.Timestamp
 import java.util.*
 
 const val MAX_PLAYERS = 6
@@ -87,6 +89,12 @@ class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(
         }
 
         return ret
+    }
+
+    override fun saveToDatabase(dtLastUpdate: Timestamp)
+    {
+        super.saveToDatabase(dtLastUpdate)
+        refreshSyncSummary()
     }
 
     companion object

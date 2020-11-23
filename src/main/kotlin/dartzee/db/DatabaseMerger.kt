@@ -3,7 +3,9 @@ package dartzee.db
 import dartzee.achievements.getAchievementForType
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.core.util.DialogUtil
-import dartzee.logging.CODE_MERGE_ERROR
+import dartzee.logging.*
+import dartzee.screen.sync.SyncProgressDialog
+import dartzee.sync.SyncStage
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
@@ -37,6 +39,8 @@ class DatabaseMerger(private val localDatabase: Database,
             return false
         }
 
+        SyncProgressDialog.progressToStage(SyncStage.MIGRATE_REMOTE)
+
         val result = migrator.migrateToLatest(remoteDatabase, "Remote")
         if (result != MigrationResult.SUCCESS)
         {
@@ -48,8 +52,13 @@ class DatabaseMerger(private val localDatabase: Database,
 
     fun performMerge(): Database
     {
+        SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
+
         val lastLocalSync = SyncAuditEntity.getLastSyncDate(localDatabase, remoteName)
+        logger.info(CODE_MERGE_STARTED, "Starting merge - last local sync $lastLocalSync")
         getSyncEntities().forEach { dao -> syncRowsFromTable(dao, lastLocalSync) }
+
+        SyncProgressDialog.progressToStage(SyncStage.UPDATE_ACHIEVEMENTS)
 
         val achievementsChanged = AchievementEntity().retrieveModifiedSince(lastLocalSync)
         if (achievementsChanged.isNotEmpty())
@@ -62,13 +71,16 @@ class DatabaseMerger(private val localDatabase: Database,
         }
 
         SyncAuditEntity.insertSyncAudit(remoteDatabase, remoteName)
-
         return remoteDatabase
     }
 
     private fun syncRowsFromTable(localDao: AbstractEntity<*>, lastSync: Timestamp?)
     {
         val rows = localDao.retrieveModifiedSince(lastSync)
+        val tableName = localDao.getTableName()
+        logger.info(CODE_MERGING_ENTITY, "Merging ${rows.size} rows from ${localDao.getTableName()}",
+            KEY_TABLE_NAME to tableName, KEY_ROW_COUNT to rows.size)
+
         rows.forEach { it.mergeIntoDatabase(remoteDatabase) }
     }
 

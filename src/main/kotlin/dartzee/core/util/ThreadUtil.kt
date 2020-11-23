@@ -48,3 +48,8 @@ fun runOnEventThreadBlocking(r: (() -> Unit))
         SwingUtilities.invokeAndWait(r)
     }
 }
+
+fun runInOtherThread(r: (() -> Unit))
+{
+    Thread(r).start()
+}

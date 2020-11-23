@@ -16,6 +16,7 @@ import dartzee.logging.Severity
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.Test
@@ -87,9 +88,9 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 
         setValuesAndSaveToDatabase(entity, true)
 
-        val log = getLastLog()
-        log.loggingCode shouldBe CODE_SQL
-        log.message shouldContain "INSERT INTO ${dao.getTableName()} VALUES ('$rowId'"
+        val insertLog = getLogRecords().find { it.loggingCode == CODE_SQL
+                && it.message.contains("INSERT INTO ${dao.getTableName()} VALUES ('$rowId'") }
+        insertLog.shouldNotBeNull()
 
         //Retrieve and check all values are as expected
         val retrievedEntity = dao.retrieveForId(rowId)!!
@@ -120,9 +121,8 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
         //Update
         setValuesAndSaveToDatabase(entity, false)
 
-        val log = getLastLog()
-        log.loggingCode shouldBe CODE_SQL
-        log.message shouldContain "UPDATE ${dao.getTableName()}"
+        val updateLog = getLogRecords().find { it.loggingCode == CODE_SQL && it.message.contains("UPDATE ${dao.getTableName()}") }
+        updateLog.shouldNotBeNull()
 
         getCountFromTable(dao.getTableName()) shouldBe 1
 

@@ -12,7 +12,7 @@ object AwsUtils
     fun readCredentials(resourceName: String) =
         try
         {
-            val awsCredentials = javaClass.getResource("/$resourceName").readText()
+            val awsCredentials = getAwsCredentialsStr(resourceName)
             val decoded = Base64.getDecoder().decode(awsCredentials).toString(Charset.forName("UTF-8"))
             val lines = decoded.lines()
             BasicAWSCredentials(lines[0], lines[1])
@@ -24,9 +24,15 @@ object AwsUtils
             null
         }
 
+    private fun getAwsCredentialsStr(resourceName: String): String
+    {
+        val rsrc = javaClass.getResource("/$resourceName")
+        return rsrc?.readText() ?: System.getenv(resourceName)
+    }
+
     fun makeS3Client(): AmazonS3
     {
-        val credentials = readCredentials("aws-sync")
+        val credentials = readCredentials("AWS_SYNC")
         return AmazonS3ClientBuilder
                 .standard()
                 .withRegion("eu-west-2")

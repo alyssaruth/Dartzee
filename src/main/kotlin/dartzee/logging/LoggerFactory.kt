@@ -10,7 +10,7 @@ object LoggerFactory
 {
     fun constructElasticsearchDestination(): LogDestinationElasticsearch
     {
-        val poster = AwsUtils.readCredentials("aws")?.let { ElasticsearchPoster(it, ELASTICSEARCH_URL, INDEX_PATH) }
+        val poster = AwsUtils.readCredentials("AWS_LOGS")?.let { ElasticsearchPoster(it, ELASTICSEARCH_URL, INDEX_PATH) }
         return LogDestinationElasticsearch(poster, Executors.newScheduledThreadPool(1))
     }
 }

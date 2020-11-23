@@ -13,7 +13,8 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.sync.AmazonS3RemoteDatabaseStore
-import dartzee.sync.SYNC_DIR
+import dartzee.sync.SyncManager
+import dartzee.sync.getRemoteName
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -25,7 +26,6 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Image
 import java.awt.event.*
-import java.io.File
 import java.util.*
 import javax.swing.*
 
@@ -215,17 +215,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             logger.error(LoggingCode("test"), "Testing stack trace")
         }
-        else if (cmd == "push")
+        else if (cmd == "sync")
         {
-            File(SYNC_DIR).deleteRecursively()
-            File(SYNC_DIR).mkdirs()
-            val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
-            store.pushDatabase("AnotherTest", mainDatabase)
-        }
-        else if (cmd == "pull")
-        {
-            val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
-            store.fetchDatabase("AnotherTest")
+            val manager = SyncManager(AmazonS3RemoteDatabaseStore("dartzee-unit-test"))
+            manager.doSync(getRemoteName())
         }
 
         return textToShow
