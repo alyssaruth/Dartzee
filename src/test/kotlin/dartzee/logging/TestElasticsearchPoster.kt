@@ -67,6 +67,8 @@ class TestElasticsearchPoster: AbstractTest()
 
         val poster = makePoster(url = "172.16.0.0")
         poster.postLog("""{"message": "test"}""") shouldBe false
+
+        verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.WARN)
     }
 
     @Test
