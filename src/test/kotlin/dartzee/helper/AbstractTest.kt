@@ -57,7 +57,6 @@ abstract class AbstractTest
 
         Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
 
-        InjectedThings.prefsNode = "DartsTest"
         InjectedThings.logger = logger
         InjectedThings.verificationDartboardSize = 50
         InjectedThings.preferencesDartboardSize = 50

@@ -131,12 +131,12 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     fun `should run conversion on the right database`()
     {
         usingInMemoryDatabase(withSchema = true) { database ->
-            val spiedDatabase = spyk(database)
-            mainDatabase = spiedDatabase
-
             usingInMemoryDatabase(withSchema = true) { otherDatabase ->
                 val alice = insertPlayer(name = "Alice", database = otherDatabase)
                 setUpAchievementRowForPlayer(alice, otherDatabase)
+
+                val spiedDatabase = spyk(database)
+                mainDatabase = spiedDatabase
 
                 factoryAchievement().populateForConversion(emptyList(), otherDatabase)
                 getAchievementCount(otherDatabase) shouldBe 1

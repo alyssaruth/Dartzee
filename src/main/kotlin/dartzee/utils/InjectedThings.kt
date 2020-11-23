@@ -19,7 +19,6 @@ import java.time.Clock
 
 object InjectedThings
 {
-    var prefsNode: String = "DartsPrefs"
     var mainDatabase: Database = Database()
     var dartzeeCalculator: AbstractDartzeeCalculator = DartzeeCalculator()
     var verificationDartboardSize = 400

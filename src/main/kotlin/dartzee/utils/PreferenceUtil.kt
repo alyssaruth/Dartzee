@@ -4,6 +4,7 @@ import java.util.prefs.Preferences
 
 object PreferenceUtil
 {
+    private const val PREFS_NODE = "DartsPrefs"
     private const val PREFERENCE_DELIM_CHAR = ";"
 
     /**
@@ -67,5 +68,5 @@ object PreferenceUtil
         preferences().putBoolean(pref, value)
     }
 
-    private fun preferences() = Preferences.userRoot().node(InjectedThings.prefsNode)
+    private fun preferences() = Preferences.userRoot().node(PREFS_NODE)
 }

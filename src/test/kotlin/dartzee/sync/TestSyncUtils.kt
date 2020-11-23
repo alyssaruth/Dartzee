@@ -12,6 +12,7 @@ class TestSyncUtils: AbstractRegistryTest()
     @Test
     fun `Should return an empty string if no remote db name set`()
     {
+        saveRemoteName("")
         getRemoteName() shouldBe ""
     }
 
