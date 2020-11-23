@@ -11,6 +11,9 @@ jobs:
         java-version: 11
     - name: Build with Gradle
       uses: GabrielBB/xvfb-action@v1.0
+      env:
+        AWS_SYNC: ${{ secrets.AWS_SYNC }}
+        AWS_LOGS: ${{ secrets.AWS_LOGS }}
       with:
         run: ./gradlew test --info
     - name: Export snapshots
