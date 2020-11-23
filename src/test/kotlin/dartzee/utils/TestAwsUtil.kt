@@ -41,7 +41,7 @@ class TestAwsUtil: AbstractTest()
         credentials shouldBe null
 
         getLogRecords().shouldBeEmpty()
-        newOut.toString().shouldContain("java.lang.IllegalStateException: javaClass.getResource(\"/\$resourceName\") must not be null")
+        newOut.toString().shouldContain("java.lang.IllegalStateException: System.getenv(resourceName) must not be null")
     }
 
     @Test
