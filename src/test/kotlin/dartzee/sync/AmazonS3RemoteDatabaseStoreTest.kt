@@ -3,6 +3,7 @@ package dartzee.sync
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.AwsUtils
+import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import io.kotlintest.matchers.file.shouldExist
 import io.kotlintest.matchers.string.shouldContain
@@ -32,6 +33,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         super.afterEachTest()
 
         File(SYNC_DIR).deleteRecursively()
+        File("$DATABASE_FILE_PATH/DartsOther").deleteRecursively()
     }
 
     @Test
@@ -42,6 +44,11 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         usingInMemoryDatabase(withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
+
+            val dbFile = File("${db.getDatabaseDirectory()}/Test.txt")
+            dbFile.createNewFile()
+            dbFile.writeText(testFileText)
+
             store.pushDatabase(remoteName, db, null)
 
             store.databaseExists(remoteName) shouldBe true

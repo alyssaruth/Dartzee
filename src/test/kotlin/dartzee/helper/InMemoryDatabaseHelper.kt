@@ -329,6 +329,8 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
     val db = makeInMemoryDatabase(dbName)
     try
     {
+        db.getDatabaseDirectory().mkdirs()
+
         if (withSchema)
         {
             val migrator = DatabaseMigrator(emptyMap())
@@ -339,6 +341,7 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
     }
     finally
     {
+        db.getDatabaseDirectory().deleteRecursively()
         db.closeConnectionsAndDrop(dbName)
     }
 }
@@ -346,6 +349,7 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
 fun Database.closeConnectionsAndDrop(dbName: String)
 {
     closeConnections()
+    shutDown()
 
     try
     {

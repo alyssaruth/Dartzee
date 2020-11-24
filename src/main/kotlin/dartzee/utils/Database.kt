@@ -79,14 +79,15 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         return connection
     }
 
-    private fun getDbStringForNewConnection() =
+    private fun getDbStringForNewConnection() = "${getQualifiedDbName()};create=true"
+    private fun getQualifiedDbName() =
         if (inMemory)
         {
-            "jdbc:derby:memory:Databases/$dbName;create=true"
+            "jdbc:derby:memory:Databases/$dbName"
         }
         else
         {
-            "jdbc:derby:Databases/$dbName;create=true"
+            "jdbc:derby:Databases/$dbName"
         }
 
     private fun getProps(): Properties
@@ -300,9 +301,11 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
 
     fun shutDown(): Boolean
     {
+        val command = "${getQualifiedDbName()};shutdown=true"
+
         try
         {
-            DriverManager.getConnection("jdbc:derby:Databases/$dbName;shutdown=true", getProps())
+            DriverManager.getConnection(command, getProps())
         }
         catch (sqle: SQLException)
         {
@@ -312,7 +315,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
                 return true
             }
 
-            logger.logSqlException("jdbc:derby:Databases/$dbName;shutdown=true", "jdbc:derby:Databases/$dbName;shutdown=true", sqle)
+            logger.logSqlException(command, command, sqle)
         }
 
         return false
