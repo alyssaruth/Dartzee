@@ -21,7 +21,7 @@ class TestElasticsearchPoster: AbstractTest()
     @Test
     fun `Should post a test log successfully`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("aws"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_LOGS"))
 
         val poster = makePoster()
         poster.postLog("""{"message": "test"}""") shouldBe true
@@ -49,7 +49,7 @@ class TestElasticsearchPoster: AbstractTest()
     @Test
     fun `Should log an error when posting an individual log fails for something other than connection problems`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("aws"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_LOGS"))
 
         val poster = makePoster(index = "denied")
         poster.postLog("""{"message": "test"}""") shouldBe false
@@ -63,10 +63,12 @@ class TestElasticsearchPoster: AbstractTest()
     @Test
     fun `Should just log a single warning line if posting a log flakes due to connection`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("aws"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_LOGS"))
 
         val poster = makePoster(url = "172.16.0.0")
         poster.postLog("""{"message": "test"}""") shouldBe false
+
+        verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.WARN)
     }
 
     @Test
@@ -108,7 +110,7 @@ class TestElasticsearchPoster: AbstractTest()
         return response
     }
 
-    private fun makePoster(credentials: BasicAWSCredentials? = AwsUtils.readCredentials("aws"),
+    private fun makePoster(credentials: BasicAWSCredentials? = AwsUtils.readCredentials("AWS_LOGS"),
                            url: String = ELASTICSEARCH_URL,
                            index: String = "unittest",
                            client: RestClient? = null): ElasticsearchPoster

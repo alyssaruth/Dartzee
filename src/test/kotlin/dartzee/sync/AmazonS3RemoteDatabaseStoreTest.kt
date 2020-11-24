@@ -37,7 +37,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     @Test
     fun `Should support pushing, checking existence and fetching the same database`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("aws-sync"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
         usingInMemoryDatabase(withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
@@ -58,7 +58,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     @Test
     fun `Should return false for a remote database that does not exist`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("aws-sync"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
         val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
         store.databaseExists(UUID.randomUUID().toString()) shouldBe false
@@ -67,7 +67,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     @Test
     fun `Should create a backup version, with filename including schema version`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("aws-sync"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
         val s3Client = AwsUtils.makeS3Client()
 
@@ -85,7 +85,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     @Test
     fun `Should throw an error if trying to overwrite database which has been modified since it was fetched`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("aws-sync"))
+        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
         usingInMemoryDatabase(withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")

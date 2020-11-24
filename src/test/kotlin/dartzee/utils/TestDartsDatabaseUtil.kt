@@ -4,6 +4,7 @@ import dartzee.db.DatabaseMigrator
 import dartzee.db.MigrationResult
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertExits
+import dartzee.helper.shouldUpdateSyncSummary
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_DATABASE_CREATED
 import dartzee.logging.CODE_DATABASE_CREATING
@@ -39,6 +40,16 @@ class TestDartsDatabaseUtil: AbstractTest()
             verifyLog(CODE_DATABASE_CREATED)
 
             db.getDatabaseVersion() shouldBe DATABASE_VERSION
+        }
+    }
+
+    @Test
+    fun `Should update sync summary`()
+    {
+        usingInMemoryDatabase { db ->
+            shouldUpdateSyncSummary {
+                DartsDatabaseUtil.initialiseDatabase(db)
+            }
         }
     }
 }
