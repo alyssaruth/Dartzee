@@ -1,6 +1,7 @@
 package dartzee.sync
 
 import com.amazonaws.services.s3.model.GetObjectRequest
+import dartzee.core.util.FileUtil
 import dartzee.core.util.getFileTimeString
 import dartzee.logging.*
 import dartzee.screen.sync.SyncProgressDialog
@@ -31,9 +32,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
             "Fetched database $remoteName - saved to $downloadPath. Last modified remotely: ${s3Obj.lastModified}",
             KEY_REMOTE_NAME to remoteName)
 
-        ZipFile(downloadPath).extractAll("$SYNC_DIR/original")
-
-        File("$SYNC_DIR/original/Databases/Darts").copyTo(File("$DATABASE_FILE_PATH/DartsOther"))
+        ZipFile(downloadPath).extractAll("$DATABASE_FILE_PATH/DartsOther")
 
         logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to $DATABASE_FILE_PATH/DartsOther")
         return FetchDatabaseResult(Database("DartsOther"), s3Obj.lastModified)
@@ -47,9 +46,11 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
 
-        val dbDirectory = File("$DATABASE_FILE_PATH/${database.dbName}")
+        val dbDirectory = database.getDatabaseDirectory()
+        val contents = FileUtil.getAllContents(dbDirectory)
+
         val zipFilePath = File("$SYNC_DIR/new.zip")
-        val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory) }
+        val zip = ZipFile(zipFilePath).also { it.addFiles(contents) }
 
         logger.info(CODE_ZIPPED_DATABASE, "Zipped up database to push to $remoteName - $zipFilePath")
 
@@ -61,7 +62,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
         val dbVersion = database.getDatabaseVersion()
         val backupName = "${getFileTimeString()}_V$dbVersion.zip"
         s3Client.copyObject(bucketName, getCurrentDatabaseKey(remoteName), bucketName, "$remoteName/backups/$backupName")
-        logger.info(CODE_PUSHED_DATABASE_BACKUP, "Pushed backup to $remoteName/backups/$backupName", KEY_REMOTE_NAME to remoteName)
+        logger.info(CODE_PUSHED_DATABASE_BACKUP, "Copied backup to $remoteName/backups/$backupName", KEY_REMOTE_NAME to remoteName)
     }
 
     private fun verifyLastModifiedNotChanged(remoteName: String, lastModified: Date)

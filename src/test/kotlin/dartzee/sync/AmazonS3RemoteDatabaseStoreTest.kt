@@ -23,9 +23,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         super.beforeEachTest()
 
         File(SYNC_DIR).deleteRecursively()
-        File("$SYNC_DIR/Databases").mkdirs()
-        File("$SYNC_DIR/Databases/Test.txt").createNewFile()
-        File("$SYNC_DIR/Databases/Test.txt").writeText(testFileText)
+        File(SYNC_DIR).mkdirs()
     }
 
     override fun afterEachTest()
@@ -56,7 +54,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
             val resultingDatabase = store.fetchDatabase(remoteName).database
             resultingDatabase.dbName shouldBe "DartsOther"
 
-            val copiedFile = File("$SYNC_DIR/original/Databases/Test.txt")
+            val copiedFile = File("$DATABASE_FILE_PATH/DartsOther/Test.txt")
             copiedFile.shouldExist()
             copiedFile.readText() shouldBe testFileText
         }
@@ -79,6 +77,8 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         val s3Client = AwsUtils.makeS3Client()
 
         usingInMemoryDatabase(withSchema = true) { db ->
+            File("${db.getDatabaseDirectory()}/Test.txt").createNewFile()
+
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
             store.pushDatabase(remoteName, db, null)
@@ -95,16 +95,19 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
         usingInMemoryDatabase(withSchema = true) { db ->
+            val dbFile = File("${db.getDatabaseDirectory()}/Test.txt")
+            dbFile.createNewFile()
+
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
             store.pushDatabase(remoteName, db, null)
 
             val lastModified = store.fetchDatabase(remoteName).lastModified
 
-            Thread.sleep(500)
+            Thread.sleep(1000)
 
             // Make a change and push it again
-            File("$SYNC_DIR/Databases/Test.txt").writeText("Modified text")
+            dbFile.writeText("Modified text")
             store.pushDatabase(remoteName, db, null)
 
             val updatedModified = store.fetchDatabase(remoteName).lastModified
