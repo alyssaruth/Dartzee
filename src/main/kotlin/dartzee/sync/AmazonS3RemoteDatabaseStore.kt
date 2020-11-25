@@ -1,12 +1,10 @@
 package dartzee.sync
 
 import com.amazonaws.services.s3.model.GetObjectRequest
-import dartzee.core.util.FileUtil
 import dartzee.core.util.getFileTimeString
 import dartzee.logging.*
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.AwsUtils
-import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import net.lingala.zip4j.ZipFile
@@ -33,10 +31,10 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
             "Fetched database $remoteName - saved to $downloadPath. Last modified remotely: ${s3Obj.lastModified}",
             KEY_REMOTE_NAME to remoteName)
 
-        ZipFile(downloadPath).extractAll("$DATABASE_FILE_PATH/DartsOther")
-
-        logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to $DATABASE_FILE_PATH/DartsOther")
-        return FetchDatabaseResult(Database("DartsOther"), s3Obj.lastModified)
+        val resultingDb = Database("DartsOther")
+        ZipFile(downloadPath).extractAll(resultingDb.getDirectoryStr())
+        logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to ${resultingDb.getDirectory()}")
+        return FetchDatabaseResult(resultingDb, s3Obj.lastModified)
     }
 
     override fun pushDatabase(remoteName: String, database: Database, lastModified: Date?)
@@ -47,7 +45,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
 
-        val dbDirectory = database.getDatabaseDirectory()
+        val dbDirectory = database.getDirectory()
 
         val zipFilePath = File("$SYNC_DIR/new.zip")
         val params = ZipParameters().also { it.isIncludeRootFolder = false }

@@ -24,8 +24,6 @@ object DartsDatabaseUtil {
     const val DATABASE_VERSION = 16
     const val DATABASE_NAME = "Darts"
 
-    private val DATABASE_FILE_PATH_TEMP = DATABASE_FILE_PATH + "_copying"
-
     fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>> {
         return listOf(
             PlayerEntity(database),
@@ -147,7 +145,7 @@ object DartsDatabaseUtil {
             otherDatabase.closeConnections()
             otherDatabase.shutDown()
 
-            val error = FileUtil.swapInFile(mainDatabase.getDatabaseDirectory().toString(), otherDatabase.getDatabaseDirectory().toString())
+            val error = FileUtil.swapInFile(mainDatabase.getDirectoryStr(), otherDatabase.getDirectoryStr())
             if (error != null)
             {
                 DialogUtil.showError("Failed to restore database. Error: $error")

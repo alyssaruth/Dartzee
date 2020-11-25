@@ -93,7 +93,8 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         return props
     }
 
-    fun getDatabaseDirectory() = File("$DATABASE_FILE_PATH/$dbName")
+    fun getDirectoryStr() = "$DATABASE_FILE_PATH/$dbName"
+    fun getDirectory() = File(getDirectoryStr())
 
     fun executeUpdates(statements: List<String>): Boolean
     {

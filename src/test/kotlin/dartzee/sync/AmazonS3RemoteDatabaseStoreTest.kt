@@ -43,7 +43,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
 
-            val dbFile = File("${db.getDatabaseDirectory()}/Test.txt")
+            val dbFile = File("${db.getDirectory()}/Test.txt")
             dbFile.createNewFile()
             dbFile.writeText(testFileText)
 
@@ -77,7 +77,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         val s3Client = AwsUtils.makeS3Client()
 
         usingInMemoryDatabase(withSchema = true) { db ->
-            File("${db.getDatabaseDirectory()}/Test.txt").createNewFile()
+            File("${db.getDirectory()}/Test.txt").createNewFile()
 
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
@@ -95,7 +95,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
         usingInMemoryDatabase(withSchema = true) { db ->
-            val dbFile = File("${db.getDatabaseDirectory()}/Test.txt")
+            val dbFile = File("${db.getDirectory()}/Test.txt")
             dbFile.createNewFile()
 
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
