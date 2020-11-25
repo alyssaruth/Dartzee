@@ -10,6 +10,7 @@ import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import net.lingala.zip4j.ZipFile
+import net.lingala.zip4j.model.ZipParameters
 import java.io.File
 import java.util.*
 import kotlin.ConcurrentModificationException
@@ -47,10 +48,10 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
 
         val dbDirectory = database.getDatabaseDirectory()
-        val contents = FileUtil.getAllContents(dbDirectory)
 
         val zipFilePath = File("$SYNC_DIR/new.zip")
-        val zip = ZipFile(zipFilePath).also { it.addFiles(contents) }
+        val params = ZipParameters().also { it.isIncludeRootFolder = false }
+        val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory, params) }
 
         logger.info(CODE_ZIPPED_DATABASE, "Zipped up database to push to $remoteName - $zipFilePath")
 

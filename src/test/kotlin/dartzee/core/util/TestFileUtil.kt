@@ -4,7 +4,6 @@ import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_FILE_ERROR
 import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -120,26 +119,4 @@ class TestFileUtil: AbstractTest()
         ii.iconWidth shouldBe 150
         ii.iconHeight shouldBe 150
     }
-
-    @Test
-    fun `Should list all contents of a directory, excluding the directory itself`()
-    {
-        val a = File("Test/A/")
-        val b = File("Test/B/")
-
-        val rootFile = File("Test/root.txt")
-        val aFile = File("Test/A/a.txt")
-        val bFile = File("Test/B/b.txt")
-
-        a.mkdirs()
-        b.mkdirs()
-
-        rootFile.createNewFile()
-        aFile.createNewFile()
-        bFile.createNewFile()
-
-        val results = FileUtil.getAllContents(TEST_DIR)
-        results.shouldContainExactlyInAnyOrder(a, b, rootFile, aFile, bFile)
-    }
-
 }

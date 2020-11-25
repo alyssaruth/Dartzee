@@ -111,17 +111,6 @@ object FileUtil
             null
         }
 
-    fun getAllContents(directory: File): List<File>
-    {
-        if (!directory.isDirectory)
-        {
-            throw FileSystemException(directory, reason = "$directory is not a directory")
-        }
-
-        val allFiles = directory.walk().toList()
-        return allFiles.filterNot { it == directory }
-    }
-
     /**
      * FileChooser
      */
