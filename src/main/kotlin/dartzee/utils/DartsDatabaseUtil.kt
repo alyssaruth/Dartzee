@@ -134,29 +134,20 @@ object DartsDatabaseUtil {
         {
             return
         }
-
-        if (swapInDatabase(directoryFrom))
-        {
-            DialogUtil.showInfo("Database successfully restored!")
-        }
     }
 
-    fun swapInDatabase(directoryFrom: File): Boolean
+    fun swapInDatabase(otherDatabase: Database): Boolean
     {
-        val success = directoryFrom.copyRecursively(File(DATABASE_FILE_PATH_TEMP), true)
-        if (!success)
-        {
-            DialogUtil.showError("Restore failed - failed to copy the new database files.")
-            return false
-        }
-
         //Now switch it in
         try
         {
             mainDatabase.closeConnections()
             mainDatabase.shutDown()
 
-            val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
+            otherDatabase.closeConnections()
+            otherDatabase.shutDown()
+
+            val error = FileUtil.swapInFile(mainDatabase.getDatabaseDirectory().toString(), otherDatabase.getDatabaseDirectory().toString())
             if (error != null)
             {
                 DialogUtil.showError("Failed to restore database. Error: $error")

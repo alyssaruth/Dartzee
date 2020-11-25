@@ -55,7 +55,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
             val remote = dbStore.fetchDatabase(remoteName).database
             SyncAuditEntity.insertSyncAudit(remote, remoteName)
-            DartsDatabaseUtil.swapInDatabase(remote.getDatabaseDirectory())
+            DartsDatabaseUtil.swapInDatabase(remote)
         }
         finally
         {
@@ -91,7 +91,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
             SyncProgressDialog.progressToStage(SyncStage.OVERWRITE_LOCAL)
 
-            val success = DartsDatabaseUtil.swapInDatabase(resultingDatabase.getDatabaseDirectory())
+            val success = DartsDatabaseUtil.swapInDatabase(resultingDatabase)
             SyncProgressDialog.dispose()
             if (success)
             {
