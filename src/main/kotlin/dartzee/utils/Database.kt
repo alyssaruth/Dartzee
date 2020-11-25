@@ -69,11 +69,6 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     {
         connectionCreateCount++
 
-        val p = System.getProperties()
-        p.setProperty("derby.system.home", DATABASE_FILE_PATH)
-        p.setProperty("derby.language.logStatementText", "${DartsClient.devMode}")
-        p.setProperty("derby.language.logQueryPlan", "${DartsClient.devMode}")
-
         val connection = DriverManager.getConnection(getDbStringForNewConnection(), getProps())
         logger.info(CODE_NEW_CONNECTION, "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
         return connection

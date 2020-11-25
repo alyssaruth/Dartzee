@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
@@ -19,28 +20,28 @@ import kotlin.system.exitProcess
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
  */
-object DartsDatabaseUtil
-{
+object DartsDatabaseUtil {
     const val DATABASE_VERSION = 16
     const val DATABASE_NAME = "Darts"
 
     private val DATABASE_FILE_PATH_TEMP = DATABASE_FILE_PATH + "_copying"
 
-    fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>>
-    {
-        return listOf(PlayerEntity(database),
-                DartEntity(database),
-                GameEntity(database),
-                ParticipantEntity(database),
-                PlayerImageEntity(database),
-                DartsMatchEntity(database),
-                AchievementEntity(database),
-                DartzeeRuleEntity(database),
-                DartzeeTemplateEntity(database),
-                DartzeeRoundResultEntity(database),
-                X01FinishEntity(database),
-                PendingLogsEntity(database),
-                SyncAuditEntity(database))
+    fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>> {
+        return listOf(
+            PlayerEntity(database),
+            DartEntity(database),
+            GameEntity(database),
+            ParticipantEntity(database),
+            PlayerImageEntity(database),
+            DartsMatchEntity(database),
+            AchievementEntity(database),
+            DartzeeRuleEntity(database),
+            DartzeeTemplateEntity(database),
+            DartzeeRoundResultEntity(database),
+            X01FinishEntity(database),
+            PendingLogsEntity(database),
+            SyncAuditEntity(database)
+        )
     }
 
     fun getAllEntitiesIncludingVersion(database: Database = mainDatabase) =
@@ -48,7 +49,7 @@ object DartsDatabaseUtil
 
     fun initialiseDatabase(database: Database)
     {
-        DriverManager.registerDriver(EmbeddedDriver())
+        initialiseDerby()
 
         DialogUtil.showLoadingDialog("Checking database status...")
 
@@ -67,6 +68,16 @@ object DartsDatabaseUtil
         migrateDatabase(migrator, database)
 
         refreshSyncSummary()
+    }
+
+    private fun initialiseDerby()
+    {
+        DriverManager.registerDriver(EmbeddedDriver())
+
+        val p = System.getProperties()
+        p.setProperty("derby.system.home", DATABASE_FILE_PATH)
+        p.setProperty("derby.language.logStatementText", "${DartsClient.devMode}")
+        p.setProperty("derby.language.logQueryPlan", "${DartsClient.devMode}")
     }
 
     fun migrateDatabase(migrator: DatabaseMigrator, database: Database)
