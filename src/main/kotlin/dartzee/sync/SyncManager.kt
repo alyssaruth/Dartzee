@@ -36,7 +36,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
         finally
         {
-            File(SYNC_DIR).deleteRecursively()
+            tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
             refreshSyncSummary()
         }
@@ -59,7 +59,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
         finally
         {
-            File(SYNC_DIR).deleteRecursively()
+            tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
             refreshSyncSummary()
         }
@@ -111,8 +111,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
         finally
         {
-            File(SYNC_DIR).deleteRecursively()
-            File("$DATABASE_FILE_PATH/DartsOther").deleteRecursively()
+            tidyUpAllSyncDirs()
             SyncProgressDialog.dispose()
             refreshSyncSummary()
         }
@@ -120,10 +119,15 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
     private fun setUpSyncDir()
     {
-        File(SYNC_DIR).deleteRecursively()
+        tidyUpAllSyncDirs()
         File(SYNC_DIR).mkdirs()
     }
 
+    private fun tidyUpAllSyncDirs()
+    {
+        File(SYNC_DIR).deleteRecursively()
+        File("$DATABASE_FILE_PATH/DartsOther").deleteRecursively()
+    }
 
     private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)
       = DatabaseMerger(mainDatabase, remoteDatabase, DatabaseMigrator(DatabaseMigrations.getConversionsMap()), remoteName)
