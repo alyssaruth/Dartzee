@@ -10,7 +10,7 @@ object ScreenCache
 
     //Embedded screens
     val hmClassToScreen = mutableMapOf<Class<out EmbeddedScreen>, EmbeddedScreen>()
-    val syncSummaryPanel = SyncSummaryPanel()
+    var syncSummaryPanel = SyncSummaryPanel()
     val mainScreen = DartsApp(CheatBar())
 
     fun getDartsGameScreens() = hmGameIdToGameScreen.values.distinct()

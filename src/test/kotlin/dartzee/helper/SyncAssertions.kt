@@ -1,17 +1,19 @@
 package dartzee.helper
 
 import dartzee.screen.ScreenCache
-import dartzee.sync.refreshSyncSummary
-import dartzee.sync.saveRemoteName
-import io.kotlintest.matchers.string.shouldContain
+import dartzee.screen.sync.SyncSummaryPanel
+import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.InjectedThings.mainDatabase
+import io.mockk.mockk
+import io.mockk.verify
 
 fun shouldUpdateSyncSummary(testFn: () -> Unit)
 {
-    saveRemoteName("")
-    refreshSyncSummary()
+    mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
+    val summaryPanelMock = mockk<SyncSummaryPanel>(relaxed = true)
+    ScreenCache.syncSummaryPanel = summaryPanelMock
 
-    saveRemoteName("Goomba")
     testFn()
 
-    ScreenCache.syncSummaryPanel.text.shouldContain("Goomba")
+    verify { summaryPanelMock.refreshSummary(any()) }
 }
