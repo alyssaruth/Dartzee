@@ -1,6 +1,7 @@
 package dartzee.core.util
 
 import dartzee.logging.CODE_FILE_ERROR
+import dartzee.logging.CODE_SWITCHING_FILES
 import dartzee.utils.InjectedThings.logger
 import java.awt.Component
 import java.awt.Dimension
@@ -33,17 +34,21 @@ object FileUtil
         val oldFileName = oldFile.name
         val newFile = File(newFilePath)
         val zzOldFile = File(oldFile.parent, "zz$oldFileName")
+
+        logger.info(CODE_SWITCHING_FILES, "Rename current out of the way [$oldFile -> $zzOldFile]")
         if (oldFile.exists()
             && !oldFile.renameTo(zzOldFile))
         {
             return "Failed to rename old out of the way."
         }
 
+        logger.info(CODE_SWITCHING_FILES, "Rename new to current [$newFile -> $oldFile]")
         if (!newFile.renameTo(File(oldFile.parent, oldFileName)))
         {
             return "Failed to rename new file to $oldFileName"
         }
 
+        logger.info(CODE_SWITCHING_FILES, "Delete zz'd file [$zzOldFile]")
         if (!zzOldFile.deleteRecursively())
         {
             return "Failed to delete zz'd old file: ${zzOldFile.path}"
