@@ -349,16 +349,17 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
 fun Database.closeConnectionsAndDrop(dbName: String)
 {
     closeConnections()
+    shutDown()
 
     try
     {
-        DriverManager.getConnection("jdbc:derby:memory:$dbName;drop=true")
+        DriverManager.getConnection("${getQualifiedDbName()};drop=true")
     }
     catch (sqle: SQLException)
     {
-        if (sqle.message != "Database 'memory:$dbName' dropped.")
+        if (sqle.message != "Database 'memory:Databases/$dbName' dropped.")
         {
-            logger.info(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
+            logger.error(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
         }
     }
 }

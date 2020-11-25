@@ -75,7 +75,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     }
 
     private fun getDbStringForNewConnection() = "${getQualifiedDbName()};create=true"
-    private fun getQualifiedDbName() =
+    fun getQualifiedDbName() =
         if (inMemory)
         {
             "jdbc:derby:memory:Databases/$dbName"
