@@ -4,7 +4,6 @@ import dartzee.core.util.formatTimestamp
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_STRING_REMOTE_DATABASE_NAME
 import dartzee.utils.PreferenceUtil
@@ -39,7 +38,7 @@ fun refreshSyncSummary()
         }
         else
         {
-            val dtLastSynced = SyncAuditEntity.getLastSyncDate(InjectedThings.mainDatabase, remoteName)
+            val dtLastSynced = SyncAuditEntity.getLastSyncDate(mainDatabase, remoteName)
             val lastSyncDesc = dtLastSynced?.formatTimestamp() ?: "-"
             val pendingGameCount = GameEntity().countModifiedSince(dtLastSynced)
 

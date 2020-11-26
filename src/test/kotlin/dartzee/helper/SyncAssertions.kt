@@ -9,11 +9,20 @@ import io.mockk.verify
 
 fun shouldUpdateSyncSummary(testFn: () -> Unit)
 {
-    mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
-    val summaryPanelMock = mockk<SyncSummaryPanel>(relaxed = true)
-    ScreenCache.syncSummaryPanel = summaryPanelMock
+    val originalPanel = ScreenCache.syncSummaryPanel
 
-    testFn()
+    try
+    {
+        mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
+        val summaryPanelMock = mockk<SyncSummaryPanel>(relaxed = true)
+        ScreenCache.syncSummaryPanel = summaryPanelMock
 
-    verify { summaryPanelMock.refreshSummary(any()) }
+        testFn()
+
+        verify { summaryPanelMock.refreshSummary(any()) }
+    }
+    finally
+    {
+        ScreenCache.syncSummaryPanel = originalPanel
+    }
 }
