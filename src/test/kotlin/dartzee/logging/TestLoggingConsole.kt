@@ -119,6 +119,16 @@ class TestLoggingConsole: AbstractTest()
     }
 
     @Test
+    fun `Should log SQL run on a different DB with a grey background`()
+    {
+        val console = LoggingConsole()
+        val record = makeLogRecord(loggingCode = CODE_SQL, message = "DELETE FROM Game", keyValuePairs = mapOf(KEY_DATABASE_NAME to "otherDb"))
+        console.log(record)
+
+        console.getBackgroundColour() shouldBe Color.DARK_GRAY
+    }
+
+    @Test
     fun `Should scroll to the bottom when a new log is added`()
     {
         val console = LoggingConsole()
@@ -177,6 +187,11 @@ class TestLoggingConsole: AbstractTest()
     {
         val style = doc.getCharacterElement(position)
         return StyleConstants.getForeground(style.attributes)
+    }
+    private fun LoggingConsole.getBackgroundColour(): Color
+    {
+        val style = doc.getCharacterElement(0)
+        return StyleConstants.getBackground(style.attributes)
     }
 
 }

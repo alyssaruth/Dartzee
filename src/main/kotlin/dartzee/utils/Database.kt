@@ -143,7 +143,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
 
         if (log)
         {
-            logger.logSql(statement, "", timer.getDuration(), updateCount)
+            logger.logSql(statement, "", timer.getDuration(), updateCount, dbName)
         }
     }
 
@@ -166,7 +166,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
                     crs
                 }
 
-                logger.logSql(query, "", timer.getDuration(), resultSet.size())
+                logger.logSql(query, "", timer.getDuration(), resultSet.size(), dbName)
                 return resultSet
             }
         }
