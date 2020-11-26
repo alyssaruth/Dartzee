@@ -22,7 +22,6 @@ import javax.swing.SwingUtilities
 import javax.swing.UIManager
 import kotlin.test.assertNotNull
 
-const val DATABASE_NAME_TEST = "jdbc:derby:memory:Darts;create=true"
 private var doneOneTimeSetup = false
 private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
@@ -63,7 +62,7 @@ abstract class AbstractTest
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-        mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        mainDatabase = Database(inMemory = true)
         DartsDatabaseUtil.initialiseDatabase(mainDatabase)
     }
 

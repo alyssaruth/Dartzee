@@ -2,7 +2,6 @@ package dartzee.db
 
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
-import dartzee.helper.DATABASE_NAME_TEST
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -15,7 +14,7 @@ class TestDatabaseMigrations: AbstractTest()
 {
     override fun beforeEachTest()
     {
-        InjectedThings.mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        InjectedThings.mainDatabase = Database(inMemory = true)
         super.beforeEachTest()
     }
 

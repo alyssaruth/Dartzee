@@ -11,9 +11,7 @@ import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.LoggingCode
-import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -319,20 +317,20 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
     return achievements.map { AchievementSummary(it.achievementType, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
 }
 
-private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString(), filePath: String = DATABASE_FILE_PATH): Database
+private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()): Database
 {
-    val fullName = "jdbc:derby:memory:$dbName;create=true"
-    return Database(filePath = filePath, dbName = fullName).also { it.initialiseConnectionPool(5) }
+    return Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(5) }
 }
 
 fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
-                          filePath: String = DATABASE_FILE_PATH,
                           withSchema: Boolean = false,
                           testBlock: (inMemoryDatabase: Database) -> Unit)
 {
-    val db = makeInMemoryDatabase(dbName, filePath)
+    val db = makeInMemoryDatabase(dbName)
     try
     {
+        db.getDirectory().mkdirs()
+
         if (withSchema)
         {
             val migrator = DatabaseMigrator(emptyMap())
@@ -343,6 +341,7 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
     }
     finally
     {
+        db.getDirectory().deleteRecursively()
         db.closeConnectionsAndDrop(dbName)
     }
 }
@@ -350,16 +349,17 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
 fun Database.closeConnectionsAndDrop(dbName: String)
 {
     closeConnections()
+    shutDown()
 
     try
     {
-        DriverManager.getConnection("jdbc:derby:memory:$dbName;drop=true")
+        DriverManager.getConnection("${getQualifiedDbName()};drop=true")
     }
     catch (sqle: SQLException)
     {
-        if (sqle.message != "Database 'memory:$dbName' dropped.")
+        if (sqle.message != "Database 'memory:Databases/$dbName' dropped.")
         {
-            InjectedThings.logger.info(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
+            logger.error(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
         }
     }
 }

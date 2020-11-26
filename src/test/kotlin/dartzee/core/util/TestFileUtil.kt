@@ -14,14 +14,29 @@ import javax.swing.ImageIcon
 
 class TestFileUtil: AbstractTest()
 {
+    private val TEST_DIR = File("Test/")
+
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+        TEST_DIR.deleteRecursively()
+        TEST_DIR.mkdirs()
+    }
+
+    override fun afterEachTest()
+    {
+        super.afterEachTest()
+        TEST_DIR.deleteRecursively()
+    }
+
     @Test
     fun `Should successfully delete a file`()
     {
-        val f = File("Test.txt")
+        val f = File("Test/Test.txt")
         f.createNewFile()
         f.exists() shouldBe true
 
-        val result = FileUtil.deleteFileIfExists("Test.txt")
+        val result = FileUtil.deleteFileIfExists("Test/Test.txt")
         result shouldBe true
         f.exists() shouldBe false
     }
@@ -36,11 +51,7 @@ class TestFileUtil: AbstractTest()
     @Test
     fun `Should stack trace and return false if the deletion fails`()
     {
-        val dir = File("Test/")
-        dir.mkdirs()
-
         val f = File("Test/File.txt")
-        f.mkdirs()
         f.createNewFile()
 
         FileUtil.deleteFileIfExists("Test") shouldBe false
@@ -48,19 +59,16 @@ class TestFileUtil: AbstractTest()
         val log = verifyLog(CODE_FILE_ERROR, Severity.ERROR)
         log.message shouldBe "Failed to delete file Test"
         log.errorObject?.shouldBeInstanceOf<DirectoryNotEmptyException>()
-
-        //Tidy up
-        dir.deleteRecursively()
     }
 
     @Test
     fun `Should swap in a file successfully`()
     {
-        val current = File("Current.txt")
+        val current = File("Test/Current.txt")
         current.createNewFile()
         current.writeText("Current")
 
-        val new = File("New.txt")
+        val new = File("Test/New.txt")
         new.createNewFile()
         new.writeText("New")
 
@@ -69,33 +77,27 @@ class TestFileUtil: AbstractTest()
         new.exists() shouldBe false
         current.exists() shouldBe true
         current.readLines().shouldContainExactly("New")
-
-        //Tidy up
-        current.delete()
     }
 
     @Test
     fun `Should swap in a directory successfully`()
     {
-        File("Current").mkdir()
-        File("New").mkdir()
+        File("Test/Current").mkdir()
+        File("Test/New").mkdir()
 
-        val current = File("Current/File.txt")
+        val current = File("Test/Current/File.txt")
         current.createNewFile()
         current.writeText("Current")
 
-        val new = File("New/File.txt")
+        val new = File("Test/New/File.txt")
         new.createNewFile()
         new.writeText("New")
 
-        FileUtil.swapInFile("Current", "New")
+        FileUtil.swapInFile("Test/Current", "Test/New")
 
         new.exists() shouldBe false
         current.exists() shouldBe true
         current.readLines().shouldContainExactly("New")
-
-        //Tidy up
-        File("Current").deleteRecursively()
     }
 
     @Test

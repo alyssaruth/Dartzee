@@ -8,7 +8,6 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.logging.CODE_MERGE_ERROR
-import dartzee.logging.CODE_TEST_CONNECTION_ERROR
 import dartzee.logging.Severity
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
@@ -28,12 +27,11 @@ class TestDatabaseMerger: AbstractTest()
     @Test
     fun `Should return false if connecting to remote database fails`()
     {
-        val remoteName = "jdbc:derby:memory:invalid;create=false"
-        val remoteDatabase = Database("invalid", remoteName)
+        val remote = mockk<Database>()
+        every { remote.testConnection() } returns false
 
-        val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase)
+        val merger = makeDatabaseMerger(remoteDatabase = remote)
         merger.validateMerge() shouldBe false
-        verifyLog(CODE_TEST_CONNECTION_ERROR, Severity.ERROR)
         dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
     }
 

@@ -26,7 +26,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
     override fun beforeEachTest()
     {
-        mainDatabase = Database(dbName = DATABASE_NAME_TEST)
+        mainDatabase = Database(inMemory = true)
         mainDatabase.dropUnexpectedTables()
         super.beforeEachTest()
     }

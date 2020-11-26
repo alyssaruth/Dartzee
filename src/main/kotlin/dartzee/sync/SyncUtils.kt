@@ -4,7 +4,7 @@ import dartzee.core.util.formatTimestamp
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_STRING_REMOTE_DATABASE_NAME
 import dartzee.utils.PreferenceUtil
 
@@ -28,21 +28,25 @@ data class SyncConfig(val mode: SyncMode, val remoteName: String)
 data class SyncSummary(val remoteName: String, val lastSynced: String, val pendingGames: String)
 fun refreshSyncSummary()
 {
-    val remoteName = getRemoteName()
-    val syncSummary = if (remoteName.isEmpty())
+    val version = mainDatabase.getDatabaseVersion() ?: return
+    if (version >= 16)
     {
-        SyncSummary("Unset", "-", "-")
-    }
-    else
-    {
-        val dtLastSynced = SyncAuditEntity.getLastSyncDate(InjectedThings.mainDatabase, remoteName)
-        val lastSyncDesc = dtLastSynced?.formatTimestamp() ?: "-"
-        val pendingGameCount = GameEntity().countModifiedSince(dtLastSynced)
+        val remoteName = getRemoteName()
+        val syncSummary = if (remoteName.isEmpty())
+        {
+            SyncSummary("Unset", "-", "-")
+        }
+        else
+        {
+            val dtLastSynced = SyncAuditEntity.getLastSyncDate(mainDatabase, remoteName)
+            val lastSyncDesc = dtLastSynced?.formatTimestamp() ?: "-"
+            val pendingGameCount = GameEntity().countModifiedSince(dtLastSynced)
 
-        SyncSummary(remoteName, lastSyncDesc, "$pendingGameCount")
-    }
+            SyncSummary(remoteName, lastSyncDesc, "$pendingGameCount")
+        }
 
-    ScreenCache.syncSummaryPanel.refreshSummary(syncSummary)
+        ScreenCache.syncSummaryPanel.refreshSummary(syncSummary)
+    }
 }
 
 fun resetRemote()

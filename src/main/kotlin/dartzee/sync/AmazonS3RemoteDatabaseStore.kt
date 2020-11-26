@@ -8,6 +8,7 @@ import dartzee.utils.AwsUtils
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import net.lingala.zip4j.ZipFile
+import net.lingala.zip4j.model.ZipParameters
 import java.io.File
 import java.util.*
 import kotlin.ConcurrentModificationException
@@ -30,10 +31,10 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
             "Fetched database $remoteName - saved to $downloadPath. Last modified remotely: ${s3Obj.lastModified}",
             KEY_REMOTE_NAME to remoteName)
 
-        ZipFile(downloadPath).extractAll("$SYNC_DIR/original")
-
-        logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to $SYNC_DIR/original")
-        return FetchDatabaseResult(Database("$SYNC_DIR/original/Databases"), s3Obj.lastModified)
+        val resultingDb = Database("DartsOther")
+        ZipFile(downloadPath).extractAll(resultingDb.getDirectoryStr())
+        logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to ${resultingDb.getDirectory()}")
+        return FetchDatabaseResult(resultingDb, s3Obj.lastModified)
     }
 
     override fun pushDatabase(remoteName: String, database: Database, lastModified: Date?)
@@ -44,9 +45,11 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
 
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
 
-        val dbDirectory = File(database.filePath)
+        val dbDirectory = database.getDirectory()
+
         val zipFilePath = File("$SYNC_DIR/new.zip")
-        val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory) }
+        val params = ZipParameters().also { it.isIncludeRootFolder = false }
+        val zip = ZipFile(zipFilePath).also { it.addFolder(dbDirectory, params) }
 
         logger.info(CODE_ZIPPED_DATABASE, "Zipped up database to push to $remoteName - $zipFilePath")
 
@@ -58,7 +61,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
         val dbVersion = database.getDatabaseVersion()
         val backupName = "${getFileTimeString()}_V$dbVersion.zip"
         s3Client.copyObject(bucketName, getCurrentDatabaseKey(remoteName), bucketName, "$remoteName/backups/$backupName")
-        logger.info(CODE_PUSHED_DATABASE_BACKUP, "Pushed backup to $remoteName/backups/$backupName", KEY_REMOTE_NAME to remoteName)
+        logger.info(CODE_PUSHED_DATABASE_BACKUP, "Copied backup to $remoteName/backups/$backupName", KEY_REMOTE_NAME to remoteName)
     }
 
     private fun verifyLastModifiedNotChanged(remoteName: String, lastModified: Date)

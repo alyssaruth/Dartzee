@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
@@ -19,28 +20,26 @@ import kotlin.system.exitProcess
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
  */
-object DartsDatabaseUtil
-{
+object DartsDatabaseUtil {
     const val DATABASE_VERSION = 16
-    const val DATABASE_NAME = "jdbc:derby:Databases/Darts;create=true"
+    const val DATABASE_NAME = "Darts"
 
-    private val DATABASE_FILE_PATH_TEMP = DATABASE_FILE_PATH + "_copying"
-
-    fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>>
-    {
-        return listOf(PlayerEntity(database),
-                DartEntity(database),
-                GameEntity(database),
-                ParticipantEntity(database),
-                PlayerImageEntity(database),
-                DartsMatchEntity(database),
-                AchievementEntity(database),
-                DartzeeRuleEntity(database),
-                DartzeeTemplateEntity(database),
-                DartzeeRoundResultEntity(database),
-                X01FinishEntity(database),
-                PendingLogsEntity(database),
-                SyncAuditEntity(database))
+    fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>> {
+        return listOf(
+            PlayerEntity(database),
+            DartEntity(database),
+            GameEntity(database),
+            ParticipantEntity(database),
+            PlayerImageEntity(database),
+            DartsMatchEntity(database),
+            AchievementEntity(database),
+            DartzeeRuleEntity(database),
+            DartzeeTemplateEntity(database),
+            DartzeeRoundResultEntity(database),
+            X01FinishEntity(database),
+            PendingLogsEntity(database),
+            SyncAuditEntity(database)
+        )
     }
 
     fun getAllEntitiesIncludingVersion(database: Database = mainDatabase) =
@@ -48,7 +47,7 @@ object DartsDatabaseUtil
 
     fun initialiseDatabase(database: Database)
     {
-        DriverManager.registerDriver(EmbeddedDriver())
+        initialiseDerby()
 
         DialogUtil.showLoadingDialog("Checking database status...")
 
@@ -67,6 +66,16 @@ object DartsDatabaseUtil
         migrateDatabase(migrator, database)
 
         refreshSyncSummary()
+    }
+
+    private fun initialiseDerby()
+    {
+        DriverManager.registerDriver(EmbeddedDriver())
+
+        val p = System.getProperties()
+        p.setProperty("derby.system.home", DATABASE_FILE_PATH)
+        p.setProperty("derby.language.logStatementText", "${DartsClient.devMode}")
+        p.setProperty("derby.language.logQueryPlan", "${DartsClient.devMode}")
     }
 
     fun migrateDatabase(migrator: DatabaseMigrator, database: Database)
@@ -123,30 +132,20 @@ object DartsDatabaseUtil
         {
             return
         }
-
-        if (swapInDatabase(directoryFrom))
-        {
-            DialogUtil.showInfo("Database successfully restored!")
-        }
     }
 
-    fun swapInDatabase(directoryFrom: File): Boolean
+    fun swapInDatabase(otherDatabase: Database): Boolean
     {
-        //Copy the files to a temporary file path in the application directory - Databases_copying.
-        val success = directoryFrom.copyRecursively(File(DATABASE_FILE_PATH_TEMP), true)
-        if (!success)
-        {
-            DialogUtil.showError("Restore failed - failed to copy the new database files.")
-            return false
-        }
-
         //Now switch it in
         try
         {
             mainDatabase.closeConnections()
             mainDatabase.shutDown()
 
-            val error = FileUtil.swapInFile(DATABASE_FILE_PATH, DATABASE_FILE_PATH_TEMP)
+            otherDatabase.closeConnections()
+            otherDatabase.shutDown()
+
+            val error = FileUtil.swapInFile(mainDatabase.getDirectoryStr(), otherDatabase.getDirectoryStr())
             if (error != null)
             {
                 DialogUtil.showError("Failed to restore database. Error: $error")
@@ -173,15 +172,6 @@ object DartsDatabaseUtil
         if (name != "Databases")
         {
             DialogUtil.showError("Selected path is not valid - you must select a folder named 'Databases'")
-            return null
-        }
-
-        //Test we can connect
-        val otherDatabase = Database(filePath = directoryFrom.absolutePath)
-        val testSuccess = otherDatabase.testConnection()
-        if (!testSuccess)
-        {
-            DialogUtil.showError("Testing connection failed for the selected database. Cannot restore from this location.")
             return null
         }
 

@@ -3,6 +3,7 @@ package dartzee.sync
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.AwsUtils
+import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import io.kotlintest.matchers.file.shouldExist
 import io.kotlintest.matchers.string.shouldContain
@@ -22,9 +23,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         super.beforeEachTest()
 
         File(SYNC_DIR).deleteRecursively()
-        File("$SYNC_DIR/Databases").mkdirs()
-        File("$SYNC_DIR/Databases/Test.txt").createNewFile()
-        File("$SYNC_DIR/Databases/Test.txt").writeText(testFileText)
+        File(SYNC_DIR).mkdirs()
     }
 
     override fun afterEachTest()
@@ -32,6 +31,7 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
         super.afterEachTest()
 
         File(SYNC_DIR).deleteRecursively()
+        File("$DATABASE_FILE_PATH/DartsOther").deleteRecursively()
     }
 
     @Test
@@ -39,17 +39,22 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     {
         Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
-        usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
+        usingInMemoryDatabase(withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
+
+            val dbFile = File("${db.getDirectory()}/Test.txt")
+            dbFile.createNewFile()
+            dbFile.writeText(testFileText)
+
             store.pushDatabase(remoteName, db, null)
 
             store.databaseExists(remoteName) shouldBe true
 
             val resultingDatabase = store.fetchDatabase(remoteName).database
-            resultingDatabase.filePath shouldBe "$SYNC_DIR/original/Databases"
+            resultingDatabase.dbName shouldBe "DartsOther"
 
-            val copiedFile = File("$SYNC_DIR/original/Databases/Test.txt")
+            val copiedFile = File("$DATABASE_FILE_PATH/DartsOther/Test.txt")
             copiedFile.shouldExist()
             copiedFile.readText() shouldBe testFileText
         }
@@ -71,7 +76,9 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
 
         val s3Client = AwsUtils.makeS3Client()
 
-        usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
+        usingInMemoryDatabase(withSchema = true) { db ->
+            File("${db.getDirectory()}/Test.txt").createNewFile()
+
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
             store.pushDatabase(remoteName, db, null)
@@ -87,17 +94,20 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     {
         Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
 
-        usingInMemoryDatabase(filePath = "$SYNC_DIR/Databases", withSchema = true) { db ->
+        usingInMemoryDatabase(withSchema = true) { db ->
+            val dbFile = File("${db.getDirectory()}/Test.txt")
+            dbFile.createNewFile()
+
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
             val remoteName = UUID.randomUUID().toString()
             store.pushDatabase(remoteName, db, null)
 
             val lastModified = store.fetchDatabase(remoteName).lastModified
 
-            Thread.sleep(500)
+            Thread.sleep(1000)
 
             // Make a change and push it again
-            File("$SYNC_DIR/Databases/Test.txt").writeText("Modified text")
+            dbFile.writeText("Modified text")
             store.pushDatabase(remoteName, db, null)
 
             val updatedModified = store.fetchDatabase(remoteName).lastModified
