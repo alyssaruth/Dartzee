@@ -4,12 +4,17 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.runInOtherThread
 import dartzee.db.DatabaseMerger
 import dartzee.db.DatabaseMigrator
+import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
+import dartzee.logging.CODE_SYNC_ERROR
+import dartzee.logging.KEY_GAME_IDS
+import dartzee.logging.KEY_PLAYER_IDS
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
@@ -73,47 +78,90 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
     {
         try
         {
-            setUpSyncDir()
-
-            SyncProgressDialog.syncStarted()
-
-            val fetchResult = dbStore.fetchDatabase(remoteName)
-            val merger = makeDatabaseMerger(fetchResult.database, remoteName)
-            if (!merger.validateMerge())
+            val result = performSyncSteps(remoteName)
+            if (result != null)
             {
-                return
-            }
-
-            SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
-
-            val resultingDatabase = merger.performMerge()
-            dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
-
-            SyncProgressDialog.progressToStage(SyncStage.OVERWRITE_LOCAL)
-
-            val success = DartsDatabaseUtil.swapInDatabase(resultingDatabase)
-            SyncProgressDialog.dispose()
-            if (success)
-            {
-                DialogUtil.showInfo("Sync completed successfully!")
+                val summary = "\n\nGames pushed: ${result.gamesPushed}\nGames pulled: ${result.gamesPulled}"
+                DialogUtil.showInfo("Sync completed successfully!$summary")
             }
         }
         catch (e: Exception)
         {
             when (e)
             {
-                is SocketException, is InterruptedIOException ->
+                is SocketException, is InterruptedIOException -> {
+                    logger.warn(CODE_SYNC_ERROR, "Caught network error during sync: $e")
                     DialogUtil.showError("A connection error occurred during database sync. Check your internet connection and try again.")
-                else -> DialogUtil.showError("An unexpected error occurred during database sync. No data has been changed.")
+                }
+                is ConcurrentModificationException -> {
+                    logger.warn(CODE_SYNC_ERROR, "$e")
+                    DialogUtil.showError("Another sync has been performed since this one started. \n\nResults have been discarded.")
+                }
+                is SyncDataLossError -> {
+                    logger.error(CODE_SYNC_ERROR, "$e", e, KEY_GAME_IDS to e.missingGameIds)
+                    DialogUtil.showError("Sync resulted in missing data. \n\nResults have been discarded.")
+                }
+                else -> {
+                    DialogUtil.showError("An unexpected error occurred during database sync. No data has been changed.")
+                    throw e
+                }
             }
-
-            throw e
         }
         finally
         {
             tidyUpAllSyncDirs()
             SyncProgressDialog.dispose()
             refreshSyncSummary()
+        }
+    }
+
+    private fun performSyncSteps(remoteName: String): SyncResult?
+    {
+        setUpSyncDir()
+
+        SyncProgressDialog.syncStarted()
+
+        val fetchResult = dbStore.fetchDatabase(remoteName)
+        val merger = makeDatabaseMerger(fetchResult.database, remoteName)
+        if (!merger.validateMerge())
+        {
+            return null
+        }
+
+        val localGamesToPush = getModifiedGameCount(remoteName)
+        val startingGameIds = getGameIds(mainDatabase)
+
+        SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
+
+        val resultingDatabase = merger.performMerge()
+
+        val resultingGameIds = getGameIds(resultingDatabase)
+        checkAllGamesStillExist(resultingGameIds, startingGameIds)
+
+        dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
+
+        SyncProgressDialog.progressToStage(SyncStage.OVERWRITE_LOCAL)
+
+        val success = DartsDatabaseUtil.swapInDatabase(resultingDatabase)
+        SyncProgressDialog.dispose()
+
+        if (!success)
+        {
+            return null
+        }
+
+        val gamesPulled = (resultingGameIds - startingGameIds).size
+        return SyncResult(localGamesToPush, gamesPulled)
+    }
+
+    private fun getGameIds(database: Database) = GameEntity(database).retrieveModifiedSince(null).map { it.rowId }.toSet()
+
+    private fun checkAllGamesStillExist(startingGameIds: Set<String>, resultingGameIds: Set<String>)
+    {
+        val missingGames = startingGameIds - resultingGameIds
+        if (missingGames.isNotEmpty())
+        {
+            throw SyncDataLossError(missingGames)
         }
     }
 
