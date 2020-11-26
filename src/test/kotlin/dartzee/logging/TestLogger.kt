@@ -99,7 +99,7 @@ class TestLogger: AbstractTest()
         val sql = "INSERT INTO Foo VALUES ('hello')"
         val genericSql = "INSERT INTO Foo VALUES (?)"
 
-        logger.logSql(sql, genericSql, 150, 20)
+        logger.logSql(sql, genericSql, 150, 20, "some_database")
         logger.waitUntilLoggingFinished()
 
         val record = destination.logRecords.first()
@@ -111,7 +111,8 @@ class TestLogger: AbstractTest()
         record.shouldContainKeyValues(KEY_DURATION to 150L,
             KEY_GENERIC_SQL to genericSql,
             KEY_SQL to sql,
-            KEY_ROW_COUNT to 20)
+            KEY_ROW_COUNT to 20,
+            KEY_DATABASE_NAME to "some_database")
     }
 
     @Test

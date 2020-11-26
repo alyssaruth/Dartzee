@@ -2,6 +2,7 @@ package dartzee.logging
 
 import dartzee.core.bean.WrapLayout
 import dartzee.screen.FocusableWindow
+import dartzee.utils.DartsDatabaseUtil
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
@@ -57,6 +58,12 @@ class LoggingConsole: FocusableWindow(), ILogDestination
                 text.contains("UPDATE") -> StyleConstants.setForeground(style, Color.ORANGE)
                 text.contains("DELETE") -> StyleConstants.setForeground(style, Color.PINK)
                 else -> StyleConstants.setForeground(style, Color.CYAN)
+            }
+
+            val dbName = record.keyValuePairs[KEY_DATABASE_NAME]
+            if (dbName != DartsDatabaseUtil.DATABASE_NAME)
+            {
+                StyleConstants.setBackground(style, Color.DARK_GRAY)
             }
         }
 

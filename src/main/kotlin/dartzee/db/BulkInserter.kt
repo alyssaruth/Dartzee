@@ -66,7 +66,7 @@ object BulkInserter
 
                         if (logInserts)
                         {
-                            logger.logSql(insertQuery, genericInsert, timer.getDuration(), ps.updateCount)
+                            logger.logSql(insertQuery, genericInsert, timer.getDuration(), ps.updateCount, database.dbName)
                         }
                     }
                 }

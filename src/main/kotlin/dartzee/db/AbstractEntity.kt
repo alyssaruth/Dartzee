@@ -246,7 +246,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
                 val updateCount = psUpdate.updateCount
 
-                logger.logSql(updateQuery, genericUpdate, timer.getDuration(), updateCount)
+                logger.logSql(updateQuery, genericUpdate, timer.getDuration(), updateCount, db.dbName)
 
                 if (updateCount == 0)
                 {
@@ -291,7 +291,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
                 val timer = DurationTimer()
                 psInsert.executeUpdate()
-                logger.logSql(insertQuery, genericInsert, timer.getDuration(), psInsert.updateCount)
+                logger.logSql(insertQuery, genericInsert, timer.getDuration(), psInsert.updateCount, db.dbName)
 
                 //Set this so we can call save() again on the same object and get the right behaviour
                 retrievedFromDb = true
