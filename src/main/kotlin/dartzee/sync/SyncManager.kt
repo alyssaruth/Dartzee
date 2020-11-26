@@ -6,9 +6,7 @@ import dartzee.db.DatabaseMerger
 import dartzee.db.DatabaseMigrator
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
-import dartzee.logging.CODE_SYNC_ERROR
-import dartzee.logging.KEY_GAME_IDS
-import dartzee.logging.KEY_PLAYER_IDS
+import dartzee.logging.*
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
@@ -39,6 +37,10 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
             SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
             dbStore.pushDatabase(remoteName, mainDatabase)
         }
+        catch (e: Exception)
+        {
+            handleSyncError(e, CODE_PUSH_ERROR)
+        }
         finally
         {
             tidyUpAllSyncDirs()
@@ -61,6 +63,10 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
             val remote = dbStore.fetchDatabase(remoteName).database
             SyncAuditEntity.insertSyncAudit(remote, remoteName)
             DartsDatabaseUtil.swapInDatabase(remote)
+        }
+        catch (e: Exception)
+        {
+            handleSyncError(e, CODE_PULL_ERROR)
         }
         finally
         {
@@ -87,25 +93,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
         catch (e: Exception)
         {
-            when (e)
-            {
-                is SocketException, is InterruptedIOException -> {
-                    logger.warn(CODE_SYNC_ERROR, "Caught network error during sync: $e")
-                    DialogUtil.showError("A connection error occurred during database sync. Check your internet connection and try again.")
-                }
-                is ConcurrentModificationException -> {
-                    logger.warn(CODE_SYNC_ERROR, "$e")
-                    DialogUtil.showError("Another sync has been performed since this one started. \n\nResults have been discarded.")
-                }
-                is SyncDataLossError -> {
-                    logger.error(CODE_SYNC_ERROR, "$e", e, KEY_GAME_IDS to e.missingGameIds)
-                    DialogUtil.showError("Sync resulted in missing data. \n\nResults have been discarded.")
-                }
-                else -> {
-                    DialogUtil.showError("An unexpected error occurred during database sync. No data has been changed.")
-                    throw e
-                }
-            }
+            handleSyncError(e, CODE_SYNC_ERROR)
         }
         finally
         {
@@ -162,6 +150,29 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         if (missingGames.isNotEmpty())
         {
             throw SyncDataLossError(missingGames)
+        }
+    }
+
+    private fun handleSyncError(e: Exception, code: LoggingCode)
+    {
+        when (e)
+        {
+            is SocketException, is InterruptedIOException -> {
+                logger.warn(code, "Caught network error during sync: $e")
+                DialogUtil.showError("A connection error occurred. Check your internet connection and try again.")
+            }
+            is ConcurrentModificationException -> {
+                logger.warn(code, "$e")
+                DialogUtil.showError("Another sync has been performed since this one started. \n\nResults have been discarded.")
+            }
+            is SyncDataLossError -> {
+                logger.error(code, "$e", e, KEY_GAME_IDS to e.missingGameIds)
+                DialogUtil.showError("Sync resulted in missing data. \n\nResults have been discarded.")
+            }
+            else -> {
+                DialogUtil.showError("An unexpected error occurred - no data has been changed.")
+                throw e
+            }
         }
     }
 
