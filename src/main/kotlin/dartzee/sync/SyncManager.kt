@@ -7,6 +7,7 @@ import dartzee.db.DatabaseMigrator
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
 import dartzee.logging.*
+import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
@@ -23,10 +24,7 @@ val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
 class SyncManager(private val dbStore: IRemoteDatabaseStore)
 {
-    fun doPush(remoteName: String)
-    {
-        runInOtherThread { doPushOnOtherThread(remoteName) }
-    }
+    fun doPush(remoteName: String) = runInOtherThread { doPushOnOtherThread(remoteName) }
     private fun doPushOnOtherThread(remoteName: String)
     {
         try
@@ -61,7 +59,12 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
             setUpSyncDir()
 
             val remote = dbStore.fetchDatabase(remoteName).database
-            SyncAuditEntity.insertSyncAudit(remote, remoteName)
+            if (!remote.testConnection())
+            {
+                DialogUtil.showError("An error occurred connecting to the remote database.")
+                return
+            }
+
             DartsDatabaseUtil.swapInDatabase(remote)
         }
         catch (e: Exception)
@@ -169,9 +172,12 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
                 logger.error(code, "$e", e, KEY_GAME_IDS to e.missingGameIds)
                 DialogUtil.showError("Sync resulted in missing data. \n\nResults have been discarded.")
             }
+            is WrappedSqlException -> {
+                logger.logSqlException(e.sqlStatement, e.genericStatement, e.sqlException)
+            }
             else -> {
+                logger.error(code, "Unexpected error: $e", e)
                 DialogUtil.showError("An unexpected error occurred - no data has been changed.")
-                throw e
             }
         }
     }

@@ -49,7 +49,9 @@ fun runOnEventThreadBlocking(r: (() -> Unit))
     }
 }
 
-fun runInOtherThread(r: (() -> Unit))
+fun runInOtherThread(r: (() -> Unit)): Thread
 {
-    Thread(r).start()
+    val t = Thread(r)
+    t.start()
+    return t
 }
