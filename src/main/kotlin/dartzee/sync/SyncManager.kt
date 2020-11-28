@@ -27,16 +27,19 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
     fun doPush(remoteName: String) = runInOtherThread { doPushOnOtherThread(remoteName) }
     private fun doPushOnOtherThread(remoteName: String)
     {
+        var auditEntry: SyncAuditEntity? = null
+
         try
         {
             SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pushing $remoteName...") }
             setUpSyncDir()
 
-            SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
+            auditEntry = SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
             dbStore.pushDatabase(remoteName, mainDatabase)
         }
         catch (e: Exception)
         {
+            auditEntry?.deleteFromDatabase()
             handleSyncError(e, CODE_PUSH_ERROR)
         }
         finally

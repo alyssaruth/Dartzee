@@ -2,10 +2,13 @@ package dartzee.helper
 
 import dartzee.screen.ScreenCache
 import dartzee.screen.sync.SyncSummaryPanel
+import dartzee.sync.SYNC_DIR
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.file.shouldNotExist
 import io.mockk.mockk
 import io.mockk.verify
+import java.io.File
 
 fun shouldUpdateSyncSummary(testFn: () -> Unit)
 {
@@ -25,4 +28,9 @@ fun shouldUpdateSyncSummary(testFn: () -> Unit)
     {
         ScreenCache.syncSummaryPanel = originalPanel
     }
+}
+
+fun syncDirectoryShouldNotExist()
+{
+    File(SYNC_DIR).shouldNotExist()
 }
