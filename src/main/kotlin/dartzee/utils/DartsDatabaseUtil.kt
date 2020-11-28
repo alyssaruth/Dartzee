@@ -9,6 +9,7 @@ import dartzee.logging.CODE_STARTING_RESTORE
 import dartzee.logging.KEY_DB_VERSION
 import dartzee.screen.ScreenCache
 import dartzee.sync.refreshSyncSummary
+import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -73,7 +74,7 @@ object DartsDatabaseUtil {
         DriverManager.registerDriver(EmbeddedDriver())
 
         val p = System.getProperties()
-        p.setProperty("derby.system.home", DATABASE_FILE_PATH)
+        p.setProperty("derby.system.home", InjectedThings.databaseDirectory)
         p.setProperty("derby.language.logStatementText", "${DartsClient.devMode}")
         p.setProperty("derby.language.logQueryPlan", "${DartsClient.devMode}")
     }
@@ -94,7 +95,7 @@ object DartsDatabaseUtil {
      */
     fun backupCurrentDatabase()
     {
-        val dbFolder = File(DATABASE_FILE_PATH)
+        val dbFolder = File(databaseDirectory)
 
         logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 

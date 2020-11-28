@@ -9,10 +9,10 @@ import dartzee.db.SyncAuditEntity
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.screen.sync.SyncProgressDialog
-import dartzee.utils.DATABASE_FILE_PATH
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
+import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
@@ -50,10 +50,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
     }
 
-    fun doPull(remoteName: String)
-    {
-        runInOtherThread { doPullOnOtherThread(remoteName) }
-    }
+    fun doPull(remoteName: String) = runInOtherThread { doPullOnOtherThread(remoteName) }
     private fun doPullOnOtherThread(remoteName: String)
     {
         try
@@ -194,7 +191,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
     private fun tidyUpAllSyncDirs()
     {
         File(SYNC_DIR).deleteRecursively()
-        File("$DATABASE_FILE_PATH/DartsOther").deleteRecursively()
+        File("$databaseDirectory/DartsOther").deleteRecursively()
     }
 
     private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)
