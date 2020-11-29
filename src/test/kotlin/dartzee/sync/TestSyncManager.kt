@@ -8,6 +8,7 @@ import dartzee.logging.CODE_SYNC_ERROR
 import dartzee.logging.KEY_GAME_IDS
 import dartzee.logging.Severity
 import dartzee.utils.Database
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
@@ -18,6 +19,7 @@ import org.junit.Test
 import java.io.File
 import java.net.SocketException
 import java.sql.Timestamp
+import kotlin.ConcurrentModificationException
 
 class TestSyncManager: AbstractTest()
 {
@@ -65,7 +67,7 @@ class TestSyncManager: AbstractTest()
     @Test
     fun `Should abort if a SQL error occurs during database merge`()
     {
-        usingInMemoryDatabase(withSchema = true) { remoteDb ->
+        usingDbWithTestFile { remoteDb ->
             insertPlayer(database = mainDatabase)
             remoteDb.dropTable("Player")
 
@@ -79,13 +81,15 @@ class TestSyncManager: AbstractTest()
             val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
             log.message shouldContain "Caught SQLException for statement"
             log.errorObject?.message shouldContain "Table/View 'PLAYER' does not exist"
+
+            databasesSwapped() shouldBe false
         }
     }
 
     @Test
     fun `Should throw an error if games from the original database have not made it through the merge`()
     {
-        usingInMemoryDatabase(withSchema = true) { remoteDb ->
+        usingDbWithTestFile { remoteDb ->
             val g = insertGame(dtLastUpdate = Timestamp(1000), database = mainDatabase)
             SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
 
@@ -99,13 +103,15 @@ class TestSyncManager: AbstractTest()
             val log = verifyLog(CODE_SYNC_ERROR, Severity.ERROR)
             log.message shouldContain "1 game(s) missing from resulting database after merge"
             log.keyValuePairs[KEY_GAME_IDS] shouldBe setOf(g.rowId)
+
+            databasesSwapped() shouldBe false
         }
     }
 
     @Test
     fun `Should show an error and log a warning if remote db has been modified since it was pulled`()
     {
-        usingInMemoryDatabase(withSchema = true) { remoteDb ->
+        usingDbWithTestFile { remoteDb ->
             val exception = ConcurrentModificationException("Oh no")
             val store = mockk<IRemoteDatabaseStore>()
             every { store.fetchDatabase(any()) } returns FetchDatabaseResult(remoteDb, getSqlDateNow())
@@ -120,6 +126,42 @@ class TestSyncManager: AbstractTest()
 
             val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
             log.message shouldBe "$exception"
+
+            databasesSwapped() shouldBe false
         }
     }
+
+    @Test
+    fun `Should successfully sync data between remote and local db, pushing up the result and swapping in locally`()
+    {
+        usingDbWithTestFile { remoteDb ->
+            insertGame(database = mainDatabase)
+            insertGame(database = remoteDb)
+
+            val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
+            val t = SyncManager(store).doSync(REMOTE_NAME)
+            t.join()
+
+            val resultingRemote = store.fetchDatabase(REMOTE_NAME).database
+            getCountFromTable("Game", resultingRemote) shouldBe 2
+
+            val summary = "\n\nGames pushed: 1\nGames pulled: 1"
+            val expectedInfoText = "Sync completed successfully!$summary"
+            dialogFactory.infosShown.shouldContainExactly(expectedInfoText)
+
+            databasesSwapped() shouldBe true
+        }
+    }
+
+    private fun usingDbWithTestFile(testBlock: (inMemoryDatabase: Database) -> Unit)
+    {
+        usingInMemoryDatabase(withSchema = true) { remoteDb ->
+            val f = File("${remoteDb.getDirectoryStr()}/SomeFile.txt")
+            f.createNewFile()
+
+            testBlock(remoteDb)
+        }
+    }
+
+    private fun databasesSwapped() = File("${InjectedThings.databaseDirectory}/Darts/SomeFile.txt").exists()
 }
