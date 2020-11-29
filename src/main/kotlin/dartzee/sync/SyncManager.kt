@@ -79,10 +79,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
     }
 
-    fun doSync(remoteName: String)
-    {
-        runInOtherThread { doSyncOnOtherThread(remoteName) }
-    }
+    fun doSync(remoteName: String) = runInOtherThread { doSyncOnOtherThread(remoteName) }
     private fun doSyncOnOtherThread(remoteName: String)
     {
         try
@@ -127,7 +124,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         val resultingDatabase = merger.performMerge()
 
         val resultingGameIds = getGameIds(resultingDatabase)
-        checkAllGamesStillExist(resultingGameIds, startingGameIds)
+        checkAllGamesStillExist(startingGameIds, resultingGameIds)
 
         dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
 
@@ -174,6 +171,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
             }
             is WrappedSqlException -> {
                 logger.logSqlException(e.sqlStatement, e.genericStatement, e.sqlException)
+                DialogUtil.showError("An unexpected error occurred - no data has been changed.")
             }
             else -> {
                 logger.error(code, "Unexpected error: $e", e)

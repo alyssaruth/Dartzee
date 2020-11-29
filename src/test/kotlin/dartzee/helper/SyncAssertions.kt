@@ -10,6 +10,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import java.io.File
 
+const val REMOTE_NAME = "Goomba"
+
 fun shouldUpdateSyncSummary(testFn: () -> Unit)
 {
     val originalPanel = ScreenCache.syncSummaryPanel
