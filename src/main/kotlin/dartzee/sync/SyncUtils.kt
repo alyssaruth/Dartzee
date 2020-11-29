@@ -40,13 +40,21 @@ fun refreshSyncSummary()
         {
             val dtLastSynced = SyncAuditEntity.getLastSyncDate(mainDatabase, remoteName)
             val lastSyncDesc = dtLastSynced?.formatTimestamp() ?: "-"
-            val pendingGameCount = GameEntity().countModifiedSince(dtLastSynced)
+            val pendingGameCount = getModifiedGameCount(remoteName)
 
             SyncSummary(remoteName, lastSyncDesc, "$pendingGameCount")
         }
 
         ScreenCache.syncSummaryPanel.refreshSummary(syncSummary)
     }
+}
+
+data class SyncResult(val gamesPushed: Int, val gamesPulled: Int)
+
+fun getModifiedGameCount(remoteName: String): Int
+{
+    val dtLastSynced = SyncAuditEntity.getLastSyncDate(mainDatabase, remoteName)
+    return GameEntity().countModifiedSince(dtLastSynced)
 }
 
 fun resetRemote()

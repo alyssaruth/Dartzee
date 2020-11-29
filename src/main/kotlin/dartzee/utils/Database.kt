@@ -1,11 +1,11 @@
 package dartzee.utils
 
-import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
 import dartzee.db.LocalIdGenerator
 import dartzee.db.VersionEntity
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
+import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.logger
 import java.io.File
 import java.sql.Connection
@@ -93,7 +93,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         return props
     }
 
-    fun getDirectoryStr() = "$DATABASE_FILE_PATH/$dbName"
+    fun getDirectoryStr() = "$databaseDirectory/$dbName"
     fun getDirectory() = File(getDirectoryStr())
 
     fun executeUpdates(statements: List<String>): Boolean
@@ -288,7 +288,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         }
         catch (t: Throwable)
         {
-            logger.error(CODE_TEST_CONNECTION_ERROR, "Failed to establish test connection for path $DATABASE_FILE_PATH/$dbName", t)
+            logger.error(CODE_TEST_CONNECTION_ERROR, "Failed to establish test connection for path ${getDirectory()}", t)
             return false
         }
 

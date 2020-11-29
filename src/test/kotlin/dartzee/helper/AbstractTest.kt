@@ -27,6 +27,8 @@ private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
 private var checkedForExceptions = false
 
+val TEST_DB_DIRECTORY = "Test/Databases"
+
 abstract class AbstractTest
 {
     private var doneClassSetup = false
@@ -56,6 +58,7 @@ abstract class AbstractTest
 
         Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
 
+        InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
         InjectedThings.logger = logger
         InjectedThings.verificationDartboardSize = 50
         InjectedThings.preferencesDartboardSize = 50

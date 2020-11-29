@@ -24,7 +24,7 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
 
     companion object
     {
-        fun insertSyncAudit(database: Database, remoteName: String)
+        fun insertSyncAudit(database: Database, remoteName: String): SyncAuditEntity
         {
             val entity = SyncAuditEntity(database)
             entity.assignRowId()
@@ -35,6 +35,7 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
             entity.remoteName = remoteName
 
             entity.saveToDatabase()
+            return entity
         }
 
         fun getLastSyncDate(database: Database, remoteName: String): Timestamp?
