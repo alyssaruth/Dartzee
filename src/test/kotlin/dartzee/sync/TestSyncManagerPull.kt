@@ -36,10 +36,10 @@ class TestSyncManagerPull: AbstractTest()
         every { dbStore.fetchDatabase(any()) } throws exception
 
         val manager = SyncManager(dbStore)
-        val t = manager.doPull("Goomba")
+        val t = manager.doPull(REMOTE_NAME)
         t.join()
 
-        dialogFactory.loadingsShown.shouldContainExactly("Pulling Goomba...")
+        dialogFactory.loadingsShown.shouldContainExactly("Pulling $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false
 
         val log = verifyLog(CODE_PULL_ERROR, Severity.ERROR)
@@ -56,11 +56,10 @@ class TestSyncManagerPull: AbstractTest()
         val db = mockk<Database>(relaxed = true)
         every { db.testConnection() } returns false
 
-        val store = InMemoryRemoteDatabaseStore()
-        store.pushDatabase("Remote", db)
+        val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to db)
 
         val manager = SyncManager(store)
-        val t = manager.doPull("Remote")
+        val t = manager.doPull(REMOTE_NAME)
         t.join()
 
         dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
@@ -70,14 +69,13 @@ class TestSyncManagerPull: AbstractTest()
     fun `Should pull and swap in remote database`()
     {
         usingInMemoryDatabase { db ->
-            val store = InMemoryRemoteDatabaseStore()
-            store.pushDatabase("Goomba", db)
+            val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to db)
 
             val f = File("${db.getDirectoryStr()}/SomeFile.txt")
             f.createNewFile()
 
             val manager = SyncManager(store)
-            val t = manager.doPull("Goomba")
+            val t = manager.doPull(REMOTE_NAME)
             t.join()
 
             File("$databaseDirectory/Darts/SomeFile.txt").shouldExist()
@@ -96,7 +94,7 @@ class TestSyncManagerPull: AbstractTest()
             every { dbStore.fetchDatabase(any()) } throws exception
 
             val manager = SyncManager(dbStore)
-            val t = manager.doPull("Goomba")
+            val t = manager.doPull(REMOTE_NAME)
             t.join()
 
             errorLogged() shouldBe true

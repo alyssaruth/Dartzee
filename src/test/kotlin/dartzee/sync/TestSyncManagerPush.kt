@@ -2,6 +2,7 @@ package dartzee.sync
 
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
+import dartzee.helper.REMOTE_NAME
 import dartzee.helper.shouldUpdateSyncSummary
 import dartzee.helper.syncDirectoryShouldNotExist
 import dartzee.logging.CODE_PUSH_ERROR
@@ -25,17 +26,17 @@ class TestSyncManagerPush: AbstractTest()
         every { dbStore.pushDatabase(any(), any()) } throws exception
 
         val manager = SyncManager(dbStore)
-        val t = manager.doPush("Goomba")
+        val t = manager.doPush(REMOTE_NAME)
         t.join()
 
-        dialogFactory.loadingsShown.shouldContainExactly("Pushing Goomba...")
+        dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false
 
         val log = verifyLog(CODE_PUSH_ERROR, Severity.ERROR)
         log.errorObject shouldBe exception
 
         dialogFactory.errorsShown.shouldContainExactly("An unexpected error occurred - no data has been changed.")
-        SyncAuditEntity.getLastSyncDate(mainDatabase, "Goomba") shouldBe null
+        SyncAuditEntity.getLastSyncDate(mainDatabase, REMOTE_NAME) shouldBe null
 
         syncDirectoryShouldNotExist()
     }
@@ -46,14 +47,14 @@ class TestSyncManagerPush: AbstractTest()
         val store = InMemoryRemoteDatabaseStore()
 
         val manager = SyncManager(store)
-        val t = manager.doPush("Goomba")
+        val t = manager.doPush(REMOTE_NAME)
         t.join()
 
-        dialogFactory.loadingsShown.shouldContainExactly("Pushing Goomba...")
+        dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false
 
-        store.fetchDatabase("Goomba").database shouldBe mainDatabase
-        SyncAuditEntity.getLastSyncDate(mainDatabase, "Goomba") shouldNotBe null
+        store.fetchDatabase(REMOTE_NAME).database shouldBe mainDatabase
+        SyncAuditEntity.getLastSyncDate(mainDatabase, REMOTE_NAME) shouldNotBe null
 
         syncDirectoryShouldNotExist()
     }
@@ -67,7 +68,7 @@ class TestSyncManagerPush: AbstractTest()
             every { dbStore.pushDatabase(any(), any()) } throws exception
 
             val manager = SyncManager(dbStore)
-            val t = manager.doPush("Goomba")
+            val t = manager.doPush(REMOTE_NAME)
             t.join()
 
             errorLogged() shouldBe true

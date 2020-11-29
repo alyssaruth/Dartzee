@@ -10,6 +10,7 @@ import dartzee.logging.Severity
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
@@ -17,6 +18,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
 import java.io.File
+import java.io.IOException
 import java.net.SocketException
 import java.sql.Timestamp
 import kotlin.ConcurrentModificationException
@@ -48,6 +50,7 @@ class TestSyncManager: AbstractTest()
         dialogFactory.errorsShown.shouldContainExactly("A connection error occurred. Check your internet connection and try again.")
         val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
         log.message shouldBe "Caught network error during sync: $exception"
+        syncDirectoryShouldNotExist()
     }
 
     @Test
@@ -62,6 +65,7 @@ class TestSyncManager: AbstractTest()
         t.join()
 
         dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
+        syncDirectoryShouldNotExist()
     }
 
     @Test
@@ -82,6 +86,8 @@ class TestSyncManager: AbstractTest()
             log.message shouldContain "Caught SQLException for statement"
             log.errorObject?.message shouldContain "Table/View 'PLAYER' does not exist"
 
+            dialogFactory.infosShown.shouldBeEmpty()
+            syncDirectoryShouldNotExist()
             databasesSwapped() shouldBe false
         }
     }
@@ -104,6 +110,8 @@ class TestSyncManager: AbstractTest()
             log.message shouldContain "1 game(s) missing from resulting database after merge"
             log.keyValuePairs[KEY_GAME_IDS] shouldBe setOf(g.rowId)
 
+            dialogFactory.infosShown.shouldBeEmpty()
+            syncDirectoryShouldNotExist()
             databasesSwapped() shouldBe false
         }
     }
@@ -127,7 +135,43 @@ class TestSyncManager: AbstractTest()
             val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
             log.message shouldBe "$exception"
 
+            dialogFactory.infosShown.shouldBeEmpty()
+            syncDirectoryShouldNotExist()
             databasesSwapped() shouldBe false
+        }
+    }
+
+    @Test
+    fun `Should show an error if something goes wrong swapping the database in`()
+    {
+        usingDbWithTestFile { remoteDb ->
+            remoteDb.getDirectory().deleteRecursively()
+
+            val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
+            val t = SyncManager(store).doSync(REMOTE_NAME)
+            t.join()
+
+            dialogFactory.errorsShown.shouldContainExactly("Failed to restore database. Error: Failed to rename new file to ${mainDatabase.dbName}")
+            dialogFactory.infosShown.shouldBeEmpty()
+
+            // Open a test connection so the tidy-up doesn't freak out about the db already being shut down
+            remoteDb.testConnection()
+        }
+    }
+
+    @Test
+    fun `Should update sync summary regardless of an error occurring`()
+    {
+        shouldUpdateSyncSummary {
+            val exception = IOException("Boom.")
+            val dbStore = mockk<IRemoteDatabaseStore>()
+            every { dbStore.fetchDatabase(any()) } throws exception
+
+            val manager = SyncManager(dbStore)
+            val t = manager.doSync(REMOTE_NAME)
+            t.join()
+
+            errorLogged() shouldBe true
         }
     }
 
@@ -149,6 +193,7 @@ class TestSyncManager: AbstractTest()
             val expectedInfoText = "Sync completed successfully!$summary"
             dialogFactory.infosShown.shouldContainExactly(expectedInfoText)
 
+            syncDirectoryShouldNotExist()
             databasesSwapped() shouldBe true
         }
     }
