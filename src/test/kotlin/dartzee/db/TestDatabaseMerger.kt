@@ -56,7 +56,7 @@ class TestDatabaseMerger: AbstractTest()
 
             val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase)
             merger.validateMerge() shouldBe false
-            dialogFactory.errorsShown.shouldContainExactly("The remote database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before syncing again.")
+            dialogFactory.errorsShown.shouldContainExactly("The remote database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before continuing.")
         }
     }
 

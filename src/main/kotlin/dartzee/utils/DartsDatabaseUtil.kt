@@ -9,7 +9,6 @@ import dartzee.logging.CODE_STARTING_RESTORE
 import dartzee.logging.KEY_DB_VERSION
 import dartzee.screen.ScreenCache
 import dartzee.sync.refreshSyncSummary
-import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -24,6 +23,7 @@ import kotlin.system.exitProcess
 object DartsDatabaseUtil {
     const val DATABASE_VERSION = 16
     const val DATABASE_NAME = "Darts"
+    const val OTHER_DATABASE_NAME = "DartsOther" //Tmp name used for restore from backup and/or sync
 
     fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>> {
         return listOf(
@@ -95,7 +95,7 @@ object DartsDatabaseUtil {
      */
     fun backupCurrentDatabase()
     {
-        val dbFolder = File(databaseDirectory)
+        val dbFolder = mainDatabase.getDirectory()
 
         logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
@@ -122,9 +122,18 @@ object DartsDatabaseUtil {
             return
         }
 
-        val directoryFrom = selectAndValidateNewDatabase()
-                ?: //Cancelled, or invalid
-                return
+        val directoryFrom = selectAndValidateNewDatabase() ?: return
+
+        val dbOther = Database(OTHER_DATABASE_NAME)
+        try
+        {
+            directoryFrom.copyRecursively(dbOther.getDirectory(), true)
+            validateAndRestoreDatabase(dbOther)
+        }
+        finally
+        {
+            dbOther.getDirectory().deleteRecursively()
+        }
 
         //Confirm at this point
         val confirmationQ = "Successfully conected to target database. " + "\n\nAre you sure you want to restore this database? All current data will be lost."
@@ -133,6 +142,16 @@ object DartsDatabaseUtil {
         {
             return
         }
+    }
+    private fun validateAndRestoreDatabase(dbOther: Database)
+    {
+        if (!dbOther.testConnection())
+        {
+            DialogUtil.showError("Selected database is not valid - failed to connect.")
+            return
+        }
+
+
     }
 
     fun swapInDatabase(otherDatabase: Database): Boolean
@@ -163,16 +182,16 @@ object DartsDatabaseUtil {
 
     private fun selectAndValidateNewDatabase(): File?
     {
-        DialogUtil.showInfo("Select the 'Databases' folder you want to restore from.")
+        DialogUtil.showInfo("Select the '$DATABASE_NAME' folder you want to restore from.")
         val directoryFrom = FileUtil.chooseDirectory(ScreenCache.mainScreen)
                 ?: //Cancelled
                 return null
 
         //Check it's named right
         val name = directoryFrom.name
-        if (name != "Databases")
+        if (name != DATABASE_NAME)
         {
-            DialogUtil.showError("Selected path is not valid - you must select a folder named 'Databases'")
+            DialogUtil.showError("Selected path is not valid - you must select a folder named '$DATABASE_NAME'")
             return null
         }
 

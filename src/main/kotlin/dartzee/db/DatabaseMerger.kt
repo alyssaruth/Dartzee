@@ -2,8 +2,10 @@ package dartzee.db
 
 import dartzee.achievements.getAchievementForType
 import dartzee.achievements.runConversionsWithProgressBar
-import dartzee.core.util.DialogUtil
-import dartzee.logging.*
+import dartzee.logging.CODE_MERGE_STARTED
+import dartzee.logging.CODE_MERGING_ENTITY
+import dartzee.logging.KEY_ROW_COUNT
+import dartzee.logging.KEY_TABLE_NAME
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.sync.SyncStage
 import dartzee.utils.DartsDatabaseUtil
@@ -18,36 +20,8 @@ class DatabaseMerger(private val localDatabase: Database,
 {
     fun validateMerge(): Boolean
     {
-        if (!remoteDatabase.testConnection())
-        {
-            DialogUtil.showError("An error occurred connecting to the remote database.")
-            return false
-        }
-
-        val remoteVersion = remoteDatabase.getDatabaseVersion()
-        if (remoteVersion == null)
-        {
-            logger.error(CODE_MERGE_ERROR, "Unable to ascertain remote database version (but could connect). Wat?")
-            DialogUtil.showError("An error occurred connecting to the remote database.")
-            return false
-        }
-
-        if (remoteVersion > DartsDatabaseUtil.DATABASE_VERSION)
-        {
-            val error = "The remote database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before syncing again."
-            DialogUtil.showError(error)
-            return false
-        }
-
         SyncProgressDialog.progressToStage(SyncStage.MIGRATE_REMOTE)
-
-        val result = migrator.migrateToLatest(remoteDatabase, "Remote")
-        if (result != MigrationResult.SUCCESS)
-        {
-            return false
-        }
-
-        return true
+        return ForeignDatabaseValidator(migrator).validateAndMigrateForeignDatabase(remoteDatabase, "remote")
     }
 
     fun performMerge(): Database
