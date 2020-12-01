@@ -99,11 +99,9 @@ object DartsDatabaseUtil {
 
         logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
-        val file = FileUtil.chooseDirectory(ScreenCache.mainScreen)
-                ?: //Cancelled
-                return
+        val file = FileUtil.chooseDirectory(ScreenCache.mainScreen) ?: return
 
-        val destinationPath = file.absolutePath + "\\Databases"
+        val destinationPath = "${file.absolutePath}/$DATABASE_NAME"
         val success = dbFolder.copyRecursively(File(destinationPath))
         if (!success)
         {
@@ -134,6 +132,14 @@ object DartsDatabaseUtil {
         {
             dbOther.getDirectory().deleteRecursively()
         }
+    }
+    private fun validateAndRestoreDatabase(dbOther: Database)
+    {
+        val validator = ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
+        if (!validator.validateAndMigrateForeignDatabase(dbOther, "selected"))
+        {
+            return
+        }
 
         //Confirm at this point
         val confirmationQ = "Successfully conected to target database. " + "\n\nAre you sure you want to restore this database? All current data will be lost."
@@ -142,16 +148,11 @@ object DartsDatabaseUtil {
         {
             return
         }
-    }
-    private fun validateAndRestoreDatabase(dbOther: Database)
-    {
-        if (!dbOther.testConnection())
+
+        if (swapInDatabase(dbOther))
         {
-            DialogUtil.showError("Selected database is not valid - failed to connect.")
-            return
+            DialogUtil.showInfo("Database restored successfully")
         }
-
-
     }
 
     fun swapInDatabase(otherDatabase: Database): Boolean
