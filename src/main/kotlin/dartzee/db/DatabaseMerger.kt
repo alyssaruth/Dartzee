@@ -15,15 +15,8 @@ import java.sql.Timestamp
 
 class DatabaseMerger(private val localDatabase: Database,
                      private val remoteDatabase: Database,
-                     private val migrator: DatabaseMigrator,
                      private val remoteName: String)
 {
-    fun validateMerge(): Boolean
-    {
-        SyncProgressDialog.progressToStage(SyncStage.MIGRATE_REMOTE)
-        return ForeignDatabaseValidator(migrator).validateAndMigrateForeignDatabase(remoteDatabase, "remote")
-    }
-
     fun performMerge(): Database
     {
         SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)

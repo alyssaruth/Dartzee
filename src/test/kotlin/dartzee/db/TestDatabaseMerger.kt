@@ -7,101 +7,17 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.helper.*
-import dartzee.logging.CODE_MERGE_ERROR
-import dartzee.logging.Severity
-import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.Test
 import java.sql.Timestamp
 
 class TestDatabaseMerger: AbstractTest()
 {
-    @Test
-    fun `Should return false if connecting to remote database fails`()
-    {
-        val remote = mockk<Database>()
-        every { remote.testConnection() } returns false
-
-        val merger = makeDatabaseMerger(remoteDatabase = remote)
-        merger.validateMerge() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
-    }
-
-    @Test
-    fun `Should return false and log an error if remote database version cannot be verified`()
-    {
-        val remoteDatabase = mockk<Database>(relaxed = true)
-        every { remoteDatabase.testConnection() } returns true
-        every { remoteDatabase.getDatabaseVersion() } returns null
-        
-        val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase)
-        merger.validateMerge() shouldBe false
-        verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
-        dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
-    }
-
-    @Test
-    fun `Should return false if remote database has higher version`()
-    {
-        usingInMemoryDatabase { remoteDatabase ->
-            remoteDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION + 1)
-
-            val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase)
-            merger.validateMerge() shouldBe false
-            dialogFactory.errorsShown.shouldContainExactly("The remote database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before continuing.")
-        }
-    }
-
-    @Test
-    fun `Should return false if unable to migrate remote database`()
-    {
-        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
-            val dbVersion = DartsDatabaseUtil.DATABASE_VERSION - 1
-            remoteDatabase.updateDatabaseVersion(dbVersion)
-
-            val migrator = DatabaseMigrator(emptyMap())
-            val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase, databaseMigrator = migrator)
-            val result = merger.validateMerge()
-            result shouldBe false
-
-            val dbDetails =
-                "Remote version: $dbVersion, min supported: ${DartsDatabaseUtil.DATABASE_VERSION}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
-            dialogFactory.errorsShown.shouldContainExactly(
-                "Remote database is too out-of-date to be upgraded by this version of Dartzee. " +
-                        "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
-            )
-        }
-    }
-
-    @Test
-    fun `Should migrate remote database to latest version and return true on success`()
-    {
-        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
-            val dbVersion = DartsDatabaseUtil.DATABASE_VERSION - 1
-            remoteDatabase.updateDatabaseVersion(dbVersion)
-
-            val migrations = mapOf(dbVersion to listOf
-            { database: Database -> database.executeUpdate("CREATE TABLE Test(RowId VARCHAR(36))") }
-            )
-
-            val migrator = DatabaseMigrator(migrations)
-            val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase, databaseMigrator = migrator)
-            val result = merger.validateMerge()
-            result shouldBe true
-
-            remoteDatabase.getDatabaseVersion() shouldBe DartsDatabaseUtil.DATABASE_VERSION
-            remoteDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Test") shouldBe 0
-        }
-    }
-
     @Test
     fun `Should insert into SyncAudit when performing the merge`()
     {
@@ -331,7 +247,6 @@ class TestDatabaseMerger: AbstractTest()
 
     private fun makeDatabaseMerger(localDatabase: Database = mainDatabase,
                                    remoteDatabase: Database,
-                                   databaseMigrator: DatabaseMigrator = DatabaseMigrator(emptyMap()),
                                    remoteName: String = "Goomba") =
-        DatabaseMerger(localDatabase, remoteDatabase, databaseMigrator, remoteName)
+        DatabaseMerger(localDatabase, remoteDatabase, remoteName)
 }

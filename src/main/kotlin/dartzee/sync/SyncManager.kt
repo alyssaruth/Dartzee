@@ -2,10 +2,7 @@ package dartzee.sync
 
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.runInOtherThread
-import dartzee.db.DatabaseMerger
-import dartzee.db.DatabaseMigrator
-import dartzee.db.GameEntity
-import dartzee.db.SyncAuditEntity
+import dartzee.db.*
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.screen.sync.SyncProgressDialog
@@ -110,11 +107,16 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         SyncProgressDialog.syncStarted()
 
         val fetchResult = dbStore.fetchDatabase(remoteName)
-        val merger = makeDatabaseMerger(fetchResult.database, remoteName)
-        if (!merger.validateMerge())
+
+        SyncProgressDialog.progressToStage(SyncStage.VALIDATE_REMOTE)
+
+        val validator = ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
+        if (!validator.validateAndMigrateForeignDatabase(fetchResult.database, "remote"))
         {
             return null
         }
+
+        val merger = DatabaseMerger(mainDatabase, fetchResult.database, remoteName)
 
         val localGamesToPush = getModifiedGameCount(remoteName)
         val startingGameIds = getGameIds(mainDatabase)
@@ -191,7 +193,4 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         File(SYNC_DIR).deleteRecursively()
         File("$databaseDirectory/${DartsDatabaseUtil.OTHER_DATABASE_NAME}").deleteRecursively()
     }
-
-    private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)
-      = DatabaseMerger(mainDatabase, remoteDatabase, DatabaseMigrator(DatabaseMigrations.getConversionsMap()), remoteName)
 }
