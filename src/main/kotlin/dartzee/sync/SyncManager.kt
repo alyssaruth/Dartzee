@@ -189,7 +189,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
     private fun tidyUpAllSyncDirs()
     {
         File(SYNC_DIR).deleteRecursively()
-        File("$databaseDirectory/DartsOther").deleteRecursively()
+        File("$databaseDirectory/${DartsDatabaseUtil.OTHER_DATABASE_NAME}").deleteRecursively()
     }
 
     private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)
