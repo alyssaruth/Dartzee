@@ -52,4 +52,10 @@ class TestDartsDatabaseUtil: AbstractTest()
             }
         }
     }
+
+    @Test
+    fun `Should backup main database to specified location`()
+    {
+
+    }
 }

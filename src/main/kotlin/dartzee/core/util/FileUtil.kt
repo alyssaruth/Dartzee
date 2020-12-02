@@ -3,7 +3,6 @@ package dartzee.core.util
 import dartzee.logging.CODE_FILE_ERROR
 import dartzee.logging.CODE_SWITCHING_FILES
 import dartzee.utils.InjectedThings.logger
-import java.awt.Component
 import java.awt.Dimension
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -12,7 +11,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import javax.imageio.ImageIO
 import javax.imageio.stream.FileImageInputStream
-import javax.swing.JFileChooser
 
 object FileUtil
 {
@@ -115,20 +113,4 @@ object FileUtil
             logger.error(CODE_FILE_ERROR, "Failed to read classpath resource $resourcePath", ioe)
             null
         }
-
-    /**
-     * FileChooser
-     */
-    fun chooseDirectory(comp: Component?): File?
-    {
-        val fc = JFileChooser()
-        fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-        val option = fc.showDialog(comp, "Select")
-        if (option != JFileChooser.APPROVE_OPTION)
-        {
-            return null
-        }
-
-        return fc.selectedFile
-    }
 }

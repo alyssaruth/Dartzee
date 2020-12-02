@@ -99,7 +99,7 @@ object DartsDatabaseUtil {
 
         logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
-        val file = FileUtil.chooseDirectory(ScreenCache.mainScreen) ?: return
+        val file = DialogUtil.chooseDirectory(ScreenCache.mainScreen) ?: return
 
         val destinationPath = "${file.absolutePath}/$DATABASE_NAME"
         val success = dbFolder.copyRecursively(File(destinationPath))
@@ -120,7 +120,7 @@ object DartsDatabaseUtil {
             return
         }
 
-        val directoryFrom = selectAndValidateNewDatabase() ?: return
+        val directoryFrom = selectNewDatabase() ?: return
 
         val dbOther = Database(OTHER_DATABASE_NAME)
         try
@@ -132,6 +132,21 @@ object DartsDatabaseUtil {
         {
             dbOther.getDirectory().deleteRecursively()
         }
+    }
+    private fun selectNewDatabase(): File?
+    {
+        DialogUtil.showInfo("Select the '$DATABASE_NAME' folder you want to restore from.")
+        val directoryFrom = DialogUtil.chooseDirectory(ScreenCache.mainScreen) ?: return null
+
+        //Check it's named right
+        val name = directoryFrom.name
+        if (name != DATABASE_NAME)
+        {
+            DialogUtil.showError("Selected path is not valid - you must select a folder named '$DATABASE_NAME'")
+            return null
+        }
+
+        return directoryFrom
     }
     private fun validateAndRestoreDatabase(dbOther: Database)
     {
@@ -179,24 +194,6 @@ object DartsDatabaseUtil {
         }
 
         return true
-    }
-
-    private fun selectAndValidateNewDatabase(): File?
-    {
-        DialogUtil.showInfo("Select the '$DATABASE_NAME' folder you want to restore from.")
-        val directoryFrom = FileUtil.chooseDirectory(ScreenCache.mainScreen)
-                ?: //Cancelled
-                return null
-
-        //Check it's named right
-        val name = directoryFrom.name
-        if (name != DATABASE_NAME)
-        {
-            DialogUtil.showError("Selected path is not valid - you must select a folder named '$DATABASE_NAME'")
-            return null
-        }
-
-        return directoryFrom
     }
 
     private fun checkAllGamesAreClosed(): Boolean

@@ -1,5 +1,7 @@
 package dartzee.core.util
 
+import java.awt.Component
+
 object DialogUtil
 {
     private var dialogFactory: AbstractMessageDialogFactory = MessageDialogFactory()
@@ -17,4 +19,5 @@ object DialogUtil
     fun dismissLoadingDialog() = dialogFactory.dismissLoading()
     fun showOption(title: String, message: String, options: List<String>) = dialogFactory.showOption(title, message, options)
     fun <K> showInput(title: String, message: String, options: Array<K>? = null, defaultOption: K? = null) = dialogFactory.showInput(title, message, options, defaultOption)
+    fun chooseDirectory(parent: Component?) = dialogFactory.chooseDirectory(parent)
 }
