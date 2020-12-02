@@ -4,6 +4,7 @@ import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
+import dartzee.logging.CODE_BACKUP_ERROR
 import dartzee.logging.CODE_STARTING_BACKUP
 import dartzee.logging.CODE_STARTING_RESTORE
 import dartzee.logging.KEY_DB_VERSION
@@ -95,21 +96,31 @@ object DartsDatabaseUtil {
      */
     fun backupCurrentDatabase()
     {
-        val dbFolder = mainDatabase.getDirectory()
-
         logger.info(CODE_STARTING_BACKUP, "About to start DB backup")
 
         val file = DialogUtil.chooseDirectory(ScreenCache.mainScreen) ?: return
-
-        val destinationPath = "${file.absolutePath}/$DATABASE_NAME"
-        val success = dbFolder.copyRecursively(File(destinationPath))
+        val fullDestination = File("${file.absolutePath}/$DATABASE_NAME")
+        val success = backupDatabaseToDestination(fullDestination)
         if (!success)
         {
             DialogUtil.showError("There was a problem creating the backup.")
         }
-
-        DialogUtil.showInfo("Database successfully backed up to $destinationPath")
+        else
+        {
+            DialogUtil.showInfo("Database successfully backed up to $fullDestination")
+        }
     }
+    private fun backupDatabaseToDestination(fullDestination: File): Boolean =
+        try
+        {
+            val dbFolder = mainDatabase.getDirectory()
+            dbFolder.copyRecursively(fullDestination)
+        }
+        catch (e: Exception)
+        {
+            logger.error(CODE_BACKUP_ERROR, "Caught $e trying to backup database", e)
+            false
+        }
 
     fun restoreDatabase()
     {
