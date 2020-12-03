@@ -341,6 +341,9 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
     }
     finally
     {
+        // Open a test connection so the tidy-up doesn't freak out if we shut it down in the test block
+        db.testConnection()
+
         db.getDirectory().deleteRecursively()
         db.closeConnectionsAndDrop(dbName)
     }

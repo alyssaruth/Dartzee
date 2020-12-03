@@ -4,10 +4,7 @@ import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.db.*
-import dartzee.logging.CODE_BACKUP_ERROR
-import dartzee.logging.CODE_STARTING_BACKUP
-import dartzee.logging.CODE_STARTING_RESTORE
-import dartzee.logging.KEY_DB_VERSION
+import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.sync.refreshSyncSummary
 import dartzee.utils.InjectedThings.logger
@@ -139,6 +136,11 @@ object DartsDatabaseUtil {
             directoryFrom.copyRecursively(dbOther.getDirectory(), true)
             validateAndRestoreDatabase(dbOther)
         }
+        catch (e: Exception)
+        {
+            logger.error(CODE_RESTORE_ERROR, "Caught $e trying to restore database", e)
+            DialogUtil.showError("There was a problem restoring the database.")
+        }
         finally
         {
             dbOther.getDirectory().deleteRecursively()
@@ -159,7 +161,7 @@ object DartsDatabaseUtil {
 
         return directoryFrom
     }
-    private fun validateAndRestoreDatabase(dbOther: Database)
+    fun validateAndRestoreDatabase(dbOther: Database)
     {
         val validator = ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
         if (!validator.validateAndMigrateForeignDatabase(dbOther, "selected"))
@@ -168,7 +170,7 @@ object DartsDatabaseUtil {
         }
 
         //Confirm at this point
-        val confirmationQ = "Successfully conected to target database. " + "\n\nAre you sure you want to restore this database? All current data will be lost."
+        val confirmationQ = "Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost."
         val option = DialogUtil.showQuestion(confirmationQ, false)
         if (option == JOptionPane.NO_OPTION)
         {
@@ -177,7 +179,7 @@ object DartsDatabaseUtil {
 
         if (swapInDatabase(dbOther))
         {
-            DialogUtil.showInfo("Database restored successfully")
+            DialogUtil.showInfo("Database restored successfully.")
         }
     }
 

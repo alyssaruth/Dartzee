@@ -4,7 +4,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.logger
 
 class ForeignDatabaseValidator(private val migrator: DatabaseMigrator)
 {
@@ -19,7 +19,7 @@ class ForeignDatabaseValidator(private val migrator: DatabaseMigrator)
         val remoteVersion = database.getDatabaseVersion()
         if (remoteVersion == null)
         {
-            InjectedThings.logger.error(CODE_MERGE_ERROR, "Unable to ascertain $desc database version (but could connect) - this is unexpected.")
+            logger.error(CODE_MERGE_ERROR, "Unable to ascertain $desc database version (but could connect) - this is unexpected.")
             DialogUtil.showError("An error occurred connecting to the $desc database.")
             return false
         }

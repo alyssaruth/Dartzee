@@ -92,6 +92,7 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         loadingVisible = false
         optionSequence.clear()
         optionsShown.clear()
+        directoryToSelect = null
     }
 
 }

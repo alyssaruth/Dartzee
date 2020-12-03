@@ -79,9 +79,6 @@ class TestSyncManagerPull: AbstractTest()
             t.join()
 
             File("$databaseDirectory/Darts/SomeFile.txt").shouldExist()
-
-            // Open a test connection so the tidy-up doesn't freak out about the db already being shut down
-            db.testConnection()
         }
     }
 
