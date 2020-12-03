@@ -1,6 +1,7 @@
 package dartzee.sync
 
 import dartzee.helper.*
+import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_PULL_ERROR
 import dartzee.logging.Severity
 import dartzee.utils.Database
@@ -66,9 +67,25 @@ class TestSyncManagerPull: AbstractTest()
     }
 
     @Test
-    fun `Should pull and swap in remote database`()
+    fun `Should abort the pull if some other validation error occurs with the database`()
     {
         usingInMemoryDatabase { db ->
+            val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to db)
+
+            val manager = SyncManager(store)
+            val t = manager.doPull(REMOTE_NAME)
+            t.join()
+
+            val log = verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
+            log.message shouldBe "Unable to ascertain remote database version (but could connect) - this is unexpected."
+            dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
+        }
+    }
+
+    @Test
+    fun `Should pull and swap in remote database`()
+    {
+        usingInMemoryDatabase(withSchema = true) { db ->
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to db)
 
             val f = File("${db.getDirectoryStr()}/SomeFile.txt")

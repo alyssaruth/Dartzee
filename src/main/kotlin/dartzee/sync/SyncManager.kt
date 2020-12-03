@@ -56,9 +56,8 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
             setUpSyncDir()
 
             val remote = dbStore.fetchDatabase(remoteName).database
-            if (!remote.testConnection())
+            if (!validateForeignDatabase(remote))
             {
-                DialogUtil.showError("An error occurred connecting to the remote database.")
                 return
             }
 
@@ -110,8 +109,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
         SyncProgressDialog.progressToStage(SyncStage.VALIDATE_REMOTE)
 
-        val validator = ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
-        if (!validator.validateAndMigrateForeignDatabase(fetchResult.database, "remote"))
+        if (!validateForeignDatabase(fetchResult.database))
         {
             return null
         }
@@ -142,6 +140,12 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
         val gamesPulled = (resultingGameIds - startingGameIds).size
         return SyncResult(localGamesToPush, gamesPulled)
+    }
+
+    private fun validateForeignDatabase(db: Database): Boolean
+    {
+        val validator = ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
+        return validator.validateAndMigrateForeignDatabase(db, "remote")
     }
 
     private fun getGameIds(database: Database) = GameEntity(database).retrieveModifiedSince(null).map { it.rowId }.toSet()
