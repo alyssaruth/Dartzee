@@ -41,8 +41,6 @@ class TestBulkInserter: AbstractTest()
     @Test
     fun `Should stack trace and do nothing if any entities are retrievedFromDb`()
     {
-        wipeTable("Player")
-
         val playerOne = PlayerEntity()
         val playerTwo = insertPlayer()
 
@@ -56,8 +54,6 @@ class TestBulkInserter: AbstractTest()
     @Test
     fun `Should log SQLExceptions if something goes wrong inserting entities`()
     {
-        wipeTable("Player")
-
         val playerOne = factoryPlayer("Pete")
         val playerTwo = factoryPlayer("Leah")
 

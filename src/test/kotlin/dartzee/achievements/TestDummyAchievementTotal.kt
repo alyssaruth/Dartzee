@@ -2,7 +2,6 @@ package dartzee.achievements
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
-import dartzee.helper.wipeTable
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.shouldBe
@@ -22,8 +21,6 @@ class TestDummyAchievementTotal: AbstractTest()
     @Test
     fun `Should retrieve all rows regardless of achievement reference`()
     {
-        wipeTable("Achievement")
-
         val a1 = insertAchievement(type = AchievementType.X01_BTBF)
         val a2 = insertAchievement(type = AchievementType.X01_SUCH_BAD_LUCK)
 

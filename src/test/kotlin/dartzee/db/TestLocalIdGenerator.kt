@@ -2,7 +2,6 @@ package dartzee.db
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
-import dartzee.helper.wipeTable
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeUnique
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -14,16 +13,12 @@ class TestLocalIdGenerator: AbstractTest()
     @Test
     fun `It should generate an ID of 1 for an empty table`()
     {
-        wipeTable("Game")
-
         LocalIdGenerator(mainDatabase).generateLocalId("Game") shouldBe 1
     }
 
     @Test
     fun `It should generate the next ID for a non-empty table`()
     {
-        wipeTable("Game")
-
         insertGame(localId = 5)
 
         LocalIdGenerator(mainDatabase).generateLocalId("Game") shouldBe 6
