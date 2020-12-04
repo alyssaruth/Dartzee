@@ -362,7 +362,7 @@ fun Database.closeConnectionsAndDrop(dbName: String)
     {
         if (sqle.message != "Database 'memory:Databases/$dbName' dropped.")
         {
-            logger.error(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
+            logger.error(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}", sqle)
         }
     }
 }
