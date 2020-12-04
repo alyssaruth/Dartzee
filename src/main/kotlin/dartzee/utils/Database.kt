@@ -31,6 +31,8 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     private val connectionPoolLock = Any()
     private var connectionCreateCount = 0
 
+    var connectionsBorrowed = 0
+
     fun initialiseConnectionPool(initialCount: Int)
     {
         synchronized(connectionPoolLock)
@@ -48,6 +50,8 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     {
         synchronized(connectionPoolLock)
         {
+            connectionsBorrowed++
+
             if (hsConnections.isEmpty())
             {
                 return createDatabaseConnection()
