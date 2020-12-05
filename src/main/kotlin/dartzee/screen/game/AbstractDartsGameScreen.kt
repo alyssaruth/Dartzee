@@ -36,6 +36,7 @@ abstract class AbstractDartsGameScreen(totalPlayers: Int, val gameType: GameType
      */
     abstract fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
     abstract fun fireAppearancePreferencesChanged()
+    abstract fun cleanUp()
 
     /**
      * Hook for when a GameId has been clicked and the screen is already visible.

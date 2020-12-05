@@ -42,6 +42,11 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
     override fun getScreenHeight() = super.getScreenHeight() + 30
 
+    override fun cleanUp()
+    {
+        hmGameIdToTab.values.forEach { it.cleanUp() }
+    }
+
     fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *, *>
     {
         //Cache this screen in ScreenCache

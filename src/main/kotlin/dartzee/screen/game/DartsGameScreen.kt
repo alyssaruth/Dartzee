@@ -34,4 +34,9 @@ class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameSc
     {
         gamePanel.achievementUnlocked(playerId, achievement)
     }
+
+    override fun cleanUp()
+    {
+        gamePanel.cleanUp()
+    }
 }

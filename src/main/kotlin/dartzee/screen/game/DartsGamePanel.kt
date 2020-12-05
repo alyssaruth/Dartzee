@@ -683,6 +683,11 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         btnReset.isEnabled = false
     }
 
+    fun cleanUp()
+    {
+        dartboard.cleanUp()
+    }
+
     /**
      * MouseListener
      */

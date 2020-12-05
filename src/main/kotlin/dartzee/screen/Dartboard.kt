@@ -35,8 +35,8 @@ const val LAYER_SLIDER = 4
 
 open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), MouseListener, MouseMotionListener
 {
-    private var hmPointToSegment = mutableMapOf<Point, DartboardSegment>()
-    protected var hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegment>()
+    private val hmPointToSegment = mutableMapOf<Point, DartboardSegment>()
+    protected val hmSegmentKeyToSegment = mutableMapOf<String, DartboardSegment>()
 
     private val dartLabels = mutableListOf<JLabel>()
 
@@ -100,6 +100,9 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         diameter = 0.7 * width
         hmPointToSegment.clear()
 
+        //Construct the segments, populated with their points. Cache pt -> segment.
+        getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
+
         if (usingCache)
         {
             initialiseFromTemplate()
@@ -107,11 +110,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         else
         {
             dartboardImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-
-            //Construct the segments, populated with their points. Cache pt -> segment.
-            getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
-
-            //Render the actual image
             dartboardImage?.paint { getColourForPointAndSegment(it, getSegmentForPoint(it), colourWrapper) }
         }
 
@@ -137,10 +135,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
     }
 
-    open fun initialiseFromTemplate()
+    fun initialiseFromTemplate()
     {
-        hmPointToSegment = dartboardTemplate!!.getPointToSegmentMap()
-        hmSegmentKeyToSegment = dartboardTemplate!!.getSegmentKeyToSegmentMap()
         dartboardImage = dartboardTemplate!!.getDartboardImg()
     }
 
@@ -460,6 +456,13 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         repaint()
     }
 
+    fun cleanUp()
+    {
+        getAllSegments().forEach { it.points.clear() }
+        hmPointToSegment.clear()
+        hmSegmentKeyToSegment.clear()
+    }
+
     override fun mouseMoved(arg0: MouseEvent)
     {
         if (getParentWindow()?.isFocused == true)
@@ -510,18 +513,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     inner class DartboardTemplate(dartboard: Dartboard)
     {
         private val dartboardImg = dartboard.dartboardImage!!
-        private val hmPointToSegment = dartboard.hmPointToSegment
-        private val hmSegmentKeyToSegment = dartboard.hmSegmentKeyToSegment
-
-        fun getPointToSegmentMap(): MutableMap<Point, DartboardSegment>
-        {
-            return hmPointToSegment.toMutableMap()
-        }
-
-        fun getSegmentKeyToSegmentMap(): MutableMap<String, DartboardSegment>
-        {
-            return hmSegmentKeyToSegment.toMutableMap()
-        }
 
         fun getDartboardImg(): BufferedImage
         {

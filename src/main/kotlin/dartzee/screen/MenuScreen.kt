@@ -7,6 +7,7 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Font
@@ -16,7 +17,7 @@ import javax.swing.JPanel
 
 class MenuScreen : EmbeddedScreen()
 {
-    private val menuDartboard = Dartboard(400, 400)
+    private val menuDartboard = Dartboard(dartboardSize, dartboardSize)
 
     private val btnNewGame = JButton("New Game")
     private val btnManagePlayers = JButton("Manage Players")
@@ -63,8 +64,10 @@ class MenuScreen : EmbeddedScreen()
         btnGameReport.setBounds(60, 340, 150, 50)
         panel.add(btnGameReport)
 
-        menuDartboard.setBounds(200, 65, 400, 400)
+        menuDartboard.setBounds(200, 65, dartboardSize, dartboardSize)
         menuDartboard.paintDartboard(null, false)
+        menuDartboard.cleanUp()
+
         panel.add(menuDartboard)
 
         //Add ActionListeners

@@ -56,11 +56,22 @@ val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:
         .withZone(ZoneId.systemDefault())
         .format(CURRENT_TIME)
 
-fun makeTestDartboard(): Dartboard
+fun usingTestDartboard(width: Int = 50, height: Int = 50, paint: Boolean = true, testFn: (dartboard: Dartboard) -> Unit)
 {
-    val dartboard = Dartboard(100, 100)
-    dartboard.paintDartboard()
-    return dartboard
+    val dartboard = Dartboard(width, height)
+    try
+    {
+        if (paint)
+        {
+            dartboard.paintDartboard()
+        }
+
+        testFn(dartboard)
+    }
+    finally
+    {
+        dartboard.cleanUp()
+    }
 }
 
 fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)

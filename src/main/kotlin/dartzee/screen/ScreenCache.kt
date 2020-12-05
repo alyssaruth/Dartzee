@@ -42,6 +42,7 @@ object ScreenCache
 
     fun removeDartsGameScreen(scrn: AbstractDartsGameScreen)
     {
+        scrn.cleanUp()
         val keys = hmGameIdToGameScreen.filter { it.value == scrn }.map { it.key }
         keys.forEach { hmGameIdToGameScreen.remove(it) }
     }
@@ -49,6 +50,8 @@ object ScreenCache
     fun emptyCache()
     {
         hmClassToScreen.clear()
-        hmGameIdToGameScreen.clear()
+
+        val gameScreens = hmGameIdToGameScreen.values.toList()
+        gameScreens.forEach(::removeDartsGameScreen)
     }
 }

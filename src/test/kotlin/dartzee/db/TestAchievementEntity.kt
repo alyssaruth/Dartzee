@@ -360,9 +360,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
             this.attainedValue = achievement.attainedValue
         }
 
-        override fun fireAppearancePreferencesChanged()
-        {
-
-        }
+        override fun fireAppearancePreferencesChanged() {}
+        override fun cleanUp() {}
     }
 }

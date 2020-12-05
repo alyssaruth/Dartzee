@@ -56,6 +56,14 @@ task runDev(type: JavaExec) {
     main 'dartzee.main.DartsMainKt'
 }
 
+test {
+    jvmArgs '-Dcom.sun.management.jmxremote',
+            '-Dcom.sun.management.jmxremote.port=9010',
+            '-Dcom.sun.management.jmxremote.authenticate=false',
+            '-Dcom.sun.management.jmxremote.ssl=false',
+            '-Djava.rmi.server.hostname=localhost'
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'dartzee.main.DartsMainKt'

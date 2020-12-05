@@ -27,7 +27,7 @@ class TestScreenCache: AbstractTest()
     @Test
     fun `Should clear the cache`()
     {
-        ScreenCache.addDartsGameScreen("Game 1", mockk())
+        ScreenCache.addDartsGameScreen("Game 1", mockk(relaxed = true))
         val scrn = ScreenCache.get<MenuScreen>()
         ScreenCache.emptyCache()
         val other = ScreenCache.get<MenuScreen>()
