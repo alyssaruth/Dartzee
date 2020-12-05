@@ -1,6 +1,5 @@
 package dartzee.`object`
 
-import dartzee.core.obj.HashMapList
 import dartzee.core.util.getAttributeInt
 import dartzee.core.util.setAttributeAny
 import dartzee.utils.getColourForPointAndSegment
@@ -15,12 +14,12 @@ const val MISS_FUDGE_FACTOR = 1805
 data class DartboardSegment(val type: SegmentType, val score: Int)
 {
     //The Points this segment contains
-    val points = mutableListOf<Point>()
-    val edgePoints: Set<Point> by lazy { makeEdgePoints() }
+    val points = mutableSetOf<Point>()
+    val edgePoints = mutableSetOf<Point>()
 
     //For tracking edge points
-    private val hmXCoordToPoints = HashMapList<Int, Point>()
-    private val hmYCoordToPoints = HashMapList<Int, Point>()
+    private val hmXCoordToPoints = mutableMapOf<Int, Set<Point>>()
+    private val hmYCoordToPoints = mutableMapOf<Int, Set<Point>>()
 
     /**
      * Helpers
@@ -34,8 +33,11 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
     {
         points.add(pt)
 
-        hmXCoordToPoints.putInList(pt.x, pt)
-        hmYCoordToPoints.putInList(pt.y, pt)
+        val xSet = hmXCoordToPoints.getOrDefault(pt.x, emptySet())
+        hmXCoordToPoints[pt.x] = xSet + pt
+
+        val ySet = hmYCoordToPoints.getOrDefault(pt.y, emptySet())
+        hmYCoordToPoints[pt.y] = ySet + pt
     }
 
     fun getColorMap(colourWrapper: ColourWrapper?) = points.map { pt -> pt to getColourForPointAndSegment(pt, this, colourWrapper) }
@@ -49,13 +51,13 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         return edgePoints.contains(pt)
     }
 
-    private fun makeEdgePoints(): Set<Point>
+    fun computeEdgePoints()
     {
         val yMins: List<Point> = hmXCoordToPoints.values.map { points -> points.minBy { it.y }!! }
         val yMaxes: List<Point> = hmXCoordToPoints.values.map { points -> points.maxBy { it.y }!! }
         val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minBy { it.x }!! }
         val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxBy { it.x }!! }
-        return (yMins + yMaxes + xMins + xMaxes).toSet()
+        edgePoints.addAll(yMins + yMaxes + xMins + xMaxes)
     }
 
     fun getRoughProbability(): Double {

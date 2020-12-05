@@ -100,6 +100,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         //Construct the segments, populated with their points. Cache pt -> segment.
         getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
+        getAllSegments().forEach { it.computeEdgePoints() }
 
         if (usingCache)
         {
@@ -264,9 +265,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     {
         val pointsForCurrentSegment = segment.points
         val edgeColour = getEdgeColourForSegment(segment)
-        for (i in pointsForCurrentSegment.indices)
+        for (pt in pointsForCurrentSegment)
         {
-            val pt = pointsForCurrentSegment[i]
             if (edgeColour != null && segment.isEdgePoint(pt))
             {
                 colourPoint(pt, edgeColour)
@@ -328,11 +328,11 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     /**
      * Public methods
      */
-    fun getPointsForSegment(score: Int, type: SegmentType): MutableList<Point>
+    fun getPointsForSegment(score: Int, type: SegmentType): Set<Point>
     {
         val segmentKey = score.toString() + "_" + type
         val segment = hmSegmentKeyToSegment[segmentKey]
-        return segment?.points ?: mutableListOf()
+        return segment?.points ?: setOf()
     }
     fun getSegment(score: Int, type: SegmentType): DartboardSegment? = hmSegmentKeyToSegment["${score}_$type"]
 

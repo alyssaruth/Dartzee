@@ -116,7 +116,7 @@ private fun getQuadrant(xIsPositive: Boolean, yIsPositive: Boolean): Quadrant?
 /**
  * For a group of points, calculate the average point
  */
-fun getAverage(points: List<Point>): Point
+fun getAverage(points: Set<Point>): Point
 {
     val xAvg = points.map{ it.x }.average()
     val yAvg = points.map{ it.y }.average()
