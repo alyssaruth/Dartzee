@@ -56,6 +56,9 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minBy { it.x }!! }
         val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxBy { it.x }!! }
         edgePoints.addAll(yMins + yMaxes + xMins + xMaxes)
+
+        hmXCoordToPoints.clear()
+        hmYCoordToPoints.clear()
     }
 
     fun getRoughProbability(): Double {

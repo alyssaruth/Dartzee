@@ -7,6 +7,8 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.screen.sync.SyncSummaryPanel
+import dartzee.sync.SyncSummary
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Font
@@ -25,7 +27,7 @@ class MenuScreen : EmbeddedScreen()
     private val btnAbout = JButton("About...")
     private val btnDartzeeTemplates = JButton("Dartzee")
     private val btnUtilities = JButton("Utilities")
-    private val syncSummary = ScreenCache.syncSummaryPanel
+    private val btnSyncSummary = SyncSummaryPanel()
     private val btnGameReport = JButton("Game Report")
 
     private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
@@ -57,8 +59,8 @@ class MenuScreen : EmbeddedScreen()
         btnUtilities.font = buttonFont
         btnUtilities.setBounds(590, 340, 150, 50)
         panel.add(btnUtilities)
-        syncSummary.setBounds(200, 465, 400, 125)
-        panel.add(syncSummary)
+        btnSyncSummary.setBounds(200, 465, 400, 125)
+        panel.add(btnSyncSummary)
         btnGameReport.font = buttonFont
         btnGameReport.setBounds(60, 340, 150, 50)
         panel.add(btnGameReport)
@@ -69,6 +71,11 @@ class MenuScreen : EmbeddedScreen()
 
         //Add ActionListeners
         addActionListenerToAllChildren(this)
+    }
+
+    fun refreshSummary(syncSummary: SyncSummary)
+    {
+        btnSyncSummary.refreshSummary(syncSummary)
     }
 
     override fun getScreenName() = "Menu"
@@ -92,7 +99,7 @@ class MenuScreen : EmbeddedScreen()
             }
 
             btnPreferences -> ScreenCache.switch<PreferencesScreen>()
-            syncSummary -> ScreenCache.switch<SyncManagementScreen>()
+            btnSyncSummary -> ScreenCache.switch<SyncManagementScreen>()
             btnNewGame -> ScreenCache.switch<GameSetupScreen>()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()

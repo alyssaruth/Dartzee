@@ -62,7 +62,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     var dartboardImage: BufferedImage? = null
     val dartboardLabel = JLabel()
-     //You know what this is...
 
     init
     {
@@ -100,11 +99,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         //Construct the segments, populated with their points. Cache pt -> segment.
         getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
-
-        if (colourWrapper?.edgeColour != null)
-        {
-            getAllSegments().forEach { it.computeEdgePoints() }
-        }
+        getAllSegments().forEach { it.computeEdgePoints() }
 
         if (usingCache)
         {
