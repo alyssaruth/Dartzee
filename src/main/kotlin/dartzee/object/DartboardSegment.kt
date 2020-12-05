@@ -1,5 +1,6 @@
 package dartzee.`object`
 
+import dartzee.core.obj.HashMapList
 import dartzee.core.util.getAttributeInt
 import dartzee.core.util.setAttributeAny
 import dartzee.utils.getColourForPointAndSegment
@@ -18,8 +19,8 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
     val edgePoints = mutableSetOf<Point>()
 
     //For tracking edge points
-    private val hmXCoordToPoints = mutableMapOf<Int, Set<Point>>()
-    private val hmYCoordToPoints = mutableMapOf<Int, Set<Point>>()
+    private val hmXCoordToPoints = HashMapList<Int, Point>()
+    private val hmYCoordToPoints = HashMapList<Int, Point>()
 
     /**
      * Helpers
@@ -33,11 +34,8 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
     {
         points.add(pt)
 
-        val xSet = hmXCoordToPoints.getOrDefault(pt.x, emptySet())
-        hmXCoordToPoints[pt.x] = xSet + pt
-
-        val ySet = hmYCoordToPoints.getOrDefault(pt.y, emptySet())
-        hmYCoordToPoints[pt.y] = ySet + pt
+        hmXCoordToPoints.putInList(pt.x, pt)
+        hmYCoordToPoints.putInList(pt.y, pt)
     }
 
     fun getColorMap(colourWrapper: ColourWrapper?) = points.map { pt -> pt to getColourForPointAndSegment(pt, this, colourWrapper) }
