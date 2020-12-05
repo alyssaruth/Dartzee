@@ -84,10 +84,10 @@ abstract class AbstractTest
 
         mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
 
-        if (mainDatabase.connectionsBorrowed > 0)
+        if (logDestination.haveRunInsert)
         {
             DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
-            mainDatabase.connectionsBorrowed = 0
+            logDestination.haveRunInsert = false
         }
 
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
