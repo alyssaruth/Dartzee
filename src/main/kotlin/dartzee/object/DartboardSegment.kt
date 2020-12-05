@@ -3,6 +3,7 @@ package dartzee.`object`
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.getAttributeInt
 import dartzee.core.util.setAttributeAny
+import dartzee.utils.getColourForPointAndSegment
 import org.w3c.dom.Element
 import java.awt.Point
 
@@ -36,6 +37,9 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         hmXCoordToPoints.putInList(pt.x, pt)
         hmYCoordToPoints.putInList(pt.y, pt)
     }
+
+    fun getColorMap(colourWrapper: ColourWrapper?) = points.map { pt -> pt to getColourForPointAndSegment(pt, this, colourWrapper) }
+    fun containsPoint(point: Point) = points.contains(point)
 
     override fun toString() = "$score ($type)"
 
