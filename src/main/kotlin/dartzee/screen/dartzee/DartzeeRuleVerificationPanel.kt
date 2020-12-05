@@ -5,10 +5,9 @@ import dartzee.core.util.setFontSize
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
-import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.dartzeeCalculator
-import dartzee.utils.InjectedThings.verificationDartboardSize
+import dartzee.utils.InjectedThings.dartboardSize
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -20,7 +19,7 @@ import javax.swing.border.EmptyBorder
 
 class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
-    val dartboard = DartzeeDartboard(verificationDartboardSize, verificationDartboardSize)
+    val dartboard = DartzeeDartboard(dartboardSize, dartboardSize)
     val dartsThrown = mutableListOf<Dart>()
     private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false)
 
