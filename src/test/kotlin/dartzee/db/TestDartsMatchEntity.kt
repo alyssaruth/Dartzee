@@ -26,8 +26,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     @Test
     fun `LocalId field should be unique`()
     {
-        wipeTable("DartsMatch")
-
         insertDartsMatch(localId = 5)
         verifyNoLogs(CODE_SQL_EXCEPTION)
 
@@ -44,8 +42,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     @Test
     fun `LocalIds should be assigned along with RowId`()
     {
-        wipeTable("DartsMatch")
-
         val entity = DartsMatchEntity()
         entity.assignRowId()
 

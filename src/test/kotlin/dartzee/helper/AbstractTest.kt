@@ -83,7 +83,13 @@ abstract class AbstractTest
         clearAllMocks()
 
         mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
-        DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
+
+        if (logDestination.haveRunInsert)
+        {
+            DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
+            logDestination.haveRunInsert = false
+        }
+
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
 
         //Clear cached dartboards

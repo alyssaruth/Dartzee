@@ -3,7 +3,6 @@ package dartzee.bean
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import dartzee.helper.wipeTable
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
@@ -21,8 +20,6 @@ class TestPlayerTypeFilterPanel: AbstractTest()
     @Test
     fun `Should return correct filter SQL for humans and AIs`()
     {
-        wipeTable("Player")
-
         val ai = insertPlayer(strategy = "foo")
         val human = insertPlayer(strategy = "")
 
