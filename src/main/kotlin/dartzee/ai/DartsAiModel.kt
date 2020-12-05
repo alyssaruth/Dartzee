@@ -237,11 +237,11 @@ data class DartsAiModel(val standardDeviation: Double,
     }
 
     private fun getDistributionToUse(pt: Point, dartboard: Dartboard) =
-        if (dartboard.isDouble(pt) && standardDeviationDoubles != null) NormalDistribution(mean.toDouble(), standardDeviationDoubles) else distribution
+        if (standardDeviationDoubles != null && dartboard.isDouble(pt)) NormalDistribution(mean.toDouble(), standardDeviationDoubles) else distribution
 
     private fun generateAngle(pt: Point, dartboard: Dartboard): Double
     {
-        if (dartboard.isDouble(pt) || standardDeviationCentral == null)
+        if (standardDeviationCentral == null || dartboard.isDouble(pt))
         {
             //Just pluck a number from 0-360.
             return generateRandomAngle()

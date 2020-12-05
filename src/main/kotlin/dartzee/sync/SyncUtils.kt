@@ -3,6 +3,7 @@ package dartzee.sync
 import dartzee.core.util.formatTimestamp
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
+import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_STRING_REMOTE_DATABASE_NAME
@@ -45,7 +46,7 @@ fun refreshSyncSummary()
             SyncSummary(remoteName, lastSyncDesc, "$pendingGameCount")
         }
 
-        ScreenCache.syncSummaryPanel.refreshSummary(syncSummary)
+        ScreenCache.get<MenuScreen>().refreshSummary(syncSummary)
     }
 }
 

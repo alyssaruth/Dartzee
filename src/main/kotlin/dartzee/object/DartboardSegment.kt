@@ -3,6 +3,7 @@ package dartzee.`object`
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.getAttributeInt
 import dartzee.core.util.setAttributeAny
+import dartzee.utils.getColourForPointAndSegment
 import org.w3c.dom.Element
 import java.awt.Point
 
@@ -14,8 +15,8 @@ const val MISS_FUDGE_FACTOR = 1805
 data class DartboardSegment(val type: SegmentType, val score: Int)
 {
     //The Points this segment contains
-    val points = mutableListOf<Point>()
-    val edgePoints: Set<Point> by lazy { makeEdgePoints() }
+    val points = mutableSetOf<Point>()
+    val edgePoints = mutableSetOf<Point>()
 
     //For tracking edge points
     private val hmXCoordToPoints = HashMapList<Int, Point>()
@@ -37,6 +38,9 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         hmYCoordToPoints.putInList(pt.y, pt)
     }
 
+    fun getColorMap(colourWrapper: ColourWrapper?) = points.map { pt -> pt to getColourForPointAndSegment(pt, this, colourWrapper) }
+    fun containsPoint(point: Point) = points.contains(point)
+
     override fun toString() = "$score ($type)"
 
     fun isEdgePoint(pt: Point?): Boolean
@@ -45,13 +49,16 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         return edgePoints.contains(pt)
     }
 
-    private fun makeEdgePoints(): Set<Point>
+    fun computeEdgePoints()
     {
         val yMins: List<Point> = hmXCoordToPoints.values.map { points -> points.minBy { it.y }!! }
         val yMaxes: List<Point> = hmXCoordToPoints.values.map { points -> points.maxBy { it.y }!! }
         val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minBy { it.x }!! }
         val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxBy { it.x }!! }
-        return (yMins + yMaxes + xMins + xMaxes).toSet()
+        edgePoints.addAll(yMins + yMaxes + xMins + xMaxes)
+
+        hmXCoordToPoints.clear()
+        hmYCoordToPoints.clear()
     }
 
     fun getRoughProbability(): Double {

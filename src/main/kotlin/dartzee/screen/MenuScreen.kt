@@ -7,17 +7,20 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.screen.sync.SyncSummaryPanel
+import dartzee.sync.SyncSummary
+import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
+import javax.swing.ImageIcon
 import javax.swing.JButton
+import javax.swing.JLabel
 import javax.swing.JPanel
 
 class MenuScreen : EmbeddedScreen()
 {
-    private val menuDartboard = Dartboard(400, 400)
-
     private val btnNewGame = JButton("New Game")
     private val btnManagePlayers = JButton("Manage Players")
     private val btnLeaderboards = JButton("Leaderboards")
@@ -25,7 +28,7 @@ class MenuScreen : EmbeddedScreen()
     private val btnAbout = JButton("About...")
     private val btnDartzeeTemplates = JButton("Dartzee")
     private val btnUtilities = JButton("Utilities")
-    private val syncSummary = ScreenCache.syncSummaryPanel
+    private val btnSyncSummary = SyncSummaryPanel()
     private val btnGameReport = JButton("Game Report")
 
     private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
@@ -57,18 +60,31 @@ class MenuScreen : EmbeddedScreen()
         btnUtilities.font = buttonFont
         btnUtilities.setBounds(590, 340, 150, 50)
         panel.add(btnUtilities)
-        syncSummary.setBounds(200, 465, 400, 125)
-        panel.add(syncSummary)
+        btnSyncSummary.setBounds(200, 465, 400, 125)
+        panel.add(btnSyncSummary)
         btnGameReport.font = buttonFont
         btnGameReport.setBounds(60, 340, 150, 50)
         panel.add(btnGameReport)
-
-        menuDartboard.setBounds(200, 65, 400, 400)
-        menuDartboard.paintDartboard(null, false)
-        panel.add(menuDartboard)
+        panel.add(renderDartboard())
 
         //Add ActionListeners
         addActionListenerToAllChildren(this)
+    }
+
+    private fun renderDartboard(): JLabel
+    {
+        val board = Dartboard(dartboardSize, dartboardSize)
+        board.paintDartboard(null, false)
+
+        val img = ImageIcon(board.dartboardImage!!)
+        val lbl = JLabel(img)
+        lbl.setBounds(200, 65, dartboardSize, dartboardSize)
+        return lbl
+    }
+
+    fun refreshSummary(syncSummary: SyncSummary)
+    {
+        btnSyncSummary.refreshSummary(syncSummary)
     }
 
     override fun getScreenName() = "Menu"
@@ -92,7 +108,7 @@ class MenuScreen : EmbeddedScreen()
             }
 
             btnPreferences -> ScreenCache.switch<PreferencesScreen>()
-            syncSummary -> ScreenCache.switch<SyncManagementScreen>()
+            btnSyncSummary -> ScreenCache.switch<SyncManagementScreen>()
             btnNewGame -> ScreenCache.switch<GameSetupScreen>()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()
