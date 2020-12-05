@@ -98,6 +98,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         }
 
         fakeSegment.points.shouldHaveSize(40401)
+        fakeSegment.computeEdgePoints()
 
         //Four corners and four edge mid-points
         assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, Color.YELLOW)

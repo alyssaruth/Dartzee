@@ -60,7 +60,7 @@ abstract class AbstractTest
 
         InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
         InjectedThings.logger = logger
-        InjectedThings.verificationDartboardSize = 50
+        InjectedThings.dartboardSize = 50
         InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 

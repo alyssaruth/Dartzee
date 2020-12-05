@@ -56,7 +56,7 @@ class TestDartboardSegment: AbstractTest()
         val points = listOf(Point(1, 0), Point(0, 1), Point(20, -5))
         points.forEach { segment.addPoint(it) }
 
-        segment.points shouldBe points.toMutableList()
+        segment.points shouldBe points.toMutableSet()
     }
 
 
@@ -76,6 +76,7 @@ class TestDartboardSegment: AbstractTest()
 
         val pts = xRange.map { x -> yRange.map { y -> Point(x, y) } }.flatten()
         pts.forEach { segment.addPoint(it) }
+        segment.computeEdgePoints()
 
         //Corners
         segment.isEdgePoint(Point(0, 0)) shouldBe true
@@ -120,8 +121,8 @@ class TestDartboardSegment: AbstractTest()
         val yRange = 0..4
 
         val pts = xRange.map { x -> yRange.filter{ it <= x }.map { y -> Point(x, y) } }.flatten()
-
         pts.forEach { segment.addPoint(it) }
+        segment.computeEdgePoints()
 
         //Bottom edge
         segment.isEdgePoint(Point(0, 0)) shouldBe true
