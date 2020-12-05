@@ -2,6 +2,7 @@ package dartzee
 
 import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.isEqual
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.bean.ComboBoxGameType
@@ -14,6 +15,7 @@ import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.screen.Dartboard
+import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.utils.DurationTimer
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
@@ -66,6 +68,20 @@ fun usingTestDartboard(width: Int = 50, height: Int = 50, paint: Boolean = true,
             dartboard.paintDartboard()
         }
 
+        testFn(dartboard)
+    }
+    finally
+    {
+        dartboard.cleanUp()
+    }
+}
+
+fun usingDartzeeDartboard(width: Int = 150, height: Int = 150, testFn: (dartboard: DartzeeDartboard) -> Unit)
+{
+    val dartboard = DartzeeDartboard(width, height)
+    try
+    {
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         testFn(dartboard)
     }
     finally

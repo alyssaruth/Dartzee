@@ -1,12 +1,11 @@
 package dartzee.dartzee
 
 import com.github.alexburlton.swingtest.shouldMatchImage
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
 import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.usingDartzeeDartboard
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.numerics.shouldBeLessThan
@@ -81,32 +80,31 @@ class TestDartzeeAimCalculator: AbstractTest()
     @Test
     fun `Should be performant`()
     {
-        val awkward = allNonMisses.filter { it.score != 25 }
-        val segmentStatus = SegmentStatus(awkward, awkward)
+        usingDartzeeDartboard(400, 400) { dartboard ->
+            val awkward = allNonMisses.filter { it.score != 25 }
+            val segmentStatus = SegmentStatus(awkward, awkward)
+            dartboard.refreshValidSegments(segmentStatus)
 
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
+            val timer = DurationTimer()
+            for (i in 1..10)
+            {
+                calculator.getPointToAimFor(dartboard, segmentStatus, true)
+            }
 
-        val timer = DurationTimer()
-        for (i in 1..10)
-        {
-            calculator.getPointToAimFor(dartboard, segmentStatus, true)
+            val timeElapsed = timer.getDuration()
+            timeElapsed shouldBeLessThan 5000
         }
-
-        val timeElapsed = timer.getDuration()
-        timeElapsed shouldBeLessThan 5000
     }
 
     private fun verifyAim(segmentStatus: SegmentStatus, screenshotName: String, aggressive: Boolean = false)
     {
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
+        usingDartzeeDartboard(400, 400) { dartboard ->
+            dartboard.refreshValidSegments(segmentStatus)
 
-        val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
-        val lbl = dartboard.markPoints(listOf(pt))
-        lbl.shouldMatchImage(screenshotName)
+            val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
+            val lbl = dartboard.markPoints(listOf(pt))
+            lbl.shouldMatchImage(screenshotName)
+        }
     }
 }
 
