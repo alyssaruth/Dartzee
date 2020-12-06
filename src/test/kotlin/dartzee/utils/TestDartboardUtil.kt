@@ -1,8 +1,8 @@
 package dartzee.utils
 
 import dartzee.`object`.ColourWrapper
-import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.`object`.StatefulSegment
 import dartzee.helper.AbstractRegistryTest
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -64,7 +64,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         val segmentStr = "" + segment
         segmentStr shouldBe "$score ($segmentType)"
 
-        val drt = getDartForSegment(pt, segment)
+        val drt = getDartForSegment(pt, segment.toDataSegment())
 
         drt.score shouldBe score
         drt.multiplier shouldBe multiplier
@@ -88,7 +88,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         val wrapper = ColourWrapper(DartsColour.TRANSPARENT)
         wrapper.edgeColour = Color.YELLOW
 
-        val fakeSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20)
+        val fakeSegment = StatefulSegment(SegmentType.OUTER_SINGLE, 20)
         for (x in 0..200)
         {
             for (y in 0..200)
@@ -120,7 +120,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT)
 
         //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
-        val missSegment = DartboardSegment(SegmentType.MISS, 20)
+        val missSegment = StatefulSegment(SegmentType.MISS, 20)
         for (x in 0..200)
         {
             for (y in 0..200)
@@ -133,7 +133,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertColourForPointAndSegment(Point(1, 1), missSegment, wrapper, DartsColour.TRANSPARENT)
     }
 
-    private fun assertColourForPointAndSegment(pt: Point, segment: DartboardSegment, wrapper: ColourWrapper?, expected: Color)
+    private fun assertColourForPointAndSegment(pt: Point, segment: StatefulSegment, wrapper: ColourWrapper?, expected: Color)
     {
         val color = getColourForPointAndSegment(pt, segment, wrapper)
         color shouldBe expected

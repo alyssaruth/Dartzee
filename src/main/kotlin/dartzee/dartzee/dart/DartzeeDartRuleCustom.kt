@@ -2,7 +2,6 @@ package dartzee.dartzee.dart
 
 import dartzee.`object`.DartboardSegment
 import dartzee.core.bean.addUpdateListener
-import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -14,7 +13,7 @@ import javax.swing.JTextField
 
 class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListener
 {
-    var segments = hashSetOf<DartboardSegment>()
+    val segments = mutableSetOf<DartboardSegment>()
     var name = ""
 
     val btnConfigure = JButton("Configure")
@@ -69,7 +68,9 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
     {
         if (e?.source == btnConfigure)
         {
-            segments = InjectedThings.dartzeeSegmentFactory.selectSegments(segments)
+            val updatedSelection = InjectedThings.dartzeeSegmentFactory.selectSegments(segments.toSet())
+            segments.clear()
+            segments.addAll(updatedSelection)
         }
 
         name = tfName.text

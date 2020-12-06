@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.doClick
@@ -20,13 +21,11 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
     {
         val panel = DartzeeRuleVerificationPanel()
 
-        val d20 = panel.dartboard.getSegment(20, SegmentType.DOUBLE)!!
-
-        val dto = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(listOf(d20)))
+        val dto = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(listOf(DartboardSegment(SegmentType.DOUBLE, 20))))
 
         panel.updateRule(dto)
 
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(d20)
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(DartboardSegment(SegmentType.DOUBLE, 20))
     }
 
     @Test

@@ -3,17 +3,18 @@ package dartzee.screen
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
+import dartzee.`object`.StatefulSegment
 import dartzee.utils.DartsColour
-import dartzee.utils.getColourForPointAndSegment
+import dartzee.utils.getColourForSegment
 import java.awt.Color
 import java.awt.Point
 import java.awt.event.MouseEvent
 
 class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(width, height)
 {
-    var selectedSegments = hashSetOf<DartboardSegment>()
+    var selectedSegments = mutableSetOf<DartboardSegment>()
 
-    private var lastDraggedSegment: DartboardSegment? = null
+    private var lastDraggedSegment: StatefulSegment? = null
 
     init
     {
@@ -21,14 +22,14 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
         renderScoreLabels = true
     }
 
-    fun initState(initialSelection: HashSet<DartboardSegment>)
+    fun initState(initialSelection: Set<DartboardSegment>)
     {
-        initialSelection.forEach {
-            val mySegment = getSegment(it.score, it.type) ?: return
+        initialSelection.forEach { dataSegment ->
+            val mySegment = getSegment(dataSegment.score, dataSegment.type) ?: return
 
-            selectedSegments.add(mySegment)
+            selectedSegments.add(dataSegment)
 
-            val col = getColourForPointAndSegment(null, mySegment, DEFAULT_COLOUR_WRAPPER)
+            val col = getColourForSegment(dataSegment, DEFAULT_COLOUR_WRAPPER)
             colourSegment(mySegment, col)
         }
     }
@@ -47,7 +48,7 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
         toggleSegment(segment)
     }
 
-    private fun toggleSegment(segment: DartboardSegment)
+    private fun toggleSegment(segment: StatefulSegment)
     {
         lastDraggedSegment = segment
         if (segment.isMiss())
@@ -55,17 +56,18 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
             return
         }
 
-        if (selectedSegments.contains(segment))
+        val dataSegment = segment.toDataSegment()
+        if (selectedSegments.contains(dataSegment))
         {
-            selectedSegments.remove(segment)
+            selectedSegments.remove(dataSegment)
 
             colourSegment(segment, DartsColour.TRANSPARENT)
         }
         else
         {
-            selectedSegments.add(segment)
+            selectedSegments.add(dataSegment)
 
-            val col = getColourForPointAndSegment(null, segment, DEFAULT_COLOUR_WRAPPER)
+            val col = getColourForSegment(dataSegment, DEFAULT_COLOUR_WRAPPER)
             colourSegment(segment, col)
         }
     }
