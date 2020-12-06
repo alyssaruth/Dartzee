@@ -307,7 +307,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         catch (sqle: SQLException)
         {
             val msg = sqle.message ?: ""
-            if (msg.contains("shutdown") || msg.contains("not found"))
+            if (msg.contains("shutdown"))
             {
                 return true
             }

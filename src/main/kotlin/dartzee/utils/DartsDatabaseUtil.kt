@@ -143,7 +143,6 @@ object DartsDatabaseUtil {
         }
         finally
         {
-            dbOther.closeConnections()
             dbOther.shutDown()
             dbOther.getDirectory().deleteRecursively()
         }
