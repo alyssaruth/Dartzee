@@ -6,7 +6,7 @@ import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import javax.swing.JPanel
 
-class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegment>): SimpleDialog()
+class DartboardSegmentSelectDialog(private val segments: Set<DartboardSegment>): SimpleDialog()
 {
     private val dartboard = DartboardSegmentSelector()
 
@@ -32,7 +32,7 @@ class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegmen
         dartboard.initState(segments)
     }
 
-    fun getSelection(): HashSet<DartboardSegment>
+    fun getSelection(): Set<DartboardSegment>
     {
         return dartboard.selectedSegments
     }
@@ -44,7 +44,7 @@ class DartboardSegmentSelectDialog(private val segments: HashSet<DartboardSegmen
 
     override fun cancelPressed()
     {
-        dartboard.selectedSegments = segments
+        dartboard.selectedSegments = segments.toMutableSet()
         dispose()
     }
 }

@@ -44,7 +44,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         val rowId = entity.assignRowId()
 
         val customRule = DartzeeDartRuleCustom()
-        customRule.segments = getAllPossibleSegments().toHashSet()
+        customRule.segments.addAll(getAllPossibleSegments())
 
         entity.dart1Rule = customRule.toDbString()
         entity.dart2Rule = customRule.toDbString()

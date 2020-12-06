@@ -108,7 +108,7 @@ class TestGeometryUtil: AbstractTest()
 
     private fun assertAverage(expected: Point, vararg points: Point)
     {
-        val list = points.toList()
+        val list = points.toSet()
         getAverage(list) shouldBe expected
     }
 

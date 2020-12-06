@@ -61,7 +61,7 @@ abstract class AbstractTest
 
         InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
         InjectedThings.logger = logger
-        InjectedThings.verificationDartboardSize = 50
+        InjectedThings.dartboardSize = 50
         InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
 
@@ -84,7 +84,13 @@ abstract class AbstractTest
         clearAllMocks()
 
         mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
-        DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
+
+        if (logDestination.haveRunInsert)
+        {
+            DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
+            logDestination.haveRunInsert = false
+        }
+
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
 
         //Clear cached dartboards

@@ -6,10 +6,11 @@ import dartzee.core.helper.makeMouseEvent
 import dartzee.doubleNineteen
 import dartzee.getColor
 import dartzee.helper.AbstractTest
+import dartzee.singleNineteen
 import dartzee.utils.DartsColour
+import dartzee.utils.getAverage
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.collections.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.Test
 import java.awt.Color
@@ -106,14 +107,17 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        dartboard.initState(hashSetOf(doubleNineteen))
+        dartboard.initState(hashSetOf(singleNineteen))
 
         val selectedSegment = dartboard.selectedSegments.first()
         assertNotNull(selectedSegment)
 
-        selectedSegment.points.shouldNotBeEmpty()
+        val pt = getAverage(dartboard.getPointsForSegment(19, SegmentType.OUTER_SINGLE))
+        val img = dartboard.dartboardImage!!
+
+        Color(img.getRGB(pt.x, pt.y)) shouldBe Color.WHITE
         selectedSegment.score shouldBe 19
-        selectedSegment.type shouldBe SegmentType.DOUBLE
+        selectedSegment.type shouldBe SegmentType.OUTER_SINGLE
     }
 
     @Test

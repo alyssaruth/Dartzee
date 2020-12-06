@@ -25,8 +25,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `LocalId field should be unique`()
     {
-        wipeTable("Game")
-
         insertGame(localId = 5)
         verifyNoLogs(CODE_SQL_EXCEPTION)
 
@@ -43,8 +41,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `LocalIds should be assigned along with RowId`()
     {
-        wipeTable("Game")
-
         val entity = GameEntity()
         entity.assignRowId()
 
@@ -65,9 +61,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `Should get the participant count based on its own row ID`()
     {
-        wipeTable("Participant")
-        wipeTable("Game")
-
         val game = GameEntity()
         val gameId = game.assignRowId()
         game.saveToDatabase()
@@ -83,9 +76,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `Should handle no participants when getting players vector`()
     {
-        wipeTable("Participant")
-        wipeTable("Game")
-
         val game = GameEntity()
         game.saveToDatabase()
 
@@ -95,10 +85,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     @Test
     fun `Should return the player vector correctly`()
     {
-        wipeTable("Player")
-        wipeTable("Participant")
-        wipeTable("Game")
-
         //Insert a random player
         val game = GameEntity()
         val gameId = game.assignRowId()

@@ -24,11 +24,11 @@ class FakeDartzeeTemplateFactory(private val newTemplate: DartzeeTemplateEntity?
             }
 }
 
-class FakeDartzeeSegmentFactory(private val desiredSegments: HashSet<DartboardSegment>): AbstractDartzeeSegmentFactory()
+class FakeDartzeeSegmentFactory(private val desiredSegments: Set<DartboardSegment>): AbstractDartzeeSegmentFactory()
 {
-    var segmentsPassedIn: HashSet<DartboardSegment> = HashSet()
+    var segmentsPassedIn: Set<DartboardSegment> = emptySet()
 
-    override fun selectSegments(segments: HashSet<DartboardSegment>): HashSet<DartboardSegment> {
+    override fun selectSegments(segments: Set<DartboardSegment>): Set<DartboardSegment> {
         segmentsPassedIn = segments
         return desiredSegments
     }

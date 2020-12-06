@@ -1,23 +1,15 @@
 package dartzee.db
 
-import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
-import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
-import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.mockk.spyk
+import io.kotlintest.shouldBe
 import org.junit.Test
 
 class TestDatabaseMigrations: AbstractTest()
 {
-    override fun beforeEachTest()
-    {
-        InjectedThings.mainDatabase = Database(inMemory = true)
-        super.beforeEachTest()
-    }
-
     @Test
     fun `Conversions map should not have gaps`()
     {
@@ -31,11 +23,11 @@ class TestDatabaseMigrations: AbstractTest()
     @Test
     fun `Conversions should all run on the specified database`()
     {
-        usingInMemoryDatabase(withSchema = true) { database ->
-            val spiedDatabase = spyk(database)
-            InjectedThings.mainDatabase = spiedDatabase
-
+        try
+        {
             usingInMemoryDatabase(withSchema = true) { dbToRunOn ->
+                mainDatabase.shutDown() shouldBe true
+
                 val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
                 for (conversion in conversionFns)
                 {
@@ -45,8 +37,13 @@ class TestDatabaseMigrations: AbstractTest()
                 //Will probably have one logged, which is fine
                 errorLogged()
 
-                verifyNotCalled { spiedDatabase.borrowConnection() }
+                //If it's been connected to during the test, then another shut down would succeed
+                mainDatabase.shutDown() shouldBe false
             }
+        }
+        finally
+        {
+            mainDatabase.initialiseConnectionPool(5)
         }
     }
 }

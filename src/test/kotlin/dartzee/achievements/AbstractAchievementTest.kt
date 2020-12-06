@@ -1,6 +1,5 @@
 package dartzee.achievements
 
-import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -17,7 +16,6 @@ import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.matchers.numerics.shouldBeLessThanOrEqual
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import io.mockk.spyk
 import org.junit.Test
 import java.sql.Timestamp
 import javax.imageio.ImageIO
@@ -26,7 +24,6 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
     override fun beforeEachTest()
     {
-        mainDatabase = Database(inMemory = true)
         mainDatabase.dropUnexpectedTables()
         super.beforeEachTest()
     }
@@ -130,19 +127,24 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     @Test
     fun `should run conversion on the right database`()
     {
-        usingInMemoryDatabase(withSchema = true) { database ->
+        try
+        {
             usingInMemoryDatabase(withSchema = true) { otherDatabase ->
                 val alice = insertPlayer(name = "Alice", database = otherDatabase)
                 setUpAchievementRowForPlayer(alice, otherDatabase)
 
-                val spiedDatabase = spyk(database)
-                mainDatabase = spiedDatabase
+                mainDatabase.shutDown() shouldBe true
 
                 factoryAchievement().populateForConversion(emptyList(), otherDatabase)
                 getAchievementCount(otherDatabase) shouldBe 1
 
-                verifyNotCalled { spiedDatabase.borrowConnection() }
+                //If it's been connected to during the test, then another shut down would succeed
+                mainDatabase.shutDown() shouldBe false
             }
+        }
+        finally
+        {
+            mainDatabase.initialiseConnectionPool(5)
         }
     }
 

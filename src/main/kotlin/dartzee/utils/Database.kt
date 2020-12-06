@@ -297,6 +297,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
 
     fun shutDown(): Boolean
     {
+        closeConnections()
         val command = "${getQualifiedDbName()};shutdown=true"
 
         try
@@ -311,13 +312,16 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
                 return true
             }
 
-            logger.logSqlException(command, command, sqle)
+            if (!msg.contains("not found"))
+            {
+                logger.logSqlException(command, command, sqle)
+            }
         }
 
         return false
     }
 
-    fun closeConnections()
+    private fun closeConnections()
     {
         hsConnections.forEach { it.close() }
         hsConnections.clear()

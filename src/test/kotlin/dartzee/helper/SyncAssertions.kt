@@ -1,7 +1,7 @@
 package dartzee.helper
 
+import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
-import dartzee.screen.sync.SyncSummaryPanel
 import dartzee.sync.SYNC_DIR
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.mainDatabase
@@ -14,22 +14,14 @@ const val REMOTE_NAME = "Goomba"
 
 fun shouldUpdateSyncSummary(testFn: () -> Unit)
 {
-    val originalPanel = ScreenCache.syncSummaryPanel
+    val menuScreen = mockk<MenuScreen>(relaxed = true)
+    ScreenCache.hmClassToScreen[MenuScreen::class.java] = menuScreen
 
-    try
-    {
-        mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
-        val summaryPanelMock = mockk<SyncSummaryPanel>(relaxed = true)
-        ScreenCache.syncSummaryPanel = summaryPanelMock
+    mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
 
-        testFn()
+    testFn()
 
-        verify { summaryPanelMock.refreshSummary(any()) }
-    }
-    finally
-    {
-        ScreenCache.syncSummaryPanel = originalPanel
-    }
+    verify { menuScreen.refreshSummary(any()) }
 }
 
 fun syncDirectoryShouldNotExist()

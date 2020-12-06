@@ -190,10 +190,7 @@ object DartsDatabaseUtil {
         //Now switch it in
         try
         {
-            mainDatabase.closeConnections()
             mainDatabase.shutDown()
-
-            otherDatabase.closeConnections()
             otherDatabase.shutDown()
 
             val error = FileUtil.swapInFile(mainDatabase.getDirectoryStr(), otherDatabase.getDirectoryStr())
