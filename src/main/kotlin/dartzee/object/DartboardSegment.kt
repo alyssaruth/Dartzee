@@ -1,11 +1,8 @@
 package dartzee.`object`
 
-import dartzee.core.obj.HashMapList
 import dartzee.core.util.getAttributeInt
 import dartzee.core.util.setAttributeAny
-import dartzee.utils.getColourForPointAndSegment
 import org.w3c.dom.Element
-import java.awt.Point
 
 const val MISS_FUDGE_FACTOR = 1805
 
@@ -14,14 +11,6 @@ const val MISS_FUDGE_FACTOR = 1805
  */
 data class DartboardSegment(val type: SegmentType, val score: Int)
 {
-    //The Points this segment contains
-    val points = mutableSetOf<Point>()
-    val edgePoints = mutableSetOf<Point>()
-
-    //For tracking edge points
-    private val hmXCoordToPoints = HashMapList<Int, Point>()
-    private val hmYCoordToPoints = HashMapList<Int, Point>()
-
     /**
      * Helpers
      */
@@ -30,36 +19,7 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
     fun getMultiplier() = type.getMultiplier()
     fun getTotal(): Int = score * getMultiplier()
 
-    fun addPoint(pt: Point)
-    {
-        points.add(pt)
-
-        hmXCoordToPoints.putInList(pt.x, pt)
-        hmYCoordToPoints.putInList(pt.y, pt)
-    }
-
-    fun getColorMap(colourWrapper: ColourWrapper?) = points.map { pt -> pt to getColourForPointAndSegment(pt, this, colourWrapper) }
-    fun containsPoint(point: Point) = points.contains(point)
-
     override fun toString() = "$score ($type)"
-
-    fun isEdgePoint(pt: Point?): Boolean
-    {
-        pt ?: return false
-        return edgePoints.contains(pt)
-    }
-
-    fun computeEdgePoints()
-    {
-        val yMins: List<Point> = hmXCoordToPoints.values.map { points -> points.minBy { it.y }!! }
-        val yMaxes: List<Point> = hmXCoordToPoints.values.map { points -> points.maxBy { it.y }!! }
-        val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minBy { it.x }!! }
-        val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxBy { it.x }!! }
-        edgePoints.addAll(yMins + yMaxes + xMins + xMaxes)
-
-        hmXCoordToPoints.clear()
-        hmYCoordToPoints.clear()
-    }
 
     fun getRoughProbability(): Double {
         return type.getRoughSize(score).toDouble() / getRoughScoringArea()

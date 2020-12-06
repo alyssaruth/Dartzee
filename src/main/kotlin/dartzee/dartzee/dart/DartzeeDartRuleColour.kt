@@ -3,7 +3,7 @@ package dartzee.dartzee.dart
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.utils.DartsColour
-import dartzee.utils.getColourForPointAndSegment
+import dartzee.utils.getColourForSegment
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.Color
@@ -52,7 +52,7 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListen
             return false
         }
 
-        val color = getColourForPointAndSegment(null, segment, DEFAULT_COLOUR_WRAPPER)
+        val color = getColourForSegment(segment, DEFAULT_COLOUR_WRAPPER)
 
         return (color == DartsColour.DARTBOARD_BLACK && black)
                 || (color == Color.WHITE && white)

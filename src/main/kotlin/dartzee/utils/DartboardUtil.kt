@@ -1,9 +1,6 @@
 package dartzee.utils
 
-import dartzee.`object`.ColourWrapper
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
+import dartzee.`object`.*
 import dartzee.screen.Dartboard
 import java.awt.Color
 import java.awt.Point
@@ -43,18 +40,18 @@ fun getAdjacentNumbers(number: Int): MutableList<Int>
     return mutableListOf(numberOrder[ix-1], numberOrder[ix+1])
 }
 
-fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
+fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): StatefulSegment
 {
     val radius = getDistance(dartPt, centerPt)
     val ratio = 2 * radius / diameter
 
     if (ratio < RATIO_INNER_BULL)
     {
-        return DartboardSegment(SegmentType.DOUBLE, 25)
+        return StatefulSegment(SegmentType.DOUBLE, 25)
     }
     else if (ratio < RATIO_OUTER_BULL)
     {
-        return DartboardSegment(SegmentType.OUTER_SINGLE, 25)
+        return StatefulSegment(SegmentType.OUTER_SINGLE, 25)
     }
 
     //We've not hit the bullseye, so do other calculations to work out score/multiplier
@@ -62,7 +59,7 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): Da
     val score = getScoreForAngle(angle)
     val type = calculateTypeForRatioNonBullseye(ratio)
 
-    return DartboardSegment(type, score)
+    return StatefulSegment(type, score)
 }
 
 /**
@@ -114,7 +111,7 @@ fun getPotentialAimPoints(centerPt: Point, diameter: Double): Set<AimPoint>
     return points.toSet()
 }
 
-fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, colourWrapper: ColourWrapper?): Color
+fun getColourForPointAndSegment(pt: Point?, segment: StatefulSegment, colourWrapper: ColourWrapper?): Color
 {
     val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
 
@@ -126,6 +123,12 @@ fun getColourForPointAndSegment(pt: Point?, segment: DartboardSegment, colourWra
         return edgeColour
     }
 
+    return getColourFromHashMap(segment.toDataSegment(), colourWrapperToUse)
+}
+
+fun getColourForSegment(segment: DartboardSegment, colourWrapper: ColourWrapper?): Color
+{
+    val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
     return getColourFromHashMap(segment, colourWrapperToUse)
 }
 

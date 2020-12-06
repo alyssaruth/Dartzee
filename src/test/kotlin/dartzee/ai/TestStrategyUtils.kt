@@ -1,8 +1,8 @@
 package dartzee.ai
 
 import dartzee.`object`.ColourWrapper
-import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.`object`.StatefulSegment
 import dartzee.helper.AbstractTest
 import dartzee.screen.Dartboard
 import getPointForScore
@@ -27,7 +27,7 @@ class TestStrategyUtils: AbstractTest()
         {
             super.paintDartboard(colourWrapper, listen, cached)
 
-            val segment = DartboardSegment(SegmentType.TREBLE, 20)
+            val segment = StatefulSegment(SegmentType.TREBLE, 20)
             segment.addPoint(Point(1, 7))
             segment.addPoint(Point(3, 3))
             segment.addPoint(Point(5, 2))

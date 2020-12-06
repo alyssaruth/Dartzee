@@ -27,7 +27,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     fun `a custom rule with at least one segment is valid`()
     {
         val rule = DartzeeDartRuleCustom()
-        rule.segments = hashSetOf(doubleTwenty)
+        rule.segments.add(doubleTwenty)
 
         rule.validate().shouldBeEmpty()
     }
@@ -56,7 +56,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     fun `segment validation`()
     {
         val rule = DartzeeDartRuleCustom()
-        rule.segments = hashSetOf(doubleTwenty, trebleNineteen)
+        rule.segments.addAll(setOf(doubleTwenty, trebleNineteen))
 
         rule.isValidSegment(doubleTwenty) shouldBe true
         rule.isValidSegment(trebleNineteen) shouldBe true
@@ -68,7 +68,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     {
         val rule = DartzeeDartRuleCustom()
 
-        rule.segments = hashSetOf(doubleTwenty, outerBull, trebleNineteen)
+        rule.segments.addAll(setOf(doubleTwenty, outerBull, trebleNineteen))
         rule.name = "Foo"
 
         val xml = rule.toDbString()
