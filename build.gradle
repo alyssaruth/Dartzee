@@ -55,7 +55,8 @@ test {
             '-Dcom.sun.management.jmxremote.authenticate=false',
             '-Dcom.sun.management.jmxremote.ssl=false',
             '-Djava.rmi.server.hostname=localhost',
-            '-Xmx'
+            '-Xms1024m',
+            '-Xmx1024m'
 }
 
 task runDev(type: JavaExec) {
@@ -66,9 +67,7 @@ task runDev(type: JavaExec) {
             '-Dcom.sun.management.jmxremote.port=9010',
             '-Dcom.sun.management.jmxremote.authenticate=false',
             '-Dcom.sun.management.jmxremote.ssl=false',
-            '-Djava.rmi.server.hostname=localhost',
-            '-Xms1024m',
-            '-Xmx1024m'
+            '-Djava.rmi.server.hostname=localhost'
 
     main 'dartzee.main.DartsMainKt'
 }
