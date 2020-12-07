@@ -24,9 +24,9 @@ class TestDatabaseMerger: AbstractTest()
         super.beforeEachTest()
 
         val runtime = Runtime.getRuntime()
-        logger.info(LoggingCode("memory.info"),"Memory settings - total: ${runtime.totalMemory()}, max: ${runtime.maxMemory()}")
+        logger.info(LoggingCode("memory.info"),"Memory settings - free: ${runtime.freeMemory()}, max: ${runtime.maxMemory()}")
         System.gc()
-        logger.info(LoggingCode("memory.info"),"Memory settings - total: ${runtime.totalMemory()}, max: ${runtime.maxMemory()}")
+        logger.info(LoggingCode("memory.info"),"Memory settings - free: ${runtime.freeMemory()}, max: ${runtime.maxMemory()}")
     }
 
     @Test
