@@ -54,9 +54,10 @@ test {
             '-Dcom.sun.management.jmxremote.port=9010',
             '-Dcom.sun.management.jmxremote.authenticate=false',
             '-Dcom.sun.management.jmxremote.ssl=false',
-            '-Djava.rmi.server.hostname=localhost',
-            '-Xms1024m',
-            '-Xmx1024m'
+            '-Djava.rmi.server.hostname=localhost'
+
+    minHeapSize = "1024m"
+    maxHeapSize = "1024m"
 }
 
 task runDev(type: JavaExec) {
