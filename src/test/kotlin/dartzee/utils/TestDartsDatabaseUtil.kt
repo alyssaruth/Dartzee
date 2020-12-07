@@ -57,23 +57,19 @@ class TestDartsDatabaseUtil: AbstractTest()
     {
         clearLogs()
 
-        usingInMemoryDatabase { db ->
-            DartsDatabaseUtil.initialiseDatabase(db)
+        DartsDatabaseUtil.initialiseDatabase(mainDatabase)
 
-            verifyLog(CODE_DATABASE_CREATING)
-            verifyLog(CODE_DATABASE_CREATED)
+        verifyLog(CODE_DATABASE_CREATING)
+        verifyLog(CODE_DATABASE_CREATED)
 
-            db.getDatabaseVersion() shouldBe DATABASE_VERSION
-        }
+        mainDatabase.getDatabaseVersion() shouldBe DATABASE_VERSION
     }
 
     @Test
     fun `Should update sync summary`()
     {
-        usingInMemoryDatabase { db ->
-            shouldUpdateSyncSummary {
-                DartsDatabaseUtil.initialiseDatabase(db)
-            }
+        shouldUpdateSyncSummary {
+            DartsDatabaseUtil.initialiseDatabase(mainDatabase)
         }
     }
 

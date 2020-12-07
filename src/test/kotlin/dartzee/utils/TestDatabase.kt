@@ -1,6 +1,9 @@
 package dartzee.utils
 
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
+import dartzee.helper.getTableNames
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
@@ -18,6 +21,12 @@ import org.junit.Test
 
 class TestDatabase: AbstractTest()
 {
+    override fun beforeEachTest()
+    {
+        super.beforeEachTest()
+        mainDatabase.dropUnexpectedTables()
+    }
+
     @Test
     fun `Should create a new connection if the pool is depleted`()
     {
@@ -49,84 +58,74 @@ class TestDatabase: AbstractTest()
     {
         clearLogs()
 
-        usingInMemoryDatabase { db ->
-            val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
-            db.executeUpdates(updates) shouldBe true
+        val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
+        mainDatabase.executeUpdates(updates) shouldBe true
 
-            val records = getLogRecords().filter { it.loggingCode == CODE_SQL }
-            records.size shouldBe 2
-            records.first().message shouldContain "CREATE TABLE zzUpdateTest(str VARCHAR(50))"
-            records.last().message shouldContain "INSERT INTO zzUpdateTest VALUES ('5')"
+        val records = getLogRecords().filter { it.loggingCode == CODE_SQL }
+        records.size shouldBe 2
+        records.first().message shouldContain "CREATE TABLE zzUpdateTest(str VARCHAR(50))"
+        records.last().message shouldContain "INSERT INTO zzUpdateTest VALUES ('5')"
 
-            db.executeQueryAggregate("SELECT COUNT(1) FROM zzUpdateTest") shouldBe 1
-        }
+        mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM zzUpdateTest") shouldBe 1
     }
 
     @Test
     fun `Should abort if any updates fail`()
     {
-        usingInMemoryDatabase { db ->
-            val updates = listOf("bollucks", "CREATE TABLE zzUpdateTest(str VARCHAR(50))")
+        val updates = listOf("bollocks", "CREATE TABLE zzUpdateTest(str VARCHAR(50))")
 
-            db.executeUpdates(updates) shouldBe false
-            verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        mainDatabase.executeUpdates(updates) shouldBe false
+        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
 
-            db.createTableIfNotExists("zzUpdateTest", "str VARCHAR(50)") shouldBe true
-        }
+        mainDatabase.createTableIfNotExists("zzUpdateTest", "str VARCHAR(50)") shouldBe true
     }
 
     @Test
     fun `Should log SQLExceptions for failed updates`()
     {
-        usingInMemoryDatabase { db ->
-            val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
-            db.executeUpdate(update) shouldBe false
+        val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
+        mainDatabase.executeUpdate(update) shouldBe false
 
-            val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-            log.message.shouldContain("Caught SQLException for statement: $update")
-            log.errorObject!!.message.shouldContain("Syntax error: Encountered \"(\"")
-        }
+        val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+        log.message.shouldContain("Caught SQLException for statement: $update")
+        log.errorObject!!.message.shouldContain("Syntax error: Encountered \"(\"")
     }
 
     @Test
     fun `Should execute queries and log them to the console`()
     {
-        usingInMemoryDatabase { db ->
-            val updates = listOf("CREATE TABLE zzQueryTest(str VARCHAR(50))",
-                "INSERT INTO zzQueryTest VALUES ('RowOne')",
-                "INSERT INTO zzQueryTest VALUES ('RowTwo')")
+        val updates = listOf("CREATE TABLE zzQueryTest(str VARCHAR(50))",
+            "INSERT INTO zzQueryTest VALUES ('RowOne')",
+            "INSERT INTO zzQueryTest VALUES ('RowTwo')")
 
-            db.executeUpdates(updates)
+        mainDatabase.executeUpdates(updates)
 
-            val retrievedValues = mutableListOf<String>()
-            db.executeQuery("SELECT * FROM zzQueryTest").use { rs ->
-                while (rs.next())
-                {
-                    retrievedValues.add(rs.getString(1))
-                }
+        val retrievedValues = mutableListOf<String>()
+        mainDatabase.executeQuery("SELECT * FROM zzQueryTest").use { rs ->
+            while (rs.next())
+            {
+                retrievedValues.add(rs.getString(1))
             }
-
-            val log = getLastLog()
-            log.loggingCode shouldBe CODE_SQL
-            log.message shouldContain "SELECT * FROM zzQueryTest"
-
-            retrievedValues.shouldContainExactly("RowOne", "RowTwo")
         }
+
+        val log = getLastLog()
+        log.loggingCode shouldBe CODE_SQL
+        log.message shouldContain "SELECT * FROM zzQueryTest"
+
+        retrievedValues.shouldContainExactly("RowOne", "RowTwo")
     }
 
     @Test
-    fun `Should log SQLExceptions (and show an error) for failed queries`()
+    fun `Should throw an error for failed queries`()
     {
-        usingInMemoryDatabase { db ->
-            val query = "SELECT * FROM zzQueryTest"
+        val query = "SELECT * FROM zzQueryTest"
 
-            val ex = shouldThrow<WrappedSqlException> {
-                db.executeQuery(query)
-            }
-
-            ex.sqlStatement shouldBe query
-            ex.sqlException.message shouldContain "does not exist"
+        val ex = shouldThrow<WrappedSqlException> {
+            mainDatabase.executeQuery(query)
         }
+
+        ex.sqlStatement shouldBe query
+        ex.sqlException.message shouldContain "does not exist"
     }
 
     @Test
@@ -145,43 +144,37 @@ class TestDatabase: AbstractTest()
     @Test
     fun `Should return null version if version has never been set`()
     {
-        usingInMemoryDatabase { it.getDatabaseVersion() shouldBe null }
+        mainDatabase.getDatabaseVersion() shouldBe null
     }
 
     @Test
     fun `Should return the right existing version and support updating it`()
     {
-        usingInMemoryDatabase { db ->
-            db.updateDatabaseVersion(5)
+        mainDatabase.updateDatabaseVersion(5)
 
-            db.getDatabaseVersion() shouldBe 5
-            db.updateDatabaseVersion(7)
-            db.getDatabaseVersion() shouldBe 7
+        mainDatabase.getDatabaseVersion() shouldBe 5
+        mainDatabase.updateDatabaseVersion(7)
+        mainDatabase.getDatabaseVersion() shouldBe 7
 
-            getCountFromTable("Version", db) shouldBe 1
-        }
+        getCountFromTable("Version", mainDatabase) shouldBe 1
     }
 
     @Test
     fun `Should support generating local IDs`()
     {
-        usingInMemoryDatabase(withSchema = true) { database ->
-            database.generateLocalId("Game") shouldBe 1
-            database.generateLocalId("Game") shouldBe 2
-            database.generateLocalId("DartsMatch") shouldBe 1
-        }
+        mainDatabase.generateLocalId("Game") shouldBe 1
+        mainDatabase.generateLocalId("Game") shouldBe 2
+        mainDatabase.generateLocalId("DartsMatch") shouldBe 1
     }
 
     @Test
     fun `Should not drop any schema tables`()
     {
-        usingInMemoryDatabase(withSchema = true) { database ->
-            database.dropUnexpectedTables().shouldBeEmpty()
+        mainDatabase.dropUnexpectedTables().shouldBeEmpty()
 
-            val expectedTableNames = DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableNameUpperCase() }
-            val tableNames = database.getTableNames()
-            tableNames.shouldContainExactlyInAnyOrder(expectedTableNames)
-        }
+        val expectedTableNames = DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableNameUpperCase() }
+        val tableNames = mainDatabase.getTableNames()
+        tableNames.shouldContainExactlyInAnyOrder(expectedTableNames)
     }
 
     @Test
