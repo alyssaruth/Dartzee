@@ -134,8 +134,8 @@ class TestDatabase: AbstractTest()
         usingInMemoryDatabase { dbOne ->
             usingInMemoryDatabase { dbTwo ->
                 shouldNotThrowAny {
-                    dbOne.initialiseConnectionPool(5)
-                    dbTwo.initialiseConnectionPool(5)
+                    dbOne.initialiseConnectionPool(1)
+                    dbTwo.initialiseConnectionPool(1)
                 }
             }
         }

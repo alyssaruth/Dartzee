@@ -64,6 +64,7 @@ abstract class AbstractTest
         InjectedThings.dartboardSize = 50
         InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
+        InjectedThings.connectionPoolSize = 1
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
         mainDatabase = Database(inMemory = true)

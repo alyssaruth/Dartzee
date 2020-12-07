@@ -43,7 +43,7 @@ class TestDatabaseMigrations: AbstractTest()
         }
         finally
         {
-            mainDatabase.initialiseConnectionPool(5)
+            mainDatabase.initialiseConnectionPool(1)
         }
     }
 }

@@ -319,7 +319,7 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
 
 private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()): Database
 {
-    return Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(5) }
+    return Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(1) }
 }
 
 fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
@@ -345,11 +345,11 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
         db.testConnection()
 
         db.getDirectory().deleteRecursively()
-        db.closeConnectionsAndDrop(dbName)
+        db.closeConnectionsAndDrop()
     }
 }
 
-fun Database.closeConnectionsAndDrop(dbName: String)
+fun Database.closeConnectionsAndDrop()
 {
     shutDown()
 

@@ -7,6 +7,7 @@ import dartzee.db.*
 import dartzee.logging.*
 import dartzee.screen.ScreenCache
 import dartzee.sync.refreshSyncSummary
+import dartzee.utils.InjectedThings.connectionPoolSize
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import org.apache.derby.jdbc.EmbeddedDriver
@@ -53,7 +54,7 @@ object DartsDatabaseUtil {
         database.doDuplicateInstanceCheck()
 
         //Pool the db connections now. Initialise with 5 to begin with?
-        database.initialiseConnectionPool(5)
+        database.initialiseConnectionPool(connectionPoolSize)
 
         val version = database.getDatabaseVersion()
 
@@ -201,7 +202,7 @@ object DartsDatabaseUtil {
         }
         finally
         {
-            mainDatabase.initialiseConnectionPool(5)
+            mainDatabase.initialiseConnectionPool(connectionPoolSize)
         }
 
         return true
