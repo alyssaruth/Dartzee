@@ -70,11 +70,11 @@ class TestSyncUtils: AbstractTest()
         val menuScreen = mockMenuScreen()
         mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
 
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
+        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(2000))
 
-        insertGame(dtLastUpdate = Timestamp(150))
-        insertGame(dtLastUpdate = Timestamp(250))
-        insertGame(dtLastUpdate = Timestamp(500))
+        insertGame(dtLastUpdate = Timestamp(1500))
+        insertGame(dtLastUpdate = Timestamp(2500))
+        insertGame(dtLastUpdate = Timestamp(5000))
 
         refreshSyncSummary()
 
@@ -84,11 +84,11 @@ class TestSyncUtils: AbstractTest()
     @Test
     fun `Should return the count of games modified since last sync`()
     {
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
+        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(2000))
 
-        insertGame(dtLastUpdate = Timestamp(150))
-        insertGame(dtLastUpdate = Timestamp(250))
-        insertGame(dtLastUpdate = Timestamp(500))
+        insertGame(dtLastUpdate = Timestamp(1500))
+        insertGame(dtLastUpdate = Timestamp(2500))
+        insertGame(dtLastUpdate = Timestamp(5000))
 
         getModifiedGameCount() shouldBe 2
     }
@@ -107,6 +107,7 @@ class TestSyncUtils: AbstractTest()
     fun `Should delete all sync audits and update summary`()
     {
         val menuScreen = mockMenuScreen()
+        mainDatabase.updateDatabaseVersion(16)
         makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
         makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(500))
 
