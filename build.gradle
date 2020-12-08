@@ -56,8 +56,8 @@ test {
             '-Dcom.sun.management.jmxremote.ssl=false',
             '-Djava.rmi.server.hostname=localhost'
 
-    minHeapSize = "2048m"
-    maxHeapSize = "2048m"
+    minHeapSize = "512m"
+    maxHeapSize = "512m"
 }
 
 task runDev(type: JavaExec) {
