@@ -63,7 +63,7 @@ class TestDartsDatabaseUtil: AbstractTest()
             verifyLog(CODE_DATABASE_CREATING)
             verifyLog(CODE_DATABASE_CREATED)
 
-            mainDatabase.getDatabaseVersion() shouldBe DATABASE_VERSION
+            db.getDatabaseVersion() shouldBe DATABASE_VERSION
         }
     }
 
