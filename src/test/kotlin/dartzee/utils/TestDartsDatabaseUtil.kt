@@ -57,12 +57,14 @@ class TestDartsDatabaseUtil: AbstractTest()
     {
         clearLogs()
 
-        DartsDatabaseUtil.initialiseDatabase(mainDatabase)
+        usingInMemoryDatabase { db ->
+            DartsDatabaseUtil.initialiseDatabase(db)
 
-        verifyLog(CODE_DATABASE_CREATING)
-        verifyLog(CODE_DATABASE_CREATED)
+            verifyLog(CODE_DATABASE_CREATING)
+            verifyLog(CODE_DATABASE_CREATED)
 
-        mainDatabase.getDatabaseVersion() shouldBe DATABASE_VERSION
+            mainDatabase.getDatabaseVersion() shouldBe DATABASE_VERSION
+        }
     }
 
     @Test
