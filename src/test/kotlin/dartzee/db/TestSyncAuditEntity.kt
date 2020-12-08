@@ -14,13 +14,11 @@ import java.util.*
 class TestSyncAuditEntity: AbstractEntityTest<SyncAuditEntity>()
 {
     private val originalDeviceId = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_DEVICE_ID, "")
-    private val originalUsername = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_USER_NAME, "")
 
     override fun afterEachTest()
     {
         super.afterEachTest()
         CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_DEVICE_ID, originalDeviceId)
-        CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_USER_NAME, originalUsername)
     }
 
     override fun factoryDao() = SyncAuditEntity()
@@ -37,7 +35,7 @@ class TestSyncAuditEntity: AbstractEntityTest<SyncAuditEntity>()
         val deviceId = UUID.randomUUID().toString()
         DartsClient.operatingSystem = "Funky OS 2.1"
         CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_DEVICE_ID, deviceId)
-        CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_USER_NAME, "Bob")
+        System.setProperty("user.name", "Bob")
 
         SyncAuditEntity.insertSyncAudit(mainDatabase, "Goomba")
 
