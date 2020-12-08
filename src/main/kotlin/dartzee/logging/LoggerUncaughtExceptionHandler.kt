@@ -36,8 +36,7 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler
     {
         val message = t.message ?: return false
 
-        return message == "javax.swing.plaf.FontUIResource cannot be cast to javax.swing.Painter"
-                || message == "javax.swing.plaf.nimbus.DerivedColor\$UIResource cannot be cast to javax.swing.Painter"
-                || message == "javax.swing.plaf.DimensionUIResource cannot be cast to java.awt.Color"
+        return message.contains("UIResource cannot be cast to javax.swing.Painter")
+                || message.contains("UIResource cannot be cast to java.awt.Color")
     }
 }

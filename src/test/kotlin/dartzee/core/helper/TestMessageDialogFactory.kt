@@ -1,10 +1,15 @@
 package dartzee.core.helper
 
 import dartzee.core.util.AbstractMessageDialogFactory
+import java.awt.Component
+import java.io.File
 import javax.swing.JOptionPane
 
 class TestMessageDialogFactory: AbstractMessageDialogFactory()
 {
+    //Directory
+    var directoryToSelect: File? = null
+
     //Inputs
     var inputSelection: Any? = null
     var inputOptionsPresented: Array<*>? = null
@@ -74,6 +79,8 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         loadingVisible = false
     }
 
+    override fun chooseDirectory(parent: Component?) = directoryToSelect
+
     fun reset()
     {
         inputsShown.clear()
@@ -85,6 +92,7 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         loadingVisible = false
         optionSequence.clear()
         optionsShown.clear()
+        directoryToSelect = null
     }
 
 }

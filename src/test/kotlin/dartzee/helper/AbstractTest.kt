@@ -27,6 +27,7 @@ private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
 private var checkedForExceptions = false
 
+val TEST_ROOT = "Test/"
 val TEST_DB_DIRECTORY = "Test/Databases"
 
 abstract class AbstractTest
@@ -63,6 +64,7 @@ abstract class AbstractTest
         InjectedThings.dartboardSize = 50
         InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
+        InjectedThings.connectionPoolSize = 1
 
         UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
         mainDatabase = Database(inMemory = true)

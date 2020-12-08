@@ -3,7 +3,7 @@ package dartzee.sync
 enum class SyncStage
 {
     PULL_REMOTE,
-    MIGRATE_REMOTE,
+    VALIDATE_REMOTE,
     MERGE_LOCAL_CHANGES,
     UPDATE_ACHIEVEMENTS,
     PUSH_TO_REMOTE,
@@ -15,7 +15,7 @@ fun SyncStage.desc() =
     when (this)
     {
         SyncStage.PULL_REMOTE -> "Download data"
-        SyncStage.MIGRATE_REMOTE -> "Upgrade database"
+        SyncStage.VALIDATE_REMOTE -> "Validate database"
         SyncStage.MERGE_LOCAL_CHANGES -> "Merge changes"
         SyncStage.UPDATE_ACHIEVEMENTS -> "Update achievements"
         SyncStage.PUSH_TO_REMOTE -> "Upload new version"

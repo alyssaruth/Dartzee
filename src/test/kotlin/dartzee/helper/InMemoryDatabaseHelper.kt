@@ -319,7 +319,7 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
 
 private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()): Database
 {
-    return Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(5) }
+    return Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(1) }
 }
 
 fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
@@ -341,12 +341,15 @@ fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
     }
     finally
     {
+        // Open a test connection so the tidy-up doesn't freak out if we shut it down in the test block
+        db.testConnection()
+
         db.getDirectory().deleteRecursively()
-        db.closeConnectionsAndDrop(dbName)
+        db.closeConnectionsAndDrop()
     }
 }
 
-fun Database.closeConnectionsAndDrop(dbName: String)
+fun Database.closeConnectionsAndDrop()
 {
     shutDown()
 
@@ -358,7 +361,7 @@ fun Database.closeConnectionsAndDrop(dbName: String)
     {
         if (sqle.message != "Database 'memory:Databases/$dbName' dropped.")
         {
-            logger.error(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}")
+            logger.error(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}", sqle)
         }
     }
 }

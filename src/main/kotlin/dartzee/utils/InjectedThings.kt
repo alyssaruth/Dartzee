@@ -19,6 +19,7 @@ import java.time.Clock
 
 object InjectedThings
 {
+    var connectionPoolSize = 5
     var databaseDirectory = DATABASE_FILE_PATH
     var mainDatabase: Database = Database()
     var dartzeeCalculator: AbstractDartzeeCalculator = DartzeeCalculator()

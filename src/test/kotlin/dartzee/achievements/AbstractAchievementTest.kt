@@ -144,7 +144,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         }
         finally
         {
-            mainDatabase.initialiseConnectionPool(5)
+            mainDatabase.initialiseConnectionPool(1)
         }
     }
 

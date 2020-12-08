@@ -2,10 +2,7 @@ package dartzee.sync
 
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.runInOtherThread
-import dartzee.db.DatabaseMerger
-import dartzee.db.DatabaseMigrator
-import dartzee.db.GameEntity
-import dartzee.db.SyncAuditEntity
+import dartzee.db.*
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.screen.sync.SyncProgressDialog
@@ -59,9 +56,8 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
             setUpSyncDir()
 
             val remote = dbStore.fetchDatabase(remoteName).database
-            if (!remote.testConnection())
+            if (!validateForeignDatabase(remote))
             {
-                DialogUtil.showError("An error occurred connecting to the remote database.")
                 return
             }
 
@@ -110,11 +106,15 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         SyncProgressDialog.syncStarted()
 
         val fetchResult = dbStore.fetchDatabase(remoteName)
-        val merger = makeDatabaseMerger(fetchResult.database, remoteName)
-        if (!merger.validateMerge())
+
+        SyncProgressDialog.progressToStage(SyncStage.VALIDATE_REMOTE)
+
+        if (!validateForeignDatabase(fetchResult.database))
         {
             return null
         }
+
+        val merger = DatabaseMerger(mainDatabase, fetchResult.database, remoteName)
 
         val localGamesToPush = getModifiedGameCount(remoteName)
         val startingGameIds = getGameIds(mainDatabase)
@@ -140,6 +140,12 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
         val gamesPulled = (resultingGameIds - startingGameIds).size
         return SyncResult(localGamesToPush, gamesPulled)
+    }
+
+    private fun validateForeignDatabase(db: Database): Boolean
+    {
+        val validator = ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
+        return validator.validateAndMigrateForeignDatabase(db, "remote")
     }
 
     private fun getGameIds(database: Database) = GameEntity(database).retrieveModifiedSince(null).map { it.rowId }.toSet()
@@ -189,9 +195,6 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
     private fun tidyUpAllSyncDirs()
     {
         File(SYNC_DIR).deleteRecursively()
-        File("$databaseDirectory/DartsOther").deleteRecursively()
+        File("$databaseDirectory/${DartsDatabaseUtil.OTHER_DATABASE_NAME}").deleteRecursively()
     }
-
-    private fun makeDatabaseMerger(remoteDatabase: Database, remoteName: String)
-      = DatabaseMerger(mainDatabase, remoteDatabase, DatabaseMigrator(DatabaseMigrations.getConversionsMap()), remoteName)
 }

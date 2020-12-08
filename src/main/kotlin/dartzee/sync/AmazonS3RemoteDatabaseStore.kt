@@ -5,6 +5,7 @@ import dartzee.core.util.getFileTimeString
 import dartzee.logging.*
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.AwsUtils
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import net.lingala.zip4j.ZipFile
@@ -31,7 +32,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDataba
             "Fetched database $remoteName - saved to $downloadPath. Last modified remotely: ${s3Obj.lastModified}",
             KEY_REMOTE_NAME to remoteName)
 
-        val resultingDb = Database("DartsOther")
+        val resultingDb = Database(DartsDatabaseUtil.OTHER_DATABASE_NAME)
         ZipFile(downloadPath).extractAll(resultingDb.getDirectoryStr())
         logger.info(CODE_UNZIPPED_DATABASE, "Unzipped database $remoteName to ${resultingDb.getDirectory()}")
         return FetchDatabaseResult(resultingDb, s3Obj.lastModified)

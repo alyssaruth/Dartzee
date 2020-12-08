@@ -3,6 +3,9 @@ package dartzee.core.util
 import dartzee.core.screen.LoadingDialog
 import dartzee.logging.*
 import dartzee.utils.InjectedThings.logger
+import java.awt.Component
+import java.io.File
+import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
 class MessageDialogFactory: AbstractMessageDialogFactory()
@@ -70,6 +73,23 @@ class MessageDialogFactory: AbstractMessageDialogFactory()
         }
 
         loadingDialog.dismissDialog()
+    }
+
+    override fun chooseDirectory(parent: Component?): File?
+    {
+        logDialogShown("File selector", "", "")
+
+        val fc = JFileChooser()
+        fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        val option = fc.showDialog(parent, "Select")
+        if (option != JFileChooser.APPROVE_OPTION)
+        {
+            return null
+        }
+
+        logDialogClosed("File selector", fc.selectedFile.absolutePath)
+
+        return fc.selectedFile
     }
 
     private fun logDialogShown(type: String, title: String, message: String)
