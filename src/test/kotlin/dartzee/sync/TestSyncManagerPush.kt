@@ -36,7 +36,7 @@ class TestSyncManagerPush: AbstractTest()
         log.errorObject shouldBe exception
 
         dialogFactory.errorsShown.shouldContainExactly("An unexpected error occurred - no data has been changed.")
-        SyncAuditEntity.getLastSyncDate(mainDatabase, REMOTE_NAME) shouldBe null
+        SyncAuditEntity.getLastSyncData(mainDatabase) shouldBe null
 
         syncDirectoryShouldNotExist()
     }
@@ -54,7 +54,8 @@ class TestSyncManagerPush: AbstractTest()
         dialogFactory.loadingVisible shouldBe false
 
         store.fetchDatabase(REMOTE_NAME).database shouldBe mainDatabase
-        SyncAuditEntity.getLastSyncDate(mainDatabase, REMOTE_NAME) shouldNotBe null
+        val lastSyncData = SyncAuditEntity.getLastSyncData(mainDatabase)!!
+        lastSyncData.remoteName shouldBe REMOTE_NAME
 
         syncDirectoryShouldNotExist()
     }

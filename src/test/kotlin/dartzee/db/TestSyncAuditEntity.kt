@@ -2,6 +2,8 @@ package dartzee.db
 
 import dartzee.`object`.DartsClient
 import dartzee.core.util.CoreRegistry
+import dartzee.helper.REMOTE_NAME
+import dartzee.sync.LastSyncData
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -26,7 +28,7 @@ class TestSyncAuditEntity: AbstractEntityTest<SyncAuditEntity>()
     @Test
     fun `Should report a null lastSyncDate if not recorded before`()
     {
-        SyncAuditEntity.getLastSyncDate(mainDatabase, "Test") shouldBe null
+        SyncAuditEntity.getLastSyncData(mainDatabase) shouldBe null
     }
 
     @Test
@@ -49,21 +51,17 @@ class TestSyncAuditEntity: AbstractEntityTest<SyncAuditEntity>()
     }
 
     @Test
-    fun `Should report the correct last sync date, taking into account remote name`()
+    fun `Should report the correct last sync date and remote name`()
     {
-        makeSyncAudit(mainDatabase, "Goomba").saveToDatabase(Timestamp(50))
-        makeSyncAudit(mainDatabase, "Goomba").saveToDatabase(Timestamp(150))
+        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(50))
+        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(150))
 
-        makeSyncAudit(mainDatabase, "Koopa").saveToDatabase(Timestamp(100))
-
-        SyncAuditEntity.getLastSyncDate(mainDatabase, "Goomba") shouldBe Timestamp(150)
-        SyncAuditEntity.getLastSyncDate(mainDatabase, "Koopa") shouldBe Timestamp(100)
-        SyncAuditEntity.getLastSyncDate(mainDatabase, "Toad") shouldBe null
+        SyncAuditEntity.getLastSyncData(mainDatabase) shouldBe LastSyncData(REMOTE_NAME, Timestamp(150))
     }
 
-    private fun makeSyncAudit(database: Database, remoteName: String)
+    private fun makeSyncAudit(database: Database)
         = SyncAuditEntity(database).also {
         it.assignRowId()
-        it.remoteName = remoteName
+        it.remoteName = REMOTE_NAME
     }
 }

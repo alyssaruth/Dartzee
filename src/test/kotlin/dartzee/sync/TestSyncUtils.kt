@@ -1,25 +1,23 @@
 package dartzee.sync
 
-import dartzee.helper.AbstractRegistryTest
-import dartzee.utils.PREFERENCES_STRING_REMOTE_DATABASE_NAME
+import dartzee.db.SyncAuditEntity
+import dartzee.helper.AbstractTest
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestSyncUtils: AbstractRegistryTest()
+class TestSyncUtils: AbstractTest()
 {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_STRING_REMOTE_DATABASE_NAME)
-
     @Test
     fun `Should return an empty string if no remote db name set`()
     {
-        saveRemoteName("")
         getRemoteName() shouldBe ""
     }
 
     @Test
     fun `Should be able to save and retrieve the remote db name`()
     {
-        saveRemoteName("Goomba")
-        getRemoteName() shouldBe "Goomba"
+        SyncAuditEntity.insertSyncAudit(mainDatabase, "foobar")
+        getRemoteName() shouldBe "foobar"
     }
 }

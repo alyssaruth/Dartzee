@@ -116,7 +116,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
         val merger = DatabaseMerger(mainDatabase, fetchResult.database, remoteName)
 
-        val localGamesToPush = getModifiedGameCount(remoteName)
+        val localGamesToPush = getModifiedGameCount()
         val startingGameIds = getGameIds(mainDatabase)
 
         SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
