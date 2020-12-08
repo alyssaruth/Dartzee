@@ -10,7 +10,6 @@ import dartzee.logging.Severity
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
@@ -36,7 +35,7 @@ class TestSyncManagerPush: AbstractTest()
         log.errorObject shouldBe exception
 
         dialogFactory.errorsShown.shouldContainExactly("An unexpected error occurred - no data has been changed.")
-        SyncAuditEntity.getLastSyncDate(mainDatabase, REMOTE_NAME) shouldBe null
+        SyncAuditEntity.getLastSyncData(mainDatabase) shouldBe null
 
         syncDirectoryShouldNotExist()
     }
@@ -54,7 +53,8 @@ class TestSyncManagerPush: AbstractTest()
         dialogFactory.loadingVisible shouldBe false
 
         store.fetchDatabase(REMOTE_NAME).database shouldBe mainDatabase
-        SyncAuditEntity.getLastSyncDate(mainDatabase, REMOTE_NAME) shouldNotBe null
+        val lastSyncData = SyncAuditEntity.getLastSyncData(mainDatabase)!!
+        lastSyncData.remoteName shouldBe REMOTE_NAME
 
         syncDirectoryShouldNotExist()
     }

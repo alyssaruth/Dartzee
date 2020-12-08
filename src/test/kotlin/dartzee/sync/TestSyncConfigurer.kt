@@ -1,16 +1,13 @@
 package dartzee.sync
 
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.PREFERENCES_STRING_REMOTE_DATABASE_NAME
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.Test
 
-class TestSyncConfigurer: AbstractRegistryTest()
+class TestSyncConfigurer: AbstractTest()
 {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_STRING_REMOTE_DATABASE_NAME)
-
     @Test
     fun `Should return return correct config when creating remote database for the first time`()
     {

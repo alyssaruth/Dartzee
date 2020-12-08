@@ -3,10 +3,10 @@ package dartzee.db
 import dartzee.`object`.DartsClient
 import dartzee.main.getDeviceId
 import dartzee.main.getUsername
+import dartzee.sync.LastSyncData
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
-import java.sql.Timestamp
 
 class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : AbstractEntity<SyncAuditEntity>(database)
 {
@@ -38,12 +38,12 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
             return entity
         }
 
-        fun getLastSyncDate(database: Database, remoteName: String): Timestamp?
+        fun getLastSyncData(database: Database): LastSyncData?
         {
             val dao = SyncAuditEntity(database)
-            val entities = dao.retrieveEntities("RemoteName = '$remoteName'")
-            val latest = entities.maxBy { it.dtLastUpdate }
-            return latest?.dtLastUpdate
+            val entities = dao.retrieveEntities()
+            val latest = entities.maxBy { it.dtLastUpdate } ?: return null
+            return LastSyncData(latest.remoteName, latest.dtLastUpdate)
         }
     }
 

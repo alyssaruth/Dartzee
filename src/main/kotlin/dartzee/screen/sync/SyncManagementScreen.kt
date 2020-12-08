@@ -8,7 +8,6 @@ import dartzee.screen.ScreenCache
 import dartzee.sync.SyncMode
 import dartzee.sync.getRemoteName
 import dartzee.sync.resetRemote
-import dartzee.sync.saveRemoteName
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.remoteDatabaseStore
@@ -78,6 +77,7 @@ class SyncManagementScreen: EmbeddedScreen()
     override fun initialise()
     {
         val remoteName = getRemoteName()
+
         tfRemoteName.text = remoteName
         btnReset.isEnabled = remoteName.isNotEmpty()
         btnPerformSync.isEnabled = remoteName.isNotEmpty()
@@ -116,7 +116,6 @@ class SyncManagementScreen: EmbeddedScreen()
             SyncMode.NORMAL_SYNC -> syncPressed(false, result.remoteName)
         }
 
-        saveRemoteName(result.remoteName)
         initialise()
     }
 
@@ -172,7 +171,7 @@ class SyncManagementScreen: EmbeddedScreen()
                 return
             }
 
-            if (SyncAuditEntity.getLastSyncDate(mainDatabase, remoteName) == null)
+            if (SyncAuditEntity.getLastSyncData(mainDatabase) == null)
             {
                 val q = "Are you sure you want to sync $remoteName with data on this device?\n\n" +
                         "This device hasn't synced with $remoteName before - if there are no local changes you want to keep, it would be quicker to pull from it."

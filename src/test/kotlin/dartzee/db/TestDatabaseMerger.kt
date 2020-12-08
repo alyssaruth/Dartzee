@@ -25,7 +25,8 @@ class TestDatabaseMerger: AbstractTest()
             val merger = makeDatabaseMerger(remoteDatabase = remoteDatabase, remoteName = "Goomba")
             val result = merger.performMerge()
 
-            SyncAuditEntity.getLastSyncDate(result, "Goomba").shouldNotBeNull()
+            val data = SyncAuditEntity.getLastSyncData(result)!!
+            data.remoteName shouldBe "Goomba"
         }
     }
 
@@ -242,7 +243,7 @@ class TestDatabaseMerger: AbstractTest()
     private fun setUpLastSync(database: Database): Timestamp
     {
         SyncAuditEntity.insertSyncAudit(database, "Goomba")
-        return SyncAuditEntity.getLastSyncDate(database, "Goomba")!!
+        return SyncAuditEntity.getLastSyncData(database)!!.lastSynced
     }
 
     private fun makeDatabaseMerger(localDatabase: Database = mainDatabase,

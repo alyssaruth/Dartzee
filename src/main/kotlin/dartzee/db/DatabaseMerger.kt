@@ -21,7 +21,7 @@ class DatabaseMerger(private val localDatabase: Database,
     {
         SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
 
-        val lastLocalSync = SyncAuditEntity.getLastSyncDate(localDatabase, remoteName)
+        val lastLocalSync = SyncAuditEntity.getLastSyncData(localDatabase)?.lastSynced
         logger.info(CODE_MERGE_STARTED, "Starting merge - last local sync $lastLocalSync")
         getSyncEntities().forEach { dao -> syncRowsFromTable(dao, lastLocalSync) }
 
