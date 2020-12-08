@@ -3,9 +3,9 @@ package dartzee.db
 import dartzee.`object`.DartsClient
 import dartzee.core.util.CoreRegistry
 import dartzee.helper.REMOTE_NAME
+import dartzee.helper.makeSyncAudit
 import dartzee.sync.LastSyncData
 import dartzee.utils.DARTS_VERSION_NUMBER
-import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
@@ -57,11 +57,5 @@ class TestSyncAuditEntity: AbstractEntityTest<SyncAuditEntity>()
         makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(150))
 
         SyncAuditEntity.getLastSyncData(mainDatabase) shouldBe LastSyncData(REMOTE_NAME, Timestamp(150))
-    }
-
-    private fun makeSyncAudit(database: Database)
-        = SyncAuditEntity(database).also {
-        it.assignRowId()
-        it.remoteName = REMOTE_NAME
     }
 }

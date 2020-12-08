@@ -10,7 +10,6 @@ import dartzee.logging.Severity
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Test
