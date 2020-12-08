@@ -7,7 +7,6 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.helper.*
-import dartzee.logging.LoggingCode
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.types.shouldBeNull
@@ -19,16 +18,6 @@ import java.sql.Timestamp
 
 class TestDatabaseMerger: AbstractTest()
 {
-    override fun beforeEachTest()
-    {
-        super.beforeEachTest()
-
-        val runtime = Runtime.getRuntime()
-        logger.info(LoggingCode("memory.info"),"Memory settings - free: ${runtime.freeMemory()}, max: ${runtime.maxMemory()}")
-        System.gc()
-        logger.info(LoggingCode("memory.info"),"Memory settings - free: ${runtime.freeMemory()}, max: ${runtime.maxMemory()}")
-    }
-
     @Test
     fun `Should insert into SyncAudit when performing the merge`()
     {
