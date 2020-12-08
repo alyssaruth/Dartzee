@@ -3,8 +3,6 @@ package dartzee.logging
 //Info
 val CODE_SQL = LoggingCode("sql")
 val CODE_BULK_SQL = LoggingCode("bulkSql")
-val CODE_USERNAME_UNSET = LoggingCode("usernameUnset")
-val CODE_USERNAME_SET = LoggingCode("usernameSet")
 val CODE_JUST_UPDATED = LoggingCode("justUpdated")
 val CODE_MEMORY_SETTINGS = LoggingCode("memorySettings")
 val CODE_TABLE_CREATED = LoggingCode("tableCreated")

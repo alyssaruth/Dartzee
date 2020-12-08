@@ -2,7 +2,6 @@ package dartzee.main
 
 import dartzee.`object`.DartsClient
 import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
-import dartzee.core.util.CoreRegistry.INSTANCE_STRING_USER_NAME
 import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
@@ -51,25 +50,4 @@ private fun setDeviceId(): String
     return deviceId
 }
 
-fun getUsername() = instance.get(INSTANCE_STRING_USER_NAME, null) ?: setUsername()
-private fun setUsername(): String
-{
-    logger.info(CODE_USERNAME_UNSET, "No username found, prompting for one now")
-
-    val username = promptForNonEmptyInput("Enter your name", "Please enter your name (for debugging purposes).\nThis will only be asked for once.")
-
-    logger.info(CODE_USERNAME_SET, "$username has set their username", KEY_USERNAME to username)
-    instance.put(INSTANCE_STRING_USER_NAME, username)
-    return username
-}
-
-fun promptForNonEmptyInput(title: String, message: String): String
-{
-    var input: String? = null
-    while (input == null || input.isEmpty())
-    {
-        input = DialogUtil.showInput(title, message)
-    }
-
-    return input
-}
+fun getUsername(): String = System.getProperty("user.name")
