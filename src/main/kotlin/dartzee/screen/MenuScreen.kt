@@ -7,7 +7,7 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.screen.sync.SyncSummaryPanel
+import dartzee.screen.sync.SyncSummaryButton
 import dartzee.sync.SyncSummary
 import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.ResourceCache
@@ -28,7 +28,7 @@ class MenuScreen : EmbeddedScreen()
     private val btnAbout = JButton("About...")
     private val btnDartzeeTemplates = JButton("Dartzee")
     private val btnUtilities = JButton("Utilities")
-    private val btnSyncSummary = SyncSummaryPanel()
+    private val btnSyncSummary = SyncSummaryButton()
     private val btnGameReport = JButton("Game Report")
 
     private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
