@@ -4,6 +4,7 @@ import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.ai.SimulationRunner
+import dartzee.awaitCondition
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
@@ -47,7 +48,7 @@ class SimulationE2E: AbstractTest()
         statsScrn.gameType shouldBe GameType.X01
 
         val totalScorePanel = statsScrn.getChild<StatisticsTabTotalScore>()
-        totalScorePanel.getChild<NumberField> { it.testId == "Mean" }.value shouldBe 9.0
+        awaitCondition { totalScorePanel.getChild<NumberField> { it.testId == "Mean" }.value == 9.0 }
         totalScorePanel.getChild<NumberField> { it.testId == "Median" }.value shouldBe 9.0
         val allScoreRows = totalScorePanel.getChild<ScrollTableDartsGame>().getRows()
         allScoreRows.shouldHaveSize(500)
