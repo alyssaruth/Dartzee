@@ -15,7 +15,7 @@ class TestLoggerUncaughtExceptionHandler: AbstractTest()
     {
         val handler = LoggerUncaughtExceptionHandler()
 
-        val message = "javax.swing.plaf.FontUIResource cannot be cast to javax.swing.Painter"
+        val message = "javax.swing.plaf.FontUIResource cannot be cast to class javax.swing.Painter"
         val ex = Exception(message)
         handler.uncaughtException(Thread.currentThread(), ex)
 
