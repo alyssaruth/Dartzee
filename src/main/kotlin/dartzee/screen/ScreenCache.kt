@@ -2,7 +2,7 @@ package dartzee.screen
 
 import dartzee.core.bean.CheatBar
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.screen.sync.SyncSummaryPanel
+import dartzee.screen.sync.SyncSummaryButton
 
 object ScreenCache
 {
@@ -10,7 +10,7 @@ object ScreenCache
 
     //Embedded screens
     val hmClassToScreen = mutableMapOf<Class<out EmbeddedScreen>, EmbeddedScreen>()
-    var syncSummaryPanel = SyncSummaryPanel()
+    var syncSummaryPanel = SyncSummaryButton()
     val mainScreen = DartsApp(CheatBar())
 
     fun getDartsGameScreens() = hmGameIdToGameScreen.values.distinct()

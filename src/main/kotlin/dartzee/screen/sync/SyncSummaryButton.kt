@@ -8,7 +8,7 @@ import java.awt.event.MouseListener
 import javax.swing.ImageIcon
 import javax.swing.JButton
 
-class SyncSummaryPanel: JButton(), MouseListener
+class SyncSummaryButton: JButton(), MouseListener
 {
     private val iconUrl = getGamesWonIcon(GameType.X01)
     private val hoverText = "<html><h1>Sync Settings &gt;</h1></html>"
