@@ -143,6 +143,11 @@ abstract class AbstractTest
         return getLogRecords().any { it.severity == Severity.ERROR }
     }
 
+    fun getLogRecordsSoFar(): List<LogRecord>
+    {
+        return logDestination.logRecords.toList()
+    }
+
     fun getLogRecords(): List<LogRecord>
     {
         logger.waitUntilLoggingFinished()

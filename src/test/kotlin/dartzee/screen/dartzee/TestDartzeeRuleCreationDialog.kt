@@ -1,6 +1,7 @@
 package dartzee.screen.dartzee
 
 import com.github.alexburlton.swingtest.flushEdt
+import dartzee.awaitCondition
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.helper.makeActionEvent
@@ -458,18 +459,10 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         val dlg = DartzeeRuleCreationDialog()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
-        flushHard()
-        dlg.tfName.text shouldBe "20 → Any → Any"
+        awaitCondition { dlg.tfName.text == "20 → Any → Any" }
 
         scoreRule.spinner.value = 15
-        flushHard()
-        dlg.tfName.text shouldBe "15 → Any → Any"
-    }
-    private fun flushHard()
-    {
-        flushEdt()
-        Thread.sleep(1000)
-        flushEdt()
+        awaitCondition { dlg.tfName.text == "15 → Any → Any" }
     }
 
     @Test

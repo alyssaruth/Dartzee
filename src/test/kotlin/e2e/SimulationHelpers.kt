@@ -11,7 +11,7 @@ import dartzee.screen.stats.player.PlayerStatisticsScreen
 fun AbstractTest.awaitStatisticsScreen(): PlayerStatisticsScreen
 {
     awaitCondition {
-        getLogRecords().any { it.loggingCode == CODE_SIMULATION_FINISHED } &&
+        getLogRecordsSoFar().any { it.loggingCode == CODE_SIMULATION_FINISHED } &&
                 getWindow { it.findChild<PlayerStatisticsScreen>() != null } != null
     }
 
