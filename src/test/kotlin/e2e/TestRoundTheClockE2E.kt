@@ -14,6 +14,7 @@ import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class TestRoundTheClockE2E: AbstractRegistryTest()
@@ -27,6 +28,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - RTC - perfect game`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
@@ -53,6 +55,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - RTC - unordered`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson())

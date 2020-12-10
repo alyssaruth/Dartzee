@@ -1,7 +1,7 @@
 package e2e
 
 import dartzee.`object`.Dart
-import dartzee.achievements.*
+import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.GameType
 import dartzee.helper.*
@@ -12,6 +12,7 @@ import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class TestX01E2E: AbstractRegistryTest()
@@ -25,6 +26,7 @@ class TestX01E2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - 501 - 9 dart game`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")
@@ -54,6 +56,7 @@ class TestX01E2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - 301 - bust and mercy rule`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "301")

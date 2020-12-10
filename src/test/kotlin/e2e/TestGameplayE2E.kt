@@ -26,8 +26,8 @@ class TestGameplayE2E: AbstractRegistryTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
-    @Tag("e2e")
     @Test
+    @Tag("e2e")
     fun `E2E - Dartzee`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
@@ -69,6 +69,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - Golf`()
     {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "18")

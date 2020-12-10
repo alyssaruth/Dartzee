@@ -23,6 +23,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import javax.swing.JTabbedPane
 
@@ -38,6 +39,7 @@ class TestMatchE2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - Two game match`()
     {
         val match = insertDartsMatch(games = 2, matchParams = "", mode = MatchMode.FIRST_TO)

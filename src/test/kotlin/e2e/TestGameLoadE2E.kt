@@ -18,6 +18,7 @@ import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import javax.swing.SwingUtilities
 
@@ -33,6 +34,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - Game load and AI resume`()
     {
         val (winner, loser) = createPlayers()

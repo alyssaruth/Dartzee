@@ -15,6 +15,7 @@ import io.kotlintest.shouldNotBe
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.Color
 
@@ -90,6 +91,7 @@ class TestDartboard: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - default`()
     {
         val dartboard = Dartboard(250, 250)
@@ -98,6 +100,7 @@ class TestDartboard: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - with numbers`()
     {
         val dartboard = Dartboard(500, 500)
@@ -107,6 +110,7 @@ class TestDartboard: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - wireframe`()
     {
         val dartboard = Dartboard(250, 250)
@@ -116,6 +120,7 @@ class TestDartboard: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should get all the correct aim points`()
     {
         val dartboard = Dartboard(400, 400)
@@ -128,6 +133,7 @@ class TestDartboard: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should correctly scale up an AimPoint calculated from a smaller dartboard`()
     {
         val smallBoard = Dartboard(200, 200)

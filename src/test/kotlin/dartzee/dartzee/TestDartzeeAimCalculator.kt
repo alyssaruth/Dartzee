@@ -10,6 +10,7 @@ import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.numerics.shouldBeLessThan
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.*
 import javax.swing.ImageIcon
@@ -21,6 +22,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     private val calculator = DartzeeAimCalculator()
 
     @Test
+    @Tag("screenshot")
     fun `Should aim at the bullseye for a fully valid dartboard`()
     {
         val segmentStatus = SegmentStatus(allNonMisses, allNonMisses)
@@ -28,6 +30,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should aim at the right place for all odd`()
     {
         val odd = allNonMisses.filter { DartzeeDartRuleOdd().isValidSegment(it) }
@@ -36,6 +39,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should aim based on valid segments for if cautious`()
     {
         val twenties = allNonMisses.filter { it.score == 20 }
@@ -44,6 +48,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should aim based on scoring segments if aggressive`()
     {
         val twenties = allNonMisses.filter { it.score == 20 }
@@ -52,6 +57,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should go on score for tie breakers`()
     {
         val trebles = allNonMisses.filter { it.getMultiplier() == 3 }
@@ -63,6 +69,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should aim correctly if bullseye is missing`()
     {
         val nonBull = allNonMisses.filter { it.getTotal() != 50 }
@@ -71,6 +78,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should aim correctly for some missing trebles`()
     {
         val segments = allNonMisses.filterNot { it.getMultiplier() == 3 && (it.score == 20 || it.score == 3) }
