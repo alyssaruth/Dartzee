@@ -9,7 +9,7 @@ import dartzee.helper.makeDart
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getValueForRow
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGameStatisticsPanelRoundTheClock: AbstractGameStatisticsPanelTest<ClockPlayerState, GameStatisticsPanelRoundTheClock>()
 {

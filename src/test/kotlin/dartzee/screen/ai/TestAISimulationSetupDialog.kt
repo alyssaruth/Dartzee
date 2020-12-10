@@ -14,7 +14,7 @@ import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.*
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JRadioButton
 

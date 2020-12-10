@@ -3,7 +3,7 @@ package dartzee.screen.ai
 import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Dimension
 
 class TestVisualisationPanelDensity: AbstractTest()

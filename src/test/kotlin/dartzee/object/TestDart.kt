@@ -6,7 +6,7 @@ import dartzee.helper.makeDart
 import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Point
 
 class TestDart: AbstractTest()

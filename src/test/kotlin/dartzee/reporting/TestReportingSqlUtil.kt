@@ -4,7 +4,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.helper.*
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestReportingSqlUtil: AbstractTest()
 {

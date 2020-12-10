@@ -9,7 +9,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JLabel
 import javax.swing.text.StyleConstants

@@ -19,7 +19,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Blob
 import java.sql.Timestamp
 import javax.sql.rowset.serial.SerialBlob

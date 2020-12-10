@@ -3,7 +3,7 @@ package dartzee.`object`
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartHint: AbstractTest()
 {

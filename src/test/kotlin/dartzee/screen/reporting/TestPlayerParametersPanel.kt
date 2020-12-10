@@ -9,7 +9,7 @@ import dartzee.reporting.IncludedPlayerParameters
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 
 class TestPlayerParametersPanel: AbstractTest()

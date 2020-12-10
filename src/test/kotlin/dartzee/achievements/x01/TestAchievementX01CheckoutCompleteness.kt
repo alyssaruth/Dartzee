@@ -14,7 +14,7 @@ import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 class TestAchievementX01CheckoutCompleteness: AbstractMultiRowAchievementTest<AchievementX01CheckoutCompleteness>()

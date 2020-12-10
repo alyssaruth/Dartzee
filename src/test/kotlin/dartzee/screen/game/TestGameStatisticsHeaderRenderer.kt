@@ -4,7 +4,7 @@ import dartzee.helper.AbstractTest
 import dartzee.shouldHaveBorderThickness
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JComponent
 import javax.swing.JTable

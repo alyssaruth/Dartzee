@@ -6,7 +6,7 @@ import dartzee.screen.game.dartzee.DartzeeRuleTileComplete
 import dartzee.screen.game.dartzee.SoftDisableButtonModel
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 
 class TestDartzeeRuleTileComplete: AbstractTest()

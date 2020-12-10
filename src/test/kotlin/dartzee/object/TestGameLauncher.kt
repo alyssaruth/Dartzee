@@ -6,7 +6,7 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGameLauncher: AbstractTest()
 {

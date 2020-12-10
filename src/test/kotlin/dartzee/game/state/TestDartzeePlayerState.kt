@@ -8,7 +8,7 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.makeDartzeePlayerState
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartzeePlayerState: AbstractTest()
 {

@@ -10,7 +10,7 @@ import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.numerics.shouldBeLessThan
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.*
 import javax.swing.ImageIcon
 import javax.swing.JLabel

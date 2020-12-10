@@ -14,7 +14,7 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestPlayerAchievementsButton: AbstractTest()
 {

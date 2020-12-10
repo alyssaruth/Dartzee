@@ -16,7 +16,7 @@ import dartzee.helper.randomGuid
 import dartzee.screen.game.golf.GamePanelGolf
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGamePanelGolf: AbstractTest()
 {

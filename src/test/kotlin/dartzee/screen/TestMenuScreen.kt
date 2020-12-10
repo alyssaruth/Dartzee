@@ -10,7 +10,7 @@ import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.screen.sync.SyncSummaryButton
 import io.kotlintest.matchers.types.shouldBeInstanceOf
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 
 class TestMenuScreen: AbstractTest()

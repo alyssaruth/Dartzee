@@ -4,7 +4,9 @@ import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
@@ -17,17 +19,15 @@ class TestAwsUtil: AbstractTest()
     private val originalOut = System.out
     private val newOut = ByteArrayOutputStream()
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         System.setOut(PrintStream(newOut))
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
-
         testFile.delete()
         System.setOut(originalOut)
     }

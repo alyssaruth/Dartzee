@@ -16,17 +16,17 @@ import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import javax.swing.JLabel
 import javax.swing.table.DefaultTableModel
 
 class TestAchievementMedal: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         ScreenCache.get<PlayerAchievementsScreen>().toggleAchievementDesc(false, makeAchievement())
     }
 

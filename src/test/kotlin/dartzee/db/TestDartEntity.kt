@@ -5,7 +5,7 @@ import dartzee.`object`.SegmentType
 import dartzee.helper.randomGuid
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Point
 
 class TestDartEntity: AbstractEntityTest<DartEntity>()

@@ -9,7 +9,8 @@ import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.util.*
 
@@ -17,9 +18,9 @@ class TestSyncAuditEntity: AbstractEntityTest<SyncAuditEntity>()
 {
     private val originalDeviceId = CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_DEVICE_ID, "")
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_DEVICE_ID, originalDeviceId)
     }
 

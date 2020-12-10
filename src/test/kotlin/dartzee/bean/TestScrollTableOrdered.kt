@@ -11,14 +11,15 @@ import io.kotlintest.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
 import net.miginfocom.swing.MigLayout
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 
 class TestScrollTableOrdered: AbstractTest()
 {
-    override fun beforeEachTest() {
-        super.beforeEachTest()
-
+    @BeforeEach
+    fun beforeEach()
+    {
         InjectedCore.collectionShuffler = CollectionShuffler()
     }
 

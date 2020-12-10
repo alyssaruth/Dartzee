@@ -4,7 +4,7 @@ import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JRadioButton

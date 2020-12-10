@@ -6,7 +6,7 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSanityCheckPlayerIdMismatch: AbstractTest()
 {

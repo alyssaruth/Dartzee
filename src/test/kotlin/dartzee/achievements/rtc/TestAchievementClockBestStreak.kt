@@ -10,7 +10,7 @@ import dartzee.helper.insertPlayer
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBestStreak>()

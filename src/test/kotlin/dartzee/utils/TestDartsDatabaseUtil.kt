@@ -16,7 +16,9 @@ import io.kotlintest.matchers.file.shouldNotExist
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.File
 import javax.swing.JOptionPane
 
@@ -24,9 +26,9 @@ const val BACKUP_LOCATION = "Test/Backup/Databases"
 
 class TestDartsDatabaseUtil: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         File(TEST_DB_DIRECTORY).deleteRecursively()
         File(BACKUP_LOCATION).deleteRecursively()
 
@@ -35,9 +37,9 @@ class TestDartsDatabaseUtil: AbstractTest()
         File("$TEST_DB_DIRECTORY/$DATABASE_NAME").mkdirs()
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         File(TEST_ROOT).deleteRecursively()
     }
 

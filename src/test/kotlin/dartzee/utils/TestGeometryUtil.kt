@@ -5,7 +5,7 @@ import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.doubles.shouldBeGreaterThanOrEqual
 import io.kotlintest.matchers.doubles.shouldBeLessThanOrEqual
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Point
 
 /**

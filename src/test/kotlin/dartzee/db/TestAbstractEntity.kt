@@ -9,21 +9,23 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.util.*
 
 class TestAbstractEntity: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         FakeEntity().createTable()
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         mainDatabase.dropUnexpectedTables()
     }
 

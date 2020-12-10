@@ -14,7 +14,7 @@ import org.elasticsearch.client.Response
 import org.elasticsearch.client.ResponseException
 import org.elasticsearch.client.RestClient
 import org.junit.Assume
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestElasticsearchPoster: AbstractTest()
 {

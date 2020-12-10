@@ -13,15 +13,16 @@ import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class TestRoundTheClockE2E: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 

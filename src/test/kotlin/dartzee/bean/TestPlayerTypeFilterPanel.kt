@@ -5,7 +5,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestPlayerTypeFilterPanel: AbstractTest()
 {

@@ -8,7 +8,7 @@ import dartzee.helper.randomGuid
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestRoundTheClockUtil: AbstractTest()
 {

@@ -1,10 +1,7 @@
 package dartzee.sync
 
 import dartzee.db.SyncAuditEntity
-import dartzee.helper.AbstractTest
-import dartzee.helper.REMOTE_NAME
-import dartzee.helper.shouldUpdateSyncSummary
-import dartzee.helper.syncDirectoryShouldNotExist
+import dartzee.helper.*
 import dartzee.logging.CODE_PUSH_ERROR
 import dartzee.logging.Severity
 import dartzee.utils.InjectedThings.mainDatabase
@@ -12,7 +9,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.IOException
 
 class TestSyncManagerPush: AbstractTest()

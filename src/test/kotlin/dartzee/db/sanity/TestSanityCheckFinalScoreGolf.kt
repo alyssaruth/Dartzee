@@ -7,7 +7,7 @@ import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSanityCheckFinalScoreGolf: AbstractTest()
 {

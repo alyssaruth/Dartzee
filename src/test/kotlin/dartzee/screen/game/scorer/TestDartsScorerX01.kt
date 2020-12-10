@@ -14,7 +14,7 @@ import dartzee.utils.ResourceCache.ICON_RESUME
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 
 class TestDartsScorerX01: AbstractTest()

@@ -8,7 +8,7 @@ import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JPanel
 import javax.swing.SwingUtilities

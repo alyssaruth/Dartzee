@@ -9,7 +9,7 @@ import dartzee.helper.insertGame
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSanityCheckDanglingIdFields: AbstractTest()
 {

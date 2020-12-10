@@ -4,7 +4,7 @@ import dartzee.core.util.enableChildren
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDate

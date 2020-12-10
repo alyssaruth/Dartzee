@@ -3,7 +3,7 @@ package dartzee.types
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestStringMicrotype: AbstractTest()
 {

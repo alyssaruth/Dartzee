@@ -11,7 +11,9 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Assume
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.*
 
@@ -19,18 +21,16 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
 {
     private val testFileText = "This isn't a database!"
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         File(SYNC_DIR).deleteRecursively()
         File(SYNC_DIR).mkdirs()
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
-
         File(SYNC_DIR).deleteRecursively()
         File("${databaseDirectory}/$OTHER_DATABASE_NAME").deleteRecursively()
     }

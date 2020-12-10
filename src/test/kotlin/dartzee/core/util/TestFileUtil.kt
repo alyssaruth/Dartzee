@@ -6,7 +6,9 @@ import dartzee.logging.Severity
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.awt.Dimension
 import java.io.File
 import java.nio.file.DirectoryNotEmptyException
@@ -16,16 +18,16 @@ class TestFileUtil: AbstractTest()
 {
     private val TEST_DIR = File("Test/")
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         TEST_DIR.deleteRecursively()
         TEST_DIR.mkdirs()
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         TEST_DIR.deleteRecursively()
     }
 

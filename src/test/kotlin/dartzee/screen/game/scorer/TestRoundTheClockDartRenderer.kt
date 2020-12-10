@@ -8,16 +8,17 @@ import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.awt.Color
 
 class TestRoundTheClockDartRenderer: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_DOUBLE_FG_BRIGHTNESS, PREFERENCES_DOUBLE_BG_BRIGHTNESS)
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         clearPreferences()
     }
 

@@ -9,7 +9,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.event.ChangeEvent

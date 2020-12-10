@@ -8,7 +8,7 @@ import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.core.util.jsonMapper
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Dimension
 import java.awt.Point
 

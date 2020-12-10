@@ -16,7 +16,7 @@ import io.kotlintest.shouldNotBe
 import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Point
 
 class TestAbstractPlayerState: AbstractTest()

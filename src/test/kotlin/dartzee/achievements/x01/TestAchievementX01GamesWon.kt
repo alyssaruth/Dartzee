@@ -3,7 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.TestAbstractAchievementGamesWon
 import dartzee.game.GameType
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestAchievementX01GamesWon: TestAbstractAchievementGamesWon<AchievementX01GamesWon>()
 {

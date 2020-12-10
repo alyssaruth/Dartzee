@@ -5,7 +5,7 @@ import dartzee.helper.insertPlayer
 import dartzee.shouldBeVisible
 import dartzee.shouldNotBeVisible
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestAbstractScorer: AbstractTest()
 {

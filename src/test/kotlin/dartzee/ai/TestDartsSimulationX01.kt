@@ -8,7 +8,7 @@ import dartzee.helper.predictableDartsModel
 import dartzee.makeTestDartboard
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartsSimulationX01: AbstractTest()
 {

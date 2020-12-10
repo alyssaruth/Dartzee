@@ -12,10 +12,7 @@ import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartsMatchEntity
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertDartzeeTemplate
-import dartzee.helper.insertPlayer
-import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.*
 import dartzee.ruleDtosEq
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
@@ -27,16 +24,16 @@ import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.*
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class TestGameSetupScreen: AbstractTest()
 {
     private val gameLauncher = mockk<GameLauncher>(relaxed = true)
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         InjectedThings.gameLauncher = gameLauncher
     }
 

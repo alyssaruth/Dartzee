@@ -22,15 +22,15 @@ import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 
 class SimulationE2E: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         InjectedThings.simulationRunner = SimulationRunner()
     }
 

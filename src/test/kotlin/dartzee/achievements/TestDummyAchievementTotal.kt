@@ -6,7 +6,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDummyAchievementTotal: AbstractTest()
 {

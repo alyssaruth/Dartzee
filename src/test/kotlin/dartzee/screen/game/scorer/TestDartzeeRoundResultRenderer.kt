@@ -3,7 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 
 class TestDartzeeRoundResultRenderer: AbstractTest()

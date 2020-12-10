@@ -11,7 +11,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 class TestSyncUtils: AbstractTest()

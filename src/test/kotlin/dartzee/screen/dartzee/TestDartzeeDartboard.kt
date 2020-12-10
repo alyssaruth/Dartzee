@@ -9,7 +9,7 @@ import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Point
 

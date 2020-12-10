@@ -7,7 +7,7 @@ import dartzee.helper.REMOTE_NAME
 import dartzee.sync.SyncSummary
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSyncSummaryButton: AbstractTest()
 {

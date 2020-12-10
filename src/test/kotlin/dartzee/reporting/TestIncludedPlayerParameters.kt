@@ -8,7 +8,7 @@ import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestIncludedPlayerParameters: AbstractTest()
 {

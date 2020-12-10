@@ -1,7 +1,7 @@
 package dartzee.bean
 
 import dartzee.helper.AbstractTest
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestSpinnerSingleSelector: AbstractTest()

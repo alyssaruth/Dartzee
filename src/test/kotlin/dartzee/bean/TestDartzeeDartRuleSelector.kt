@@ -5,7 +5,7 @@ import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartzeeDartRuleSelector : AbstractTest()
 {

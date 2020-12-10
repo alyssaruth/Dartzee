@@ -12,21 +12,21 @@ import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeSortedWith
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class TestBulkInserter: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         mainDatabase.executeUpdate("CREATE TABLE InsertTest (RowId INT)")
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
-
         mainDatabase.dropTable("InsertTest")
     }
 

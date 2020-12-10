@@ -6,7 +6,7 @@ import dartzee.helper.*
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JComponent
 
 

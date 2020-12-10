@@ -2,7 +2,8 @@ package dartzee.utils
 
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 
 private const val STRING_PREF = "FAKE_STRING;foo"
 private const val INT_PREF = "FAKE_INT;20"
@@ -11,10 +12,9 @@ private const val BOOLEAN_PREF = "FAKE_BOOLEAN;false"
 
 class TestPreferenceUtil: AbstractTest()
 {
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
-
         PreferenceUtil.deleteSetting(STRING_PREF)
         PreferenceUtil.deleteSetting(INT_PREF)
         PreferenceUtil.deleteSetting(DOUBLE_PREF)

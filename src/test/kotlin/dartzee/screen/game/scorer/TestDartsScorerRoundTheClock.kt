@@ -15,7 +15,7 @@ import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartsScorerRoundTheClock: AbstractTest()
 {

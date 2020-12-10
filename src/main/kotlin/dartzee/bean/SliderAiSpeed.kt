@@ -24,7 +24,7 @@ class SliderAiSpeed(custom: Boolean) : JSlider()
 
         if (custom && !DartsClient.isAppleOs())
         {
-            setUI(CustomSliderUI(this))
+            try { setUI(CustomSliderUI(this)) } catch (t: Throwable) {}
         }
     }
 }

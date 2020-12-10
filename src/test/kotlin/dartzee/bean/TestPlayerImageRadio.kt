@@ -7,7 +7,7 @@ import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.ButtonGroup
 import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder

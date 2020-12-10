@@ -22,16 +22,17 @@ import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import javax.swing.JTabbedPane
 
 class TestMatchE2E: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
     }

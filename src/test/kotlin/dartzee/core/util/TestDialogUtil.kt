@@ -4,7 +4,7 @@ import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.helper.AbstractTest
 import io.mockk.mockk
 import io.mockk.verifySequence
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDialogUtil: AbstractTest()
 {

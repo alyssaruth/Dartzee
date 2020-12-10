@@ -9,7 +9,7 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
 {

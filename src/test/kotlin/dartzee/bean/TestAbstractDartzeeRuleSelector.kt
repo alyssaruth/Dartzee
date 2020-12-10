@@ -9,7 +9,7 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 
 class TestAbstractDartzeeRuleSelector: AbstractTest()

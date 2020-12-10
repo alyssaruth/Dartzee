@@ -3,7 +3,7 @@ package dartzee.screen.stats.player
 import io.kotlintest.matchers.collections.shouldContainNoNulls
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Component
 
 abstract class AbstractStatsPieBreakdownTest<E: AbstractStatisticsTabPieBreakdown>: AbstractPlayerStatisticsTest<E>()

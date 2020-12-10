@@ -12,18 +12,21 @@ import dartzee.utils.PreferenceUtil
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
 class TestGameplayE2E: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
+    @Tag("e2e")
     @Test
     fun `E2E - Dartzee`()
     {

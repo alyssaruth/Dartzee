@@ -6,7 +6,7 @@ import dartzee.dartzee.parseDartRule
 import dartzee.helper.makeColourRule
 import io.kotlintest.matchers.string.shouldBeEmpty
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
