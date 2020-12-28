@@ -2,6 +2,7 @@ package dartzee.screen.game.scorer
 
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
+import com.github.alexburlton.swingtest.shouldBeVisible
 import com.github.alexburlton.swingtest.shouldNotBeVisible
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
@@ -10,7 +11,6 @@ import dartzee.game.state.TestPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.screen.game.GamePanelPausable
-import dartzee.shouldBeVisible
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache.ICON_PAUSE

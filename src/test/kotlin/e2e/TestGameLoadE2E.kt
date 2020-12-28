@@ -1,8 +1,9 @@
 package e2e
 
+import com.github.alexburlton.swingtest.shouldBeVisible
 import dartzee.`object`.Dart
 import dartzee.`object`.GameLauncher
-import dartzee.awaitCondition
+import com.github.alexburlton.swingtest.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.game.GameType
 import dartzee.getRows
@@ -11,7 +12,6 @@ import dartzee.helper.retrieveGame
 import dartzee.helper.retrieveParticipant
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.shouldBeVisible
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil

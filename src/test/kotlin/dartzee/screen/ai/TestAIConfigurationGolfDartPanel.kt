@@ -1,16 +1,12 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeDisabled
-import com.github.alexburlton.swingtest.shouldBeEnabled
+import com.github.alexburlton.swingtest.*
 import dartzee.`object`.SegmentType
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
-import dartzee.shouldBeVisible
-import dartzee.shouldNotBeVisible
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JComboBox

@@ -1,9 +1,9 @@
 package dartzee.screen.game.scorer
 
+import com.github.alexburlton.swingtest.shouldBeVisible
+import com.github.alexburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import dartzee.shouldBeVisible
-import dartzee.shouldNotBeVisible
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
