@@ -1,7 +1,11 @@
 package dartzee.sync
 
+import com.github.alexburlton.swingtest.flushEdt
 import dartzee.db.SyncAuditEntity
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.REMOTE_NAME
+import dartzee.helper.shouldUpdateSyncSummary
+import dartzee.helper.syncDirectoryShouldNotExist
 import dartzee.logging.CODE_PUSH_ERROR
 import dartzee.logging.Severity
 import dartzee.utils.InjectedThings.mainDatabase
@@ -24,6 +28,7 @@ class TestSyncManagerPush: AbstractTest()
         val manager = SyncManager(dbStore)
         val t = manager.doPush(REMOTE_NAME)
         t.join()
+        flushEdt()
 
         dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false
@@ -45,6 +50,7 @@ class TestSyncManagerPush: AbstractTest()
         val manager = SyncManager(store)
         val t = manager.doPush(REMOTE_NAME)
         t.join()
+        flushEdt()
 
         dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false
