@@ -1,5 +1,6 @@
 package dartzee.sync
 
+import com.github.alexburlton.swingtest.flushEdt
 import dartzee.helper.*
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_PULL_ERROR
@@ -41,6 +42,7 @@ class TestSyncManagerPull: AbstractTest()
         val manager = SyncManager(dbStore)
         val t = manager.doPull(REMOTE_NAME)
         t.join()
+        flushEdt()
 
         dialogFactory.loadingsShown.shouldContainExactly("Pulling $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false
