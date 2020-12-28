@@ -1,11 +1,11 @@
 package e2e
 
+import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.Dart
 import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
-import dartzee.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
 import dartzee.db.DartEntity

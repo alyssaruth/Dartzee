@@ -4,7 +4,7 @@ import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.ai.SimulationRunner
-import dartzee.awaitCondition
+import com.github.alexburlton.swingtest.awaitCondition
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable

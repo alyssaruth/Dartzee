@@ -1,6 +1,8 @@
 package dartzee.screen.dartzee
 
 import com.github.alexburlton.swingtest.flushEdt
+import com.github.alexburlton.swingtest.shouldBeVisible
+import com.github.alexburlton.swingtest.shouldNotBeVisible
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.helper.makeActionEvent
@@ -11,8 +13,6 @@ import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.dartzee.total.DartzeeTotalRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
 import dartzee.helper.*
-import dartzee.shouldBeVisible
-import dartzee.shouldNotBeVisible
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly

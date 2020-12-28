@@ -151,33 +151,3 @@ fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>>
 }
 
 fun ScrollTable.firstRow(): List<Any?> = getRows().first()
-
-/**
- * TODO - improvements for swing-test
- */
-fun Component.shouldBeVisible()
-{
-    isVisible shouldBe true
-}
-fun Component.shouldNotBeVisible()
-{
-    isVisible shouldBe false
-}
-fun JCheckBox.unCheck()
-{
-    if (isSelected)
-    {
-        doClick()
-    }
-}
-fun awaitCondition(timeout: Int = 10000, condition: (() -> Boolean))
-{
-    val timer = DurationTimer()
-    while (!condition()) {
-        Thread.sleep(200)
-
-        if (timer.getDuration() > timeout) {
-            throw AssertionError("Timed out waiting for condition")
-        }
-    }
-}

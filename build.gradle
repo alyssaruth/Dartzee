@@ -27,7 +27,7 @@ dependencies {
 
     testImplementation "io.mockk:mockk:1.9.3"
     testImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
-    testImplementation 'com.github.alexburlton:swing-test:0.3.0'
+    testImplementation 'com.github.alexburlton:swing-test:1.0.0'
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.1.0"
 }
