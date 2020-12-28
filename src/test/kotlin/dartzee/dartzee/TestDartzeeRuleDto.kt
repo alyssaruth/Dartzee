@@ -1,6 +1,5 @@
 package dartzee.dartzee
 
-import dartzee.`object`.Dart
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.total.DartzeeTotalRuleGreaterThan
 import dartzee.dartzee.total.DartzeeTotalRulePrime
@@ -9,9 +8,9 @@ import dartzee.doubleTwenty
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldNotBeEmpty
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
-import kotlin.test.assertNotNull
 
 class TestDartzeeRuleDto: AbstractTest()
 {
@@ -50,7 +49,7 @@ class TestDartzeeRuleDto: AbstractTest()
         dto.runStrengthCalculation()
 
         val result = dto.calculationResult
-        assertNotNull(result)
+        result.shouldNotBeNull()
         result.validSegments.shouldContainExactly(getFakeValidSegment(0))
     }
 

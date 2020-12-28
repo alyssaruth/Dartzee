@@ -5,11 +5,10 @@ import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.dartzee.parseDartRule
 import dartzee.helper.makeColourRule
 import io.kotlintest.matchers.string.shouldBeEmpty
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>()
 {
@@ -121,10 +120,10 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         val cbGreen = checkBoxes.find{it.text == "Green"}
         val cbRed = checkBoxes.find{it.text == "Red"}
 
-        assertNotNull(cbBlack)
-        assertNotNull(cbWhite)
-        assertNotNull(cbGreen)
-        assertNotNull(cbRed)
+        cbBlack.shouldNotBeNull()
+        cbWhite.shouldNotBeNull()
+        cbGreen.shouldNotBeNull()
+        cbRed.shouldNotBeNull()
 
         for (i in 0..15)
         {
@@ -135,10 +134,10 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
 
             rule.actionPerformed(null)
 
-            assertEquals(cbBlack.isSelected, rule.black)
-            assertEquals(cbWhite.isSelected, rule.white)
-            assertEquals(cbRed.isSelected, rule.red)
-            assertEquals(cbGreen.isSelected, rule.green)
+            cbBlack.isSelected shouldBe rule.black
+            cbWhite.isSelected shouldBe rule.white
+            cbRed.isSelected shouldBe rule.red
+            cbGreen.isSelected shouldBe rule.green
         }
     }
 

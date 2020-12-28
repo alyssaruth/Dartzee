@@ -11,11 +11,11 @@ import dartzee.utils.DartsColour
 import dartzee.utils.getAverage
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.event.MouseEvent
-import kotlin.test.assertNotNull
 
 class TestDartboardSegmentSelector: AbstractTest()
 {
@@ -110,7 +110,7 @@ class TestDartboardSegmentSelector: AbstractTest()
         dartboard.initState(hashSetOf(singleNineteen))
 
         val selectedSegment = dartboard.selectedSegments.first()
-        assertNotNull(selectedSegment)
+        selectedSegment.shouldNotBeNull()
 
         val pt = getAverage(dartboard.getPointsForSegment(19, SegmentType.OUTER_SINGLE))
         val img = dartboard.dartboardImage!!
@@ -127,7 +127,7 @@ class TestDartboardSegmentSelector: AbstractTest()
         dartboard.paintDartboard()
 
         val doubleNineteenSegment = dartboard.getSegment(19, SegmentType.DOUBLE)
-        assertNotNull(doubleNineteenSegment)
+        doubleNineteenSegment.shouldNotBeNull()
 
         val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
         val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)
@@ -150,7 +150,7 @@ class TestDartboardSegmentSelector: AbstractTest()
         dartboard.initState(hashSetOf(doubleNineteen))
 
         val doubleNineteenSegment = dartboard.getSegment(19, SegmentType.DOUBLE)
-        assertNotNull(doubleNineteenSegment)
+        doubleNineteenSegment.shouldNotBeNull()
 
         val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
         val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)

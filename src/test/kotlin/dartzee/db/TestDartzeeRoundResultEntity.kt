@@ -4,9 +4,9 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
-import kotlin.test.assertNotNull
 
 class TestDartzeeRoundResultEntity: AbstractEntityTest<DartzeeRoundResultEntity>()
 {
@@ -48,7 +48,7 @@ class TestDartzeeRoundResultEntity: AbstractEntityTest<DartzeeRoundResultEntity>
         DartzeeRoundResultEntity.factoryAndSave(dto, pt, 10)
 
         val entity = DartzeeRoundResultEntity().retrieveEntities().first()
-        assertNotNull(entity)
+        entity.shouldNotBeNull()
 
         entity.roundNumber shouldBe 10
         entity.participantId shouldBe pt.rowId

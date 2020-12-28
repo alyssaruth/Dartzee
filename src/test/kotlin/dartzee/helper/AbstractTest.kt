@@ -8,6 +8,7 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import java.awt.Window
 import javax.swing.SwingUtilities
-import kotlin.test.assertNotNull
 
 private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
@@ -79,7 +79,7 @@ abstract class AbstractTest
     fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
     {
         val record = getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
-        assertNotNull(record)
+        record.shouldNotBeNull()
 
         if (severity == Severity.ERROR)
         {

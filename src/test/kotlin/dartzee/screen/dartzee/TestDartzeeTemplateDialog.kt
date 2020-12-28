@@ -5,14 +5,16 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeRuleEntity
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartzeeTemplate
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import kotlin.test.assertNotNull
 
 class TestDartzeeTemplateDialog: AbstractTest()
 {
@@ -69,7 +71,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
         verify { dialog.dispose() }
 
         //Template should be set on the dialog, and should have been saved to the DB
-        val template = assertNotNull(dialog.dartzeeTemplate)
+        val template = dialog.dartzeeTemplate!!
         template.name shouldBe "ABC"
         template.retrievedFromDb shouldBe true
 
