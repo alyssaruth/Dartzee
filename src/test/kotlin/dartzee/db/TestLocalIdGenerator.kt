@@ -6,7 +6,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeUnique
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestLocalIdGenerator: AbstractTest()
 {

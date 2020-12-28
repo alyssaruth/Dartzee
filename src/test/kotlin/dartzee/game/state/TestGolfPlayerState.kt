@@ -2,7 +2,7 @@ package dartzee.game.state
 
 import dartzee.helper.*
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGolfPlayerState: AbstractTest()
 {

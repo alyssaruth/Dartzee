@@ -22,19 +22,21 @@ import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 
 class SimulationE2E: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         InjectedThings.simulationRunner = SimulationRunner()
     }
 
     @Test
+    @Tag("e2e")
     fun `Should be able to run a simulation of 500 games`()
     {
         val model = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))

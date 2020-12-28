@@ -4,7 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Font
 

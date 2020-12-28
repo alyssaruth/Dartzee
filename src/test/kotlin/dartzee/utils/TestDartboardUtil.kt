@@ -7,7 +7,7 @@ import dartzee.helper.AbstractRegistryTest
 import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Point
 

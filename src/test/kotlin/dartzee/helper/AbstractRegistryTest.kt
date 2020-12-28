@@ -1,6 +1,8 @@
 package dartzee.helper
 
 import dartzee.utils.PreferenceUtil
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 
 abstract class AbstractRegistryTest: AbstractTest()
 {
@@ -8,10 +10,9 @@ abstract class AbstractRegistryTest: AbstractTest()
 
     abstract fun getPreferencesAffected(): List<String>
 
-    override fun doClassSetup()
+    @BeforeEach
+    fun cachePreferences()
     {
-        super.doClassSetup()
-
         getPreferencesAffected().forEach {
             hmPreferenceToSetting[it] = PreferenceUtil.getStringValue(it)
         }
@@ -24,10 +25,9 @@ abstract class AbstractRegistryTest: AbstractTest()
         }
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun resestPreferences()
     {
-        super.afterEachTest()
-
         getPreferencesAffected().forEach {
             PreferenceUtil.saveString(it, hmPreferenceToSetting[it])
         }

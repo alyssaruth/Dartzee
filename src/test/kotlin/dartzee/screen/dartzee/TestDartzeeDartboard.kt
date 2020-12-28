@@ -2,14 +2,17 @@ package dartzee.screen.dartzee
 
 import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.*
-import dartzee.`object`.*
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.`object`.GREY_COLOUR_WRAPPER
+import dartzee.`object`.SegmentType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeSegmentStatus
 import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Point
 
@@ -131,6 +134,7 @@ class TestDartzeeDartboard: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Snapshot test`()
     {
         val scoringSegments = getAllPossibleSegments().filter { it.score == 20 && !it.isMiss() }

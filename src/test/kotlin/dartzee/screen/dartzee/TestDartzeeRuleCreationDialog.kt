@@ -1,7 +1,6 @@
 package dartzee.screen.dartzee
 
 import com.github.alexburlton.swingtest.flushEdt
-import dartzee.awaitCondition
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.helper.makeActionEvent
@@ -25,7 +24,7 @@ import io.kotlintest.shouldNotBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.SwingUtilities
 
 class TestDartzeeRuleAmendment: AbstractTest()
@@ -459,10 +458,14 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         val dlg = DartzeeRuleCreationDialog()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
-        awaitCondition { dlg.tfName.text == "20 → Any → Any" }
+        flushEdt()
+        dlg.tfName.text shouldBe "20 → Any → Any"
 
         scoreRule.spinner.value = 15
-        awaitCondition { dlg.tfName.text == "15 → Any → Any" }
+        flushEdt()
+        dlg.stateChanged(mockk())
+        flushEdt()
+        dlg.tfName.text shouldBe "15 → Any → Any"
     }
 
     @Test

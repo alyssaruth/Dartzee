@@ -8,9 +8,9 @@ import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.types.shouldBeInstanceOf
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
-import org.junit.Test
-import kotlin.test.assertNotNull
+import org.junit.jupiter.api.Test
 
 class TestAbstractDartzeeRuleSelector: AbstractTest()
 {
@@ -30,7 +30,7 @@ class TestAbstractDartzeeRuleSelector: AbstractTest()
         val items = selector.comboBoxRuleType.items()
 
         getAllDartRules().forEach { rule ->
-            assertNotNull(items.find { rule.javaClass.isInstance(it) })
+            items.find { rule.javaClass.isInstance(it) }.shouldNotBeNull()
         }
     }
 

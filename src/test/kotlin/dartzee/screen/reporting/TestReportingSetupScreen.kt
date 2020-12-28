@@ -13,7 +13,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 
 class TestReportingSetupScreen: AbstractTest()

@@ -16,7 +16,7 @@ import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import javax.swing.JButton
 

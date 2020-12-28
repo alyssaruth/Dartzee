@@ -6,7 +6,7 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 class TestReportParameters: AbstractTest()

@@ -8,7 +8,7 @@ import dartzee.core.bean.selectedItemTyped
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JComboBox
 import javax.swing.JSpinner
 import javax.swing.border.TitledBorder

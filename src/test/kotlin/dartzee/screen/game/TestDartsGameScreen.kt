@@ -7,7 +7,7 @@ import dartzee.screen.ScreenCache
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartsGameScreen: AbstractTest()
 {

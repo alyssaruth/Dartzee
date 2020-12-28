@@ -1,8 +1,8 @@
 package dartzee.bean
 
 import dartzee.helper.AbstractTest
-import org.junit.Test
-import kotlin.test.assertEquals
+import io.kotlintest.shouldBe
+import org.junit.jupiter.api.Test
 
 class TestSpinnerSingleSelector: AbstractTest()
 {
@@ -12,15 +12,15 @@ class TestSpinnerSingleSelector: AbstractTest()
         val spinner = SpinnerSingleSelector()
 
         spinner.value = 21
-        assertEquals(spinner.value, 25)
+        spinner.value shouldBe 25
 
         spinner.value = 22
-        assertEquals(spinner.value, 25)
+        spinner.value shouldBe 25
 
         spinner.value = 23
-        assertEquals(spinner.value, 20)
+        spinner.value shouldBe 20
 
         spinner.value = 24
-        assertEquals(spinner.value, 20)
+        spinner.value shouldBe 20
     }
 }

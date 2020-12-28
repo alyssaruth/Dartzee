@@ -5,7 +5,7 @@ import dartzee.logging.exceptions.ApplicationFault
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.shouldContainKeyValues
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.SQLException
 
 class TestLoggerUncaughtExceptionHandler: AbstractTest()

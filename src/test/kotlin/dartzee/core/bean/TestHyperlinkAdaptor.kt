@@ -7,7 +7,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.mockk.mockk
 import io.mockk.verifySequence
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import java.awt.event.MouseEvent
 import javax.swing.JPanel

@@ -9,7 +9,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01NoMercy>()
 {

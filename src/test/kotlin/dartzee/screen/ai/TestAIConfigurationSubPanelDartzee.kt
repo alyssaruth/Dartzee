@@ -6,7 +6,7 @@ import dartzee.ai.DartzeePlayStyle
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JRadioButton
 
 class TestAIConfigurationSubPanelDartzee: AbstractTest()

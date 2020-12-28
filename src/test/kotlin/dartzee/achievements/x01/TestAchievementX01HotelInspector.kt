@@ -16,7 +16,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.getSortedDartStr
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<AchievementX01HotelInspector>()
 {

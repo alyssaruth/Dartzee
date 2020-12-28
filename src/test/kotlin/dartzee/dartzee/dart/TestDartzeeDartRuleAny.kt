@@ -3,7 +3,7 @@ package dartzee.dartzee.dart
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartzeeDartRuleAny: AbstractDartzeeRuleTest<DartzeeDartRuleAny>()
 {

@@ -7,7 +7,8 @@ import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants
@@ -17,9 +18,9 @@ class TestRoundTheClockScorecardRenderer: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_DOUBLE_FG_BRIGHTNESS, PREFERENCES_DOUBLE_BG_BRIGHTNESS)
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         clearPreferences()
     }
 

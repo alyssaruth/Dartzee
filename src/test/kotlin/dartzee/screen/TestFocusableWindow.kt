@@ -5,7 +5,7 @@ import dartzee.helper.logger
 import dartzee.logging.KEY_ACTIVE_WINDOW
 import io.kotlintest.shouldBe
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestFocusableWindow: AbstractTest()
 {

@@ -11,7 +11,7 @@ import dartzee.helper.randomGuid
 import dartzee.helper.wipeTable
 import dartzee.screen.game.x01.GamePanelX01
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGamePanelX01: AbstractTest()
 {

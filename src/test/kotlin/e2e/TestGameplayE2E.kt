@@ -12,19 +12,22 @@ import dartzee.utils.PreferenceUtil
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
 class TestGameplayE2E: AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - Dartzee`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
@@ -66,6 +69,7 @@ class TestGameplayE2E: AbstractRegistryTest()
     }
 
     @Test
+    @Tag("e2e")
     fun `E2E - Golf`()
     {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "18")

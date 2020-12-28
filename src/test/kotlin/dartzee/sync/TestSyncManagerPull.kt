@@ -1,5 +1,6 @@
 package dartzee.sync
 
+import com.github.alexburlton.swingtest.flushEdt
 import dartzee.helper.*
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_PULL_ERROR
@@ -11,21 +12,23 @@ import io.kotlintest.matchers.file.shouldExist
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
 
 class TestSyncManagerPull: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         File(TEST_DB_DIRECTORY).mkdirs()
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         File(TEST_DB_DIRECTORY).deleteRecursively()
     }
 
@@ -39,6 +42,7 @@ class TestSyncManagerPull: AbstractTest()
         val manager = SyncManager(dbStore)
         val t = manager.doPull(REMOTE_NAME)
         t.join()
+        flushEdt()
 
         dialogFactory.loadingsShown.shouldContainExactly("Pulling $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false

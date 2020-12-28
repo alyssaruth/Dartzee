@@ -13,7 +13,7 @@ import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 
 class TestAbstractDartsScorer: AbstractTest()

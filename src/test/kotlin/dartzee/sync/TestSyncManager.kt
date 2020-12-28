@@ -16,7 +16,9 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
 import java.net.SocketException
@@ -25,15 +27,15 @@ import kotlin.ConcurrentModificationException
 
 class TestSyncManager: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
         File(TEST_DB_DIRECTORY).mkdirs()
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         File(TEST_DB_DIRECTORY).deleteRecursively()
     }
 

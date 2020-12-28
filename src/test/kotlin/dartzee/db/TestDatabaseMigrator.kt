@@ -11,7 +11,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDatabaseMigrator: AbstractTest()
 {

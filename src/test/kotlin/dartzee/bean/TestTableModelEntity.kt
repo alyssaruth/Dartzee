@@ -4,7 +4,7 @@ import dartzee.helper.AbstractTest
 import dartzee.utils.DartsDatabaseUtil
 import io.kotlintest.matchers.collections.shouldBeOneOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestTableModelEntity: AbstractTest()
 {

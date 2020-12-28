@@ -3,7 +3,7 @@ package dartzee.db.sanity
 import dartzee.db.GameEntity
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSanityUtils: AbstractTest()
 {

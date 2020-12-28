@@ -7,7 +7,7 @@ import dartzee.helper.makeClockPlayerState
 import dartzee.helper.makeDart
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestClockPlayerState: AbstractTest()
 {

@@ -16,7 +16,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
 {

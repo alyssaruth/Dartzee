@@ -5,7 +5,7 @@ import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: AbstractAchievementTest<E>()

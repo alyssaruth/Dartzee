@@ -8,7 +8,7 @@ import dartzee.helper.AbstractTest
 import dartzee.stats.GameWrapper
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Component
 import java.sql.Timestamp

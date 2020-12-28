@@ -8,7 +8,7 @@ import dartzee.helper.makeGolfRound
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getValueForRow
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerState, GameStatisticsPanelGolf>()
 {

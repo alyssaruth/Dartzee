@@ -14,8 +14,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.Test
-import kotlin.test.assertNotNull
+import org.junit.jupiter.api.Test
 
 class TestDartzeeTemplateDialog: AbstractTest()
 {
@@ -72,7 +71,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
         verify { dialog.dispose() }
 
         //Template should be set on the dialog, and should have been saved to the DB
-        val template = assertNotNull(dialog.dartzeeTemplate)
+        val template = dialog.dartzeeTemplate!!
         template.name shouldBe "ABC"
         template.retrievedFromDb shouldBe true
 

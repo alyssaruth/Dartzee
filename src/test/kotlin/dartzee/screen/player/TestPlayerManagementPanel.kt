@@ -26,7 +26,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JOptionPane
 

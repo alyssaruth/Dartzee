@@ -2,7 +2,7 @@ package dartzee.core.bean
 
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Font
 import javax.swing.JTextField
 import javax.swing.SwingConstants.LEADING

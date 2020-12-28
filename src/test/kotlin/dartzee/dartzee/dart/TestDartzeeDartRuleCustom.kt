@@ -10,12 +10,12 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.string.shouldBeEmpty
+import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
-import kotlin.test.assertTrue
 
 class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
 {
@@ -74,14 +74,14 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
         val xml = rule.toDbString()
         val parsedRule = parseDartRule(xml)
 
-        assertTrue(parsedRule is DartzeeDartRuleCustom)
+        parsedRule.shouldBeInstanceOf<DartzeeDartRuleCustom> {
+            it.segments shouldHaveSize(3)
 
-        parsedRule.segments shouldHaveSize(3)
-
-        parsedRule.isValidSegment(doubleTwenty) shouldBe true
-        parsedRule.isValidSegment(singleTwenty) shouldBe false
-        parsedRule.name shouldBe "Foo"
-        parsedRule.tfName.text shouldBe "Foo"
+            it.isValidSegment(doubleTwenty) shouldBe true
+            it.isValidSegment(singleTwenty) shouldBe false
+            it.name shouldBe "Foo"
+            it.tfName.text shouldBe "Foo"
+        }
     }
 
     @Test

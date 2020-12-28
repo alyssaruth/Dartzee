@@ -9,7 +9,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
 {

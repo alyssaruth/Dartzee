@@ -10,7 +10,7 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchBadLuck>()

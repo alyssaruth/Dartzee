@@ -15,7 +15,7 @@ import dartzee.helper.makeDartsModel
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JRadioButton

@@ -6,7 +6,7 @@ import dartzee.helper.*
 import dartzee.makeTestDartboard
 import io.kotlintest.matchers.collections.shouldContainInOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartsSimulationGolf: AbstractTest()
 {

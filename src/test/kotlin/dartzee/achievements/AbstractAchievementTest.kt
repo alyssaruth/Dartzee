@@ -16,16 +16,17 @@ import io.kotlintest.matchers.numerics.shouldBeLessThan
 import io.kotlintest.matchers.numerics.shouldBeLessThanOrEqual
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import javax.imageio.ImageIO
 
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
         mainDatabase.dropUnexpectedTables()
-        super.beforeEachTest()
     }
 
     abstract fun factoryAchievement(): E

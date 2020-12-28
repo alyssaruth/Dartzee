@@ -5,7 +5,7 @@ import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartzeeRules: AbstractTest()
 {

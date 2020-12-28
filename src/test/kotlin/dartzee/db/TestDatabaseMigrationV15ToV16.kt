@@ -11,7 +11,7 @@ import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 private const val ACHIEVEMENT_REF_X01_BEST_FINISH = 0

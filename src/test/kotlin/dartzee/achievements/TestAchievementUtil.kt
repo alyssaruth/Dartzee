@@ -6,7 +6,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestAchievementUtil: AbstractTest()
 {

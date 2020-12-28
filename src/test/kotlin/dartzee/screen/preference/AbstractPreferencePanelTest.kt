@@ -5,7 +5,7 @@ import com.github.alexburlton.swingtest.getChild
 import com.github.alexburlton.swingtest.shouldBeDisabled
 import com.github.alexburlton.swingtest.shouldBeEnabled
 import dartzee.helper.AbstractRegistryTest
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JButton
 
 abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: AbstractRegistryTest()

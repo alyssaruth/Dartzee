@@ -13,15 +13,15 @@ import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 
 class TestDartzeeRuleSetupPanel: AbstractTest()
 {
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
-
         InjectedThings.dartzeeRuleFactory = DartzeeRuleFactory()
     }
 

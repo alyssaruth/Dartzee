@@ -26,7 +26,7 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.mockk.*
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Color
 
 class TestGamePanelDartzee: AbstractTest()

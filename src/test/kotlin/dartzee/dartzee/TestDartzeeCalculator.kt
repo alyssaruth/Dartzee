@@ -18,7 +18,7 @@ import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.doubles.shouldBeExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestAllPossibilities: AbstractTest()
 {

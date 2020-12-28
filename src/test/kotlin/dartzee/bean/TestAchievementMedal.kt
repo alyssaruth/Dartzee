@@ -16,21 +16,23 @@ import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import javax.swing.JLabel
 import javax.swing.table.DefaultTableModel
 
 class TestAchievementMedal: AbstractTest()
 {
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         ScreenCache.get<PlayerAchievementsScreen>().toggleAchievementDesc(false, makeAchievement())
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - locked`()
     {
         val achievement = makeAchievement(-1)
@@ -39,6 +41,7 @@ class TestAchievementMedal: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - red`()
     {
         val achievement = makeAchievement(AchievementX01BestThreeDarts().redThreshold)
@@ -47,6 +50,7 @@ class TestAchievementMedal: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - orange`()
     {
         val achievement = makeAchievement(AchievementX01BestThreeDarts().orangeThreshold)
@@ -55,6 +59,7 @@ class TestAchievementMedal: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - yellow`()
     {
         val achievement = makeAchievement(AchievementX01BestThreeDarts().yellowThreshold)
@@ -63,6 +68,7 @@ class TestAchievementMedal: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - green`()
     {
         val achievement = makeAchievement(AchievementX01BestThreeDarts().greenThreshold)
@@ -71,6 +77,7 @@ class TestAchievementMedal: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - blue`()
     {
         val achievement = makeAchievement(AchievementX01BestThreeDarts().blueThreshold)
@@ -79,6 +86,7 @@ class TestAchievementMedal: AbstractTest()
     }
 
     @Test
+    @Tag("screenshot")
     fun `Should match snapshot - pink`()
     {
         val achievement = makeAchievement(AchievementX01BestThreeDarts().pinkThreshold)

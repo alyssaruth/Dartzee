@@ -4,7 +4,7 @@ import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 abstract class AbstractDartzeeRuleTest<E: AbstractDartzeeRule>: AbstractTest()
 {

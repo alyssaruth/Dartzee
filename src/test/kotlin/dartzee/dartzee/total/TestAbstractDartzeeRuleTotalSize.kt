@@ -3,7 +3,7 @@ package dartzee.dartzee.total
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.text.ParseException
 
 class TestAbstractDartzeeRuleTotalSize: AbstractTest()

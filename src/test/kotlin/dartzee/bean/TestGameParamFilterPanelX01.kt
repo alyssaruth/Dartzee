@@ -6,7 +6,7 @@ import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
 
 class TestGameParamFilterPanelX01: AbstractTest()

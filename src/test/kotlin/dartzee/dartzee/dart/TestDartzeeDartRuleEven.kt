@@ -3,7 +3,7 @@ package dartzee.dartzee.dart
 import dartzee.*
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartzeeDartRuleEven: AbstractDartzeeRuleTest<DartzeeDartRuleEven>()
 {

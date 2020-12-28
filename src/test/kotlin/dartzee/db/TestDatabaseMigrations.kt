@@ -6,7 +6,7 @@ import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDatabaseMigrations: AbstractTest()
 {

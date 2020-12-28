@@ -6,7 +6,7 @@ import dartzee.helper.insertPlayer
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 class TestLeaderboardTopX01Finishes: AbstractRegistryTest()

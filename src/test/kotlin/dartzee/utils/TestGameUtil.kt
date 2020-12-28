@@ -13,9 +13,9 @@ import dartzee.helper.insertAchievement
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import io.kotlintest.matchers.types.shouldBeInstanceOf
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
-import org.junit.Test
-import kotlin.test.assertNotNull
+import org.junit.jupiter.api.Test
 
 class TestGameUtil: AbstractTest()
 {
@@ -138,7 +138,7 @@ class TestGameUtil: AbstractTest()
         playerOneAchievements.size shouldBe 2
 
         val a2 = AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, pt2.playerId)
-        assertNotNull(a2)
+        a2.shouldNotBeNull()
         a2.gameIdEarned shouldBe game.rowId
         a2.achievementDetail shouldBe "29"
 

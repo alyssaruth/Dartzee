@@ -12,7 +12,7 @@ import dartzee.helper.makeDartsModel
 import dartzee.shouldBeVisible
 import dartzee.shouldNotBeVisible
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import javax.swing.JComboBox
 import javax.swing.JLabel
 import javax.swing.JSpinner

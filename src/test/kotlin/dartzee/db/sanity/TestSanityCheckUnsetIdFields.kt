@@ -7,7 +7,7 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSanityCheckUnsetIdFields: AbstractTest()
 {

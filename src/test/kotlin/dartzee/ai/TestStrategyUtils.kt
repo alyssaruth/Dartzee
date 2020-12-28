@@ -7,7 +7,7 @@ import dartzee.helper.AbstractTest
 import dartzee.screen.Dartboard
 import getPointForScore
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Point
 
 class TestStrategyUtils: AbstractTest()

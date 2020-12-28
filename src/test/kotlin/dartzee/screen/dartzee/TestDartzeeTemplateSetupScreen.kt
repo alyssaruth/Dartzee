@@ -15,16 +15,16 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JOptionPane
 
 class TestDartzeeTemplateSetupScreen: AbstractTest()
 {
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
-
         InjectedThings.dartzeeTemplateFactory = DartzeeTemplateFactory()
     }
 

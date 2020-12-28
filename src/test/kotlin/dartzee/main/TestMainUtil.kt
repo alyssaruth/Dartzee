@@ -12,7 +12,8 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import javax.swing.UIManager
 import javax.swing.plaf.metal.MetalLookAndFeel
 import javax.swing.plaf.nimbus.NimbusLookAndFeel
@@ -21,9 +22,9 @@ class TestMainUtil: AbstractTest()
 {
     private val originalDeviceId = instance.get(INSTANCE_STRING_DEVICE_ID, "")
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         instance.put(INSTANCE_STRING_DEVICE_ID, originalDeviceId)
     }
 

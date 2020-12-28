@@ -4,7 +4,9 @@ import dartzee.CURRENT_TIME_STRING
 import dartzee.helper.AbstractTest
 import dartzee.makeLogRecord
 import io.kotlintest.matchers.string.shouldContain
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
@@ -14,16 +16,15 @@ class TestLogDestinationSystemOut: AbstractTest()
 
     private val newOut = ByteArrayOutputStream()
 
-    override fun beforeEachTest()
+    @BeforeEach
+    fun beforeEach()
     {
-        super.beforeEachTest()
-
         System.setOut(PrintStream(newOut))
     }
 
-    override fun afterEachTest()
+    @AfterEach
+    fun afterEach()
     {
-        super.afterEachTest()
         System.setOut(originalOut)
     }
 

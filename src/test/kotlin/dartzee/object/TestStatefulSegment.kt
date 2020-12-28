@@ -2,7 +2,7 @@ package dartzee.`object`
 
 import dartzee.helper.AbstractTest
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Point
 
 class TestStatefulSegment: AbstractTest()

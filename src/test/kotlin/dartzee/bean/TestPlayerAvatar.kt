@@ -13,7 +13,7 @@ import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
 import io.kotlintest.shouldBe
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import javax.swing.Icon
 import javax.swing.ImageIcon

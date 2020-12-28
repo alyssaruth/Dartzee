@@ -1,88 +1,44 @@
 package dartzee.helper
 
-import dartzee.CURRENT_TIME
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
 import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
-import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
-import org.junit.After
-import org.junit.Before
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
 import java.awt.Window
-import java.time.Clock
-import java.time.ZoneId
 import javax.swing.SwingUtilities
-import javax.swing.UIManager
-import kotlin.test.assertNotNull
 
-private var doneOneTimeSetup = false
 private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
 private var checkedForExceptions = false
 
-val TEST_ROOT = "Test/"
-val TEST_DB_DIRECTORY = "Test/Databases"
+const val TEST_ROOT = "Test/"
+const val TEST_DB_DIRECTORY = "Test/Databases"
 
+@ExtendWith(BeforeAllTestsExtension::class)
 abstract class AbstractTest
 {
-    private var doneClassSetup = false
-    protected val dialogFactory = TestMessageDialogFactory()
+    val dialogFactory = TestMessageDialogFactory()
 
-    @Before
-    fun oneTimeSetup()
-    {
-        if (!doneOneTimeSetup)
-        {
-            doOneTimeSetup()
-            doneOneTimeSetup = true
-        }
-
-        if (!doneClassSetup)
-        {
-            doClassSetup()
-            doneClassSetup = true
-        }
-
-        beforeEachTest()
-    }
-
-    private fun doOneTimeSetup()
-    {
-        DialogUtil.init(dialogFactory)
-
-        Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
-
-        InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
-        InjectedThings.logger = logger
-        InjectedThings.dartboardSize = 50
-        InjectedThings.preferencesDartboardSize = 50
-        InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
-        InjectedThings.connectionPoolSize = 1
-
-        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-        mainDatabase = Database(inMemory = true)
-        DartsDatabaseUtil.initialiseDatabase(mainDatabase)
-    }
-
-    open fun doClassSetup()
-    {
-        DialogUtil.init(dialogFactory)
-        InjectedThings.esDestination = mockk(relaxed = true)
-    }
-
-    open fun beforeEachTest()
+    @BeforeEach
+    fun beforeEachTest()
     {
         ScreenCache.emptyCache()
         dialogFactory.reset()
         clearLogs()
         clearAllMocks()
+
+        DialogUtil.init(dialogFactory)
 
         mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
 
@@ -92,6 +48,7 @@ abstract class AbstractTest
             logDestination.haveRunInsert = false
         }
 
+        InjectedThings.esDestination = mockk(relaxed = true)
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
 
         //Clear cached dartboards
@@ -100,8 +57,8 @@ abstract class AbstractTest
         logger.loggingContext.clear()
     }
 
-    @After
-    open fun afterEachTest()
+    @AfterEach
+    fun afterEachTest()
     {
         if (!checkedForExceptions)
         {
@@ -122,7 +79,7 @@ abstract class AbstractTest
     fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
     {
         val record = getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
-        assertNotNull(record)
+        record.shouldNotBeNull()
 
         if (severity == Severity.ERROR)
         {

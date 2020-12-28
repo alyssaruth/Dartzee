@@ -7,7 +7,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.maps.shouldContain
 import io.kotlintest.shouldBe
 import net.miginfocom.swing.MigLayout
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestNewSetupRuleDialog: AbstractTest()
 {

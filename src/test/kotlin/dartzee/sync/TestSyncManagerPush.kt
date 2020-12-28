@@ -1,5 +1,6 @@
 package dartzee.sync
 
+import com.github.alexburlton.swingtest.flushEdt
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
@@ -12,7 +13,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.IOException
 
 class TestSyncManagerPush: AbstractTest()
@@ -27,6 +28,7 @@ class TestSyncManagerPush: AbstractTest()
         val manager = SyncManager(dbStore)
         val t = manager.doPush(REMOTE_NAME)
         t.join()
+        flushEdt()
 
         dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false
@@ -48,6 +50,7 @@ class TestSyncManagerPush: AbstractTest()
         val manager = SyncManager(store)
         val t = manager.doPush(REMOTE_NAME)
         t.join()
+        flushEdt()
 
         dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
         dialogFactory.loadingVisible shouldBe false

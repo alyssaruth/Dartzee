@@ -4,7 +4,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.LoggingCode
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSimpleDialog: AbstractTest()
 {

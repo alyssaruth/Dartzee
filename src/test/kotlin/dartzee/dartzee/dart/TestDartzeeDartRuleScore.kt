@@ -6,7 +6,7 @@ import dartzee.dartzee.parseDartRule
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.matchers.shouldNotBeInRange
 import io.kotlintest.shouldBe
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
 {

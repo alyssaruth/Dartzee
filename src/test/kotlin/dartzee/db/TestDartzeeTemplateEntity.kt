@@ -1,8 +1,8 @@
 package dartzee.db
 
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
-import org.junit.Test
-import kotlin.test.assertNotNull
+import org.junit.jupiter.api.Test
 
 class TestDartzeeTemplateEntity: AbstractEntityTest<DartzeeTemplateEntity>()
 {
@@ -23,7 +23,7 @@ class TestDartzeeTemplateEntity: AbstractEntityTest<DartzeeTemplateEntity>()
         DartzeeTemplateEntity.factoryAndSave("Hello")
 
         val entityOnDb = DartzeeTemplateEntity().retrieveEntities().first()
-        assertNotNull(entityOnDb)
+        entityOnDb.shouldNotBeNull()
 
         entityOnDb.name shouldBe "Hello"
     }
