@@ -10,10 +10,7 @@ import io.kotlintest.matchers.file.shouldExist
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
-import org.junit.Assume
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import java.io.File
 import java.util.*
 
@@ -36,9 +33,10 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     }
 
     @Test
+    @Tag("integration")
     fun `Should support pushing, checking existence and fetching the same database`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
+        Assumptions.assumeTrue { AwsUtils.readCredentials("AWS_SYNC") != null }
 
         usingInMemoryDatabase(withSchema = true) { db ->
             val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
@@ -62,18 +60,20 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     }
 
     @Test
+    @Tag("integration")
     fun `Should return false for a remote database that does not exist`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
+        Assumptions.assumeTrue { AwsUtils.readCredentials("AWS_SYNC") != null }
 
         val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
         store.databaseExists(UUID.randomUUID().toString()) shouldBe false
     }
 
     @Test
+    @Tag("integration")
     fun `Should create a backup version, with filename including schema version`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
+        Assumptions.assumeTrue { AwsUtils.readCredentials("AWS_SYNC") != null }
 
         val s3Client = AwsUtils.makeS3Client()
 
@@ -91,9 +91,10 @@ class AmazonS3RemoteDatabaseStoreTest: AbstractTest()
     }
 
     @Test
+    @Tag("integration")
     fun `Should throw an error if trying to overwrite database which has been modified since it was fetched`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_SYNC"))
+        Assumptions.assumeTrue { AwsUtils.readCredentials("AWS_SYNC") != null }
 
         usingInMemoryDatabase(withSchema = true) { db ->
             val dbFile = File("${db.getDirectory()}/Test.txt")

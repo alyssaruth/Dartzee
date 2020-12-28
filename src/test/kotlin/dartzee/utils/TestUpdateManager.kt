@@ -17,6 +17,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.json.JSONException
 import org.json.JSONObject
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
@@ -28,6 +29,7 @@ class TestUpdateManager: AbstractTest()
      * Communication
      */
     @Test
+    @Tag("integration")
     fun `Should log out an unexpected HTTP response, along with the full JSON payload`()
     {
         Unirest.setTimeouts(2000, 2000)
@@ -45,6 +47,7 @@ class TestUpdateManager: AbstractTest()
     }
 
     @Test
+    @Tag("integration")
     fun `Should catch and log any exceptions communicating over HTTPS`()
     {
         Unirest.setTimeouts(100, 100)
@@ -61,6 +64,7 @@ class TestUpdateManager: AbstractTest()
     }
 
     @Test
+    @Tag("integration")
     fun `Should retrieve a valid latest asset from the remote repo`()
     {
         val responseJson = UpdateManager.queryLatestReleaseJson(DARTZEE_REPOSITORY_URL)!!
@@ -210,15 +214,4 @@ class TestUpdateManager: AbstractTest()
 
         dialogFactory.errorsShown.shouldContainExactly("Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo")
     }
-
-    /**
-     * E2E - run to actually download+run the latest JAR
-     */
-    /*@Test
-    fun `Should perform the whole download without error`()
-    {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-
-        UpdateManager.checkForUpdates("foo")
-    }*/
 }

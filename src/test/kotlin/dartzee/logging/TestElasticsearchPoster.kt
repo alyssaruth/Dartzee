@@ -13,18 +13,47 @@ import org.apache.http.message.BasicStatusLine
 import org.elasticsearch.client.Response
 import org.elasticsearch.client.ResponseException
 import org.elasticsearch.client.RestClient
-import org.junit.Assume
+import org.junit.jupiter.api.Assumptions
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class TestElasticsearchPoster: AbstractTest()
 {
     @Test
+    @Tag("integration")
     fun `Should post a test log successfully`()
     {
-        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_LOGS"))
+        Assumptions.assumeTrue { AwsUtils.readCredentials("AWS_LOGS") != null }
 
         val poster = makePoster()
         poster.postLog("""{"message": "test"}""") shouldBe true
+    }
+
+    @Test
+    @Tag("integration")
+    fun `Should log an error when posting an individual log fails for something other than connection problems`()
+    {
+        Assumptions.assumeTrue { AwsUtils.readCredentials("AWS_LOGS") != null }
+
+        val poster = makePoster(index = "denied")
+        poster.postLog("""{"message": "test"}""") shouldBe false
+
+        val log = verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.ERROR)
+        log.message shouldBe "Received status code 403 trying to post to ES"
+        log.errorObject.shouldBeInstanceOf<ResponseException>()
+        (log.errorObject as ResponseException).response.statusLine.statusCode shouldBe 403
+    }
+
+    @Test
+    @Tag("integration")
+    fun `Should just log a single warning line if posting a log flakes due to connection`()
+    {
+        Assumptions.assumeTrue { AwsUtils.readCredentials("AWS_LOGS") != null }
+
+        val poster = makePoster(url = "172.16.0.0")
+        poster.postLog("""{"message": "test"}""") shouldBe false
+
+        verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.WARN)
     }
 
     @Test
@@ -44,31 +73,6 @@ class TestElasticsearchPoster: AbstractTest()
         clearLogs()
         poster.postLog("foo")
         getLogRecords().shouldBeEmpty()
-    }
-
-    @Test
-    fun `Should log an error when posting an individual log fails for something other than connection problems`()
-    {
-        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_LOGS"))
-
-        val poster = makePoster(index = "denied")
-        poster.postLog("""{"message": "test"}""") shouldBe false
-
-        val log = verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.ERROR)
-        log.message shouldBe "Received status code 403 trying to post to ES"
-        log.errorObject.shouldBeInstanceOf<ResponseException>()
-        (log.errorObject as ResponseException).response.statusLine.statusCode shouldBe 403
-    }
-
-    @Test
-    fun `Should just log a single warning line if posting a log flakes due to connection`()
-    {
-        Assume.assumeNotNull(AwsUtils.readCredentials("AWS_LOGS"))
-
-        val poster = makePoster(url = "172.16.0.0")
-        poster.postLog("""{"message": "test"}""") shouldBe false
-
-        verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.WARN)
     }
 
     @Test
