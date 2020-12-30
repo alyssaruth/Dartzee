@@ -1,5 +1,6 @@
 package dartzee.sync
 
+import dartzee.core.util.DialogUtil
 import dartzee.core.util.formatTimestamp
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
@@ -54,4 +55,16 @@ fun resetRemote()
 {
     SyncAuditEntity().deleteAll()
     refreshSyncSummary()
+}
+
+fun validateSyncAction(): Boolean
+{
+    val openScreens = ScreenCache.getDartsGameScreens()
+    if (openScreens.isNotEmpty())
+    {
+        DialogUtil.showError("You must close all open games before performing this action.")
+        return false
+    }
+
+    return true
 }
