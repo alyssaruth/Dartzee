@@ -1,6 +1,5 @@
 package dartzee.screen.sync
 
-import dartzee.screen.ScreenCache
 import dartzee.sync.SyncMode
 import dartzee.sync.validateSyncAction
 import dartzee.utils.InjectedThings.syncConfigurer
@@ -10,12 +9,9 @@ import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.ImageIcon
-import javax.swing.JButton
-import javax.swing.JLabel
-import javax.swing.JPanel
+import javax.swing.*
 
-class SyncSetupPanel(private val parent: SyncManagementScreen): JPanel(), ActionListener
+class SyncSetupPanel: JPanel(), ActionListener
 {
     private val instructionsPanel = JPanel()
     private val syncPanelOne = JLabel()
@@ -63,7 +59,6 @@ class SyncSetupPanel(private val parent: SyncManagementScreen): JPanel(), Action
     override fun actionPerformed(e: ActionEvent?)
     {
         setUpPressed()
-        ScreenCache.switch<SyncManagementScreen>()
     }
 
     private fun setUpPressed()

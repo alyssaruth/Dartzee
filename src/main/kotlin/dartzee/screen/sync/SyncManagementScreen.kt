@@ -1,13 +1,14 @@
 package dartzee.screen.sync
 
 import dartzee.screen.EmbeddedScreen
+import dartzee.screen.ScreenCache
 import dartzee.sync.getRemoteName
 import java.awt.BorderLayout
 
 class SyncManagementScreen: EmbeddedScreen()
 {
-    private val setupPanel = SyncSetupPanel(this)
-    private val managementPanel = SyncManagementPanel(this)
+    private val setupPanel = SyncSetupPanel()
+    private val managementPanel = SyncManagementPanel()
 
     override fun initialise()
     {
@@ -24,6 +25,7 @@ class SyncManagementScreen: EmbeddedScreen()
             add(managementPanel, BorderLayout.CENTER)
         }
 
+        ScreenCache.mainScreen.pack()
         repaint()
     }
 

@@ -20,7 +20,7 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.border.TitledBorder
 
-class SyncManagementPanel(private val parent: SyncManagementScreen): JPanel(), ActionListener
+class SyncManagementPanel: JPanel(), ActionListener
 {
     private val btnPerformSync = JButton("Perform Sync")
     private val panelMainOptions = JPanel()
@@ -67,8 +67,6 @@ class SyncManagementPanel(private val parent: SyncManagementScreen): JPanel(), A
             btnPush -> pushPressed()
             btnPull -> pullPressed()
         }
-
-        ScreenCache.switch<SyncManagementScreen>()
     }
 
     private fun pushPressed()

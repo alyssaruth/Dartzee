@@ -6,6 +6,7 @@ import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
 import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
+import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
 
@@ -47,6 +48,7 @@ fun getModifiedGameCount(): Int
 fun resetRemote()
 {
     SyncAuditEntity().deleteAll()
+    ScreenCache.get<SyncManagementScreen>().initialise()
 }
 
 fun validateSyncAction(): Boolean
