@@ -2,7 +2,6 @@ package dartzee.screen
 
 import dartzee.core.bean.CheatBar
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.screen.sync.SyncSummaryButton
 
 object ScreenCache
 {

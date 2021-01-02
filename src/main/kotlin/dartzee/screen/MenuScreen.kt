@@ -7,8 +7,6 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.screen.sync.SyncSummaryButton
-import dartzee.sync.SyncSummary
 import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
