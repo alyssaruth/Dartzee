@@ -192,14 +192,4 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
             retrieved.localId shouldBe 3
         }
     }
-
-    @Test
-    fun `Should refresh the sync summary when a game is saved`()
-    {
-        shouldUpdateSyncSummary {
-            val g = GameEntity()
-            g.assignRowId()
-            g.saveToDatabase()
-        }
-    }
 }

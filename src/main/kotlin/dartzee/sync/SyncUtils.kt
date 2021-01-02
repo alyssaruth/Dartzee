@@ -24,15 +24,8 @@ data class SyncConfig(val mode: SyncMode, val remoteName: String)
 
 data class LastSyncData(val remoteName: String, val lastSynced: Timestamp)
 data class SyncSummary(val remoteName: String, val lastSynced: String, val pendingGames: String)
-fun refreshSyncSummary()
-{
-    val version = mainDatabase.getDatabaseVersion() ?: return
-    if (version >= 16)
-    {
-        val syncSummary = retrieveSyncSummary()
-        ScreenCache.get<MenuScreen>().refreshSummary(syncSummary)
-    }
-}
+
+
 private fun retrieveSyncSummary(): SyncSummary
 {
     val lastSyncData = SyncAuditEntity.getLastSyncData(mainDatabase) ?: return SyncSummary("Unset", "-", "-")
@@ -54,7 +47,6 @@ fun getModifiedGameCount(): Int
 fun resetRemote()
 {
     SyncAuditEntity().deleteAll()
-    refreshSyncSummary()
 }
 
 fun validateSyncAction(): Boolean

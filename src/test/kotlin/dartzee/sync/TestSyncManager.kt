@@ -162,22 +162,6 @@ class TestSyncManager: AbstractTest()
     }
 
     @Test
-    fun `Should update sync summary regardless of an error occurring`()
-    {
-        shouldUpdateSyncSummary {
-            val exception = IOException("Boom.")
-            val dbStore = mockk<IRemoteDatabaseStore>()
-            every { dbStore.fetchDatabase(any()) } throws exception
-
-            val manager = SyncManager(dbStore)
-            val t = manager.doSync(REMOTE_NAME)
-            t.join()
-
-            errorLogged() shouldBe true
-        }
-    }
-
-    @Test
     fun `Should successfully sync data between remote and local db, pushing up the result and swapping in locally`()
     {
         usingDbWithTestFile { remoteDb ->

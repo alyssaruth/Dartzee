@@ -14,18 +14,6 @@ import java.io.File
 
 const val REMOTE_NAME = "Goomba"
 
-fun shouldUpdateSyncSummary(testFn: () -> Unit)
-{
-    val menuScreen = mockk<MenuScreen>(relaxed = true)
-    ScreenCache.hmClassToScreen[MenuScreen::class.java] = menuScreen
-
-    mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
-
-    testFn()
-
-    verify { menuScreen.refreshSummary(any()) }
-}
-
 fun syncDirectoryShouldNotExist()
 {
     File(SYNC_DIR).shouldNotExist()

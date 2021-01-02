@@ -43,7 +43,6 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         {
             tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
-            refreshSyncSummary()
         }
     }
 
@@ -71,7 +70,6 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         {
             tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
-            refreshSyncSummary()
         }
     }
 
@@ -95,7 +93,6 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         {
             tidyUpAllSyncDirs()
             SyncProgressDialog.dispose()
-            refreshSyncSummary()
         }
     }
 

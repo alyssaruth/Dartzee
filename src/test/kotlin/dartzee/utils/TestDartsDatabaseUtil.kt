@@ -70,14 +70,6 @@ class TestDartsDatabaseUtil: AbstractTest()
     }
 
     @Test
-    fun `Should update sync summary`()
-    {
-        shouldUpdateSyncSummary {
-            DartsDatabaseUtil.initialiseDatabase(mainDatabase)
-        }
-    }
-
-    @Test
     fun `Should not back up any files if file selection cancelled`()
     {
         dialogFactory.directoryToSelect = null
