@@ -4,6 +4,7 @@ import com.github.alexburlton.swingtest.flushEdt
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
+import dartzee.helper.shouldUpdateSyncScreen
 import dartzee.helper.syncDirectoryShouldNotExist
 import dartzee.logging.CODE_PUSH_ERROR
 import dartzee.logging.Severity
@@ -59,5 +60,21 @@ class TestSyncManagerPush: AbstractTest()
         lastSyncData.remoteName shouldBe REMOTE_NAME
 
         syncDirectoryShouldNotExist()
+    }
+
+    @Test
+    fun `Should update sync screen regardless of an error occurring`()
+    {
+        shouldUpdateSyncScreen {
+            val exception = IOException("Boom.")
+            val dbStore = mockk<IRemoteDatabaseStore>()
+            every { dbStore.pushDatabase(any(), any()) } throws exception
+
+            val manager = SyncManager(dbStore)
+            val t = manager.doPush(REMOTE_NAME)
+            t.join()
+
+            errorLogged() shouldBe true
+        }
     }
 }

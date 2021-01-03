@@ -1,18 +1,26 @@
 package dartzee.helper
 
 import dartzee.db.SyncAuditEntity
-import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
+import dartzee.screen.sync.SyncManagementScreen
 import dartzee.sync.SYNC_DIR
-import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.file.shouldNotExist
 import io.mockk.mockk
 import io.mockk.verify
 import java.io.File
 
 const val REMOTE_NAME = "Goomba"
+
+fun shouldUpdateSyncScreen(testFn: () -> Unit)
+{
+    val menuScreen = mockk<SyncManagementScreen>(relaxed = true)
+    ScreenCache.hmClassToScreen[SyncManagementScreen::class.java] = menuScreen
+
+    testFn()
+
+    verify { menuScreen.initialise() }
+}
 
 fun syncDirectoryShouldNotExist()
 {

@@ -184,7 +184,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return database.executeUpdate(sql)
     }
 
-    open fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
+    fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
     {
         this.dtLastUpdate = dtLastUpdate
 

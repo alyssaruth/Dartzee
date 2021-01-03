@@ -102,4 +102,20 @@ class TestSyncManagerPull: AbstractTest()
             File("$databaseDirectory/Darts/SomeFile.txt").shouldExist()
         }
     }
+
+    @Test
+    fun `Should update sync screen regardless of an error occurring`()
+    {
+        shouldUpdateSyncScreen {
+            val exception = IOException("Boom.")
+            val dbStore = mockk<IRemoteDatabaseStore>()
+            every { dbStore.fetchDatabase(any()) } throws exception
+
+            val manager = SyncManager(dbStore)
+            val t = manager.doPull(REMOTE_NAME)
+            t.join()
+
+            errorLogged() shouldBe true
+        }
+    }
 }

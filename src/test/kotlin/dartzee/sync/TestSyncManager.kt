@@ -23,7 +23,6 @@ import java.io.File
 import java.io.IOException
 import java.net.SocketException
 import java.sql.Timestamp
-import kotlin.ConcurrentModificationException
 
 class TestSyncManager: AbstractTest()
 {
@@ -158,6 +157,22 @@ class TestSyncManager: AbstractTest()
 
             // Open a test connection so the tidy-up doesn't freak out about the db already being shut down
             remoteDb.testConnection()
+        }
+    }
+
+    @Test
+    fun `Should update sync screen regardless of an error occurring`()
+    {
+        shouldUpdateSyncScreen {
+            val exception = IOException("Boom.")
+            val dbStore = mockk<IRemoteDatabaseStore>()
+            every { dbStore.fetchDatabase(any()) } throws exception
+
+            val manager = SyncManager(dbStore)
+            val t = manager.doSync(REMOTE_NAME)
+            t.join()
+
+            errorLogged() shouldBe true
         }
     }
 

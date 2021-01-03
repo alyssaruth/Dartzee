@@ -1,10 +1,7 @@
 package dartzee.sync
 
 import dartzee.db.SyncAuditEntity
-import dartzee.helper.AbstractTest
-import dartzee.helper.getCountFromTable
-import dartzee.helper.insertGame
-import dartzee.helper.makeSyncAudit
+import dartzee.helper.*
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -48,14 +45,16 @@ class TestSyncUtils: AbstractTest()
     }
 
     @Test
-    fun `Should delete all sync audits`()
+    fun `Should delete all sync audits and refresh sync screen`()
     {
-        mainDatabase.updateDatabaseVersion(16)
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(500))
+        shouldUpdateSyncScreen {
+            mainDatabase.updateDatabaseVersion(16)
+            makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
+            makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(500))
 
-        resetRemote()
+            resetRemote()
 
-        getCountFromTable("SyncAudit") shouldBe 0
+            getCountFromTable("SyncAudit") shouldBe 0
+        }
     }
 }
