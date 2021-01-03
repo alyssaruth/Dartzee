@@ -104,9 +104,9 @@ class TestSyncManagerPull: AbstractTest()
     }
 
     @Test
-    fun `Should update sync summary regardless of an error occurring`()
+    fun `Should update sync screen regardless of an error occurring`()
     {
-        shouldUpdateSyncSummary {
+        shouldUpdateSyncScreen {
             val exception = IOException("Boom.")
             val dbStore = mockk<IRemoteDatabaseStore>()
             every { dbStore.fetchDatabase(any()) } throws exception

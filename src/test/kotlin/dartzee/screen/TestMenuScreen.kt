@@ -8,7 +8,6 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.screen.sync.SyncSummaryButton
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
@@ -19,7 +18,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to Sync Management screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<SyncSummaryButton>()
+        scrn.clickChild<JButton>("Sync Setup")
         ScreenCache.currentScreen().shouldBeInstanceOf<SyncManagementScreen>()
     }
 

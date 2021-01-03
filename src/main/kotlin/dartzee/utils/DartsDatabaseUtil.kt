@@ -6,7 +6,6 @@ import dartzee.core.util.FileUtil
 import dartzee.db.*
 import dartzee.logging.*
 import dartzee.screen.ScreenCache
-import dartzee.sync.refreshSyncSummary
 import dartzee.utils.InjectedThings.connectionPoolSize
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
@@ -64,8 +63,6 @@ object DartsDatabaseUtil {
 
         val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
         migrateDatabase(migrator, database)
-
-        refreshSyncSummary()
     }
 
     private fun initialiseDerby()

@@ -1,16 +1,13 @@
 package dartzee.sync
 
-import dartzee.core.helper.verifyNotCalled
-import dartzee.core.util.formatTimestamp
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.*
-import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
-import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
@@ -27,58 +24,6 @@ class TestSyncUtils: AbstractTest()
     {
         SyncAuditEntity.insertSyncAudit(mainDatabase, "foobar")
         getRemoteName() shouldBe "foobar"
-    }
-
-    @Test
-    fun `Should not update Sync Summary if DB version is too old`()
-    {
-        val menuScreen = mockMenuScreen()
-        mainDatabase.updateDatabaseVersion(15)
-
-        refreshSyncSummary()
-
-        verifyNotCalled { menuScreen.refreshSummary(any()) }
-    }
-
-    @Test
-    fun `Should refresh with blank sync summary if never synced before`()
-    {
-        val menuScreen = mockMenuScreen()
-        mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
-
-        refreshSyncSummary()
-
-        verify { menuScreen.refreshSummary(SyncSummary("Unset", "-", "-")) }
-    }
-
-    @Test
-    fun `Should refresh with correct data if sync has occurred`()
-    {
-        val menuScreen = mockMenuScreen()
-        mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
-
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
-
-        refreshSyncSummary()
-
-        verify { menuScreen.refreshSummary(SyncSummary(REMOTE_NAME, Timestamp(200).formatTimestamp(), "0"))}
-    }
-
-    @Test
-    fun `Should refresh with correct game count if sync has occurred`()
-    {
-        val menuScreen = mockMenuScreen()
-        mainDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION)
-
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(2000))
-
-        insertGame(dtLastUpdate = Timestamp(1500))
-        insertGame(dtLastUpdate = Timestamp(2500))
-        insertGame(dtLastUpdate = Timestamp(5000))
-
-        refreshSyncSummary()
-
-        verify { menuScreen.refreshSummary(SyncSummary(REMOTE_NAME, Timestamp(200).formatTimestamp(), "2"))}
     }
 
     @Test
@@ -104,23 +49,32 @@ class TestSyncUtils: AbstractTest()
     }
 
     @Test
-    fun `Should delete all sync audits and update summary`()
+    fun `Should delete all sync audits and refresh sync screen`()
     {
-        val menuScreen = mockMenuScreen()
-        mainDatabase.updateDatabaseVersion(16)
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
-        makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(500))
+        shouldUpdateSyncScreen {
+            mainDatabase.updateDatabaseVersion(16)
+            makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
+            makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(500))
 
-        resetRemote()
+            resetRemote()
 
-        getCountFromTable("SyncAudit") shouldBe 0
-        verify { menuScreen.refreshSummary(SyncSummary("Unset", "-", "-")) }
+            getCountFromTable("SyncAudit") shouldBe 0
+        }
     }
 
-    private fun mockMenuScreen(): MenuScreen
+    @Test
+    fun `Should allow sync action when no open games`()
     {
-        val menuScreen = mockk<MenuScreen>(relaxed = true)
-        ScreenCache.hmClassToScreen[MenuScreen::class.java] = menuScreen
-        return menuScreen
+        validateSyncAction() shouldBe true
+        dialogFactory.errorsShown.shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should not allow sync action if there are open games`()
+    {
+        ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
+
+        validateSyncAction() shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
     }
 }

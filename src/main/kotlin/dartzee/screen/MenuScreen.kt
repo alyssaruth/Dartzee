@@ -7,8 +7,6 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.screen.sync.SyncSummaryButton
-import dartzee.sync.SyncSummary
 import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
@@ -28,7 +26,7 @@ class MenuScreen : EmbeddedScreen()
     private val btnAbout = JButton("About...")
     private val btnDartzeeTemplates = JButton("Dartzee")
     private val btnUtilities = JButton("Utilities")
-    private val btnSyncSummary = SyncSummaryButton()
+    private val btnSyncSummary = JButton("Sync Setup")
     private val btnGameReport = JButton("Game Report")
 
     private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
@@ -60,7 +58,8 @@ class MenuScreen : EmbeddedScreen()
         btnUtilities.font = buttonFont
         btnUtilities.setBounds(590, 340, 150, 50)
         panel.add(btnUtilities)
-        btnSyncSummary.setBounds(200, 465, 400, 125)
+        btnSyncSummary.font = buttonFont
+        btnSyncSummary.setBounds(325, 465, 150, 50)
         panel.add(btnSyncSummary)
         btnGameReport.font = buttonFont
         btnGameReport.setBounds(60, 340, 150, 50)
@@ -80,11 +79,6 @@ class MenuScreen : EmbeddedScreen()
         val lbl = JLabel(img)
         lbl.setBounds(200, 65, dartboardSize, dartboardSize)
         return lbl
-    }
-
-    fun refreshSummary(syncSummary: SyncSummary)
-    {
-        btnSyncSummary.refreshSummary(syncSummary)
     }
 
     override fun getScreenName() = "Menu"

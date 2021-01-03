@@ -5,6 +5,8 @@ import dartzee.core.util.runInOtherThread
 import dartzee.db.*
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
+import dartzee.screen.ScreenCache
+import dartzee.screen.sync.SyncManagementScreen
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
@@ -43,7 +45,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         {
             tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
-            refreshSyncSummary()
+            ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
 
@@ -71,7 +73,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         {
             tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
-            refreshSyncSummary()
+            ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
 
@@ -95,7 +97,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         {
             tidyUpAllSyncDirs()
             SyncProgressDialog.dispose()
-            refreshSyncSummary()
+            ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
 

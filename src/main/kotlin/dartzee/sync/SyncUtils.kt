@@ -1,10 +1,12 @@
 package dartzee.sync
 
+import dartzee.core.util.DialogUtil
 import dartzee.core.util.formatTimestamp
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
 import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
+import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
 
@@ -23,15 +25,8 @@ data class SyncConfig(val mode: SyncMode, val remoteName: String)
 
 data class LastSyncData(val remoteName: String, val lastSynced: Timestamp)
 data class SyncSummary(val remoteName: String, val lastSynced: String, val pendingGames: String)
-fun refreshSyncSummary()
-{
-    val version = mainDatabase.getDatabaseVersion() ?: return
-    if (version >= 16)
-    {
-        val syncSummary = retrieveSyncSummary()
-        ScreenCache.get<MenuScreen>().refreshSummary(syncSummary)
-    }
-}
+
+
 private fun retrieveSyncSummary(): SyncSummary
 {
     val lastSyncData = SyncAuditEntity.getLastSyncData(mainDatabase) ?: return SyncSummary("Unset", "-", "-")
@@ -53,5 +48,17 @@ fun getModifiedGameCount(): Int
 fun resetRemote()
 {
     SyncAuditEntity().deleteAll()
-    refreshSyncSummary()
+    ScreenCache.get<SyncManagementScreen>().initialise()
+}
+
+fun validateSyncAction(): Boolean
+{
+    val openScreens = ScreenCache.getDartsGameScreens()
+    if (openScreens.isNotEmpty())
+    {
+        DialogUtil.showError("You must close all open games before performing this action.")
+        return false
+    }
+
+    return true
 }
