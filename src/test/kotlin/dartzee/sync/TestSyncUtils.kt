@@ -2,8 +2,12 @@ package dartzee.sync
 
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.*
+import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
+import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
@@ -56,5 +60,21 @@ class TestSyncUtils: AbstractTest()
 
             getCountFromTable("SyncAudit") shouldBe 0
         }
+    }
+
+    @Test
+    fun `Should allow sync action when no open games`()
+    {
+        validateSyncAction() shouldBe true
+        dialogFactory.errorsShown.shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should not allow sync action if there are open games`()
+    {
+        ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
+
+        validateSyncAction() shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
     }
 }
