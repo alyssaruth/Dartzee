@@ -6,6 +6,7 @@ import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil
 import dartzee.core.util.TableUtil.SimpleRenderer
+import dartzee.core.util.append
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.aiSetupRuleFactory
 import java.awt.BorderLayout
@@ -15,8 +16,6 @@ import javax.swing.JPanel
 import javax.swing.JTextPane
 import javax.swing.SwingConstants
 import javax.swing.text.DefaultStyledDocument
-import javax.swing.text.SimpleAttributeSet
-import javax.swing.text.StyleConstants
 
 /**
  * Dialog to specify setup darts that override defaults. Some examples:
@@ -172,16 +171,6 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
 
             hm[score] = drt
         }
-    }
-
-    private fun JTextPane.append(str: String, bold: Boolean = false, italic: Boolean = false)
-    {
-        val style = SimpleAttributeSet()
-        StyleConstants.setBold(style, bold)
-        StyleConstants.setItalic(style, italic)
-
-        val length = document.length
-        document.insertString(length, str, style)
     }
 
     companion object

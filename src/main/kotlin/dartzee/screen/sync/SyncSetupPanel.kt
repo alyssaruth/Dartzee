@@ -1,5 +1,6 @@
 package dartzee.screen.sync
 
+import dartzee.core.util.setFontSize
 import dartzee.sync.SyncMode
 import dartzee.sync.validateSyncAction
 import dartzee.utils.InjectedThings.syncConfigurer
@@ -19,12 +20,20 @@ class SyncSetupPanel: JPanel(), ActionListener
     private val syncPanelThree = JLabel()
     private val syncPanelFour = JLabel()
 
+    private val titleLabel = JLabel("Sync Setup")
+    private val descriptionLabel = JLabel("Database syncing allows you to share your database across multiple devices")
+    private val infoPanel = JPanel()
     private val setupPanel = JPanel()
     private val btnSetUp = JButton("Set Up")
 
     init
     {
         layout = BorderLayout(0, 0)
+
+        add(infoPanel, BorderLayout.NORTH)
+        infoPanel.add(titleLabel)
+        titleLabel.setFontSize(18)
+
         add(instructionsPanel, BorderLayout.CENTER)
 
         syncPanelOne.preferredSize = Dimension(234, 148)

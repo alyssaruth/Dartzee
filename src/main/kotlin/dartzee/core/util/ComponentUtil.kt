@@ -7,6 +7,8 @@ import java.awt.Window
 import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.event.ChangeListener
+import javax.swing.text.SimpleAttributeSet
+import javax.swing.text.StyleConstants
 
 /**
  * Recurses through all child components, returning an ArrayList of all children of the appropriate type
@@ -114,4 +116,14 @@ fun Container.getParentWindow(): Window?
 fun Component.setFontSize(size: Int)
 {
     font = Font(font.name, font.style, size)
+}
+
+fun JTextPane.append(str: String, bold: Boolean = false, italic: Boolean = false)
+{
+    val style = SimpleAttributeSet()
+    StyleConstants.setBold(style, bold)
+    StyleConstants.setItalic(style, italic)
+
+    val length = document.length
+    document.insertString(length, str, style)
 }
