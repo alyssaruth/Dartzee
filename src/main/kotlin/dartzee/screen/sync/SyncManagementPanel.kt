@@ -2,7 +2,6 @@ package dartzee.screen.sync
 
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.screen.ScreenCache
 import dartzee.sync.getRemoteName
 import dartzee.sync.resetRemote
 import dartzee.sync.validateSyncAction
@@ -14,10 +13,7 @@ import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.AbstractButton
-import javax.swing.JButton
-import javax.swing.JOptionPane
-import javax.swing.JPanel
+import javax.swing.*
 import javax.swing.border.TitledBorder
 
 class SyncManagementPanel: JPanel(), ActionListener
@@ -33,6 +29,11 @@ class SyncManagementPanel: JPanel(), ActionListener
     {
         layout = BorderLayout(0, 0)
         add(panelMainOptions, BorderLayout.CENTER)
+        btnPerformSync.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
+        btnReset.icon = ImageIcon(javaClass.getResource("/buttons/reset.png"))
+        btnPull.icon = ImageIcon(javaClass.getResource("/buttons/pull.png"))
+        btnPush.icon = ImageIcon(javaClass.getResource("/buttons/push.png"))
+
         val panelDbName = JPanel()
         val panelSetUpAndSync = JPanel()
         panelSetUpAndSync.add(btnPerformSync)
