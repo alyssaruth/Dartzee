@@ -6,6 +6,7 @@ import dartzee.achievements.getAchievementsForGameType
 import dartzee.achievements.getPlayerAchievementScore
 import dartzee.bean.AchievementMedal
 import dartzee.core.bean.WrapLayout
+import dartzee.core.util.setMargins
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -14,7 +15,6 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.player.PlayerManagementScreen
 import java.awt.*
 import javax.swing.*
-import javax.swing.border.EmptyBorder
 
 class PlayerAchievementsScreen : EmbeddedScreen()
 {
@@ -52,7 +52,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         panelAchievementDesc.add(lblAchievementDesc, BorderLayout.CENTER)
         panelAchievementDesc.add(lblAchievementExtraDetails, BorderLayout.SOUTH)
 
-        panelAchievementDesc.border = EmptyBorder(5, 5, 5, 5)
+        panelAchievementDesc.setMargins(5)
     }
 
     override fun getScreenName() : String

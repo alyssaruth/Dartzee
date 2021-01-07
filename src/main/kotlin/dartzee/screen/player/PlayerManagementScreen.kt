@@ -3,6 +3,7 @@ package dartzee.screen.player
 import dartzee.bean.getSelectedPlayer
 import dartzee.bean.initPlayerTableModel
 import dartzee.core.bean.ScrollTable
+import dartzee.core.util.setMargins
 import dartzee.db.PlayerEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.utils.InjectedThings
@@ -41,7 +42,7 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
         panelPlayers.layout = BorderLayout(0, 0)
 
         panelPlayers.add(tablePlayers, BorderLayout.CENTER)
-        panelNorth.border = EmptyBorder(5, 5, 5, 5)
+        panelNorth.setMargins(5)
 
         sideBar.add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = FlowLayout(FlowLayout.LEFT, 5, 5)

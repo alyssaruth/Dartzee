@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.core.util.ceilDiv
+import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
@@ -14,7 +15,6 @@ import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.*
-import javax.swing.border.EmptyBorder
 
 class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
@@ -55,7 +55,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         toggleButtonPending.addActionListener(this)
         toggleButtonComplete.addActionListener(this)
 
-        toggleButtonPanel.border = EmptyBorder(5, 5, 5, 5)
+        toggleButtonPanel.setMargins(5)
         toggleButtonPending.preferredSize = Dimension(50, 50)
         toggleButtonPending.icon = ImageIcon(javaClass.getResource("/buttons/inProgress.png"))
         toggleButtonComplete.preferredSize = Dimension(50, 50)

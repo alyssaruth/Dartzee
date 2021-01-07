@@ -1,6 +1,7 @@
 package dartzee.logging
 
 import dartzee.core.bean.WrapLayout
+import dartzee.core.util.setMargins
 import dartzee.screen.FocusableWindow
 import dartzee.utils.DartsDatabaseUtil
 import java.awt.BorderLayout
@@ -10,7 +11,6 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextPane
-import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
 import javax.swing.border.MatteBorder
 import javax.swing.text.BadLocationException
@@ -104,7 +104,7 @@ class LoggingConsole: FocusableWindow(), ILogDestination
     {
         val label = JLabel("${field.key}: ${field.value}")
         label.foreground = Color.GREEN
-        label.border = EmptyBorder(5, 5, 5, 5)
+        label.setMargins(5)
 
         val panel = JPanel()
         panel.border = LineBorder(Color.GREEN)

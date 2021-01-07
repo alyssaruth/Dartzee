@@ -2,12 +2,13 @@ package dartzee.screen.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.core.util.setFontSize
+import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
 import dartzee.utils.DartsColour
-import dartzee.utils.InjectedThings.dartzeeCalculator
 import dartzee.utils.InjectedThings.dartboardSize
+import dartzee.utils.InjectedThings.dartzeeCalculator
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -44,7 +45,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         lblCombinations.horizontalAlignment = JLabel.CENTER
         lblCombinations.border = EmptyBorder(0, 0, 5, 0)
 
-        panelNorth.border = EmptyBorder(4, 4, 4, 4)
+        panelNorth.setMargins(4)
         panelNorth.layout = BorderLayout(0, 0)
         panelNorth.add(tfResult, BorderLayout.CENTER)
         panelNorth.add(btnReset, BorderLayout.EAST)
