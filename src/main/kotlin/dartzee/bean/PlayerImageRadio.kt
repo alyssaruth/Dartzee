@@ -1,5 +1,6 @@
 package dartzee.bean
 
+import dartzee.core.util.setMargins
 import dartzee.db.PlayerImageEntity
 import java.awt.Color
 import java.awt.event.FocusEvent
@@ -7,7 +8,6 @@ import java.awt.event.FocusListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.*
-import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
@@ -23,7 +23,7 @@ class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, Mouse
 
     init
     {
-        border = EmptyBorder(1, 1, 1, 1)
+        setMargins(1)
         lblImg.icon = pi.asImageIcon()
         playerImageId = pi.rowId
 
@@ -57,7 +57,7 @@ class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, Mouse
         }
         else
         {
-            border = EmptyBorder(1, 1, 1, 1)
+            setMargins(1)
         }
     }
 

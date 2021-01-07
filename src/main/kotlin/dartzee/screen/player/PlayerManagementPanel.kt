@@ -6,6 +6,7 @@ import dartzee.core.bean.WrapLayout
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.getSqlDateNow
+import dartzee.core.util.setMargins
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -57,7 +58,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
 
         panelNorth.layout = BorderLayout(0, 0)
         val panelName = JPanel()
-        panelName.border = EmptyBorder(10, 10, 10, 10)
+        panelName.setMargins(10)
         panelName.layout = BorderLayout(0, 0)
         panelName.add(lblPlayerName)
         panelNorth.add(panelName, BorderLayout.NORTH)

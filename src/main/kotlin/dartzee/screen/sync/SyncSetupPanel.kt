@@ -1,6 +1,7 @@
 package dartzee.screen.sync
 
 import dartzee.core.util.setFontSize
+import dartzee.core.util.setMargins
 import dartzee.sync.SyncMode
 import dartzee.sync.validateSyncAction
 import dartzee.utils.InjectedThings.syncConfigurer
@@ -21,18 +22,27 @@ class SyncSetupPanel: JPanel(), ActionListener
     private val syncPanelFour = JLabel()
 
     private val titleLabel = JLabel("Sync Setup")
-    private val descriptionLabel = JLabel("Database syncing allows you to share your database across multiple devices")
+    private val syncIntroPanel = JLabel()
     private val infoPanel = JPanel()
     private val setupPanel = JPanel()
-    private val btnSetUp = JButton("Set Up")
+    private val btnSetUp = JButton("Get Started > ")
 
     init
     {
         layout = BorderLayout(0, 0)
+        infoPanel.layout = BorderLayout(0, 0)
+
+        titleLabel.setFontSize(22)
+        titleLabel.horizontalAlignment = SwingConstants.CENTER
+        titleLabel.setMargins(5)
 
         add(infoPanel, BorderLayout.NORTH)
-        infoPanel.add(titleLabel)
-        titleLabel.setFontSize(18)
+        infoPanel.add(titleLabel, BorderLayout.NORTH)
+        infoPanel.add(syncIntroPanel, BorderLayout.CENTER)
+        syncIntroPanel.preferredSize = Dimension(538, 120)
+        syncIntroPanel.size = Dimension(538, 110)
+        syncIntroPanel.icon = ImageIcon(javaClass.getResource("/sync/sync-intro.png"))
+        syncIntroPanel.horizontalAlignment = SwingConstants.CENTER
 
         add(instructionsPanel, BorderLayout.CENTER)
 
@@ -61,7 +71,7 @@ class SyncSetupPanel: JPanel(), ActionListener
         setupPanel.add(btnSetUp)
 
         btnSetUp.font = Font("Tahoma", Font.PLAIN, 18)
-        btnSetUp.preferredSize = Dimension(200, 100)
+        btnSetUp.preferredSize = Dimension(200, 75)
         btnSetUp.addActionListener(this)
     }
 
