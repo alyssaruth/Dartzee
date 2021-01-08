@@ -10,8 +10,6 @@ import java.sql.Timestamp
 
 const val SYNC_BUCKET_NAME = "dartzee-databases"
 
-fun getRemoteName() = SyncAuditEntity.getLastSyncData(mainDatabase)?.remoteName ?: ""
-
 enum class SyncMode
 {
     CREATE_REMOTE,

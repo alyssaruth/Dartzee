@@ -12,6 +12,11 @@ class InMemoryRemoteDatabaseStore(vararg initialEntries: Pair<String, Database>)
         hmNameToDatabase.putAll(initialEntries)
     }
 
+    fun clear()
+    {
+        hmNameToDatabase.clear()
+    }
+
     override fun databaseExists(remoteName: String) = hmNameToDatabase.containsKey(remoteName)
 
     override fun fetchDatabase(remoteName: String) = FetchDatabaseResult(hmNameToDatabase.getValue(remoteName), Date())

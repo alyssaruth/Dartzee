@@ -1,6 +1,5 @@
 package dartzee.sync
 
-import dartzee.db.SyncAuditEntity
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
@@ -13,19 +12,6 @@ import java.sql.Timestamp
 
 class TestSyncUtils: AbstractTest()
 {
-    @Test
-    fun `Should return an empty string if no remote db name set`()
-    {
-        getRemoteName() shouldBe ""
-    }
-
-    @Test
-    fun `Should be able to save and retrieve the remote db name`()
-    {
-        SyncAuditEntity.insertSyncAudit(mainDatabase, "foobar")
-        getRemoteName() shouldBe "foobar"
-    }
-
     @Test
     fun `Should return the count of games modified since last sync`()
     {

@@ -4,7 +4,10 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.formatTimestamp
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.setFontSize
-import dartzee.sync.*
+import dartzee.sync.LastSyncData
+import dartzee.sync.getModifiedGameCount
+import dartzee.sync.resetRemote
+import dartzee.sync.validateSyncAction
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import net.miginfocom.swing.MigLayout
@@ -22,6 +25,8 @@ import javax.swing.border.TitledBorder
 
 class SyncManagementPanel: JPanel(), ActionListener
 {
+    private var remoteName = ""
+
     private val btnPerformSync = JButton("Perform Sync")
     private val panelSyncStatus = JPanel()
     private val lblSharedDatabaseName = JLabel("")
@@ -84,7 +89,9 @@ class SyncManagementPanel: JPanel(), ActionListener
     {
         val pendingGameCount = getModifiedGameCount()
 
-        lblSharedDatabaseName.text = "<html><b>Shared Database:</b> ${syncData.remoteName}</html>"
+        remoteName = syncData.remoteName
+
+        lblSharedDatabaseName.text = "<html><b>Shared Database:</b> $remoteName</html>"
         lblLastSynced.text = "<html><font color=\"${getColour(syncData.lastSynced)}\"><b>Last Synced:</b> ${syncData.lastSynced.formatTimestamp()}</font></html>"
         lblPendingGames.text = "<html><font color=\"${getColour(pendingGameCount)}\"><b>Pending Games:</b> $pendingGameCount</font></html>"
     }
@@ -126,7 +133,6 @@ class SyncManagementPanel: JPanel(), ActionListener
             return
         }
 
-        val remoteName = getRemoteName()
         if (InjectedThings.remoteDatabaseStore.databaseExists(remoteName))
         {
             val q = "Are you sure you want to push to $remoteName? \n\nThis will overwrite any data that hasn't been synced to this device."
@@ -147,7 +153,6 @@ class SyncManagementPanel: JPanel(), ActionListener
             return
         }
 
-        val remoteName = getRemoteName()
         val q = "Are you sure you want to pull from $remoteName? \n\nThis will overwrite any local data that hasn't been synced to $remoteName from this device."
         val ans = DialogUtil.showQuestion(q)
         if (ans != JOptionPane.YES_OPTION)
@@ -165,12 +170,11 @@ class SyncManagementPanel: JPanel(), ActionListener
             return
         }
 
-        InjectedThings.syncManager.doSync(getRemoteName())
+        InjectedThings.syncManager.doSync(remoteName)
     }
 
     private fun resetPressed()
     {
-        val remoteName = getRemoteName()
         val q = "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $remoteName, requiring you to set it up again."
         val answer = DialogUtil.showQuestion(q)
         if (answer == JOptionPane.YES_OPTION)

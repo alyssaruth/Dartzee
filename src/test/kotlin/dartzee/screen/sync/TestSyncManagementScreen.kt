@@ -4,10 +4,13 @@ import com.github.alexburlton.swingtest.findChild
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
+import dartzee.helper.REMOTE_NAME_2
+import dartzee.sync.resetRemote
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.matchers.types.shouldNotBeNull
 import org.junit.jupiter.api.Test
+import javax.swing.JLabel
 
 class TestSyncManagementScreen: AbstractTest()
 {
@@ -50,5 +53,19 @@ class TestSyncManagementScreen: AbstractTest()
         scrn.initialise()
         scrn.findChild<SyncManagementPanel>().shouldBeNull()
         scrn.findChild<SyncSetupPanel>().shouldNotBeNull()
+    }
+
+    @Test
+    fun `Should update sync management panel when initialised`()
+    {
+        SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
+        val scrn = SyncManagementScreen()
+        scrn.initialise()
+        scrn.findChild<JLabel> { it.text.contains(REMOTE_NAME) }.shouldNotBeNull()
+
+        resetRemote()
+        SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME_2)
+        scrn.initialise()
+        scrn.findChild<JLabel> { it.text.contains(REMOTE_NAME_2) }.shouldNotBeNull()
     }
 }
