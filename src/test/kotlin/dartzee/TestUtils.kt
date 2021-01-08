@@ -14,7 +14,6 @@ import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.screen.Dartboard
-import dartzee.utils.DurationTimer
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -29,7 +28,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.swing.Icon
-import javax.swing.JCheckBox
 import javax.swing.JComponent
 import javax.swing.table.DefaultTableModel
 
@@ -50,6 +48,7 @@ val singleEighteen = DartboardSegment(SegmentType.OUTER_SINGLE, 18)
 val singleTen = DartboardSegment(SegmentType.INNER_SINGLE, 10)
 val singleFive = DartboardSegment(SegmentType.INNER_SINGLE, 5)
 
+val PAST_TIME: Instant = Instant.parse("2020-04-12T11:04:00.00Z")
 val CURRENT_TIME: Instant = Instant.parse("2020-04-13T11:04:00.00Z")
 val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         .withLocale(Locale.UK)

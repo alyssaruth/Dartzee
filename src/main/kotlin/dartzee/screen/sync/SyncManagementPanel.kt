@@ -47,7 +47,6 @@ class SyncManagementPanel: JPanel(), ActionListener
         btnPull.icon = ImageIcon(javaClass.getResource("/buttons/pull.png"))
         btnPush.icon = ImageIcon(javaClass.getResource("/buttons/push.png"))
 
-
         panelSyncStatus.background = Color.WHITE
         panelSyncStatus.border = LineBorder(Color.BLACK, 3)
         lblSharedDatabaseName.setFontSize(14)
