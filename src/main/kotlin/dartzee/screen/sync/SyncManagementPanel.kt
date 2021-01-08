@@ -43,7 +43,7 @@ class SyncManagementPanel: JPanel(), ActionListener
         layout = BorderLayout(0, 0)
         add(panelMainOptions, BorderLayout.CENTER)
         btnPerformSync.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
-        btnReset.icon = ImageIcon(javaClass.getResource("/buttons/reset.png"))
+        btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
         btnPull.icon = ImageIcon(javaClass.getResource("/buttons/pull.png"))
         btnPush.icon = ImageIcon(javaClass.getResource("/buttons/push.png"))
 
