@@ -305,10 +305,12 @@ fun getCountFromTable(table: String, database: Database = mainDatabase): Int
 /**
  * Retrieve
  */
-fun retrieveGame() = GameEntity().retrieveEntities().first()
+fun retrieveGame() = GameEntity().retrieveEntities().maxBy { it.dtLastUpdate }!!
 fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
+
+fun retrieveParticipant(gameId: String, playerId: String) = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND PlayerId = '$playerId'").first()
 
 data class AchievementSummary(val achievementType: AchievementType, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
 fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>

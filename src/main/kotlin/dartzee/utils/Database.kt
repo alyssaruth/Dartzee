@@ -78,11 +78,11 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     fun getQualifiedDbName() =
         if (inMemory)
         {
-            "jdbc:derby:memory:Databases/$dbName"
+            "jdbc:derby:memory:$databaseDirectory/$dbName"
         }
         else
         {
-            "jdbc:derby:Databases/$dbName"
+            "jdbc:derby:$databaseDirectory/$dbName"
         }
 
     private fun getProps(): Properties

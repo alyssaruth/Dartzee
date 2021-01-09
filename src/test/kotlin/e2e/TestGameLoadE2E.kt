@@ -1,9 +1,9 @@
 package e2e
 
+import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.shouldBeVisible
 import dartzee.`object`.Dart
 import dartzee.`object`.GameLauncher
-import com.github.alexburlton.swingtest.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.game.GameType
 import dartzee.getRows
@@ -63,7 +63,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
         loserScorer.shouldBePaused()
         loserScorer.resume()
 
-        awaitCondition(10000) { retrieveParticipant().dtFinished != DateStatics.END_OF_TIME }
+        awaitCondition { retrieveParticipant().dtFinished != DateStatics.END_OF_TIME }
     }
 
     private fun verifyGameLoadedCorrectly(gameScreen: AbstractDartsGameScreen)
