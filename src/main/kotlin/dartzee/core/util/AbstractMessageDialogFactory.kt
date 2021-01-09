@@ -12,7 +12,7 @@ abstract class AbstractMessageDialogFactory
     abstract fun showOption(title: String, message: String, options: List<String>): String?
     abstract fun showLoading(text: String)
     abstract fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K?): K?
-    abstract fun dismissLoading()
+    abstract fun dismissLoading(): Boolean
     abstract fun chooseDirectory(parent: Component?): File?
 
     fun showErrorLater(text: String)
