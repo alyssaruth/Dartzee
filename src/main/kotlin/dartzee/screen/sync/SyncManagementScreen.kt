@@ -1,8 +1,9 @@
 package dartzee.screen.sync
 
+import dartzee.db.SyncAuditEntity
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
-import dartzee.sync.getRemoteName
+import dartzee.utils.InjectedThings.mainDatabase
 import java.awt.BorderLayout
 
 class SyncManagementScreen: EmbeddedScreen()
@@ -15,13 +16,14 @@ class SyncManagementScreen: EmbeddedScreen()
         remove(setupPanel)
         remove(managementPanel)
 
-        val remoteName = getRemoteName()
-        if (remoteName.isEmpty())
+        val lastSyncData = SyncAuditEntity.getLastSyncData(mainDatabase)
+        if (lastSyncData == null)
         {
             add(setupPanel, BorderLayout.CENTER)
         }
         else
         {
+            managementPanel.updateStatus(lastSyncData)
             add(managementPanel, BorderLayout.CENTER)
         }
 

@@ -11,6 +11,7 @@ import io.mockk.verify
 import java.io.File
 
 const val REMOTE_NAME = "Goomba"
+const val REMOTE_NAME_2 = "Koopa"
 
 fun shouldUpdateSyncScreen(testFn: () -> Unit)
 {
