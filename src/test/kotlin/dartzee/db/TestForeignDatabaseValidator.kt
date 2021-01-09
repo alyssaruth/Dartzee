@@ -33,9 +33,11 @@ class TestForeignDatabaseValidator: AbstractTest()
         every { remoteDatabase.getDatabaseVersion() } returns null
 
         val validator = makeValidator()
-        validator.validateAndMigrateForeignDatabase(remoteDatabase, "remote") shouldBe false
-        verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
-        dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
+        validator.validateAndMigrateForeignDatabase(remoteDatabase, "selected") shouldBe false
+
+        val log = verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
+        log.message shouldBe "Unable to ascertain selected database version (but could connect) - this is unexpected."
+        dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the selected database.")
     }
 
     @Test

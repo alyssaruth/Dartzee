@@ -55,7 +55,7 @@ class SyncE2E: AbstractRegistryTest()
     fun after()
     {
         InjectedThings.mainDatabase = Database(inMemory = true)
-        File(TEST_DB_DIRECTORY).deleteRecursively()
+        File(TEST_ROOT).deleteRecursively()
     }
 
     @Tag("e2e")

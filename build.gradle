@@ -57,7 +57,8 @@ test {
             '-Dcom.sun.management.jmxremote.port=9010',
             '-Dcom.sun.management.jmxremote.authenticate=false',
             '-Dcom.sun.management.jmxremote.ssl=false',
-            '-Djava.rmi.server.hostname=localhost'
+            '-Djava.rmi.server.hostname=localhost',
+            '-DscreenshotOs=linux'
 
     minHeapSize = "512m"
     maxHeapSize = "512m"

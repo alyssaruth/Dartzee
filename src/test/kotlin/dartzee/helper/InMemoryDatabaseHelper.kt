@@ -12,6 +12,7 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.LoggingCode
 import dartzee.utils.Database
+import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -361,7 +362,7 @@ fun Database.closeConnectionsAndDrop()
     }
     catch (sqle: SQLException)
     {
-        if (sqle.message != "Database 'memory:Databases/$dbName' dropped.")
+        if (sqle.message != "Database 'memory:$databaseDirectory/$dbName' dropped.")
         {
             logger.error(LoggingCode("dropInMemoryDatabase"), "Caught: ${sqle.message}", sqle)
         }
