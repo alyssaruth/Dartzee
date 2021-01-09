@@ -65,7 +65,8 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
     override fun showOption(title: String, message: String, options: List<String>): String?
     {
         optionsShown.add(message)
-        return optionSequence.removeAt(0)
+        val selection = optionSequence.removeAt(0)
+        return selection
     }
 
     override fun showLoading(text: String)
@@ -74,9 +75,11 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         loadingVisible = true
     }
 
-    override fun dismissLoading()
+    override fun dismissLoading(): Boolean
     {
+        val wasVisible = loadingVisible
         loadingVisible = false
+        return wasVisible
     }
 
     override fun chooseDirectory(parent: Component?) = directoryToSelect
@@ -94,5 +97,4 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         optionsShown.clear()
         directoryToSelect = null
     }
-
 }

@@ -161,8 +161,7 @@ class TestDartsDatabaseUtil: AbstractTest()
 
         DartsDatabaseUtil.restoreDatabase()
 
-        val log = verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
-        log.message shouldBe "Unable to ascertain selected database version (but could connect) - this is unexpected."
+        verifyLog(CODE_TEST_CONNECTION_ERROR, Severity.ERROR)
 
         dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the selected database.")
     }

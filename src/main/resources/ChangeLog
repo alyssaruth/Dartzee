@@ -1,3 +1,9 @@
+--------- v5.0.0 ---------
+
++ Database sync functionality, allowing a database to be shared between players in different locations
+= Upgrade tests to JUnit 5
+= 85.6% test coverage (10473 / 12231 lines covered by 1835 tests)
+
 --------- v4.6.1 ---------
 
 + Game Winner, Gambler and Didn't he do well!? achievements will now show broken down results when clicked

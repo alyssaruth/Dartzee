@@ -1,6 +1,11 @@
 package dartzee.core.util
 
+import dartzee.logging.*
+import dartzee.utils.InjectedThings
 import java.awt.Component
+import java.io.File
+import javax.swing.JOptionPane
+import javax.swing.SwingUtilities
 
 object DialogUtil
 {
@@ -11,13 +16,96 @@ object DialogUtil
         dialogFactory = implementation
     }
 
-    fun showInfo(infoText: String) = dialogFactory.showInfo(infoText)
-    fun showError(errorText: String) = dialogFactory.showError(errorText)
-    fun showErrorLater(errorText: String) = dialogFactory.showErrorLater(errorText)
-    fun showQuestion(message: String, allowCancel: Boolean = false) = dialogFactory.showQuestion(message, allowCancel)
-    fun showLoadingDialog(text: String) = dialogFactory.showLoading(text)
-    fun dismissLoadingDialog() = dialogFactory.dismissLoading()
-    fun showOption(title: String, message: String, options: List<String>) = dialogFactory.showOption(title, message, options)
-    fun <K> showInput(title: String, message: String, options: Array<K>? = null, defaultOption: K? = null) = dialogFactory.showInput(title, message, options, defaultOption)
-    fun chooseDirectory(parent: Component?) = dialogFactory.chooseDirectory(parent)
+    fun showInfo(infoText: String)
+    {
+        logDialogShown("Info", "Information", infoText)
+        dialogFactory.showInfo(infoText)
+        logDialogClosed("Info", null)
+    }
+
+    fun showError(errorText: String)
+    {
+        dismissLoadingDialog()
+
+        logDialogShown("Error", "Error", errorText)
+        dialogFactory.showError(errorText)
+        logDialogClosed("Error", null)
+    }
+
+    fun showErrorLater(errorText: String)
+    {
+        SwingUtilities.invokeLater { showError(errorText) }
+    }
+
+    fun showQuestion(message: String, allowCancel: Boolean = false): Int
+    {
+        logDialogShown("Question", "Question", message)
+        val selection = dialogFactory.showQuestion(message, allowCancel)
+        logDialogClosed("Question", selection)
+        return selection
+    }
+
+    fun showLoadingDialog(text: String)
+    {
+        logDialogShown("Loading", "", text)
+        dialogFactory.showLoading(text)
+    }
+
+    fun dismissLoadingDialog()
+    {
+        val dismissed = dialogFactory.dismissLoading()
+        if (dismissed)
+        {
+            logDialogClosed("Loading", null)
+        }
+    }
+
+    fun showOption(title: String, message: String, options: List<String>): String?
+    {
+        logDialogShown("Option", title, message)
+        val selectionStr = dialogFactory.showOption(title, message, options)
+        logDialogClosed("Option", selectionStr)
+        return selectionStr
+    }
+
+    fun <K> showInput(title: String, message: String, options: Array<K>? = null, defaultOption: K? = null): K?
+    {
+        logDialogShown("Input", title, message)
+        val selection = dialogFactory.showInput(title, message, options, defaultOption)
+        logDialogClosed("Input", selection)
+        return selection
+    }
+
+    fun chooseDirectory(parent: Component?): File?
+    {
+        logDialogShown("File selector", "", "")
+        val file = dialogFactory.chooseDirectory(parent)
+        logDialogClosed("File selector", file?.absolutePath)
+        return file
+    }
+
+
+    private fun logDialogShown(type: String, title: String, message: String)
+    {
+        InjectedThings.logger.info(CODE_DIALOG_SHOWN, "$type dialog shown: $message", KEY_DIALOG_TYPE to type, KEY_DIALOG_TITLE to title, KEY_DIALOG_MESSAGE to message)
+    }
+
+    private fun logDialogClosed(type: String, selection: Any?)
+    {
+        var message = "$type dialog closed"
+        selection?.let { message += " - selected ${translateOption(it)}" }
+
+        InjectedThings.logger.info(
+            CODE_DIALOG_CLOSED, message,
+            KEY_DIALOG_TYPE to type,
+            KEY_DIALOG_SELECTION to selection)
+    }
+    private fun translateOption(option: Any?) =
+        when (option)
+        {
+            JOptionPane.YES_OPTION -> "Yes"
+            JOptionPane.NO_OPTION -> "No"
+            JOptionPane.CANCEL_OPTION -> "Cancel"
+            else -> option
+        }
 }
