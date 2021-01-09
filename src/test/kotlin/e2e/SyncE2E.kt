@@ -114,7 +114,7 @@ class SyncE2E: AbstractRegistryTest()
     {
         dialogFactory.optionSequence.add("Sync with local data")
         mainScreen.clickChild<JButton>("Get Started > ")
-        awaitCondition { mainScreen.findChild<SyncManagementPanel>() != null }
+        awaitCondition(20000) { mainScreen.findChild<SyncManagementPanel>() != null }
     }
 
     private fun wipeGamesAndResetRemote(mainScreen: DartsApp)
