@@ -5,6 +5,7 @@ import dartzee.utils.InjectedThings
 import java.awt.Component
 import java.io.File
 import javax.swing.JOptionPane
+import javax.swing.SwingUtilities
 
 object DialogUtil
 {
@@ -31,7 +32,11 @@ object DialogUtil
         logDialogClosed("Error", null)
     }
 
-    fun showErrorLater(errorText: String) = dialogFactory.showErrorLater(errorText)
+    fun showErrorLater(errorText: String)
+    {
+        SwingUtilities.invokeLater { showError(errorText) }
+    }
+
     fun showQuestion(message: String, allowCancel: Boolean = false): Int
     {
         logDialogShown("Question", "Question", message)
