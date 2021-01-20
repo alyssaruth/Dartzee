@@ -1,8 +1,12 @@
 package dartzee.reporting
 
+import dartzee.core.util.DateStatics
 import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.core.util.getSqlString
 import dartzee.db.PlayerEntity
+import dartzee.db.SyncAuditEntity
 import dartzee.game.GameType
+import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
 import java.util.*
 
@@ -19,6 +23,7 @@ class ReportParameters
     var excludedPlayers: List<PlayerEntity> = ArrayList()
     var excludeOnlyAi: Boolean = false
     var partOfMatch = MatchFilter.BOTH
+    var pendingChanges: Boolean? = null
 
     fun getExtraWhereSql(): String
     {
@@ -75,6 +80,18 @@ class ReportParameters
         else if (partOfMatch == MatchFilter.MATCHES_ONLY)
         {
             sb.append(" AND g.DartsMatchId <> ''")
+        }
+
+        pendingChanges?.let { pendingChanges ->
+            val dtLastSynced = SyncAuditEntity.getLastSyncData(mainDatabase)?.lastSynced ?: DateStatics.START_OF_TIME
+            if (pendingChanges)
+            {
+                sb.append(" AND g.DtLastUpdate > ${dtLastSynced.getSqlString()}")
+            }
+            else
+            {
+                sb.append(" AND g.DtLastUpdate <= ${dtLastSynced.getSqlString()}")
+            }
         }
 
         val it = hmIncludedPlayerToParms.entries.iterator()

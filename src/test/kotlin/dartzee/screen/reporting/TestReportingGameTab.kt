@@ -119,6 +119,19 @@ class TestReportingGameTab: AbstractTest()
         tab.getChild<JRadioButton>("No").shouldBeDisabled()
     }
 
+    @Test
+    fun `Should toggle the sync status radio buttons correctly`()
+    {
+        val tab = ReportingGameTab()
+        tab.clickChild<JCheckBox>("Sync Status")
+        tab.getChild<JRadioButton>("Pending changes").shouldBeEnabled()
+        tab.getChild<JRadioButton>("Synced").shouldBeEnabled()
+
+        tab.clickChild<JCheckBox>("Sync Status")
+        tab.getChild<JRadioButton>("Pending changes").shouldBeDisabled()
+        tab.getChild<JRadioButton>("Synced").shouldBeDisabled()
+    }
+
     /**
      * Validation
      */
@@ -206,6 +219,24 @@ class TestReportingGameTab: AbstractTest()
         tab.clickChild<JRadioButton>("No")
         tab.populateReportParameters(rp)
         rp.partOfMatch shouldBe MatchFilter.GAMES_ONLY
+    }
+
+    @Test
+    fun `Should populate sync status correctly`()
+    {
+        val rp = ReportParameters()
+        val tab = ReportingGameTab()
+
+        tab.populateReportParameters(rp)
+        rp.pendingChanges shouldBe null
+
+        tab.clickChild<JCheckBox>("Sync Status")
+        tab.populateReportParameters(rp)
+        rp.pendingChanges shouldBe true
+
+        tab.clickChild<JRadioButton>("Synced")
+        tab.populateReportParameters(rp)
+        rp.pendingChanges shouldBe false
     }
 
     @Test

@@ -182,9 +182,10 @@ fun insertGameForReport(uuid: String = randomGuid(),
                         dtFinish: Timestamp = DateStatics.END_OF_TIME,
                         dartsMatchId: String = "",
                         matchOrdinal: Int = -1,
-                        dtCreation: Timestamp = getSqlDateNow()): GameEntity
+                        dtCreation: Timestamp = getSqlDateNow(),
+                        dtLastUpdate: Timestamp = getSqlDateNow()): GameEntity
 {
-    val game = insertGame(uuid, mainDatabase, localId, gameType, gameParams, dtFinish, dartsMatchId, matchOrdinal, dtCreation)
+    val game = insertGame(uuid, mainDatabase, localId, gameType, gameParams, dtFinish, dartsMatchId, matchOrdinal, dtCreation, dtLastUpdate)
     val player = insertPlayer()
     insertParticipant(gameId = game.rowId, playerId = player.rowId)
 
