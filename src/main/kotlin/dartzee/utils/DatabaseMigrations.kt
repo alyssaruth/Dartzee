@@ -18,10 +18,6 @@ object DatabaseMigrations
     fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>>
     {
         return mapOf(
-            13 to listOf(
-                { db -> runScript(db, 14, "1. Player.sql") },
-                { db -> updatePlayerStrategies(db) }
-            ),
             14 to listOf(
                 { db -> updatePlayerStrategiesToJson(db) },
                 { db -> updateRoundTheClockParams(db) }
@@ -116,20 +112,6 @@ object DatabaseMigrations
             val clockType = ClockType.valueOf(it.gameParams)
             val config = RoundTheClockConfig(clockType, true)
             it.gameParams = config.toJson()
-            it.saveToDatabase()
-        }
-    }
-
-    /**
-     * V13 -> V14
-     */
-    private fun updatePlayerStrategies(database: Database)
-    {
-        val players = PlayerEntity(database).retrieveEntities("Strategy <> ''")
-        players.forEach {
-            val model = DartsAiModelOLD()
-            model.readXml(it.strategy)
-            it.strategy = model.writeXml()
             it.saveToDatabase()
         }
     }
