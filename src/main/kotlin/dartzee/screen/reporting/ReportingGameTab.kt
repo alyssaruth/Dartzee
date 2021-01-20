@@ -38,6 +38,9 @@ class ReportingGameTab: JPanel(), ActionListener
     private val cbPartOfMatch = JCheckBox("Part of Match")
     private val rdbtnYes = JRadioButton("Yes")
     private val rdbtnNo = JRadioButton("No")
+    private val cbSyncStatus = JCheckBox("Sync Status")
+    private val rdbtnSynced = JRadioButton("Synced")
+    private val rdbtnPendingChanges = JRadioButton("Pending changes")
 
     init
     {
@@ -62,6 +65,9 @@ class ReportingGameTab: JPanel(), ActionListener
         add(panelGameType, "cell 2 0")
         panelGameType.add(comboBox)
         add(rdbtnNo, "cell 2 6")
+        add(cbSyncStatus, "cell 0 7")
+        add(rdbtnPendingChanges, "flowx,cell 2 7")
+        add(rdbtnSynced, "cell 2 7")
 
         createButtonGroupsAndSelectDefaults()
         addListeners()
@@ -71,6 +77,7 @@ class ReportingGameTab: JPanel(), ActionListener
     {
         createButtonGroup(rdbtnDtFinish, rdbtnUnfinished)
         createButtonGroup(rdbtnYes, rdbtnNo)
+        createButtonGroup(rdbtnPendingChanges, rdbtnSynced)
     }
 
     private fun addListeners()
@@ -90,6 +97,9 @@ class ReportingGameTab: JPanel(), ActionListener
         dateFilterPanelFinish.enableChildren(rdbtnDtFinish.isSelectedAndEnabled())
         rdbtnYes.isEnabled = cbPartOfMatch.isSelected
         rdbtnNo.isEnabled = cbPartOfMatch.isSelected
+
+        rdbtnPendingChanges.isEnabled = cbSyncStatus.isSelected
+        rdbtnSynced.isEnabled = cbSyncStatus.isSelected
     }
 
     override fun actionPerformed(e: ActionEvent?)
@@ -125,6 +135,11 @@ class ReportingGameTab: JPanel(), ActionListener
         if (cbPartOfMatch.isSelected)
         {
             rp.setEnforceMatch(rdbtnYes.isSelected)
+        }
+
+        if (cbSyncStatus.isSelected)
+        {
+            rp.pendingChanges = rdbtnPendingChanges.isSelected
         }
 
         if (cbStartDate.isSelected)

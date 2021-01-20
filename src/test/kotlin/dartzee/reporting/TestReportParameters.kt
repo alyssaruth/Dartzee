@@ -1,9 +1,14 @@
 package dartzee.reporting
 
+import dartzee.core.helper.getFutureTime
+import dartzee.core.helper.getPastTime
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
+import dartzee.db.SyncAuditEntity
 import dartzee.game.GameType
 import dartzee.helper.*
+import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.jupiter.api.Test
@@ -129,6 +134,43 @@ class TestReportParameters: AbstractTest()
         rpMatchGames.setEnforceMatch(true)
         val resultsMatchGames = runReportForTest(rpMatchGames)
         resultsMatchGames.shouldContainExactly(matchGame.localId)
+    }
+
+    @Test
+    fun `Should be able to report on sync status`()
+    {
+        val lastSynced = SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME).dtLastUpdate
+
+        val syncedGame = insertGameForReport(dtLastUpdate = getPastTime(lastSynced))
+        val unsyncedGame = insertGameForReport(dtLastUpdate = getFutureTime(lastSynced))
+
+        val rpAll = ReportParameters()
+        val resultsAll = runReportForTest(rpAll)
+        resultsAll.shouldContainExactlyInAnyOrder(syncedGame.localId, unsyncedGame.localId)
+
+        val rpPendingChanges = ReportParameters().also { it.pendingChanges = true }
+        val resultsSingleGames = runReportForTest(rpPendingChanges)
+        resultsSingleGames.shouldContainExactly(unsyncedGame.localId)
+
+        val rpSyncedGames = ReportParameters().also { it.pendingChanges = false }
+        val resultsMatchGames = runReportForTest(rpSyncedGames)
+        resultsMatchGames.shouldContainExactly(syncedGame.localId)
+    }
+
+    @Test
+    fun `Should cope with reporting on sync status when never synced`()
+    {
+        val now = getSqlDateNow()
+        val gameOne = insertGameForReport(dtLastUpdate = getPastTime(now))
+        val gameTwo = insertGameForReport(dtLastUpdate = getFutureTime(now))
+
+        val rpPendingChanges = ReportParameters().also { it.pendingChanges = true }
+        val resultsSingleGames = runReportForTest(rpPendingChanges)
+        resultsSingleGames.shouldContainExactly(gameOne.localId, gameTwo.localId)
+
+        val rpSyncedGames = ReportParameters().also { it.pendingChanges = false }
+        val resultsMatchGames = runReportForTest(rpSyncedGames)
+        resultsMatchGames.shouldBeEmpty()
     }
 
     @Test
