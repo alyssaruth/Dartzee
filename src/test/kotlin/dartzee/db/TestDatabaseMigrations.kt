@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
+import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -46,4 +47,10 @@ class TestDatabaseMigrations: AbstractTest()
             mainDatabase.initialiseConnectionPool(1)
         }
     }
+}
+
+fun runMigrationsForVersion(database: Database, version: Int)
+{
+    val conversions = DatabaseMigrations.getConversionsMap().getValue(version)
+    conversions.forEach { it(database) }
 }
