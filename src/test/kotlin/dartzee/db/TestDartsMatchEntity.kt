@@ -2,7 +2,7 @@ package dartzee.db
 
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.getSqlDateNow
-import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
+import dartzee.db.DartsMatchEntity.Companion.constructPointsJson
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.*
@@ -165,7 +165,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     @Test
     fun `Should return the correct points per position in POINTS mode`()
     {
-        val matchParams = constructPointsXml(15, 9, 6, 3, 2, 1)
+        val matchParams = constructPointsJson(15, 9, 6, 3, 2, 1)
         val dm = DartsMatchEntity.factoryPoints(3, matchParams)
 
         dm.getScoreForFinishingPosition(1) shouldBe 15

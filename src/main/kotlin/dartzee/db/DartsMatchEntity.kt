@@ -1,5 +1,6 @@
 package dartzee.db
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.core.util.*
 import dartzee.game.GameType
 import dartzee.game.MatchMode
@@ -29,7 +30,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
     var players = mutableListOf<PlayerEntity>()
 
     private var currentOrdinal = 0
-    private val hmPositionToPoints: MutableMap<Int, Int> = mutableMapOf()
+    private var hmPositionToPoints: Map<Int, Int>? = null
 
     override fun getTableName() = "DartsMatch"
 
@@ -115,22 +116,11 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
             MatchMode.POINTS -> if (position == -1) 0 else getHmPositionToPoints()[position]!!
         }
 
-    private fun getHmPositionToPoints(): MutableMap<Int, Int>
+    private fun getHmPositionToPoints(): Map<Int, Int>
     {
-        if (hmPositionToPoints.isEmpty())
-        {
-            val doc = matchParams.toXmlDoc() ?: return hmPositionToPoints
-            val root = doc.documentElement
-
-            hmPositionToPoints[1] = root.getAttributeInt("First")
-            hmPositionToPoints[2] = root.getAttributeInt("Second")
-            hmPositionToPoints[3] = root.getAttributeInt("Third")
-            hmPositionToPoints[4] = root.getAttributeInt("Fourth")
-            hmPositionToPoints[5] = root.getAttributeInt("Fifth")
-            hmPositionToPoints[6] = root.getAttributeInt("Sixth")
-        }
-
-        return hmPositionToPoints
+        val result = hmPositionToPoints ?: jsonMapper().readValue(matchParams)
+        hmPositionToPoints = result
+        return result
     }
 
     fun incrementAndGetCurrentOrdinal() = ++currentOrdinal
@@ -159,20 +149,11 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
 
     companion object
     {
-        fun constructPointsXml(first: Int, second: Int, third: Int, fourth: Int, fifth: Int, sixth: Int): String
+        fun constructPointsJson(first: Int, second: Int, third: Int, fourth: Int, fifth: Int, sixth: Int): String
         {
-            val doc = XmlUtil.factoryNewDocument()
-            val rootElement = doc.createRootElement("MatchParams")
-            rootElement.setAttributeAny("First", first)
-            rootElement.setAttributeAny("Second", second)
-            rootElement.setAttributeAny("Third", third)
-            rootElement.setAttributeAny("Fourth", fourth)
-            rootElement.setAttributeAny("Fifth", fifth)
-            rootElement.setAttributeAny("Sixth", sixth)
-
-            return doc.toXmlString()
+            val map = mapOf(1 to first, 2 to second, 3 to third, 4 to fourth, 5 to fifth, 6 to sixth)
+            return jsonMapper().writeValueAsString(map)
         }
-
 
         /**
          * Factory methods
@@ -182,9 +163,9 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
             return factoryAndSave(games, MatchMode.FIRST_TO, "")
         }
 
-        fun factoryPoints(games: Int, pointsXml: String): DartsMatchEntity
+        fun factoryPoints(games: Int, pointsJson: String): DartsMatchEntity
         {
-            return factoryAndSave(games, MatchMode.POINTS, pointsXml)
+            return factoryAndSave(games, MatchMode.POINTS, pointsJson)
         }
 
         private fun factoryAndSave(games: Int, mode: MatchMode, matchParams: String): DartsMatchEntity
