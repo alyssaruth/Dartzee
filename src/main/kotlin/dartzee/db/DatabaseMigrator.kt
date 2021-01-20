@@ -55,7 +55,7 @@ class DatabaseMigrator(private val migrations: Map<Int, List<((database: Databas
     {
         val newVersion = version + 1
         val migrationBatch = migrations.getValue(version)
-        val migrationCount= migrationBatch.size
+        val migrationCount = migrationBatch.size
 
         val updateMessage = "Upgrading $databaseDesc database to V$newVersion"
 

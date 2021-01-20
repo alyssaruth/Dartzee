@@ -18,8 +18,9 @@ import kotlin.system.exitProcess
 /**
  * Database helpers specific to Dartzee, e.g. first time initialisation
  */
-object DartsDatabaseUtil {
-    const val DATABASE_VERSION = 16
+object DartsDatabaseUtil
+{
+    const val DATABASE_VERSION = 17
     const val DATABASE_NAME = "Darts"
     const val OTHER_DATABASE_NAME = "DartsOther" //Tmp name used for restore from backup and/or sync
 

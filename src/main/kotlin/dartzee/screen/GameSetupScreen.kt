@@ -5,7 +5,7 @@ import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.util.StringUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
-import dartzee.db.DartsMatchEntity.Companion.constructPointsXml
+import dartzee.db.DartsMatchEntity.Companion.constructPointsJson
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
@@ -194,7 +194,7 @@ class GameSetupScreen : EmbeddedScreen()
         val match = when
         {
             rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(spinnerWins.value as Int)
-            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(spinnerGames.value as Int, getPointsXml())
+            rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(spinnerGames.value as Int, getPointsJson())
             else -> null
         }
 
@@ -205,9 +205,9 @@ class GameSetupScreen : EmbeddedScreen()
         }
     }
 
-    private fun getPointsXml(): String
+    private fun getPointsJson(): String
     {
-        return constructPointsXml(spinners[0].value as Int,
+        return constructPointsJson(spinners[0].value as Int,
                 spinners[1].value as Int,
                 spinners[2].value as Int,
                 spinners[3].value as Int,

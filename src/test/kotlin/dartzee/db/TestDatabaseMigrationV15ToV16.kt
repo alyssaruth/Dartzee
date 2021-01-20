@@ -64,10 +64,7 @@ class TestDatabaseMigrationV15ToV16: AbstractTest()
     fun `V15 - V16 should create SyncAudit table and update Achievement schema`()
     {
         withV15Database { database ->
-            val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
-            migrator.migrateToLatest(database, "Test")
-
-            database.getDatabaseVersion() shouldBe 16
+            runMigrationsForVersion(database, 15)
 
             shouldNotThrowAny {
                 SyncAuditEntity(database).retrieveForId("foo", false)
@@ -123,9 +120,6 @@ private class AchievementEntityOld(database: Database = InjectedThings.mainDatab
     var achievementCounter = -1
     var achievementDetail = ""
     var dtAchieved: Timestamp = getSqlDateNow()
-
-    //Other stuff
-    var localGameIdEarned = -1L
 
     override fun getTableName() = "Achievement"
 

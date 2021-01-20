@@ -3,6 +3,10 @@ package dartzee.utils
 import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartsAiModelOLD
+import dartzee.core.util.getAttributeInt
+import dartzee.core.util.jsonMapper
+import dartzee.core.util.toXmlDoc
+import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.db.SyncAuditEntity
@@ -14,10 +18,6 @@ object DatabaseMigrations
     fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>>
     {
         return mapOf(
-            13 to listOf(
-                { db -> runScript(db, 14, "1. Player.sql") },
-                { db -> updatePlayerStrategies(db) }
-            ),
             14 to listOf(
                 { db -> updatePlayerStrategiesToJson(db) },
                 { db -> updateRoundTheClockParams(db) }
@@ -31,8 +31,41 @@ object DatabaseMigrations
                 { db -> convertAchievement(AchievementType.DARTZEE_GAMES_WON, db) },
                 { db -> convertAchievement(AchievementType.CLOCK_BRUCEY_BONUSES, db) },
                 { db -> convertAchievement(AchievementType.GOLF_POINTS_RISKED, db) }
+            ),
+            16 to listOf (
+                { db -> convertMatchParams(db) }
             )
         )
+    }
+
+    /**
+     * V16 -> V17
+     */
+    fun convertMatchParams(database: Database)
+    {
+        val matches = DartsMatchEntity(database).retrieveEntities("MatchParams <> ''")
+        matches.forEach { match ->
+            val params = match.matchParams
+            println(params)
+            val map = readMatchParamXml(params)
+            match.matchParams = jsonMapper().writeValueAsString(map)
+            match.saveToDatabase()
+        }
+    }
+    private fun readMatchParamXml(matchParams: String): Map<Int, Int>
+    {
+        val map = mutableMapOf<Int, Int>()
+        val doc = matchParams.toXmlDoc() ?: return map
+        val root = doc.documentElement
+
+        map[1] = root.getAttributeInt("First")
+        map[2] = root.getAttributeInt("Second")
+        map[3] = root.getAttributeInt("Third")
+        map[4] = root.getAttributeInt("Fourth")
+        map[5] = root.getAttributeInt("Fifth")
+        map[6] = root.getAttributeInt("Sixth")
+
+        return map
     }
 
     /**
@@ -79,20 +112,6 @@ object DatabaseMigrations
             val clockType = ClockType.valueOf(it.gameParams)
             val config = RoundTheClockConfig(clockType, true)
             it.gameParams = config.toJson()
-            it.saveToDatabase()
-        }
-    }
-
-    /**
-     * V13 -> V14
-     */
-    private fun updatePlayerStrategies(database: Database)
-    {
-        val players = PlayerEntity(database).retrieveEntities("Strategy <> ''")
-        players.forEach {
-            val model = DartsAiModelOLD()
-            model.readXml(it.strategy)
-            it.strategy = model.writeXml()
             it.saveToDatabase()
         }
     }

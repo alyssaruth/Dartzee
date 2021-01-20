@@ -220,7 +220,7 @@ class TestGameSetupScreen: AbstractTest()
         match.gameParams shouldBe "18"
         match.mode shouldBe MatchMode.POINTS
         match.games shouldBe 8
-        match.matchParams shouldBe DartsMatchEntity.constructPointsXml(15, 9, 6, 3, 2, 1)
+        match.matchParams shouldBe DartsMatchEntity.constructPointsJson(15, 9, 6, 3, 2, 1)
     }
 
     @Test
