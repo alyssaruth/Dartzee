@@ -1,15 +1,39 @@
 package dartzee.achievements
 
+import dartzee.achievements.x01.AchievementX01HighestBust
+import dartzee.achievements.x01.TestAchievementX01HighestBust
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
+import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementUtil: AbstractTest()
 {
+    @Test
+    fun `Running achievement conversion should not reuse old temp tables`()
+    {
+        ensureX01RoundsTableExists(listOf("foo"), mainDatabase)
+
+        val g = insertGame(gameType = GameType.X01)
+        val p = insertPlayer()
+        TestAchievementX01HighestBust().setUpAchievementRowForPlayerAndGame(p, g, mainDatabase)
+
+        val t = runConversionsWithProgressBar(listOf(AchievementX01HighestBust()), listOf(p.rowId))
+        t.join()
+
+        val result = retrieveAchievement()
+        result.playerId shouldBe p.rowId
+        result.achievementType shouldBe AchievementType.X01_HIGHEST_BUST
+        result.gameIdEarned shouldBe g.rowId
+    }
+
     @Test
     fun `Running achievement conversion should leave no temp tables lying around`()
     {
