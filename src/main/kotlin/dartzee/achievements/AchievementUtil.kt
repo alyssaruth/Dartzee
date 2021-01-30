@@ -67,6 +67,8 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
 
     try
     {
+        mainDatabase.dropUnexpectedTables()
+
         achievements.forEach {
             val timer = DurationTimer()
             it.runConversion(playerIds, database)
