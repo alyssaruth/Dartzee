@@ -4,10 +4,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.db.PlayerEntity
-import dartzee.helper.getCountFromTable
-import dartzee.helper.insertGame
-import dartzee.helper.insertParticipant
-import dartzee.helper.insertPlayer
+import dartzee.helper.*
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -53,6 +50,21 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         factoryAchievement().populateForConversion(emptyList())
 
         getCountFromTable("Achievement") shouldBe 0
+    }
+
+    @Test
+    fun `Should ignore games of the wrong params with better scores`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val badGame = insertGame(gameType = factoryAchievement().gameType!!, gameParams = "blah")
+        val goodGame = insertRelevantGame()
+
+        insertParticipant(gameId = badGame.rowId, playerId = alice.rowId, finalScore = 20)
+        insertParticipant(gameId = goodGame.rowId, playerId = alice.rowId, finalScore = 31)
+
+        factoryAchievement().populateForConversion(emptyList())
+        val result = retrieveAchievement()
+        result.achievementCounter shouldBe 31
     }
 
     @Test
