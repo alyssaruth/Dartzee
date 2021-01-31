@@ -309,6 +309,7 @@ fun getCountFromTable(table: String, database: Database = mainDatabase): Int
  */
 fun retrieveGame() = GameEntity().retrieveEntities().maxBy { it.dtLastUpdate }!!
 fun retrieveDart() = DartEntity().retrieveEntities().first()
+fun retrieveDartsMatch() = DartsMatchEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 
