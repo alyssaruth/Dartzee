@@ -33,7 +33,7 @@ class TestDateUtil: AbstractTest()
     {
         val str = getEndOfTimeSqlString()
 
-        str.shouldBe("'9999-12-31 00:00:00'")
+        str.shouldBe("'9999-12-31 00:00:00.000'")
     }
 
     @Test

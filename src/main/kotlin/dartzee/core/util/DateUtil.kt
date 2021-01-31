@@ -35,7 +35,7 @@ fun Timestamp.formatAsDate() : String
 
 fun Timestamp.getSqlString(): String
 {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
     val formatted = dateFormat.format(this)
     return "'$formatted'"
 }
