@@ -22,6 +22,8 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
         "RemoteName VARCHAR(255) NOT NULL, Username VARCHAR(1000) NOT NULL, AppVersion VARCHAR(255) NOT NULL, " +
         "DeviceId VARCHAR(36) NOT NULL, OperatingSystem VARCHAR(1000) NOT NULL"
 
+    override fun includeInSync() = false
+
     companion object
     {
         fun insertSyncAudit(database: Database, remoteName: String): SyncAuditEntity

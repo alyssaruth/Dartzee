@@ -44,7 +44,7 @@ abstract class AbstractTest
 
         if (logDestination.haveRunInsert)
         {
-            DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
+            wipeDatabase()
             logDestination.haveRunInsert = false
         }
 
@@ -72,6 +72,11 @@ abstract class AbstractTest
         }
 
         checkedForExceptions = false
+    }
+
+    fun wipeDatabase()
+    {
+        DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
     }
 
     fun getLastLog() = getLogRecords().last()

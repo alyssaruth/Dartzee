@@ -11,6 +11,7 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.insertDartsMatch
+import dartzee.helper.retrieveDartsMatch
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.MatchScorer
@@ -51,7 +52,7 @@ class TestMatchE2E: AbstractRegistryTest()
 
         GameLauncher().launchNewMatch(match)
 
-        awaitCondition { match.dtFinish != DateStatics.END_OF_TIME }
+        awaitCondition { retrieveDartsMatch().dtFinish != DateStatics.END_OF_TIME }
 
         verifyDatabase(match.rowId, winner, loser)
         verifyUi()

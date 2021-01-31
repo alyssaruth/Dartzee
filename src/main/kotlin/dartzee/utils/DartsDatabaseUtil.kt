@@ -24,6 +24,9 @@ object DartsDatabaseUtil
     const val DATABASE_NAME = "Darts"
     const val OTHER_DATABASE_NAME = "DartsOther" //Tmp name used for restore from backup and/or sync
 
+    fun getSyncEntities(database: Database = mainDatabase): List<AbstractEntity<*>> =
+        getAllEntities(database).filter { it.includeInSync() }
+
     fun getAllEntities(database: Database = mainDatabase): List<AbstractEntity<*>> {
         return listOf(
             PlayerEntity(database),

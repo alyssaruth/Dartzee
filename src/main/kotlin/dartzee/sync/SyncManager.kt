@@ -77,6 +77,19 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
     }
 
+    fun doSyncIfNecessary(remoteName: String): Thread
+    {
+        if (needsSync())
+        {
+            return doSync(remoteName)
+        }
+        else
+        {
+            logger.info(CODE_REVERT_TO_PULL, "Reverting to a pull as there are no local changes.")
+            return doPull(remoteName)
+        }
+    }
+
     fun doSync(remoteName: String) = runInOtherThread { doSyncOnOtherThread(remoteName) }
     private fun doSyncOnOtherThread(remoteName: String)
     {

@@ -3,10 +3,7 @@ package dartzee.sync
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.*
-import dartzee.logging.CODE_SQL_EXCEPTION
-import dartzee.logging.CODE_SYNC_ERROR
-import dartzee.logging.KEY_GAME_IDS
-import dartzee.logging.Severity
+import dartzee.logging.*
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
@@ -16,6 +13,8 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,6 +35,29 @@ class TestSyncManager: AbstractTest()
     fun afterEach()
     {
         File(TEST_DB_DIRECTORY).deleteRecursively()
+    }
+
+    @Test
+    fun `Should revert to a PULL if no local changes`()
+    {
+        val syncManager = spyk(SyncManager(mockk(relaxed = true)))
+        val t = syncManager.doSyncIfNecessary(REMOTE_NAME)
+        t.join()
+
+        verify { syncManager.doPull(REMOTE_NAME) }
+        verifyLog(CODE_REVERT_TO_PULL, Severity.INFO)
+    }
+
+    @Test
+    fun `Should process with a sync if there are local changes`()
+    {
+        insertGame()
+
+        val syncManager = spyk(SyncManager(mockk(relaxed = true)))
+        val t = syncManager.doSyncIfNecessary(REMOTE_NAME)
+        t.join()
+
+        verify { syncManager.doSync(REMOTE_NAME) }
     }
 
     @Test
