@@ -45,6 +45,7 @@ val CODE_MERGING_ENTITY = LoggingCode("mergingEntity")
 val CODE_ACHIEVEMENT_CONVERSION_STARTED = LoggingCode("achievementConversionStarted")
 val CODE_ACHIEVEMENT_CONVERSION_FINISHED = LoggingCode("achievementConversionFinished")
 val CODE_SWITCHING_FILES = LoggingCode("switchingFiles")
+val CODE_REVERT_TO_PULL = LoggingCode("revertToPull")
 
 //Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")

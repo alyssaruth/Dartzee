@@ -169,7 +169,7 @@ class SyncManagementPanel: JPanel(), ActionListener
             return
         }
 
-        InjectedThings.syncManager.doSync(remoteName)
+        InjectedThings.syncManager.doSyncIfNecessary(remoteName)
     }
 
     private fun resetPressed()

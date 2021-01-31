@@ -261,7 +261,7 @@ class TestSyncManagementPanel: AbstractTest()
         panel.clickChild<JButton>("Perform Sync")
 
         dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
-        verifyNotCalled { syncManager.doSync(any()) }
+        verifyNotCalled { syncManager.doSyncIfNecessary(any()) }
     }
 
     @Test
@@ -271,7 +271,7 @@ class TestSyncManagementPanel: AbstractTest()
         panel.clickChild<JButton>("Perform Sync")
 
         dialogFactory.errorsShown.shouldBeEmpty()
-        verify { syncManager.doSync(REMOTE_NAME) }
+        verify { syncManager.doSyncIfNecessary(REMOTE_NAME) }
     }
 
     /**
