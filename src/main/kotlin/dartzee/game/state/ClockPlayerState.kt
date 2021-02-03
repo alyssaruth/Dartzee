@@ -34,7 +34,7 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
         }
         else
         {
-            getAllPossibleSegments().filterNot { it.score == findCurrentTarget() }
+            getAllPossibleSegments() - scoringSegments
         }
 
         return SegmentStatus(scoringSegments, validSegments)
