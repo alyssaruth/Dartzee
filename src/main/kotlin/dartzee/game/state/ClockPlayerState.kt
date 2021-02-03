@@ -3,6 +3,8 @@ package dartzee.game.state
 import dartzee.`object`.Dart
 import dartzee.db.ParticipantEntity
 import dartzee.game.RoundTheClockConfig
+import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getLongestStreak
 
 data class ClockPlayerState(private val config: RoundTheClockConfig,
@@ -22,6 +24,21 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
     fun onTrackForBrucey() = currentRound.all { it.hitClockTarget(config.clockType) }
 
     fun hasHitTarget(target: Int) = getAllDartsFlattened().any { it.hitAnyClockTarget(config.clockType) && it.score == target }
+
+    fun getSegmentStatus(): SegmentStatus
+    {
+        val scoringSegments = getAllPossibleSegments().filter { it.score == findCurrentTarget() }
+        val validSegments = if (!config.inOrder)
+        {
+            getAllPossibleSegments().filterNot { hasHitTarget(it.score) || it.score == 25 }
+        }
+        else
+        {
+            getAllPossibleSegments().filterNot { it.score == findCurrentTarget() }
+        }
+
+        return SegmentStatus(scoringSegments, validSegments)
+    }
 
     override fun dartThrown(dart: Dart)
     {

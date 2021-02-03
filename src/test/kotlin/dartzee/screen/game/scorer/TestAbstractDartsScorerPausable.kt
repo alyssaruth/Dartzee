@@ -92,7 +92,7 @@ class TestAbstractDartsScorerPausable: AbstractTest()
     @Test
     fun `Should notify parent of pause and unpause`()
     {
-        val parent = mockk<GamePanelPausable<*, *>>(relaxed = true)
+        val parent = mockk<GamePanelPausable<*, *, *>>(relaxed = true)
         val scorer = factoryScorer(parent)
         val state = TestPlayerState(insertParticipant(finishingPosition = 2, dtFinished = DateStatics.END_OF_TIME), scoreSoFar = 30)
         scorer.stateChanged(state)
@@ -107,10 +107,10 @@ class TestAbstractDartsScorerPausable: AbstractTest()
         verify { parent.pauseLastPlayer() }
     }
 
-    private fun factoryScorer(parent: GamePanelPausable<*, *> = mockk(relaxed = true)) = FakeDartsScorerPausable(parent).also { it.init(null) }
+    private fun factoryScorer(parent: GamePanelPausable<*, *, *> = mockk(relaxed = true)) = FakeDartsScorerPausable(parent).also { it.init(null) }
 
 
-    private class FakeDartsScorerPausable(parent: GamePanelPausable<*, *>): AbstractDartsScorerPausable<TestPlayerState>(parent)
+    private class FakeDartsScorerPausable(parent: GamePanelPausable<*, *, *>): AbstractDartsScorerPausable<TestPlayerState>(parent)
     {
         override fun getNumberOfColumns() = 4
         override fun initImpl() {}

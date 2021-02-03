@@ -10,14 +10,17 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
+import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
-open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerRoundTheClock, ClockPlayerState>(parent, game, totalPlayers)
+open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+    GamePanelPausable<DartsScorerRoundTheClock, DartzeeDartboard, ClockPlayerState>(parent, game, totalPlayers)
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
 
+    override fun factoryDartboard() = DartzeeDartboard()
     override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(config, pt)
 
     override fun doAiTurn(model: DartsAiModel)
@@ -36,6 +39,14 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         {
             dartboard.doBadLuck()
         }
+
+        updateDartboard()
+    }
+
+    override fun readyForThrow()
+    {
+        super.readyForThrow()
+        updateDartboard()
     }
 
     override fun shouldAnimateMiss(dart: Dart) = dartsThrownCount() < 4
@@ -82,6 +93,13 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         {
             AchievementEntity.updateAchievement(AchievementType.CLOCK_BEST_STREAK, getCurrentPlayerId(), getGameId(), longestStreakThisGame)
         }
+    }
+
+    private fun updateDartboard()
+    {
+        val state = getCurrentPlayerState()
+        val segmentStatus = state.getSegmentStatus()
+        dartboard.refreshValidSegments(segmentStatus)
     }
 
     override fun currentPlayerHasFinished() = getCurrentPlayerState().findCurrentTarget() == null
