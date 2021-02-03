@@ -14,6 +14,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
+import dartzee.utils.getAllPossibleSegments
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -80,6 +82,22 @@ class TestGamePanelRoundTheClock: AbstractTest()
 
         val updatedAchievement = AchievementEntity.retrieveAchievement(AchievementType.CLOCK_BEST_STREAK, playerId)!!
         updatedAchievement.achievementCounter shouldBe 4
+    }
+
+    @Test
+    fun `Should update the dartboard when ready for throw`()
+    {
+        val panel = TestRoundTheClockGamePanel()
+        panel.readyForThrow()
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 1 })
+    }
+
+    @Test
+    fun `Should update the dartboard when a dart is thrown`()
+    {
+        val panel = TestRoundTheClockGamePanel()
+        panel.dartThrown(Dart(1, 1))
+        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 2 })
     }
 
     private fun factoryClockHit(clockTarget: Int): Dart

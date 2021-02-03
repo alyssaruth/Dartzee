@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 
-abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>>(private val parent: GamePanelPausable<*, *>) : AbstractDartsScorer<PlayerState>(), ActionListener
+abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>>(private val parent: GamePanelPausable<*, *, *>) : AbstractDartsScorer<PlayerState>(), ActionListener
 {
     private val btnResume = JButton("")
     private var latestState: PlayerState? = null

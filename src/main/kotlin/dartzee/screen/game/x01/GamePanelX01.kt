@@ -11,16 +11,19 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.X01FinishEntity
 import dartzee.game.state.X01PlayerState
+import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 
-open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) : GamePanelPausable<DartsScorerX01, X01PlayerState>(parent, game, totalPlayers)
+open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+    GamePanelPausable<DartsScorerX01, Dartboard, X01PlayerState>(parent, game, totalPlayers)
 {
     private val startingScore = Integer.parseInt(game.gameParams)
 
     override fun factoryState(pt: ParticipantEntity) = X01PlayerState(startingScore, pt)
+    override fun factoryDartboard() = Dartboard()
 
     override fun saveDartsAndProceed()
     {
