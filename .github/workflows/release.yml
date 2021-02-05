@@ -18,6 +18,8 @@ jobs:
         run: ./gradlew jar --info
       - name: Rename JAR
         run: |
+          echo $PWD
+          ls
           suffix="${{ github.event.inputs.version }}"
           updatedSuffix="${suffix//./_}"
           mv "build/libs/Dartzee.jar" "build/libs/Dartzee_$updatedSuffix.jar"
