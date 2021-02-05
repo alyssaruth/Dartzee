@@ -18,8 +18,9 @@ jobs:
         run: ./gradlew jar --info
       - name: Rename JAR
         run: |
-          suffix="${{ github.event.inputs.version }}//./_"
-          mv "build/libs/Dartzee.jar" "build/libs/Dartzee_$suffix.jar"
+          suffix="${{ github.event.inputs.version }}"
+          updatedSuffix="${suffix//./_}"
+          mv "build/libs/Dartzee.jar" "build/libs/Dartzee_$updatedSuffix.jar"
       - name: Release
         uses: ncipollo/release-action@v1
         with:
