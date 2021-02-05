@@ -15,12 +15,7 @@ jobs:
         with:
           java-version: 11
       - name: Build JAR
-        uses: GabrielBB/xvfb-action@v1.0
-        env:
-          AWS_SYNC: ${{ secrets.AWS_SYNC }}
-          AWS_LOGS: ${{ secrets.AWS_LOGS }}
-        with:
-          run: ./gradlew jar --info
+        run: ./gradlew jar --info
       - name: Rename JAR
         run: |
           suffix="${{ github.event.inputs.version }}//./_"
