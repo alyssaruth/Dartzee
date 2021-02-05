@@ -1,0 +1,33 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. v5.0.0)'
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build JAR
+        uses: GabrielBB/xvfb-action@v1.0
+        env:
+          AWS_SYNC: ${{ secrets.AWS_SYNC }}
+          AWS_LOGS: ${{ secrets.AWS_LOGS }}
+        with:
+          run: ./gradlew jar --info
+      - name: Rename JAR
+        run: |
+          suffix="${{ github.event.inputs.version }}//./_"
+          mv "build/libs/Dartzee.jar" "build/libs/Dartzee_$suffix.jar"
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/libs/*.jar"
+          commit: master
+          tag: github.events.inputs.version
