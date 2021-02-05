@@ -1,6 +1,7 @@
 package dartzee.sync
 
 import dartzee.PAST_TIME
+import dartzee.core.helper.getFutureTime
 import dartzee.db.ParticipantEntity
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.*
@@ -100,8 +101,8 @@ class TestSyncUtils: AbstractTest()
     @Test
     fun `Should perform a sync if changes since last sync date`()
     {
-        SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
-        insertGame()
+        val syncAuditEntity = SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
+        insertGame(dtLastUpdate = getFutureTime(syncAuditEntity.dtLastUpdate))
         needsSync() shouldBe true
     }
 }
