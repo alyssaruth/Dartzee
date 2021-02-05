@@ -5,6 +5,9 @@ on:
       version:
         description: 'Version (e.g. v5.0.0)'
         required: true
+      name:
+        description: 'Release name'
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,10 +26,14 @@ jobs:
           mv "build/libs/Dartzee.jar" "build/libs/Dartzee_$updatedSuffix.jar"
           cd build/libs
           ls
+          export CHANGELOG=$(awk "/--------- ${{ github.event.inputs.version }} ---------/,/coverage/" src/main/resources/ChangeLog)
+          echo $CHANGELOG
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/libs/*.jar"
           commit: master
-          tag: github.events.inputs.version
+          name: ${{ github.events.inputs.name }}
+          tag: ${{ github.events.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          body: env.CHANGELOG
