@@ -200,7 +200,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     fun countWhere(whereSql: String): Int
     {
-        return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableName()} WHERE $whereSql")
+        val fullWhere = if (whereSql.isNotEmpty()) "WHERE $whereSql" else ""
+        return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableName()} $fullWhere")
     }
 
     /**
