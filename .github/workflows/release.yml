@@ -24,7 +24,7 @@ jobs:
           suffix="${{ github.event.inputs.version }}"
           updatedSuffix="${suffix//./_}"
           mv "build/libs/Dartzee.jar" "build/libs/Dartzee_$updatedSuffix.jar"
-          ls builds/libs
+          ls build/libs
           export CHANGELOG=$(awk "/--------- ${{ github.event.inputs.version }} ---------/,/coverage/" src/main/resources/ChangeLog)
           echo $CHANGELOG
       - name: Release
