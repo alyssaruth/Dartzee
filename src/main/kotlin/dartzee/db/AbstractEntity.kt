@@ -198,13 +198,19 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
     }
 
+    fun countWhere(whereSql: String): Int
+    {
+        val fullWhere = if (whereSql.isNotEmpty()) "WHERE $whereSql" else ""
+        return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableName()} $fullWhere")
+    }
+
     /**
      * Merge helpers
      */
     fun countModifiedSince(dt: Timestamp?): Int
     {
-        val whereSql = if (dt != null) "WHERE DtLastUpdate > ${dt.getSqlString()}" else ""
-        return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableName()} $whereSql")
+        val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""
+        return countWhere(whereSql)
     }
     fun retrieveModifiedSince(dt: Timestamp?): List<E>
     {

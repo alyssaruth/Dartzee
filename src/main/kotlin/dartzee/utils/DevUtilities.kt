@@ -59,29 +59,27 @@ object DevUtilities
             return
         }
 
-        val participants = ParticipantEntity().retrieveEntities("GameId = '$gameId'")
-        val darts = DartEntity().retrieveEntitiesWithFrom(getDartFromSql(gameId), "d")
+        val participantIds = ParticipantEntity().retrieveEntities("GameId = '$gameId'").map { it.rowId }
+        val ptSql = participantIds.joinToString { "'$it'" }
+        val dartCount = if (participantIds.isEmpty()) 0 else DartEntity().countWhere("ParticipantId IN ($ptSql)")
 
         val question = ("Purge all data for Game #$localId? The following rows will be deleted:"
-                + "\n\n Participant: ${participants.size} rows"
-                + "\n Dart: ${darts.size} rows")
+                + "\n\n Participant: ${participantIds.size} rows"
+                + "\n Dart: $dartCount rows")
 
         val answer = DialogUtil.showQuestion(question, false)
         if (answer == JOptionPane.YES_OPTION)
         {
-            darts.forEach{ it.deleteFromDatabase() }
-            participants.forEach{ it.deleteFromDatabase() }
+            if (participantIds.isNotEmpty())
+            {
+                mainDatabase.executeUpdate("DELETE FROM Dart WHERE ParticipantId IN ($ptSql)")
+            }
 
-            val gameDeleteSql = "DELETE FROM Game WHERE RowId = '$gameId'"
-            mainDatabase.executeUpdate(gameDeleteSql)
+            mainDatabase.executeUpdate("DELETE FROM Participant WHERE GameId = '$gameId'")
+            mainDatabase.executeUpdate("DELETE FROM X01Finish WHERE GameId = '$gameId'")
+            mainDatabase.executeUpdate("DELETE FROM Game WHERE RowId = '$gameId'")
 
             DialogUtil.showInfo("Game #$localId has been purged.")
         }
-    }
-
-    private fun getDartFromSql(gameId: String): String
-    {
-        return ("FROM Dart d "
-                + "INNER JOIN Participant p ON (d.ParticipantId = p.RowId AND d.PlayerId = p.PlayerId AND p.GameId = '" + gameId + "')")
     }
 }

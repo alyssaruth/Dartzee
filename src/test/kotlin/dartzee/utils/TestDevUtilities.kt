@@ -93,11 +93,26 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
+    fun `Should delete from X01Finish`()
+    {
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
+
+        val player = insertPlayer()
+        val gameOne = insertFinishForPlayer(player, 25)
+        val gameTwo = insertFinishForPlayer(player, 80)
+
+        DevUtilities.purgeGame(gameOne.localId)
+
+        getCountFromTable("X01Finish") shouldBe 1
+        retrieveX01Finish().gameId shouldBe gameTwo.rowId
+        retrieveX01Finish().finish shouldBe 80
+    }
+
+    @Test
     fun `Should delete the specified game, along with associated Participants and Darts`()
     {
         val g1 = insertGame(localId = 1)
         val g2 = insertGame(localId = 2)
-
 
         val p = insertPlayer()
         val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId)
