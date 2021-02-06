@@ -5,6 +5,9 @@ on:
       version:
         description: 'Version (e.g. v5.0.0)'
         required: true
+      name:
+        description: 'Release name'
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,5 +32,7 @@ jobs:
         with:
           artifacts: "build/libs/*.jar"
           commit: master
-          tag: ${{ github.events.inputs.version }}
+          name: ${{ github.event.inputs.name }}
+          tag: ${{ github.event.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          body: env.CHANGELOG
