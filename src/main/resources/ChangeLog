@@ -1,3 +1,11 @@
+--------- v5.0.1 ---------
+
++ Dartboard highlighting for Round the Clock
++ Reporting options for games that have/have not been synced
+= Fix a couple of bugs syncing achievements
+= Optimise sync when there are no local changes
+= 85.8% test coverage (10528 / 12271 lines covered by 1854 tests)
+
 --------- v5.0.0 ---------
 
 + Database sync functionality, allowing a database to be shared between players in different locations
