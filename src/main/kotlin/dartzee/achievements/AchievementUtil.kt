@@ -17,8 +17,8 @@ import dartzee.game.GameType
 import dartzee.logging.*
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.net.URL
 
@@ -67,7 +67,7 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
 
     try
     {
-        mainDatabase.dropUnexpectedTables()
+        database.dropUnexpectedTables()
 
         achievements.forEach {
             val timer = DurationTimer()
@@ -81,7 +81,7 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
     }
     finally
     {
-        mainDatabase.dropUnexpectedTables()
+        database.dropUnexpectedTables()
     }
 
     val totalTime = timings.values.sum()
