@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import dartzee.core.screen.ProgressDialog
+import dartzee.core.util.jsonMapper
 import dartzee.db.DartzeeRuleEntity
 
 object DartzeeRuleConversion

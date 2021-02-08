@@ -1,5 +1,6 @@
 package dartzee.db
 
+import dartzee.core.util.jsonMapper
 import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd

@@ -1,27 +1,19 @@
 package dartzee.utils
 
 import dartzee.achievements.*
-import dartzee.ai.DartsAiModel
-import dartzee.ai.DartsAiModelOLD
 import dartzee.core.util.getAttributeInt
 import dartzee.core.util.jsonMapper
 import dartzee.core.util.toXmlDoc
+import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.DartsMatchEntity
-import dartzee.db.GameEntity
-import dartzee.db.PlayerEntity
+import dartzee.db.DartzeeRuleEntity
 import dartzee.db.SyncAuditEntity
-import dartzee.game.ClockType
-import dartzee.game.RoundTheClockConfig
 
 object DatabaseMigrations
 {
     fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>>
     {
         return mapOf(
-            14 to listOf(
-                { db -> updatePlayerStrategiesToJson(db) },
-                { db -> updateRoundTheClockParams(db) }
-            ),
             15 to listOf (
                 { db -> SyncAuditEntity(db).createTable() },
                 { db -> runScript(db, 16, "1. Achievement.sql") },
@@ -34,8 +26,24 @@ object DatabaseMigrations
             ),
             16 to listOf (
                 { db -> convertMatchParams(db) }
+            ),
+            17 to listOf(
+                { db -> convertDartzeeCalculationResults(db) }
             )
         )
+    }
+
+    /**
+     * V17 -> V18
+     */
+    fun convertDartzeeCalculationResults(database: Database)
+    {
+        val rules = DartzeeRuleEntity(database).retrieveEntities()
+        rules.forEach { ruleEntity ->
+            val calculationResult = DartzeeRuleCalculationResult.fromDbStringOLD(ruleEntity.calculationResult)
+            ruleEntity.calculationResult = calculationResult.toDbString()
+            ruleEntity.saveToDatabase()
+        }
     }
 
     /**
@@ -46,7 +54,6 @@ object DatabaseMigrations
         val matches = DartsMatchEntity(database).retrieveEntities("MatchParams <> ''")
         matches.forEach { match ->
             val params = match.matchParams
-            println(params)
             val map = readMatchParamXml(params)
             match.matchParams = jsonMapper().writeValueAsString(map)
             match.saveToDatabase()
@@ -80,39 +87,6 @@ object DatabaseMigrations
         finally
         {
             database.dropUnexpectedTables()
-        }
-    }
-    private fun updatePlayerStrategiesToJson(database: Database)
-    {
-        val players = PlayerEntity(database).retrieveEntities("Strategy <> ''")
-        players.forEach {
-            val model = DartsAiModelOLD()
-            model.readXml(it.strategy)
-
-            val newModel = DartsAiModel(model.standardDeviation,
-                if (model.standardDeviationDoubles > 0.0) model.standardDeviationDoubles else null,
-                if (model.standardDeviationCentral > 0.0) model.standardDeviationCentral else null,
-                450,
-                model.scoringDart,
-                model.hmScoreToDart.toMap(),
-                if (model.mercyThreshold > -1) model.mercyThreshold else null,
-                model.hmDartNoToSegmentType.toMap(),
-                model.hmDartNoToStopThreshold.toMap(),
-                model.dartzeePlayStyle)
-
-            it.strategy = newModel.toJson()
-            it.saveToDatabase()
-        }
-    }
-
-    private fun updateRoundTheClockParams(database: Database)
-    {
-        val games = GameEntity(database).retrieveEntities("GameType = 'ROUND_THE_CLOCK'")
-        games.forEach {
-            val clockType = ClockType.valueOf(it.gameParams)
-            val config = RoundTheClockConfig(clockType, true)
-            it.gameParams = config.toJson()
-            it.saveToDatabase()
         }
     }
 

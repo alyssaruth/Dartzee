@@ -112,23 +112,4 @@ class TestXmlUtil: AbstractTest()
 
         root.getAttributeDouble("Foo") shouldBe 0.0
     }
-
-    @Test
-    fun `Should read and write Integer hashmaps`()
-    {
-        val map = mutableMapOf<Int, Int>()
-        map[0] = 10
-        map[1] = 20
-        map[5] = -5
-
-        val doc = XmlUtil.factoryNewDocument()
-        val root = doc.createRootElement("Root")
-
-        root.writeHashMap(map, "SomeMap")
-        val newMap = root.readIntegerHashMap("SomeMap").mapValues { it.value.toInt() }
-        newMap.size shouldBe 3
-        newMap[0] shouldBe 10
-        newMap[1] shouldBe 20
-        newMap[5] shouldBe -5
-    }
 }
