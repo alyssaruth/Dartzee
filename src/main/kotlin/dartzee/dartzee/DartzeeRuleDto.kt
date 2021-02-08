@@ -6,7 +6,6 @@ import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.db.DartzeeRuleEntity
 import dartzee.utils.InjectedThings.dartzeeCalculator
-import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.sumScore
 
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,

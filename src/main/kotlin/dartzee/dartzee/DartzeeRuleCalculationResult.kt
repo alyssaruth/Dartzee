@@ -1,5 +1,7 @@
 package dartzee.dartzee
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.`object`.DartboardSegment
 import dartzee.core.util.*
 import dartzee.screen.game.dartzee.SegmentStatus
@@ -19,6 +21,7 @@ enum class DartzeeRuleDifficulty(val desc: String)
 
 val INVALID_CALCULATION_RESULT = DartzeeRuleCalculationResult(listOf(), listOf(), 0, 0, 0.0, 1.0)
 
+@JsonIgnoreProperties("percentage", "combinationsDesc", "difficultyDesc", "segmentStatus", "foreground", "background", "difficulty")
 data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegment>,
                                         val validSegments: List<DartboardSegment>,
                                         val validCombinations: Int,
@@ -48,24 +51,11 @@ data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegme
         else -> DartzeeRuleDifficulty.INSANE
     }
 
-    fun toDbString(): String
-    {
-        val doc = XmlUtil.factoryNewDocument()
-        val root = doc.createRootElement("CalculationResult")
-
-        root.setAttributeAny("ValidCombinations", validCombinations)
-        root.setAttributeAny("AllCombinations", allCombinations)
-        root.setAttributeAny("ValidCombinationProbability", validCombinationProbability)
-        root.setAttributeAny("AllCombinationsProbability", allCombinationsProbability)
-        scoringSegments.forEach { it.writeXml(root, "ScoringSegment") }
-        validSegments.forEach { it.writeXml(root, "ValidSegment") }
-
-        return doc.toXmlString()
-    }
+    fun toDbString(): String = jsonMapper().writeValueAsString(this)
 
     companion object
     {
-        fun fromDbString(dbString: String): DartzeeRuleCalculationResult
+        fun fromDbStringOLD(dbString: String): DartzeeRuleCalculationResult
         {
             val doc = dbString.toXmlDoc()!!
             val root = doc.documentElement
@@ -79,5 +69,7 @@ data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegme
 
             return DartzeeRuleCalculationResult(scoringSegments, validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
         }
+
+        fun fromDbString(dbString: String): DartzeeRuleCalculationResult = jsonMapper().readValue(dbString)
     }
 }

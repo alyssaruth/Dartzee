@@ -6,6 +6,7 @@ import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
+import dartzee.core.util.jsonMapper
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
 import dartzee.game.GameType
@@ -313,6 +314,7 @@ fun retrieveDartsMatch() = DartsMatchEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
+fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
 
 fun retrieveParticipant(gameId: String, playerId: String) = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND PlayerId = '$playerId'").first()
 

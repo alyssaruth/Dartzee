@@ -41,34 +41,6 @@ fun Element.getAttributeDouble(attributeName: String): Double
     return if (attribute == "") 0.0 else attribute.toDouble()
 }
 
-fun Element.readIntegerHashMap(tagName: String): MutableMap<Int, String>
-{
-    val hm = mutableMapOf<Int, String>()
-
-    val children = getElementsByTagName(tagName)
-    val size = children.length
-    for (i in 0 until size)
-    {
-        val child = children.item(i) as Element
-        val key = child.getAttributeInt("Key")
-        val value = child.getAttribute("Value")
-
-        hm[key] = value
-    }
-
-    return hm
-}
-
-fun Element.writeHashMap(hm: Map<*, *>, tagName: String)
-{
-    hm.forEach { key, value ->
-        val child = ownerDocument.createElement(tagName)
-        child.setAttribute("Key", "$key")
-        child.setAttribute("Value", "$value")
-        appendChild(child)
-    }
-}
-
 fun Element.setAttributeAny(key: String, value: Any) = setAttribute(key, "$value")
 
 fun Document.createRootElement(name: String): Element = createElement(name).also { appendChild(it) }

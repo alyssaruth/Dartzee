@@ -1,5 +1,6 @@
 package dartzee.`object`
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import dartzee.core.util.getAttributeInt
 import dartzee.core.util.setAttributeAny
 import org.w3c.dom.Element
@@ -9,6 +10,7 @@ const val MISS_FUDGE_FACTOR = 1805
 /**
  * Data class so that equivalent segments are treated as equal (e.g. DartzeeRuleCalculationResult externalisation)
  */
+@JsonIgnoreProperties("miss", "doubleExcludingBull", "multiplier", "total", "roughProbability")
 data class DartboardSegment(val type: SegmentType, val score: Int)
 {
     /**
