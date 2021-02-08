@@ -2,7 +2,6 @@ package dartzee.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
-import dartzee.core.util.jsonMapper
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.db.DartzeeRuleEntity

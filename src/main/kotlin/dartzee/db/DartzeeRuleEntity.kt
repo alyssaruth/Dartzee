@@ -1,7 +1,5 @@
 package dartzee.db
 
-import com.fasterxml.jackson.module.kotlin.readValue
-import dartzee.core.util.jsonMapper
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.parseDartRule
@@ -48,7 +46,7 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
         val dto = DartzeeRuleDto(rule1, rule2, rule3, total, inOrder, allowMisses)
         if (includeCalculationResult)
         {
-            val calculationResult = jsonMapper().readValue<DartzeeRuleCalculationResult>(calculationResult)
+            val calculationResult = DartzeeRuleCalculationResult.fromDbString(calculationResult)
             dto.calculationResult = calculationResult
         }
 

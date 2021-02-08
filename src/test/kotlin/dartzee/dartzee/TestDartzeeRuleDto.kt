@@ -1,6 +1,5 @@
 package dartzee.dartzee
 
-import dartzee.core.util.jsonMapper
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.total.DartzeeTotalRuleGreaterThan
 import dartzee.dartzee.total.DartzeeTotalRulePrime
