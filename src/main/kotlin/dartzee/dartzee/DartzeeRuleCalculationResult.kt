@@ -1,5 +1,6 @@
 package dartzee.dartzee
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.`object`.DartboardSegment
 import dartzee.core.util.*
@@ -20,6 +21,7 @@ enum class DartzeeRuleDifficulty(val desc: String)
 
 val INVALID_CALCULATION_RESULT = DartzeeRuleCalculationResult(listOf(), listOf(), 0, 0, 0.0, 1.0)
 
+@JsonIgnoreProperties("percentage", "combinationsDesc", "difficultyDesc", "segmentStatus", "foreground", "background", "difficulty")
 data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegment>,
                                         val validSegments: List<DartboardSegment>,
                                         val validCombinations: Int,

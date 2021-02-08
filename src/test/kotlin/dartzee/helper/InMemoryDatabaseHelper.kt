@@ -314,6 +314,7 @@ fun retrieveDartsMatch() = DartsMatchEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
+fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
 
 fun retrieveParticipant(gameId: String, playerId: String) = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND PlayerId = '$playerId'").first()
 
