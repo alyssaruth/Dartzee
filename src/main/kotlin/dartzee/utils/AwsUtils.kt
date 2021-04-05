@@ -2,6 +2,7 @@ package dartzee.utils
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import java.nio.charset.Charset
@@ -33,10 +34,11 @@ object AwsUtils
     fun makeS3Client(): AmazonS3
     {
         val credentials = readCredentials("AWS_SYNC")
+        val credProvider = if (credentials != null) AWSStaticCredentialsProvider(credentials) else EnvironmentVariableCredentialsProvider()
         return AmazonS3ClientBuilder
                 .standard()
                 .withRegion("eu-west-2")
-                .withCredentials(AWSStaticCredentialsProvider(credentials))
+                .withCredentials(credProvider)
                 .build()
     }
 }

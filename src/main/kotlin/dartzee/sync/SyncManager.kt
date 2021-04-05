@@ -23,6 +23,8 @@ val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
 class SyncManager(private val dbStore: IRemoteDatabaseStore)
 {
+    fun databaseExists(remoteName: String) = dbStore.databaseExists(remoteName)
+
     fun doPush(remoteName: String) = runInOtherThread { doPushOnOtherThread(remoteName) }
     private fun doPushOnOtherThread(remoteName: String)
     {

@@ -21,6 +21,7 @@ import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -31,18 +32,14 @@ import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JOptionPane
 
-class TestSyncManagementPanel: AbstractTest()
+class TestSyncManagementPanel : AbstractTest()
 {
     private val syncManager = mockk<SyncManager>(relaxed = true)
-    private val remoteDatabaseStore = InMemoryRemoteDatabaseStore()
 
     @BeforeEach
     fun before()
     {
-        remoteDatabaseStore.clear()
-
         InjectedThings.syncManager = syncManager
-        InjectedThings.remoteDatabaseStore = remoteDatabaseStore
         
         SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
     }
@@ -176,7 +173,7 @@ class TestSyncManagementPanel: AbstractTest()
     fun `Should not push if confirmation is cancelled`()
     {
         dialogFactory.questionOption = JOptionPane.NO_OPTION
-        remoteDatabaseStore.pushDatabase(REMOTE_NAME, mockk(relaxed = true))
+        every { syncManager.databaseExists(REMOTE_NAME) } returns true
 
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>("Push")
@@ -189,7 +186,7 @@ class TestSyncManagementPanel: AbstractTest()
     fun `Should overwrite remote if push is confirmed`()
     {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
-        remoteDatabaseStore.pushDatabase(REMOTE_NAME, mockk(relaxed = true))
+        every { syncManager.databaseExists(REMOTE_NAME) } returns true
 
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>("Push")
@@ -201,6 +198,7 @@ class TestSyncManagementPanel: AbstractTest()
     @Test
     fun `Should push without confirmation if no remote version exists`()
     {
+        every { syncManager.databaseExists(REMOTE_NAME) } returns false
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>("Push")
 
