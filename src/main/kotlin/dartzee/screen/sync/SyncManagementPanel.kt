@@ -132,7 +132,7 @@ class SyncManagementPanel: JPanel(), ActionListener
             return
         }
 
-        if (InjectedThings.remoteDatabaseStore.databaseExists(remoteName))
+        if (InjectedThings.syncManager.databaseExists(remoteName))
         {
             val q = "Are you sure you want to push to $remoteName? \n\nThis will overwrite any data that hasn't been synced to this device."
             val ans = DialogUtil.showQuestion(q)

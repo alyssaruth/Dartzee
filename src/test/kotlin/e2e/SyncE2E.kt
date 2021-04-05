@@ -41,7 +41,6 @@ class SyncE2E: AbstractRegistryTest()
         DartsDatabaseUtil.initialiseDatabase(InjectedThings.mainDatabase)
 
         val store = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
-        InjectedThings.remoteDatabaseStore = AmazonS3RemoteDatabaseStore("dartzee-unit-test")
         InjectedThings.syncManager = SyncManager(store)
         InjectedThings.syncConfigurer = SyncConfigurer(store)
 

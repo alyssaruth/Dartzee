@@ -34,12 +34,12 @@ object InjectedThings
     var esDestination = LoggerFactory.constructElasticsearchDestination()
     var logger: Logger = Logger(listOf(loggingConsole, LogDestinationSystemOut(), esDestination))
     var gameLauncher: GameLauncher = GameLauncher()
-    var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true }}
+    var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true } }
     var playerManager: PlayerManager = PlayerManager()
     val dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: AbstractSimulationRunner = SimulationRunner()
-    var remoteDatabaseStore: IRemoteDatabaseStore = AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
+    private val remoteDatabaseStore: IRemoteDatabaseStore = AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
     var syncConfigurer: SyncConfigurer = SyncConfigurer(remoteDatabaseStore)
     var syncManager: SyncManager = SyncManager(remoteDatabaseStore)
 }
