@@ -1,7 +1,7 @@
 name: CI
 on: push
 jobs:
-  build:
+  unit-test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -9,16 +9,28 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: Build with Gradle
+    - name: Build & Unit Test
       uses: GabrielBB/xvfb-action@v1.0
-      env:
-        AWS_SYNC: ${{ secrets.AWS_SYNC }}
-        AWS_LOGS: ${{ secrets.AWS_LOGS }}
       with:
-        run: ./gradlew test --info
+        run: ./gradlew unitTest --info
     - name: Export snapshots
       uses: actions/upload-artifact@v2
       if: failure()
       with:
         name: snapshots
         path: /home/runner/**/*.failed.png
+  integration-and-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Integration & E2E
+        uses: GabrielBB/xvfb-action@v1.0
+        env:
+          AWS_SYNC: ${{ secrets.AWS_SYNC }}
+          AWS_LOGS: ${{ secrets.AWS_LOGS }}
+        with:
+          run: ./gradlew integrationAndE2E --info
