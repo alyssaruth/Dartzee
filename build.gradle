@@ -70,6 +70,18 @@ task runDev(type: JavaExec) {
     main 'dartzee.main.DartsMainKt'
 }
 
+task unitTest(type: Test) {
+    useJUnitPlatform {
+        excludeTags "integration", "e2e"
+    }
+}
+
+task integrationAndE2E(type: Test) {
+    useJUnitPlatform {
+        includeTags "integration", "e2e"
+    }
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'dartzee.main.DartsMainKt'
