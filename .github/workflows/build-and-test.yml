@@ -16,13 +16,13 @@ jobs:
     - name: Export test results
       uses: actions/upload-artifact@v2
       with:
-        name: test-results
+        name: unit-test-results
         path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/unitTest/**/*.html
     - name: Export snapshots
       uses: actions/upload-artifact@v2
       if: failure()
       with:
-        name: snapshots
+        name: failed-snapshots
         path: /home/runner/**/*.failed.png
   integration-and-e2e:
     runs-on: ubuntu-latest
@@ -42,5 +42,5 @@ jobs:
       - name: Export test results
         uses: actions/upload-artifact@v2
         with:
-          name: test-results
+          name: integration-and-e2e-results
           path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/integrationAndE2E/**/*.html
