@@ -13,6 +13,11 @@ jobs:
       uses: GabrielBB/xvfb-action@v1.0
       with:
         run: ./gradlew unitTest --info
+    - name: Export test results
+      uses: actions/upload-artifacts@v2
+      with:
+        name: test-results
+        path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/unitTest/**/*.html
     - name: Export snapshots
       uses: actions/upload-artifact@v2
       if: failure()
@@ -34,3 +39,8 @@ jobs:
           AWS_LOGS: ${{ secrets.AWS_LOGS }}
         with:
           run: ./gradlew integrationAndE2E --info
+      - name: Export test results
+        uses: actions/upload-artifacts@v2
+        with:
+          name: test-results
+          path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/integrationAndE2E/**/*.html
