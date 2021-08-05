@@ -7,7 +7,9 @@ import dartzee.doubleNineteen
 import dartzee.getColor
 import dartzee.helper.AbstractTest
 import dartzee.singleNineteen
+import dartzee.trebleTwenty
 import dartzee.utils.DartsColour
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAverage
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -31,6 +33,39 @@ class TestDartboardSegmentSelector: AbstractTest()
         dartboard.selectedSegments.shouldHaveSize(1)
 
         dartboard.dartThrown(pt)
+        dartboard.selectedSegments.shouldBeEmpty()
+    }
+
+    @Test
+    fun `should be able to select all`()
+    {
+        val allSegments = getAllNonMissSegments()
+        val dartboard = DartboardSegmentSelector(100, 100)
+        dartboard.paintDartboard()
+        dartboard.initState(setOf(doubleNineteen, trebleTwenty))
+
+        dartboard.selectAll()
+        dartboard.selectedSegments shouldBe allSegments.toSet()
+
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
+        dartboard.dartThrown(pt)
+        dartboard.selectAll()
+        dartboard.selectedSegments shouldBe allSegments.toSet()
+    }
+
+    @Test
+    fun `should be able to select none`()
+    {
+        val dartboard = DartboardSegmentSelector(100, 100)
+        dartboard.paintDartboard()
+        dartboard.initState(setOf(doubleNineteen, trebleTwenty))
+
+        dartboard.selectNone()
+        dartboard.selectedSegments.shouldBeEmpty()
+
+        val pt = dartboard.getPointsForSegment(20, SegmentType.OUTER_SINGLE).first()
+        dartboard.dartThrown(pt)
+        dartboard.selectNone()
         dartboard.selectedSegments.shouldBeEmpty()
     }
 

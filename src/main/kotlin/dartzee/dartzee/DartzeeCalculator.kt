@@ -7,7 +7,7 @@ import dartzee.core.util.allIndexed
 import dartzee.core.util.getAllPermutations
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.dartzee.total.AbstractDartzeeTotalRule
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 
 abstract class AbstractDartzeeCalculator
 {
@@ -123,7 +123,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
 
     private fun getAllSegments(): List<DartboardSegment>
     {
-        val segments = getAllPossibleSegments().filter { !it.isMiss() }
+        val segments = getAllNonMissSegments()
         return segments + DartboardSegment(SegmentType.MISS, 20)
     }
 

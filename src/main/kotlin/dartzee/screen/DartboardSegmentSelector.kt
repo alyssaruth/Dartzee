@@ -5,6 +5,7 @@ import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.StatefulSegment
 import dartzee.utils.DartsColour
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getColourForSegment
 import java.awt.Color
 import java.awt.Point
@@ -32,6 +33,22 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
             val col = getColourForSegment(dataSegment, DEFAULT_COLOUR_WRAPPER)
             colourSegment(mySegment, col)
         }
+    }
+
+    fun selectAll()
+    {
+        val unselectedSegments = getAllNonMissSegments() - selectedSegments
+        toggleAll(unselectedSegments)
+    }
+
+    fun selectNone()
+    {
+        toggleAll(selectedSegments.toList())
+    }
+
+    private fun toggleAll(segments: List<DartboardSegment>)
+    {
+        segments.mapNotNull { getSegment(it.score, it.type) }.forEach(::toggleSegment)
     }
 
 

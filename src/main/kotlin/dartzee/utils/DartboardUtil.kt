@@ -222,3 +222,5 @@ fun getAllPossibleSegments(): List<DartboardSegment>
 
     return segments.toList()
 }
+
+fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }
