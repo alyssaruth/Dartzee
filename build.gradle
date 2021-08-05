@@ -76,6 +76,13 @@ task unitTest(type: Test) {
     }
 }
 
+task updateScreenshots(type: Test) {
+    jvmArgs '-DupdateSnapshots=true'
+    useJUnitPlatform {
+        includeTags "screenshot"
+    }
+}
+
 task integrationAndE2E(type: Test) {
     useJUnitPlatform {
         includeTags "integration", "e2e"

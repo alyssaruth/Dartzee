@@ -83,6 +83,8 @@ object DartsColour
             3 -> setColors(c, COLOUR_BRONZE, COLOUR_BRONZE_TEXT)
             else -> setColors(c, Color.BLACK, COLOUR_BRONZE)
         }
+
+        c.repaint()
     }
     private fun setColors(c: Component, background: Color?, foreground: Color?)
     {
