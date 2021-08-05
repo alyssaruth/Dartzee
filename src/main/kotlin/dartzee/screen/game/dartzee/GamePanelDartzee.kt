@@ -2,6 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
@@ -95,8 +96,10 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     private fun updateCarouselAndDartboard()
     {
-        updateCarousel()
-        dartboard.refreshValidSegments(summaryPanel.getSegmentStatus())
+        runOnEventThreadBlocking {
+            updateCarousel()
+            dartboard.refreshValidSegments(summaryPanel.getSegmentStatus())
+        }
     }
     private fun updateCarousel()
     {
