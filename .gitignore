@@ -12,3 +12,6 @@ out
 /terraform/terraform.tfstate.backup
 /src/main/resources/AWS*
 *.failed.png
+
+### Synced idea settings
+!.idea/dataSources.xml
