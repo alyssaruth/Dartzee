@@ -11,6 +11,7 @@ import java.awt.Color
 import java.awt.event.ActionEvent
 import java.util.*
 import javax.swing.*
+import dartzee.core.util.sortedBy
 
 class LeaderboardAchievements: AbstractLeaderboard()
 {
@@ -53,12 +54,13 @@ class LeaderboardAchievements: AbstractLeaderboard()
         val achievementRows = achievement.retrieveAllRows()
 
         val model = TableUtil.DefaultModel()
+        model.addColumn("#")
         model.addColumn("")
         model.addColumn("Player")
         model.addColumn("Score")
 
         val players = PlayerEntity.retrievePlayers(panelPlayerFilters.getWhereSql())
-        players.forEach{ p ->
+        val entries = players.map { p ->
             val myRows = achievementRows.filter { it.playerId == p.rowId }
 
             val myAchievement = achievement.javaClass.getDeclaredConstructor().newInstance()
@@ -69,15 +71,18 @@ class LeaderboardAchievements: AbstractLeaderboard()
                 myAchievement.attainedValue = Integer.MAX_VALUE
             }
 
-            val row = arrayOf(p.getFlag(), p, myAchievement)
-            model.addRow(row)
-        }
+            val row = listOf(p.getFlag(), p, myAchievement)
+            LeaderboardEntry(myAchievement.attainedValue, row)
+        }.sortedBy(!achievement.isDecreasing()) { it.score }
+
+        val modelRows = getRankedRowsForTable(entries)
+        model.addRows(modelRows)
 
         table.model = model
-        table.setColumnWidths("25;200")
-        table.setComparator(2, compareBy<AbstractAchievement>{ it.attainedValue })
-        table.sortBy(2, !achievement.isDecreasing())
+        table.setColumnWidths("35;25;200")
+        table.sortBy(0, false)
 
+        table.setComparator(3, compareBy<AbstractAchievement>{ it.attainedValue })
         val renderer = AchievementProgressBarRenderer()
         renderer.minimum = 0
         if (achievement.isDecreasing())
@@ -89,7 +94,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
             renderer.maximum = achievement.maxValue
         }
 
-        table.getColumn(2).cellRenderer = renderer
+        table.getColumn(3).cellRenderer = renderer
     }
 
     private fun getSelectedAchievement() = if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex) else DummyAchievementTotal()

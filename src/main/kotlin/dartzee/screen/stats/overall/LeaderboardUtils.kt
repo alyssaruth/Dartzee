@@ -1,0 +1,13 @@
+package dartzee.screen.stats.overall
+
+fun getRankedRowsForTable(entries: List<LeaderboardEntry>): List<Array<Any>>
+{
+    var previousPosition = 1
+    var previousScore = -1
+    return entries.mapIndexed { ix, entry ->
+        val position = if (entry.score != previousScore) ix+1 else previousPosition
+        previousPosition = position
+        previousScore = entry.score
+        (listOf(position) + entry.rowValues).toTypedArray()
+    }
+}

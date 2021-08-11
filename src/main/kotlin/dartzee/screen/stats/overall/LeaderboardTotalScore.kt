@@ -51,9 +51,7 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
     override fun buildTable()
     {
         val sql = getTotalScoreSql()
-        val desc = (doesHighestWin(gameType) != rdbtnWorst.isSelected)
-
-        buildStandardLeaderboard(scrollPane, sql, "Score", desc)
+        buildStandardLeaderboard(scrollPane, sql, "Score")
     }
 
     private fun getTotalScoreSql() : String
@@ -76,7 +74,8 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
             sb.append(" AND p.$playerWhereSql")
         }
 
-        val orderStr = if (rdbtnBest.isSelected) "ASC" else "DESC"
+
+        val orderStr = if (doesHighestWin(gameType) == rdbtnWorst.isSelected) "ASC" else "DESC"
         sb.append(" ORDER BY pt.FinalScore $orderStr")
         sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
 
