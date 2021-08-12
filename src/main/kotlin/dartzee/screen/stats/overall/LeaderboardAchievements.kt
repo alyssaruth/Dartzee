@@ -13,6 +13,8 @@ import java.util.*
 import javax.swing.*
 import dartzee.core.util.sortedBy
 
+const val ACHIEVEMENT_COLUMN_IX = 3
+
 class LeaderboardAchievements: AbstractLeaderboard()
 {
     val table = ScrollTableAchievements()
@@ -82,7 +84,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
         table.setColumnWidths("35;25;200")
         table.sortBy(0, false)
 
-        table.setComparator(3, compareBy<AbstractAchievement>{ it.attainedValue })
+        table.setComparator(ACHIEVEMENT_COLUMN_IX, compareBy<AbstractAchievement>{ it.attainedValue })
         val renderer = AchievementProgressBarRenderer()
         renderer.minimum = 0
         if (achievement.isDecreasing())
@@ -94,7 +96,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
             renderer.maximum = achievement.maxValue
         }
 
-        table.getColumn(3).cellRenderer = renderer
+        table.getColumn(ACHIEVEMENT_COLUMN_IX).cellRenderer = renderer
     }
 
     private fun getSelectedAchievement() = if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex) else DummyAchievementTotal()

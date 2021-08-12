@@ -67,10 +67,10 @@ class TestLeaderboardAchievements: AbstractTest()
         val table = leaderboard.table
         table.rowCount shouldBe 2
 
-        val achievementAlice = table.getValueAt(0, 2) as DummyAchievementTotal
+        val achievementAlice = table.getValueAt(0, ACHIEVEMENT_COLUMN_IX) as DummyAchievementTotal
         achievementAlice.attainedValue shouldBe 11
 
-        val achievementBob = table.getValueAt(1, 2) as DummyAchievementTotal
+        val achievementBob = table.getValueAt(1, ACHIEVEMENT_COLUMN_IX) as DummyAchievementTotal
         achievementBob.attainedValue shouldBe 4
     }
 
@@ -95,10 +95,39 @@ class TestLeaderboardAchievements: AbstractTest()
 
         leaderboard.panelPlayerFilters.rdbtnHuman.doClick()
         leaderboard.table.rowCount shouldBe 1
-        (leaderboard.table.getValueAt(0, 1) as PlayerEntity).rowId shouldBe alice.rowId
+        (leaderboard.table.getValueAt(0, 2) as PlayerEntity).rowId shouldBe alice.rowId
 
         leaderboard.panelPlayerFilters.rdbtnAi.doClick()
         leaderboard.table.rowCount shouldBe 1
-        (leaderboard.table.getValueAt(0, 1) as PlayerEntity).rowId shouldBe bob.rowId
+        (leaderboard.table.getValueAt(0, 2) as PlayerEntity).rowId shouldBe bob.rowId
+    }
+
+    @Test
+    fun `Should include rankings`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+        val clive = insertPlayer(name = "Clive")
+
+        val bestFinish = AchievementX01BestFinish()
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
+            achievementCounter = bestFinish.pinkThreshold,
+            playerId = alice.rowId)
+
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
+            achievementCounter = bestFinish.greenThreshold,
+            playerId = bob.rowId)
+
+        insertAchievement(type = AchievementType.X01_BEST_FINISH,
+            achievementCounter = bestFinish.pinkThreshold,
+            playerId = clive.rowId)
+
+        val leaderboard = LeaderboardAchievements()
+        leaderboard.buildTable()
+        leaderboard.table.rowCount shouldBe 3
+
+        leaderboard.table.getValueAt(0, 0) shouldBe 1
+        leaderboard.table.getValueAt(1, 0) shouldBe 1
+        leaderboard.table.getValueAt(2, 0) shouldBe 3
     }
 }

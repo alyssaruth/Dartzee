@@ -1,5 +1,7 @@
 package dartzee.screen.stats.overall
 
+data class LeaderboardEntry(val score: Int, val rowValues: List<Any>)
+
 fun getRankedRowsForTable(entries: List<LeaderboardEntry>): List<Array<Any>>
 {
     var previousPosition = 1
