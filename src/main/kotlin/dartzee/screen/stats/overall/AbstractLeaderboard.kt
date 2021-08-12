@@ -32,9 +32,10 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
     /**
      * Build a standard leaderboard table, which contains the flag, name, Game ID and a custom 'score' column.
      */
-    protected fun buildStandardLeaderboard(table: ScrollTableDartsGame, sql: String, scoreColumnName: String, desc: Boolean)
+    protected fun buildStandardLeaderboard(table: ScrollTableDartsGame, sql: String, scoreColumnName: String)
     {
         val model = TableUtil.DefaultModel()
+        model.addColumn("#")
         model.addColumn("")
         model.addColumn("Player")
         model.addColumn("Game")
@@ -44,13 +45,13 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
         model.addRows(rows)
 
         table.model = model
-        table.setColumnWidths("25")
-        table.sortBy(3, desc)
+        table.setColumnWidths("35;25")
+        table.sortBy(0, false)
     }
 
     private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): List<Array<Any>>
     {
-        val rows = mutableListOf<Array<Any>>()
+        val rows = mutableListOf<LeaderboardEntry>()
 
         mainDatabase.executeQuery(sqlStr).use { rs ->
             while (rs.next())
@@ -61,12 +62,11 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
                 val score = rs.getInt(4)
 
                 val playerFlag = PlayerEntity.getPlayerFlag(strategy.isEmpty())
-
-                val row = arrayOf<Any>(playerFlag, playerName, localId, score)
-                rows.add(row)
+                val entry = LeaderboardEntry(score, listOf(playerFlag, playerName, localId, score))
+                rows.add(entry)
             }
         }
 
-        return rows
+        return getRankedRowsForTable(rows)
     }
 }

@@ -44,6 +44,6 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
         sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
 
         val sql = sb.toString()
-        buildStandardLeaderboard(tableTopFinishes, sql, "Finish", true)
+        buildStandardLeaderboard(tableTopFinishes, sql, "Finish")
     }
 }
