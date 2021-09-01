@@ -12,16 +12,7 @@ import javax.swing.*
 import javax.swing.text.JTextComponent
 
 
-fun <K> JComboBox<K>.items(): List<K>
-{
-    val list = mutableListOf<K>()
-    for (i in 0 until model.size)
-    {
-        list.add(model.getElementAt(i))
-    }
-
-    return list
-}
+fun <K> JComboBox<K>.items() = (0 until model.size).map { model.getElementAt(it) }
 
 fun <K> JComboBox<K>.selectedItemTyped(): K = getItemAt(selectedIndex)
 

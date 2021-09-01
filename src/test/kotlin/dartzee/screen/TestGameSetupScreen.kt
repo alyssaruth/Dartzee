@@ -5,6 +5,7 @@ import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelX01
 import dartzee.bean.getAllPlayers
+import dartzee.core.bean.items
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.total.DartzeeTotalRulePrime
@@ -17,10 +18,7 @@ import dartzee.ruleDtosEq
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldNotContain
+import io.kotlintest.matchers.collections.*
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import io.mockk.*
@@ -289,6 +287,22 @@ class TestGameSetupScreen: AbstractTest()
         match.gameParams shouldBe ""
         match.gameType shouldBe GameType.DARTZEE
         match.players.shouldContainExactly(p1, p2)
+    }
+
+    @Test
+    fun `Should update the game parameters panel on initialise`()
+    {
+        val setupScreen = GameSetupScreen()
+        setupScreen.initialise()
+        setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
+
+        val originalFilterPanel = setupScreen.gameParamFilterPanel as GameParamFilterPanelDartzee
+        originalFilterPanel.comboBox.items().mapNotNull { it.hiddenData }.shouldBeEmpty()
+
+        insertDartzeeTemplate(name = "New Template")
+        setupScreen.initialise()
+        val newFilterPanel = setupScreen.gameParamFilterPanel as GameParamFilterPanelDartzee
+        newFilterPanel.comboBox.items().mapNotNull { it.hiddenData }.shouldHaveSize(1)
     }
 
     private fun makeGameSetupScreenReadyToLaunch(): GameSetupScreen
