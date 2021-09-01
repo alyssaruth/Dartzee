@@ -9,8 +9,8 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.getAllAggregateRules
-import dartzee.dartzee.total.AbstractDartzeeRuleTotalSize
-import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
+import dartzee.dartzee.aggregate.AbstractDartzeeRuleTotalSize
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.ParticipantEntity
 import dartzee.game.state.DartzeePlayerState
@@ -29,7 +29,7 @@ val innerOuterInner = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRule
         inOrder = true,
         calculationResult = makeDartzeeRuleCalculationResult(getInnerSegments()))
 
-val totalIsFifty = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
+val totalIsFifty = makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
         calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
 
 val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeScoreRule(20),
@@ -39,12 +39,12 @@ val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeS
 fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
                        dart2Rule: AbstractDartzeeDartRule? = null,
                        dart3Rule: AbstractDartzeeDartRule? = null,
-                       totalRule: AbstractDartzeeAggregateRule? = null,
+                       aggregateRule: AbstractDartzeeAggregateRule? = null,
                        inOrder: Boolean = false,
                        allowMisses: Boolean = false,
                        calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult()): DartzeeRuleDto
 {
-    val rule = DartzeeRuleDto(dart1Rule, dart2Rule, dart3Rule, totalRule, inOrder, allowMisses)
+    val rule = DartzeeRuleDto(dart1Rule, dart2Rule, dart3Rule, aggregateRule, inOrder, allowMisses)
     rule.calculationResult = calculationResult
     return rule
 }

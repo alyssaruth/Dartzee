@@ -1,8 +1,8 @@
 package dartzee.dartzee
 
 import dartzee.dartzee.dart.*
-import dartzee.dartzee.total.DartzeeTotalRuleGreaterThan
-import dartzee.dartzee.total.DartzeeTotalRulePrime
+import dartzee.dartzee.aggregate.DartzeeTotalRuleGreaterThan
+import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.helper.*
@@ -37,7 +37,7 @@ class TestDartzeeRuleDto: AbstractTest()
     @Test
     fun `Dart rule list should be null if no dart rules have been set`()
     {
-        val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+        val rule = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRulePrime())
 
         rule.getDartRuleList() shouldBe null
     }
@@ -66,10 +66,10 @@ class TestDartzeeRuleDto: AbstractTest()
     @Test
     fun `Should describe total rules correctly`()
     {
-        val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+        val rule = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRulePrime())
         rule.generateRuleDescription() shouldBe "Total is prime"
 
-        val rule2 = makeDartzeeRuleDto(totalRule = DartzeeTotalRuleGreaterThan())
+        val rule2 = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRuleGreaterThan())
         rule2.generateRuleDescription() shouldBe "Total > 20"
     }
 
@@ -151,7 +151,7 @@ class TestDartzeeRuleDto: AbstractTest()
     {
         val rule = makeDartzeeRuleDto(
             DartzeeDartRuleEven(),
-            totalRule = DartzeeTotalRuleGreaterThan()
+            aggregateRule = DartzeeTotalRuleGreaterThan()
         )
         rule.generateRuleDescription() shouldBe "Score Evens, Total > 20"
     }
@@ -161,7 +161,7 @@ class TestDartzeeRuleDto: AbstractTest()
     {
         val validSegments = listOf(doubleNineteen, doubleTwenty)
 
-        val rule = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+        val rule = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRulePrime())
         rule.getScoringSegments(validSegments).shouldContainExactly(doubleNineteen, doubleTwenty)
     }
 

@@ -11,4 +11,5 @@ class DartzeeAggregateRuleIncreasing: AbstractDartzeeAggregateRule()
     }
 
     override fun getRuleIdentifier() = "DartsIncreasing"
+    override fun getDescription() = "Darts are increasing"
 }

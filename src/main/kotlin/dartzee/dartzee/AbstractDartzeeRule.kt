@@ -4,10 +4,8 @@ import dartzee.core.util.XmlUtil
 import dartzee.core.util.createRootElement
 import dartzee.core.util.toXmlDoc
 import dartzee.core.util.toXmlString
-import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
-import dartzee.dartzee.aggregate.DartzeeAggregateRuleIncreasing
+import dartzee.dartzee.aggregate.*
 import dartzee.dartzee.dart.*
-import dartzee.dartzee.total.*
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 
@@ -48,7 +46,7 @@ abstract class AbstractDartzeeRule
 
 fun getAllDartRules(): List<AbstractDartzeeDartRule>
 {
-    return mutableListOf(DartzeeDartRuleAny(),
+    return listOf(DartzeeDartRuleAny(),
             DartzeeDartRuleEven(),
             DartzeeDartRuleOdd(),
             DartzeeDartRuleInner(),
@@ -59,7 +57,8 @@ fun getAllDartRules(): List<AbstractDartzeeDartRule>
 }
 fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule>
 {
-    return mutableListOf(DartzeeTotalRuleLessThan(),
+    return listOf(
+        DartzeeTotalRuleLessThan(),
             DartzeeTotalRuleGreaterThan(),
             DartzeeTotalRuleEqualTo(),
             DartzeeTotalRuleEven(),

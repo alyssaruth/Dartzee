@@ -1,6 +1,7 @@
 package dartzee.dartzee.total
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
+import dartzee.dartzee.aggregate.DartzeeTotalRuleLessThan
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 

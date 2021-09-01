@@ -1,4 +1,4 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 class DartzeeTotalRuleEqualTo: AbstractDartzeeRuleTotalSize()
 {
@@ -6,7 +6,7 @@ class DartzeeTotalRuleEqualTo: AbstractDartzeeRuleTotalSize()
 
     override fun isValidTotal(total: Int) = total == target
 
-    override fun toString() = "Equal to"
+    override fun toString() = "Total equal to"
 
     override fun getDescription() = "= $target"
 }

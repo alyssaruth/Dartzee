@@ -1,4 +1,4 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 import dartzee.core.util.getAttributeInt
 import dartzee.dartzee.IDartzeeRuleConfigurable

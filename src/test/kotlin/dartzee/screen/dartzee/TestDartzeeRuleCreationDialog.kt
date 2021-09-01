@@ -9,9 +9,9 @@ import dartzee.core.helper.makeActionEvent
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.dart.*
-import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
-import dartzee.dartzee.total.DartzeeTotalRuleOdd
-import dartzee.dartzee.total.DartzeeTotalRulePrime
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
+import dartzee.dartzee.aggregate.DartzeeTotalRuleOdd
+import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.helper.*
 import dartzee.utils.InjectedThings
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -104,17 +104,17 @@ class TestDartzeeRuleAmendment: AbstractTest()
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(makeDartzeeRuleDto())
 
-        dlg.totalSelector.cbDesc.isSelected shouldBe false
+        dlg.aggregateSelector.cbDesc.isSelected shouldBe false
     }
 
     @Test
     fun `Should populate a total rule correctly`()
     {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.amendRule(makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(48)))
+        dlg.amendRule(makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(48)))
 
-        dlg.totalSelector.cbDesc.isSelected shouldBe true
-        val totalRule = dlg.totalSelector.getSelection() as DartzeeTotalRuleEqualTo
+        dlg.aggregateSelector.cbDesc.isSelected shouldBe true
+        val totalRule = dlg.aggregateSelector.getSelection() as DartzeeTotalRuleEqualTo
         totalRule.target shouldBe 48
     }
 
@@ -240,8 +240,8 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
-            dlg.totalSelector.cbDesc.doClick()
-            dlg.totalSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
+            dlg.aggregateSelector.cbDesc.doClick()
+            dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
             dlg.btnOk.doClick()
         }
 
@@ -348,8 +348,8 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
     fun `Should populate the total rule correctly`()
     {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.totalSelector.cbDesc.doClick()
-        dlg.totalSelector.comboBoxRuleType.selectByClass<DartzeeTotalRulePrime>()
+        dlg.aggregateSelector.cbDesc.doClick()
+        dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRulePrime>()
         dlg.btnOk.doClick()
 
         val rule = dlg.dartzeeRule!!
@@ -428,8 +428,8 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 
         dlg.tfName.text shouldBe "Inner → Outer → Odd"
 
-        dlg.totalSelector.cbDesc.doClick()
-        dlg.totalSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
+        dlg.aggregateSelector.cbDesc.doClick()
+        dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
 
         flushEdt()
 

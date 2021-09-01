@@ -1,7 +1,7 @@
 package dartzee.bean
 
 import dartzee.dartzee.getAllAggregateRules
-import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain

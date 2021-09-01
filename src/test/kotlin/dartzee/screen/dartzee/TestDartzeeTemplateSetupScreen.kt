@@ -4,7 +4,7 @@ import dartzee.core.helper.processKeyPress
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.DartzeeTemplateFactory
 import dartzee.dartzee.dart.DartzeeDartRuleEven
-import dartzee.dartzee.total.DartzeeTotalRulePrime
+import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
@@ -271,7 +271,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val template = insertDartzeeTemplate()
 
         val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven())
-        val ruleTwo = makeDartzeeRuleDto(totalRule = DartzeeTotalRulePrime())
+        val ruleTwo = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRulePrime())
 
         ruleOne.toEntity(1, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
         ruleTwo.toEntity(2, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()

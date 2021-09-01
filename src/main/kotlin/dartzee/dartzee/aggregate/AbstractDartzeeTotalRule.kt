@@ -1,7 +1,6 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 import dartzee.`object`.DartboardSegment
-import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 
 abstract class AbstractDartzeeTotalRule: AbstractDartzeeAggregateRule()
 {

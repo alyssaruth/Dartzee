@@ -3,7 +3,6 @@ package dartzee.bean
 import dartzee.core.util.enableChildren
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.getAllAggregateRules
-import dartzee.dartzee.total.AbstractDartzeeTotalRule
 
 class DartzeeTotalRuleSelector(desc: String): AbstractDartzeeRuleSelector<AbstractDartzeeAggregateRule>(desc)
 {

@@ -4,7 +4,7 @@ import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
-import dartzee.dartzee.total.DartzeeTotalRuleEven
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import dartzee.doubleNineteen
 import dartzee.helper.insertDartzeeRule
 import dartzee.helper.insertDartzeeTemplate
