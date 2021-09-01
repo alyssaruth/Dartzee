@@ -86,6 +86,8 @@ class GameSetupScreen : EmbeddedScreen()
     {
         playerSelector.init()
 
+        refreshGameParamFilterPanel()
+
         toggleComponents()
     }
 
@@ -97,17 +99,7 @@ class GameSetupScreen : EmbeddedScreen()
         }
         else if (arg0.source === gameTypeComboBox)
         {
-            //Remove what's already there
-            gameParamFilterPanel.removeActionListener(this)
-            panelGameType.remove(gameParamFilterPanel)
-
-            gameParamFilterPanel = getFilterPanel(gameTypeComboBox.getGameType())
-            panelGameType.add(gameParamFilterPanel)
-            gameParamFilterPanel.addActionListener(this)
-
-            panelGameType.revalidate()
-
-            toggleComponents()
+            refreshGameParamFilterPanel()
         }
         else if (arg0.source != btnNext && arg0.source != btnBack)
         {
@@ -117,6 +109,21 @@ class GameSetupScreen : EmbeddedScreen()
         {
             super.actionPerformed(arg0)
         }
+    }
+
+    private fun refreshGameParamFilterPanel()
+    {
+        //Remove what's already there
+        gameParamFilterPanel.removeActionListener(this)
+        panelGameType.remove(gameParamFilterPanel)
+
+        gameParamFilterPanel = getFilterPanel(gameTypeComboBox.getGameType())
+        panelGameType.add(gameParamFilterPanel)
+        gameParamFilterPanel.addActionListener(this)
+
+        panelGameType.revalidate()
+
+        toggleComponents()
     }
 
     private fun toggleComponents()

@@ -139,7 +139,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return retrieveEntitiesWithFrom(queryWithFrom, alias)
     }
 
-    fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): MutableList<E>
+    private fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): MutableList<E>
     {
         val query = "SELECT " + getColumnsForSelectStatement(alias) + " " + whereSqlWithFrom
         val ret = mutableListOf<E>()
