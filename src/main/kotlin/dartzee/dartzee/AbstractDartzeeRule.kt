@@ -4,6 +4,8 @@ import dartzee.core.util.XmlUtil
 import dartzee.core.util.createRootElement
 import dartzee.core.util.toXmlDoc
 import dartzee.core.util.toXmlString
+import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
+import dartzee.dartzee.aggregate.DartzeeAggregateRuleIncreasing
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.total.*
 import org.w3c.dom.Document
@@ -55,17 +57,18 @@ fun getAllDartRules(): List<AbstractDartzeeDartRule>
             DartzeeDartRuleScore(),
             DartzeeDartRuleCustom())
 }
-fun getAllTotalRules(): List<AbstractDartzeeTotalRule>
+fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule>
 {
     return mutableListOf(DartzeeTotalRuleLessThan(),
             DartzeeTotalRuleGreaterThan(),
             DartzeeTotalRuleEqualTo(),
             DartzeeTotalRuleEven(),
             DartzeeTotalRuleOdd(),
-            DartzeeTotalRulePrime())
+            DartzeeTotalRulePrime(),
+            DartzeeAggregateRuleIncreasing())
 }
 fun parseDartRule(xmlStr: String) = parseRule(xmlStr, getAllDartRules())
-fun parseTotalRule(xmlStr: String) = parseRule(xmlStr, getAllTotalRules())
+fun parseAggregateRule(xmlStr: String) = parseRule(xmlStr, getAllAggregateRules())
 fun <K: AbstractDartzeeRule> parseRule(xmlStr: String, ruleTemplates: List<K>): K?
 {
     if (xmlStr.isEmpty())

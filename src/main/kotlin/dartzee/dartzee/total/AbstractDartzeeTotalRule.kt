@@ -1,8 +1,10 @@
 package dartzee.dartzee.total
 
-import dartzee.dartzee.AbstractDartzeeRule
+import dartzee.`object`.DartboardSegment
+import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 
-abstract class AbstractDartzeeTotalRule: AbstractDartzeeRule()
+abstract class AbstractDartzeeTotalRule: AbstractDartzeeAggregateRule()
 {
+    override fun isValidRound(segments: List<DartboardSegment>) = isValidTotal(segments.sumBy { it.getTotal() })
     abstract fun isValidTotal(total: Int): Boolean
 }

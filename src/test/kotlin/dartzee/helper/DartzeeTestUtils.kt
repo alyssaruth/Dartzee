@@ -6,10 +6,10 @@ import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.*
-import dartzee.dartzee.getAllTotalRules
+import dartzee.dartzee.getAllAggregateRules
 import dartzee.dartzee.total.AbstractDartzeeRuleTotalSize
-import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.ParticipantEntity
@@ -39,7 +39,7 @@ val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeS
 fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
                        dart2Rule: AbstractDartzeeDartRule? = null,
                        dart3Rule: AbstractDartzeeDartRule? = null,
-                       totalRule: AbstractDartzeeTotalRule? = null,
+                       totalRule: AbstractDartzeeAggregateRule? = null,
                        inOrder: Boolean = false,
                        allowMisses: Boolean = false,
                        calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult()): DartzeeRuleDto
@@ -75,7 +75,7 @@ fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean 
     return rule
 }
 
-inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllTotalRules().find { it is T }.also { (it as T).target = score }
+inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllAggregateRules().find { it is T }.also { (it as T).target = score }
 
 fun getOuterSegments() = getAllPossibleSegments().filter { it.type == SegmentType.DOUBLE || it.type == SegmentType.OUTER_SINGLE }.filter { it.score != 25 }
 fun getInnerSegments() = getAllPossibleSegments().filter { (it.score == 25 && !it.isMiss()) || it.type == SegmentType.TREBLE || it.type == SegmentType.INNER_SINGLE }

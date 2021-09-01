@@ -68,7 +68,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         entity.dart1Rule = "<Even />"
         entity.dart2Rule = "<Odd />"
         entity.dart3Rule = "<Outer />"
-        entity.totalRule = "<Even />"
+        entity.aggregateRule = "<Even />"
         entity.allowMisses = true
         entity.inOrder = false
 
@@ -80,7 +80,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         dto.dart1Rule!!.shouldBeInstanceOf<DartzeeDartRuleEven>()
         dto.dart2Rule!!.shouldBeInstanceOf<DartzeeDartRuleOdd>()
         dto.dart3Rule!!.shouldBeInstanceOf<DartzeeDartRuleOuter>()
-        dto.totalRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
+        dto.aggregateRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
         dto.allowMisses shouldBe true
         dto.inOrder shouldBe false
 
@@ -95,7 +95,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         entity.dart1Rule = "<Even />"
         entity.dart2Rule = "<Odd />"
         entity.dart3Rule = "<Outer />"
-        entity.totalRule = "<Even />"
+        entity.aggregateRule = "<Even />"
         entity.allowMisses = true
         entity.inOrder = false
 
@@ -107,7 +107,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         dto.dart1Rule!!.shouldBeInstanceOf<DartzeeDartRuleEven>()
         dto.dart2Rule!!.shouldBeInstanceOf<DartzeeDartRuleOdd>()
         dto.dart3Rule!!.shouldBeInstanceOf<DartzeeDartRuleOuter>()
-        dto.totalRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
+        dto.aggregateRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
         dto.allowMisses shouldBe true
         dto.inOrder shouldBe false
 

@@ -201,7 +201,7 @@ class TestDartzeeRuleDto: AbstractTest()
         dao.dart1Rule shouldBe DartzeeDartRuleEven().toDbString()
         dao.dart2Rule shouldBe DartzeeDartRuleOdd().toDbString()
         dao.dart3Rule shouldBe DartzeeDartRuleInner().toDbString()
-        dao.totalRule shouldBe DartzeeTotalRulePrime().toDbString()
+        dao.aggregateRule shouldBe DartzeeTotalRulePrime().toDbString()
     }
 
     private val dartsForTotal = listOf(makeDart(20, 1), makeDart(20, 1), makeDart(5, 2))

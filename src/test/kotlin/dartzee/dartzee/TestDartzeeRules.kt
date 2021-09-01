@@ -21,7 +21,7 @@ class TestDartzeeRules: AbstractTest()
     @Test
     fun `no total rules should have overlapping identifiers`()
     {
-        val rules = getAllTotalRules()
+        val rules = getAllAggregateRules()
 
         val nameCount = rules.map{ it.getRuleIdentifier() }.distinct().count()
         nameCount shouldBe rules.size

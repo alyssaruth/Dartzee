@@ -136,7 +136,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
             dartThreeSelector.populate(rule.dart3Rule!!)
         }
 
-        totalSelector.populate(rule.totalRule)
+        totalSelector.populate(rule.aggregateRule)
 
         cbAllowMisses.isSelected = rule.allowMisses
 

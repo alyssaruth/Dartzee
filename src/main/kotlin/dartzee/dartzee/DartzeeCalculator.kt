@@ -5,8 +5,8 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.core.util.allIndexed
 import dartzee.core.util.getAllPermutations
+import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
-import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.utils.getAllNonMissSegments
 
 abstract class AbstractDartzeeCalculator
@@ -25,7 +25,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
                            rule: DartzeeRuleDto,
                            cachedResults: MutableMap<List<DartboardSegment>, Boolean> = mutableMapOf()): Boolean
     {
-        return isValidCombinationForTotalRule(combination, rule.totalRule)
+        return isValidCombinationForAggregateRule(combination, rule.aggregateRule)
                 && isValidFromMisses(combination, rule)
                 && isValidCombinationForDartRule(combination, rule.getDartRuleList(), rule.inOrder, cachedResults)
     }
@@ -62,15 +62,14 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return rule.allowMisses || combination.all { !it.isMiss() }
     }
 
-    private fun isValidCombinationForTotalRule(combination: List<DartboardSegment>, totalRule: AbstractDartzeeTotalRule?): Boolean
+    private fun isValidCombinationForAggregateRule(combination: List<DartboardSegment>, aggregateRule: AbstractDartzeeAggregateRule?): Boolean
     {
-        if (totalRule == null)
+        if (aggregateRule == null)
         {
             return true
         }
 
-        val total = combination.map { it.score * it.getMultiplier() }.sum()
-        return totalRule.isValidTotal(total)
+        return aggregateRule.isValidRound(combination)
     }
     private fun isValidCombinationForDartRule(combination: List<DartboardSegment>,
                                               dartRules: List<AbstractDartzeeDartRule>?,

@@ -353,7 +353,7 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
         dlg.btnOk.doClick()
 
         val rule = dlg.dartzeeRule!!
-        rule.totalRule!!.toDbString() shouldBe DartzeeTotalRulePrime().toDbString()
+        rule.aggregateRule!!.toDbString() shouldBe DartzeeTotalRulePrime().toDbString()
     }
 }
 

@@ -1,0 +1,1 @@
+RENAME COLUMN DartzeeRule.TotalRule TO AggregateRule
