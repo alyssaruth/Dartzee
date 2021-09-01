@@ -38,7 +38,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     private val panelTotal = JPanel()
     private val panelAllowMisses = JPanel()
     val cbAllowMisses = JCheckBox("Allow misses")
-    val totalSelector = DartzeeTotalRuleSelector("Total")
+    val aggregateSelector = DartzeeTotalRuleSelector("Other")
     private val panelRuleName = JPanel()
     val tfName = JTextField()
     val btnRandom = JButton()
@@ -73,7 +73,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
         panelTotal.layout = MigLayout("", "[]", "[]")
 
-        panelTotal.add(totalSelector, "cell 0 0")
+        panelTotal.add(aggregateSelector, "cell 0 0")
 
         panelAllowMisses.layout = MigLayout("", "[]", "[]")
         panelAllowMisses.add(cbAllowMisses, "cell 0 0")
@@ -96,7 +96,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         dartTwoSelector.addActionListener(this)
         dartThreeSelector.addActionListener(this)
         targetSelector.addActionListener(this)
-        totalSelector.addActionListener(this)
+        aggregateSelector.addActionListener(this)
         cbInOrder.addActionListener(this)
         cbAllowMisses.addActionListener(this)
         btnRandom.addActionListener(this)
@@ -136,7 +136,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
             dartThreeSelector.populate(rule.dart3Rule!!)
         }
 
-        totalSelector.populate(rule.totalRule)
+        aggregateSelector.populate(rule.aggregateRule)
 
         cbAllowMisses.isSelected = rule.allowMisses
 
@@ -189,7 +189,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
     fun constructRuleFromComponents(): DartzeeRuleDto
     {
-        val totalRule = if (totalSelector.isEnabled) totalSelector.getSelection() else null
+        val totalRule = if (aggregateSelector.isEnabled) aggregateSelector.getSelection() else null
 
         return if (rdbtnAllDarts.isSelected)
         {

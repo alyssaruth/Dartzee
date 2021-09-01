@@ -1,4 +1,4 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 class DartzeeTotalRuleLessThan: AbstractDartzeeRuleTotalSize()
 {
@@ -6,7 +6,7 @@ class DartzeeTotalRuleLessThan: AbstractDartzeeRuleTotalSize()
 
     override fun isValidTotal(total: Int) = total < target
 
-    override fun toString() = "Less than"
+    override fun toString() = "Total less than"
 
-    override fun getDescription() = "< $target"
+    override fun getDescription() = "Total < $target"
 }

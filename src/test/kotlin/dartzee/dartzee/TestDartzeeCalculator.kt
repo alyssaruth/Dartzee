@@ -8,9 +8,9 @@ import dartzee.dartzee.dart.DartzeeDartRuleAny
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
-import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
-import dartzee.dartzee.total.DartzeeTotalRuleEven
-import dartzee.dartzee.total.DartzeeTotalRuleLessThan
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
+import dartzee.dartzee.aggregate.DartzeeTotalRuleLessThan
 import dartzee.helper.*
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldBeEmpty
@@ -305,7 +305,7 @@ class TestValidCombinations: AbstractTest()
     @Test
     fun `should test for just total rules`()
     {
-        val rule = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50))
+        val rule = makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50))
 
         DartzeeCalculator().isValidCombination(listOf(singleTwenty, singleTwenty, singleTen), rule) shouldBe true
         DartzeeCalculator().isValidCombination(listOf(outerBull, singleTwenty, singleFive), rule) shouldBe true

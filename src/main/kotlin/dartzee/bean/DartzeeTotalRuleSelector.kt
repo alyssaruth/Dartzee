@@ -1,12 +1,12 @@
 package dartzee.bean
 
 import dartzee.core.util.enableChildren
-import dartzee.dartzee.getAllTotalRules
-import dartzee.dartzee.total.AbstractDartzeeTotalRule
+import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
+import dartzee.dartzee.getAllAggregateRules
 
-class DartzeeTotalRuleSelector(desc: String): AbstractDartzeeRuleSelector<AbstractDartzeeTotalRule>(desc)
+class DartzeeTotalRuleSelector(desc: String): AbstractDartzeeRuleSelector<AbstractDartzeeAggregateRule>(desc)
 {
-    override fun getRules() = getAllTotalRules()
+    override fun getRules() = getAllAggregateRules()
     override fun shouldBeEnabled() = cbDesc.isSelected
     override fun isOptional() = true
 

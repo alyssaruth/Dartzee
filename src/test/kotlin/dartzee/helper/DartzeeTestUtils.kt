@@ -6,11 +6,11 @@ import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.*
-import dartzee.dartzee.getAllTotalRules
-import dartzee.dartzee.total.AbstractDartzeeRuleTotalSize
-import dartzee.dartzee.total.AbstractDartzeeTotalRule
-import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
+import dartzee.dartzee.getAllAggregateRules
+import dartzee.dartzee.aggregate.AbstractDartzeeRuleTotalSize
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.ParticipantEntity
 import dartzee.game.state.DartzeePlayerState
@@ -29,7 +29,7 @@ val innerOuterInner = makeDartzeeRuleDto(DartzeeDartRuleInner(), DartzeeDartRule
         inOrder = true,
         calculationResult = makeDartzeeRuleCalculationResult(getInnerSegments()))
 
-val totalIsFifty = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
+val totalIsFifty = makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
         calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { !it.isMiss() }))
 
 val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeScoreRule(20),
@@ -39,12 +39,12 @@ val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeS
 fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
                        dart2Rule: AbstractDartzeeDartRule? = null,
                        dart3Rule: AbstractDartzeeDartRule? = null,
-                       totalRule: AbstractDartzeeTotalRule? = null,
+                       aggregateRule: AbstractDartzeeAggregateRule? = null,
                        inOrder: Boolean = false,
                        allowMisses: Boolean = false,
                        calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult()): DartzeeRuleDto
 {
-    val rule = DartzeeRuleDto(dart1Rule, dart2Rule, dart3Rule, totalRule, inOrder, allowMisses)
+    val rule = DartzeeRuleDto(dart1Rule, dart2Rule, dart3Rule, aggregateRule, inOrder, allowMisses)
     rule.calculationResult = calculationResult
     return rule
 }
@@ -75,7 +75,7 @@ fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean 
     return rule
 }
 
-inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllTotalRules().find { it is T }.also { (it as T).target = score }
+inline fun <reified T: AbstractDartzeeRuleTotalSize> makeTotalScoreRule(score: Int) = getAllAggregateRules().find { it is T }.also { (it as T).target = score }
 
 fun getOuterSegments() = getAllPossibleSegments().filter { it.type == SegmentType.DOUBLE || it.type == SegmentType.OUTER_SINGLE }.filter { it.score != 25 }
 fun getInnerSegments() = getAllPossibleSegments().filter { (it.score == 25 && !it.isMiss()) || it.type == SegmentType.TREBLE || it.type == SegmentType.INNER_SINGLE }

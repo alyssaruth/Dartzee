@@ -2,7 +2,7 @@ package dartzee.screen.dartzee
 
 import dartzee.core.helper.makeMouseEvent
 import dartzee.dartzee.DartzeeRuleDto
-import dartzee.dartzee.total.DartzeeTotalRuleLessThan
+import dartzee.dartzee.aggregate.DartzeeTotalRuleLessThan
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.makeTotalScoreRule
@@ -24,7 +24,7 @@ class TestDartzeeRuleTile: AbstractTest()
     @Test
     fun `Should escape special characters in the description`()
     {
-        val dto = makeDartzeeRuleDto(totalRule = makeTotalScoreRule<DartzeeTotalRuleLessThan>(20))
+        val dto = makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<DartzeeTotalRuleLessThan>(20))
 
         val tile = FakeDartzeeRuleTile(dto, 3)
 

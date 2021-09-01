@@ -17,7 +17,7 @@ object DartzeeRandomiser
         val hasTotalRule = totalRuleBit == 1
 
         val dartRule = if (hasDartRule) makeDartRule() else null
-        val totalRule = if (hasTotalRule) getAllTotalRules().random().also { it.randomise() } else null
+        val totalRule = if (hasTotalRule) getAllAggregateRules().random().also { it.randomise() } else null
 
         val allowMisses = Random.nextInt(5) == 1
 

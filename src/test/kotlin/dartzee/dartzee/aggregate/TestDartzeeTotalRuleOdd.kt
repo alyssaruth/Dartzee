@@ -1,4 +1,4 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.shouldBe
@@ -21,6 +21,6 @@ class TestDartzeeTotalRuleOdd: AbstractDartzeeRuleTest<DartzeeTotalRuleOdd>()
     fun `Rule description`()
     {
         val rule = DartzeeTotalRuleOdd()
-        rule.getDescription() shouldBe "is odd"
+        rule.getDescription() shouldBe "Total is odd"
     }
 }

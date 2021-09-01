@@ -3,7 +3,7 @@ package dartzee.db
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.parseDartRule
-import dartzee.dartzee.parseTotalRule
+import dartzee.dartzee.parseAggregateRule
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
@@ -14,7 +14,7 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
     var dart1Rule = ""
     var dart2Rule = ""
     var dart3Rule = ""
-    var totalRule = ""
+    var aggregateRule = ""
     var inOrder = false
     var allowMisses = false
     var ordinal = -1
@@ -29,7 +29,7 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
                 + "Dart1Rule VARCHAR(32000) NOT NULL, "
                 + "Dart2Rule VARCHAR(32000) NOT NULL, "
                 + "Dart3Rule VARCHAR(32000) NOT NULL, "
-                + "TotalRule VARCHAR(255) NOT NULL, "
+                + "AggregateRule VARCHAR(255) NOT NULL, "
                 + "InOrder BOOLEAN NOT NULL, "
                 + "AllowMisses BOOLEAN NOT NULL, "
                 + "Ordinal INT NOT NULL, "
@@ -41,7 +41,7 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
         val rule1 = parseDartRule(dart1Rule)
         val rule2 = parseDartRule(dart2Rule)
         val rule3 = parseDartRule(dart3Rule)
-        val total = parseTotalRule(totalRule)
+        val total = parseAggregateRule(aggregateRule)
 
         val dto = DartzeeRuleDto(rule1, rule2, rule3, total, inOrder, allowMisses)
         if (includeCalculationResult)

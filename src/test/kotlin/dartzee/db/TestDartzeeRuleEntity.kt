@@ -4,7 +4,7 @@ import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
-import dartzee.dartzee.total.DartzeeTotalRuleEven
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import dartzee.doubleNineteen
 import dartzee.helper.insertDartzeeRule
 import dartzee.helper.insertDartzeeTemplate
@@ -68,7 +68,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         entity.dart1Rule = "<Even />"
         entity.dart2Rule = "<Odd />"
         entity.dart3Rule = "<Outer />"
-        entity.totalRule = "<Even />"
+        entity.aggregateRule = "<Even />"
         entity.allowMisses = true
         entity.inOrder = false
 
@@ -80,7 +80,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         dto.dart1Rule!!.shouldBeInstanceOf<DartzeeDartRuleEven>()
         dto.dart2Rule!!.shouldBeInstanceOf<DartzeeDartRuleOdd>()
         dto.dart3Rule!!.shouldBeInstanceOf<DartzeeDartRuleOuter>()
-        dto.totalRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
+        dto.aggregateRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
         dto.allowMisses shouldBe true
         dto.inOrder shouldBe false
 
@@ -95,7 +95,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         entity.dart1Rule = "<Even />"
         entity.dart2Rule = "<Odd />"
         entity.dart3Rule = "<Outer />"
-        entity.totalRule = "<Even />"
+        entity.aggregateRule = "<Even />"
         entity.allowMisses = true
         entity.inOrder = false
 
@@ -107,7 +107,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         dto.dart1Rule!!.shouldBeInstanceOf<DartzeeDartRuleEven>()
         dto.dart2Rule!!.shouldBeInstanceOf<DartzeeDartRuleOdd>()
         dto.dart3Rule!!.shouldBeInstanceOf<DartzeeDartRuleOuter>()
-        dto.totalRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
+        dto.aggregateRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
         dto.allowMisses shouldBe true
         dto.inOrder shouldBe false
 

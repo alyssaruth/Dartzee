@@ -29,6 +29,9 @@ object DatabaseMigrations
             ),
             17 to listOf(
                 { db -> convertDartzeeCalculationResults(db) }
+            ),
+            18 to listOf(
+                { db -> runScript(db, 19, "1. DartzeeRule.sql") }
             )
         )
     }

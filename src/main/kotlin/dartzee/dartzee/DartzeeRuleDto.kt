@@ -2,14 +2,14 @@ package dartzee.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
+import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
-import dartzee.dartzee.total.AbstractDartzeeTotalRule
 import dartzee.db.DartzeeRuleEntity
 import dartzee.utils.InjectedThings.dartzeeCalculator
 import dartzee.utils.sumScore
 
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,
-                          val totalRule: AbstractDartzeeTotalRule?, val inOrder: Boolean, val allowMisses: Boolean)
+                          val aggregateRule: AbstractDartzeeAggregateRule?, val inOrder: Boolean, val allowMisses: Boolean)
 {
     var calculationResult: DartzeeRuleCalculationResult? = null
 
@@ -74,12 +74,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         val result = ruleParts.joinToString()
         return if (result.isEmpty()) "Anything" else result
     }
-    private fun getTotalDescription(): String
-    {
-        totalRule ?: return ""
-
-        return "Total ${totalRule.getDescription()}"
-    }
+    private fun getTotalDescription() = aggregateRule?.getDescription() ?: ""
     private fun getDartsDescription(): String
     {
         dart1Rule ?: return ""
@@ -119,7 +114,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         entity.dart1Rule = dart1Rule?.toDbString() ?: ""
         entity.dart2Rule = dart2Rule?.toDbString() ?: ""
         entity.dart3Rule = dart3Rule?.toDbString() ?: ""
-        entity.totalRule = totalRule?.toDbString() ?: ""
+        entity.aggregateRule = aggregateRule?.toDbString() ?: ""
         entity.allowMisses = allowMisses
         entity.inOrder = inOrder
         entity.entityName = entityName

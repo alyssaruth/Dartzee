@@ -1,4 +1,4 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import io.kotlintest.shouldBe

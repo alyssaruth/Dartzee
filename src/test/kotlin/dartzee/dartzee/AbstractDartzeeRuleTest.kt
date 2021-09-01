@@ -44,7 +44,7 @@ abstract class AbstractDartzeeRuleTest<E: AbstractDartzeeRule>: AbstractTest()
         }
         else
         {
-            getAllTotalRules()
+            getAllAggregateRules()
         }
     }
 }

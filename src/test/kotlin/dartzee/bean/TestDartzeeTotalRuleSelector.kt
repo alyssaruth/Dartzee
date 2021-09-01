@@ -1,7 +1,7 @@
 package dartzee.bean
 
-import dartzee.dartzee.getAllTotalRules
-import dartzee.dartzee.total.DartzeeTotalRuleEqualTo
+import dartzee.dartzee.getAllAggregateRules
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
 import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.matchers.collections.shouldNotContain
@@ -14,7 +14,7 @@ class TestDartzeeTotalRuleSelector : AbstractTest()
     fun `Should initialise with all the total rules`()
     {
         val selector = DartzeeTotalRuleSelector("")
-        selector.getRules().size shouldBe getAllTotalRules().size
+        selector.getRules().size shouldBe getAllAggregateRules().size
     }
 
     @Test
