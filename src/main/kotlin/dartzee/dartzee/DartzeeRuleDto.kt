@@ -74,12 +74,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         val result = ruleParts.joinToString()
         return if (result.isEmpty()) "Anything" else result
     }
-    private fun getTotalDescription(): String
-    {
-        aggregateRule ?: return ""
-
-        return "Total ${aggregateRule.getDescription()}"
-    }
+    private fun getTotalDescription() = aggregateRule?.getDescription() ?: ""
     private fun getDartsDescription(): String
     {
         dart1Rule ?: return ""

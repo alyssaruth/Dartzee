@@ -8,5 +8,5 @@ class DartzeeTotalRuleEqualTo: AbstractDartzeeRuleTotalSize()
 
     override fun toString() = "Total equal to"
 
-    override fun getDescription() = "= $target"
+    override fun getDescription() = "Total = $target"
 }

@@ -8,5 +8,5 @@ class DartzeeTotalRuleGreaterThan: AbstractDartzeeRuleTotalSize()
 
     override fun toString() = "Total greater than"
 
-    override fun getDescription() = "> $target"
+    override fun getDescription() = "Total > $target"
 }
