@@ -1,7 +1,6 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -22,6 +21,6 @@ class TestDartzeeTotalRuleEven: AbstractDartzeeRuleTest<DartzeeTotalRuleEven>()
     fun `Rule description`()
     {
         val rule = DartzeeTotalRuleEven()
-        rule.getDescription() shouldBe "is even"
+        rule.getDescription() shouldBe "Total is even"
     }
 }

@@ -1,7 +1,6 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import dartzee.dartzee.aggregate.DartzeeTotalRuleGreaterThan
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -26,6 +25,6 @@ class TestDartzeeTotalRuleGreaterThan: AbstractDartzeeRuleTest<DartzeeTotalRuleG
         val rule = DartzeeTotalRuleGreaterThan()
         rule.target = 25
 
-        rule.getDescription() shouldBe "> 25"
+        rule.getDescription() shouldBe "Total > 25"
     }
 }

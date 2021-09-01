@@ -1,7 +1,6 @@
-package dartzee.dartzee.total
+package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
