@@ -4,7 +4,7 @@ import dartzee.core.util.enableChildren
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.getAllAggregateRules
 
-class DartzeeTotalRuleSelector(desc: String): AbstractDartzeeRuleSelector<AbstractDartzeeAggregateRule>(desc)
+class DartzeeAggregateRuleSelector(desc: String): AbstractDartzeeRuleSelector<AbstractDartzeeAggregateRule>(desc)
 {
     override fun getRules() = getAllAggregateRules()
     override fun shouldBeEnabled() = cbDesc.isSelected

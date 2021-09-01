@@ -8,19 +8,19 @@ import io.kotlintest.matchers.collections.shouldNotContain
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeTotalRuleSelector : AbstractTest()
+class TestDartzeeAggregateRuleSelector : AbstractTest()
 {
     @Test
     fun `Should initialise with all the total rules`()
     {
-        val selector = DartzeeTotalRuleSelector("")
+        val selector = DartzeeAggregateRuleSelector("")
         selector.getRules().size shouldBe getAllAggregateRules().size
     }
 
     @Test
     fun `Should be optional`()
     {
-        val selector = DartzeeTotalRuleSelector("")
+        val selector = DartzeeAggregateRuleSelector("")
         selector.isOptional() shouldBe true
         val children = selector.components.toList()
         children.shouldNotContain(selector.lblDesc)
@@ -36,7 +36,7 @@ class TestDartzeeTotalRuleSelector : AbstractTest()
     @Test
     fun `Should enable or disable all children`()
     {
-        val selector = DartzeeTotalRuleSelector("")
+        val selector = DartzeeAggregateRuleSelector("")
         selector.populate(DartzeeTotalRuleEqualTo())
 
         val populatedRule = selector.getSelection() as DartzeeTotalRuleEqualTo

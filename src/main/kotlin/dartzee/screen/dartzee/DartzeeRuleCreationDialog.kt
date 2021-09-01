@@ -1,7 +1,7 @@
 package dartzee.screen.dartzee
 
 import dartzee.bean.DartzeeDartRuleSelector
-import dartzee.bean.DartzeeTotalRuleSelector
+import dartzee.bean.DartzeeAggregateRuleSelector
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
@@ -38,7 +38,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     private val panelTotal = JPanel()
     private val panelAllowMisses = JPanel()
     val cbAllowMisses = JCheckBox("Allow misses")
-    val aggregateSelector = DartzeeTotalRuleSelector("Other")
+    val aggregateSelector = DartzeeAggregateRuleSelector("Other")
     private val panelRuleName = JPanel()
     val tfName = JTextField()
     val btnRandom = JButton()

@@ -59,12 +59,14 @@ fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule>
 {
     return listOf(
         DartzeeTotalRuleLessThan(),
-            DartzeeTotalRuleGreaterThan(),
-            DartzeeTotalRuleEqualTo(),
-            DartzeeTotalRuleEven(),
-            DartzeeTotalRuleOdd(),
-            DartzeeTotalRulePrime(),
-            DartzeeAggregateRuleIncreasing())
+        DartzeeTotalRuleGreaterThan(),
+        DartzeeTotalRuleEqualTo(),
+        DartzeeTotalRuleEven(),
+        DartzeeTotalRuleOdd(),
+        DartzeeTotalRulePrime(),
+        DartzeeAggregateRuleIncreasing(),
+        DartzeeAggregateRuleDecreasing(),
+        DartzeeAggregateRuleSpread())
 }
 fun parseDartRule(xmlStr: String) = parseRule(xmlStr, getAllDartRules())
 fun parseAggregateRule(xmlStr: String) = parseRule(xmlStr, getAllAggregateRules())
