@@ -4,7 +4,8 @@ import dartzee.`object`.ColourWrapper
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import dartzee.helper.AbstractRegistryTest
-import io.kotlintest.matchers.collections.shouldContainAll
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -157,10 +158,20 @@ class TestDartboardUtil : AbstractRegistryTest()
         val adjacentTo6 = getAdjacentNumbers(6)
         val adjacentTo11 = getAdjacentNumbers(11)
 
-        adjacentTo20.shouldContainAll(1, 5)
-        adjacentTo3.shouldContainAll(19, 17)
-        adjacentTo6.shouldContainAll(10, 13)
-        adjacentTo11.shouldContainAll(14, 8)
+        adjacentTo20.shouldContainExactlyInAnyOrder(1, 5)
+        adjacentTo3.shouldContainExactlyInAnyOrder(19, 17)
+        adjacentTo6.shouldContainExactlyInAnyOrder(10, 13)
+        adjacentTo11.shouldContainExactlyInAnyOrder(14, 8)
+    }
+
+    @Test
+    fun `Should return all numbers within N segments`()
+    {
+        getNumbersWithinN(20, 1).shouldContainExactly(5, 20, 1)
+        getNumbersWithinN(20, 2).shouldContainExactly(12, 5, 20, 1, 18)
+        getNumbersWithinN(20, 3).shouldContainExactly(9, 12, 5, 20, 1, 18, 4)
+        getNumbersWithinN(20, 4).shouldContainExactly(14, 9, 12, 5, 20, 1, 18, 4, 13)
+        getNumbersWithinN(20, 5).shouldContainExactly(11, 14, 9, 12, 5, 20, 1, 18, 4, 13, 6)
     }
 
     @Test

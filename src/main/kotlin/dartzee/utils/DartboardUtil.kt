@@ -31,23 +31,15 @@ fun getDartForSegment(pt: Point, segment: DartboardSegment): Dart
 
 fun getNumbersWithinN(number: Int, n: Int): List<Int>
 {
-    val result = mutableSetOf(number)
-    repeat(n) {
-        result.addAll(result.flatMap { no -> getAdjacentNumbers(no) })
-    }
+    val ix = numberOrder.indexOf(number)
+    val range = ((ix-n)..(ix+n))
 
-    return result.toList()
+    return range.map { numberOrder[(it+20) % 20] }
 }
 
 fun getAdjacentNumbers(number: Int): List<Int>
 {
-    if (number == 20)
-    {
-        return listOf(1, 5)
-    }
-
-    val ix = numberOrder.indexOf(number)
-    return listOf(numberOrder[ix-1], numberOrder[ix+1])
+    return getNumbersWithinN(number, 1).filterNot { it == number }
 }
 
 fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): StatefulSegment
