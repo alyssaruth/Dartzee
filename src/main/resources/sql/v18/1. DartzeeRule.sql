@@ -1,1 +1,4 @@
-RENAME COLUMN DartzeeRule.TotalRule TO AggregateRule
+RENAME COLUMN DartzeeRule.TotalRule TO AggregateRule;
+
+ALTER TABLE DartzeeRule ADD COLUMN RuleName VARCHAR(1000) DEFAULT '';
+ALTER TABLE DartzeeRule ALTER COLUMN RuleName DROP DEFAULT

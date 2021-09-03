@@ -42,9 +42,10 @@ fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
                        aggregateRule: AbstractDartzeeAggregateRule? = null,
                        inOrder: Boolean = false,
                        allowMisses: Boolean = false,
-                       calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult()): DartzeeRuleDto
+                       calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
+                       ruleName: String? = null): DartzeeRuleDto
 {
-    val rule = DartzeeRuleDto(dart1Rule, dart2Rule, dart3Rule, aggregateRule, inOrder, allowMisses)
+    val rule = DartzeeRuleDto(dart1Rule, dart2Rule, dart3Rule, aggregateRule, inOrder, allowMisses, ruleName)
     rule.calculationResult = calculationResult
     return rule
 }

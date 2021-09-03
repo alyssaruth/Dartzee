@@ -7,6 +7,8 @@ import dartzee.dartzee.parseAggregateRule
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
+const val MAX_RULE_NAME = 1000
+
 class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<DartzeeRuleEntity>(database)
 {
     var entityName = ""
@@ -19,6 +21,7 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
     var allowMisses = false
     var ordinal = -1
     var calculationResult = ""
+    var ruleName = ""
 
     override fun getTableName() = "DartzeeRule"
 
@@ -33,7 +36,8 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
                 + "InOrder BOOLEAN NOT NULL, "
                 + "AllowMisses BOOLEAN NOT NULL, "
                 + "Ordinal INT NOT NULL, "
-                + "CalculationResult VARCHAR(32000) NOT NULL")
+                + "CalculationResult VARCHAR(32000) NOT NULL, "
+                + "RuleName VARCHAR($MAX_RULE_NAME) NOT NULL")
     }
 
     fun toDto(includeCalculationResult: Boolean = true): DartzeeRuleDto
@@ -42,8 +46,9 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
         val rule2 = parseDartRule(dart2Rule)
         val rule3 = parseDartRule(dart3Rule)
         val total = parseAggregateRule(aggregateRule)
+        val name = ruleName.ifBlank { null }
 
-        val dto = DartzeeRuleDto(rule1, rule2, rule3, total, inOrder, allowMisses)
+        val dto = DartzeeRuleDto(rule1, rule2, rule3, total, inOrder, allowMisses, name)
         if (includeCalculationResult)
         {
             val calculationResult = DartzeeRuleCalculationResult.fromDbString(calculationResult)

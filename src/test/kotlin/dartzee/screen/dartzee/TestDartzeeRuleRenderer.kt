@@ -10,9 +10,10 @@ import org.junit.jupiter.api.Test
 class TestDartzeeRuleRenderer: AbstractTest()
 {
     @Test
-    fun `Should render the rule description for the first column`()
+    fun `Should render the rule name, falling back on the description for the first column`()
     {
         val renderer = DartzeeRuleRenderer(0)
+        renderer.getReplacementValue(makeDartzeeRuleDto(ruleName = "My Rule")) shouldBe "My Rule"
         renderer.getReplacementValue(makeDartzeeRuleDto()) shouldBe "Anything"
         renderer.getReplacementValue(makeDartzeeRuleDto(DartzeeDartRuleInner())) shouldBe "Score Inners"
     }

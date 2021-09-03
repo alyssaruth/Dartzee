@@ -28,8 +28,8 @@ object DatabaseMigrations
                 { db -> convertMatchParams(db) }
             ),
             17 to listOf(
-                { db -> convertDartzeeCalculationResults(db) },
-                { db -> runScript(db, 18, "1. DartzeeRule.sql") }
+                { db -> runScript(db, 18, "1. DartzeeRule.sql") },
+                { db -> convertDartzeeCalculationResults(db) }
             )
         )
     }

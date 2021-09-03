@@ -186,7 +186,7 @@ class TestDartzeeRuleDto: AbstractTest()
     @Test
     fun `Should convert to an entity correctly`()
     {
-        val rule = DartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeTotalRulePrime(), true, false)
+        val rule = DartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeTotalRulePrime(), true, false, "foobar")
         rule.runStrengthCalculation()
 
         val dao = rule.toEntity(5, "Game", "foo")
@@ -202,6 +202,20 @@ class TestDartzeeRuleDto: AbstractTest()
         dao.dart2Rule shouldBe DartzeeDartRuleOdd().toDbString()
         dao.dart3Rule shouldBe DartzeeDartRuleInner().toDbString()
         dao.aggregateRule shouldBe DartzeeTotalRulePrime().toDbString()
+        dao.ruleName shouldBe "foobar"
+    }
+
+    @Test
+    fun `Should convert null ruleName and rules to empty strings`()
+    {
+        val rule = DartzeeRuleDto(DartzeeDartRuleEven(), null, null, null, true, false, null)
+        rule.runStrengthCalculation()
+
+        val dao = rule.toEntity(5, "Game", "foo")
+        dao.dart2Rule shouldBe ""
+        dao.dart3Rule shouldBe ""
+        dao.aggregateRule shouldBe ""
+        dao.ruleName shouldBe ""
     }
 
     private val dartsForTotal = listOf(makeDart(20, 1), makeDart(20, 1), makeDart(5, 2))

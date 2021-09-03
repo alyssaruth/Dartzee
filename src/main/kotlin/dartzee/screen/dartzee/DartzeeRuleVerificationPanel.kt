@@ -22,7 +22,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
     val dartboard = DartzeeDartboard(dartboardSize, dartboardSize)
     val dartsThrown = mutableListOf<Dart>()
-    private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false)
+    private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false, null)
 
     val btnReset = JButton()
     private val panelNorth = JPanel()

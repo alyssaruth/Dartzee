@@ -126,7 +126,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
 
         flushEdt()
 
-        dlg.tfName.text shouldBe "Score Outers"
+        dlg.tfDescription.text shouldBe "Score Outers"
     }
 
     @Test
@@ -426,14 +426,14 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 
         flushEdt()
 
-        dlg.tfName.text shouldBe "Inner → Outer → Odd"
+        dlg.tfDescription.text shouldBe "Inner → Outer → Odd"
 
         dlg.aggregateSelector.cbDesc.doClick()
         dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
 
         flushEdt()
 
-        dlg.tfName.text shouldBe "Inner → Outer → Odd, Total is odd"
+        dlg.tfDescription.text shouldBe "Inner → Outer → Odd, Total is odd"
     }
 
     @Test
@@ -459,13 +459,13 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
         flushEdt()
-        dlg.tfName.text shouldBe "20 → Any → Any"
+        dlg.tfDescription.text shouldBe "20 → Any → Any"
 
         scoreRule.spinner.value = 15
         flushEdt()
         dlg.stateChanged(mockk())
         flushEdt()
-        dlg.tfName.text shouldBe "15 → Any → Any"
+        dlg.tfDescription.text shouldBe "15 → Any → Any"
     }
 
     @Test
@@ -476,12 +476,12 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         val customRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleCustom>()!!
         flushEdt()
 
-        dlg.tfName.text shouldBe "Custom → Any → Any"
+        dlg.tfDescription.text shouldBe "Custom → Any → Any"
 
         customRule.tfName.text = "Foo"
         customRule.actionPerformed(makeActionEvent(customRule.tfName))
         flushEdt()
 
-        dlg.tfName.text shouldBe "Foo → Any → Any"
+        dlg.tfDescription.text shouldBe "Foo → Any → Any"
     }
 }
