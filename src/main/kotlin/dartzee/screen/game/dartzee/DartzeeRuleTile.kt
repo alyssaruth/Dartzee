@@ -21,13 +21,23 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
 
     abstract fun getScoreForHover(): Int?
 
-    protected fun getButtonText(hovered: Boolean = false) =
-        if (hovered) "<html><center><b>${getScoreText()}</b></center></html>"
-        else
+    private fun getButtonText(hovered: Boolean = false): String
+    {
+        val ruleDesc = ImageMapUtilities.htmlEscape(dto.generateRuleDescription())
+        val ruleNameOrDesc = dto.ruleName?.let { ImageMapUtilities.htmlEscape(it) } ?: ruleDesc
+
+        val nonHoverHtml = "<html><center><b>#$ruleNumber <br /><br /> $ruleNameOrDesc</b></center></html>"
+        val hoverHtml = "<html><center><b>#$ruleNumber <br /><br /> $ruleDesc</b></center></html>"
+        val scoreHtml = "<html><center><b>${getScoreText()}</b></center></html>"
+
+        return when
         {
-            val ruleDesc = ImageMapUtilities.htmlEscape(dto.generateRuleDescription())
-            "<html><center><b>#$ruleNumber <br /><br /> $ruleDesc</b></center></html>"
+            hovered && getScoreForHover() != null -> scoreHtml
+            hovered -> hoverHtml
+            else -> nonHoverHtml
         }
+    }
+
 
     private fun getScoreText(): String
     {
@@ -40,8 +50,9 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
 
     override fun mouseEntered(e: MouseEvent?)
     {
+        text = getButtonText(true)
+
         if (getScoreForHover() != null) {
-            text = getButtonText(true)
             setFontSize(24)
         }
     }
