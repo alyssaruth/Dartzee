@@ -14,6 +14,7 @@ import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.types.shouldBeInstanceOf
+import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import org.junit.jupiter.api.Test
@@ -71,6 +72,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         entity.aggregateRule = "<Even />"
         entity.allowMisses = true
         entity.inOrder = false
+        entity.ruleName = "My Rule"
 
         val calculationResult = makeDartzeeRuleCalculationResult(listOf(doubleNineteen))
         entity.calculationResult = calculationResult.toDbString()
@@ -83,6 +85,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         dto.aggregateRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
         dto.allowMisses shouldBe true
         dto.inOrder shouldBe false
+        dto.ruleName shouldBe "My Rule"
 
         val newCalcResult = dto.calculationResult!!
         newCalcResult.scoringSegments.shouldContainExactly(doubleNineteen)
@@ -110,6 +113,27 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         dto.aggregateRule!!.shouldBeInstanceOf<DartzeeTotalRuleEven>()
         dto.allowMisses shouldBe true
         dto.inOrder shouldBe false
+
+        dto.calculationResult shouldBe null
+    }
+
+    @Test
+    fun `Should convert empty values to nulls when converting to a DTO`()
+    {
+        val entity = DartzeeRuleEntity()
+        entity.dart1Rule = ""
+        entity.dart2Rule = ""
+        entity.dart3Rule = ""
+        entity.aggregateRule = ""
+        entity.ruleName = ""
+
+        val dto = entity.toDto(includeCalculationResult = false)
+
+        dto.dart1Rule.shouldBeNull()
+        dto.dart2Rule.shouldBeNull()
+        dto.dart3Rule.shouldBeNull()
+        dto.aggregateRule.shouldBeNull()
+        dto.ruleName.shouldBeNull()
 
         dto.calculationResult shouldBe null
     }

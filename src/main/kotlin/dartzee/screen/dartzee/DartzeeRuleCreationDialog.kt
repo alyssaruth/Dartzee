@@ -45,7 +45,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     val btnRandom = JButton()
     private val panelRuleName = JPanel()
     private val cbRuleName = JCheckBox("Custom rule name")
-    private val tfRuleName = JTextField()
+    val tfRuleName = JTextField()
 
     init
     {
@@ -127,6 +127,9 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
     fun populate(rule: DartzeeRuleDto)
     {
+        cbRuleName.isSelected = rule.ruleName != null
+        tfRuleName.text = rule.ruleName ?: ""
+
         if (rule.dart1Rule == null)
         {
             rdbtnNoDarts.isSelected = true
