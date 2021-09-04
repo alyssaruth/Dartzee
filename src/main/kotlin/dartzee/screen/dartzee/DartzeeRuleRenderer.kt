@@ -8,7 +8,8 @@ class DartzeeRuleRenderer(private val colNo: Int) : AbstractTableRenderer<Dartze
 {
     override fun getReplacementValue(value: DartzeeRuleDto): Any
     {
-        return if (colNo == 0) value.generateRuleDescription() else value.getDifficultyDesc()
+        val ruleDesc = value.ruleName ?: value.generateRuleDescription()
+        return if (colNo == 0) ruleDesc else value.getDifficultyDesc()
     }
 
     override fun setCellColours(typedValue: DartzeeRuleDto?, isSelected: Boolean)

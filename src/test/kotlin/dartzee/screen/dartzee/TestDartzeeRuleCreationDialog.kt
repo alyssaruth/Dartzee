@@ -1,8 +1,6 @@
 package dartzee.screen.dartzee
 
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.shouldBeVisible
-import com.github.alexburlton.swingtest.shouldNotBeVisible
+import com.github.alexburlton.swingtest.*
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.helper.makeActionEvent
@@ -25,6 +23,7 @@ import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import javax.swing.JCheckBox
 import javax.swing.SwingUtilities
 
 class TestDartzeeRuleAmendment: AbstractTest()
@@ -36,6 +35,20 @@ class TestDartzeeRuleAmendment: AbstractTest()
         dlg.amendRule(makeDartzeeRuleDto())
 
         dlg.title shouldBe "Amend Dartzee Rule"
+    }
+
+    @Test
+    fun `Should populate the ruleName correctly`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.amendRule(makeDartzeeRuleDto(ruleName = "My Rule"))
+
+        dlg.getChild<JCheckBox>("Custom rule name").isSelected shouldBe true
+        dlg.tfRuleName.text shouldBe "My Rule"
+
+        dlg.amendRule(makeDartzeeRuleDto())
+        dlg.getChild<JCheckBox>("Custom rule name").isSelected shouldBe false
+        dlg.tfRuleName.text shouldBe ""
     }
 
     @Test
@@ -126,7 +139,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
 
         flushEdt()
 
-        dlg.tfName.text shouldBe "Score Outers"
+        dlg.tfDescription.text shouldBe "Score Outers"
     }
 
     @Test
@@ -179,6 +192,33 @@ class TestDartzeeRuleAmendment: AbstractTest()
 
 class TestDartzeeRuleCreationDialogValidation: AbstractTest()
 {
+    @Test
+    fun `Should prevent an empty rule name`()
+    {
+        val dlg = showRuleCreationDialog()
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.btnOk.doClick()
+
+        dialogFactory.errorsShown.shouldContainExactly("You cannot have an empty rule name.")
+        dlg.dartzeeRule shouldBe null
+        dlg.shouldBeVisible()
+    }
+
+    @Test
+    fun `Should prevent a rule name that is too long`()
+    {
+        val ruleName = "a".repeat(1001)
+
+        val dlg = showRuleCreationDialog()
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.tfRuleName.text = ruleName
+        dlg.btnOk.doClick()
+
+        dialogFactory.errorsShown.shouldContainExactly("Rule name cannot exceed 1000 characters.")
+        dlg.dartzeeRule shouldBe null
+        dlg.shouldBeVisible()
+    }
+
     @Test
     fun `Should validate all three dart selectors for an all darts rule`()
     {
@@ -334,6 +374,31 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
     }
 
     @Test
+    fun `Should populate ruleName correctly when checked`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.tfRuleName.text = "My Rule"
+        dlg.btnOk.doClick()
+
+        val rule = dlg.dartzeeRule!!
+        rule.ruleName shouldBe "My Rule"
+    }
+
+    @Test
+    fun `Should not populate ruleName when unchecked`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.tfRuleName.text = "My Rule"
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.btnOk.doClick()
+
+        val rule = dlg.dartzeeRule!!
+        rule.ruleName shouldBe null
+    }
+
+    @Test
     fun `Should populate a 'no darts' rule correctly`()
     {
         val dlg = DartzeeRuleCreationDialog()
@@ -365,6 +430,19 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         val dlg = DartzeeRuleCreationDialog()
         dlg.btnCancel.doClick()
         dlg.dartzeeRule shouldBe null
+    }
+
+    @Test
+    fun `Should toggle rule name text field based on checkbox`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.tfRuleName.shouldBeDisabled()
+
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.tfRuleName.shouldBeEnabled()
+
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.tfRuleName.shouldBeDisabled()
     }
 
     @Test
@@ -426,14 +504,14 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 
         flushEdt()
 
-        dlg.tfName.text shouldBe "Inner → Outer → Odd"
+        dlg.tfDescription.text shouldBe "Inner → Outer → Odd"
 
         dlg.aggregateSelector.cbDesc.doClick()
         dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
 
         flushEdt()
 
-        dlg.tfName.text shouldBe "Inner → Outer → Odd, Total is odd"
+        dlg.tfDescription.text shouldBe "Inner → Outer → Odd, Total is odd"
     }
 
     @Test
@@ -459,13 +537,13 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
         flushEdt()
-        dlg.tfName.text shouldBe "20 → Any → Any"
+        dlg.tfDescription.text shouldBe "20 → Any → Any"
 
         scoreRule.spinner.value = 15
         flushEdt()
         dlg.stateChanged(mockk())
         flushEdt()
-        dlg.tfName.text shouldBe "15 → Any → Any"
+        dlg.tfDescription.text shouldBe "15 → Any → Any"
     }
 
     @Test
@@ -476,12 +554,12 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         val customRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleCustom>()!!
         flushEdt()
 
-        dlg.tfName.text shouldBe "Custom → Any → Any"
+        dlg.tfDescription.text shouldBe "Custom → Any → Any"
 
         customRule.tfName.text = "Foo"
         customRule.actionPerformed(makeActionEvent(customRule.tfName))
         flushEdt()
 
-        dlg.tfName.text shouldBe "Foo → Any → Any"
+        dlg.tfDescription.text shouldBe "Foo → Any → Any"
     }
 }

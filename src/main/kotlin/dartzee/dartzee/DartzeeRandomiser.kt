@@ -21,7 +21,7 @@ object DartzeeRandomiser
 
         val allowMisses = Random.nextInt(5) == 1
 
-        return DartzeeRuleDto(dartRule?.dart1Rule, dartRule?.dart2Rule, dartRule?.dart3Rule, totalRule, dartRule?.inOrder ?: false, allowMisses)
+        return DartzeeRuleDto(dartRule?.dart1Rule, dartRule?.dart2Rule, dartRule?.dart3Rule, totalRule, dartRule?.inOrder ?: false, allowMisses, null)
     }
 
     private fun makeDartRule(): DartRule

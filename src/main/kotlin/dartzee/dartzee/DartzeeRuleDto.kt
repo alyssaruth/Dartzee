@@ -9,7 +9,7 @@ import dartzee.utils.InjectedThings.dartzeeCalculator
 import dartzee.utils.sumScore
 
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,
-                          val aggregateRule: AbstractDartzeeAggregateRule?, val inOrder: Boolean, val allowMisses: Boolean)
+                          val aggregateRule: AbstractDartzeeAggregateRule?, val inOrder: Boolean, val allowMisses: Boolean, val ruleName: String?)
 {
     var calculationResult: DartzeeRuleCalculationResult? = null
 
@@ -121,6 +121,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         entity.entityId = entityId
         entity.ordinal = ordinal
         entity.calculationResult = calculationResult!!.toDbString()
+        entity.ruleName = ruleName ?: ""
 
         return entity
     }

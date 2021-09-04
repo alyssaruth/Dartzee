@@ -32,9 +32,19 @@ class TestDartzeeRuleTile: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing on hover if no score is set`()
+    fun `Should initialise with the rule number and name, escaping special characters`()
     {
-        val dto = makeDartzeeRuleDto()
+        val dto = makeDartzeeRuleDto(ruleName = "> Awesome Rule <")
+
+        val tile = FakeDartzeeRuleTile(dto, 4)
+
+        tile.text shouldBe "<html><center><b>#4 <br /><br /> &gt; Awesome Rule &lt;</b></center></html>"
+    }
+
+    @Test
+    fun `Should show rule description on hover if no score is set`()
+    {
+        val dto = makeDartzeeRuleDto(ruleName = "Awesome Rule")
 
         val tile = FakeDartzeeRuleTile(dto, 2)
         tile.mouseEntered(makeMouseEvent())

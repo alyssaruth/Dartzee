@@ -8,6 +8,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.setFontSize
 import dartzee.dartzee.DartzeeRandomiser
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.db.MAX_RULE_NAME
 import dartzee.screen.ScreenCache
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -39,9 +40,12 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     private val panelAllowMisses = JPanel()
     val cbAllowMisses = JCheckBox("Allow misses")
     val aggregateSelector = DartzeeAggregateRuleSelector("Other")
-    private val panelRuleName = JPanel()
-    val tfName = JTextField()
+    private val panelRuleDescription = JPanel()
+    val tfDescription = JTextField()
     val btnRandom = JButton()
+    private val panelRuleName = JPanel()
+    private val cbRuleName = JCheckBox("Custom rule name")
+    val tfRuleName = JTextField()
 
     init
     {
@@ -50,7 +54,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         setLocationRelativeTo(ScreenCache.mainScreen)
         isModal = true
 
-        add(panelRuleName, BorderLayout.NORTH)
+        add(panelRuleDescription, BorderLayout.NORTH)
         add(panelCenter, BorderLayout.CENTER)
         add(verificationPanel, BorderLayout.EAST)
 
@@ -60,9 +64,15 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
         panelCenter.layout = MigLayout("", "[grow]", "[grow][grow][grow]")
         panelCenter.add(panelRuleStrength, "cell 0 1, growx")
-        panelCenter.add(panelDarts, "cell 0 2, growx")
-        panelCenter.add(panelTotal, "cell 0 3, growx")
-        panelCenter.add(panelAllowMisses, "cell 0 4, growx")
+        panelCenter.add(panelRuleName, "cell 0 2, growx")
+        panelCenter.add(panelDarts, "cell 0 3, growx")
+        panelCenter.add(panelTotal, "cell 0 4, growx")
+        panelCenter.add(panelAllowMisses, "cell 0 5, growx")
+
+        tfRuleName.columns = 30
+        panelRuleName.layout = MigLayout("", "[]", "[]")
+        panelRuleName.add(cbRuleName, "cell 0 0")
+        panelRuleName.add(tfRuleName, "cell 1 0, growx")
 
         panelDarts.layout = MigLayout("", "[][]", "[][][][]")
         rdbtnPanelDartScoreType.add(rdbtnAllDarts)
@@ -78,19 +88,20 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         panelAllowMisses.layout = MigLayout("", "[]", "[]")
         panelAllowMisses.add(cbAllowMisses, "cell 0 0")
 
-        panelRuleName.layout = BorderLayout(0,0)
-        panelRuleName.border = TitledBorder("")
-        panelRuleName.add(tfName, BorderLayout.CENTER)
-        panelRuleName.add(btnRandom, BorderLayout.EAST)
+        panelRuleDescription.layout = BorderLayout(0,0)
+        panelRuleDescription.border = TitledBorder("")
+        panelRuleDescription.add(tfDescription, BorderLayout.CENTER)
+        panelRuleDescription.add(btnRandom, BorderLayout.EAST)
         btnRandom.preferredSize = Dimension(50, 50)
         btnRandom.icon = ImageIcon(javaClass.getResource("/buttons/dice.png"))
         btnRandom.toolTipText = "Generate random rule"
-        tfName.preferredSize = Dimension(900, 50)
+        tfDescription.preferredSize = Dimension(900, 50)
 
-        tfName.horizontalAlignment = JTextField.CENTER
-        tfName.setFontSize(24)
-        tfName.isEditable = false
+        tfDescription.horizontalAlignment = JTextField.CENTER
+        tfDescription.setFontSize(24)
+        tfDescription.isEditable = false
 
+        cbRuleName.addActionListener(this)
         rdbtnPanelDartScoreType.addActionListener(this)
         dartOneSelector.addActionListener(this)
         dartTwoSelector.addActionListener(this)
@@ -116,6 +127,9 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
     fun populate(rule: DartzeeRuleDto)
     {
+        cbRuleName.isSelected = rule.ruleName != null
+        tfRuleName.text = rule.ruleName ?: ""
+
         if (rule.dart1Rule == null)
         {
             rdbtnNoDarts.isSelected = true
@@ -190,21 +204,39 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     fun constructRuleFromComponents(): DartzeeRuleDto
     {
         val totalRule = if (aggregateSelector.isEnabled) aggregateSelector.getSelection() else null
+        val ruleName = if (cbRuleName.isSelected) tfRuleName.text else null
 
         return if (rdbtnAllDarts.isSelected)
         {
             DartzeeRuleDto(dartOneSelector.getSelection(),
-                    dartTwoSelector.getSelection(), dartThreeSelector.getSelection(), totalRule, cbInOrder.isSelected, cbAllowMisses.isSelected)
+                    dartTwoSelector.getSelection(), dartThreeSelector.getSelection(), totalRule, cbInOrder.isSelected, cbAllowMisses.isSelected, ruleName)
         }
         else
         {
             val dart1Rule = if (rdbtnAtLeastOne.isSelected) targetSelector.getSelection() else null
-            DartzeeRuleDto(dart1Rule, null, null, totalRule, false, cbAllowMisses.isSelected)
+            DartzeeRuleDto(dart1Rule, null, null, totalRule, false, cbAllowMisses.isSelected, ruleName)
         }
     }
 
     private fun valid(): Boolean
     {
+        if (cbRuleName.isSelected)
+        {
+            val ruleName = tfRuleName.text
+
+            if (ruleName.isBlank())
+            {
+                DialogUtil.showError("You cannot have an empty rule name.")
+                return false
+            }
+
+            if (ruleName.length > MAX_RULE_NAME)
+            {
+                DialogUtil.showError("Rule name cannot exceed $MAX_RULE_NAME characters.")
+                return false
+            }
+        }
+
         return if (rdbtnAtLeastOne.isSelected)
         {
             targetSelector.valid()
@@ -217,6 +249,8 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
     private fun updateComponents()
     {
+        tfRuleName.isEnabled = cbRuleName.isSelected
+
         if (rdbtnAllDarts.isSelected)
         {
             panelDarts.remove(targetSelector)
@@ -248,7 +282,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         SwingUtilities.invokeLater {
             val rule = constructRuleFromComponents()
             val ruleName = rule.generateRuleDescription()
-            tfName.text = ruleName
+            tfDescription.text = ruleName
 
             val calculationResult = rule.runStrengthCalculation()
             lblDifficulty.text = calculationResult.getDifficultyDesc()

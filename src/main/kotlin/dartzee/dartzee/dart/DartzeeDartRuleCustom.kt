@@ -38,7 +38,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
     override fun getRuleIdentifier() = "Custom"
 
-    override fun getDescription() = if (name.isEmpty()) "Custom" else name
+    override fun getDescription() = name.ifEmpty { "Custom" }
 
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
