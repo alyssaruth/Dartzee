@@ -433,6 +433,19 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     }
 
     @Test
+    fun `Should toggle rule name text field based on checkbox`()
+    {
+        val dlg = DartzeeRuleCreationDialog()
+        dlg.tfRuleName.shouldBeDisabled()
+
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.tfRuleName.shouldBeEnabled()
+
+        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.tfRuleName.shouldBeDisabled()
+    }
+
+    @Test
     fun `Should toggle the rule selectors based on radio selection`()
     {
         val dlg = DartzeeRuleCreationDialog()
