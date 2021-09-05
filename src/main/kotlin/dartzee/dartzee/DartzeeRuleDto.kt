@@ -32,15 +32,17 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
 
     fun getSuccessTotal(darts: List<Dart>): Int
     {
-        dart1Rule ?: return sumScore(darts)
+        val dartsAfterAggregate = aggregateRule?.getScoringDarts(darts) ?: darts
+
+        dart1Rule ?: return sumScore(dartsAfterAggregate)
 
         if (dart2Rule != null)
         {
-            return sumScore(darts)
+            return sumScore(dartsAfterAggregate)
         }
         else
         {
-            val validDarts = darts.filter { dart1Rule.isValidDart(it) }
+            val validDarts = dartsAfterAggregate.filter { dart1Rule.isValidDart(it) }
             return sumScore(validDarts)
         }
     }
