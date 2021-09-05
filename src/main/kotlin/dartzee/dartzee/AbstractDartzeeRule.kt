@@ -66,7 +66,9 @@ fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule>
         DartzeeTotalRulePrime(),
         DartzeeAggregateRuleIncreasing(),
         DartzeeAggregateRuleDecreasing(),
-        DartzeeAggregateRuleSpread())
+        DartzeeAggregateRuleSpread(),
+        DartzeeAggregateRuleDistinctScores(),
+        DartzeeAggregateRuleRepeats())
 }
 fun parseDartRule(xmlStr: String) = parseRule(xmlStr, getAllDartRules())
 fun parseAggregateRule(xmlStr: String) = parseRule(xmlStr, getAllAggregateRules())
