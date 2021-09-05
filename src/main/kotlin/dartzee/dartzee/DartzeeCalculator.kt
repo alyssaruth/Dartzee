@@ -45,7 +45,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
             isValidCombination(it, rule, cachedCombinationResults) }
 
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
-        val scoringSegments = rule.getScoringSegments(validSegments)
+        val scoringSegments = rule.getScoringSegments(dartsSoFar, validSegments)
 
         val validPixelPossibility = validCombinations.map { mapCombinationToProbability(it) }.sum()
         val allProbabilities = allPossibilities.map { mapCombinationToProbability(it) }.sum()

@@ -50,14 +50,28 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
     /**
      * If this is a "Score X" rule, return the relevant segments
      */
-    fun getScoringSegments(validSegments: List<DartboardSegment>): List<DartboardSegment>
+    fun getScoringSegments(dartsSoFar: List<Dart>, validSegments: List<DartboardSegment>): List<DartboardSegment>
     {
+        val scoringSegments = getScoringSegmentsForAggregateRule(dartsSoFar, validSegments)
         if (dart1Rule == null || dart2Rule != null)
         {
-            return validSegments
+            return scoringSegments
         }
 
-        return validSegments.filter { dart1Rule.isValidSegment(it) }
+        return scoringSegments.filter { dart1Rule.isValidSegment(it) }
+    }
+    private fun getScoringSegmentsForAggregateRule(dartsSoFar: List<Dart>, validSegments: List<DartboardSegment>): List<DartboardSegment>
+    {
+        if (dartsSoFar.size == 2 && aggregateRule != null)
+        {
+            return validSegments.filter {
+                val scoringDartsAfterTwo = aggregateRule.getScoringDarts(dartsSoFar).size
+                val scoringDartsAfterThree = aggregateRule.getScoringDarts(dartsSoFar + Dart(it.score, it.getMultiplier())).size
+                scoringDartsAfterThree > scoringDartsAfterTwo
+            }
+        }
+
+        return validSegments
     }
 
 
