@@ -18,12 +18,12 @@ fun main(args: Array<String>)
         exitProcess(0)
     }
 
-    DialogUtil.init(MessageDialogFactory())
-
     Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
     setLoggingContextFields()
 
     setLookAndFeel()
+
+    DialogUtil.init(MessageDialogFactory())
 
     DartsClient.logArgumentState()
     DartsClient.checkForUpdatesIfRequired()

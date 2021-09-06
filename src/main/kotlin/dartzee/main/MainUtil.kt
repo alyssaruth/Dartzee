@@ -1,12 +1,15 @@
 package dartzee.main
 
+import Theme
 import dartzee.`object`.DartsClient
 import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
 import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.logger
+import java.awt.Color
 import java.util.*
 import javax.swing.UIManager
 
@@ -22,6 +25,7 @@ fun setLookAndFeel(laf: String)
 {
     try
     {
+        Theme(Color.CYAN, Color.GREEN, Color.WHITE).apply()
         UIManager.setLookAndFeel(laf)
     }
     catch (e: Throwable)

@@ -16,7 +16,7 @@ object DatabaseMigrations
                 { db -> convertMatchParams(db) }
             ),
             17 to listOf(
-                { db -> runScript(db, 18, "1. DartzeeRule.sql") },
+                { db -> runScript(db, 18, "1. DlookartzeeRule.sql") },
                 { db -> convertDartzeeCalculationResults(db) }
             )
         )
