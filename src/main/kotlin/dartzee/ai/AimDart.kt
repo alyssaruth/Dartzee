@@ -37,9 +37,9 @@ interface IDart
 }
 
 @JsonIgnoreProperties("segmentType", "total", "double", "treble")
-data class AimDart(override val score: Int, override val multiplier: Int): IDart
+data class AimDart(override val score: Int, override val multiplier: Int, val segment: SegmentType? = null): IDart
 {
-    fun getSegmentType() =
+    fun getSegmentType() = segment ?:
         when (multiplier)
         {
             0 -> SegmentType.MISS
