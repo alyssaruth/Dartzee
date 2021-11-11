@@ -7,7 +7,6 @@ import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
 import dartzee.utils.DARTS_VERSION_NUMBER
-import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 import java.util.*
