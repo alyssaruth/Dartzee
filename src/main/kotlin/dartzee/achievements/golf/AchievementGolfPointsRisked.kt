@@ -26,7 +26,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
     override fun isUnbounded() = true
 
     override fun getBreakdownColumns() = listOf("Game", "Round", "Points risked", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.achievementCounter, a.dtAchieved)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.achievementCounter, a.dtAchieved)
     override fun useCounter() = true
 
     private fun buildPointsRiskedSql(): String

@@ -29,7 +29,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
     override fun isUnbounded() = true
 
     override fun getBreakdownColumns() = listOf("Game", "Round", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {
