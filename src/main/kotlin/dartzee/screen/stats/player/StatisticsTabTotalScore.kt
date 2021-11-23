@@ -315,10 +315,10 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
      */
     private fun adjustGraphMinAndMax(gamesToGraph: List<GameWrapper>, gamesToGraphOther: List<GameWrapper>)
     {
-        val combined = (gamesToGraph + gamesToGraphOther).filter{it.isFinished()}
+        val combined = (gamesToGraph + gamesToGraphOther).filter { it.isFinished() }
 
-        graphMax = combined.map{it.finalScore}.max() ?: Integer.MAX_VALUE
-        graphMin = combined.map{it.finalScore}.min() ?: 0
+        graphMax = combined.map{ it.finalScore }.maxOrNull() ?: Integer.MAX_VALUE
+        graphMin = combined.map{ it.finalScore }.minOrNull() ?: 0
     }
 
     /**

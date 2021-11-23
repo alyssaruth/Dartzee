@@ -49,7 +49,7 @@ class DatabaseMigrator(private val migrations: Map<Int, List<((database: Databas
         return MigrationResult.SUCCESS
     }
 
-    private fun getMinimumSupportedVersion() = migrations.keys.min() ?: DartsDatabaseUtil.DATABASE_VERSION
+    private fun getMinimumSupportedVersion() = migrations.keys.minOrNull() ?: DartsDatabaseUtil.DATABASE_VERSION
 
     private fun runMigrationsForVersion(database: Database, databaseDesc: String, version: Int)
     {

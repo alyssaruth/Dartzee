@@ -215,7 +215,7 @@ class TestGameStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState
     }
 
     @Test
-    fun `should correctly calculate checkout %`()
+    fun `should correctly calculate checkout percentage`()
     {
         val roundOne = listOf(Dart(17, 1), Dart(20, 0), Dart(20, 0)) //On 40, two chances
         val roundTwo = listOf(Dart(5, 1), Dart(19, 1), Dart(8, 1)) //On 8, four chances

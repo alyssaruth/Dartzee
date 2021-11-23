@@ -155,7 +155,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 
             val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
             log.message shouldBe "Caught SQLException for statement: $sql"
-            log.errorObject?.message shouldContain "Column '${it.toUpperCase()}'  cannot accept a NULL value."
+            log.errorObject?.message shouldContain "Column '${it.uppercase()}'  cannot accept a NULL value."
         }
     }
 

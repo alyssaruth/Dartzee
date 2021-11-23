@@ -44,7 +44,7 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
         {
             val dao = SyncAuditEntity(database)
             val entities = dao.retrieveEntities()
-            val latest = entities.maxBy { it.dtLastUpdate } ?: return null
+            val latest = entities.maxByOrNull { it.dtLastUpdate } ?: return null
             return LastSyncData(latest.remoteName, latest.dtLastUpdate)
         }
     }

@@ -44,7 +44,7 @@ class DartzeeAimCalculator
         val contendingHighScorePoints = contendingPoints.filter { miniDartboard.getSegmentForPoint(it.point).getTotal() == bestScore }
 
         //Prefer even angles to odd ones
-        val bestPoint = contendingHighScorePoints.minBy { it.angle % 2 }!!
+        val bestPoint = contendingHighScorePoints.minByOrNull { it.angle % 2 }!!
         return dartboard.translateAimPoint(bestPoint)
     }
 
