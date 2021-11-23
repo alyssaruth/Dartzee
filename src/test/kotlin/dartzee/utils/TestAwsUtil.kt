@@ -13,7 +13,7 @@ import java.io.PrintStream
 
 class TestAwsUtil: AbstractTest()
 {
-    private val rsrcPath = File(javaClass.getResource("/ChangeLog").file).absolutePath
+    private val rsrcPath = File(javaClass.getResource("/ChangeLog")!!.file).absolutePath
     private val newRsrcPath = rsrcPath.replace("ChangeLog", "foo")
     private val testFile: File = File(newRsrcPath)
     private val originalOut = System.out
@@ -41,7 +41,7 @@ class TestAwsUtil: AbstractTest()
         credentials shouldBe null
 
         getLogRecords().shouldBeEmpty()
-        newOut.toString().shouldContain("java.lang.IllegalStateException: System.getenv(resourceName) must not be null")
+        newOut.toString().shouldContain("getenv(resourceName) must not be null")
     }
 
     @Test

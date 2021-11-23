@@ -15,8 +15,8 @@ class TestDatabaseMigrations: AbstractTest()
     fun `Conversions map should not have gaps`()
     {
         val supportedVersions = DatabaseMigrations.getConversionsMap().keys
-        val min = supportedVersions.min()!!
-        val max = supportedVersions.max()!!
+        val min = supportedVersions.minOrNull()!!
+        val max = supportedVersions.maxOrNull()!!
 
         supportedVersions.shouldContainExactly((min..max).toSet())
     }
@@ -47,10 +47,4 @@ class TestDatabaseMigrations: AbstractTest()
             mainDatabase.initialiseConnectionPool(1)
         }
     }
-}
-
-fun runMigrationsForVersion(database: Database, version: Int)
-{
-    val conversions = DatabaseMigrations.getConversionsMap().getValue(version)
-    conversions.forEach { it(database) }
 }

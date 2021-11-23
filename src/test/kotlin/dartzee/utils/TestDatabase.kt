@@ -184,6 +184,6 @@ class TestDatabase: AbstractTest()
         mainDatabase.createTableIfNotExists("SomeTable", "RowId INT")
         val tmpName = mainDatabase.createTempTable("TempTable", "RowId INT")
 
-        mainDatabase.dropUnexpectedTables().shouldContainExactlyInAnyOrder("SOMETABLE", tmpName?.toUpperCase())
+        mainDatabase.dropUnexpectedTables().shouldContainExactlyInAnyOrder("SOMETABLE", tmpName?.uppercase())
     }
 }

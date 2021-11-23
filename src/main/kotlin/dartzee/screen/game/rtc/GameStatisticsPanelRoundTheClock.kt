@@ -21,7 +21,7 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameSta
     {
         addRow(getDartsPerNumber("Most darts", true) { it.maxOrZero() })
         addRow(getDartsPerNumber("Avg darts", false) { getAverageDartsForAnyRound(it) })
-        addRow(getDartsPerNumber("Fewest darts", false) { it.min() })
+        addRow(getDartsPerNumber("Fewest darts", false) { it.minOrNull() })
 
         addRow(getLongestStreak())
         addRow(getBruceys("Brucey chances", false))

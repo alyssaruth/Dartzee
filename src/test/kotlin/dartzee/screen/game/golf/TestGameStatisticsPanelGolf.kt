@@ -62,7 +62,7 @@ class TestGameStatisticsPanelGolf: AbstractGameStatisticsPanelTest<GolfPlayerSta
     }
 
     @Test
-    fun `Should correctly calculate miss %`()
+    fun `Should correctly calculate miss percentage`()
     {
         val roundOne = makeGolfRound(1, listOf(makeDart(1, 1, segmentType = SegmentType.OUTER_SINGLE)))
 

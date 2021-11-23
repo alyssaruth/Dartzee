@@ -14,9 +14,9 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<GolfPlayerState>
 
     override fun addRowsToTable()
     {
-        addRow(getScoreRow("Best Hole") { it.min() } )
+        addRow(getScoreRow("Best Hole") { it.minOrNull() } )
         addRow(getScoreRow("Avg. Hole") { MathsUtil.round(it.average(), 2) })
-        addRow(getScoreRow("Worst Hole") { it.max() })
+        addRow(getScoreRow("Worst Hole") { it.maxOrNull() })
         addRow(getMissesRow())
         addRow(getGambleRow({ r -> getPointsSquandered(r) }, "Points Squandered"))
         addRow(getGambleRow({ r -> getPointsImproved(r) }, "Points Improved"))
@@ -47,7 +47,7 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<GolfPlayerState>
     private fun getPointsSquandered(round: List<Dart>): Int
     {
         val finalScore = round.last().getGolfScore()
-        val bestScore = round.map { it.getGolfScore() }.min() ?: finalScore
+        val bestScore = round.map { it.getGolfScore() }.minOrNull() ?: finalScore
 
         return finalScore - bestScore
     }
@@ -55,7 +55,7 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<GolfPlayerState>
     private fun getPointsImproved(round: List<Dart>): Int
     {
         val finalScore = round.last().getGolfScore()
-        val bestScore = round.map { d -> d.getGolfScore() }.min() ?: finalScore
+        val bestScore = round.map { d -> d.getGolfScore() }.minOrNull() ?: finalScore
 
         //This round is stuffed - points have been squandered, not gained! Or it's just 1 dart!
         if (finalScore > bestScore || round.size == 1)

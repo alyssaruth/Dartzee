@@ -47,10 +47,10 @@ class StatefulSegment(val type: SegmentType, val score: Int)
 
     fun computeEdgePoints()
     {
-        val yMins: List<Point> = hmXCoordToPoints.values.map { points -> points.minBy { it.y }!! }
-        val yMaxes: List<Point> = hmXCoordToPoints.values.map { points -> points.maxBy { it.y }!! }
-        val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minBy { it.x }!! }
-        val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxBy { it.x }!! }
+        val yMins: List<Point> = hmXCoordToPoints.values.map { points -> points.minByOrNull { it.y }!! }
+        val yMaxes: List<Point> = hmXCoordToPoints.values.map { points -> points.maxByOrNull { it.y }!! }
+        val xMins: List<Point> = hmYCoordToPoints.values.map { points -> points.minByOrNull { it.x }!! }
+        val xMaxes: List<Point> = hmYCoordToPoints.values.map { points -> points.maxByOrNull { it.x }!! }
         edgePoints.addAll(yMins + yMaxes + xMins + xMaxes)
 
         hmXCoordToPoints.clear()

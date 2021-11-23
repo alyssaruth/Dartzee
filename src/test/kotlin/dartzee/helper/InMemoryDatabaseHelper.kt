@@ -6,7 +6,6 @@ import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
-import dartzee.core.util.jsonMapper
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
 import dartzee.game.GameType
@@ -308,7 +307,7 @@ fun getCountFromTable(table: String, database: Database = mainDatabase): Int
 /**
  * Retrieve
  */
-fun retrieveGame() = GameEntity().retrieveEntities().maxBy { it.dtLastUpdate }!!
+fun retrieveGame() = GameEntity().retrieveEntities().maxByOrNull { it.dtLastUpdate }!!
 fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveDartsMatch() = DartsMatchEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()

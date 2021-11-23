@@ -43,7 +43,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
     }
 
     override fun getBreakdownColumns() = listOf("Checkout", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_X01_NO_MERCY
 }
