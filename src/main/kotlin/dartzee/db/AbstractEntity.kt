@@ -67,7 +67,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return columns
     }
 
-    fun getTableNameUpperCase() = getTableName().toUpperCase()
+    fun getTableNameUpperCase() = getTableName().uppercase()
 
     fun factoryFromResultSet(rs: ResultSet): E
     {

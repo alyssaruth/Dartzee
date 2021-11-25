@@ -31,7 +31,7 @@ abstract class AbstractMultiRowAchievement: AbstractAchievement()
     }
 
     private fun calculateAttainedValue(achievementRows: List<AchievementEntity>) =
-        if (useCounter()) achievementRows.sumBy { it.achievementCounter } else achievementRows.size
+        if (useCounter()) achievementRows.sumOf { it.achievementCounter } else achievementRows.size
 
     open fun useCounter() = false
 

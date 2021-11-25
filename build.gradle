@@ -90,6 +90,12 @@ task integrationAndE2E(type: Test) {
     }
 }
 
+tasks.koverReport {
+    updateScreenshots.onlyIf { false }
+    integrationAndE2E.onlyIf { false }
+    unitTest.onlyIf { false }
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'dartzee.main.DartsMainKt'
