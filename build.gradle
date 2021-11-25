@@ -91,9 +91,9 @@ task integrationAndE2E(type: Test) {
 }
 
 task koverReportAllTests {
-    updateScreenshots.onlyIf { false }
-    integrationAndE2E.onlyIf { false }
-    unitTest.onlyIf { false }
+    updateScreenshots.enabled = false
+    integrationAndE2E.enabled = false
+    unitTest.enabled = false
 }
 
 jar {
