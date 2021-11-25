@@ -90,7 +90,7 @@ task integrationAndE2E(type: Test) {
     }
 }
 
-tasks.koverReport {
+task koverReportAllTests {
     updateScreenshots.onlyIf { false }
     integrationAndE2E.onlyIf { false }
     unitTest.onlyIf { false }
