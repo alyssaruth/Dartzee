@@ -12,12 +12,17 @@ jobs:
     - name: Build & Unit Test
       uses: GabrielBB/xvfb-action@v1.0
       with:
-        run: ./gradlew unitTest --info
+        run: ./gradlew koverReport -x integrationAndE2E -x test -x updateScreenshots --info
     - name: Export test results
       uses: actions/upload-artifact@v2
       with:
         name: unit-test-results
         path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/unitTest/**/*.html
+    - name: Export coverage stats
+      uses: actions/upload-artifact@v2
+      with:
+        name: kover-report
+        path: /home/runner/work/Dartzee/Dartzee/build/reports/kover/html
     - name: Export snapshots
       uses: actions/upload-artifact@v2
       if: failure()

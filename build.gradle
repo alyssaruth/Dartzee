@@ -90,12 +90,6 @@ task integrationAndE2E(type: Test) {
     }
 }
 
-task koverReportAllTests {
-    updateScreenshots.enabled = false
-    integrationAndE2E.enabled = false
-    unitTest.enabled = false
-}
-
 jar {
     manifest {
         attributes 'Main-Class': 'dartzee.main.DartsMainKt'
