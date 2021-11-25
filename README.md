@@ -1,4 +1,8 @@
 # Dartzee
+
+[![Build Status](https://github.com/alexburlton/Dartzee/workflows/CI/badge.svg)](https://github.com/alexburlton/dartzee/actions)
+![Coverage: 93.5%](https://img.shields.io/badge/coverage-93.5%25-brightgreen)
+
 All rights reserved
 
 ## Run

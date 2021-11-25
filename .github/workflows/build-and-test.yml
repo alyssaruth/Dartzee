@@ -29,6 +29,13 @@ jobs:
       with:
         name: failed-snapshots
         path: /home/runner/**/*.failed.png
+    - name: Update README
+      if: #branch is master, run python script etc
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        tags: true
   integration-and-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20
