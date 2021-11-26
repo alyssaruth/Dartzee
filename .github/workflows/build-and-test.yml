@@ -30,7 +30,8 @@ jobs:
         name: failed-snapshots
         path: /home/runner/**/*.failed.png
     - name: Update README
-      if: #branch is master, run python script etc
+      run: |
+        python scripts/update-coverage.py
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
