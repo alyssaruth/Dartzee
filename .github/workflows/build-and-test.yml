@@ -12,18 +12,32 @@ jobs:
     - name: Build & Unit Test
       uses: GabrielBB/xvfb-action@v1.0
       with:
-        run: ./gradlew unitTest --info
+        run: ./gradlew koverReport -x integrationAndE2E -x test -x updateScreenshots --info
     - name: Export test results
       uses: actions/upload-artifact@v2
       with:
         name: unit-test-results
         path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/unitTest/**/*.html
+    - name: Export coverage stats
+      uses: actions/upload-artifact@v2
+      with:
+        name: kover-report
+        path: /home/runner/work/Dartzee/Dartzee/build/reports/kover/html
     - name: Export snapshots
       uses: actions/upload-artifact@v2
       if: failure()
       with:
         name: failed-snapshots
         path: /home/runner/**/*.failed.png
+    - name: Update README
+      if: github.ref == 'refs/heads/master'
+      run: |
+        python scripts/update-coverage.py
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      if: github.ref == 'refs/heads/master'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
   integration-and-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20

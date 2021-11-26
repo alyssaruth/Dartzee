@@ -70,7 +70,7 @@ class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), Ac
         val file = selectedFile
         if (file == null)
         {
-            val btnText = btnUpload.text.toLowerCase()
+            val btnText = btnUpload.text.lowercase()
             DialogUtil.showError("You must select a file to $btnText.")
             return
         }

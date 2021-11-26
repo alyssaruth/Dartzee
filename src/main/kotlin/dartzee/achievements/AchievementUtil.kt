@@ -28,7 +28,7 @@ fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, playe
 {
     val myAchievementRows = allAchievementRows.filter{ it.playerId == player.rowId }
 
-    return getAllAchievements().sumBy { achievement ->
+    return getAllAchievements().sumOf { achievement ->
         val myRelevantRows = myAchievementRows.filter { it.achievementType == achievement.achievementType }
         achievement.initialiseFromDb(myRelevantRows, player)
         achievement.getScore()
