@@ -23,7 +23,7 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
     var calculationResult = ""
     var ruleName = ""
 
-    override fun getTableName() = "DartzeeRule"
+    override fun getTableName() = TableName.DartzeeRule
 
     override fun getCreateTableSqlSpecific(): String
     {
@@ -63,5 +63,5 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
 
     fun retrieveForGame(gameId: String) = retrieveEntities("EntityName = 'Game' AND EntityId = '$gameId'").sortedBy { it.ordinal }
 
-    private fun getTemplateWhere(templateId: String) = "EntityName = '$DARTZEE_TEMPLATE' AND EntityId = '$templateId'"
+    private fun getTemplateWhere(templateId: String) = "EntityName = '${TableName.DartzeeTemplate}' AND EntityId = '$templateId'"
 }

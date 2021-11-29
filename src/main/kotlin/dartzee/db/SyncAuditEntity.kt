@@ -16,7 +16,7 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
     var deviceId = ""
     var operatingSystem = ""
 
-    override fun getTableName() = "SyncAudit"
+    override fun getTableName() = TableName.SyncAudit
 
     override fun getCreateTableSqlSpecific() =
         "RemoteName VARCHAR(255) NOT NULL, Username VARCHAR(1000) NOT NULL, AppVersion VARCHAR(255) NOT NULL, " +

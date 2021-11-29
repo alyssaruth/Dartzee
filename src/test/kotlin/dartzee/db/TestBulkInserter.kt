@@ -12,24 +12,10 @@ import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.matchers.collections.shouldNotBeSortedWith
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestBulkInserter: AbstractTest()
 {
-    @BeforeEach
-    fun beforeEach()
-    {
-        mainDatabase.executeUpdate("CREATE TABLE InsertTest (RowId INT)")
-    }
-
-    @AfterEach
-    fun afterEach()
-    {
-        mainDatabase.dropTable("InsertTest")
-    }
-
     @Test
     fun `Should do nothing if passed no entities to insert`()
     {
@@ -76,15 +62,15 @@ class TestBulkInserter: AbstractTest()
         checkInsertBatching(rows, 20, 4)
         checkInsertBatching(rows, 21, 4)
     }
-    private fun checkInsertBatching(rows: List<String>, rowsPerInsert: Int, expectedNumberOfBatches: Int)
+    private fun checkInsertBatching(rows: List<GameEntity>, rowsPerInsert: Int, expectedNumberOfBatches: Int)
     {
-        wipeTable("InsertTest")
+        wipeTable(TableName.Game)
         clearLogs()
 
-        BulkInserter.insert("InsertTest", rows, 1000, rowsPerInsert)
+        BulkInserter.insert(rows, 1000, rowsPerInsert)
 
         getLogRecords() shouldHaveSize(expectedNumberOfBatches)
-        getCountFromTable("InsertTest") shouldBe rows.size
+        getCountFromTable(TableName.Game) shouldBe rows.size
     }
 
     @Test
@@ -92,10 +78,10 @@ class TestBulkInserter: AbstractTest()
     {
         val rows = prepareRows(50)
 
-        BulkInserter.insert("InsertTest", rows, 50, 1)
+        BulkInserter.insert(rows, 50, 1)
 
         retrieveValues() shouldBeSortedWith{i: Int, j: Int -> i.compareTo(j)}
-        getCountFromTable("InsertTest") shouldBe 50
+        getCountFromTable(TableName.Game) shouldBe 50
     }
 
     @Test
@@ -103,10 +89,10 @@ class TestBulkInserter: AbstractTest()
     {
         val rows = prepareRows(50)
 
-        BulkInserter.insert("InsertTest", rows, 5, 1)
+        BulkInserter.insert(rows, 5, 1)
 
         retrieveValues() shouldNotBeSortedWith{i: Int, j: Int -> i.compareTo(j)}
-        getCountFromTable("InsertTest") shouldBe 50
+        getCountFromTable(TableName.Game) shouldBe 50
     }
 
     @Test
@@ -115,7 +101,7 @@ class TestBulkInserter: AbstractTest()
         val rows = prepareRows(501)
         clearLogs()
 
-        BulkInserter.insert("InsertTest", rows, 300, 50)
+        BulkInserter.insert(rows, 300, 50)
 
         getLogRecords().filter { it.loggingCode == CODE_SQL }.shouldBeEmpty()
         val log = getLogRecords().last { it.loggingCode == CODE_BULK_SQL }
@@ -123,7 +109,7 @@ class TestBulkInserter: AbstractTest()
         getCountFromTable("InsertTest") shouldBe 501
 
         val moreRows = prepareRows(10)
-        BulkInserter.insert("InsertTest", moreRows, 300, 50)
+        BulkInserter.insert(moreRows, 300, 50)
 
         val newLog = getLastLog()
         newLog.loggingCode shouldBe CODE_SQL
@@ -144,14 +130,5 @@ class TestBulkInserter: AbstractTest()
         return rows
     }
 
-    private fun prepareRows(numberToGenerate: Int): List<String>
-    {
-        val rows = mutableListOf<String>()
-        for (i in 1..numberToGenerate)
-        {
-            rows.add("($i)")
-        }
-
-        return rows
-    }
+    private fun prepareRows(numberToGenerate: Int) = (1..numberToGenerate).map { _ -> GameEntity().also { it.assignRowId() }}
 }

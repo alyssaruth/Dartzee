@@ -13,7 +13,7 @@ class DartzeeRoundResultEntity(database: Database = mainDatabase): AbstractEntit
     var success: Boolean = false
     var score: Int = -1
 
-    override fun getTableName() = "DartzeeRoundResult"
+    override fun getTableName() = TableName.DartzeeRoundResult
 
     override fun getCreateTableSqlSpecific(): String
     {

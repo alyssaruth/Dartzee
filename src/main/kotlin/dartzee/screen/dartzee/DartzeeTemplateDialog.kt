@@ -4,9 +4,9 @@ import dartzee.core.bean.addGhostText
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.setFontSize
-import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
+import dartzee.db.TableName
 import dartzee.screen.ScreenCache
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -50,7 +50,7 @@ class DartzeeTemplateDialog : SimpleDialog()
 
         val rules = rulePanel.getRules()
         rules.forEachIndexed { ix, rule ->
-            val entity = rule.toEntity(ix + 1, DARTZEE_TEMPLATE, template.rowId)
+            val entity = rule.toEntity(ix + 1, TableName.DartzeeTemplate, template.rowId)
             entity.saveToDatabase()
         }
 

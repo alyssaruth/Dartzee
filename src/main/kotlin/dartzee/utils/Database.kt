@@ -2,6 +2,7 @@ package dartzee.utils
 
 import dartzee.core.util.DialogUtil
 import dartzee.db.LocalIdGenerator
+import dartzee.db.TableName
 import dartzee.db.VersionEntity
 import dartzee.logging.*
 import dartzee.logging.exceptions.WrappedSqlException
@@ -252,7 +253,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         entity.saveToDatabase()
     }
 
-    fun generateLocalId(tableName: String) = localIdGenerator.generateLocalId(tableName)
+    fun generateLocalId(tableName: TableName) = localIdGenerator.generateLocalId(tableName)
 
     private fun getVersionRow(): VersionEntity?
     {
@@ -327,7 +328,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         hsConnections.clear()
     }
 
-    fun deleteRowsFromTable(tableName: String, rowIds: List<String>): Boolean
+    fun deleteRowsFromTable(tableName: TableName, rowIds: List<String>): Boolean
     {
         var success = true
         rowIds.chunked(50).forEach {

@@ -45,7 +45,7 @@ object BulkInserter
 
         entities.forEach {it.retrievedFromDb = true}
     }
-    private fun getInsertThreadForBatch(batch: List<AbstractEntity<*>>, tableName: String, rowsPerInsert: Int, database: Database): Thread
+    private fun getInsertThreadForBatch(batch: List<AbstractEntity<*>>, tableName: TableName, rowsPerInsert: Int, database: Database): Thread
     {
         return Thread {
             batch.chunked(rowsPerInsert).forEach { entities ->
@@ -82,42 +82,7 @@ object BulkInserter
         }
     }
 
-    /**
-     * Ad-hoc insert
-     */
-    fun insert(tableName: String, rows: List<String>, rowsPerThread: Int, rowsPerStatement: Int)
-    {
-        val threads = mutableListOf<Thread>()
-        rows.chunked(rowsPerThread).forEach{
-            val t = getInsertThreadForBatch(tableName, it, rowsPerStatement)
-            threads.add(t)
-        }
-
-        doBulkInsert(threads, tableName, rows.size, rowsPerStatement)
-    }
-    private fun getInsertThreadForBatch(tableName: String, batch: List<String>, rowsPerStatement: Int): Thread
-    {
-        return Thread {
-            batch.chunked(rowsPerStatement).forEach {
-                var s = "INSERT INTO $tableName VALUES "
-
-                it.forEachIndexed{index, rowValues ->
-                    if (index > 0) {
-                        s += ", "
-                    }
-
-                    s += rowValues
-                }
-
-                mainDatabase.executeUpdate(s, logInserts)
-            }
-        }
-    }
-
-    /**
-     * Generic
-     */
-    private fun doBulkInsert(threads: List<Thread>, tableName: String, rowCount: Int, rowsPerStatement: Int)
+    private fun doBulkInsert(threads: List<Thread>, tableName: TableName, rowCount: Int, rowsPerStatement: Int)
     {
         if (rowCount > 100)
         {

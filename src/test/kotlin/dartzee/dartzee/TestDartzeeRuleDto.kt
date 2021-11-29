@@ -5,6 +5,7 @@ import dartzee.dartzee.aggregate.DartzeeAggregateRuleRepeats
 import dartzee.dartzee.dart.*
 import dartzee.dartzee.aggregate.DartzeeTotalRuleGreaterThan
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
+import dartzee.db.TableName
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.helper.*
@@ -209,7 +210,7 @@ class TestDartzeeRuleDto: AbstractTest()
         val rule = DartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleInner(), DartzeeTotalRulePrime(), true, false, "foobar")
         rule.runStrengthCalculation()
 
-        val dao = rule.toEntity(5, "Game", "foo")
+        val dao = rule.toEntity(5, TableName.Game, "foo")
 
         dao.rowId.shouldNotBeEmpty()
         dao.entityName shouldBe "Game"
@@ -231,7 +232,7 @@ class TestDartzeeRuleDto: AbstractTest()
         val rule = DartzeeRuleDto(DartzeeDartRuleEven(), null, null, null, true, false, null)
         rule.runStrengthCalculation()
 
-        val dao = rule.toEntity(5, "Game", "foo")
+        val dao = rule.toEntity(5, TableName.Game, "foo")
         dao.dart2Rule shouldBe ""
         dao.dart3Rule shouldBe ""
         dao.aggregateRule shouldBe ""

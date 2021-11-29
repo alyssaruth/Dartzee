@@ -195,6 +195,6 @@ class FakeEntity(database: Database = mainDatabase): AbstractEntity<FakeEntity>(
 {
     var testString = ""
 
-    override fun getTableName() = "TestTable"
+    override fun getTableName() = TableName.TestTable
     override fun getCreateTableSqlSpecific() = "TestString VARCHAR(10) NOT NULL"
 }

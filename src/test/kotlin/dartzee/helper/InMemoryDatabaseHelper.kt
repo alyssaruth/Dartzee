@@ -20,7 +20,7 @@ import java.sql.Timestamp
 import java.util.*
 import javax.sql.rowset.serial.SerialBlob
 
-fun wipeTable(tableName: String)
+fun wipeTable(tableName: TableName)
 {
     mainDatabase.executeUpdate("DELETE FROM $tableName")
 }
@@ -44,7 +44,7 @@ fun factoryPlayer(name: String): PlayerEntity
 
 fun insertDartsMatch(uuid: String = randomGuid(),
                      database: Database = mainDatabase,
-                     localId: Long = database.generateLocalId("DartsMatch"),
+                     localId: Long = database.generateLocalId(TableName.DartsMatch),
                      games: Int = 3,
                      mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -176,7 +176,7 @@ fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),
-                        localId: Long = mainDatabase.generateLocalId("Game"),
+                        localId: Long = mainDatabase.generateLocalId(TableName.Game),
                         gameType: GameType = GameType.X01,
                         gameParams: String = "501",
                         dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -194,7 +194,7 @@ fun insertGameForReport(uuid: String = randomGuid(),
 
 fun insertGame(uuid: String = randomGuid(),
                database: Database = mainDatabase,
-               localId: Long = database.generateLocalId("Game"),
+               localId: Long = database.generateLocalId(TableName.Game),
                gameType: GameType = GameType.X01,
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -219,7 +219,7 @@ fun insertGame(uuid: String = randomGuid(),
 }
 
 fun insertDartzeeRule(uuid: String = randomGuid(),
-                      entityName: String = "",
+                      entityName: TableName = TableName.DartzeeTemplate,
                       entityId: String = "",
                       ordinal: Int = 1,
                       calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
@@ -230,7 +230,7 @@ fun insertDartzeeRule(uuid: String = randomGuid(),
     de.rowId = uuid
     de.dtCreation = dtCreation
     de.entityId = entityId
-    de.entityName = entityName
+    de.entityName = entityName.name
     de.calculationResult = calculationResult.toDbString()
     de.ordinal = ordinal
 
@@ -257,7 +257,7 @@ fun insertDartzeeTemplate(uuid: String = randomGuid(),
 fun insertTemplateAndRule(name: String = "Template"): DartzeeTemplateEntity
 {
     val template = insertDartzeeTemplate(name = name)
-    insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = template.rowId)
+    insertDartzeeRule(entityName = TableName.DartzeeTemplate, entityId = template.rowId)
     return template
 }
 
@@ -298,7 +298,7 @@ fun insertPlayerImage(resource: String = "BaboOne", database: Database = mainDat
     return pi
 }
 
-
+fun getCountFromTable(table: TableName, database: Database = mainDatabase) = getCountFromTable(table.name, database)
 fun getCountFromTable(table: String, database: Database = mainDatabase): Int
 {
     return database.executeQueryAggregate("SELECT COUNT(1) FROM $table")

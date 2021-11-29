@@ -8,6 +8,7 @@ import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.db.TableName
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.screen.DartsApp
@@ -120,7 +121,7 @@ class SyncE2E: AbstractRegistryTest()
     {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
         DevUtilities.purgeGame(1)
-        wipeTable("Achievement")
+        wipeTable(TableName.Achievement)
         mainScreen.clickChild<JButton>("Reset")
         awaitCondition { mainScreen.findChild<SyncSetupPanel>() != null }
     }

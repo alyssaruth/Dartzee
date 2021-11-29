@@ -32,7 +32,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
     private var currentOrdinal = 0
     private var hmPositionToPoints: Map<Int, Int>? = null
 
-    override fun getTableName() = "DartsMatch"
+    override fun getTableName() = TableName.DartsMatch
 
     override fun getCreateTableSqlSpecific(): String
     {

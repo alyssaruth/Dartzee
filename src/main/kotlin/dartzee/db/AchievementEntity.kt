@@ -27,7 +27,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
     //Other stuff
     var localGameIdEarned = -1L
 
-    override fun getTableName() = "Achievement"
+    override fun getTableName() = TableName.Achievement
 
     override fun getCreateTableSqlSpecific(): String
     {
