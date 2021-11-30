@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import dartzee.db.DatabaseMigrator
+import dartzee.db.EntityName
 import dartzee.db.MigrationResult
 import dartzee.helper.*
 import dartzee.logging.*
@@ -11,6 +12,7 @@ import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.file.shouldExist
 import io.kotlintest.matchers.file.shouldNotExist
 import io.kotlintest.shouldBe
@@ -194,4 +196,12 @@ class TestDartsDatabaseUtil: AbstractTest()
         }
     }
 
+    @Test
+    fun `Should correctly list all entities`()
+    {
+        val entityNameStatics = EntityName.values().toList()
+        val entityNames = DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableName() }
+
+        entityNames.shouldContainExactlyInAnyOrder(entityNameStatics)
+    }
 }
