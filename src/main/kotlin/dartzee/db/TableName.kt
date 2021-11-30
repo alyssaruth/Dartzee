@@ -14,7 +14,6 @@ enum class TableName {
     Player,
     PlayerImage,
     SyncAudit,
-    TestTable,
     Version,
     X01Finish
 }

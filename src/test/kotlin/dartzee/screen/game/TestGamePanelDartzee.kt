@@ -13,6 +13,7 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.db.TableName
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
@@ -297,7 +298,7 @@ class TestGamePanelDartzee: AbstractTest()
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
 
         rules.forEachIndexed { ix, it ->
-            val entity = it.toEntity(ix, "Game", game.rowId)
+            val entity = it.toEntity(ix, TableName.Game, game.rowId)
             entity.saveToDatabase()
         }
 

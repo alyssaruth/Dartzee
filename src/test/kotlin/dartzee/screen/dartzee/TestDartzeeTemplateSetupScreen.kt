@@ -5,9 +5,9 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.DartzeeTemplateFactory
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
-import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
+import dartzee.db.TableName
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.utils.InjectedThings
@@ -90,7 +90,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
         scrn.scrollTable.rowCount shouldBe 1
-        getCountFromTable(DARTZEE_TEMPLATE) shouldBe 1
+        getCountFromTable(TableName.DartzeeTemplate) shouldBe 1
     }
 
     @Test
@@ -108,8 +108,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
 
         scrn.scrollTable.rowCount shouldBe 0
-        getCountFromTable(DARTZEE_TEMPLATE) shouldBe 0
-        getCountFromTable("DartzeeRule") shouldBe 0
+        getCountFromTable(TableName.DartzeeTemplate) shouldBe 0
+        getCountFromTable(TableName.DartzeeRule) shouldBe 0
     }
 
     @Test
@@ -127,8 +127,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
 
         scrn.scrollTable.rowCount shouldBe 0
-        getCountFromTable(DARTZEE_TEMPLATE) shouldBe 0
-        getCountFromTable("DartzeeRule") shouldBe 0
+        getCountFromTable(TableName.DartzeeTemplate) shouldBe 0
+        getCountFromTable(TableName.DartzeeRule) shouldBe 0
     }
 
     @Test
@@ -273,8 +273,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRulePrime())
 
-        ruleOne.toEntity(1, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
-        ruleTwo.toEntity(2, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
+        ruleOne.toEntity(1, TableName.DartzeeTemplate, template.rowId).saveToDatabase()
+        ruleTwo.toEntity(2, TableName.DartzeeTemplate, template.rowId).saveToDatabase()
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()

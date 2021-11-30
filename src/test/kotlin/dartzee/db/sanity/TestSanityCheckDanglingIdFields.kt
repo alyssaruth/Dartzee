@@ -2,6 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
+import dartzee.db.TableName
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertDartzeeRule
@@ -48,9 +49,9 @@ class TestSanityCheckDanglingIdFields: AbstractTest()
     @Test
     fun `Should flag up generic EntityId+EntityName pairs`()
     {
-        insertDartzeeRule(entityName = "Game", entityId = "Foo")
-        insertDartzeeRule(entityName = "Game", entityId = "Bar")
-        insertDartzeeRule(entityName = "Player", entityId = "Baz")
+        insertDartzeeRule(entityName = TableName.Game, entityId = "Foo")
+        insertDartzeeRule(entityName = TableName.Game, entityId = "Bar")
+        insertDartzeeRule(entityName = TableName.Player, entityId = "Baz")
 
         val results = SanityCheckDanglingIdFields(DartzeeRuleEntity()).runCheck()
         results.size shouldBe 2
