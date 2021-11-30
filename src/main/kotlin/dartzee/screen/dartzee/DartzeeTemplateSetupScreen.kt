@@ -6,7 +6,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
-import dartzee.db.TableName
+import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.utils.InjectedThings.mainDatabase
@@ -94,7 +94,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     {
         val cols = DartzeeTemplateEntity().getColumnsForSelectStatement("t")
 
-        val allRules = DartzeeRuleEntity().retrieveEntities("EntityName = '${TableName.DartzeeTemplate}'")
+        val allRules = DartzeeRuleEntity().retrieveEntities("EntityName = '${EntityName.DartzeeTemplate}'")
         val hmTemplateIdToRules = allRules.groupBy { it.entityId }
 
         val sb = StringBuilder()

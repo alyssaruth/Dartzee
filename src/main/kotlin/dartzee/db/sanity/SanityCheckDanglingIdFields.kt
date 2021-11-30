@@ -1,7 +1,7 @@
 package dartzee.db.sanity
 
 import dartzee.db.AbstractEntity
-import dartzee.db.TableName
+import dartzee.db.EntityName
 import dartzee.utils.DartsDatabaseUtil
 
 class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanityCheck()
@@ -29,7 +29,7 @@ class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanity
     private fun checkForHangingValues(entity: AbstractEntity<*>, idColumn: String)
     {
         val tableStr = idColumn.substring(0, idColumn.length - 2)
-        val referencedTable = TableName.valueOf(tableStr)
+        val referencedTable = EntityName.valueOf(tableStr)
 
         val sb = StringBuilder()
         sb.append("$idColumn <> ''")
@@ -47,7 +47,7 @@ class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanity
         }
     }
 
-    private fun checkForHangingEntityId(entity: AbstractEntity<*>, referencedTable: TableName)
+    private fun checkForHangingEntityId(entity: AbstractEntity<*>, referencedTable: EntityName)
     {
         val sb = StringBuilder()
         sb.append("EntityId <> ''")

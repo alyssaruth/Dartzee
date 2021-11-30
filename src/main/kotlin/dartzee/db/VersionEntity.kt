@@ -8,7 +8,7 @@ class VersionEntity(database: Database = mainDatabase) : AbstractEntity<VersionE
 {
     var version = DartsDatabaseUtil.DATABASE_VERSION
 
-    override fun getTableName() = TableName.Version
+    override fun getTableName() = EntityName.Version
 
     override fun getCreateTableSqlSpecific() = "Version INT NOT NULL"
 }

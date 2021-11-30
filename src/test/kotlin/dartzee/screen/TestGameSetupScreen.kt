@@ -10,7 +10,7 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.db.DartsMatchEntity
-import dartzee.db.TableName
+import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.*
@@ -154,8 +154,8 @@ class TestGameSetupScreen: AbstractTest()
         val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRulePrime())
 
-        ruleOne.toEntity(1, TableName.DartzeeTemplate, templateId).saveToDatabase()
-        ruleTwo.toEntity(2, TableName.DartzeeTemplate, templateId).saveToDatabase()
+        ruleOne.toEntity(1, EntityName.DartzeeTemplate, templateId).saveToDatabase()
+        ruleTwo.toEntity(2, EntityName.DartzeeTemplate, templateId).saveToDatabase()
 
         val screen = makeGameSetupScreenReadyToLaunch()
         screen.gameTypeComboBox.updateSelection(GameType.DARTZEE)

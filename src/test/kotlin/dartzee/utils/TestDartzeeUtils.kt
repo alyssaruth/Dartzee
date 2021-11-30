@@ -2,6 +2,7 @@ package dartzee.utils
 
 import dartzee.`object`.Dart
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.EntityName
 import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -50,7 +51,7 @@ class TestDartzeeUtils: AbstractTest()
 
         entities.map { it.toDto().generateRuleDescription() }.shouldContainExactlyInAnyOrder(*dtoDescs.toTypedArray())
         entities.forEach {
-            it.entityName shouldBe "Game"
+            it.entityName shouldBe EntityName.Game
             it.entityId shouldBe game.rowId
         }
 

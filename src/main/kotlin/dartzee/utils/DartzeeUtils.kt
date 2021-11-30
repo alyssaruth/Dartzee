@@ -4,7 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.GameEntity
-import dartzee.db.TableName
+import dartzee.db.EntityName
 import java.awt.Color
 import java.awt.Component
 
@@ -32,7 +32,7 @@ fun insertDartzeeRules(game: GameEntity, dartzeeDtos: List<DartzeeRuleDto>? = nu
     dartzeeDtos ?: return
 
     dartzeeDtos.forEachIndexed { ix, dto ->
-        val dao = dto.toEntity(ix + 1, TableName.Game, game.rowId)
+        val dao = dto.toEntity(ix + 1, EntityName.Game, game.rowId)
         dao.saveToDatabase()
     }
 }

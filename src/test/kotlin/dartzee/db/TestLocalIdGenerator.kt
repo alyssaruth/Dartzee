@@ -13,7 +13,7 @@ class TestLocalIdGenerator: AbstractTest()
     @Test
     fun `It should generate an ID of 1 for an empty table`()
     {
-        LocalIdGenerator(mainDatabase).generateLocalId(TableName.Game) shouldBe 1
+        LocalIdGenerator(mainDatabase).generateLocalId(EntityName.Game) shouldBe 1
     }
 
     @Test
@@ -21,18 +21,18 @@ class TestLocalIdGenerator: AbstractTest()
     {
         insertGame(localId = 5)
 
-        LocalIdGenerator(mainDatabase).generateLocalId(TableName.Game) shouldBe 6
+        LocalIdGenerator(mainDatabase).generateLocalId(EntityName.Game) shouldBe 6
     }
 
     @Test
     fun `It should generate sequential IDs`()
     {
         val generator = LocalIdGenerator(mainDatabase)
-        generator.hmLastAssignedIdByTableName[TableName.Game] = 25
+        generator.hmLastAssignedIdByEntityName[EntityName.Game] = 25
 
-        val idOne = generator.generateLocalId(TableName.Game)
-        val idTwo = generator.generateLocalId(TableName.Game)
-        val idThree = generator.generateLocalId(TableName.Game)
+        val idOne = generator.generateLocalId(EntityName.Game)
+        val idTwo = generator.generateLocalId(EntityName.Game)
+        val idThree = generator.generateLocalId(EntityName.Game)
 
         idOne shouldBe 26
         idTwo shouldBe 27
@@ -43,18 +43,18 @@ class TestLocalIdGenerator: AbstractTest()
     fun `It should keep track of different entities`()
     {
         val generator = LocalIdGenerator(mainDatabase)
-        generator.hmLastAssignedIdByTableName[TableName.Game] = 5
-        generator.hmLastAssignedIdByTableName[TableName.DartsMatch] = 25
+        generator.hmLastAssignedIdByEntityName[EntityName.Game] = 5
+        generator.hmLastAssignedIdByEntityName[EntityName.DartsMatch] = 25
 
-        generator.generateLocalId(TableName.Game) shouldBe 6
-        generator.generateLocalId(TableName.DartsMatch) shouldBe 26
+        generator.generateLocalId(EntityName.Game) shouldBe 6
+        generator.generateLocalId(EntityName.DartsMatch) shouldBe 26
     }
 
     @Test
     fun `It should be thread-safe`()
     {
         val generator = LocalIdGenerator(mainDatabase)
-        generator.hmLastAssignedIdByTableName[TableName.Game] = 0
+        generator.hmLastAssignedIdByEntityName[EntityName.Game] = 0
 
         val threads = mutableListOf<Thread>()
         val runnables = mutableListOf<IdGeneratorRunnable>()
@@ -89,7 +89,7 @@ class TestLocalIdGenerator: AbstractTest()
         {
             for (i in 1..20)
             {
-                val id = generator.generateLocalId(TableName.Game)
+                val id = generator.generateLocalId(EntityName.Game)
                 list.add(id)
             }
         }

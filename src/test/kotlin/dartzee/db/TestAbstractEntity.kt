@@ -197,8 +197,8 @@ class FakeEntity(database: Database = mainDatabase): AbstractEntity<FakeEntity>(
 {
     var testString = ""
 
-    override fun getTableName(): TableName {
-        val result = mockk<TableName>(relaxed = true)
+    override fun getTableName(): EntityName {
+        val result = mockk<EntityName>(relaxed = true)
         every { result.name } returns "TestTable"
         every { result.toString() } returns "TestTable"
         return result

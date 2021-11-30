@@ -2,12 +2,12 @@ package dartzee.db.sanity
 
 import dartzee.core.util.DialogUtil
 import dartzee.db.AbstractEntity
-import dartzee.db.TableName
+import dartzee.db.EntityName
 import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.JOptionPane
 
 class SanityCheckResultDanglingIdFields(private val idColumn: String,
-                                        private val referencedEntity: TableName,
+                                        private val referencedEntity: EntityName,
                                         entities: List<AbstractEntity<*>>) : AbstractSanityCheckResultEntities(entities)
 {
     override fun getDescription() = "$entityName rows where the $idColumn points at a non-existent $referencedEntity"

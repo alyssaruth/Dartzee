@@ -12,7 +12,7 @@ class X01FinishEntity(database: Database = mainDatabase) : AbstractEntity<X01Fin
     var gameId = ""
     var finish = -1
 
-    override fun getTableName() = TableName.X01Finish
+    override fun getTableName() = EntityName.X01Finish
 
     override fun getCreateTableSqlSpecific(): String
     {

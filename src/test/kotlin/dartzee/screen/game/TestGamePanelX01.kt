@@ -85,7 +85,7 @@ class TestGamePanelX01: AbstractTest()
 
         for (i in listOf(3, 5, 7, 9))
         {
-            wipeTable(TableName.Achievement)
+            wipeTable(EntityName.Achievement)
             val darts = listOf(Dart(1, 1), Dart((i-1)/2, 2))
             panel.setDartsThrown(darts)
 

@@ -1,6 +1,6 @@
 package dartzee.db
 
-enum class TableName {
+enum class EntityName {
     Achievement,
     Dart,
     DartsMatch,

@@ -7,7 +7,7 @@ class DartzeeTemplateEntity(database: Database = mainDatabase): AbstractEntity<D
 {
     var name = ""
 
-    override fun getTableName() = TableName.DartzeeTemplate
+    override fun getTableName() = EntityName.DartzeeTemplate
 
     override fun getCreateTableSqlSpecific(): String
     {

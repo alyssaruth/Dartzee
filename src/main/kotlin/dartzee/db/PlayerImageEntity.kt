@@ -23,7 +23,7 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
     //Will be set when we retrieve from the DB
     var bytes: ByteArray? = null
 
-    override fun getTableName() = TableName.PlayerImage
+    override fun getTableName() = EntityName.PlayerImage
 
     override fun getCreateTableSqlSpecific(): String
     {

@@ -5,7 +5,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.db.DartzeeRuleEntity
-import dartzee.db.TableName
+import dartzee.db.EntityName
 import dartzee.utils.InjectedThings.dartzeeCalculator
 import dartzee.utils.sumScore
 
@@ -123,7 +123,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         }
     }
 
-    fun toEntity(ordinal: Int, entityName: TableName, entityId: String): DartzeeRuleEntity
+    fun toEntity(ordinal: Int, entityName: EntityName, entityId: String): DartzeeRuleEntity
     {
         val entity = DartzeeRuleEntity()
         entity.assignRowId()
@@ -134,7 +134,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         entity.aggregateRule = aggregateRule?.toDbString() ?: ""
         entity.allowMisses = allowMisses
         entity.inOrder = inOrder
-        entity.entityName = entityName.name
+        entity.entityName = entityName
         entity.entityId = entityId
         entity.ordinal = ordinal
         entity.calculationResult = calculationResult!!.toDbString()

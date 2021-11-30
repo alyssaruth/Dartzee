@@ -12,10 +12,10 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
     /**
      * DB fields
      */
-    var entityName = ""
+    var entityName: EntityName = EntityName.DeletionAudit
     var entityId = ""
 
-    override fun getTableName() = TableName.DeletionAudit
+    override fun getTableName() = EntityName.DeletionAudit
 
     override fun getCreateTableSqlSpecific(): String
     {
@@ -25,7 +25,7 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
 
     companion object
     {
-        fun factoryAndSave(entityName: String, entityId: String): DeletionAuditEntity
+        fun factoryAndSave(entityName: EntityName, entityId: String): DeletionAuditEntity
         {
             val entity = DeletionAuditEntity()
             entity.assignRowId()
