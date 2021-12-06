@@ -17,6 +17,8 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
 
     override fun getTableName() = EntityName.DeletionAudit
 
+    override fun includeInSync() = false
+
     override fun getCreateTableSqlSpecific(): String
     {
         return ("EntityName VARCHAR(255) NOT NULL, "
@@ -25,14 +27,18 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
 
     companion object
     {
-        fun factoryAndSave(entityName: EntityName, entityId: String): DeletionAuditEntity
+        fun factory(entityName: EntityName, entityId: String): DeletionAuditEntity
         {
             val entity = DeletionAuditEntity()
             entity.assignRowId()
             entity.entityName = entityName
             entity.entityId = entityId
-            entity.saveToDatabase()
             return entity
+        }
+
+        fun factoryAndSave(entityName: EntityName, entityId: String): DeletionAuditEntity
+        {
+            return factory(entityName, entityId).also { it.saveToDatabase() }
         }
     }
 }

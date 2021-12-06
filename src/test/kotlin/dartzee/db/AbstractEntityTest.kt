@@ -9,12 +9,15 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
+import dartzee.helper.retrieveDeletionAudit
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
@@ -31,13 +34,19 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     abstract fun factoryDao(): AbstractEntity<E>
     open fun setExtraValuesForBulkInsert(e: E) {}
 
+    private fun factory(): AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
+    private fun factoryAndSave() = factory().also {
+        it.assignRowId()
+        setValuesAndSaveToDatabase(it, true)
+    }
+
     @Suppress("UNCHECKED_CAST")
     @Test
     fun `Should be bulk insertable`()
     {
         val tableName = dao.getTableName()
-        val e1: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
-        val e2: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
+        val e1 = factory()
+        val e2 = factory()
 
         e1.assignRowId()
         e2.assignRowId()
@@ -70,19 +79,51 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     @Test
     fun `Delete individual row`()
     {
-        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
-        entity.assignRowId()
-        setValuesAndSaveToDatabase(entity, true)
+        val entity = factoryAndSave()
         getCountFromTable(dao.getTableName()) shouldBe 1
 
         entity.deleteFromDatabase() shouldBe true
         getCountFromTable(dao.getTableName()) shouldBe 0
+
+        if (entity.includeInSync())
+        {
+            val audit = retrieveDeletionAudit()
+            audit.entityName shouldBe entity.getTableName()
+            audit.entityId shouldBe entity.rowId
+        }
+        else
+        {
+            getCountFromTable(EntityName.DeletionAudit) shouldBe 0
+        }
+    }
+
+    @Test
+    fun `Delete where`()
+    {
+        val entityOne = factoryAndSave()
+        val entityTwo = factoryAndSave()
+        val entityThree = factoryAndSave()
+
+        val whereSql = "RowId IN ('${entityOne.rowId}', '${entityThree.rowId}')"
+        factory().deleteWhere(whereSql)
+
+        factory().retrieveEntities().map { it.rowId }.shouldContainExactly(entityTwo.rowId)
+
+        if (factory().includeInSync())
+        {
+            val audits = DeletionAuditEntity().retrieveEntities()
+            audits.map { it.entityId }.shouldContainExactlyInAnyOrder(entityOne.rowId, entityThree.rowId)
+        }
+        else
+        {
+            getCountFromTable(EntityName.DeletionAudit) shouldBe 0
+        }
     }
 
     @Test
     fun `Insert and retrieve`()
     {
-        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
+        val entity = factory()
         entity.assignRowId()
         val rowId = entity.rowId
 
@@ -109,7 +150,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     @Test
     fun `Update and retrieve`()
     {
-        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
+        val entity = factory()
         entity.assignRowId()
         val rowId = entity.rowId
 
@@ -142,7 +183,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     @Test
     fun `Columns should not allow NULLs`()
     {
-        val entity: AbstractEntity<E> = dao.javaClass.getDeclaredConstructor().newInstance()
+        val entity = factory()
         val rowId = entity.assignRowId()
 
         //Insert into the DB
