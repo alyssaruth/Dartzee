@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.db.EntityName
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.getTableNames
@@ -163,9 +164,9 @@ class TestDatabase: AbstractTest()
     @Test
     fun `Should support generating local IDs`()
     {
-        mainDatabase.generateLocalId("Game") shouldBe 1
-        mainDatabase.generateLocalId("Game") shouldBe 2
-        mainDatabase.generateLocalId("DartsMatch") shouldBe 1
+        mainDatabase.generateLocalId(EntityName.Game) shouldBe 1
+        mainDatabase.generateLocalId(EntityName.Game) shouldBe 2
+        mainDatabase.generateLocalId(EntityName.DartsMatch) shouldBe 1
     }
 
     @Test

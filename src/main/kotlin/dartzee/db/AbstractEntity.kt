@@ -34,7 +34,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     /**
      * Abstract fns
      */
-    abstract fun getTableName(): String
+    abstract fun getTableName(): EntityName
     abstract fun getCreateTableSqlSpecific(): String
 
     /**
@@ -67,7 +67,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return columns
     }
 
-    fun getTableNameUpperCase() = getTableName().uppercase()
+    fun getTableNameUpperCase() = getTableName().name.uppercase()
 
     fun factoryFromResultSet(rs: ResultSet): E
     {
@@ -339,7 +339,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     open fun createTable(): Boolean
     {
-        val createdTable = database.createTableIfNotExists(getTableName(), getCreateTableColumnSql())
+        val createdTable = database.createTableIfNotExists(getTableName().name, getCreateTableColumnSql())
         if (createdTable)
         {
             createIndexes()
@@ -485,6 +485,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             MatchMode::class.java -> MatchMode.valueOf(rs.getString(columnName))
             SegmentType::class.java -> SegmentType.valueOf(rs.getString(columnName))
             AchievementType::class.java -> AchievementType.valueOf(rs.getString(columnName))
+            EntityName::class.java -> EntityName.valueOf(rs.getString(columnName))
             else -> null
         }
 

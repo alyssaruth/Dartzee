@@ -3,13 +3,11 @@ package dartzee.db
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
-const val DARTZEE_TEMPLATE = "DartzeeTemplate"
-
 class DartzeeTemplateEntity(database: Database = mainDatabase): AbstractEntity<DartzeeTemplateEntity>(database)
 {
     var name = ""
 
-    override fun getTableName() = DARTZEE_TEMPLATE
+    override fun getTableName() = EntityName.DartzeeTemplate
 
     override fun getCreateTableSqlSpecific(): String
     {

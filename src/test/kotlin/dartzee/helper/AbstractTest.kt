@@ -40,7 +40,7 @@ abstract class AbstractTest
 
         DialogUtil.init(dialogFactory)
 
-        mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
+        mainDatabase.localIdGenerator.hmLastAssignedIdByEntityName.clear()
 
         if (logDestination.haveRunInsert)
         {

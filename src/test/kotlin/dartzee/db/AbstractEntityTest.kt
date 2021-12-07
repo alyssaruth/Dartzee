@@ -232,6 +232,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
             MatchMode::class.java -> if (initial) MatchMode.FIRST_TO else MatchMode.POINTS
             SegmentType::class.java -> if (initial) SegmentType.OUTER_SINGLE else SegmentType.DOUBLE
             AchievementType::class.java -> if (initial) AchievementType.X01_BEST_FINISH else AchievementType.CLOCK_BEST_GAME
+            EntityName::class.java -> if (initial) EntityName.Game else EntityName.Player
             else -> {
                 println(fieldType)
                 "uh oh"

@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
@@ -19,6 +20,15 @@ class TestDatabaseMigrations: AbstractTest()
         val max = supportedVersions.maxOrNull()!!
 
         supportedVersions.shouldContainExactly((min..max).toSet())
+    }
+
+    @Test
+    fun `Conversions map should get us up to the current version`()
+    {
+        val supportedVersions = DatabaseMigrations.getConversionsMap().keys
+        val max = supportedVersions.maxOrNull()!!
+
+        max shouldBe DartsDatabaseUtil.DATABASE_VERSION - 1
     }
 
     @Test

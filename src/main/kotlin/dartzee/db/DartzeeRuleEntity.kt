@@ -11,7 +11,7 @@ const val MAX_RULE_NAME = 1000
 
 class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<DartzeeRuleEntity>(database)
 {
-    var entityName = ""
+    var entityName = EntityName.DartzeeRule
     var entityId = ""
     var dart1Rule = ""
     var dart2Rule = ""
@@ -23,7 +23,7 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
     var calculationResult = ""
     var ruleName = ""
 
-    override fun getTableName() = "DartzeeRule"
+    override fun getTableName() = EntityName.DartzeeRule
 
     override fun getCreateTableSqlSpecific(): String
     {
@@ -63,5 +63,5 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
 
     fun retrieveForGame(gameId: String) = retrieveEntities("EntityName = 'Game' AND EntityId = '$gameId'").sortedBy { it.ordinal }
 
-    private fun getTemplateWhere(templateId: String) = "EntityName = '$DARTZEE_TEMPLATE' AND EntityId = '$templateId'"
+    private fun getTemplateWhere(templateId: String) = "EntityName = '${EntityName.DartzeeTemplate}' AND EntityId = '$templateId'"
 }

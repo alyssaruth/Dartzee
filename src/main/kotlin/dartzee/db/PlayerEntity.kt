@@ -15,7 +15,7 @@ class PlayerEntity(database: Database = mainDatabase): AbstractEntity<PlayerEnti
     var dtDeleted = END_OF_TIME
     var playerImageId = ""
 
-    override fun getTableName() = "Player"
+    override fun getTableName() = EntityName.Player
 
     override fun getCreateTableSqlSpecific(): String
     {

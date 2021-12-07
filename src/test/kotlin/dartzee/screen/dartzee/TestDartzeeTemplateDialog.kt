@@ -3,8 +3,8 @@ package dartzee.screen.dartzee
 import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
-import dartzee.db.DARTZEE_TEMPLATE
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.EntityName
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
@@ -101,8 +101,8 @@ class TestDartzeeTemplateDialog: AbstractTest()
         val rule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
-        rule.toEntity(1, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
-        ruleTwo.toEntity(2, DARTZEE_TEMPLATE, template.rowId).saveToDatabase()
+        rule.toEntity(1, EntityName.DartzeeTemplate, template.rowId).saveToDatabase()
+        ruleTwo.toEntity(2, EntityName.DartzeeTemplate, template.rowId).saveToDatabase()
 
         val dialog = DartzeeTemplateDialog()
         dialog.copy(template)

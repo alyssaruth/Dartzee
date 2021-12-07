@@ -2,6 +2,7 @@ package dartzee.core.util
 
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.EntityName
 import dartzee.helper.*
 import dartzee.utils.DartzeeRuleConversion
 import dartzee.utils.InjectedThings
@@ -20,7 +21,7 @@ class TestDartzeeRuleConversion: AbstractTest()
         val dartzeeRule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = true)
         dartzeeRule.calculationResult!!.validSegments.shouldBeEmpty()
 
-        val entity = dartzeeRule.toEntity(1, "Game", randomGuid())
+        val entity = dartzeeRule.toEntity(1, EntityName.Game, randomGuid())
         entity.saveToDatabase()
 
         DartzeeRuleConversion.convertDartzeeRules()
@@ -42,7 +43,7 @@ class TestDartzeeRuleConversion: AbstractTest()
         val dartzeeRule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = true)
         dartzeeRule.calculationResult!!.validSegments.shouldBeEmpty()
 
-        val entity = dartzeeRule.toEntity(1, "Game", randomGuid())
+        val entity = dartzeeRule.toEntity(1, EntityName.Game, randomGuid())
         entity.calculationResult = "boom"
         entity.saveToDatabase()
 

@@ -8,7 +8,7 @@ class PendingLogsEntity(database: Database = mainDatabase): AbstractEntity<Pendi
     //DB Fields
     var logJson = ""
 
-    override fun getTableName() = "PendingLogs"
+    override fun getTableName() = EntityName.PendingLogs
 
     override fun getCreateTableSqlSpecific() = "LogJson varchar(30000) NOT NULL"
 

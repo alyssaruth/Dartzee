@@ -23,7 +23,7 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
     //In memory things
     private var player: PlayerEntity? = null
 
-    override fun getTableName() = "Participant"
+    override fun getTableName() = EntityName.Participant
 
     override fun getCreateTableSqlSpecific(): String
     {
