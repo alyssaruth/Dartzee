@@ -69,6 +69,7 @@ fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule>
         DartzeeAggregateRuleIncreasing(),
         DartzeeAggregateRuleDecreasing(),
         DartzeeAggregateRuleSpread(),
+        DartzeeAggregateRuleCluster(),
         DartzeeAggregateRuleDistinctScores(),
         DartzeeAggregateRuleRepeats())
 }

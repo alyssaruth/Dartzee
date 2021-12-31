@@ -12,7 +12,7 @@ import javax.swing.JSpinner
 import javax.swing.SpinnerNumberModel
 import kotlin.random.Random
 
-class DartzeeAggregateRuleSpread: AbstractDartzeeAggregateRule(), IDartzeeRuleConfigurable
+class DartzeeAggregateRuleCluster: AbstractDartzeeAggregateRule(), IDartzeeRuleConfigurable
 {
     override val configPanel = JPanel()
     val spinner = JSpinner()
@@ -28,34 +28,29 @@ class DartzeeAggregateRuleSpread: AbstractDartzeeAggregateRule(), IDartzeeRuleCo
 
     override fun isValidRound(segments: List<DartboardSegment>): Boolean
     {
-        if (segments.any { it.isMiss() || it.score == 25 }) {
+        if (segments.any { it.isMiss() }) {
             return false
         }
 
-        val valids = (1..20).toMutableSet()
-        segments.forEach { segment ->
-            if (!valids.contains(segment.score)) {
-                return false
-            }
-
-            valids.removeAll(getNumbersWithinN(segment.score, spinner.value as Int))
+        return segments.all { segment ->
+            val others = (segments - segment).map { it.score }
+            val valids = getNumbersWithinN(segment.score, spinner.value as Int)
+            valids.containsAll(others)
         }
-
-        return true
     }
 
-    override fun getRuleIdentifier() = "DartsSpread"
-    override fun toString() = "Darts spaced by at least "
-    override fun getDescription() = "Darts spaced by at least ${spinner.value}"
+    override fun getRuleIdentifier() = "DartsCluster"
+    override fun toString() = "Darts spaced by at most "
+    override fun getDescription() = "Darts spaced by at most ${spinner.value}"
 
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {
-        rootElement.setAttribute("Spread", "${spinner.value}")
+        rootElement.setAttribute("Cluster", "${spinner.value}")
     }
 
     override fun populate(rootElement: Element)
     {
-        spinner.value = rootElement.getAttributeInt("Spread")
+        spinner.value = rootElement.getAttributeInt("Cluster")
     }
 
     override fun randomise()

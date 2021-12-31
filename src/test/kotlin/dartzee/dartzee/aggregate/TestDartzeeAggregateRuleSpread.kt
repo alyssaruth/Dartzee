@@ -38,7 +38,7 @@ class TestDartzeeAggregateRuleSpread: AbstractDartzeeRuleTest<DartzeeAggregateRu
     }
 
     @Test
-    fun `Should not be possible to set values lower than 3 or higher than 180`()
+    fun `Should not be possible to set values lower than 1 or higher than 5`()
     {
         val rule = DartzeeAggregateRuleSpread()
 
@@ -57,22 +57,22 @@ class TestDartzeeAggregateRuleSpread: AbstractDartzeeRuleTest<DartzeeAggregateRu
     fun `Should have the correct description`()
     {
         val rule = DartzeeAggregateRuleSpread()
-        rule.getDescription() shouldBe "Darts spaced by 1"
+        rule.getDescription() shouldBe "Darts spaced by at least 1"
 
         rule.spinner.value = 4
-        rule.getDescription() shouldBe "Darts spaced by 4"
+        rule.getDescription() shouldBe "Darts spaced by at least 4"
     }
 
     @Test
     fun `Should write and read XML correctly`()
     {
-        val rule = DartzeeAggregateRuleSpread()
+        val rule = factory()
         rule.spinner.value = 3
 
         val xml = rule.toDbString()
         val deserialisedRule = parseAggregateRule(xml)
 
-        deserialisedRule.shouldBeInstanceOf<DartzeeAggregateRuleSpread>() {
+        deserialisedRule.shouldBeInstanceOf<DartzeeAggregateRuleSpread> {
             it.spinner.value shouldBe 3
         }
     }
