@@ -25,6 +25,11 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
                 + "EntityId VARCHAR(36) NOT NULL")
     }
 
+    override fun mergeImpl(otherDatabase: Database)
+    {
+        otherDatabase.executeUpdate("DELETE FROM $entityName WHERE RowId = '$entityId'")
+    }
+
     companion object
     {
         fun factory(entityName: EntityName, entityId: String): DeletionAuditEntity

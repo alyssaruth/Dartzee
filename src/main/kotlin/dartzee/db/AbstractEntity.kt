@@ -250,6 +250,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
     }
     open fun reassignLocalId(otherDatabase: Database) {}
+    open fun mergeImpl(otherDatabase: Database) {}
 
     private fun updateDatabaseRow(db: Database = database)
     {
