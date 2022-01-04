@@ -68,8 +68,3 @@ jobs:
           java-version: 11
       - name: Build JAR
         run: ./gradlew jar --info
-      - name: Export artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: binary
-          path: /home/runner/work/Dartzee/Dartzee/build/libs/Dartzee.jar
