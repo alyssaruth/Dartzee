@@ -114,7 +114,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
             val audits = DeletionAuditEntity().retrieveEntities()
             audits.map { it.entityId }.shouldContainExactlyInAnyOrder(entityOne.rowId, entityThree.rowId)
         }
-        else
+        else if (dao.getTableName() != EntityName.DeletionAudit)
         {
             getCountFromTable(EntityName.DeletionAudit) shouldBe 0
         }
@@ -252,6 +252,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
     {
         val cols = dao.getColumns()
         cols.remove("RowId")
+        cols.remove("LocalId")
         cols.remove("DtCreation")
         cols.remove("DtLastUpdate")
 
