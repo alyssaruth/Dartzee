@@ -95,6 +95,8 @@ jar {
         attributes 'Main-Class': 'dartzee.main.DartsMainKt'
     }
 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     dependsOn configurations.runtimeClasspath
     from {
         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
