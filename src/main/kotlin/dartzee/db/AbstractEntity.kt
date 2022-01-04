@@ -7,10 +7,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.getSqlString
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.logging.CODE_INSTANTIATION_ERROR
-import dartzee.logging.CODE_MERGE_ERROR
-import dartzee.logging.CODE_SQL_EXCEPTION
-import dartzee.logging.KEY_SQL
+import dartzee.logging.*
 import dartzee.logging.exceptions.ApplicationFault
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.Database
@@ -173,15 +170,34 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun deleteFromDatabase(): Boolean
     {
         val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
-        return database.executeUpdate(sql)
+        val success = database.executeUpdate(sql)
+        if (success && includeInSync()) {
+            DeletionAuditEntity.factoryAndSave(getTableName(), rowId)
+        }
+
+        return success
     }
 
-    fun deleteAll() = database.executeUpdate("DELETE FROM ${getTableName()}")
+    fun deleteAll()
+    {
+        if (includeInSync())
+        {
+            logger.error(CODE_DELETE_ERROR, "Wiping of ${getTableName()} will not be audited. This will break the sync!")
+        }
+
+        database.executeUpdate("DELETE FROM ${getTableName()}")
+    }
 
     fun deleteWhere(whereSql: String): Boolean
     {
+        val audits = retrieveEntities(whereSql).map { DeletionAuditEntity.factory(getTableName(), it.rowId) }
         val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
-        return database.executeUpdate(sql)
+        val success = database.executeUpdate(sql)
+        if (success && includeInSync()) {
+            BulkInserter.insert(audits)
+        }
+
+        return success
     }
 
     fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
