@@ -58,3 +58,18 @@ jobs:
         with:
           name: integration-and-e2e-results
           path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/integrationAndE2E/**/*.html
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build JAR
+        run: ./gradlew jar --info
+      - name: Export artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: binary
+          path: /home/runner/work/Dartzee/Dartzee/build/libs/Dartzee.jar
