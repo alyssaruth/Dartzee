@@ -74,5 +74,7 @@ class SyncProgressDialog() : JDialog()
         {
             instance.disposeLater()
         }
+
+        fun isVisible() = instance.isVisible
     }
 }
