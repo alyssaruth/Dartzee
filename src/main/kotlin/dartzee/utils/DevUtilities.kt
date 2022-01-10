@@ -4,6 +4,7 @@ import dartzee.core.util.DialogUtil
 import dartzee.db.DartEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
+import dartzee.db.X01FinishEntity
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.JOptionPane
@@ -72,12 +73,12 @@ object DevUtilities
         {
             if (participantIds.isNotEmpty())
             {
-                mainDatabase.executeUpdate("DELETE FROM Dart WHERE ParticipantId IN ($ptSql)")
+                DartEntity().deleteWhere("ParticipantId IN ($ptSql)")
             }
 
-            mainDatabase.executeUpdate("DELETE FROM Participant WHERE GameId = '$gameId'")
-            mainDatabase.executeUpdate("DELETE FROM X01Finish WHERE GameId = '$gameId'")
-            mainDatabase.executeUpdate("DELETE FROM Game WHERE RowId = '$gameId'")
+            ParticipantEntity().deleteWhere("GameId = '$gameId'")
+            X01FinishEntity().deleteWhere("GameId = '$gameId'")
+            GameEntity().deleteWhere("RowId = '$gameId'")
 
             DialogUtil.showInfo("Game #$localId has been purged.")
         }

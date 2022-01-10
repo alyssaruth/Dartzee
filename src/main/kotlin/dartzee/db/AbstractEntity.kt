@@ -172,7 +172,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
         val success = database.executeUpdate(sql)
         if (success && includeInSync()) {
-            DeletionAuditEntity.factoryAndSave(getTableName(), rowId)
+            DeletionAuditEntity.factoryAndSave(this)
         }
 
         return success
@@ -190,7 +190,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     fun deleteWhere(whereSql: String): Boolean
     {
-        val audits = retrieveEntities(whereSql).map { DeletionAuditEntity.factory(getTableName(), it.rowId) }
+        val audits = retrieveEntities(whereSql).map { DeletionAuditEntity.factory(it) }
         val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
         val success = database.executeUpdate(sql)
         if (success && includeInSync()) {
@@ -237,7 +237,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun mergeIntoDatabase(otherDatabase: Database)
     {
         val otherDao = factory(otherDatabase) ?: throw ApplicationFault(CODE_MERGE_ERROR, "Failed to factory ${getTableName()} dao")
-
         val existingRow = otherDao.retrieveForId(rowId, false)
         if (existingRow == null)
         {
@@ -248,8 +247,11 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         {
             updateDatabaseRow(otherDatabase)
         }
+
+        mergeImpl(otherDatabase)
     }
     open fun reassignLocalId(otherDatabase: Database) {}
+    open fun mergeImpl(otherDatabase: Database) {}
 
     private fun updateDatabaseRow(db: Database = database)
     {

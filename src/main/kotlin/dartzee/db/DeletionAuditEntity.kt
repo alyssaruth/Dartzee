@@ -25,20 +25,25 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
                 + "EntityId VARCHAR(36) NOT NULL")
     }
 
+    override fun mergeImpl(otherDatabase: Database)
+    {
+        otherDatabase.executeUpdate("DELETE FROM $entityName WHERE RowId = '$entityId'")
+    }
+
     companion object
     {
-        fun factory(entityName: EntityName, entityId: String): DeletionAuditEntity
+        fun factory(entity: AbstractEntity<*>): DeletionAuditEntity
         {
-            val entity = DeletionAuditEntity()
-            entity.assignRowId()
-            entity.entityName = entityName
-            entity.entityId = entityId
-            return entity
+            val result = DeletionAuditEntity()
+            result.assignRowId()
+            result.entityName = entity.getTableName()
+            result.entityId = entity.rowId
+            return result
         }
 
-        fun factoryAndSave(entityName: EntityName, entityId: String): DeletionAuditEntity
+        fun factoryAndSave(entity: AbstractEntity<*>): DeletionAuditEntity
         {
-            return factory(entityName, entityId).also { it.saveToDatabase() }
+            return factory(entity).also { it.saveToDatabase() }
         }
     }
 }
