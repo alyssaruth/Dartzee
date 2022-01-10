@@ -29,5 +29,5 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
     }
 
     override fun getBreakdownColumns() = listOf("Game", "Score", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
 }

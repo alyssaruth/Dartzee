@@ -21,7 +21,7 @@ class DartEntity(database: Database = mainDatabase) : AbstractEntity<DartEntity>
     var posY = -1
     var segmentType = SegmentType.MISS
 
-    override fun getTableName() = "Dart"
+    override fun getTableName() = EntityName.Dart
 
     override fun getCreateTableSqlSpecific(): String
     {

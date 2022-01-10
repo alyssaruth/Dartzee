@@ -30,7 +30,7 @@ open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayer
     private fun getPeakScore(playerName: String): Any?
     {
         val states = hmPlayerToStates[playerName] ?: return null
-        return states.mapNotNull { it.getPeakScore() }.max()
+        return states.mapNotNull { it.getPeakScore() }.maxOrNull()
     }
 
     private fun getScoreRow(desc: String, f: (i: List<Int>) -> Number) = prepareRow(desc) { playerName ->
@@ -43,12 +43,12 @@ open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayer
     private fun getLongestStreakRow() = prepareRow("Longest Streak") { playerName ->
         val allResults = getRoundResults(playerName)
 
-        allResults.map { results -> results.getLongestStreak { it.success }.size }.max()
+        allResults.map { results -> results.getLongestStreak { it.success }.size }.maxOrNull()
     }
 
     private fun getHardestRuleRow() = prepareRow("Hardest Rule") { playerName ->
         val allResults = getRoundResults(playerName).flatten()
-        allResults.filter { it.success }.map { it.ruleNumber }.max()
+        allResults.filter { it.success }.map { it.ruleNumber }.maxOrNull()
     }
 
     private fun getRoundResults(playerName: String): List<List<DartzeeRoundResultEntity>>

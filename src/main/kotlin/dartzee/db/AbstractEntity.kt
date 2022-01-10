@@ -7,10 +7,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.getSqlString
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.logging.CODE_INSTANTIATION_ERROR
-import dartzee.logging.CODE_MERGE_ERROR
-import dartzee.logging.CODE_SQL_EXCEPTION
-import dartzee.logging.KEY_SQL
+import dartzee.logging.*
 import dartzee.logging.exceptions.ApplicationFault
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.Database
@@ -34,7 +31,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     /**
      * Abstract fns
      */
-    abstract fun getTableName(): String
+    abstract fun getTableName(): EntityName
     abstract fun getCreateTableSqlSpecific(): String
 
     /**
@@ -67,7 +64,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return columns
     }
 
-    fun getTableNameUpperCase() = getTableName().toUpperCase()
+    fun getTableNameUpperCase() = getTableName().name.uppercase()
 
     fun factoryFromResultSet(rs: ResultSet): E
     {
@@ -173,15 +170,34 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun deleteFromDatabase(): Boolean
     {
         val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
-        return database.executeUpdate(sql)
+        val success = database.executeUpdate(sql)
+        if (success && includeInSync()) {
+            DeletionAuditEntity.factoryAndSave(this)
+        }
+
+        return success
     }
 
-    fun deleteAll() = database.executeUpdate("DELETE FROM ${getTableName()}")
+    fun deleteAll()
+    {
+        if (includeInSync())
+        {
+            logger.error(CODE_DELETE_ERROR, "Wiping of ${getTableName()} will not be audited. This will break the sync!")
+        }
+
+        database.executeUpdate("DELETE FROM ${getTableName()}")
+    }
 
     fun deleteWhere(whereSql: String): Boolean
     {
+        val audits = retrieveEntities(whereSql).map { DeletionAuditEntity.factory(it) }
         val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
-        return database.executeUpdate(sql)
+        val success = database.executeUpdate(sql)
+        if (success && includeInSync()) {
+            BulkInserter.insert(audits)
+        }
+
+        return success
     }
 
     fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
@@ -221,7 +237,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     fun mergeIntoDatabase(otherDatabase: Database)
     {
         val otherDao = factory(otherDatabase) ?: throw ApplicationFault(CODE_MERGE_ERROR, "Failed to factory ${getTableName()} dao")
-
         val existingRow = otherDao.retrieveForId(rowId, false)
         if (existingRow == null)
         {
@@ -232,8 +247,11 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         {
             updateDatabaseRow(otherDatabase)
         }
+
+        mergeImpl(otherDatabase)
     }
     open fun reassignLocalId(otherDatabase: Database) {}
+    open fun mergeImpl(otherDatabase: Database) {}
 
     private fun updateDatabaseRow(db: Database = database)
     {
@@ -339,7 +357,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     open fun createTable(): Boolean
     {
-        val createdTable = database.createTableIfNotExists(getTableName(), getCreateTableColumnSql())
+        val createdTable = database.createTableIfNotExists(getTableName().name, getCreateTableColumnSql())
         if (createdTable)
         {
             createIndexes()
@@ -485,6 +503,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             MatchMode::class.java -> MatchMode.valueOf(rs.getString(columnName))
             SegmentType::class.java -> SegmentType.valueOf(rs.getString(columnName))
             AchievementType::class.java -> AchievementType.valueOf(rs.getString(columnName))
+            EntityName::class.java -> EntityName.valueOf(rs.getString(columnName))
             else -> null
         }
 

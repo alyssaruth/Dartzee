@@ -144,12 +144,12 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         val templateA = insertDartzeeTemplate(name = "Template A")
         val templateB = insertDartzeeTemplate(name = "Template B")
 
-        val ruleA3 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 3)
-        val ruleA1 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 1)
-        val ruleA2 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 2)
+        val ruleA3 = insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateA.rowId, ordinal = 3)
+        val ruleA1 = insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateA.rowId, ordinal = 1)
+        val ruleA2 = insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateA.rowId, ordinal = 2)
 
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateB.rowId, ordinal = 1)
-        insertDartzeeRule(entityName = "Game", entityId = templateA.rowId, ordinal = 4)
+        insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateB.rowId, ordinal = 1)
+        insertDartzeeRule(entityName = EntityName.Game, entityId = templateA.rowId, ordinal = 4)
 
         val rules = DartzeeRuleEntity().retrieveForTemplate(templateA.rowId)
 
@@ -162,12 +162,12 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         val templateA = insertDartzeeTemplate(name = "Template A")
         val templateB = insertDartzeeTemplate(name = "Template B")
 
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 3)
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 1)
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 2)
+        insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateA.rowId, ordinal = 3)
+        insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateA.rowId, ordinal = 1)
+        insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateA.rowId, ordinal = 2)
 
-        val ruleB1 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateB.rowId, ordinal = 1)
-        val gameRule = insertDartzeeRule(entityName = "Game", entityId = templateA.rowId, ordinal = 4)
+        val ruleB1 = insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = templateB.rowId, ordinal = 1)
+        val gameRule = insertDartzeeRule(entityName = EntityName.Game, entityId = templateA.rowId, ordinal = 4)
 
         DartzeeRuleEntity().deleteForTemplate(templateA.rowId)
 
@@ -182,12 +182,12 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         val gameA = insertGame()
         val gameB = insertGame()
 
-        val ruleA3 = insertDartzeeRule(entityName = "Game", entityId = gameA.rowId, ordinal = 3)
-        val ruleA1 = insertDartzeeRule(entityName = "Game", entityId = gameA.rowId, ordinal = 1)
-        val ruleA2 = insertDartzeeRule(entityName = "Game", entityId = gameA.rowId, ordinal = 2)
+        val ruleA3 = insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 3)
+        val ruleA1 = insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 1)
+        val ruleA2 = insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 2)
 
-        insertDartzeeRule(entityName = "Game", entityId = gameB.rowId, ordinal = 1)
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = gameA.rowId, ordinal = 4)
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameB.rowId, ordinal = 1)
+        insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = gameA.rowId, ordinal = 4)
 
         val rules = DartzeeRuleEntity().retrieveForGame(gameA.rowId)
 

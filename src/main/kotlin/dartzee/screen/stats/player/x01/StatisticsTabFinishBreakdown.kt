@@ -78,7 +78,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
     {
         val scores = filteredGames.filter { it.isFinished() }.map { it.getDartsForFinalRound().last().score }
 
-        val rows = scores.distinct().map {
+        val rows: List<Array<Any>> = scores.distinct().map {
             val count = scores.count { score -> score == it }
             val percent = getPercentage(count, scores.size.toDouble())
             arrayOf(it, count, percent)

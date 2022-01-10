@@ -6,7 +6,6 @@ import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
-import dartzee.core.util.jsonMapper
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.*
 import dartzee.game.GameType
@@ -21,9 +20,9 @@ import java.sql.Timestamp
 import java.util.*
 import javax.sql.rowset.serial.SerialBlob
 
-fun wipeTable(tableName: String)
+fun wipeTable(entityName: EntityName)
 {
-    mainDatabase.executeUpdate("DELETE FROM $tableName")
+    mainDatabase.executeUpdate("DELETE FROM $entityName")
 }
 
 fun randomGuid() = UUID.randomUUID().toString()
@@ -45,7 +44,7 @@ fun factoryPlayer(name: String): PlayerEntity
 
 fun insertDartsMatch(uuid: String = randomGuid(),
                      database: Database = mainDatabase,
-                     localId: Long = database.generateLocalId("DartsMatch"),
+                     localId: Long = database.generateLocalId(EntityName.DartsMatch),
                      games: Int = 3,
                      mode: MatchMode = MatchMode.FIRST_TO,
                      dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -177,7 +176,7 @@ fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
 }
 
 fun insertGameForReport(uuid: String = randomGuid(),
-                        localId: Long = mainDatabase.generateLocalId("Game"),
+                        localId: Long = mainDatabase.generateLocalId(EntityName.Game),
                         gameType: GameType = GameType.X01,
                         gameParams: String = "501",
                         dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -195,7 +194,7 @@ fun insertGameForReport(uuid: String = randomGuid(),
 
 fun insertGame(uuid: String = randomGuid(),
                database: Database = mainDatabase,
-               localId: Long = database.generateLocalId("Game"),
+               localId: Long = database.generateLocalId(EntityName.Game),
                gameType: GameType = GameType.X01,
                gameParams: String = "501",
                dtFinish: Timestamp = DateStatics.END_OF_TIME,
@@ -220,7 +219,7 @@ fun insertGame(uuid: String = randomGuid(),
 }
 
 fun insertDartzeeRule(uuid: String = randomGuid(),
-                      entityName: String = "",
+                      entityName: EntityName = EntityName.DartzeeTemplate,
                       entityId: String = "",
                       ordinal: Int = 1,
                       calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
@@ -258,7 +257,7 @@ fun insertDartzeeTemplate(uuid: String = randomGuid(),
 fun insertTemplateAndRule(name: String = "Template"): DartzeeTemplateEntity
 {
     val template = insertDartzeeTemplate(name = name)
-    insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = template.rowId)
+    insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = template.rowId)
     return template
 }
 
@@ -299,7 +298,7 @@ fun insertPlayerImage(resource: String = "BaboOne", database: Database = mainDat
     return pi
 }
 
-
+fun getCountFromTable(table: EntityName, database: Database = mainDatabase) = getCountFromTable(table.name, database)
 fun getCountFromTable(table: String, database: Database = mainDatabase): Int
 {
     return database.executeQueryAggregate("SELECT COUNT(1) FROM $table")
@@ -308,13 +307,14 @@ fun getCountFromTable(table: String, database: Database = mainDatabase): Int
 /**
  * Retrieve
  */
-fun retrieveGame() = GameEntity().retrieveEntities().maxBy { it.dtLastUpdate }!!
+fun retrieveGame() = GameEntity().retrieveEntities().maxByOrNull { it.dtLastUpdate }!!
 fun retrieveDart() = DartEntity().retrieveEntities().first()
 fun retrieveDartsMatch() = DartsMatchEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
 fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
+fun retrieveDeletionAudit() = DeletionAuditEntity().retrieveEntities().first()
 
 fun retrieveParticipant(gameId: String, playerId: String) = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND PlayerId = '$playerId'").first()
 

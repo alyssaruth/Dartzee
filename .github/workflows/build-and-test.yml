@@ -5,25 +5,39 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Build & Unit Test
-      uses: GabrielBB/xvfb-action@v1.0
-      with:
-        run: ./gradlew unitTest --info
-    - name: Export test results
-      uses: actions/upload-artifact@v2
-      with:
-        name: unit-test-results
-        path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/unitTest/**/*.html
-    - name: Export snapshots
-      uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: failed-snapshots
-        path: /home/runner/**/*.failed.png
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build & Unit Test
+        uses: GabrielBB/xvfb-action@v1.0
+        with:
+          run: ./gradlew koverReport -x integrationAndE2E -x test -x updateScreenshots --info
+      - name: Export test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-test-results
+          path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/unitTest/**/*.html
+      - name: Export coverage stats
+        uses: actions/upload-artifact@v2
+        with:
+          name: kover-report
+          path: /home/runner/work/Dartzee/Dartzee/build/reports/kover/html
+      - name: Export snapshots
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: failed-snapshots
+          path: /home/runner/**/*.failed.png
+      - name: Update coverage
+        if: github.ref == 'refs/heads/master'
+        run: |
+          python scripts/update-coverage.py
+      - name: Commit coverage stats
+        uses: EndBug/add-and-commit@v7
+        if: github.ref == 'refs/heads/master'
+        with:
+          message: 'Update coverage stats'
   integration-and-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -44,3 +58,13 @@ jobs:
         with:
           name: integration-and-e2e-results
           path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/integrationAndE2E/**/*.html
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build JAR
+        run: ./gradlew jar --info

@@ -32,7 +32,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
 
     override fun getBreakdownColumns() = listOf("Double", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementCounter, a.localGameIdEarned, a.dtAchieved)
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementCounter, a.localGameIdEarned, a.dtAchieved)
     override fun isUnbounded() = false
 
     override fun populateForConversion(playerIds: List<String>, database: Database)

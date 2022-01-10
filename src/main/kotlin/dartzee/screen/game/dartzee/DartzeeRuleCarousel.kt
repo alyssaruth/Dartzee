@@ -170,7 +170,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         }
         else
         {
-            availableTiles.maxBy { it.ruleNumber }
+            availableTiles.maxByOrNull { it.ruleNumber }
         }
 
         selectedTile!!.doClick()

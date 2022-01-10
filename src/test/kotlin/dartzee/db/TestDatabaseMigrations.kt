@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
@@ -15,10 +16,19 @@ class TestDatabaseMigrations: AbstractTest()
     fun `Conversions map should not have gaps`()
     {
         val supportedVersions = DatabaseMigrations.getConversionsMap().keys
-        val min = supportedVersions.min()!!
-        val max = supportedVersions.max()!!
+        val min = supportedVersions.minOrNull()!!
+        val max = supportedVersions.maxOrNull()!!
 
         supportedVersions.shouldContainExactly((min..max).toSet())
+    }
+
+    @Test
+    fun `Conversions map should get us up to the current version`()
+    {
+        val supportedVersions = DatabaseMigrations.getConversionsMap().keys
+        val max = supportedVersions.maxOrNull()!!
+
+        max shouldBe DartsDatabaseUtil.DATABASE_VERSION - 1
     }
 
     @Test
@@ -47,10 +57,4 @@ class TestDatabaseMigrations: AbstractTest()
             mainDatabase.initialiseConnectionPool(1)
         }
     }
-}
-
-fun runMigrationsForVersion(database: Database, version: Int)
-{
-    val conversions = DatabaseMigrations.getConversionsMap().getValue(version)
-    conversions.forEach { it(database) }
 }

@@ -93,6 +93,38 @@ class TestDatabaseMerger: AbstractTest()
     }
 
     @Test
+    fun `Should sync deletion audits and remove corresponding rows from the remote`()
+    {
+        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
+            val game = insertGame(database = remoteDatabase)
+
+            DeletionAuditEntity.factoryAndSave(game)
+
+            val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+            val resultingDatabase = merger.performMerge()
+
+            getCountFromTable("Game", resultingDatabase) shouldBe 0
+            getCountFromTable("DeletionAudit", resultingDatabase) shouldBe 1
+        }
+    }
+
+    @Test
+    fun `Should handle syncing a newly deleted entity that never made it to the remote`()
+    {
+        usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
+            val game = insertGame(database = mainDatabase)
+
+            DeletionAuditEntity.factoryAndSave(game)
+
+            val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
+            val resultingDatabase = merger.performMerge()
+
+            getCountFromTable("Game", resultingDatabase) shouldBe 0
+            getCountFromTable("DeletionAudit", resultingDatabase) shouldBe 1
+        }
+    }
+
+    @Test
     fun `Should reassign localIds in order for new games`()
     {
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->

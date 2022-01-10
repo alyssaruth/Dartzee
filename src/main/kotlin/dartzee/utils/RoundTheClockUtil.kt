@@ -9,5 +9,5 @@ fun getLongestStreak(allDarts: List<Dart>, clockType: ClockType = ClockType.Stan
     val groupedByPt = allDarts.groupBy { it.participantId }.values
 
     val streaks = groupedByPt.map { darts -> darts.getLongestStreak { it.hitClockTarget(clockType) } }
-    return streaks.maxBy { it.size } ?: listOf()
+    return streaks.maxByOrNull { it.size } ?: listOf()
 }

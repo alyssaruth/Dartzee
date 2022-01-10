@@ -8,12 +8,15 @@ import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.screen.DartsApp
 import dartzee.screen.ScreenCache
+import dartzee.screen.UtilitiesScreen
 import dartzee.screen.sync.SyncManagementPanel
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.screen.sync.SyncProgressDialog
 import dartzee.screen.sync.SyncSetupPanel
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
@@ -87,6 +90,42 @@ class SyncE2E: AbstractRegistryTest()
         x01Wins.size shouldBe 2
     }
 
+    @Tag("e2e")
+    @Test
+    fun `Syncing deleted data`()
+    {
+        val (winner, loser) = createPlayers()
+
+        runGame(winner, loser)
+
+        val mainScreen = ScreenCache.mainScreen
+        ScreenCache.switch<SyncManagementScreen>()
+        mainScreen.isVisible = true
+
+        performPush(mainScreen)
+        deleteGame(mainScreen)
+
+        ScreenCache.switch<SyncManagementScreen>()
+        mainScreen.clickChild<JButton>("Perform Sync")
+
+        awaitCondition { SyncProgressDialog.isVisible() }
+        awaitCondition { !SyncProgressDialog.isVisible() }
+
+        dialogFactory.infosShown.last() shouldBe "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0"
+        getCountFromTable(EntityName.Game) shouldBe 0
+        getCountFromTable(EntityName.Dart) shouldBe 0
+        getCountFromTable(EntityName.Participant) shouldBe 0
+        getCountFromTable(EntityName.X01Finish) shouldBe 0
+    }
+
+    private fun deleteGame(mainScreen: DartsApp)
+    {
+        ScreenCache.switch<UtilitiesScreen>()
+        dialogFactory.inputSelection = 1L
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
+        mainScreen.clickChild<JButton>("Delete Game")
+    }
+
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String
     {
         GameLauncher().launchNewGame(listOf(winner, loser), GameType.X01, "501")
@@ -120,7 +159,8 @@ class SyncE2E: AbstractRegistryTest()
     {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
         DevUtilities.purgeGame(1)
-        wipeTable("Achievement")
+        wipeTable(EntityName.DeletionAudit)
+        wipeTable(EntityName.Achievement)
         mainScreen.clickChild<JButton>("Reset")
         awaitCondition { mainScreen.findChild<SyncSetupPanel>() != null }
     }

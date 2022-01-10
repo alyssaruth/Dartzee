@@ -25,6 +25,9 @@ class DatabaseMerger(private val localDatabase: Database,
         logger.info(CODE_MERGE_STARTED, "Starting merge - last local sync $lastLocalSync")
         DartsDatabaseUtil.getSyncEntities(localDatabase).forEach { dao -> syncRowsFromTable(dao, lastLocalSync) }
 
+        // Explicitly sync deletion audits last
+        syncRowsFromTable(DeletionAuditEntity(localDatabase), lastLocalSync)
+
         SyncProgressDialog.progressToStage(SyncStage.UPDATE_ACHIEVEMENTS)
 
         val achievementsChanged = AchievementEntity().retrieveModifiedSince(lastLocalSync)
@@ -44,9 +47,8 @@ class DatabaseMerger(private val localDatabase: Database,
     private fun syncRowsFromTable(localDao: AbstractEntity<*>, lastSync: Timestamp?)
     {
         val rows = localDao.retrieveModifiedSince(lastSync)
-        val tableName = localDao.getTableName()
         logger.info(CODE_MERGING_ENTITY, "Merging ${rows.size} rows from ${localDao.getTableName()}",
-            KEY_TABLE_NAME to tableName, KEY_ROW_COUNT to rows.size)
+            KEY_TABLE_NAME to localDao.getTableName(), KEY_ROW_COUNT to rows.size)
 
         rows.forEach { it.mergeIntoDatabase(remoteDatabase) }
     }

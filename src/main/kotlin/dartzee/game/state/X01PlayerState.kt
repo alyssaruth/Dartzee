@@ -43,7 +43,7 @@ data class X01PlayerState(private val startingScore: Int,
             nonBustRounds.add(currentRound.toList())
         }
 
-        return startingScore - nonBustRounds.sumBy { sumScore(it) }
+        return startingScore - nonBustRounds.sumOf { sumScore(it) }
     }
 
     fun getRemainingScore() = getRemainingScoreForRound(currentRoundNumber())

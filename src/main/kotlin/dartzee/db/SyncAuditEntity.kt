@@ -16,7 +16,7 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
     var deviceId = ""
     var operatingSystem = ""
 
-    override fun getTableName() = "SyncAudit"
+    override fun getTableName() = EntityName.SyncAudit
 
     override fun getCreateTableSqlSpecific() =
         "RemoteName VARCHAR(255) NOT NULL, Username VARCHAR(1000) NOT NULL, AppVersion VARCHAR(255) NOT NULL, " +
@@ -44,7 +44,7 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
         {
             val dao = SyncAuditEntity(database)
             val entities = dao.retrieveEntities()
-            val latest = entities.maxBy { it.dtLastUpdate } ?: return null
+            val latest = entities.maxByOrNull { it.dtLastUpdate } ?: return null
             return LastSyncData(latest.remoteName, latest.dtLastUpdate)
         }
     }

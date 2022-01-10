@@ -19,7 +19,7 @@ class TestDatabaseMigrationV17toV18: AbstractTest()
         val de = DartzeeRuleEntity()
         de.rowId = randomGuid()
         de.entityId = randomGuid()
-        de.entityName = "Game"
+        de.entityName = EntityName.Game
         de.calculationResult = oldString
         de.ordinal = 1
         de.saveToDatabase()

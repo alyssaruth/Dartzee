@@ -45,8 +45,8 @@ class DartzeeAggregateRuleSpread: AbstractDartzeeAggregateRule(), IDartzeeRuleCo
     }
 
     override fun getRuleIdentifier() = "DartsSpread"
-    override fun toString() = "Darts spaced by "
-    override fun getDescription() = "Darts spaced by ${spinner.value}"
+    override fun toString() = "Darts spaced by at least "
+    override fun getDescription() = "Darts spaced by at least ${spinner.value}"
 
     override fun writeXmlAttributes(doc: Document, rootElement: Element)
     {

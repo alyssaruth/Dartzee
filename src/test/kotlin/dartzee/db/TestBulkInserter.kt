@@ -5,31 +5,14 @@ import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
-import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldBeSortedWith
 import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.collections.shouldNotBeSortedWith
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestBulkInserter: AbstractTest()
 {
-    @BeforeEach
-    fun beforeEach()
-    {
-        mainDatabase.executeUpdate("CREATE TABLE InsertTest (RowId INT)")
-    }
-
-    @AfterEach
-    fun afterEach()
-    {
-        mainDatabase.dropTable("InsertTest")
-    }
-
     @Test
     fun `Should do nothing if passed no entities to insert`()
     {
@@ -70,43 +53,37 @@ class TestBulkInserter: AbstractTest()
     @Test
     fun `Should insert the right number of rows per INSERT statement`()
     {
-        val rows = prepareRows(80)
-
-        checkInsertBatching(rows, 1, 80)
-        checkInsertBatching(rows, 20, 4)
-        checkInsertBatching(rows, 21, 4)
+        checkInsertBatching(prepareRows(80), 1, 80)
+        checkInsertBatching(prepareRows(80), 20, 4)
+        checkInsertBatching(prepareRows(80), 21, 4)
     }
-    private fun checkInsertBatching(rows: List<String>, rowsPerInsert: Int, expectedNumberOfBatches: Int)
+    private fun checkInsertBatching(rows: List<GameEntity>, rowsPerInsert: Int, expectedNumberOfBatches: Int)
     {
-        wipeTable("InsertTest")
+        wipeTable(EntityName.Game)
         clearLogs()
 
-        BulkInserter.insert("InsertTest", rows, 1000, rowsPerInsert)
+        BulkInserter.insert(rows, 1000, rowsPerInsert)
 
         getLogRecords() shouldHaveSize(expectedNumberOfBatches)
-        getCountFromTable("InsertTest") shouldBe rows.size
+        getCountFromTable(EntityName.Game) shouldBe rows.size
     }
 
     @Test
-    fun `Should only run 1 thread for a small number of rows`()
+    fun `Should only run single-threaded successfully for a small number of rows`()
     {
         val rows = prepareRows(50)
 
-        BulkInserter.insert("InsertTest", rows, 50, 1)
-
-        retrieveValues() shouldBeSortedWith{i: Int, j: Int -> i.compareTo(j)}
-        getCountFromTable("InsertTest") shouldBe 50
+        BulkInserter.insert(rows, 50, 5)
+        getCountFromTable(EntityName.Game) shouldBe 50
     }
 
     @Test
-    fun `Should run multi-threaded if required`()
+    fun `Should run multi-threaded successfully`()
     {
         val rows = prepareRows(50)
 
-        BulkInserter.insert("InsertTest", rows, 5, 1)
-
-        retrieveValues() shouldNotBeSortedWith{i: Int, j: Int -> i.compareTo(j)}
-        getCountFromTable("InsertTest") shouldBe 50
+        BulkInserter.insert(rows, 5, 5)
+        getCountFromTable(EntityName.Game) shouldBe 50
     }
 
     @Test
@@ -115,43 +92,25 @@ class TestBulkInserter: AbstractTest()
         val rows = prepareRows(501)
         clearLogs()
 
-        BulkInserter.insert("InsertTest", rows, 300, 50)
+        BulkInserter.insert(rows, 300, 50)
 
         getLogRecords().filter { it.loggingCode == CODE_SQL }.shouldBeEmpty()
         val log = getLogRecords().last { it.loggingCode == CODE_BULK_SQL }
-        log.message shouldBe "Inserting 501 rows into InsertTest (2 threads @ 50 rows per insert)"
-        getCountFromTable("InsertTest") shouldBe 501
+        log.message shouldBe "Inserting 501 rows into Game (2 threads @ 50 rows per insert)"
+        getCountFromTable(EntityName.Game) shouldBe 501
 
+        wipeTable(EntityName.Game)
         val moreRows = prepareRows(10)
-        BulkInserter.insert("InsertTest", moreRows, 300, 50)
+        BulkInserter.insert(moreRows, 300, 50)
 
         val newLog = getLastLog()
         newLog.loggingCode shouldBe CODE_SQL
-        newLog.message shouldContain "INSERT INTO InsertTest VALUES"
+        newLog.message shouldContain "INSERT INTO Game VALUES"
     }
 
-
-    private fun retrieveValues(): List<Int>
-    {
-        val rows = mutableListOf<Int>()
-        mainDatabase.executeQuery("SELECT RowId FROM InsertTest").use{ rs ->
-            while (rs.next())
-            {
-                rows.add(rs.getInt(1))
-            }
+    private fun prepareRows(numberToGenerate: Int) = (1..numberToGenerate).map {
+        GameEntity().also {
+            it.assignRowId()
         }
-
-        return rows
-    }
-
-    private fun prepareRows(numberToGenerate: Int): List<String>
-    {
-        val rows = mutableListOf<String>()
-        for (i in 1..numberToGenerate)
-        {
-            rows.add("($i)")
-        }
-
-        return rows
     }
 }

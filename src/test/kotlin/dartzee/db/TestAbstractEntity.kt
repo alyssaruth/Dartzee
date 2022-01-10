@@ -9,6 +9,8 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -195,6 +197,11 @@ class FakeEntity(database: Database = mainDatabase): AbstractEntity<FakeEntity>(
 {
     var testString = ""
 
-    override fun getTableName() = "TestTable"
+    override fun getTableName(): EntityName {
+        val result = mockk<EntityName>(relaxed = true)
+        every { result.name } returns "TestTable"
+        every { result.toString() } returns "TestTable"
+        return result
+    }
     override fun getCreateTableSqlSpecific() = "TestString VARCHAR(10) NOT NULL"
 }

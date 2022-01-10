@@ -12,7 +12,7 @@ object DartsClient
 {
     var devMode = false
     var trueLaunch = false
-    var operatingSystem = System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
+    var operatingSystem = System.getProperty("os.name").lowercase(Locale.ENGLISH)
     var justUpdated = false
     var updateManager = UpdateManager
 

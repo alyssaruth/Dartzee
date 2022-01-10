@@ -2,6 +2,7 @@ package dartzee.sync
 
 import dartzee.core.util.DialogUtil
 import dartzee.db.AchievementEntity
+import dartzee.db.DeletionAuditEntity
 import dartzee.db.GameEntity
 import dartzee.db.SyncAuditEntity
 import dartzee.screen.ScreenCache
@@ -51,7 +52,7 @@ fun validateSyncAction(): Boolean
 
 fun needsSync(): Boolean
 {
-    val entitiesToCheck = DartsDatabaseUtil.getSyncEntities(mainDatabase) + AchievementEntity(mainDatabase)
+    val entitiesToCheck = DartsDatabaseUtil.getSyncEntities(mainDatabase) + AchievementEntity(mainDatabase) + DeletionAuditEntity(mainDatabase)
     val lastLocalSync = SyncAuditEntity.getLastSyncData(mainDatabase)?.lastSynced
     return entitiesToCheck.flatMap { it.retrieveModifiedSince(lastLocalSync) }.isNotEmpty()
 }

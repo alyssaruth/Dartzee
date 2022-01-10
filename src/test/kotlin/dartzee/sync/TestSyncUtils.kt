@@ -80,6 +80,7 @@ class TestSyncUtils: AbstractTest()
         validateSyncIsNecessary { insertDartzeeTemplate() }
         validateSyncIsNecessary { insertPlayerImage() }
         validateSyncIsNecessary { insertDart(ParticipantEntity()) }
+        validateSyncIsNecessary { insertGame().also { it.deleteFromDatabase() } }
     }
     private fun validateSyncIsNecessary(setupFn: () -> Unit)
     {

@@ -6,20 +6,28 @@ import dartzee.core.util.toXmlDoc
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.DartsMatchEntity
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.DeletionAuditEntity
 
 object DatabaseMigrations
 {
     fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>>
     {
         return mapOf(
-            16 to listOf (
-                { db -> convertMatchParams(db) }
-            ),
+            16 to listOf { db -> convertMatchParams(db) },
             17 to listOf(
                 { db -> runScript(db, 18, "1. DartzeeRule.sql") },
                 { db -> convertDartzeeCalculationResults(db) }
-            )
+            ),
+            18 to listOf { db -> createDeletionAudit(db) }
         )
+    }
+
+    /**
+     * V18 -> V19
+     */
+    fun createDeletionAudit(database: Database)
+    {
+        DeletionAuditEntity(database).createTable()
     }
 
     /**
