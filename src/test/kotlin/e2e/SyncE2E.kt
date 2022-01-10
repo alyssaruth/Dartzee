@@ -103,7 +103,6 @@ class SyncE2E: AbstractRegistryTest()
         mainScreen.isVisible = true
 
         performPush(mainScreen)
-        Thread.sleep(1000)
         deleteGame(mainScreen)
 
         ScreenCache.switch<SyncManagementScreen>()
@@ -160,6 +159,7 @@ class SyncE2E: AbstractRegistryTest()
     {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
         DevUtilities.purgeGame(1)
+        wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
         mainScreen.clickChild<JButton>("Reset")
         awaitCondition { mainScreen.findChild<SyncSetupPanel>() != null }
