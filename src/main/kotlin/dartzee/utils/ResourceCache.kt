@@ -61,7 +61,7 @@ object ResourceCache
     {
         return listOf("60.wav", "100.wav", "140.wav", "180.wav", "badmiss1.wav", "badmiss2.wav", "badmiss3.wav", "badmiss4.wav",
                 "basil1.wav", "basil2.wav", "basil3.wav", "basil4.wav", "bull.wav", "damage.wav", "forsyth1.wav", "forsyth2.wav",
-                "forsyth3.wav", "forsyth4.wav", "four.wav", "fourTrimmed.wav", "badLuck1.wav", "badLuck2.wav")
+                "forsyth3.wav", "forsyth4.wav", "four.wav", "fourTrimmed.wav", "badLuck1.wav", "badLuck2.wav", "chucklevision1.wav", "chucklevision2.wav", "chucklevision3.wav")
         }
 
     fun initialiseResources()
