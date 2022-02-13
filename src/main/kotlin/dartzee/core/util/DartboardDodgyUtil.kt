@@ -12,6 +12,14 @@ import java.util.*
 import javax.sound.sampled.*
 import javax.swing.ImageIcon
 
+fun Dartboard.doChucklevision()
+{
+    val rand = Random()
+    val chuckleSound = rand.nextInt(3) + 1
+
+    doDodgy(ResourceCache.IMG_CHUCKLE, 266, 279, "chucklevision$chuckleSound")
+}
+
 fun Dartboard.doFawlty()
 {
     val rand = Random()
