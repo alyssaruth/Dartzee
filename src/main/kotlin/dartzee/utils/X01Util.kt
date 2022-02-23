@@ -3,7 +3,7 @@ package dartzee.utils
 import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
 
-fun isBust(dart: Dart) =  isBust(dart.startingScore, dart)
+fun isBust(dart: Dart) = isBust(dart.startingScore, dart)
 fun isBust(score: Int, lastDart: Dart): Boolean
 {
     val scoreRemaining = score - lastDart.getTotal()
@@ -100,10 +100,7 @@ fun calculateThreeDartAverage(darts: List<Dart>, scoreCutOff: Int): Double
     return amountScored / scoringDarts.size * 3
 }
 
-fun sumScore(darts: List<Dart>): Int
-{
-    return darts.map { it.getTotal() }.sum()
-}
+fun sumScore(darts: List<Dart>) = darts.sumOf { it.getTotal() }
 
 /**
  * Shanghai: T20, D20, 20 in any order.
