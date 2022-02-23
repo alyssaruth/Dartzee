@@ -22,5 +22,6 @@ enum class AchievementType
     X01_NO_MERCY,
     GOLF_COURSE_MASTER,
     DARTZEE_GAMES_WON,
+    DARTZEE_BEST_GAME,
     DUMMY_TOTAL
 }
