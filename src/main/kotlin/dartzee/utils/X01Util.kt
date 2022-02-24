@@ -24,7 +24,6 @@ fun shouldStopForMercyRule(model: DartsAiModel, startingScore: Int, currentScore
     return startingScore < mercyThreshold
             && startingScore % 2 != 0
             && currentScore % 2 == 0
-
 }
 
 /**

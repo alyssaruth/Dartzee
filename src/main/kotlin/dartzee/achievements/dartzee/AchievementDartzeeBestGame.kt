@@ -2,20 +2,22 @@ package dartzee.achievements.dartzee
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.AchievementType
-import dartzee.achievements.X01_ROUNDS_TABLE
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.net.URL
 
+const val DARTZEE_BEST_GAME_MIN_ROUNDS = 5
+
 /**
  * Measured as average-per-round, to prevent "gaming" it by having a massive set of easy rules
  */
 class AchievementDartzeeBestGame: AbstractAchievement()
 {
-    override val name = ""
-    override val desc = "Best 3-dart average in Dartzee (at least 5 rules)"
+    override val name = "Yahtzee!"
+    override val desc = "Best round average in Dartzee (at least 5 rules)"
     override val achievementType = AchievementType.DARTZEE_BEST_GAME
     override val redThreshold = 10
     override val orangeThreshold = 20
@@ -37,21 +39,28 @@ class AchievementDartzeeBestGame: AbstractAchievement()
         sb.append(" WHERE dr.EntityId = g.RowId")
         sb.append(" AND dr.EntityName = '${EntityName.Game}'")
         sb.append(" GROUP BY g.RowId")
-        sb.append(" HAVING COUNT(1) > 4")
+        sb.append(" HAVING COUNT(1) >= $DARTZEE_BEST_GAME_MIN_ROUNDS")
 
         if (!database.executeUpdate(sb)) return
 
-        val allScores = database.createTempTable("DartzeeScores", "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36), RoundCount INT, Score INT, ComputedScore INT")
+        val allScores = database.createTempTable("DartzeeScores", "PlayerId VARCHAR(36), DtAchieved TIMESTAMP, GameId VARCHAR(36), ComputedScore INT")
 
         sb = StringBuilder()
         sb.append(" INSERT INTO $allScores")
-        sb.append(" SELECT pt.RowId, pt.PlayerId, g.GameId, g.RoundCount, pt.FinalScore, pt.FinalScore / g.RoundCount")
+        sb.append(" SELECT pt.PlayerId, pt.DtFinished, zz.GameId, pt.FinalScore / zz.RoundCount")
         sb.append(" FROM ${EntityName.Participant} pt, $dartzeeGames zz")
-        sb.append(" WHERE pt.GameId = g.GameId")
+        sb.append(" WHERE pt.GameId = zz.GameId")
 
         if (!database.executeUpdate(sb)) return
 
+        sb = StringBuilder()
+        sb.append(" SELECT *")
+        sb.append(" FROM $allScores")
+        sb.append(" ORDER BY ComputedScore DESC, DtAchieved")
 
+        database.executeQuery(sb).use { rs ->
+            bulkInsertFromResultSet(rs, database, achievementType, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("ComputedScore") })
+        }
     }
 
     override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_DARTZEE_BEST_GAME
