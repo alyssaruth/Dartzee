@@ -2,6 +2,7 @@ package dartzee.achievements.dartzee
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.AchievementType
+import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.EntityName
 import dartzee.game.GameType
@@ -38,6 +39,7 @@ class AchievementDartzeeBestGame: AbstractAchievement()
         sb.append(" FROM ${EntityName.Game} g, ${EntityName.DartzeeRule} dr")
         sb.append(" WHERE dr.EntityId = g.RowId")
         sb.append(" AND dr.EntityName = '${EntityName.Game}'")
+        sb.append(" AND g.GameType = '${GameType.DARTZEE}'")
         sb.append(" GROUP BY g.RowId")
         sb.append(" HAVING COUNT(1) >= $DARTZEE_BEST_GAME_MIN_ROUNDS")
 
@@ -50,6 +52,8 @@ class AchievementDartzeeBestGame: AbstractAchievement()
         sb.append(" SELECT pt.PlayerId, pt.DtFinished, zz.GameId, pt.FinalScore / zz.RoundCount")
         sb.append(" FROM ${EntityName.Participant} pt, $dartzeeGames zz")
         sb.append(" WHERE pt.GameId = zz.GameId")
+        sb.append(" AND pt.FinalScore > -1")
+        appendPlayerSql(sb, playerIds)
 
         if (!database.executeUpdate(sb)) return
 

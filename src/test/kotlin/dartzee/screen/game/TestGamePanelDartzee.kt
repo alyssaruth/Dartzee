@@ -15,7 +15,6 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.db.EntityName
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
@@ -25,6 +24,7 @@ import dartzee.screen.game.dartzee.*
 import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.insertDartzeeRules
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
@@ -357,10 +357,7 @@ class TestGamePanelDartzee: AbstractTest()
         val dtFinish = if (rounds > 4) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
 
-        rules.forEachIndexed { ix, it ->
-            val entity = it.toEntity(ix, EntityName.Game, game.rowId)
-            entity.saveToDatabase()
-        }
+        insertDartzeeRules(game.rowId, rules)
 
         val participant = insertParticipant(insertPlayer = (player == null), gameId = game.rowId, ordinal = 0, playerId = player?.rowId ?: "")
 
