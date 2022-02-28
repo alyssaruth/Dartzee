@@ -8,6 +8,7 @@ import dartzee.utils.Database
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
+import java.sql.Timestamp
 
 class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzeeBestGame>()
 {
@@ -52,5 +53,43 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
 
         factoryAchievement().populateForConversion(emptyList())
         retrieveAchievement().achievementCounter shouldBe 20
+    }
+
+    @Test
+    fun `Should arrive at the correct average for longer games`()
+    {
+        val pt = insertRelevantParticipant(finalScore = 120)
+        val rules = testRules + testRules
+        insertDartzeeRules(pt.gameId, rules)
+
+        factoryAchievement().populateForConversion(emptyList())
+        retrieveAchievement().achievementCounter shouldBe 10
+    }
+
+    @Test
+    fun `Should take the earliest game with the best computed score`()
+    {
+        val player = insertPlayer()
+        setUpGame(player, 100, Timestamp(100))
+        val expectedGameId = setUpGame(player, 120, Timestamp(150))
+        setUpGame(player, 120, Timestamp(200))
+        setUpGame(player, 118, Timestamp(250))
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        val achievement = retrieveAchievement()
+        achievement.gameIdEarned shouldBe expectedGameId
+        achievement.dtAchieved shouldBe Timestamp(150)
+        achievement.achievementCounter shouldBe 20
+        achievement.playerId shouldBe player.rowId
+    }
+
+    private fun setUpGame(player: PlayerEntity, finalScore: Int, dtFinished: Timestamp): String
+    {
+        val g = insertRelevantGame()
+        insertParticipant(playerId = player.rowId, gameId = g.rowId, finalScore = finalScore, dtFinished = dtFinished)
+        insertDartzeeRules(g.rowId, testRules)
+
+        return g.rowId
     }
 }
