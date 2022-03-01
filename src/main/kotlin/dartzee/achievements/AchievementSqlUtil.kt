@@ -1,7 +1,7 @@
 package dartzee.achievements
 
 import dartzee.`object`.*
-import dartzee.achievements.dartzee.DARTZEE_BEST_GAME_MIN_ROUNDS
+import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_RULES
 import dartzee.db.AchievementEntity
 import dartzee.db.BulkInserter
 import dartzee.db.EntityName
@@ -92,7 +92,7 @@ fun buildQualifyingDartzeeGamesTable(database: Database): String?
     sb.append(" AND dr.EntityName = '${EntityName.Game}'")
     sb.append(" AND g.GameType = '${GameType.DARTZEE}'")
     sb.append(" GROUP BY g.RowId, dt.Name")
-    sb.append(" HAVING COUNT(1) >= $DARTZEE_BEST_GAME_MIN_ROUNDS")
+    sb.append(" HAVING COUNT(1) >= $DARTZEE_ACHIEVEMENT_MIN_RULES")
 
     if (!database.executeUpdate(sb)) return null
 
