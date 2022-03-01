@@ -109,6 +109,12 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         panel.add(medal)
     }
 
+    fun selectTab(gameType: GameType)
+    {
+        val ix = tabbedPane.indexOfTab(gameType.getDescription())
+        tabbedPane.selectedIndex = ix
+    }
+
     fun toggleAchievementDesc(hovered: Boolean, achievement : AbstractAchievement)
     {
         if (hovered)

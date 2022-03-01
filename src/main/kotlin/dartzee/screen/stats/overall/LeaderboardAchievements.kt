@@ -17,7 +17,7 @@ const val ACHIEVEMENT_COLUMN_IX = 3
 
 class LeaderboardAchievements: AbstractLeaderboard()
 {
-    val table = ScrollTableAchievements()
+    val table = ScrollTableAchievements(this)
     private val panelFilters = JPanel()
 
     val cbSpecificAchievement = JCheckBox("Achievement")
@@ -99,7 +99,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
         table.getColumn(ACHIEVEMENT_COLUMN_IX).cellRenderer = renderer
     }
 
-    private fun getSelectedAchievement() = if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex) else DummyAchievementTotal()
+    fun getSelectedAchievement(): AbstractAchievement = if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex) else DummyAchievementTotal()
 
     override fun actionPerformed(e: ActionEvent?)
     {
