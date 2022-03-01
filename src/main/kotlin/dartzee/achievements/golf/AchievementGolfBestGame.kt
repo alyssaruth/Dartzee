@@ -22,5 +22,5 @@ class AchievementGolfBestGame : AbstractAchievementBestGame()
     override val pinkThreshold = 36   //2 per hole
     override val maxValue = 18
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_GOLF_BEST_GAME
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_BEST_GAME
 }

@@ -29,7 +29,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
 
     var hitDoubles = mutableListOf<Int>()
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
 
     override fun getBreakdownColumns() = listOf("Double", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementCounter, a.localGameIdEarned, a.dtAchieved)

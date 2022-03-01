@@ -22,7 +22,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
     override val pinkThreshold = 200
     override val maxValue = 200
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_POINTS_RISKED
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_POINTS_RISKED
     override fun isUnbounded() = true
 
     override fun getBreakdownColumns() = listOf("Game", "Round", "Points risked", "Date Achieved")

@@ -1,8 +1,10 @@
 package dartzee.achievements
 
 import dartzee.`object`.*
+import dartzee.achievements.dartzee.DARTZEE_BEST_GAME_MIN_ROUNDS
 import dartzee.db.AchievementEntity
 import dartzee.db.BulkInserter
+import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.utils.Database
 import java.sql.ResultSet
@@ -75,6 +77,26 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
     sb.append(" AND zz.RoundNumber = drt.RoundNumber")
     sb.append(" AND zz.LastDartOrdinal = drt.Ordinal")
     database.executeUpdate(sb.toString())
+}
+
+fun buildQualifyingDartzeeGamesTable(database: Database): String?
+{
+    val dartzeeGames = database.createTempTable("DartzeeGames", "GameId VARCHAR(36), RoundCount INT, TemplateName VARCHAR(1000)")
+
+    val sb = StringBuilder()
+    sb.append(" INSERT INTO $dartzeeGames")
+    sb.append(" SELECT g.RowId, COUNT(1) + 1, CASE WHEN dt.Name IS NULL THEN '' ELSE dt.Name END AS TemplateName")
+    sb.append(" FROM ${EntityName.DartzeeRule} dr, ${EntityName.Game} g")
+    sb.append(" LEFT OUTER JOIN ${EntityName.DartzeeTemplate} dt ON (g.GameParams = dt.RowId)")
+    sb.append(" WHERE dr.EntityId = g.RowId")
+    sb.append(" AND dr.EntityName = '${EntityName.Game}'")
+    sb.append(" AND g.GameType = '${GameType.DARTZEE}'")
+    sb.append(" GROUP BY g.RowId, dt.Name")
+    sb.append(" HAVING COUNT(1) >= $DARTZEE_BEST_GAME_MIN_ROUNDS")
+
+    if (!database.executeUpdate(sb)) return null
+
+    return dartzeeGames
 }
 
 fun bulkInsertFromResultSet(rs: ResultSet,

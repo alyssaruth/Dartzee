@@ -1,9 +1,6 @@
 package dartzee.achievements.dartzee
 
-import dartzee.achievements.AbstractAchievement
-import dartzee.achievements.AchievementType
-import dartzee.achievements.appendPlayerSql
-import dartzee.achievements.bulkInsertFromResultSet
+import dartzee.achievements.*
 import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.utils.Database
@@ -31,23 +28,11 @@ class AchievementDartzeeBestGame: AbstractAchievement()
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {
-        val dartzeeGames = database.createTempTable("DartzeeGames", "GameId VARCHAR(36), RoundCount INT")
-
-        var sb = StringBuilder()
-        sb.append(" INSERT INTO $dartzeeGames")
-        sb.append(" SELECT g.RowId, COUNT(1) + 1")
-        sb.append(" FROM ${EntityName.Game} g, ${EntityName.DartzeeRule} dr")
-        sb.append(" WHERE dr.EntityId = g.RowId")
-        sb.append(" AND dr.EntityName = '${EntityName.Game}'")
-        sb.append(" AND g.GameType = '${GameType.DARTZEE}'")
-        sb.append(" GROUP BY g.RowId")
-        sb.append(" HAVING COUNT(1) >= $DARTZEE_BEST_GAME_MIN_ROUNDS")
-
-        if (!database.executeUpdate(sb)) return
+        val dartzeeGames = buildQualifyingDartzeeGamesTable(database) ?: return
 
         val allScores = database.createTempTable("DartzeeScores", "PlayerId VARCHAR(36), DtAchieved TIMESTAMP, GameId VARCHAR(36), ComputedScore INT")
 
-        sb = StringBuilder()
+        var sb = StringBuilder()
         sb.append(" INSERT INTO $allScores")
         sb.append(" SELECT pt.PlayerId, pt.DtFinished, zz.GameId, pt.FinalScore / zz.RoundCount")
         sb.append(" FROM ${EntityName.Participant} pt, $dartzeeGames zz")
@@ -67,5 +52,5 @@ class AchievementDartzeeBestGame: AbstractAchievement()
         }
     }
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_DARTZEE_BEST_GAME
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_DARTZEE_BEST_GAME
 }
