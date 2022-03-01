@@ -49,11 +49,11 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         return insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate, database = database)
     }
 
-    fun insertRelevantParticipant(player: PlayerEntity = insertPlayer()): ParticipantEntity
+    fun insertRelevantParticipant(player: PlayerEntity = insertPlayer(), finalScore: Int = -1): ParticipantEntity
     {
         val g = insertRelevantGame()
 
-        return insertParticipant(playerId = player.rowId, gameId = g.rowId)
+        return insertParticipant(playerId = player.rowId, gameId = g.rowId, finalScore = finalScore)
     }
 
     @Test

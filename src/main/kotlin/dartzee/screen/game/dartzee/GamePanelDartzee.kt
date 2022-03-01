@@ -1,10 +1,13 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
+import dartzee.achievements.AchievementType
+import dartzee.achievements.dartzee.DARTZEE_BEST_GAME_MIN_ROUNDS
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -152,6 +155,17 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         dartboard.refreshValidSegments(null)
 
         updateCarousel()
+    }
+
+    override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
+    {
+        super.updateAchievementsForFinish(playerId, finishingPosition, score)
+
+        if (totalRounds >= DARTZEE_BEST_GAME_MIN_ROUNDS)
+        {
+            val scorePerRound = getCurrentPlayerState().getScoreSoFar() / totalRounds
+            AchievementEntity.updateAchievement(AchievementType.DARTZEE_BEST_GAME, playerId, gameEntity.rowId, scorePerRound)
+        }
     }
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelDartzee()

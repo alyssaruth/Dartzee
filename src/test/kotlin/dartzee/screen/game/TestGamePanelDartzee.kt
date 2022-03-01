@@ -2,6 +2,8 @@ package dartzee.screen.game
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.achievements.AchievementType
+import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bullseye
 import dartzee.core.util.DateStatics
@@ -13,7 +15,6 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.db.EntityName
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
@@ -23,6 +24,7 @@ import dartzee.screen.game.dartzee.*
 import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.insertDartzeeRules
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
@@ -32,8 +34,13 @@ import java.awt.Color
 
 class TestGamePanelDartzee: AbstractTest()
 {
-    private val rules = listOf(twoBlackOneWhite, innerOuterInner)
-    private val ruleResults = listOf(DartzeeRoundResult(2, true, 50), DartzeeRoundResult(1, false, -115))
+    private val rules = listOf(twoBlackOneWhite, innerOuterInner, scoreEighteens, totalIsFifty)
+    private val ruleResults = listOf(
+        DartzeeRoundResult(2, true, 50),
+        DartzeeRoundResult(1, false, -115),
+        DartzeeRoundResult(3, true, 18),
+        DartzeeRoundResult(4, true, -66),
+    )
 
     @Test
     fun `Should initialise totalRounds based on the number of rules`()
@@ -55,7 +62,7 @@ class TestGamePanelDartzee: AbstractTest()
     @Test
     fun `Should tell the summaryPanel to finish and select the first player when loading a finished game`()
     {
-        val game = setUpDartzeeGameOnDatabase(3)
+        val game = setUpDartzeeGameOnDatabase(5)
 
         val summaryPanel = mockk<DartzeeRuleSummaryPanel>(relaxed = true)
 
@@ -69,14 +76,14 @@ class TestGamePanelDartzee: AbstractTest()
     @Test
     fun `Should load scores and results correctly`()
     {
-        val game = setUpDartzeeGameOnDatabase(3)
+        val game = setUpDartzeeGameOnDatabase(5)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame()
 
-        gamePanel.getPlayerState().getScoreSoFar() shouldBe 115
+        gamePanel.getPlayerState().getScoreSoFar() shouldBe 67
 
         val tiles = carousel.completeTiles
         tiles[0].dto shouldBe innerOuterInner
@@ -86,6 +93,58 @@ class TestGamePanelDartzee: AbstractTest()
         tiles[1].dto shouldBe twoBlackOneWhite
         tiles[1].ruleNumber shouldBe 1
         tiles[1].getScoreForHover() shouldBe -115
+
+        tiles[2].dto shouldBe scoreEighteens
+        tiles[2].ruleNumber shouldBe 3
+        tiles[2].getScoreForHover() shouldBe 18
+
+        tiles[3].dto shouldBe totalIsFifty
+        tiles[3].ruleNumber shouldBe 4
+        tiles[3].getScoreForHover() shouldBe -66
+    }
+
+    @Test
+    fun `Should not update best game achievement for too few rules`()
+    {
+        val shorterRules = rules.subList(0, 2)
+
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(2, player)
+        val carousel = DartzeeRuleCarousel(shorterRules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(shorterRules, summaryPanel, game)
+        gamePanel.loadGame()
+
+        gamePanel.getPlayerState().getScoreSoFar() shouldBe 230
+
+        // Finish the game by failing
+        gamePanel.dartThrown(makeDart(20, 0, SegmentType.MISS))
+        carousel.getDisplayedTiles().first().doClick()
+
+        retrieveAchievementForDetail(AchievementType.DARTZEE_BEST_GAME, player.rowId, "") shouldBe null
+    }
+
+    @Test
+    fun `Should update best game achievement if there are 5 or more rules`()
+    {
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(4, player)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+
+        gamePanel.getPlayerState().getScoreSoFar() shouldBe 133
+
+        // Finish the game by failing
+        gamePanel.dartThrown(makeDart(20, 0, SegmentType.MISS))
+        carousel.getDisplayedTiles().first().doClick()
+
+        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_BEST_GAME, player.rowId, "")!!
+        achievement.achievementCounter shouldBe 13
+        achievement.gameIdEarned shouldBe game.rowId
     }
 
     @Test
@@ -93,14 +152,15 @@ class TestGamePanelDartzee: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
+        val reducedRules = rules.subList(0, 2)
         val game = setUpDartzeeGameOnDatabase(1)
-        val carousel = DartzeeRuleCarousel(rules)
+        val carousel = DartzeeRuleCarousel(reducedRules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
-        val panel = makeGamePanel(rules, summaryPanel, game)
+        val panel = makeGamePanel(reducedRules, summaryPanel, game)
         panel.loadGame()
 
         carousel.completeTiles.shouldBeEmpty()
-        carousel.pendingTiles.size shouldBe 2
+        carousel.pendingTiles.size shouldBe reducedRules.size
 
         val expectedSegments = getAllPossibleSegments().filter { !it.isMiss() && !it.isDoubleExcludingBull() }
         panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
@@ -281,10 +341,10 @@ class TestGamePanelDartzee: AbstractTest()
         results.size shouldBe 1
 
         val result = results.first()
-        result.ruleNumber shouldBe 2
+        result.ruleNumber shouldBe 3
         result.success shouldBe true
 
-        carousel.getAvailableRuleTiles().size shouldBe 1
+        carousel.getAvailableRuleTiles().size shouldBe 3
         carousel.getAvailableRuleTiles().first().dto shouldBe twoBlackOneWhite
     }
 
@@ -294,13 +354,10 @@ class TestGamePanelDartzee: AbstractTest()
 
     private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null): GameEntity
     {
-        val dtFinish = if (rounds > 2) getSqlDateNow() else DateStatics.END_OF_TIME
+        val dtFinish = if (rounds > 4) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
 
-        rules.forEachIndexed { ix, it ->
-            val entity = it.toEntity(ix, EntityName.Game, game.rowId)
-            entity.saveToDatabase()
-        }
+        insertDartzeeRules(game.rowId, rules)
 
         val participant = insertParticipant(insertPlayer = (player == null), gameId = game.rowId, ordinal = 0, playerId = player?.rowId ?: "")
 
@@ -324,6 +381,22 @@ class TestGamePanelDartzee: AbstractTest()
         {
             insertDart(participant = participant, roundNumber = 3, ordinal = 1, score = 20, multiplier = 0)
             DartzeeRoundResultEntity.factoryAndSave(ruleResults[1], participant, 3)
+        }
+
+        if (rounds > 3)
+        {
+            insertDart(participant = participant, roundNumber = 4, ordinal = 1, score = 18, multiplier = 1)
+            insertDart(participant = participant, roundNumber = 4, ordinal = 2, score = 4, multiplier = 1)
+            insertDart(participant = participant, roundNumber = 4, ordinal = 3, score = 13, multiplier = 1)
+            DartzeeRoundResultEntity.factoryAndSave(ruleResults[2], participant, 4)
+        }
+
+        if (rounds > 4)
+        {
+            insertDart(participant = participant, roundNumber = 5, ordinal = 1, score = 20, multiplier = 1)
+            insertDart(participant = participant, roundNumber = 5, ordinal = 2, score = 20, multiplier = 0)
+            insertDart(participant = participant, roundNumber = 5, ordinal = 3, score = 15, multiplier = 0)
+            DartzeeRoundResultEntity.factoryAndSave(ruleResults[3], participant, 5)
         }
 
         return game

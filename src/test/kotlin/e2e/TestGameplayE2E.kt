@@ -38,7 +38,7 @@ class TestGameplayE2E: AbstractRegistryTest()
         val player = insertPlayer(model = model)
 
         val rules = listOf(scoreEighteens, allTwenties)
-        insertDartzeeRules(game, rules)
+        insertDartzeeRules(game.rowId, rules)
 
         val (panel, listener) = setUpGamePanel(game)
         panel.startNewGame(listOf(player))

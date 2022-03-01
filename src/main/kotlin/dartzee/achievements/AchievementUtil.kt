@@ -1,5 +1,6 @@
 package dartzee.achievements
 
+import dartzee.achievements.dartzee.AchievementDartzeeBestGame
 import dartzee.achievements.dartzee.AchievementDartzeeGamesWon
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
@@ -120,7 +121,9 @@ fun getAllAchievements() =
             AchievementClockBestStreak(),
             AchievementX01NoMercy(),
             AchievementGolfCourseMaster(),
-            AchievementDartzeeGamesWon())
+            AchievementDartzeeGamesWon(),
+            AchievementDartzeeBestGame()
+    )
 
 fun getAchievementForType(achievementType: AchievementType)
         = getAllAchievements().find { it.achievementType == achievementType }

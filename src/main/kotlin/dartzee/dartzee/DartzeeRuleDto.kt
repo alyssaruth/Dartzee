@@ -6,7 +6,9 @@ import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
+import dartzee.utils.Database
 import dartzee.utils.InjectedThings.dartzeeCalculator
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.sumScore
 
 data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule: AbstractDartzeeDartRule?, val dart3Rule: AbstractDartzeeDartRule?,
@@ -123,9 +125,9 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         }
     }
 
-    fun toEntity(ordinal: Int, entityName: EntityName, entityId: String): DartzeeRuleEntity
+    fun toEntity(ordinal: Int, entityName: EntityName, entityId: String, database: Database = mainDatabase): DartzeeRuleEntity
     {
-        val entity = DartzeeRuleEntity()
+        val entity = DartzeeRuleEntity(database)
         entity.assignRowId()
 
         entity.dart1Rule = dart1Rule?.toDbString() ?: ""
