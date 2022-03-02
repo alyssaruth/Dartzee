@@ -55,11 +55,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         panelAchievementDesc.setMargins(5)
     }
 
-    override fun getScreenName() : String
-    {
-        return "Achievements - ${player?.name} - $progressDesc"
-    }
-
+    override fun getScreenName() = "Achievements - ${player?.name} - $progressDesc"
 
     override fun initialise()
     {

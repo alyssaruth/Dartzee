@@ -14,12 +14,7 @@ class ScrollTableAchievements(private val parentScrn: LeaderboardAchievements) :
 
         val gameType = parentScrn.getSelectedAchievement().gameType
 
-        val scrn = ScreenCache.get<PlayerAchievementsScreen>()
-        scrn.player = player
-        scrn.previousScrn = ScreenCache.currentScreen()
-
-        ScreenCache.switch(scrn)
-
+        val scrn = ScreenCache.switchToAchievementsScreen(player)
         if (gameType != null)
         {
             scrn.selectTab(gameType)
