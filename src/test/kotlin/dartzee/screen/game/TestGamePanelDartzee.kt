@@ -148,6 +148,47 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
+    fun `Should update flawless achievement if all rules passed`()
+    {
+        val allPassed = listOf(
+            DartzeeRoundResult(2, true, 50),
+            DartzeeRoundResult(1, true, 35),
+            DartzeeRoundResult(3, true, 18),
+            DartzeeRoundResult(4, true, 40),
+        )
+
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(5, player, allPassed)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+
+        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_FLAWLESS, player.rowId, "")!!
+        achievement.achievementCounter shouldBe 180
+        achievement.achievementDetail shouldBe ""
+        achievement.gameIdEarned shouldBe game.rowId
+    }
+
+    @Test
+    fun `Should not update flawless achievement if a rule was failed`()
+    {
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(5, player)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+
+        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_FLAWLESS, player.rowId, "")
+        achievement shouldBe null
+    }
+
+    @Test
     fun `Should update the carousel and dartboard on readyForThrow and each time a dart is thrown`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
@@ -352,7 +393,7 @@ class TestGamePanelDartzee: AbstractTest()
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
-    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null): GameEntity
+    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null, results: List<DartzeeRoundResult> = ruleResults): GameEntity
     {
         val dtFinish = if (rounds > 4) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
@@ -374,13 +415,13 @@ class TestGamePanelDartzee: AbstractTest()
             insertDart(participant = participant, roundNumber = 2, ordinal = 2, score = 12, multiplier = 1)
             insertDart(participant = participant, roundNumber = 2, ordinal = 3, score = 20, multiplier = 1)
 
-            DartzeeRoundResultEntity.factoryAndSave(ruleResults[0], participant, 2)
+            DartzeeRoundResultEntity.factoryAndSave(results[0], participant, 2)
         }
 
         if (rounds > 2)
         {
             insertDart(participant = participant, roundNumber = 3, ordinal = 1, score = 20, multiplier = 0)
-            DartzeeRoundResultEntity.factoryAndSave(ruleResults[1], participant, 3)
+            DartzeeRoundResultEntity.factoryAndSave(results[1], participant, 3)
         }
 
         if (rounds > 3)
@@ -388,7 +429,7 @@ class TestGamePanelDartzee: AbstractTest()
             insertDart(participant = participant, roundNumber = 4, ordinal = 1, score = 18, multiplier = 1)
             insertDart(participant = participant, roundNumber = 4, ordinal = 2, score = 4, multiplier = 1)
             insertDart(participant = participant, roundNumber = 4, ordinal = 3, score = 13, multiplier = 1)
-            DartzeeRoundResultEntity.factoryAndSave(ruleResults[2], participant, 4)
+            DartzeeRoundResultEntity.factoryAndSave(results[2], participant, 4)
         }
 
         if (rounds > 4)
@@ -396,7 +437,7 @@ class TestGamePanelDartzee: AbstractTest()
             insertDart(participant = participant, roundNumber = 5, ordinal = 1, score = 20, multiplier = 1)
             insertDart(participant = participant, roundNumber = 5, ordinal = 2, score = 20, multiplier = 0)
             insertDart(participant = participant, roundNumber = 5, ordinal = 3, score = 15, multiplier = 0)
-            DartzeeRoundResultEntity.factoryAndSave(ruleResults[3], participant, 5)
+            DartzeeRoundResultEntity.factoryAndSave(results[3], participant, 5)
         }
 
         return game

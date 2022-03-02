@@ -11,6 +11,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
+import dartzee.game.GameType
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -163,8 +164,15 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
         if (totalRounds >= DARTZEE_ACHIEVEMENT_MIN_RULES)
         {
-            val scorePerRound = getCurrentPlayerState().getScoreSoFar() / totalRounds
+            val scorePerRound = score / totalRounds
             AchievementEntity.updateAchievement(AchievementType.DARTZEE_BEST_GAME, playerId, gameEntity.rowId, scorePerRound)
+
+            val playerState = getCurrentPlayerState()
+            if (playerState.roundResults.all { it.success })
+            {
+                val templateName = GameType.DARTZEE.getParamsDescription(gameEntity.gameParams)
+                AchievementEntity.insertAchievement(AchievementType.DARTZEE_FLAWLESS, playerId, gameEntity.rowId, templateName, score)
+            }
         }
     }
 
