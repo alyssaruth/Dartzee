@@ -2,7 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
-import dartzee.achievements.dartzee.DARTZEE_BEST_GAME_MIN_ROUNDS
+import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_RULES
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.dartzee.DartzeeRoundResult
@@ -11,6 +11,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
+import dartzee.game.GameType
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -161,10 +162,17 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     {
         super.updateAchievementsForFinish(playerId, finishingPosition, score)
 
-        if (totalRounds >= DARTZEE_BEST_GAME_MIN_ROUNDS)
+        if (totalRounds >= DARTZEE_ACHIEVEMENT_MIN_RULES)
         {
-            val scorePerRound = getCurrentPlayerState().getScoreSoFar() / totalRounds
+            val scorePerRound = score / totalRounds
             AchievementEntity.updateAchievement(AchievementType.DARTZEE_BEST_GAME, playerId, gameEntity.rowId, scorePerRound)
+
+            val playerState = getCurrentPlayerState()
+            if (playerState.roundResults.all { it.success })
+            {
+                val templateName = GameType.DARTZEE.getParamsDescription(gameEntity.gameParams)
+                AchievementEntity.insertAchievement(AchievementType.DARTZEE_FLAWLESS, playerId, gameEntity.rowId, templateName, score)
+            }
         }
     }
 

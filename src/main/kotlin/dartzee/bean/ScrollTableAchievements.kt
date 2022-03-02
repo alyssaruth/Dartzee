@@ -3,18 +3,21 @@ package dartzee.bean
 import dartzee.core.bean.ScrollTableHyperlink
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
+import dartzee.screen.stats.overall.LeaderboardAchievements
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 
-class ScrollTableAchievements : ScrollTableHyperlink("Player")
+class ScrollTableAchievements(private val parentScrn: LeaderboardAchievements) : ScrollTableHyperlink("Player")
 {
     override fun linkClicked(value: Any)
     {
         val player = value as PlayerEntity
 
-        val scrn = ScreenCache.get<PlayerAchievementsScreen>()
-        scrn.player = player
-        scrn.previousScrn = ScreenCache.currentScreen()
+        val gameType = parentScrn.getSelectedAchievement().gameType
 
-        ScreenCache.switch(scrn)
+        val scrn = ScreenCache.switchToAchievementsScreen(player)
+        if (gameType != null)
+        {
+            scrn.selectTab(gameType)
+        }
     }
 }

@@ -166,7 +166,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
             //Work out the width for this label, based on the text
             val metrics = factoryFontMetrics(fontToUse)
-            val lblWidth = metrics.stringWidth("" + i) + 2
+            val lblWidth = metrics.stringWidth("" + i) + 5
             lbl.setSize(lblWidth, lblHeight)
 
             //Work out where to place the label

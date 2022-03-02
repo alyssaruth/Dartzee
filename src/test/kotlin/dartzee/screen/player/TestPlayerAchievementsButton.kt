@@ -35,6 +35,7 @@ class TestPlayerAchievementsButton: AbstractTest()
     @Test
     fun `Should switch to the achievements screen on click`()
     {
+        val startingScreen = ScreenCache.currentScreen()
         val player = insertPlayer()
 
         val button = PlayerAchievementsButton(player, listOf())
@@ -49,7 +50,7 @@ class TestPlayerAchievementsButton: AbstractTest()
 
         val achievementsScreen = currentScreen as PlayerAchievementsScreen
         achievementsScreen.player shouldBe player
-        achievementsScreen.previousScrn shouldBe ScreenCache.get<PlayerManagementScreen>()
+        achievementsScreen.previousScrn shouldBe startingScreen
     }
 
     @Test

@@ -30,5 +30,5 @@ class AchievementX01HighestBust : AbstractAchievement()
         unlockThreeDartAchievement(playerIds, whereSql, "StartingScore", achievementType, database)
     }
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_HIGHEST_BUST
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_HIGHEST_BUST
 }

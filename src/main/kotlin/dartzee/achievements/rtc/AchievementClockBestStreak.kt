@@ -27,7 +27,7 @@ class AchievementClockBestStreak: AbstractAchievement()
     override val pinkThreshold = 12
     override val maxValue = 20
 
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
+    override fun getIconURL() = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {

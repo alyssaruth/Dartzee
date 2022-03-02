@@ -28,7 +28,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     {
         val pt = insertRelevantParticipant(finalScore = 120)
 
-        val shortList = testRules.subList(0, DARTZEE_BEST_GAME_MIN_ROUNDS - 1)
+        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_RULES - 1)
         insertDartzeeRules(pt.gameId, shortList)
 
         factoryAchievement().populateForConversion(emptyList())

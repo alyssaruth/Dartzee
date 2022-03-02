@@ -22,7 +22,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
     override val pinkThreshold = 26
     override val maxValue = 26
 
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
+    override fun getIconURL() = URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 
     override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)

@@ -39,5 +39,5 @@ class AchievementX01BestFinish : AbstractAchievement()
         }
     }
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_BEST_FINISH
 }

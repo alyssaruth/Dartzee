@@ -111,12 +111,12 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             }
         }
 
-        fun insertAchievement(achievementType: AchievementType, playerId: String, gameId: String, detail: String = "")
+        fun insertAchievement(achievementType: AchievementType, playerId: String, gameId: String, detail: String = "", counter: Int = -1)
         {
             val sql = "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementType = '$achievementType'"
             val count = mainDatabase.executeQueryAggregate(sql)
 
-            factoryAndSave(achievementType, playerId, gameId, -1, detail)
+            factoryAndSave(achievementType, playerId, gameId, counter, detail)
             triggerAchievementUnlock(count, count + 1, achievementType, playerId, gameId)
         }
 

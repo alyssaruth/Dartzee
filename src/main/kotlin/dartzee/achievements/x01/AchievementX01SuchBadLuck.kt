@@ -65,6 +65,6 @@ class AchievementX01SuchBadLuck: AbstractAchievement()
         }
     }
 
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
+    override fun getIconURL() = URL_ACHIEVEMENT_X01_SUCH_BAD_LUCK
     override fun isUnbounded() = true
 }

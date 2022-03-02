@@ -23,5 +23,6 @@ enum class AchievementType
     GOLF_COURSE_MASTER,
     DARTZEE_GAMES_WON,
     DARTZEE_BEST_GAME,
+    DARTZEE_FLAWLESS,
     DUMMY_TOTAL
 }

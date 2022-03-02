@@ -1,7 +1,9 @@
 package dartzee.screen
 
 import dartzee.core.bean.CheatBar
+import dartzee.db.PlayerEntity
 import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.stats.player.PlayerAchievementsScreen
 
 object ScreenCache
 {
@@ -48,5 +50,16 @@ object ScreenCache
     {
         hmClassToScreen.clear()
         hmGameIdToGameScreen.clear()
+    }
+
+    fun switchToAchievementsScreen(player: PlayerEntity): PlayerAchievementsScreen
+    {
+        val scrn = get<PlayerAchievementsScreen>()
+        scrn.player = player
+        scrn.previousScrn = currentScreen()
+
+        switch(scrn)
+
+        return scrn
     }
 }

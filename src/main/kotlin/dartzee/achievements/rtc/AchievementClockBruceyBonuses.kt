@@ -54,5 +54,5 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
         }
     }
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_CLOCK_BRUCEY_BONUSES
 }
