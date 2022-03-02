@@ -94,7 +94,27 @@ class TestPlayerAchievementsScreen
         achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
         achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
         achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldNotBe null
+    }
 
+    @Test
+    fun `Should show achievement progress for the right player and right achievement`()
+    {
+        val p1 = insertPlayer()
+        val p2 = insertPlayer()
+
+        val g = insertGame()
+
+        AchievementEntity.updateAchievement(AchievementType.X01_BEST_FINISH, p1.rowId, g.rowId, 40)
+        AchievementEntity.updateAchievement(AchievementType.X01_HIGHEST_BUST, p1.rowId, g.rowId, 80)
+        AchievementEntity.updateAchievement(AchievementType.X01_BEST_FINISH, p2.rowId, g.rowId, 75)
+
+        val p1AchievementScreen = ScreenCache.switchToAchievementsScreen(p1)
+        p1AchievementScreen.findAchievementMedal(AchievementType.X01_BEST_FINISH)?.achievement?.attainedValue shouldBe 40
+        p1AchievementScreen.findAchievementMedal(AchievementType.X01_HIGHEST_BUST)?.achievement?.attainedValue shouldBe 80
+
+        val p2AchievementScreen = ScreenCache.switchToAchievementsScreen(p2)
+        p2AchievementScreen.findAchievementMedal(AchievementType.X01_BEST_FINISH)?.achievement?.attainedValue shouldBe 75
+        p2AchievementScreen.findAchievementMedal(AchievementType.X01_HIGHEST_BUST)?.achievement?.isLocked() shouldBe true
     }
 
     private fun PlayerAchievementsScreen.findAchievementMedal(type: AchievementType) =
