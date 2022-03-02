@@ -17,7 +17,7 @@ import javax.swing.JLabel
 
 const val SIZE = 175
 
-class AchievementMedal(private val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), MouseListener, MouseMotionListener
+class AchievementMedal(val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), MouseListener, MouseMotionListener
 {
     private val angle = achievement.getAngle()
     private var highlighted = false

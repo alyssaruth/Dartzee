@@ -26,9 +26,9 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     private val centerPanel = JPanel()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val panelAchievementDesc = JPanel()
-    private val lblAchievementName = JLabel()
-    private val lblAchievementDesc = JLabel()
-    private val lblAchievementExtraDetails = JLabel()
+    val lblAchievementName = JLabel()
+    val lblAchievementDesc = JLabel()
+    val lblAchievementExtraDetails = JLabel()
 
     init
     {
@@ -111,7 +111,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         tabbedPane.selectedIndex = ix
     }
 
-    fun toggleAchievementDesc(hovered: Boolean, achievement : AbstractAchievement)
+    fun toggleAchievementDesc(hovered: Boolean, achievement: AbstractAchievement)
     {
         if (hovered)
         {

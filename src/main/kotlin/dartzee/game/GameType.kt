@@ -26,7 +26,7 @@ enum class GameType
             X01 -> paramDesc
             GOLF -> "Golf - $paramDesc"
             ROUND_THE_CLOCK -> "Round the Clock - $paramDesc"
-            DARTZEE -> "Dartzee - $paramDesc"
+            DARTZEE -> if (paramDesc.isEmpty()) "Dartzee" else "Dartzee - $paramDesc"
         }
     }
 
