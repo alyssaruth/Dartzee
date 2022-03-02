@@ -10,7 +10,7 @@ import dartzee.utils.ResourceCache
 class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
 {
     override val name = "Flawless"
-    override val desc = "Games where all rules were passed (at least 5 rules)"
+    override val desc = "Games where all rules were passed (at least 5 rounds)"
     override val achievementType = AchievementType.DARTZEE_FLAWLESS
     override val redThreshold = 1
     override val orangeThreshold = 2
@@ -44,7 +44,6 @@ class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
             bulkInsertFromResultSet(rs, database, achievementType, achievementCounterFn = { rs.getInt("FinalScore") }, achievementDetailFn = { rs.getString("TemplateName")})
         }
     }
-
 
     override fun getBreakdownColumns() = listOf("Game", "Score", "Template", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementCounter, a.achievementDetail, a.dtAchieved)

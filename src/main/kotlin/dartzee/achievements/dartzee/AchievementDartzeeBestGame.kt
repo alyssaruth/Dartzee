@@ -14,7 +14,7 @@ const val DARTZEE_ACHIEVEMENT_MIN_RULES = 5
 class AchievementDartzeeBestGame: AbstractAchievement()
 {
     override val name = "Yahtzee!"
-    override val desc = "Best round average in Dartzee (at least 5 rules)"
+    override val desc = "Best round average in Dartzee (at least 5 rounds)"
     override val achievementType = AchievementType.DARTZEE_BEST_GAME
     override val redThreshold = 10
     override val orangeThreshold = 20
