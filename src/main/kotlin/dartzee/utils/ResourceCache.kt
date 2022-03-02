@@ -51,7 +51,7 @@ object ResourceCache
     val URL_ACHIEVEMENT_GOLF_COURSE_MASTER: URL? = javaClass.getResource("/achievements/courseMaster.png")
     val URL_ACHIEVEMENT_DARTZEE_GAMES_WON: URL? = javaClass.getResource("/achievements/trophyDartzee.png")
     val URL_ACHIEVEMENT_DARTZEE_BEST_GAME: URL? = javaClass.getResource("/achievements/podiumDartzee.png")
-    val URL_ACHIEVEMENT_DARTZEE_FLAWLESS: URL? = javaClass.getResource("/achievements/bust.png")
+    val URL_ACHIEVEMENT_DARTZEE_FLAWLESS: URL? = javaClass.getResource("/achievements/flawless.png")
 
     val BASE_FONT: Font = Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/trebuc.ttf"))
 
