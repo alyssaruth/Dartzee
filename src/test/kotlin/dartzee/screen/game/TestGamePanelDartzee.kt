@@ -184,8 +184,76 @@ class TestGamePanelDartzee: AbstractTest()
         gamePanel.loadGame()
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
 
-        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_FLAWLESS, player.rowId, "")
-        achievement shouldBe null
+        getAchievementCount(AchievementType.DARTZEE_FLAWLESS) shouldBe 0
+    }
+
+    @Test
+    fun `Should update under pressure achievement if hardest rule passed last`()
+    {
+        val hardestPassedLast = listOf(
+            DartzeeRoundResult(2, true, 50),
+            DartzeeRoundResult(1, true, 35),
+            DartzeeRoundResult(3, true, 18),
+            DartzeeRoundResult(4, true, 50),
+        )
+
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+
+        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_UNDER_PRESSURE, player.rowId, totalIsFifty.getDisplayName())!!
+        achievement.achievementCounter shouldBe 50
+        achievement.achievementDetail shouldBe totalIsFifty.getDisplayName()
+        achievement.gameIdEarned shouldBe game.rowId
+    }
+
+    @Test
+    fun `Should not update under pressure achievement if last round was a fail`()
+    {
+        val hardestPassedLast = listOf(
+            DartzeeRoundResult(2, true, 50),
+            DartzeeRoundResult(1, true, 35),
+            DartzeeRoundResult(3, true, 18),
+            DartzeeRoundResult(4, false, -100),
+        )
+
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+
+        getAchievementCount(AchievementType.DARTZEE_UNDER_PRESSURE) shouldBe 0
+    }
+
+    @Test
+    fun `Should not update under pressure achievement if last round was not the hardest rule`()
+    {
+        val hardestPassedLast = listOf(
+            DartzeeRoundResult(2, true, 50),
+            DartzeeRoundResult(1, true, 35),
+            DartzeeRoundResult(4, true, 50),
+            DartzeeRoundResult(3, true, 18),
+        )
+
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+
+        getAchievementCount(AchievementType.DARTZEE_UNDER_PRESSURE) shouldBe 0
     }
 
     @Test
