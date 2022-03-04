@@ -26,7 +26,7 @@ jobs:
           mv "build/libs/Dartzee.jar" "build/libs/Dartzee_$updatedSuffix.jar"
           ls build/libs
           export CHANGELOG=$(awk "/--------- ${{ github.event.inputs.version }} ---------/,/coverage/" src/main/resources/ChangeLog)
-          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
+          echo $CHANGELOG
       - name: Release
         uses: ncipollo/release-action@v1
         with:
@@ -35,4 +35,4 @@ jobs:
           name: ${{ github.event.inputs.name }}
           tag: ${{ github.event.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: ${{ env.CHANGELOG }}
+          body: 'Automated release'
