@@ -58,12 +58,7 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
         sb.append(" AND drr.PlayerId = pt.PlayerId")
         sb.append(" AND drr.RuleNumber = zz.RuleNumber")
         sb.append(" AND drr.Success = true")
-        sb.append(" AND NOT EXISTS (")
-        sb.append("     SELECT 1")
-        sb.append("     FROM ${EntityName.DartzeeRoundResult} drr2")
-        sb.append("     WHERE drr2.ParticipantId = pt.RowId")
-        sb.append("     AND drr2.RoundNumber > drr.RoundNumber")
-        sb.append(" )")
+        sb.append(" AND drr.RoundNumber = zz.RuleNumber + 1")
 
         database.executeQuery(sb).use { rs ->
             bulkInsertFromResultSet(rs, database, achievementType,
