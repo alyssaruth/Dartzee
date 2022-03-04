@@ -35,4 +35,4 @@ jobs:
           name: ${{ github.event.inputs.name }}
           tag: ${{ github.event.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: env.CHANGELOG
+          body: ${{ env.CHANGELOG }}
