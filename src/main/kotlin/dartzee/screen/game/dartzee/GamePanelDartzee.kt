@@ -173,6 +173,13 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
                 val templateName = GameType.DARTZEE.getParamsDescription(gameEntity.gameParams)
                 AchievementEntity.insertAchievement(AchievementType.DARTZEE_FLAWLESS, playerId, gameEntity.rowId, templateName, score)
             }
+
+            val lastRoundResult = playerState.roundResults.last()
+            if (lastRoundResult.success && lastRoundResult.ruleNumber == dtos.size)
+            {
+                val ruleDescription = dtos.last().getDisplayName()
+                AchievementEntity.insertAchievement(AchievementType.DARTZEE_UNDER_PRESSURE, playerId, gameEntity.rowId, ruleDescription, lastRoundResult.score)
+            }
         }
     }
 

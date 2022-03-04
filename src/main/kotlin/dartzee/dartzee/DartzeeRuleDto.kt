@@ -81,6 +81,8 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
     fun getDifficulty() = calculationResult?.percentage ?: 0.0
     fun getDifficultyDesc() = calculationResult?.getDifficultyDesc() ?: ""
 
+    fun getDisplayName() = ruleName ?: generateRuleDescription()
+
     fun generateRuleDescription(): String
     {
         val dartsDesc = getDartsDescription()

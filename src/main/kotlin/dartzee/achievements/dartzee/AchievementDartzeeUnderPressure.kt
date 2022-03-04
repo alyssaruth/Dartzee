@@ -74,7 +74,7 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
         val rule = DartzeeRuleEntity(database).retrieveForId(ruleId) ?: return ""
 
         val dto = rule.toDto()
-        return dto.ruleName ?: dto.generateRuleDescription()
+        return dto.getDisplayName()
     }
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_DARTZEE_UNDER_PRESSURE
