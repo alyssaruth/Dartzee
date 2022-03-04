@@ -316,6 +316,11 @@ fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
 fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
 fun retrieveDeletionAudit() = DeletionAuditEntity().retrieveEntities().first()
 
+fun getAchievementCount(type: AchievementType): Int
+{
+    return mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementType = '$type'")
+}
+
 fun retrieveParticipant(gameId: String, playerId: String) = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND PlayerId = '$playerId'").first()
 
 data class AchievementSummary(val achievementType: AchievementType, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
