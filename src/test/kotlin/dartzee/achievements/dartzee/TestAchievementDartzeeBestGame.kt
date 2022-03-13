@@ -12,8 +12,6 @@ import java.sql.Timestamp
 
 class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzeeBestGame>()
 {
-    private val testRules = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
-
     override fun factoryAchievement() = AchievementDartzeeBestGame()
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)

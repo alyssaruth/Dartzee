@@ -1,9 +1,6 @@
 package dartzee.achievements
 
-import dartzee.achievements.dartzee.AchievementDartzeeBestGame
-import dartzee.achievements.dartzee.AchievementDartzeeFlawless
-import dartzee.achievements.dartzee.AchievementDartzeeGamesWon
-import dartzee.achievements.dartzee.AchievementDartzeeUnderPressure
+import dartzee.achievements.dartzee.*
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
 import dartzee.achievements.golf.AchievementGolfGamesWon
@@ -127,7 +124,8 @@ fun getAllAchievements() =
         AchievementDartzeeGamesWon(),
         AchievementDartzeeBestGame(),
         AchievementDartzeeFlawless(),
-        AchievementDartzeeUnderPressure()
+        AchievementDartzeeUnderPressure(),
+        AchievementDartzeeBingo()
     )
 
 fun getAchievementForType(achievementType: AchievementType)

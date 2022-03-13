@@ -17,8 +17,6 @@ import org.junit.jupiter.api.Test
 
 class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<AchievementDartzeeUnderPressure>()
 {
-    private val testRules = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
-
     override fun factoryAchievement() = AchievementDartzeeUnderPressure()
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)

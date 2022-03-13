@@ -25,5 +25,6 @@ enum class AchievementType
     DARTZEE_BEST_GAME,
     DARTZEE_FLAWLESS,
     DARTZEE_UNDER_PRESSURE,
+    DARTZEE_BINGO,
     DUMMY_TOTAL
 }

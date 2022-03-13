@@ -10,7 +10,6 @@ import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
-import java.net.URL
 
 class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
 {
