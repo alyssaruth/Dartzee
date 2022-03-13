@@ -12,6 +12,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -254,6 +255,27 @@ class TestGamePanelDartzee: AbstractTest()
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
 
         getAchievementCount(AchievementType.DARTZEE_UNDER_PRESSURE) shouldBe 0
+    }
+
+    @Test
+    fun `Should insert a row for bingo, calculating the score correctly and not adding duplicates`()
+    {
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(5, player)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 80)
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 1080)
+
+        val rows = getAchievementRows(AchievementType.DARTZEE_BINGO)
+        rows.size shouldBe 1
+        val achievement = rows.first()
+        achievement.achievementCounter shouldBe 80
+        achievement.achievementDetail shouldBe "180"
     }
 
     @Test

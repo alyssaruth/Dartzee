@@ -129,6 +129,20 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             triggerAchievementUnlock(count, count + counter, achievementType, playerId, gameId)
         }
 
+        fun insertForUniqueCounter(achievementType: AchievementType, playerId: String, gameId: String, counter: Int, detail: String)
+        {
+            val whereSql = "PlayerId = '$playerId' AND AchievementType = '$achievementType'"
+
+            val achievementRows = AchievementEntity().retrieveEntities(whereSql)
+            val hits = achievementRows.map { it.achievementCounter }
+            if (!hits.contains(counter))
+            {
+                factoryAndSave(achievementType, playerId, gameId, counter, detail)
+
+                triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, achievementType, playerId, gameId)
+            }
+        }
+
         private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementType: AchievementType, playerId: String, gameId: String)
         {
             val achievementTemplate = getAchievementForType(achievementType)
@@ -139,7 +153,6 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
         {
             //Work out if the threshold has changed
             achievementTemplate.attainedValue = oldValue
-
             val oldColor = achievementTemplate.getColor(false)
 
             achievementTemplate.attainedValue = newValue
