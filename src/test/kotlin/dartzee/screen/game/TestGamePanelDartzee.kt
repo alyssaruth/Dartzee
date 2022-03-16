@@ -257,6 +257,27 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
+    fun `Should insert a row for bingo, calculating the score correctly and not adding duplicates`()
+    {
+        val player = insertPlayer()
+        val game = setUpDartzeeGameOnDatabase(5, player)
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+
+        val gamePanel = makeGamePanel(rules, summaryPanel, game)
+        gamePanel.loadGame()
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 80)
+        gamePanel.updateAchievementsForFinish(player.rowId, -1, 1080)
+
+        val rows = getAchievementRows(AchievementType.DARTZEE_BINGO)
+        rows.size shouldBe 1
+        val achievement = rows.first()
+        achievement.achievementCounter shouldBe 80
+        achievement.achievementDetail shouldBe "180"
+    }
+
+    @Test
     fun `Should update the carousel and dartboard on readyForThrow and each time a dart is thrown`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()

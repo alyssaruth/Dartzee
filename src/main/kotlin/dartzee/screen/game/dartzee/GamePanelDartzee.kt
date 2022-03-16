@@ -180,6 +180,8 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
                 val ruleDescription = dtos.last().getDisplayName()
                 AchievementEntity.insertAchievement(AchievementType.DARTZEE_UNDER_PRESSURE, playerId, gameEntity.rowId, ruleDescription, lastRoundResult.score)
             }
+
+            AchievementEntity.insertForUniqueCounter(AchievementType.DARTZEE_BINGO, playerId, gameEntity.rowId, score % 100, "$score")
         }
     }
 

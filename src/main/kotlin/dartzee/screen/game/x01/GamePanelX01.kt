@@ -104,7 +104,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
 
         val checkout = finalRound.last().score
-        insertForCheckoutCompleteness(playerId, getGameId(), checkout)
+        AchievementEntity.insertForUniqueCounter(AchievementType.X01_CHECKOUT_COMPLETENESS, playerId, getGameId(), checkout, "")
 
         if (sum in listOf(3, 5, 7, 9))
         {

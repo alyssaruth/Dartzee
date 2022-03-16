@@ -1,9 +1,6 @@
 package dartzee.achievements
 
-import dartzee.achievements.dartzee.AchievementDartzeeBestGame
-import dartzee.achievements.dartzee.AchievementDartzeeFlawless
-import dartzee.achievements.dartzee.AchievementDartzeeGamesWon
-import dartzee.achievements.dartzee.AchievementDartzeeUnderPressure
+import dartzee.achievements.dartzee.*
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
 import dartzee.achievements.golf.AchievementGolfGamesWon
@@ -127,7 +124,8 @@ fun getAllAchievements() =
         AchievementDartzeeGamesWon(),
         AchievementDartzeeBestGame(),
         AchievementDartzeeFlawless(),
-        AchievementDartzeeUnderPressure()
+        AchievementDartzeeUnderPressure(),
+        AchievementDartzeeBingo()
     )
 
 fun getAchievementForType(achievementType: AchievementType)
@@ -181,27 +179,6 @@ fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String
 
     database.executeQuery(sb).use { rs ->
         bulkInsertFromResultSet(rs, database, achievementType, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Score") })
-    }
-}
-
-fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
-{
-    val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = '$playerId' AND AchievementType = '$achievementType'"
-
-    val achievementRows = AchievementEntity().retrieveEntities(whereSql)
-    val hitDoubles = achievementRows.map { it.achievementCounter }
-    if (!hitDoubles.contains(counter))
-    {
-        AchievementEntity.factoryAndSave(achievementType, playerId, gameId, counter)
-
-        val template = AchievementX01CheckoutCompleteness()
-        val arrayList = ArrayList(hitDoubles)
-        arrayList.add(counter)
-
-        template.hitDoubles = arrayList
-
-        AchievementEntity.triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, template, playerId, gameId)
     }
 }
 

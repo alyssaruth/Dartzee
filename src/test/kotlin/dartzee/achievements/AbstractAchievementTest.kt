@@ -23,6 +23,8 @@ import javax.imageio.ImageIO
 
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
+    protected val testRules = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
+
     @BeforeEach
     fun beforeEach()
     {

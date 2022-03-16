@@ -129,17 +129,32 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             triggerAchievementUnlock(count, count + counter, achievementType, playerId, gameId)
         }
 
-        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementType: AchievementType, playerId: String, gameId: String)
+        fun insertForUniqueCounter(achievementType: AchievementType, playerId: String, gameId: String, counter: Int, detail: String)
         {
-            val achievementTemplate = getAchievementForType(achievementType)
-            triggerAchievementUnlock(oldValue, newValue, achievementTemplate!!, playerId, gameId)
+            val whereSql = "PlayerId = '$playerId' AND AchievementType = '$achievementType'"
+
+            val achievementRows = AchievementEntity().retrieveEntities(whereSql)
+            val hits = achievementRows.map { it.achievementCounter }
+            if (!hits.contains(counter))
+            {
+                val newRow = factoryAndSave(achievementType, playerId, gameId, counter, detail)
+                val allRows = achievementRows + newRow
+
+                triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, achievementType, playerId, gameId, allRows)
+            }
+        }
+
+        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementType: AchievementType, playerId: String, gameId: String, achievementRows: List<AchievementEntity>? = null)
+        {
+            val achievementTemplate = getAchievementForType(achievementType) ?: return
+            achievementRows?.let { achievementTemplate.initialiseFromDb(achievementRows,null) }
+            triggerAchievementUnlock(oldValue, newValue, achievementTemplate, playerId, gameId)
         }
 
         fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementTemplate: AbstractAchievement, playerId: String, gameId: String)
         {
             //Work out if the threshold has changed
             achievementTemplate.attainedValue = oldValue
-
             val oldColor = achievementTemplate.getColor(false)
 
             achievementTemplate.attainedValue = newValue

@@ -11,13 +11,11 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
-{
+class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
     override fun factoryDao() = AchievementEntity()
 
     @Test
-    fun `Should retrieve achievements for which no gameIdEarned is set`()
-    {
+    fun `Should retrieve achievements for which no gameIdEarned is set`() {
         val p = insertPlayer()
         val a = insertAchievement(playerId = p.rowId, gameIdEarned = "")
 
@@ -32,8 +30,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `Should only retrieve achievements for the specified player`()
-    {
+    fun `Should only retrieve achievements for the specified player`() {
         val p1 = insertPlayer()
         val p2 = insertPlayer()
 
@@ -49,8 +46,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `Should populate LocalGameIdEarned correctly when a linked game exists`()
-    {
+    fun `Should populate LocalGameIdEarned correctly when a linked game exists`() {
         val p = insertPlayer()
         val g = insertGame(localId = 72)
 
@@ -63,8 +59,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `Should return an empty list if no achievements are found`()
-    {
+    fun `Should return an empty list if no achievements are found`() {
         insertAchievement(playerId = randomGuid())
 
         val achievements = AchievementEntity.retrieveAchievements(randomGuid())
@@ -72,8 +67,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `Should return null if no achievement exists`()
-    {
+    fun `Should return null if no achievement exists`() {
         val playerId = randomGuid()
 
         insertAchievement(playerId = playerId, type = AchievementType.GOLF_BEST_GAME)
@@ -83,8 +77,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `Should retrieve an achievement by playerId and ref`()
-    {
+    fun `Should retrieve an achievement by playerId and ref`() {
         val playerId = randomGuid()
         val type = AchievementType.GOLF_BEST_GAME
 
@@ -98,8 +91,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `updateAchievement - should insert a fresh achievement row if none are present`()
-    {
+    fun `updateAchievement - should insert a fresh achievement row if none are present`() {
         getCountFromTable("Achievement") shouldBe 0
 
         val ref = AchievementType.X01_BEST_GAME
@@ -121,8 +113,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `updateAchievement - should preserve an increasing achievement for values that are not strictly greater`()
-    {
+    fun `updateAchievement - should preserve an increasing achievement for values that are not strictly greater`() {
         val ref = AchievementType.X01_BEST_FINISH
         val playerId = randomGuid()
         val oldGameId = randomGuid()
@@ -143,8 +134,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `updateAchievement - should update an increasing achievement for a value that is strictly greater`()
-    {
+    fun `updateAchievement - should update an increasing achievement for a value that is strictly greater`() {
         val ref = AchievementType.X01_BEST_FINISH
         val playerId = randomGuid()
         val oldGameId = randomGuid()
@@ -168,8 +158,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
 
 
     @Test
-    fun `updateAchievement - should preserve a decreasing achievement for values that are not strictly less`()
-    {
+    fun `updateAchievement - should preserve a decreasing achievement for values that are not strictly less`() {
         val ref = AchievementType.X01_BEST_GAME
         val playerId = randomGuid()
         val oldGameId = randomGuid()
@@ -190,8 +179,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `updateAchievement - should update a decreasing achievement for a value that is strictly less`()
-    {
+    fun `updateAchievement - should update a decreasing achievement for a value that is strictly less`() {
         val ref = AchievementType.X01_BEST_GAME
         val playerId = randomGuid()
         val oldGameId = randomGuid()
@@ -214,8 +202,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `insertAchievement - Should insert a row with the specified values`()
-    {
+    fun `insertAchievement - Should insert a row with the specified values`() {
         val ref = AchievementType.X01_HOTEL_INSPECTOR
         val playerId = randomGuid()
         val gameId = randomGuid()
@@ -232,8 +219,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `insertAchievement - Should insert empty achievement detail by default`()
-    {
+    fun `insertAchievement - Should insert empty achievement detail by default`() {
         val ref = AchievementType.X01_SHANGHAI
         val playerId = randomGuid()
         val gameId = randomGuid()
@@ -249,8 +235,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `insertAchievement - Should call into triggerAchievementUnlock`()
-    {
+    fun `insertAchievement - Should call into triggerAchievementUnlock`() {
         val ref = AchievementType.X01_SHANGHAI
         val playerId = randomGuid()
         val gameId = randomGuid()
@@ -270,8 +255,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `insertAchievementWithCounter - Should insert a row with the specified values`()
-    {
+    fun `insertAchievementWithCounter - Should insert a row with the specified values`() {
         val ref = AchievementType.GOLF_POINTS_RISKED
         val playerId = randomGuid()
         val gameId = randomGuid()
@@ -287,8 +271,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
     }
 
     @Test
-    fun `insertAchievementWithCounter - Should call into triggerAchievementUnlock`()
-    {
+    fun `insertAchievementWithCounter - Should call into triggerAchievementUnlock`() {
         val ref = AchievementType.GOLF_POINTS_RISKED
         val playerId = randomGuid()
         val gameId = randomGuid()
@@ -304,6 +287,44 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>()
         scrn.playerId shouldBe playerId
         scrn.achievementType shouldBe ref
         scrn.attainedValue shouldBe 11
+        scrn.gameId shouldBe gameId
+    }
+
+    @Test
+    fun `insertForUniqueCounter - should insert unique values`()
+    {
+        val ref = AchievementType.DARTZEE_BINGO
+        val playerId = randomGuid()
+        val gameId = randomGuid()
+
+        AchievementEntity.insertForUniqueCounter(ref, playerId, gameId, 1, "110")
+        AchievementEntity.insertForUniqueCounter(ref, playerId, gameId, 5, "110")
+        AchievementEntity.insertForUniqueCounter(ref, playerId, gameId, 1, "110")
+        AchievementEntity.insertForUniqueCounter(ref, playerId, gameId, 6, "110")
+        AchievementEntity.insertForUniqueCounter(ref, playerId, gameId, 80, "110")
+        AchievementEntity.insertForUniqueCounter(ref, playerId, gameId, 6, "110")
+
+        getAchievementCount(ref) shouldBe 4
+    }
+
+    @Test
+    fun `insertForUniqueCounter - should call into triggerAchievementUnlock`()
+    {
+        val ref = AchievementType.DARTZEE_BINGO
+        val playerId = randomGuid()
+        val gameId = randomGuid()
+
+        //Start with 9 / 10 rows
+        (1..9).forEach { insertAchievement(type = ref, playerId = playerId, achievementCounter = it) }
+
+        val scrn = FakeDartsScreen()
+        ScreenCache.addDartsGameScreen(gameId, scrn)
+
+        AchievementEntity.insertForUniqueCounter(ref, playerId, gameId, 10, "110")
+
+        scrn.playerId shouldBe playerId
+        scrn.achievementType shouldBe ref
+        scrn.attainedValue shouldBe 10
         scrn.gameId shouldBe gameId
     }
 
