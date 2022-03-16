@@ -26,7 +26,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
     override val pinkThreshold = 21
     override val maxValue = 21
 
-    var hitDoubles = mutableListOf<Int>()
+    private var hitDoubles = mutableListOf<Int>()
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
 

@@ -182,27 +182,6 @@ fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String
     }
 }
 
-fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
-{
-    val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = '$playerId' AND AchievementType = '$achievementType'"
-
-    val achievementRows = AchievementEntity().retrieveEntities(whereSql)
-    val hitDoubles = achievementRows.map { it.achievementCounter }
-    if (!hitDoubles.contains(counter))
-    {
-        AchievementEntity.factoryAndSave(achievementType, playerId, gameId, counter)
-
-        val template = AchievementX01CheckoutCompleteness()
-        val arrayList = ArrayList(hitDoubles)
-        arrayList.add(counter)
-
-        template.hitDoubles = arrayList
-
-        AchievementEntity.triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, template, playerId, gameId)
-    }
-}
-
 fun retrieveAchievementForDetail(achievementType: AchievementType, playerId: String, achievementDetail: String): AchievementEntity?
 {
     val whereSql = "AchievementType = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"

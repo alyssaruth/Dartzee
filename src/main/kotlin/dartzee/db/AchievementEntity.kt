@@ -137,16 +137,18 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
             val hits = achievementRows.map { it.achievementCounter }
             if (!hits.contains(counter))
             {
-                factoryAndSave(achievementType, playerId, gameId, counter, detail)
+                val newRow = factoryAndSave(achievementType, playerId, gameId, counter, detail)
+                val allRows = achievementRows + newRow
 
-                triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, achievementType, playerId, gameId)
+                triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, achievementType, playerId, gameId, allRows)
             }
         }
 
-        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementType: AchievementType, playerId: String, gameId: String)
+        private fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementType: AchievementType, playerId: String, gameId: String, achievementRows: List<AchievementEntity>? = null)
         {
-            val achievementTemplate = getAchievementForType(achievementType)
-            triggerAchievementUnlock(oldValue, newValue, achievementTemplate!!, playerId, gameId)
+            val achievementTemplate = getAchievementForType(achievementType) ?: return
+            achievementRows?.let { achievementTemplate.initialiseFromDb(achievementRows,null) }
+            triggerAchievementUnlock(oldValue, newValue, achievementTemplate, playerId, gameId)
         }
 
         fun triggerAchievementUnlock(oldValue: Int, newValue: Int, achievementTemplate: AbstractAchievement, playerId: String, gameId: String)
