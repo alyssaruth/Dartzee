@@ -175,6 +175,27 @@ fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
     else -> SegmentType.MISS
 }
 
+fun insertDartzeeRoundResult(participant: ParticipantEntity = insertParticipant(),
+                             uuid: String = randomGuid(),
+                             success: Boolean = true,
+                             score: Int = 100,
+                             roundNumber: Int = 2,
+                             ruleNumber: Int = 2,
+                             database: Database = mainDatabase): DartzeeRoundResultEntity
+{
+    val drr = DartzeeRoundResultEntity(database)
+    drr.rowId = uuid
+    drr.playerId = participant.playerId
+    drr.participantId = participant.rowId
+    drr.score = score
+    drr.success = success
+    drr.roundNumber = roundNumber
+    drr.ruleNumber = ruleNumber
+
+    drr.saveToDatabase()
+    return drr
+}
+
 fun insertGameForReport(uuid: String = randomGuid(),
                         localId: Long = mainDatabase.generateLocalId(EntityName.Game),
                         gameType: GameType = GameType.X01,
