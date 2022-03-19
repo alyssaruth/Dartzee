@@ -181,6 +181,7 @@ fun insertDartzeeRoundResult(participant: ParticipantEntity = insertParticipant(
                              score: Int = 100,
                              roundNumber: Int = 2,
                              ruleNumber: Int = 2,
+                             dtCreation: Timestamp = getSqlDateNow(),
                              database: Database = mainDatabase): DartzeeRoundResultEntity
 {
     val drr = DartzeeRoundResultEntity(database)
@@ -191,6 +192,7 @@ fun insertDartzeeRoundResult(participant: ParticipantEntity = insertParticipant(
     drr.success = success
     drr.roundNumber = roundNumber
     drr.ruleNumber = ruleNumber
+    drr.dtCreation = dtCreation
 
     drr.saveToDatabase()
     return drr
