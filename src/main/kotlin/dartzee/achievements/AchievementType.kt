@@ -26,5 +26,6 @@ enum class AchievementType
     DARTZEE_FLAWLESS,
     DARTZEE_UNDER_PRESSURE,
     DARTZEE_BINGO,
+    DARTZEE_HALVED,
     DUMMY_TOTAL
 }

@@ -125,7 +125,8 @@ fun getAllAchievements() =
         AchievementDartzeeBestGame(),
         AchievementDartzeeFlawless(),
         AchievementDartzeeUnderPressure(),
-        AchievementDartzeeBingo()
+        AchievementDartzeeBingo(),
+        AchievementDartzeeHalved()
     )
 
 fun getAchievementForType(achievementType: AchievementType)
