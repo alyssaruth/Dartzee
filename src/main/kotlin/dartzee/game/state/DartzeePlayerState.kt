@@ -1,7 +1,9 @@
 package dartzee.game.state
 
 import dartzee.`object`.Dart
+import dartzee.achievements.AchievementType
 import dartzee.dartzee.DartzeeRoundResult
+import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.ParticipantEntity
 import dartzee.utils.sumScore
@@ -15,6 +17,12 @@ data class DartzeePlayerState(override val pt: ParticipantEntity,
     fun saveRoundResult(result: DartzeeRoundResult)
     {
         val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber())
+
+        if (!result.success)
+        {
+            AchievementEntity.updateAchievement(AchievementType.DARTZEE_HALVED, pt.playerId, pt.gameId, -result.score)
+        }
+
         addRoundResult(entity)
     }
 

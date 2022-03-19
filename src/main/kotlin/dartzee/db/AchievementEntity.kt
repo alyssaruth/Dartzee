@@ -104,6 +104,7 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
                 {
                     existingAchievement.achievementCounter = counter
                     existingAchievement.gameIdEarned = gameId
+                    existingAchievement.dtAchieved = getSqlDateNow()
                     existingAchievement.saveToDatabase()
 
                     triggerAchievementUnlock(existingCounter, counter, achievementType, playerId, gameId)
