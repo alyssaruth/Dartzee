@@ -98,6 +98,18 @@ class TestDartzeePlayerState: AbstractTest()
     }
 
     @Test
+    fun `Should not update Halved achievement if round was a success`()
+    {
+        val p = insertPlayer()
+        val pt = insertParticipant(playerId = p.rowId)
+        val state = makeDartzeePlayerState(pt)
+
+        state.saveRoundResult(DartzeeRoundResult(2, true, 49))
+
+        getAchievementCount(AchievementType.DARTZEE_HALVED) shouldBe 0
+    }
+
+    @Test
     fun `Should add loaded round results`()
     {
         val result = DartzeeRoundResult(2, true, 50)
