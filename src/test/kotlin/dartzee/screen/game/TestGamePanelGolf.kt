@@ -40,6 +40,7 @@ class TestGamePanelGolf: AbstractTest()
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId) shouldBe null
     }
+
     @Test
     fun `It should sum up all the points gambled in that round`()
     {
@@ -58,6 +59,25 @@ class TestGamePanelGolf: AbstractTest()
         val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId)!!
         a.achievementCounter shouldBe 4
     }
+
+    @Test
+    fun `It should compute correctly when just two darts thrown`()
+    {
+        val playerId = randomGuid()
+        val panel = TestGamePanel(playerId)
+
+        val darts = listOf(
+            Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE),
+            Dart(1, 1, segmentType = SegmentType.INNER_SINGLE))
+
+        panel.setDartsThrown(darts)
+
+        panel.unlockAchievements()
+
+        val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId)!!
+        a.achievementCounter shouldBe 1
+    }
+
     @Test
     fun `It should do nothing for a single dart hit`()
     {

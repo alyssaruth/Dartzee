@@ -16,7 +16,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestGolfE2E: AbstractRegistryTest() {
+class TestGolfE2E: AbstractRegistryTest()
+{
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
     @BeforeEach
@@ -60,11 +61,13 @@ class TestGolfE2E: AbstractRegistryTest() {
         parentWindow.gamePanel.dartboard.addDartboardListener(listener)
 
         val roundOne = listOf(makeDart(1, 1, SegmentType.OUTER_SINGLE), makeDart(1, 1, SegmentType.INNER_SINGLE))
-        val roundTwo = listOf(makeDart(15, 1), makeDart(17, 3), makeDart(17, 1))
+        val roundTwo = listOf(makeDart(15, 1, SegmentType.OUTER_SINGLE), makeDart(17, 3), makeDart(17, 1))
+        val roundThree = listOf(makeDart(3, 1, SegmentType.INNER_SINGLE), makeDart(3, 1, SegmentType.OUTER_SINGLE), makeDart(3, 2, SegmentType.DOUBLE))
 
         val expectedRounds = listOf(
             roundOne, // 3, 1 gambled
-            roundTwo // 3, 1 gambled
+            roundTwo, // 8, 1 gambled
+            roundThree // 9, 4 gambled
         )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier, it.segmentType) }
