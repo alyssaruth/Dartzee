@@ -175,6 +175,29 @@ fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
     else -> SegmentType.MISS
 }
 
+fun insertDartzeeRoundResult(participant: ParticipantEntity = insertParticipant(),
+                             uuid: String = randomGuid(),
+                             success: Boolean = true,
+                             score: Int = 100,
+                             roundNumber: Int = 2,
+                             ruleNumber: Int = 2,
+                             dtCreation: Timestamp = getSqlDateNow(),
+                             database: Database = mainDatabase): DartzeeRoundResultEntity
+{
+    val drr = DartzeeRoundResultEntity(database)
+    drr.rowId = uuid
+    drr.playerId = participant.playerId
+    drr.participantId = participant.rowId
+    drr.score = score
+    drr.success = success
+    drr.roundNumber = roundNumber
+    drr.ruleNumber = ruleNumber
+    drr.dtCreation = dtCreation
+
+    drr.saveToDatabase()
+    return drr
+}
+
 fun insertGameForReport(uuid: String = randomGuid(),
                         localId: Long = mainDatabase.generateLocalId(EntityName.Game),
                         gameType: GameType = GameType.X01,
@@ -316,6 +339,15 @@ fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
 fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
 fun retrieveDeletionAudit() = DeletionAuditEntity().retrieveEntities().first()
 
+fun getAchievementCount(type: AchievementType): Int
+{
+    return mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementType = '$type'")
+}
+
+fun getAchievementRows(type: AchievementType): List<AchievementEntity>
+{
+    return AchievementEntity().retrieveEntities("AchievementType = '$type'")
+}
 fun retrieveParticipant(gameId: String, playerId: String) = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND PlayerId = '$playerId'").first()
 
 data class AchievementSummary(val achievementType: AchievementType, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")

@@ -34,9 +34,9 @@ class DartzeeRoundResultEntity(database: Database = mainDatabase): AbstractEntit
 
     companion object
     {
-        fun factoryAndSave(dto: DartzeeRoundResult, pt: ParticipantEntity, roundNumber: Int): DartzeeRoundResultEntity
+        fun factoryAndSave(dto: DartzeeRoundResult, pt: ParticipantEntity, roundNumber: Int, database: Database = mainDatabase): DartzeeRoundResultEntity
         {
-            val entity = DartzeeRoundResultEntity()
+            val entity = DartzeeRoundResultEntity(database)
             entity.assignRowId()
             entity.ruleNumber = dto.ruleNumber
             entity.success = dto.success

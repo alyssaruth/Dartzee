@@ -25,7 +25,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
     override val maxValue = 18
     override val gameType = GameType.GOLF
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
 
     override fun getBreakdownColumns() = listOf("Hole", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtAchieved)

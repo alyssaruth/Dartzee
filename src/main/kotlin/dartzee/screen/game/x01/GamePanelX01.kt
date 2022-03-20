@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.doBadLuck
+import dartzee.core.util.doChucklevision
 import dartzee.core.util.doFawlty
 import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
@@ -40,6 +41,11 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         if (!bust)
         {
             val totalScore = sumScore(getDartsThrown())
+            if (totalScore == 69)
+            {
+                dartboard.doChucklevision()
+            }
+
             if (totalScore == 26)
             {
                 dartboard.doFawlty()
@@ -98,7 +104,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
 
         val checkout = finalRound.last().score
-        insertForCheckoutCompleteness(playerId, getGameId(), checkout)
+        AchievementEntity.insertForUniqueCounter(AchievementType.X01_CHECKOUT_COMPLETENESS, playerId, getGameId(), checkout, "")
 
         if (sum in listOf(3, 5, 7, 9))
         {

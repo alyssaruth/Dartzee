@@ -58,7 +58,7 @@ abstract class AbstractAchievement
     }
 
     abstract fun populateForConversion(playerIds: List<String>, database: Database = mainDatabase)
-    abstract fun getIconURL() : URL
+    abstract fun getIconURL(): URL?
 
     /**
      * Basic init will be the same for most achievements - get the value from the single row

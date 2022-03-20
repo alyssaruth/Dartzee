@@ -13,5 +13,5 @@ class AchievementGolfGamesWon : AbstractAchievementGamesWon()
     override val name = "Golf Winner"
     override val desc = "Total number of wins in Golf"
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_GOLF_GAMES_WON
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_GAMES_WON
 }

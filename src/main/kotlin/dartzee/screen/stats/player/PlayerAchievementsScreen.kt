@@ -26,9 +26,9 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     private val centerPanel = JPanel()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val panelAchievementDesc = JPanel()
-    private val lblAchievementName = JLabel()
-    private val lblAchievementDesc = JLabel()
-    private val lblAchievementExtraDetails = JLabel()
+    val lblAchievementName = JLabel()
+    val lblAchievementDesc = JLabel()
+    val lblAchievementExtraDetails = JLabel()
 
     init
     {
@@ -55,11 +55,7 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         panelAchievementDesc.setMargins(5)
     }
 
-    override fun getScreenName() : String
-    {
-        return "Achievements - ${player?.name} - $progressDesc"
-    }
-
+    override fun getScreenName() = "Achievements - ${player?.name} - $progressDesc"
 
     override fun initialise()
     {
@@ -109,7 +105,13 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         panel.add(medal)
     }
 
-    fun toggleAchievementDesc(hovered: Boolean, achievement : AbstractAchievement)
+    fun selectTab(gameType: GameType)
+    {
+        val ix = tabbedPane.indexOfTab(gameType.getDescription())
+        tabbedPane.selectedIndex = ix
+    }
+
+    fun toggleAchievementDesc(hovered: Boolean, achievement: AbstractAchievement)
     {
         if (hovered)
         {

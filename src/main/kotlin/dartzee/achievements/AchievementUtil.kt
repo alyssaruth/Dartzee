@@ -1,6 +1,6 @@
 package dartzee.achievements
 
-import dartzee.achievements.dartzee.AchievementDartzeeGamesWon
+import dartzee.achievements.dartzee.*
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
 import dartzee.achievements.golf.AchievementGolfGamesWon
@@ -101,26 +101,33 @@ private fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
 fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter { it.gameType == gameType }
 
 fun getAllAchievements() =
-    listOf(AchievementX01GamesWon(),
-            AchievementGolfGamesWon(),
-            AchievementClockGamesWon(),
-            AchievementX01BestGame(),
-            AchievementGolfBestGame(),
-            AchievementClockBestGame(),
-            AchievementX01BestFinish(),
-            AchievementX01BestThreeDarts(),
-            AchievementX01CheckoutCompleteness(),
-            AchievementX01HighestBust(),
-            AchievementGolfPointsRisked(),
-            AchievementClockBruceyBonuses(),
-            AchievementX01Shanghai(),
-            AchievementX01HotelInspector(),
-            AchievementX01SuchBadLuck(),
-            AchievementX01Btbf(),
-            AchievementClockBestStreak(),
-            AchievementX01NoMercy(),
-            AchievementGolfCourseMaster(),
-            AchievementDartzeeGamesWon())
+    listOf(
+        AchievementX01GamesWon(),
+        AchievementGolfGamesWon(),
+        AchievementClockGamesWon(),
+        AchievementX01BestGame(),
+        AchievementGolfBestGame(),
+        AchievementClockBestGame(),
+        AchievementX01BestFinish(),
+        AchievementX01BestThreeDarts(),
+        AchievementX01CheckoutCompleteness(),
+        AchievementX01HighestBust(),
+        AchievementGolfPointsRisked(),
+        AchievementClockBruceyBonuses(),
+        AchievementX01Shanghai(),
+        AchievementX01HotelInspector(),
+        AchievementX01SuchBadLuck(),
+        AchievementX01Btbf(),
+        AchievementClockBestStreak(),
+        AchievementX01NoMercy(),
+        AchievementGolfCourseMaster(),
+        AchievementDartzeeGamesWon(),
+        AchievementDartzeeBestGame(),
+        AchievementDartzeeFlawless(),
+        AchievementDartzeeUnderPressure(),
+        AchievementDartzeeBingo(),
+        AchievementDartzeeHalved()
+    )
 
 fun getAchievementForType(achievementType: AchievementType)
         = getAllAchievements().find { it.achievementType == achievementType }
@@ -176,34 +183,13 @@ fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String
     }
 }
 
-fun insertForCheckoutCompleteness(playerId: String, gameId: String, counter: Int)
-{
-    val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
-    val whereSql = "PlayerId = '$playerId' AND AchievementType = '$achievementType'"
-
-    val achievementRows = AchievementEntity().retrieveEntities(whereSql)
-    val hitDoubles = achievementRows.map { it.achievementCounter }
-    if (!hitDoubles.contains(counter))
-    {
-        AchievementEntity.factoryAndSave(achievementType, playerId, gameId, counter)
-
-        val template = AchievementX01CheckoutCompleteness()
-        val arrayList = ArrayList(hitDoubles)
-        arrayList.add(counter)
-
-        template.hitDoubles = arrayList
-
-        AchievementEntity.triggerAchievementUnlock(achievementRows.size, achievementRows.size + 1, template, playerId, gameId)
-    }
-}
-
 fun retrieveAchievementForDetail(achievementType: AchievementType, playerId: String, achievementDetail: String): AchievementEntity?
 {
     val whereSql = "AchievementType = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
     return AchievementEntity().retrieveEntity(whereSql)
 }
 
-fun getGamesWonIcon(gameType: GameType): URL =
+fun getGamesWonIcon(gameType: GameType): URL? =
     when (gameType)
     {
         GameType.X01 -> ResourceCache.URL_ACHIEVEMENT_X01_GAMES_WON

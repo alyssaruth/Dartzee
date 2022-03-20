@@ -22,7 +22,7 @@ class AchievementX01Btbf: AbstractMultiRowAchievement()
     override val pinkThreshold = 100
     override val maxValue = pinkThreshold
 
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_X01_BTBF
+    override fun getIconURL() = URL_ACHIEVEMENT_X01_BTBF
 
     override fun getBreakdownColumns() = listOf("Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.dtAchieved)

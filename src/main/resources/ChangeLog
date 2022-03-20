@@ -1,3 +1,9 @@
+--------- v5.2.0 ---------
+
++ 3 Dartzee achievements (Yahtzee!, Flawless & Under Pressure)
++ Sync now supports deleted data
+= 84.9% test coverage (11190 / 13194 lines covered by 2016 tests)
+
 --------- v5.1.1 ---------
 
 + More rule types for Dartzee

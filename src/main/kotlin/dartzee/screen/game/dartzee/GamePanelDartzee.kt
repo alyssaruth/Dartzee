@@ -1,13 +1,17 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.`object`.Dart
+import dartzee.achievements.AchievementType
+import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_RULES
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
+import dartzee.game.GameType
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -152,6 +156,33 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         dartboard.refreshValidSegments(null)
 
         updateCarousel()
+    }
+
+    override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
+    {
+        super.updateAchievementsForFinish(playerId, finishingPosition, score)
+
+        if (totalRounds >= DARTZEE_ACHIEVEMENT_MIN_RULES)
+        {
+            val scorePerRound = score / totalRounds
+            AchievementEntity.updateAchievement(AchievementType.DARTZEE_BEST_GAME, playerId, gameEntity.rowId, scorePerRound)
+
+            val playerState = getCurrentPlayerState()
+            if (playerState.roundResults.all { it.success })
+            {
+                val templateName = GameType.DARTZEE.getParamsDescription(gameEntity.gameParams)
+                AchievementEntity.insertAchievement(AchievementType.DARTZEE_FLAWLESS, playerId, gameEntity.rowId, templateName, score)
+            }
+
+            val lastRoundResult = playerState.roundResults.last()
+            if (lastRoundResult.success && lastRoundResult.ruleNumber == dtos.size)
+            {
+                val ruleDescription = dtos.last().getDisplayName()
+                AchievementEntity.insertAchievement(AchievementType.DARTZEE_UNDER_PRESSURE, playerId, gameEntity.rowId, ruleDescription, lastRoundResult.score)
+            }
+
+            AchievementEntity.insertForUniqueCounter(AchievementType.DARTZEE_BINGO, playerId, gameEntity.rowId, score % 100, "$score")
+        }
     }
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelDartzee()

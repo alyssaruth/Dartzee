@@ -36,9 +36,6 @@ class PlayerAchievementsButton(private val player: PlayerEntity,
 
     override fun buttonPressed()
     {
-        val scrn = ScreenCache.get<PlayerAchievementsScreen>()
-        scrn.player = player
-        scrn.previousScrn = ScreenCache.get<PlayerManagementScreen>()
-        ScreenCache.switch(scrn)
+        ScreenCache.switchToAchievementsScreen(player)
     }
 }

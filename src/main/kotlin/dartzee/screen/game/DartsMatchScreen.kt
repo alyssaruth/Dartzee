@@ -89,7 +89,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         val priorGamePanel = hmGameIdToTab.values.first()
         if (priorGamePanel is GamePanelDartzee)
         {
-            insertDartzeeRules(nextGame, priorGamePanel.dtos)
+            insertDartzeeRules(nextGame.rowId, priorGamePanel.dtos)
         }
 
         val panel = addGameToMatch(nextGame)

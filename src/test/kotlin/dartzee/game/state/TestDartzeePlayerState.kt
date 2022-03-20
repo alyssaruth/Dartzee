@@ -1,13 +1,13 @@
 package dartzee.game.state
 
 import dartzee.`object`.Dart
+import dartzee.achievements.AchievementType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertParticipant
-import dartzee.helper.makeDartzeePlayerState
+import dartzee.helper.*
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeePlayerState: AbstractTest()
@@ -63,6 +63,50 @@ class TestDartzeePlayerState: AbstractTest()
         result.score shouldBe 50
         result.roundNumber shouldBe 3
         result.retrievedFromDb shouldBe true
+    }
+
+    @Test
+    fun `Should update Halved achievement`()
+    {
+        val p = insertPlayer()
+        insertAchievement(playerId = p.rowId, type = AchievementType.DARTZEE_HALVED, gameIdEarned = randomGuid(), achievementCounter = 50)
+
+        val pt = insertParticipant(playerId = p.rowId)
+        val state = makeDartzeePlayerState(pt)
+
+        state.saveRoundResult(DartzeeRoundResult(2, false, -51))
+
+        val a = retrieveAchievement()
+        a.achievementCounter shouldBe 51
+        a.gameIdEarned shouldBe pt.gameId
+    }
+
+    @Test
+    fun `Should not update Halved achievement if point loss is not higher than existing row`()
+    {
+        val p = insertPlayer()
+        insertAchievement(playerId = p.rowId, type = AchievementType.DARTZEE_HALVED, gameIdEarned = randomGuid(), achievementCounter = 50)
+
+        val pt = insertParticipant(playerId = p.rowId)
+        val state = makeDartzeePlayerState(pt)
+
+        state.saveRoundResult(DartzeeRoundResult(2, false, -49))
+
+        val a = retrieveAchievement()
+        a.achievementCounter shouldBe 50
+        a.gameIdEarned shouldNotBe pt.gameId
+    }
+
+    @Test
+    fun `Should not update Halved achievement if round was a success`()
+    {
+        val p = insertPlayer()
+        val pt = insertParticipant(playerId = p.rowId)
+        val state = makeDartzeePlayerState(pt)
+
+        state.saveRoundResult(DartzeeRoundResult(2, true, 49))
+
+        getAchievementCount(AchievementType.DARTZEE_HALVED) shouldBe 0
     }
 
     @Test

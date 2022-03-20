@@ -10,7 +10,6 @@ import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
-import java.net.URL
 
 class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
 {
@@ -27,9 +26,9 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
     override val pinkThreshold = 21
     override val maxValue = 21
 
-    var hitDoubles = mutableListOf<Int>()
+    private var hitDoubles = mutableListOf<Int>()
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
 
     override fun getBreakdownColumns() = listOf("Double", "Game", "Date Achieved")
     override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementCounter, a.localGameIdEarned, a.dtAchieved)

@@ -24,5 +24,5 @@ class AchievementClockBestGame : AbstractAchievementBestGame()
     override val pinkThreshold = 30
     override val maxValue = 20
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_GAME
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_GAME
 }

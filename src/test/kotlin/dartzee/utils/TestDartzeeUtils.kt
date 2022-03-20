@@ -45,7 +45,7 @@ class TestDartzeeUtils: AbstractTest()
         val dtoDescs = dtos.map { it.generateRuleDescription() }
 
         val game = insertGame()
-        insertDartzeeRules(game, dtos)
+        insertDartzeeRules(game.rowId, dtos)
 
         val entities = DartzeeRuleEntity().retrieveEntities("")
 
@@ -63,7 +63,7 @@ class TestDartzeeUtils: AbstractTest()
     fun `Should do nothing if empty list of rules is passed`()
     {
         val game = insertGame()
-        insertDartzeeRules(game)
+        insertDartzeeRules(game.rowId)
 
         getCountFromTable("DartzeeRule") shouldBe 0
     }

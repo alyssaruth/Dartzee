@@ -24,7 +24,7 @@ class GameLauncher
 
         val game = GameEntity.factoryAndSave(match)
 
-        insertDartzeeRules(game, dartzeeDtos)
+        insertDartzeeRules(game.rowId, dartzeeDtos)
 
         val panel = scrn.addGameToMatch(game)
         panel.startNewGame(match.players)
@@ -35,7 +35,7 @@ class GameLauncher
         //Create and save a game
         val gameEntity = GameEntity.factoryAndSave(gameType, gameParams)
 
-        insertDartzeeRules(gameEntity, dartzeeDtos)
+        insertDartzeeRules(gameEntity.rowId, dartzeeDtos)
 
         //Construct the screen and factory a tab
         val scrn = DartsGameScreen(gameEntity, players.size)

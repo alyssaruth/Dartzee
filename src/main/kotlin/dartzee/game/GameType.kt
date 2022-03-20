@@ -1,5 +1,7 @@
 package dartzee.game
 
+import dartzee.db.DartzeeTemplateEntity
+
 enum class GameType
 {
     X01,
@@ -24,7 +26,7 @@ enum class GameType
             X01 -> paramDesc
             GOLF -> "Golf - $paramDesc"
             ROUND_THE_CLOCK -> "Round the Clock - $paramDesc"
-            DARTZEE -> "Dartzee"
+            DARTZEE -> if (paramDesc.isEmpty()) "Dartzee" else "Dartzee - $paramDesc"
         }
     }
 
@@ -34,6 +36,6 @@ enum class GameType
             X01 -> gameParams
             GOLF -> "$gameParams holes"
             ROUND_THE_CLOCK -> RoundTheClockConfig.fromJson(gameParams).getDescription()
-            DARTZEE -> ""
+            DARTZEE -> DartzeeTemplateEntity().retrieveForId(gameParams, false)?.name ?: ""
         }
 }
