@@ -1,7 +1,7 @@
 package e2e
 
+import dartzee.*
 import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.GameType
@@ -60,14 +60,16 @@ class TestGolfE2E: AbstractRegistryTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         parentWindow.gamePanel.dartboard.addDartboardListener(listener)
 
-        val roundOne = listOf(makeDart(1, 1, SegmentType.OUTER_SINGLE), makeDart(1, 1, SegmentType.INNER_SINGLE))
-        val roundTwo = listOf(makeDart(15, 1, SegmentType.OUTER_SINGLE), makeDart(17, 3), makeDart(17, 1))
-        val roundThree = listOf(makeDart(3, 1, SegmentType.INNER_SINGLE), makeDart(3, 1, SegmentType.OUTER_SINGLE), makeDart(3, 2, SegmentType.DOUBLE))
-
         val expectedRounds = listOf(
-            roundOne, // 3, 1 gambled
-            roundTwo, // 8, 1 gambled
-            roundThree // 9, 4 gambled
+            listOf(drtOuterOne, drtInnerOne), // 3, 1 gambled
+            listOf(drtOuterFifteen, drtTrebleSeventeen, drtOuterSeventeen), // 8, 1 gambled
+            listOf(drtInnerThree, drtOuterThree, drtDoubleThree), // 9, 4 gambled
+            listOf(), //
+            listOf(), //
+            listOf(), //
+            listOf(), //
+            listOf(), //
+            listOf(), //
         )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier, it.segmentType) }
