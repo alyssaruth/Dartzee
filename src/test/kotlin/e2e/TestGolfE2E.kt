@@ -46,6 +46,7 @@ class TestGolfE2E: AbstractRegistryTest()
                 AchievementSummary(AchievementType.GOLF_BEST_GAME, 18, game.rowId)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
+        checkAchievementConversions(player.rowId)
     }
 
     @Test
@@ -64,12 +65,12 @@ class TestGolfE2E: AbstractRegistryTest()
             listOf(drtOuterOne, drtInnerOne), // 3, 1 gambled
             listOf(drtOuterFifteen, drtTrebleSeventeen, drtOuterSeventeen), // 8, 1 gambled
             listOf(drtInnerThree, drtOuterThree, drtDoubleThree), // 9, 4 gambled
-            listOf(), //
-            listOf(), //
-            listOf(), //
-            listOf(), //
-            listOf(), //
-            listOf(), //
+            listOf(drtTrebleFour), // 11, 4 gambled (tests first stopThreshold)
+            listOf(drtDoubleFive), // 12, 4 gambled
+            listOf(drtOuterSix, drtOuterSix, drtOuterSix), // 16, 6 gambled
+            listOf(drtOuterSeven, drtOuterSixteen, drtInnerSixteen), // 21, 7 gambled
+            listOf(drtMissEight, drtInnerEight), // 24, 7 gambled
+            listOf(drtMissNine, drtDoubleNine), // 25, 7 gambled
         )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier, it.segmentType) }
@@ -78,5 +79,20 @@ class TestGolfE2E: AbstractRegistryTest()
         val player = makePlayerWithModel(aiModel)
         parentWindow.gamePanel.startNewGame(listOf(player))
         awaitGameFinish(game)
+
+        verifyState(parentWindow.gamePanel, listener, expectedRounds, finalScore = 25, expectedScorerRows = 10)
+
+        val expectedAchievementRows = listOf(
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "3"),
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "5"),
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "9"),
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "1"),
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 3, game.rowId, "3"),
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, game.rowId, "6"),
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "7"),
+        )
+
+        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
+        checkAchievementConversions(player.rowId)
     }
 }

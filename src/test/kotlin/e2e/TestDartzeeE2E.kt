@@ -1,7 +1,6 @@
 package e2e
 
 import dartzee.`object`.Dart
-import dartzee.achievements.AchievementType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.GameType
@@ -10,7 +9,6 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.insertDartzeeRules
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
@@ -66,5 +64,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
         roundTwo.ruleNumber shouldBe 1
         roundTwo.score shouldBe 36
         roundTwo.participantId shouldBe participantId
+
+        checkAchievementConversions(player.rowId)
     }
 }

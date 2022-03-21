@@ -52,6 +52,8 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4"),
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "5")
         )
+
+        checkAchievementConversions(player.rowId)
     }
 
     @Test
@@ -90,5 +92,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
                 AchievementSummary(AchievementType.CLOCK_BEST_STREAK, 5, game.rowId),
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4")
         )
+
+        checkAchievementConversions(player.rowId)
     }
 }
