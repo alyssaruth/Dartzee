@@ -57,10 +57,14 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
             dartzeePlayStyle)
 }
 
-fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mercyThreshold: Int? = null): DartsAiModel
+fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mercyThreshold: Int? = null, golfStopThresholds: Map<Int, Int>? = null): DartsAiModel
 {
+    val defaultModel = DartsAiModel.new()
+    val hmDartNoToStopThreshold = golfStopThresholds ?: defaultModel.hmDartNoToStopThreshold
+
     val model = mockk<DartsAiModel>()
     every { model.mercyThreshold } returns mercyThreshold
+    every { model.hmDartNoToStopThreshold } returns hmDartNoToStopThreshold
 
     val remainingDarts = dartsToThrow.toMutableList()
 
@@ -72,6 +76,8 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
 
     every { model.throwX01Dart(any(), any()) } answers { throwDartFn() }
     every { model.throwClockDart(any(), any(), any()) } answers { throwDartFn() }
+    every { model.throwGolfDart(any(), any(), any()) } answers { throwDartFn() }
+    every { model.getStopThresholdForDartNo(any()) } answers { callOriginal() }
     return model
 }
 

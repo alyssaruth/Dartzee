@@ -4,17 +4,17 @@ import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.`object`.Dart
+import dartzee.achievements.getAllAchievements
+import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
 import dartzee.db.DartEntity
+import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.beastDartsModel
-import dartzee.helper.insertPlayer
-import dartzee.helper.makeDartsModel
-import dartzee.helper.retrieveParticipant
+import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -22,6 +22,7 @@ import dartzee.screen.game.DartsGamePanel
 import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.ResourceCache.ICON_RESUME
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.every
@@ -139,4 +140,16 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
     val chunkedDartEntities: List<List<DartEntity>> = dartEntities.groupBy { it.roundNumber }.getSortedValues().map { it.sortedBy { drt -> drt.ordinal } }
     val retrievedDartRounds = chunkedDartEntities.map { rnd -> rnd.map { drt -> Dart(drt.score, drt.multiplier) } }
     retrievedDartRounds shouldBe dartRounds
+}
+
+fun checkAchievementConversions(playerId: String)
+{
+    val transactionalState = retrieveAchievementsForPlayer(playerId)
+
+    wipeTable(EntityName.Achievement)
+    val t = runConversionsWithProgressBar(getAllAchievements(), listOf(playerId))
+    t.join()
+
+    retrieveAchievementsForPlayer(playerId).shouldContainExactlyInAnyOrder(transactionalState)
+
 }

@@ -53,6 +53,8 @@ class TestX01E2E: AbstractRegistryTest()
                 AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
                 AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 12, game.rowId)
         )
+
+        checkAchievementConversions(player.rowId)
     }
 
     @Test
@@ -93,5 +95,7 @@ class TestX01E2E: AbstractRegistryTest()
                 AchievementSummary(AchievementType.X01_HIGHEST_BUST, 20, game.rowId),
                 AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
         )
+
+        checkAchievementConversions(player.rowId)
     }
 }
