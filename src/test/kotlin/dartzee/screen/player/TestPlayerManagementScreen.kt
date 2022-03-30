@@ -3,7 +3,6 @@ package dartzee.screen.player
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
 import dartzee.bean.getAllPlayers
-import dartzee.bean.getPlayerEntityForRow
 import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -71,45 +70,41 @@ class TestPlayerManagementScreen: AbstractTest()
     fun `Should create a new human player and update the table`()
     {
         val playerManager = mockk<PlayerManager>()
-        every { playerManager.createNewPlayer(any()) } returns true
+        every { playerManager.createNewPlayer(any()) } answers { insertPlayer() }
         InjectedThings.playerManager = playerManager
 
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
-        val player = insertPlayer()
-
         scrn.clickChild<JButton>("", "Add player")
         verify { playerManager.createNewPlayer(true) }
 
         val table = scrn.getChild<ScrollTable>()
-        table.getPlayerEntityForRow(0).rowId shouldBe player.rowId
+        table.rowCount shouldBe 1
     }
 
     @Test
     fun `Should create a new AI player and update the table`()
     {
         val playerManager = mockk<PlayerManager>()
-        every { playerManager.createNewPlayer(any()) } returns true
+        every { playerManager.createNewPlayer(any()) } answers { insertPlayer() }
         InjectedThings.playerManager = playerManager
 
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
-        val player = insertPlayer()
-
         scrn.clickChild<JButton>("", "Add computer")
         verify { playerManager.createNewPlayer(false) }
 
         val table = scrn.getChild<ScrollTable>()
-        table.getPlayerEntityForRow(0).rowId shouldBe player.rowId
+        table.rowCount shouldBe 1
     }
 
     @Test
     fun `Should not reinitialise the table if player creation is cancelled`()
     {
         val playerManager = mockk<PlayerManager>()
-        every { playerManager.createNewPlayer(any()) } returns false
+        every { playerManager.createNewPlayer(any()) } returns Unit
         InjectedThings.playerManager = playerManager
 
         val scrn = PlayerManagementScreen()

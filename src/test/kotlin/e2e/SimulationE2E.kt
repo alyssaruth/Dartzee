@@ -50,7 +50,11 @@ class SimulationE2E: AbstractTest()
         statsScrn.gameType shouldBe GameType.X01
 
         val totalScorePanel = statsScrn.getChild<StatisticsTabTotalScore>()
-        awaitCondition { totalScorePanel.getChild<NumberField> { it.testId == "Mean" }.value == 9.0 }
+        awaitCondition {
+            val mean = totalScorePanel.getChild<NumberField> { it.testId == "Mean" }.value
+            println("Waiting for mean, got value $mean...")
+            mean == 9.0
+        }
         totalScorePanel.getChild<NumberField> { it.testId == "Median" }.value shouldBe 9.0
         val allScoreRows = totalScorePanel.getChild<ScrollTableDartsGame>().getRows()
         allScoreRows.shouldHaveSize(500)

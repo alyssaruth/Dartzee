@@ -6,10 +6,8 @@ import dartzee.core.util.DialogUtil
 import dartzee.db.PlayerEntity
 import javax.swing.JTextField
 
-abstract class AbstractPlayerCreationDialog : SimpleDialog()
+abstract class AbstractPlayerConfigurationDialog(protected val player: PlayerEntity): SimpleDialog()
 {
-    var createdPlayer = false
-
     //Components
     val avatar = PlayerAvatar()
     val textFieldName = JTextField()
@@ -31,7 +29,7 @@ abstract class AbstractPlayerCreationDialog : SimpleDialog()
     protected fun valid(): Boolean
     {
         val name = textFieldName.text
-        if (!isValidName(name, doExistenceCheck()))
+        if (!isValidName(name))
         {
             return false
         }
@@ -46,9 +44,7 @@ abstract class AbstractPlayerCreationDialog : SimpleDialog()
         return true
     }
 
-    protected open fun doExistenceCheck() = true
-
-    private fun isValidName(name: String?, checkForExistence: Boolean): Boolean
+    private fun isValidName(name: String?): Boolean
     {
         if (name == null || name.isEmpty())
         {
@@ -69,14 +65,12 @@ abstract class AbstractPlayerCreationDialog : SimpleDialog()
             return false
         }
 
-        if (checkForExistence)
+
+        val existingPlayer = PlayerEntity.retrieveForName(name)
+        if (existingPlayer != null && existingPlayer.rowId != player.rowId)
         {
-            val existingPlayer = PlayerEntity.retrieveForName(name)
-            if (existingPlayer != null)
-            {
-                DialogUtil.showError("A player with the name $name already exists.")
-                return false
-            }
+            DialogUtil.showError("A player with the name $name already exists.")
+            return false
         }
 
         return true

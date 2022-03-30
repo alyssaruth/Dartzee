@@ -98,7 +98,7 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.lblPlayerName.text shouldBe "Alex"
         panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar()!!)
         panel.getChild<JButton>("Delete").shouldBeVisible()
-        panel.getChild<JButton>("Edit").shouldNotBeVisible()
+        panel.getChild<JButton>("Edit").shouldBeVisible()
         panel.getChild<JButton>("Run Simulation").shouldNotBeVisible()
     }
 

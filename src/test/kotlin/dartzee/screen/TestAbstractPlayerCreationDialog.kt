@@ -1,6 +1,7 @@
 package dartzee.screen
 
 import dartzee.core.helper.verifyNotCalled
+import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
@@ -16,7 +17,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
     @Test
     fun `Should not allow an empty player name, and should not call save with a validation error`()
     {
-        val dlg = spyk<DummyPlayerCreationDialog>()
+        val dlg = spyk<DummyPlayerConfigurationDialog>()
 
         dlg.btnOk.doClick()
 
@@ -27,7 +28,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
     @Test
     fun `Should call save for a valid player`()
     {
-        val dlg = spyk<DummyPlayerCreationDialog>()
+        val dlg = spyk<DummyPlayerConfigurationDialog>()
         dlg.textFieldName.text = "Clive"
         dlg.avatar.avatarId = randomGuid()
 
@@ -40,7 +41,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
     @Test
     fun `Should not allow a name with fewer than 3 characters`()
     {
-        val dlg = DummyPlayerCreationDialog()
+        val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "AA"
 
         dlg.btnOk.doClick()
@@ -51,7 +52,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
     @Test
     fun `Should not allow a name with more than 25 characters`()
     {
-        val dlg = DummyPlayerCreationDialog()
+        val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
         dlg.btnOk.doClick()
@@ -64,7 +65,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
     {
         insertPlayer(name = "Barry")
 
-        val dlg = DummyPlayerCreationDialog()
+        val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "Barry"
 
         dlg.btnOk.doClick()
@@ -74,7 +75,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
     @Test
     fun `Should not allow a player with no avatar`()
     {
-        val dlg = DummyPlayerCreationDialog()
+        val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "Derek"
 
         dlg.btnOk.doClick()
@@ -82,7 +83,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
     }
 
-    class DummyPlayerCreationDialog : AbstractPlayerCreationDialog()
+    class DummyPlayerConfigurationDialog : AbstractPlayerConfigurationDialog(PlayerEntity.factoryCreate())
     {
         @SpyK
         override fun savePlayer() {}

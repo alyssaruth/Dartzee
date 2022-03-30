@@ -5,7 +5,7 @@ import dartzee.core.bean.addGhostText
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
-import dartzee.screen.AbstractPlayerCreationDialog
+import dartzee.screen.AbstractPlayerConfigurationDialog
 import dartzee.screen.ScreenCache
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.SoftBevelBorder
 import javax.swing.border.TitledBorder
 
-class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.factoryCreate()) : AbstractPlayerCreationDialog()
+class AIConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate()): AbstractPlayerConfigurationDialog(player)
 {
     private val panelScreen = JPanel()
     private val panelNorth = JPanel()
@@ -123,12 +123,11 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
 
     private fun initFields()
     {
-        avatar.init(aiPlayer, false)
+        avatar.init(player, false)
 
-        if (!aiPlayer.retrievedFromDb)
+        if (!player.retrievedFromDb)
         {
             avatar.readOnly = false
-            textFieldName.isEditable = true
 
             panelX01Config.reset()
             panelGolfConfig.reset()
@@ -138,12 +137,11 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         else
         {
             avatar.readOnly = true
-            textFieldName.isEditable = false
 
-            val name = aiPlayer.name
+            val name = player.name
             textFieldName.text = name
 
-            val model = DartsAiModel.fromJson(aiPlayer.strategy)
+            val model = DartsAiModel.fromJson(player.strategy)
 
             panelAIConfig.initialiseFromModel(model)
             panelX01Config.initialiseFromModel(model)
@@ -177,31 +175,19 @@ class AIConfigurationDialog(private val aiPlayer: PlayerEntity = PlayerEntity.fa
         val model = factoryModelFromPanels()
 
         //If the player hasn't actually been created yet, then we need to instantiate a PlayerEntity just to hold stuff like the name
-        aiPlayer.name = textFieldName.text
+        player.name = textFieldName.text
 
-        val dlg = AISimulationSetupDialog(aiPlayer, model, true)
+        val dlg = AISimulationSetupDialog(player, model, true)
         dlg.isVisible = true
-    }
-
-    override fun doExistenceCheck(): Boolean
-    {
-        return !aiPlayer.retrievedFromDb
     }
 
     override fun savePlayer()
     {
         val name = textFieldName.text
-        aiPlayer.name = name
-
-        val model = factoryModelFromPanels()
-        aiPlayer.strategy = model.toJson()
-
-        val avatarId = avatar.avatarId
-        aiPlayer.playerImageId = avatarId
-
-        aiPlayer.saveToDatabase()
-
-        createdPlayer = true
+        player.name = name
+        player.strategy = factoryModelFromPanels().toJson()
+        player.playerImageId = avatar.avatarId
+        player.saveToDatabase()
 
         //Now dispose the window
         dispose()

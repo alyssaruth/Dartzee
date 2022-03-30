@@ -6,12 +6,12 @@ import dartzee.helper.randomGuid
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestHumanCreationDialog: AbstractTest()
+class TestHumanConfigurationDialog: AbstractTest()
 {
     @Test
     fun `Should be modal and non-resizable`()
     {
-        val dlg = HumanCreationDialog()
+        val dlg = HumanConfigurationDialog()
         dlg.isModal shouldBe true
         dlg.isResizable shouldBe false
     }
@@ -19,9 +19,8 @@ class TestHumanCreationDialog: AbstractTest()
     @Test
     fun `Should start with empty values`()
     {
-        val dlg = HumanCreationDialog()
+        val dlg = HumanConfigurationDialog()
         dlg.textFieldName.text shouldBe ""
-        dlg.createdPlayer shouldBe false
         dlg.avatar.avatarId shouldBe ""
     }
 
@@ -30,13 +29,10 @@ class TestHumanCreationDialog: AbstractTest()
     {
         val avatarId = randomGuid()
 
-        val dlg = HumanCreationDialog()
+        val dlg = HumanConfigurationDialog()
         dlg.textFieldName.text = "Barry"
         dlg.avatar.avatarId = avatarId
         dlg.btnOk.doClick()
-
-
-        dlg.createdPlayer shouldBe true
 
         val player = PlayerEntity.retrieveForName("Barry")!!
         player.playerImageId shouldBe avatarId

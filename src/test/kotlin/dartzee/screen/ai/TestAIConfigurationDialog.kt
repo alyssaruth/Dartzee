@@ -56,7 +56,6 @@ class TestAIConfigurationDialog: AbstractTest()
         val dlg = AIConfigurationDialog(player)
 
         dlg.getChild<PlayerAvatar>().readOnly shouldBe true
-        dlg.textFieldName.isEditable shouldBe false
 
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
         normalDistPanel.nfStandardDeviation.value shouldBe 75.0
