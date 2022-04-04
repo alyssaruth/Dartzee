@@ -1,10 +1,11 @@
 package dartzee.screen.stats.overall
 
+import dartzee.helper.AbstractTest
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestLeaderboardUtils
+class TestLeaderboardUtils: AbstractTest()
 {
     @Test
     fun `Should add rankings correctly`()

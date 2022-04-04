@@ -9,6 +9,14 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Verify tests
+        run: |
+          badTestFiles=$(grep -r "class Test[^\:]*$" src/test)
+          if [ -z "$badTestFiles" ]; then
+            echo "The following test files do not correctly extend AbstractTest:"
+            echo $badTestFiles
+            exit 1
+          fi
       - name: Build & Unit Test
         uses: GabrielBB/xvfb-action@v1.0
         with:
