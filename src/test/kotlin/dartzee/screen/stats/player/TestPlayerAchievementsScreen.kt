@@ -21,7 +21,7 @@ import java.awt.Color
 import java.awt.Container
 import javax.swing.JTabbedPane
 
-class TestPlayerAchievementsScreen
+class TestPlayerAchievementsScreen: AbstractTest()
 {
     @Test
     fun `Should go back to the desired previous screen`()
