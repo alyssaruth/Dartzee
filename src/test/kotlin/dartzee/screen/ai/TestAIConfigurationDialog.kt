@@ -52,9 +52,10 @@ class TestAIConfigurationDialog: AbstractTest()
                 mercyThreshold = 17,
                 hmDartNoToSegmentType = mapOf(1 to SegmentType.INNER_SINGLE, 2 to SegmentType.INNER_SINGLE, 3 to SegmentType.INNER_SINGLE))
 
-        val player = insertPlayer(strategy = strategy.toJson())
+        val player = insertPlayer(name = "Robot", strategy = strategy.toJson())
         val dlg = AIConfigurationDialog(player)
 
+        dlg.textFieldName.text shouldBe "Robot"
         dlg.getChild<PlayerAvatar>().readOnly shouldBe true
 
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
@@ -73,16 +74,18 @@ class TestAIConfigurationDialog: AbstractTest()
     @Test
     fun `Should successfully save changes to an AI player`()
     {
-        val player = insertPlayer(strategy = DartsAiModel.new().toJson())
+        val player = insertPlayer(name = "Sid", strategy = DartsAiModel.new().toJson())
 
         val dlg = AIConfigurationDialog(player)
+        dlg.textFieldName.text = "Brooke"
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
         normalDistPanel.nfStandardDeviation.value = 75.0
 
         dlg.clickChild<JButton>("Ok")
 
-        val reretrievedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
-        val model = reretrievedPlayer.getModel()
+        val updatedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
+        updatedPlayer.name shouldBe "Brooke"
+        val model = updatedPlayer.getModel()
         model shouldBe DartsAiModel.new().copy(standardDeviation = 75.0)
     }
 
