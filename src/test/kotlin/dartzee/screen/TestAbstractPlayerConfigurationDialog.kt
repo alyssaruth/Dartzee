@@ -12,7 +12,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestAbstractPlayerCreationDialog: AbstractTest()
+class TestAbstractPlayerConfigurationDialog: AbstractTest()
 {
     @Test
     fun `Should not allow an empty player name, and should not call save with a validation error`()
@@ -73,6 +73,20 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
     }
 
     @Test
+    fun `Should allow an edit of an existing player that makes no changes`()
+    {
+        val p = insertPlayer(name = "Barry")
+
+        val dlg = DummyPlayerConfigurationDialog(p)
+        dlg.textFieldName.text = p.name
+        dlg.avatar.avatarId = p.playerImageId
+
+        dlg.btnOk.doClick()
+
+        dialogFactory.errorsShown.shouldBeEmpty()
+    }
+
+    @Test
     fun `Should not allow a player with no avatar`()
     {
         val dlg = DummyPlayerConfigurationDialog()
@@ -83,7 +97,7 @@ class TestAbstractPlayerCreationDialog: AbstractTest()
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
     }
 
-    class DummyPlayerConfigurationDialog : AbstractPlayerConfigurationDialog(PlayerEntity.factoryCreate())
+    class DummyPlayerConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate()): AbstractPlayerConfigurationDialog(player)
     {
         @SpyK
         override fun savePlayer() {}

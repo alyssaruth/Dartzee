@@ -11,7 +11,6 @@ class HumanConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate
 
     init
     {
-        title = "New Player"
         setSize(350, 225)
         isResizable = false
         isModal = true
