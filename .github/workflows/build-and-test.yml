@@ -9,6 +9,9 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Verify tests
+        run: |
+          sh scripts/verify-test-files.sh
       - name: Build & Unit Test
         uses: GabrielBB/xvfb-action@v1.0
         with:

@@ -8,10 +8,8 @@ import dartzee.helper.insertPlayerImage
 import dartzee.helper.makeDartsModel
 import dartzee.shouldMatch
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.ImageIcon
@@ -99,19 +97,5 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
         PlayerEntity.retrieveForName("Bob")!!.rowId shouldBe p2.rowId
         PlayerEntity.retrieveForName("Clive") shouldBe null
         PlayerEntity.retrieveForName("ZZZZ") shouldBe null
-    }
-
-    @Test
-    fun `Should save a human player to the database`()
-    {
-        val p = PlayerEntity.factoryAndSaveHuman("Clive", "foo")
-
-        p.retrievedFromDb shouldBe true
-        p.rowId.shouldNotBeEmpty()
-        p.name shouldBe "Clive"
-        p.playerImageId shouldBe "foo"
-        p.strategy shouldBe ""
-
-        PlayerEntity().retrieveForId(p.rowId).shouldNotBeNull()
     }
 }

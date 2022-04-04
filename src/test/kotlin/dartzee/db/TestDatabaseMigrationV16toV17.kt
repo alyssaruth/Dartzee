@@ -1,13 +1,14 @@
 package dartzee.db
 
 import dartzee.game.MatchMode
+import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMigrationV16toV17
+class TestDatabaseMigrationV16toV17: AbstractTest()
 {
     @Test
     fun `Should correctly convert old XML to JSON`()

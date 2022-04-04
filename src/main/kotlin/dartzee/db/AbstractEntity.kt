@@ -214,6 +214,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         }
     }
 
+    fun count() = countWhere("")
     fun countWhere(whereSql: String): Int
     {
         val fullWhere = if (whereSql.isNotEmpty()) "WHERE $whereSql" else ""

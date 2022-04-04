@@ -99,8 +99,10 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 
     private fun createPlayer(human: Boolean)
     {
-        val created = InjectedThings.playerManager.createNewPlayer(human)
-        if (created)
+        val countBefore = PlayerEntity().count()
+
+        InjectedThings.playerManager.createNewPlayer(human)
+        if (PlayerEntity().count() > countBefore)
         {
             initialise()
         }

@@ -24,6 +24,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -98,7 +99,7 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.lblPlayerName.text shouldBe "Alex"
         panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar()!!)
         panel.getChild<JButton>("Delete").shouldBeVisible()
-        panel.getChild<JButton>("Edit").shouldNotBeVisible()
+        panel.getChild<JButton>("Edit").shouldBeVisible()
         panel.getChild<JButton>("Run Simulation").shouldNotBeVisible()
     }
 
@@ -200,18 +201,24 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should support editing an AI player`()
+    fun `Should support editing a player, and refresh with new details`()
     {
-        val playerManager = mockk<PlayerManager>(relaxed = true)
-        InjectedThings.playerManager = playerManager
+        val player = insertPlayer(name = "Old name")
 
-        val player = insertPlayer(strategy = "foo")
+        val playerManager = mockk<PlayerManager>(relaxed = true)
+        every { playerManager.amendPlayer(any())} answers {
+            player.name = "New name"
+            player.saveToDatabase()
+        }
+
+        InjectedThings.playerManager = playerManager
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
         panel.clickChild<JButton>("Edit")
 
         verify { playerManager.amendPlayer(player) }
+        panel.lblPlayerName.text shouldBe "New name"
     }
 
     @Test

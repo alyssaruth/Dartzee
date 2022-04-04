@@ -84,9 +84,9 @@ class PlayerManagementPanel : JPanel(), ActionListener
         lblPlayerName.text = player?.name ?: ""
 
         //Only show this for AIs
-        btnEdit.isVisible = player?.isAi() == true
         btnRunSimulation.isVisible = player?.isAi() == true
 
+        btnEdit.isVisible = player != null
         btnDelete.isVisible = player != null
         avatar.isVisible = player != null
 
@@ -127,10 +127,16 @@ class PlayerManagementPanel : JPanel(), ActionListener
         val selectedPlayer = player ?: return
         when (arg0.source)
         {
-            btnEdit -> InjectedThings.playerManager.amendPlayer(selectedPlayer)
+            btnEdit -> amendPlayer(selectedPlayer)
             btnDelete -> confirmAndDeletePlayer(selectedPlayer)
             btnRunSimulation -> InjectedThings.playerManager.runSimulation(selectedPlayer)
         }
+    }
+
+    private fun amendPlayer(playerEntity: PlayerEntity)
+    {
+        InjectedThings.playerManager.amendPlayer(playerEntity)
+        refresh(playerEntity)
     }
 
     private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity)

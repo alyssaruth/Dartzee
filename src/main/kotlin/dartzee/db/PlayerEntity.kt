@@ -74,17 +74,6 @@ class PlayerEntity(database: Database = mainDatabase): AbstractEntity<PlayerEnti
             return if (players.isEmpty()) null else players[0]
         }
 
-        fun factoryAndSaveHuman(name: String, avatarId: String): PlayerEntity
-        {
-            val entity = factoryCreate()
-
-            entity.name = name
-            entity.playerImageId = avatarId
-            entity.saveToDatabase()
-            entity.retrievedFromDb = true
-
-            return entity
-        }
         fun factoryCreate(): PlayerEntity
         {
             val entity = PlayerEntity()
