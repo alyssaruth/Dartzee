@@ -41,6 +41,12 @@ object UpdateManager
             DialogUtil.showLoadingDialog("Checking for updates...")
 
             val response = Unirest.get("$repositoryUrl/releases/latest").asJson()
+            if (response.status == 404 && repositoryUrl == DARTZEE_REPOSITORY_URL)
+            {
+                logger.info(CODE_UPDATE_CHECK, "Got 404 for $repositoryUrl, falling back to $DARTZEE_REPOSITORY_URL_2")
+                return queryLatestReleaseJson(DARTZEE_REPOSITORY_URL_2)
+            }
+
             if (response.status != 200)
             {
                 logger.error(CODE_UPDATE_ERROR,
