@@ -23,7 +23,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
     private val lblMovingAverageInterval = JLabel("Moving Average Interval")
     private val nfAverageThreshold = NumberField(1, 200)
     private val lblDartAverage = JLabel("3 Dart Average")
-    private val nfThreeDartAverage = JTextField()
+    val nfThreeDartAverage = JTextField()
     private val panelTable = JPanel()
     private val tableBestAverages = ScrollTableDartsGame()
     private val nfOtherThreeDartAvg = JTextField()
@@ -108,15 +108,15 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
                               nfMissPercent: JTextField, graphSuffix: String)
     {
         //Filter out unfinished games, then sort by start date
-        val finishedGames = filteredGames.filter{ it.isFinished() }.sortedBy{ it.dtStart }
+        val sortedGames = filteredGames.sortedBy{ it.dtStart }
         val scoreThreshold = nfScoringThreshold.getNumber()
 
-        val totalScoringDarts = finishedGames.map{ it.getScoringDarts(scoreThreshold).size }.sum().toDouble()
-        val misses = finishedGames.map { it.getDartsForMultiplierX01(scoreThreshold, 0) }.sum().toDouble()
-        val avgTotal = finishedGames.map { it.getThreeDartAverage(scoreThreshold) }.sum()
+        val totalScoringDarts = sortedGames.sumOf { it.getScoringDarts(scoreThreshold).size }.toDouble()
+        val misses = sortedGames.sumOf { it.getDartsForMultiplierX01(scoreThreshold, 0) }.toDouble()
+        val avgTotal = sortedGames.sumOf { it.getThreeDartAverage(scoreThreshold) }
 
         val rawAverages = XYSeries("Avg$graphSuffix")
-        finishedGames.forEachIndexed { i, game ->
+        sortedGames.forEachIndexed { i, game ->
             val ordinal = i + 1
             val avg = game.getThreeDartAverage(scoreThreshold)
             val startValue = game.getGameStartValueX01()
@@ -136,7 +136,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         chartPanel.addSeries(rawAverages, graphSuffix, nfAverageThreshold.getNumber())
 
         //Overall avg, to 1 d.p
-        nfThreeDartAverage.text = "" + MathsUtil.round(avgTotal / finishedGames.size, 1)
+        nfThreeDartAverage.text = "" + MathsUtil.round(avgTotal / sortedGames.size, 1)
 
         //Miss percent, to 1 d.p
         nfMissPercent.text = "" + MathsUtil.round(100 * misses / totalScoringDarts, 1)
