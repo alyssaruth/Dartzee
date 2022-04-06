@@ -3,6 +3,7 @@ package dartzee.screen
 import dartzee.`object`.DartsClient
 import dartzee.core.util.dumpThreadStacks
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.core.util.runInOtherThread
 import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDatabaseUtil
@@ -62,7 +63,7 @@ class UtilitiesScreen : EmbeddedScreen()
             btnCreateBackup -> DartsDatabaseUtil.backupCurrentDatabase()
             btnRestoreFromBackup -> DartsDatabaseUtil.restoreDatabase()
             btnPerformDatabaseCheck -> DatabaseSanityCheck.runSanityCheck()
-            btnCheckForUpdates -> DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER)
+            btnCheckForUpdates -> runInOtherThread { DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER) }
             btnViewLogs -> {val loggingDialog = InjectedThings.loggingConsole
                             loggingDialog.isVisible = true
                             loggingDialog.toFront()}
