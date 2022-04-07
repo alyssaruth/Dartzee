@@ -51,7 +51,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         return hmRoundNumberToDarts.getAllValues()
     }
 
-    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<List<Dart>>?
+    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<List<Dart>>
     {
         if (scoreCutOff < 62)
         {
@@ -143,7 +143,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     {
         val dartsRounds = getScoringDartsGroupedByRound(scoreThreshold)
 
-        for (i in dartsRounds!!.indices)
+        for (i in dartsRounds.indices)
         {
             val dartsForRound = dartsRounds[i]
             val score = sumScore(dartsForRound)
