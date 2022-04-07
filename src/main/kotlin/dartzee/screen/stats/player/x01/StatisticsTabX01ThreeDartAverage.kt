@@ -111,9 +111,11 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         val sortedGames = filteredGames.sortedBy{ it.dtStart }
         val scoreThreshold = nfScoringThreshold.getNumber()
 
-        val totalScoringDarts = sortedGames.sumOf { it.getScoringDarts(scoreThreshold).size }.toDouble()
-        val misses = sortedGames.sumOf { it.getDartsForMultiplierX01(scoreThreshold, 0) }.toDouble()
-        val avgTotal = sortedGames.sumOf { it.getThreeDartAverage(scoreThreshold) }
+        val allScoringDarts = sortedGames.flatMap { it.getScoringDarts(scoreThreshold) }
+
+        val totalScoringDarts = allScoringDarts.size.toDouble()
+        val misses = allScoringDarts.filter { it.multiplier == 0 }.size.toDouble()
+        val overallThreeDartAvg = 3 * allScoringDarts.sumOf { it.getTotal() } / allScoringDarts.size.toDouble()
 
         val rawAverages = XYSeries("Avg$graphSuffix")
         sortedGames.forEachIndexed { i, game ->
@@ -136,7 +138,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         chartPanel.addSeries(rawAverages, graphSuffix, nfAverageThreshold.getNumber())
 
         //Overall avg, to 1 d.p
-        nfThreeDartAverage.text = "" + MathsUtil.round(avgTotal / sortedGames.size, 1)
+        nfThreeDartAverage.text = "" + MathsUtil.round(overallThreeDartAvg, 1)
 
         //Miss percent, to 1 d.p
         nfMissPercent.text = "" + MathsUtil.round(100 * misses / totalScoringDarts, 1)

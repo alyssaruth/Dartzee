@@ -47,6 +47,18 @@ fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
     return darts
 }
 
+fun makeX01RoundsMap(startingScore: Int = 501, vararg darts: List<Dart>): HashMapList<Int, Dart>
+{
+    val rounds = makeX01Rounds(startingScore, *darts)
+
+    val map = HashMapList<Int, Dart>()
+    rounds.forEachIndexed { ix, round ->
+        map[ix+1] = round.toMutableList()
+    }
+
+    return map
+}
+
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
 {
     var currentScore = startingScore
