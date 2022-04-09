@@ -19,7 +19,7 @@ import javax.swing.border.TitledBorder
 
 class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
 {
-    private val nfScoringThreshold = NumberField(62, 501)
+    private val nfScoringThreshold = NumberField(62, 501, testId = "setupThreshold")
     private val lblMovingAverageInterval = JLabel("Moving Average Interval")
     private val nfAverageThreshold = NumberField(1, 200)
     private val lblDartAverage = JLabel("3 Dart Average")
