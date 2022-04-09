@@ -29,6 +29,8 @@ enum class DartzeePlayStyle {
     AGGRESSIVE
 }
 
+val DELIBERATE_MISS = Point(Int.MAX_VALUE, Int.MAX_VALUE)
+
 data class DartsAiModel(val standardDeviation: Double,
                         val standardDeviationDoubles: Double?,
                         val standardDeviationCentral: Double?,
@@ -195,6 +197,11 @@ data class DartsAiModel(val standardDeviation: Double,
         {
             logger.error(CODE_AI_ERROR, "Gaussian model with SD of 0 - this shouldn't be possible!")
             return pt
+        }
+
+        if (pt == DELIBERATE_MISS)
+        {
+            return dartboard.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
         }
 
         val (radius, angle) = calculateRadiusAndAngle(pt, dartboard)

@@ -50,7 +50,7 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should deserialize from static JSON`()
     {
-        val jsonString = javaClass.getResource("/aiModel.json").readText()
+        val jsonString = javaClass.getResource("/aiModel.json")!!.readText()
         val model = DartsAiModel.fromJson(jsonString)
 
         model shouldBe makePopulatedAiModel()
@@ -173,6 +173,18 @@ class TestDartsAiModel: AbstractTest()
         val erraticModel = makeDartsModel(standardDeviation = 50.0, maxRadius = 75)
         val moreRadii = (1..1000).map { erraticModel.calculateRadiusAndAngle(pt, dartboard).radius }
         moreRadii.forEach { it.shouldBeBetween(-75.0, 75.0, 0.0) }
+    }
+
+    @Test
+    fun `Should just miss the board if told to deliberately miss`()
+    {
+        val dartboard = makeTestDartboard()
+        val erraticModel = makeDartsModel(standardDeviation = 100.0, maxRadius = 75)
+
+        repeat(20) {
+            val result = erraticModel.throwDartAtPoint(DELIBERATE_MISS, dartboard)
+            dartboard.getSegmentForPoint(result).toDataSegment() shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
+        }
     }
 
     /**
