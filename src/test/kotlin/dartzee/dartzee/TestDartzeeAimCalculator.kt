@@ -2,6 +2,7 @@ package dartzee.dartzee
 
 import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.ai.DELIBERATE_MISS
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
 import dartzee.screen.Dartboard
@@ -10,6 +11,7 @@ import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
 import io.kotlintest.matchers.numerics.shouldBeLessThan
+import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.*
@@ -84,6 +86,28 @@ class TestDartzeeAimCalculator: AbstractTest()
         val segments = allNonMisses.filterNot { it.getMultiplier() == 3 && (it.score == 20 || it.score == 3) }
         val segmentStatus = SegmentStatus(segments, segments)
         verifyAim(segmentStatus, "Missing trebles")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should revert to aiming at valid segments if there are no scoring segments`()
+    {
+        val validSegments = allNonMisses.filter { it.score == 1 }
+        val segmentStatus = SegmentStatus(emptyList(), validSegments)
+        verifyAim(segmentStatus, "No scoring segments", true)
+    }
+
+    @Test
+    fun `Should deliberately miss if no valid segments`()
+    {
+        val segmentStatus = SegmentStatus(emptyList(), emptyList())
+
+        val dartboard = DartzeeDartboard(400, 400)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.refreshValidSegments(segmentStatus)
+
+        val pt = calculator.getPointToAimFor(dartboard, segmentStatus, true)
+        pt shouldBe DELIBERATE_MISS
     }
 
     @Test

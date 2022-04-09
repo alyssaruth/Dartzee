@@ -1,6 +1,7 @@
 package dartzee.dartzee
 
 import dartzee.`object`.SegmentType
+import dartzee.ai.DELIBERATE_MISS
 import dartzee.core.util.maxOrZero
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
@@ -23,7 +24,12 @@ class DartzeeAimCalculator
         val scoringSegments = segmentStatus.scoringSegments.map { miniDartboard.getSegment(it.score, it.type)!! }
         val validSegments = segmentStatus.validSegments.map { miniDartboard.getSegment(it.score, it.type)!! }
 
-        val segmentsToConsiderAimingFor = if (aggressive) scoringSegments else validSegments
+        val segmentsToConsiderAimingFor = if (aggressive && scoringSegments.isNotEmpty()) scoringSegments else validSegments
+        if (segmentsToConsiderAimingFor.isEmpty())
+        {
+            return DELIBERATE_MISS
+        }
+
         val dataSegmentsToConsiderAimingFor = segmentsToConsiderAimingFor.map { it.toDataSegment() }
 
         //Shortcut straight to the bullseye if all outer singles, inner singles, trebles and bull are valid
@@ -44,7 +50,7 @@ class DartzeeAimCalculator
         val contendingHighScorePoints = contendingPoints.filter { miniDartboard.getSegmentForPoint(it.point).getTotal() == bestScore }
 
         //Prefer even angles to odd ones
-        val bestPoint = contendingHighScorePoints.minByOrNull { it.angle % 2 }!!
+        val bestPoint = contendingHighScorePoints.minByOrNull { it.angle % 2 } !!
         return dartboard.translateAimPoint(bestPoint)
     }
 
