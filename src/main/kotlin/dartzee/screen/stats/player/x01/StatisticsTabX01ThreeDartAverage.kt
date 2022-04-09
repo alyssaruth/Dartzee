@@ -19,19 +19,19 @@ import javax.swing.border.TitledBorder
 
 class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
 {
-    private val nfScoringThreshold = NumberField(62, 501)
+    private val nfScoringThreshold = NumberField(62, 501, testId = "setupThreshold")
     private val lblMovingAverageInterval = JLabel("Moving Average Interval")
     private val nfAverageThreshold = NumberField(1, 200)
     private val lblDartAverage = JLabel("3 Dart Average")
-    private val nfThreeDartAverage = JTextField()
+    private val nfThreeDartAverage = NumberField(testId = "overallAverage")
     private val panelTable = JPanel()
     private val tableBestAverages = ScrollTableDartsGame()
-    private val nfOtherThreeDartAvg = JTextField()
+    private val nfOtherThreeDartAvg = NumberField(testId = "overallAverageOther")
     private val panelCenter = JPanel()
     private val chartPanel = MovingAverageChartPanel(this)
     private val lblMiss = JLabel("Miss %")
-    private val nfMissPercent = JTextField()
-    private val nfOtherMissPercent = JTextField()
+    private val nfMissPercent = NumberField(testId = "missPercent")
+    private val nfOtherMissPercent = NumberField(testId = "missPercentOther")
 
     init
     {
@@ -108,15 +108,17 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
                               nfMissPercent: JTextField, graphSuffix: String)
     {
         //Filter out unfinished games, then sort by start date
-        val finishedGames = filteredGames.filter{ it.isFinished() }.sortedBy{ it.dtStart }
+        val sortedGames = filteredGames.sortedBy{ it.dtStart }
         val scoreThreshold = nfScoringThreshold.getNumber()
 
-        val totalScoringDarts = finishedGames.map{ it.getScoringDarts(scoreThreshold).size }.sum().toDouble()
-        val misses = finishedGames.map { it.getDartsForMultiplierX01(scoreThreshold, 0) }.sum().toDouble()
-        val avgTotal = finishedGames.map { it.getThreeDartAverage(scoreThreshold) }.sum()
+        val allScoringDarts = sortedGames.flatMap { it.getScoringDarts(scoreThreshold) }
+
+        val totalScoringDarts = allScoringDarts.size.toDouble()
+        val misses = allScoringDarts.filter { it.multiplier == 0 }.size.toDouble()
+        val overallThreeDartAvg = 3 * allScoringDarts.sumOf { it.getTotal() } / allScoringDarts.size.toDouble()
 
         val rawAverages = XYSeries("Avg$graphSuffix")
-        finishedGames.forEachIndexed { i, game ->
+        sortedGames.forEachIndexed { i, game ->
             val ordinal = i + 1
             val avg = game.getThreeDartAverage(scoreThreshold)
             val startValue = game.getGameStartValueX01()
@@ -136,7 +138,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         chartPanel.addSeries(rawAverages, graphSuffix, nfAverageThreshold.getNumber())
 
         //Overall avg, to 1 d.p
-        nfThreeDartAverage.text = "" + MathsUtil.round(avgTotal / finishedGames.size, 1)
+        nfThreeDartAverage.text = "" + MathsUtil.round(overallThreeDartAvg, 1)
 
         //Miss percent, to 1 d.p
         nfMissPercent.text = "" + MathsUtil.round(100 * misses / totalScoringDarts, 1)

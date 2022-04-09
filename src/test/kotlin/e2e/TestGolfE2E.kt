@@ -62,15 +62,15 @@ class TestGolfE2E: AbstractRegistryTest()
         parentWindow.gamePanel.dartboard.addDartboardListener(listener)
 
         val expectedRounds = listOf(
-            listOf(drtOuterOne, drtInnerOne), // 3, 1 gambled
-            listOf(drtOuterFifteen, drtTrebleSeventeen, drtOuterSeventeen), // 8, 1 gambled
-            listOf(drtInnerThree, drtOuterThree, drtDoubleThree), // 9, 4 gambled
-            listOf(drtTrebleFour), // 11, 4 gambled (tests first stopThreshold)
-            listOf(drtDoubleFive), // 12, 4 gambled
-            listOf(drtOuterSix, drtOuterSix, drtOuterSix), // 16, 6 gambled
-            listOf(drtOuterSeven, drtOuterSixteen, drtInnerSixteen), // 21, 7 gambled
-            listOf(drtMissEight, drtInnerEight), // 24, 7 gambled
-            listOf(drtMissNine, drtDoubleNine), // 25, 7 gambled
+            listOf(drtOuterOne(), drtInnerOne()), // 3, 1 gambled
+            listOf(drtOuterFifteen(), drtTrebleSeventeen(), drtOuterSeventeen()), // 8, 1 gambled
+            listOf(drtInnerThree(), drtOuterThree(), drtDoubleThree()), // 9, 4 gambled
+            listOf(drtTrebleFour()), // 11, 4 gambled (tests first stopThreshold)
+            listOf(drtDoubleFive()), // 12, 4 gambled
+            listOf(drtOuterSix(), drtOuterSix(), drtOuterSix()), // 16, 6 gambled
+            listOf(drtOuterSeven(), drtOuterSixteen(), drtInnerSixteen()), // 21, 7 gambled
+            listOf(drtMissEight(), drtInnerEight()), // 24, 7 gambled
+            listOf(drtMissNine(), drtDoubleNine()), // 25, 7 gambled
         )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier, it.segmentType) }

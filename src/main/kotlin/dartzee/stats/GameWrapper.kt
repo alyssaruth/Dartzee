@@ -51,7 +51,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         return hmRoundNumberToDarts.getAllValues()
     }
 
-    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<List<Dart>>?
+    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<List<Dart>>
     {
         if (scoreCutOff < 62)
         {
@@ -130,19 +130,11 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         return calculateThreeDartAverage(darts, scoreCutOff)
     }
 
-    fun getDartsForMultiplierX01(scoreCutOff: Int, multiplier: Int): Int
-    {
-        val darts = getScoringDarts(scoreCutOff)
-        return darts.filter{d -> d.multiplier == multiplier}.size
-    }
-
     fun getScoringDarts(scoreCutOff: Int): MutableList<Dart>
     {
         val allDarts = getAllDartsFlattened()
         return getScoringDarts(allDarts, scoreCutOff)
     }
-
-
 
     /**
      * Burlton Constant
@@ -151,7 +143,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     {
         val dartsRounds = getScoringDartsGroupedByRound(scoreThreshold)
 
-        for (i in dartsRounds!!.indices)
+        for (i in dartsRounds.indices)
         {
             val dartsForRound = dartsRounds[i]
             val score = sumScore(dartsForRound)

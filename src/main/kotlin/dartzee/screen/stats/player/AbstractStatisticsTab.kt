@@ -22,7 +22,7 @@ abstract class AbstractStatisticsTab : JPanel(), PropertyChangeListener
     }
 
     abstract fun populateStats()
-    fun includeOtherComparison() = !filteredGamesOther.isEmpty()
+    fun includeOtherComparison() = filteredGamesOther.isNotEmpty()
 
     /**
      * For the tabs that are a simple grid layout showing two tables.

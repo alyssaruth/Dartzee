@@ -2,6 +2,10 @@ package dartzee.helper
 
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.core.obj.HashMapList
+import dartzee.core.util.DateStatics
+import dartzee.db.EntityName
+import dartzee.db.LocalIdGenerator
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
@@ -9,8 +13,11 @@ import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.X01PlayerState
+import dartzee.stats.GameWrapper
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
 import java.awt.Point
+import java.sql.Timestamp
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
 {
@@ -38,6 +45,18 @@ fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
 {
     darts.forEach { it.roundNumber = golfHole }
     return darts
+}
+
+fun makeX01RoundsMap(startingScore: Int = 501, vararg darts: List<Dart>): HashMapList<Int, Dart>
+{
+    val rounds = makeX01Rounds(startingScore, *darts)
+
+    val map = HashMapList<Int, Dart>()
+    rounds.forEachIndexed { ix, round ->
+        map[ix+1] = round.toMutableList()
+    }
+
+    return map
 }
 
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
@@ -107,4 +126,20 @@ fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
                         currentRound: List<Dart> = emptyList()): GolfPlayerState
 {
     return GolfPlayerState(participant, completedRounds.toMutableList(), currentRound.toMutableList())
+}
+
+fun makeGameWrapper(
+    localId: Long = LocalIdGenerator(mainDatabase).generateLocalId(EntityName.Game),
+    gameParams: String = "501",
+    dtStart: Timestamp = Timestamp(1000),
+    dtFinish: Timestamp = DateStatics.END_OF_TIME,
+    finalScore: Int = -1,
+    dartRounds: HashMapList<Int, Dart> = HashMapList(),
+    totalRounds: Int = dartRounds.size
+): GameWrapper
+{
+    return GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore).also {
+        it.setHmRoundNumberToDartsThrown(dartRounds)
+        it.setTotalRounds(totalRounds)
+    }
 }
