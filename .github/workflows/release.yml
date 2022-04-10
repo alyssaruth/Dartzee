@@ -19,8 +19,8 @@ jobs:
           java-version: 11
       - name: Prepare secrets
         env:
-          AWS_LOGS: {{ secrets.AWS_LOGS }}
-          AWS_SYNC: {{ secrets.AWS_SYNC }}
+          AWS_SYNC: ${{ secrets.AWS_SYNC }}
+          AWS_LOGS: ${{ secrets.AWS_LOGS }}
         run: |
           echo $AWS_LOGS > src/main/resources/AWS_LOGS
           echo $AWS_SYNC > src/main/resources/AWS_SYNC
