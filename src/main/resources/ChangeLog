@@ -1,3 +1,12 @@
+--------- v5.3.0 ---------
+
++ 2 Dartzee achievements (Bingo!, Halved)
++ Ability to edit player names
++ Three dart average player stats now include unfinished games
+= Fixed a bug causing AI opponents in Dartzee to stop throwing occasionally
+= Fixed the way that overall three dart average is calculated so it no longer overestimates
+= 85.1% test coverage (11347 / 13338 lines covered by 2049 tests)
+
 --------- v5.2.0 ---------
 
 + 3 Dartzee achievements (Yahtzee!, Flawless & Under Pressure)
