@@ -5,6 +5,7 @@ import java.io.File
 
 abstract class AbstractMessageDialogFactory
 {
+    abstract fun showCustomMessage(messageBody: Any)
     abstract fun showInfo(text: String)
     abstract fun showError(text: String)
     abstract fun showQuestion(text: String, allowCancel: Boolean = false): Int

@@ -26,6 +26,7 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
 
     val infosShown = mutableListOf<String>()
     val errorsShown = mutableListOf<String>()
+    val customsShown = mutableListOf<Any>()
 
     val loadingsShown = mutableListOf<String>()
 
@@ -54,6 +55,11 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
     override fun showError(text: String)
     {
         errorsShown.add(text)
+    }
+
+    override fun showCustomMessage(messageBody: Any)
+    {
+        customsShown.add(messageBody)
     }
 
     override fun showQuestion(text: String, allowCancel: Boolean): Int
@@ -96,5 +102,6 @@ class TestMessageDialogFactory: AbstractMessageDialogFactory()
         optionSequence.clear()
         optionsShown.clear()
         directoryToSelect = null
+        customsShown.clear()
     }
 }

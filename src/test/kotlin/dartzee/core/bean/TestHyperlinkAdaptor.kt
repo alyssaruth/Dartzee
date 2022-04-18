@@ -48,6 +48,12 @@ class TestHyperlinkAdaptor: AbstractTest()
 
         adaptor.mouseMoved(makeMouseEvent())
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
+        adaptor.mouseEntered(makeMouseEvent())
+        listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
+        adaptor.mouseEntered(MOUSE_EVENT_SINGLE_CLICK)
+        listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
     }
 
     @Test

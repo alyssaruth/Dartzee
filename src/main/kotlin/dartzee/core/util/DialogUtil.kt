@@ -23,6 +23,13 @@ object DialogUtil
         logDialogClosed("Info", null)
     }
 
+    fun showCustomMessage(message: Any)
+    {
+        logDialogShown("CustomInfo", "Information", "?")
+        dialogFactory.showCustomMessage(message)
+        logDialogClosed("CustomInfo", null)
+    }
+
     fun showError(errorText: String)
     {
         dismissLoadingDialog()
