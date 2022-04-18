@@ -1,14 +1,20 @@
 package dartzee.utils
 
 import com.mashape.unirest.http.Unirest
-import dartzee.`object`.DartsClient
+import dartzee.core.bean.LinkLabel
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
+import dartzee.`object`.DartsClient
 import dartzee.utils.InjectedThings.logger
+import launchUrl
 import org.json.JSONObject
+import java.awt.BorderLayout
 import java.io.File
+import javax.swing.JLabel
 import javax.swing.JOptionPane
+import javax.swing.JPanel
 import kotlin.system.exitProcess
+
 
 /**
  * Automatically check for and download updates using the Github API
@@ -41,12 +47,6 @@ object UpdateManager
             DialogUtil.showLoadingDialog("Checking for updates...")
 
             val response = Unirest.get("$repositoryUrl/releases/latest").asJson()
-            if (response.status == 404 && repositoryUrl == DARTZEE_REPOSITORY_URL)
-            {
-                logger.info(CODE_UPDATE_CHECK, "Got 404 for $repositoryUrl, falling back to $DARTZEE_REPOSITORY_URL_2")
-                return queryLatestReleaseJson(DARTZEE_REPOSITORY_URL_2)
-            }
-
             if (response.status != 200)
             {
                 logger.error(CODE_UPDATE_ERROR,
@@ -85,12 +85,26 @@ object UpdateManager
 
         if (!DartsClient.isWindowsOs())
         {
-            DialogUtil.showInfo("An update is available ($newVersion). You can download it manually from: \n$DARTZEE_MANUAL_DOWNLOAD_URL/tags/$newVersion")
+            showManualDownloadMessage(newVersion)
             return false
         }
 
         val answer = DialogUtil.showQuestion("An update is available (${metadata.version}). Would you like to download it now?", false)
         return answer == JOptionPane.YES_OPTION
+    }
+
+    private fun showManualDownloadMessage(newVersion: String)
+    {
+        val fullUrl = "$DARTZEE_MANUAL_DOWNLOAD_URL/tag/$newVersion"
+        val panel = JPanel()
+        panel.layout = BorderLayout(0, 0)
+        val lblOne = JLabel("An update is available ($newVersion). You can download it manually from:")
+        val linkLabel = LinkLabel(fullUrl) { launchUrl(fullUrl) }
+
+        panel.add(lblOne, BorderLayout.NORTH)
+        panel.add(linkLabel, BorderLayout.SOUTH)
+
+        DialogUtil.showCustomMessage(panel)
     }
 
     fun parseUpdateMetadata(responseJson: JSONObject): UpdateMetadata?
@@ -120,7 +134,6 @@ object UpdateManager
         try
         {
             runtime.exec("cmd /c start update.bat $args")
-            exitProcess(0)
         }
         catch (t: Throwable)
         {
@@ -129,7 +142,10 @@ object UpdateManager
 
             val msg = "Failed to launch update.bat - call the following manually to perform the update: \n\n$manualCommand"
             DialogUtil.showError(msg)
+            return
         }
+
+        exitProcess(0)
     }
 
     fun prepareBatchFile()

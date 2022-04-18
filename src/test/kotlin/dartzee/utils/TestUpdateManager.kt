@@ -1,9 +1,13 @@
 package dartzee.utils
 
+import com.github.alexburlton.swingtest.getChild
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
+import dartzee.core.bean.LinkLabel
 import dartzee.`object`.DartsClient
 import dartzee.helper.AbstractTest
+import dartzee.helper.assertDoesNotExit
+import dartzee.helper.assertExits
 import dartzee.logging.*
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -22,6 +26,7 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
 import javax.swing.JOptionPane
+import javax.swing.JPanel
 
 class TestUpdateManager: AbstractTest()
 {
@@ -153,8 +158,11 @@ class TestUpdateManager: AbstractTest()
         log.message shouldBe "Newer release available - v100"
 
         dialogFactory.questionsShown.shouldBeEmpty()
-        dialogFactory.infosShown.shouldContainExactly("An update is available (v100). You can download it manually from: \n" +
-                "$DARTZEE_MANUAL_DOWNLOAD_URL/tags/v100")
+        dialogFactory.customsShown.size shouldBe 1
+
+        val content = dialogFactory.customsShown.first() as JPanel
+        val linkLabel = content.getChild<LinkLabel>()
+        linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v100</u></html>"
     }
 
     @Test
@@ -202,16 +210,29 @@ class TestUpdateManager: AbstractTest()
      * Run update
      */
     @Test
-    fun `Should log an error if batch file goes wrong`()
+    fun `Should log an error and not exit if batch file goes wrong`()
     {
         val runtime = mockk<Runtime>()
         val error = IOException("Argh")
         every { runtime.exec(any<String>()) } throws error
-        UpdateManager.startUpdate("foo", runtime)
+
+        assertDoesNotExit {
+            UpdateManager.startUpdate("foo", runtime)
+        }
 
         val log = verifyLog(CODE_BATCH_ERROR, Severity.ERROR)
         log.errorObject shouldBe error
 
         dialogFactory.errorsShown.shouldContainExactly("Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo")
+    }
+
+    @Test
+    fun `Should exit normally if batch file succeeds`()
+    {
+        val runtime = mockk<Runtime>(relaxed = true)
+
+        assertExits(0) {
+            UpdateManager.startUpdate("foo", runtime)
+        }
     }
 }

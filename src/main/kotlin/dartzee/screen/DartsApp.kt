@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import com.mashape.unirest.http.Unirest
 import dartzee.`object`.DartsClient
 import dartzee.achievements.convertEmptyAchievements
 import dartzee.core.bean.AbstractDevScreen
@@ -197,12 +196,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == CMD_GUID)
         {
             textToShow = UUID.randomUUID().toString()
-        }
-        else if (cmd == "git")
-        {
-            val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
-
-            println("Response tag: " + response.body.`object`.get("tag_name"))
         }
         else if (cmd == "load")
         {

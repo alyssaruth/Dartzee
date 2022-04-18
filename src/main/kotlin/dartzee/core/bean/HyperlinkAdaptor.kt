@@ -23,6 +23,14 @@ class HyperlinkAdaptor(private val listener: IHyperlinkListener) : MouseAdapter(
         }
     }
 
+    override fun mouseEntered(e: MouseEvent)
+    {
+        if (listener.isOverHyperlink(e))
+        {
+            listenerWindow.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+        }
+    }
+
     override fun mouseDragged(e: MouseEvent?)
     {
         if (listenerWindow.cursor.type == Cursor.HAND_CURSOR)

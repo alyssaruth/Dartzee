@@ -24,6 +24,11 @@ class MessageDialogFactory: AbstractMessageDialogFactory()
         JOptionPane.showMessageDialog(null, text, "Error", JOptionPane.ERROR_MESSAGE)
     }
 
+    override fun showCustomMessage(messageBody: Any)
+    {
+        JOptionPane.showMessageDialog(null, messageBody, "Information", JOptionPane.INFORMATION_MESSAGE)
+    }
+
     override fun showOption(title: String, message: String, options: List<String>): String?
     {
         val typedArray = options.toTypedArray()
