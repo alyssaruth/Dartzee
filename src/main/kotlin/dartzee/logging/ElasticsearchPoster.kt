@@ -47,8 +47,7 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
 
     fun isOnline(): Boolean
     {
-        val initialisedClient = client
-        initialisedClient ?: return false
+        val initialisedClient = client ?: return false
 
         try
         {
@@ -70,8 +69,7 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
 
     fun postLog(logJson: String): Boolean
     {
-        val initialisedClient = client
-        initialisedClient ?: return false
+        val initialisedClient = client ?: return false
 
         try
         {

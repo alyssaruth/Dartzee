@@ -14,7 +14,7 @@ class LogDestinationElasticsearch(private val poster: ElasticsearchPoster?, priv
 
     override fun log(record: LogRecord)
     {
-        if (DartsClient.devMode)
+        if (!DartsClient.devMode)
         {
             pendingLogs.add(record.toJsonString())
         }
