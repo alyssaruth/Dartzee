@@ -13,8 +13,7 @@ import org.apache.http.nio.entity.NStringEntity
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.ResponseException
 import org.elasticsearch.client.RestClient
-import java.io.InterruptedIOException
-import java.net.SocketException
+import java.io.IOException
 import java.util.*
 
 
@@ -46,10 +45,31 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
         }
     }
 
+    fun isOnline(): Boolean
+    {
+        val initialisedClient = client ?: return false
+
+        try
+        {
+            val request = Request("GET", "/_cluster/health")
+            val response = initialisedClient.performRequest(request)
+            val status = response.statusLine.statusCode
+            return status == HttpStatus.SC_OK
+        }
+        catch (t: IOException)
+        {
+            return false
+        }
+        catch (t: Throwable)
+        {
+            logger.error(CODE_ELASTICSEARCH_ERROR, "Unexpected error checking if we are online", t)
+            return false
+        }
+    }
+
     fun postLog(logJson: String): Boolean
     {
-        val initialisedClient = client
-        initialisedClient ?: return false
+        val initialisedClient = client ?: return false
 
         try
         {
@@ -72,8 +92,8 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
         {
             when (t)
             {
-                is SocketException, is InterruptedIOException -> logger.warn(CODE_ELASTICSEARCH_ERROR, "Caught $t trying to post to elasticsearch")
                 is ResponseException -> handleResponseException(t)
+                is IOException -> logger.warn(CODE_ELASTICSEARCH_ERROR, "Caught $t trying to post to elasticsearch")
                 else -> logger.error(CODE_ELASTICSEARCH_ERROR, "Failed to post log to ES", t)
             }
 

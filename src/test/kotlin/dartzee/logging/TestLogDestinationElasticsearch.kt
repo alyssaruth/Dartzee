@@ -92,10 +92,23 @@ class TestLogDestinationElasticsearch: AbstractTest()
         dest.postPendingLogs()
         verify { poster.postLog(log.toJsonString()) }
 
-        clearAllMocks()
+        clearAllMocks(answers = false)
 
         dest.postPendingLogs()
         verify { poster.postLog(log.toJsonString()) }
+    }
+
+    @Test
+    fun `Should not bother attempting to post any logs if not online`()
+    {
+        val poster = mockPoster(online = false)
+        val dest = makeLogDestination(poster)
+        dest.log(makeLogRecord())
+        dest.log(makeLogRecord())
+
+        dest.postPendingLogs()
+
+        verifyNotCalled { poster.postLog(any()) }
     }
 
     @Test
@@ -133,7 +146,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
 
         dest.startPosting()
 
-        verify { scheduler.scheduleAtFixedRate(any(), 0, 5, TimeUnit.SECONDS) }
+        verify { scheduler.scheduleAtFixedRate(any(), 0, 10, TimeUnit.SECONDS) }
     }
 
     @Test
@@ -174,10 +187,11 @@ class TestLogDestinationElasticsearch: AbstractTest()
                                    scheduler: ScheduledExecutorService = mockk(relaxed = true)) =
             LogDestinationElasticsearch(poster, scheduler)
 
-    private fun mockPoster(success: Boolean = true): ElasticsearchPoster
+    private fun mockPoster(success: Boolean = true, online: Boolean = true): ElasticsearchPoster
     {
         val poster = mockk<ElasticsearchPoster>(relaxed = true)
         every { poster.postLog(any()) } returns success
+        every { poster.isOnline() } returns online
         return poster
     }
 }

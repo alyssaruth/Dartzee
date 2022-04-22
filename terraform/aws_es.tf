@@ -57,6 +57,16 @@ data "aws_iam_policy_document" "elasticsearch_put" {
       "${aws_elasticsearch_domain.dartzee.arn}/unittest/*"
     ]
   }
+
+  statement {
+    effect = "Allow"
+
+    actions = ["es:ESHttpGet"]
+
+    resources = [
+      "${aws_elasticsearch_domain.dartzee.arn}/_cluster/health"
+    ]
+  }
 }
 
 resource "aws_iam_user_policy" "elasticsearch" {
