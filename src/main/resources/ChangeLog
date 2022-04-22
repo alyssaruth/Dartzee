@@ -1,3 +1,9 @@
+--------- v5.3.1 ---------
+
+= Fix slowdown / crash when using with no internet connection
+= Tidy up some update logic after moving the download URL
+= 85.1% test coverage (11357 / 13345 lines covered by 2055 tests)
+
 --------- v5.3.0 ---------
 
 + 2 Dartzee achievements (Bingo!, Halved)
