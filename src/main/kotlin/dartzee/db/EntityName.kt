@@ -15,5 +15,6 @@ enum class EntityName {
     PlayerImage,
     SyncAudit,
     Version,
-    X01Finish
+    X01Finish,
+    Team
 }

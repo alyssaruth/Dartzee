@@ -42,7 +42,8 @@ object DartsDatabaseUtil
             X01FinishEntity(database),
             PendingLogsEntity(database),
             SyncAuditEntity(database),
-            DeletionAuditEntity(database)
+            DeletionAuditEntity(database),
+            TeamEntity(database)
         )
     }
 

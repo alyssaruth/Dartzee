@@ -12,7 +12,7 @@ class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
 
     override fun populateParticipantToFinalScoreTable(tempTable: String)
     {
-        val tempTable1 = mainDatabase.createTempTable("ParticipantToRoundCount", "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT")
+        val tempTable1 = mainDatabase.createTempTable("ParticipantToRoundCount", "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT") ?: return
 
         var sb = StringBuilder()
         sb.append("INSERT INTO $tempTable1")
