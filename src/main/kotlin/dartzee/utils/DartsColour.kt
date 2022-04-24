@@ -34,6 +34,8 @@ object DartsColour
     val COLOUR_ACHIEVEMENT_ORANGE: Color = Color.getHSBColor(0.1f, 1f, 1f)
 
     val COLOUR_PASTEL_BLUE: Color = Color.getHSBColor(242.toFloat() / 360, 0.48.toFloat(), 0.8.toFloat())
+    val PURPLE = Color(138,43,226)
+    val ORANGE = Color(255, 140, 0)
 
     val FIRST_COLOURS = Pair(Color.YELLOW, COLOUR_GOLD_TEXT)
     val SECOND_COLOURS = Pair(Color.GRAY, COLOUR_SILVER_TEXT)
@@ -120,3 +122,5 @@ object DartsColour
 
     fun getProportionalColourRedToGreen(value: Double, total: Int, brightness: Double) = getProportionalColour(value, total, 0.4, brightness)
 }
+
+fun Color.translucent() = Color(this.red, this.green, this.blue, 120)

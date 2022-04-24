@@ -10,33 +10,9 @@ fun ScrollTable.getSelectedPlayer(): PlayerEntity?
     return if (row == -1) null else getPlayerEntityForRow(row)
 }
 
-fun ScrollTable.getAllPlayers(): MutableList<PlayerEntity>
-{
-    val ret = mutableListOf<PlayerEntity>()
+fun ScrollTable.getAllPlayers() = (0 until table.rowCount).map(::getPlayerEntityForRow)
 
-    for (i in 0 until table.rowCount)
-    {
-        val player = getPlayerEntityForRow(i)
-        ret.add(player)
-    }
-
-    return ret
-}
-
-
-fun ScrollTable.getSelectedPlayers(): MutableList<PlayerEntity>
-{
-    val ret = mutableListOf<PlayerEntity>()
-
-    val viewRows = table.selectedRows
-    for (i in viewRows.indices)
-    {
-        val player = getPlayerEntityForRow(viewRows[i])
-        ret.add(player)
-    }
-
-    return ret
-}
+fun ScrollTable.getSelectedPlayers() = table.selectedRows.map(::getPlayerEntityForRow)
 
 fun ScrollTable.getPlayerEntityForRow(row: Int): PlayerEntity
 {
@@ -60,7 +36,7 @@ fun ScrollTable.initPlayerTableModel(players: List<PlayerEntity> = listOf())
     sortBy(1, false)
 }
 
-fun ScrollTable.addPlayers(players: List<PlayerEntity>) = players.forEach{ addPlayer(it) }
+fun ScrollTable.addPlayers(players: List<PlayerEntity>) = players.forEach(::addPlayer)
 private fun ScrollTable.addPlayer(player: PlayerEntity)
 {
     val flag = player.getFlag()

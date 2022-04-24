@@ -6,22 +6,28 @@ import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
 import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
+import dartzee.utils.DartsColour
+import dartzee.utils.translucent
 import net.miginfocom.swing.MigLayout
+import java.awt.Color
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
-import javax.swing.ImageIcon
-import javax.swing.JButton
-import javax.swing.JPanel
+import javax.swing.*
+import javax.swing.border.CompoundBorder
+import javax.swing.border.EmptyBorder
+import javax.swing.border.MatteBorder
+import javax.swing.table.TableCellRenderer
 
-class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
+class PlayerSelector: JPanel(), ActionListener, IDoubleClickListener
 {
     val tablePlayersToSelectFrom = ScrollTable()
     val tablePlayersSelected = ScrollTableOrdered()
     val btnSelect = JButton("")
     val btnUnselect = JButton("")
+    private val btnPairs = JToggleButton("")
 
     init
     {
@@ -39,12 +45,16 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         btnUnselect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnUnselect, "cell 0 1,alignx left,aligny top")
         add(tablePlayersSelected, "cell 2 0,alignx left,growy")
+        btnPairs.icon = ImageIcon(javaClass.getResource("/buttons/teams.png"))
+        btnPairs.toolTipText = "Play in pairs"
+        tablePlayersSelected.addButtonToOrderingPanel(btnPairs, 3)
 
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)
 
         btnSelect.addActionListener(this)
         btnUnselect.addActionListener(this)
+        btnPairs.addActionListener(this)
 
         addKeyListener(tablePlayersSelected)
         addKeyListener(tablePlayersToSelectFrom)
@@ -55,6 +65,9 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         val allPlayers = PlayerEntity.retrievePlayers("")
         tablePlayersToSelectFrom.initPlayerTableModel(allPlayers)
         tablePlayersSelected.initPlayerTableModel()
+
+        val nimbusRenderer = tablePlayersSelected.getBuiltInRenderer()
+        tablePlayersSelected.setTableRenderer(TeamRenderer(nimbusRenderer))
     }
 
     fun init(selectedPlayers: List<PlayerEntity>)
@@ -63,7 +76,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         moveRows(tablePlayersToSelectFrom, tablePlayersSelected, selectedPlayers)
     }
 
-    fun getSelectedPlayers(): MutableList<PlayerEntity> = tablePlayersSelected.getAllPlayers()
+    fun getSelectedPlayers(): List<PlayerEntity> = tablePlayersSelected.getAllPlayers()
 
     private fun addKeyListener(table: ScrollTable)
     {
@@ -89,7 +102,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
             rowToSelect = 0
         }
 
-        if (!availablePlayers.isEmpty())
+        if (availablePlayers.isNotEmpty())
         {
             source.selectRow(rowToSelect)
         }
@@ -132,6 +145,46 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         }
     }
 
-    override fun actionPerformed(e: ActionEvent) = moveRows(e.source)
+    private fun togglePairs()
+    {
+        tablePlayersSelected.repaint()
+    }
+
+    override fun actionPerformed(e: ActionEvent) {
+        when (e.source)
+        {
+            btnSelect, btnUnselect -> moveRows(e.source)
+            btnPairs -> togglePairs()
+        }
+    }
+
     override fun doubleClicked(source: Component) = moveRows(source)
+
+    private inner class TeamRenderer(private val baseRenderer: TableCellRenderer): TableCellRenderer
+    {
+        private val colors = listOf(Color.RED, Color.GREEN, Color.CYAN, Color.YELLOW, DartsColour.PURPLE, DartsColour.ORANGE)
+
+        override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
+        {
+            val c = baseRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JComponent
+
+            val rawColour = if (row/2 < colors.size) colors[row/2] else null
+            if (btnPairs.isSelected)
+            {
+                c.background = if (isSelected) rawColour else rawColour?.translucent()
+                c.foreground = Color.BLACK
+
+                val padding = if (column == 0) 0 else 5
+                val lineBorder = MatteBorder(0, 0, row % 2, 0, Color.BLACK)
+                val padBorder = EmptyBorder(0, padding, 0, 0)
+                c.border = CompoundBorder(lineBorder, padBorder)
+            }
+            else if (!isSelected)
+            {
+                c.background = null
+            }
+
+            return c
+        }
+    }
 }
