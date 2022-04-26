@@ -42,6 +42,8 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
         indexes.add(listOf("PlayerId", "GameId"))
     }
 
+    override fun getColumnsAllowedToBeUnset() = listOf("TeamId")
+
     /**
      * Helpers
      */
