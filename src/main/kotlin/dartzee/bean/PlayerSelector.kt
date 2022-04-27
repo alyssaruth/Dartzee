@@ -121,15 +121,18 @@ class PlayerSelector: JPanel(), ActionListener, IDoubleClickListener
             return false
         }
 
-        if (match && rowCount < 2)
+        val playerOrTeamDesc = if (btnPairs.isSelected) "teams" else "players"
+        val matchMinimum = if (btnPairs.isSelected) 4 else 2
+        if (match && rowCount < matchMinimum)
         {
-            DialogUtil.showError("You must select at least 2 players for a match.")
+            DialogUtil.showError("You must select at least 2 $playerOrTeamDesc for a match.")
             return false
         }
 
-        if (rowCount > MAX_PLAYERS)
+        val maxPlayers = if (btnPairs.isSelected) MAX_PLAYERS * 2 else MAX_PLAYERS
+        if (rowCount > maxPlayers)
         {
-            DialogUtil.showError("You cannot select more than $MAX_PLAYERS players.")
+            DialogUtil.showError("You cannot select more than $MAX_PLAYERS $playerOrTeamDesc.")
             return false
         }
 
