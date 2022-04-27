@@ -3,7 +3,6 @@ package dartzee.db
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.DartsDatabaseUtil
-import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactly

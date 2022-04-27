@@ -12,7 +12,7 @@ class TestDatabaseMigrationV18toV19: AbstractTest()
     @Test
     fun `Should correctly add DeletionAudit table`()
     {
-        mainDatabase.dropTable(EntityName.DeletionAudit.name)
+        mainDatabase.dropTable(EntityName.DeletionAudit)
 
         DatabaseMigrations.createDeletionAudit(mainDatabase)
 

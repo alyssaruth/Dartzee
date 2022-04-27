@@ -3,6 +3,7 @@ package dartzee.utils
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DeletionAuditEntity
+import dartzee.db.TeamEntity
 
 object DatabaseMigrations
 {
@@ -13,7 +14,11 @@ object DatabaseMigrations
                 { db -> runScript(db, 18, "1. DartzeeRule.sql") },
                 { db -> convertDartzeeCalculationResults(db) }
             ),
-            18 to listOf { db -> createDeletionAudit(db) }
+            18 to listOf { db -> createDeletionAudit(db) },
+            19 to listOf (
+                { db -> TeamEntity(db).createTable() },
+                { db -> runScript(db, 20, "Participant.sql")}
+            )
         )
     }
 
@@ -38,7 +43,7 @@ object DatabaseMigrations
         }
     }
 
-    fun runScript(database: Database, version: Int, scriptName: String): Boolean
+    private fun runScript(database: Database, version: Int, scriptName: String): Boolean
     {
         val resourcePath = "/sql/v$version/"
         val rsrc = javaClass.getResource("$resourcePath$scriptName").readText()

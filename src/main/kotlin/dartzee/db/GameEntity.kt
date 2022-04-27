@@ -5,7 +5,6 @@ import dartzee.core.util.isEndOfTime
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
-import java.util.*
 
 const val MAX_PLAYERS = 6
 
@@ -41,12 +40,7 @@ class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(
         indexes.add(listOf("GameType"))
     }
 
-    override fun getColumnsAllowedToBeUnset(): ArrayList<String>
-    {
-        val ret = ArrayList<String>()
-        ret.add("DartsMatchId")
-        return ret
-    }
+    override fun getColumnsAllowedToBeUnset() = listOf("DartsMatchId")
 
     override fun assignRowId(): String
     {

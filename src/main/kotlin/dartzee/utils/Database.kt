@@ -129,12 +129,11 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     {
         val timer = DurationTimer()
         val conn = borrowConnection()
-        var updateCount = 0
-        try
+        val updateCount = try
         {
             conn.createStatement().use {
                 s -> s.execute(statement)
-                updateCount = s.updateCount
+                s.updateCount
             }
         }
         finally
@@ -275,7 +274,8 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         else null
     }
 
-    fun dropTable(tableName: String?): Boolean
+    fun dropTable(tableName: EntityName) = dropTable(tableName.name)
+    fun dropTable(tableName: String): Boolean
     {
         val sql = "DROP TABLE $tableName"
         return executeUpdate(sql)

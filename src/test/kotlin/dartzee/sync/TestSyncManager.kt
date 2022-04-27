@@ -1,6 +1,7 @@
 package dartzee.sync
 
 import dartzee.core.util.getSqlDateNow
+import dartzee.db.EntityName
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.*
 import dartzee.logging.*
@@ -96,7 +97,7 @@ class TestSyncManager: AbstractTest()
     {
         usingDbWithTestFile { remoteDb ->
             insertPlayer(database = mainDatabase)
-            remoteDb.dropTable("Player")
+            remoteDb.dropTable(EntityName.Player)
 
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
 

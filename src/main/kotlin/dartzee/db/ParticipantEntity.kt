@@ -19,6 +19,7 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
     var finishingPosition = -1
     var finalScore = -1
     var dtFinished = DateStatics.END_OF_TIME
+    var teamId = ""
 
     //In memory things
     private var player: PlayerEntity? = null
@@ -32,13 +33,16 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
                 + "Ordinal INT NOT NULL, "
                 + "FinishingPosition INT NOT NULL, "
                 + "FinalScore INT NOT NULL, "
-                + "DtFinished TIMESTAMP NOT NULL")
+                + "DtFinished TIMESTAMP NOT NULL, "
+                + "TeamId VARCHAR(36) NOT NULL")
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>)
     {
         indexes.add(listOf("PlayerId", "GameId"))
     }
+
+    override fun getColumnsAllowedToBeUnset() = listOf("TeamId")
 
     /**
      * Helpers
