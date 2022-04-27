@@ -1,5 +1,6 @@
 package dartzee.db
 
+import ICompetitor
 import dartzee.core.util.DateStatics
 import dartzee.core.util.StringUtil
 import dartzee.core.util.isEndOfTime
@@ -10,15 +11,15 @@ import dartzee.utils.InjectedThings.mainDatabase
  * Represents the participant of a game. This is a link between a player and a game, with additional information
  * such as play position and finishing position.
  */
-class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<ParticipantEntity>(database)
+class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<ParticipantEntity>(database), ICompetitor
 {
     //DB Fields
     var gameId = ""
     var playerId = ""
     var ordinal = -1
-    var finishingPosition = -1
-    var finalScore = -1
-    var dtFinished = DateStatics.END_OF_TIME
+    override var finishingPosition = -1
+    override var finalScore = -1
+    override var dtFinished = DateStatics.END_OF_TIME
     var teamId = ""
 
     //In memory things

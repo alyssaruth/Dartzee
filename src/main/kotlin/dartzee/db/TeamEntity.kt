@@ -1,5 +1,6 @@
 package dartzee.db
 
+import ICompetitor
 import dartzee.core.util.DateStatics
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -7,14 +8,14 @@ import dartzee.utils.InjectedThings.mainDatabase
 /**
  * Represents a team in a game. Individual participants will point at this entity in team games.
  */
-class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(database)
+class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(database), ICompetitor
 {
     //DB Fields
     var gameId = ""
     var ordinal = -1
-    var finishingPosition = -1
-    var finalScore = -1
-    var dtFinished = DateStatics.END_OF_TIME
+    override var finishingPosition = -1
+    override var finalScore = -1
+    override var dtFinished = DateStatics.END_OF_TIME
 
     override fun getTableName() = EntityName.Team
 

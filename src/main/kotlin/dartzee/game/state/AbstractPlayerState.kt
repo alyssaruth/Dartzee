@@ -1,16 +1,16 @@
 package dartzee.game.state
 
+import IParticipant
 import dartzee.`object`.Dart
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.BulkInserter
 import dartzee.db.DartEntity
-import dartzee.db.ParticipantEntity
 
 abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 {
     private val listeners = mutableListOf<PlayerStateListener<S>>()
 
-    abstract val pt: ParticipantEntity
+    abstract val pt: IParticipant
     abstract val completedRounds: MutableList<List<Dart>>
     abstract val currentRound: MutableList<Dart>
     abstract var isActive: Boolean
@@ -31,14 +31,14 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     protected fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
 
-    fun isHuman() = !pt.isAi()
+    fun isHuman(roundNumber: Int) = !pt.getParticipant(roundNumber).isAi()
 
     /**
      * Modifiers
      */
     open fun dartThrown(dart: Dart)
     {
-        dart.participantId = pt.rowId
+        dart.participantId = pt.getParticipant(dart.roundNumber).rowId
         currentRound.add(dart)
 
         fireStateChanged()
@@ -79,18 +79,20 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     fun setParticipantFinishPosition(finishingPosition: Int)
     {
-        pt.finishingPosition = finishingPosition
-        pt.saveToDatabase()
+        val team = pt.getTeam()
+        team.finishingPosition = finishingPosition
+        team.saveToDatabase()
 
         fireStateChanged()
     }
 
     fun participantFinished(finishingPosition: Int, finalScore: Int)
     {
-        pt.finishingPosition = finishingPosition
-        pt.finalScore = finalScore
-        pt.dtFinished = getSqlDateNow()
-        pt.saveToDatabase()
+        val team = pt.getTeam()
+        team.finishingPosition = finishingPosition
+        team.finalScore = finalScore
+        team.dtFinished = getSqlDateNow()
+        team.saveToDatabase()
 
         fireStateChanged()
     }
