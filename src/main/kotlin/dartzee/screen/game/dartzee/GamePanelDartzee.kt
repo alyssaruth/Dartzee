@@ -1,8 +1,10 @@
 package dartzee.screen.game.dartzee
 
+import IWrappedParticipant
 import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
 import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_RULES
+import dartzee.achievements.getIdsStr
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.dartzee.DartzeeRoundResult
@@ -10,7 +12,6 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.game.GameType
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.dartzee.DartzeeDartboard
@@ -37,7 +38,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     }
 
     override fun factoryDartboard() = DartzeeDartboard()
-    override fun factoryState(pt: ParticipantEntity) = DartzeePlayerState(pt)
+    override fun factoryState(pt: IWrappedParticipant) = DartzeePlayerState(pt)
 
     override fun doAiTurn(model: DartsAiModel)
     {
@@ -65,10 +66,11 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
 
     override fun loadAdditionalEntities(state: DartzeePlayerState)
     {
-        val playerId = state.pt.playerId
-        val participantId = state.pt.rowId
+        val individuals = state.wrappedParticipant.individuals
+        val playerIds = individuals.getIdsStr { it.playerId }
+        val ptIds = individuals.getIdsStr { it.rowId }
 
-        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId = '$playerId' AND ParticipantId = '$participantId'")
+        val roundResults = DartzeeRoundResultEntity().retrieveEntities("PlayerId IN $playerIds AND ParticipantId IN $ptIds").sortedBy { it.roundNumber }
         roundResults.forEach { state.addRoundResult(it) }
     }
 

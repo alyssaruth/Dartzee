@@ -1,5 +1,6 @@
 package dartzee.stats
 
+import SingleParticipant
 import dartzee.`object`.Dart
 import dartzee.core.obj.HashMapList
 import dartzee.db.DartEntity
@@ -232,7 +233,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         val endHole = getEndHoleForMode(mode)
 
         val rounds = (startHole..endHole).map(::getDartsForRound).toMutableList()
-        val state = GolfPlayerState(ParticipantEntity(), rounds)
+        val state = GolfPlayerState(SingleParticipant(ParticipantEntity()), rounds)
         scorer.stateChanged(state)
     }
 

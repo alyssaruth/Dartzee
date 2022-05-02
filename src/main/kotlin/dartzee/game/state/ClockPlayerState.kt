@@ -1,5 +1,6 @@
 package dartzee.game.state
 
+import IWrappedParticipant
 import dartzee.`object`.Dart
 import dartzee.db.ParticipantEntity
 import dartzee.game.RoundTheClockConfig
@@ -8,7 +9,7 @@ import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getLongestStreak
 
 data class ClockPlayerState(private val config: RoundTheClockConfig,
-                            override val pt: ParticipantEntity,
+                            override val wrappedParticipant: IWrappedParticipant,
                             override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                             override val currentRound: MutableList<Dart> = mutableListOf(),
                             override var isActive: Boolean = false): AbstractPlayerState<ClockPlayerState>()

@@ -1,14 +1,12 @@
 package dartzee.utils
 
-import dartzee.achievements.getWinAchievementType
+import IParticipant
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
 import dartzee.core.util.sortedBy
-import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.game.GameType
 
 fun getFilterPanel(gameType: GameType) =
@@ -27,9 +25,9 @@ fun doesHighestWin(gameType: GameType?) =
         GameType.X01, GameType.GOLF, GameType.ROUND_THE_CLOCK, null -> false
     }
 
-fun setFinishingPositions(participants: List<ParticipantEntity>, game: GameEntity)
+fun setFinishingPositions(participants: List<IParticipant>, game: GameEntity)
 {
-    //If there's only one player, it's already set to -1 which is correct
+    //If there's only one player/team, it's already set to -1 which is correct
     if (participants.size == 1)
     {
         return
@@ -43,17 +41,5 @@ fun setFinishingPositions(participants: List<ParticipantEntity>, game: GameEntit
     entries.forEach { (_, participants) ->
         participants.forEach { it.saveFinishingPosition(game, finishPos) }
         finishPos += participants.size
-    }
-}
-
-private fun ParticipantEntity.saveFinishingPosition(game: GameEntity, position: Int)
-{
-    this.finishingPosition = position
-    this.saveToDatabase()
-
-    if (position == 1)
-    {
-        val type = getWinAchievementType(game.gameType)
-        AchievementEntity.insertAchievement(type, playerId, game.rowId, "$finalScore")
     }
 }

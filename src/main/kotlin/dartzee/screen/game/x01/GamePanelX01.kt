@@ -1,5 +1,6 @@
 package dartzee.screen.game.x01
 
+import IWrappedParticipant
 import dartzee.`object`.Dart
 import dartzee.achievements.*
 import dartzee.ai.DartsAiModel
@@ -23,7 +24,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 {
     private val startingScore = Integer.parseInt(game.gameParams)
 
-    override fun factoryState(pt: ParticipantEntity) = X01PlayerState(startingScore, pt)
+    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(startingScore, pt)
     override fun factoryDartboard() = Dartboard()
 
     override fun saveDartsAndProceed()

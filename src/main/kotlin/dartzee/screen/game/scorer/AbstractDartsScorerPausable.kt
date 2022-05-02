@@ -59,12 +59,13 @@ abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<Play
         val dartCount = state.getScoreSoFar()
         lblResult.text = "$dartCount Darts"
 
-        if (state.pt.finishingPosition == -1)
+        val participant = state.wrappedParticipant.getTeam()
+        if (participant.finishingPosition == -1)
         {
             return
         }
 
-        val playerHasFinished = state.pt.dtFinished != DateStatics.END_OF_TIME
+        val playerHasFinished = participant.dtFinished != DateStatics.END_OF_TIME
         btnResume.isVisible = !playerHasFinished
 
         if (getPaused() && !playerHasFinished)
@@ -74,7 +75,7 @@ abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<Play
 
         if (getPaused() || playerHasFinished)
         {
-            updateResultColourForPosition(state.pt.finishingPosition)
+            updateResultColourForPosition(participant.finishingPosition)
         }
     }
 

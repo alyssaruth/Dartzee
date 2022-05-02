@@ -1,34 +1,52 @@
 
-import dartzee.core.util.getSqlDateNow
+import dartzee.achievements.getWinAchievementType
+import dartzee.core.util.isEndOfTime
+import dartzee.db.AchievementEntity
+import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
 import java.sql.Timestamp
 
-interface IParticipant
+interface IWrappedParticipant
 {
-    fun getParticipant(roundNumber: Int): ParticipantEntity
-    fun getTeam(): ICompetitor
+    val individuals: List<ParticipantEntity>
+
+    fun getIndividual(roundNumber: Int): ParticipantEntity
+    fun getTeam(): IParticipant
+    fun getTeamName(): String
 }
 
-class SingleParticipant(val pt: ParticipantEntity): IParticipant
+class SingleParticipant(val pt: ParticipantEntity): IWrappedParticipant
 {
-    override fun getParticipant(roundNumber: Int) = pt
+    override val individuals = listOf(pt)
+
+    override fun getIndividual(roundNumber: Int) = pt
     override fun getTeam() = pt
+    override fun getTeamName() = pt.getPlayerName()
 }
 
-class TeamParticipant(val t: TeamEntity, val participants: List<ParticipantEntity>): IParticipant
+class TeamParticipant(val t: TeamEntity, override val individuals: List<ParticipantEntity>): IWrappedParticipant
 {
-    private val teamSize = participants.size
+    private val teamSize = individuals.size
 
-    override fun getParticipant(roundNumber: Int) = participants[(roundNumber - 1) % teamSize]
+    override fun getIndividual(roundNumber: Int) = individuals[(roundNumber - 1) % teamSize]
     override fun getTeam() = t
+    override fun getTeamName() = individuals.map { it.getPlayerName() }.sorted().joinToString(" & ")
 }
 
-interface ICompetitor
+interface IParticipant
 {
     var finishingPosition: Int
     var finalScore: Int
     var dtFinished: Timestamp
 
-    fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
+    fun saveToDatabase()
+
+    fun isActive() = isEndOfTime(dtFinished)
+
+    open fun saveFinishingPosition(game: GameEntity, position: Int)
+    {
+        this.finishingPosition = position
+        this.saveToDatabase()
+    }
 }

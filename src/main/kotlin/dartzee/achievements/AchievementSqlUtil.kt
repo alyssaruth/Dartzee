@@ -31,7 +31,7 @@ fun appendPlayerSql(sb: StringBuilder, playerIds: List<String>, alias: String? =
         return
     }
 
-    val keys = playerIds.joinToString { "'$it'" }
+    val keys = playerIds.getIdsStr { it }
     val column = if (alias != null) "$alias.PlayerId" else "PlayerId"
     sb.append(" $whereOrAnd $column IN ($keys)")
 }
@@ -125,3 +125,5 @@ fun bulkInsertFromResultSet(rs: ResultSet,
 
     BulkInserter.insert(entities, database = database)
 }
+
+fun <T: Any> List<T>.getIdsStr(fieldSelector: (obj: T) -> String) = "(${joinToString { "'${fieldSelector(it)}'" } })"

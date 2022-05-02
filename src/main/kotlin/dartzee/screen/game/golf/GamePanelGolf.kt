@@ -1,5 +1,6 @@
 package dartzee.screen.game.golf
 
+import IWrappedParticipant
 import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartsAiModel
@@ -20,7 +21,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
     override val totalRounds = Integer.parseInt(game.gameParams)
 
     override fun factoryDartboard() = Dartboard()
-    override fun factoryState(pt: ParticipantEntity) = GolfPlayerState(pt)
+    override fun factoryState(pt: IWrappedParticipant) = GolfPlayerState(pt)
 
     private fun getScoreForMostRecentDart() : Int
     {

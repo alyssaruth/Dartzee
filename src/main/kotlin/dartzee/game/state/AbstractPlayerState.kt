@@ -1,6 +1,6 @@
 package dartzee.game.state
 
-import IParticipant
+import IWrappedParticipant
 import dartzee.`object`.Dart
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.BulkInserter
@@ -10,7 +10,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 {
     private val listeners = mutableListOf<PlayerStateListener<S>>()
 
-    abstract val pt: IParticipant
+    abstract val wrappedParticipant: IWrappedParticipant
     abstract val completedRounds: MutableList<List<Dart>>
     abstract val currentRound: MutableList<Dart>
     abstract var isActive: Boolean
@@ -28,17 +28,18 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
      * Helpers
      */
     fun currentRoundNumber() = completedRounds.size + 1
+    fun currentIndividual() = wrappedParticipant.getIndividual(currentRoundNumber())
 
     protected fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
 
-    fun isHuman(roundNumber: Int) = !pt.getParticipant(roundNumber).isAi()
+    fun isHuman() = !currentIndividual().isAi()
 
     /**
      * Modifiers
      */
     open fun dartThrown(dart: Dart)
     {
-        dart.participantId = pt.getParticipant(dart.roundNumber).rowId
+        dart.participantId = currentIndividual().rowId
         currentRound.add(dart)
 
         fireStateChanged()
@@ -52,6 +53,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     fun commitRound()
     {
+        val pt = currentIndividual()
         val entities = currentRound.mapIndexed { ix, drt ->
             DartEntity.factory(drt, pt.playerId, pt.rowId, currentRoundNumber(), ix + 1)
         }
@@ -71,6 +73,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     fun addCompletedRound(darts: List<Dart>)
     {
+        val pt = currentIndividual()
         darts.forEach { it.participantId = pt.rowId }
         this.completedRounds.add(darts.toList())
 
@@ -79,7 +82,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     fun setParticipantFinishPosition(finishingPosition: Int)
     {
-        val team = pt.getTeam()
+        val team = wrappedParticipant.getTeam()
         team.finishingPosition = finishingPosition
         team.saveToDatabase()
 
@@ -88,7 +91,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     fun participantFinished(finishingPosition: Int, finalScore: Int)
     {
-        val team = pt.getTeam()
+        val team = wrappedParticipant.getTeam()
         team.finishingPosition = finishingPosition
         team.finalScore = finalScore
         team.dtFinished = getSqlDateNow()

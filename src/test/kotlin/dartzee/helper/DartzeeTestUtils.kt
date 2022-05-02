@@ -1,5 +1,6 @@
 package dartzee.helper
 
+import SingleParticipant
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -100,7 +101,7 @@ fun makeDartzeePlayerState(participant: ParticipantEntity = insertParticipant(),
                            roundResults: List<DartzeeRoundResult> = emptyList()): DartzeePlayerState
 {
     val resultEntities = makeRoundResultEntities(*roundResults.toTypedArray())
-    return DartzeePlayerState(participant, completedRounds.toMutableList(), mutableListOf(), false, resultEntities.toMutableList())
+    return DartzeePlayerState(SingleParticipant(participant), completedRounds.toMutableList(), mutableListOf(), false, resultEntities.toMutableList())
 }
 
 fun makeSegmentStatus(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),

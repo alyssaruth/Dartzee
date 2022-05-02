@@ -1,14 +1,14 @@
 package dartzee.game.state
 
-import dartzee.`object`.Dart
+import IWrappedParticipant
 import dartzee.achievements.AchievementType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.db.ParticipantEntity
+import dartzee.`object`.Dart
 import dartzee.utils.sumScore
 
-data class DartzeePlayerState(override val pt: ParticipantEntity,
+data class DartzeePlayerState(override val wrappedParticipant: IWrappedParticipant,
                               override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                               override val currentRound: MutableList<Dart> = mutableListOf(),
                               override var isActive: Boolean = false,
@@ -16,6 +16,7 @@ data class DartzeePlayerState(override val pt: ParticipantEntity,
 {
     fun saveRoundResult(result: DartzeeRoundResult)
     {
+        val pt = wrappedParticipant.getIndividual(currentRoundNumber())
         val entity = DartzeeRoundResultEntity.factoryAndSave(result, pt, currentRoundNumber())
 
         if (!result.success)

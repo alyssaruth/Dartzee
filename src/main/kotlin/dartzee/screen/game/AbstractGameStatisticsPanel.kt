@@ -1,10 +1,10 @@
 package dartzee.screen.game
 
+import IWrappedParticipant
 import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.addUnique
-import dartzee.db.ParticipantEntity
 import dartzee.game.state.AbstractPlayerState
 import java.awt.BorderLayout
 import java.awt.Color
@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel
 abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<PlayerState>>: JPanel()
 {
     protected val playerNamesOrdered = mutableListOf<String>()
-    protected var participants: List<ParticipantEntity> = emptyList()
+    protected var participants: List<IWrappedParticipant> = emptyList()
     protected val hmPlayerToDarts = mutableMapOf<String, List<List<Dart>>>()
     protected val hmPlayerToStates = mutableMapOf<String, List<PlayerState>>()
 
@@ -50,12 +50,12 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
 
     fun showStats(playerStates: List<PlayerState>)
     {
-        this.participants = playerStates.map { it.pt }
+        this.participants = playerStates.map { it.wrappedParticipant }
 
         hmPlayerToDarts.clear()
         hmPlayerToStates.clear()
 
-        val hm = playerStates.groupBy { it.pt.getPlayerName() }
+        val hm = playerStates.groupBy { it.wrappedParticipant.getTeamName() }
         hmPlayerToStates.putAll(hm)
 
         hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.completedRounds }})
@@ -79,7 +79,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
 
         for (pt in participants)
         {
-            val playerName = pt.getPlayerName()
+            val playerName = pt.getTeamName()
             playerNamesOrdered.addUnique(playerName)
         }
 
@@ -124,16 +124,16 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
 
     protected fun getBestGameRow(fn: (s: List<Int>) -> Int) = prepareRow("Best Game") { playerName ->
         val playerPts = getFinishedParticipants(playerName)
-        val scores = playerPts.map { it.finalScore }
+        val scores = playerPts.map { it.getTeam().finalScore }
         if (scores.isEmpty()) null else fn(scores)
     }
     protected fun getAverageGameRow() = prepareRow("Avg Game") { playerName ->
         val playerPts = getFinishedParticipants(playerName)
-        val scores = playerPts.map { it.finalScore }
+        val scores = playerPts.map { it.getTeam().finalScore }
         if (scores.isEmpty()) null else MathsUtil.round(scores.average(), 2)
     }
 
-    private fun getFinishedParticipants(playerName: String) = participants.filter { it.getPlayerName() == playerName && it.finalScore > -1 }
+    private fun getFinishedParticipants(playerName: String) = participants.filter { it.getTeamName() == playerName && it.getTeam().finalScore > -1 }
 
     protected fun prepareRow(name: String, fn: (playerName: String) -> Any?): Array<Any?>
     {

@@ -1,5 +1,6 @@
 package dartzee.game.state
 
+import SingleParticipant
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.core.helper.verifyNotCalled
@@ -195,12 +196,14 @@ class TestAbstractPlayerState: AbstractTest()
     }
 }
 
-data class TestPlayerState(override val pt: ParticipantEntity,
+data class TestPlayerState(val participant: ParticipantEntity,
                            override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                            override val currentRound: MutableList<Dart> = mutableListOf(),
                            override var isActive: Boolean = false,
                            private val scoreSoFar: Int = -1): AbstractPlayerState<TestPlayerState>()
 {
+    override val wrappedParticipant = SingleParticipant(participant)
+
     override fun getScoreSoFar() = scoreSoFar
 }
 

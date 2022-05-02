@@ -36,7 +36,7 @@ abstract class GamePanelFixedLength<S : AbstractDartsScorer<PlayerState>, D: Dar
     private fun finishGame()
     {
         //Get the participants sorted by score so we can assign finishing positions
-        setFinishingPositions(getParticipants(), gameEntity)
+        setFinishingPositions(getParticipants().map { it.getTeam() }, gameEntity)
 
         allPlayersFinished()
 

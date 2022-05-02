@@ -1,14 +1,15 @@
 package dartzee.db
 
-import ICompetitor
+import IParticipant
 import dartzee.core.util.DateStatics
+import dartzee.core.util.getSqlDateNow
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
 /**
  * Represents a team in a game. Individual participants will point at this entity in team games.
  */
-class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(database), ICompetitor
+class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(database), IParticipant
 {
     //DB Fields
     var gameId = ""
@@ -32,6 +33,8 @@ class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(
     {
         indexes.add(listOf("GameId"))
     }
+
+    override fun saveToDatabase() = saveToDatabase(getSqlDateNow())
 
     companion object
     {

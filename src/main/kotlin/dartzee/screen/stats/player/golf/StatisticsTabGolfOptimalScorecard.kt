@@ -1,5 +1,6 @@
 package dartzee.screen.stats.player.golf
 
+import SingleParticipant
 import dartzee.`object`.Dart
 import dartzee.core.util.getSortedValues
 import dartzee.db.ParticipantEntity
@@ -71,7 +72,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         scorer.showGameId = true
         scorer.init(null)
 
-        val state = GolfPlayerState(ParticipantEntity(), hmHoleToBestDarts.values.toMutableList())
+        val state = GolfPlayerState(SingleParticipant(ParticipantEntity()), hmHoleToBestDarts.values.toMutableList())
         scorer.stateChanged(state)
 
         scorer.addGameIds(hmHoleToBestGameId.getSortedValues())
