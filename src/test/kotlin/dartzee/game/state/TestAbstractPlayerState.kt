@@ -6,9 +6,11 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
+import dartzee.drtDoubleEight
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -193,14 +195,40 @@ class TestAbstractPlayerState: AbstractTest()
         TestPlayerState(aiPt).isHuman() shouldBe false
         TestPlayerState(humanPt).isHuman() shouldBe true
     }
+
+    @Test
+    fun `Should correctly identify the current individual within a team`()
+    {
+        val pt1 = insertParticipant()
+        val pt2 = insertParticipant()
+
+        val state = TestTeamState(listOf(pt1, pt2))
+        state.currentIndividual() shouldBe pt1
+
+        state.dartThrown(drtDoubleEight())
+        state.commitRound()
+
+        state.currentIndividual() shouldBe pt2
+    }
 }
 
-data class TestPlayerState(override val pt: ParticipantEntity,
+data class TestPlayerState(val participant: ParticipantEntity,
                            override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                            override val currentRound: MutableList<Dart> = mutableListOf(),
                            override var isActive: Boolean = false,
                            private val scoreSoFar: Int = -1): AbstractPlayerState<TestPlayerState>()
 {
+    override val wrappedParticipant = SingleParticipant(participant)
+    override fun getScoreSoFar() = scoreSoFar
+}
+
+data class TestTeamState(val participants: List<ParticipantEntity>,
+                         override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+                         override val currentRound: MutableList<Dart> = mutableListOf(),
+                         override var isActive: Boolean = false,
+                         private val scoreSoFar: Int = -1): AbstractPlayerState<TestTeamState>()
+{
+    override val wrappedParticipant = TeamParticipant(insertTeam(), participants)
     override fun getScoreSoFar() = scoreSoFar
 }
 

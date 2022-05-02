@@ -8,6 +8,7 @@ import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.game.state.GolfPlayerState
+import dartzee.game.state.SingleParticipant
 import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.HoleBreakdownWrapper
 import dartzee.utils.calculateThreeDartAverage
@@ -232,7 +233,8 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         val endHole = getEndHoleForMode(mode)
 
         val rounds = (startHole..endHole).map(::getDartsForRound).toMutableList()
-        val state = GolfPlayerState(ParticipantEntity(), rounds)
+        // TODO - TEAMS - This will break for team play... just exclude from this stats tab?
+        val state = GolfPlayerState(SingleParticipant(ParticipantEntity()), rounds)
         scorer.stateChanged(state)
     }
 

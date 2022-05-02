@@ -1,18 +1,13 @@
 package dartzee.screen.game
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.db.TestAchievementEntity
 import dartzee.game.GameType
-import dartzee.game.state.GolfPlayerState
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertAchievement
-import dartzee.helper.insertPlayer
-import dartzee.helper.randomGuid
+import dartzee.helper.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.golf.GamePanelGolf
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
@@ -172,14 +167,11 @@ class TestGamePanelGolf: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-
             val scorer = assignScorer(player)
 
             currentPlayerNumber = 0
-            val pt = ParticipantEntity()
-            pt.playerId = currentPlayerId
 
-            addState(0, GolfPlayerState(pt), scorer)
+            addState(0, makeGolfPlayerState(player), scorer)
 
             currentRoundNumber = 1
         }

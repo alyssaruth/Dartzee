@@ -1,18 +1,17 @@
 package dartzee.screen.game
 
-import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.db.TestAchievementEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
-import dartzee.game.state.ClockPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
+import dartzee.helper.makeClockPlayerState
 import dartzee.helper.randomGuid
+import dartzee.`object`.Dart
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -116,10 +115,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
             val scorer = assignScorer(player)
 
             currentPlayerNumber = 0
-            val pt = ParticipantEntity()
-            pt.playerId = currentPlayerId
-
-            addState(0, ClockPlayerState(RoundTheClockConfig(ClockType.Standard, true), pt), scorer)
+            addState(0, makeClockPlayerState(player = player), scorer)
 
             currentRoundNumber = 1
         }

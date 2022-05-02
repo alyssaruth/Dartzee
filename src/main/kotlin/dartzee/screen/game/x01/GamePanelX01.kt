@@ -1,7 +1,7 @@
 package dartzee.screen.game.x01
 
-import dartzee.`object`.Dart
-import dartzee.achievements.*
+import dartzee.achievements.AchievementType
+import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.doBadLuck
 import dartzee.core.util.doChucklevision
@@ -9,9 +9,10 @@ import dartzee.core.util.doFawlty
 import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
+import dartzee.`object`.Dart
 import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
@@ -23,7 +24,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 {
     private val startingScore = Integer.parseInt(game.gameParams)
 
-    override fun factoryState(pt: ParticipantEntity) = X01PlayerState(startingScore, pt)
+    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(startingScore, pt)
     override fun factoryDartboard() = Dartboard()
 
     override fun saveDartsAndProceed()

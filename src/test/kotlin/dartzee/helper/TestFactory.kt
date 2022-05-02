@@ -12,6 +12,7 @@ import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
+import dartzee.game.state.SingleParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.stats.GameWrapper
 import dartzee.utils.InjectedThings.mainDatabase
@@ -99,7 +100,7 @@ fun makeClockPlayerState(clockType: ClockType = ClockType.Standard,
 {
     val config = RoundTheClockConfig(clockType, inOrder)
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
-    return ClockPlayerState(config, participant, completedRounds.toMutableList(), currentRound.toMutableList(), isActive)
+    return ClockPlayerState(config, SingleParticipant(participant), completedRounds.toMutableList(), currentRound.toMutableList(), isActive)
 }
 
 fun makeX01PlayerState(startingScore: Int = 501,
@@ -107,7 +108,7 @@ fun makeX01PlayerState(startingScore: Int = 501,
                        participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
                        completedRound: List<Dart> = listOf()): X01PlayerState
 {
-    return X01PlayerState(startingScore, participant, mutableListOf(completedRound))
+    return X01PlayerState(startingScore, SingleParticipant(participant), mutableListOf(completedRound))
 }
 
 fun makeX01PlayerStateWithRounds(startingScore: Int = 501,
@@ -117,7 +118,7 @@ fun makeX01PlayerStateWithRounds(startingScore: Int = 501,
                                  isActive: Boolean = false): X01PlayerState
 {
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
-    return X01PlayerState(startingScore, participant, completedRounds.toMutableList(), mutableListOf(), isActive)
+    return X01PlayerState(startingScore, SingleParticipant(participant), completedRounds.toMutableList(), mutableListOf(), isActive)
 }
 
 fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
@@ -125,7 +126,7 @@ fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
                         completedRounds: List<List<Dart>> = emptyList(),
                         currentRound: List<Dart> = emptyList()): GolfPlayerState
 {
-    return GolfPlayerState(participant, completedRounds.toMutableList(), currentRound.toMutableList())
+    return GolfPlayerState(SingleParticipant(participant), completedRounds.toMutableList(), currentRound.toMutableList())
 }
 
 fun makeGameWrapper(

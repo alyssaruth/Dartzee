@@ -78,9 +78,9 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         val fifthDarts = factoryRow("")
         val remainingDarts = factoryRow("Remainder")
 
-        for (i in playerNamesOrdered.indices)
+        for (i in participantNamesOrdered.indices)
         {
-            val playerName = playerNamesOrdered[i]
+            val playerName = participantNamesOrdered[i]
             val darts = getScoringDarts(playerName)
 
             val hmHitScoreToDarts = darts.groupBy{it.getHitScore()}

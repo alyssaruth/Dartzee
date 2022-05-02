@@ -91,7 +91,7 @@ class TestX01PlayerState: AbstractTest()
     @Test
     fun `Should take into account current round when computing the remaining score`()
     {
-        val state = X01PlayerState(301, insertParticipant())
+        val state = X01PlayerState(301, SingleParticipant(insertParticipant()))
         state.dartThrown(makeDart(20, 3))
         state.dartThrown(makeDart(20, 3))
         state.dartThrown(makeDart(20, 3))
@@ -159,7 +159,7 @@ class TestX01PlayerState: AbstractTest()
     @Test
     fun `Should set startingScore on darts as they are added`()
     {
-        val state = X01PlayerState(301, insertParticipant())
+        val state = X01PlayerState(301, SingleParticipant(insertParticipant()))
 
         val dartOne = makeDart(20, 1)
         val dartTwo = makeDart(25, 2)
@@ -190,7 +190,7 @@ class TestX01PlayerState: AbstractTest()
     }
     private fun stateWithCurrentRound(darts: List<Dart>): X01PlayerState
     {
-        val state = X01PlayerState(101, insertParticipant())
+        val state = X01PlayerState(101, SingleParticipant(insertParticipant()))
         darts.forEach { state.dartThrown(it) }
         return state
     }
