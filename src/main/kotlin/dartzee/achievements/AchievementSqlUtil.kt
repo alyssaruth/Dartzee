@@ -7,6 +7,7 @@ import dartzee.db.BulkInserter
 import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.utils.Database
+import dartzee.utils.getQuotedIdStr
 import java.sql.ResultSet
 
 const val X01_ROUNDS_TABLE = "X01Rounds"
@@ -31,9 +32,9 @@ fun appendPlayerSql(sb: StringBuilder, playerIds: List<String>, alias: String? =
         return
     }
 
-    val keys = playerIds.joinToString { "'$it'" }
+    val keys = playerIds.getQuotedIdStr()
     val column = if (alias != null) "$alias.PlayerId" else "PlayerId"
-    sb.append(" $whereOrAnd $column IN ($keys)")
+    sb.append(" $whereOrAnd $column IN $keys")
 }
 
 fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)

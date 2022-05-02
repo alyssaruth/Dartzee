@@ -61,8 +61,8 @@ object DevUtilities
         }
 
         val participantIds = ParticipantEntity().retrieveEntities("GameId = '$gameId'").map { it.rowId }
-        val ptSql = participantIds.joinToString { "'$it'" }
-        val dartCount = if (participantIds.isEmpty()) 0 else DartEntity().countWhere("ParticipantId IN ($ptSql)")
+        val ptSql = participantIds.getQuotedIdStr()
+        val dartCount = if (participantIds.isEmpty()) 0 else DartEntity().countWhere("ParticipantId IN $ptSql")
 
         val question = ("Purge all data for Game #$localId? The following rows will be deleted:"
                 + "\n\n Participant: ${participantIds.size} rows"
@@ -73,7 +73,7 @@ object DevUtilities
         {
             if (participantIds.isNotEmpty())
             {
-                DartEntity().deleteWhere("ParticipantId IN ($ptSql)")
+                DartEntity().deleteWhere("ParticipantId IN $ptSql")
             }
 
             ParticipantEntity().deleteWhere("GameId = '$gameId'")
