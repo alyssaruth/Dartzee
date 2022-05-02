@@ -33,7 +33,7 @@ fun appendPlayerSql(sb: StringBuilder, playerIds: List<String>, alias: String? =
 
     val keys = playerIds.getIdsStr { it }
     val column = if (alias != null) "$alias.PlayerId" else "PlayerId"
-    sb.append(" $whereOrAnd $column IN ($keys)")
+    sb.append(" $whereOrAnd $column IN $keys")
 }
 
 fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
