@@ -135,6 +135,27 @@ fun insertParticipant(uuid: String = randomGuid(),
     return pe
 }
 
+fun insertTeam(uuid: String = randomGuid(),
+               gameId: String = randomGuid(),
+               ordinal: Int = 1,
+               finishingPosition: Int = -1,
+               finalScore: Int = -1,
+               dtFinished: Timestamp = DateStatics.END_OF_TIME,
+               database: Database = mainDatabase): TeamEntity
+{
+    val t = TeamEntity(database)
+    t.rowId = uuid
+    t.gameId = gameId
+    t.ordinal = ordinal
+    t.finishingPosition = finishingPosition
+    t.finalScore = finalScore
+    t.dtFinished = dtFinished
+
+    t.saveToDatabase()
+
+    return t
+}
+
 fun insertDart(participant: ParticipantEntity,
                uuid: String = randomGuid(),
                roundNumber: Int = 1,

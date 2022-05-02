@@ -1,15 +1,15 @@
 package dartzee.screen.game.rtc
 
-import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.doBadLuck
 import dartzee.core.util.doForsyth
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
+import dartzee.game.state.IWrappedParticipant
+import dartzee.`object`.Dart
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
@@ -21,7 +21,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
 
     override fun factoryDartboard() = DartzeeDartboard()
-    override fun factoryState(pt: ParticipantEntity) = ClockPlayerState(config, pt)
+    override fun factoryState(pt: IWrappedParticipant) = ClockPlayerState(config, pt)
 
     override fun doAiTurn(model: DartsAiModel)
     {

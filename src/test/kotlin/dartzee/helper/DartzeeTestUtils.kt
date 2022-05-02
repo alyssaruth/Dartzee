@@ -14,6 +14,7 @@ import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.ParticipantEntity
 import dartzee.game.state.DartzeePlayerState
+import dartzee.game.state.SingleParticipant
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getAllPossibleSegments
 
@@ -100,7 +101,7 @@ fun makeDartzeePlayerState(participant: ParticipantEntity = insertParticipant(),
                            roundResults: List<DartzeeRoundResult> = emptyList()): DartzeePlayerState
 {
     val resultEntities = makeRoundResultEntities(*roundResults.toTypedArray())
-    return DartzeePlayerState(participant, completedRounds.toMutableList(), mutableListOf(), false, resultEntities.toMutableList())
+    return DartzeePlayerState(SingleParticipant(participant), completedRounds.toMutableList(), mutableListOf(), false, resultEntities.toMutableList())
 }
 
 fun makeSegmentStatus(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),

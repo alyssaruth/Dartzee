@@ -332,8 +332,8 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     {
         var success = true
         rowIds.chunked(50).forEach {
-            val idStr = it.joinToString{rowId -> "'$rowId'"}
-            val sql = "DELETE FROM $entityName WHERE RowId IN ($idStr)"
+            val idStr = it.getQuotedIdStr()
+            val sql = "DELETE FROM $entityName WHERE RowId IN $idStr"
             success = executeUpdate(sql)
         }
 
@@ -343,13 +343,13 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     fun dropUnexpectedTables(): List<String>
     {
         val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
-        val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
+        val tableNameSql = entities.getQuotedIdStr{ it.getTableNameUpperCase() }
 
         val sb = StringBuilder()
         sb.append(" SELECT TableName")
         sb.append(" FROM sys.systables")
         sb.append(" WHERE TableType = 'T'")
-        sb.append(" AND TableName NOT IN ($tableNameSql)")
+        sb.append(" AND TableName NOT IN $tableNameSql")
 
         val list = mutableListOf<String>()
         executeQuery(sb).use{ rs ->

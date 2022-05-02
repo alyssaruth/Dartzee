@@ -1,8 +1,9 @@
 package dartzee.db
 
+import dartzee.achievements.getWinAchievementType
 import dartzee.core.util.DateStatics
 import dartzee.core.util.StringUtil
-import dartzee.core.util.isEndOfTime
+import dartzee.core.util.getSqlDateNow
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
@@ -10,15 +11,15 @@ import dartzee.utils.InjectedThings.mainDatabase
  * Represents the participant of a game. This is a link between a player and a game, with additional information
  * such as play position and finishing position.
  */
-class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<ParticipantEntity>(database)
+class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<ParticipantEntity>(database), IParticipant
 {
     //DB Fields
     var gameId = ""
     var playerId = ""
     var ordinal = -1
-    var finishingPosition = -1
-    var finalScore = -1
-    var dtFinished = DateStatics.END_OF_TIME
+    override var finishingPosition = -1
+    override var finalScore = -1
+    override var dtFinished = DateStatics.END_OF_TIME
     var teamId = ""
 
     //In memory things
@@ -44,11 +45,23 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
 
     override fun getColumnsAllowedToBeUnset() = listOf("TeamId")
 
+    override fun saveToDatabase() = saveToDatabase(getSqlDateNow())
+
+    override fun saveFinishingPosition(game: GameEntity, position: Int)
+    {
+        super.saveFinishingPosition(game, position)
+
+        if (position == 1)
+        {
+            val type = getWinAchievementType(game.gameType)
+            AchievementEntity.insertAchievement(type, playerId, game.rowId, "$finalScore")
+        }
+    }
+
     /**
      * Helpers
      */
     fun isAi() = getPlayer().isAi()
-    fun isActive() = isEndOfTime(dtFinished)
     fun getFinishingPositionDesc(): String = StringUtil.convertOrdinalToText(finishingPosition)
     fun getModel() = getPlayer().getModel()
     fun getPlayerName() = getPlayer().name

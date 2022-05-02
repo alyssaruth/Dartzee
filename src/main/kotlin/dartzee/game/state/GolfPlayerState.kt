@@ -1,9 +1,8 @@
 package dartzee.game.state
 
 import dartzee.`object`.Dart
-import dartzee.db.ParticipantEntity
 
-data class GolfPlayerState(override val pt: ParticipantEntity,
+data class GolfPlayerState(override val wrappedParticipant: IWrappedParticipant,
                            override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
                            override val currentRound: MutableList<Dart> = mutableListOf(),
                            override var isActive: Boolean = false): AbstractPlayerState<GolfPlayerState>()

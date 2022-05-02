@@ -51,7 +51,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
     {
         val scoreSoFar = state.getScoreSoFar()
         lblResult.text = if (scoreSoFar > 0) "$scoreSoFar" else ""
-        updateResultColourForPosition(state.pt.finishingPosition)
+        updateResultColourForPosition(state.wrappedParticipant.participant.finishingPosition)
     }
 
     private fun setSelected(selected: Boolean)

@@ -1,14 +1,10 @@
 package dartzee.screen.game
 
-import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
 import dartzee.db.*
 import dartzee.game.GameType
-import dartzee.game.state.X01PlayerState
-import dartzee.helper.AbstractTest
-import dartzee.helper.insertPlayer
-import dartzee.helper.randomGuid
-import dartzee.helper.wipeTable
+import dartzee.helper.*
+import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GamePanelX01
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -134,10 +130,7 @@ class TestGamePanelX01: AbstractTest()
             val scorer = assignScorer(player)
 
             currentPlayerNumber = 0
-            val pt = ParticipantEntity()
-            pt.playerId = currentPlayerId
-
-            addState(0, X01PlayerState(501, pt), scorer)
+            addState(0, makeX01PlayerState(player = player), scorer)
 
             currentRoundNumber = 1
         }

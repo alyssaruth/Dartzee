@@ -1,20 +1,21 @@
 package dartzee.db
 
 import dartzee.core.util.DateStatics
+import dartzee.core.util.getSqlDateNow
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
 /**
  * Represents a team in a game. Individual participants will point at this entity in team games.
  */
-class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(database)
+class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(database), IParticipant
 {
     //DB Fields
     var gameId = ""
     var ordinal = -1
-    var finishingPosition = -1
-    var finalScore = -1
-    var dtFinished = DateStatics.END_OF_TIME
+    override var finishingPosition = -1
+    override var finalScore = -1
+    override var dtFinished = DateStatics.END_OF_TIME
 
     override fun getTableName() = EntityName.Team
 
@@ -31,6 +32,8 @@ class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(
     {
         indexes.add(listOf("GameId"))
     }
+
+    override fun saveToDatabase() = saveToDatabase(getSqlDateNow())
 
     companion object
     {
