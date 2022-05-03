@@ -2,11 +2,9 @@ package dartzee.bean
 
 import dartzee.core.bean.IDoubleClickListener
 import dartzee.core.bean.ScrollTable
-import dartzee.core.bean.ScrollTableOrdered
-import dartzee.core.util.DialogUtil
-import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
-import dartzee.utils.FeatureToggles
+import dartzee.logging.CODE_SWING_ERROR
+import dartzee.utils.InjectedThings
 import net.miginfocom.swing.MigLayout
 import java.awt.Component
 import java.awt.Dimension
@@ -16,17 +14,26 @@ import java.awt.event.KeyEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
-import javax.swing.JToggleButton
 
-class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
+class PlayerSelector: AbstractPlayerSelector<ScrollTable>()
 {
-    val tablePlayersToSelectFrom = ScrollTable()
-    val tablePlayersSelected = ScrollTableOrdered()
-    val btnSelect = JButton("")
-    val btnUnselect = JButton("")
-    private val btnPairs = JToggleButton("")
+    override val tablePlayersSelected = ScrollTable()
 
     init
+    {
+        super.render()
+    }
+}
+
+abstract class AbstractPlayerSelector<S: ScrollTable> : JPanel(), ActionListener, IDoubleClickListener
+{
+    abstract val tablePlayersSelected: S
+
+    val tablePlayersToSelectFrom = ScrollTable()
+    val btnSelect = JButton("")
+    val btnUnselect = JButton("")
+
+    protected fun render()
     {
         layout = MigLayout("", "[452px][100px][452px]", "[407px]")
 
@@ -35,38 +42,29 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         panelMovementOptions.minimumSize = Dimension(50, 10)
         add(panelMovementOptions, "cell 1 0,grow")
         panelMovementOptions.layout = MigLayout("al center center, wrap, gapy 20")
-        btnSelect.icon = ImageIcon(PlayerSelector::class.java.getResource("/buttons/rightArrow.png"))
+        btnSelect.icon = ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/rightArrow.png"))
         btnSelect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnSelect, "cell 0 0,alignx left,aligny top")
-        btnUnselect.icon = ImageIcon(PlayerSelector::class.java.getResource("/buttons/leftArrow.png"))
+        btnUnselect.icon = ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/leftArrow.png"))
         btnUnselect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnUnselect, "cell 0 1,alignx left,aligny top")
         add(tablePlayersSelected, "cell 2 0,alignx left,growy")
-        btnPairs.icon = ImageIcon(javaClass.getResource("/buttons/teams.png"))
-        btnPairs.toolTipText = "Play in pairs"
-        tablePlayersSelected.addButtonToOrderingPanel(btnPairs, 3)
 
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)
 
         btnSelect.addActionListener(this)
         btnUnselect.addActionListener(this)
-        btnPairs.addActionListener(this)
 
         addKeyListener(tablePlayersSelected)
         addKeyListener(tablePlayersToSelectFrom)
     }
 
-    fun init()
+    open fun init()
     {
         val allPlayers = PlayerEntity.retrievePlayers("")
         tablePlayersToSelectFrom.initPlayerTableModel(allPlayers)
         tablePlayersSelected.initPlayerTableModel()
-
-        val nimbusRenderer = tablePlayersSelected.getBuiltInRenderer()
-        tablePlayersSelected.setTableRenderer(TeamRenderer(nimbusRenderer) { btnPairs.isSelected })
-
-        btnPairs.isVisible = FeatureToggles.teamMode
     }
 
     fun init(selectedPlayers: List<PlayerEntity>)
@@ -107,37 +105,6 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         }
     }
 
-    /**
-     * Is this selection valid for a game/match?
-     */
-    fun valid(match: Boolean): Boolean
-    {
-        val selectedPlayers = getSelectedPlayers()
-        val rowCount = selectedPlayers.size
-        if (rowCount < 1)
-        {
-            DialogUtil.showError("You must select at least 1 player.")
-            return false
-        }
-
-        val playerOrTeamDesc = if (btnPairs.isSelected) "teams" else "players"
-        val matchMinimum = if (btnPairs.isSelected) 4 else 2
-        if (match && rowCount < matchMinimum)
-        {
-            DialogUtil.showError("You must select at least 2 $playerOrTeamDesc for a match.")
-            return false
-        }
-
-        val maxPlayers = if (btnPairs.isSelected) MAX_PLAYERS * 2 else MAX_PLAYERS
-        if (rowCount > maxPlayers)
-        {
-            DialogUtil.showError("You cannot select more than $MAX_PLAYERS $playerOrTeamDesc.")
-            return false
-        }
-
-        return true
-    }
-
     private fun moveRows(source: Any)
     {
         when (source)
@@ -147,16 +114,11 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         }
     }
 
-    private fun togglePairs()
-    {
-        tablePlayersSelected.repaint()
-    }
-
     override fun actionPerformed(e: ActionEvent) {
         when (e.source)
         {
             btnSelect, btnUnselect -> moveRows(e.source)
-            btnPairs -> togglePairs()
+            else -> InjectedThings.logger.error(CODE_SWING_ERROR, "Unexpected actionPerformed: ${e.source}")
         }
     }
     override fun doubleClicked(source: Component) = moveRows(source)
