@@ -120,7 +120,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         val dm = DartsMatchEntity()
         dm.getPlayerCount() shouldBe 0
 
-        dm.players.add(PlayerEntity())
+        dm.players = listOf(PlayerEntity())
         dm.getPlayerCount() shouldBe 1
     }
 

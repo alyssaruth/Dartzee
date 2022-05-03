@@ -19,7 +19,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
     private var rowNamePlural: String? = null
     private var fgColor: Color? = null
     private var sortingEnabled = true
-    var rowSorter: TableRowSorter<TableModel>? = null
+    private var rowSorter: TableRowSorter<TableModel>? = null
 
     private val listeners = ArrayList<RowSelectionListener>()
     private val clickListeners = ArrayList<IDoubleClickListener>()
@@ -230,6 +230,13 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
             if (desc) it.toggleSortOrder(columnIndex)
         }
     }
+
+    fun setTableRenderer(renderer: TableCellRenderer)
+    {
+        table.setDefaultRenderer(Object::class.java, renderer)
+    }
+
+    fun getBuiltInRenderer(): TableCellRenderer = table.getDefaultRenderer(Object::class.java)
 
     fun setRenderer(columnIndex: Int, renderer: TableCellRenderer?)
     {

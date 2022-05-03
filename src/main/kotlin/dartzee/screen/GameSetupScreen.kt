@@ -196,7 +196,7 @@ class GameSetupScreen : EmbeddedScreen()
         return rules.map { it.toDto() }
     }
 
-    private fun factoryMatch(players: MutableList<PlayerEntity>): DartsMatchEntity?
+    private fun factoryMatch(players: List<PlayerEntity>): DartsMatchEntity?
     {
         val match = when
         {

@@ -1,5 +1,6 @@
 package dartzee.bean
 
+import com.github.alexburlton.swingtest.clickChild
 import dartzee.core.helper.doubleClick
 import dartzee.core.helper.processKeyPress
 import dartzee.db.PlayerEntity
@@ -11,6 +12,7 @@ import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
+import javax.swing.JToggleButton
 
 class TestPlayerSelector: AbstractTest()
 {
@@ -243,6 +245,19 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
+    fun `Should be invalid for a match of 1 team`()
+    {
+        val alyssa = insertPlayer()
+        val alex = insertPlayer()
+        val selector = PlayerSelector()
+        selector.init(listOf(alex, alyssa))
+        selector.clickChild<JToggleButton>()
+
+        selector.valid(true) shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You must select at least 2 teams for a match.")
+    }
+
+    @Test
     fun `Should always be valid for up to 6 players`()
     {
         val p1 = insertPlayer()
@@ -253,6 +268,25 @@ class TestPlayerSelector: AbstractTest()
         {
             val selector = PlayerSelector()
             selector.init(players)
+
+            selector.valid(true) shouldBe true
+            selector.valid(false) shouldBe true
+            dialogFactory.errorsShown.shouldBeEmpty()
+
+            val p = insertPlayer()
+            players.add(p)
+        }
+    }
+
+    @Test
+    fun `Should always be valid for up to 12 players in team play`()
+    {
+        val players = mutableListOf(insertPlayer(), insertPlayer(), insertPlayer(), insertPlayer())
+        while (players.size <= 12)
+        {
+            val selector = PlayerSelector()
+            selector.init(players)
+            selector.clickChild<JToggleButton>()
 
             selector.valid(true) shouldBe true
             selector.valid(false) shouldBe true
@@ -278,5 +312,23 @@ class TestPlayerSelector: AbstractTest()
         dialogFactory.errorsShown.clear()
         selector.valid(false) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 players.")
+    }
+
+    @Test
+    fun `Should not allow more than 12 players in team play`()
+    {
+        val players = mutableListOf<PlayerEntity>()
+        repeat(13) { players.add(insertPlayer()) }
+
+        val selector = PlayerSelector()
+        selector.init(players)
+        selector.clickChild<JToggleButton>()
+
+        selector.valid(true) shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 teams.")
+
+        dialogFactory.errorsShown.clear()
+        selector.valid(false) shouldBe false
+        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 teams.")
     }
 }
