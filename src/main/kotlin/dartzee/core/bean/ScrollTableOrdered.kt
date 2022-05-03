@@ -6,6 +6,7 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import javax.swing.AbstractButton
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -47,7 +48,7 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
         btnRandomize.addActionListener(this)
     }
 
-    fun addButtonToOrderingPanel(btn: JButton, row: Int)
+    fun addButtonToOrderingPanel(btn: AbstractButton, row: Int)
     {
         btn.preferredSize = Dimension(40, 40)
         panelOrdering.add(btn, "cell 0 $row")

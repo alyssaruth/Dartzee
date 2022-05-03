@@ -27,7 +27,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
      */
     var gameParams = ""
     var gameType: GameType = GameType.X01
-    var players = mutableListOf<PlayerEntity>()
+    var players = listOf<PlayerEntity>()
 
     private var currentOrdinal = 0
     private var hmPositionToPoints: Map<Int, Int>? = null
@@ -129,11 +129,11 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
     {
         if (players.size == 2)
         {
-            players.reverse()
+            players = players.reversed()
         }
         else
         {
-            players.shuffle()
+            players = players.shuffled()
         }
     }
 
