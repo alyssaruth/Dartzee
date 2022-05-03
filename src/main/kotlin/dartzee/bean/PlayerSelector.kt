@@ -6,21 +6,17 @@ import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
 import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
-import dartzee.utils.DartsColour
 import dartzee.utils.FeatureToggles
-import dartzee.utils.translucent
 import net.miginfocom.swing.MigLayout
-import java.awt.Color
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
-import javax.swing.*
-import javax.swing.border.CompoundBorder
-import javax.swing.border.EmptyBorder
-import javax.swing.border.MatteBorder
-import javax.swing.table.TableCellRenderer
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JPanel
+import javax.swing.JToggleButton
 
 class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
 {
@@ -68,7 +64,7 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         tablePlayersSelected.initPlayerTableModel()
 
         val nimbusRenderer = tablePlayersSelected.getBuiltInRenderer()
-        tablePlayersSelected.setTableRenderer(TeamRenderer(nimbusRenderer))
+        tablePlayersSelected.setTableRenderer(TeamRenderer(nimbusRenderer) { btnPairs.isSelected })
 
         btnPairs.isVisible = FeatureToggles.teamMode
     }
@@ -164,32 +160,4 @@ class PlayerSelector : JPanel(), ActionListener, IDoubleClickListener
         }
     }
     override fun doubleClicked(source: Component) = moveRows(source)
-
-    private inner class TeamRenderer(private val baseRenderer: TableCellRenderer): TableCellRenderer
-    {
-        private val colors = listOf(Color.RED, Color.GREEN, Color.CYAN, Color.YELLOW, DartsColour.PURPLE, DartsColour.ORANGE)
-
-        override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-        {
-            val c = baseRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JComponent
-
-            val rawColour = if (row/2 < colors.size) colors[row/2] else null
-            if (btnPairs.isSelected)
-            {
-                c.background = if (isSelected) rawColour else rawColour?.translucent()
-                c.foreground = Color.BLACK
-
-                val padding = if (column == 0) 0 else 5
-                val lineBorder = MatteBorder(0, 0, row % 2, 0, Color.BLACK)
-                val padBorder = EmptyBorder(0, padding, 0, 0)
-                c.border = CompoundBorder(lineBorder, padBorder)
-            }
-            else if (!isSelected)
-            {
-                c.background = null
-            }
-
-            return c
-        }
-    }
 }
