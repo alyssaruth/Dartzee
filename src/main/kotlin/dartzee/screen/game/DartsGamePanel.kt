@@ -14,6 +14,7 @@ import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
+import dartzee.game.state.TeamParticipant
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
@@ -175,23 +176,55 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     /**
      * Regular methods
      */
-    fun startNewGame(players: List<PlayerEntity>)
+    fun startNewGame(players: List<PlayerEntity>, pairMode: Boolean)
     {
-        players.forEachIndexed { ix, player ->
-            val gameId = gameEntity.rowId
-            val participant = ParticipantEntity.factoryAndSave(gameId, player, ix)
-            addParticipant(participant)
-
-            val scorer = assignScorer(player)
-            val state = factoryState(SingleParticipant(participant))
-            state.addListener(scorer)
-            addState(ix, state, scorer)
-        }
+        prepareParticipants(players, pairMode)
 
         initForAi(hasAi())
         dartboard.paintDartboardCached()
 
         nextTurn()
+    }
+
+    private fun prepareParticipants(players: List<PlayerEntity>, pairMode: Boolean)
+    {
+        if (pairMode)
+        {
+            val groups = players.chunked(2)
+            groups.forEachIndexed { ordinal, group ->
+                if (group.size == 1) addSinglePlayer(group.first(), ordinal) else addTeam(group, ordinal)
+            }
+        }
+        else
+        {
+            players.forEachIndexed { ordinal, player -> addSinglePlayer(player, ordinal) }
+        }
+    }
+
+    private fun addTeam(players: List<PlayerEntity>, ordinal: Int)
+    {
+        val team = TeamEntity.factoryAndSave(gameEntity.rowId, ordinal)
+        val pts = players.mapIndexed { playerIx, player ->
+            ParticipantEntity.factoryAndSave(gameEntity.rowId, player, playerIx, team.rowId)
+        }
+
+        addParticipant(TeamParticipant(team, pts), ordinal)
+    }
+
+    private fun addSinglePlayer(player: PlayerEntity, ordinal: Int)
+    {
+        val participant = ParticipantEntity.factoryAndSave(gameEntity.rowId, player, ordinal)
+        addParticipant(participant)
+
+        addParticipant(SingleParticipant(participant), ordinal)
+    }
+
+    private fun addParticipant(wrappedPt: IWrappedParticipant, ordinal: Int)
+    {
+        val scorer = assignScorer(wrappedPt)
+        val state = factoryState(wrappedPt)
+        state.addListener(scorer)
+        addState(ordinal, state, scorer)
     }
 
     protected fun nextTurn()
@@ -293,8 +326,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             val pt = participants[i]
             addParticipant(pt)
 
-            val scorer = assignScorer(pt.getPlayer())
-            val state = factoryState(SingleParticipant(pt))
+            // TODO - TEAMS - sort out loading
+            val wrappedPt = SingleParticipant(pt)
+            val scorer = assignScorer(wrappedPt)
+            val state = factoryState(wrappedPt)
             state.addListener(scorer)
             addState(i, state, scorer)
         }

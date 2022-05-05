@@ -37,7 +37,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         panelOther.add(panelOtherScorecard)
         panelOtherScorecard.layout = BorderLayout(0, 0)
         val scorer = DartsScorerGolf()
-        scorer.init(null)
+        scorer.initEmpty()
         panelMyScorecard.add(scorer, BorderLayout.CENTER)
     }
 
@@ -70,7 +70,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         }
 
         scorer.showGameId = true
-        scorer.init(null)
+        scorer.initEmpty()
 
         val state = GolfPlayerState(SingleParticipant(ParticipantEntity()), hmHoleToBestDarts.values.toMutableList())
         scorer.stateChanged(state)

@@ -86,13 +86,14 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
 
     companion object
     {
-        fun factoryAndSave(gameId: String, player: PlayerEntity, ordinal: Int): ParticipantEntity
+        fun factoryAndSave(gameId: String, player: PlayerEntity, ordinal: Int, teamId: String = ""): ParticipantEntity
         {
             val gp = ParticipantEntity()
             gp.assignRowId()
             gp.gameId = gameId
             gp.playerId = player.rowId
             gp.ordinal = ordinal
+            gp.teamId = teamId
 
             //Cache the actual player entity so we can access its strategy etc
             gp.setPlayer(player)

@@ -16,31 +16,41 @@ import dartzee.screen.game.x01.X01MatchScreen
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.insertDartzeeRules
 
+data class GameLaunchParams(
+    val players: List<PlayerEntity>,
+    val gameType: GameType,
+    val gameParams: String,
+    val pairMode: Boolean,
+    val dartzeeDtos: List<DartzeeRuleDto>? = null
+) {
+    fun teamCount(): Int = if (pairMode) players.chunked(2).size else players.size
+}
+
 class GameLauncher
 {
-    fun launchNewMatch(match: DartsMatchEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
+    fun launchNewMatch(match: DartsMatchEntity, params: GameLaunchParams)
     {
-        val scrn = factoryMatchScreen(match, match.players)
+        val scrn = factoryMatchScreen(match, params.players)
 
         val game = GameEntity.factoryAndSave(match)
 
-        insertDartzeeRules(game.rowId, dartzeeDtos)
+        insertDartzeeRules(game.rowId, params.dartzeeDtos)
 
         val panel = scrn.addGameToMatch(game)
-        panel.startNewGame(match.players)
+        panel.startNewGame(params.players, params.pairMode)
     }
 
-    fun launchNewGame(players: List<PlayerEntity>, gameType: GameType, gameParams: String, dartzeeDtos: List<DartzeeRuleDto>? = null)
+    fun launchNewGame(params: GameLaunchParams)
     {
         //Create and save a game
-        val gameEntity = GameEntity.factoryAndSave(gameType, gameParams)
+        val gameEntity = GameEntity.factoryAndSave(params.gameType, params.gameParams)
 
-        insertDartzeeRules(gameEntity.rowId, dartzeeDtos)
+        insertDartzeeRules(gameEntity.rowId, params.dartzeeDtos)
 
         //Construct the screen and factory a tab
-        val scrn = DartsGameScreen(gameEntity, players.size)
+        val scrn = DartsGameScreen(gameEntity, params.teamCount())
         scrn.isVisible = true
-        scrn.gamePanel.startNewGame(players)
+        scrn.gamePanel.startNewGame(params.players, params.pairMode)
     }
 
     fun loadAndDisplayGame(gameId: String)

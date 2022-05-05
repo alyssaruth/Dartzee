@@ -4,6 +4,7 @@ import dartzee.bean.PlayerAvatar
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.db.PlayerEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import java.awt.Color
@@ -68,21 +69,42 @@ abstract class AbstractScorer : JPanel()
     abstract fun getNumberOfColumns(): Int
     abstract fun initImpl()
 
-    fun init(player: PlayerEntity?)
+    private fun populate(name: String)
     {
-        lblName.isVisible = player != null
-        lblAvatar.isVisible = player != null
-        panelAvatar.isVisible = player != null
+        lblName.isVisible = true
+        lblAvatar.isVisible = true
+        panelAvatar.isVisible = true
 
+        lblName.text = name
+    }
+
+    fun init(wrappedParticipant: IWrappedParticipant)
+    {
+        populate(wrappedParticipant.getParticipantName())
+        commonInit()
+    }
+
+    fun init(player: PlayerEntity)
+    {
         //Sometimes we pass in a null player for the purpose of showing stats
-        if (player != null)
-        {
-            val playerName = player.name
-            lblName.text = playerName
-            lblAvatar.init(player, false)
-            playerId = player.rowId
-        }
+        populate(player.name)
+        lblAvatar.init(player, false)
+        playerId = player.rowId
 
+        commonInit()
+    }
+
+    fun initEmpty()
+    {
+        lblName.isVisible = false
+        lblAvatar.isVisible = false
+        panelAvatar.isVisible = false
+
+        commonInit()
+    }
+
+    private fun commonInit()
+    {
         lblResult.text = ""
 
         //TableModel

@@ -3,6 +3,7 @@ package dartzee.screen.dartzee
 import dartzee.db.DartsMatchEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.`object`.GameLaunchParams
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.GameSetupScreen
 import dartzee.screen.ScreenCache
@@ -15,6 +16,7 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
 
     var match: DartsMatchEntity? = null
     var players: List<PlayerEntity> = listOf()
+    var pairMode: Boolean = false
 
     init
     {
@@ -23,10 +25,11 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
 
     override fun initialise() {}
 
-    fun setState(match: DartsMatchEntity?, players: List<PlayerEntity>)
+    fun setState(match: DartsMatchEntity?, players: List<PlayerEntity>, pairMode: Boolean)
     {
         this.match = match
         this.players = players
+        this.pairMode = pairMode
 
         btnNext.text = getNextText() + " >"
     }
@@ -34,14 +37,15 @@ class DartzeeRuleSetupScreen : EmbeddedScreen()
     override fun nextPressed()
     {
         val dtos = dartzeeRulePanel.getRules()
+        val launchParams = GameLaunchParams(players, GameType.DARTZEE, "", pairMode, dtos)
 
         if (match != null)
         {
-            gameLauncher.launchNewMatch(match!!, dtos)
+            gameLauncher.launchNewMatch(match!!, launchParams)
         }
         else
         {
-            gameLauncher.launchNewGame(players, GameType.DARTZEE, "", dtos)
+            gameLauncher.launchNewGame(launchParams)
         }
     }
 

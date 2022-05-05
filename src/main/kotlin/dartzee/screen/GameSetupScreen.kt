@@ -10,6 +10,7 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.`object`.GameLaunchParams
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.getFilterPanel
@@ -174,13 +175,14 @@ class GameSetupScreen : EmbeddedScreen()
 
         val rules = retrieveDartzeeRules()
 
+        val launchParams = GameLaunchParams(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), playerSelector.pairMode(), rules)
         if (match == null)
         {
-            gameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
+            gameLauncher.launchNewGame(launchParams)
         }
         else
         {
-            gameLauncher.launchNewMatch(match, rules)
+            gameLauncher.launchNewMatch(match, launchParams)
         }
     }
 
@@ -234,7 +236,7 @@ class GameSetupScreen : EmbeddedScreen()
         }
 
         val scrn = ScreenCache.get<DartzeeRuleSetupScreen>()
-        scrn.setState(match, selectedPlayers)
+        scrn.setState(match, selectedPlayers, playerSelector.pairMode())
         ScreenCache.switch(scrn)
     }
 }

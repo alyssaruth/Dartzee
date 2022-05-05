@@ -95,7 +95,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         val panel = addGameToMatch(nextGame)
 
         match.shufflePlayers()
-        panel.startNewGame(match.players)
+        panel.startNewGame(match.players, false) // TODO - TEAMS - ugh. Need some kind of entity to keep track of all this stuff I think?
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)

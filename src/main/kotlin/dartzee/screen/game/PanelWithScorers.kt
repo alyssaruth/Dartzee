@@ -2,6 +2,7 @@ package dartzee.screen.game
 
 import dartzee.core.util.ceilDiv
 import dartzee.db.PlayerEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.AbstractScorer
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -59,6 +60,16 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         westScorers.forEach { panelWest.add(it, "growy") }
     }
 
+    fun assignScorer(player: IWrappedParticipant): S
+    {
+        val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player")
+        scorer.init(player)
+        return scorer
+    }
+
+    /**
+     * TODO - TEAMS - Tidy
+     */
     fun assignScorer(player: PlayerEntity): S
     {
         val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player")
