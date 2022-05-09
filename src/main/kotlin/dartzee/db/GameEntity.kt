@@ -56,16 +56,6 @@ class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(
     /**
      * Helpers
      */
-    fun getParticipantCount(): Int
-    {
-        val sb = StringBuilder()
-        sb.append("SELECT COUNT(1) FROM ")
-        sb.append(ParticipantEntity().getTableName())
-        sb.append(" WHERE GameId = '$rowId'")
-
-        return database.executeQueryAggregate(sb)
-    }
-
     fun isFinished() = !isEndOfTime(dtFinish)
     fun getTypeDesc() = gameType.getDescription(gameParams)
 

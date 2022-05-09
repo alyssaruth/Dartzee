@@ -10,7 +10,7 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.`object`.GameLaunchParams
+import dartzee.game.GameLaunchParams
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.getFilterPanel

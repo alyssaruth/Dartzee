@@ -5,6 +5,7 @@ import dartzee.core.util.getLongestStreak
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
 import dartzee.db.DartzeeRoundResultEntity
+import dartzee.game.ParticipantName
 import dartzee.game.state.DartzeePlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 
@@ -27,7 +28,7 @@ open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayer
     override fun getStartOfSectionRows() = listOf("Longest Streak")
 
     private fun getPeakScoreRow() = prepareRow("Peak Score", ::getPeakScore)
-    private fun getPeakScore(playerName: String): Any?
+    private fun getPeakScore(playerName: ParticipantName): Any?
     {
         val states = hmPlayerToStates[playerName] ?: return null
         return states.mapNotNull { it.getPeakScore() }.maxOrNull()
@@ -51,7 +52,7 @@ open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayer
         allResults.filter { it.success }.map { it.ruleNumber }.maxOrNull()
     }
 
-    private fun getRoundResults(playerName: String): List<List<DartzeeRoundResultEntity>>
+    private fun getRoundResults(playerName: ParticipantName): List<List<DartzeeRoundResultEntity>>
     {
         val states = hmPlayerToStates[playerName]
         return states?.map { it.roundResults } ?: listOf()

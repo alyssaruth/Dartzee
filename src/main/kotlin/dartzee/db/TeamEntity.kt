@@ -12,7 +12,7 @@ class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(
 {
     //DB Fields
     var gameId = ""
-    var ordinal = -1
+    override var ordinal = -1
     override var finishingPosition = -1
     override var finalScore = -1
     override var dtFinished = DateStatics.END_OF_TIME

@@ -1,7 +1,7 @@
 package e2e
 
 import com.github.alexburlton.swingtest.getChild
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import com.github.alexburlton.swingtest.awaitCondition
 import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity

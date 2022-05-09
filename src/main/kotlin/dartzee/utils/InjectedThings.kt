@@ -1,9 +1,9 @@
 package dartzee.utils
 
-import dartzee.`object`.GameLauncher
 import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.SimulationRunner
 import dartzee.dartzee.*
+import dartzee.game.GameLauncher
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory

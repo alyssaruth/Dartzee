@@ -1,7 +1,5 @@
 package dartzee.screen.game
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
 import dartzee.achievements.getWinAchievementType
@@ -9,13 +7,15 @@ import dartzee.ai.DartsAiModel
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.*
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.DartzeeRuleEntity
+import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
-import dartzee.game.state.SingleParticipant
-import dartzee.game.state.TeamParticipant
 import dartzee.listener.DartboardListener
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
@@ -176,9 +176,9 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     /**
      * Regular methods
      */
-    fun startNewGame(players: List<PlayerEntity>, pairMode: Boolean)
+    fun startNewGame(participants: List<IWrappedParticipant>)
     {
-        prepareParticipants(players, pairMode)
+        participants.forEach(::addParticipant)
 
         initForAi(hasAi())
         dartboard.paintDartboardCached()
@@ -186,45 +186,17 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         nextTurn()
     }
 
-    private fun prepareParticipants(players: List<PlayerEntity>, pairMode: Boolean)
+    private fun addParticipant(wrappedPt: IWrappedParticipant)
     {
-        if (pairMode)
+        if (parentWindow is DartsMatchScreen<*>)
         {
-            val groups = players.chunked(2)
-            groups.forEachIndexed { ordinal, group ->
-                if (group.size == 1) addSinglePlayer(group.first(), ordinal) else addTeam(group, ordinal)
-            }
-        }
-        else
-        {
-            players.forEachIndexed { ordinal, player -> addSinglePlayer(player, ordinal) }
-        }
-    }
-
-    private fun addTeam(players: List<PlayerEntity>, ordinal: Int)
-    {
-        val team = TeamEntity.factoryAndSave(gameEntity.rowId, ordinal)
-        val pts = players.mapIndexed { playerIx, player ->
-            ParticipantEntity.factoryAndSave(gameEntity.rowId, player, playerIx, team.rowId)
+            parentWindow.addParticipant(gameEntity.localId, wrappedPt)
         }
 
-        addParticipant(TeamParticipant(team, pts), ordinal)
-    }
-
-    private fun addSinglePlayer(player: PlayerEntity, ordinal: Int)
-    {
-        val participant = ParticipantEntity.factoryAndSave(gameEntity.rowId, player, ordinal)
-        addParticipant(participant)
-
-        addParticipant(SingleParticipant(participant), ordinal)
-    }
-
-    private fun addParticipant(wrappedPt: IWrappedParticipant, ordinal: Int)
-    {
         val scorer = assignScorer(wrappedPt)
         val state = factoryState(wrappedPt)
         state.addListener(scorer)
-        addState(ordinal, state, scorer)
+        addState(wrappedPt.ordinal, state, scorer)
     }
 
     protected fun nextTurn()
@@ -265,12 +237,14 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         return "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
     }
 
-    fun loadGame()
+    fun loadGame(participants: List<IWrappedParticipant>)
     {
         val gameId = gameEntity.rowId
 
-        //Get the participants, sorted by Ordinal. Assign their scorers.
-        loadParticipants(gameId)
+        // Initialise participants
+        participants.forEach(::addParticipant)
+        initForAi(hasAi())
+
         loadScoresAndCurrentPlayer(gameId)
 
         //Paint the dartboard - always do this, in case of resuming with stats open
@@ -311,30 +285,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             btnStats.isSelected = true
             viewStats()
         }
-    }
-
-    /**
-     * Retrieve the ordered participants and assign their scorers
-     */
-    private fun loadParticipants(gameId: String)
-    {
-        val whereSql = "GameId = '$gameId' ORDER BY Ordinal ASC"
-        val participants = ParticipantEntity().retrieveEntities(whereSql)
-
-        for (i in participants.indices)
-        {
-            val pt = participants[i]
-            addParticipant(pt)
-
-            // TODO - TEAMS - sort out loading
-            val wrappedPt = SingleParticipant(pt)
-            val scorer = assignScorer(wrappedPt)
-            val state = factoryState(wrappedPt)
-            state.addListener(scorer)
-            addState(i, state, scorer)
-        }
-
-        initForAi(hasAi())
     }
 
     /**
@@ -695,14 +645,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
         panelCenter.revalidate()
         panelCenter.repaint()
-    }
-
-    private fun addParticipant(participant: ParticipantEntity)
-    {
-        if (parentWindow is DartsMatchScreen<*>)
-        {
-            parentWindow.addParticipant(gameEntity.localId, participant)
-        }
     }
 
     fun achievementUnlocked(playerId: String, achievement: AbstractAchievement)

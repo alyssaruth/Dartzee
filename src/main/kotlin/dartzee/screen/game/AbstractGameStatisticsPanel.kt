@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.addUnique
+import dartzee.game.ParticipantName
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import java.awt.BorderLayout
@@ -18,10 +19,10 @@ import javax.swing.table.DefaultTableModel
  */
 abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<PlayerState>>: JPanel()
 {
-    protected val participantNamesOrdered = mutableListOf<String>()
+    protected val participantNamesOrdered = mutableListOf<ParticipantName>()
     protected var participants: List<IWrappedParticipant> = emptyList()
-    protected val hmPlayerToDarts = mutableMapOf<String, List<List<Dart>>>()
-    protected val hmPlayerToStates = mutableMapOf<String, List<PlayerState>>()
+    protected val hmPlayerToDarts = mutableMapOf<ParticipantName, List<List<Dart>>>()
+    protected val hmPlayerToStates = mutableMapOf<ParticipantName, List<PlayerState>>()
 
     var tm = DefaultTableModel()
 
@@ -109,7 +110,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         tm.addRow(row)
     }
 
-    protected fun getFlattenedDarts(participantName: String): List<Dart>
+    protected fun getFlattenedDarts(participantName: ParticipantName): List<Dart>
     {
         val rounds = hmPlayerToDarts[participantName]
         return rounds?.flatten() ?: listOf()
@@ -133,9 +134,9 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         if (scores.isEmpty()) null else MathsUtil.round(scores.average(), 2)
     }
 
-    private fun getFinishedParticipants(participantName: String) = participants.filter { it.getParticipantName() == participantName && it.participant.finalScore > -1 }
+    private fun getFinishedParticipants(participantName: ParticipantName) = participants.filter { it.getParticipantName() == participantName && it.participant.finalScore > -1 }
 
-    protected fun prepareRow(name: String, fn: (participantName: String) -> Any?): Array<Any?>
+    protected fun prepareRow(name: String, fn: (participantName: ParticipantName) -> Any?): Array<Any?>
     {
         val row = factoryRow(name)
 

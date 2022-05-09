@@ -4,9 +4,9 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
-import dartzee.db.PlayerEntity
+import dartzee.game.prepareParticipants
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.insertDartzeeRules
@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener
 abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     private val matchPanel: MatchSummaryPanel<PlayerState>,
     val match: DartsMatchEntity,
-    players: List<PlayerEntity>): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
+    participants: List<IWrappedParticipant>): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
     override val windowName = match.getMatchDesc()
 
@@ -33,7 +33,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         tabbedPane.addTab("Match", matchPanel)
         tabbedPane.addChangeListener(this)
 
-        matchPanel.init(players)
+        matchPanel.init(participants)
 
         title = match.getMatchDesc()
     }
@@ -61,7 +61,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         return tab
     }
 
-    fun addParticipant(localId: Long, participant: ParticipantEntity)
+    fun addParticipant(localId: Long, participant: IWrappedParticipant)
     {
         matchPanel.addParticipant(localId, participant)
     }
@@ -86,16 +86,19 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         val nextGame = GameEntity.factoryAndSave(match)
 
         //Insert dartzee rules if applicable
-        val priorGamePanel = hmGameIdToTab.values.first()
-        if (priorGamePanel is GamePanelDartzee)
+        val firstGamePanel = hmGameIdToTab.values.first()
+        if (firstGamePanel is GamePanelDartzee)
         {
-            insertDartzeeRules(nextGame.rowId, priorGamePanel.dtos)
+            insertDartzeeRules(nextGame.rowId, firstGamePanel.dtos)
         }
+
+        val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
+        val newParticipants = prepareParticipants(firstGameParticipants, nextGame)
 
         val panel = addGameToMatch(nextGame)
 
         match.shufflePlayers()
-        panel.startNewGame(match.players, false) // TODO - TEAMS - ugh. Need some kind of entity to keep track of all this stuff I think?
+        panel.startNewGame(newParticipants)
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)

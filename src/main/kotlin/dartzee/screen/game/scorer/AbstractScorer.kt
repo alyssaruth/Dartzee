@@ -80,7 +80,7 @@ abstract class AbstractScorer : JPanel()
 
     fun init(wrappedParticipant: IWrappedParticipant)
     {
-        populate(wrappedParticipant.getParticipantName())
+        populate(wrappedParticipant.getParticipantName().value)
         commonInit()
     }
 

@@ -59,21 +59,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Should get the participant count based on its own row ID`()
-    {
-        val game = GameEntity()
-        val gameId = game.assignRowId()
-        game.saveToDatabase()
-        game.getParticipantCount() shouldBe 0
-
-        insertParticipant()
-        game.getParticipantCount() shouldBe 0
-
-        insertParticipant(gameId = gameId)
-        game.getParticipantCount() shouldBe 1
-    }
-
-    @Test
     fun `Should handle no participants when getting players vector`()
     {
         val game = GameEntity()

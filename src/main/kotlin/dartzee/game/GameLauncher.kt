@@ -1,11 +1,11 @@
-package dartzee.`object`
+package dartzee.game
 
 import dartzee.core.util.DialogUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.game.GameType
+import dartzee.game.state.IWrappedParticipant
 import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
@@ -30,14 +30,13 @@ class GameLauncher
 {
     fun launchNewMatch(match: DartsMatchEntity, params: GameLaunchParams)
     {
-        val scrn = factoryMatchScreen(match, params.players)
-
         val game = GameEntity.factoryAndSave(match)
+        val participants = insertNewGameEntities(game.rowId, params)
 
-        insertDartzeeRules(game.rowId, params.dartzeeDtos)
+        val scrn = factoryMatchScreen(match, participants)
 
         val panel = scrn.addGameToMatch(game)
-        panel.startNewGame(params.players, params.pairMode)
+        panel.startNewGame(participants)
     }
 
     fun launchNewGame(params: GameLaunchParams)
@@ -45,12 +44,19 @@ class GameLauncher
         //Create and save a game
         val gameEntity = GameEntity.factoryAndSave(params.gameType, params.gameParams)
 
-        insertDartzeeRules(gameEntity.rowId, params.dartzeeDtos)
+        val participants = insertNewGameEntities(gameEntity.rowId, params)
 
         //Construct the screen and factory a tab
         val scrn = DartsGameScreen(gameEntity, params.teamCount())
         scrn.isVisible = true
-        scrn.gamePanel.startNewGame(params.players, params.pairMode)
+        scrn.gamePanel.startNewGame(participants)
+    }
+
+    private fun insertNewGameEntities(gameId: String, params: GameLaunchParams): List<IWrappedParticipant>
+    {
+        insertDartzeeRules(gameId, params.dartzeeDtos)
+
+        return prepareParticipants(gameId, params)
     }
 
     fun loadAndDisplayGame(gameId: String)
@@ -84,14 +90,14 @@ class GameLauncher
     private fun loadAndDisplaySingleGame(gameEntity: GameEntity)
     {
         //We've found a game, so construct a screen and initialise it
-        val playerCount = gameEntity.getParticipantCount()
-        val scrn = DartsGameScreen(gameEntity, playerCount)
+        val participants = loadParticipants(gameEntity.rowId)
+        val scrn = DartsGameScreen(gameEntity, participants.size)
         scrn.isVisible = true
 
         //Now try to load the game
         try
         {
-            scrn.gamePanel.loadGame()
+            scrn.gamePanel.loadGame(participants)
         }
         catch (t: Throwable)
         {
@@ -112,13 +118,14 @@ class GameLauncher
         val match = DartsMatchEntity().retrieveForId(matchId)
         match!!.cacheMetadataFromGame(lastGame)
 
-        val scrn = factoryMatchScreen(match, firstGame.retrievePlayersVector())
+        val scrn = factoryMatchScreen(match, loadParticipants(firstGame.rowId))
 
         try
         {
             allGames.forEach {
+                val participants = loadParticipants(it.rowId)
                 val panel = scrn.addGameToMatch(it)
-                panel.loadGame()
+                panel.loadGame(participants)
             }
 
             scrn.displayGame(originalGameId)
@@ -134,12 +141,12 @@ class GameLauncher
         scrn.updateTotalScores()
     }
 
-    private fun factoryMatchScreen(match: DartsMatchEntity, players: List<PlayerEntity>) =
+    private fun factoryMatchScreen(match: DartsMatchEntity, participants: List<IWrappedParticipant>) =
         when (match.gameType)
         {
-            GameType.X01 -> X01MatchScreen(match, players)
-            GameType.ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match, players)
-            GameType.GOLF -> GolfMatchScreen(match, players)
-            GameType.DARTZEE -> DartzeeMatchScreen(match, players)
+            GameType.X01 -> X01MatchScreen(match, participants)
+            GameType.ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match, participants)
+            GameType.GOLF -> GolfMatchScreen(match, participants)
+            GameType.DARTZEE -> DartzeeMatchScreen(match, participants)
         }
 }

@@ -16,7 +16,7 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
     //DB Fields
     var gameId = ""
     var playerId = ""
-    var ordinal = -1
+    override var ordinal = -1
     override var finishingPosition = -1
     override var finalScore = -1
     override var dtFinished = DateStatics.END_OF_TIME

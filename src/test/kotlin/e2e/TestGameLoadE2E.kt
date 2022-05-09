@@ -3,7 +3,7 @@ package e2e
 import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.shouldBeVisible
 import dartzee.`object`.Dart
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import dartzee.core.util.DateStatics
 import dartzee.game.GameType
 import dartzee.getRows

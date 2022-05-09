@@ -1,7 +1,7 @@
 package dartzee.screen.dartzee
 
 import com.github.alexburlton.swingtest.getChild
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity

@@ -18,6 +18,8 @@ import dartzee.db.PlayerEntity
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
+import dartzee.game.state.IWrappedParticipant
+import dartzee.game.state.SingleParticipant
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.dartzee.*
@@ -62,12 +64,12 @@ class TestGamePanelDartzee: AbstractTest()
     @Test
     fun `Should tell the summaryPanel to finish and select the first player when loading a finished game`()
     {
-        val game = setUpDartzeeGameOnDatabase(5)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5)
 
         val summaryPanel = mockk<DartzeeRuleSummaryPanel>(relaxed = true)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
 
         verify { summaryPanel.gameFinished() }
         gamePanel.currentPlayerNumber shouldBe 0
@@ -76,12 +78,12 @@ class TestGamePanelDartzee: AbstractTest()
     @Test
     fun `Should load scores and results correctly`()
     {
-        val game = setUpDartzeeGameOnDatabase(5)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
 
         gamePanel.getPlayerState().getScoreSoFar() shouldBe 67
 
@@ -109,12 +111,12 @@ class TestGamePanelDartzee: AbstractTest()
         val shorterRules = rules.subList(0, 2)
 
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(2, player)
+        val (game, participants) = setUpDartzeeGameOnDatabase(2, player)
         val carousel = DartzeeRuleCarousel(shorterRules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(shorterRules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
 
         gamePanel.getPlayerState().getScoreSoFar() shouldBe 230
 
@@ -129,12 +131,12 @@ class TestGamePanelDartzee: AbstractTest()
     fun `Should update best game achievement if there are 5 or more rules`()
     {
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(4, player)
+        val (game, participants) = setUpDartzeeGameOnDatabase(4, player)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
 
         gamePanel.getPlayerState().getScoreSoFar() shouldBe 133
 
@@ -158,12 +160,12 @@ class TestGamePanelDartzee: AbstractTest()
         )
 
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(5, player, allPassed)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5, player, allPassed)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
 
         val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_FLAWLESS, player.rowId, "")!!
@@ -176,12 +178,12 @@ class TestGamePanelDartzee: AbstractTest()
     fun `Should not update flawless achievement if a rule was failed`()
     {
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(5, player)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5, player)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
 
         getAchievementCount(AchievementType.DARTZEE_FLAWLESS) shouldBe 0
@@ -198,12 +200,12 @@ class TestGamePanelDartzee: AbstractTest()
         )
 
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
 
         val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_UNDER_PRESSURE, player.rowId, totalIsFifty.getDisplayName())!!
@@ -223,12 +225,12 @@ class TestGamePanelDartzee: AbstractTest()
         )
 
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
 
         getAchievementCount(AchievementType.DARTZEE_UNDER_PRESSURE) shouldBe 0
@@ -245,12 +247,12 @@ class TestGamePanelDartzee: AbstractTest()
         )
 
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
 
         getAchievementCount(AchievementType.DARTZEE_UNDER_PRESSURE) shouldBe 0
@@ -260,12 +262,12 @@ class TestGamePanelDartzee: AbstractTest()
     fun `Should insert a row for bingo, calculating the score correctly and not adding duplicates`()
     {
         val player = insertPlayer()
-        val game = setUpDartzeeGameOnDatabase(5, player)
+        val (game, participants) = setUpDartzeeGameOnDatabase(5, player)
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
-        gamePanel.loadGame()
+        gamePanel.loadGame(participants)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 80)
         gamePanel.updateAchievementsForFinish(player.rowId, -1, 1080)
@@ -283,11 +285,11 @@ class TestGamePanelDartzee: AbstractTest()
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val reducedRules = rules.subList(0, 2)
-        val game = setUpDartzeeGameOnDatabase(1)
+        val (game, participants) = setUpDartzeeGameOnDatabase(1)
         val carousel = DartzeeRuleCarousel(reducedRules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         val panel = makeGamePanel(reducedRules, summaryPanel, game)
-        panel.loadGame()
+        panel.loadGame(participants)
 
         carousel.completeTiles.shouldBeEmpty()
         carousel.pendingTiles.size shouldBe reducedRules.size
@@ -315,11 +317,12 @@ class TestGamePanelDartzee: AbstractTest()
 
         val game = insertGame(gameType = GameType.DARTZEE)
         val player = insertPlayer(strategy = "")
+        val participant = SingleParticipant(insertParticipant(playerId = player.rowId))
 
         val carousel = DartzeeRuleCarousel(rules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         val panel = makeGamePanel(rules, summaryPanel, game)
-        panel.startNewGame(listOf(player))
+        panel.startNewGame(listOf(participant))
 
         panel.btnConfirm.isVisible shouldBe true
 
@@ -420,7 +423,7 @@ class TestGamePanelDartzee: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val game = setUpDartzeeGameOnDatabase(1)
+        val (game, participants) = setUpDartzeeGameOnDatabase(1)
 
         val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
         every { carousel.getSegmentStatus() } returns SegmentStatus(listOf(singleTwenty), getAllPossibleSegments())
@@ -428,7 +431,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         val panel = makeGamePanel(rules, summaryPanel, game)
-        panel.loadGame()
+        panel.loadGame(participants)
 
         val listener = mockk<DartboardListener>(relaxed = true)
         panel.dartboard.addDartboardListener(listener)
@@ -453,13 +456,13 @@ class TestGamePanelDartzee: AbstractTest()
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
 
         val player = insertPlayer(model = beastDartsModel())
-        val game = setUpDartzeeGameOnDatabase(1, player)
+        val (game, participants) = setUpDartzeeGameOnDatabase(1, player)
 
         val carousel = DartzeeRuleCarousel(rules)
 
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         val panel = makeGamePanel(rules, summaryPanel, game)
-        panel.loadGame()
+        panel.loadGame(participants)
 
         panel.doAiTurn(model)
         panel.doAiTurn(model)
@@ -482,7 +485,7 @@ class TestGamePanelDartzee: AbstractTest()
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
-    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null, results: List<DartzeeRoundResult> = ruleResults): GameEntity
+    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null, results: List<DartzeeRoundResult> = ruleResults): Pair<GameEntity, List<IWrappedParticipant>>
     {
         val dtFinish = if (rounds > 4) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
@@ -529,7 +532,7 @@ class TestGamePanelDartzee: AbstractTest()
             DartzeeRoundResultEntity.factoryAndSave(results[3], participant, 5)
         }
 
-        return game
+        return game to listOf(SingleParticipant(participant))
     }
 
     private fun makeGamePanel(dtos: List<DartzeeRuleDto>,

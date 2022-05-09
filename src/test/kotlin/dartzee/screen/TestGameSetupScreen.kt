@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import dartzee.`object`.GameLauncher
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelX01
@@ -11,6 +10,8 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
+import dartzee.game.GameLaunchParams
+import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.*
@@ -83,7 +84,8 @@ class TestGameSetupScreen: AbstractTest()
         gameParamsPanel.spinner.value = 701
 
         screen.btnLaunch.doClick()
-        verify { gameLauncher.launchNewGame(listOf(alice, clive), GameType.X01, "701", null) }
+        val expectedParams = GameLaunchParams(listOf(alice, clive), GameType.X01, "701", false,null)
+        verify { gameLauncher.launchNewGame(expectedParams) }
     }
 
     @Test
@@ -165,7 +167,7 @@ class TestGameSetupScreen: AbstractTest()
 
         screen.btnLaunch.doClick()
 
-        verify { gameLauncher.launchNewGame(any(), GameType.DARTZEE, templateId, ruleDtosEq(listOf(ruleOne, ruleTwo))) }
+        verify { gameLauncher.launchNewGame(GameLaunchParams(any(), GameType.DARTZEE, templateId, false,ruleDtosEq(listOf(ruleOne, ruleTwo)))) }
     }
 
     @Test
@@ -181,6 +183,7 @@ class TestGameSetupScreen: AbstractTest()
 
         scrn.btnLaunch.doClick()
 
+        val launchParams = GameLaunchParams()
         verify { gameLauncher.launchNewMatch(any(), null)}
 
         val match = slot.captured

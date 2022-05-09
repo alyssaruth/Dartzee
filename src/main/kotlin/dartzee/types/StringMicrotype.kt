@@ -8,5 +8,4 @@ abstract class StringMicrotype(val value: String) {
 
     override fun hashCode(): Int = value.hashCode()
     override fun toString(): String = value
-
 }

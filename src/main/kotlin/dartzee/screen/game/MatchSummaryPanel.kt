@@ -1,9 +1,9 @@
 package dartzee.screen.game
 
 import dartzee.db.DartsMatchEntity
-import dartzee.db.ParticipantEntity
-import dartzee.db.PlayerEntity
+import dartzee.game.ParticipantName
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.MatchScorer
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -20,7 +20,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
     val match: DartsMatchEntity,
     private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(), ActionListener
 {
-    private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
+    private val hmParticipantNameToScorer = mutableMapOf<ParticipantName, MatchScorer>()
     private val gameTabs = mutableListOf<DartsGamePanel<*, *, PlayerState>>()
 
     private val refreshPanel = JPanel()
@@ -35,7 +35,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         btnRefresh.toolTipText = "Refresh stats"
     }
 
-    fun init(playersInStartingOrder: List<PlayerEntity>)
+    fun init(playersInStartingOrder: List<IWrappedParticipant>)
     {
         panelCenter.add(statsPanel, BorderLayout.CENTER)
         panelCenter.add(refreshPanel, BorderLayout.SOUTH)
@@ -46,15 +46,15 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         for (player in playersInStartingOrder)
         {
             val scorer = assignScorer(player)
-            hmPlayerIdToScorer[player.rowId] = scorer
+            hmParticipantNameToScorer[player.getParticipantName()] = scorer
             scorer.setMatch(match)
         }
     }
 
-    fun addParticipant(localId: Long, participant: ParticipantEntity)
+    fun addParticipant(localId: Long, participant: IWrappedParticipant)
     {
-        val playerId = participant.playerId
-        val scorer = hmPlayerIdToScorer[playerId]!!
+        val playerId = participant.getParticipantName()
+        val scorer = hmParticipantNameToScorer[playerId]!!
 
         val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
@@ -62,7 +62,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
 
     fun updateTotalScores()
     {
-        val scorers = hmPlayerIdToScorer.values
+        val scorers = hmParticipantNameToScorer.values
         for (scorer in scorers)
         {
             scorer.updateResult()
