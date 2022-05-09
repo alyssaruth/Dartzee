@@ -1,9 +1,8 @@
 package dartzee.screen.game.scorer
 
-import dartzee.bean.PlayerAvatar
+import dartzee.bean.ParticipantAvatar
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil.DefaultModel
-import dartzee.db.PlayerEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
@@ -17,7 +16,7 @@ import javax.swing.border.EmptyBorder
 
 abstract class AbstractScorer : JPanel()
 {
-    var playerId = ""
+    var playerIds: List<String> = emptyList()
 
     val model = DefaultModel()
 
@@ -26,7 +25,6 @@ abstract class AbstractScorer : JPanel()
     val tableScores = ScrollTableDartsGame()
     val lblResult = JLabel("")
     protected val panelNorth = JPanel()
-    val lblAvatar = PlayerAvatar()
     val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
 
@@ -51,7 +49,6 @@ abstract class AbstractScorer : JPanel()
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
         panelAvatar.layout = BorderLayout(0, 0)
-        panelAvatar.add(lblAvatar, BorderLayout.NORTH)
         add(panelSouth, BorderLayout.SOUTH)
         panelSouth.layout = BorderLayout(0, 0)
         panelSouth.add(lblResult)
@@ -62,34 +59,22 @@ abstract class AbstractScorer : JPanel()
         tableScores.setFillsViewportHeight(false)
         tableScores.setShowRowCount(false)
         tableScores.disableSorting()
-
-        lblAvatar.readOnly = true
     }
 
     abstract fun getNumberOfColumns(): Int
     abstract fun initImpl()
 
-    private fun populate(name: String)
-    {
-        lblName.isVisible = true
-        lblAvatar.isVisible = true
-        panelAvatar.isVisible = true
-
-        lblName.text = name
-    }
-
     fun init(wrappedParticipant: IWrappedParticipant)
     {
-        populate(wrappedParticipant.getParticipantName().value)
-        commonInit()
-    }
+        lblName.isVisible = true
+        panelAvatar.isVisible = true
 
-    fun init(player: PlayerEntity)
-    {
-        //Sometimes we pass in a null player for the purpose of showing stats
-        populate(player.name)
-        lblAvatar.init(player, false)
-        playerId = player.rowId
+        val avatar = ParticipantAvatar(wrappedParticipant)
+        panelAvatar.add(avatar, BorderLayout.NORTH)
+
+        lblName.text = wrappedParticipant.getParticipantName().value
+        val players = wrappedParticipant.individuals.map { it.getPlayer() }
+        playerIds = players.map { it.rowId }
 
         commonInit()
     }
@@ -97,7 +82,6 @@ abstract class AbstractScorer : JPanel()
     fun initEmpty()
     {
         lblName.isVisible = false
-        lblAvatar.isVisible = false
         panelAvatar.isVisible = false
 
         commonInit()

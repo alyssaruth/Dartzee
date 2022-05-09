@@ -649,7 +649,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     fun achievementUnlocked(playerId: String, achievement: AbstractAchievement)
     {
-        scorersOrdered.find { it.playerId === playerId }?.achievementUnlocked(achievement)
+        scorersOrdered.find { it.playerIds.contains(playerId) }?.achievementUnlocked(achievement)
     }
 
     private fun dismissSlider()

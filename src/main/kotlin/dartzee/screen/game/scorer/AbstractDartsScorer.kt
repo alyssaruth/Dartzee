@@ -57,7 +57,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
     private fun setSelected(selected: Boolean)
     {
         lblName.foreground = if (selected) Color.RED else Color.BLACK
-        lblAvatar.setSelected(selected)
+        // lblAvatar.setSelected(selected) // TODO - TEAMS - Argh
     }
 
     protected open fun stateChangedImpl(state: PlayerState) {}
