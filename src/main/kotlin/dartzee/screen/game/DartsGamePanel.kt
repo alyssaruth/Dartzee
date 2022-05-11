@@ -194,6 +194,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
         val scorer = factoryScorer(wrappedPt)
         assignScorer(scorer)
+
         val state = factoryState(wrappedPt)
         state.addListener(scorer)
         addState(wrappedPt.ordinal, state, scorer)

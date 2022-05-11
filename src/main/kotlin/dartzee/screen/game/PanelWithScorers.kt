@@ -58,6 +58,7 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 
     fun assignScorer(scorer: S)
     {
+        scorer.init()
         scorersOrdered.add(scorer)
     }
 }

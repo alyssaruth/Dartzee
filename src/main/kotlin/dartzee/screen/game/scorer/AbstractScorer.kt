@@ -64,7 +64,7 @@ abstract class AbstractScorer(private val participant: IWrappedParticipant) : JP
     }
 
     abstract fun getNumberOfColumns(): Int
-    abstract fun initImpl()
+    protected abstract fun initImpl()
 
     fun getTableOnly() = panelCenter
 
