@@ -188,7 +188,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     }
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelDartzee()
-    override fun factoryScorer() = DartsScorerDartzee(this)
+    override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerDartzee(this, participant)
 
     override fun hoverChanged(segmentStatus: SegmentStatus)
     {

@@ -27,6 +27,7 @@ sealed interface IWrappedParticipant
 
     fun getIndividual(roundNumber: Int): ParticipantEntity
     fun getParticipantName() = ParticipantName(individuals.map { it.getPlayerName() }.sorted().joinToString(" & "))
+    fun getParticipantNameOrdered() = ParticipantName(individuals.joinToString(" & ") { it.getPlayerName() })
     fun getCombinedAvatar(): ImageIcon
 }
 

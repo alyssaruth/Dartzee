@@ -3,10 +3,11 @@
 import dartzee.`object`.DartNotThrown
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.GamePanelPausable
 import java.awt.BorderLayout
 
-class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *, *>, private val clockConfig: RoundTheClockConfig) : AbstractDartsScorerPausable<ClockPlayerState>(parent)
+class DartsScorerRoundTheClock(parent: GamePanelPausable<*, *, *>, private val clockConfig: RoundTheClockConfig, participant: IWrappedParticipant) : AbstractDartsScorerPausable<ClockPlayerState>(parent, participant)
 {
     private val tableRemaining = RoundTheClockScorecard()
 

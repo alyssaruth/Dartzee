@@ -154,8 +154,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         addMouseListener(this)
 
         dartboard.renderScoreLabels = true
-
-        initScorers(totalPlayers)
     }
 
 
@@ -179,6 +177,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     fun startNewGame(participants: List<IWrappedParticipant>)
     {
         participants.forEach(::addParticipant)
+        initScorers()
 
         initForAi(hasAi())
         dartboard.paintDartboardCached()
@@ -193,7 +192,8 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             parentWindow.addParticipant(gameEntity.localId, wrappedPt)
         }
 
-        val scorer = assignScorer(wrappedPt)
+        val scorer = factoryScorer(wrappedPt)
+        assignScorer(scorer)
         val state = factoryState(wrappedPt)
         state.addListener(scorer)
         addState(wrappedPt.ordinal, state, scorer)

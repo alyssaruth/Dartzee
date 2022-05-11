@@ -3,15 +3,14 @@ package dartzee.screen.game.scorer
 import dartzee.core.bean.AbstractTableRenderer
 import dartzee.db.DartsMatchEntity
 import dartzee.db.ParticipantEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.utils.DartsColour
 
 /**
  * For the 'Match Summary' tab.
  */
-class MatchScorer : AbstractScorer()
+class MatchScorer(pt: IWrappedParticipant, private val match: DartsMatchEntity) : AbstractScorer(pt)
 {
-    private var match: DartsMatchEntity? = null
-
     /**
      * Game #, Score, Position, Points
      */
@@ -29,11 +28,6 @@ class MatchScorer : AbstractScorer()
         tableScores.setColumnWidths("100")
     }
 
-    fun setMatch(match: DartsMatchEntity)
-    {
-        this.match = match
-    }
-
     fun updateResult()
     {
         var totalScore = 0
@@ -42,7 +36,7 @@ class MatchScorer : AbstractScorer()
         for (i in 0 until rowCount)
         {
             val pt = tableScores.getValueAt(i, COLUMN_NO_MATCH_POINTS) as ParticipantEntity
-            totalScore += match!!.getScoreForFinishingPosition(pt.finishingPosition)
+            totalScore += match.getScoreForFinishingPosition(pt.finishingPosition)
         }
 
         lblResult.isVisible = true
@@ -63,7 +57,7 @@ class MatchScorer : AbstractScorer()
             {
                 COLUMN_NO_FINAL_SCORE -> if (value.finalScore == -1) "N/A" else value.finalScore
                 COLUMN_NO_FINISHING_POSITION -> value.getFinishingPositionDesc()
-                COLUMN_NO_MATCH_POINTS -> match!!.getScoreForFinishingPosition(value.finishingPosition)
+                COLUMN_NO_MATCH_POINTS -> match.getScoreForFinishingPosition(value.finishingPosition)
                 else -> ""
             }
         }

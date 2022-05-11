@@ -32,18 +32,15 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
     /**
      * Abstract methods
      */
-    abstract fun factoryScorer(): S
+    abstract fun factoryScorer(participant: IWrappedParticipant): S
 
     /**
      * Instance methods
      */
-    fun initScorers(totalPlayers: Int)
+    fun initScorers()
     {
-        scorersOrdered.clear()
         panelEast.removeAll()
         panelWest.removeAll()
-
-        for (i in 0 until totalPlayers) { scorersOrdered.add(factoryScorer()) }
 
         val chunkSize = scorersOrdered.size.ceilDiv(2)
         val eastAndWestScorers = scorersOrdered.chunked(chunkSize)
@@ -59,10 +56,8 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         westScorers.forEach { panelWest.add(it, "growy") }
     }
 
-    fun assignScorer(player: IWrappedParticipant): S
+    fun assignScorer(scorer: S)
     {
-        val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player")
-        scorer.init(player)
-        return scorer
+        scorersOrdered.add(scorer)
     }
 }

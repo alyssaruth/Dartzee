@@ -14,9 +14,9 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer : JPanel()
+abstract class AbstractScorer(private val participant: IWrappedParticipant) : JPanel()
 {
-    var playerIds: List<String> = emptyList()
+    val playerIds: List<String> = participant.individuals.map { it.playerId }
 
     val model = DefaultModel()
 
@@ -27,7 +27,7 @@ abstract class AbstractScorer : JPanel()
     protected val panelNorth = JPanel()
     val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
-    var lblAvatar: ParticipantAvatar? = null
+    val lblAvatar = ParticipantAvatar(participant)
 
     val playerName: String
         get() = lblName.text
@@ -50,6 +50,7 @@ abstract class AbstractScorer : JPanel()
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
         panelAvatar.layout = BorderLayout(0, 0)
+        panelAvatar.add(lblAvatar, BorderLayout.NORTH)
         add(panelSouth, BorderLayout.SOUTH)
         panelSouth.layout = BorderLayout(0, 0)
         panelSouth.add(lblResult)
@@ -65,33 +66,11 @@ abstract class AbstractScorer : JPanel()
     abstract fun getNumberOfColumns(): Int
     abstract fun initImpl()
 
-    fun init(wrappedParticipant: IWrappedParticipant)
+    fun getTableOnly() = panelCenter
+
+    fun init()
     {
-        lblName.isVisible = true
-        panelAvatar.isVisible = true
-
-        val avatar = ParticipantAvatar(wrappedParticipant)
-        panelAvatar.add(avatar, BorderLayout.NORTH)
-        lblAvatar = avatar
-
-        lblName.text = wrappedParticipant.getParticipantName().value
-        val players = wrappedParticipant.individuals.map { it.getPlayer() }
-        playerIds = players.map { it.rowId }
-
-        commonInit()
-    }
-
-    fun initEmpty()
-    {
-        lblName.isVisible = false
-        panelAvatar.isVisible = false
-
-        commonInit()
-    }
-
-    private fun commonInit()
-    {
-        lblResult.text = ""
+        lblName.text = participant.getParticipantNameOrdered().value
 
         //TableModel
         tableScores.setRowHeight(25)

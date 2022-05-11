@@ -40,14 +40,11 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         panelCenter.add(statsPanel, BorderLayout.CENTER)
         panelCenter.add(refreshPanel, BorderLayout.SOUTH)
 
-        val totalPlayers = playersInStartingOrder.size
-        initScorers(totalPlayers)
-
         for (player in playersInStartingOrder)
         {
-            val scorer = assignScorer(player)
+            val scorer = factoryScorer(player)
+            assignScorer(scorer)
             hmParticipantNameToScorer[player.getParticipantName()] = scorer
-            scorer.setMatch(match)
         }
     }
 
@@ -77,7 +74,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         statsPanel.showStats(states)
     }
 
-    override fun factoryScorer() = MatchScorer()
+    override fun factoryScorer(participant: IWrappedParticipant) = MatchScorer(participant, match)
 
     fun addGameTab(tab: DartsGamePanel<*, *, PlayerState>)
     {

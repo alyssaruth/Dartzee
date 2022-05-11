@@ -85,7 +85,7 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         }
     }
 
-    override fun factoryScorer() = DartsScorerGolf()
+    override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerGolf(participant)
 
     override fun shouldAIStop() = false
 
