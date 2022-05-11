@@ -27,6 +27,7 @@ abstract class AbstractScorer : JPanel()
     protected val panelNorth = JPanel()
     val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
+    var lblAvatar: ParticipantAvatar? = null
 
     val playerName: String
         get() = lblName.text
@@ -71,6 +72,7 @@ abstract class AbstractScorer : JPanel()
 
         val avatar = ParticipantAvatar(wrappedParticipant)
         panelAvatar.add(avatar, BorderLayout.NORTH)
+        lblAvatar = avatar
 
         lblName.text = wrappedParticipant.getParticipantName().value
         val players = wrappedParticipant.individuals.map { it.getPlayer() }

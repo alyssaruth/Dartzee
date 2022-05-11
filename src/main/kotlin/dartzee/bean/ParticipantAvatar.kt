@@ -9,7 +9,7 @@ import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
 import javax.swing.border.LineBorder
 
-class ParticipantAvatar(pt: IWrappedParticipant) : JLabel(ResourceCache.AVATAR_UNSET)
+class ParticipantAvatar(private val pt: IWrappedParticipant) : JLabel(ResourceCache.AVATAR_UNSET)
 {
     init
     {
@@ -19,8 +19,9 @@ class ParticipantAvatar(pt: IWrappedParticipant) : JLabel(ResourceCache.AVATAR_U
         icon = pt.getCombinedAvatar()
     }
 
-    fun setSelected(selected: Boolean)
+    fun setSelected(selected: Boolean, roundNumber: Int)
     {
         border = if (selected) LineBorder(Color.RED, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
+        icon = if (selected) pt.getIndividual(roundNumber).getPlayer().getAvatar() else pt.getCombinedAvatar()
     }
 }

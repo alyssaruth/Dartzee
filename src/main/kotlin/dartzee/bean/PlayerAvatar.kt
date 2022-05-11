@@ -4,7 +4,6 @@ import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
 import dartzee.utils.InjectedThings.playerImageSelector
 import dartzee.utils.ResourceCache
-import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.event.MouseAdapter
@@ -12,7 +11,6 @@ import java.awt.event.MouseEvent
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
-import javax.swing.border.LineBorder
 
 class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
 {
@@ -28,11 +26,6 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
         horizontalAlignment = SwingConstants.CENTER
 
         addMouseListener(AvatarClickListener())
-    }
-
-    fun setSelected(selected: Boolean)
-    {
-        border = if (selected) LineBorder(Color.RED, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
     }
 
     fun init(player: PlayerEntity, saveChanges: Boolean)

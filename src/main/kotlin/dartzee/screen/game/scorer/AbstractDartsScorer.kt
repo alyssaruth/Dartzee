@@ -36,7 +36,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
     {
         runOnEventThreadBlocking {
             model.clear()
-            setSelected(state.isActive)
+            setSelected(state.isActive, state.currentRoundNumber())
 
             stateChangedImpl(state)
 
@@ -54,10 +54,10 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
         updateResultColourForPosition(state.wrappedParticipant.participant.finishingPosition)
     }
 
-    private fun setSelected(selected: Boolean)
+    private fun setSelected(selected: Boolean, roundNumber: Int)
     {
         lblName.foreground = if (selected) Color.RED else Color.BLACK
-        // lblAvatar.setSelected(selected) // TODO - TEAMS - Argh
+        lblAvatar?.setSelected(selected, roundNumber)
     }
 
     protected open fun stateChangedImpl(state: PlayerState) {}

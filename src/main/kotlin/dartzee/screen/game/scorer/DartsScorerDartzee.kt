@@ -13,7 +13,7 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): AbstractDartsSco
 {
     init
     {
-        // lblAvatar.addMouseListener(this) // TODO - Argh
+        lblAvatar?.addMouseListener(this)
     }
 
     override fun stateChangedImpl(state: DartzeePlayerState)
