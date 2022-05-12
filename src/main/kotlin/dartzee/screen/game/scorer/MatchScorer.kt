@@ -2,7 +2,6 @@ package dartzee.screen.game.scorer
 
 import dartzee.core.bean.AbstractTableRenderer
 import dartzee.db.DartsMatchEntity
-import dartzee.db.ParticipantEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.utils.DartsColour
 
@@ -35,8 +34,8 @@ class MatchScorer(pt: IWrappedParticipant, private val match: DartsMatchEntity) 
         val rowCount = tableScores.rowCount
         for (i in 0 until rowCount)
         {
-            val pt = tableScores.getValueAt(i, COLUMN_NO_MATCH_POINTS) as ParticipantEntity
-            totalScore += match.getScoreForFinishingPosition(pt.finishingPosition)
+            val pt = tableScores.getValueAt(i, COLUMN_NO_MATCH_POINTS) as IWrappedParticipant
+            totalScore += match.getScoreForFinishingPosition(pt.participant.finishingPosition)
         }
 
         lblResult.isVisible = true
@@ -49,24 +48,25 @@ class MatchScorer(pt: IWrappedParticipant, private val match: DartsMatchEntity) 
     /**
      * Inner classes
      */
-    private inner class ParticipantRenderer(private val colNo: Int) : AbstractTableRenderer<ParticipantEntity>()
+    private inner class ParticipantRenderer(private val colNo: Int) : AbstractTableRenderer<IWrappedParticipant>()
     {
-        override fun getReplacementValue(value: ParticipantEntity): Any
+        override fun getReplacementValue(value: IWrappedParticipant): Any
         {
+            val pt = value.participant
             return when (colNo)
             {
-                COLUMN_NO_FINAL_SCORE -> if (value.finalScore == -1) "N/A" else value.finalScore
-                COLUMN_NO_FINISHING_POSITION -> value.getFinishingPositionDesc()
-                COLUMN_NO_MATCH_POINTS -> match.getScoreForFinishingPosition(value.finishingPosition)
+                COLUMN_NO_FINAL_SCORE -> if (pt.finalScore == -1) "N/A" else pt.finalScore
+                COLUMN_NO_FINISHING_POSITION -> pt.getFinishingPositionDesc()
+                COLUMN_NO_MATCH_POINTS -> match.getScoreForFinishingPosition(pt.finishingPosition)
                 else -> ""
             }
         }
 
-        override fun setCellColours(typedValue: ParticipantEntity?, isSelected: Boolean)
+        override fun setCellColours(typedValue: IWrappedParticipant?, isSelected: Boolean)
         {
             if (colNo == COLUMN_NO_FINISHING_POSITION)
             {
-                val finishingPos = typedValue!!.finishingPosition
+                val finishingPos = typedValue!!.participant.finishingPosition
                 DartsColour.setFgAndBgColoursForPosition(this, finishingPos)
             }
         }

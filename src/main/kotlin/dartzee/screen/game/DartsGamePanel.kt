@@ -178,6 +178,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     {
         participants.forEach(::addParticipant)
         initScorers()
+        parentWindow.revalidate()
 
         initForAi(hasAi())
         dartboard.paintDartboardCached()

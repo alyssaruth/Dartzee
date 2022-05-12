@@ -62,7 +62,6 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
      * Helpers
      */
     fun isAi() = getPlayer().isAi()
-    fun getFinishingPositionDesc(): String = StringUtil.convertOrdinalToText(finishingPosition)
     fun getModel() = getPlayer().getModel()
     fun getPlayerName() = getPlayer().name
 

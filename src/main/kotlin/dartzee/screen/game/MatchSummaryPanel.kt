@@ -46,6 +46,9 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
             assignScorer(scorer)
             hmParticipantNameToScorer[player.getParticipantName()] = scorer
         }
+
+        initScorers()
+        revalidate()
     }
 
     fun addParticipant(localId: Long, participant: IWrappedParticipant)
