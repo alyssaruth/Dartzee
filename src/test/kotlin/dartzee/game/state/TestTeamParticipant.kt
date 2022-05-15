@@ -37,8 +37,8 @@ class TestTeamParticipant: AbstractTest()
         val teamOne = TeamParticipant(insertTeam(), listOf(pt1, pt2))
         val teamTwo = TeamParticipant(insertTeam(), listOf(pt2, pt1))
 
-        teamOne.getUniqueParticipantName().value shouldBe "Alyssa & Leah"
-        teamTwo.getUniqueParticipantName().value shouldBe "Leah & Alyssa"
+        teamOne.getParticipantName().value shouldBe "Alyssa & Leah"
+        teamTwo.getParticipantName().value shouldBe "Leah & Alyssa"
     }
 
     @Test
