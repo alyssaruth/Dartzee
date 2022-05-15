@@ -1,4 +1,5 @@
 
+import dartzee.ai.AI_DARTBOARD
 import dartzee.`object`.SegmentType
 import dartzee.ai.AimDart
 import dartzee.screen.Dartboard
@@ -8,14 +9,14 @@ import java.awt.Point
 /**
  * Given the single/double/treble required, calculate the physical coordinates of the optimal place to aim
  */
-fun getPointForScore(drt: AimDart, dartboard: Dartboard): Point
+fun getPointForScore(drt: AimDart, dartboard: Dartboard = AI_DARTBOARD): Point
 {
     val score = drt.score
     val segmentType = drt.getSegmentType()
-    return getPointForScore(score, dartboard, segmentType)
+    return getPointForScore(score, segmentType, dartboard)
 }
 
-fun getPointForScore(score: Int, dartboard: Dartboard, type: SegmentType): Point
+fun getPointForScore(score: Int, type: SegmentType, dartboard: Dartboard = AI_DARTBOARD): Point
 {
     val points = dartboard.getPointsForSegment(score, type)
     val avgPoint = getAverage(points)
