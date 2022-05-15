@@ -1,6 +1,6 @@
 package dartzee.utils
 
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.SimulationRunner
 import dartzee.dartzee.*

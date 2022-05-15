@@ -1,4 +1,4 @@
-package dartzee.`object`
+package dartzee.game
 
 import dartzee.helper.AbstractTest
 import dartzee.screen.ScreenCache

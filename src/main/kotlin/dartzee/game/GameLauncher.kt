@@ -1,11 +1,10 @@
-package dartzee.`object`
+package dartzee.game
 
 import dartzee.core.util.DialogUtil
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.game.GameType
 import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen

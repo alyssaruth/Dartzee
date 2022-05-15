@@ -3,7 +3,7 @@ package e2e
 import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.findChild
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity

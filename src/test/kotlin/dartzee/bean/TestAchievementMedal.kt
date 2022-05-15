@@ -4,7 +4,7 @@ import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.doHover
 import com.github.alexburlton.swingtest.findChild
 import com.github.alexburlton.swingtest.shouldMatchImage
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.helper.AbstractTest
 import dartzee.screen.ScreenCache

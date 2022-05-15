@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelX01
