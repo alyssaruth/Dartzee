@@ -21,8 +21,24 @@ class TestTeamParticipant: AbstractTest()
         val teamOne = TeamParticipant(insertTeam(), listOf(pt1, pt2))
         val teamTwo = TeamParticipant(insertTeam(), listOf(pt2, pt1))
 
-        teamOne.getParticipantName() shouldBe "Alyssa & Leah"
-        teamTwo.getParticipantName() shouldBe "Alyssa & Leah"
+        teamOne.getUniqueParticipantName().value shouldBe "Alyssa & Leah"
+        teamTwo.getUniqueParticipantName().value shouldBe "Alyssa & Leah"
+    }
+
+    @Test
+    fun `Should return team name in throw order`()
+    {
+        val p1 = insertPlayer(name = "Alyssa")
+        val p2 = insertPlayer(name = "Leah")
+
+        val pt1 = insertParticipant(playerId = p1.rowId)
+        val pt2 = insertParticipant(playerId = p2.rowId)
+
+        val teamOne = TeamParticipant(insertTeam(), listOf(pt1, pt2))
+        val teamTwo = TeamParticipant(insertTeam(), listOf(pt2, pt1))
+
+        teamOne.getUniqueParticipantName().value shouldBe "Alyssa & Leah"
+        teamTwo.getUniqueParticipantName().value shouldBe "Leah & Alyssa"
     }
 
     @Test

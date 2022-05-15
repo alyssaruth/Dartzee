@@ -18,6 +18,7 @@ class TestSingleParticipant: AbstractTest()
         singlePt.individuals shouldBe listOf(pt)
         singlePt.getIndividual(1) shouldBe pt
         singlePt.getIndividual(2) shouldBe pt
-        singlePt.getParticipantName() shouldBe "Alyssa"
+        singlePt.getUniqueParticipantName().value shouldBe "Alyssa"
+        singlePt.getParticipantName().value shouldBe "Alyssa"
     }
 }
