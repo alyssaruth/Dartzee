@@ -75,7 +75,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
 
         val gameId = randomGuid()
 
-        val pt = ParticipantEntity.factoryAndSave(gameId, player, 2)
+        val pt = ParticipantEntity.factoryAndSave(gameId, player, 2, "foo")
         val rowId = pt.rowId
 
         pt.gameId shouldBe gameId
@@ -85,6 +85,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
         pt.dtFinished shouldBe DateStatics.END_OF_TIME
         pt.finalScore shouldBe -1
         pt.finishingPosition shouldBe -1
+        pt.teamId shouldBe "foo"
 
         pt.retrieveForId(rowId) shouldNotBe null
     }

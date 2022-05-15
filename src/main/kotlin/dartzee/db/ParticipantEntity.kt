@@ -2,7 +2,6 @@ package dartzee.db
 
 import dartzee.achievements.getWinAchievementType
 import dartzee.core.util.DateStatics
-import dartzee.core.util.StringUtil
 import dartzee.core.util.getSqlDateNow
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -16,7 +15,7 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
     //DB Fields
     var gameId = ""
     var playerId = ""
-    var ordinal = -1
+    override var ordinal = -1
     override var finishingPosition = -1
     override var finalScore = -1
     override var dtFinished = DateStatics.END_OF_TIME
@@ -62,7 +61,6 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
      * Helpers
      */
     fun isAi() = getPlayer().isAi()
-    fun getFinishingPositionDesc(): String = StringUtil.convertOrdinalToText(finishingPosition)
     fun getModel() = getPlayer().getModel()
     fun getPlayerName() = getPlayer().name
 
@@ -86,13 +84,14 @@ class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<Parti
 
     companion object
     {
-        fun factoryAndSave(gameId: String, player: PlayerEntity, ordinal: Int): ParticipantEntity
+        fun factoryAndSave(gameId: String, player: PlayerEntity, ordinal: Int, teamId: String = ""): ParticipantEntity
         {
             val gp = ParticipantEntity()
             gp.assignRowId()
             gp.gameId = gameId
             gp.playerId = player.rowId
             gp.ordinal = ordinal
+            gp.teamId = teamId
 
             //Cache the actual player entity so we can access its strategy etc
             gp.setPlayer(player)
