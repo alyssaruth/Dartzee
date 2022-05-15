@@ -111,7 +111,7 @@ class SyncE2E: AbstractRegistryTest()
         awaitCondition { SyncProgressDialog.isVisible() }
         awaitCondition { !SyncProgressDialog.isVisible() }
 
-        dialogFactory.infosShown.last() shouldBe "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0"
+        awaitCondition { dialogFactory.infosShown.last() == "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0" }
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.Dart) shouldBe 0
         getCountFromTable(EntityName.Participant) shouldBe 0
