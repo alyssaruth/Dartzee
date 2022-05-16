@@ -5,6 +5,7 @@ import dartzee.core.bean.NumberField
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
+import dartzee.game.UniqueParticipantName
 import dartzee.game.state.X01PlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.utils.calculateThreeDartAverage
@@ -78,9 +79,9 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         val fifthDarts = factoryRow("")
         val remainingDarts = factoryRow("Remainder")
 
-        for (i in participantNamesOrdered.indices)
+        for (i in uniqueParticipantNamesOrdered.indices)
         {
-            val playerName = participantNamesOrdered[i]
+            val playerName = uniqueParticipantNamesOrdered[i]
             val darts = getScoringDarts(playerName)
 
             val hmHitScoreToDarts = darts.groupBy{it.getHitScore()}
@@ -166,7 +167,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         MathsUtil.getPercentage(hits.size, scoringDarts.size)
     }
 
-    private fun getScoringRounds(playerName: String): List<List<Dart>>
+    private fun getScoringRounds(playerName: UniqueParticipantName): List<List<Dart>>
     {
         val rounds = hmPlayerToDarts[playerName]
         rounds ?: return mutableListOf()
@@ -174,7 +175,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         return rounds.filter { it.last().startingScore > nfSetupThreshold.getNumber() }.toList()
     }
 
-    private fun getScoringDarts(playerName: String): MutableList<Dart>
+    private fun getScoringDarts(playerName: UniqueParticipantName): MutableList<Dart>
     {
         val darts = getFlattenedDarts(playerName)
         return getScoringDarts(darts, nfSetupThreshold.getNumber())

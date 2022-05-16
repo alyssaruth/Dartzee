@@ -3,7 +3,7 @@ package e2e
 import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.findChild
-import dartzee.`object`.GameLauncher
+import dartzee.game.GameLauncher
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
@@ -111,7 +111,7 @@ class SyncE2E: AbstractRegistryTest()
         awaitCondition { SyncProgressDialog.isVisible() }
         awaitCondition { !SyncProgressDialog.isVisible() }
 
-        dialogFactory.infosShown.last() shouldBe "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0"
+        awaitCondition { dialogFactory.infosShown.last() == "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0" }
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.Dart) shouldBe 0
         getCountFromTable(EntityName.Participant) shouldBe 0
