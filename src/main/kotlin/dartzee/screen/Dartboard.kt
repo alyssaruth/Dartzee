@@ -40,7 +40,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     var centerPoint = Point(200, 200)
         private set
 
-    private var diameter = 360.0
+    var diameter = 360.0
 
     var scoreLabelColor: Color = Color.WHITE
     var renderScoreLabels = false
@@ -270,6 +270,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun getAllSegments() = hmSegmentKeyToSegment.values.toList()
 
+    fun getDataSegmentForPoint(pt: Point) = getSegmentForPoint(pt).toDataSegment()
     fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): StatefulSegment
     {
         val segment = getAllSegments().firstOrNull { it.containsPoint(pt) }

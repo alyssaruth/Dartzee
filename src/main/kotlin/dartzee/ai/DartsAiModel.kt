@@ -9,11 +9,8 @@ import dartzee.logging.CODE_AI_ERROR
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
-import dartzee.utils.InjectedThings
+import dartzee.utils.*
 import dartzee.utils.InjectedThings.logger
-import dartzee.utils.generateRandomAngle
-import dartzee.utils.getAngleForPoint
-import dartzee.utils.translatePoint
 import getDefaultDartToAimAt
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
@@ -118,7 +115,7 @@ data class DartsAiModel(val standardDeviation: Double,
     fun throwDartzeeDart(dartsThrownSoFar: Int, dartboard: DartzeeDartboard, segmentStatus: SegmentStatus)
     {
         val aggressive = (dartsThrownSoFar < 2 || dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE)
-        val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
+        val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(AI_DARTBOARD, segmentStatus, aggressive)
         val pt = throwDartAtPoint(ptToAimAt, dartboard)
         dartboard.dartThrown(pt)
     }
@@ -129,22 +126,23 @@ data class DartsAiModel(val standardDeviation: Double,
 
     fun throwAtDouble(double: Int, dartboard: Dartboard) = throwDartAtPoint(getPointForScore(double, SegmentType.DOUBLE), dartboard)
 
-    fun throwDartAtPoint(pt: Point, dartboard: Dartboard): Point
+    private fun throwDartAtPoint(aiDartboardPoint: Point, destinationDartboard: Dartboard): Point
     {
         if (standardDeviation == 0.0)
         {
             logger.error(CODE_AI_ERROR, "Gaussian model with SD of 0 - this shouldn't be possible!")
-            return pt
+            return aiDartboardPoint
         }
 
-        if (pt == DELIBERATE_MISS)
+        if (aiDartboardPoint == DELIBERATE_MISS)
         {
-            return dartboard.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
+            return destinationDartboard.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
         }
 
-        val (radius, angle) = calculateRadiusAndAngle(pt, dartboard)
+        val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint, AI_DARTBOARD)
 
-        return translatePoint(pt, radius, angle)
+        val resultingAiPoint = translatePoint(aiDartboardPoint, radius, angle)
+        return convertForDestinationDartboard(resultingAiPoint, AI_DARTBOARD, destinationDartboard)
     }
 
     data class DistributionSample(val radius: Double, val theta: Double)

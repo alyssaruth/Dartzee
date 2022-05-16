@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import dartzee.`object`.*
+import dartzee.screen.Dartboard
 import java.awt.Color
 import java.awt.Point
 
@@ -61,6 +62,26 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): St
     val type = calculateTypeForRatioNonBullseye(ratio)
 
     return StatefulSegment(type, score)
+}
+
+fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, destinationDartboard: Dartboard): Point
+{
+    val relativeDistance = getDistance(sourcePt, sourceDartboard.centerPoint) / sourceDartboard.diameter
+    val angle = getAngleForPoint(sourcePt, sourceDartboard.centerPoint)
+
+    val newPoint = translatePoint(destinationDartboard.centerPoint, relativeDistance * destinationDartboard.diameter, angle)
+    destinationDartboard.rationalisePoint(newPoint)
+
+    val desiredSegment = sourceDartboard.getDataSegmentForPoint(sourcePt)
+    val candidatePoints = mutableSetOf(newPoint)
+    while (candidatePoints.none { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment })
+    {
+        val neighbours = candidatePoints.flatMap(::getNeighbours)
+        neighbours.forEach(destinationDartboard::rationalisePoint)
+        candidatePoints.addAll(neighbours)
+    }
+
+    return candidatePoints.first { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment }
 }
 
 /**

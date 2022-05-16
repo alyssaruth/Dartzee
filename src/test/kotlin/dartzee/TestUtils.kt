@@ -14,6 +14,7 @@ import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.screen.Dartboard
+import dartzee.screen.dartzee.DartzeeDartboard
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.matchers.maps.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -55,12 +56,8 @@ val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:
         .withZone(ZoneId.systemDefault())
         .format(CURRENT_TIME)
 
-fun makeTestDartboard(): Dartboard
-{
-    val dartboard = Dartboard(100, 100)
-    dartboard.paintDartboard()
-    return dartboard
-}
+fun makeTestDartboard(width: Int = 100, height: Int = 100)  = Dartboard(width, height).also { it.paintDartboard() }
+fun makeTestDartzeeDartboard() = DartzeeDartboard(100, 100).also { it.paintDartboard() }
 
 fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)
 

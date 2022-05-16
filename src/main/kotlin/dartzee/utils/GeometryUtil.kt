@@ -65,6 +65,9 @@ fun getDistance(dartPt: Point, centerPt: Point): Double
     return Math.sqrt(xLength * xLength + yLength * yLength)
 }
 
+fun getNeighbours(pt: Point) =
+    setOf(Point(pt.x, pt.y + 1), Point(pt.x, pt.y - 1), Point(pt.x + 1, pt.y), Point(pt.x - 1, pt.y))
+
 /**
  * Compute the clockwise angle for the point, relative to the center
  */
