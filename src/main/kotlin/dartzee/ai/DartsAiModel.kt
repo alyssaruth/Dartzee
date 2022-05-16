@@ -55,7 +55,7 @@ data class DartsAiModel(val standardDeviation: Double,
         val drtToAimAt = getOveriddenDartToAimAt(score)
         if (drtToAimAt != null)
         {
-            val ptToAimAt = getPointForScore(drtToAimAt, dartboard)
+            val ptToAimAt = getPointForScore(drtToAimAt)
             return throwDartAtPoint(ptToAimAt, dartboard)
         }
 
@@ -67,7 +67,7 @@ data class DartsAiModel(val standardDeviation: Double,
         else
         {
             val defaultDrt = getDefaultDartToAimAt(score)
-            val ptToAimAt = getPointForScore(defaultDrt, dartboard)
+            val ptToAimAt = getPointForScore(defaultDrt)
             return throwDartAtPoint(ptToAimAt, dartboard)
         }
     }
@@ -142,6 +142,7 @@ data class DartsAiModel(val standardDeviation: Double,
         val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint, AI_DARTBOARD)
 
         val resultingAiPoint = translatePoint(aiDartboardPoint, radius, angle)
+        AI_DARTBOARD.rationalisePoint(resultingAiPoint)
         return convertForDestinationDartboard(resultingAiPoint, AI_DARTBOARD, destinationDartboard)
     }
 

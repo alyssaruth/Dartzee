@@ -53,7 +53,7 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
 
     override fun okPressed()
     {
-        val dartboard = Dartboard(500, 500)
+        val dartboard = Dartboard(100, 100)
         dartboard.simulation = true //Don't do animations etc
         dartboard.paintDartboard()
 
