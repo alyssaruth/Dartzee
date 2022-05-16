@@ -68,10 +68,14 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
     every { model.hmDartNoToStopThreshold } returns hmDartNoToStopThreshold
 
     val throwDartFn = makeThrowDartFn(dartsToThrow, dartboard)
+    val actualFn = {
+        val pt = throwDartFn()
+        dartboard.dartThrown(pt)
+    }
 
-    every { model.throwX01Dart(any(), any()) } answers { throwDartFn() }
-    every { model.throwClockDart(any(), any(), any()) } answers { throwDartFn() }
-    every { model.throwGolfDart(any(), any(), any()) } answers { throwDartFn() }
+    every { model.throwX01Dart(any(), any()) } answers { actualFn() }
+    every { model.throwClockDart(any(), any(), any()) } answers { actualFn() }
+    every { model.throwGolfDart(any(), any(), any()) } answers { actualFn() }
     every { model.getStopThresholdForDartNo(any()) } answers { callOriginal() }
     return model
 }
