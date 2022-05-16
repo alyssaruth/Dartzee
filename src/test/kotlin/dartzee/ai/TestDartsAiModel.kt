@@ -23,12 +23,19 @@ import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.mockk.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.awt.Point
 import kotlin.math.floor
 
 class TestDartsAiModel: AbstractTest()
 {
+    @BeforeEach
+    fun beforeEach()
+    {
+        InjectedThings.dartzeeAimCalculator = DartzeeAimCalculator()
+    }
+
     @Test
     fun `Should serialize and deserialize with default values`()
     {
