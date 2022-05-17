@@ -18,11 +18,11 @@ import java.awt.*
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
+private val allNonMisses = getAllNonMissSegments()
+private val calculator = DartzeeAimCalculator()
+
 class TestDartzeeAimCalculator: AbstractTest()
 {
-    private val allNonMisses = getAllNonMissSegments()
-    private val calculator = DartzeeAimCalculator()
-
     @Test
     @Tag("screenshot")
     fun `Should aim at the bullseye for a fully valid dartboard`()
@@ -121,7 +121,7 @@ class TestDartzeeAimCalculator: AbstractTest()
         dartboard.refreshValidSegments(segmentStatus)
 
         val timer = DurationTimer()
-        for (i in 1..10)
+        repeat(10)
         {
             calculator.getPointToAimFor(dartboard, segmentStatus, true)
         }
