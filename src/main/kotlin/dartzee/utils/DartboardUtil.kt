@@ -1,7 +1,6 @@
 package dartzee.utils
 
 import dartzee.`object`.*
-import dartzee.screen.Dartboard
 import java.awt.Color
 import java.awt.Point
 
@@ -202,8 +201,6 @@ private fun initialiseOrdinalHashMap() : MutableMap<Int, Boolean>
 fun resetCachedDartboardValues()
 {
     colourWrapperFromPrefs = null
-
-    Dartboard.appearancePreferenceChanged()
 }
 
 fun getAllPossibleSegments(): List<DartboardSegment>

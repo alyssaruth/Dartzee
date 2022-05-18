@@ -3,7 +3,6 @@ package dartzee.helper
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.logging.*
-import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
@@ -50,9 +49,6 @@ abstract class AbstractTest
 
         InjectedThings.esDestination = mockk(relaxed = true)
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-
-        //Clear cached dartboards
-        Dartboard.appearancePreferenceChanged()
 
         logger.loggingContext.clear()
     }
