@@ -50,7 +50,7 @@ class TestDartsAiSimulator : AbstractTest()
         every { model.scoringDart } returns 20
         every { model.getScoringPoint(any()) } returns getPointForScore(20, dartboard, SegmentType.TREBLE)
 
-        val aimDarts = scoringDarts.map { it.toAimDart() }.shuffled()
+        val aimDarts = scoringDarts.map { AimDart(it.score, it.multiplier, it.segmentType) }.shuffled()
         val throwDartFn = makeThrowDartFn(aimDarts, dartboard)
         every { model.throwScoringDart(any()) } answers { throwDartFn() }
 

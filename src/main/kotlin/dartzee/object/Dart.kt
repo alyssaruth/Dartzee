@@ -1,6 +1,5 @@
 package dartzee.`object`
 
-import dartzee.ai.AimDart
 import dartzee.ai.IDart
 import dartzee.core.util.DateStatics
 import dartzee.game.ClockType
@@ -64,8 +63,6 @@ open class Dart(
             5
         } else segmentType.getGolfScore()
     }
-
-    fun toAimDart(): AimDart = AimDart(score, multiplier, segmentType)
 
     override fun hashCode(): Int
     {
