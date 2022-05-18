@@ -1,14 +1,11 @@
 package dartzee.ai
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import dartzee.`object`.SegmentType
-import dartzee.`object`.getSegmentTypeForClockType
-import dartzee.core.obj.HashMapCount
 import dartzee.core.util.jsonMapper
 import dartzee.game.ClockType
 import dartzee.logging.CODE_AI_ERROR
-import dartzee.logging.CODE_SIMULATION_FINISHED
-import dartzee.logging.CODE_SIMULATION_STARTED
+import dartzee.`object`.SegmentType
+import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
@@ -21,7 +18,6 @@ import getDefaultDartToAimAt
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import java.awt.Point
-import java.util.*
 import kotlin.math.abs
 
 enum class DartzeePlayStyle {
@@ -127,69 +123,11 @@ data class DartsAiModel(val standardDeviation: Double,
         dartboard.dartThrown(pt)
     }
 
-    fun runSimulation(dartboard: Dartboard): SimulationWrapper
-    {
-        logger.info(CODE_SIMULATION_STARTED, "Simulating scoring and doubles throws")
-
-        val hmPointToCount = HashMapCount<Point>()
-
-        var totalScore = 0.0
-        var missPercent = 0.0
-        var treblePercent = 0.0
-
-        for (i in 0 until SCORING_DARTS_TO_THROW)
-        {
-            val ptToAimAt = getScoringPoint(dartboard)
-
-            val pt = throwDartAtPoint(ptToAimAt, dartboard)
-            dartboard.rationalisePoint(pt)
-
-            hmPointToCount.incrementCount(pt)
-
-            val dart = dartboard.convertPointToDart(pt, false)
-            totalScore += dart.getTotal()
-
-            if (dart.getTotal() == 0)
-            {
-                missPercent++
-            }
-
-            if (dart.multiplier == 3 && dart.score == scoringDart)
-            {
-                treblePercent++
-            }
-        }
-
-        val avgScore = totalScore / SCORING_DARTS_TO_THROW
-        missPercent = 100 * missPercent / SCORING_DARTS_TO_THROW
-        treblePercent = 100 * treblePercent / SCORING_DARTS_TO_THROW
-
-        var doublesHit = 0.0
-        val rand = Random()
-        for (i in 0 until DOUBLE_DARTS_TO_THROW)
-        {
-            val doubleToAimAt = rand.nextInt(20) + 1
-
-            val doublePtToAimAt = getPointForScore(doubleToAimAt, dartboard, SegmentType.DOUBLE)
-
-            val pt = throwDartAtPoint(doublePtToAimAt, dartboard)
-            val dart = dartboard.convertPointToDart(pt, true)
-
-            if (dart.getTotal() == doubleToAimAt * 2 && dart.isDouble())
-            {
-                doublesHit++
-            }
-        }
-
-        logger.info(CODE_SIMULATION_FINISHED, "Finished simulating throws")
-
-        val doublePercent = 100 * doublesHit / DOUBLE_DARTS_TO_THROW
-        return SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount)
-    }
-
     fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getValue(dartNo)
 
     fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getValue(dartNo)
+
+    fun throwAtDouble(double: Int, dartboard: Dartboard) = throwDartAtPoint(getPointForScore(double, dartboard, SegmentType.DOUBLE), dartboard)
 
     fun throwDartAtPoint(pt: Point, dartboard: Dartboard): Point
     {
@@ -278,9 +216,6 @@ data class DartsAiModel(val standardDeviation: Double,
 
     companion object
     {
-        private const val SCORING_DARTS_TO_THROW = 20000
-        private const val DOUBLE_DARTS_TO_THROW = 20000
-
         val DEFAULT_GOLF_SEGMENT_TYPES = mapOf(1 to SegmentType.DOUBLE, 2 to SegmentType.TREBLE, 3 to SegmentType.TREBLE)
         val DEFAULT_GOLF_STOP_THRESHOLDS = mapOf(1 to 2, 2 to 3)
 
