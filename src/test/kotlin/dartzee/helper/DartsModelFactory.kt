@@ -67,8 +67,9 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
     every { model.mercyThreshold } returns mercyThreshold
     every { model.hmDartNoToStopThreshold } returns hmDartNoToStopThreshold
 
+    val tempFn = makeThrowDartFn(dartsToThrow, dartboard)
     val throwDartFn = {
-        val pt = makeThrowDartFn(dartsToThrow, dartboard)()
+        val pt = tempFn()
         dartboard.dartThrown(pt)
     }
 
