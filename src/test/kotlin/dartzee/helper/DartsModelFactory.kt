@@ -9,7 +9,6 @@ import getPointForScore
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import java.awt.Point
 
 fun beastDartsModel(standardDeviationDoubles: Double? = null,
                     standardDeviationCentral: Double? = null,
@@ -67,9 +66,11 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
     every { model.mercyThreshold } returns mercyThreshold
     every { model.hmDartNoToStopThreshold } returns hmDartNoToStopThreshold
 
-    val tempFn = makeThrowDartFn(dartsToThrow, dartboard)
+    val remainingDarts = dartsToThrow.toMutableList()
+
     val throwDartFn = {
-        val pt = tempFn()
+        val dart = remainingDarts.removeAt(0)
+        val pt = getPointForScore(dart, dartboard)
         dartboard.dartThrown(pt)
     }
 
@@ -78,17 +79,6 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
     every { model.throwGolfDart(any(), any(), any()) } answers { throwDartFn() }
     every { model.getStopThresholdForDartNo(any()) } answers { callOriginal() }
     return model
-}
-
-fun makeThrowDartFn(dartsToThrow: List<AimDart>, dartboard: Dartboard): () -> Point
-{
-    val remainingDarts = dartsToThrow.toMutableList()
-    val throwDartFn = {
-        val dart = remainingDarts.removeAt(0)
-        getPointForScore(dart, dartboard)
-    }
-
-    return throwDartFn
 }
 
 data class ScoreAndSegmentType(val score: Int, val segmentType: SegmentType)
