@@ -111,6 +111,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
+    @Tag("integration")
     fun `Should be performant`()
     {
         val awkward = allNonMisses.filter { it.score != 25 }
