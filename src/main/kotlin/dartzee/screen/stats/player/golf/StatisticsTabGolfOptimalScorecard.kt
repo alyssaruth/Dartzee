@@ -61,13 +61,11 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         }
 
         val fudgedParticipant = SingleParticipant(ParticipantEntity())
-        val scorer = DartsScorerGolf(fudgedParticipant)
+        val scorer = DartsScorerGolf(fudgedParticipant, showGameId = true)
         if (color != null)
         {
             scorer.setTableForeground(Color.RED)
         }
-
-        scorer.showGameId = true
 
         val state = GolfPlayerState(fudgedParticipant, hmHoleToBestDarts.values.toMutableList())
         scorer.stateChanged(state)

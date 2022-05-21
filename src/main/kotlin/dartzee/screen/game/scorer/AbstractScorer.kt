@@ -92,8 +92,6 @@ abstract class AbstractScorer(protected val participant: IWrappedParticipant) : 
 
     protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
 
-    fun canBeAssigned() = isVisible && playerName.isEmpty()
-
     protected fun updateResultColourForPosition(pos: Int)
     {
         DartsColour.setFgAndBgColoursForPosition(lblResult, pos)

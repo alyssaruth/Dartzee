@@ -115,7 +115,7 @@ class TestDartsMatchScreen: AbstractTest()
         scrn.updateTotalScores()
         verify { matchSummaryPanel.updateTotalScores() }
 
-        val pt = insertParticipant()
+        val pt = makeSingleParticipant()
         scrn.addParticipant(500L, pt)
         verify { matchSummaryPanel.addParticipant(500L, pt) }
     }
