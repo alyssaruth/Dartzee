@@ -56,7 +56,7 @@ class DartboardSegmentSelector(width: Int = 500, height: Int = 500): Dartboard(w
     {
         val wireframe = ColourWrapper(DartsColour.TRANSPARENT)
         wireframe.edgeColour = Color.BLACK
-        super.paintDartboard(wireframe, true, cached=false)
+        super.paintDartboard(wireframe, listen = true)
     }
 
     override fun dartThrown(pt: Point)

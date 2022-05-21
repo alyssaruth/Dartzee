@@ -2,7 +2,7 @@ package dartzee.screen.game.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
-import dartzee.game.ParticipantName
+import dartzee.game.UniqueParticipantName
 import dartzee.game.state.GolfPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
 
@@ -89,7 +89,7 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<GolfPlayerState>
     /**
      * Get the darts that were actually counted, i.e. the last of each round.
      */
-    private fun getCountedDarts(playerName: ParticipantName): List<Dart>
+    private fun getCountedDarts(playerName: UniqueParticipantName): List<Dart>
     {
         val rounds = hmPlayerToDarts[playerName]!!
 

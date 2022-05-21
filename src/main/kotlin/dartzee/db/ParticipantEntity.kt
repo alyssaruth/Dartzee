@@ -2,7 +2,6 @@ package dartzee.db
 
 import dartzee.achievements.getWinAchievementType
 import dartzee.core.util.DateStatics
-import dartzee.core.util.StringUtil
 import dartzee.core.util.getSqlDateNow
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase

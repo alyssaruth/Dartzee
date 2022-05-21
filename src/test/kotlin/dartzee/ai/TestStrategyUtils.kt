@@ -23,9 +23,9 @@ class TestStrategyUtils: AbstractTest()
 
     class FudgedDartboard : Dartboard(100, 100)
     {
-        override fun paintDartboard(colourWrapper: ColourWrapper?, listen: Boolean, cached: Boolean)
+        override fun paintDartboard(colourWrapper: ColourWrapper?, listen: Boolean)
         {
-            super.paintDartboard(colourWrapper, listen, cached)
+            super.paintDartboard(colourWrapper, listen)
 
             val segment = StatefulSegment(SegmentType.TREBLE, 20)
             segment.addPoint(Point(1, 7))

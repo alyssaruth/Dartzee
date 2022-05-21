@@ -181,7 +181,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         parentWindow.revalidate()
 
         initForAi(hasAi())
-        dartboard.paintDartboardCached()
+        dartboard.paintDartboard()
 
         nextTurn()
     }
@@ -250,7 +250,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         loadScoresAndCurrentPlayer(gameId)
 
         //Paint the dartboard - always do this, in case of resuming with stats open
-        dartboard.paintDartboardCached()
+        dartboard.paintDartboard()
 
         //If the game is over, do some extra stuff to sort the screen out
         val dtFinish = gameEntity.dtFinish

@@ -64,6 +64,26 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): St
     return StatefulSegment(type, score)
 }
 
+fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, destinationDartboard: Dartboard): Point
+{
+    val relativeDistance = getDistance(sourcePt, sourceDartboard.centerPoint) / sourceDartboard.diameter
+    val angle = getAngleForPoint(sourcePt, sourceDartboard.centerPoint)
+
+    val newPoint = translatePoint(destinationDartboard.centerPoint, relativeDistance * destinationDartboard.diameter, angle)
+    destinationDartboard.rationalisePoint(newPoint)
+
+    val desiredSegment = sourceDartboard.getDataSegmentForPoint(sourcePt)
+    val candidatePoints = mutableSetOf(newPoint)
+    while (candidatePoints.none { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment })
+    {
+        val neighbours = candidatePoints.flatMap(::getNeighbours)
+        neighbours.forEach(destinationDartboard::rationalisePoint)
+        candidatePoints.addAll(neighbours)
+    }
+
+    return candidatePoints.first { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment }
+}
+
 /**
  * 1) Calculate the radius from the center to our point
  * 2) Using the diameter, work out whether this makes us a miss, single, double or treble
@@ -202,8 +222,6 @@ private fun initialiseOrdinalHashMap() : MutableMap<Int, Boolean>
 fun resetCachedDartboardValues()
 {
     colourWrapperFromPrefs = null
-
-    Dartboard.appearancePreferenceChanged()
 }
 
 fun getAllPossibleSegments(): List<DartboardSegment>

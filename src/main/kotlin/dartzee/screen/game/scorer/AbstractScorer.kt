@@ -70,7 +70,7 @@ abstract class AbstractScorer(private val participant: IWrappedParticipant) : JP
 
     fun init()
     {
-        lblName.text = participant.getParticipantNameOrdered().value
+        lblName.text = participant.getParticipantName().value
 
         //TableModel
         tableScores.setRowHeight(25)

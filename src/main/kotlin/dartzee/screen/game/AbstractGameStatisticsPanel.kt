@@ -4,7 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.addUnique
-import dartzee.game.ParticipantName
+import dartzee.game.UniqueParticipantName
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import java.awt.BorderLayout
@@ -19,10 +19,10 @@ import javax.swing.table.DefaultTableModel
  */
 abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<PlayerState>>: JPanel()
 {
-    protected val participantNamesOrdered = mutableListOf<ParticipantName>()
+    protected val uniqueParticipantNamesOrdered = mutableListOf<UniqueParticipantName>()
     protected var participants: List<IWrappedParticipant> = emptyList()
-    protected val hmPlayerToDarts = mutableMapOf<ParticipantName, List<List<Dart>>>()
-    protected val hmPlayerToStates = mutableMapOf<ParticipantName, List<PlayerState>>()
+    protected val hmPlayerToDarts = mutableMapOf<UniqueParticipantName, List<List<Dart>>>()
+    protected val hmPlayerToStates = mutableMapOf<UniqueParticipantName, List<PlayerState>>()
 
     var tm = DefaultTableModel()
 
@@ -56,7 +56,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         hmPlayerToDarts.clear()
         hmPlayerToStates.clear()
 
-        val hm = playerStates.groupBy { it.wrappedParticipant.getParticipantName() }
+        val hm = playerStates.groupBy { it.wrappedParticipant.getUniqueParticipantName() }
         hmPlayerToStates.putAll(hm)
 
         hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.completedRounds }})
@@ -80,11 +80,11 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
 
         for (pt in participants)
         {
-            val participantName = pt.getParticipantName()
-            participantNamesOrdered.addUnique(participantName)
+            val participantName = pt.getUniqueParticipantName()
+            uniqueParticipantNamesOrdered.addUnique(participantName)
         }
 
-        for (participantName in participantNamesOrdered)
+        for (participantName in uniqueParticipantNamesOrdered)
         {
             tm.addColumn(participantName)
         }
@@ -110,9 +110,9 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         tm.addRow(row)
     }
 
-    protected fun getFlattenedDarts(participantName: ParticipantName): List<Dart>
+    protected fun getFlattenedDarts(uniqueParticipantName: UniqueParticipantName): List<Dart>
     {
-        val rounds = hmPlayerToDarts[participantName]
+        val rounds = hmPlayerToDarts[uniqueParticipantName]
         return rounds?.flatten() ?: listOf()
     }
 
@@ -134,15 +134,15 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         if (scores.isEmpty()) null else MathsUtil.round(scores.average(), 2)
     }
 
-    private fun getFinishedParticipants(participantName: ParticipantName) = participants.filter { it.getParticipantName() == participantName && it.participant.finalScore > -1 }
+    private fun getFinishedParticipants(uniqueParticipantName: UniqueParticipantName) = participants.filter { it.getUniqueParticipantName() == uniqueParticipantName && it.participant.finalScore > -1 }
 
-    protected fun prepareRow(name: String, fn: (participantName: ParticipantName) -> Any?): Array<Any?>
+    protected fun prepareRow(name: String, fn: (uniqueParticipantName: UniqueParticipantName) -> Any?): Array<Any?>
     {
         val row = factoryRow(name)
 
-        for (i in participantNamesOrdered.indices)
+        for (i in uniqueParticipantNamesOrdered.indices)
         {
-            val playerName = participantNamesOrdered[i]
+            val playerName = uniqueParticipantNamesOrdered[i]
             val result = fn(playerName)
 
             row[i + 1] = result ?: "N/A"

@@ -4,16 +4,13 @@ import com.github.alexburlton.swingtest.shouldMatchImage
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
-import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.markPoints
 import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
 import io.mockk.mockk
-import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -37,43 +34,12 @@ class TestDartboard: AbstractTest()
     }
 
     @Test
-    fun `It should cache the image and re-use the cache for future paints`()
-    {
-        Dartboard.dartboardTemplate shouldBe null
-
-        val dartboard = spyk(Dartboard(50, 50))
-        dartboard.paintDartboardCached()
-
-        Dartboard.dartboardTemplate shouldNotBe null
-        verifyNotCalled { dartboard.initialiseFromTemplate() }
-
-        val dartboard2 = spyk(Dartboard(50, 50))
-        dartboard2.paintDartboardCached()
-
-        verify {dartboard2.initialiseFromTemplate()}
-    }
-
-    @Test
-    fun `Dartboard template should be cleared when appearance preferences are changed`()
-    {
-        val dartboard = Dartboard(50, 50)
-        dartboard.paintDartboardCached()
-
-        Dartboard.appearancePreferenceChanged()
-
-        Dartboard.dartboardTemplate shouldBe null
-    }
-
-
-    @Test
     fun `Dartboard should paint the correct colours`()
     {
-        Dartboard.dartboardTemplate = null
-
         val dartboard = Dartboard(50, 50)
-        dartboard.paintDartboard(cached = true, colourWrapper = DEFAULT_COLOUR_WRAPPER)
+        dartboard.paintDartboard(colourWrapper = DEFAULT_COLOUR_WRAPPER)
 
-        val img = Dartboard.dartboardTemplate!!.getDartboardImg()
+        val img = dartboard.dartboardImage!!
 
         val singleTwenty = img.getRGB(25, 10)
         val singleSix = img.getRGB(40, 25)

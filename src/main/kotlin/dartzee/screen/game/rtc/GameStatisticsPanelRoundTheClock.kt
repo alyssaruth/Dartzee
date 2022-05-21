@@ -3,7 +3,7 @@ package dartzee.screen.game.rtc
 import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
-import dartzee.game.ParticipantName
+import dartzee.game.UniqueParticipantName
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
 import dartzee.screen.game.AbstractGameStatisticsPanel
@@ -65,7 +65,7 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameSta
         fn(sizes)
     }
 
-    private fun getDartsGroupedByParticipantAndNumber(playerName: ParticipantName): List<List<Dart>>
+    private fun getDartsGroupedByParticipantAndNumber(playerName: UniqueParticipantName): List<List<Dart>>
     {
         val darts = getFlattenedDarts(playerName)
         val hm = darts.groupBy{d -> "${d.participantId}_${d.startingScore}"}

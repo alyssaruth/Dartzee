@@ -14,7 +14,6 @@ interface IParticipant
     fun saveToDatabase()
 
     fun isActive() = isEndOfTime(dtFinished)
-
     fun getFinishingPositionDesc(): String = StringUtil.convertOrdinalToText(finishingPosition)
 
     fun saveFinishingPosition(game: GameEntity, position: Int)

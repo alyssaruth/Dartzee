@@ -4,12 +4,13 @@ import dartzee.core.bean.paint
 import dartzee.db.IParticipant
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
+import javax.swing.ImageIcon
 import dartzee.game.ParticipantName
+import dartzee.game.UniqueParticipantName
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Image
 import java.awt.image.BufferedImage
-import javax.swing.ImageIcon
 
 /**
  * Wraps up either a Team or an individual Participant, granting access to either:
@@ -26,8 +27,8 @@ sealed interface IWrappedParticipant
         get() = participant.ordinal
 
     fun getIndividual(roundNumber: Int): ParticipantEntity
-    fun getParticipantName() = ParticipantName(individuals.map { it.getPlayerName() }.sorted().joinToString(" & "))
-    fun getParticipantNameOrdered() = ParticipantName(individuals.joinToString(" & ") { it.getPlayerName() })
+    fun getUniqueParticipantName() = UniqueParticipantName(individuals.map { it.getPlayerName() }.sorted().joinToString(" & "))
+    fun getParticipantName() = ParticipantName(individuals.joinToString(" & ") { it.getPlayerName() })
     fun getCombinedAvatar(): ImageIcon
 }
 
