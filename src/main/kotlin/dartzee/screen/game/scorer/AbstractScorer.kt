@@ -1,9 +1,9 @@
 package dartzee.screen.game.scorer
 
-import dartzee.bean.PlayerAvatar
+import dartzee.bean.ParticipantAvatar
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil.DefaultModel
-import dartzee.db.PlayerEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import java.awt.Color
@@ -14,9 +14,9 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer : JPanel()
+abstract class AbstractScorer(protected val participant: IWrappedParticipant) : JPanel()
 {
-    var playerId = ""
+    val playerIds = participant.individuals.map { it.playerId }
 
     val model = DefaultModel()
 
@@ -25,7 +25,7 @@ abstract class AbstractScorer : JPanel()
     val tableScores = ScrollTableDartsGame()
     val lblResult = JLabel("")
     protected val panelNorth = JPanel()
-    val lblAvatar = PlayerAvatar()
+    val lblAvatar = ParticipantAvatar(participant)
     val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
 
@@ -46,6 +46,7 @@ abstract class AbstractScorer : JPanel()
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
+        lblName.text = participant.getParticipantName().value
         lblName.foreground = Color.BLACK
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
@@ -61,28 +62,15 @@ abstract class AbstractScorer : JPanel()
         tableScores.setFillsViewportHeight(false)
         tableScores.setShowRowCount(false)
         tableScores.disableSorting()
-
-        lblAvatar.readOnly = true
     }
 
     abstract fun getNumberOfColumns(): Int
-    abstract fun initImpl()
+    protected abstract fun initImpl()
 
-    fun init(player: PlayerEntity?)
+    fun getTableOnly() = panelCenter
+
+    fun init()
     {
-        lblName.isVisible = player != null
-        lblAvatar.isVisible = player != null
-        panelAvatar.isVisible = player != null
-
-        //Sometimes we pass in a null player for the purpose of showing stats
-        if (player != null)
-        {
-            val playerName = player.name
-            lblName.text = playerName
-            lblAvatar.init(player, false)
-            playerId = player.rowId
-        }
-
         lblResult.text = ""
 
         //TableModel

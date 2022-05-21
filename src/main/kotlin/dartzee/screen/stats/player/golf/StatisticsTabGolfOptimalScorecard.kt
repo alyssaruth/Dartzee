@@ -36,9 +36,6 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         add(panelOther)
         panelOther.add(panelOtherScorecard)
         panelOtherScorecard.layout = BorderLayout(0, 0)
-        val scorer = DartsScorerGolf()
-        scorer.init(null)
-        panelMyScorecard.add(scorer, BorderLayout.CENTER)
     }
 
     override fun populateStats()
@@ -63,22 +60,22 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
             game.populateOptimalScorecardMaps(hmHoleToBestDarts, hmHoleToBestGameId)
         }
 
-        val scorer = DartsScorerGolf()
+        val fudgedParticipant = SingleParticipant(ParticipantEntity())
+        val scorer = DartsScorerGolf(fudgedParticipant)
         if (color != null)
         {
             scorer.setTableForeground(Color.RED)
         }
 
         scorer.showGameId = true
-        scorer.init(null)
 
-        val state = GolfPlayerState(SingleParticipant(ParticipantEntity()), hmHoleToBestDarts.values.toMutableList())
+        val state = GolfPlayerState(fudgedParticipant, hmHoleToBestDarts.values.toMutableList())
         scorer.stateChanged(state)
 
         scorer.addGameIds(hmHoleToBestGameId.getSortedValues())
 
         panel.removeAll()
-        panel.add(scorer, BorderLayout.CENTER)
+        panel.add(scorer.getTableOnly(), BorderLayout.CENTER)
         panel.revalidate()
         panel.repaint()
     }

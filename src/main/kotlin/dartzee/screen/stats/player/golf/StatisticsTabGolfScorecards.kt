@@ -5,6 +5,8 @@ import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.RowSelectionListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
+import dartzee.db.ParticipantEntity
+import dartzee.game.state.SingleParticipant
 import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
@@ -142,8 +144,8 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
 
     private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel)
     {
-        val scorer = DartsScorerGolf()
-        scorer.init(null)
+        val fudgedParticipant = SingleParticipant(ParticipantEntity())
+        val scorer = DartsScorerGolf(fudgedParticipant)
         if (mode == MODE_BACK_9)
         {
             scorer.fudgeFactor = 9
@@ -152,7 +154,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
         game.populateScorer(scorer, mode)
 
         scorecardPanel.removeAll()
-        scorecardPanel.add(scorer, BorderLayout.CENTER)
+        scorecardPanel.add(scorer.getTableOnly(), BorderLayout.CENTER)
         scorecardPanel.revalidate()
         scorecardPanel.repaint()
     }

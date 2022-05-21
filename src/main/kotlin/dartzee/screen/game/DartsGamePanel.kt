@@ -153,8 +153,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         addMouseListener(this)
 
         dartboard.renderScoreLabels = true
-
-        initScorers(totalPlayers)
     }
 
 
@@ -180,14 +178,18 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         players.forEachIndexed { ix, player ->
             val gameId = gameEntity.rowId
             val participant = ParticipantEntity.factoryAndSave(gameId, player, ix)
-            addParticipant(participant)
+            val wrappedPt = SingleParticipant(participant)
 
-            val scorer = assignScorer(player)
-            val state = factoryState(SingleParticipant(participant))
+            addParticipant(wrappedPt)
+
+            val scorer = factoryScorer(wrappedPt)
+            assignScorer(scorer)
+            val state = factoryState(wrappedPt)
             state.addListener(scorer)
             addState(ix, state, scorer)
         }
 
+        initScorers()
         initForAi(hasAi())
         dartboard.paintDartboardCached()
 
@@ -291,14 +293,18 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         for (i in participants.indices)
         {
             val pt = participants[i]
-            addParticipant(pt)
+            val wrappedPt = SingleParticipant(pt)
 
-            val scorer = assignScorer(pt.getPlayer())
+            addParticipant(wrappedPt)
+            val scorer = factoryScorer(wrappedPt)
+
+            assignScorer(scorer)
             val state = factoryState(SingleParticipant(pt))
             state.addListener(scorer)
             addState(i, state, scorer)
         }
 
+        initScorers()
         initForAi(hasAi())
     }
 
@@ -662,7 +668,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         panelCenter.repaint()
     }
 
-    private fun addParticipant(participant: ParticipantEntity)
+    private fun addParticipant(participant: IWrappedParticipant)
     {
         if (parentWindow is DartsMatchScreen<*>)
         {
@@ -670,9 +676,20 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         }
     }
 
+    private fun finaliseParticipants()
+    {
+        initScorers()
+        initForAi(hasAi())
+
+        if (parentWindow is DartsMatchScreen<*>)
+        {
+            parentWindow.finaliseParticipants()
+        }
+    }
+
     fun achievementUnlocked(playerId: String, achievement: AbstractAchievement)
     {
-        scorersOrdered.find { it.playerId === playerId }?.achievementUnlocked(achievement)
+        scorersOrdered.find { it.playerIds.contains(playerId) }?.achievementUnlocked(achievement)
     }
 
     private fun dismissSlider()

@@ -19,7 +19,7 @@ class GameLauncher
 {
     fun launchNewMatch(match: DartsMatchEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
     {
-        val scrn = factoryMatchScreen(match, match.players)
+        val scrn = factoryMatchScreen(match)
 
         val game = GameEntity.factoryAndSave(match)
 
@@ -94,14 +94,12 @@ class GameLauncher
     private fun loadAndDisplayMatch(matchId: String, originalGameId: String)
     {
         val allGames = GameEntity.retrieveGamesForMatch(matchId)
-
-        val firstGame = allGames.first()
         val lastGame = allGames[allGames.size - 1]
 
         val match = DartsMatchEntity().retrieveForId(matchId)
         match!!.cacheMetadataFromGame(lastGame)
 
-        val scrn = factoryMatchScreen(match, firstGame.retrievePlayersVector())
+        val scrn = factoryMatchScreen(match)
 
         try
         {
@@ -123,12 +121,12 @@ class GameLauncher
         scrn.updateTotalScores()
     }
 
-    private fun factoryMatchScreen(match: DartsMatchEntity, players: List<PlayerEntity>) =
+    private fun factoryMatchScreen(match: DartsMatchEntity) =
         when (match.gameType)
         {
-            GameType.X01 -> X01MatchScreen(match, players)
-            GameType.ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match, players)
-            GameType.GOLF -> GolfMatchScreen(match, players)
-            GameType.DARTZEE -> DartzeeMatchScreen(match, players)
+            GameType.X01 -> X01MatchScreen(match)
+            GameType.ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match)
+            GameType.GOLF -> GolfMatchScreen(match)
+            GameType.DARTZEE -> DartzeeMatchScreen(match)
         }
 }
