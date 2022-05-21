@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestX01E2E: AbstractRegistryTest()
+class TestX01E2E : AbstractRegistryTest()
 {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
