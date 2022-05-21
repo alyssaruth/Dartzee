@@ -182,14 +182,13 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
             addParticipant(wrappedPt)
 
-            val scorer = factoryScorer(wrappedPt)
-            assignScorer(scorer)
+            val scorer = assignScorer(wrappedPt)
             val state = factoryState(wrappedPt)
             state.addListener(scorer)
             addState(ix, state, scorer)
         }
 
-        initScorers()
+        finaliseScorers()
         initForAi(hasAi())
         dartboard.paintDartboardCached()
 
@@ -296,15 +295,14 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             val wrappedPt = SingleParticipant(pt)
 
             addParticipant(wrappedPt)
-            val scorer = factoryScorer(wrappedPt)
+            val scorer = assignScorer(wrappedPt)
 
-            assignScorer(scorer)
             val state = factoryState(SingleParticipant(pt))
             state.addListener(scorer)
             addState(i, state, scorer)
         }
 
-        initScorers()
+        finaliseScorers()
         initForAi(hasAi())
     }
 
@@ -678,7 +676,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     private fun finaliseParticipants()
     {
-        initScorers()
+        finaliseScorers()
         initForAi(hasAi())
 
         if (parentWindow is DartsMatchScreen<*>)

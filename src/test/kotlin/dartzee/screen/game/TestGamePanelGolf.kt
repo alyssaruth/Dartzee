@@ -167,7 +167,7 @@ class TestGamePanelGolf: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = assignScorer(player)
+            val scorer = assignScorer(makeSingleParticipant(player))
 
             currentPlayerNumber = 0
 

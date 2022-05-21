@@ -1,14 +1,15 @@
 package dartzee.screen.game.scorer
 
-import dartzee.`object`.Dart
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.achievements.x01.AchievementX01GamesWon
+import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.TestPlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
-import dartzee.helper.insertPlayer
+import dartzee.`object`.Dart
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -26,7 +27,7 @@ class TestAbstractDartsScorer: AbstractTest()
         val state = TestPlayerState(insertParticipant(), completedRounds = mutableListOf(roundOne, roundTwo))
 
         val scorer = TestDartsScorer()
-        scorer.init(null)
+        scorer.init()
         scorer.addRow(arrayOfNulls<Any?>(2))
 
         scorer.stateChanged(state)
@@ -43,7 +44,7 @@ class TestAbstractDartsScorer: AbstractTest()
         val state = TestPlayerState(insertParticipant(finishingPosition = 3), scoreSoFar = 30)
 
         val scorer = TestDartsScorer()
-        scorer.init(null)
+        scorer.init()
         scorer.stateChanged(state)
 
         scorer.lblResult.shouldHaveColours(DartsColour.THIRD_COLOURS)
@@ -54,7 +55,7 @@ class TestAbstractDartsScorer: AbstractTest()
     fun `Should correctly update colours when selected and deselected`()
     {
         val scorer = TestDartsScorer()
-        scorer.init(insertPlayer())
+        scorer.init()
 
         val state = TestPlayerState(insertParticipant(), isActive = false)
         scorer.stateChanged(state)
@@ -71,7 +72,7 @@ class TestAbstractDartsScorer: AbstractTest()
         val state = TestPlayerState(insertParticipant(finishingPosition = -1), scoreSoFar = -1)
 
         val scorer = TestDartsScorer()
-        scorer.init(null)
+        scorer.init()
 
         val startingColours = Pair(scorer.lblResult.background, scorer.lblResult.foreground)
         scorer.stateChanged(state)
@@ -83,7 +84,7 @@ class TestAbstractDartsScorer: AbstractTest()
     fun `Should layer achievements, and show them in sequence as they are closed`()
     {
         val scorer = TestDartsScorer()
-        scorer.init(null)
+        scorer.init()
 
         val achievementOne = AchievementX01BestGame().also { it.attainedValue = 30 }
         val achievementTwo = AchievementX01BestFinish().also { it.attainedValue = 97 }
@@ -108,7 +109,7 @@ class TestAbstractDartsScorer: AbstractTest()
         scorer.getAchievementOverlay() shouldBe null
     }
 
-    private class TestDartsScorer: AbstractDartsScorer<TestPlayerState>()
+    private class TestDartsScorer(participant: IWrappedParticipant = makeSingleParticipant()) : AbstractDartsScorer<TestPlayerState>(participant)
     {
         override fun getNumberOfColumns() = 5
         override fun getNumberOfColumnsForAddingNewDart() = 3

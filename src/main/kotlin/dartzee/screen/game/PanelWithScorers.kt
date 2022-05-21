@@ -32,12 +32,9 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
     /**
      * Abstract methods
      */
-    abstract fun factoryScorer(participant: IWrappedParticipant): S
+    protected abstract fun factoryScorer(participant: IWrappedParticipant): S
 
-    /**
-     * Instance methods
-     */
-    fun initScorers()
+    fun finaliseScorers()
     {
         panelEast.removeAll()
         panelWest.removeAll()
@@ -56,9 +53,11 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         westScorers.forEach { panelWest.add(it, "growy") }
     }
 
-    fun assignScorer(scorer: S)
+    fun assignScorer(participant: IWrappedParticipant): S
     {
+        val scorer = factoryScorer(participant)
         scorer.init()
         scorersOrdered.add(scorer)
+        return scorer
     }
 }

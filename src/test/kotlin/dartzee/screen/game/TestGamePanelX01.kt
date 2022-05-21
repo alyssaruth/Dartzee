@@ -127,7 +127,7 @@ class TestGamePanelX01: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = assignScorer(player)
+            val scorer = assignScorer(makeSingleParticipant(player))
 
             currentPlayerNumber = 0
             addState(0, makeX01PlayerState(player = player), scorer)

@@ -40,15 +40,14 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
 
     fun finaliseParticipants()
     {
-        initScorers()
+        finaliseScorers()
         revalidate()
     }
 
     fun addParticipant(localId: Long, participant: IWrappedParticipant)
     {
         val participantName = participant.getUniqueParticipantName()
-        val scorer = factoryScorer(participant)
-        assignScorer(scorer)
+        val scorer = assignScorer(participant)
         hmParticipantNameToScorer[participantName] = scorer
 
         val row = arrayOf(localId, participant, participant, participant)

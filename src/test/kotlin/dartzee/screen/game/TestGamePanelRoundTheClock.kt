@@ -112,7 +112,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
         init
         {
             val player = insertPlayer(currentPlayerId)
-            val scorer = assignScorer(player)
+            val scorer = assignScorer(makeSingleParticipant(player))
 
             currentPlayerNumber = 0
             addState(0, makeClockPlayerState(player = player), scorer)
