@@ -8,7 +8,6 @@ import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
 import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.logging.CODE_RENDER_ERROR
-import dartzee.logging.KEY_CACHED
 import dartzee.logging.KEY_DURATION
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.*
@@ -41,7 +40,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     var centerPoint = Point(200, 200)
         private set
 
-    private var diameter = 360.0
+    var diameter = 360.0
 
     var scoreLabelColor: Color = Color.WHITE
     var renderScoreLabels = false
@@ -74,18 +73,12 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         listeners.add(listener)
     }
 
-    fun paintDartboardCached()
-    {
-        paintDartboard(cached = true)
-    }
-
-    open fun paintDartboard(colourWrapper: ColourWrapper? = null, listen: Boolean = true, cached: Boolean = false)
+    open fun paintDartboard(colourWrapper: ColourWrapper? = null, listen: Boolean = true)
     {
         val width = width
         val height = height
 
         val timer = DurationTimer()
-        val usingCache = cached && dartboardTemplate != null
 
         dartboardLabel.setSize(width, height)
 
@@ -98,29 +91,16 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
         getAllSegments().forEach { it.computeEdgePoints() }
 
-        if (usingCache)
-        {
-            initialiseFromTemplate()
-        }
-        else
-        {
-            paintDartboardImage()
-        }
+        paintDartboardImage()
 
         addScoreLabels()
 
         dartboardLabel.icon = ImageIcon(dartboardImage!!)
         dartboardLabel.repaint()
 
-        if (cached
-          && dartboardTemplate == null)
-        {
-            dartboardTemplate = DartboardTemplate(this)
-        }
-
         val duration = timer.getDuration()
-        logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms (cached: $usingCache)",
-            KEY_DURATION to duration, KEY_CACHED to usingCache)
+        logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
+            KEY_DURATION to duration)
 
         //Now the dartboard is painted, add the mouse listeners
         if (listen)
@@ -135,11 +115,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         dartboardImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
         dartboardImage?.paint { hmPointToColor[it] }
-    }
-
-    fun initialiseFromTemplate()
-    {
-        dartboardImage = dartboardTemplate!!.getDartboardImg()
     }
 
     private fun addScoreLabels()
@@ -295,6 +270,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun getAllSegments() = hmSegmentKeyToSegment.values.toList()
 
+    fun getDataSegmentForPoint(pt: Point) = getSegmentForPoint(pt).toDataSegment()
     fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): StatefulSegment
     {
         val segment = getAllSegments().firstOrNull { it.containsPoint(pt) }
@@ -496,27 +472,5 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     companion object
     {
         private val DARTIMG = ImageIcon(Dartboard::class.java.getResource("/dartImage.png"))
-        var dartboardTemplate: DartboardTemplate? = null
-
-        fun appearancePreferenceChanged()
-        {
-            dartboardTemplate = null
-        }
     }
-
-    inner class DartboardTemplate(dartboard: Dartboard)
-    {
-        private val dartboardImg = dartboard.dartboardImage!!
-
-        fun getDartboardImg(): BufferedImage
-        {
-            val cm = dartboardImg.colorModel
-            val isAlphaPremultiplied = cm.isAlphaPremultiplied
-            val writableRaster = dartboardImg.raster.createCompatibleWritableRaster()
-            val raster = dartboardImg.copyData(writableRaster)
-            return BufferedImage(cm, raster, isAlphaPremultiplied, null)
-        }
-
-    }
-
 }

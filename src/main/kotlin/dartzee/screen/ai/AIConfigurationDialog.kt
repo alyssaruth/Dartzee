@@ -1,6 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
+import dartzee.ai.DartsAiSimulator
 import dartzee.core.bean.addGhostText
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.setFontSize
@@ -198,7 +199,7 @@ class AIConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate())
         val model = factoryModelFromPanels()
 
         val dartboard = scatterTab.dartboard
-        val simulationWrapper = model.runSimulation(dartboard)
+        val simulationWrapper = DartsAiSimulator.runSimulation(model, dartboard)
 
         val averageDart = MathsUtil.round(simulationWrapper.averageDart, 2)
         textFieldAverageScore.text = "" + averageDart
