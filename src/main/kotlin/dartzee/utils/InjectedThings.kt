@@ -36,7 +36,7 @@ object InjectedThings
     var gameLauncher: GameLauncher = GameLauncher()
     var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true } }
     var playerManager: PlayerManager = PlayerManager()
-    val dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
+    var dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: AbstractSimulationRunner = SimulationRunner()
     private val remoteDatabaseStore: IRemoteDatabaseStore = AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)

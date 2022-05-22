@@ -5,28 +5,37 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.makeTestDartboard
 import dartzee.core.helper.verifyNotCalled
+import dartzee.dartzee.DartzeeAimCalculator
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.makeDartsModel
+import dartzee.helper.makeSegmentStatus
 import dartzee.listener.DartboardListener
+import dartzee.makeTestDartzeeDartboard
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import io.mockk.mockk
-import io.mockk.verify
-import io.mockk.verifySequence
+import io.mockk.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.awt.Point
 import kotlin.math.floor
 
 class TestDartsAiModel: AbstractTest()
 {
+    @BeforeEach
+    fun beforeEach()
+    {
+        InjectedThings.dartzeeAimCalculator = DartzeeAimCalculator()
+    }
+
     @Test
     fun `Should serialize and deserialize with default values`()
     {
@@ -178,12 +187,20 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should just miss the board if told to deliberately miss`()
     {
-        val dartboard = makeTestDartboard()
+        val dartboard = makeTestDartzeeDartboard()
         val erraticModel = makeDartsModel(standardDeviation = 100.0, maxRadius = 75)
 
+        val mockDartzeeAimCalculator = mockk<DartzeeAimCalculator>()
+        every { mockDartzeeAimCalculator.getPointToAimFor(any(), any(), any()) } returns DELIBERATE_MISS
+        InjectedThings.dartzeeAimCalculator = mockDartzeeAimCalculator
+
+        val listener = mockk<DartboardListener>(relaxed = true)
+        dartboard.addDartboardListener(listener)
+
         repeat(20) {
-            val result = erraticModel.throwDartAtPoint(DELIBERATE_MISS, dartboard)
-            dartboard.getSegmentForPoint(result).toDataSegment() shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
+            erraticModel.throwDartzeeDart(0, dartboard, makeSegmentStatus())
+            verify { listener.dartThrown(Dart(3, 0)) }
+            clearMocks(listener)
         }
     }
 

@@ -1,9 +1,11 @@
 package dartzee.utils
 
+import dartzee.core.bean.getPointList
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import dartzee.helper.AbstractRegistryTest
+import dartzee.makeTestDartboard
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -180,4 +182,18 @@ class TestDartboardUtil : AbstractRegistryTest()
         getAllPossibleSegments().size shouldBe (20 * 6) + 2
     }
 
+    @Test
+    fun `Should preserve the segment type when mapping between dartboards`()
+    {
+        val bigDartboard = makeTestDartboard(200, 200)
+        val smallDartboard = makeTestDartboard(100, 100)
+
+        getPointList(200, 200).forEach { pt ->
+            val result = convertForDestinationDartboard(pt, bigDartboard, smallDartboard)
+
+            val bigSegment = bigDartboard.getDataSegmentForPoint(pt)
+            val smallSegment = smallDartboard.getDataSegmentForPoint(result)
+            bigSegment shouldBe smallSegment
+        }
+    }
 }
