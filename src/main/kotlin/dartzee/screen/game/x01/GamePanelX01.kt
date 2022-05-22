@@ -25,7 +25,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
     private val startingScore = Integer.parseInt(game.gameParams)
 
     override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(startingScore, pt)
-    override fun factoryDartboard() = Dartboard()
+    override fun factoryDartboard() = Dartboard(500, 500)
 
     override fun saveDartsAndProceed()
     {

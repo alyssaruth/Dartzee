@@ -20,7 +20,7 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
 
-    override fun factoryDartboard() = DartzeeDartboard()
+    override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = ClockPlayerState(config, pt)
 
     override fun doAiTurn(model: DartsAiModel)

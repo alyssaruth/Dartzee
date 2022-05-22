@@ -19,7 +19,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
     //Number of rounds - 9 holes or 18?
     override val totalRounds = Integer.parseInt(game.gameParams)
 
-    override fun factoryDartboard() = Dartboard()
+    override fun factoryDartboard() = Dartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = GolfPlayerState(pt)
 
     private fun getScoreForMostRecentDart() : Int
