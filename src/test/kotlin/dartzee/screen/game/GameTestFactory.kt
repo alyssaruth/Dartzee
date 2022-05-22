@@ -5,12 +5,16 @@ import dartzee.achievements.AchievementType
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.ClockType
 import dartzee.game.GameType
+import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
 import dartzee.helper.*
 import dartzee.`object`.Dart
 import dartzee.screen.game.golf.GamePanelGolf
+import dartzee.screen.game.rtc.GamePanelRoundTheClock
+import dartzee.screen.game.x01.GamePanelX01
 
 fun makeSingleParticipant(player: PlayerEntity) = makeSingleParticipant(insertParticipant(playerId = player.rowId))
 fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant()) = SingleParticipant(pt)
@@ -28,6 +32,15 @@ fun makeGolfGamePanel(currentPlayerId: String = randomGuid()) =
         GameEntity.factoryAndSave(GameType.GOLF, "18"),
         1).apply { testInit(currentPlayerId) }
 
+fun makeX01GamePanel(currentPlayerId: String = randomGuid()) =
+    GamePanelX01(FakeDartsScreen(), GameEntity.factoryAndSave(GameType.X01, "501"), 1).apply { testInit(currentPlayerId) }
+
+fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
+    GamePanelRoundTheClock(
+        FakeDartsScreen(GameType.ROUND_THE_CLOCK),
+        GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, RoundTheClockConfig(ClockType.Standard, true).toJson()),
+        1).apply { testInit(playerId) }
+
 fun DartsGamePanel<*, *, *>.testInit(playerId: String)
 {
     val player = insertPlayer(playerId)
@@ -37,7 +50,13 @@ fun DartsGamePanel<*, *, *>.testInit(playerId: String)
 fun DartsGamePanel<*, *, *>.setDartsThrown(dartsThrown: List<Dart>)
 {
     btnReset.doClick()
-    dartsThrown.forEach { dartThrown(it) }
+    dartsThrown.forEach(::dartThrown)
+}
+
+fun DartsGamePanel<*, *, *>.addCompletedRound(dartsThrown: List<Dart>)
+{
+    setDartsThrown(dartsThrown)
+    btnConfirm.doClick()
 }
 
 class FakeDartsScreen(gameType: GameType = GameType.X01) : AbstractDartsGameScreen(2, gameType)

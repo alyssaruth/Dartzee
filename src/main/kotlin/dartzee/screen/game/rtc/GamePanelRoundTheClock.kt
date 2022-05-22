@@ -15,7 +15,7 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
-open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
     GamePanelPausable<DartsScorerRoundTheClock, DartzeeDartboard, ClockPlayerState>(parent, game, totalPlayers)
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
@@ -86,7 +86,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         super.saveDartsAndProceed()
     }
 
-    fun updateBestStreakAchievement()
+    private fun updateBestStreakAchievement()
     {
         val longestStreakThisGame = getCurrentPlayerState().getLongestStreak()
         if (longestStreakThisGame > 1)

@@ -19,7 +19,7 @@ import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 
-open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
     GamePanelPausable<DartsScorerX01, Dartboard, X01PlayerState>(parent, game, totalPlayers)
 {
     private val startingScore = Integer.parseInt(game.gameParams)
