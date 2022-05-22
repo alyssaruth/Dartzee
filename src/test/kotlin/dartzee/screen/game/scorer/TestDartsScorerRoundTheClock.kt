@@ -1,18 +1,16 @@
 package dartzee.screen.game.scorer
 
 import com.github.alexburlton.swingtest.findChild
-import dartzee.`object`.Dart
-import dartzee.`object`.DartNotThrown
 import dartzee.achievements.rtc.AchievementClockBestGame
-import dartzee.db.ParticipantEntity
 import dartzee.firstRow
 import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
-import dartzee.game.state.SingleParticipant
 import dartzee.getRows
 import dartzee.helper.AbstractTest
-import dartzee.helper.insertParticipant
 import dartzee.helper.makeClockPlayerState
+import dartzee.`object`.Dart
+import dartzee.`object`.DartNotThrown
+import dartzee.screen.game.makeSingleParticipant
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeNull
 import io.kotlintest.matchers.types.shouldNotBeNull
@@ -127,10 +125,9 @@ class TestDartsScorerRoundTheClock: AbstractTest()
 
     private fun factoryScorer(
         clockType: ClockType = ClockType.Standard,
-        inOrder: Boolean = true,
-        participant: ParticipantEntity = insertParticipant()): DartsScorerRoundTheClock
+        inOrder: Boolean = true): DartsScorerRoundTheClock
     {
-        val scorer = DartsScorerRoundTheClock(mockk(relaxed = true), RoundTheClockConfig(clockType, inOrder), SingleParticipant(participant))
+        val scorer = DartsScorerRoundTheClock(mockk(relaxed = true), RoundTheClockConfig(clockType, inOrder), makeSingleParticipant())
         scorer.init()
         return scorer
     }
