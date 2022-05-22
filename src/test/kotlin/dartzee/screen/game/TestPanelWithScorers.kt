@@ -12,7 +12,19 @@ import org.junit.jupiter.api.Test
 class TestPanelWithScorers: AbstractTest()
 {
     @Test
-    fun `Should init with the right number of scorers, and split them evenly between east and west`()
+    fun `Assigning a scorer should initialise it`()
+    {
+        val scrn = FakeDartsScreen()
+
+        val singleParticipant = makeSingleParticipant()
+        scrn.assignScorer(singleParticipant)
+
+        val scorer = scrn.getScorer(0)
+        scorer.initted shouldBe true
+    }
+
+    @Test
+    fun `Should split 5 scorers correctly`()
     {
         val scrn = FakeDartsScreen()
 
@@ -22,13 +34,19 @@ class TestPanelWithScorers: AbstractTest()
         scrn.scorerCount() shouldBe 5
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1), scrn.getScorer(2))
         scrn.getEastScorers().shouldContainExactly(scrn.getScorer(3), scrn.getScorer(4))
+    }
 
-        val scrn4 = FakeDartsScreen()
-        scrn4.assignScorers(4)
-        scrn4.finaliseScorers()
-        scrn4.scorerCount() shouldBe 4
-        scrn4.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1))
-        scrn4.getEastScorers().shouldContainExactly(scrn.getScorer(2), scrn.getScorer(3))
+    @Test
+    fun `Should split 4 scorers correctly`()
+    {
+        val scrn = FakeDartsScreen()
+
+        scrn.assignScorers(4)
+        scrn.finaliseScorers()
+
+        scrn.scorerCount() shouldBe 4
+        scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1))
+        scrn.getEastScorers().shouldContainExactly(scrn.getScorer(2), scrn.getScorer(3))
     }
 
     @Test
@@ -60,8 +78,12 @@ class TestPanelWithScorers: AbstractTest()
 
     inner class FakeScorer(participant: IWrappedParticipant) : AbstractScorer(participant)
     {
+        var initted = false
+
         override fun getNumberOfColumns() = 4
-        override fun initImpl() {}
+        override fun initImpl() {
+            initted = true
+        }
     }
 
     inner class FakeDartsScreen: PanelWithScorers<FakeScorer>()

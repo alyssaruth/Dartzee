@@ -17,7 +17,7 @@ import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
 
 fun makeSingleParticipant(player: PlayerEntity) = makeSingleParticipant(insertParticipant(playerId = player.rowId))
-fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant()) = SingleParticipant(pt)
+fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant(insertPlayer = true)) = SingleParticipant(pt)
 
 fun makeTeam(vararg players: PlayerEntity): TeamParticipant
 {
