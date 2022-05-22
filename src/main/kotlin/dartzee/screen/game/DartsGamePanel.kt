@@ -188,8 +188,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             addState(ix, state, scorer)
         }
 
-        finaliseScorers()
-        initForAi(hasAi())
+        finaliseParticipants()
         dartboard.paintDartboardCached()
 
         nextTurn()
@@ -302,8 +301,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             addState(i, state, scorer)
         }
 
-        finaliseScorers()
-        initForAi(hasAi())
+        finaliseParticipants()
     }
 
     /**
@@ -676,7 +674,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     private fun finaliseParticipants()
     {
-        finaliseScorers()
+        finaliseScorers(parentWindow)
         initForAi(hasAi())
 
         if (parentWindow is DartsMatchScreen<*> && gameEntity.matchOrdinal == 1)

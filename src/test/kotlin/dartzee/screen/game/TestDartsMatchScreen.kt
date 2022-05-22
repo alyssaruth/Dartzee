@@ -120,7 +120,7 @@ class TestDartsMatchScreen: AbstractTest()
         verify { matchSummaryPanel.addParticipant(500L, pt) }
 
         scrn.finaliseParticipants()
-        verify { matchSummaryPanel.finaliseScorers() }
+        verify { matchSummaryPanel.finaliseScorers(scrn) }
     }
 
     @Test

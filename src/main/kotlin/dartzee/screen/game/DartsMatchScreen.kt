@@ -64,7 +64,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
     fun finaliseParticipants()
     {
-        matchPanel.finaliseScorers()
+        matchPanel.finaliseScorers(this)
     }
 
     fun updateTotalScores()

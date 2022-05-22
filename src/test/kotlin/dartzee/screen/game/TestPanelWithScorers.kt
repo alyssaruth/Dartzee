@@ -8,6 +8,7 @@ import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
+import javax.swing.JFrame
 
 class TestPanelWithScorers: AbstractTest()
 {
@@ -29,7 +30,7 @@ class TestPanelWithScorers: AbstractTest()
         val scrn = FakeDartsScreen()
 
         scrn.assignScorers(5)
-        scrn.finaliseScorers()
+        scrn.finaliseScorers(JFrame())
 
         scrn.scorerCount() shouldBe 5
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1), scrn.getScorer(2))
@@ -42,7 +43,7 @@ class TestPanelWithScorers: AbstractTest()
         val scrn = FakeDartsScreen()
 
         scrn.assignScorers(4)
-        scrn.finaliseScorers()
+        scrn.finaliseScorers(JFrame())
 
         scrn.scorerCount() shouldBe 4
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1))
@@ -55,7 +56,7 @@ class TestPanelWithScorers: AbstractTest()
         val scrn = FakeDartsScreen()
 
         scrn.assignScorer(makeSingleParticipant())
-        scrn.finaliseScorers()
+        scrn.finaliseScorers(JFrame())
 
         scrn.scorerCount() shouldBe 1
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0))
@@ -86,7 +87,7 @@ class TestPanelWithScorers: AbstractTest()
         }
     }
 
-    inner class FakeDartsScreen: PanelWithScorers<FakeScorer>()
+    inner class FakeDartsScreen : PanelWithScorers<FakeScorer>()
     {
         override fun factoryScorer(participant: IWrappedParticipant) = FakeScorer(participant)
 
