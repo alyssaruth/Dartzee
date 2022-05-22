@@ -679,7 +679,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         finaliseScorers()
         initForAi(hasAi())
 
-        if (parentWindow is DartsMatchScreen<*>)
+        if (parentWindow is DartsMatchScreen<*> && gameEntity.matchOrdinal == 1)
         {
             parentWindow.finaliseParticipants()
         }

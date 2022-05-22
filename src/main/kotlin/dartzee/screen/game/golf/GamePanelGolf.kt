@@ -13,7 +13,7 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
+class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
         GamePanelFixedLength<DartsScorerGolf, Dartboard, GolfPlayerState>(parent, game, totalPlayers)
 {
     //Number of rounds - 9 holes or 18?

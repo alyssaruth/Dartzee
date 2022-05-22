@@ -51,6 +51,8 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 
         eastScorers?.forEach { panelEast.add(it, "growy") }
         westScorers.forEach { panelWest.add(it, "growy") }
+
+        revalidate()
     }
 
     fun assignScorer(participant: IWrappedParticipant): S

@@ -1,7 +1,6 @@
 package dartzee.screen.game
 
 import dartzee.db.DartsMatchEntity
-import dartzee.game.UniqueParticipantName
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.MatchScorer
@@ -20,7 +19,6 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
     val match: DartsMatchEntity,
     private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(), ActionListener
 {
-    private val hmParticipantNameToScorer = mutableMapOf<UniqueParticipantName, MatchScorer>()
     private val gameTabs = mutableListOf<DartsGamePanel<*, *, PlayerState>>()
 
     private val refreshPanel = JPanel()
@@ -38,29 +36,20 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         btnRefresh.toolTipText = "Refresh stats"
     }
 
-    fun finaliseParticipants()
-    {
-        finaliseScorers()
-        revalidate()
-    }
-
     fun addParticipant(localId: Long, participant: IWrappedParticipant)
     {
-        val participantName = participant.getUniqueParticipantName()
-        val scorer = assignScorer(participant)
-        hmParticipantNameToScorer[participantName] = scorer
+        val scorer = findOrAssignScorer(participant)
 
         val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
     }
 
+    private fun findOrAssignScorer(participant: IWrappedParticipant) =
+        scorersOrdered.find { it.participant.getUniqueParticipantName() == participant.getUniqueParticipantName() } ?: assignScorer(participant)
+
     fun updateTotalScores()
     {
-        val scorers = hmParticipantNameToScorer.values
-        for (scorer in scorers)
-        {
-            scorer.updateResult()
-        }
+        scorersOrdered.forEach { it.updateResult() }
 
         updateStats()
     }

@@ -3,7 +3,6 @@ package dartzee.screen.game
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.TestAchievementEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
@@ -107,7 +106,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
     }
 
     class TestRoundTheClockGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelRoundTheClock(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, RoundTheClockConfig(ClockType.Standard, true).toJson()), 1)
+        : GamePanelRoundTheClock(FakeDartsScreen(), GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, RoundTheClockConfig(ClockType.Standard, true).toJson()), 1)
     {
         init
         {

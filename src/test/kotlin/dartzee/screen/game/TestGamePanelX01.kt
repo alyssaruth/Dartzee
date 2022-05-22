@@ -122,7 +122,7 @@ class TestGamePanelX01: AbstractTest()
     }
 
     private class TestGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelX01(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.X01, "501"), 1)
+        : GamePanelX01(FakeDartsScreen(), GameEntity.factoryAndSave(GameType.X01, "501"), 1)
     {
         init
         {

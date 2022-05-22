@@ -2,13 +2,11 @@ package dartzee.screen.game
 
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
-import dartzee.db.GameEntity
-import dartzee.db.TestAchievementEntity
-import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertAchievement
+import dartzee.helper.randomGuid
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import dartzee.screen.game.golf.GamePanelGolf
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -22,7 +20,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `It should not update gambler achievement for missed darts`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(
                 Dart(1, 0, segmentType = SegmentType.MISS),
@@ -40,7 +38,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `It should sum up all the points gambled in that round`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(
                 Dart(1, 3, segmentType = SegmentType.TREBLE),
@@ -59,7 +57,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `It should compute correctly when just two darts thrown`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(
             Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE),
@@ -77,7 +75,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `It should do nothing for a single dart hit`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(1, 1, segmentType = SegmentType.TREBLE))
         panel.setDartsThrown(darts)
@@ -94,7 +92,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `Should not count darts that aren't a hole in one`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(1, 3, segmentType = SegmentType.TREBLE))
         panel.setDartsThrown(darts)
@@ -107,7 +105,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `Should not count darts for the wrong hole`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(2, 2, segmentType = SegmentType.DOUBLE))
         panel.setDartsThrown(darts)
@@ -120,7 +118,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `Should only count the last dart thrown`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE), Dart(1, 3, segmentType = SegmentType.TREBLE))
         panel.setDartsThrown(darts)
@@ -133,7 +131,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `Should insert a row for a new hole in one`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
         insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "2")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
@@ -149,7 +147,7 @@ class TestGamePanelGolf: AbstractTest()
     fun `Should not insert a row for a hole in one already attained`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeGolfGamePanel(playerId)
         val originalRow = insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "1")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
@@ -159,27 +157,5 @@ class TestGamePanelGolf: AbstractTest()
 
         val newRow = AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId)!!
         newRow.rowId shouldBe originalRow.rowId
-    }
-
-    private class TestGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelGolf(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.GOLF, "18"), 1)
-    {
-        init
-        {
-            val player = insertPlayer(currentPlayerId)
-            val scorer = assignScorer(makeSingleParticipant(player))
-
-            currentPlayerNumber = 0
-
-            addState(0, makeGolfPlayerState(player), scorer)
-
-            currentRoundNumber = 1
-        }
-
-        fun setDartsThrown(dartsThrown: List<Dart>)
-        {
-            getCurrentPlayerState().resetRound()
-            dartsThrown.forEach { getCurrentPlayerState().dartThrown(it) }
-        }
     }
 }

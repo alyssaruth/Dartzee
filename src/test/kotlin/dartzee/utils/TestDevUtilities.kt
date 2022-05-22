@@ -1,8 +1,8 @@
 package dartzee.utils
 
-import dartzee.db.TestAchievementEntity
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
+import dartzee.screen.game.FakeDartsScreen
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -71,7 +71,7 @@ class TestDevUtilities: AbstractTest()
     {
         val game = insertGame(localId = 5)
 
-        ScreenCache.addDartsGameScreen(game.rowId, TestAchievementEntity.FakeDartsScreen())
+        ScreenCache.addDartsGameScreen(game.rowId, FakeDartsScreen())
 
         DevUtilities.purgeGame(5)
 

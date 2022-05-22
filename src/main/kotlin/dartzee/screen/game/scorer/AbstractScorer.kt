@@ -14,7 +14,7 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer(protected val participant: IWrappedParticipant) : JPanel()
+abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
 {
     val playerIds = participant.individuals.map { it.playerId }
 
