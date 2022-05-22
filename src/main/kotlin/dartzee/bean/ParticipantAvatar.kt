@@ -16,7 +16,7 @@ class ParticipantAvatar(private val pt: IWrappedParticipant) : JLabel(ResourceCa
         preferredSize = Dimension(150, 150)
         border = EtchedBorder(EtchedBorder.RAISED, null, null)
         horizontalAlignment = SwingConstants.CENTER
-        icon = pt.getIndividual(0).getPlayer().getAvatar() // TODO - TEAMS - combined avatar stuff
+        icon = pt.getIndividual(1).getPlayer().getAvatar() // TODO - TEAMS - combined avatar stuff
     }
 
     fun setSelected(selected: Boolean, roundNumber: Int)
