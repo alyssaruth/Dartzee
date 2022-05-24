@@ -57,9 +57,9 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         return tab
     }
 
-    fun addParticipant(localId: Long, participant: IWrappedParticipant)
+    fun addParticipant(localId: Long, participant: IWrappedParticipant, state: PlayerState)
     {
-        matchPanel.addParticipant(localId, participant)
+        matchPanel.addParticipant(localId, participant, state)
     }
 
     fun finaliseParticipants()
@@ -67,15 +67,8 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         matchPanel.finaliseScorers(this)
     }
 
-    fun updateTotalScores()
-    {
-        matchPanel.updateTotalScores()
-    }
-
     override fun startNextGameIfNecessary()
     {
-        updateTotalScores()
-
         if (match.isComplete())
         {
             match.dtFinish = getSqlDateNow()

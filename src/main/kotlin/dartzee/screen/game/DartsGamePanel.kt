@@ -180,12 +180,11 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             val participant = ParticipantEntity.factoryAndSave(gameId, player, ix)
             val wrappedPt = SingleParticipant(participant)
 
-            addParticipant(wrappedPt)
-
             val scorer = assignScorer(wrappedPt)
             val state = factoryState(wrappedPt)
             state.addListener(scorer)
             addState(ix, state, scorer)
+            addParticipant(wrappedPt, state)
         }
 
         finaliseParticipants()
@@ -292,13 +291,12 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         {
             val pt = participants[i]
             val wrappedPt = SingleParticipant(pt)
-
-            addParticipant(wrappedPt)
             val scorer = assignScorer(wrappedPt)
-
             val state = factoryState(SingleParticipant(pt))
             state.addListener(scorer)
             addState(i, state, scorer)
+
+            addParticipant(wrappedPt, state)
         }
 
         finaliseParticipants()
@@ -664,12 +662,9 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         panelCenter.repaint()
     }
 
-    private fun addParticipant(participant: IWrappedParticipant)
+    private fun addParticipant(participant: IWrappedParticipant, state: PlayerState)
     {
-        if (parentWindow is DartsMatchScreen<*>)
-        {
-            parentWindow.addParticipant(gameEntity.localId, participant)
-        }
+        runForMatch { it.addParticipant(gameEntity.localId, participant, state) }
     }
 
     private fun finaliseParticipants()
@@ -677,9 +672,16 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         finaliseScorers(parentWindow)
         initForAi(hasAi())
 
-        if (parentWindow is DartsMatchScreen<*> && gameEntity.matchOrdinal == 1)
+        if (gameEntity.matchOrdinal == 1) {
+            runForMatch { it.finaliseParticipants() }
+        }
+    }
+
+    private fun runForMatch(fn: (matchScreen: DartsMatchScreen<PlayerState>) -> Unit)
+    {
+        if (parentWindow is DartsMatchScreen<*>)
         {
-            parentWindow.finaliseParticipants()
+            fn(parentWindow as DartsMatchScreen<PlayerState>)
         }
     }
 

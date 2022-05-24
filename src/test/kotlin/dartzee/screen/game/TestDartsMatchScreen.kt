@@ -112,9 +112,6 @@ class TestDartsMatchScreen: AbstractTest()
         val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
         val scrn = setUpMatchScreen(matchSummaryPanel = matchSummaryPanel)
 
-        scrn.updateTotalScores()
-        verify { matchSummaryPanel.updateTotalScores() }
-
         val pt = makeSingleParticipant()
         scrn.addParticipant(500L, pt)
         verify { matchSummaryPanel.addParticipant(500L, pt) }
@@ -124,7 +121,7 @@ class TestDartsMatchScreen: AbstractTest()
     }
 
     @Test
-    fun `Should update total scores one last time and mark the match as complete if no more games need to be played`()
+    fun `Should mark the match as complete if no more games need to be played`()
     {
         val matchEntity = mockk<DartsMatchEntity>(relaxed = true)
         every { matchEntity.isComplete() } returns true
@@ -133,7 +130,6 @@ class TestDartsMatchScreen: AbstractTest()
         val scrn = setUpMatchScreen(match = matchEntity, matchSummaryPanel = matchSummaryPanel)
         scrn.startNextGameIfNecessary()
 
-        verify { matchSummaryPanel.updateTotalScores() }
         verify { matchEntity.dtFinish = any() }
         verify { matchEntity.saveToDatabase(any()) }
     }

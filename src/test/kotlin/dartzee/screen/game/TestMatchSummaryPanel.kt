@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import com.github.alexburlton.swingtest.clickChild
 import dartzee.db.DartsMatchEntity
 import dartzee.getRows
 import dartzee.helper.AbstractTest
@@ -11,7 +10,6 @@ import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import javax.swing.JButton
 
 class TestMatchSummaryPanel : AbstractTest()
 {
@@ -62,19 +60,7 @@ class TestMatchSummaryPanel : AbstractTest()
         matchPanel.addGameTab(gameOne)
         matchPanel.addGameTab(gameTwo)
 
-        matchPanel.updateTotalScores()
-
         verify { statsPanel.showStats(expectedStates) }
-    }
-
-    @Test
-    fun `Clicking refresh button should refresh stats`()
-    {
-        val statsPanel = mockk<GameStatisticsPanelX01>(relaxed = true)
-        val matchPanel = makeMatchSummaryPanel(statsPanel = statsPanel)
-
-        matchPanel.clickChild<JButton> { it.toolTipText == "Refresh stats" }
-        verify { statsPanel.showStats(any()) }
     }
 
     private fun makeMatchSummaryPanel(
