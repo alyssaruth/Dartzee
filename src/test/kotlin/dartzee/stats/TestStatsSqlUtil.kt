@@ -7,7 +7,7 @@ import dartzee.helper.insertPlayer
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestPlayerSummaryUtil: AbstractTest()
+class TestStatsSqlUtil : AbstractTest()
 {
     @Test
     fun `Should return the counts by game type for a particular player`()

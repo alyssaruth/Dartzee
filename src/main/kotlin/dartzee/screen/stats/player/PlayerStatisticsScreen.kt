@@ -1,7 +1,5 @@
 package dartzee.screen.stats.player
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
@@ -15,12 +13,10 @@ import dartzee.screen.stats.player.golf.StatisticsTabGolfScorecards
 import dartzee.screen.stats.player.rtc.StatisticsTabRoundTheClockHitRate
 import dartzee.screen.stats.player.x01.*
 import dartzee.stats.GameWrapper
-import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.InjectedThings.logger
+import dartzee.stats.retrieveGameData
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
-import java.sql.SQLException
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTabbedPane
@@ -29,7 +25,7 @@ import javax.swing.SwingConstants
 class PlayerStatisticsScreen : EmbeddedScreen()
 {
     private var hmLocalIdToWrapper = mapOf<Long, GameWrapper>()
-    private var hmLocalIdToWrapperOther = mutableMapOf<Long, GameWrapper>()
+    private var hmLocalIdToWrapperOther = mapOf<Long, GameWrapper>()
     private var filteredGames = listOf<GameWrapper>()
     private var filteredGamesOther = listOf<GameWrapper>()
 
@@ -82,8 +78,8 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         filterPanelOther.isVisible = false
         btnAdd.isVisible = true
 
-        hmLocalIdToWrapper = retrieveGameData(player!!.rowId)
-        hmLocalIdToWrapperOther.clear()
+        hmLocalIdToWrapper = retrieveGameData(player!!.rowId, gameType)
+        hmLocalIdToWrapperOther = mapOf()
 
         resetTabs()
         buildTabs()
@@ -140,7 +136,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         filterPanelOther.isVisible = true
         btnAdd.isVisible = false
 
-        hmLocalIdToWrapperOther = retrieveGameData(player.rowId)
+        hmLocalIdToWrapperOther = retrieveGameData(player.rowId, gameType)
         buildTabs()
     }
 
@@ -148,82 +144,9 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     {
         filterPanelOther.isVisible = false
         btnAdd.isVisible = true
-        hmLocalIdToWrapperOther = mutableMapOf()
+        hmLocalIdToWrapperOther = mapOf()
 
         buildTabs()
-    }
-
-    private fun retrieveGameData(playerId: String): MutableMap<Long, GameWrapper>
-    {
-        val hm = mutableMapOf<Long, GameWrapper>()
-
-        val zzParticipants = buildParticipantTable(playerId)
-        zzParticipants ?: return hm
-
-        val sb = StringBuilder()
-        sb.append(" SELECT zz.LocalId, zz.GameParams, zz.DtCreation, zz.DtFinish, zz.FinalScore, ")
-        sb.append(" drt.RoundNumber,")
-        sb.append(" drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.SegmentType")
-        sb.append(" FROM Dart drt, $zzParticipants zz")
-        sb.append(" WHERE drt.ParticipantId = zz.ParticipantId")
-        sb.append(" AND drt.PlayerId = zz.PlayerId")
-
-        try
-        {
-            mainDatabase.executeQuery(sb).use { rs ->
-                while (rs.next())
-                {
-                    val gameId = rs.getLong("LocalId")
-                    val gameParams = rs.getString("GameParams")
-                    val dtStart = rs.getTimestamp("DtCreation")
-                    val dtFinish = rs.getTimestamp("DtFinish")
-                    val numberOfDarts = rs.getInt("FinalScore")
-                    val roundNumber = rs.getInt("RoundNumber")
-                    val ordinal = rs.getInt("Ordinal")
-                    val score = rs.getInt("Score")
-                    val multiplier = rs.getInt("Multiplier")
-                    val startingScore = rs.getInt("StartingScore")
-                    val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
-
-                    val wrapper = hm[gameId] ?: GameWrapper(gameId, gameParams, dtStart, dtFinish, numberOfDarts)
-                    hm[gameId] = wrapper
-
-                    val dart = Dart(score, multiplier, segmentType = segmentType)
-                    dart.ordinal = ordinal
-                    dart.startingScore = startingScore
-                    dart.roundNumber = roundNumber
-                    wrapper.addDart(roundNumber, dart)
-                }
-            }
-        }
-        catch (sqle: SQLException)
-        {
-            logger.logSqlException(sb.toString(), "", sqle)
-        }
-        finally
-        {
-            mainDatabase.dropTable(zzParticipants)
-        }
-
-        return hm
-    }
-    private fun buildParticipantTable(playerId: String): String?
-    {
-        val tmp = mainDatabase.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT")
-        tmp ?: return null
-
-        val sb = StringBuilder()
-        sb.append(" INSERT INTO $tmp")
-        sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.PlayerId, pt.RowId AS ParticipantId, pt.FinalScore ")
-        sb.append(" FROM Participant pt, Game g")
-        sb.append(" WHERE pt.GameId = g.RowId")
-        sb.append(" AND pt.PlayerId = '$playerId'")
-        sb.append(" AND g.GameType = '$gameType'")
-
-        mainDatabase.executeUpdate("" + sb)
-
-        mainDatabase.executeUpdate("CREATE INDEX ${tmp}_PlayerId_ParticipantId ON $tmp(PlayerId, ParticipantId)")
-        return tmp
     }
 
     fun buildTabs()
@@ -261,7 +184,6 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     }
 
     override fun getBackTarget() = ScreenCache.get<PlayerManagementScreen>()
-
 
     override fun actionPerformed(arg0: ActionEvent)
     {
