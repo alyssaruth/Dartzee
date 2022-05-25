@@ -2,10 +2,6 @@ package dartzee.screen.stats.player.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.getSortedValues
-import dartzee.db.ParticipantEntity
-import dartzee.game.state.GolfPlayerState
-import dartzee.game.state.SingleParticipant
-import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
 import java.awt.BorderLayout
@@ -60,20 +56,19 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
             game.populateOptimalScorecardMaps(hmHoleToBestDarts, hmHoleToBestGameId)
         }
 
-        val fudgedParticipant = SingleParticipant(ParticipantEntity())
-        val scorer = DartsScorerGolf(fudgedParticipant, showGameId = true)
+        val scoreSheet = GolfStatsScoresheet(0)
         if (color != null)
         {
-            scorer.setTableForeground(Color.RED)
+            scoreSheet.setTableForeground(Color.RED)
         }
 
-        val state = GolfPlayerState(fudgedParticipant, hmHoleToBestDarts.values.toMutableList())
-        scorer.stateChanged(state)
+        val rounds = hmHoleToBestDarts.values.toList()
+        scoreSheet.populateTable(rounds)
 
-        scorer.addGameIds(hmHoleToBestGameId.getSortedValues())
+        scoreSheet.addGameIds(hmHoleToBestGameId.getSortedValues())
 
         panel.removeAll()
-        panel.add(scorer.getTableOnly(), BorderLayout.CENTER)
+        panel.add(scoreSheet, BorderLayout.CENTER)
         panel.revalidate()
         panel.repaint()
     }

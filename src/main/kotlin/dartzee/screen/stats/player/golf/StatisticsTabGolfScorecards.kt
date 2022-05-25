@@ -144,12 +144,8 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
 
     private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel)
     {
-        val fudgedParticipant = SingleParticipant(ParticipantEntity())
-        val scorer = DartsScorerGolf(fudgedParticipant)
-        if (mode == MODE_BACK_9)
-        {
-            scorer.fudgeFactor = 9
-        }
+        val fudgeFactor = if (mode == MODE_BACK_9) 9 else 0
+        val scorer = GolfStatsScoresheet(fudgeFactor)
 
         game.populateScorer(scorer, mode)
 

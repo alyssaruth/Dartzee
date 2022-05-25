@@ -14,11 +14,11 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
+abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), IScorerTable
 {
     val playerIds = participant.individuals.map { it.playerId }
 
-    val model = DefaultModel()
+    override val model = DefaultModel()
 
     val lblName = JLabel()
     protected val panelCenter = JPanel()
@@ -64,7 +64,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
         tableScores.disableSorting()
     }
 
-    abstract fun getNumberOfColumns(): Int
     protected abstract fun initImpl()
 
     fun getTableOnly() = panelCenter
@@ -83,14 +82,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
 
         initImpl()
     }
-
-    fun addRow(row: Array<*>)
-    {
-        model.addRow(row)
-        tableScores.scrollToBottom()
-    }
-
-    protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
 
     protected fun updateResultColourForPosition(pos: Int)
     {
