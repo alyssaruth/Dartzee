@@ -13,7 +13,7 @@ fun isScoreRow(row: Int): Boolean
     return row == ROUNDS_HALFWAY || row == ROUNDS_FULL + 1
 }
 
-fun getScorerColour(score: Int, brightness: Double): Color
+fun getGolfScorerColour(score: Int, brightness: Double): Color
 {
     val hue = when(score)
     {

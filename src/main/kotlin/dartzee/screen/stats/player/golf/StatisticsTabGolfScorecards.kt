@@ -5,14 +5,8 @@ import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.RowSelectionListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
-import dartzee.db.ParticipantEntity
-import dartzee.game.state.SingleParticipant
-import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.AbstractStatisticsTab
-import dartzee.stats.GameWrapper
-import dartzee.stats.MODE_BACK_9
-import dartzee.stats.MODE_FRONT_9
-import dartzee.stats.MODE_FULL_18
+import dartzee.stats.*
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
@@ -23,8 +17,8 @@ import javax.swing.*
 
 class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, RowSelectionListener
 {
-    private var mode = -1
-    private val comboBoxMode = JComboBox<ComboBoxItem<Int>>()
+    private var mode: GolfMode = GolfMode.FULL_18
+    private val comboBoxMode = JComboBox<ComboBoxItem<GolfMode>>()
     private val panelCenter = JPanel()
     private val lblMode = JLabel("Mode")
     private val panelMine = JPanel()
@@ -91,20 +85,20 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
 
     private fun initialiseComboBoxModel()
     {
-        val model = DefaultComboBoxModel<ComboBoxItem<Int>>()
-        addMode("Front 9", MODE_FRONT_9, model)
-        addMode("Back 9", MODE_BACK_9, model)
-        addMode("Full 18", MODE_FULL_18, model)
+        val model = DefaultComboBoxModel<ComboBoxItem<GolfMode>>()
+        addMode("Front 9", GolfMode.FRONT_9, model)
+        addMode("Back 9", GolfMode.BACK_9, model)
+        addMode("Full 18", GolfMode.FULL_18, model)
 
         if (model.size == 0)
         {
-            model.addElement(ComboBoxItem(MODE_FULL_18, "N/A"))
+            model.addElement(ComboBoxItem(GolfMode.FULL_18, "N/A"))
         }
 
         comboBoxMode.model = model
     }
 
-    private fun addMode(modeDesc: String, mode: Int, model: DefaultComboBoxModel<ComboBoxItem<Int>>)
+    private fun addMode(modeDesc: String, mode: GolfMode, model: DefaultComboBoxModel<ComboBoxItem<GolfMode>>)
     {
         val validGames = filteredGames.filter { it.getRoundScore(mode) > -1 }
         if (validGames.isEmpty())
@@ -144,13 +138,14 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
 
     private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel)
     {
-        val fudgeFactor = if (mode == MODE_BACK_9) 9 else 0
-        val scorer = GolfStatsScoresheet(fudgeFactor)
+        val fudgeFactor = if (mode == GolfMode.BACK_9) 9 else 0
+        val scorer = GolfStatsScoresheet(fudgeFactor, showGameId = false)
 
-        game.populateScorer(scorer, mode)
+        val rounds = game.getGolfRounds(mode)
+        scorer.populateTable(rounds)
 
         scorecardPanel.removeAll()
-        scorecardPanel.add(scorer.getTableOnly(), BorderLayout.CENTER)
+        scorecardPanel.add(scorer, BorderLayout.CENTER)
         scorecardPanel.revalidate()
         scorecardPanel.repaint()
     }

@@ -42,8 +42,8 @@ class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRender
             val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
             val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
 
-            foreground = getScorerColour(score, fgBrightness)
-            background = getScorerColour(score, bgBrightness)
+            foreground = getGolfScorerColour(score, fgBrightness)
+            background = getGolfScorerColour(score, bgBrightness)
         }
 
         return this

@@ -8,10 +8,10 @@ import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JPanel
 
-class GolfStatsScoresheet(override val fudgeFactor: Int) : JPanel(), IGolfScorerTable
+class GolfStatsScoresheet(override val fudgeFactor: Int, private val showGameId: Boolean = true) : JPanel(), IGolfScorerTable
 {
     override val model = TableUtil.DefaultModel()
-    override fun getNumberOfColumns() = 6
+    override fun getNumberOfColumns() = if (showGameId) 6 else 5
 
     val tableScores = ScrollTableDartsGame()
 
@@ -38,10 +38,13 @@ class GolfStatsScoresheet(override val fudgeFactor: Int) : JPanel(), IGolfScorer
 
         for (i in 0..GOLF_SCORE_COLUMN)
         {
-            tableScores.setRenderer(i, GolfDartRenderer(true))
+            tableScores.setRenderer(i, GolfDartRenderer(showGameId))
         }
 
-        tableScores.setLinkColumnIndex(tableScores.columnCount - 1)
+        if (showGameId)
+        {
+            tableScores.setLinkColumnIndex(tableScores.columnCount - 1)
+        }
     }
 
     fun addGameIds(localGameIds: List<Long>)

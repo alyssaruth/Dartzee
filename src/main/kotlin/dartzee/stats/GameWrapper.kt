@@ -7,9 +7,6 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.game.state.GolfPlayerState
-import dartzee.game.state.SingleParticipant
-import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.HoleBreakdownWrapper
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
@@ -17,10 +14,11 @@ import dartzee.utils.getSortedDartStr
 import dartzee.utils.sumScore
 import java.sql.Timestamp
 
-
-const val MODE_FRONT_9 = 0
-const val MODE_BACK_9 = 1
-const val MODE_FULL_18 = 2
+enum class GolfMode {
+    FRONT_9,
+    BACK_9,
+    FULL_18
+}
 
 /**
  * Wraps up an entire game of darts from a single player's perspective
@@ -202,7 +200,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     /**
      * Get the overall score for front 9, back 9 or the whole lot
      */
-    fun getRoundScore(mode: Int): Int
+    fun getRoundScore(mode: GolfMode): Int
     {
         val startHole = getStartHoleForMode(mode)
         val endHole = getEndHoleForMode(mode)
@@ -227,34 +225,19 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         return total
     }
 
-    fun populateScorer(scorer: DartsScorerGolf, mode: Int)
+    fun getGolfRounds(mode: GolfMode): List<List<Dart>>
     {
         val startHole = getStartHoleForMode(mode)
         val endHole = getEndHoleForMode(mode)
 
-        val rounds = (startHole..endHole).map(::getDartsForRound).toMutableList()
-        // TODO - TEAMS - This will break for team play... just exclude from this stats tab?
-        val state = GolfPlayerState(SingleParticipant(ParticipantEntity()), rounds)
-        scorer.stateChanged(state)
+        return (startHole..endHole).map(::getDartsForRound)
     }
 
-    private fun getStartHoleForMode(mode: Int): Int
-    {
-        return if (mode == MODE_BACK_9)
-        {
-            10
-        } else 1
+    private fun getStartHoleForMode(mode: GolfMode) =
+        if (mode == GolfMode.BACK_9) 10 else 1
 
-    }
-
-    private fun getEndHoleForMode(mode: Int): Int
-    {
-        return if (mode == MODE_FRONT_9)
-        {
-            9
-        } else 18
-
-    }
+    private fun getEndHoleForMode(mode: GolfMode) =
+        if (mode == GolfMode.FRONT_9) 9 else 18
 
     fun populateOptimalScorecardMaps(hmHoleToBestDarts: MutableMap<Int, List<Dart>>, hmHoleToBestGameId: MutableMap<Int, Long>)
     {
