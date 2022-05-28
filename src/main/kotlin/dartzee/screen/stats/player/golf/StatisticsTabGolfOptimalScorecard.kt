@@ -56,7 +56,7 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
             game.populateOptimalScorecardMaps(hmHoleToBestDarts, hmHoleToBestGameId)
         }
 
-        val scoreSheet = GolfStatsScoresheet(0)
+        val scoreSheet = GolfStatsScorecard(0)
         if (color != null)
         {
             scoreSheet.setTableForeground(Color.RED)

@@ -8,7 +8,7 @@ import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JPanel
 
-class GolfStatsScoresheet(override val fudgeFactor: Int, private val showGameId: Boolean = true) : JPanel(), IGolfScorerTable
+class GolfStatsScorecard(override val fudgeFactor: Int, private val showGameId: Boolean = true) : JPanel(), IGolfScorerTable
 {
     override val model = TableUtil.DefaultModel()
     override fun getNumberOfColumns() = if (showGameId) 6 else 5

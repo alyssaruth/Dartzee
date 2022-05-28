@@ -139,7 +139,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
     private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel)
     {
         val fudgeFactor = if (mode == GolfMode.BACK_9) 9 else 0
-        val scorer = GolfStatsScoresheet(fudgeFactor, showGameId = false)
+        val scorer = GolfStatsScorecard(fudgeFactor, showGameId = false)
 
         val rounds = game.getGolfRounds(mode)
         scorer.populateTable(rounds)
