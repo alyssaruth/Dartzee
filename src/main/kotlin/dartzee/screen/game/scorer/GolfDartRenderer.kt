@@ -14,9 +14,6 @@ import javax.swing.border.Border
 import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableCellRenderer
 
-/**
- * Inner Classes
- */
 class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRenderer()
 {
     override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
@@ -49,7 +46,7 @@ class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRender
         return this
     }
 
-    fun getReplacementValue(table: JTable?, obj: Any?, row: Int): Any?
+    private fun getReplacementValue(table: JTable?, obj: Any?, row: Int): Any?
     {
         if (obj == null)
         {
