@@ -57,9 +57,9 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         return tab
     }
 
-    fun addParticipant(localId: Long, participant: IWrappedParticipant, state: PlayerState)
+    fun addParticipant(localId: Long, state: PlayerState)
     {
-        matchPanel.addParticipant(localId, participant, state)
+        matchPanel.addParticipant(localId, state)
     }
 
     fun finaliseParticipants()

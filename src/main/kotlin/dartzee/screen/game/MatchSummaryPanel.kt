@@ -23,8 +23,9 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         panelCenter.add(statsPanel, BorderLayout.CENTER)
     }
 
-    fun addParticipant(localId: Long, participant: IWrappedParticipant, state: PlayerState)
+    fun addParticipant(localId: Long, state: PlayerState)
     {
+        val participant = state.wrappedParticipant
         val scorer = findOrAssignScorer(participant)
 
         val row = arrayOf(localId, participant, participant, participant)

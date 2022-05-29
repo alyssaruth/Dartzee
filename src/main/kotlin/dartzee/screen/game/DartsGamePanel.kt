@@ -184,7 +184,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             val state = factoryState(wrappedPt)
             state.addListener(scorer)
             addState(ix, state, scorer)
-            addParticipant(wrappedPt, state)
+            addParticipant(state)
         }
 
         finaliseParticipants()
@@ -292,11 +292,11 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             val pt = participants[i]
             val wrappedPt = SingleParticipant(pt)
             val scorer = assignScorer(wrappedPt)
-            val state = factoryState(SingleParticipant(pt))
+            val state = factoryState(wrappedPt)
             state.addListener(scorer)
             addState(i, state, scorer)
 
-            addParticipant(wrappedPt, state)
+            addParticipant( state)
         }
 
         finaliseParticipants()
@@ -662,9 +662,9 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         panelCenter.repaint()
     }
 
-    private fun addParticipant(participant: IWrappedParticipant, state: PlayerState)
+    private fun addParticipant(state: PlayerState)
     {
-        runForMatch { it.addParticipant(gameEntity.localId, participant, state) }
+        runForMatch { it.addParticipant(gameEntity.localId, state) }
     }
 
     private fun finaliseParticipants()

@@ -112,9 +112,10 @@ class TestDartsMatchScreen: AbstractTest()
         val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
         val scrn = setUpMatchScreen(matchSummaryPanel = matchSummaryPanel)
 
-        val pt = makeSingleParticipant()
-        scrn.addParticipant(500L, pt)
-        verify { matchSummaryPanel.addParticipant(500L, pt) }
+
+        val state = makeX01PlayerState()
+        scrn.addParticipant(500L, state)
+        verify { matchSummaryPanel.addParticipant(500L, state) }
 
         scrn.finaliseParticipants()
         verify { matchSummaryPanel.finaliseScorers(scrn) }
