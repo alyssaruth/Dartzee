@@ -1,9 +1,8 @@
 package dartzee.screen.game
 
 import dartzee.db.DartsMatchEntity
-import dartzee.db.ParticipantEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.MatchScorer
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -20,7 +19,6 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
     val match: DartsMatchEntity,
     private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(), ActionListener
 {
-    private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
     private val gameTabs = mutableListOf<DartsGamePanel<*, *, PlayerState>>()
 
     private val refreshPanel = JPanel()
@@ -28,6 +26,9 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
 
     init
     {
+        panelCenter.add(statsPanel, BorderLayout.CENTER)
+        panelCenter.add(refreshPanel, BorderLayout.SOUTH)
+
         refreshPanel.add(btnRefresh)
         btnRefresh.addActionListener(this)
         btnRefresh.preferredSize = Dimension(80, 80)
@@ -35,49 +36,31 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         btnRefresh.toolTipText = "Refresh stats"
     }
 
-    fun init(playersInStartingOrder: List<PlayerEntity>)
+    fun addParticipant(localId: Long, participant: IWrappedParticipant)
     {
-        panelCenter.add(statsPanel, BorderLayout.CENTER)
-        panelCenter.add(refreshPanel, BorderLayout.SOUTH)
-
-        val totalPlayers = playersInStartingOrder.size
-        initScorers(totalPlayers)
-
-        for (player in playersInStartingOrder)
-        {
-            val scorer = assignScorer(player)
-            hmPlayerIdToScorer[player.rowId] = scorer
-            scorer.setMatch(match)
-        }
-    }
-
-    fun addParticipant(localId: Long, participant: ParticipantEntity)
-    {
-        val playerId = participant.playerId
-        val scorer = hmPlayerIdToScorer[playerId]!!
+        val scorer = findOrAssignScorer(participant)
 
         val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
     }
 
+    private fun findOrAssignScorer(participant: IWrappedParticipant) =
+        scorersOrdered.find { it.participant.getUniqueParticipantName() == participant.getUniqueParticipantName() } ?: assignScorer(participant)
+
     fun updateTotalScores()
     {
-        val scorers = hmPlayerIdToScorer.values
-        for (scorer in scorers)
-        {
-            scorer.updateResult()
-        }
+        scorersOrdered.forEach { it.updateResult() }
 
         updateStats()
     }
 
-    fun updateStats()
+    private fun updateStats()
     {
         val states = gameTabs.map { it.getPlayerStates() }.flatten()
         statsPanel.showStats(states)
     }
 
-    override fun factoryScorer() = MatchScorer()
+    override fun factoryScorer(participant: IWrappedParticipant) = MatchScorer(participant, match)
 
     fun addGameTab(tab: DartsGamePanel<*, *, PlayerState>)
     {

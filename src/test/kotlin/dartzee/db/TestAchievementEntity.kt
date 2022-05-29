@@ -1,12 +1,11 @@
 package dartzee.db
 
-import dartzee.achievements.*
+import dartzee.achievements.AchievementType
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.achievements.x01.AchievementX01BestGame
-import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
-import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.FakeDartsScreen
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -362,28 +361,5 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         scrn.achievementType shouldBe achievement.achievementType
         scrn.attainedValue shouldBe achievement.yellowThreshold
         scrn.gameId shouldBe gameId
-    }
-
-    class FakeDartsScreen: AbstractDartsGameScreen(2, GameType.X01)
-    {
-        override val windowName = "Fake"
-
-        var gameId: String? = null
-        var playerId: String? = null
-        var achievementType: AchievementType? = null
-        var attainedValue: Int? = null
-
-        override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
-        {
-            this.gameId = gameId
-            this.playerId = playerId
-            this.achievementType = achievement.achievementType
-            this.attainedValue = achievement.attainedValue
-        }
-
-        override fun fireAppearancePreferencesChanged()
-        {
-
-        }
     }
 }

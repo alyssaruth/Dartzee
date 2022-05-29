@@ -19,13 +19,13 @@ import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.*
 
-open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
     GamePanelPausable<DartsScorerX01, Dartboard, X01PlayerState>(parent, game, totalPlayers)
 {
     private val startingScore = Integer.parseInt(game.gameParams)
 
     override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(startingScore, pt)
-    override fun factoryDartboard() = Dartboard()
+    override fun factoryDartboard() = Dartboard(500, 500)
 
     override fun saveDartsAndProceed()
     {
@@ -143,7 +143,7 @@ open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, total
 
     }
 
-    override fun factoryScorer() = DartsScorerX01(this, gameEntity.gameParams)
+    override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerX01(this, gameEntity.gameParams, participant)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 

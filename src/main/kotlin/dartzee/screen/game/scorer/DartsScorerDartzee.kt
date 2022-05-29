@@ -1,6 +1,7 @@
 package dartzee.screen.game.scorer
 
 import dartzee.game.state.DartzeePlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.factoryHighScoreResult
 import java.awt.event.MouseEvent
@@ -9,7 +10,8 @@ import java.awt.event.MouseListener
 private const val RULE_COLUMN = 3
 private const val SCORE_COLUMN = 4
 
-class DartsScorerDartzee(private val parent: GamePanelDartzee): AbstractDartsScorer<DartzeePlayerState>(), MouseListener
+class DartsScorerDartzee(private val parent: GamePanelDartzee, participant: IWrappedParticipant) :
+    AbstractDartsScorer<DartzeePlayerState>(participant), MouseListener
 {
     init
     {

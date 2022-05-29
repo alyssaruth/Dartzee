@@ -1,10 +1,11 @@
 package dartzee.screen.game
 
 import dartzee.core.util.ceilDiv
-import dartzee.db.PlayerEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.AbstractScorer
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
+import java.awt.Window
 import javax.swing.JPanel
 
 /**
@@ -32,18 +33,12 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
     /**
      * Abstract methods
      */
-    abstract fun factoryScorer(): S
+    protected abstract fun factoryScorer(participant: IWrappedParticipant): S
 
-    /**
-     * Instance methods
-     */
-    fun initScorers(totalPlayers: Int)
+    fun finaliseScorers(parentWindow: Window)
     {
-        scorersOrdered.clear()
         panelEast.removeAll()
         panelWest.removeAll()
-
-        for (i in 0 until totalPlayers) { scorersOrdered.add(factoryScorer()) }
 
         val chunkSize = scorersOrdered.size.ceilDiv(2)
         val eastAndWestScorers = scorersOrdered.chunked(chunkSize)
@@ -57,12 +52,15 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 
         eastScorers?.forEach { panelEast.add(it, "growy") }
         westScorers.forEach { panelWest.add(it, "growy") }
+
+        parentWindow.pack()
     }
 
-    fun assignScorer(player: PlayerEntity): S
+    fun assignScorer(participant: IWrappedParticipant): S
     {
-        val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player")
-        scorer.init(player)
+        val scorer = factoryScorer(participant)
+        scorer.init()
+        scorersOrdered.add(scorer)
         return scorer
     }
 }

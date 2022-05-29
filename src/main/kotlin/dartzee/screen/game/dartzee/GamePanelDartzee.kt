@@ -37,7 +37,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         summaryPanel.setCarouselListener(this)
     }
 
-    override fun factoryDartboard() = DartzeeDartboard()
+    override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = DartzeePlayerState(pt)
 
     override fun doAiTurn(model: DartsAiModel)
@@ -188,7 +188,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     }
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelDartzee()
-    override fun factoryScorer() = DartsScorerDartzee(this)
+    override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerDartzee(this, participant)
 
     override fun hoverChanged(segmentStatus: SegmentStatus)
     {

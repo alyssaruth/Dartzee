@@ -3,18 +3,16 @@ package dartzee.bean
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
 import dartzee.utils.InjectedThings.playerImageSelector
-import java.awt.Color
+import dartzee.utils.ResourceCache
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
-import javax.swing.border.LineBorder
 
-class PlayerAvatar : JLabel(AVATAR_UNSET)
+class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
 {
     private var player: PlayerEntity? = null
 
@@ -30,11 +28,6 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
         addMouseListener(AvatarClickListener())
     }
 
-    fun setSelected(selected: Boolean)
-    {
-        border = if (selected) LineBorder(Color.RED, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
-    }
-
     fun init(player: PlayerEntity, saveChanges: Boolean)
     {
         //Only set the player variable if we want to allow the label to directly make changes to it.
@@ -44,7 +37,7 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
         }
 
         avatarId = player.playerImageId
-        icon = player.getAvatar() ?: AVATAR_UNSET
+        icon = player.getAvatar() ?: ResourceCache.AVATAR_UNSET
     }
 
     /**
@@ -88,10 +81,5 @@ class PlayerAvatar : JLabel(AVATAR_UNSET)
                 cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
             }
         }
-    }
-
-    companion object
-    {
-        private val AVATAR_UNSET = ImageIcon(PlayerAvatar::class.java.getResource("/avatars/Unset.png"))
     }
 }

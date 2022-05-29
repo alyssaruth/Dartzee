@@ -4,9 +4,8 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.insertDartzeeRules
@@ -18,8 +17,7 @@ import javax.swing.event.ChangeListener
 
 abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     private val matchPanel: MatchSummaryPanel<PlayerState>,
-    val match: DartsMatchEntity,
-    players: List<PlayerEntity>): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
+    val match: DartsMatchEntity): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
     override val windowName = match.getMatchDesc()
 
@@ -32,8 +30,6 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
         tabbedPane.addTab("Match", matchPanel)
         tabbedPane.addChangeListener(this)
-
-        matchPanel.init(players)
 
         title = match.getMatchDesc()
     }
@@ -61,9 +57,14 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         return tab
     }
 
-    fun addParticipant(localId: Long, participant: ParticipantEntity)
+    fun addParticipant(localId: Long, participant: IWrappedParticipant)
     {
         matchPanel.addParticipant(localId, participant)
+    }
+
+    fun finaliseParticipants()
+    {
+        matchPanel.finaliseScorers(this)
     }
 
     fun updateTotalScores()

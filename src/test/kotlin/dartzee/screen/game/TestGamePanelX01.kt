@@ -1,11 +1,13 @@
 package dartzee.screen.game
 
 import dartzee.achievements.AchievementType
-import dartzee.db.*
-import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.db.AchievementEntity
+import dartzee.db.EntityName
+import dartzee.db.X01FinishEntity
+import dartzee.helper.AbstractTest
+import dartzee.helper.randomGuid
+import dartzee.helper.wipeTable
 import dartzee.`object`.Dart
-import dartzee.screen.game.x01.GamePanelX01
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -15,10 +17,10 @@ class TestGamePanelX01: AbstractTest()
     fun `Should update BTBF achievement if the game was finished on D1`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeX01GamePanel(playerId)
 
         val darts = listOf(Dart(1, 2))
-        panel.setDartsThrown(darts)
+        panel.addCompletedRound(darts)
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
@@ -30,10 +32,10 @@ class TestGamePanelX01: AbstractTest()
     fun `Should not update BTBF achievement if the game was finished on a different double`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeX01GamePanel(playerId)
 
         val darts = listOf(Dart(2, 2))
-        panel.setDartsThrown(darts)
+        panel.addCompletedRound(darts)
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
@@ -44,10 +46,10 @@ class TestGamePanelX01: AbstractTest()
     fun `Should update the best finish achievement for a player`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeX01GamePanel(playerId)
 
         val darts = listOf(Dart(20, 3), Dart(20, 2))
-        panel.setDartsThrown(darts)
+        panel.addCompletedRound(darts)
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
@@ -60,10 +62,10 @@ class TestGamePanelX01: AbstractTest()
     fun `Should update X01Finish table`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeX01GamePanel(playerId)
 
         val darts = listOf(Dart(20, 3), Dart(20, 2))
-        panel.setDartsThrown(darts)
+        panel.addCompletedRound(darts)
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
         X01FinishEntity().retrieveEntities().size shouldBe 1
@@ -77,13 +79,13 @@ class TestGamePanelX01: AbstractTest()
     fun `Should update No Mercy achievement if the game was finished on from 3, 5, 7 or 9`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeX01GamePanel(playerId)
 
         for (i in listOf(3, 5, 7, 9))
         {
             wipeTable(EntityName.Achievement)
             val darts = listOf(Dart(1, 1), Dart((i-1)/2, 2))
-            panel.setDartsThrown(darts)
+            panel.addCompletedRound(darts)
 
             panel.updateAchievementsForFinish(playerId, 1, 30)
 
@@ -97,10 +99,10 @@ class TestGamePanelX01: AbstractTest()
     fun `Should not update No Mercy achievement if the game was finished from a higher finish`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeX01GamePanel(playerId)
 
         val darts = listOf(Dart(11, 1))
-        panel.setDartsThrown(darts)
+        panel.addCompletedRound(darts)
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
@@ -111,33 +113,13 @@ class TestGamePanelX01: AbstractTest()
     fun `Should not update No Mercy achievement if the game was finished from an even number`()
     {
         val playerId = randomGuid()
-        val panel = TestGamePanel(playerId)
+        val panel = makeX01GamePanel(playerId)
 
         val darts = listOf(Dart(8, 1))
-        panel.setDartsThrown(darts)
+        panel.addCompletedRound(darts)
 
         panel.updateAchievementsForFinish(playerId, 1, 30)
 
         AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId) shouldBe null
-    }
-
-    private class TestGamePanel(currentPlayerId: String = randomGuid())
-        : GamePanelX01(TestAchievementEntity.FakeDartsScreen(), GameEntity.factoryAndSave(GameType.X01, "501"), 1)
-    {
-        init
-        {
-            val player = insertPlayer(currentPlayerId)
-            val scorer = assignScorer(player)
-
-            currentPlayerNumber = 0
-            addState(0, makeX01PlayerState(player = player), scorer)
-
-            currentRoundNumber = 1
-        }
-
-        fun setDartsThrown(dartsThrown: List<Dart>)
-        {
-            getCurrentPlayerState().addCompletedRound(dartsThrown)
-        }
     }
 }

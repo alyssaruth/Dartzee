@@ -5,7 +5,6 @@ import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
-import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.*
@@ -116,9 +115,12 @@ class TestDartsMatchScreen: AbstractTest()
         scrn.updateTotalScores()
         verify { matchSummaryPanel.updateTotalScores() }
 
-        val pt = insertParticipant()
+        val pt = makeSingleParticipant()
         scrn.addParticipant(500L, pt)
         verify { matchSummaryPanel.addParticipant(500L, pt) }
+
+        scrn.finaliseParticipants()
+        verify { matchSummaryPanel.finaliseScorers(scrn) }
     }
 
     @Test
@@ -163,14 +165,13 @@ class TestDartsMatchScreen: AbstractTest()
                                  matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
     {
         PlayerImageEntity().createPresets()
-        return FakeMatchScreen(match, listOf(insertPlayer(), insertPlayer()), matchSummaryPanel)
+        return FakeMatchScreen(match, matchSummaryPanel)
     }
 }
 
 private class FakeMatchScreen(match: DartsMatchEntity,
-                              players: List<PlayerEntity>,
                               matchSummaryPanel: MatchSummaryPanel<X01PlayerState>):
-        DartsMatchScreen<X01PlayerState>(matchSummaryPanel, match, players)
+        DartsMatchScreen<X01PlayerState>(matchSummaryPanel, match)
 {
     override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelX01
     {

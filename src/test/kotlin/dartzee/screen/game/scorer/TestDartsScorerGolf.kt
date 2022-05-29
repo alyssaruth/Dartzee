@@ -5,6 +5,7 @@ import dartzee.`object`.SegmentType
 import dartzee.game.state.GolfPlayerState
 import dartzee.getRows
 import dartzee.helper.*
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -17,11 +18,8 @@ class TestDartsScorerGolf: AbstractTest()
     @Test
     fun `Should show the right number of columns`()
     {
-        val scorer = factoryScorer()
-        scorer.getNumberOfColumns() shouldBe 5
-
-        scorer.showGameId = true
-        scorer.getNumberOfColumns() shouldBe 6
+        factoryScorer(false).getNumberOfColumns() shouldBe 5
+        factoryScorer(true).getNumberOfColumns() shouldBe 6
     }
 
     @Test
@@ -66,7 +64,6 @@ class TestDartsScorerGolf: AbstractTest()
     fun `Should set the score and finishing position`()
     {
         val scorer = factoryScorer()
-        scorer.init(insertPlayer())
         val pt = insertParticipant(finishingPosition = 2)
 
         val roundOne = makeGolfRound(1, listOf(Dart(1, 3, segmentType = SegmentType.TREBLE)))
@@ -121,9 +118,7 @@ class TestDartsScorerGolf: AbstractTest()
     @Test
     fun `Should render an extra column with gameIds`()
     {
-        val scorer = DartsScorerGolf()
-        scorer.showGameId = true
-        scorer.init(null)
+        val scorer = factoryScorer(true)
         scorer.getNumberOfColumns() shouldBe 6
 
         val roundOne = makeGolfRound(1, listOf(Dart(1, 3, segmentType = SegmentType.TREBLE)))
@@ -144,10 +139,7 @@ class TestDartsScorerGolf: AbstractTest()
     @Test
     fun `Should split gameIds if more than 9 rounds`()
     {
-        val scorer = DartsScorerGolf()
-        scorer.showGameId = true
-        scorer.init(null)
-
+        val scorer = factoryScorer(true)
         val state = makeGolfPlayerState()
         for (i in 1..10)
         {
@@ -182,10 +174,10 @@ class TestDartsScorerGolf: AbstractTest()
         scorer.lblResult.foreground shouldBe Color.RED
     }
 
-    private fun factoryScorer(): DartsScorerGolf
+    private fun factoryScorer(showGameId: Boolean = false): DartsScorerGolf
     {
-        val scorer = DartsScorerGolf()
-        scorer.init(null)
+        val scorer = DartsScorerGolf(makeSingleParticipant(), showGameId)
+        scorer.init()
         return scorer
     }
 }

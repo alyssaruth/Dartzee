@@ -15,12 +15,12 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
-open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
+class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
     GamePanelPausable<DartsScorerRoundTheClock, DartzeeDartboard, ClockPlayerState>(parent, game, totalPlayers)
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
 
-    override fun factoryDartboard() = DartzeeDartboard()
+    override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = ClockPlayerState(config, pt)
 
     override fun doAiTurn(model: DartsAiModel)
@@ -86,7 +86,7 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
         super.saveDartsAndProceed()
     }
 
-    fun updateBestStreakAchievement()
+    private fun updateBestStreakAchievement()
     {
         val longestStreakThisGame = getCurrentPlayerState().getLongestStreak()
         if (longestStreakThisGame > 1)
@@ -104,7 +104,8 @@ open class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEnt
 
     override fun currentPlayerHasFinished() = getCurrentPlayerState().findCurrentTarget() == null
 
-    override fun factoryScorer() = DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams))
+    override fun factoryScorer(participant: IWrappedParticipant) =
+        DartsScorerRoundTheClock(this, RoundTheClockConfig.fromJson(gameEntity.gameParams), participant)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelRoundTheClock(gameParams)
 

@@ -6,6 +6,7 @@ import dartzee.bean.AchievementMedal
 import dartzee.core.bean.SwingLabel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.PlayerStateListener
 import net.miginfocom.swing.MigLayout
 import java.awt.*
@@ -22,7 +23,8 @@ import javax.swing.border.LineBorder
 
 const val SCORER_WIDTH = 210
 
-abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>: AbstractScorer(), PlayerStateListener<PlayerState>
+abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>(participant: IWrappedParticipant) :
+    AbstractScorer(participant), PlayerStateListener<PlayerState>
 {
     private val overlays = mutableListOf<AchievementOverlay>()
 
@@ -36,7 +38,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
     {
         runOnEventThreadBlocking {
             model.clear()
-            setSelected(state.isActive)
+            setSelected(state.isActive, state.currentRoundNumber())
 
             stateChangedImpl(state)
 
@@ -54,10 +56,10 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
         updateResultColourForPosition(state.wrappedParticipant.participant.finishingPosition)
     }
 
-    private fun setSelected(selected: Boolean)
+    private fun setSelected(selected: Boolean, roundNumber: Int)
     {
         lblName.foreground = if (selected) Color.RED else Color.BLACK
-        lblAvatar.setSelected(selected)
+        lblAvatar.setSelected(selected, roundNumber)
     }
 
     protected open fun stateChangedImpl(state: PlayerState) {}
