@@ -38,14 +38,14 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
     {
         setOtherComponentVisibility(this, panelOther)
 
-        populateStats(filteredGames, panelMyScorecard, null)
+        populateStats(filteredGames, panelMyScorecard, false)
         if (includeOtherComparison())
         {
-            populateStats(filteredGamesOther, panelOtherScorecard, Color.RED)
+            populateStats(filteredGamesOther, panelOtherScorecard, true)
         }
     }
 
-    private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, color: Color?)
+    private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, other: Boolean)
     {
         val hmHoleToBestDarts = mutableMapOf<Int, List<Dart>>()
         val hmHoleToBestGameId = mutableMapOf<Int, Long>()
@@ -56,8 +56,9 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
             game.populateOptimalScorecardMaps(hmHoleToBestDarts, hmHoleToBestGameId)
         }
 
-        val scoreSheet = GolfStatsScorecard(0)
-        if (color != null)
+        val testId = if (other) "scorecardOther" else "scorecardMine"
+        val scoreSheet = GolfStatsScorecard(0, true, testId)
+        if (other)
         {
             scoreSheet.setTableForeground(Color.RED)
         }

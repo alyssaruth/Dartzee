@@ -17,6 +17,7 @@ import dartzee.game.state.X01PlayerState
 import dartzee.stats.GameWrapper
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
+import io.kotlintest.shouldBe
 import java.awt.Point
 import java.sql.Timestamp
 
@@ -143,4 +144,16 @@ fun makeGameWrapper(
         it.setHmRoundNumberToDartsThrown(dartRounds)
         it.setTotalRounds(totalRounds)
     }
+}
+
+fun makeGolfGameWrapper(localId: Long = 1L, gameParams: String = "18", dartRounds: List<List<Dart>>, expectedScore: Int): GameWrapper
+{
+    val golfRounds = dartRounds.mapIndexed { ix, round -> makeGolfRound(ix+1, round) }
+
+    val score = golfRounds.sumOf { it.last().getGolfScore() }
+    score shouldBe expectedScore
+
+    val wrapper = makeGameWrapper(localId = localId, gameParams = gameParams, finalScore = score)
+    golfRounds.flatten().forEach { wrapper.addDart(it.roundNumber, it) }
+    return wrapper
 }

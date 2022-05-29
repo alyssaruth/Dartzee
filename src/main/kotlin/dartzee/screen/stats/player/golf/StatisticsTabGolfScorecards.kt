@@ -23,9 +23,9 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
     private val lblMode = JLabel("Mode")
     private val panelMine = JPanel()
     private val panelOther = JPanel()
-    private val scrollTableMine = ScrollTableDartsGame()
+    private val scrollTableMine = ScrollTableDartsGame(testId = "ScorecardsMine")
     private val panelMyScorecard = JPanel()
-    private val scrollTableOther = ScrollTableDartsGame()
+    private val scrollTableOther = ScrollTableDartsGame(testId = "ScorecardsOther")
     private val panelOtherScorecard = JPanel()
 
     init
@@ -110,7 +110,6 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
         model.addElement(item)
     }
 
-
     private fun populateTable(filteredGames: List<GameWrapper>, scrollTable: ScrollTableDartsGame)
     {
         //Filter out the -1's - these are games that haven't gone on long enough to have all the data
@@ -130,16 +129,21 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
         scrollTable.sortBy(1, false)
 
         //Select a row so the scorecard automatically populates
-        if (!validGames.isEmpty())
+        if (validGames.isNotEmpty())
         {
             scrollTable.selectFirstRow()
         }
     }
 
-    private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel)
+    private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel, other: Boolean)
     {
         val fudgeFactor = if (mode == GolfMode.BACK_9) 9 else 0
-        val scorer = GolfStatsScorecard(fudgeFactor, showGameId = false)
+        val testId = if (other) "scorecardOther" else "scorecardMine"
+        val scorer = GolfStatsScorecard(fudgeFactor, showGameId = false, testId = testId)
+        if (other)
+        {
+            scorer.setTableForeground(Color.RED)
+        }
 
         val rounds = game.getGolfRounds(mode)
         scorer.populateTable(rounds)
@@ -163,8 +167,8 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
         val game = src.getValueAt(row, 2) as GameWrapper
         when (src)
         {
-            scrollTableMine -> displayScorecard(game, panelMyScorecard)
-            scrollTableOther -> displayScorecard(game, panelOtherScorecard)
+            scrollTableMine -> displayScorecard(game, panelMyScorecard, false)
+            scrollTableOther -> displayScorecard(game, panelOtherScorecard, true)
         }
     }
 }

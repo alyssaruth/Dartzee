@@ -1,17 +1,14 @@
 package dartzee.screen.stats.player
 
 import dartzee.core.bean.ScrollTable
-import dartzee.core.util.DateStatics
 import dartzee.core.util.containsComponent
-import dartzee.core.util.getSqlDateNow
 import dartzee.helper.AbstractTest
-import dartzee.stats.GameWrapper
+import dartzee.helper.makeGameWrapper
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotThrowAny
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Component
-import java.sql.Timestamp
 
 abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractTest()
 {
@@ -36,19 +33,19 @@ abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractT
         val tab = factoryTab()
         val components = getComponentsForComparison(tab)
 
-        tab.setFilteredGames(listOf(constructGameWrapper()), listOf())
+        tab.setFilteredGames(listOf(makeGameWrapper()), listOf())
         tab.populateStats()
         components.forEach{
             tab.containsComponent(it) shouldBe false
         }
 
-        tab.setFilteredGames(listOf(constructGameWrapper()), listOf(constructGameWrapper()))
+        tab.setFilteredGames(listOf(makeGameWrapper()), listOf(makeGameWrapper()))
         tab.populateStats()
         components.forEach{
             tab.containsComponent(it) shouldBe true
         }
 
-        tab.setFilteredGames(listOf(constructGameWrapper()), listOf())
+        tab.setFilteredGames(listOf(makeGameWrapper()), listOf())
         tab.populateStats()
         components.forEach{
             tab.containsComponent(it) shouldBe false
@@ -64,14 +61,5 @@ abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractT
 
             tab.populateStats()
         }
-    }
-
-    fun constructGameWrapper(localId: Long = 1,
-                             gameParams: String = "",
-                             dtStart: Timestamp = getSqlDateNow(),
-                             dtFinish: Timestamp = DateStatics.END_OF_TIME,
-                             finalScore: Int = -1): GameWrapper
-    {
-        return GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore)
     }
 }
