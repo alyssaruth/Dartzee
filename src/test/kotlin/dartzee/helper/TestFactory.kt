@@ -146,14 +146,19 @@ fun makeGameWrapper(
     }
 }
 
-fun makeGolfGameWrapper(localId: Long = 1L, gameParams: String = "18", dartRounds: List<List<Dart>>, expectedScore: Int): GameWrapper
+fun makeGolfGameWrapper(
+    localId: Long = 1L,
+    gameParams: String = "18",
+    dartRounds: List<List<Dart>>,
+    expectedScore: Int,
+    dtStart: Timestamp = Timestamp(1000)): GameWrapper
 {
     val golfRounds = dartRounds.mapIndexed { ix, round -> makeGolfRound(ix+1, round) }
 
     val score = golfRounds.sumOf { it.last().getGolfScore() }
     score shouldBe expectedScore
 
-    val wrapper = makeGameWrapper(localId = localId, gameParams = gameParams, finalScore = score)
+    val wrapper = makeGameWrapper(localId = localId, gameParams = gameParams, finalScore = score, dtStart = dtStart)
     golfRounds.flatten().forEach { wrapper.addDart(it.roundNumber, it) }
     return wrapper
 }

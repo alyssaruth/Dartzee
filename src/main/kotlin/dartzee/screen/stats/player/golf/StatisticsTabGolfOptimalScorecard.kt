@@ -50,6 +50,13 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         val hmHoleToBestDarts = mutableMapOf<Int, List<Dart>>()
         val hmHoleToBestGameId = mutableMapOf<Int, Long>()
 
+        // Add fudge data so we always display something, even if there are no games
+        for (i in 1..18)
+        {
+            hmHoleToBestDarts[i] = listOf(Dart(20, 0), Dart(20, 0), Dart(20, 0))
+            hmHoleToBestGameId[i] = -1
+        }
+
         val sortedGames = filteredGames.sortedBy { it.dtStart }
         for (game in sortedGames)
         {
@@ -73,5 +80,4 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         panel.revalidate()
         panel.repaint()
     }
-
 }

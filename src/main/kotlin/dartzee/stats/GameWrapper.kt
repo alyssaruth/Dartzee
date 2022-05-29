@@ -244,9 +244,10 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         for (i in 1..totalRounds)
         {
             val darts = getDartsForRound(i)
-            val currentDarts = hmHoleToBestDarts[i]
+            val currentDarts = hmHoleToBestDarts.getValue(i)
+            val currentGameId = hmHoleToBestGameId.getValue(i)
 
-            if (isBetterGolfRound(i, darts, currentDarts))
+            if (isBetterGolfRound(i, darts, currentGameId, currentDarts))
             {
                 hmHoleToBestDarts[i] = darts
                 hmHoleToBestGameId[i] = localId
@@ -254,9 +255,9 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         }
     }
 
-    private fun isBetterGolfRound(hole: Int, dartsNew: List<Dart>, dartsCurrent: List<Dart>?): Boolean
+    private fun isBetterGolfRound(hole: Int, dartsNew: List<Dart>, currentGameId: Long, dartsCurrent: List<Dart>): Boolean
     {
-        if (dartsCurrent == null)
+        if (currentGameId == -1L)
         {
             return true
         }

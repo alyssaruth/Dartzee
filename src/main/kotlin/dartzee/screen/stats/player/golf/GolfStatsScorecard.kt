@@ -51,7 +51,10 @@ class GolfStatsScorecard(override val fudgeFactor: Int, private val showGameId: 
     {
         localGameIds.forEachIndexed { ix, gameId ->
             val row = if (ix >= 9) ix + 1 else ix
-            model.setValueAt(gameId, row, GOLF_GAME_ID_COLUMN)
+            if (gameId > -1)
+            {
+                model.setValueAt(gameId, row, GOLF_GAME_ID_COLUMN)
+            }
         }
     }
 

@@ -2,9 +2,11 @@ package dartzee.screen.stats.player.golf
 
 import dartzee.*
 import dartzee.helper.makeGolfGameWrapper
+import dartzee.`object`.Dart
 import dartzee.stats.GameWrapper
+import java.sql.Timestamp
 
-fun golfFrontNine22(localId: Long = 1L): GameWrapper
+fun golfFrontNine22(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): GameWrapper
 {
     val rounds = listOf(
         listOf(drtDoubleOne()), // 1
@@ -18,10 +20,10 @@ fun golfFrontNine22(localId: Long = 1L): GameWrapper
         listOf(drtOuterTwelve(), drtTrebleFourteen(), drtMissNine()), // 5
     )
 
-    return makeGolfGameWrapper(localId, gameParams = "9", expectedScore = 22, dartRounds = rounds)
+    return makeGolfGameWrapper(localId, gameParams = "9", expectedScore = 22, dartRounds = rounds, dtStart = dtStart)
 }
 
-fun golfFrontNine29(localId: Long = 1L): GameWrapper
+fun golfFrontNine29(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): GameWrapper
 {
     val rounds = listOf(
         listOf(drtMissOne(), drtMissTwenty(), drtOuterOne()), // 4
@@ -35,10 +37,10 @@ fun golfFrontNine29(localId: Long = 1L): GameWrapper
         listOf(drtOuterNine()), // 4
     )
 
-    return makeGolfGameWrapper(localId, gameParams = "9", expectedScore = 29, dartRounds = rounds)
+    return makeGolfGameWrapper(localId, gameParams = "9", expectedScore = 29, dartRounds = rounds, dtStart = dtStart)
 }
 
-fun golfFull31_22(localId: Long = 1L): GameWrapper
+fun golfFull31_22(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): GameWrapper
 {
     val rounds = listOf(
         listOf(drtMissOne(), drtMissTwenty(), drtInnerOne()), // 3
@@ -62,10 +64,10 @@ fun golfFull31_22(localId: Long = 1L): GameWrapper
         listOf(drtDoubleEighteen()), // 1
     )
 
-    return makeGolfGameWrapper(localId, gameParams = "18", expectedScore = 53, dartRounds = rounds)
+    return makeGolfGameWrapper(localId, gameParams = "18", expectedScore = 53, dartRounds = rounds, dtStart = dtStart)
 }
 
-fun golfFull28_29(localId: Long = 1L): GameWrapper
+fun golfFull28_29(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): GameWrapper
 {
     val rounds = listOf(
         listOf(drtMissOne(), drtOuterOne()), // 4
@@ -89,5 +91,39 @@ fun golfFull28_29(localId: Long = 1L): GameWrapper
         listOf(drtDoubleEighteen()), // 1
     )
 
-    return makeGolfGameWrapper(localId, gameParams = "18", expectedScore = 57, dartRounds = rounds)
+    return makeGolfGameWrapper(localId, gameParams = "18", expectedScore = 57, dartRounds = rounds, dtStart = dtStart)
+}
+
+fun golfFullOptimal(): Pair<GameWrapper, List<Long>>
+{
+    val rounds = listOf(
+        listOf(drtDoubleOne()), // 1, from G1
+        listOf(drtMissTwo(), drtDoubleTwo()), // 1, from G3
+        listOf(drtDoubleThree()), // 1, from G1
+        listOf(drtDoubleFour()), // 1, from G4
+        listOf(drtMissFive(), drtTrebleFive()), // 2, from G2
+        listOf(drtDoubleSix()), // 1, from G1
+        listOf(drtMissSeven(), drtDoubleSeven()), // 1, from G1
+        listOf(drtInnerSixteen(), drtDoubleEight()), // 1, from G1
+        listOf(drtOuterNine()), // 4, from G2
+        // Halfway - 13
+        listOf(drtDoubleTen()), // 1, from G4 (fewer darts)
+        listOf(drtDoubleEleven()), // 1, from G3
+        listOf(drtInnerTwelve()), // 3, from G3 (equivalent, but G3 happened first)
+        listOf(drtOuterThirteen()), // 4, from G4
+        listOf(drtInnerFourteen()), // 3, from G4
+        listOf(drtOuterFifteen()), // 4, from G4 (fewer darts)
+        listOf(drtMissSixteen(), drtDoubleSixteen()), // 1, from G3
+        listOf(drtMissSeventeen(), drtOuterThree(), drtDoubleSeventeen()), // 1, from G3
+        listOf(drtDoubleEighteen()), // 1, from G3
+    )
+
+    return makeGolfGameWrapper(1L, gameParams = "18", expectedScore = 32, dartRounds = rounds) to
+            listOf(1L, 3L, 1L, 4L, 2L, 1L, 1L, 1L, 2L, 4L, 3L, 3L, 4L, 4L, 4L, 3L, 3L, 3L)
+}
+
+fun golfAllMisses(): GameWrapper
+{
+    val rounds = (1..18).map { listOf(Dart(20, 0), Dart(20, 0), Dart(20, 0)) }
+    return makeGolfGameWrapper(-1, gameParams = "18", expectedScore = 90, dartRounds = rounds)
 }
