@@ -117,8 +117,6 @@ class GameLauncher
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }
-
-        scrn.updateTotalScores()
     }
 
     private fun factoryMatchScreen(match: DartsMatchEntity) =
