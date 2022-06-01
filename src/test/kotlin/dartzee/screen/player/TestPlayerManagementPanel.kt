@@ -97,7 +97,7 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
         panel.lblPlayerName.text shouldBe "Alex"
-        panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar()!!)
+        panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
         panel.getChild<JButton>("Delete").shouldBeVisible()
         panel.getChild<JButton>("Edit").shouldBeVisible()
         panel.getChild<JButton>("Run Simulation").shouldNotBeVisible()
@@ -113,7 +113,7 @@ class TestPlayerManagementPanel: AbstractTest()
         panel.refresh(player)
 
         panel.lblPlayerName.text shouldBe "Dennis"
-        panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar()!!)
+        panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
         panel.getChild<JButton>("Delete").shouldBeVisible()
         panel.getChild<JButton>("Edit").shouldBeVisible()
         panel.getChild<JButton>("Run Simulation").shouldBeVisible()

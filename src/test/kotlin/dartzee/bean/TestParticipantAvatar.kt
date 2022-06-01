@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 class TestParticipantAvatar : AbstractTest()
 {
     @Test
-    fun `Should default to the first player's avatar, and update accordingly based on round number`()
+    fun `Should default to the split avatar, and update accordingly based on round number`()
     {
         val playerOneImage = insertPlayerImage(resource = "yoshi")
         val playerOne = insertPlayer(playerImageId = playerOneImage.rowId)
