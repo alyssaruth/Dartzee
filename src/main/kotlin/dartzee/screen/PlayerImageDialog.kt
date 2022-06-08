@@ -9,8 +9,11 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerImageEntity
+import dartzee.utils.PLAYER_IMAGE_HEIGHT
+import dartzee.utils.PLAYER_IMAGE_WIDTH
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Dimension
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.*
@@ -91,10 +94,10 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelec
 
     private fun validateAndUploadImage(imgFile: File)
     {
-        val imgDim = FileUtil.getImageDim(imgFile.absolutePath)
-        if (imgDim!!.getWidth() > 150 || imgDim.getHeight() > 150)
+        val imgDim = FileUtil.getImageDim(imgFile.absolutePath) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
+        if (imgDim.getWidth() > PLAYER_IMAGE_WIDTH || imgDim.getHeight() > PLAYER_IMAGE_HEIGHT)
         {
-            DialogUtil.showError("The image must be no larger than 150x150px.")
+            DialogUtil.showError("The image must be no larger than $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
             return
         }
 

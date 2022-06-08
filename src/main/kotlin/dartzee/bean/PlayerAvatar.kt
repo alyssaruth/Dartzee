@@ -3,6 +3,8 @@ package dartzee.bean
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
 import dartzee.utils.InjectedThings.playerImageSelector
+import dartzee.utils.PLAYER_IMAGE_HEIGHT
+import dartzee.utils.PLAYER_IMAGE_WIDTH
 import dartzee.utils.ResourceCache
 import java.awt.Cursor
 import java.awt.Dimension
@@ -21,7 +23,7 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
 
     init
     {
-        preferredSize = Dimension(150, 150)
+        preferredSize = Dimension(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
         border = EtchedBorder(EtchedBorder.RAISED, null, null)
         horizontalAlignment = SwingConstants.CENTER
 
@@ -37,7 +39,7 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
         }
 
         avatarId = player.playerImageId
-        icon = player.getAvatar() ?: ResourceCache.AVATAR_UNSET
+        icon = if (player.playerImageId.isNotEmpty()) player.getAvatar() else ResourceCache.AVATAR_UNSET
     }
 
     /**
