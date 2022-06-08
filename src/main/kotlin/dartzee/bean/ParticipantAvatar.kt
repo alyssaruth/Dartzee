@@ -15,7 +15,7 @@ class ParticipantAvatar(private val pt: IWrappedParticipant) : JLabel(ResourceCa
 {
     init
     {
-        preferredSize = Dimension(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
+        size = Dimension(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
         border = EtchedBorder(EtchedBorder.RAISED, null, null)
         horizontalAlignment = SwingConstants.CENTER
         icon = pt.getAvatar(1, false)
@@ -23,7 +23,7 @@ class ParticipantAvatar(private val pt: IWrappedParticipant) : JLabel(ResourceCa
 
     fun setSelected(selected: Boolean, roundNumber: Int)
     {
-        border = if (selected) LineBorder(Color.RED, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
+        border = if (selected) LineBorder(Color.BLACK, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
         icon = pt.getAvatar(roundNumber, selected)
     }
 }

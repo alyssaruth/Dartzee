@@ -16,7 +16,7 @@ fun splitAvatar(playerOne: PlayerEntity, playerTwo: PlayerEntity, selectedPlayer
     val first = playerOne.getAvatarImage()
     val second = playerTwo.getAvatarImage()
 
-    val fudgeFactor = when (selectedPlayer) {
+    val diagonalOffset = when (selectedPlayer) {
         playerOne -> 1.4
         playerTwo -> 0.6
         else -> 1.0
@@ -24,15 +24,15 @@ fun splitAvatar(playerOne: PlayerEntity, playerTwo: PlayerEntity, selectedPlayer
 
     val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
     newImage.paint { pt ->
-        if (pt.x + pt.y == (PLAYER_IMAGE_WIDTH * fudgeFactor).toInt()) {
+        if (pt.x + pt.y == (PLAYER_IMAGE_WIDTH * diagonalOffset).toInt()) {
             Color.BLACK
-        } else if (pt.x < (PLAYER_IMAGE_WIDTH * fudgeFactor) - pt.y) {
+        } else if (pt.x + pt.y < (PLAYER_IMAGE_WIDTH * diagonalOffset)) {
             val rgb = first.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerTwo) greyscale(rgb) else rgb
+            val rgbToUse = if (selectedPlayer == playerOne) rgb else greyscale(rgb)
             Color(rgbToUse)
         } else {
             val rgb = second.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerOne) greyscale(rgb) else rgb
+            val rgbToUse = if (selectedPlayer == playerTwo) rgb else greyscale(rgb)
             Color(rgbToUse)
         }
     }
