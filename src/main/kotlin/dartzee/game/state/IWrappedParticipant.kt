@@ -19,6 +19,7 @@ sealed interface IWrappedParticipant
     val individuals: List<ParticipantEntity>
     val participant: IParticipant
 
+    fun ordinal() = participant.ordinal
     fun getIndividual(roundNumber: Int): ParticipantEntity
     fun getUniqueParticipantName() = UniqueParticipantName(individuals.map { it.getPlayerName() }.sorted().joinToString(" & "))
     fun getParticipantName() = ParticipantName(individuals.joinToString(" & ") { it.getPlayerName() })
