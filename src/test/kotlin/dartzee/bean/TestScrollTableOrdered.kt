@@ -130,8 +130,8 @@ class TestScrollTableOrdered: AbstractTest()
         val table = setupTable()
         table.btnRandomize.doClick()
 
-        verify { mockShuffler.shuffleCollection(any()) }
-        table.getRowValues().shouldContainExactly("C", "B", "A")
+        verify { mockShuffler.shuffleCollection<List<Array<Any?>>>(any()) }
+        table.getRowValues().shouldContainExactly("B", "C", "A")
     }
 
     @Test
