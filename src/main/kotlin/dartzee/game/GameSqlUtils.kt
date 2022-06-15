@@ -1,5 +1,6 @@
 package dartzee.game
 
+import dartzee.core.util.InjectedCore.collectionShuffler
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
@@ -83,7 +84,7 @@ private fun <T: Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<
 {
     if (things.size > 2)
     {
-        return things.shuffled()
+        return collectionShuffler.shuffleCollection(things)
     }
 
     return if (gameOrdinal % 2 == 0) things.toList() else things.reversed()

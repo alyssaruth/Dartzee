@@ -1,7 +1,7 @@
 package dartzee.bean
 
 import dartzee.core.bean.ScrollTableOrdered
-import dartzee.core.helper.FakeCollectionShuffler
+import dartzee.core.helper.DeterministicCollectionShuffler
 import dartzee.core.util.CollectionShuffler
 import dartzee.core.util.InjectedCore
 import dartzee.core.util.TableUtil
@@ -123,7 +123,7 @@ class TestScrollTableOrdered: AbstractTest()
     @Test
     fun `Should scramble the row order`()
     {
-        val mockShuffler = spyk<FakeCollectionShuffler>()
+        val mockShuffler = spyk<DeterministicCollectionShuffler>()
 
         InjectedCore.collectionShuffler = mockShuffler
 
