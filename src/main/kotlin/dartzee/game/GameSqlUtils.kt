@@ -1,5 +1,6 @@
 package dartzee.game
 
+import dartzee.core.util.InjectedCore.collectionShuffler
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
@@ -50,7 +51,7 @@ fun loadParticipants(gameId: String): List<IWrappedParticipant>
     val teamParticipants = teams.map(::loadTeam)
     val soloParticipants = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND TeamId = ''").map(::SingleParticipant)
 
-    return (teamParticipants + soloParticipants).sortedBy { it.ordinal }
+    return (teamParticipants + soloParticipants).sortedBy { it.ordinal() }
 }
 private fun loadTeam(team: TeamEntity): TeamParticipant
 {
@@ -61,7 +62,7 @@ private fun loadTeam(team: TeamEntity): TeamParticipant
 /**
  * Follow-on game (in a match)
  */
-fun prepareParticipants(firstGameParticipants: List<IWrappedParticipant>, newGame: GameEntity): List<IWrappedParticipant>
+fun prepareNextParticipants(firstGameParticipants: List<IWrappedParticipant>, newGame: GameEntity): List<IWrappedParticipant>
 {
     val templateParticipants = shuffleForNewGame(firstGameParticipants, newGame.matchOrdinal)
     return templateParticipants.mapIndexed { ordinal, pt ->
@@ -83,7 +84,7 @@ private fun <T: Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<
 {
     if (things.size > 2)
     {
-        return things.shuffled()
+        return collectionShuffler.shuffleCollection(things)
     }
 
     return if (gameOrdinal % 2 == 0) things.toList() else things.reversed()

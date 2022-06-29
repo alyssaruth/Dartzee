@@ -6,9 +6,11 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRoundResult
+import dartzee.game.state.IWrappedParticipant
 import dartzee.getRows
 import dartzee.helper.*
 import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.factoryHighScoreResult
@@ -29,7 +31,7 @@ class TestDartsScorerDartzee: AbstractTest()
         val parent = mockk<GamePanelDartzee>(relaxed = true)
         every { parent.gameEntity } returns game
 
-        val scorer = DartsScorerDartzee(parent)
+        val scorer = makeScorer(parent)
         scorer.lblAvatar.doClick()
 
         verify { parent.scorerSelected(scorer) }
@@ -42,7 +44,7 @@ class TestDartsScorerDartzee: AbstractTest()
         val parent = mockk<GamePanelDartzee>(relaxed = true)
         every { parent.gameEntity } returns game
 
-        val scorer = DartsScorerDartzee(parent)
+        val scorer = makeScorer(parent)
         scorer.lblAvatar.doClick()
 
         verifyNotCalled { parent.scorerSelected(scorer) }
@@ -51,15 +53,14 @@ class TestDartsScorerDartzee: AbstractTest()
     @Test
     fun `Should return 0 for score so far when no entries`()
     {
-        val scorer = DartsScorerDartzee(mockk())
+        val scorer = makeScorer()
         scorer.lblResult.text shouldBe ""
     }
 
     @Test
     fun `Should set the score and finishing position`()
     {
-        val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer())
+        val scorer = makeScorer()
         val pt = insertParticipant(finishingPosition = 2)
 
         val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
@@ -76,8 +77,7 @@ class TestDartsScorerDartzee: AbstractTest()
     @Test
     fun `Table should contain the correct darts and results for completed rounds`()
     {
-        val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer())
+        val scorer = makeScorer()
 
         val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3)) //120
         val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1)) //60
@@ -99,8 +99,7 @@ class TestDartsScorerDartzee: AbstractTest()
     @Test
     fun `Should include the in progress round`()
     {
-        val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer())
+        val scorer = makeScorer()
 
         val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3)) //120
         val state = makeDartzeePlayerState(insertParticipant(), listOf(roundOne))
@@ -118,8 +117,7 @@ class TestDartsScorerDartzee: AbstractTest()
     @Test
     fun `Should update the result renderer based on the current maximum score`()
     {
-        val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer())
+        val scorer = makeScorer()
 
         val roundOne = listOf(Dart(20, 1), Dart(20, 2), Dart(20, 3))
         val roundTwo = listOf(Dart(5, 1), Dart(5, 1), Dart(5, 1))
@@ -138,8 +136,7 @@ class TestDartsScorerDartzee: AbstractTest()
     @Test
     fun `Table should have the right columns and renderers`()
     {
-        val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer())
+        val scorer = makeScorer()
 
         scorer.getNumberOfColumns() shouldBe 5
 
@@ -152,13 +149,15 @@ class TestDartsScorerDartzee: AbstractTest()
     @Test
     fun `Should cope with empty state`()
     {
-        val scorer = DartsScorerDartzee(mockk())
-        scorer.init(insertPlayer())
+        val scorer = makeScorer()
 
         val state = makeDartzeePlayerState()
         scorer.stateChanged(state)
         scorer.tableScores.rowCount shouldBe 0
     }
+
+    private fun makeScorer(parent: GamePanelDartzee = mockk(), participant: IWrappedParticipant = makeSingleParticipant()) =
+        DartsScorerDartzee(parent, participant).also { it.init() }
 
     private fun DartsScorerDartzee.getRendererMaximum(): Int
     {

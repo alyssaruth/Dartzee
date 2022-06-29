@@ -11,6 +11,7 @@ import dartzee.game.state.TestPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.screen.game.GamePanelPausable
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache.ICON_PAUSE
@@ -107,10 +108,10 @@ class TestAbstractDartsScorerPausable: AbstractTest()
         verify { parent.pauseLastPlayer() }
     }
 
-    private fun factoryScorer(parent: GamePanelPausable<*, *, *> = mockk(relaxed = true)) = FakeDartsScorerPausable(parent).also { it.init(null) }
+    private fun factoryScorer(parent: GamePanelPausable<*, *, *> = mockk(relaxed = true)) = FakeDartsScorerPausable(parent).also { it.init() }
 
 
-    private class FakeDartsScorerPausable(parent: GamePanelPausable<*, *, *>): AbstractDartsScorerPausable<TestPlayerState>(parent)
+    private class FakeDartsScorerPausable(parent: GamePanelPausable<*, *, *>): AbstractDartsScorerPausable<TestPlayerState>(parent, makeSingleParticipant())
     {
         override fun getNumberOfColumns() = 4
         override fun initImpl() {}

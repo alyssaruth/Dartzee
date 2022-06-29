@@ -135,6 +135,8 @@ private fun Icon.toBufferedImage(): BufferedImage
 fun ScrollTable.getRows(): List<List<Any?>> =
     model.getRows(columnCount)
 
+fun ScrollTable.getFirstRow() = getRows().first()
+
 fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>>
 {
     val result = mutableListOf<List<Any?>>()

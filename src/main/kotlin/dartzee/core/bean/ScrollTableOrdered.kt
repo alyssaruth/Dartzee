@@ -95,18 +95,15 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
 
     private fun scrambleOrder()
     {
-        val allRows = getAllRows()
-        InjectedCore.collectionShuffler.shuffleCollection(allRows)
-
-        setNewOrder(allRows)
+        val shuffled = InjectedCore.collectionShuffler.shuffleCollection(getAllRows())
+        setNewOrder(shuffled)
     }
 
     inline fun <R : Comparable<R>> reorderRows(crossinline selector: (Array<Any?>) -> R?)
     {
-        val rows = getAllRows()
-        rows.sortBy(selector)
+        val newRows = getAllRows().sortedBy(selector)
 
-        setNewOrder(rows)
+        setNewOrder(newRows)
     }
 
     fun setNewOrder(orderedRows: List<Array<Any?>>)
@@ -116,17 +113,7 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
         orderedRows.forEach { addRow(it) }
     }
 
-    fun getAllRows(): MutableList<Array<Any?>>
-    {
-        val rows = mutableListOf<Array<Any?>>()
-        for (i in 0 until rowCount)
-        {
-            val row = getRow(i)
-            rows.add(row)
-        }
-
-        return rows
-    }
+    fun getAllRows(): List<Array<Any?>> = (0 until rowCount).map(::getRow)
 
     private fun getRow(rowIx: Int): Array<Any?>
     {

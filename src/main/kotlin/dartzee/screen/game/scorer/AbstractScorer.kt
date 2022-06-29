@@ -14,20 +14,20 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer(private val participant: IWrappedParticipant) : JPanel()
+abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), IScorerTable
 {
-    val playerIds: List<String> = participant.individuals.map { it.playerId }
+    val playerIds = participant.individuals.map { it.playerId }
 
-    val model = DefaultModel()
+    override val model = DefaultModel()
 
     val lblName = JLabel()
     protected val panelCenter = JPanel()
     val tableScores = ScrollTableDartsGame()
     val lblResult = JLabel("")
     protected val panelNorth = JPanel()
+    val lblAvatar = ParticipantAvatar(participant)
     val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
-    val lblAvatar = ParticipantAvatar(participant)
 
     val playerName: String
         get() = lblName.text
@@ -46,6 +46,7 @@ abstract class AbstractScorer(private val participant: IWrappedParticipant) : JP
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
+        lblName.text = participant.getParticipantName().value
         lblName.foreground = Color.BLACK
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
@@ -63,14 +64,13 @@ abstract class AbstractScorer(private val participant: IWrappedParticipant) : JP
         tableScores.disableSorting()
     }
 
-    abstract fun getNumberOfColumns(): Int
     protected abstract fun initImpl()
 
     fun getTableOnly() = panelCenter
 
     fun init()
     {
-        lblName.text = participant.getParticipantName().value
+        lblResult.text = ""
 
         //TableModel
         tableScores.setRowHeight(25)
@@ -82,16 +82,6 @@ abstract class AbstractScorer(private val participant: IWrappedParticipant) : JP
 
         initImpl()
     }
-
-    fun addRow(row: Array<*>)
-    {
-        model.addRow(row)
-        tableScores.scrollToBottom()
-    }
-
-    protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
-
-    fun canBeAssigned() = isVisible && playerName.isEmpty()
 
     protected fun updateResultColourForPosition(pos: Int)
     {

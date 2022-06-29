@@ -1,6 +1,5 @@
 package dartzee.screen.game.scorer
 
-import dartzee.`object`.Dart
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
 import dartzee.core.bean.SwingLabel
@@ -23,8 +22,8 @@ import javax.swing.border.LineBorder
 
 const val SCORER_WIDTH = 210
 
-abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>(pt: IWrappedParticipant) :
-    AbstractScorer(pt), PlayerStateListener<PlayerState>
+abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>>(participant: IWrappedParticipant) :
+    AbstractScorer(participant), PlayerStateListener<PlayerState>, IDartsScorerTable
 {
     private val overlays = mutableListOf<AchievementOverlay>()
 
@@ -63,41 +62,6 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
     }
 
     protected open fun stateChangedImpl(state: PlayerState) {}
-
-    protected fun addDartRound(darts: List<Dart>)
-    {
-        addRow(makeEmptyRow())
-
-        darts.forEach(::addDart)
-    }
-
-    /**
-     * Add a dart to the scorer.
-     */
-    protected fun addDart(drt: Dart)
-    {
-        addDartToRow(model.rowCount - 1, drt)
-    }
-
-    /**
-     * Default method, overridden by Round the Clock
-     */
-    open fun getNumberOfColumnsForAddingNewDart() = getNumberOfColumns() - 1
-
-    private fun addDartToRow(rowNumber: Int, drt: Dart)
-    {
-        for (i in 0 until getNumberOfColumnsForAddingNewDart())
-        {
-            val currentVal = model.getValueAt(rowNumber, i)
-            if (currentVal == null)
-            {
-                model.setValueAt(drt, rowNumber, i)
-                return
-            }
-        }
-
-        throw Exception("Trying to add dart to row $rowNumber but it's already full.")
-    }
 
     fun achievementUnlocked(achievement: AbstractAchievement)
     {

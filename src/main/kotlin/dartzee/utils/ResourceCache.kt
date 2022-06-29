@@ -30,7 +30,7 @@ object ResourceCache
     val ICON_PAUSE = ImageIcon(javaClass.getResource("/buttons/pause.png"))
     val ICON_STATS_LARGE = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
 
-    val AVATAR_UNSET = ImageIcon(javaClass.getResource("/avatars/Unset.png"))
+    val AVATAR_UNSET = ImageIcon(PlayerAvatar::class.java.getResource("/avatars/Unset.png"))
 
     val URL_ACHIEVEMENT_LOCKED: URL? = javaClass.getResource("/achievements/locked.png")
     val URL_ACHIEVEMENT_BEST_FINISH: URL? = javaClass.getResource("/achievements/bestFinish.png")

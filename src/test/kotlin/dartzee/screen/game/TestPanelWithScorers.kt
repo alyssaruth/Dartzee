@@ -1,28 +1,50 @@
 package dartzee.screen.game
 
+import dartzee.game.state.IWrappedParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.screen.game.scorer.AbstractScorer
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrowExactly
 import org.junit.jupiter.api.Test
+import javax.swing.JFrame
 
 class TestPanelWithScorers: AbstractTest()
 {
     @Test
-    fun `Should init with the right number of scorers, and split them evenly between east and west`()
+    fun `Assigning a scorer should initialise it`()
     {
         val scrn = FakeDartsScreen()
 
-        scrn.initScorers(5)
+        val singleParticipant = makeSingleParticipant()
+        scrn.assignScorer(singleParticipant)
+
+        val scorer = scrn.getScorer(0)
+        scorer.initted shouldBe true
+    }
+
+    @Test
+    fun `Should split 5 scorers correctly`()
+    {
+        val scrn = FakeDartsScreen()
+
+        scrn.assignScorers(5)
+        scrn.finaliseScorers(JFrame())
 
         scrn.scorerCount() shouldBe 5
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1), scrn.getScorer(2))
         scrn.getEastScorers().shouldContainExactly(scrn.getScorer(3), scrn.getScorer(4))
+    }
 
-        scrn.initScorers(4)
+    @Test
+    fun `Should split 4 scorers correctly`()
+    {
+        val scrn = FakeDartsScreen()
+
+        scrn.assignScorers(4)
+        scrn.finaliseScorers(JFrame())
+
         scrn.scorerCount() shouldBe 4
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1))
         scrn.getEastScorers().shouldContainExactly(scrn.getScorer(2), scrn.getScorer(3))
@@ -33,7 +55,8 @@ class TestPanelWithScorers: AbstractTest()
     {
         val scrn = FakeDartsScreen()
 
-        scrn.initScorers(1)
+        scrn.assignScorer(makeSingleParticipant())
+        scrn.finaliseScorers(JFrame())
 
         scrn.scorerCount() shouldBe 1
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0))
@@ -41,46 +64,36 @@ class TestPanelWithScorers: AbstractTest()
     }
 
     @Test
-    fun `Should throw an exception if there are no remaining scorers to be assigned`()
-    {
-        val scrn = FakeDartsScreen()
-        scrn.initScorers(2)
-
-        scrn.assignScorer(insertPlayer())
-        scrn.assignScorer(insertPlayer())
-
-        val e = shouldThrowExactly<Exception> {
-            scrn.assignScorer(insertPlayer(name = "Richard"))
-        }
-
-        e.message shouldBe "Unable to assign scorer for player Richard"
-    }
-
-    @Test
     fun `Should assign scorers in order`()
     {
         val scrn = FakeDartsScreen()
-        scrn.initScorers(3)
 
-        scrn.assignScorer(insertPlayer(name = "Player One"))
-        scrn.assignScorer(insertPlayer(name = "Player Two"))
-        scrn.assignScorer(insertPlayer(name = "Player Three"))
+        scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player One")))
+        scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player Two")))
+        scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player Three")))
 
         scrn.getScorer(0).lblName.text shouldBe "Player One"
         scrn.getScorer(1).lblName.text shouldBe "Player Two"
         scrn.getScorer(2).lblName.text shouldBe "Player Three"
     }
 
-
-    inner class FakeScorer: AbstractScorer()
+    inner class FakeScorer(participant: IWrappedParticipant) : AbstractScorer(participant)
     {
+        var initted = false
+
         override fun getNumberOfColumns() = 4
-        override fun initImpl() {}
+        override fun initImpl() {
+            initted = true
+        }
     }
 
-    inner class FakeDartsScreen: PanelWithScorers<FakeScorer>()
+    inner class FakeDartsScreen : PanelWithScorers<FakeScorer>()
     {
-        override fun factoryScorer() = FakeScorer()
+        override fun factoryScorer(participant: IWrappedParticipant) = FakeScorer(participant)
+
+        fun assignScorers(scorerCount: Int) {
+            repeat(scorerCount) { assignScorer(makeSingleParticipant()) }
+        }
 
         fun scorerCount() = scorersOrdered.size
         fun getScorer(i: Int) = scorersOrdered[i]

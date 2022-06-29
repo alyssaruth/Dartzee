@@ -1,16 +1,12 @@
 package dartzee.game.state
 
-import dartzee.core.bean.paint
 import dartzee.db.IParticipant
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
-import javax.swing.ImageIcon
 import dartzee.game.ParticipantName
 import dartzee.game.UniqueParticipantName
-import dartzee.utils.ResourceCache
-import java.awt.Color
-import java.awt.Image
-import java.awt.image.BufferedImage
+import dartzee.utils.splitAvatar
+import javax.swing.ImageIcon
 
 /**
  * Wraps up either a Team or an individual Participant, granting access to either:
@@ -23,13 +19,11 @@ sealed interface IWrappedParticipant
     val individuals: List<ParticipantEntity>
     val participant: IParticipant
 
-    val ordinal: Int
-        get() = participant.ordinal
-
+    fun ordinal() = participant.ordinal
     fun getIndividual(roundNumber: Int): ParticipantEntity
     fun getUniqueParticipantName() = UniqueParticipantName(individuals.map { it.getPlayerName() }.sorted().joinToString(" & "))
     fun getParticipantName() = ParticipantName(individuals.joinToString(" & ") { it.getPlayerName() })
-    fun getCombinedAvatar(): ImageIcon
+    fun getAvatar(roundNumber: Int, selected: Boolean): ImageIcon
 }
 
 class SingleParticipant(override val participant: ParticipantEntity): IWrappedParticipant
@@ -37,7 +31,8 @@ class SingleParticipant(override val participant: ParticipantEntity): IWrappedPa
     override val individuals = listOf(participant)
 
     override fun getIndividual(roundNumber: Int) = participant
-    override fun getCombinedAvatar() = participant.getPlayer().getAvatar() ?: ResourceCache.AVATAR_UNSET
+
+    override fun getAvatar(roundNumber: Int, selected: Boolean) = participant.getPlayer().getAvatar()
 }
 
 class TeamParticipant(override val participant: TeamEntity, override val individuals: List<ParticipantEntity>): IWrappedParticipant
@@ -45,31 +40,10 @@ class TeamParticipant(override val participant: TeamEntity, override val individ
     private val teamSize = individuals.size
 
     override fun getIndividual(roundNumber: Int) = individuals[(roundNumber - 1) % teamSize]
-    override fun getCombinedAvatar(): ImageIcon {
-        val avatars = individuals.map { it.getPlayer().getAvatar() ?: ResourceCache.AVATAR_UNSET }
-        val first = avatars[0].image.toBufferedImage()
-        val second = avatars[1].image.toBufferedImage()
 
-        val newImage = BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB)
-        newImage.paint { pt ->
-            if (pt.x + pt.y == 150) {
-                Color.BLACK
-            } else if (pt.x < 150 - pt.y) {
-                Color(first.getRGB(pt.x, pt.y))
-            } else {
-                Color(second.getRGB(pt.x, pt.y))
-            }
-        }
-
-        return ImageIcon(newImage)
-    }
-
-    private fun Image.toBufferedImage(): BufferedImage
+    override fun getAvatar(roundNumber: Int, selected: Boolean): ImageIcon
     {
-        val bi = BufferedImage(150, 150, BufferedImage.TYPE_INT_RGB)
-        val g = bi.createGraphics()
-        g.drawImage(this, 0, 0, null)
-        g.dispose()
-        return bi
+        val selectedPlayer = if (selected) getIndividual(roundNumber).getPlayer() else null
+        return splitAvatar(individuals[0].getPlayer(), individuals[1].getPlayer(), selectedPlayer)
     }
 }

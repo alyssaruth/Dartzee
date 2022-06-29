@@ -1,14 +1,16 @@
 package dartzee.screen.game.scorer
 
 import com.github.alexburlton.swingtest.clickChild
-import dartzee.`object`.Dart
-import dartzee.`object`.DartHint
 import dartzee.core.util.DateStatics
+import dartzee.db.ParticipantEntity
+import dartzee.game.state.SingleParticipant
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.helper.makeX01PlayerStateWithRounds
 import dartzee.helper.makeX01Rounds
+import dartzee.`object`.Dart
+import dartzee.`object`.DartHint
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -116,10 +118,10 @@ class TestDartsScorerX01: AbstractTest()
     @Test
     fun `Should toggle checkout suggestions on pause`()
     {
-        val participant = insertParticipant(finishingPosition = 4, dtFinished = DateStatics.END_OF_TIME)
+        val participant = insertParticipant(finishingPosition = 4, dtFinished = DateStatics.END_OF_TIME, insertPlayer = true)
         val state = makeX01PlayerStateWithRounds(101, participant = participant, isActive = true)
 
-        val scorer = factoryScorer()
+        val scorer = factoryScorer(participant)
         scorer.stateChanged(state)
 
         scorer.getPaused() shouldBe true
@@ -138,10 +140,10 @@ class TestDartsScorerX01: AbstractTest()
         scorer.tableScores.rowCount shouldBe 0
     }
 
-    private fun factoryScorer(): DartsScorerX01
+    private fun factoryScorer(participant: ParticipantEntity = insertParticipant(insertPlayer = true)): DartsScorerX01
     {
-        val scorer = DartsScorerX01(mockk(relaxed = true), "501")
-        scorer.init(null)
+        val scorer = DartsScorerX01(mockk(relaxed = true), "501", SingleParticipant(participant))
+        scorer.init()
         return scorer
     }
 }

@@ -1,78 +1,46 @@
 package dartzee.screen.game
 
+import dartzee.core.util.runOnEventThread
 import dartzee.db.DartsMatchEntity
-import dartzee.game.ParticipantName
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
+import dartzee.game.state.PlayerStateListener
 import dartzee.screen.game.scorer.MatchScorer
 import java.awt.BorderLayout
-import java.awt.Dimension
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import javax.swing.ImageIcon
-import javax.swing.JButton
-import javax.swing.JPanel
 
 /**
  * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
  */
 class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
     val match: DartsMatchEntity,
-    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(), ActionListener
+    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(),
+    PlayerStateListener<PlayerState>
 {
-    private val hmParticipantNameToScorer = mutableMapOf<ParticipantName, MatchScorer>()
     private val gameTabs = mutableListOf<DartsGamePanel<*, *, PlayerState>>()
-
-    private val refreshPanel = JPanel()
-    private val btnRefresh = JButton()
 
     init
     {
-        refreshPanel.add(btnRefresh)
-        btnRefresh.addActionListener(this)
-        btnRefresh.preferredSize = Dimension(80, 80)
-        btnRefresh.icon = ImageIcon(javaClass.getResource("/buttons/refresh.png"))
-        btnRefresh.toolTipText = "Refresh stats"
-    }
-
-    fun init(playersInStartingOrder: List<IWrappedParticipant>)
-    {
         panelCenter.add(statsPanel, BorderLayout.CENTER)
-        panelCenter.add(refreshPanel, BorderLayout.SOUTH)
-
-        for (player in playersInStartingOrder)
-        {
-            val scorer = factoryScorer(player)
-            assignScorer(scorer)
-            hmParticipantNameToScorer[player.getParticipantName()] = scorer
-        }
-
-        initScorers()
-        revalidate()
     }
 
-    fun addParticipant(localId: Long, participant: IWrappedParticipant)
+    fun addParticipant(localId: Long, state: PlayerState)
     {
-        val playerId = participant.getParticipantName()
-        val scorer = hmParticipantNameToScorer[playerId]!!
+        val participant = state.wrappedParticipant
+        val scorer = findOrAssignScorer(participant)
 
         val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
+
+        state.addListener(this)
     }
 
-    fun updateTotalScores()
-    {
-        val scorers = hmParticipantNameToScorer.values
-        for (scorer in scorers)
-        {
-            scorer.updateResult()
-        }
+    private fun findOrAssignScorer(participant: IWrappedParticipant) =
+        scorersOrdered.find { it.participant.getUniqueParticipantName() == participant.getUniqueParticipantName() } ?: assignScorer(participant)
 
-        updateStats()
-    }
-
-    fun updateStats()
+    private fun updateStats()
     {
+        scorersOrdered.forEach { it.updateResult() }
+
         val states = gameTabs.map { it.getPlayerStates() }.flatten()
         statsPanel.showStats(states)
     }
@@ -84,8 +52,8 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         gameTabs.add(tab)
     }
 
-    override fun actionPerformed(e: ActionEvent)
+    override fun stateChanged(state: PlayerState)
     {
-        updateStats()
+        runOnEventThread { updateStats() }
     }
 }

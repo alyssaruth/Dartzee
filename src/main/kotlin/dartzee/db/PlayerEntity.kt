@@ -43,7 +43,7 @@ class PlayerEntity(database: Database = mainDatabase): AbstractEntity<PlayerEnti
     fun isAi() = strategy.isNotEmpty()
     fun getModel() = DartsAiModel.fromJson(strategy)
 
-    fun getAvatar() = if (playerImageId.isEmpty()) null else PlayerImageEntity.retrieveImageIconForId(playerImageId)
+    fun getAvatar() = PlayerImageEntity.retrieveImageIconForId(playerImageId)
     fun getFlag() = getPlayerFlag(isHuman())
 
     companion object

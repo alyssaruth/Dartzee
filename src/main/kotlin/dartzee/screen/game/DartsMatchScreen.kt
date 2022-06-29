@@ -18,8 +18,7 @@ import javax.swing.event.ChangeListener
 
 abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     private val matchPanel: MatchSummaryPanel<PlayerState>,
-    val match: DartsMatchEntity,
-    participants: List<IWrappedParticipant>): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
+    val match: DartsMatchEntity): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
 {
     override val windowName = match.getMatchDesc()
 
@@ -32,8 +31,6 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
         tabbedPane.addTab("Match", matchPanel)
         tabbedPane.addChangeListener(this)
-
-        matchPanel.init(participants)
 
         title = match.getMatchDesc()
     }
@@ -61,20 +58,18 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         return tab
     }
 
-    fun addParticipant(localId: Long, participant: IWrappedParticipant)
+    fun addParticipant(localId: Long, state: PlayerState)
     {
-        matchPanel.addParticipant(localId, participant)
+        matchPanel.addParticipant(localId, state)
     }
 
-    fun updateTotalScores()
+    fun finaliseParticipants()
     {
-        matchPanel.updateTotalScores()
+        matchPanel.finaliseScorers(this)
     }
 
     override fun startNextGameIfNecessary()
     {
-        updateTotalScores()
-
         if (match.isComplete())
         {
             match.dtFinish = getSqlDateNow()
