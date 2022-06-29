@@ -2,10 +2,12 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.AchievementType
+import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.SingleParticipant
@@ -15,6 +17,14 @@ import dartzee.`object`.Dart
 import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
+
+fun makeGameLaunchParams(
+    players: List<PlayerEntity> = listOf(insertPlayer()),
+    gameType: GameType = GameType.X01,
+    gameParams: String = "501",
+    pairMode: Boolean = false,
+    dartzeeDtos: List<DartzeeRuleDto>? = null
+) = GameLaunchParams(players, gameType, gameParams, pairMode, dartzeeDtos)
 
 fun makeSingleParticipant(player: PlayerEntity) = makeSingleParticipant(insertParticipant(playerId = player.rowId))
 fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant(insertPlayer = true)) = SingleParticipant(pt)
