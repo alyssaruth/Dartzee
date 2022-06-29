@@ -127,7 +127,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should prepare participants correctly for a game with more than 2 teams`()
+    fun `Should prepare next participants correctly for a game with more than 2 teams`()
     {
         InjectedCore.collectionShuffler = DeterministicCollectionShuffler()
 
@@ -143,6 +143,11 @@ class TestGameSqlUtils : AbstractTest()
         validateTeam(pt2_1, g2.rowId, 0, p4, p3)
         validateSingleParticipant(pt2_2, g2.rowId, 1, p5)
         validateTeam(pt2_3, g2.rowId, 2, p2, p1)
+
+        val (loadedPt2_1, loadedPt2_2, loadedPt2_3) = loadParticipants(g2.rowId)
+        validateTeam(loadedPt2_1, g2.rowId, 0, p4, p3)
+        validateSingleParticipant(loadedPt2_2, g2.rowId, 1, p5)
+        validateTeam(loadedPt2_3, g2.rowId, 2, p2, p1)
 
         val (pt3_1, pt3_2, pt3_3) = prepareNextParticipants(participants, g3)
         validateTeam(pt3_1, g3.rowId, 0, p3, p4)
