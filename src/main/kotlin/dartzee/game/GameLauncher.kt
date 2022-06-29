@@ -1,10 +1,8 @@
 package dartzee.game
 
 import dartzee.core.util.DialogUtil
-import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.screen.ScreenCache
@@ -16,16 +14,6 @@ import dartzee.screen.game.x01.X01MatchScreen
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.insertDartzeeRules
 
-data class GameLaunchParams(
-    val players: List<PlayerEntity>,
-    val gameType: GameType,
-    val gameParams: String,
-    val pairMode: Boolean,
-    val dartzeeDtos: List<DartzeeRuleDto>? = null
-) {
-    fun teamCount(): Int = if (pairMode) players.chunked(2).size else players.size
-}
-
 class GameLauncher
 {
     fun launchNewMatch(match: DartsMatchEntity, params: GameLaunchParams)
@@ -33,7 +21,7 @@ class GameLauncher
         val game = GameEntity.factoryAndSave(match)
         val participants = insertNewGameEntities(game.rowId, params)
 
-        val scrn = factoryMatchScreen(match, participants)
+        val scrn = factoryMatchScreen(match)
 
         val panel = scrn.addGameToMatch(game)
         panel.startNewGame(participants)
@@ -111,14 +99,12 @@ class GameLauncher
     private fun loadAndDisplayMatch(matchId: String, originalGameId: String)
     {
         val allGames = GameEntity.retrieveGamesForMatch(matchId)
-
-        val firstGame = allGames.first()
         val lastGame = allGames[allGames.size - 1]
 
         val match = DartsMatchEntity().retrieveForId(matchId)
         match!!.cacheMetadataFromGame(lastGame)
 
-        val scrn = factoryMatchScreen(match, loadParticipants(firstGame.rowId))
+        val scrn = factoryMatchScreen(match)
 
         try
         {
@@ -137,16 +123,14 @@ class GameLauncher
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }
-
-        scrn.updateTotalScores()
     }
 
-    private fun factoryMatchScreen(match: DartsMatchEntity, participants: List<IWrappedParticipant>) =
+    private fun factoryMatchScreen(match: DartsMatchEntity) =
         when (match.gameType)
         {
-            GameType.X01 -> X01MatchScreen(match, participants)
-            GameType.ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match, participants)
-            GameType.GOLF -> GolfMatchScreen(match, participants)
-            GameType.DARTZEE -> DartzeeMatchScreen(match, participants)
+            GameType.X01 -> X01MatchScreen(match)
+            GameType.ROUND_THE_CLOCK -> RoundTheClockMatchScreen(match)
+            GameType.GOLF -> GolfMatchScreen(match)
+            GameType.DARTZEE -> DartzeeMatchScreen(match)
         }
 }

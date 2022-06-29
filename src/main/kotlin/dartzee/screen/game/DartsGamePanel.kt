@@ -177,7 +177,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     fun startNewGame(participants: List<IWrappedParticipant>)
     {
         participants.forEach(::addParticipant)
-        initScorers()
         parentWindow.revalidate()
 
         initForAi(hasAi())
@@ -188,17 +187,16 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     private fun addParticipant(wrappedPt: IWrappedParticipant)
     {
-        if (parentWindow is DartsMatchScreen<*>)
-        {
-            parentWindow.addParticipant(gameEntity.localId, wrappedPt)
-        }
-
-        val scorer = factoryScorer(wrappedPt)
-        assignScorer(scorer)
-
+        val scorer = assignScorer(wrappedPt)
         val state = factoryState(wrappedPt)
         state.addListener(scorer)
-        addState(wrappedPt.ordinal, state, scorer)
+
+        if (parentWindow is DartsMatchScreen<*>)
+        {
+            (parentWindow as DartsMatchScreen<PlayerState>).addParticipant(gameEntity.localId, state)
+        }
+
+        addState(wrappedPt.ordinal(), state, scorer)
     }
 
     protected fun nextTurn()

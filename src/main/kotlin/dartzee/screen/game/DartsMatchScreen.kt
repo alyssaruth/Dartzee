@@ -4,6 +4,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
+import dartzee.game.prepareNextParticipants
 import dartzee.game.prepareParticipants
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
@@ -88,7 +89,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         }
 
         val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
-        val newParticipants = prepareParticipants(firstGameParticipants, nextGame)
+        val newParticipants = prepareNextParticipants(firstGameParticipants, nextGame)
 
         val panel = addGameToMatch(nextGame)
 
