@@ -1,10 +1,9 @@
 package dartzee.game
 
 import dartzee.core.util.DialogUtil
-import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
-import dartzee.db.PlayerEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
@@ -17,29 +16,33 @@ import dartzee.utils.insertDartzeeRules
 
 class GameLauncher
 {
-    fun launchNewMatch(match: DartsMatchEntity, dartzeeDtos: List<DartzeeRuleDto>? = null)
+    fun launchNewMatch(match: DartsMatchEntity, params: GameLaunchParams)
     {
+        val game = GameEntity.factoryAndSave(params, match)
+        val participants = insertNewGameEntities(game.rowId, params)
+
         val scrn = factoryMatchScreen(match)
 
-        val game = GameEntity.factoryAndSave(match)
-
-        insertDartzeeRules(game.rowId, dartzeeDtos)
-
         val panel = scrn.addGameToMatch(game)
-        panel.startNewGame(match.players)
+        panel.startNewGame(participants)
     }
 
-    fun launchNewGame(players: List<PlayerEntity>, gameType: GameType, gameParams: String, dartzeeDtos: List<DartzeeRuleDto>? = null)
+    fun launchNewGame(params: GameLaunchParams)
     {
         //Create and save a game
-        val gameEntity = GameEntity.factoryAndSave(gameType, gameParams)
-
-        insertDartzeeRules(gameEntity.rowId, dartzeeDtos)
+        val game = GameEntity.factoryAndSave(params)
+        val participants = insertNewGameEntities(game.rowId, params)
 
         //Construct the screen and factory a tab
-        val scrn = DartsGameScreen(gameEntity, players.size)
+        val scrn = DartsGameScreen(game, params.teamCount())
         scrn.isVisible = true
-        scrn.gamePanel.startNewGame(players)
+        scrn.gamePanel.startNewGame(participants)
+    }
+
+    private fun insertNewGameEntities(gameId: String, params: GameLaunchParams): List<IWrappedParticipant>
+    {
+        insertDartzeeRules(gameId, params.dartzeeDtos)
+        return prepareParticipants(gameId, params)
     }
 
     fun loadAndDisplayGame(gameId: String)
@@ -73,14 +76,14 @@ class GameLauncher
     private fun loadAndDisplaySingleGame(gameEntity: GameEntity)
     {
         //We've found a game, so construct a screen and initialise it
-        val playerCount = gameEntity.getParticipantCount()
-        val scrn = DartsGameScreen(gameEntity, playerCount)
+        val participants = loadParticipants(gameEntity.rowId)
+        val scrn = DartsGameScreen(gameEntity, participants.size)
         scrn.isVisible = true
 
         //Now try to load the game
         try
         {
-            scrn.gamePanel.loadGame()
+            scrn.gamePanel.loadGame(participants)
         }
         catch (t: Throwable)
         {
@@ -104,8 +107,9 @@ class GameLauncher
         try
         {
             allGames.forEach {
+                val participants = loadParticipants(it.rowId)
                 val panel = scrn.addGameToMatch(it)
-                panel.loadGame()
+                panel.loadGame(participants)
             }
 
             scrn.displayGame(originalGameId)

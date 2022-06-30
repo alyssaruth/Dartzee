@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.core.util.DateStatics
 import dartzee.core.util.isEndOfTime
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -56,53 +57,29 @@ class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(
     /**
      * Helpers
      */
-    fun getParticipantCount(): Int
-    {
-        val sb = StringBuilder()
-        sb.append("SELECT COUNT(1) FROM ")
-        sb.append(ParticipantEntity().getTableName())
-        sb.append(" WHERE GameId = '$rowId'")
-
-        return database.executeQueryAggregate(sb)
-    }
-
     fun isFinished() = !isEndOfTime(dtFinish)
     fun getTypeDesc() = gameType.getDescription(gameParams)
 
-    fun retrievePlayersVector(): MutableList<PlayerEntity>
+    fun retrievePlayersVector(): List<PlayerEntity>
     {
-        val ret = mutableListOf<PlayerEntity>()
-
         val whereSql = "GameId = '$rowId' ORDER BY Ordinal ASC"
         val participants = ParticipantEntity().retrieveEntities(whereSql)
-
-        participants.forEach{
-            ret.add(it.getPlayer())
-        }
-
-        return ret
+        return participants.map { it.getPlayer() }
     }
 
     companion object
     {
-        fun factoryAndSave(gameType: GameType, gameParams: String): GameEntity
+        fun factoryAndSave(launchParams: GameLaunchParams, match: DartsMatchEntity? = null)
+          = factoryAndSave(launchParams.gameType, launchParams.gameParams, match)
+
+        fun factoryAndSave(gameType: GameType, gameParams: String, match: DartsMatchEntity? = null): GameEntity
         {
             val gameEntity = GameEntity()
             gameEntity.assignRowId()
             gameEntity.gameType = gameType
             gameEntity.gameParams = gameParams
-            gameEntity.saveToDatabase()
-            return gameEntity
-        }
-
-        fun factoryAndSave(match: DartsMatchEntity): GameEntity
-        {
-            val gameEntity = GameEntity()
-            gameEntity.assignRowId()
-            gameEntity.gameType = match.gameType
-            gameEntity.gameParams = match.gameParams
-            gameEntity.dartsMatchId = match.rowId
-            gameEntity.matchOrdinal = match.incrementAndGetCurrentOrdinal()
+            gameEntity.dartsMatchId = match?.rowId ?: ""
+            gameEntity.matchOrdinal = match?.incrementAndGetCurrentOrdinal() ?: -1
             gameEntity.saveToDatabase()
             return gameEntity
         }

@@ -4,11 +4,9 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
+import dartzee.game.prepareNewEntities
 import dartzee.game.state.AbstractPlayerState
-import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.ScreenCache
-import dartzee.screen.game.dartzee.GamePanelDartzee
-import dartzee.utils.insertDartzeeRules
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
@@ -76,20 +74,13 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
             return
         }
 
-        //Factory and save the next game
-        val nextGame = GameEntity.factoryAndSave(match)
+        val firstGamePanel = hmGameIdToTab.values.first()
+        val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
-        //Insert dartzee rules if applicable
-        val priorGamePanel = hmGameIdToTab.values.first()
-        if (priorGamePanel is GamePanelDartzee)
-        {
-            insertDartzeeRules(nextGame.rowId, priorGamePanel.dtos)
-        }
+        val (nextGame, nextParticipants) = prepareNewEntities(firstGamePanel.gameEntity, firstGameParticipants, match)
 
         val panel = addGameToMatch(nextGame)
-
-        match.shufflePlayers()
-        panel.startNewGame(match.players)
+        panel.startNewGame(nextParticipants)
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)

@@ -33,6 +33,8 @@ class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
         btnPairs.isVisible = FeatureToggles.teamMode
     }
 
+    fun pairMode(): Boolean = btnPairs.isSelected
+
     /**
      * Is this selection valid for a game/match?
      */

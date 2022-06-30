@@ -125,18 +125,6 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
 
     fun incrementAndGetCurrentOrdinal() = ++currentOrdinal
 
-    fun shufflePlayers()
-    {
-        if (players.size == 2)
-        {
-            players = players.reversed()
-        }
-        else
-        {
-            players = players.shuffled()
-        }
-    }
-
     fun cacheMetadataFromGame(lastGame: GameEntity)
     {
         this.gameType = lastGame.gameType

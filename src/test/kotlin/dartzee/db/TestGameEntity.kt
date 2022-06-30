@@ -59,21 +59,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Should get the participant count based on its own row ID`()
-    {
-        val game = GameEntity()
-        val gameId = game.assignRowId()
-        game.saveToDatabase()
-        game.getParticipantCount() shouldBe 0
-
-        insertParticipant()
-        game.getParticipantCount() shouldBe 0
-
-        insertParticipant(gameId = gameId)
-        game.getParticipantCount() shouldBe 1
-    }
-
-    @Test
     fun `Should handle no participants when getting players vector`()
     {
         val game = GameEntity()
@@ -129,21 +114,17 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     fun `Factory and save for a match`()
     {
         val match = DartsMatchEntity.factoryFirstTo(4)
-        match.gameType = GameType.GOLF
-        match.gameParams = "18"
 
-        val matchId = match.rowId
-
-        val gameOne = GameEntity.factoryAndSave(match)
+        val gameOne = GameEntity.factoryAndSave(GameType.GOLF, "18", match)
         gameOne.matchOrdinal shouldBe 1
-        gameOne.dartsMatchId shouldBe matchId
+        gameOne.dartsMatchId shouldBe match.rowId
         gameOne.gameType shouldBe GameType.GOLF
         gameOne.gameParams shouldBe "18"
         gameOne.rowId shouldNotBe ""
 
-        val gameTwo = GameEntity.factoryAndSave(match)
+        val gameTwo = GameEntity.factoryAndSave(GameType.GOLF, "18", match)
         gameTwo.matchOrdinal shouldBe 2
-        gameTwo.dartsMatchId shouldBe matchId
+        gameTwo.dartsMatchId shouldBe match.rowId
         gameTwo.gameType shouldBe GameType.GOLF
         gameTwo.gameParams shouldBe "18"
         gameTwo.rowId shouldNotBe ""
