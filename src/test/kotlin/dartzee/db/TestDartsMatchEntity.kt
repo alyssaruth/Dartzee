@@ -1,14 +1,10 @@
 package dartzee.db
 
-import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity.Companion.constructPointsJson
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartsMatch
-import dartzee.helper.insertGame
-import dartzee.helper.insertParticipant
-import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerForGame
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL_EXCEPTION
@@ -67,53 +63,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
             val retrieved = DartsMatchEntity(otherDatabase).retrieveForId(dartsMatch.rowId)!!
             retrieved.localId shouldBe 3
         }
-    }
-
-    @Test
-    fun `Should correctly report whether a FIRST_TO match is complete`()
-    {
-        val match = DartsMatchEntity.factoryFirstTo(2)
-
-        match.isComplete() shouldBe false
-
-        val gameOne = GameEntity.factoryAndSave(GameType.X01, "501", match)
-        val gameTwo = GameEntity.factoryAndSave(GameType.X01, "501", match)
-        val gameThree = GameEntity.factoryAndSave(GameType.X01, "501", match)
-        val playerOneId = insertPlayer().rowId
-        val playerTwoId = insertPlayer().rowId
-
-        insertParticipant(gameId = gameOne.rowId, finishingPosition = 1, playerId = playerOneId)
-        insertParticipant(gameId = gameOne.rowId, finishingPosition = 2, playerId = playerTwoId)
-        match.isComplete() shouldBe false
-
-        insertParticipant(gameId = gameTwo.rowId, finishingPosition = 1, playerId = playerTwoId)
-        insertParticipant(gameId = gameTwo.rowId, finishingPosition = 2, playerId = playerOneId)
-        match.isComplete() shouldBe false
-
-        insertParticipant(gameId = gameThree.rowId, finishingPosition = 2, playerId = playerTwoId)
-        match.isComplete() shouldBe false
-
-        insertParticipant(gameId = gameThree.rowId, finishingPosition = 1, playerId = playerOneId)
-        match.isComplete() shouldBe true
-    }
-
-    @Test
-    fun `Should correctly report whether a POINTS match is complete`()
-    {
-        val match = DartsMatchEntity.factoryPoints(2, "")
-
-        match.isComplete() shouldBe false
-
-        insertGame(dartsMatchId = match.rowId, dtFinish = getSqlDateNow())
-        match.isComplete() shouldBe false
-
-        val gameTwo = GameEntity.factoryAndSave(GameType.X01, "501", match)
-        match.isComplete() shouldBe false
-
-        gameTwo.dtFinish = getSqlDateNow()
-        gameTwo.saveToDatabase()
-
-        match.isComplete() shouldBe true
     }
 
     @Test

@@ -95,7 +95,6 @@ private fun copyForNewGame(participantOrdinal: Int, template: IWrappedParticipan
             addTeam(newGame.rowId, newPlayerOrder, participantOrdinal)
         }
     }
-
 private fun <T: Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<T>
 {
     if (things.size > 2)

@@ -4,6 +4,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
+import dartzee.game.matchIsComplete
 import dartzee.game.prepareNewEntities
 import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.ScreenCache
@@ -69,7 +70,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
     override fun startNextGameIfNecessary()
     {
-        if (match.isComplete())
+        if (isMatchComplete())
         {
             match.dtFinish = getSqlDateNow()
             match.saveToDatabase()
@@ -83,6 +84,12 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
         val panel = addGameToMatch(nextGame, nextParticipants.size)
         panel.startNewGame(nextParticipants)
+    }
+
+    private fun isMatchComplete(): Boolean
+    {
+        val participants = matchPanel.getAllParticipants()
+        return matchIsComplete(match, participants)
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
