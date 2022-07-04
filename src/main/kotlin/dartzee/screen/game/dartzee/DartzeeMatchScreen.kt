@@ -11,5 +11,6 @@ import dartzee.screen.game.MatchSummaryPanel
 class DartzeeMatchScreen(match: DartsMatchEntity):
     DartsMatchScreen<DartzeePlayerState>(MatchSummaryPanel(match, MatchStatisticsPanelDartzee()), match)
 {
-    override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity) = constructGamePanelDartzee(parent, game, match.getPlayerCount())
+    override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) =
+        constructGamePanelDartzee(parent, game, totalPlayers)
 }

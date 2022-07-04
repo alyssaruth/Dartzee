@@ -15,7 +15,7 @@ import javax.swing.event.ChangeListener
 
 abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     private val matchPanel: MatchSummaryPanel<PlayerState>,
-    val match: DartsMatchEntity): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
+    val match: DartsMatchEntity): AbstractDartsGameScreen(), ChangeListener
 {
     override val windowName = match.getMatchDesc()
 
@@ -32,18 +32,20 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         title = match.getMatchDesc()
     }
 
-    abstract fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, PlayerState>
+    abstract fun factoryGamePanel(
+        parent: AbstractDartsGameScreen,
+        game: GameEntity,
+        totalPlayers: Int
+    ) : DartsGamePanel<*, *, PlayerState>
 
-    override fun getScreenHeight() = super.getScreenHeight() + 30
-
-    fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *, *>
+    fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *, *>
     {
         //Cache this screen in ScreenCache
         val gameId = game.rowId
         ScreenCache.addDartsGameScreen(gameId, this)
 
         //Initialise some basic properties of the tab, such as visibility of components etc
-        val tab = factoryGamePanel(this, game)
+        val tab = factoryGamePanel(this, game, totalPlayers)
 
         matchPanel.addGameTab(tab)
 
@@ -79,7 +81,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
         val (nextGame, nextParticipants) = prepareNewEntities(firstGamePanel.gameEntity, firstGameParticipants, match)
 
-        val panel = addGameToMatch(nextGame)
+        val panel = addGameToMatch(nextGame, nextParticipants.size)
         panel.startNewGame(nextParticipants)
     }
 

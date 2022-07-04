@@ -23,7 +23,7 @@ class GameLauncher
 
         val scrn = factoryMatchScreen(match)
 
-        val panel = scrn.addGameToMatch(game)
+        val panel = scrn.addGameToMatch(game, participants.size)
         panel.startNewGame(participants)
     }
 
@@ -108,7 +108,7 @@ class GameLauncher
         {
             allGames.forEach {
                 val participants = loadParticipants(it.rowId)
-                val panel = scrn.addGameToMatch(it)
+                val panel = scrn.addGameToMatch(it, participants.size)
                 panel.loadGame(participants)
             }
 

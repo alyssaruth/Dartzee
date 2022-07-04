@@ -4,11 +4,16 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity.Companion.constructPointsJson
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.helper.*
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertPlayerForGame
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
@@ -112,16 +117,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should return the number of players in the match`()
-    {
-        val dm = DartsMatchEntity()
-        dm.getPlayerCount() shouldBe 0
-
-        dm.players = listOf(PlayerEntity())
-        dm.getPlayerCount() shouldBe 1
-    }
-
-    @Test
     fun `FIRST_TO descriptions`()
     {
         val dm = DartsMatchEntity()
@@ -203,13 +198,11 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         match.gameType shouldBe game501.gameType
         match.gameParams shouldBe game501.gameParams
         match.incrementAndGetCurrentOrdinal() shouldBe game501.matchOrdinal + 1
-        match.players.map{it.name}.shouldContainExactlyInAnyOrder("BTBF", "Mooch")
 
         match.cacheMetadataFromGame(gameGolf)
         match.gameType shouldBe gameGolf.gameType
         match.gameParams shouldBe gameGolf.gameParams
         match.incrementAndGetCurrentOrdinal() shouldBe gameGolf.matchOrdinal + 1
-        match.players.map{it.name}.shouldContainExactlyInAnyOrder("Scat", "Aggie")
     }
 
     @Test

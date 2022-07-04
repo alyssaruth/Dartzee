@@ -27,7 +27,6 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
      */
     var gameParams = ""
     var gameType: GameType = GameType.X01
-    var players = listOf<PlayerEntity>()
 
     private var currentOrdinal = 0
     private var hmPositionToPoints: Map<Int, Int>? = null
@@ -62,6 +61,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
 
     private fun getIsFirstToMatchComplete(): Boolean
     {
+        // TODO - Teams - this doesn't work!
         val sb = StringBuilder()
         sb.append(" SELECT COUNT(1) AS WinCount")
         sb.append(" FROM Participant p, Game g")
@@ -95,11 +95,9 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         return count == games
     }
 
-    fun getPlayerCount(): Int = players.size
-
     fun getMatchDesc(): String
     {
-        return "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)}, ${getPlayerCount()} players)"
+        return "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)})"
     }
 
     private fun getMatchTypeDesc() =
@@ -129,9 +127,6 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
     {
         this.gameType = lastGame.gameType
         this.gameParams = lastGame.gameParams
-        this.players = lastGame.retrievePlayersVector()
-
-        //Should've been setting this too...
         this.currentOrdinal = lastGame.matchOrdinal
     }
 
