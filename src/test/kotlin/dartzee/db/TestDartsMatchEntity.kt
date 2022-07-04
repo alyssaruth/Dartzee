@@ -75,7 +75,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.gameType = GameType.X01
         dm.gameParams = "501"
 
-        dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501, 0 players)"
+        dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501)"
     }
 
     @Test
@@ -88,7 +88,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.gameType = GameType.GOLF
         dm.gameParams = "18"
 
-        dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes, 0 players)"
+        dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes)"
     }
 
     @Test

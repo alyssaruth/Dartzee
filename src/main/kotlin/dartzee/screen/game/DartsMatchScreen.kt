@@ -37,7 +37,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         parent: AbstractDartsGameScreen,
         game: GameEntity,
         totalPlayers: Int
-    ) : DartsGamePanel<*, *, PlayerState>
+    ): DartsGamePanel<*, *, PlayerState>
 
     fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *, *>
     {
