@@ -38,7 +38,7 @@ fun makeTeam(vararg players: PlayerEntity): TeamParticipant
 
 fun makeGolfGamePanel(currentPlayerId: String = randomGuid()) =
     GamePanelGolf(
-        FakeDartsScreen(GameType.GOLF),
+        FakeDartsScreen(),
         GameEntity.factoryAndSave(GameType.GOLF, "18"),
         1).apply { testInit(currentPlayerId) }
 
@@ -47,7 +47,7 @@ fun makeX01GamePanel(currentPlayerId: String = randomGuid()) =
 
 fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
     GamePanelRoundTheClock(
-        FakeDartsScreen(GameType.ROUND_THE_CLOCK),
+        FakeDartsScreen(),
         GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, RoundTheClockConfig(ClockType.Standard, true).toJson()),
         1).apply { testInit(playerId) }
 
@@ -69,7 +69,7 @@ fun DartsGamePanel<*, *, *>.addCompletedRound(dartsThrown: List<Dart>)
     btnConfirm.doClick()
 }
 
-class FakeDartsScreen(gameType: GameType = GameType.X01) : AbstractDartsGameScreen(2, gameType)
+class FakeDartsScreen() : AbstractDartsGameScreen()
 {
     override val windowName = "Fake"
 

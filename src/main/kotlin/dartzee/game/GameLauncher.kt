@@ -25,7 +25,7 @@ class GameLauncher
 
         insertDartzeeRules(game.rowId, dartzeeDtos)
 
-        val panel = scrn.addGameToMatch(game)
+        val panel = scrn.addGameToMatch(game, match.players.size)
         panel.startNewGame(match.players)
     }
 
@@ -104,7 +104,7 @@ class GameLauncher
         try
         {
             allGames.forEach {
-                val panel = scrn.addGameToMatch(it)
+                val panel = scrn.addGameToMatch(it, it.retrievePlayersVector().size)
                 panel.loadGame()
             }
 

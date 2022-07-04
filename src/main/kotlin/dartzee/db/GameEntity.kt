@@ -69,18 +69,11 @@ class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(
     fun isFinished() = !isEndOfTime(dtFinish)
     fun getTypeDesc() = gameType.getDescription(gameParams)
 
-    fun retrievePlayersVector(): MutableList<PlayerEntity>
+    fun retrievePlayersVector(): List<PlayerEntity>
     {
-        val ret = mutableListOf<PlayerEntity>()
-
         val whereSql = "GameId = '$rowId' ORDER BY Ordinal ASC"
         val participants = ParticipantEntity().retrieveEntities(whereSql)
-
-        participants.forEach{
-            ret.add(it.getPlayer())
-        }
-
-        return ret
+        return participants.map { it.getPlayer() }
     }
 
     companion object
