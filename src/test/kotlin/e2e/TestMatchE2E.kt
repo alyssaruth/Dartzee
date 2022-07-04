@@ -94,7 +94,7 @@ class TestMatchE2E: AbstractRegistryTest()
     private fun verifyUi()
     {
         val matchScreen = ScreenCache.getDartsGameScreens().first() as X01MatchScreen
-        matchScreen.title shouldBe "Match #1 (First to 2 - 501, 2 players)"
+        matchScreen.title shouldBe "Match #1 (First to 2 - 501)"
 
         val summaryPanel = matchScreen.getChild<MatchSummaryPanel<*>>()
         val winnerScorer = summaryPanel.getChild<MatchScorer> { it.playerName == "Winner" }
