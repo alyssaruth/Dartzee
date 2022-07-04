@@ -95,12 +95,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         return count == games
     }
 
-    fun getPlayerCount(): Int = players.size
-
-    fun getMatchDesc(): String
-    {
-        return "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)}, ${getPlayerCount()} players)"
-    }
+    fun getMatchDesc() = "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)})"
 
     private fun getMatchTypeDesc() =
         when(mode)
@@ -158,15 +153,8 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         /**
          * Factory methods
          */
-        fun factoryFirstTo(games: Int): DartsMatchEntity
-        {
-            return factoryAndSave(games, MatchMode.FIRST_TO, "")
-        }
-
-        fun factoryPoints(games: Int, pointsJson: String): DartsMatchEntity
-        {
-            return factoryAndSave(games, MatchMode.POINTS, pointsJson)
-        }
+        fun factoryFirstTo(games: Int) = factoryAndSave(games, MatchMode.FIRST_TO, "")
+        fun factoryPoints(games: Int, pointsJson: String) = factoryAndSave(games, MatchMode.POINTS, pointsJson)
 
         private fun factoryAndSave(games: Int, mode: MatchMode, matchParams: String): DartsMatchEntity
         {

@@ -1,34 +1,21 @@
 package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
-import dartzee.game.GameType
 import dartzee.screen.FocusableWindow
 import dartzee.screen.ScreenCache
-import dartzee.screen.game.scorer.SCORER_WIDTH
-import java.awt.Dimension
 import java.awt.Frame
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
 import javax.swing.WindowConstants
 
-abstract class AbstractDartsGameScreen(totalPlayers: Int, val gameType: GameType): FocusableWindow(), WindowListener
+abstract class AbstractDartsGameScreen : FocusableWindow(), WindowListener
 {
     var haveLostFocus = false
 
     init
     {
-        setScreenSize(totalPlayers)
-
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         addWindowListener(this)
-    }
-
-    open fun getScreenHeight() = if (gameType == GameType.DARTZEE) 795 else 675
-    private fun setScreenSize(playerCount: Int)
-    {
-        val newSize = Dimension(520 + (playerCount * (SCORER_WIDTH + 4)), getScreenHeight())
-        size = newSize
-        isResizable = false
     }
 
     /**

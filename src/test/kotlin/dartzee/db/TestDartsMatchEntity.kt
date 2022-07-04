@@ -115,16 +115,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should return the number of players in the match`()
-    {
-        val dm = DartsMatchEntity()
-        dm.getPlayerCount() shouldBe 0
-
-        dm.players = listOf(PlayerEntity())
-        dm.getPlayerCount() shouldBe 1
-    }
-
-    @Test
     fun `FIRST_TO descriptions`()
     {
         val dm = DartsMatchEntity()
@@ -134,7 +124,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.gameType = GameType.X01
         dm.gameParams = "501"
 
-        dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501, 0 players)"
+        dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501)"
     }
 
     @Test
@@ -147,7 +137,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.gameType = GameType.GOLF
         dm.gameParams = "18"
 
-        dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes, 0 players)"
+        dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes)"
     }
 
     @Test
