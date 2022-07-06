@@ -3,6 +3,7 @@ package dartzee.screen.game
 import com.github.alexburlton.swingtest.getChild
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.core.helper.verifyNotCalled
+import dartzee.core.util.DateStatics
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerImageEntity
@@ -11,9 +12,9 @@ import dartzee.helper.*
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.MatchStatisticsPanelX01
-import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -124,15 +125,17 @@ class TestDartsMatchScreen: AbstractTest()
     @Test
     fun `Should mark the match as complete if no more games need to be played`()
     {
-        val matchEntity = mockk<DartsMatchEntity>(relaxed = true)
-        every { matchEntity.isComplete() } returns true
+        val match = insertDartsMatch(games = 1)
+        val summaryPanel = makeMatchSummaryPanel(match)
 
-        val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
-        val scrn = setUpMatchScreen(match = matchEntity, matchSummaryPanel = matchSummaryPanel)
+        val pt = insertParticipant(finishingPosition = 1)
+        val state = makeX01PlayerState(participant = pt)
+        summaryPanel.addParticipant(1, state)
+
+        val scrn = setUpMatchScreen(match = match, matchSummaryPanel = summaryPanel)
         scrn.startNextGameIfNecessary()
 
-        verify { matchEntity.dtFinish = any() }
-        verify { matchEntity.saveToDatabase(any()) }
+        match.dtFinish shouldNotBe DateStatics.END_OF_TIME
     }
 
     @Test
@@ -142,16 +145,12 @@ class TestDartsMatchScreen: AbstractTest()
         val p2 = insertPlayer()
 
         val match = insertDartsMatch(gameParams = "501")
-        match.players = mutableListOf(p1, p2)
 
         val scrn = setUpMatchScreen(match = match)
         val firstGame = insertGame()
         scrn.addGameToMatchOnEdt(firstGame)
 
         scrn.startNextGameIfNecessaryOnEdt()
-
-        //Players should have been shuffled
-        match.players.shouldContainExactly(p2, p1)
 
         //Game panel should have been added and had a game kicked off
         val gamePanel = scrn.getChild<GamePanelX01> { it.gameEntity != firstGame }

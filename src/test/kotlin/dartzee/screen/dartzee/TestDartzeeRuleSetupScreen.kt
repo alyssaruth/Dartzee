@@ -5,6 +5,8 @@ import dartzee.game.GameLauncher
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
+import dartzee.db.PlayerEntity
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
@@ -23,7 +25,7 @@ class TestDartzeeRuleSetupScreen: AbstractTest()
     @Test
     fun `Should have the right title n stuff`()
     {
-        val scrn = DartzeeRuleSetupScreen()
+        val scrn = makeDartzeeRuleSetupScreen()
         scrn.getScreenName() shouldBe "Dartzee - Custom Setup"
         scrn.getBackTarget().shouldBeInstanceOf<GameSetupScreen>()
         scrn.showNextButton() shouldBe true
@@ -32,13 +34,11 @@ class TestDartzeeRuleSetupScreen: AbstractTest()
     @Test
     fun `Should update the next button text based on whether there is a match or not`()
     {
-        val scrn = DartzeeRuleSetupScreen()
-
-        scrn.setState(null, listOf())
+        val scrn = makeDartzeeRuleSetupScreen(match = null)
         scrn.btnNext.text shouldBe "Launch Game >"
 
-        scrn.setState(DartsMatchEntity(), listOf())
-        scrn.btnNext.text shouldBe "Launch Match >"
+        val scrnWithMatch = makeDartzeeRuleSetupScreen(match = insertDartsMatch())
+        scrnWithMatch.btnNext.text shouldBe "Launch Match >"
     }
 
     @Test
@@ -50,17 +50,14 @@ class TestDartzeeRuleSetupScreen: AbstractTest()
         val match = insertDartsMatch()
         val players = listOf(insertPlayer(), insertPlayer())
 
-        val scrn = DartzeeRuleSetupScreen()
-        scrn.setState(match, players)
-        scrn.players shouldBe players
-
+        val scrn = makeDartzeeRuleSetupScreen(players, match = match)
         scrn.btnNext.doClick()
 
-        verify { launcher.launchNewMatch(match, listOf())}
+        verify { launcher.launchNewMatch(match, any())}
     }
 
     @Test
-    fun `Should launch a single game`()
+    fun `Should launch a single game and pass pairMode`()
     {
         val launcher = mockk<GameLauncher>(relaxed = true)
         InjectedThings.gameLauncher = launcher
@@ -68,13 +65,19 @@ class TestDartzeeRuleSetupScreen: AbstractTest()
         val players = listOf(insertPlayer(), insertPlayer())
         val rules = listOf(makeDartzeeRuleDto(DartzeeDartRuleOdd()), makeDartzeeRuleDto(DartzeeDartRuleEven()))
 
-        val scrn = DartzeeRuleSetupScreen()
-        scrn.setState(null, players)
+        val scrn = makeDartzeeRuleSetupScreen(players, true)
         val panel = scrn.getChild<DartzeeRuleSetupPanel>()
         panel.addRulesToTable(rules)
 
         scrn.btnNext.doClick()
 
-        verify { launcher.launchNewGame(players, GameType.DARTZEE, "", rules) }
+        val expectedParams = GameLaunchParams(players, GameType.DARTZEE, "", true, rules)
+        verify { launcher.launchNewGame(expectedParams) }
     }
+
+    private fun makeDartzeeRuleSetupScreen(
+        players: List<PlayerEntity> = listOf(insertPlayer(), insertPlayer()),
+        pairMode: Boolean = false,
+        match: DartsMatchEntity? = null
+    ) = DartzeeRuleSetupScreen(match, players, pairMode)
 }

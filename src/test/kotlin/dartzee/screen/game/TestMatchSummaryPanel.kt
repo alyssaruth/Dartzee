@@ -1,11 +1,9 @@
 package dartzee.screen.game
 
-import dartzee.db.DartsMatchEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
-import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertPlayer
 import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GameStatisticsPanelX01
@@ -77,9 +75,4 @@ class TestMatchSummaryPanel : AbstractTest()
         val expectedStates = gameOne.getPlayerStates() + gameTwo.getPlayerStates()
         verify { statsPanel.showStats(expectedStates) }
     }
-
-    private fun makeMatchSummaryPanel(
-        match: DartsMatchEntity = insertDartsMatch(),
-        statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501"))
-    = MatchSummaryPanel(match, statsPanel)
 }

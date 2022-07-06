@@ -3,6 +3,7 @@ package dartzee.screen.game
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.AchievementType
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
@@ -17,6 +18,7 @@ import dartzee.`object`.Dart
 import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
+import dartzee.screen.game.x01.GameStatisticsPanelX01
 
 fun makeGameLaunchParams(
     players: List<PlayerEntity> = listOf(insertPlayer()),
@@ -54,7 +56,8 @@ fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
 fun DartsGamePanel<*, *, *>.testInit(playerId: String)
 {
     val player = insertPlayer(playerId)
-    startNewGame(listOf(player))
+    val pt = makeSingleParticipant(player)
+    startNewGame(listOf(pt))
 }
 
 fun DartsGamePanel<*, *, *>.setDartsThrown(dartsThrown: List<Dart>)
@@ -68,6 +71,11 @@ fun DartsGamePanel<*, *, *>.addCompletedRound(dartsThrown: List<Dart>)
     setDartsThrown(dartsThrown)
     btnConfirm.doClick()
 }
+
+fun makeMatchSummaryPanel(
+    match: DartsMatchEntity = insertDartsMatch(),
+    statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501")
+) = MatchSummaryPanel(match, statsPanel)
 
 class FakeDartsScreen() : AbstractDartsGameScreen()
 {
