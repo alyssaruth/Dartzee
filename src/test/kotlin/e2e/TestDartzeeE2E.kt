@@ -5,6 +5,7 @@ import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.GameType
 import dartzee.helper.*
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
@@ -39,7 +40,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
         insertDartzeeRules(game.rowId, rules)
 
         val (panel, listener) = setUpGamePanel(game)
-        panel.startNewGame(listOf(player))
+        panel.startNewGame(listOf(makeSingleParticipant(player)))
         awaitGameFinish(game)
 
         val expectedRounds = listOf(

@@ -9,6 +9,7 @@ import dartzee.helper.insertPlayer
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
 import dartzee.screen.game.DartsGameScreen
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.mockk.mockk
@@ -41,7 +42,7 @@ class TestResizeE2E : AbstractRegistryTest()
 
         val listener = mockk<DartboardListener>(relaxed = true)
         parentWindow.gamePanel.dartboard.addDartboardListener(listener)
-        parentWindow.gamePanel.startNewGame(listOf(player))
+        parentWindow.gamePanel.startNewGame(listOf(makeSingleParticipant(player)))
         awaitGameFinish(game)
 
         val expectedRounds = listOf(

@@ -7,6 +7,7 @@ import dartzee.core.util.DateStatics
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerImageEntity
+import dartzee.game.loadParticipants
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
@@ -141,24 +142,33 @@ class TestDartsMatchScreen: AbstractTest()
     @Test
     fun `Should start a new game if the match is not yet complete`()
     {
-        val p1 = insertPlayer()
-        val p2 = insertPlayer()
+        val p1 = insertPlayer(name = "Amy")
+        val p2 = insertPlayer(name = "Billie")
+        val gameOneStates = listOf(p1, p2).map { makeX01PlayerState(player = it) }
 
         val match = insertDartsMatch(gameParams = "501")
 
         val scrn = setUpMatchScreen(match = match)
         val firstGame = insertGame()
-        scrn.addGameToMatchOnEdt(firstGame)
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+        every { firstPanel.getPlayerStates() } returns gameOneStates
 
         scrn.startNextGameIfNecessaryOnEdt()
 
         //Game panel should have been added and had a game kicked off
         val gamePanel = scrn.getChild<GamePanelX01> { it.gameEntity != firstGame }
-        verify { gamePanel.startNewGame(listOf(p2, p1)) }
+        verify { gamePanel.startNewGame(any()) }
+
+        val gameTwo = gamePanel.gameEntity
+        val participants = loadParticipants(gameTwo.rowId)
+        participants[0].getParticipantName().toString() shouldBe "Billie"
+        participants[1].getParticipantName().toString() shouldBe "Amy"
     }
 
-    private fun setUpMatchScreen(match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
-                                 matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
+    private fun setUpMatchScreen(
+        match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
+        matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))
+    ): FakeMatchScreen
     {
         PlayerImageEntity().createPresets()
         return FakeMatchScreen(match, matchSummaryPanel)

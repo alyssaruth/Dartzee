@@ -9,6 +9,7 @@ import dartzee.game.RoundTheClockConfig
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.DartsGameScreen
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -37,7 +38,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         val player = insertPlayer(model = model)
 
         val (panel, listener) = setUpGamePanel(game)
-        panel.startNewGame(listOf(player))
+        panel.startNewGame(listOf(makeSingleParticipant(player)))
         awaitGameFinish(game)
 
         val expectedDarts = (1..20).map { Dart(it, 1) }.chunked(4)
@@ -83,7 +84,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         val aiModel = predictableDartsModel(parentWindow.gamePanel.dartboard, aimDarts, mercyThreshold = 7)
 
         val player = makePlayerWithModel(aiModel)
-        parentWindow.gamePanel.startNewGame(listOf(player))
+        parentWindow.gamePanel.startNewGame(listOf(makeSingleParticipant(player)))
         awaitGameFinish(game)
 
         verifyState(parentWindow.gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 24)

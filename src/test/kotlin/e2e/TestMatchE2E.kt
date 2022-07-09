@@ -7,6 +7,7 @@ import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.AbstractRegistryTest
@@ -48,9 +49,8 @@ class TestMatchE2E: AbstractRegistryTest()
         match.gameParams = "501"
 
         val (winner, loser) = createPlayers()
-        match.players = mutableListOf(winner, loser)
-
-        GameLauncher().launchNewMatch(match)
+        val launchParams = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
+        GameLauncher().launchNewMatch(match, launchParams)
 
         awaitCondition { retrieveDartsMatch().dtFinish != DateStatics.END_OF_TIME }
 

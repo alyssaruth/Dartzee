@@ -8,6 +8,7 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.game.DartsGameScreen
+import dartzee.screen.game.makeSingleParticipant
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -36,7 +37,7 @@ class TestGolfE2E: AbstractRegistryTest()
         val player = insertPlayer(model = model)
 
         val (panel, listener) = setUpGamePanel(game)
-        panel.startNewGame(listOf(player))
+        panel.startNewGame(listOf(makeSingleParticipant(player)))
         awaitGameFinish(game)
 
         val expectedDarts = (1..18).map { listOf(Dart(it, 2)) }
@@ -77,7 +78,7 @@ class TestGolfE2E: AbstractRegistryTest()
         val aiModel = predictableDartsModel(parentWindow.gamePanel.dartboard, aimDarts)
 
         val player = makePlayerWithModel(aiModel)
-        parentWindow.gamePanel.startNewGame(listOf(player))
+        parentWindow.gamePanel.startNewGame(listOf(makeSingleParticipant(player)))
         awaitGameFinish(game)
 
         verifyState(parentWindow.gamePanel, listener, expectedRounds, finalScore = 25, expectedScorerRows = 10)

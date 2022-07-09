@@ -9,6 +9,7 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.db.EntityName
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.screen.DartsApp
@@ -128,7 +129,8 @@ class SyncE2E: AbstractRegistryTest()
 
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String
     {
-        GameLauncher().launchNewGame(listOf(winner, loser), GameType.X01, "501")
+        val params = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
+        GameLauncher().launchNewGame(params)
 
         val gameId = retrieveGame().rowId
         awaitCondition(15000) { !retrieveParticipant(gameId, loser.rowId).isActive() }
