@@ -1,11 +1,16 @@
 package e2e
 
-import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.GameType
-import dartzee.helper.*
-import dartzee.screen.game.makeSingleParticipant
+import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.allTwenties
+import dartzee.helper.beastDartsModel
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveParticipant
+import dartzee.helper.scoreEighteens
+import dartzee.`object`.Dart
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
@@ -39,8 +44,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
         val rules = listOf(scoreEighteens, allTwenties)
         insertDartzeeRules(game.rowId, rules)
 
-        val (panel, listener) = setUpGamePanel(game)
-        panel.startNewGame(listOf(makeSingleParticipant(player)))
+        val (panel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
         val expectedRounds = listOf(

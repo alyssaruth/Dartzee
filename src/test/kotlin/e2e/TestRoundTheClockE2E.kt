@@ -1,19 +1,21 @@
 package e2e
 
-import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
-import dartzee.helper.*
-import dartzee.listener.DartboardListener
-import dartzee.screen.game.DartsGameScreen
-import dartzee.screen.game.makeSingleParticipant
+import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AchievementSummary
+import dartzee.helper.beastDartsModel
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
+import dartzee.helper.predictableDartsModel
+import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -37,8 +39,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         val model = beastDartsModel()
         val player = insertPlayer(model = model)
 
-        val (panel, listener) = setUpGamePanel(game)
-        panel.startNewGame(listOf(makeSingleParticipant(player)))
+        val (panel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
         val expectedDarts = (1..20).map { Dart(it, 1) }.chunked(4)
@@ -63,11 +64,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson())
 
-        val parentWindow = DartsGameScreen(game, 1)
-        parentWindow.isVisible = true
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        parentWindow.gamePanel.dartboard.addDartboardListener(listener)
+        val (gamePanel, listener) = setUpGamePanel(game)
 
         val expectedRounds = listOf(
                 listOf(Dart(1, 1), Dart(5, 3), Dart(20, 1)),               // 2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19
@@ -81,13 +78,13 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier) }
-        val aiModel = predictableDartsModel(parentWindow.gamePanel.dartboard, aimDarts, mercyThreshold = 7)
+        val aiModel = predictableDartsModel(gamePanel.dartboard, aimDarts, mercyThreshold = 7)
 
         val player = makePlayerWithModel(aiModel)
-        parentWindow.gamePanel.startNewGame(listOf(makeSingleParticipant(player)))
+        gamePanel.startGame(listOf(player))
         awaitGameFinish(game)
 
-        verifyState(parentWindow.gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 24)
+        verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 24)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
                 AchievementSummary(AchievementType.CLOCK_BEST_STREAK, 5, game.rowId),

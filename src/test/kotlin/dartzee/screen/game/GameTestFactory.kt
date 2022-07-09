@@ -2,33 +2,29 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.AchievementType
-import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
-import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
-import dartzee.helper.*
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
+import dartzee.helper.randomGuid
 import dartzee.`object`.Dart
 import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
 
-fun makeGameLaunchParams(
-    players: List<PlayerEntity> = listOf(insertPlayer()),
-    gameType: GameType = GameType.X01,
-    gameParams: String = "501",
-    pairMode: Boolean = false,
-    dartzeeDtos: List<DartzeeRuleDto>? = null
-) = GameLaunchParams(players, gameType, gameParams, pairMode, dartzeeDtos)
-
-fun makeSingleParticipant(player: PlayerEntity) = makeSingleParticipant(insertParticipant(playerId = player.rowId))
+fun makeSingleParticipant(player: PlayerEntity, gameId: String? = null) =
+    makeSingleParticipant(insertParticipant(playerId = player.rowId, gameId = gameId ?: insertGame().rowId))
 fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant(insertPlayer = true)) = SingleParticipant(pt)
 
 fun makeTeam(vararg players: PlayerEntity): TeamParticipant

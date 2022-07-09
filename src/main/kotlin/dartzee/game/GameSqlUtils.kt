@@ -15,18 +15,18 @@ import dartzee.utils.insertDartzeeRules
 /**
  * New Game
  */
-fun prepareParticipants(gameId: String, params: GameLaunchParams): List<IWrappedParticipant>
+fun prepareParticipants(gameId: String, players: List<PlayerEntity>, pairMode: Boolean): List<IWrappedParticipant>
 {
-    return if (params.pairMode)
+    return if (pairMode)
     {
-        val groups = params.players.chunked(2)
+        val groups = players.chunked(2)
         groups.mapIndexed { ordinal, group ->
             if (group.size == 1) addSinglePlayer(gameId, group.first(), ordinal) else addTeam(gameId, group, ordinal)
         }
     }
     else
     {
-        params.players.mapIndexed { ordinal, player -> addSinglePlayer(gameId, player, ordinal) }
+        players.mapIndexed { ordinal, player -> addSinglePlayer(gameId, player, ordinal) }
     }
 }
 private fun addTeam(gameId: String, players: List<PlayerEntity>, ordinal: Int): IWrappedParticipant

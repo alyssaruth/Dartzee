@@ -1,17 +1,19 @@
 package e2e
 
-import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.GameType
-import dartzee.helper.*
-import dartzee.listener.DartboardListener
-import dartzee.screen.game.DartsGameScreen
-import dartzee.screen.game.makeSingleParticipant
+import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AchievementSummary
+import dartzee.helper.beastDartsModel
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
+import dartzee.helper.predictableDartsModel
+import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -35,9 +37,7 @@ class TestX01E2E : AbstractRegistryTest()
         val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
         val player = insertPlayer(model = aiModel)
 
-        val (panel, listener) = setUpGamePanel(game)
-
-        panel.startNewGame(listOf(makeSingleParticipant(player)))
+        val (panel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
         val expectedRounds = listOf(
@@ -64,11 +64,7 @@ class TestX01E2E : AbstractRegistryTest()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "301")
 
-        val parentWindow = DartsGameScreen(game, 1)
-        parentWindow.isVisible = true
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        parentWindow.gamePanel.dartboard.addDartboardListener(listener)
+        val (gamePanel, listener) = setUpGamePanel(game)
 
         val expectedRounds = listOf(
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)), //121
@@ -81,13 +77,13 @@ class TestX01E2E : AbstractRegistryTest()
         )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier) }
-        val aiModel = predictableDartsModel(parentWindow.gamePanel.dartboard, aimDarts, mercyThreshold = 7)
+        val aiModel = predictableDartsModel(gamePanel.dartboard, aimDarts, mercyThreshold = 7)
 
         val player = makePlayerWithModel(aiModel)
-        parentWindow.gamePanel.startNewGame(listOf(makeSingleParticipant(player)))
+        gamePanel.startGame(listOf(player))
         awaitGameFinish(game)
 
-        verifyState(parentWindow.gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 19)
+        verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 19)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
                 AchievementSummary(AchievementType.X01_BEST_FINISH, 4, game.rowId),

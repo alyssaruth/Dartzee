@@ -12,7 +12,6 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
-import dartzee.screen.game.makeGameLaunchParams
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.BeforeEach
@@ -31,10 +30,9 @@ class TestGameSqlUtils : AbstractTest()
     {
         val players = preparePlayers(3)
         val (p1, p2, p3) = players
-        val params = makeGameLaunchParams(players, pairMode = false)
         val g = insertGame()
 
-        val (pt1, pt2, pt3) = prepareParticipants(g.rowId, params)
+        val (pt1, pt2, pt3) = prepareParticipants(g.rowId, players, false)
         validateSingleParticipant(pt1, g.rowId, 0, p1)
         validateSingleParticipant(pt2, g.rowId, 1, p2)
         validateSingleParticipant(pt3, g.rowId, 2, p3)
@@ -52,10 +50,9 @@ class TestGameSqlUtils : AbstractTest()
     {
         val players = preparePlayers(4)
         val (p1, p2, p3, p4) = players
-        val params = makeGameLaunchParams(players, pairMode = true)
         val g = insertGame()
 
-        val (pt1, pt2) = prepareParticipants(g.rowId, params)
+        val (pt1, pt2) = prepareParticipants(g.rowId, players, true)
         validateTeam(pt1, g.rowId, 0, p1, p2)
         validateTeam(pt2, g.rowId, 1, p3, p4)
 
@@ -72,10 +69,9 @@ class TestGameSqlUtils : AbstractTest()
     {
         val players = preparePlayers(3)
         val (p1, p2, p3) = players
-        val params = makeGameLaunchParams(players, pairMode = true)
         val g = insertGame()
 
-        val (pt1, pt2) = prepareParticipants(g.rowId, params)
+        val (pt1, pt2) = prepareParticipants(g.rowId, players, true)
         validateTeam(pt1, g.rowId, 0, p1, p2)
         validateSingleParticipant(pt2, g.rowId, 1, p3)
 
@@ -92,8 +88,7 @@ class TestGameSqlUtils : AbstractTest()
     {
         val players = preparePlayers(2)
         val (p1, p2) = players
-        val params = makeGameLaunchParams(players, pairMode = false)
-        val participants = prepareParticipants(insertGame().rowId, params)
+        val participants = prepareParticipants(insertGame().rowId, players, false)
         val g2 = insertGame(matchOrdinal = 1)
         val g3 = insertGame(matchOrdinal = 2)
 
@@ -111,9 +106,8 @@ class TestGameSqlUtils : AbstractTest()
     {
         val players = preparePlayers(4)
         val (p1, p2, p3, p4) = players
-        val params = makeGameLaunchParams(players, pairMode = true)
 
-        val participants = prepareParticipants(insertGame().rowId, params)
+        val participants = prepareParticipants(insertGame().rowId, players, true)
         val g2 = insertGame(matchOrdinal = 1)
         val g3 = insertGame(matchOrdinal = 2)
 
@@ -133,9 +127,8 @@ class TestGameSqlUtils : AbstractTest()
 
         val players = preparePlayers(5)
         val (p1, p2, p3, p4, p5) = players
-        val params = makeGameLaunchParams(players, pairMode = true)
 
-        val participants = prepareParticipants(insertGame().rowId, params)
+        val participants = prepareParticipants(insertGame().rowId, players, true)
         val g2 = insertGame(matchOrdinal = 1)
         val g3 = insertGame(matchOrdinal = 2)
 

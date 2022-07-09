@@ -42,7 +42,7 @@ class GameLauncher
     private fun insertNewGameEntities(gameId: String, params: GameLaunchParams): List<IWrappedParticipant>
     {
         insertDartzeeRules(gameId, params.dartzeeDtos)
-        return prepareParticipants(gameId, params)
+        return prepareParticipants(gameId, params.players, params.pairMode)
     }
 
     fun loadAndDisplayGame(gameId: String)
