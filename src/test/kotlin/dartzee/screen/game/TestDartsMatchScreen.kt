@@ -126,14 +126,16 @@ class TestDartsMatchScreen: AbstractTest()
     @Test
     fun `Should mark the match as complete if no more games need to be played`()
     {
-        val match = insertDartsMatch(games = 1)
-        val summaryPanel = makeMatchSummaryPanel(match)
+        val match = insertDartsMatch(games = 1, gameParams = "501")
+        val scrn = setUpMatchScreen(match = match)
 
-        val pt = insertParticipant(finishingPosition = 1)
+        val firstGame = insertGame()
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+
+        val pt = insertParticipant(finishingPosition = 1, playerId = insertPlayer().rowId)
         val state = makeX01PlayerState(participant = pt)
-        summaryPanel.addParticipant(1, state)
+        every { firstPanel.getPlayerStates() } returns listOf(state)
 
-        val scrn = setUpMatchScreen(match = match, matchSummaryPanel = summaryPanel)
         scrn.startNextGameIfNecessary()
 
         match.dtFinish shouldNotBe DateStatics.END_OF_TIME

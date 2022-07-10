@@ -35,10 +35,10 @@ class TestDartzeeRuleSetupScreen: AbstractTest()
     fun `Should update the next button text based on whether there is a match or not`()
     {
         val scrn = makeDartzeeRuleSetupScreen(match = null)
-        scrn.btnNext.text shouldBe "Launch Game >"
+        scrn.getNextText() shouldBe "Launch Game"
 
         val scrnWithMatch = makeDartzeeRuleSetupScreen(match = insertDartsMatch())
-        scrnWithMatch.btnNext.text shouldBe "Launch Match >"
+        scrnWithMatch.getNextText() shouldBe "Launch Match"
     }
 
     @Test

@@ -16,6 +16,7 @@ import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.*
+import dartzee.launchParamsEqual
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
 import dartzee.utils.InjectedThings
@@ -169,7 +170,7 @@ class TestGameSetupScreen: AbstractTest()
         screen.btnLaunch.doClick()
 
         val expectedParams = GameLaunchParams(players, GameType.DARTZEE, templateId, false, listOf(ruleOne, ruleTwo))
-        verify { gameLauncher.launchNewGame(expectedParams) }
+        verify { gameLauncher.launchNewGame(launchParamsEqual(expectedParams)) }
     }
 
     @Test
