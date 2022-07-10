@@ -102,5 +102,5 @@ private fun <T: Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<
         return collectionShuffler.shuffleCollection(things)
     }
 
-    return if (gameOrdinal % 2 == 0) things.toList() else things.reversed()
+    return if (gameOrdinal % 2 == 1) things.toList() else things.reversed()
 }

@@ -89,8 +89,8 @@ class TestGameSqlUtils : AbstractTest()
         val players = preparePlayers(2)
         val (p1, p2) = players
         val participants = prepareParticipants(insertGame().rowId, players, false)
-        val g2 = insertGame(matchOrdinal = 1)
-        val g3 = insertGame(matchOrdinal = 2)
+        val g2 = insertGame(matchOrdinal = 2)
+        val g3 = insertGame(matchOrdinal = 3)
 
         val (pt2_1, pt2_2) = prepareNextParticipants(participants, g2)
         validateSingleParticipant(pt2_1, g2.rowId, 0, p2)
@@ -108,8 +108,8 @@ class TestGameSqlUtils : AbstractTest()
         val (p1, p2, p3, p4) = players
 
         val participants = prepareParticipants(insertGame().rowId, players, true)
-        val g2 = insertGame(matchOrdinal = 1)
-        val g3 = insertGame(matchOrdinal = 2)
+        val g2 = insertGame(matchOrdinal = 2)
+        val g3 = insertGame(matchOrdinal = 3)
 
         val (pt2_1, pt2_2) = prepareNextParticipants(participants, g2)
         validateTeam(pt2_1, g2.rowId, 0, p4, p3)
@@ -129,8 +129,8 @@ class TestGameSqlUtils : AbstractTest()
         val (p1, p2, p3, p4, p5) = players
 
         val participants = prepareParticipants(insertGame().rowId, players, true)
-        val g2 = insertGame(matchOrdinal = 1)
-        val g3 = insertGame(matchOrdinal = 2)
+        val g2 = insertGame(matchOrdinal = 2)
+        val g3 = insertGame(matchOrdinal = 3)
 
         val (pt2_1, pt2_2, pt2_3) = prepareNextParticipants(participants, g2)
         validateTeam(pt2_1, g2.rowId, 0, p4, p3)
