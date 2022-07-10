@@ -152,6 +152,8 @@ class TestDartsMatchScreen: AbstractTest()
 
         val scrn = setUpMatchScreen(match = match)
         val firstGame = insertGame()
+        firstGame.matchOrdinal = match.incrementAndGetCurrentOrdinal()
+
         val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
         every { firstPanel.getPlayerStates() } returns gameOneStates
 
