@@ -1,20 +1,22 @@
 package dartzee.screen
 
-import dartzee.game.GameLauncher
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelX01
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.items
+import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
-import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
+import dartzee.db.PlayerEntity
+import dartzee.game.GameLaunchParams
+import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.*
-import dartzee.ruleDtosEq
+import dartzee.launchParamsEqual
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
 import dartzee.utils.InjectedThings
@@ -83,7 +85,9 @@ class TestGameSetupScreen: AbstractTest()
         gameParamsPanel.spinner.value = 701
 
         screen.btnLaunch.doClick()
-        verify { gameLauncher.launchNewGame(listOf(alice, clive), GameType.X01, "701", null) }
+
+        val expectedParams = GameLaunchParams(listOf(alice, clive), GameType.X01, "701", false, null)
+        verify { gameLauncher.launchNewGame(expectedParams) }
     }
 
     @Test
@@ -157,7 +161,7 @@ class TestGameSetupScreen: AbstractTest()
         ruleOne.toEntity(1, EntityName.DartzeeTemplate, templateId).saveToDatabase()
         ruleTwo.toEntity(2, EntityName.DartzeeTemplate, templateId).saveToDatabase()
 
-        val screen = makeGameSetupScreenReadyToLaunch()
+        val (screen, players) = makeGameSetupScreenReadyToLaunch()
         screen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
 
         val dartzeeParamPanel = screen.gameParamFilterPanel as GameParamFilterPanelDartzee
@@ -165,7 +169,8 @@ class TestGameSetupScreen: AbstractTest()
 
         screen.btnLaunch.doClick()
 
-        verify { gameLauncher.launchNewGame(any(), GameType.DARTZEE, templateId, ruleDtosEq(listOf(ruleOne, ruleTwo))) }
+        val expectedParams = GameLaunchParams(players, GameType.DARTZEE, templateId, false, listOf(ruleOne, ruleTwo))
+        verify { gameLauncher.launchNewGame(launchParamsEqual(expectedParams)) }
     }
 
     @Test
@@ -174,14 +179,15 @@ class TestGameSetupScreen: AbstractTest()
         val slot = slot<DartsMatchEntity>()
         every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
 
-        val scrn = makeGameSetupScreenReadyToLaunch()
+        val (scrn, players) = makeGameSetupScreenReadyToLaunch()
 
         scrn.rdbtnFirstTo.doClick()
         scrn.spinnerWins.value = 7
 
         scrn.btnLaunch.doClick()
 
-        verify { gameLauncher.launchNewMatch(any(), null)}
+        val launchParams = GameLaunchParams(players, GameType.X01, "501", false)
+        verify { gameLauncher.launchNewMatch(any(), launchParams)}
 
         val match = slot.captured
         match.gameType shouldBe GameType.X01
@@ -197,7 +203,7 @@ class TestGameSetupScreen: AbstractTest()
         val slot = slot<DartsMatchEntity>()
         every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
 
-        val scrn = makeGameSetupScreenReadyToLaunch()
+        val (scrn, _) = makeGameSetupScreenReadyToLaunch()
         scrn.gameTypeComboBox.updateSelection(GameType.GOLF)
 
         scrn.rdbtnPoints.doClick()
@@ -211,7 +217,7 @@ class TestGameSetupScreen: AbstractTest()
 
         scrn.btnLaunch.doClick()
 
-        verify { gameLauncher.launchNewMatch(any(), null)}
+        verify { gameLauncher.launchNewMatch(any(), any())}
 
         val match = slot.captured
         match.gameType shouldBe GameType.GOLF
@@ -253,14 +259,19 @@ class TestGameSetupScreen: AbstractTest()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
 
         val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen
-        dartzeeScreen.players.shouldContainExactly(p1, p2)
-        dartzeeScreen.match shouldBe null
         dartzeeScreen.btnNext.text shouldBe "Launch Game >"
+        dartzeeScreen.nextPressed()
+
+        val expectedParams = GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
+        verify { gameLauncher.launchNewGame(expectedParams) }
     }
 
     @Test
     fun `Should switch to the DartzeeRuleSetupScreen for a match`()
     {
+        val slot = slot<DartsMatchEntity>()
+        every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
+
         val p1 = insertPlayer(strategy = "")
         val p2 = insertPlayer(strategy = "")
 
@@ -278,15 +289,17 @@ class TestGameSetupScreen: AbstractTest()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
 
         val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen
-        dartzeeScreen.players.shouldContainExactly(p1, p2)
         dartzeeScreen.btnNext.text shouldBe "Launch Match >"
+        dartzeeScreen.nextPressed()
 
-        val match = dartzeeScreen.match!!
+        val expectedParams = GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
+        verify { gameLauncher.launchNewMatch(any(), expectedParams) }
+
+        val match = slot.captured
         match.games shouldBe 2
         match.mode shouldBe MatchMode.FIRST_TO
         match.gameParams shouldBe ""
         match.gameType shouldBe GameType.DARTZEE
-        match.players.shouldContainExactly(p1, p2)
     }
 
     @Test
@@ -305,7 +318,7 @@ class TestGameSetupScreen: AbstractTest()
         newFilterPanel.comboBox.items().mapNotNull { it.hiddenData }.shouldHaveSize(1)
     }
 
-    private fun makeGameSetupScreenReadyToLaunch(): GameSetupScreen
+    private fun makeGameSetupScreenReadyToLaunch(): Pair<GameSetupScreen, List<PlayerEntity>>
     {
         val p1 = insertPlayer(strategy = "")
         val p2 = insertPlayer(strategy = "")
@@ -314,6 +327,6 @@ class TestGameSetupScreen: AbstractTest()
         setupScreen.initialise()
         setupScreen.playerSelector.init(listOf(p1, p2))
 
-        return setupScreen
+        return setupScreen to listOf(p1, p2)
     }
 }

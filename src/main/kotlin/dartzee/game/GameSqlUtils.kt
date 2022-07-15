@@ -1,6 +1,7 @@
 package dartzee.game
 
 import dartzee.core.util.InjectedCore.collectionShuffler
+import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
@@ -8,22 +9,23 @@ import dartzee.db.TeamEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
+import dartzee.utils.insertDartzeeRules
 
 /**
  * New Game
  */
-fun prepareParticipants(gameId: String, params: GameLaunchParams): List<IWrappedParticipant>
+fun prepareParticipants(gameId: String, players: List<PlayerEntity>, pairMode: Boolean): List<IWrappedParticipant>
 {
-    return if (params.pairMode)
+    return if (pairMode)
     {
-        val groups = params.players.chunked(2)
+        val groups = players.chunked(2)
         groups.mapIndexed { ordinal, group ->
             if (group.size == 1) addSinglePlayer(gameId, group.first(), ordinal) else addTeam(gameId, group, ordinal)
         }
     }
     else
     {
-        params.players.mapIndexed { ordinal, player -> addSinglePlayer(gameId, player, ordinal) }
+        players.mapIndexed { ordinal, player -> addSinglePlayer(gameId, player, ordinal) }
     }
 }
 private fun addTeam(gameId: String, players: List<PlayerEntity>, ordinal: Int): IWrappedParticipant
@@ -62,7 +64,23 @@ private fun loadTeam(team: TeamEntity): TeamParticipant
 /**
  * Follow-on game (in a match)
  */
-fun prepareNextParticipants(firstGameParticipants: List<IWrappedParticipant>, newGame: GameEntity): List<IWrappedParticipant>
+fun prepareNextEntities(
+    firstGame: GameEntity,
+    firstGameParticipants: List<IWrappedParticipant>,
+    matchOrdinal: Int): Pair<GameEntity, List<IWrappedParticipant>>
+{
+    val nextGame = GameEntity.factory(firstGame.gameType, firstGame.gameParams)
+    nextGame.dartsMatchId = firstGame.dartsMatchId
+    nextGame.matchOrdinal = matchOrdinal
+    nextGame.saveToDatabase()
+
+    val dartzeeRules = DartzeeRuleEntity().retrieveForGame(firstGame.rowId).map { it.toDto() }
+    insertDartzeeRules(nextGame.rowId, dartzeeRules)
+
+    val participants = prepareNextParticipants(firstGameParticipants, nextGame)
+    return nextGame to participants
+}
+private fun prepareNextParticipants(firstGameParticipants: List<IWrappedParticipant>, newGame: GameEntity): List<IWrappedParticipant>
 {
     val templateParticipants = shuffleForNewGame(firstGameParticipants, newGame.matchOrdinal)
     return templateParticipants.mapIndexed { ordinal, pt ->
@@ -79,7 +97,6 @@ private fun copyForNewGame(participantOrdinal: Int, template: IWrappedParticipan
             addTeam(newGame.rowId, newPlayerOrder, participantOrdinal)
         }
     }
-
 private fun <T: Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<T>
 {
     if (things.size > 2)
@@ -87,5 +104,5 @@ private fun <T: Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<
         return collectionShuffler.shuffleCollection(things)
     }
 
-    return if (gameOrdinal % 2 == 0) things.toList() else things.reversed()
+    return if (gameOrdinal % 2 == 1) things.toList() else things.reversed()
 }

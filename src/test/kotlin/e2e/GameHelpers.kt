@@ -14,11 +14,13 @@ import dartzee.db.DartEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.prepareParticipants
 import dartzee.helper.*
 import dartzee.listener.DartboardListener
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.DartsGamePanel
+import dartzee.screen.game.DartsGameScreen
 import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.ResourceCache.ICON_RESUME
@@ -75,16 +77,27 @@ fun getWindow(fn: (window: Window) -> Boolean) = Window.getWindows().find(fn)
 
 data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
 
+fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>) =
+    setUpGamePanel(game).also {
+        it.gamePanel.startGame(players)
+    }
+
 fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
 {
-    val parentWindow = mockk<AbstractDartsGameScreen>(relaxed = true)
-    every { parentWindow.isVisible } returns true
+    val parentWindow = DartsGameScreen(game, 1)
+    parentWindow.isVisible = true
+    val gamePanel = parentWindow.gamePanel
 
-    val panel = DartsGamePanel.factory(parentWindow, game, 1)
     val listener = mockk<DartboardListener>(relaxed = true)
-    panel.dartboard.addDartboardListener(listener)
+    gamePanel.dartboard.addDartboardListener(listener)
 
-    return GamePanelTestSetup(panel, listener)
+    return GamePanelTestSetup(gamePanel, listener)
+}
+
+fun DartsGamePanel<*, *, *>.startGame(players: List<PlayerEntity>)
+{
+    val participants = prepareParticipants(gameEntity.rowId, players, false)
+    startNewGame(participants)
 }
 
 fun awaitGameFinish(game: GameEntity)

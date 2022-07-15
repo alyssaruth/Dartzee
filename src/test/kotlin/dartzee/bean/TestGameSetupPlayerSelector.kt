@@ -136,4 +136,17 @@ class TestGameSetupPlayerSelector: AbstractTest()
         selector.valid(false) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 teams.")
     }
+
+    @Test
+    fun `Should correctly report whether pair mode is active`()
+    {
+        val selector = GameSetupPlayerSelector()
+        selector.pairMode() shouldBe false
+
+        selector.clickChild<JToggleButton>()
+        selector.pairMode() shouldBe true
+
+        selector.clickChild<JToggleButton>()
+        selector.pairMode() shouldBe false
+    }
 }

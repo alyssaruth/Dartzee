@@ -4,10 +4,10 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
+import dartzee.game.matchIsComplete
+import dartzee.game.prepareNextEntities
 import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.ScreenCache
-import dartzee.screen.game.dartzee.GamePanelDartzee
-import dartzee.utils.insertDartzeeRules
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
@@ -70,27 +70,26 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
 
     override fun startNextGameIfNecessary()
     {
-        if (match.isComplete())
+        if (isMatchComplete())
         {
             match.dtFinish = getSqlDateNow()
             match.saveToDatabase()
             return
         }
 
-        //Factory and save the next game
-        val nextGame = GameEntity.factoryAndSave(match)
+        val firstGamePanel = hmGameIdToTab.values.first()
+        val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
-        //Insert dartzee rules if applicable
-        val priorGamePanel = hmGameIdToTab.values.first()
-        if (priorGamePanel is GamePanelDartzee)
-        {
-            insertDartzeeRules(nextGame.rowId, priorGamePanel.dtos)
-        }
+        val (nextGame, nextParticipants) = prepareNextEntities(firstGamePanel.gameEntity, firstGameParticipants, hmGameIdToTab.size + 1)
 
-        val panel = addGameToMatch(nextGame, match.players.size)
+        val panel = addGameToMatch(nextGame, nextParticipants.size)
+        panel.startNewGame(nextParticipants)
+    }
 
-        match.shufflePlayers()
-        panel.startNewGame(match.players)
+    private fun isMatchComplete(): Boolean
+    {
+        val participants = matchPanel.getAllParticipants()
+        return matchIsComplete(match, participants)
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)

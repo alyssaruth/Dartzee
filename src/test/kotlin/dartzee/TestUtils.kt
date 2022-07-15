@@ -8,7 +8,7 @@ import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
-import dartzee.dartzee.DartzeeRuleDto
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
@@ -95,8 +95,12 @@ fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom
     insets.bottom shouldBe bottom
 }
 
-fun MockKMatcherScope.ruleDtosEq(players: List<DartzeeRuleDto>) = match<List<DartzeeRuleDto>> {
-    it.map { p -> p.generateRuleDescription() } == players.map { p -> p.generateRuleDescription() }
+fun MockKMatcherScope.launchParamsEqual(expected: GameLaunchParams) = match<GameLaunchParams> { actual ->
+    val expectedNoDartzee = expected.copy(dartzeeDtos = emptyList())
+    val actualNoDartzee = actual.copy(dartzeeDtos = emptyList())
+
+    expectedNoDartzee == actualNoDartzee &&
+            expected.dartzeeDtos?.map { it.generateRuleDescription() } == actual.dartzeeDtos?.map { it.generateRuleDescription() }
 }
 
 fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)

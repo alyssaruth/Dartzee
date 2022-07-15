@@ -5,6 +5,7 @@ import com.github.alexburlton.swingtest.shouldBeVisible
 import dartzee.`object`.Dart
 import dartzee.game.GameLauncher
 import dartzee.core.util.DateStatics
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.getRows
 import dartzee.helper.AbstractRegistryTest
@@ -39,7 +40,8 @@ class TestGameLoadE2E: AbstractRegistryTest()
     {
         val (winner, loser) = createPlayers()
 
-        GameLauncher().launchNewGame(listOf(winner, loser), GameType.X01, "501")
+        val params = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
+        GameLauncher().launchNewGame(params)
 
         awaitCondition { retrieveGame().isFinished() }
 

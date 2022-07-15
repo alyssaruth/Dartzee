@@ -34,6 +34,12 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         state.addListener(this)
     }
 
+    fun getAllParticipants(): List<IWrappedParticipant>
+    {
+        val states = gameTabs.map { it.getPlayerStates() }.flatten()
+        return states.map { it.wrappedParticipant }
+    }
+
     private fun findOrAssignScorer(participant: IWrappedParticipant) =
         scorersOrdered.find { it.participant.getUniqueParticipantName() == participant.getUniqueParticipantName() } ?: assignScorer(participant)
 

@@ -1,17 +1,37 @@
 package e2e
 
-import dartzee.*
-import dartzee.`object`.Dart
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
+import dartzee.drtDoubleFive
+import dartzee.drtDoubleNine
+import dartzee.drtDoubleThree
+import dartzee.drtInnerEight
+import dartzee.drtInnerOne
+import dartzee.drtInnerSixteen
+import dartzee.drtInnerThree
+import dartzee.drtMissEight
+import dartzee.drtMissNine
+import dartzee.drtOuterFifteen
+import dartzee.drtOuterOne
+import dartzee.drtOuterSeven
+import dartzee.drtOuterSeventeen
+import dartzee.drtOuterSix
+import dartzee.drtOuterSixteen
+import dartzee.drtOuterThree
+import dartzee.drtTrebleFour
+import dartzee.drtTrebleSeventeen
 import dartzee.game.GameType
-import dartzee.helper.*
-import dartzee.listener.DartboardListener
-import dartzee.screen.game.DartsGameScreen
+import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AchievementSummary
+import dartzee.helper.beastDartsModel
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
+import dartzee.helper.predictableDartsModel
+import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -35,8 +55,7 @@ class TestGolfE2E: AbstractRegistryTest()
         val model = beastDartsModel()
         val player = insertPlayer(model = model)
 
-        val (panel, listener) = setUpGamePanel(game)
-        panel.startNewGame(listOf(player))
+        val (panel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
         val expectedDarts = (1..18).map { listOf(Dart(it, 2)) }
@@ -54,12 +73,7 @@ class TestGolfE2E: AbstractRegistryTest()
     fun `E2E - Golf - Gambler, stop threshold`()
     {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
-
-        val parentWindow = DartsGameScreen(game, 1)
-        parentWindow.isVisible = true
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        parentWindow.gamePanel.dartboard.addDartboardListener(listener)
+        val (gamePanel, listener) = setUpGamePanel(game)
 
         val expectedRounds = listOf(
             listOf(drtOuterOne(), drtInnerOne()), // 3, 1 gambled
@@ -74,13 +88,13 @@ class TestGolfE2E: AbstractRegistryTest()
         )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier, it.segmentType) }
-        val aiModel = predictableDartsModel(parentWindow.gamePanel.dartboard, aimDarts)
+        val aiModel = predictableDartsModel(gamePanel.dartboard, aimDarts)
 
         val player = makePlayerWithModel(aiModel)
-        parentWindow.gamePanel.startNewGame(listOf(player))
+        gamePanel.startGame(listOf(player))
         awaitGameFinish(game)
 
-        verifyState(parentWindow.gamePanel, listener, expectedRounds, finalScore = 25, expectedScorerRows = 10)
+        verifyState(gamePanel, listener, expectedRounds, finalScore = 25, expectedScorerRows = 10)
 
         val expectedAchievementRows = listOf(
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "3"),

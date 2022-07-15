@@ -13,7 +13,6 @@ import dartzee.db.*
 import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
-import dartzee.game.state.SingleParticipant
 import dartzee.listener.DartboardListener
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
@@ -98,8 +97,8 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     protected fun getParticipants() = hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.wrappedParticipant }
     protected fun getCurrentPlayerId() = getCurrentIndividual().playerId
     protected fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
-    protected fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
-    protected fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).wrappedParticipant
+    private fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
+    private fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).wrappedParticipant
     private fun getCurrentIndividual() = getCurrentPlayerState().currentIndividual()
     fun getDartsThrown() = getCurrentPlayerState().currentRound
     fun dartsThrownCount() = getDartsThrown().size
@@ -173,19 +172,9 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     /**
      * Regular methods
      */
-    fun startNewGame(players: List<PlayerEntity>)
+    fun startNewGame(participants: List<IWrappedParticipant>)
     {
-        players.forEachIndexed { ix, player ->
-            val gameId = gameEntity.rowId
-            val participant = ParticipantEntity.factoryAndSave(gameId, player, ix)
-            val wrappedPt = SingleParticipant(participant)
-
-            val scorer = assignScorer(wrappedPt)
-            val state = factoryState(wrappedPt)
-            state.addListener(scorer)
-            addState(ix, state, scorer)
-            addParticipant(state)
-        }
+        participants.forEachIndexed(::addParticipant)
 
         finaliseParticipants()
         dartboard.paintDartboard()
@@ -231,12 +220,13 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         return "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
     }
 
-    fun loadGame()
+    fun loadGame(participants: List<IWrappedParticipant>)
     {
         val gameId = gameEntity.rowId
 
-        //Get the participants, sorted by Ordinal. Assign their scorers.
-        loadParticipants(gameId)
+        participants.forEachIndexed(::addParticipant)
+        finaliseParticipants()
+
         loadScoresAndCurrentPlayer(gameId)
 
         //Paint the dartboard - always do this, in case of resuming with stats open
@@ -277,29 +267,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             btnStats.isSelected = true
             viewStats()
         }
-    }
-
-    /**
-     * Retrieve the ordered participants and assign their scorers
-     */
-    private fun loadParticipants(gameId: String)
-    {
-        val whereSql = "GameId = '$gameId' ORDER BY Ordinal ASC"
-        val participants = ParticipantEntity().retrieveEntities(whereSql)
-
-        for (i in participants.indices)
-        {
-            val pt = participants[i]
-            val wrappedPt = SingleParticipant(pt)
-            val scorer = assignScorer(wrappedPt)
-            val state = factoryState(wrappedPt)
-            state.addListener(scorer)
-            addState(i, state, scorer)
-
-            addParticipant( state)
-        }
-
-        finaliseParticipants()
     }
 
     /**
@@ -662,8 +629,13 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         panelCenter.repaint()
     }
 
-    private fun addParticipant(state: PlayerState)
+    private fun addParticipant(ordinal: Int, wrappedPt: IWrappedParticipant)
     {
+        val scorer = assignScorer(wrappedPt)
+        val state = factoryState(wrappedPt)
+        state.addListener(scorer)
+        addState(ordinal, state, scorer)
+
         runForMatch { it.addParticipant(gameEntity.localId, state) }
     }
 

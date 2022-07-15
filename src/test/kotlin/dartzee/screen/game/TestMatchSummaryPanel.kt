@@ -1,14 +1,13 @@
 package dartzee.screen.game
 
-import dartzee.db.DartsMatchEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
-import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertPlayer
 import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GameStatisticsPanelX01
+import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -78,8 +77,16 @@ class TestMatchSummaryPanel : AbstractTest()
         verify { statsPanel.showStats(expectedStates) }
     }
 
-    private fun makeMatchSummaryPanel(
-        match: DartsMatchEntity = insertDartsMatch(),
-        statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501"))
-    = MatchSummaryPanel(match, statsPanel)
+    @Test
+    fun `Should return all participants as a flat list`()
+    {
+        val gamePanelOne = makeX01GamePanel()
+        val gamePanelTwo = makeX01GamePanel()
+
+        val panel = makeMatchSummaryPanel()
+        panel.addGameTab(gamePanelOne)
+        panel.addGameTab(gamePanelTwo)
+
+        panel.getAllParticipants().shouldHaveSize(2)
+    }
 }

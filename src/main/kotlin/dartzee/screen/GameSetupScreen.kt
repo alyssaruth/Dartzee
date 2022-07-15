@@ -1,6 +1,10 @@
 package dartzee.screen
 
-import dartzee.bean.*
+import dartzee.bean.ComboBoxGameType
+import dartzee.bean.GameParamFilterPanel
+import dartzee.bean.GameParamFilterPanelDartzee
+import dartzee.bean.GameParamFilterPanelX01
+import dartzee.bean.GameSetupPlayerSelector
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.util.StringUtil
 import dartzee.dartzee.DartzeeRuleDto
@@ -8,7 +12,7 @@ import dartzee.db.DartsMatchEntity
 import dartzee.db.DartsMatchEntity.Companion.constructPointsJson
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.MAX_PLAYERS
-import dartzee.db.PlayerEntity
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.utils.InjectedThings.gameLauncher
@@ -17,7 +21,12 @@ import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JRadioButton
+import javax.swing.JSpinner
+import javax.swing.SpinnerNumberModel
 import javax.swing.border.TitledBorder
 
 class GameSetupScreen : EmbeddedScreen()
@@ -166,21 +175,22 @@ class GameSetupScreen : EmbeddedScreen()
     private fun launchGame()
     {
         val selectedPlayers = playerSelector.getSelectedPlayers()
-        val match = factoryMatch(selectedPlayers)
+        val match = factoryMatch()
         if (!playerSelector.valid(match != null))
         {
             return
         }
 
         val rules = retrieveDartzeeRules()
+        val launchParams = GameLaunchParams(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), playerSelector.pairMode(), rules)
 
         if (match == null)
         {
-            gameLauncher.launchNewGame(selectedPlayers, gameTypeComboBox.getGameType(), getGameParams(), rules)
+            gameLauncher.launchNewGame(launchParams)
         }
         else
         {
-            gameLauncher.launchNewMatch(match, rules)
+            gameLauncher.launchNewMatch(match, launchParams)
         }
     }
 
@@ -196,7 +206,7 @@ class GameSetupScreen : EmbeddedScreen()
         return rules.map { it.toDto() }
     }
 
-    private fun factoryMatch(players: List<PlayerEntity>): DartsMatchEntity?
+    private fun factoryMatch(): DartsMatchEntity?
     {
         val match = when
         {
@@ -206,7 +216,6 @@ class GameSetupScreen : EmbeddedScreen()
         }
 
         return match?.also {
-            it.players = players
             it.gameType = gameTypeComboBox.getGameType()
             it.gameParams = getGameParams()
         }
@@ -227,14 +236,13 @@ class GameSetupScreen : EmbeddedScreen()
     override fun nextPressed()
     {
         val selectedPlayers = playerSelector.getSelectedPlayers()
-        val match = factoryMatch(selectedPlayers)
+        val match = factoryMatch()
         if (!playerSelector.valid(match != null))
         {
             return
         }
 
-        val scrn = ScreenCache.get<DartzeeRuleSetupScreen>()
-        scrn.setState(match, selectedPlayers)
+        val scrn = DartzeeRuleSetupScreen(match, selectedPlayers, playerSelector.pairMode())
         ScreenCache.switch(scrn)
     }
 }
