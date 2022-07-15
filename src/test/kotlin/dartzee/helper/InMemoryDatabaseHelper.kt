@@ -94,6 +94,17 @@ fun insertPlayer(uuid: String = randomGuid(),
     return p
 }
 
+fun preparePlayers(count: Int): List<PlayerEntity>
+{
+    val p1 = insertPlayer(name = "Alice")
+    val p2 = insertPlayer(name = "Bob")
+    val p3 = insertPlayer(name = "Clara")
+    val p4 = insertPlayer(name = "David")
+    val p5 = insertPlayer(name = "Ellie")
+
+    return listOf(p1, p2, p3, p4, p5).subList(0, count)
+}
+
 fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timestamp = getSqlDateNow(), game: GameEntity = insertGame(gameType = GameType.X01), database: Database = mainDatabase): GameEntity
 {
     val entity = X01FinishEntity(database)

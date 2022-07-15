@@ -13,7 +13,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
-import dartzee.helper.insertPlayer
+import dartzee.helper.preparePlayers
 import dartzee.helper.scoreEighteens
 import dartzee.helper.twoBlackOneWhite
 import dartzee.utils.insertDartzeeRules
@@ -190,17 +190,6 @@ class TestGameSqlUtils : AbstractTest()
         rules.size shouldBe 2
 
         rules.map { it.toDto().generateRuleDescription() }.shouldContainExactly(originalRules.map { it.generateRuleDescription() })
-    }
-
-    private fun preparePlayers(count: Int): List<PlayerEntity>
-    {
-        val p1 = insertPlayer(name = "Alice")
-        val p2 = insertPlayer(name = "Bob")
-        val p3 = insertPlayer(name = "Clara")
-        val p4 = insertPlayer(name = "David")
-        val p5 = insertPlayer(name = "Ellie")
-
-        return listOf(p1, p2, p3, p4, p5).subList(0, count)
     }
 
     private fun validateTeam(team: IWrappedParticipant, gameId: String, ordinal: Int, p1: PlayerEntity, p2: PlayerEntity)
