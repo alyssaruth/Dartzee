@@ -28,7 +28,6 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
     var gameParams = ""
     var gameType: GameType = GameType.X01
 
-    private var currentOrdinal = 0
     private var hmPositionToPoints: Map<Int, Int>? = null
 
     override fun getTableName() = EntityName.DartsMatch
@@ -72,13 +71,10 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         return result
     }
 
-    fun incrementAndGetCurrentOrdinal() = ++currentOrdinal
-
     fun cacheMetadataFromGame(lastGame: GameEntity)
     {
         this.gameType = lastGame.gameType
         this.gameParams = lastGame.gameParams
-        this.currentOrdinal = lastGame.matchOrdinal
     }
 
     companion object

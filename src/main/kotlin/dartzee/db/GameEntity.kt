@@ -69,18 +69,24 @@ class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(
 
     companion object
     {
-        fun factoryAndSave(launchParams: GameLaunchParams, match: DartsMatchEntity? = null)
-          = factoryAndSave(launchParams.gameType, launchParams.gameParams, match)
+        fun factoryAndSave(launchParams: GameLaunchParams, match: DartsMatchEntity? = null): GameEntity
+        {
+            val game = factory(launchParams.gameType, launchParams.gameParams)
+            match?.let {
+                game.dartsMatchId = it.rowId
+                game.matchOrdinal = 1
+            }
 
-        fun factoryAndSave(gameType: GameType, gameParams: String, match: DartsMatchEntity? = null): GameEntity
+            game.saveToDatabase()
+            return game
+        }
+
+        fun factory(gameType: GameType, gameParams: String): GameEntity
         {
             val gameEntity = GameEntity()
             gameEntity.assignRowId()
             gameEntity.gameType = gameType
             gameEntity.gameParams = gameParams
-            gameEntity.dartsMatchId = match?.rowId ?: ""
-            gameEntity.matchOrdinal = match?.incrementAndGetCurrentOrdinal() ?: -1
-            gameEntity.saveToDatabase()
             return gameEntity
         }
 

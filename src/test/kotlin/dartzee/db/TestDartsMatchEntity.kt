@@ -5,7 +5,7 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartsMatch
-import dartzee.helper.insertPlayerForGame
+import dartzee.helper.insertGame
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.exceptions.WrappedSqlException
@@ -119,39 +119,20 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should increment the ordinal in place and return it`()
-    {
-        val match = DartsMatchEntity()
-        match.incrementAndGetCurrentOrdinal() shouldBe 1
-        match.incrementAndGetCurrentOrdinal() shouldBe 2
-        match.incrementAndGetCurrentOrdinal() shouldBe 3
-    }
-
-    @Test
     fun `Should cache metadata from a game correctly`()
     {
-        val game501 = GameEntity.factoryAndSave(GameType.X01, "501")
-        game501.matchOrdinal = 2
-        val gameGolf = GameEntity.factoryAndSave(GameType.GOLF, "18")
-        gameGolf.matchOrdinal = 4
-
-        insertPlayerForGame("BTBF", game501.rowId)
-        insertPlayerForGame("Mooch", game501.rowId)
-
-        insertPlayerForGame("Scat", gameGolf.rowId)
-        insertPlayerForGame("Aggie", gameGolf.rowId)
+        val game501 = insertGame(gameType = GameType.X01, gameParams = "301")
+        val gameGolf = insertGame(gameType = GameType.GOLF, gameParams = "18")
 
         val match = DartsMatchEntity()
 
         match.cacheMetadataFromGame(game501)
         match.gameType shouldBe game501.gameType
         match.gameParams shouldBe game501.gameParams
-        match.incrementAndGetCurrentOrdinal() shouldBe game501.matchOrdinal + 1
 
         match.cacheMetadataFromGame(gameGolf)
         match.gameType shouldBe gameGolf.gameType
         match.gameParams shouldBe gameGolf.gameParams
-        match.incrementAndGetCurrentOrdinal() shouldBe gameGolf.matchOrdinal + 1
     }
 
     @Test

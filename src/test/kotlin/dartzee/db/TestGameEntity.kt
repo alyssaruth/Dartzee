@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.logging.CODE_SQL_EXCEPTION
@@ -95,9 +96,9 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Factory and save individual game`()
+    fun `Factory individual game`()
     {
-        val game = GameEntity.factoryAndSave(GameType.X01, "301")
+        val game = GameEntity.factory(GameType.X01, "301")
 
         val gameId = game.rowId
         game.localId shouldNotBe -1
@@ -107,7 +108,19 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         game.dartsMatchId shouldBe ""
         game.matchOrdinal shouldBe -1
 
-        game.retrieveForId(gameId) shouldNotBe null
+        game.retrieveForId(gameId) shouldBe null
+    }
+
+    @Test
+    fun `Factory and save individual game`()
+    {
+        val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
+        val gameOne = GameEntity.factoryAndSave(launchParams)
+        gameOne.matchOrdinal shouldBe -1
+        gameOne.dartsMatchId shouldBe ""
+        gameOne.gameType shouldBe GameType.GOLF
+        gameOne.gameParams shouldBe "18"
+        gameOne.rowId shouldNotBe ""
     }
 
     @Test
@@ -115,19 +128,13 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     {
         val match = DartsMatchEntity.factoryFirstTo(4)
 
-        val gameOne = GameEntity.factoryAndSave(GameType.GOLF, "18", match)
+        val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
+        val gameOne = GameEntity.factoryAndSave(launchParams, match)
         gameOne.matchOrdinal shouldBe 1
         gameOne.dartsMatchId shouldBe match.rowId
         gameOne.gameType shouldBe GameType.GOLF
         gameOne.gameParams shouldBe "18"
         gameOne.rowId shouldNotBe ""
-
-        val gameTwo = GameEntity.factoryAndSave(GameType.GOLF, "18", match)
-        gameTwo.matchOrdinal shouldBe 2
-        gameTwo.dartsMatchId shouldBe match.rowId
-        gameTwo.gameType shouldBe GameType.GOLF
-        gameTwo.gameParams shouldBe "18"
-        gameTwo.rowId shouldNotBe ""
     }
 
     @Test

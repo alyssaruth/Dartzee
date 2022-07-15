@@ -151,8 +151,7 @@ class TestDartsMatchScreen: AbstractTest()
         val match = insertDartsMatch(gameParams = "501")
 
         val scrn = setUpMatchScreen(match = match)
-        val firstGame = insertGame()
-        firstGame.matchOrdinal = match.incrementAndGetCurrentOrdinal()
+        val firstGame = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
 
         val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
         every { firstPanel.getPlayerStates() } returns gameOneStates
@@ -164,6 +163,9 @@ class TestDartsMatchScreen: AbstractTest()
         verify { gamePanel.startNewGame(any()) }
 
         val gameTwo = gamePanel.gameEntity
+        gameTwo.matchOrdinal shouldBe 2
+        gameTwo.dartsMatchId shouldBe match.rowId
+
         val participants = loadParticipants(gameTwo.rowId)
         participants[0].getParticipantName().toString() shouldBe "Billie"
         participants[1].getParticipantName().toString() shouldBe "Amy"

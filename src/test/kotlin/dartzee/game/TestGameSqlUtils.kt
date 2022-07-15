@@ -10,6 +10,7 @@ import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
+import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import io.kotlintest.matchers.types.shouldBeInstanceOf
@@ -86,17 +87,19 @@ class TestGameSqlUtils : AbstractTest()
     @Test
     fun `Should prepare next participants correctly for a 2 player game`()
     {
+        val match = insertDartsMatch()
+        val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val players = preparePlayers(2)
         val (p1, p2) = players
-        val participants = prepareParticipants(insertGame().rowId, players, false)
-        val g2 = insertGame(matchOrdinal = 2)
-        val g3 = insertGame(matchOrdinal = 3)
+        val firstGameParticipants = prepareParticipants(g1.rowId, players, false)
 
-        val (pt2_1, pt2_2) = prepareNextParticipants(participants, g2)
+        val (g2, g2participants) = prepareNewEntities(g1, firstGameParticipants, 2)
+        val (pt2_1, pt2_2) = g2participants
         validateSingleParticipant(pt2_1, g2.rowId, 0, p2)
         validateSingleParticipant(pt2_2, g2.rowId, 1, p1)
 
-        val (pt3_1, pt3_2) = prepareNextParticipants(participants, g3)
+        val (g3, g3participants) = prepareNewEntities(g1, firstGameParticipants, 3)
+        val (pt3_1, pt3_2) = g3participants
         validateSingleParticipant(pt3_1, g3.rowId, 0, p1)
         validateSingleParticipant(pt3_2, g3.rowId, 1, p2)
     }
@@ -104,18 +107,20 @@ class TestGameSqlUtils : AbstractTest()
     @Test
     fun `Should prepare next participants correctly for a 2 team game`()
     {
+        val match = insertDartsMatch()
+        val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val players = preparePlayers(4)
         val (p1, p2, p3, p4) = players
 
-        val participants = prepareParticipants(insertGame().rowId, players, true)
-        val g2 = insertGame(matchOrdinal = 2)
-        val g3 = insertGame(matchOrdinal = 3)
+        val firstGameParticipants = prepareParticipants(g1.rowId, players, true)
 
-        val (pt2_1, pt2_2) = prepareNextParticipants(participants, g2)
+        val (g2, g2participants) = prepareNewEntities(g1, firstGameParticipants, 2)
+        val (pt2_1, pt2_2) = g2participants
         validateTeam(pt2_1, g2.rowId, 0, p4, p3)
         validateTeam(pt2_2, g2.rowId, 1, p2, p1)
 
-        val (pt3_1, pt3_2) = prepareNextParticipants(participants, g3)
+        val (g3, g3participants) = prepareNewEntities(g1, firstGameParticipants, 3)
+        val (pt3_1, pt3_2) = g3participants
         validateTeam(pt3_1, g3.rowId, 0, p1, p2)
         validateTeam(pt3_2, g3.rowId, 1, p3, p4)
     }
@@ -125,14 +130,15 @@ class TestGameSqlUtils : AbstractTest()
     {
         InjectedCore.collectionShuffler = DeterministicCollectionShuffler()
 
+        val match = insertDartsMatch()
+        val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val players = preparePlayers(5)
         val (p1, p2, p3, p4, p5) = players
 
-        val participants = prepareParticipants(insertGame().rowId, players, true)
-        val g2 = insertGame(matchOrdinal = 2)
-        val g3 = insertGame(matchOrdinal = 3)
+        val firstGameParticipants = prepareParticipants(g1.rowId, players, true)
 
-        val (pt2_1, pt2_2, pt2_3) = prepareNextParticipants(participants, g2)
+        val (g2, g2participants) = prepareNewEntities(g1, firstGameParticipants, 2)
+        val (pt2_1, pt2_2, pt2_3) = g2participants
         validateTeam(pt2_1, g2.rowId, 0, p4, p3)
         validateSingleParticipant(pt2_2, g2.rowId, 1, p5)
         validateTeam(pt2_3, g2.rowId, 2, p2, p1)
@@ -142,7 +148,8 @@ class TestGameSqlUtils : AbstractTest()
         validateSingleParticipant(loadedPt2_2, g2.rowId, 1, p5)
         validateTeam(loadedPt2_3, g2.rowId, 2, p2, p1)
 
-        val (pt3_1, pt3_2, pt3_3) = prepareNextParticipants(participants, g3)
+        val (g3, g3participants) = prepareNewEntities(g1, firstGameParticipants, 3)
+        val (pt3_1, pt3_2, pt3_3) = g3participants
         validateTeam(pt3_1, g3.rowId, 0, p3, p4)
         validateSingleParticipant(pt3_2, g3.rowId, 1, p5)
         validateTeam(pt3_3, g3.rowId, 2, p1, p2)

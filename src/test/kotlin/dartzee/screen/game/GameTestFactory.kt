@@ -3,7 +3,6 @@ package dartzee.screen.game
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.AchievementType
 import dartzee.db.DartsMatchEntity
-import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
@@ -37,16 +36,16 @@ fun makeTeam(vararg players: PlayerEntity): TeamParticipant
 fun makeGolfGamePanel(currentPlayerId: String = randomGuid()) =
     GamePanelGolf(
         FakeDartsScreen(),
-        GameEntity.factoryAndSave(GameType.GOLF, "18"),
+        insertGame(gameType = GameType.GOLF, gameParams = "18"),
         1).apply { testInit(currentPlayerId) }
 
 fun makeX01GamePanel(currentPlayerId: String = randomGuid()) =
-    GamePanelX01(FakeDartsScreen(), GameEntity.factoryAndSave(GameType.X01, "501"), 1).apply { testInit(currentPlayerId) }
+    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = "501"), 1).apply { testInit(currentPlayerId) }
 
 fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
     GamePanelRoundTheClock(
         FakeDartsScreen(),
-        GameEntity.factoryAndSave(GameType.ROUND_THE_CLOCK, RoundTheClockConfig(ClockType.Standard, true).toJson()),
+        insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()),
         1).apply { testInit(playerId) }
 
 fun DartsGamePanel<*, *, *>.testInit(playerId: String)

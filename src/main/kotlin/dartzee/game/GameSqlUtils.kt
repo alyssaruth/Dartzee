@@ -1,7 +1,6 @@
 package dartzee.game
 
 import dartzee.core.util.InjectedCore.collectionShuffler
-import dartzee.db.DartsMatchEntity
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -68,9 +67,12 @@ private fun loadTeam(team: TeamEntity): TeamParticipant
 fun prepareNewEntities(
     firstGame: GameEntity,
     firstGameParticipants: List<IWrappedParticipant>,
-    match: DartsMatchEntity): Pair<GameEntity, List<IWrappedParticipant>>
+    matchOrdinal: Int): Pair<GameEntity, List<IWrappedParticipant>>
 {
-    val nextGame = GameEntity.factoryAndSave(firstGame.gameType, firstGame.gameParams, match)
+    val nextGame = GameEntity.factory(firstGame.gameType, firstGame.gameParams)
+    nextGame.dartsMatchId = firstGame.dartsMatchId
+    nextGame.matchOrdinal = matchOrdinal
+    nextGame.saveToDatabase()
 
     val dartzeeRules = DartzeeRuleEntity().retrieveForGame(firstGame.rowId).map { it.toDto() }
     insertDartzeeRules(nextGame.rowId, dartzeeRules)
@@ -78,7 +80,7 @@ fun prepareNewEntities(
     val participants = prepareNextParticipants(firstGameParticipants, nextGame)
     return nextGame to participants
 }
-fun prepareNextParticipants(firstGameParticipants: List<IWrappedParticipant>, newGame: GameEntity): List<IWrappedParticipant>
+private fun prepareNextParticipants(firstGameParticipants: List<IWrappedParticipant>, newGame: GameEntity): List<IWrappedParticipant>
 {
     val templateParticipants = shuffleForNewGame(firstGameParticipants, newGame.matchOrdinal)
     return templateParticipants.mapIndexed { ordinal, pt ->

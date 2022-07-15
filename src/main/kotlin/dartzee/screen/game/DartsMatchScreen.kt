@@ -80,7 +80,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         val firstGamePanel = hmGameIdToTab.values.first()
         val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
-        val (nextGame, nextParticipants) = prepareNewEntities(firstGamePanel.gameEntity, firstGameParticipants, match)
+        val (nextGame, nextParticipants) = prepareNewEntities(firstGamePanel.gameEntity, firstGameParticipants, hmGameIdToTab.size + 1)
 
         val panel = addGameToMatch(nextGame, nextParticipants.size)
         panel.startNewGame(nextParticipants)
