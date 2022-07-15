@@ -99,28 +99,30 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     fun `Factory individual game`()
     {
         val game = GameEntity.factory(GameType.X01, "301")
-
-        val gameId = game.rowId
         game.localId shouldNotBe -1
         game.gameType shouldBe GameType.X01
         game.gameParams shouldBe "301"
         game.dtFinish shouldBe DateStatics.END_OF_TIME
         game.dartsMatchId shouldBe ""
         game.matchOrdinal shouldBe -1
+        game.retrievedFromDb shouldBe false
 
-        game.retrieveForId(gameId) shouldBe null
+        getCountFromTable(EntityName.Game) shouldBe 0
     }
 
     @Test
     fun `Factory and save individual game`()
     {
         val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
-        val gameOne = GameEntity.factoryAndSave(launchParams)
-        gameOne.matchOrdinal shouldBe -1
-        gameOne.dartsMatchId shouldBe ""
-        gameOne.gameType shouldBe GameType.GOLF
-        gameOne.gameParams shouldBe "18"
-        gameOne.rowId shouldNotBe ""
+        val game = GameEntity.factoryAndSave(launchParams)
+        game.matchOrdinal shouldBe -1
+        game.dartsMatchId shouldBe ""
+        game.gameType shouldBe GameType.GOLF
+        game.gameParams shouldBe "18"
+        game.rowId shouldNotBe ""
+        game.retrievedFromDb shouldBe true
+
+        getCountFromTable(EntityName.Game) shouldBe 1
     }
 
     @Test
@@ -129,12 +131,12 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         val match = DartsMatchEntity.factoryFirstTo(4)
 
         val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
-        val gameOne = GameEntity.factoryAndSave(launchParams, match)
-        gameOne.matchOrdinal shouldBe 1
-        gameOne.dartsMatchId shouldBe match.rowId
-        gameOne.gameType shouldBe GameType.GOLF
-        gameOne.gameParams shouldBe "18"
-        gameOne.rowId shouldNotBe ""
+        val game = GameEntity.factoryAndSave(launchParams, match)
+        game.matchOrdinal shouldBe 1
+        game.dartsMatchId shouldBe match.rowId
+        game.gameType shouldBe GameType.GOLF
+        game.gameParams shouldBe "18"
+        game.rowId shouldNotBe ""
     }
 
     @Test

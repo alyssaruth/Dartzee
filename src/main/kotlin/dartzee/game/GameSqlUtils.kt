@@ -64,7 +64,7 @@ private fun loadTeam(team: TeamEntity): TeamParticipant
 /**
  * Follow-on game (in a match)
  */
-fun prepareNewEntities(
+fun prepareNextEntities(
     firstGame: GameEntity,
     firstGameParticipants: List<IWrappedParticipant>,
     matchOrdinal: Int): Pair<GameEntity, List<IWrappedParticipant>>

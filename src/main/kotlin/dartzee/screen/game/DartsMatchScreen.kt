@@ -5,7 +5,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.game.matchIsComplete
-import dartzee.game.prepareNewEntities
+import dartzee.game.prepareNextEntities
 import dartzee.game.state.AbstractPlayerState
 import dartzee.screen.ScreenCache
 import java.awt.BorderLayout
@@ -80,7 +80,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         val firstGamePanel = hmGameIdToTab.values.first()
         val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
-        val (nextGame, nextParticipants) = prepareNewEntities(firstGamePanel.gameEntity, firstGameParticipants, hmGameIdToTab.size + 1)
+        val (nextGame, nextParticipants) = prepareNextEntities(firstGamePanel.gameEntity, firstGameParticipants, hmGameIdToTab.size + 1)
 
         val panel = addGameToMatch(nextGame, nextParticipants.size)
         panel.startNewGame(nextParticipants)
