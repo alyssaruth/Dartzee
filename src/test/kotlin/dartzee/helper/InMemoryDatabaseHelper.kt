@@ -370,6 +370,7 @@ fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
 fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
 fun retrieveDeletionAudit() = DeletionAuditEntity().retrieveEntities().first()
+fun retrieveTeam() = TeamEntity().retrieveEntities().first()
 
 fun getAchievementCount(type: AchievementType): Int
 {
