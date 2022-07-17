@@ -8,6 +8,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.randomGuid
 import dartzee.helper.wipeTable
 import dartzee.`object`.Dart
+import dartzee.screen.game.x01.GamePanelX01
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -21,8 +22,7 @@ class TestGamePanelX01: AbstractTest()
 
         val darts = listOf(Dart(1, 2))
         panel.addCompletedRound(darts)
-
-        panel.updateAchievementsForFinish(playerId, 1, 30)
+        panel.updateAchievementsForFinish(1, 30)
 
         val a = AchievementEntity.retrieveAchievement(AchievementType.X01_BTBF, playerId)!!
         a.gameIdEarned shouldBe panel.getGameId()
@@ -37,7 +37,7 @@ class TestGamePanelX01: AbstractTest()
         val darts = listOf(Dart(2, 2))
         panel.addCompletedRound(darts)
 
-        panel.updateAchievementsForFinish(playerId, 1, 30)
+        panel.updateAchievementsForFinish(1, 30)
 
         AchievementEntity.retrieveAchievement(AchievementType.X01_BTBF, playerId) shouldBe null
     }
@@ -51,7 +51,7 @@ class TestGamePanelX01: AbstractTest()
         val darts = listOf(Dart(20, 3), Dart(20, 2))
         panel.addCompletedRound(darts)
 
-        panel.updateAchievementsForFinish(playerId, 1, 30)
+        panel.updateAchievementsForFinish(1, 30)
 
         val a = AchievementEntity.retrieveAchievement(AchievementType.X01_BEST_FINISH, playerId)!!
         a.achievementCounter shouldBe 100
@@ -66,7 +66,7 @@ class TestGamePanelX01: AbstractTest()
 
         val darts = listOf(Dart(20, 3), Dart(20, 2))
         panel.addCompletedRound(darts)
-        panel.updateAchievementsForFinish(playerId, 1, 30)
+        panel.updateAchievementsForFinish(1, 30)
 
         X01FinishEntity().retrieveEntities().size shouldBe 1
         val entity = X01FinishEntity().retrieveEntities().first()
@@ -87,7 +87,7 @@ class TestGamePanelX01: AbstractTest()
             val darts = listOf(Dart(1, 1), Dart((i-1)/2, 2))
             panel.addCompletedRound(darts)
 
-            panel.updateAchievementsForFinish(playerId, 1, 30)
+            panel.updateAchievementsForFinish(1, 30)
 
             val a = AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId)!!
             a.gameIdEarned shouldBe panel.getGameId()
@@ -104,7 +104,7 @@ class TestGamePanelX01: AbstractTest()
         val darts = listOf(Dart(11, 1))
         panel.addCompletedRound(darts)
 
-        panel.updateAchievementsForFinish(playerId, 1, 30)
+        panel.updateAchievementsForFinish(1, 30)
 
         AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId) shouldBe null
     }
@@ -118,8 +118,13 @@ class TestGamePanelX01: AbstractTest()
         val darts = listOf(Dart(8, 1))
         panel.addCompletedRound(darts)
 
-        panel.updateAchievementsForFinish(playerId, 1, 30)
+        panel.updateAchievementsForFinish(1, 30)
 
         AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId) shouldBe null
+    }
+
+    private fun GamePanelX01.updateAchievementsForFinish(finishingPosition: Int, score: Int)
+    {
+        updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
     }
 }

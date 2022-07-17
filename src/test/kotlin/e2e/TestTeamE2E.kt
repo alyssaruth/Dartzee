@@ -1,15 +1,19 @@
 package e2e
 
+import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.GameType
 import dartzee.game.prepareParticipants
 import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AchievementSummary
 import dartzee.helper.insertGame
 import dartzee.helper.predictableDartsModel
+import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -29,7 +33,6 @@ class TestTeamE2E : AbstractRegistryTest()
     fun `E2E - Team of 2`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")
-
         val (gamePanel, listener) = setUpGamePanel(game)
 
         val p1Rounds = listOf(
@@ -65,14 +68,18 @@ class TestTeamE2E : AbstractRegistryTest()
 
         verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 29, pt = retrieveTeam())
 
-//        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
-//            AchievementSummary(AchievementType.X01_BEST_FINISH, 4, game.rowId),
-//            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
-//            AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 2, game.rowId),
-//            AchievementSummary(AchievementType.X01_HIGHEST_BUST, 20, game.rowId),
-//            AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
-//        )
-//
-//        checkAchievementConversions(player.rowId)
+        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+            AchievementSummary(AchievementType.X01_HIGHEST_BUST, 19, game.rowId),
+            AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId),
+        )
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 95, game.rowId),
+            AchievementSummary(AchievementType.X01_BEST_FINISH, 4, game.rowId),
+            AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 2, game.rowId)
+        )
+
+        checkAchievementConversions(listOf(p1.rowId, p2.rowId))
     }
 }

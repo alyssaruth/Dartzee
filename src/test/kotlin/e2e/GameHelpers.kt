@@ -148,11 +148,6 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
 
     // Check that the dart entities on the database line up
     val dartEntities = DartEntity().retrieveEntities().sortedWith(compareBy( { it.roundNumber }, { it.ordinal }))
-//    dartEntities.forEach {
-//        it.participantId shouldBe pt.rowId
-//        it.playerId shouldBe pt.playerId
-//    }
-
     val chunkedDartEntities: List<List<DartEntity>> = dartEntities.groupBy { it.roundNumber }.getSortedValues().map { it.sortedBy { drt -> drt.ordinal } }
     val retrievedDartRounds = chunkedDartEntities.map { rnd -> rnd.map { drt -> Dart(drt.score, drt.multiplier) } }
     retrievedDartRounds shouldBe dartRounds
@@ -160,12 +155,18 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
 
 fun checkAchievementConversions(playerId: String)
 {
-    val transactionalState = retrieveAchievementsForPlayer(playerId)
-
+    checkAchievementConversions(listOf(playerId))
+}
+fun checkAchievementConversions(playerIds: List<String>)
+{
+    val transactionalStates = playerIds.associateWith(::retrieveAchievementsForPlayer)
     wipeTable(EntityName.Achievement)
-    val t = runConversionsWithProgressBar(getAllAchievements(), listOf(playerId))
+
+    val t = runConversionsWithProgressBar(getAllAchievements(), playerIds)
     t.join()
 
-    retrieveAchievementsForPlayer(playerId).shouldContainExactlyInAnyOrder(transactionalState)
-
+    transactionalStates.forEach { (playerId, transactionalState) ->
+        val retrieved = retrieveAchievementsForPlayer(playerId)
+        retrieved.shouldContainExactlyInAnyOrder(transactionalState)
+    }
 }

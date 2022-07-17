@@ -71,7 +71,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
     {
         val size = getDartsThrown().size
         val dartsRisked = getDartsThrown().subList(0, size - 1)
-        val pointsRisked = dartsRisked.map { 5 - it.getGolfScore(currentRoundNumber) }.sum()
+        val pointsRisked = dartsRisked.sumOf { 5 - it.getGolfScore(currentRoundNumber) }
 
         if (pointsRisked > 0)
         {

@@ -4,6 +4,7 @@ import dartzee.`object`.Dart
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.BulkInserter
 import dartzee.db.DartEntity
+import dartzee.db.ParticipantEntity
 
 abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 {
@@ -28,10 +29,15 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
      */
     fun currentRoundNumber() = completedRounds.size + 1
     fun currentIndividual() = wrappedParticipant.getIndividual(currentRoundNumber())
+    fun lastIndividual() = wrappedParticipant.getIndividual(completedRounds.size)
+
+    fun getCompletedRoundsForIndividual(individual: ParticipantEntity) =
+        completedRounds.filter { it.all { drt -> drt.participantId == individual.rowId } }
 
     protected fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
 
     fun isHuman() = !currentIndividual().isAi()
+    fun hasMultiplePlayers() = wrappedParticipant.individuals.size > 1
 
     /**
      * Modifiers

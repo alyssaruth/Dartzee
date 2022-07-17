@@ -160,30 +160,34 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         updateCarousel()
     }
 
-    override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
+    override fun updateAchievementsForFinish(playerState: DartzeePlayerState, finishingPosition: Int, score: Int)
     {
-        super.updateAchievementsForFinish(playerId, finishingPosition, score)
+        super.updateAchievementsForFinish(playerState, finishingPosition, score)
+        if (totalRounds < DARTZEE_ACHIEVEMENT_MIN_RULES)
+        {
+            return
+        }
 
-        if (totalRounds >= DARTZEE_ACHIEVEMENT_MIN_RULES)
+        val playerId = playerState.lastIndividual().playerId
+        if (!playerState.hasMultiplePlayers())
         {
             val scorePerRound = score / totalRounds
             AchievementEntity.updateAchievement(AchievementType.DARTZEE_BEST_GAME, playerId, gameEntity.rowId, scorePerRound)
 
-            val playerState = getCurrentPlayerState()
             if (playerState.roundResults.all { it.success })
             {
                 val templateName = GameType.DARTZEE.getParamsDescription(gameEntity.gameParams)
                 AchievementEntity.insertAchievement(AchievementType.DARTZEE_FLAWLESS, playerId, gameEntity.rowId, templateName, score)
             }
 
-            val lastRoundResult = playerState.roundResults.last()
-            if (lastRoundResult.success && lastRoundResult.ruleNumber == dtos.size)
-            {
-                val ruleDescription = dtos.last().getDisplayName()
-                AchievementEntity.insertAchievement(AchievementType.DARTZEE_UNDER_PRESSURE, playerId, gameEntity.rowId, ruleDescription, lastRoundResult.score)
-            }
-
             AchievementEntity.insertForUniqueCounter(AchievementType.DARTZEE_BINGO, playerId, gameEntity.rowId, score % 100, "$score")
+        }
+
+        val lastRoundResult = playerState.roundResults.last()
+        if (lastRoundResult.success && lastRoundResult.ruleNumber == dtos.size)
+        {
+            val ruleDescription = dtos.last().getDisplayName()
+            AchievementEntity.insertAchievement(AchievementType.DARTZEE_UNDER_PRESSURE, playerId, gameEntity.rowId, ruleDescription, lastRoundResult.score)
         }
     }
 

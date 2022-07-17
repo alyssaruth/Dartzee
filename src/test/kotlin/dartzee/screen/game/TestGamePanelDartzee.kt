@@ -1,7 +1,5 @@
 package dartzee.screen.game
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartzeePlayStyle
@@ -19,9 +17,29 @@ import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.game.GameType
 import dartzee.game.loadParticipants
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.beastDartsModel
+import dartzee.helper.getAchievementCount
+import dartzee.helper.getAchievementRows
+import dartzee.helper.getCountFromTable
+import dartzee.helper.innerOuterInner
+import dartzee.helper.insertDart
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.makeDart
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.scoreEighteens
+import dartzee.helper.totalIsFifty
+import dartzee.helper.twoBlackOneWhite
 import dartzee.listener.DartboardListener
-import dartzee.screen.game.dartzee.*
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
+import dartzee.screen.game.dartzee.DartzeeRuleCarousel
+import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
+import dartzee.screen.game.dartzee.DartzeeRuleTile
+import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -29,7 +47,11 @@ import dartzee.utils.insertDartzeeRules
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
-import io.mockk.*
+import io.mockk.clearAllMocks
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
 import java.awt.Color
 
@@ -165,7 +187,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame(loadParticipants(game.rowId))
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+        gamePanel.updateAchievementsForFinish(-1, 180)
 
         val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_FLAWLESS, player.rowId, "")!!
         achievement.achievementCounter shouldBe 180
@@ -183,7 +205,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame(loadParticipants(game.rowId))
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+        gamePanel.updateAchievementsForFinish(-1, 180)
 
         getAchievementCount(AchievementType.DARTZEE_FLAWLESS) shouldBe 0
     }
@@ -205,7 +227,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame(loadParticipants(game.rowId))
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+        gamePanel.updateAchievementsForFinish(-1, 180)
 
         val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_UNDER_PRESSURE, player.rowId, totalIsFifty.getDisplayName())!!
         achievement.achievementCounter shouldBe 50
@@ -230,7 +252,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame(loadParticipants(game.rowId))
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+        gamePanel.updateAchievementsForFinish(-1, 180)
 
         getAchievementCount(AchievementType.DARTZEE_UNDER_PRESSURE) shouldBe 0
     }
@@ -252,7 +274,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame(loadParticipants(game.rowId))
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
+        gamePanel.updateAchievementsForFinish(-1, 180)
 
         getAchievementCount(AchievementType.DARTZEE_UNDER_PRESSURE) shouldBe 0
     }
@@ -267,9 +289,9 @@ class TestGamePanelDartzee: AbstractTest()
 
         val gamePanel = makeGamePanel(rules, summaryPanel, game)
         gamePanel.loadGame(loadParticipants(game.rowId))
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 180)
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 80)
-        gamePanel.updateAchievementsForFinish(player.rowId, -1, 1080)
+        gamePanel.updateAchievementsForFinish(-1, 180)
+        gamePanel.updateAchievementsForFinish(-1, 80)
+        gamePanel.updateAchievementsForFinish(-1, 1080)
 
         val rows = getAchievementRows(AchievementType.DARTZEE_BINGO)
         rows.size shouldBe 1
@@ -546,5 +568,10 @@ class TestGamePanelDartzee: AbstractTest()
             dtos,
             summaryPanel
         )
+    }
+
+    private fun GamePanelDartzee.updateAchievementsForFinish(finishingPosition: Int, score: Int)
+    {
+        updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
     }
 }
