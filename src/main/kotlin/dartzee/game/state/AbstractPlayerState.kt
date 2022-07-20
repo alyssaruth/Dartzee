@@ -32,7 +32,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
     fun lastIndividual() = wrappedParticipant.getIndividual(completedRounds.size)
 
     fun getCompletedRoundsForIndividual(individual: ParticipantEntity) =
-        completedRounds.filter { it.all { drt -> drt.participantId == individual.rowId } }
+        (completedRounds + listOf(currentRound)).filter { it.all { drt -> drt.participantId == individual.rowId } }
 
     protected fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
 
