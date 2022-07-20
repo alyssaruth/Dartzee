@@ -5,10 +5,15 @@ import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.db.X01FinishEntity
 import dartzee.helper.AbstractTest
+import dartzee.helper.AchievementSummary
+import dartzee.helper.preparePlayers
 import dartzee.helper.randomGuid
+import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.wipeTable
 import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GamePanelX01
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainAll
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -121,6 +126,33 @@ class TestGamePanelX01: AbstractTest()
         panel.updateAchievementsForFinish(1, 30)
 
         AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId) shouldBe null
+    }
+
+    @Test
+    fun `Should unlock the achievements correctly for a team finish`()
+    {
+        val (p1, p2) = preparePlayers(2)
+        val team = makeTeam(p1, p2)
+        val panel = makeX01GamePanel(team)
+        val gameId = panel.gameEntity.rowId
+
+        val darts = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
+        panel.addCompletedRound(darts)
+
+        // Finish from 9
+        val finishDarts = listOf(Dart(5, 1), Dart(2, 1), Dart(1, 2))
+        panel.addCompletedRound(finishDarts)
+
+        panel.updateAchievementsForFinish(1, 30)
+
+        retrieveAchievementsForPlayer(p1.rowId).shouldBeEmpty()
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldContainAll(
+            AchievementSummary(AchievementType.X01_BEST_FINISH, 9, gameId),
+            AchievementSummary(AchievementType.X01_NO_MERCY, 4, gameId),
+            AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 1, gameId),
+            AchievementSummary(AchievementType.X01_BTBF, 1, gameId)
+        )
     }
 
     private fun GamePanelX01.updateAchievementsForFinish(finishingPosition: Int, score: Int)
