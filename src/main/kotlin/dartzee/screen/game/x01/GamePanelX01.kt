@@ -121,7 +121,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
         if (checkout == 1)
         {
-            AchievementEntity.insertAchievement(AchievementType.X01_BTBF, getCurrentPlayerId(), getGameId())
+            AchievementEntity.insertAchievement(AchievementType.X01_BTBF, playerId, getGameId())
         }
     }
 

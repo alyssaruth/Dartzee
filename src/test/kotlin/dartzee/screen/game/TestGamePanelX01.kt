@@ -12,8 +12,9 @@ import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.wipeTable
 import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GamePanelX01
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainAll
+import io.kotlintest.matchers.collections.shouldContain
+import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -145,13 +146,40 @@ class TestGamePanelX01: AbstractTest()
 
         panel.updateAchievementsForFinish(1, 30)
 
-        retrieveAchievementsForPlayer(p1.rowId).shouldBeEmpty()
+        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactly(
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 60, gameId)
+        )
 
-        retrieveAchievementsForPlayer(p2.rowId).shouldContainAll(
+        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 9, gameId),
             AchievementSummary(AchievementType.X01_BEST_FINISH, 9, gameId),
-            AchievementSummary(AchievementType.X01_NO_MERCY, 4, gameId),
+            AchievementSummary(AchievementType.X01_NO_MERCY, -1, gameId, "9"),
             AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 1, gameId),
-            AchievementSummary(AchievementType.X01_BTBF, 1, gameId)
+            AchievementSummary(AchievementType.X01_BTBF, -1, gameId)
+        )
+    }
+
+    @Test
+    fun `Should correctly update such bad luck achievement for a team`()
+    {
+        val (p1, p2) = preparePlayers(2)
+        val team = makeTeam(p1, p2)
+        val panel = makeX01GamePanel(team, gameParams = "101")
+        val gameId = panel.gameEntity.rowId
+
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(20, 1), Dart(19, 1))) // Score 99, to put them on 2
+        panel.addCompletedRound(listOf(Dart(20, 2))) // 1 for P2
+        panel.addCompletedRound(listOf(Dart(20, 1)))
+        panel.addCompletedRound(listOf(Dart(20, 2))) // 1 for P2
+        panel.addCompletedRound(listOf(Dart(18, 2))) // 1 for P1
+
+        println(retrieveAchievementsForPlayer(p1.rowId))
+        retrieveAchievementsForPlayer(p1.rowId).shouldContain(
+            AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, gameId)
+        )
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldContain(
+            AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 2, gameId)
         )
     }
 

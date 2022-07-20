@@ -43,8 +43,8 @@ fun makeGolfGamePanel(currentPlayerId: String = randomGuid()) =
 fun makeX01GamePanel(currentPlayerId: String = randomGuid()) =
     GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = "501"), 1).apply { testInit(currentPlayerId) }
 
-fun makeX01GamePanel(pt: IWrappedParticipant) =
-    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = "501"), 1).apply { testInit(pt) }
+fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = "501") =
+    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1).apply { testInit(pt) }
 
 fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
     GamePanelRoundTheClock(
