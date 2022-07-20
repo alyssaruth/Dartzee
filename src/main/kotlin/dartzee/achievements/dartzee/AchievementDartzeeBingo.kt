@@ -20,6 +20,7 @@ class AchievementDartzeeBingo: AbstractMultiRowAchievement()
     override val pinkThreshold = 100
     override val maxValue = 100
     override val gameType = GameType.DARTZEE
+    override val allowedForTeams = false
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {

@@ -20,6 +20,7 @@ class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
     override val pinkThreshold = 50
     override val maxValue = 50
     override val gameType = GameType.DARTZEE
+    override val allowedForTeams = false
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_DARTZEE_FLAWLESS
 

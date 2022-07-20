@@ -22,6 +22,7 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
     override val pinkThreshold = 40
     override val maxValue = 40
     override val gameType = GameType.DARTZEE
+    override val allowedForTeams = true
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {

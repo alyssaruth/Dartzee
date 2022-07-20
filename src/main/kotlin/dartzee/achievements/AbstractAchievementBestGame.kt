@@ -6,6 +6,7 @@ import dartzee.utils.doesHighestWin
 abstract class AbstractAchievementBestGame : AbstractAchievement()
 {
     abstract val gameParams: String
+    override val allowedForTeams = false
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {

@@ -31,6 +31,7 @@ abstract class AbstractAchievement
     abstract val pinkThreshold : Int
     abstract val maxValue : Int
     abstract val gameType: GameType?
+    abstract val allowedForTeams: Boolean
 
     open val usesTransactionalTablesForConversion = true
 

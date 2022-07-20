@@ -1,11 +1,14 @@
 package dartzee.achievements.golf
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.bulkInsertFromResultSet
+import dartzee.achievements.getGolfSegmentCases
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
-import java.net.URL
 
 class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
 {
@@ -21,6 +24,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
     override val blueThreshold = 100
     override val pinkThreshold = 200
     override val maxValue = 200
+    override val allowedForTeams = true
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_POINTS_RISKED
     override fun isUnbounded() = true
