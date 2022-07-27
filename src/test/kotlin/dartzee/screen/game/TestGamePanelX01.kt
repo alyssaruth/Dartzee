@@ -130,7 +130,7 @@ class TestGamePanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should unlock the achievements correctly for a team finish`()
+    fun `Should unlock the achievements correctly for a team finish, and put the right row into X01Finish`()
     {
         val (p1, p2) = preparePlayers(2)
         val team = makeTeam(p1, p2)
@@ -157,6 +157,10 @@ class TestGamePanelX01: AbstractTest()
             AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 1, gameId),
             AchievementSummary(AchievementType.X01_BTBF, -1, gameId)
         )
+
+        val finishes = X01FinishEntity().retrieveEntities()
+        finishes.size shouldBe 1
+        finishes.first().playerId shouldBe p2.rowId
     }
 
     @Test

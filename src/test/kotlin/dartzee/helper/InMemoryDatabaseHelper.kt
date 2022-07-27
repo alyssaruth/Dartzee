@@ -125,6 +125,7 @@ fun insertParticipant(uuid: String = randomGuid(),
                       finalScore: Int = -1,
                       dtFinished: Timestamp = DateStatics.END_OF_TIME,
                       insertPlayer: Boolean = false,
+                      teamId: String = "",
                       database: Database = mainDatabase): ParticipantEntity
 {
     val pe = ParticipantEntity(database)
@@ -135,6 +136,7 @@ fun insertParticipant(uuid: String = randomGuid(),
     pe.finishingPosition = finishingPosition
     pe.finalScore = finalScore
     pe.dtFinished = dtFinished
+    pe.teamId = teamId
 
     if (insertPlayer)
     {

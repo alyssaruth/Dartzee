@@ -6,6 +6,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import dartzee.utils.Database
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
@@ -25,6 +26,19 @@ abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: 
         val alice = insertPlayer(name = "Alice")
         val game = insertRelevantGame()
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 2)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getCountFromTable("Achievement") shouldBe 0
+    }
+
+    @Test
+    fun `Should ignore participants who were part of a team`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val game = insertRelevantGame()
+        val team = insertTeam(gameId = game.rowId)
+        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, teamId = team.rowId)
 
         factoryAchievement().populateForConversion(emptyList())
 
