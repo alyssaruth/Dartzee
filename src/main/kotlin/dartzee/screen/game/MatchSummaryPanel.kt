@@ -7,6 +7,7 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.PlayerStateListener
 import dartzee.screen.game.scorer.MatchScorer
 import java.awt.BorderLayout
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
@@ -16,7 +17,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
     private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(),
     PlayerStateListener<PlayerState>
 {
-    private val gameTabs = mutableListOf<DartsGamePanel<*, *, PlayerState>>()
+    private val gameTabs = CopyOnWriteArrayList<DartsGamePanel<*, *, PlayerState>>()
 
     init
     {
