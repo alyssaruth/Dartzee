@@ -7,6 +7,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
@@ -23,6 +24,21 @@ class TestAchievementX01HighestBust: AbstractAchievementTest<AchievementX01Highe
         insertDart(pt, ordinal = 1, startingScore = 181, score = 20, multiplier = 3, database = database)
         insertDart(pt, ordinal = 2, startingScore = 121, score = 20, multiplier = 3, database = database)
         insertDart(pt, ordinal = 3, startingScore = 61, score = 20, multiplier = 3, database = database)
+    }
+
+    @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val g = insertRelevantGame()
+        val team = insertTeam(gameId = g.rowId)
+        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, insertPlayer = true)
+
+        insertDart(pt, ordinal = 1, roundNumber = 1, startingScore = 40, score = 20, multiplier = 1)
+        insertDart(pt, ordinal = 2, roundNumber = 1, startingScore = 20, score = 20, multiplier = 1)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getAchievementCount() shouldBe 1
     }
 
     @Test
