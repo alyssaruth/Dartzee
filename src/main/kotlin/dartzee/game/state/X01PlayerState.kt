@@ -49,7 +49,7 @@ data class X01PlayerState(private val startingScore: Int,
 
     fun getBadLuckCount(): Int
     {
-        val rounds = getCompletedRoundsForIndividual(currentIndividual())
+        val rounds = getRoundsForIndividual(currentIndividual())
         return rounds.flatten().count { isNearMissDouble(it) }
     }
 

@@ -7,6 +7,12 @@ import dartzee.core.util.DateStatics
 import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
 import dartzee.drtDoubleEight
+import dartzee.drtInnerSeven
+import dartzee.drtOuterFive
+import dartzee.drtOuterNineteen
+import dartzee.drtOuterOne
+import dartzee.drtOuterTwenty
+import dartzee.drtTrebleOne
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
@@ -209,6 +215,38 @@ class TestAbstractPlayerState: AbstractTest()
         state.commitRound()
 
         state.currentIndividual() shouldBe pt2
+    }
+
+    @Test
+    fun `Should correctly identify whether or not there are multiple participants`()
+    {
+        TestPlayerState(insertParticipant()).hasMultiplePlayers() shouldBe false
+
+        val pt1 = insertParticipant()
+        val pt2 = insertParticipant()
+        TestTeamState(listOf(pt1, pt2)).hasMultiplePlayers() shouldBe true
+    }
+
+    @Test
+    fun `Should correctly extract the rounds for a player, including the current one`()
+    {
+        val pt1 = insertParticipant()
+        val pt2 = insertParticipant()
+        val state = TestTeamState(listOf(pt1, pt2))
+
+        val roundOne = listOf(drtOuterTwenty(), drtOuterFive(), drtOuterOne())
+        roundOne.forEach(state::dartThrown)
+        state.commitRound()
+
+        val roundTwo = listOf(drtOuterNineteen(), drtInnerSeven(), drtOuterNineteen())
+        roundTwo.forEach(state::dartThrown)
+        state.commitRound()
+
+        val roundThree = listOf(drtTrebleOne())
+        roundThree.forEach(state::dartThrown)
+
+        state.getRoundsForIndividual(pt1).shouldContainExactly(roundOne, roundThree)
+        state.getRoundsForIndividual(pt2).shouldContainExactly(listOf(roundTwo))
     }
 }
 
