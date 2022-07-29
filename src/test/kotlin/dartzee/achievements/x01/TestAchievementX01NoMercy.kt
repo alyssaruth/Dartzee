@@ -28,7 +28,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     {
         val g = insertRelevantGame()
         val team = insertTeam(gameId = g.rowId)
-        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, insertPlayer = true)
+        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, finalScore = 21, insertPlayer = true)
         insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
 
         factoryAchievement().populateForConversion(emptyList())
