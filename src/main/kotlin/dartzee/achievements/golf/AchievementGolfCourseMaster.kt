@@ -1,15 +1,14 @@
 package dartzee.achievements.golf
 
-import dartzee.`object`.SegmentType
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
-import java.net.URL
 
 class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
 {
@@ -24,6 +23,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
     override val pinkThreshold = 18
     override val maxValue = 18
     override val gameType = GameType.GOLF
+    override val allowedForTeams = true
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
 

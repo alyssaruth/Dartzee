@@ -7,6 +7,7 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -22,6 +23,21 @@ class TestAchievementX01Shanghai: AbstractMultiRowAchievementTest<AchievementX01
         insertDart(pt, score = 20, multiplier = 2, ordinal = 1, startingScore = 400, database = database)
         insertDart(pt, score = 20, multiplier = 3, ordinal = 2, startingScore = 360, database = database)
         insertDart(pt, score = 20, multiplier = 1, ordinal = 3, startingScore = 300, database = database)
+    }
+
+    @Test
+    fun `Should count shanghais thrown when part of a team`()
+    {
+        val g = insertRelevantGame()
+        val team = insertTeam(gameId = g.rowId)
+        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, insertPlayer = true)
+
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
+        insertDart(pt, score = 20, multiplier = 1, ordinal = 2, startingScore = 340)
+        insertDart(pt, score = 20, multiplier = 2, ordinal = 3, startingScore = 320)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getCountFromTable("Achievement") shouldBe 1
     }
 
     @Test

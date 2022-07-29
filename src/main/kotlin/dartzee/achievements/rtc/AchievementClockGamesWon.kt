@@ -4,7 +4,6 @@ import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievementGamesWon
 import dartzee.game.GameType
 import dartzee.utils.ResourceCache
-import java.net.URL
 
 class AchievementClockGamesWon : AbstractAchievementGamesWon()
 {

@@ -7,7 +7,7 @@ import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.ImageIcon
 
-class PlayerEntity(database: Database = mainDatabase): AbstractEntity<PlayerEntity>(database)
+open class PlayerEntity(database: Database = mainDatabase): AbstractEntity<PlayerEntity>(database)
 {
     //DB Fields
     var name = ""
@@ -41,7 +41,7 @@ class PlayerEntity(database: Database = mainDatabase): AbstractEntity<PlayerEnti
      */
     fun isHuman() = strategy.isEmpty()
     fun isAi() = strategy.isNotEmpty()
-    fun getModel() = DartsAiModel.fromJson(strategy)
+    open fun getModel() = DartsAiModel.fromJson(strategy)
 
     fun getAvatar() = PlayerImageEntity.retrieveImageIconForId(playerImageId)
     fun getFlag() = getPlayerFlag(isHuman())

@@ -1,7 +1,7 @@
 package dartzee.achievements.rtc
 
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
@@ -9,7 +9,6 @@ import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
-import java.net.URL
 
 class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
 {
@@ -17,6 +16,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
     override val desc = "Total number of 'Brucey Bonuses' executed in Round the Clock"
     override val achievementType = AchievementType.CLOCK_BRUCEY_BONUSES
     override val gameType = GameType.ROUND_THE_CLOCK
+    override val allowedForTeams = true
 
     override val redThreshold = 1
     override val orangeThreshold = 5

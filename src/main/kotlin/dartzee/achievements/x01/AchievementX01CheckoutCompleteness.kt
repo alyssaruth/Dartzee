@@ -17,6 +17,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
     override val desc = "Total unique doubles checked out on in X01"
     override val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
     override val gameType = GameType.X01
+    override val allowedForTeams = true
 
     override val redThreshold = 1
     override val orangeThreshold = 5

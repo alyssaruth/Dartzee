@@ -1,15 +1,15 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
+import dartzee.achievements.AchievementType
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -22,18 +22,30 @@ class TestAchievementX01CheckoutCompleteness: AbstractMultiRowAchievementTest<Ac
     override fun factoryAchievement() = AchievementX01CheckoutCompleteness()
 
     @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val g = insertRelevantGame()
+        val team = insertTeam(gameId = g.rowId)
+        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, insertPlayer = true)
+        insertDart(pt, startingScore = 2, score = 1, multiplier = 2)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
     fun `Should ignore non-checkout darts`()
     {
         val g = insertRelevantGame()
-        val p = insertPlayer()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
+        val pt = insertParticipant(gameId = g.rowId, insertPlayer = true)
 
         insertDart(pt, roundNumber = 1, startingScore = 100, score = 1, multiplier = 2)
         insertDart(pt, roundNumber = 1, startingScore = 2, score = 2, multiplier = 1)
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test

@@ -428,25 +428,33 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         val numberOfDarts = state.getScoreSoFar()
         state.participantFinished(finishingPosition, numberOfDarts)
 
-        updateAchievementsForFinish(getCurrentPlayerId(), finishingPosition, numberOfDarts)
+        updateAchievementsForFinish(getCurrentPlayerState(), finishingPosition, numberOfDarts)
 
         return finishingPosition
     }
 
-    open fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
+    open fun updateAchievementsForFinish(playerState: PlayerState, finishingPosition: Int, score: Int)
     {
-        if (finishingPosition == 1)
+        if (playerState.hasMultiplePlayers())
         {
-            val type = getWinAchievementType(gameEntity.gameType)
-            AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
+            // TODO - Team achievements
         }
-
-        //Update the 'best game' achievement
-        val aa = getBestGameAchievement(gameEntity.gameType) ?: return
-        val gameParams = aa.gameParams
-        if (gameParams == gameEntity.gameParams)
+        else
         {
-            AchievementEntity.updateAchievement(aa.achievementType, playerId, gameEntity.rowId, score)
+            val playerId = playerState.lastIndividual().playerId
+            if (finishingPosition == 1)
+            {
+                val type = getWinAchievementType(gameEntity.gameType)
+                AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
+            }
+
+            //Update the 'best game' achievement
+            val aa = getBestGameAchievement(gameEntity.gameType) ?: return
+            val gameParams = aa.gameParams
+            if (gameParams == gameEntity.gameParams)
+            {
+                AchievementEntity.updateAchievement(aa.achievementType, playerId, gameEntity.rowId, score)
+            }
         }
     }
 

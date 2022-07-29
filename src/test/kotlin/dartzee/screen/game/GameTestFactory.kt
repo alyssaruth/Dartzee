@@ -8,6 +8,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
 import dartzee.helper.insertDartsMatch
@@ -42,6 +43,9 @@ fun makeGolfGamePanel(currentPlayerId: String = randomGuid()) =
 fun makeX01GamePanel(currentPlayerId: String = randomGuid()) =
     GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = "501"), 1).apply { testInit(currentPlayerId) }
 
+fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = "501") =
+    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1).apply { testInit(pt) }
+
 fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
     GamePanelRoundTheClock(
         FakeDartsScreen(),
@@ -52,6 +56,11 @@ fun DartsGamePanel<*, *, *>.testInit(playerId: String)
 {
     val player = insertPlayer(playerId)
     val pt = makeSingleParticipant(player)
+    startNewGame(listOf(pt))
+}
+
+fun DartsGamePanel<*, *, *>.testInit(pt: IWrappedParticipant)
+{
     startNewGame(listOf(pt))
 }
 

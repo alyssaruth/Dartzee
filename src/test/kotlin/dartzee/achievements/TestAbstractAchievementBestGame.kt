@@ -40,6 +40,20 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
+    fun `Should ignore games that were completed as a team`()
+    {
+        val alice = insertPlayer(name = "Alice")
+        val game = insertRelevantGame()
+        val team = insertTeam(gameId = game.rowId)
+
+        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20, teamId = team.rowId)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getCountFromTable("Achievement") shouldBe 0
+    }
+
+    @Test
     fun `Should ignore games that are the wrong params`()
     {
         val alice = insertPlayer(name = "Alice")

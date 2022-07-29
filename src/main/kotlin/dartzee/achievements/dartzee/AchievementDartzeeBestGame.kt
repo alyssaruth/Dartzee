@@ -24,6 +24,7 @@ class AchievementDartzeeBestGame: AbstractAchievement()
     override val pinkThreshold = 60
     override val maxValue = 180
     override val gameType = GameType.DARTZEE
+    override val allowedForTeams = false
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {

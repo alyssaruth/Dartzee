@@ -2,9 +2,11 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.AbstractMultiRowAchievementTest
 import dartzee.db.GameEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.shouldBe
@@ -20,6 +22,21 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
     }
 
     @Test
+    fun `Should include games that were won as part of a team`()
+    {
+        val g = insertRelevantGame()
+        val team = insertTeam(gameId = g.rowId)
+        val p = insertPlayer()
+
+        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 3, teamId = team.rowId)
+        insertDart(pt, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
     fun `Should ignore games that were won on a different double`()
     {
         val g = insertRelevantGame()
@@ -30,7 +47,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -44,7 +61,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -60,7 +77,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 3
+        getAchievementCount() shouldBe 3
     }
 
     private fun insertSuccessfulParticipant(game: GameEntity, player: PlayerEntity, database: Database = mainDatabase)

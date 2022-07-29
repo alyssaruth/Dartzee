@@ -1,16 +1,16 @@
 package dartzee.achievements.x01
 
-import dartzee.`object`.Dart
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
+import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
+import dartzee.`object`.Dart
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.getSortedDartStr
@@ -21,6 +21,23 @@ import org.junit.jupiter.api.Test
 class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<AchievementX01HotelInspector>()
 {
     override fun factoryAchievement() = AchievementX01HotelInspector()
+
+    @Test
+    fun `Should include rounds that were completed as part of a team`()
+    {
+        val p = insertPlayer()
+        val g = insertRelevantGame()
+        val team = insertTeam(gameId = g.rowId)
+        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, playerId = p.rowId)
+
+        val validOne = listOf(Dart(5, 1), Dart(20, 1), Dart(1, 1))
+
+        insertDartsForPlayer(g, p, validOne, participant = pt)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getAchievementCount() shouldBe 1
+    }
 
     @Test
     fun `Should ignore rounds that contain any misses`()
@@ -34,7 +51,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -48,7 +65,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -61,7 +78,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -79,7 +96,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 1
+        getAchievementCount() shouldBe 1
     }
 
     @Test
@@ -92,7 +109,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 0
+        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -113,7 +130,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 1
+        getAchievementCount() shouldBe 1
 
         val a = AchievementEntity.retrieveAchievement(AchievementType.X01_HOTEL_INSPECTOR, p.rowId)!!
         a.gameIdEarned shouldBe g.rowId
@@ -133,7 +150,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         factoryAchievement().populateForConversion(emptyList())
 
-        getCountFromTable("Achievement") shouldBe 2
+        getAchievementCount() shouldBe 2
 
         val achievements = AchievementEntity().retrieveEntities("PlayerId = '${p.rowId}'")
         val methods = achievements.map{ it.achievementDetail }

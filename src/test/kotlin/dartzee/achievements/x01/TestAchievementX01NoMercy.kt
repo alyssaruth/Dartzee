@@ -6,6 +6,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
@@ -20,6 +21,18 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 21, database = database)
 
         insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1, database = database)
+    }
+
+    @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val g = insertRelevantGame()
+        val team = insertTeam(gameId = g.rowId)
+        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, finalScore = 21, insertPlayer = true)
+        insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 1
     }
 
     @Test

@@ -3,7 +3,6 @@ package e2e
 import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.clickChild
 import com.github.alexburlton.swingtest.getChild
-import dartzee.`object`.Dart
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AimDart
@@ -13,10 +12,18 @@ import dartzee.core.util.getSortedValues
 import dartzee.db.DartEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
+import dartzee.db.IParticipant
 import dartzee.db.PlayerEntity
 import dartzee.game.prepareParticipants
-import dartzee.helper.*
+import dartzee.helper.beastDartsModel
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertPlayerImage
+import dartzee.helper.makeDartsModel
+import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.helper.retrieveParticipant
+import dartzee.helper.wipeTable
 import dartzee.listener.DartboardListener
+import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.DartsGamePanel
@@ -27,11 +34,9 @@ import dartzee.utils.ResourceCache.ICON_RESUME
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
 import java.awt.Window
-import java.util.*
 import javax.swing.JButton
 import javax.swing.JToggleButton
 import javax.swing.SwingUtilities
@@ -102,32 +107,30 @@ fun DartsGamePanel<*, *, *>.startGame(players: List<PlayerEntity>)
 
 fun awaitGameFinish(game: GameEntity)
 {
-    awaitCondition { game.isFinished() }
+    awaitCondition(timeout = 30000) { game.isFinished() }
 }
 
-fun makePlayerWithModel(model: DartsAiModel): PlayerEntity
+fun makePlayerWithModel(model: DartsAiModel, name: String = "Clive", image: String = "BaboOne"): PlayerEntity
 {
-    val player = mockk<PlayerEntity>(relaxed = true)
-    every { player.getModel() } returns model
-    every { player.rowId } returns UUID.randomUUID().toString()
-    every { player.isAi() } returns true
-    every { player.isHuman() } returns false
-    return player
+    val playerImage = insertPlayerImage(resource = image)
 
+    val player = insertPlayer(playerImageId = playerImage.rowId, name = name)
+    return player.toDeterministicPlayer(model)
 }
 
 fun verifyState(panel: DartsGamePanel<*, *, *>,
-                        listener: DartboardListener,
-                        dartRounds: List<List<Dart>>,
-                        finalScore: Int,
-                        scoreSuffix: String = "",
-                        expectedScorerRows: Int = dartRounds.size)
+                listener: DartboardListener,
+                dartRounds: List<List<Dart>>,
+                finalScore: Int,
+                scoreSuffix: String = "",
+                expectedScorerRows: Int = dartRounds.size,
+                pt: IParticipant = retrieveParticipant()
+)
 {
     // ParticipantEntity on the database
-    val pt = retrieveParticipant()
     pt.finalScore shouldBe finalScore
     pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
-    pt.gameId shouldBe panel.gameEntity.rowId
+    //pt.gameId shouldBe panel.gameEntity.rowId
     pt.finishingPosition shouldBe -1
     pt.ordinal shouldBe 0
 
@@ -145,11 +148,6 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
 
     // Check that the dart entities on the database line up
     val dartEntities = DartEntity().retrieveEntities().sortedWith(compareBy( { it.roundNumber }, { it.ordinal }))
-    dartEntities.forEach {
-        it.participantId shouldBe pt.rowId
-        it.playerId shouldBe pt.playerId
-    }
-
     val chunkedDartEntities: List<List<DartEntity>> = dartEntities.groupBy { it.roundNumber }.getSortedValues().map { it.sortedBy { drt -> drt.ordinal } }
     val retrievedDartRounds = chunkedDartEntities.map { rnd -> rnd.map { drt -> Dart(drt.score, drt.multiplier) } }
     retrievedDartRounds shouldBe dartRounds
@@ -157,12 +155,18 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
 
 fun checkAchievementConversions(playerId: String)
 {
-    val transactionalState = retrieveAchievementsForPlayer(playerId)
-
+    checkAchievementConversions(listOf(playerId))
+}
+fun checkAchievementConversions(playerIds: List<String>)
+{
+    val transactionalStates = playerIds.associateWith(::retrieveAchievementsForPlayer)
     wipeTable(EntityName.Achievement)
-    val t = runConversionsWithProgressBar(getAllAchievements(), listOf(playerId))
+
+    val t = runConversionsWithProgressBar(getAllAchievements(), playerIds)
     t.join()
 
-    retrieveAchievementsForPlayer(playerId).shouldContainExactlyInAnyOrder(transactionalState)
-
+    transactionalStates.forEach { (playerId, transactionalState) ->
+        val retrieved = retrieveAchievementsForPlayer(playerId)
+        retrieved.shouldContainExactlyInAnyOrder(transactionalState)
+    }
 }
