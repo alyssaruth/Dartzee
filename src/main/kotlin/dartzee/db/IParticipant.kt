@@ -6,6 +6,7 @@ import java.sql.Timestamp
 
 interface IParticipant
 {
+    var gameId: String
     var ordinal: Int
     var finishingPosition: Int
     var finalScore: Int

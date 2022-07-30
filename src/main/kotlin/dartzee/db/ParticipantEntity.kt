@@ -13,7 +13,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 class ParticipantEntity(database: Database = mainDatabase): AbstractEntity<ParticipantEntity>(database), IParticipant
 {
     //DB Fields
-    var gameId = ""
+    override var gameId = ""
     var playerId = ""
     override var ordinal = -1
     override var finishingPosition = -1

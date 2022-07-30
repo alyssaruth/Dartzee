@@ -130,7 +130,7 @@ fun verifyState(panel: DartsGamePanel<*, *, *>,
     // ParticipantEntity on the database
     pt.finalScore shouldBe finalScore
     pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
-    //pt.gameId shouldBe panel.gameEntity.rowId
+    pt.gameId shouldBe panel.gameEntity.rowId
     pt.finishingPosition shouldBe -1
     pt.ordinal shouldBe 0
 

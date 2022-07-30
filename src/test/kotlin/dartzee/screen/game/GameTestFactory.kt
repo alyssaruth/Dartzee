@@ -58,6 +58,12 @@ fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
         insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()),
         1).apply { testInit(playerId) }
 
+fun makeRoundTheClockGamePanel(pt: IWrappedParticipant) =
+    GamePanelRoundTheClock(
+        FakeDartsScreen(),
+        insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()),
+        1).apply { testInit(pt) }
+
 fun DartsGamePanel<*, *, *>.testInit(playerId: String)
 {
     val player = insertPlayer(playerId)

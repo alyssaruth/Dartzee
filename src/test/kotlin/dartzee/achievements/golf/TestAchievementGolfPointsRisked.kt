@@ -1,13 +1,19 @@
 package dartzee.achievements.golf
 
-import dartzee.`object`.SegmentType
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
+import dartzee.achievements.AchievementType
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.AchievementSummary
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
+import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -25,7 +31,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
     fun `Should include games that were finished as part of a team`()
     {
         val pt = insertRelevantParticipant(team = true)
-        insertRiskedDart(pt.playerId, pt.gameId, SegmentType.INNER_SINGLE, 1)
+        insertRiskedDart(pt, SegmentType.INNER_SINGLE, 1)
 
         factoryAchievement().populateForConversion(emptyList())
         getAchievementCount() shouldBe 1
@@ -113,9 +119,16 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
                                  database: Database = mainDatabase)
     {
         val pt = insertParticipant(playerId = playerId, gameId = gameId, database = database)
+        insertRiskedDart(pt, segmentType, roundNumber, dtCreation, database)
+    }
 
+    private fun insertRiskedDart(pt: ParticipantEntity,
+                                 segmentType: SegmentType = SegmentType.OUTER_SINGLE,
+                                 roundNumber: Int = 1,
+                                 dtCreation: Timestamp = getSqlDateNow(),
+                                 database: Database = mainDatabase)
+    {
         insertDart(pt, roundNumber = roundNumber, ordinal = 1, score = roundNumber, multiplier = 1, segmentType = segmentType, dtCreation = dtCreation, database = database)
         insertDart(pt, roundNumber = roundNumber, ordinal = 2, score = roundNumber, multiplier = 2, segmentType = SegmentType.DOUBLE, dtCreation = dtCreation, database = database)
-
     }
 }

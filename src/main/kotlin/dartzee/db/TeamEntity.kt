@@ -11,7 +11,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 class TeamEntity(database: Database = mainDatabase): AbstractEntity<TeamEntity>(database), IParticipant
 {
     //DB Fields
-    var gameId = ""
+    override var gameId = ""
     override var ordinal = -1
     override var finishingPosition = -1
     override var finalScore = -1

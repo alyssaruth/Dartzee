@@ -2,9 +2,36 @@ package e2e
 
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
+import dartzee.drtDoubleEleven
+import dartzee.drtInnerEight
+import dartzee.drtInnerFourteen
+import dartzee.drtInnerSeven
+import dartzee.drtInnerSeventeen
+import dartzee.drtInnerTen
+import dartzee.drtInnerThree
+import dartzee.drtMissThree
+import dartzee.drtMissTwelve
+import dartzee.drtOuterEighteen
+import dartzee.drtOuterEleven
+import dartzee.drtOuterFifteen
+import dartzee.drtOuterFive
+import dartzee.drtOuterFour
+import dartzee.drtOuterNine
+import dartzee.drtOuterOne
+import dartzee.drtOuterSeven
+import dartzee.drtOuterSeventeen
+import dartzee.drtOuterSixteen
+import dartzee.drtOuterThree
+import dartzee.drtOuterTwelve
+import dartzee.drtOuterTwenty
+import dartzee.drtOuterTwo
+import dartzee.drtTrebleNineteen
+import dartzee.drtTrebleSix
+import dartzee.drtTrebleThirteen
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.prepareParticipants
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.beastDartsModel
@@ -12,9 +39,12 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.helper.predictableDartsModel
 import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import dartzee.zipDartRounds
+import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
@@ -92,5 +122,53 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         )
 
         checkAchievementConversions(player.rowId)
+    }
+
+    @Test
+    @Tag("e2e")
+    fun `E2E - In Order- Team of 2`()
+    {
+        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
+        val (gamePanel, listener) = setUpGamePanel(game)
+
+        val p1Rounds = listOf(
+            listOf(drtOuterOne(), drtOuterTwo(), drtMissThree()), // Target: 3
+            listOf(drtOuterFive(), drtTrebleSix(), drtOuterSeven(), drtInnerEight()), // Target: 9
+            listOf(drtOuterTwelve(), drtTrebleThirteen(), drtOuterEleven()), // Target: 14
+            listOf(drtOuterSeventeen(), drtOuterEighteen(), drtInnerSeven()), // Target: 19
+            listOf(drtOuterTwenty()) // Fin
+        )
+
+        val p2Rounds = listOf(
+            listOf(drtInnerSeventeen(), drtInnerThree(), drtOuterFour()), // Target: 5
+            listOf(drtOuterNine(), drtInnerTen(), drtDoubleEleven(), drtMissTwelve()), // Target: 12
+            listOf(drtInnerFourteen(), drtOuterFifteen(), drtOuterSixteen(), drtOuterThree()), // Target: 17
+            listOf(drtTrebleNineteen(), drtOuterFive(), drtOuterOne()) // Target: 20
+        )
+
+        val expectedRounds: List<List<Dart>> = p1Rounds.zipDartRounds(p2Rounds)
+
+        val p1AimDarts = p1Rounds.flatten().map { it.toAimDart() }
+        val p2AimDarts = p2Rounds.flatten().map { it.toAimDart() }
+
+        val p1Model = predictableDartsModel(gamePanel.dartboard, p1AimDarts)
+        val p2Model = predictableDartsModel(gamePanel.dartboard, p2AimDarts)
+
+        val p1 = makePlayerWithModel(p1Model, name = "Alan")
+        val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
+
+        val participants = prepareParticipants(game.rowId, listOf(p1, p2), true)
+        gamePanel.startNewGame(participants)
+        awaitGameFinish(game)
+
+        verifyState(gamePanel, listener, expectedRounds, finalScore = 28, pt = retrieveTeam(), scoreSuffix = " Darts")
+
+        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "3"),
+        )
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldBeEmpty()
+
+        checkAchievementConversions(listOf(p1.rowId, p2.rowId))
     }
 }
