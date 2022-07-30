@@ -40,6 +40,12 @@ fun makeGolfGamePanel(currentPlayerId: String = randomGuid()) =
         insertGame(gameType = GameType.GOLF, gameParams = "18"),
         1).apply { testInit(currentPlayerId) }
 
+fun makeGolfGamePanel(pt: IWrappedParticipant) =
+    GamePanelGolf(
+        FakeDartsScreen(),
+        insertGame(gameType = GameType.GOLF, gameParams = "18"),
+        1).apply { testInit(pt) }
+
 fun makeX01GamePanel(currentPlayerId: String = randomGuid()) =
     GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = "501"), 1).apply { testInit(currentPlayerId) }
 
