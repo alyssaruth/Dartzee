@@ -8,7 +8,6 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
-import dartzee.helper.insertTeam
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -28,10 +27,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
     @Test
     fun `Should include participants who were part of a team`()
     {
-        val g = insertRelevantGame()
-        val team = insertTeam(gameId = g.rowId)
-        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, insertPlayer = true)
-
+        val pt = insertRelevantParticipant(team = true)
         insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
 
         factoryAchievement().populateForConversion(emptyList())

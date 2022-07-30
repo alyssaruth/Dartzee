@@ -24,6 +24,16 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
+    fun `Should include games that were finished as part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+        insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
     fun `Should only insert the earliest example per hole`()
     {
         val pt = insertRelevantParticipant()

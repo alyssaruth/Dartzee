@@ -9,7 +9,6 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
-import dartzee.helper.insertTeam
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -24,9 +23,7 @@ class TestAchievementX01CheckoutCompleteness: AbstractMultiRowAchievementTest<Ac
     @Test
     fun `Should include participants who were part of a team`()
     {
-        val g = insertRelevantGame()
-        val team = insertTeam(gameId = g.rowId)
-        val pt = insertParticipant(gameId = g.rowId, teamId = team.rowId, insertPlayer = true)
+        val pt = insertRelevantParticipant(team = true)
         insertDart(pt, startingScore = 2, score = 1, multiplier = 2)
 
         factoryAchievement().populateForConversion(emptyList())

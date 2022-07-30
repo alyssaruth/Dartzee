@@ -7,7 +7,6 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
-import dartzee.helper.insertTeam
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotlintest.shouldBe
@@ -30,9 +29,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
     @Test
     fun `Should include rounds that were thrown as part of a team`()
     {
-        val g = insertRelevantGame()
-        val team = insertTeam(gameId = g.rowId)
-        val pt = insertParticipant(playerId = insertPlayer().rowId, gameId = g.rowId, teamId = team.rowId)
+        val pt = insertRelevantParticipant(team = true)
 
         insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
