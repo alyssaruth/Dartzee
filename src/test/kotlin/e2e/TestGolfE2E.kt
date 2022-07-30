@@ -1,26 +1,39 @@
 package e2e
 
 import dartzee.achievements.AchievementType
-import dartzee.ai.AimDart
+import dartzee.drtDoubleEleven
 import dartzee.drtDoubleFive
 import dartzee.drtDoubleNine
+import dartzee.drtDoubleSix
+import dartzee.drtDoubleSixteen
 import dartzee.drtDoubleThree
 import dartzee.drtInnerEight
+import dartzee.drtInnerFour
 import dartzee.drtInnerOne
+import dartzee.drtInnerSeven
 import dartzee.drtInnerSixteen
 import dartzee.drtInnerThree
 import dartzee.drtMissEight
+import dartzee.drtMissFour
 import dartzee.drtMissNine
+import dartzee.drtMissOne
+import dartzee.drtMissSeven
+import dartzee.drtMissThree
+import dartzee.drtMissTwo
 import dartzee.drtOuterFifteen
+import dartzee.drtOuterFour
+import dartzee.drtOuterNine
 import dartzee.drtOuterOne
 import dartzee.drtOuterSeven
 import dartzee.drtOuterSeventeen
 import dartzee.drtOuterSix
 import dartzee.drtOuterSixteen
 import dartzee.drtOuterThree
+import dartzee.drtOuterTwo
 import dartzee.drtTrebleFour
 import dartzee.drtTrebleSeventeen
 import dartzee.game.GameType
+import dartzee.game.prepareParticipants
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.beastDartsModel
@@ -28,9 +41,11 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.helper.predictableDartsModel
 import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import dartzee.zipDartRounds
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
@@ -87,7 +102,7 @@ class TestGolfE2E: AbstractRegistryTest()
             listOf(drtMissNine(), drtDoubleNine()), // 25, 7 gambled
         )
 
-        val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier, it.segmentType) }
+        val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
         val aiModel = predictableDartsModel(gamePanel.dartboard, aimDarts)
 
         val player = makePlayerWithModel(aiModel)
@@ -108,5 +123,60 @@ class TestGolfE2E: AbstractRegistryTest()
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
         checkAchievementConversions(player.rowId)
+    }
+
+    @Test
+    @Tag("e2e")
+    fun `E2E - 9 holes - Team of 2`()
+    {
+        val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
+        val (gamePanel, listener) = setUpGamePanel(game)
+
+        val p1Rounds = listOf(
+            listOf(drtMissOne(), drtOuterOne(), drtOuterOne()), // Gambled 1 in round 1. Total: 4
+            listOf(drtMissThree(), drtDoubleThree()), // CM: 3, Total: 9
+            listOf(drtDoubleFive()), // CM: 5, Total: 13
+            listOf(drtMissSeven(), drtInnerSeven()), // Total: 17
+            listOf(drtOuterNine(), drtOuterNine(), drtDoubleNine()), // Gambled 2, CM: 9, Total: 23
+        )
+
+        val p2Rounds = listOf(
+            listOf(drtMissTwo(), drtOuterTwo()), // Total: 8
+            listOf(drtOuterFour(), drtMissFour(), drtInnerFour()), // Gambled 1 in round 4, Total: 12
+            listOf(drtDoubleSix()), // CM: 6, Total: 14
+            listOf(drtDoubleSixteen(), drtDoubleEleven(), drtMissEight()) // Total: 22
+        )
+
+        val expectedRounds: List<List<Dart>> = p1Rounds.zipDartRounds(p2Rounds)
+
+        val p1AimDarts = p1Rounds.flatten().map { it.toAimDart() }
+        val p2AimDarts = p2Rounds.flatten().map { it.toAimDart() }
+
+        val p1Model = predictableDartsModel(gamePanel.dartboard, p1AimDarts, golfStopThresholds = mapOf(1 to 1, 2 to 3))
+        val p2Model = predictableDartsModel(gamePanel.dartboard, p2AimDarts, golfStopThresholds = mapOf(1 to 3, 2 to 4))
+
+        val p1 = makePlayerWithModel(p1Model, name = "Alan")
+        val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
+
+        val participants = prepareParticipants(game.rowId, listOf(p1, p2), true)
+        gamePanel.startNewGame(participants)
+        awaitGameFinish(game)
+
+        verifyState(gamePanel, listener, expectedRounds, finalScore = 23, pt = retrieveTeam(), expectedScorerRows = 10)
+
+        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "1"),
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, game.rowId, "9"),
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "3"),
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "5"),
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "9"),
+        )
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "4"),
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "6"),
+        )
+
+        checkAchievementConversions(listOf(p1.rowId, p2.rowId))
     }
 }
