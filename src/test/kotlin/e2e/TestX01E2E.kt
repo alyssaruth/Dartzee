@@ -3,16 +3,20 @@ package e2e
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.GameType
+import dartzee.game.prepareParticipants
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
+import dartzee.helper.makeDart
 import dartzee.helper.predictableDartsModel
 import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
+import dartzee.zipDartRounds
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
@@ -67,16 +71,16 @@ class TestX01E2E : AbstractRegistryTest()
         val (gamePanel, listener) = setUpGamePanel(game)
 
         val expectedRounds = listOf(
-                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)), //121
-                listOf(Dart(20, 3), Dart(20, 2), Dart(1, 1)),  // 20
-                listOf(Dart(15, 2)),                           // 20 (bust)
-                listOf(Dart(10, 1), Dart(5, 1), Dart(5, 0)),   //  5
-                listOf(Dart(5, 0), Dart(5, 0), Dart(5, 0)),    //  5
-                listOf(Dart(1, 1)),                            //  4 (mercy)
-                listOf(Dart(2, 2))                             //  0
+                listOf(makeDart(20, 3), makeDart(20, 3), makeDart(20, 3)), //121
+                listOf(makeDart(20, 3), makeDart(20, 2), makeDart(1, 1)),  // 20
+                listOf(makeDart(15, 2)),                           // 20 (bust)
+                listOf(makeDart(10, 1), makeDart(5, 1), makeDart(5, 0)),   //  5
+                listOf(makeDart(5, 0), makeDart(5, 0), makeDart(5, 0)),    //  5
+                listOf(makeDart(1, 1)),                            //  4 (mercy)
+                listOf(makeDart(2, 2))                             //  0
         )
 
-        val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier) }
+        val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
         val aiModel = predictableDartsModel(gamePanel.dartboard, aimDarts, mercyThreshold = 7)
 
         val player = makePlayerWithModel(aiModel)
@@ -94,5 +98,60 @@ class TestX01E2E : AbstractRegistryTest()
         )
 
         checkAchievementConversions(player.rowId)
+    }
+
+    @Test
+    @Tag("e2e")
+    fun `E2E - 501 - Team of 2`()
+    {
+        val game = insertGame(gameType = GameType.X01, gameParams = "501")
+        val (gamePanel, listener) = setUpGamePanel(game)
+
+        val p1Rounds = listOf(
+            listOf(makeDart(20, 3), makeDart(20, 3), makeDart(20, 3)), // 321
+            listOf(makeDart(20, 1), makeDart(20, 3), makeDart(5, 3)), // 179
+            listOf(makeDart(14, 1), makeDart(20, 1), makeDart(5, 1)), // 45
+            listOf(makeDart(3, 0), makeDart(3, 1), makeDart(16, 2)), // 19
+            listOf(makeDart(8, 0), makeDart(8, 1), makeDart(4, 1)), // 4
+        )
+
+        val p2Rounds = listOf(
+            listOf(makeDart(19, 1), makeDart(3, 3), makeDart(19, 1)), // 274
+            listOf(makeDart(19, 3), makeDart(17, 1), makeDart(7, 3)), // 84
+            listOf(makeDart(17, 1), makeDart(14, 0), makeDart(9, 1)), // 19
+            listOf(makeDart(3, 1)), // 16, mercied
+            listOf(makeDart(2, 0), makeDart(2, 2)) // Fin.
+        )
+
+        val expectedRounds = p1Rounds.zipDartRounds(p2Rounds)
+
+        val p1AimDarts = p1Rounds.flatten().map { it.toAimDart() }
+        val p2AimDarts = p2Rounds.flatten().map { it.toAimDart() }
+
+        val p1Model = predictableDartsModel(gamePanel.dartboard, p1AimDarts, mercyThreshold = 7)
+        val p2Model = predictableDartsModel(gamePanel.dartboard, p2AimDarts, mercyThreshold = 20)
+
+        val p1 = makePlayerWithModel(p1Model, name = "Alan")
+        val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
+
+        val participants = prepareParticipants(game.rowId, listOf(p1, p2), true)
+        gamePanel.startNewGame(participants)
+        awaitGameFinish(game)
+
+        verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 29, pt = retrieveTeam())
+
+        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+            AchievementSummary(AchievementType.X01_HIGHEST_BUST, 19, game.rowId),
+            AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId),
+        )
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 95, game.rowId),
+            AchievementSummary(AchievementType.X01_BEST_FINISH, 4, game.rowId),
+            AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 2, game.rowId)
+        )
+
+        checkAchievementConversions(listOf(p1.rowId, p2.rowId))
     }
 }
