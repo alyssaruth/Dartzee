@@ -15,7 +15,6 @@ import dartzee.utils.DartsColour
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
-import java.awt.Color
 
 class TestAbstractDartsScorer: AbstractTest()
 {
@@ -52,18 +51,18 @@ class TestAbstractDartsScorer: AbstractTest()
     }
 
     @Test
-    fun `Should correctly update colours when selected and deselected`()
+    fun `Should correctly update bold text when selected and deselected`()
     {
         val scorer = TestDartsScorer()
         scorer.init()
 
-        val state = TestPlayerState(insertParticipant(), isActive = false)
+        val state = TestPlayerState(insertParticipant(insertPlayer = true), isActive = false)
         scorer.stateChanged(state)
-        scorer.lblName.foreground shouldBe Color.BLACK
+        scorer.lblName.text shouldBe "<html>Clive</html>"
 
         state.updateActive(true)
         scorer.stateChanged(state)
-        scorer.lblName.foreground shouldBe Color.RED
+        scorer.lblName.text shouldBe "<html><b>Clive</b></html>"
     }
 
     @Test

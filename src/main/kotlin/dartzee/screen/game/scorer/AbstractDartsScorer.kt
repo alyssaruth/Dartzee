@@ -8,7 +8,10 @@ import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.PlayerStateListener
 import net.miginfocom.swing.MigLayout
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Dimension
+import java.awt.FlowLayout
+import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
@@ -37,7 +40,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
     {
         runOnEventThreadBlocking {
             model.clear()
-            setSelected(state.isActive, state.currentRoundNumber())
+            setSelected(state)
 
             stateChangedImpl(state)
 
@@ -55,10 +58,11 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
         updateResultColourForPosition(state.wrappedParticipant.participant.finishingPosition)
     }
 
-    private fun setSelected(selected: Boolean, roundNumber: Int)
+    private fun setSelected(state: PlayerState)
     {
-        lblName.foreground = if (selected) Color.RED else Color.BLACK
-        lblAvatar.setSelected(selected, roundNumber)
+        val currentIndividual = state.currentIndividual()
+        lblName.text = state.wrappedParticipant.getParticipantNameHtml(state.isActive, currentIndividual)
+        lblAvatar.setSelected(state.isActive, state.currentRoundNumber())
     }
 
     protected open fun stateChangedImpl(state: PlayerState) {}

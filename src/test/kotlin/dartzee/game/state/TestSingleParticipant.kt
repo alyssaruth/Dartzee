@@ -19,6 +19,7 @@ class TestSingleParticipant: AbstractTest()
         singlePt.getIndividual(1) shouldBe pt
         singlePt.getIndividual(2) shouldBe pt
         singlePt.getUniqueParticipantName().value shouldBe "Alyssa"
-        singlePt.getParticipantName().value shouldBe "Alyssa"
+        singlePt.getParticipantNameHtml(false) shouldBe "<html>Alyssa</html>"
+        singlePt.getParticipantNameHtml(true, pt) shouldBe "<html><b>Alyssa</b></html>"
     }
 }
