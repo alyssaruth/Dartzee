@@ -7,6 +7,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
+import dartzee.helper.testRules
 import dartzee.utils.Database
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.shouldBe
@@ -34,11 +35,11 @@ class TestAchievementDartzeeBingo: AbstractMultiRowAchievementTest<AchievementDa
     }
 
     @Test
-    fun `should ignore games with fewer than 5 rules`()
+    fun `should ignore games with fewer than 5 rounds`()
     {
         val pt = insertRelevantParticipant(finalScore = 120)
 
-        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_RULES - 1)
+        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertDartzeeRules(pt.gameId, shortList)
 
         factoryAchievement().populateForConversion(emptyList())

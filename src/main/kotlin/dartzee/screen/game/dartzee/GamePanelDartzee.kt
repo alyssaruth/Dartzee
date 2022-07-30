@@ -1,7 +1,7 @@
 package dartzee.screen.game.dartzee
 
 import dartzee.achievements.AchievementType
-import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_RULES
+import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_ROUNDS
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.dartzee.DartzeeRoundResult
@@ -163,7 +163,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun updateAchievementsForFinish(playerState: DartzeePlayerState, finishingPosition: Int, score: Int)
     {
         super.updateAchievementsForFinish(playerState, finishingPosition, score)
-        if (totalRounds < DARTZEE_ACHIEVEMENT_MIN_RULES)
+        if (totalRounds < DARTZEE_ACHIEVEMENT_MIN_ROUNDS)
         {
             return
         }

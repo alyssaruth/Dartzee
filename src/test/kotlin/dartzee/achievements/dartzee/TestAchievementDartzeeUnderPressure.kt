@@ -11,6 +11,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
+import dartzee.helper.testRules
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.insertDartzeeRules
@@ -41,7 +42,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     fun `Should ignore games with fewer than 5 rounds`()
     {
         val pt = insertRelevantParticipant(finalScore = 120)
-        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_RULES - 1)
+        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertValidRoundResult(pt, shortList)
 
         factoryAchievement().populateForConversion(emptyList())
@@ -97,8 +98,8 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
 
         val a = retrieveAchievement()
         a.achievementType shouldBe AchievementType.DARTZEE_UNDER_PRESSURE
-        a.achievementCounter shouldBe 60
-        a.achievementDetail shouldBe "20 → 20 → 20"
+        a.achievementCounter shouldBe 50
+        a.achievementDetail shouldBe "Total = 50"
         a.gameIdEarned shouldBe pt.gameId
     }
 
@@ -123,5 +124,5 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         DartzeeRoundResultEntity.factoryAndSave(roundResult, participant, rules.size + 1, database)
     }
 
-    private fun getHardestRulePass(rules: List<DartzeeRuleDto>) = DartzeeRoundResult(rules.size, true, 60)
+    private fun getHardestRulePass(rules: List<DartzeeRuleDto>) = DartzeeRoundResult(rules.size, true, 50)
 }

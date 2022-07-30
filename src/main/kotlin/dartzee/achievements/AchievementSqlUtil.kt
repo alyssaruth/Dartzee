@@ -1,17 +1,18 @@
 package dartzee.achievements
 
-import dartzee.`object`.*
-import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_RULES
+import dartzee.achievements.dartzee.DARTZEE_ACHIEVEMENT_MIN_ROUNDS
 import dartzee.db.AchievementEntity
 import dartzee.db.BulkInserter
 import dartzee.db.EntityName
 import dartzee.game.GameType
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.getQuotedIdStr
 import java.sql.ResultSet
 
 const val X01_ROUNDS_TABLE = "X01Rounds"
 const val LAST_ROUND_FROM_PARTICIPANT = "CEIL(CAST(pt.FinalScore AS DECIMAL)/3)"
+const val LAST_ROUND_FROM_TEAM = "CEIL(CAST(t.FinalScore AS DECIMAL)/3)"
 
 fun getGolfSegmentCases(): String
 {
@@ -93,7 +94,7 @@ fun buildQualifyingDartzeeGamesTable(database: Database): String?
     sb.append(" AND dr.EntityName = '${EntityName.Game}'")
     sb.append(" AND g.GameType = '${GameType.DARTZEE}'")
     sb.append(" GROUP BY g.RowId, dt.Name")
-    sb.append(" HAVING COUNT(1) >= $DARTZEE_ACHIEVEMENT_MIN_RULES")
+    sb.append(" HAVING COUNT(1) >= ${DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 1}")
 
     if (!database.executeUpdate(sb)) return null
 

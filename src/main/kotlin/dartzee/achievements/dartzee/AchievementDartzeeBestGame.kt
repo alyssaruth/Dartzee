@@ -10,7 +10,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-const val DARTZEE_ACHIEVEMENT_MIN_RULES = 5
+const val DARTZEE_ACHIEVEMENT_MIN_ROUNDS = 5
 
 /**
  * Measured as average-per-round, to prevent "gaming" it by having a massive set of easy rules

@@ -58,7 +58,13 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
             dartzeePlayStyle)
 }
 
-fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mercyThreshold: Int? = null, golfStopThresholds: Map<Int, Int>? = null): DartsAiModel
+fun predictableDartsModel(
+    dartboard: Dartboard,
+    dartsToThrow: List<AimDart>,
+    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE,
+    mercyThreshold: Int? = null,
+    golfStopThresholds: Map<Int, Int>? = null,
+): DartsAiModel
 {
     val defaultModel = DartsAiModel.new()
     val hmDartNoToStopThreshold = golfStopThresholds ?: defaultModel.hmDartNoToStopThreshold
@@ -66,6 +72,7 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
     val model = mockk<DartsAiModel>()
     every { model.mercyThreshold } returns mercyThreshold
     every { model.hmDartNoToStopThreshold } returns hmDartNoToStopThreshold
+    every { model.dartzeePlayStyle } returns dartzeePlayStyle
 
     val throwDartFn = makeThrowDartFn(dartsToThrow, dartboard)
     val actualFn = {
@@ -73,6 +80,8 @@ fun predictableDartsModel(dartboard: Dartboard, dartsToThrow: List<AimDart>, mer
         dartboard.dartThrown(pt)
     }
 
+    every { model.throwScoringDart(any()) } answers { throwDartFn() }
+    every { model.throwDartzeeDart(any(), any(), any()) } answers { actualFn() }
     every { model.throwX01Dart(any(), any()) } answers { actualFn() }
     every { model.throwClockDart(any(), any(), any()) } answers { actualFn() }
     every { model.throwGolfDart(any(), any(), any()) } answers { actualFn() }

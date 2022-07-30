@@ -3,6 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.AchievementType
 import dartzee.achievements.LAST_ROUND_FROM_PARTICIPANT
+import dartzee.achievements.LAST_ROUND_FROM_TEAM
 import dartzee.achievements.appendPlayerSql
 import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
@@ -30,11 +31,12 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
     {
         val sb = StringBuilder()
         sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished AS DtAchieved")
-        sb.append(" FROM Game g, Participant pt, Dart drt")
+        sb.append(" FROM Game g, Dart drt, Participant pt")
+        sb.append(" LEFT OUTER JOIN Team t ON (pt.TeamId = t.RowId)")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.X01}'")
-        sb.append(" AND pt.FinalScore > -1")
-        sb.append(" AND $LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber")
+        sb.append(" AND (pt.FinalScore > -1 OR t.FinalScore > -1)")
+        sb.append(" AND ($LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber OR $LAST_ROUND_FROM_TEAM = drt.RoundNumber)")
         sb.append(" AND pt.RowId = drt.ParticipantId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         sb.append(" AND drt.Ordinal = 1")
