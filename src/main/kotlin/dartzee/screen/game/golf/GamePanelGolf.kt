@@ -67,7 +67,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
         finishRound()
     }
 
-    fun unlockAchievements()
+    private fun unlockAchievements()
     {
         val size = getDartsThrown().size
         val dartsRisked = getDartsThrown().subList(0, size - 1)

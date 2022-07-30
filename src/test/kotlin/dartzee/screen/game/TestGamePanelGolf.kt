@@ -35,9 +35,7 @@ class TestGamePanelGolf: AbstractTest()
                 Dart(20, 3, segmentType = SegmentType.TREBLE),
                 Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE))
 
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId) shouldBe null
     }
@@ -53,9 +51,7 @@ class TestGamePanelGolf: AbstractTest()
                 Dart(1, 3, segmentType = SegmentType.OUTER_SINGLE),
                 Dart(1, 1, segmentType = SegmentType.TREBLE))
 
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId)!!
         a.achievementCounter shouldBe 4
@@ -71,9 +67,7 @@ class TestGamePanelGolf: AbstractTest()
             Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE),
             Dart(1, 1, segmentType = SegmentType.INNER_SINGLE))
 
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId)!!
         a.achievementCounter shouldBe 1
@@ -86,9 +80,7 @@ class TestGamePanelGolf: AbstractTest()
         val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(1, 1, segmentType = SegmentType.TREBLE))
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId) shouldBe null
     }
@@ -103,9 +95,7 @@ class TestGamePanelGolf: AbstractTest()
         val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(1, 3, segmentType = SegmentType.TREBLE))
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
@@ -116,9 +106,7 @@ class TestGamePanelGolf: AbstractTest()
         val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(2, 2, segmentType = SegmentType.DOUBLE))
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
@@ -129,9 +117,7 @@ class TestGamePanelGolf: AbstractTest()
         val panel = makeGolfGamePanel(playerId)
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE), Dart(1, 3, segmentType = SegmentType.TREBLE))
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
@@ -143,9 +129,7 @@ class TestGamePanelGolf: AbstractTest()
         insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "2")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         val rows = AchievementEntity().retrieveEntities("PlayerId = '$playerId' AND AchievementType = '${AchievementType.GOLF_COURSE_MASTER}'")
         rows.size shouldBe 2
@@ -159,9 +143,7 @@ class TestGamePanelGolf: AbstractTest()
         val originalRow = insertAchievement(playerId = playerId, type = AchievementType.GOLF_COURSE_MASTER, achievementDetail = "1")
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
-        panel.setDartsThrown(darts)
-
-        panel.unlockAchievements()
+        panel.addCompletedRound(darts)
 
         val newRow = AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId)!!
         newRow.rowId shouldBe originalRow.rowId
