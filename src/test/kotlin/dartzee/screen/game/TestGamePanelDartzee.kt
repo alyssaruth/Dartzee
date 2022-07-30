@@ -10,6 +10,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -18,6 +19,7 @@ import dartzee.doubleTwenty
 import dartzee.game.GameType
 import dartzee.game.loadParticipants
 import dartzee.helper.AbstractTest
+import dartzee.helper.AchievementSummary
 import dartzee.helper.beastDartsModel
 import dartzee.helper.getAchievementCount
 import dartzee.helper.getAchievementRows
@@ -29,6 +31,8 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDart
 import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.preparePlayers
+import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.scoreEighteens
 import dartzee.helper.totalIsFifty
 import dartzee.helper.twoBlackOneWhite
@@ -45,6 +49,7 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
@@ -499,6 +504,116 @@ class TestGamePanelDartzee: AbstractTest()
 
         carousel.getAvailableRuleTiles().size shouldBe 3
         carousel.getAvailableRuleTiles().first().dto shouldBe twoBlackOneWhite
+    }
+
+    @Test
+    fun `Should update achievements correctly for a team game`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val (p1, p2) = preparePlayers(2)
+        val game = insertGame(gameType = GameType.DARTZEE)
+        val team = makeTeam(p1, p2, gameId = game.rowId)
+
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.startNewGame(listOf(team))
+
+        // P1 - Scoring round
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.OUTER_SINGLE))
+        panel.btnConfirm.doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 26
+
+        // P2 - IOI
+        panel.dartThrown(makeDart(20, 1, SegmentType.INNER_SINGLE))
+        panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 52
+
+        // P1 - Score eighteens
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 88
+
+        // P2 - Fail
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 44
+
+        // P1 - Score 50
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(12, 1, SegmentType.OUTER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 94
+
+        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactly(
+            AchievementSummary(AchievementType.DARTZEE_UNDER_PRESSURE, 50, game.rowId, totalIsFifty.getDisplayName())
+        )
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactly(
+            AchievementSummary(AchievementType.DARTZEE_HALVED, 44, game.rowId)
+        )
+    }
+
+    @Test
+    fun `Should not unlock flawless achievement for a team game`()
+    {
+        InjectedThings.dartzeeCalculator = DartzeeCalculator()
+
+        val (p1, p2) = preparePlayers(2)
+        val game = insertGame(gameType = GameType.DARTZEE)
+        val team = makeTeam(p1, p2, gameId = game.rowId)
+
+        val carousel = DartzeeRuleCarousel(rules)
+        val summaryPanel = DartzeeRuleSummaryPanel(carousel)
+        val panel = makeGamePanel(rules, summaryPanel, game)
+        panel.startNewGame(listOf(team))
+
+        // P1 - Scoring round
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.OUTER_SINGLE))
+        panel.btnConfirm.doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 26
+
+        // P2 - IOI
+        panel.dartThrown(makeDart(20, 1, SegmentType.INNER_SINGLE))
+        panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 52
+
+        // P1 - Score eighteens
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 88
+
+        // P2 - 2B1W
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 131
+
+        // P1 - Score 50
+        panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(18, 1, SegmentType.OUTER_SINGLE))
+        panel.dartThrown(makeDart(12, 1, SegmentType.OUTER_SINGLE))
+        carousel.getDisplayedTiles().first().doClick()
+        panel.getPlayerState().getScoreSoFar() shouldBe 181
+
+        AchievementEntity().countWhere("AchievementType = '${AchievementType.DARTZEE_FLAWLESS}'") shouldBe 0
     }
 
     private fun GamePanelDartzee.getPlayerState() = getPlayerStates().first()

@@ -27,10 +27,10 @@ fun makeSingleParticipant(player: PlayerEntity, gameId: String? = null) =
     makeSingleParticipant(insertParticipant(playerId = player.rowId, gameId = gameId ?: insertGame().rowId))
 fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant(insertPlayer = true)) = SingleParticipant(pt)
 
-fun makeTeam(vararg players: PlayerEntity): TeamParticipant
+fun makeTeam(vararg players: PlayerEntity, gameId: String = randomGuid()): TeamParticipant
 {
-    val team = insertTeam()
-    val pts = players.map { insertParticipant(playerId = it.rowId) }
+    val team = insertTeam(gameId = gameId)
+    val pts = players.map { insertParticipant(playerId = it.rowId, gameId = gameId) }
     return TeamParticipant(team, pts)
 }
 

@@ -177,7 +177,6 @@ class TestGamePanelX01: AbstractTest()
         panel.addCompletedRound(listOf(Dart(20, 2))) // 1 for P2
         panel.addCompletedRound(listOf(Dart(18, 2))) // 1 for P1
 
-        println(retrieveAchievementsForPlayer(p1.rowId))
         retrieveAchievementsForPlayer(p1.rowId).shouldContain(
             AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, gameId)
         )
