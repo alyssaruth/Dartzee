@@ -1,12 +1,16 @@
 package dartzee.achievements.dartzee
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.buildQualifyingDartzeeGamesTable
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-const val DARTZEE_ACHIEVEMENT_MIN_RULES = 5
+const val DARTZEE_ACHIEVEMENT_MIN_ROUNDS = 5
 
 /**
  * Measured as average-per-round, to prevent "gaming" it by having a massive set of easy rules
@@ -38,6 +42,7 @@ class AchievementDartzeeBestGame: AbstractAchievement()
         sb.append(" FROM ${EntityName.Participant} pt, $dartzeeGames zz")
         sb.append(" WHERE pt.GameId = zz.GameId")
         sb.append(" AND pt.FinalScore > -1")
+        sb.append(" AND pt.TeamId = ''")
         appendPlayerSql(sb, playerIds)
 
         if (!database.executeUpdate(sb)) return

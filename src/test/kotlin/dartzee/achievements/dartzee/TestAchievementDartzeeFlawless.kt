@@ -9,7 +9,12 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.insertDartzeeTemplate
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
+import dartzee.helper.testRules
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.insertDartzeeRules
@@ -28,10 +33,20 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
     }
 
     @Test
-    fun `Should ignore games with fewer than 5 rules`()
+    fun `Should ignore participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(finalScore = 120, team = true)
+        insertSuccessRoundResults(pt, testRules)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 0
+    }
+
+    @Test
+    fun `Should ignore games with fewer than 5 rounds`()
     {
         val pt = insertRelevantParticipant(finalScore = 120)
-        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_RULES - 1)
+        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertSuccessRoundResults(pt, shortList)
 
         factoryAchievement().populateForConversion(emptyList())

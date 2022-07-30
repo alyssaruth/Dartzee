@@ -112,7 +112,8 @@ class TestX01E2E : AbstractRegistryTest()
             listOf(makeDart(20, 1), makeDart(20, 3), makeDart(5, 3)), // 179
             listOf(makeDart(14, 1), makeDart(20, 1), makeDart(5, 1)), // 45
             listOf(makeDart(3, 0), makeDart(3, 1), makeDart(16, 2)), // 19
-            listOf(makeDart(8, 0), makeDart(8, 1), makeDart(4, 1)), // 4
+            listOf(makeDart(8, 0), makeDart(8, 0), makeDart(16, 0)), // 16
+            listOf(makeDart(1, 1), makeDart(4, 0), makeDart(4, 2)), // Fin
         )
 
         val p2Rounds = listOf(
@@ -120,7 +121,7 @@ class TestX01E2E : AbstractRegistryTest()
             listOf(makeDart(19, 3), makeDart(17, 1), makeDart(7, 3)), // 84
             listOf(makeDart(17, 1), makeDart(14, 0), makeDart(9, 1)), // 19
             listOf(makeDart(3, 1)), // 16, mercied
-            listOf(makeDart(2, 0), makeDart(2, 2)) // Fin.
+            listOf(makeDart(8, 0), makeDart(8, 0), makeDart(7, 1)) // 9
         )
 
         val expectedRounds = p1Rounds.zipDartRounds(p2Rounds)
@@ -138,18 +139,19 @@ class TestX01E2E : AbstractRegistryTest()
         gamePanel.startNewGame(participants)
         awaitGameFinish(game)
 
-        verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 29, pt = retrieveTeam())
+        verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 33, pt = retrieveTeam())
 
         retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
             AchievementSummary(AchievementType.X01_HIGHEST_BUST, 19, game.rowId),
             AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId),
+            AchievementSummary(AchievementType.X01_NO_MERCY, -1, game.rowId, "9"),
+            AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 4, game.rowId),
+            AchievementSummary(AchievementType.X01_BEST_FINISH, 9, game.rowId),
         )
 
         retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 95, game.rowId),
-            AchievementSummary(AchievementType.X01_BEST_FINISH, 4, game.rowId),
-            AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 2, game.rowId)
         )
 
         checkAchievementConversions(listOf(p1.rowId, p2.rowId))

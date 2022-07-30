@@ -23,6 +23,16 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
     }
 
     @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+        insertDartzeeRoundResult(pt, success = false, score = -100)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
     fun `Should not include successful rounds`()
     {
         val pt = insertRelevantParticipant()

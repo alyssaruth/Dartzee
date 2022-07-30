@@ -1,20 +1,24 @@
 package dartzee.helper
 
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
-import dartzee.dartzee.dart.*
-import dartzee.dartzee.getAllAggregateRules
 import dartzee.dartzee.aggregate.AbstractDartzeeRuleTotalSize
 import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
+import dartzee.dartzee.dart.AbstractDartzeeDartRule
+import dartzee.dartzee.dart.DartzeeDartRuleColour
+import dartzee.dartzee.dart.DartzeeDartRuleInner
+import dartzee.dartzee.dart.DartzeeDartRuleOuter
+import dartzee.dartzee.dart.DartzeeDartRuleScore
+import dartzee.dartzee.getAllAggregateRules
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.ParticipantEntity
 import dartzee.game.state.DartzeePlayerState
 import dartzee.game.state.SingleParticipant
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getAllPossibleSegments
 
@@ -36,6 +40,8 @@ val totalIsFifty = makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<Dartzee
 val allTwenties = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(20), makeScoreRule(20),
         inOrder = true,
         calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments().filter { it.score == 20 && !it.isMiss() }))
+
+val testRules = listOf(twoBlackOneWhite, innerOuterInner, scoreEighteens, totalIsFifty)
 
 fun makeDartzeeRuleDto(dart1Rule: AbstractDartzeeDartRule? = null,
                        dart2Rule: AbstractDartzeeDartRule? = null,
