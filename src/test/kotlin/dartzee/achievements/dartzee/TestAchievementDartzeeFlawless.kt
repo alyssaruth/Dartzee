@@ -9,7 +9,11 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.insertDartzeeTemplate
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.insertDartzeeRules
@@ -25,6 +29,16 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 275, database = database)
 
         insertSuccessRoundResults(pt, testRules, database)
+    }
+
+    @Test
+    fun `Should ignore participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(finalScore = 120, team = true)
+        insertSuccessRoundResults(pt, testRules)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 0
     }
 
     @Test

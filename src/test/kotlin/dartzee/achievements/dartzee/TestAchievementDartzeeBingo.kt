@@ -24,6 +24,16 @@ class TestAchievementDartzeeBingo: AbstractMultiRowAchievementTest<AchievementDa
     }
 
     @Test
+    fun `Should ignore participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(finalScore = 120, team = true)
+        insertDartzeeRules(pt.gameId, testRules)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 0
+    }
+
+    @Test
     fun `should ignore games with fewer than 5 rules`()
     {
         val pt = insertRelevantParticipant(finalScore = 120)

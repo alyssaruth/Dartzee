@@ -8,7 +8,9 @@ import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.insertDartzeeRules
@@ -23,6 +25,16 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     {
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 275, database = database)
         insertValidRoundResult(pt, testRules, database)
+    }
+
+    @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(finalScore = 120, team = true)
+        insertValidRoundResult(pt, testRules)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 1
     }
 
     @Test

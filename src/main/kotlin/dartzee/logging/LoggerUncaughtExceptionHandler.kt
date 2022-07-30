@@ -36,7 +36,7 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler
     {
         val message = t.message ?: return false
 
-        return message.contains("UIResource cannot be cast to class javax.swing.Painter")
+        return message.contains("cannot be cast to class javax.swing.Painter")
                 || message.contains("UIResource cannot be cast to class java.awt.Color")
     }
 }

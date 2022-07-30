@@ -3,7 +3,9 @@ package dartzee.achievements.dartzee
 import dartzee.achievements.AbstractAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.shouldBe
@@ -19,6 +21,16 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 125, database = database)
 
         insertDartzeeRules(g.rowId, testRules, database)
+    }
+
+    @Test
+    fun `should ignore participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(finalScore = 120, team = true)
+        insertDartzeeRules(pt.gameId, testRules)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 0
     }
 
     @Test
