@@ -88,6 +88,11 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
 
     private fun updateBestStreakAchievement()
     {
+        if (getCurrentPlayerState().hasMultiplePlayers())
+        {
+            return
+        }
+
         val longestStreakThisGame = getCurrentPlayerState().getLongestStreak()
         if (longestStreakThisGame > 1)
         {
