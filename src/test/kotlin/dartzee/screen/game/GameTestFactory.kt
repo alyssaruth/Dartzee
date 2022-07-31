@@ -25,7 +25,7 @@ import dartzee.screen.game.x01.GameStatisticsPanelX01
 
 fun makeSingleParticipant(player: PlayerEntity, gameId: String? = null) =
     makeSingleParticipant(insertParticipant(playerId = player.rowId, gameId = gameId ?: insertGame().rowId))
-fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant(insertPlayer = true)) = SingleParticipant(pt)
+fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant()) = SingleParticipant(pt)
 
 fun makeTeam(vararg players: PlayerEntity, gameId: String = randomGuid()): TeamParticipant
 {

@@ -1,13 +1,13 @@
 package e2e
 
-import com.github.alexburlton.swingtest.getChild
-import dartzee.game.GameLauncher
 import com.github.alexburlton.swingtest.awaitCondition
+import com.github.alexburlton.swingtest.getChild
 import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameLaunchParams
+import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.helper.AbstractRegistryTest
@@ -97,10 +97,10 @@ class TestMatchE2E: AbstractRegistryTest()
         matchScreen.title shouldBe "Match #1 (First to 2 - 501)"
 
         val summaryPanel = matchScreen.getChild<MatchSummaryPanel<*>>()
-        val winnerScorer = summaryPanel.getChild<MatchScorer> { it.playerName == "Winner" }
+        val winnerScorer = summaryPanel.getChild<MatchScorer> { it.playerName.contains("Winner") }
         winnerScorer.lblResult.text shouldBe "2"
 
-        val loserScorer = summaryPanel.getChild<MatchScorer> { it.playerName == "Loser" }
+        val loserScorer = summaryPanel.getChild<MatchScorer> { it.playerName.contains("Loser") }
         loserScorer.lblResult.text shouldBe "0"
 
         // Select the first game

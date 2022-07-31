@@ -3,7 +3,6 @@ package dartzee.game.state
 import dartzee.db.IParticipant
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
-import dartzee.game.ParticipantName
 import dartzee.game.UniqueParticipantName
 import dartzee.utils.splitAvatar
 import javax.swing.ImageIcon
@@ -22,7 +21,21 @@ sealed interface IWrappedParticipant
     fun ordinal() = participant.ordinal
     fun getIndividual(roundNumber: Int): ParticipantEntity
     fun getUniqueParticipantName() = UniqueParticipantName(individuals.map { it.getPlayerName() }.sorted().joinToString(" & "))
-    fun getParticipantName() = ParticipantName(individuals.joinToString(" & ") { it.getPlayerName() })
+    fun getParticipantNameHtml(active: Boolean, currentParticipant: ParticipantEntity? = null): String
+    {
+        val contents = individuals.joinToString(" &#38; ") { pt ->
+            if (active && pt == currentParticipant)
+            {
+                "<b>${pt.getPlayerName()}</b>"
+            }
+            else
+            {
+                pt.getPlayerName()
+            }
+        }
+
+        return "<html>$contents</html>"
+    }
     fun getAvatar(roundNumber: Int, selected: Boolean): ImageIcon
 }
 

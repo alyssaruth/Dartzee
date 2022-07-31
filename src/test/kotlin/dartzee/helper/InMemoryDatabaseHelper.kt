@@ -1,16 +1,30 @@
 package dartzee.helper
 
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRuleCalculationResult
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.DartEntity
+import dartzee.db.DartsMatchEntity
+import dartzee.db.DartzeeRoundResultEntity
+import dartzee.db.DartzeeRuleEntity
+import dartzee.db.DartzeeTemplateEntity
+import dartzee.db.DatabaseMigrator
+import dartzee.db.DeletionAuditEntity
+import dartzee.db.EntityName
+import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
+import dartzee.db.PlayerEntity
+import dartzee.db.PlayerImageEntity
+import dartzee.db.TeamEntity
+import dartzee.db.X01FinishEntity
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.LoggingCode
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.mainDatabase
@@ -119,12 +133,11 @@ fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timesta
 
 fun insertParticipant(uuid: String = randomGuid(),
                       gameId: String = randomGuid(),
-                      playerId: String = randomGuid(),
+                      playerId: String = insertPlayer().rowId,
                       ordinal: Int = 1,
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
                       dtFinished: Timestamp = DateStatics.END_OF_TIME,
-                      insertPlayer: Boolean = false,
                       teamId: String = "",
                       database: Database = mainDatabase): ParticipantEntity
 {
@@ -137,11 +150,6 @@ fun insertParticipant(uuid: String = randomGuid(),
     pe.finalScore = finalScore
     pe.dtFinished = dtFinished
     pe.teamId = teamId
-
-    if (insertPlayer)
-    {
-        pe.playerId = insertPlayer().rowId
-    }
 
     pe.saveToDatabase()
 

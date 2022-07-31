@@ -9,7 +9,12 @@ import dartzee.db.GameEntity
 import dartzee.db.PlayerImageEntity
 import dartzee.game.loadParticipants
 import dartzee.game.state.X01PlayerState
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.makeX01PlayerState
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.MatchStatisticsPanelX01
@@ -167,8 +172,8 @@ class TestDartsMatchScreen: AbstractTest()
         gameTwo.dartsMatchId shouldBe match.rowId
 
         val participants = loadParticipants(gameTwo.rowId)
-        participants[0].getParticipantName().toString() shouldBe "Billie"
-        participants[1].getParticipantName().toString() shouldBe "Amy"
+        participants[0].getParticipantNameHtml(false) shouldBe "<html>Billie</html>"
+        participants[1].getParticipantNameHtml(false) shouldBe "<html>Amy</html>"
     }
 
     private fun setUpMatchScreen(

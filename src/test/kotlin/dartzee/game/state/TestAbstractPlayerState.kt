@@ -1,7 +1,5 @@
 package dartzee.game.state
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.db.DartEntity
@@ -17,6 +15,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertTeam
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
@@ -70,7 +70,7 @@ class TestAbstractPlayerState: AbstractTest()
     @Test
     fun `Should support committing a round of darts and saving them to the database`()
     {
-        val pt = insertParticipant(insertPlayer = true)
+        val pt = insertParticipant()
         val dartOne = Dart(20, 1, Point(50, 50), SegmentType.OUTER_SINGLE)
         val dartTwo = Dart(5, 1, Point(40, 45), SegmentType.OUTER_SINGLE)
         val dartThree = Dart(1, 1, Point(60, 45), SegmentType.OUTER_SINGLE)

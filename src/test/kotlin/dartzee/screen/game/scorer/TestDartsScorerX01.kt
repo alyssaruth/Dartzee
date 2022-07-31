@@ -118,7 +118,7 @@ class TestDartsScorerX01: AbstractTest()
     @Test
     fun `Should toggle checkout suggestions on pause`()
     {
-        val participant = insertParticipant(finishingPosition = 4, dtFinished = DateStatics.END_OF_TIME, insertPlayer = true)
+        val participant = insertParticipant(finishingPosition = 4, dtFinished = DateStatics.END_OF_TIME)
         val state = makeX01PlayerStateWithRounds(101, participant = participant, isActive = true)
 
         val scorer = factoryScorer(participant)
@@ -140,7 +140,7 @@ class TestDartsScorerX01: AbstractTest()
         scorer.tableScores.rowCount shouldBe 0
     }
 
-    private fun factoryScorer(participant: ParticipantEntity = insertParticipant(insertPlayer = true)): DartsScorerX01
+    private fun factoryScorer(participant: ParticipantEntity = insertParticipant()): DartsScorerX01
     {
         val scorer = DartsScorerX01(mockk(relaxed = true), "501", SingleParticipant(participant))
         scorer.init()

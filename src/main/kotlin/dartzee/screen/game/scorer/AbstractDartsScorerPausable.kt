@@ -45,12 +45,12 @@ abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<Play
     {
         if (btnResume.icon === ICON_PAUSE)
         {
-            logger.info(CODE_PLAYER_PAUSED, "Paused player ${participant.getParticipantName()}")
+            logger.info(CODE_PLAYER_PAUSED, "Paused player ${participant.getUniqueParticipantName()}")
             btnResume.icon = ICON_RESUME
         }
         else
         {
-            logger.info(CODE_PLAYER_UNPAUSED, "Unpaused player ${participant.getParticipantName()}")
+            logger.info(CODE_PLAYER_UNPAUSED, "Unpaused player ${participant.getUniqueParticipantName()}")
             btnResume.icon = ICON_PAUSE
             updateResultColourForPosition(-1)
         }

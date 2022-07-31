@@ -52,6 +52,8 @@ import dartzee.utils.insertDartzeeRules
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -59,7 +61,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
-import java.awt.Color
 
 class TestGamePanelDartzee: AbstractTest()
 {
@@ -409,16 +410,16 @@ class TestGamePanelDartzee: AbstractTest()
 
         panel.scorerSelected(panel.scorersOrdered[0])
         panel.currentPlayerNumber shouldBe 0
-        panel.scorersOrdered[0].lblName.foreground shouldBe Color.RED
-        panel.scorersOrdered[1].lblName.foreground shouldBe Color.BLACK
+        panel.scorersOrdered[0].lblName.text shouldContain "<b>"
+        panel.scorersOrdered[1].lblName.text shouldNotContain "<b>"
         verify { summaryPanel.update(listOf(), listOf(), 0, 1) }
 
         clearAllMocks()
 
         panel.scorerSelected(panel.scorersOrdered[1])
         panel.currentPlayerNumber shouldBe 1
-        panel.scorersOrdered[0].lblName.foreground shouldBe Color.BLACK
-        panel.scorersOrdered[1].lblName.foreground shouldBe Color.RED
+        panel.scorersOrdered[0].lblName.text shouldNotContain "<b>"
+        panel.scorersOrdered[1].lblName.text shouldContain "<b>"
         verify { summaryPanel.update(listOf(), listOf(), 0, 1) }
     }
 
@@ -620,14 +621,14 @@ class TestGamePanelDartzee: AbstractTest()
 
     private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
-    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity? = null, results: List<DartzeeRoundResult> = ruleResults): GameEntity
+    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity = insertPlayer(), results: List<DartzeeRoundResult> = ruleResults): GameEntity
     {
         val dtFinish = if (rounds > 4) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
 
         insertDartzeeRules(game.rowId, testRules)
 
-        val participant = insertParticipant(insertPlayer = (player == null), gameId = game.rowId, ordinal = 0, playerId = player?.rowId ?: "")
+        val participant = insertParticipant(gameId = game.rowId, ordinal = 0, playerId = player.rowId)
 
         if (rounds > 0)
         {

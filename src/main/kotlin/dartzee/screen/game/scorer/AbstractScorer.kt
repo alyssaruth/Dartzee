@@ -46,8 +46,9 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
-        lblName.text = participant.getParticipantName().value
+        lblName.text = participant.getParticipantNameHtml(false)
         lblName.foreground = Color.BLACK
+        lblName.border = EmptyBorder(10, 0, 0, 0)
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
         panelAvatar.layout = BorderLayout(0, 0)

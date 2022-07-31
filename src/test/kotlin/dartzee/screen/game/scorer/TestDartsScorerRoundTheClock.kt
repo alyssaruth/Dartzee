@@ -116,10 +116,10 @@ class TestDartsScorerRoundTheClock: AbstractTest()
     fun `Should add back the scorecard when achievement popup is dismissed`()
     {
         val scorer = factoryScorer(inOrder = false)
-        scorer.achievementUnlocked(AchievementClockBestGame())
+        scorer.achievementUnlocked(AchievementClockBestGame(), "")
 
         scorer.findChild<RoundTheClockScorecard>().shouldBeNull()
-        scorer.getAchievementOverlay()!!.close()
+        scorer.getAchievementOverlay().close()
         scorer.findChild<RoundTheClockScorecard>().shouldNotBeNull()
     }
 

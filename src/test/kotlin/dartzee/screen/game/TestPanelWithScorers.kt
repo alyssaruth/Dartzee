@@ -6,6 +6,7 @@ import dartzee.helper.insertPlayer
 import dartzee.screen.game.scorer.AbstractScorer
 import io.kotlintest.matchers.collections.shouldBeEmpty
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JFrame
@@ -72,9 +73,9 @@ class TestPanelWithScorers: AbstractTest()
         scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player Two")))
         scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player Three")))
 
-        scrn.getScorer(0).lblName.text shouldBe "Player One"
-        scrn.getScorer(1).lblName.text shouldBe "Player Two"
-        scrn.getScorer(2).lblName.text shouldBe "Player Three"
+        scrn.getScorer(0).lblName.text shouldContain "Player One"
+        scrn.getScorer(1).lblName.text shouldContain "Player Two"
+        scrn.getScorer(2).lblName.text shouldContain "Player Three"
     }
 
     inner class FakeScorer(participant: IWrappedParticipant) : AbstractScorer(participant)
