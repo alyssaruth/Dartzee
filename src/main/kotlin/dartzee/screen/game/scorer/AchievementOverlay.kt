@@ -28,7 +28,6 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
     {
         layout = BorderLayout(0, 0)
         border = LineBorder(borderColor, 6)
-        size = Dimension(SCORER_WIDTH, 500)
 
         background = fillColor
         val panelNorth = JPanel()
