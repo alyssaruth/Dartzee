@@ -8,8 +8,10 @@ import dartzee.game.state.TestPlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
+import dartzee.helper.preparePlayers
 import dartzee.`object`.Dart
 import dartzee.screen.game.makeSingleParticipant
+import dartzee.screen.game.makeTeam
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotlintest.matchers.collections.shouldContainExactly
@@ -56,7 +58,7 @@ class TestAbstractDartsScorer: AbstractTest()
         val scorer = TestDartsScorer()
         scorer.init()
 
-        val state = TestPlayerState(insertParticipant(insertPlayer = true), isActive = false)
+        val state = TestPlayerState(insertParticipant(), isActive = false)
         scorer.stateChanged(state)
         scorer.lblName.text shouldBe "<html>Clive</html>"
 
@@ -70,7 +72,7 @@ class TestAbstractDartsScorer: AbstractTest()
     {
         val state = TestPlayerState(insertParticipant(finishingPosition = -1), scoreSoFar = -1)
 
-        val scorer = TestDartsScorer()
+        val scorer = TestDartsScorer(state.wrappedParticipant)
         scorer.init()
 
         val startingColours = Pair(scorer.lblResult.background, scorer.lblResult.foreground)
@@ -89,23 +91,42 @@ class TestAbstractDartsScorer: AbstractTest()
         val achievementTwo = AchievementX01BestFinish().also { it.attainedValue = 97 }
         val achievementThree = AchievementX01GamesWon().also { it.attainedValue = 1 }
 
-        scorer.achievementUnlocked(achievementOne)
-        scorer.achievementUnlocked(achievementTwo)
-        scorer.achievementUnlocked(achievementThree)
+        scorer.achievementUnlocked(achievementOne, "")
+        scorer.achievementUnlocked(achievementTwo, "")
+        scorer.achievementUnlocked(achievementThree, "")
 
-        val visibleAchievement = scorer.getAchievementOverlay()!!
+        val visibleAchievement = scorer.getAchievementOverlay()
         visibleAchievement.getAchievementName() shouldBe achievementThree.name
         visibleAchievement.close()
 
-        val secondAchievement = scorer.getAchievementOverlay()!!
+        val secondAchievement = scorer.getAchievementOverlay()
         secondAchievement.getAchievementName() shouldBe achievementTwo.name
         secondAchievement.close()
 
-        val thirdAchievement = scorer.getAchievementOverlay()!!
+        val thirdAchievement = scorer.getAchievementOverlay()
         thirdAchievement.getAchievementName() shouldBe achievementOne.name
         thirdAchievement.close()
 
         scorer.getAchievementOverlay() shouldBe null
+    }
+
+    @Test
+    fun `Should pass player name when achievement unlocked for a team`()
+    {
+        val (alice, bob) = preparePlayers(2)
+        val team = makeTeam(alice, bob)
+
+        val scorer = TestDartsScorer(team)
+        scorer.init()
+
+        val achievementOne = AchievementX01BestGame().also { it.attainedValue = 30 }
+        val achievementTwo = AchievementX01BestFinish().also { it.attainedValue = 97 }
+
+        scorer.achievementUnlocked(achievementOne, alice.rowId)
+        scorer.getAchievementOverlay().getPlayerName() shouldBe "Alice"
+
+        scorer.achievementUnlocked(achievementTwo, bob.rowId)
+        scorer.getAchievementOverlay().getPlayerName() shouldBe "Bob"
     }
 
     private class TestDartsScorer(participant: IWrappedParticipant = makeSingleParticipant()) : AbstractDartsScorer<TestPlayerState>(participant)

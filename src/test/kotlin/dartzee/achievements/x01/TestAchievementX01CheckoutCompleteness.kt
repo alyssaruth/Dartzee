@@ -35,7 +35,7 @@ class TestAchievementX01CheckoutCompleteness: AbstractMultiRowAchievementTest<Ac
     fun `Should ignore non-checkout darts`()
     {
         val g = insertRelevantGame()
-        val pt = insertParticipant(gameId = g.rowId, insertPlayer = true)
+        val pt = insertParticipant(gameId = g.rowId)
 
         insertDart(pt, roundNumber = 1, startingScore = 100, score = 1, multiplier = 2)
         insertDart(pt, roundNumber = 1, startingScore = 2, score = 2, multiplier = 1)

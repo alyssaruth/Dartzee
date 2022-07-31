@@ -627,7 +627,7 @@ class TestGamePanelDartzee: AbstractTest()
 
         insertDartzeeRules(game.rowId, testRules)
 
-        val participant = insertParticipant(insertPlayer = (player == null), gameId = game.rowId, ordinal = 0, playerId = player?.rowId ?: "")
+        val participant = insertParticipant(gameId = game.rowId, ordinal = 0, playerId = player?.rowId ?: "")
 
         if (rounds > 0)
         {

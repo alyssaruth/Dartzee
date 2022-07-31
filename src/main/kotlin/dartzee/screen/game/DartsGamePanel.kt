@@ -1,19 +1,25 @@
 package dartzee.screen.game
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
 import dartzee.achievements.getWinAchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.*
-import dartzee.db.*
+import dartzee.core.util.doBadMiss
+import dartzee.core.util.doBull
+import dartzee.core.util.getSortedValues
+import dartzee.core.util.getSqlDateNow
+import dartzee.core.util.isEndOfTime
+import dartzee.db.AchievementEntity
+import dartzee.db.DartzeeRuleEntity
+import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.listener.DartboardListener
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
@@ -36,7 +42,12 @@ import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.sql.SQLException
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JPanel
+import javax.swing.JToggleButton
+import javax.swing.SwingConstants
+import javax.swing.SwingUtilities
 
 abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
@@ -103,7 +114,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     fun getDartsThrown() = getCurrentPlayerState().currentRound
     fun dartsThrownCount() = getDartsThrown().size
 
-    protected fun addState(playerNumber: Int, state: PlayerState, scorer: S) {
+    private fun addState(playerNumber: Int, state: PlayerState, scorer: S) {
         hmPlayerNumberToState[playerNumber] = state
         hmPlayerNumberToScorer[playerNumber] = scorer
     }
@@ -667,7 +678,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     fun achievementUnlocked(playerId: String, achievement: AbstractAchievement)
     {
-        scorersOrdered.find { it.playerIds.contains(playerId) }?.achievementUnlocked(achievement)
+        scorersOrdered.find { it.playerIds.contains(playerId) }?.achievementUnlocked(achievement, playerId)
     }
 
     private fun dismissSlider()
