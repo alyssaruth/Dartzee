@@ -107,7 +107,7 @@ class TestAbstractDartsScorer: AbstractTest()
         thirdAchievement.getAchievementName() shouldBe achievementOne.name
         thirdAchievement.close()
 
-        scorer.getAchievementOverlay() shouldBe null
+        scorer.findAchievementOverlay() shouldBe null
     }
 
     @Test

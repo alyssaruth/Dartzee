@@ -58,7 +58,7 @@ fun AbstractDartsGameScreen.toggleStats()
 
 fun AbstractDartsGameScreen.getScorer(playerName: String): DartsScorerX01
 {
-    return getChild { it.playerName == playerName }
+    return getChild { it.playerName.contains(playerName) }
 }
 
 data class TwoPlayers(val winner: PlayerEntity, val loser: PlayerEntity)
