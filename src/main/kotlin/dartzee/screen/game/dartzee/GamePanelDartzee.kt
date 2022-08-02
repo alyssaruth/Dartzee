@@ -207,11 +207,14 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         completeRound(dartzeeRoundResult)
     }
 
-    fun scorerSelected(scorer: DartsScorerDartzee)
+    fun scorerSelected(selectedScorer: DartsScorerDartzee)
     {
-        currentPlayerNumber = getPlayerNumberForScorer(scorer)
+        currentPlayerNumber = getPlayerNumberForScorer(selectedScorer)
 
-        updateActivePlayer()
+        scorersOrdered.forEach { scorer ->
+            scorer.togglePostGame(scorer == selectedScorer)
+        }
+
         updateCarousel()
     }
 }

@@ -11,36 +11,59 @@ import kotlin.math.pow
 const val PLAYER_IMAGE_WIDTH = 150
 const val PLAYER_IMAGE_HEIGHT = 150
 
-fun splitAvatar(playerOne: PlayerEntity, playerTwo: PlayerEntity, selectedPlayer: PlayerEntity? = null): ImageIcon
+fun splitAvatar(
+    playerOne: PlayerEntity,
+    playerTwo: PlayerEntity,
+    selectedPlayer: PlayerEntity?,
+    gameFinished: Boolean): ImageIcon
 {
     val first = playerOne.getAvatarImage()
     val second = playerTwo.getAvatarImage()
 
-    val diagonalOffset = when (selectedPlayer) {
+    val diagonalOffset = if (gameFinished) 1.0 else when (selectedPlayer) {
         playerOne -> 1.4
         playerTwo -> 0.6
         else -> 1.0
     }
 
+    val diagonalCenter = (PLAYER_IMAGE_WIDTH * diagonalOffset).toInt()
+    val diagonalThickness = if (selectedPlayer != null && !gameFinished) 1 else 0
+
     val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
     newImage.paint { pt ->
-        if (pt.x + pt.y == (PLAYER_IMAGE_WIDTH * diagonalOffset).toInt()) {
+        if (pt.x + pt.y >= diagonalCenter - diagonalThickness &&
+            pt.x + pt.y <= diagonalCenter + diagonalThickness) {
             Color.BLACK
-        } else if (pt.x + pt.y < (PLAYER_IMAGE_WIDTH * diagonalOffset)) {
+        } else if (pt.x + pt.y < diagonalCenter) {
             val rgb = first.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerOne) rgb else greyscale(rgb)
+            val rgbToUse = if (selectedPlayer == playerOne || gameFinished) rgb else greyscale(rgb)
             Color(rgbToUse)
         } else {
             val rgb = second.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerTwo) rgb else greyscale(rgb)
+            val rgbToUse = if (selectedPlayer == playerTwo || gameFinished) rgb else greyscale(rgb)
             Color(rgbToUse)
         }
     }
 
     return ImageIcon(newImage)
 }
+
 private fun PlayerEntity.getAvatarImage() =
     getAvatar().image.toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
+
+fun ImageIcon.greyscale(): ImageIcon
+{
+    val original = image.toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
+
+    val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
+    newImage.paint { pt ->
+        val rgb = original.getRGB(pt.x, pt.y)
+        Color(greyscale(rgb))
+    }
+
+    return ImageIcon(newImage)
+}
+
 
 private fun greyscale(rgb: Int): Int
 {

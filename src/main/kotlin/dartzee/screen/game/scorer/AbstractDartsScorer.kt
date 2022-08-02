@@ -26,7 +26,7 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
     {
         runOnEventThreadBlocking {
             model.clear()
-            setSelected(state)
+            updateSelectionState(state)
 
             stateChangedImpl(state)
 
@@ -44,11 +44,17 @@ abstract class AbstractDartsScorer<PlayerState: AbstractPlayerState<PlayerState>
         updateResultColourForPosition(state.wrappedParticipant.participant.finishingPosition)
     }
 
-    private fun setSelected(state: PlayerState)
+    private fun updateSelectionState(state: PlayerState)
     {
         val currentIndividual = state.currentIndividual()
         lblName.text = state.wrappedParticipant.getParticipantNameHtml(state.isActive, currentIndividual)
         lblAvatar.setSelected(state.isActive, state.currentRoundNumber())
+    }
+
+    fun gameFinished()
+    {
+        lblName.text = participant.getParticipantNameHtml(false)
+        lblAvatar.setSelected(false, -1, true)
     }
 
     protected open fun stateChangedImpl(state: PlayerState) {}

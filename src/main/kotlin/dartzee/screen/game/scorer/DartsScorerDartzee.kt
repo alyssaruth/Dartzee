@@ -53,6 +53,12 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee, participant: IWra
         tableScores.getColumn(RULE_COLUMN).cellRenderer = DartzeeRoundResultRenderer()
     }
 
+    fun togglePostGame(selected: Boolean)
+    {
+        lblName.text = participant.getParticipantNameHtml(selected)
+        lblAvatar.setSelected(selected, -1, selected)
+    }
+
     override fun mouseReleased(e: MouseEvent?)
     {
         if (parent.gameEntity.isFinished())
