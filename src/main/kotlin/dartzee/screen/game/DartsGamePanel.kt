@@ -257,7 +257,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
     protected open fun setGameReadOnly()
     {
-        setUIFinished()
+        dartboard.stopListening()
+        scorersOrdered.forEach {
+            it.gameFinished()
+        }
 
         if (getActiveCount() == 0)
         {
@@ -384,15 +387,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             gameEntity.saveToDatabase()
         }
 
-        setUIFinished()
-    }
-
-    private fun setUIFinished()
-    {
-        dartboard.stopListening()
-        scorersOrdered.forEach {
-            it.gameFinished()
-        }
+        setGameReadOnly()
     }
 
 

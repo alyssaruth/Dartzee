@@ -6,6 +6,7 @@ import dartzee.db.PlayerEntity
 import java.awt.Color
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
+import kotlin.math.abs
 import kotlin.math.pow
 
 const val PLAYER_IMAGE_WIDTH = 150
@@ -17,8 +18,8 @@ fun splitAvatar(
     selectedPlayer: PlayerEntity?,
     gameFinished: Boolean): ImageIcon
 {
-    val first = playerOne.getAvatarImage()
-    val second = playerTwo.getAvatarImage()
+    val firstImg = playerOne.getAvatarImage()
+    val secondImg = playerTwo.getAvatarImage()
 
     val diagonalOffset = if (gameFinished) 1.0 else when (selectedPlayer) {
         playerOne -> 1.4
@@ -27,20 +28,18 @@ fun splitAvatar(
     }
 
     val diagonalCenter = (PLAYER_IMAGE_WIDTH * diagonalOffset).toInt()
-    val diagonalThickness = if (selectedPlayer != null && !gameFinished) 1 else 0
+    val diagonalThickness = if (selectedPlayer != null) 1 else 0
 
     val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
     newImage.paint { pt ->
-        if (pt.x + pt.y >= diagonalCenter - diagonalThickness &&
-            pt.x + pt.y <= diagonalCenter + diagonalThickness) {
+        val manhattan = pt.x + pt.y
+        if (abs(manhattan - diagonalCenter) <= diagonalThickness) {
             Color.BLACK
-        } else if (pt.x + pt.y < diagonalCenter) {
-            val rgb = first.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerOne || gameFinished) rgb else greyscale(rgb)
-            Color(rgbToUse)
         } else {
-            val rgb = second.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerTwo || gameFinished) rgb else greyscale(rgb)
+            val playerForSection = if (manhattan < diagonalCenter) playerOne else playerTwo
+            val originalImg = if (playerForSection == playerOne) firstImg else secondImg
+            val rgb = originalImg.getRGB(pt.x, pt.y)
+            val rgbToUse = if (selectedPlayer == playerForSection || gameFinished) rgb else greyscale(rgb)
             Color(rgbToUse)
         }
     }

@@ -40,6 +40,19 @@ class TestPlayerImageUtils : AbstractTest()
 
     @Test
     @Tag("screenshot")
+    fun `Should match screenshot - game over with player selected`()
+    {
+        val (p1, p2) = setUpPlayers()
+
+        val result = splitAvatar(p1, p2, p1, true)
+        val label = JLabel(result)
+        label.size = Dimension(150, 150)
+        label.repaint()
+        label.shouldMatchImage("split-50-game-over-selected")
+    }
+
+    @Test
+    @Tag("screenshot")
     fun `Should match screenshot - player one selected`()
     {
         val (p1, p2) = setUpPlayers()
