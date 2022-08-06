@@ -1,7 +1,9 @@
 package dartzee.bean
 
 import com.github.alexburlton.swingtest.shouldMatchImage
+import dartzee.game.state.SingleParticipant
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.screen.game.makeTeam
@@ -32,5 +34,25 @@ class TestParticipantAvatar : AbstractTest()
 
         avatar.setSelected(true, 3)
         avatar.shouldMatchImage("player-one")
+
+        avatar.setSelected(false, 1, gameFinished = true)
+        avatar.shouldMatchImage("team-game-over")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should correct avatar for a single participant`()
+    {
+        val singlePt = SingleParticipant(insertParticipant())
+        val avatar = ParticipantAvatar(singlePt)
+
+        avatar.setSelected(selected = true, 1, gameFinished = false)
+        avatar.shouldMatchImage("single-selected")
+
+        avatar.setSelected(selected = false, 1, gameFinished = true)
+        avatar.shouldMatchImage("single-selected")
+
+        avatar.setSelected(selected = false, 1, gameFinished = false)
+        avatar.shouldMatchImage("single-unselected")
     }
 }

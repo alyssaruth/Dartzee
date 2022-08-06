@@ -54,6 +54,7 @@ class TestTeamParticipant: AbstractTest()
 
         team.getParticipantNameHtml(true, pt1) shouldBe "<html><b>Alyssa</b> &#38; Leah</html>"
         team.getParticipantNameHtml(true, pt2) shouldBe "<html>Alyssa &#38; <b>Leah</b></html>"
+        team.getParticipantNameHtml(true, null) shouldBe "<html><b>Alyssa &#38; Leah</b></html>"
     }
 
     @Test
