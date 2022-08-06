@@ -50,7 +50,7 @@ class TestParticipantAvatar : AbstractTest()
         avatar.shouldMatchImage("single-selected")
 
         avatar.setSelected(selected = false, 1, gameFinished = true)
-        avatar.shouldMatchImage("single-selected")
+        avatar.shouldMatchImage("single-game-over")
 
         avatar.setSelected(selected = false, 1, gameFinished = false)
         avatar.shouldMatchImage("single-unselected")
