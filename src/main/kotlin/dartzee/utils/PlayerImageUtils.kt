@@ -6,41 +6,63 @@ import dartzee.db.PlayerEntity
 import java.awt.Color
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
+import kotlin.math.abs
 import kotlin.math.pow
 
 const val PLAYER_IMAGE_WIDTH = 150
 const val PLAYER_IMAGE_HEIGHT = 150
 
-fun splitAvatar(playerOne: PlayerEntity, playerTwo: PlayerEntity, selectedPlayer: PlayerEntity? = null): ImageIcon
+fun splitAvatar(
+    playerOne: PlayerEntity,
+    playerTwo: PlayerEntity,
+    selectedPlayer: PlayerEntity?,
+    gameFinished: Boolean): ImageIcon
 {
-    val first = playerOne.getAvatarImage()
-    val second = playerTwo.getAvatarImage()
+    val firstImg = playerOne.getAvatarImage()
+    val secondImg = playerTwo.getAvatarImage()
 
-    val diagonalOffset = when (selectedPlayer) {
+    val diagonalOffset = if (gameFinished) 1.0 else when (selectedPlayer) {
         playerOne -> 1.4
         playerTwo -> 0.6
         else -> 1.0
     }
 
+    val diagonalCenter = (PLAYER_IMAGE_WIDTH * diagonalOffset).toInt()
+    val diagonalThickness = if (selectedPlayer != null) 1 else 0
+
     val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
     newImage.paint { pt ->
-        if (pt.x + pt.y == (PLAYER_IMAGE_WIDTH * diagonalOffset).toInt()) {
+        val manhattan = pt.x + pt.y
+        if (abs(manhattan - diagonalCenter) <= diagonalThickness) {
             Color.BLACK
-        } else if (pt.x + pt.y < (PLAYER_IMAGE_WIDTH * diagonalOffset)) {
-            val rgb = first.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerOne) rgb else greyscale(rgb)
-            Color(rgbToUse)
         } else {
-            val rgb = second.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerTwo) rgb else greyscale(rgb)
+            val playerForSection = if (manhattan < diagonalCenter) playerOne else playerTwo
+            val originalImg = if (playerForSection == playerOne) firstImg else secondImg
+            val rgb = originalImg.getRGB(pt.x, pt.y)
+            val rgbToUse = if (selectedPlayer == playerForSection || gameFinished) rgb else greyscale(rgb)
             Color(rgbToUse)
         }
     }
 
     return ImageIcon(newImage)
 }
+
 private fun PlayerEntity.getAvatarImage() =
     getAvatar().image.toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
+
+fun ImageIcon.greyscale(): ImageIcon
+{
+    val original = image.toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
+
+    val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
+    newImage.paint { pt ->
+        val rgb = original.getRGB(pt.x, pt.y)
+        Color(greyscale(rgb))
+    }
+
+    return ImageIcon(newImage)
+}
+
 
 private fun greyscale(rgb: Int): Int
 {

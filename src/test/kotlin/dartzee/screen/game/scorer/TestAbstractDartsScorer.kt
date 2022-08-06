@@ -65,6 +65,9 @@ class TestAbstractDartsScorer: AbstractTest()
         state.updateActive(true)
         scorer.stateChanged(state)
         scorer.lblName.text shouldBe "<html><b>Clive</b></html>"
+
+        scorer.gameFinished()
+        scorer.lblName.text shouldBe "<html>Clive</html>"
     }
 
     @Test

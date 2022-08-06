@@ -4,6 +4,7 @@ import dartzee.db.IParticipant
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
 import dartzee.game.UniqueParticipantName
+import dartzee.utils.greyscale
 import dartzee.utils.splitAvatar
 import javax.swing.ImageIcon
 
@@ -34,9 +35,15 @@ sealed interface IWrappedParticipant
             }
         }
 
+        if (active && currentParticipant == null)
+        {
+            return "<html><b>$contents</b></html>"
+        }
+
         return "<html>$contents</html>"
     }
-    fun getAvatar(roundNumber: Int, selected: Boolean): ImageIcon
+
+    fun getAvatar(roundNumber: Int, selected: Boolean, gameFinished: Boolean): ImageIcon
 }
 
 class SingleParticipant(override val participant: ParticipantEntity): IWrappedParticipant
@@ -45,7 +52,16 @@ class SingleParticipant(override val participant: ParticipantEntity): IWrappedPa
 
     override fun getIndividual(roundNumber: Int) = participant
 
-    override fun getAvatar(roundNumber: Int, selected: Boolean) = participant.getPlayer().getAvatar()
+    override fun getAvatar(roundNumber: Int, selected: Boolean, gameFinished: Boolean): ImageIcon
+    {
+        val avatar = participant.getPlayer().getAvatar()
+        if (gameFinished || selected)
+        {
+            return avatar
+        }
+
+        return avatar.greyscale()
+    }
 }
 
 class TeamParticipant(override val participant: TeamEntity, override val individuals: List<ParticipantEntity>): IWrappedParticipant
@@ -54,9 +70,9 @@ class TeamParticipant(override val participant: TeamEntity, override val individ
 
     override fun getIndividual(roundNumber: Int) = individuals[(roundNumber - 1) % teamSize]
 
-    override fun getAvatar(roundNumber: Int, selected: Boolean): ImageIcon
+    override fun getAvatar(roundNumber: Int, selected: Boolean, gameFinished: Boolean): ImageIcon
     {
         val selectedPlayer = if (selected) getIndividual(roundNumber).getPlayer() else null
-        return splitAvatar(individuals[0].getPlayer(), individuals[1].getPlayer(), selectedPlayer)
+        return splitAvatar(individuals[0].getPlayer(), individuals[1].getPlayer(), selectedPlayer, gameFinished)
     }
 }

@@ -1,12 +1,12 @@
 package dartzee.utils
 
+import com.github.alexburlton.swingtest.shouldMatchImage
+import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import com.github.alexburlton.swingtest.shouldMatchImage
-import dartzee.db.PlayerEntity
 import java.awt.Dimension
 import javax.swing.JLabel
 
@@ -14,15 +14,41 @@ class TestPlayerImageUtils : AbstractTest()
 {
     @Test
     @Tag("screenshot")
-    fun `Should match screenshot - 50-50 split`()
+    fun `Should match screenshot - 50-50 split, inactive`()
     {
         val (p1, p2) = setUpPlayers()
 
-        val result = splitAvatar(p1, p2)
+        val result = splitAvatar(p1, p2, null, false)
         val label = JLabel(result)
         label.size = Dimension(150, 150)
         label.repaint()
-        label.shouldMatchImage("split-50")
+        label.shouldMatchImage("split-50-inactive")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match screenshot - game over`()
+    {
+        val (p1, p2) = setUpPlayers()
+
+        val result = splitAvatar(p1, p2, null, true)
+        val label = JLabel(result)
+        label.size = Dimension(150, 150)
+        label.repaint()
+        label.shouldMatchImage("split-50-game-over")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match screenshot - game over with player selected`()
+    {
+        val (p1, p2) = setUpPlayers()
+
+        val result = splitAvatar(p1, p2, p1, true)
+        val label = JLabel(result)
+        label.size = Dimension(150, 150)
+        label.repaint()
+        label.shouldMatchImage("split-50-game-over-selected")
     }
 
     @Test
@@ -31,7 +57,7 @@ class TestPlayerImageUtils : AbstractTest()
     {
         val (p1, p2) = setUpPlayers()
 
-        val result = splitAvatar(p1, p2, p1)
+        val result = splitAvatar(p1, p2, p1, false)
         val label = JLabel(result)
         label.size = Dimension(150, 150)
         label.repaint()
@@ -44,7 +70,7 @@ class TestPlayerImageUtils : AbstractTest()
     {
         val (p1, p2) = setUpPlayers()
 
-        val result = splitAvatar(p1, p2, p2)
+        val result = splitAvatar(p1, p2, p2, false)
         val label = JLabel(result)
         label.size = Dimension(150, 150)
         label.repaint()

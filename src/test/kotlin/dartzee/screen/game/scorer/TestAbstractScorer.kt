@@ -7,6 +7,7 @@ import dartzee.helper.insertPlayer
 import dartzee.screen.game.makeSingleParticipant
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.string.shouldContain
+import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -21,7 +22,7 @@ class TestAbstractScorer: AbstractTest()
         scorer.init()
 
         scorer.lblName.text shouldContain "Bob"
-        scorer.lblAvatar.icon shouldBe player.getAvatar()
+        scorer.lblAvatar.icon.shouldNotBeNull()
         scorer.panelAvatar.shouldBeVisible()
         scorer.playerIds.shouldContainExactly(player.rowId)
     }
