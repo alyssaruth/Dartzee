@@ -1,11 +1,11 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.Dart
 import dartzee.core.util.setFontSize
 import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
+import dartzee.`object`.Dart
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.InjectedThings.dartzeeCalculator
@@ -14,7 +14,11 @@ import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 
 
@@ -36,6 +40,7 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 
         dartboard.renderScoreLabels = true
         dartboard.paintDartboard()
+        dartboard.ensureListening()
         dartboard.addDartboardListener(this)
         dartboard.renderDarts = true
         add(panelNorth, BorderLayout.NORTH)

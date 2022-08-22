@@ -14,6 +14,7 @@ import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
+import java.awt.Point
 
 class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
     GamePanelPausable<DartsScorerRoundTheClock, DartzeeDartboard, ClockPlayerState>(parent, game, totalPlayers)
@@ -23,10 +24,10 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
     override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = ClockPlayerState(config, pt)
 
-    override fun doAiTurn(model: DartsAiModel)
+    override fun doAiTurn(model: DartsAiModel): Point
     {
         val currentTarget = getCurrentPlayerState().getCurrentTarget()
-        model.throwClockDart(currentTarget, config.clockType, dartboard)
+        return model.throwClockDart(currentTarget, config.clockType)
     }
 
     override fun updateVariablesForDartThrown(dart: Dart)

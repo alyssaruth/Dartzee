@@ -73,7 +73,7 @@ class MenuScreen : EmbeddedScreen()
     private fun renderDartboard(): JLabel
     {
         val board = Dartboard(dartboardSize, dartboardSize)
-        board.paintDartboard(null, false)
+        board.paintDartboard(null)
 
         val img = ImageIcon(board.dartboardImage!!)
         val lbl = JLabel(img)

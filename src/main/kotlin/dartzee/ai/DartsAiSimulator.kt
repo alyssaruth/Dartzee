@@ -5,6 +5,7 @@ import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
 import dartzee.screen.Dartboard
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.convertForUiDartboard
 import java.util.*
 
 private const val SCORING_DARTS_TO_THROW = 20000
@@ -38,9 +39,8 @@ object DartsAiSimulator
 
     private fun throwScoringDarts(model: DartsAiModel, dartboard: Dartboard) =
         (0 until SCORING_DARTS_TO_THROW).map {
-            val pt = model.throwScoringDart(dartboard)
-            dartboard.rationalisePoint(pt)
-            pt
+            val pt = model.throwScoringDart()
+            convertForUiDartboard(pt, dartboard)
         }
 
     private fun throwAtDoubles(model: DartsAiModel, dartboard: Dartboard): Double
@@ -50,8 +50,9 @@ object DartsAiSimulator
         return (0 until DOUBLE_DARTS_TO_THROW).fold(0.0) { hits, _ ->
             val doubleToAimAt = rand.nextInt(20) + 1
 
-            val pt = model.throwAtDouble(doubleToAimAt, dartboard)
-            val dart = dartboard.convertPointToDart(pt, true)
+            val pt = model.throwAtDouble(doubleToAimAt)
+            val uiPt = convertForUiDartboard(pt, dartboard)
+            val dart = dartboard.convertPointToDart(uiPt, true)
             if (dart.score == doubleToAimAt && dart.isDouble()) {
                 hits + 1
             } else {

@@ -1,12 +1,16 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.ColourWrapper
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
+import dartzee.`object`.ColourWrapper
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
 import dartzee.utils.getDistance
-import java.awt.*
+import java.awt.Color
+import java.awt.Font
+import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
@@ -23,7 +27,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         add(overlay)
 
         val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        dartboard.paintDartboard(colourWrapper, false)
+        dartboard.paintDartboard(colourWrapper)
 
         panelKey.setBounds(0, 0, 100, 500)
         panel.add(panelKey)

@@ -40,21 +40,18 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = DartzeePlayerState(pt)
 
-    override fun doAiTurn(model: DartsAiModel)
-    {
+    override fun doAiTurn(model: DartsAiModel) =
         if (isScoringRound())
         {
-            val pt = model.throwScoringDart(dartboard)
-            dartboard.dartThrown(pt)
+            model.throwScoringDart()
         }
         else
         {
             summaryPanel.ensureReady()
 
             val segmentStatus = summaryPanel.getSegmentStatus()
-            model.throwDartzeeDart(dartsThrownCount(), dartboard, segmentStatus)
+            model.throwDartzeeDart(dartsThrownCount(), segmentStatus)
         }
-    }
 
     override fun setGameReadOnly()
     {

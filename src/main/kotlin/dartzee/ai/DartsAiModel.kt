@@ -1,16 +1,18 @@
 package dartzee.ai
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import dartzee.`object`.SegmentType
-import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.core.util.jsonMapper
 import dartzee.game.ClockType
 import dartzee.logging.CODE_AI_ERROR
+import dartzee.`object`.SegmentType
+import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
-import dartzee.utils.*
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.generateRandomAngle
+import dartzee.utils.getAngleForPoint
+import dartzee.utils.translatePoint
 import getDefaultDartToAimAt
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
@@ -43,39 +45,33 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * X01
      */
-    fun throwX01Dart(score: Int, dartboard: Dartboard)
-    {
-        val pt = getX01Dart(score, dartboard)
-        dartboard.dartThrown(pt)
-    }
-
-    private fun getX01Dart(score: Int, dartboard: Dartboard): Point
+    fun throwX01Dart(score: Int): Point
     {
         //Check for a specific dart to aim for. It's possible to override any value for a specific AI strategy.
         val drtToAimAt = getOveriddenDartToAimAt(score)
         if (drtToAimAt != null)
         {
             val ptToAimAt = getPointForScore(drtToAimAt)
-            return throwDartAtPoint(ptToAimAt, dartboard)
+            return throwDartAtPoint(ptToAimAt)
         }
 
         //No overridden strategy, do the default thing
         if (score > 60)
         {
-            return throwScoringDart(dartboard)
+            return throwScoringDart()
         }
         else
         {
             val defaultDrt = getDefaultDartToAimAt(score)
             val ptToAimAt = getPointForScore(defaultDrt)
-            return throwDartAtPoint(ptToAimAt, dartboard)
+            return throwDartAtPoint(ptToAimAt)
         }
     }
 
-    fun throwScoringDart(dartboard: Dartboard): Point
+    fun throwScoringDart(): Point
     {
         val ptToAimAt = getScoringPoint()
-        return throwDartAtPoint(ptToAimAt, dartboard)
+        return throwDartAtPoint(ptToAimAt)
     }
 
     fun getScoringPoint(dartboard: Dartboard = AI_DARTBOARD): Point
@@ -89,44 +85,41 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * Golf
      */
-    fun throwGolfDart(targetHole: Int, dartNo: Int, dartboard: Dartboard)
+    fun throwGolfDart(targetHole: Int, dartNo: Int): Point
     {
         val segmentTypeToAimAt = getSegmentTypeForDartNo(dartNo)
         val ptToAimAt = getPointForScore(targetHole, segmentTypeToAimAt)
-        val pt = throwDartAtPoint(ptToAimAt, dartboard)
-        dartboard.dartThrown(pt)
+        return throwDartAtPoint(ptToAimAt)
     }
 
     /**
      * Clock
      */
-    fun throwClockDart(clockTarget: Int, clockType: ClockType, dartboard: Dartboard)
+    fun throwClockDart(clockTarget: Int, clockType: ClockType): Point
     {
         val segmentType = getSegmentTypeForClockType(clockType)
 
         val ptToAimAt = getPointForScore(clockTarget, segmentType)
-        val pt = throwDartAtPoint(ptToAimAt, dartboard)
-        dartboard.dartThrown(pt)
+        return throwDartAtPoint(ptToAimAt)
     }
 
     /**
      * Dartzee
      */
-    fun throwDartzeeDart(dartsThrownSoFar: Int, dartboard: DartzeeDartboard, segmentStatus: SegmentStatus)
+    fun throwDartzeeDart(dartsThrownSoFar: Int, segmentStatus: SegmentStatus): Point
     {
         val aggressive = (dartsThrownSoFar < 2 || dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE)
         val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(AI_DARTBOARD, segmentStatus, aggressive)
-        val pt = throwDartAtPoint(ptToAimAt, dartboard)
-        dartboard.dartThrown(pt)
+        return throwDartAtPoint(ptToAimAt)
     }
 
     fun getSegmentTypeForDartNo(dartNo: Int) = hmDartNoToSegmentType.getValue(dartNo)
 
     fun getStopThresholdForDartNo(dartNo: Int) = hmDartNoToStopThreshold.getValue(dartNo)
 
-    fun throwAtDouble(double: Int, dartboard: Dartboard) = throwDartAtPoint(getPointForScore(double, SegmentType.DOUBLE), dartboard)
+    fun throwAtDouble(double: Int) = throwDartAtPoint(getPointForScore(double, SegmentType.DOUBLE))
 
-    private fun throwDartAtPoint(aiDartboardPoint: Point, destinationDartboard: Dartboard): Point
+    private fun throwDartAtPoint(aiDartboardPoint: Point): Point
     {
         if (standardDeviation == 0.0)
         {
@@ -136,14 +129,14 @@ data class DartsAiModel(val standardDeviation: Double,
 
         if (aiDartboardPoint == DELIBERATE_MISS)
         {
-            return destinationDartboard.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
+            return AI_DARTBOARD.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
         }
 
         val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint, AI_DARTBOARD)
 
         val resultingAiPoint = translatePoint(aiDartboardPoint, radius, angle)
         AI_DARTBOARD.rationalisePoint(resultingAiPoint)
-        return convertForDestinationDartboard(resultingAiPoint, AI_DARTBOARD, destinationDartboard)
+        return resultingAiPoint
     }
 
     data class DistributionSample(val radius: Double, val theta: Double)

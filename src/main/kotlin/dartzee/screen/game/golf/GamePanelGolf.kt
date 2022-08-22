@@ -12,6 +12,7 @@ import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
+import java.awt.Point
 
 class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
         GamePanelFixedLength<DartsScorerGolf, Dartboard, GolfPlayerState>(parent, game, totalPlayers)
@@ -30,11 +31,11 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
         return lastDart.getGolfScore(targetHole)
     }
 
-    override fun doAiTurn(model: DartsAiModel)
+    override fun doAiTurn(model: DartsAiModel): Point
     {
         val targetHole = currentRoundNumber
         val dartNo = dartsThrownCount() + 1
-        model.throwGolfDart(targetHole, dartNo, dartboard)
+        return model.throwGolfDart(targetHole, dartNo)
     }
 
     override fun shouldStopAfterDartThrown(): Boolean

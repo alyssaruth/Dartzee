@@ -1,8 +1,8 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.`object`.Dart
 import dartzee.screen.Dartboard
 
 private const val ROUNDS = 18
@@ -31,7 +31,8 @@ class DartsSimulationGolf(dartboard: Dartboard, player: PlayerEntity, model: Dar
         resetRound()
 
         val dartNo = dartsThrown.size + 1
-        model.throwGolfDart(currentRound, dartNo, dartboard)
+        val pt = model.throwGolfDart(currentRound, dartNo)
+        dartThrown(pt)
     }
 
     private fun finishedRound()
@@ -58,7 +59,8 @@ class DartsSimulationGolf(dartboard: Dartboard, player: PlayerEntity, model: Dar
         else
         {
             val dartNo = dartsThrown.size + 1
-            model.throwGolfDart(currentRound, dartNo, dartboard)
+            val pt = model.throwGolfDart(currentRound, dartNo)
+            dartThrown(pt)
         }
     }
 }

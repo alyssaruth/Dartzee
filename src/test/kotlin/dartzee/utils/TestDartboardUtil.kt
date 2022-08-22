@@ -1,11 +1,11 @@
 package dartzee.utils
 
 import dartzee.core.bean.getPointList
+import dartzee.helper.AbstractRegistryTest
+import dartzee.makeTestDartboard
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
-import dartzee.helper.AbstractRegistryTest
-import dartzee.makeTestDartboard
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.matchers.collections.shouldHaveSize
@@ -67,13 +67,13 @@ class TestDartboardUtil : AbstractRegistryTest()
         val segmentStr = "" + segment
         segmentStr shouldBe "$score ($segmentType)"
 
-        val drt = getDartForSegment(pt, segment.toDataSegment())
+        val drt = getDartForSegment(pt, segment)
 
         drt.score shouldBe score
         drt.multiplier shouldBe multiplier
         drt.segmentType shouldBe segmentType
 
-        assertColourForPointAndSegment(pt, segment, null, expectedColor)
+        assertColourForPointAndSegment(pt, StatefulSegment(segment.type, segment.score), null, expectedColor)
     }
 
     @Test
@@ -119,7 +119,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertColourForPointAndSegment(Point(1, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
         assertColourForPointAndSegment(Point(199, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
 
-        //Another non-edge. Let's say we'll highlight this one, to check theres no NPE
+        //Another non-edge. Let's say we'll highlight this one, to check there's no NPE
         assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT)
 
         //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
