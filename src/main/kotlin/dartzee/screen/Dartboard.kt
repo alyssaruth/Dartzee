@@ -109,7 +109,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         val oldCenter = centerPoint
         val oldDiameter = diameter
 
-        stopListening(false)
+        lastHoveredSegment = null
+        stopListening()
         hmSegmentKeyToSegment.clear()
 
         val width = width
@@ -413,7 +414,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
     }
 
-    fun stopListening(unpaintHighlight: Boolean = true)
+    fun stopListening()
     {
         if (isListening())
         {
@@ -422,9 +423,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
 
         //Undo any colouring that there might have been
-        if (unpaintHighlight) {
-            lastHoveredSegment?.let { colourSegment(it, false) }
-        }
+        lastHoveredSegment?.let { colourSegment(it, false) }
     }
 
     fun isListening() = dartboardLabel.mouseListeners.isNotEmpty()
