@@ -72,15 +72,18 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): Da
 fun convertForUiDartboard(sourcePt: Point, destinationDartboard: Dartboard): Point =
     convertForDestinationDartboard(sourcePt, AI_DARTBOARD, destinationDartboard)
 
-fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, destinationDartboard: Dartboard): Point
+fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, destinationDartboard: Dartboard): Point =
+    convertForDestinationDartboard(sourcePt, sourceDartboard.centerPoint, sourceDartboard.diameter, destinationDartboard)
+
+fun convertForDestinationDartboard(sourcePt: Point, oldCenter: Point, oldDiameter: Double, destinationDartboard: Dartboard): Point
 {
-    val relativeDistance = getDistance(sourcePt, sourceDartboard.centerPoint) / sourceDartboard.diameter
-    val angle = getAngleForPoint(sourcePt, sourceDartboard.centerPoint)
+    val relativeDistance = getDistance(sourcePt, oldCenter) / oldDiameter
+    val angle = getAngleForPoint(sourcePt, oldCenter)
 
     val newPoint = translatePoint(destinationDartboard.centerPoint, relativeDistance * destinationDartboard.diameter, angle)
     destinationDartboard.rationalisePoint(newPoint)
 
-    val desiredSegment = sourceDartboard.getDataSegmentForPoint(sourcePt)
+    val desiredSegment = factorySegmentForPoint(sourcePt, oldCenter, oldDiameter)
     val candidatePoints = mutableSetOf(newPoint)
     while (candidatePoints.none { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment })
     {

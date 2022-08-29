@@ -575,8 +575,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         btnReset.isEnabled = false
 
         //Might need to re-enable the dartboard for listening if we're a human player
-        val human = getCurrentPlayerState().isHuman()
-        dartboard.listen(human)
+        if (getCurrentPlayerState().isHuman())
+        {
+            dartboard.ensureListening()
+        }
     }
 
     /**
