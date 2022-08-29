@@ -1,3 +1,10 @@
+--------- v6.0.0 ---------
+
++ Pair mode, allowing players to participate in teams of 2 by alternating throws
++ Ability to resize game windows, e.g. to fit on smaller screens or make dartboard easier to click
+= Some UI polish to the game window around player names/avatars
+= 86.7% test coverage (11761 / 13561 lines covered by 2144 tests)
+
 --------- v5.3.1 ---------
 
 = Fix slowdown / crash when using with no internet connection
