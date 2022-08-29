@@ -103,7 +103,7 @@ class TestGolfE2E: AbstractRegistryTest()
         )
 
         val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
-        val aiModel = predictableDartsModel(gamePanel.dartboard, aimDarts)
+        val aiModel = predictableDartsModel(aimDarts)
 
         val player = makePlayerWithModel(aiModel)
         gamePanel.startGame(listOf(player))
@@ -152,8 +152,8 @@ class TestGolfE2E: AbstractRegistryTest()
         val p1AimDarts = p1Rounds.flatten().map { it.toAimDart() }
         val p2AimDarts = p2Rounds.flatten().map { it.toAimDart() }
 
-        val p1Model = predictableDartsModel(gamePanel.dartboard, p1AimDarts, golfStopThresholds = mapOf(1 to 1, 2 to 3))
-        val p2Model = predictableDartsModel(gamePanel.dartboard, p2AimDarts, golfStopThresholds = mapOf(1 to 3, 2 to 4))
+        val p1Model = predictableDartsModel(p1AimDarts, golfStopThresholds = mapOf(1 to 1, 2 to 3))
+        val p2Model = predictableDartsModel(p2AimDarts, golfStopThresholds = mapOf(1 to 3, 2 to 4))
 
         val p1 = makePlayerWithModel(p1Model, name = "Alan")
         val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")

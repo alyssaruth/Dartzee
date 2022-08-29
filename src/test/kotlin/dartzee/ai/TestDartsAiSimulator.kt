@@ -1,11 +1,20 @@
 package dartzee.ai
 
-import dartzee.*
+import dartzee.drtDoubleTwenty
+import dartzee.drtMissTwenty
+import dartzee.drtOuterEighteen
+import dartzee.drtOuterFive
+import dartzee.drtOuterOne
+import dartzee.drtOuterTwelve
+import dartzee.drtOuterTwenty
+import dartzee.drtTrebleFive
+import dartzee.drtTrebleOne
+import dartzee.drtTrebleTwenty
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeThrowDartFn
+import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import dartzee.screen.Dartboard
 import getPointForScore
 import io.kotlintest.shouldBe
 import io.mockk.every
@@ -35,7 +44,7 @@ class TestDartsAiSimulator : AbstractTest()
                 (1..9000).map { SegmentType.MISS } + // 45%
                 (1..9000).map { SegmentType.OUTER_SINGLE } // 45%
 
-        val model = mockDartsModel(dartboard, scoringDarts, doubleSegmentTypes)
+        val model = mockDartsModel(scoringDarts, doubleSegmentTypes)
 
         val result = DartsAiSimulator.runSimulation(model, dartboard)
         result.finishPercent shouldBe 10.0
@@ -44,22 +53,22 @@ class TestDartsAiSimulator : AbstractTest()
         result.averageDart shouldBe scoringDarts.map { it.getTotal() }.average()
     }
 
-    private fun mockDartsModel(dartboard: Dartboard, scoringDarts: List<Dart>, doubles: List<SegmentType>): DartsAiModel
+    private fun mockDartsModel(scoringDarts: List<Dart>, doubles: List<SegmentType>): DartsAiModel
     {
         val model = mockk<DartsAiModel>()
         every { model.scoringDart } returns 20
-        every { model.getScoringPoint() } returns getPointForScore(20, SegmentType.TREBLE)
+        every { model.calculateScoringPoint() } returns getPointForScore(20, SegmentType.TREBLE)
 
         val aimDarts = scoringDarts.map { it.toAimDart() }.shuffled()
-        val throwDartFn = makeThrowDartFn(aimDarts, dartboard)
-        every { model.throwScoringDart(any()) } answers { throwDartFn() }
+        val throwDartFn = makeThrowDartFn(aimDarts)
+        every { model.throwScoringDart() } answers { throwDartFn() }
 
         val shuffledSegmentTypes = doubles.shuffled().toMutableList()
         val doubleSlot = slot<Int>()
-        every { model.throwAtDouble(capture(doubleSlot), any()) } answers {
+        every { model.throwAtDouble(capture(doubleSlot)) } answers {
             val score = doubleSlot.captured
             val segmentType = shuffledSegmentTypes.removeFirst()
-            getPointForScore(score, segmentType, dartboard)
+            getPointForScore(score, segmentType)
         }
 
         return model

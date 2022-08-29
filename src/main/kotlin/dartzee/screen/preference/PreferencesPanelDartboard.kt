@@ -1,12 +1,19 @@
 package dartzee.screen.preference
 
-import dartzee.`object`.ColourWrapper
 import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
 import dartzee.core.util.setFontSize
+import dartzee.`object`.ColourWrapper
 import dartzee.screen.Dartboard
-import dartzee.utils.*
+import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.preferencesDartboardSize
+import dartzee.utils.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_EVEN_SINGLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_EVEN_TREBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_DOUBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_SINGLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_TREBLE_COLOUR
+import dartzee.utils.PreferenceUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Color
@@ -102,7 +109,8 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         val wrapper = ColourWrapper(evenSingle, evenDouble, evenTreble,
                 oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)
 
-        dartboardPreview.paintDartboard(wrapper, true)
+        dartboardPreview.paintDartboard(wrapper)
+        dartboardPreview.ensureListening()
     }
 
     override fun saveImpl()

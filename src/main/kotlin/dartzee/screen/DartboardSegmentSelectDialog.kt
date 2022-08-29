@@ -1,8 +1,8 @@
 package dartzee.screen
 
-import dartzee.`object`.DartboardSegment
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.setMargins
+import dartzee.`object`.DartboardSegment
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
@@ -35,6 +35,7 @@ class DartboardSegmentSelectDialog(private val segments: Set<DartboardSegment>):
         panelCenter.add(panelSelectionOptions, BorderLayout.SOUTH)
 
         dartboard.paintDartboard()
+        dartboard.ensureListening()
 
         panelSelectionOptions.background = DartsColour.COLOUR_PASTEL_BLUE
         panelCenter.background = DartsColour.COLOUR_PASTEL_BLUE

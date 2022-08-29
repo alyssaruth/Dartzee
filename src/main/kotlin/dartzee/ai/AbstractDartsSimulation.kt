@@ -1,14 +1,16 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
-import dartzee.`object`.DartsClient
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.listener.DartboardListener
+import dartzee.`object`.Dart
+import dartzee.`object`.DartsClient
 import dartzee.screen.Dartboard
 import dartzee.stats.GameWrapper
+import dartzee.utils.convertForUiDartboard
+import java.awt.Point
 import java.sql.Timestamp
 
 abstract class AbstractDartsSimulation(val dartboard: Dartboard,
@@ -74,5 +76,11 @@ abstract class AbstractDartsSimulation(val dartboard: Dartboard,
     {
         dartsThrown = mutableListOf()
         dartboard.clearDarts()
+    }
+
+    protected fun dartThrown(aiPt: Point)
+    {
+        val pt = convertForUiDartboard(aiPt, dartboard)
+        dartboard.dartThrown(pt)
     }
 }

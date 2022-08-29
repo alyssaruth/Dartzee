@@ -1,8 +1,8 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.ColourWrapper
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
+import dartzee.`object`.ColourWrapper
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
 import java.awt.Color
@@ -19,7 +19,7 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         add(overlay)
         add(dartboard)
 
-        dartboard.paintDartboard(factoryColourWrapper(), false)
+        dartboard.paintDartboard(factoryColourWrapper())
 
         val label = JLabel("20+")
         label.border = LineBorder(Color(0, 0, 0))

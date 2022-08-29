@@ -24,7 +24,7 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler
         }
         else
         {
-            logger.error(CODE_UNCAUGHT_EXCEPTION, "Uncaught exception: $arg1", arg1, KEY_THREAD to arg0.toString())
+            logger.error(CODE_UNCAUGHT_EXCEPTION, "Uncaught exception: $arg1 in thread $arg0", arg1, KEY_THREAD to arg0.toString())
         }
     }
 

@@ -11,6 +11,7 @@ import dartzee.core.util.doBull
 import dartzee.core.util.getSortedValues
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.isEndOfTime
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
@@ -33,12 +34,15 @@ import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache.ICON_STATS_LARGE
+import dartzee.utils.convertForUiDartboard
 import dartzee.utils.getQuotedIdStr
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.sql.SQLException
@@ -48,6 +52,7 @@ import javax.swing.JPanel
 import javax.swing.JToggleButton
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
+
 
 abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
@@ -163,6 +168,14 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         addMouseListener(this)
 
         dartboard.renderScoreLabels = true
+
+        addComponentListener(object : ComponentAdapter() {
+            override fun componentResized(evt: ComponentEvent) {
+                SwingUtilities.invokeLater {
+                    dartboard.paintDartboard()
+                }
+            }
+        })
     }
 
 
@@ -170,7 +183,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
      * Abstract methods
      */
     abstract fun factoryState(pt: IWrappedParticipant): PlayerState
-    abstract fun doAiTurn(model: DartsAiModel)
+    abstract fun computeAiDart(model: DartsAiModel): Point?
 
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
@@ -188,7 +201,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         participants.forEachIndexed(::addParticipant)
 
         finaliseParticipants()
-        dartboard.paintDartboard()
 
         nextTurn()
     }
@@ -239,9 +251,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         finaliseParticipants()
 
         loadScoresAndCurrentPlayer(gameId)
-
-        //Paint the dartboard - always do this, in case of resuming with stats open
-        dartboard.paintDartboard()
 
         //If the game is over, do some extra stuff to sort the screen out
         val dtFinish = gameEntity.dtFinish
@@ -568,8 +577,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         btnReset.isEnabled = false
 
         //Might need to re-enable the dartboard for listening if we're a human player
-        val human = getCurrentPlayerState().isHuman()
-        dartboard.listen(human)
+        if (getCurrentPlayerState().isHuman())
+        {
+            dartboard.ensureListening()
+        }
     }
 
     /**
@@ -722,7 +733,14 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             }
 
             val model = getCurrentPlayerStrategy()
-            doAiTurn(model)
+            val pt = computeAiDart(model)
+
+            pt?.let {
+                runOnEventThreadBlocking {
+                    val uiPt = convertForUiDartboard(pt, dartboard)
+                    dartboard.dartThrown(uiPt)
+                }
+            }
         }
     }
 

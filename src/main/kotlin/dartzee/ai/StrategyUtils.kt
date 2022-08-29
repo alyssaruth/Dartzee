@@ -1,31 +1,24 @@
 
 import dartzee.ai.AI_DARTBOARD
-import dartzee.`object`.SegmentType
 import dartzee.ai.AimDart
-import dartzee.screen.Dartboard
+import dartzee.`object`.SegmentType
 import dartzee.utils.getAverage
 import java.awt.Point
 
 /**
  * Given the single/double/treble required, calculate the physical coordinates of the optimal place to aim
  */
-fun getPointForScore(drt: AimDart, dartboard: Dartboard = AI_DARTBOARD): Point
+fun getPointForScore(drt: AimDart): Point
 {
     val score = drt.score
     val segmentType = drt.getSegmentType()
-    return getPointForScore(score, segmentType, dartboard)
+    return getPointForScore(score, segmentType)
 }
 
-fun getPointForScore(score: Int, type: SegmentType, dartboard: Dartboard = AI_DARTBOARD): Point
+fun getPointForScore(score: Int, type: SegmentType): Point
 {
-    val points = dartboard.getPointsForSegment(score, type)
-    val avgPoint = getAverage(points)
-
-    //Need to rationalise here as we may have adjusted outside of the bounds
-    //Shouldn't need this anymore, but can't hurt to leave it here anyway!
-    dartboard.rationalisePoint(avgPoint)
-
-    return avgPoint
+    val points = AI_DARTBOARD.getPointsForSegment(score, type)
+    return getAverage(points)
 }
 
 /**

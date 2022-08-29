@@ -2,6 +2,7 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.AchievementType
+import dartzee.ai.DartsAiModel
 import dartzee.db.DartsMatchEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
@@ -22,6 +23,7 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
+import dartzee.utils.convertForUiDartboard
 
 fun makeSingleParticipant(player: PlayerEntity, gameId: String? = null) =
     makeSingleParticipant(insertParticipant(playerId = player.rowId, gameId = gameId ?: insertGame().rowId))
@@ -86,6 +88,13 @@ fun DartsGamePanel<*, *, *>.addCompletedRound(dartsThrown: List<Dart>)
 {
     setDartsThrown(dartsThrown)
     btnConfirm.doClick()
+}
+
+fun DartsGamePanel<*, *, *>.doAiTurn(model: DartsAiModel)
+{
+    val pt = computeAiDart(model) ?: return
+    val uiPt = convertForUiDartboard(pt, dartboard)
+    dartboard.dartThrown(uiPt)
 }
 
 fun makeMatchSummaryPanel(

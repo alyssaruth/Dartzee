@@ -1,11 +1,11 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertPlayer
 import dartzee.helper.predictableDartsModel
 import dartzee.makeTestDartboard
+import dartzee.`object`.Dart
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -37,7 +37,6 @@ class TestDartsSimulationX01: AbstractTest()
     fun `Should take into account mercy rule`()
     {
         val player = insertPlayer()
-        val dartboard = makeTestDartboard()
 
         val aimDarts = listOf(
                 AimDart(20, 3), AimDart(20, 3), AimDart(20, 3), //321
@@ -47,9 +46,9 @@ class TestDartsSimulationX01: AbstractTest()
                 AimDart(1, 2)                                   //  0
         )
 
-        val model = predictableDartsModel(dartboard, aimDarts, mercyThreshold = 7)
+        val model = predictableDartsModel(aimDarts, mercyThreshold = 7)
 
-        val simulation = DartsSimulationX01(dartboard, player, model)
+        val simulation = DartsSimulationX01(makeTestDartboard(), player, model)
         val result = simulation.simulateGame(-1)
         result.finalScore shouldBe 13
     }
@@ -58,7 +57,6 @@ class TestDartsSimulationX01: AbstractTest()
     fun `Should take into account busts`()
     {
         val player = insertPlayer()
-        val dartboard = makeTestDartboard()
 
         val aimDarts = listOf(
                 AimDart(20, 3), AimDart(20, 3), AimDart(20, 3), //321
@@ -68,8 +66,8 @@ class TestDartsSimulationX01: AbstractTest()
                 AimDart(10, 2)                                  //  0
         )
 
-        val model = predictableDartsModel(dartboard, aimDarts, mercyThreshold = 7)
-        val simulation = DartsSimulationX01(dartboard, player, model)
+        val model = predictableDartsModel(aimDarts, mercyThreshold = 7)
+        val simulation = DartsSimulationX01(makeTestDartboard(), player, model)
         val result = simulation.simulateGame(-1)
         result.finalScore shouldBe 13
     }

@@ -4,7 +4,6 @@ import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.`object`.SegmentType
-import dartzee.screen.Dartboard
 import getPointForScore
 import io.mockk.every
 import io.mockk.mockk
@@ -59,7 +58,6 @@ fun makeDartsModel(standardDeviation: Double = 50.0,
 }
 
 fun predictableDartsModel(
-    dartboard: Dartboard,
     dartsToThrow: List<AimDart>,
     dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE,
     mercyThreshold: Int? = null,
@@ -74,34 +72,30 @@ fun predictableDartsModel(
     every { model.hmDartNoToStopThreshold } returns hmDartNoToStopThreshold
     every { model.dartzeePlayStyle } returns dartzeePlayStyle
 
-    val throwDartFn = makeThrowDartFn(dartsToThrow, dartboard)
-    val actualFn = {
-        val pt = throwDartFn()
-        dartboard.dartThrown(pt)
-    }
+    val throwDartFn = makeThrowDartFn(dartsToThrow)
 
-    every { model.throwScoringDart(any()) } answers { throwDartFn() }
-    every { model.throwDartzeeDart(any(), any(), any()) } answers { actualFn() }
-    every { model.throwX01Dart(any(), any()) } answers { actualFn() }
-    every { model.throwClockDart(any(), any(), any()) } answers { actualFn() }
-    every { model.throwGolfDart(any(), any(), any()) } answers { actualFn() }
+    every { model.throwScoringDart() } answers { throwDartFn() }
+    every { model.throwDartzeeDart(any(), any()) } answers { throwDartFn() }
+    every { model.throwX01Dart(any()) } answers { throwDartFn() }
+    every { model.throwClockDart(any(), any()) } answers { throwDartFn() }
+    every { model.throwGolfDart(any(), any()) } answers { throwDartFn() }
     every { model.getStopThresholdForDartNo(any()) } answers { callOriginal() }
     return model
 }
 
-fun makeThrowDartFn(dartsToThrow: List<AimDart>, dartboard: Dartboard): () -> Point
+fun makeThrowDartFn(dartsToThrow: List<AimDart>): () -> Point
 {
     val remainingDarts = dartsToThrow.toMutableList()
     val throwDartFn = {
         val dart = remainingDarts.removeAt(0)
-        getPointForScore(dart, dartboard)
+        getPointForScore(dart)
     }
 
     return throwDartFn
 }
 
 data class ScoreAndSegmentType(val score: Int, val segmentType: SegmentType)
-fun predictableGolfModel(dartboard: Dartboard, hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(), fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType): DartsAiModel
+fun predictableGolfModel(hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(), fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType): DartsAiModel
 {
     val model = mockk<DartsAiModel>(relaxed = true)
     val stopThresholdSlot = slot<Int>()
@@ -109,10 +103,9 @@ fun predictableGolfModel(dartboard: Dartboard, hmDartNoToStopThreshold: Map<Int,
 
     val holeSlot = slot<Int>()
     val dartNoSlot = slot<Int>()
-    every { model.throwGolfDart(capture(holeSlot), capture(dartNoSlot), dartboard) } answers {
+    every { model.throwGolfDart(capture(holeSlot), capture(dartNoSlot)) } answers {
         val result = fn(holeSlot.captured, dartNoSlot.captured)
-        val pt = getPointForScore(result.score, result.segmentType, dartboard)
-        dartboard.dartThrown(pt)
+        getPointForScore(result.score, result.segmentType)
     }
 
     return model

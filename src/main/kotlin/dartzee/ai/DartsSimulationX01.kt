@@ -1,8 +1,8 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.`object`.Dart
 import dartzee.screen.Dartboard
 import dartzee.utils.isBust
 import dartzee.utils.shouldStopForMercyRule
@@ -42,7 +42,8 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Dart
         startingScore = currentScore
         resetRound()
 
-        model.throwX01Dart(currentScore, dartboard)
+        val pt = model.throwX01Dart(currentScore)
+        dartThrown(pt)
     }
 
     private fun finishedRound()
@@ -74,7 +75,8 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Dart
         }
         else
         {
-            model.throwX01Dart(currentScore, dartboard)
+            val pt = model.throwX01Dart(currentScore)
+            dartThrown(pt)
         }
     }
 }

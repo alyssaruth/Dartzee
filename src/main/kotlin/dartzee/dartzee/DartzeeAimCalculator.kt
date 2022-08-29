@@ -1,8 +1,8 @@
 package dartzee.dartzee
 
-import dartzee.`object`.SegmentType
 import dartzee.ai.DELIBERATE_MISS
 import dartzee.core.util.maxOrZero
+import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.AimPoint
@@ -45,8 +45,8 @@ class DartzeeAimCalculator
         val potentialPointsToAimFor = miniDartboard.getPotentialAimPoints().filter { aimingPointSet.contains(it.point) }
         val contendingPoints = getMaxCirclePoints(validPointSet, potentialPointsToAimFor)
 
-        val bestScore = contendingPoints.map { miniDartboard.getSegmentForPoint(it.point).getTotal() }.maxOrZero()
-        val contendingHighScorePoints = contendingPoints.filter { miniDartboard.getSegmentForPoint(it.point).getTotal() == bestScore }
+        val bestScore = contendingPoints.map { miniDartboard.getDataSegmentForPoint(it.point).getTotal() }.maxOrZero()
+        val contendingHighScorePoints = contendingPoints.filter { miniDartboard.getDataSegmentForPoint(it.point).getTotal() == bestScore }
 
         //Prefer even angles to odd ones
         val bestPoint = contendingHighScorePoints.minByOrNull { it.angle % 2 } !!

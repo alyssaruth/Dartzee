@@ -1,20 +1,13 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
-import dartzee.makeTestDartboard
-import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.DartzeeAimCalculator
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.makeDartsModel
 import dartzee.helper.makeSegmentStatus
-import dartzee.listener.DartboardListener
-import dartzee.makeTestDartzeeDartboard
-import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeDartboard
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -22,7 +15,8 @@ import dartzee.utils.getCheckoutScores
 import io.kotlintest.matchers.doubles.shouldBeBetween
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.awt.Point
@@ -121,16 +115,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(standardDeviationDoubles = 100000.0, maxRadius = 1000)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(40, dartboard)
-
-        verify { listener.dartThrown(any()) }
-        verifyNotCalled { listener.dartThrown(Dart(20, 2)) }
+        val pt = model.throwX01Dart(40)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldNotBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
     @Test
@@ -138,15 +124,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(standardDeviationDoubles = null)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(40, dartboard)
-
-        verify { listener.dartThrown(Dart(20, 2)) }
+        val pt = model.throwX01Dart(40)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
     @Test
@@ -154,13 +133,11 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = makeDartsModel(standardDeviation = 3.0)
 
-        val dartboard = makeTestDartboard()
         val pt = Point(0, 0)
-
         val hsAngles = HashSet<Double>()
         for (i in 0..100000)
         {
-            val (_, theta) = model.calculateRadiusAndAngle(pt, dartboard)
+            val (_, theta) = model.calculateRadiusAndAngle(pt)
             theta.shouldBeBetween(0.0, 360.0, 0.0)
 
             hsAngles.add(floor(theta))
@@ -172,35 +149,29 @@ class TestDartsAiModel: AbstractTest()
     @Test
     fun `Should not allow the radius to exceed the max outlier ratio`()
     {
-        val dartboard = makeTestDartboard()
         val pt = Point(0, 0)
 
         val model = makeDartsModel(standardDeviation = 50.0, maxRadius = 50)
-        val radii = (1..1000).map { model.calculateRadiusAndAngle(pt, dartboard).radius }
+        val radii = (1..1000).map { model.calculateRadiusAndAngle(pt).radius }
         radii.forEach { it.shouldBeBetween(-50.0, 50.0, 0.0) }
 
         val erraticModel = makeDartsModel(standardDeviation = 50.0, maxRadius = 75)
-        val moreRadii = (1..1000).map { erraticModel.calculateRadiusAndAngle(pt, dartboard).radius }
+        val moreRadii = (1..1000).map { erraticModel.calculateRadiusAndAngle(pt).radius }
         moreRadii.forEach { it.shouldBeBetween(-75.0, 75.0, 0.0) }
     }
 
     @Test
     fun `Should just miss the board if told to deliberately miss`()
     {
-        val dartboard = makeTestDartzeeDartboard()
         val erraticModel = makeDartsModel(standardDeviation = 100.0, maxRadius = 75)
 
         val mockDartzeeAimCalculator = mockk<DartzeeAimCalculator>()
         every { mockDartzeeAimCalculator.getPointToAimFor(any(), any(), any()) } returns DELIBERATE_MISS
         InjectedThings.dartzeeAimCalculator = mockDartzeeAimCalculator
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
         repeat(20) {
-            erraticModel.throwDartzeeDart(0, dartboard, makeSegmentStatus())
-            verify { listener.dartThrown(Dart(3, 0)) }
-            clearMocks(listener)
+            val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatus())
+            AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
         }
     }
 
@@ -212,15 +183,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(hmScoreToDart = mapOf(77 to AimDart(17, 2)))
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(77, dartboard)
-
-        verify { listener.dartThrown(Dart(17, 2)) }
+        val pt = model.throwX01Dart(77)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, 17)
     }
 
     @Test
@@ -228,15 +192,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(scoringDart = 18)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(61, dartboard)
-
-        verify { listener.dartThrown(Dart(18, 3)) }
+        val pt = model.throwX01Dart(61)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.TREBLE, 18)
     }
 
     @Test
@@ -244,15 +201,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(scoringDart = 25)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(501, dartboard)
-
-        verify { listener.dartThrown(Dart(25, 2)) }
+        val pt = model.throwX01Dart(501)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test
@@ -260,18 +210,10 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(scoringDart = 25)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
         for (i in 41..60)
         {
-            dartboard.clearDarts()
-
-            val listener = mockk<DartboardListener>(relaxed = true)
-            dartboard.addDartboardListener(listener)
-
-            model.throwX01Dart(i, dartboard)
-            verify { listener.dartThrown(Dart(i - 40, 1))}
+            val pt = model.throwX01Dart(i)
+            AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, i - 40)
         }
     }
 
@@ -280,14 +222,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(37, dartboard)
-        verify { listener.dartThrown(Dart(5, 1))}
+        val pt = model.throwX01Dart(37)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 5)
     }
 
     @Test
@@ -295,14 +231,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(31, dartboard)
-        verify { listener.dartThrown(Dart(15, 1))}
+        val pt = model.throwX01Dart(31)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 15)
     }
 
     @Test
@@ -310,14 +240,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(15, dartboard)
-        verify { listener.dartThrown(Dart(7, 1))}
+        val pt = model.throwX01Dart(15)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 7)
     }
 
     @Test
@@ -325,14 +249,8 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(7, dartboard)
-        verify { listener.dartThrown(Dart(3, 1)) }
+        val pt = model.throwX01Dart(7)
+        AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 3)
     }
 
     @Test
@@ -342,14 +260,8 @@ class TestDartsAiModel: AbstractTest()
 
         val scores = getCheckoutScores().filter{ it <= 40 }
         scores.forEach {
-            val dartboard = Dartboard(100, 100)
-            dartboard.paintDartboard()
-
-            val listener = mockk<DartboardListener>(relaxed = true)
-            dartboard.addDartboardListener(listener)
-
-            model.throwX01Dart(it, dartboard)
-            verify { listener.dartThrown(Dart(it/2, 2))}
+            val pt = model.throwX01Dart(it)
+            AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, it/2)
         }
     }
 
@@ -360,20 +272,18 @@ class TestDartsAiModel: AbstractTest()
     fun `Should aim for double, treble, treble by default`()
     {
         val model = beastDartsModel()
-
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        for (i in 1..3) { model.throwGolfDart(1, i, dartboard) }
-
-        verifySequence { listener.dartThrown(Dart(1, 2)); listener.dartThrown(Dart(1, 3)); listener.dartThrown(Dart(1, 3)) }
-
         model.getSegmentTypeForDartNo(1) shouldBe SegmentType.DOUBLE
         model.getSegmentTypeForDartNo(2) shouldBe SegmentType.TREBLE
         model.getSegmentTypeForDartNo(3) shouldBe SegmentType.TREBLE
+
+        val pt1 = model.throwGolfDart(1, 1)
+        AI_DARTBOARD.getDataSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
+
+        val pt2 = model.throwGolfDart(1, 2)
+        AI_DARTBOARD.getDataSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.TREBLE, 1)
+
+        val pt3 = model.throwGolfDart(1, 3)
+        AI_DARTBOARD.getDataSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.TREBLE, 1)
     }
 
     @Test
@@ -382,15 +292,14 @@ class TestDartsAiModel: AbstractTest()
         val hmDartNoToSegmentType = mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.OUTER_SINGLE, 3 to SegmentType.DOUBLE)
         val model = beastDartsModel(hmDartNoToSegmentType = hmDartNoToSegmentType)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val pt1 = model.throwGolfDart(1, 1)
+        AI_DARTBOARD.getDataSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.TREBLE, 1)
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+        val pt2 = model.throwGolfDart(1, 2)
+        AI_DARTBOARD.getDataSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
 
-        for (i in 1..3) { model.throwGolfDart(1, i, dartboard) }
-
-        verifySequence { listener.dartThrown(Dart(1, 3)); listener.dartThrown(Dart(1, 1)); listener.dartThrown(Dart(1, 2)) }
+        val pt3 = model.throwGolfDart(1, 3)
+        AI_DARTBOARD.getDataSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
     }
 
     @Test
@@ -420,17 +329,14 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val pt1 = model.throwClockDart(1, ClockType.Standard)
+        AI_DARTBOARD.getDataSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+        val pt2 = model.throwClockDart(13, ClockType.Doubles)
+        AI_DARTBOARD.getDataSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.DOUBLE, 13)
 
-        model.throwClockDart(1, ClockType.Standard, dartboard)
-        model.throwClockDart(13, ClockType.Doubles, dartboard)
-        model.throwClockDart(11, ClockType.Trebles, dartboard)
-
-        verifySequence { listener.dartThrown(Dart(1, 1)); listener.dartThrown(Dart(13, 2)); listener.dartThrown(Dart(11, 3)) }
+        val pt3 = model.throwClockDart(11, ClockType.Trebles)
+        AI_DARTBOARD.getDataSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.TREBLE, 11)
     }
 
     /**
@@ -441,22 +347,15 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
 
-        val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
         val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
-        model.throwDartzeeDart(0, dartboard, segmentStatus)
-        model.throwDartzeeDart(1, dartboard, segmentStatus)
-        model.throwDartzeeDart(2, dartboard, segmentStatus)
+        val pt1 = model.throwDartzeeDart(0, segmentStatus)
+        AI_DARTBOARD.getDataSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        verifySequence {
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(25, 2))
-        }
+        val pt2 = model.throwDartzeeDart(1, segmentStatus)
+        AI_DARTBOARD.getDataSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+
+        val pt3 = model.throwDartzeeDart(2, segmentStatus)
+        AI_DARTBOARD.getDataSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test
@@ -464,21 +363,14 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
 
-        val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
         val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
-        model.throwDartzeeDart(0, dartboard, segmentStatus)
-        model.throwDartzeeDart(1, dartboard, segmentStatus)
-        model.throwDartzeeDart(2, dartboard, segmentStatus)
+        val pt1 = model.throwDartzeeDart(0, segmentStatus)
+        AI_DARTBOARD.getDataSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        verifySequence {
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-        }
+        val pt2 = model.throwDartzeeDart(1, segmentStatus)
+        AI_DARTBOARD.getDataSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+
+        val pt3 = model.throwDartzeeDart(2, segmentStatus)
+        AI_DARTBOARD.getDataSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
     }
 }
