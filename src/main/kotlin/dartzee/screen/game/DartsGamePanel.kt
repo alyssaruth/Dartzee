@@ -171,7 +171,9 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
         addComponentListener(object : ComponentAdapter() {
             override fun componentResized(evt: ComponentEvent) {
-                dartboard.paintDartboard()
+                SwingUtilities.invokeLater {
+                    dartboard.paintDartboard()
+                }
             }
         })
     }

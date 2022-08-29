@@ -101,7 +101,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     open fun paintDartboard(colourWrapper: ColourWrapper? = null)
     {
-        if (width < 0 || height < 0 || repaintingSameSize()) {
+        if (width <= 0 || height <= 0 || repaintingSameSize()) {
             return
         }
 
