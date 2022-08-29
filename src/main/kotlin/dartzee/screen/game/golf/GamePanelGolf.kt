@@ -31,7 +31,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
         return lastDart.getGolfScore(targetHole)
     }
 
-    override fun doAiTurn(model: DartsAiModel): Point
+    override fun computeAiDart(model: DartsAiModel): Point
     {
         val targetHole = currentRoundNumber
         val dartNo = dartsThrownCount() + 1

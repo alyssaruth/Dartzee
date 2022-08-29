@@ -1,13 +1,13 @@
 package dartzee.screen
 
 import com.github.alexburlton.swingtest.shouldMatchImage
-import dartzee.`object`.ColourWrapper
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
-import dartzee.`object`.Dart
 import dartzee.dartzee.markPoints
 import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.`object`.Dart
 import dartzee.utils.DartsColour
 import io.kotlintest.shouldBe
 import io.mockk.mockk
@@ -23,6 +23,7 @@ class TestDartboard: AbstractTest()
     {
         val dartboard = Dartboard(50, 50)
         dartboard.paintDartboard()
+        dartboard.ensureListening()
 
         val listener = mockk<DartboardListener>(relaxed = true)
 
@@ -81,7 +82,7 @@ class TestDartboard: AbstractTest()
     {
         val dartboard = Dartboard(250, 250)
         val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        dartboard.paintDartboard(colourWrapper, false)
+        dartboard.paintDartboard(colourWrapper)
         dartboard.shouldMatchImage("wireframe")
     }
 
@@ -91,7 +92,7 @@ class TestDartboard: AbstractTest()
     {
         val dartboard = Dartboard(400, 400)
         val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        dartboard.paintDartboard(colourWrapper, false)
+        dartboard.paintDartboard(colourWrapper)
 
         val pts = dartboard.getPotentialAimPoints().map { it.point }
         val lbl = dartboard.markPoints(pts)
@@ -107,7 +108,7 @@ class TestDartboard: AbstractTest()
 
         val bigBoard = Dartboard(400, 400)
         val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        bigBoard.paintDartboard(colourWrapper, false)
+        bigBoard.paintDartboard(colourWrapper)
 
         val smallPoints = smallBoard.getPotentialAimPoints()
 

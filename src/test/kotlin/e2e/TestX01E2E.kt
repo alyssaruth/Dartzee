@@ -81,7 +81,7 @@ class TestX01E2E : AbstractRegistryTest()
         )
 
         val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
-        val aiModel = predictableDartsModel(gamePanel.dartboard, aimDarts, mercyThreshold = 7)
+        val aiModel = predictableDartsModel(aimDarts, mercyThreshold = 7)
 
         val player = makePlayerWithModel(aiModel)
         gamePanel.startGame(listOf(player))
@@ -129,8 +129,8 @@ class TestX01E2E : AbstractRegistryTest()
         val p1AimDarts = p1Rounds.flatten().map { it.toAimDart() }
         val p2AimDarts = p2Rounds.flatten().map { it.toAimDart() }
 
-        val p1Model = predictableDartsModel(gamePanel.dartboard, p1AimDarts, mercyThreshold = 7)
-        val p2Model = predictableDartsModel(gamePanel.dartboard, p2AimDarts, mercyThreshold = 20)
+        val p1Model = predictableDartsModel(p1AimDarts, mercyThreshold = 7)
+        val p2Model = predictableDartsModel(p2AimDarts, mercyThreshold = 20)
 
         val p1 = makePlayerWithModel(p1Model, name = "Alan")
         val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")

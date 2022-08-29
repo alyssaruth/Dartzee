@@ -24,7 +24,7 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
     override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = ClockPlayerState(config, pt)
 
-    override fun doAiTurn(model: DartsAiModel): Point
+    override fun computeAiDart(model: DartsAiModel): Point
     {
         val currentTarget = getCurrentPlayerState().getCurrentTarget()
         return model.throwClockDart(currentTarget, config.clockType)

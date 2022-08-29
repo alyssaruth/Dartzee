@@ -136,7 +136,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
     override fun shouldStopAfterDartThrown() = getCurrentPlayerState().isCurrentRoundComplete()
 
-    override fun doAiTurn(model: DartsAiModel): Point?
+    override fun computeAiDart(model: DartsAiModel): Point?
     {
         val startOfRoundScore = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
         val currentScore = getCurrentPlayerState().getRemainingScore()

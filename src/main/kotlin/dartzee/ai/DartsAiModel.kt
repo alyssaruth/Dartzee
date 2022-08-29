@@ -6,7 +6,6 @@ import dartzee.game.ClockType
 import dartzee.logging.CODE_AI_ERROR
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
-import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
@@ -70,14 +69,14 @@ data class DartsAiModel(val standardDeviation: Double,
 
     fun throwScoringDart(): Point
     {
-        val ptToAimAt = getScoringPoint()
+        val ptToAimAt = calculateScoringPoint()
         return throwDartAtPoint(ptToAimAt)
     }
 
-    fun getScoringPoint(dartboard: Dartboard = AI_DARTBOARD): Point
+    fun calculateScoringPoint(): Point
     {
         val segmentType = if (scoringDart == 25) SegmentType.DOUBLE else SegmentType.TREBLE
-        return getPointForScore(scoringDart, segmentType, dartboard)
+        return getPointForScore(scoringDart, segmentType)
     }
 
     private fun getOveriddenDartToAimAt(score: Int) = hmScoreToDart[score]
@@ -132,7 +131,7 @@ data class DartsAiModel(val standardDeviation: Double,
             return AI_DARTBOARD.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
         }
 
-        val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint, AI_DARTBOARD)
+        val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint)
 
         val resultingAiPoint = translatePoint(aiDartboardPoint, radius, angle)
         AI_DARTBOARD.rationalisePoint(resultingAiPoint)
@@ -140,20 +139,20 @@ data class DartsAiModel(val standardDeviation: Double,
     }
 
     data class DistributionSample(val radius: Double, val theta: Double)
-    fun calculateRadiusAndAngle(pt: Point, dartboard: Dartboard): DistributionSample
+    fun calculateRadiusAndAngle(pt: Point): DistributionSample
     {
         //Averaging logic
-        val radius = sampleRadius(pt, dartboard)
+        val radius = sampleRadius(pt)
 
         //Generate the angle
-        val theta = generateAngle(pt, dartboard)
+        val theta = generateAngle(pt)
         val sanitisedAngle = sanitiseAngle(theta)
 
         return DistributionSample(radius, sanitisedAngle)
     }
-    private fun sampleRadius(pt: Point, dartboard: Dartboard): Double
+    private fun sampleRadius(pt: Point): Double
     {
-        val distribution = getDistributionToUse(pt, dartboard)
+        val distribution = getDistributionToUse(pt)
 
         var radius = distribution.sample()
         while (abs(radius) > maxRadius)
@@ -173,19 +172,19 @@ data class DartsAiModel(val standardDeviation: Double,
         }
     }
 
-    private fun getDistributionToUse(pt: Point, dartboard: Dartboard) =
-        if (standardDeviationDoubles != null && dartboard.isDouble(pt)) NormalDistribution(mean.toDouble(), standardDeviationDoubles) else distribution
+    private fun getDistributionToUse(pt: Point) =
+        if (standardDeviationDoubles != null && AI_DARTBOARD.isDouble(pt)) NormalDistribution(mean.toDouble(), standardDeviationDoubles) else distribution
 
-    private fun generateAngle(pt: Point, dartboard: Dartboard): Double
+    private fun generateAngle(pt: Point): Double
     {
-        if (standardDeviationCentral == null || dartboard.isDouble(pt))
+        if (standardDeviationCentral == null || AI_DARTBOARD.isDouble(pt))
         {
             //Just pluck a number from 0-360.
             return generateRandomAngle()
         }
 
         //Otherwise, we have a Normal Distribution to use to generate an angle more likely to be into the dartboard (rather than out of it)
-        val angleToAvoid = getAngleForPoint(pt, dartboard.centerPoint)
+        val angleToAvoid = getAngleForPoint(pt, AI_DARTBOARD.centerPoint)
         val angleTowardsCenter = (angleToAvoid + 180) % 360
         val angleDistribution = NormalDistribution(angleTowardsCenter, standardDeviationCentral)
         return angleDistribution.sample()

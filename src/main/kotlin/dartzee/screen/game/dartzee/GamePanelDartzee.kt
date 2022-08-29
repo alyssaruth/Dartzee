@@ -40,7 +40,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = DartzeePlayerState(pt)
 
-    override fun doAiTurn(model: DartsAiModel) =
+    override fun computeAiDart(model: DartsAiModel) =
         if (isScoringRound())
         {
             model.throwScoringDart()

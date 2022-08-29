@@ -5,6 +5,7 @@ import dartzee.core.bean.paint
 import dartzee.`object`.ColourWrapper
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
+import dartzee.utils.convertForUiDartboard
 import dartzee.utils.getDistance
 import java.awt.Color
 import java.awt.Font
@@ -36,7 +37,8 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
 
     override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
     {
-        val centerPt = model.getScoringPoint(dartboard)
+        val modelPt = model.calculateScoringPoint()
+        val centerPt = convertForUiDartboard(modelPt, dartboard)
 
         val divisor = model.computeProbabilityDensityDivisor()
 

@@ -181,7 +181,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
      * Abstract methods
      */
     abstract fun factoryState(pt: IWrappedParticipant): PlayerState
-    abstract fun doAiTurn(model: DartsAiModel): Point?
+    abstract fun computeAiDart(model: DartsAiModel): Point?
 
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
@@ -729,7 +729,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             }
 
             val model = getCurrentPlayerStrategy()
-            val pt = doAiTurn(model)
+            val pt = computeAiDart(model)
 
             pt?.let {
                 runOnEventThreadBlocking {

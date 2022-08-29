@@ -117,8 +117,8 @@ class TestDartzeeE2E: AbstractRegistryTest()
         val p1AimDarts = p1Rounds.flatten().map { it.toAimDart() }
         val p2AimDarts = p2Rounds.flatten().map { it.toAimDart() }
 
-        val p1Model = predictableDartsModel(gamePanel.dartboard, p1AimDarts, mercyThreshold = 7, dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
-        val p2Model = predictableDartsModel(gamePanel.dartboard, p2AimDarts, mercyThreshold = 20)
+        val p1Model = predictableDartsModel(p1AimDarts, mercyThreshold = 7, dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
+        val p2Model = predictableDartsModel(p2AimDarts, mercyThreshold = 20)
 
         val p1 = makePlayerWithModel(p1Model, name = "Alan")
         val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
