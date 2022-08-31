@@ -1,9 +1,8 @@
 package dartzee.helper
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.DateStatics
+import dartzee.db.DartEntity
 import dartzee.db.EntityName
 import dartzee.db.LocalIdGenerator
 import dartzee.db.ParticipantEntity
@@ -14,9 +13,12 @@ import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.X01PlayerState
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.stats.GameWrapper
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
+import io.kotlintest.shouldBe
 import java.awt.Point
 import java.sql.Timestamp
 
@@ -25,6 +27,19 @@ fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
     val dart = Dart(score, multiplier)
     dart.startingScore = score
     return dart
+}
+
+fun factoryClockMiss(score: Int): Dart
+{
+    val dart = Dart(score, 0)
+    dart.startingScore = score
+    return dart
+}
+
+fun List<Dart>.insertDarts(pt: ParticipantEntity, roundNumber: Int)
+{
+    val entities = mapIndexed { ix, drt -> DartEntity.factory(drt, pt.playerId, pt.rowId, roundNumber, ix) }
+    entities.forEach { it.saveToDatabase() }
 }
 
 fun makeDart(score: Int = 20,
@@ -143,4 +158,21 @@ fun makeGameWrapper(
         it.setHmRoundNumberToDartsThrown(dartRounds)
         it.setTotalRounds(totalRounds)
     }
+}
+
+fun makeGolfGameWrapper(
+    localId: Long = 1L,
+    gameParams: String = "18",
+    dartRounds: List<List<Dart>>,
+    expectedScore: Int,
+    dtStart: Timestamp = Timestamp(1000)): GameWrapper
+{
+    val golfRounds = dartRounds.mapIndexed { ix, round -> makeGolfRound(ix+1, round) }
+
+    val score = golfRounds.sumOf { it.last().getGolfScore() }
+    score shouldBe expectedScore
+
+    val wrapper = makeGameWrapper(localId = localId, gameParams = gameParams, finalScore = score, dtStart = dtStart)
+    golfRounds.flatten().forEach { wrapper.addDart(it.roundNumber, it) }
+    return wrapper
 }

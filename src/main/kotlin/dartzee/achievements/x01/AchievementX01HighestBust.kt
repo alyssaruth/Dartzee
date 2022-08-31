@@ -1,12 +1,11 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.AchievementType
 import dartzee.achievements.unlockThreeDartAchievement
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
-import java.net.URL
 
 class AchievementX01HighestBust : AbstractAchievement()
 {
@@ -14,6 +13,7 @@ class AchievementX01HighestBust : AbstractAchievement()
     override val desc = "Highest number busted from in X01"
     override val achievementType = AchievementType.X01_HIGHEST_BUST
     override val gameType = GameType.X01
+    override val allowedForTeams = true
 
     override val redThreshold = 2
     override val orangeThreshold = 20

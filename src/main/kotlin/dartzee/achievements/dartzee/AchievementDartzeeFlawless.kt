@@ -1,6 +1,10 @@
 package dartzee.achievements.dartzee
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.buildQualifyingDartzeeGamesTable
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.game.GameType
@@ -20,6 +24,7 @@ class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
     override val pinkThreshold = 50
     override val maxValue = 50
     override val gameType = GameType.DARTZEE
+    override val allowedForTeams = false
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_DARTZEE_FLAWLESS
 
@@ -32,6 +37,7 @@ class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
         sb.append(" FROM ${EntityName.Participant} pt, $dartzeeGames zz")
         sb.append(" WHERE pt.GameId = zz.GameId")
         sb.append(" AND pt.FinalScore > -1")
+        sb.append(" AND pt.TeamId = ''")
         appendPlayerSql(sb, playerIds)
         sb.append(" AND NOT EXISTS (")
         sb.append("     SELECT 1")

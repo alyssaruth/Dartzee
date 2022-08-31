@@ -17,7 +17,14 @@ import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
-import dartzee.utils.*
+import dartzee.utils.getSortedDartStr
+import dartzee.utils.isBust
+import dartzee.utils.isCheckoutScore
+import dartzee.utils.isNearMissDouble
+import dartzee.utils.isShanghai
+import dartzee.utils.shouldStopForMercyRule
+import dartzee.utils.sumScore
+import java.awt.Point
 
 class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
     GamePanelPausable<DartsScorerX01, Dartboard, X01PlayerState>(parent, game, totalPlayers)
@@ -92,10 +99,11 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
     override fun currentPlayerHasFinished() = getCurrentPlayerState().getRemainingScore() == 0
 
-    override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
+    override fun updateAchievementsForFinish(playerState: X01PlayerState, finishingPosition: Int, score: Int)
     {
-        super.updateAchievementsForFinish(playerId, finishingPosition, score)
+        super.updateAchievementsForFinish(playerState, finishingPosition, score)
 
+        val playerId = playerState.lastIndividual().playerId
         val finalRound = getCurrentPlayerState().getLastRound()
 
         val sum = sumScore(finalRound)
@@ -114,7 +122,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
         if (checkout == 1)
         {
-            AchievementEntity.insertAchievement(AchievementType.X01_BTBF, getCurrentPlayerId(), getGameId())
+            AchievementEntity.insertAchievement(AchievementType.X01_BTBF, playerId, getGameId())
         }
     }
 
@@ -128,19 +136,19 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
     override fun shouldStopAfterDartThrown() = getCurrentPlayerState().isCurrentRoundComplete()
 
-    override fun doAiTurn(model: DartsAiModel)
+    override fun computeAiDart(model: DartsAiModel): Point?
     {
         val startOfRoundScore = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
         val currentScore = getCurrentPlayerState().getRemainingScore()
-        if (shouldStopForMercyRule(model, startOfRoundScore, currentScore))
+        return if (shouldStopForMercyRule(model, startOfRoundScore, currentScore))
         {
             stopThrowing()
+            null
         }
         else
         {
-            model.throwX01Dart(currentScore, dartboard)
+            model.throwX01Dart(currentScore)
         }
-
     }
 
     override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerX01(this, gameEntity.gameParams, participant)

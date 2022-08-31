@@ -2,6 +2,7 @@ package dartzee.core.bean
 
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Image
 import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -53,6 +54,14 @@ fun JTextComponent.addGhostText(text: String)
     this.add(GhostText(text, this))
 }
 
+fun Image.toBufferedImage(width: Int, height: Int): BufferedImage
+{
+    val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+    val g = bi.createGraphics()
+    g.drawImage(this, 0, 0, null)
+    g.dispose()
+    return bi
+}
 fun BufferedImage.paint(fn: (pt: Point) -> Color?)
 {
     val pts = getPointList(width, height)

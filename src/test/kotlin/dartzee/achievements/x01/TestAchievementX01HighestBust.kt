@@ -26,6 +26,19 @@ class TestAchievementX01HighestBust: AbstractAchievementTest<AchievementX01Highe
     }
 
     @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+
+        insertDart(pt, ordinal = 1, roundNumber = 1, startingScore = 40, score = 20, multiplier = 1)
+        insertDart(pt, ordinal = 2, roundNumber = 1, startingScore = 20, score = 20, multiplier = 1)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
     fun `Should create an achievement with the correct fields populated`()
     {
         val pt = insertRelevantParticipant()

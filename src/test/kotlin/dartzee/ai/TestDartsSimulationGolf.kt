@@ -1,9 +1,13 @@
 package dartzee.ai
 
+import dartzee.helper.AbstractTest
+import dartzee.helper.ScoreAndSegmentType
+import dartzee.helper.beastDartsModel
+import dartzee.helper.insertPlayer
+import dartzee.helper.predictableGolfModel
+import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import dartzee.helper.*
-import dartzee.makeTestDartboard
 import io.kotlintest.matchers.collections.shouldContainInOrder
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
@@ -36,7 +40,7 @@ class TestDartsSimulationGolf: AbstractTest()
         val dartboard = makeTestDartboard()
 
         val hmDartNoToStopThreshold = mutableMapOf(1 to 2, 2 to 3)
-        val model = predictableGolfModel(dartboard, hmDartNoToStopThreshold) { hole, _ ->
+        val model = predictableGolfModel(hmDartNoToStopThreshold) { hole, _ ->
             when
             {
                 hole == 1 -> ScoreAndSegmentType(1, SegmentType.TREBLE)

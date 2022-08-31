@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import dartzee.`object`.*
 import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
 import dartzee.core.util.getParentWindow
@@ -9,12 +8,34 @@ import dartzee.listener.DartboardListener
 import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.logging.CODE_RENDER_ERROR
 import dartzee.logging.KEY_DURATION
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
+import dartzee.`object`.StatefulSegment
 import dartzee.screen.game.DartsGameScreen
-import dartzee.utils.*
+import dartzee.utils.AimPoint
+import dartzee.utils.DartsColour
 import dartzee.utils.DartsColour.DARTBOARD_BLACK
+import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.BASE_FONT
-import java.awt.*
+import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
+import dartzee.utils.convertForDestinationDartboard
+import dartzee.utils.factorySegmentForPoint
+import dartzee.utils.getAverage
+import dartzee.utils.getColourForSegment
+import dartzee.utils.getDartForSegment
+import dartzee.utils.getPotentialAimPoints
+import java.awt.Canvas
+import java.awt.Color
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.Font
+import java.awt.FontMetrics
+import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.RenderingHints
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
@@ -73,8 +94,25 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         listeners.add(listener)
     }
 
-    open fun paintDartboard(colourWrapper: ColourWrapper? = null, listen: Boolean = true)
+    private fun repaintingSameSize() =
+        dartboardLabel.width == width
+                && dartboardLabel.height == height
+                && hmSegmentKeyToSegment.isNotEmpty()
+
+    open fun paintDartboard(colourWrapper: ColourWrapper? = null)
     {
+        if (width <= 0 || height <= 0 || repaintingSameSize()) {
+            return
+        }
+
+        val wasListening = isListening()
+        val oldCenter = centerPoint
+        val oldDiameter = diameter
+
+        lastHoveredSegment = null
+        stopListening()
+        hmSegmentKeyToSegment.clear()
+
         val width = width
         val height = height
 
@@ -98,15 +136,24 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         dartboardLabel.icon = ImageIcon(dartboardImage!!)
         dartboardLabel.repaint()
 
+        if (wasListening) {
+            ensureListening()
+        }
+
+        translateThrownDarts(oldCenter, oldDiameter)
+
         val duration = timer.getDuration()
         logger.info(CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
             KEY_DURATION to duration)
+    }
 
-        //Now the dartboard is painted, add the mouse listeners
-        if (listen)
-        {
-            ensureListening()
-        }
+    private fun translateThrownDarts(oldCenter: Point, oldDiameter: Double)
+    {
+        val points = dartLabels.filter { it.isVisible }.map { it.location }
+        val newPoints = points.map { convertForDestinationDartboard(it, oldCenter, oldDiameter, this) }
+
+        clearDarts()
+        newPoints.forEach(::addDart)
     }
 
     private fun paintDartboardImage()
@@ -270,8 +317,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun getAllSegments() = hmSegmentKeyToSegment.values.toList()
 
-    fun getDataSegmentForPoint(pt: Point) = getSegmentForPoint(pt).toDataSegment()
-    fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): StatefulSegment
+    fun getDataSegmentForPoint(pt: Point) = factorySegmentForPoint(pt, centerPoint, diameter)
+    protected fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): StatefulSegment
     {
         val segment = getAllSegments().firstOrNull { it.containsPoint(pt) }
         if (segment != null)
@@ -293,7 +340,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         val newSegment = factorySegmentForPoint(pt, centerPoint, diameter)
         val segmentKey = "${newSegment.score}_${newSegment.type}"
 
-        val segment = hmSegmentKeyToSegment.getOrPut(segmentKey) { newSegment }
+        val segment = hmSegmentKeyToSegment.getOrPut(segmentKey) { StatefulSegment(newSegment.type, newSegment.score) }
         segment.addPoint(pt)
         return segment
     }
@@ -311,7 +358,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun isDouble(pt: Point): Boolean
     {
-        val seg = getSegmentForPoint(pt)
+        val seg = getDataSegmentForPoint(pt)
         return seg.isDoubleExcludingBull()
     }
 
@@ -346,8 +393,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
             rationalisePoint(pt)
         }
 
-        val segment = getSegmentForPoint(pt)
-        return getDartForSegment(pt, segment.toDataSegment())
+        val segment = getDataSegmentForPoint(pt)
+        return getDartForSegment(pt, segment)
     }
 
     fun rationalisePoint(pt: Point)
@@ -358,21 +405,9 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         pt.setLocation(x, y)
     }
 
-    fun listen(listen: Boolean)
-    {
-        if (listen)
-        {
-            ensureListening()
-        }
-        else
-        {
-            stopListening()
-        }
-    }
-
     fun ensureListening()
     {
-        if (dartboardLabel.mouseListeners.isEmpty())
+        if (!isListening())
         {
             dartboardLabel.addMouseListener(this)
             dartboardLabel.addMouseMotionListener(this)
@@ -381,7 +416,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun stopListening()
     {
-        if (dartboardLabel.mouseListeners.isNotEmpty())
+        if (isListening())
         {
             dartboardLabel.removeMouseListener(this)
             dartboardLabel.removeMouseMotionListener(this)
@@ -390,6 +425,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         //Undo any colouring that there might have been
         lastHoveredSegment?.let { colourSegment(it, false) }
     }
+
+    fun isListening() = dartboardLabel.mouseListeners.isNotEmpty()
 
     private fun addDart(pt: Point)
     {
@@ -419,9 +456,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun clearDarts()
     {
-        //Always want to stop this at the same time
-        //stopDodgy();
-
         for (i in dartLabels.indices)
         {
             val dartLabel = dartLabels[i]

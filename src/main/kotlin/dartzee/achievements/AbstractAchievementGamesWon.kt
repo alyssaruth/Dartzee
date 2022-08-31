@@ -12,6 +12,7 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
     override val blueThreshold = 100
     override val pinkThreshold = 200
     override val maxValue = 200
+    override val allowedForTeams = false
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {
@@ -21,6 +22,7 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement()
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '$gameType'")
         sb.append(" AND pt.FinishingPosition = 1")
+        sb.append(" AND pt.TeamId = ''")
         appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->

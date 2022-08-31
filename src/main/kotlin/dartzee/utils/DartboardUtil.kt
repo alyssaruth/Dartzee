@@ -1,6 +1,11 @@
 package dartzee.utils
 
-import dartzee.`object`.*
+import dartzee.ai.AI_DARTBOARD
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
+import dartzee.`object`.StatefulSegment
 import dartzee.screen.Dartboard
 import java.awt.Color
 import java.awt.Point
@@ -42,18 +47,18 @@ fun getAdjacentNumbers(number: Int): List<Int>
     return getNumbersWithinN(number, 1).filterNot { it == number }
 }
 
-fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): StatefulSegment
+fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
 {
     val radius = getDistance(dartPt, centerPt)
     val ratio = 2 * radius / diameter
 
     if (ratio < RATIO_INNER_BULL)
     {
-        return StatefulSegment(SegmentType.DOUBLE, 25)
+        return DartboardSegment(SegmentType.DOUBLE, 25)
     }
     else if (ratio < RATIO_OUTER_BULL)
     {
-        return StatefulSegment(SegmentType.OUTER_SINGLE, 25)
+        return DartboardSegment(SegmentType.OUTER_SINGLE, 25)
     }
 
     //We've not hit the bullseye, so do other calculations to work out score/multiplier
@@ -61,18 +66,24 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): St
     val score = getScoreForAngle(angle)
     val type = calculateTypeForRatioNonBullseye(ratio)
 
-    return StatefulSegment(type, score)
+    return DartboardSegment(type, score)
 }
 
-fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, destinationDartboard: Dartboard): Point
+fun convertForUiDartboard(sourcePt: Point, destinationDartboard: Dartboard): Point =
+    convertForDestinationDartboard(sourcePt, AI_DARTBOARD, destinationDartboard)
+
+fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, destinationDartboard: Dartboard): Point =
+    convertForDestinationDartboard(sourcePt, sourceDartboard.centerPoint, sourceDartboard.diameter, destinationDartboard)
+
+fun convertForDestinationDartboard(sourcePt: Point, oldCenter: Point, oldDiameter: Double, destinationDartboard: Dartboard): Point
 {
-    val relativeDistance = getDistance(sourcePt, sourceDartboard.centerPoint) / sourceDartboard.diameter
-    val angle = getAngleForPoint(sourcePt, sourceDartboard.centerPoint)
+    val relativeDistance = getDistance(sourcePt, oldCenter) / oldDiameter
+    val angle = getAngleForPoint(sourcePt, oldCenter)
 
     val newPoint = translatePoint(destinationDartboard.centerPoint, relativeDistance * destinationDartboard.diameter, angle)
     destinationDartboard.rationalisePoint(newPoint)
 
-    val desiredSegment = sourceDartboard.getDataSegmentForPoint(sourcePt)
+    val desiredSegment = factorySegmentForPoint(sourcePt, oldCenter, oldDiameter)
     val candidatePoints = mutableSetOf(newPoint)
     while (candidatePoints.none { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment })
     {

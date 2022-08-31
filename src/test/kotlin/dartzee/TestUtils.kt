@@ -2,17 +2,18 @@ package dartzee
 
 import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.isEqual
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
 import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
-import dartzee.dartzee.DartzeeRuleDto
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.logging.LogRecord
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import io.kotlintest.matchers.doubles.shouldBeBetween
@@ -95,8 +96,12 @@ fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom
     insets.bottom shouldBe bottom
 }
 
-fun MockKMatcherScope.ruleDtosEq(players: List<DartzeeRuleDto>) = match<List<DartzeeRuleDto>> {
-    it.map { p -> p.generateRuleDescription() } == players.map { p -> p.generateRuleDescription() }
+fun MockKMatcherScope.launchParamsEqual(expected: GameLaunchParams) = match<GameLaunchParams> { actual ->
+    val expectedNoDartzee = expected.copy(dartzeeDtos = emptyList())
+    val actualNoDartzee = actual.copy(dartzeeDtos = emptyList())
+
+    expectedNoDartzee == actualNoDartzee &&
+            expected.dartzeeDtos?.map { it.generateRuleDescription() } == actual.dartzeeDtos?.map { it.generateRuleDescription() }
 }
 
 fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
@@ -135,6 +140,8 @@ private fun Icon.toBufferedImage(): BufferedImage
 fun ScrollTable.getRows(): List<List<Any?>> =
     model.getRows(columnCount)
 
+fun ScrollTable.getFirstRow() = getRows().first()
+
 fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>>
 {
     val result = mutableListOf<List<Any?>>()
@@ -147,3 +154,10 @@ fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>>
 }
 
 fun ScrollTable.firstRow(): List<Any?> = getRows().first()
+
+fun List<List<Dart>>.zipDartRounds(other: List<List<Dart>>): List<List<Dart>> {
+    val result = zip(other) { p1Round, p2Round -> listOf(p1Round, p2Round) }.flatten()
+
+    val extraRows = subList(other.size, size)
+    return result + extraRows
+}

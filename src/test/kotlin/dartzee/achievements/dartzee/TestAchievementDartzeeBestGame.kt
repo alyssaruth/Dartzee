@@ -3,7 +3,10 @@ package dartzee.achievements.dartzee
 import dartzee.achievements.AbstractAchievementTest
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
+import dartzee.helper.testRules
 import dartzee.utils.Database
 import dartzee.utils.insertDartzeeRules
 import io.kotlintest.shouldBe
@@ -16,17 +19,27 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
 
     override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
     {
-        insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 125, database = database)
+        insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 127, database = database)
 
         insertDartzeeRules(g.rowId, testRules, database)
     }
 
     @Test
-    fun `should ignore games with fewer than 5 rules`()
+    fun `should ignore participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(finalScore = 120, team = true)
+        insertDartzeeRules(pt.gameId, testRules)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 0
+    }
+
+    @Test
+    fun `should ignore games with fewer than 5 rounds`()
     {
         val pt = insertRelevantParticipant(finalScore = 120)
 
-        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_RULES - 1)
+        val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertDartzeeRules(pt.gameId, shortList)
 
         factoryAchievement().populateForConversion(emptyList())
@@ -46,11 +59,10 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     @Test
     fun `Should compute score as average per round, rounded down`()
     {
-        val player = insertPlayer()
-        setUpAchievementRowForPlayer(player)
+        setUpAchievementRowForPlayer(insertPlayer())
 
         factoryAchievement().populateForConversion(emptyList())
-        retrieveAchievement().achievementCounter shouldBe 20
+        retrieveAchievement().achievementCounter shouldBe 25
     }
 
     @Test
@@ -61,7 +73,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         insertDartzeeRules(pt.gameId, rules)
 
         factoryAchievement().populateForConversion(emptyList())
-        retrieveAchievement().achievementCounter shouldBe 10
+        retrieveAchievement().achievementCounter shouldBe 13
     }
 
     @Test
@@ -71,14 +83,14 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         setUpGame(player, 100, Timestamp(100))
         val expectedGameId = setUpGame(player, 120, Timestamp(150))
         setUpGame(player, 120, Timestamp(200))
-        setUpGame(player, 118, Timestamp(250))
+        setUpGame(player, 121, Timestamp(250))
 
         factoryAchievement().populateForConversion(emptyList())
 
         val achievement = retrieveAchievement()
         achievement.gameIdEarned shouldBe expectedGameId
         achievement.dtAchieved shouldBe Timestamp(150)
-        achievement.achievementCounter shouldBe 20
+        achievement.achievementCounter shouldBe 24
         achievement.playerId shouldBe player.rowId
     }
 

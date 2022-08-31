@@ -24,7 +24,7 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler
         }
         else
         {
-            logger.error(CODE_UNCAUGHT_EXCEPTION, "Uncaught exception: $arg1", arg1, KEY_THREAD to arg0.toString())
+            logger.error(CODE_UNCAUGHT_EXCEPTION, "Uncaught exception: $arg1 in thread $arg0", arg1, KEY_THREAD to arg0.toString())
         }
     }
 
@@ -36,7 +36,7 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler
     {
         val message = t.message ?: return false
 
-        return message.contains("UIResource cannot be cast to class javax.swing.Painter")
+        return message.contains("cannot be cast to class javax.swing.Painter")
                 || message.contains("UIResource cannot be cast to class java.awt.Color")
     }
 }

@@ -2,6 +2,7 @@ package dartzee.db
 
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
+import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.logging.CODE_SQL_EXCEPTION
@@ -59,21 +60,6 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Should get the participant count based on its own row ID`()
-    {
-        val game = GameEntity()
-        val gameId = game.assignRowId()
-        game.saveToDatabase()
-        game.getParticipantCount() shouldBe 0
-
-        insertParticipant()
-        game.getParticipantCount() shouldBe 0
-
-        insertParticipant(gameId = gameId)
-        game.getParticipantCount() shouldBe 1
-    }
-
-    @Test
     fun `Should handle no participants when getting players vector`()
     {
         val game = GameEntity()
@@ -110,43 +96,47 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Factory and save individual game`()
+    fun `Factory individual game`()
     {
-        val game = GameEntity.factoryAndSave(GameType.X01, "301")
-
-        val gameId = game.rowId
+        val game = GameEntity.factory(GameType.X01, "301")
         game.localId shouldNotBe -1
         game.gameType shouldBe GameType.X01
         game.gameParams shouldBe "301"
         game.dtFinish shouldBe DateStatics.END_OF_TIME
         game.dartsMatchId shouldBe ""
         game.matchOrdinal shouldBe -1
+        game.retrievedFromDb shouldBe false
 
-        game.retrieveForId(gameId) shouldNotBe null
+        getCountFromTable(EntityName.Game) shouldBe 0
+    }
+
+    @Test
+    fun `Factory and save individual game`()
+    {
+        val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
+        val game = GameEntity.factoryAndSave(launchParams)
+        game.matchOrdinal shouldBe -1
+        game.dartsMatchId shouldBe ""
+        game.gameType shouldBe GameType.GOLF
+        game.gameParams shouldBe "18"
+        game.rowId shouldNotBe ""
+        game.retrievedFromDb shouldBe true
+
+        getCountFromTable(EntityName.Game) shouldBe 1
     }
 
     @Test
     fun `Factory and save for a match`()
     {
         val match = DartsMatchEntity.factoryFirstTo(4)
-        match.gameType = GameType.GOLF
-        match.gameParams = "18"
 
-        val matchId = match.rowId
-
-        val gameOne = GameEntity.factoryAndSave(match)
-        gameOne.matchOrdinal shouldBe 1
-        gameOne.dartsMatchId shouldBe matchId
-        gameOne.gameType shouldBe GameType.GOLF
-        gameOne.gameParams shouldBe "18"
-        gameOne.rowId shouldNotBe ""
-
-        val gameTwo = GameEntity.factoryAndSave(match)
-        gameTwo.matchOrdinal shouldBe 2
-        gameTwo.dartsMatchId shouldBe matchId
-        gameTwo.gameType shouldBe GameType.GOLF
-        gameTwo.gameParams shouldBe "18"
-        gameTwo.rowId shouldNotBe ""
+        val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
+        val game = GameEntity.factoryAndSave(launchParams, match)
+        game.matchOrdinal shouldBe 1
+        game.dartsMatchId shouldBe match.rowId
+        game.gameType shouldBe GameType.GOLF
+        game.gameParams shouldBe "18"
+        game.rowId shouldNotBe ""
     }
 
     @Test

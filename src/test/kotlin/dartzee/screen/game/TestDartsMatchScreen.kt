@@ -3,17 +3,24 @@ package dartzee.screen.game
 import com.github.alexburlton.swingtest.getChild
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.core.helper.verifyNotCalled
+import dartzee.core.util.DateStatics
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerImageEntity
+import dartzee.game.loadParticipants
 import dartzee.game.state.X01PlayerState
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.makeX01PlayerState
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.MatchStatisticsPanelX01
-import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.matchers.types.shouldBeInstanceOf
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -112,57 +119,67 @@ class TestDartsMatchScreen: AbstractTest()
         val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
         val scrn = setUpMatchScreen(matchSummaryPanel = matchSummaryPanel)
 
-        scrn.updateTotalScores()
-        verify { matchSummaryPanel.updateTotalScores() }
 
-        val pt = makeSingleParticipant()
-        scrn.addParticipant(500L, pt)
-        verify { matchSummaryPanel.addParticipant(500L, pt) }
+        val state = makeX01PlayerState()
+        scrn.addParticipant(500L, state)
+        verify { matchSummaryPanel.addParticipant(500L, state) }
 
         scrn.finaliseParticipants()
         verify { matchSummaryPanel.finaliseScorers(scrn) }
     }
 
     @Test
-    fun `Should update total scores one last time and mark the match as complete if no more games need to be played`()
+    fun `Should mark the match as complete if no more games need to be played`()
     {
-        val matchEntity = mockk<DartsMatchEntity>(relaxed = true)
-        every { matchEntity.isComplete() } returns true
+        val match = insertDartsMatch(games = 1, gameParams = "501")
+        val scrn = setUpMatchScreen(match = match)
 
-        val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
-        val scrn = setUpMatchScreen(match = matchEntity, matchSummaryPanel = matchSummaryPanel)
+        val firstGame = insertGame()
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+
+        val pt = insertParticipant(finishingPosition = 1, playerId = insertPlayer().rowId)
+        val state = makeX01PlayerState(participant = pt)
+        every { firstPanel.getPlayerStates() } returns listOf(state)
+
         scrn.startNextGameIfNecessary()
 
-        verify { matchSummaryPanel.updateTotalScores() }
-        verify { matchEntity.dtFinish = any() }
-        verify { matchEntity.saveToDatabase(any()) }
+        match.dtFinish shouldNotBe DateStatics.END_OF_TIME
     }
 
     @Test
     fun `Should start a new game if the match is not yet complete`()
     {
-        val p1 = insertPlayer()
-        val p2 = insertPlayer()
+        val p1 = insertPlayer(name = "Amy")
+        val p2 = insertPlayer(name = "Billie")
+        val gameOneStates = listOf(p1, p2).map { makeX01PlayerState(player = it) }
 
         val match = insertDartsMatch(gameParams = "501")
-        match.players = mutableListOf(p1, p2)
 
         val scrn = setUpMatchScreen(match = match)
-        val firstGame = insertGame()
-        scrn.addGameToMatchOnEdt(firstGame)
+        val firstGame = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
+
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+        every { firstPanel.getPlayerStates() } returns gameOneStates
 
         scrn.startNextGameIfNecessaryOnEdt()
 
-        //Players should have been shuffled
-        match.players.shouldContainExactly(p2, p1)
-
         //Game panel should have been added and had a game kicked off
         val gamePanel = scrn.getChild<GamePanelX01> { it.gameEntity != firstGame }
-        verify { gamePanel.startNewGame(listOf(p2, p1)) }
+        verify { gamePanel.startNewGame(any()) }
+
+        val gameTwo = gamePanel.gameEntity
+        gameTwo.matchOrdinal shouldBe 2
+        gameTwo.dartsMatchId shouldBe match.rowId
+
+        val participants = loadParticipants(gameTwo.rowId)
+        participants[0].getParticipantNameHtml(false) shouldBe "<html>Billie</html>"
+        participants[1].getParticipantNameHtml(false) shouldBe "<html>Amy</html>"
     }
 
-    private fun setUpMatchScreen(match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
-                                 matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
+    private fun setUpMatchScreen(
+        match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
+        matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))
+    ): FakeMatchScreen
     {
         PlayerImageEntity().createPresets()
         return FakeMatchScreen(match, matchSummaryPanel)
@@ -173,7 +190,7 @@ private class FakeMatchScreen(match: DartsMatchEntity,
                               matchSummaryPanel: MatchSummaryPanel<X01PlayerState>):
         DartsMatchScreen<X01PlayerState>(matchSummaryPanel, match)
 {
-    override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelX01
+    override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int): GamePanelX01
     {
         val panel = mockk<GamePanelX01>(relaxed = true)
         every { panel.gameEntity } returns game
@@ -185,7 +202,7 @@ private class FakeMatchScreen(match: DartsMatchEntity,
     {
         var panel: DartsGamePanel<*, *, *>? = null
         SwingUtilities.invokeAndWait {
-            panel = addGameToMatch(gameEntity)
+            panel = addGameToMatch(gameEntity, 2)
         }
 
         return panel!!

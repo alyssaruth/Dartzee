@@ -2,10 +2,6 @@ package dartzee.screen.stats.player.golf
 
 import dartzee.`object`.Dart
 import dartzee.core.util.getSortedValues
-import dartzee.db.ParticipantEntity
-import dartzee.game.state.GolfPlayerState
-import dartzee.game.state.SingleParticipant
-import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
 import java.awt.BorderLayout
@@ -42,17 +38,24 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
     {
         setOtherComponentVisibility(this, panelOther)
 
-        populateStats(filteredGames, panelMyScorecard, null)
+        populateStats(filteredGames, panelMyScorecard, false)
         if (includeOtherComparison())
         {
-            populateStats(filteredGamesOther, panelOtherScorecard, Color.RED)
+            populateStats(filteredGamesOther, panelOtherScorecard, true)
         }
     }
 
-    private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, color: Color?)
+    private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, other: Boolean)
     {
         val hmHoleToBestDarts = mutableMapOf<Int, List<Dart>>()
         val hmHoleToBestGameId = mutableMapOf<Int, Long>()
+
+        // Add fudge data so we always display something, even if there are no games
+        for (i in 1..18)
+        {
+            hmHoleToBestDarts[i] = listOf(Dart(20, 0), Dart(20, 0), Dart(20, 0))
+            hmHoleToBestGameId[i] = -1
+        }
 
         val sortedGames = filteredGames.sortedBy { it.dtStart }
         for (game in sortedGames)
@@ -60,22 +63,21 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
             game.populateOptimalScorecardMaps(hmHoleToBestDarts, hmHoleToBestGameId)
         }
 
-        val fudgedParticipant = SingleParticipant(ParticipantEntity())
-        val scorer = DartsScorerGolf(fudgedParticipant, showGameId = true)
-        if (color != null)
+        val testId = if (other) "scorecardOther" else "scorecardMine"
+        val scoreSheet = GolfStatsScorecard(0, true, testId)
+        if (other)
         {
-            scorer.setTableForeground(Color.RED)
+            scoreSheet.setTableForeground(Color.RED)
         }
 
-        val state = GolfPlayerState(fudgedParticipant, hmHoleToBestDarts.values.toMutableList())
-        scorer.stateChanged(state)
+        val rounds = hmHoleToBestDarts.values.toList()
+        scoreSheet.populateTable(rounds)
 
-        scorer.addGameIds(hmHoleToBestGameId.getSortedValues())
+        scoreSheet.addGameIds(hmHoleToBestGameId.getSortedValues())
 
         panel.removeAll()
-        panel.add(scorer.getTableOnly(), BorderLayout.CENTER)
+        panel.add(scoreSheet, BorderLayout.CENTER)
         panel.revalidate()
         panel.repaint()
     }
-
 }

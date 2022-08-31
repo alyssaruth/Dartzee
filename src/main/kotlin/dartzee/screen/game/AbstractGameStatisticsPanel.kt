@@ -3,6 +3,7 @@ package dartzee.screen.game
 import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.MathsUtil
+import dartzee.core.util.TableUtil
 import dartzee.core.util.addUnique
 import dartzee.game.UniqueParticipantName
 import dartzee.game.state.AbstractPlayerState
@@ -12,7 +13,6 @@ import java.awt.Color
 import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
-import javax.swing.table.DefaultTableModel
 
 /**
  * Shows statistics for each player in a particular game, based on the PlayerStates
@@ -24,7 +24,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
     protected val hmPlayerToDarts = mutableMapOf<UniqueParticipantName, List<List<Dart>>>()
     protected val hmPlayerToStates = mutableMapOf<UniqueParticipantName, List<PlayerState>>()
 
-    var tm = DefaultTableModel()
+    val tm = TableUtil.DefaultModel()
 
     val table = ScrollTable()
 
@@ -45,8 +45,10 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         val c = UIManager.getColor("Panel.background")
         val c2 = Color(c.red, c.green, c.blue)
         table.setTableBackground(c2)
-
         table.setShowRowCount(false)
+
+        table.setRowHeight(20)
+        table.model = tm
     }
 
     fun showStats(playerStates: List<PlayerState>)
@@ -75,8 +77,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
 
     protected fun buildTableModel()
     {
-        tm = DefaultTableModel()
-        tm.addColumn("")
+        tm.clear()
 
         for (pt in participants)
         {
@@ -84,13 +85,10 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
             uniqueParticipantNamesOrdered.addUnique(participantName)
         }
 
-        for (participantName in uniqueParticipantNamesOrdered)
-        {
-            tm.addColumn(participantName)
+        val requiredColumns = listOf("") + uniqueParticipantNamesOrdered.map { it.value }
+        (tm.columnCount until requiredColumns.size).forEach {
+            table.addColumn(requiredColumns[it])
         }
-
-        table.setRowHeight(20)
-        table.model = tm
 
         addRowsToTable()
 

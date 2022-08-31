@@ -1,11 +1,14 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.X01_ROUNDS_TABLE
+import dartzee.achievements.bulkInsertFromResultSet
+import dartzee.achievements.ensureX01RoundsTableExists
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_BTBF
-import java.net.URL
 
 class AchievementX01Btbf: AbstractMultiRowAchievement()
 {
@@ -21,6 +24,7 @@ class AchievementX01Btbf: AbstractMultiRowAchievement()
     override val blueThreshold = 50
     override val pinkThreshold = 100
     override val maxValue = pinkThreshold
+    override val allowedForTeams = true
 
     override fun getIconURL() = URL_ACHIEVEMENT_X01_BTBF
 

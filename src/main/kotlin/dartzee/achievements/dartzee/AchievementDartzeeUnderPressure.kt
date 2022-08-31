@@ -1,6 +1,10 @@
 package dartzee.achievements.dartzee
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.buildQualifyingDartzeeGamesTable
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
@@ -22,6 +26,7 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
     override val pinkThreshold = 40
     override val maxValue = 40
     override val gameType = GameType.DARTZEE
+    override val allowedForTeams = true
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {
@@ -50,9 +55,10 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
 
         sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, pt.DtFinished AS DtAchieved, zz.GameId, zz.RuleId, drr.Score")
-        sb.append(" FROM ${EntityName.Participant} pt, $dartzeeGamesHardestRule zz, ${EntityName.DartzeeRoundResult} drr")
+        sb.append(" FROM $dartzeeGamesHardestRule zz, ${EntityName.DartzeeRoundResult} drr, ${EntityName.Participant} pt")
+        sb.append(" LEFT OUTER JOIN ${EntityName.Team} t ON (pt.TeamId = t.RowId)")
         sb.append(" WHERE pt.GameId = zz.GameId")
-        sb.append(" AND pt.FinalScore > -1")
+        sb.append(" AND (pt.FinalScore > -1 OR t.FinalScore > -1)")
         appendPlayerSql(sb, playerIds)
         sb.append(" AND drr.ParticipantId = pt.RowId")
         sb.append(" AND drr.PlayerId = pt.PlayerId")

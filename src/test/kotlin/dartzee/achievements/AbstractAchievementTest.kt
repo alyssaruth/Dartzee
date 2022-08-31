@@ -6,7 +6,12 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -23,8 +28,6 @@ import javax.imageio.ImageIO
 
 abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
 {
-    protected val testRules = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
-
     @BeforeEach
     fun beforeEach()
     {
@@ -43,7 +46,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     protected fun getAchievementCount(database: Database = mainDatabase): Int
     {
         val type = factoryAchievement().achievementType
-        return database.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementType = '$type'")
+        return AchievementEntity(database).countWhere("AchievementType = '$type'")
     }
 
     open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow(), database: Database = mainDatabase): GameEntity
@@ -51,11 +54,13 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         return insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate, database = database)
     }
 
-    fun insertRelevantParticipant(player: PlayerEntity = insertPlayer(), finalScore: Int = -1): ParticipantEntity
+    fun insertRelevantParticipant(player: PlayerEntity = insertPlayer(), finalScore: Int = -1, team: Boolean = false): ParticipantEntity
     {
         val g = insertRelevantGame()
+        val teamEntity = if (team) insertTeam(gameId = g.rowId, finalScore = finalScore) else null
 
-        return insertParticipant(playerId = player.rowId, gameId = g.rowId, finalScore = finalScore)
+        val ptFinalScore = if (team) -1 else finalScore
+        return insertParticipant(playerId = player.rowId, gameId = g.rowId, finalScore = ptFinalScore, teamId = teamEntity?.rowId ?: "")
     }
 
     @Test

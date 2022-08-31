@@ -1,16 +1,30 @@
 package dartzee.helper
 
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRuleCalculationResult
-import dartzee.db.*
+import dartzee.db.AchievementEntity
+import dartzee.db.DartEntity
+import dartzee.db.DartsMatchEntity
+import dartzee.db.DartzeeRoundResultEntity
+import dartzee.db.DartzeeRuleEntity
+import dartzee.db.DartzeeTemplateEntity
+import dartzee.db.DatabaseMigrator
+import dartzee.db.DeletionAuditEntity
+import dartzee.db.EntityName
+import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
+import dartzee.db.PlayerEntity
+import dartzee.db.PlayerImageEntity
+import dartzee.db.TeamEntity
+import dartzee.db.X01FinishEntity
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.LoggingCode
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.mainDatabase
@@ -94,6 +108,17 @@ fun insertPlayer(uuid: String = randomGuid(),
     return p
 }
 
+fun preparePlayers(count: Int): List<PlayerEntity>
+{
+    val p1 = insertPlayer(name = "Alice")
+    val p2 = insertPlayer(name = "Bob")
+    val p3 = insertPlayer(name = "Clara")
+    val p4 = insertPlayer(name = "David")
+    val p5 = insertPlayer(name = "Ellie")
+
+    return listOf(p1, p2, p3, p4, p5).subList(0, count)
+}
+
 fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timestamp = getSqlDateNow(), game: GameEntity = insertGame(gameType = GameType.X01), database: Database = mainDatabase): GameEntity
 {
     val entity = X01FinishEntity(database)
@@ -108,12 +133,12 @@ fun insertFinishForPlayer(player: PlayerEntity, finish: Int, dtCreation: Timesta
 
 fun insertParticipant(uuid: String = randomGuid(),
                       gameId: String = randomGuid(),
-                      playerId: String = randomGuid(),
+                      playerId: String = insertPlayer().rowId,
                       ordinal: Int = 1,
                       finishingPosition: Int = -1,
                       finalScore: Int = -1,
                       dtFinished: Timestamp = DateStatics.END_OF_TIME,
-                      insertPlayer: Boolean = false,
+                      teamId: String = "",
                       database: Database = mainDatabase): ParticipantEntity
 {
     val pe = ParticipantEntity(database)
@@ -124,11 +149,7 @@ fun insertParticipant(uuid: String = randomGuid(),
     pe.finishingPosition = finishingPosition
     pe.finalScore = finalScore
     pe.dtFinished = dtFinished
-
-    if (insertPlayer)
-    {
-        pe.playerId = insertPlayer().rowId
-    }
+    pe.teamId = teamId
 
     pe.saveToDatabase()
 
@@ -359,6 +380,7 @@ fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
 fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
 fun retrieveDeletionAudit() = DeletionAuditEntity().retrieveEntities().first()
+fun retrieveTeam() = TeamEntity().retrieveEntities().first()
 
 fun getAchievementCount(type: AchievementType): Int
 {

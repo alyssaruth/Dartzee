@@ -12,6 +12,7 @@ class DummyAchievementTotal: AbstractAchievement()
     override val desc = ""
     override val achievementType = AchievementType.DUMMY_TOTAL
     override val gameType: GameType? = null
+    override val allowedForTeams = false
 
     override val redThreshold = 1
     override val orangeThreshold = getAchievementMaximum() / 6

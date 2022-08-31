@@ -1,14 +1,20 @@
 package dartzee.achievements.rtc
 
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
+import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
-import dartzee.helper.*
+import dartzee.helper.AchievementSummary
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertDart
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.utils.Database
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
@@ -32,6 +38,17 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
             gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
             dtLastUpdate = dtLastUpdate,
             database = database)
+    }
+
+    @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+        insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getAchievementCount() shouldBe 1
     }
 
     @Test

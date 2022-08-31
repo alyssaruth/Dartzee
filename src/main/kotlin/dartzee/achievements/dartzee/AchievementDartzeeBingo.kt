@@ -1,6 +1,10 @@
 package dartzee.achievements.dartzee
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.appendPlayerSql
+import dartzee.achievements.buildQualifyingDartzeeGamesTable
+import dartzee.achievements.bulkInsertFromResultSet
 import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.game.GameType
@@ -20,6 +24,7 @@ class AchievementDartzeeBingo: AbstractMultiRowAchievement()
     override val pinkThreshold = 100
     override val maxValue = 100
     override val gameType = GameType.DARTZEE
+    override val allowedForTeams = false
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {
@@ -35,6 +40,7 @@ class AchievementDartzeeBingo: AbstractMultiRowAchievement()
         sb.append(" WHERE pt.GameId = zz.GameId")
         appendPlayerSql(sb, playerIds)
         sb.append(" AND pt.FinalScore > -1")
+        sb.append(" AND pt.TeamId = ''")
 
         if (!database.executeUpdate(sb)) return
 

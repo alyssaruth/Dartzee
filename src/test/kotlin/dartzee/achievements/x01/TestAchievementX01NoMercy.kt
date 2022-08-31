@@ -23,6 +23,16 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true, finalScore = 21)
+        insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
     fun `Should not include data for an unfinished player`()
     {
         val g = insertRelevantGame()

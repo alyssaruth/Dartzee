@@ -1,16 +1,21 @@
 package dartzee.screen.game.scorer
 
 import com.github.alexburlton.swingtest.doClick
-import dartzee.`object`.Dart
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.game.state.IWrappedParticipant
 import dartzee.getRows
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.makeDartzeePlayerState
+import dartzee.helper.preparePlayers
+import dartzee.`object`.Dart
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.screen.game.makeSingleParticipant
+import dartzee.screen.game.makeTeam
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.factoryHighScoreResult
@@ -48,6 +53,20 @@ class TestDartsScorerDartzee: AbstractTest()
         scorer.lblAvatar.doClick()
 
         verifyNotCalled { parent.scorerSelected(scorer) }
+    }
+
+    @Test
+    fun `Should be selectable post-game`()
+    {
+        val (p1, p2) = preparePlayers(2)
+        val team = makeTeam(p1, p2)
+        val scorer = makeScorer(participant = team)
+
+        scorer.togglePostGame(true)
+        scorer.lblName.text shouldBe "<html><b>Alice &#38; Bob</b></html>"
+
+        scorer.togglePostGame(false)
+        scorer.lblName.text shouldBe "<html>Alice &#38; Bob</html>"
     }
 
     @Test

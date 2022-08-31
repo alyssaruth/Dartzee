@@ -27,9 +27,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
      */
     var gameParams = ""
     var gameType: GameType = GameType.X01
-    var players = listOf<PlayerEntity>()
 
-    private var currentOrdinal = 0
     private var hmPositionToPoints: Map<Int, Int>? = null
 
     override fun getTableName() = EntityName.DartsMatch
@@ -50,57 +48,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         localId = otherDatabase.generateLocalId(getTableName())
     }
 
-    /**
-     * Helpers
-     */
-    fun isComplete() =
-        when (mode)
-        {
-            MatchMode.FIRST_TO -> getIsFirstToMatchComplete()
-            MatchMode.POINTS -> getIsPointsMatchComplete()
-        }
-
-    private fun getIsFirstToMatchComplete(): Boolean
-    {
-        val sb = StringBuilder()
-        sb.append(" SELECT COUNT(1) AS WinCount")
-        sb.append(" FROM Participant p, Game g")
-        sb.append(" WHERE g.DartsMatchId = '$rowId'")
-        sb.append(" AND p.GameId = g.RowId")
-        sb.append(" AND p.FinishingPosition = 1")
-        sb.append(" GROUP BY p.PlayerId")
-        sb.append(" ORDER BY COUNT(1) DESC")
-        sb.append(" FETCH FIRST 1 ROWS ONLY")
-
-        database.executeQuery(sb).use { rs ->
-            if (rs.next())
-            {
-                val count = rs.getInt("WinCount")
-                return count == games
-            }
-        }
-
-        return false
-    }
-    private fun getIsPointsMatchComplete(): Boolean
-    {
-        val sb = StringBuilder()
-        sb.append(" SELECT COUNT(1)")
-        sb.append(" FROM Game")
-        sb.append(" WHERE DartsMatchId = '$rowId'")
-        sb.append(" AND DtFinish < ")
-        sb.append(getEndOfTimeSqlString())
-
-        val count = database.executeQueryAggregate(sb)
-        return count == games
-    }
-
-    fun getPlayerCount(): Int = players.size
-
-    fun getMatchDesc(): String
-    {
-        return "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)}, ${getPlayerCount()} players)"
-    }
+    fun getMatchDesc() = "Match #$localId (${getMatchTypeDesc()} - ${gameType.getDescription(gameParams)})"
 
     private fun getMatchTypeDesc() =
         when(mode)
@@ -123,28 +71,10 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         return result
     }
 
-    fun incrementAndGetCurrentOrdinal() = ++currentOrdinal
-
-    fun shufflePlayers()
-    {
-        if (players.size == 2)
-        {
-            players = players.reversed()
-        }
-        else
-        {
-            players = players.shuffled()
-        }
-    }
-
     fun cacheMetadataFromGame(lastGame: GameEntity)
     {
         this.gameType = lastGame.gameType
         this.gameParams = lastGame.gameParams
-        this.players = lastGame.retrievePlayersVector()
-
-        //Should've been setting this too...
-        this.currentOrdinal = lastGame.matchOrdinal
     }
 
     companion object
@@ -158,15 +88,8 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         /**
          * Factory methods
          */
-        fun factoryFirstTo(games: Int): DartsMatchEntity
-        {
-            return factoryAndSave(games, MatchMode.FIRST_TO, "")
-        }
-
-        fun factoryPoints(games: Int, pointsJson: String): DartsMatchEntity
-        {
-            return factoryAndSave(games, MatchMode.POINTS, pointsJson)
-        }
+        fun factoryFirstTo(games: Int) = factoryAndSave(games, MatchMode.FIRST_TO, "")
+        fun factoryPoints(games: Int, pointsJson: String) = factoryAndSave(games, MatchMode.POINTS, pointsJson)
 
         private fun factoryAndSave(games: Int, mode: MatchMode, matchParams: String): DartsMatchEntity
         {

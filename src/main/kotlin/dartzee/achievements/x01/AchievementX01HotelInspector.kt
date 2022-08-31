@@ -1,11 +1,14 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.X01_ROUNDS_TABLE
+import dartzee.achievements.bulkInsertFromResultSet
+import dartzee.achievements.ensureX01RoundsTableExists
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
-import java.net.URL
 
 class AchievementX01HotelInspector : AbstractMultiRowAchievement()
 {
@@ -13,6 +16,7 @@ class AchievementX01HotelInspector : AbstractMultiRowAchievement()
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"
     override val achievementType = AchievementType.X01_HOTEL_INSPECTOR
     override val gameType = GameType.X01
+    override val allowedForTeams = true
 
     override val redThreshold = 1
     override val orangeThreshold = 5

@@ -6,6 +6,8 @@ import com.github.alexburlton.swingtest.getChild
 import dartzee.core.bean.SwingLabel
 import javax.swing.JButton
 
-fun AbstractDartsScorer<*>.getAchievementOverlay() = findChild<AbstractDartsScorer<*>.AchievementOverlay>()
-fun AbstractDartsScorer<*>.AchievementOverlay.getAchievementName() = getChild<SwingLabel> { it.testId == "achievementName" }.text
-fun AbstractDartsScorer<*>.AchievementOverlay.close() = clickChild<JButton>("X")
+fun AbstractDartsScorer<*>.findAchievementOverlay() = findChild<AchievementOverlay>()
+fun AbstractDartsScorer<*>.getAchievementOverlay() = getChild<AchievementOverlay>()
+fun AchievementOverlay.getAchievementName(): String = getChild<SwingLabel> { it.testId == "achievementName" }.text
+fun AchievementOverlay.getPlayerName(): String = getChild<SwingLabel> { it.testId == "playerName"}.text
+fun AchievementOverlay.close() = clickChild<JButton>("X")

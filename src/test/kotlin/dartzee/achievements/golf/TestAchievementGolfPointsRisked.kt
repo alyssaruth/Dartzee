@@ -1,13 +1,19 @@
 package dartzee.achievements.golf
 
-import dartzee.`object`.SegmentType
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractMultiRowAchievementTest
+import dartzee.achievements.AchievementType
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
+import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.AchievementSummary
+import dartzee.helper.insertDart
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
+import dartzee.helper.retrieveAchievementsForPlayer
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -18,7 +24,18 @@ import java.sql.Timestamp
 class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<AchievementGolfPointsRisked>()
 {
     override fun factoryAchievement() = AchievementGolfPointsRisked()
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database) = insertRiskedDart(p, g, database = database)
+    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database) =
+        insertRiskedDart(p.rowId, g.rowId, database = database)
+
+    @Test
+    fun `Should include games that were finished as part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+        insertRiskedDart(pt, SegmentType.INNER_SINGLE, 1)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 1
+    }
 
     @Test
     fun `Should ignore rounds where no points were risked`()
@@ -40,8 +57,8 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         val p = insertPlayer()
         val g = insertRelevantGame()
 
-        insertRiskedDart(p, g, SegmentType.INNER_SINGLE, 1)
-        insertRiskedDart(p, g, SegmentType.OUTER_SINGLE, 2)
+        insertRiskedDart(p.rowId, g.rowId, SegmentType.INNER_SINGLE, 1)
+        insertRiskedDart(p.rowId, g.rowId, SegmentType.OUTER_SINGLE, 2)
 
         factoryAchievement().populateForConversion(emptyList())
 
@@ -86,7 +103,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         val p = insertPlayer()
         val g = insertRelevantGame()
 
-        insertRiskedDart(p, g, segmentType)
+        insertRiskedDart(p.rowId, g.rowId, segmentType)
 
         factoryAchievement().populateForConversion(emptyList())
 
@@ -94,17 +111,24 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         a.achievementCounter shouldBe expectedScore
     }
 
-    private fun insertRiskedDart(p: PlayerEntity,
-                                 g: GameEntity,
+    private fun insertRiskedDart(playerId: String,
+                                 gameId: String,
                                  segmentType: SegmentType = SegmentType.OUTER_SINGLE,
                                  roundNumber: Int = 1,
                                  dtCreation: Timestamp = getSqlDateNow(),
                                  database: Database = mainDatabase)
     {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
+        val pt = insertParticipant(playerId = playerId, gameId = gameId, database = database)
+        insertRiskedDart(pt, segmentType, roundNumber, dtCreation, database)
+    }
 
+    private fun insertRiskedDart(pt: ParticipantEntity,
+                                 segmentType: SegmentType = SegmentType.OUTER_SINGLE,
+                                 roundNumber: Int = 1,
+                                 dtCreation: Timestamp = getSqlDateNow(),
+                                 database: Database = mainDatabase)
+    {
         insertDart(pt, roundNumber = roundNumber, ordinal = 1, score = roundNumber, multiplier = 1, segmentType = segmentType, dtCreation = dtCreation, database = database)
         insertDart(pt, roundNumber = roundNumber, ordinal = 2, score = roundNumber, multiplier = 2, segmentType = SegmentType.DOUBLE, dtCreation = dtCreation, database = database)
-
     }
 }

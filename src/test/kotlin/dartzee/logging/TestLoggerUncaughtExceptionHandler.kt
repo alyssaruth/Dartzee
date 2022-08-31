@@ -4,6 +4,7 @@ import dartzee.helper.AbstractTest
 import dartzee.logging.exceptions.ApplicationFault
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.shouldContainKeyValues
+import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 import java.sql.SQLException
@@ -36,7 +37,7 @@ class TestLoggerUncaughtExceptionHandler: AbstractTest()
         val log = verifyLog(CODE_UNCAUGHT_EXCEPTION, Severity.ERROR)
         log.errorObject shouldBe ex
         log.shouldContainKeyValues(KEY_THREAD to Thread.currentThread().toString(), KEY_EXCEPTION_MESSAGE to null)
-        log.message shouldBe "Uncaught exception: $ex"
+        log.message shouldContain "Uncaught exception: $ex"
     }
 
     @Test
@@ -51,7 +52,7 @@ class TestLoggerUncaughtExceptionHandler: AbstractTest()
         val log = verifyLog(CODE_UNCAUGHT_EXCEPTION, Severity.ERROR)
         log.errorObject shouldBe ex
         log.shouldContainKeyValues(KEY_THREAD to t.toString(), KEY_EXCEPTION_MESSAGE to "Argh")
-        log.message shouldBe "Uncaught exception: $ex"
+        log.message shouldContain "Uncaught exception: $ex"
     }
 
     @Test

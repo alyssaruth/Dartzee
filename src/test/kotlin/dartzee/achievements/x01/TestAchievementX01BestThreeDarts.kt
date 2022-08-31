@@ -27,6 +27,20 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
     }
 
     @Test
+    fun `Should include rounds that were thrown as part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+
+        insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getAchievementCount() shouldBe 1
+    }
+
+
+    @Test
     fun `Should ignore busts`()
     {
         val pt = insertRelevantParticipant()

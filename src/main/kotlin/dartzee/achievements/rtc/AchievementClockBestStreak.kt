@@ -1,16 +1,15 @@
 package dartzee.achievements.rtc
 
-import dartzee.`object`.Dart
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.AchievementType
 import dartzee.achievements.appendPlayerSql
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
+import dartzee.`object`.Dart
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import dartzee.utils.getLongestStreak
-import java.net.URL
 
 class AchievementClockBestStreak: AbstractAchievement()
 {
@@ -18,6 +17,7 @@ class AchievementClockBestStreak: AbstractAchievement()
     override val name = "Like Clockwork"
     override val desc = "Longest streak of hits in Round the Clock"
     override val gameType = GameType.ROUND_THE_CLOCK
+    override val allowedForTeams = false
 
     override val redThreshold = 2
     override val orangeThreshold = 3
@@ -36,6 +36,7 @@ class AchievementClockBestStreak: AbstractAchievement()
         sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE g.GameType = '${GameType.ROUND_THE_CLOCK}'")
         sb.append(" AND pt.GameId = g.RowId")
+        sb.append(" AND pt.TeamId = ''")
         sb.append(" AND drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         appendPlayerSql(sb, playerIds)

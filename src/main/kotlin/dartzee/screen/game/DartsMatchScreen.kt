@@ -4,11 +4,10 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
+import dartzee.game.matchIsComplete
+import dartzee.game.prepareNextEntities
 import dartzee.game.state.AbstractPlayerState
-import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.ScreenCache
-import dartzee.screen.game.dartzee.GamePanelDartzee
-import dartzee.utils.insertDartzeeRules
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
@@ -17,7 +16,7 @@ import javax.swing.event.ChangeListener
 
 abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     private val matchPanel: MatchSummaryPanel<PlayerState>,
-    val match: DartsMatchEntity): AbstractDartsGameScreen(match.getPlayerCount(), match.gameType), ChangeListener
+    val match: DartsMatchEntity): AbstractDartsGameScreen(), ChangeListener
 {
     override val windowName = match.getMatchDesc()
 
@@ -34,18 +33,20 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         title = match.getMatchDesc()
     }
 
-    abstract fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): DartsGamePanel<*, *, PlayerState>
+    abstract fun factoryGamePanel(
+        parent: AbstractDartsGameScreen,
+        game: GameEntity,
+        totalPlayers: Int
+    ): DartsGamePanel<*, *, PlayerState>
 
-    override fun getScreenHeight() = super.getScreenHeight() + 30
-
-    fun addGameToMatch(game: GameEntity): DartsGamePanel<*, *, *>
+    fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *, *>
     {
         //Cache this screen in ScreenCache
         val gameId = game.rowId
         ScreenCache.addDartsGameScreen(gameId, this)
 
         //Initialise some basic properties of the tab, such as visibility of components etc
-        val tab = factoryGamePanel(this, game)
+        val tab = factoryGamePanel(this, game, totalPlayers)
 
         matchPanel.addGameTab(tab)
 
@@ -57,9 +58,9 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         return tab
     }
 
-    fun addParticipant(localId: Long, participant: IWrappedParticipant)
+    fun addParticipant(localId: Long, state: PlayerState)
     {
-        matchPanel.addParticipant(localId, participant)
+        matchPanel.addParticipant(localId, state)
     }
 
     fun finaliseParticipants()
@@ -67,36 +68,28 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         matchPanel.finaliseScorers(this)
     }
 
-    fun updateTotalScores()
-    {
-        matchPanel.updateTotalScores()
-    }
-
     override fun startNextGameIfNecessary()
     {
-        updateTotalScores()
-
-        if (match.isComplete())
+        if (isMatchComplete())
         {
             match.dtFinish = getSqlDateNow()
             match.saveToDatabase()
             return
         }
 
-        //Factory and save the next game
-        val nextGame = GameEntity.factoryAndSave(match)
+        val firstGamePanel = hmGameIdToTab.values.first()
+        val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
-        //Insert dartzee rules if applicable
-        val priorGamePanel = hmGameIdToTab.values.first()
-        if (priorGamePanel is GamePanelDartzee)
-        {
-            insertDartzeeRules(nextGame.rowId, priorGamePanel.dtos)
-        }
+        val (nextGame, nextParticipants) = prepareNextEntities(firstGamePanel.gameEntity, firstGameParticipants, hmGameIdToTab.size + 1)
 
-        val panel = addGameToMatch(nextGame)
+        val panel = addGameToMatch(nextGame, nextParticipants.size)
+        panel.startNewGame(nextParticipants)
+    }
 
-        match.shufflePlayers()
-        panel.startNewGame(match.players)
+    private fun isMatchComplete(): Boolean
+    {
+        val participants = matchPanel.getAllParticipants()
+        return matchIsComplete(match, participants)
     }
 
     override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)

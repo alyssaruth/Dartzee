@@ -1,7 +1,20 @@
 package dartzee.game.state
 
+import dartzee.drtDoubleFifteen
+import dartzee.drtDoubleFive
+import dartzee.drtDoubleSeventeen
+import dartzee.drtMissFifteen
+import dartzee.drtMissTwenty
+import dartzee.drtOuterOne
+import dartzee.drtOuterTen
+import dartzee.drtTrebleTwenty
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertTeam
+import dartzee.helper.makeDart
+import dartzee.helper.makeX01PlayerStateWithRounds
+import dartzee.helper.makeX01Rounds
 import dartzee.`object`.Dart
-import dartzee.helper.*
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -142,6 +155,47 @@ class TestX01PlayerState: AbstractTest()
         state.getBadLuckCount() shouldBe 3
 
         state.resetRound()
+        state.getBadLuckCount() shouldBe 2
+    }
+
+    @Test
+    fun `Should compute bad luck count for the current player`()
+    {
+        val team = insertTeam()
+        val pt1 = insertParticipant(teamId = team.rowId)
+        val pt2 = insertParticipant(teamId = team.rowId)
+        val state = X01PlayerState(101, TeamParticipant(team, listOf(pt1, pt2)))
+
+        val roundOne = listOf(drtTrebleTwenty(), drtOuterOne(), drtMissTwenty()) // Get down to 40
+
+        val roundTwo = listOf(
+            drtDoubleFive(), //bad luck
+            drtOuterTen(),
+            drtMissFifteen()
+        )
+
+        val roundThree = listOf(
+            drtDoubleSeventeen()
+        )
+
+        val roundFour = listOf(
+            drtDoubleFifteen()
+        )
+
+        roundOne.forEach(state::dartThrown)
+        state.commitRound()
+
+        roundTwo.forEach(state::dartThrown)
+        state.getBadLuckCount() shouldBe 1
+        state.commitRound()
+
+        state.getBadLuckCount() shouldBe 0
+        roundThree.forEach(state::dartThrown)
+        state.getBadLuckCount() shouldBe 0
+        state.commitRound()
+
+        state.getBadLuckCount() shouldBe 1
+        roundFour.forEach(state::dartThrown)
         state.getBadLuckCount() shouldBe 2
     }
 

@@ -11,17 +11,9 @@ import dartzee.utils.DartsColour
 import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
-import java.awt.Color
 
 class TestDartsScorerGolf: AbstractTest()
 {
-    @Test
-    fun `Should show the right number of columns`()
-    {
-        factoryScorer(false).getNumberOfColumns() shouldBe 5
-        factoryScorer(true).getNumberOfColumns() shouldBe 6
-    }
-
     @Test
     fun `Should add a subtotal row after 9 and 18 holes`()
     {
@@ -116,45 +108,6 @@ class TestDartsScorerGolf: AbstractTest()
     }
 
     @Test
-    fun `Should render an extra column with gameIds`()
-    {
-        val scorer = factoryScorer(true)
-        scorer.getNumberOfColumns() shouldBe 6
-
-        val roundOne = makeGolfRound(1, listOf(Dart(1, 3, segmentType = SegmentType.TREBLE)))
-        val roundTwo = makeGolfRound(2, listOf(Dart(2, 0, segmentType = SegmentType.MISS), Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE)))
-
-        val gameIds = listOf(50L, 350L)
-        val state = makeGolfPlayerState(completedRounds = listOf(roundOne, roundTwo))
-        scorer.stateChanged(state)
-        scorer.addGameIds(gameIds)
-
-        val rows = scorer.tableScores.getRows()
-        rows.shouldContainExactlyInAnyOrder(
-                listOf(1) + roundOne + listOf<Any?>(null, null, 2, 50L),
-                listOf(2) + roundTwo + listOf<Any?>(null, 4, 350L)
-        )
-    }
-
-    @Test
-    fun `Should split gameIds if more than 9 rounds`()
-    {
-        val scorer = factoryScorer(true)
-        val state = makeGolfPlayerState()
-        for (i in 1..10)
-        {
-            addRound(state, i)
-        }
-
-        scorer.stateChanged(state)
-        val gameIds = (1L..10L).toList()
-        scorer.addGameIds(gameIds)
-
-        scorer.tableScores.getValueAt(9, 5) shouldBe null
-        scorer.tableScores.getValueAt(10, 5) shouldBe 10L
-    }
-
-    @Test
     fun `Should cope with empty state`()
     {
         val scorer = factoryScorer()
@@ -164,19 +117,9 @@ class TestDartsScorerGolf: AbstractTest()
         scorer.tableScores.rowCount shouldBe 0
     }
 
-    @Test
-    fun `Should support changing fg colour`()
+    private fun factoryScorer(): DartsScorerGolf
     {
-        val scorer = factoryScorer()
-        scorer.setTableForeground(Color.RED)
-
-        scorer.tableScores.tableForeground shouldBe Color.RED
-        scorer.lblResult.foreground shouldBe Color.RED
-    }
-
-    private fun factoryScorer(showGameId: Boolean = false): DartsScorerGolf
-    {
-        val scorer = DartsScorerGolf(makeSingleParticipant(), showGameId)
+        val scorer = DartsScorerGolf(makeSingleParticipant())
         scorer.init()
         return scorer
     }

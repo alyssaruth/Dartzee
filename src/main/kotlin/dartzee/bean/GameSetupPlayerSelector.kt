@@ -3,7 +3,6 @@ package dartzee.bean
 import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
 import dartzee.db.MAX_PLAYERS
-import dartzee.utils.FeatureToggles
 import java.awt.event.ActionEvent
 import javax.swing.ImageIcon
 import javax.swing.JToggleButton
@@ -30,8 +29,9 @@ class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
 
         val nimbusRenderer = tablePlayersSelected.getBuiltInRenderer()
         tablePlayersSelected.setTableRenderer(TeamRenderer(nimbusRenderer) { btnPairs.isSelected })
-        btnPairs.isVisible = FeatureToggles.teamMode
     }
+
+    fun pairMode(): Boolean = btnPairs.isSelected
 
     /**
      * Is this selection valid for a game/match?

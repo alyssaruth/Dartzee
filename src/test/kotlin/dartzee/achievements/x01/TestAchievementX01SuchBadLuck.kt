@@ -25,6 +25,17 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
     }
 
     @Test
+    fun `Should include participants who were part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+        insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
+
+        factoryAchievement().populateForConversion(emptyList())
+
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
     fun `Should report on the highest streak per player`()
     {
         val p = insertPlayer()

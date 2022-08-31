@@ -3,10 +3,14 @@ package dartzee.screen.game
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.helper.AbstractTest
+import dartzee.helper.AchievementSummary
+import dartzee.helper.preparePlayers
 import dartzee.helper.randomGuid
+import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.Dart
 import dartzee.utils.getAllPossibleSegments
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -84,6 +88,32 @@ class TestGamePanelRoundTheClock: AbstractTest()
         val panel = makeRoundTheClockGamePanel()
         panel.dartThrown(Dart(1, 1))
         panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 2 })
+    }
+
+    /**
+     * Team achievements
+     */
+    @Test
+    fun `Should unlock the correct achievements for team play`()
+    {
+        val (p1, p2) = preparePlayers(2)
+        val team = makeTeam(p1, p2)
+        val panel = makeRoundTheClockGamePanel(team)
+        val gameId = panel.gameEntity.rowId
+
+        val roundOne = listOf(factoryClockHit(1), factoryClockHit(2), factoryClockHit(3), factoryClockHit(4))
+        panel.addCompletedRound(roundOne)
+
+        val roundTwo = listOf(factoryClockHit(5), factoryClockHit(6), factoryClockHit(7), factoryClockHit(8))
+        panel.addCompletedRound(roundTwo)
+
+        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, gameId, "1"),
+        )
+
+        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, gameId, "2"),
+        )
     }
 
     private fun factoryClockHit(clockTarget: Int): Dart

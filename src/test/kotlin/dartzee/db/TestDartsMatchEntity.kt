@@ -1,17 +1,15 @@
 package dartzee.db
 
-import dartzee.core.obj.HashMapCount
-import dartzee.core.util.getSqlDateNow
 import dartzee.db.DartsMatchEntity.Companion.constructPointsJson
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.helper.*
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertGame
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.numerics.shouldBeBetween
 import io.kotlintest.matchers.string.shouldContain
 import io.kotlintest.matchers.string.shouldNotBeEmpty
 import io.kotlintest.shouldBe
@@ -68,63 +66,6 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should correctly report whether a FIRST_TO match is complete`()
-    {
-        val match = DartsMatchEntity.factoryFirstTo(2)
-
-        match.isComplete() shouldBe false
-
-        val gameOne = GameEntity.factoryAndSave(match)
-        val gameTwo = GameEntity.factoryAndSave(match)
-        val gameThree = GameEntity.factoryAndSave(match)
-        val playerOneId = insertPlayer().rowId
-        val playerTwoId = insertPlayer().rowId
-
-        insertParticipant(gameId = gameOne.rowId, finishingPosition = 1, playerId = playerOneId)
-        insertParticipant(gameId = gameOne.rowId, finishingPosition = 2, playerId = playerTwoId)
-        match.isComplete() shouldBe false
-
-        insertParticipant(gameId = gameTwo.rowId, finishingPosition = 1, playerId = playerTwoId)
-        insertParticipant(gameId = gameTwo.rowId, finishingPosition = 2, playerId = playerOneId)
-        match.isComplete() shouldBe false
-
-        insertParticipant(gameId = gameThree.rowId, finishingPosition = 2, playerId = playerTwoId)
-        match.isComplete() shouldBe false
-
-        insertParticipant(gameId = gameThree.rowId, finishingPosition = 1, playerId = playerOneId)
-        match.isComplete() shouldBe true
-    }
-
-    @Test
-    fun `Should correctly report whether a POINTS match is complete`()
-    {
-        val match = DartsMatchEntity.factoryPoints(2, "")
-
-        match.isComplete() shouldBe false
-
-        insertGame(dartsMatchId = match.rowId, dtFinish = getSqlDateNow())
-        match.isComplete() shouldBe false
-
-        val gameTwo = GameEntity.factoryAndSave(match)
-        match.isComplete() shouldBe false
-
-        gameTwo.dtFinish = getSqlDateNow()
-        gameTwo.saveToDatabase()
-
-        match.isComplete() shouldBe true
-    }
-
-    @Test
-    fun `Should return the number of players in the match`()
-    {
-        val dm = DartsMatchEntity()
-        dm.getPlayerCount() shouldBe 0
-
-        dm.players = listOf(PlayerEntity())
-        dm.getPlayerCount() shouldBe 1
-    }
-
-    @Test
     fun `FIRST_TO descriptions`()
     {
         val dm = DartsMatchEntity()
@@ -134,7 +75,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.gameType = GameType.X01
         dm.gameParams = "501"
 
-        dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501, 0 players)"
+        dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501)"
     }
 
     @Test
@@ -147,7 +88,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
         dm.gameType = GameType.GOLF
         dm.gameParams = "18"
 
-        dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes, 0 players)"
+        dm.getMatchDesc() shouldBe "Match #1 (Points based (3 games) - Golf - 18 holes)"
     }
 
     @Test
@@ -178,89 +119,20 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should increment the ordinal in place and return it`()
-    {
-        val match = DartsMatchEntity()
-        match.incrementAndGetCurrentOrdinal() shouldBe 1
-        match.incrementAndGetCurrentOrdinal() shouldBe 2
-        match.incrementAndGetCurrentOrdinal() shouldBe 3
-    }
-
-    @Test
-    fun `Should flip the order if there are only 2 players`()
-    {
-        val match = DartsMatchEntity()
-
-        val bob = factoryPlayer("Bob")
-
-        val amy = factoryPlayer("Amy")
-
-        match.players = mutableListOf(bob, amy)
-
-        for (i in 0..20)
-        {
-            match.shufflePlayers()
-            match.players.shouldContainExactly(amy, bob)
-
-            match.shufflePlayers()
-            match.players.shouldContainExactly(bob, amy)
-        }
-    }
-
-    @Test
-    fun `Should shuffle fairly with more than 2 players`()
-    {
-        val players = mutableListOf(factoryPlayer("Alice"),
-                factoryPlayer("Bob"),
-                factoryPlayer("Clive"),
-                factoryPlayer("Donna"))
-
-        val match = DartsMatchEntity()
-        match.players = players
-
-
-        val hmOrderToCount = HashMapCount<String>()
-        for (i in 1..2400000)
-        {
-            match.shufflePlayers()
-
-            hmOrderToCount.incrementCount("${match.players}")
-        }
-
-        hmOrderToCount.size shouldBe 24 //Should have all permutations at least once
-
-        hmOrderToCount.values.forEach{
-            it.shouldBeBetween(98000, 102000)
-        }
-    }
-
-    @Test
     fun `Should cache metadata from a game correctly`()
     {
-        val game501 = GameEntity.factoryAndSave(GameType.X01, "501")
-        game501.matchOrdinal = 2
-        val gameGolf = GameEntity.factoryAndSave(GameType.GOLF, "18")
-        gameGolf.matchOrdinal = 4
-
-        insertPlayerForGame("BTBF", game501.rowId)
-        insertPlayerForGame("Mooch", game501.rowId)
-
-        insertPlayerForGame("Scat", gameGolf.rowId)
-        insertPlayerForGame("Aggie", gameGolf.rowId)
+        val game501 = insertGame(gameType = GameType.X01, gameParams = "301")
+        val gameGolf = insertGame(gameType = GameType.GOLF, gameParams = "18")
 
         val match = DartsMatchEntity()
 
         match.cacheMetadataFromGame(game501)
         match.gameType shouldBe game501.gameType
         match.gameParams shouldBe game501.gameParams
-        match.incrementAndGetCurrentOrdinal() shouldBe game501.matchOrdinal + 1
-        match.players.map{it.name}.shouldContainExactlyInAnyOrder("BTBF", "Mooch")
 
         match.cacheMetadataFromGame(gameGolf)
         match.gameType shouldBe gameGolf.gameType
         match.gameParams shouldBe gameGolf.gameParams
-        match.incrementAndGetCurrentOrdinal() shouldBe gameGolf.matchOrdinal + 1
-        match.players.map{it.name}.shouldContainExactlyInAnyOrder("Scat", "Aggie")
     }
 
     @Test

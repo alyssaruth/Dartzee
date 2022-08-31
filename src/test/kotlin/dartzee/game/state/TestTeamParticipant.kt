@@ -37,8 +37,24 @@ class TestTeamParticipant: AbstractTest()
         val teamOne = TeamParticipant(insertTeam(), listOf(pt1, pt2))
         val teamTwo = TeamParticipant(insertTeam(), listOf(pt2, pt1))
 
-        teamOne.getParticipantName().value shouldBe "Alyssa & Leah"
-        teamTwo.getParticipantName().value shouldBe "Leah & Alyssa"
+        teamOne.getParticipantNameHtml(false) shouldBe "<html>Alyssa &#38; Leah</html>"
+        teamTwo.getParticipantNameHtml(false) shouldBe "<html>Leah &#38; Alyssa</html>"
+    }
+
+    @Test
+    fun `Should bold the right player when active`()
+    {
+        val p1 = insertPlayer(name = "Alyssa")
+        val p2 = insertPlayer(name = "Leah")
+
+        val pt1 = insertParticipant(playerId = p1.rowId)
+        val pt2 = insertParticipant(playerId = p2.rowId)
+
+        val team = TeamParticipant(insertTeam(), listOf(pt1, pt2))
+
+        team.getParticipantNameHtml(true, pt1) shouldBe "<html><b>Alyssa</b> &#38; Leah</html>"
+        team.getParticipantNameHtml(true, pt2) shouldBe "<html>Alyssa &#38; <b>Leah</b></html>"
+        team.getParticipantNameHtml(true, null) shouldBe "<html><b>Alyssa &#38; Leah</b></html>"
     }
 
     @Test

@@ -14,11 +14,11 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
+abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), IScorerTable
 {
     val playerIds = participant.individuals.map { it.playerId }
 
-    val model = DefaultModel()
+    override val model = DefaultModel()
 
     val lblName = JLabel()
     protected val panelCenter = JPanel()
@@ -46,8 +46,9 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
-        lblName.text = participant.getParticipantName().value
+        lblName.text = participant.getParticipantNameHtml(false)
         lblName.foreground = Color.BLACK
+        lblName.border = EmptyBorder(10, 0, 0, 0)
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
         panelAvatar.layout = BorderLayout(0, 0)
@@ -64,7 +65,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
         tableScores.disableSorting()
     }
 
-    abstract fun getNumberOfColumns(): Int
     protected abstract fun initImpl()
 
     fun getTableOnly() = panelCenter
@@ -83,14 +83,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel()
 
         initImpl()
     }
-
-    fun addRow(row: Array<*>)
-    {
-        model.addRow(row)
-        tableScores.scrollToBottom()
-    }
-
-    protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
 
     protected fun updateResultColourForPosition(pos: Int)
     {

@@ -1,17 +1,17 @@
 package dartzee.screen.game
 
-import com.github.alexburlton.swingtest.clickChild
-import dartzee.db.DartsMatchEntity
+import dartzee.game.state.IWrappedParticipant
+import dartzee.game.state.X01PlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
-import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertPlayer
+import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GameStatisticsPanelX01
+import io.kotlintest.matchers.collections.shouldHaveSize
 import io.kotlintest.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import javax.swing.JButton
 
 class TestMatchSummaryPanel : AbstractTest()
 {
@@ -48,37 +48,45 @@ class TestMatchSummaryPanel : AbstractTest()
         otherRows[0] shouldBe listOf(1L, qwiAndNatalie, qwiAndNatalie, qwiAndNatalie)
         otherRows[1] shouldBe listOf(2L, natalieAndQwi, natalieAndQwi, natalieAndQwi)
     }
+    private fun MatchSummaryPanel<X01PlayerState>.addParticipant(localId: Long, participant: IWrappedParticipant)
+    {
+        addParticipant(localId, X01PlayerState(501, participant))
+    }
 
     @Test
-    fun `Should update stats using states from all the games`()
+    fun `Should add listeners to player states, and update stats using all of them`()
     {
         val statsPanel = mockk<GameStatisticsPanelX01>(relaxed = true)
         val matchPanel = makeMatchSummaryPanel(statsPanel = statsPanel)
 
         val gameOne = makeX01GamePanel()
         val gameTwo = makeX01GamePanel()
-        val expectedStates = gameOne.getPlayerStates() + gameTwo.getPlayerStates()
 
         matchPanel.addGameTab(gameOne)
+        gameOne.getPlayerStates().forEach { matchPanel.addParticipant(gameOne.gameEntity.localId, it) }
+        matchPanel.finaliseScorers(mockk(relaxed = true))
+
         matchPanel.addGameTab(gameTwo)
+        gameTwo.getPlayerStates().forEach { matchPanel.addParticipant(gameTwo.gameEntity.localId, it) }
 
-        matchPanel.updateTotalScores()
+        // Now trigger a state change for one of the player states
+        val state = gameOne.getPlayerStates().first()
+        state.dartThrown(Dart(20, 1))
 
+        val expectedStates = gameOne.getPlayerStates() + gameTwo.getPlayerStates()
         verify { statsPanel.showStats(expectedStates) }
     }
 
     @Test
-    fun `Clicking refresh button should refresh stats`()
+    fun `Should return all participants as a flat list`()
     {
-        val statsPanel = mockk<GameStatisticsPanelX01>(relaxed = true)
-        val matchPanel = makeMatchSummaryPanel(statsPanel = statsPanel)
+        val gamePanelOne = makeX01GamePanel()
+        val gamePanelTwo = makeX01GamePanel()
 
-        matchPanel.clickChild<JButton> { it.toolTipText == "Refresh stats" }
-        verify { statsPanel.showStats(any()) }
+        val panel = makeMatchSummaryPanel()
+        panel.addGameTab(gamePanelOne)
+        panel.addGameTab(gamePanelTwo)
+
+        panel.getAllParticipants().shouldHaveSize(2)
     }
-
-    private fun makeMatchSummaryPanel(
-        match: DartsMatchEntity = insertDartsMatch(),
-        statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501"))
-    = MatchSummaryPanel(match, statsPanel)
 }

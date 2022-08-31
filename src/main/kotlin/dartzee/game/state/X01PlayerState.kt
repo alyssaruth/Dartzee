@@ -47,7 +47,11 @@ data class X01PlayerState(private val startingScore: Int,
 
     fun getRemainingScore() = getRemainingScoreForRound(currentRoundNumber())
 
-    fun getBadLuckCount() = getAllDartsFlattened().count { isNearMissDouble(it) }
+    fun getBadLuckCount(): Int
+    {
+        val rounds = getRoundsForIndividual(currentIndividual())
+        return rounds.flatten().count { isNearMissDouble(it) }
+    }
 
     fun getLastRound() = completedRounds.last()
 

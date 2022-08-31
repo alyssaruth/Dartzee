@@ -25,6 +25,19 @@ class TestAchievementX01Shanghai: AbstractMultiRowAchievementTest<AchievementX01
     }
 
     @Test
+    fun `Should count shanghais thrown when part of a team`()
+    {
+        val pt = insertRelevantParticipant(team = true)
+
+        insertDart(pt, score = 20, multiplier = 3, ordinal = 1, startingScore = 400)
+        insertDart(pt, score = 20, multiplier = 1, ordinal = 2, startingScore = 340)
+        insertDart(pt, score = 20, multiplier = 2, ordinal = 3, startingScore = 320)
+
+        factoryAchievement().populateForConversion(emptyList())
+        getCountFromTable("Achievement") shouldBe 1
+    }
+
+    @Test
     fun `Should not count misses`()
     {
         val p = insertPlayer()
