@@ -26,7 +26,7 @@ abstract class AbstractRegistryTest: AbstractTest()
     }
 
     @AfterEach
-    fun resestPreferences()
+    fun resetPreferences()
     {
         getPreferencesAffected().forEach {
             PreferenceUtil.saveString(it, hmPreferenceToSetting[it])
