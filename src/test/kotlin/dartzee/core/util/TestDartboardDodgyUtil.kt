@@ -1,11 +1,14 @@
+package dartzee.core.util
+
 import com.github.alexburlton.swingtest.findChild
 import com.github.alexburlton.swingtest.flushEdt
 import com.github.alexburlton.swingtest.getChild
 import com.github.alexburlton.swingtest.shouldBeVisible
 import dartzee.core.bean.SwingLabel
-import dartzee.core.util.doBadLuck
-import dartzee.core.util.doChucklevision
+import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
+import dartzee.logging.CODE_AUDIO_ERROR
+import dartzee.logging.Severity
 import dartzee.makeTestDartboard
 import dartzee.screen.Dartboard
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
@@ -36,6 +39,53 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     fun beforeEach()
     {
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, true)
+    }
+
+    @Test
+    fun `should not play a sound for a simulation`()
+    {
+        mockkStatic(AudioSystem::class)
+
+        val dartboard = makeTestDartboard().also { it.simulation = true }
+        dartboard.playDodgySound("60")
+
+        verifyNotCalled { AudioSystem.getLine(any()) }
+    }
+
+    @Test
+    fun `should not play a sound if preference is disabled`()
+    {
+        mockkStatic(AudioSystem::class)
+
+        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, false)
+        val dartboard = makeTestDartboard()
+        dartboard.playDodgySound("60")
+
+        verifyNotCalled { AudioSystem.getLine(any()) }
+    }
+
+    @Test
+    fun `should do nothing if invalid sound is requested`()
+    {
+        mockkStatic(AudioSystem::class)
+
+        val dartboard = makeTestDartboard()
+        dartboard.playDodgySound("invalid")
+
+        verifyNotCalled { AudioSystem.getLine(any()) }
+    }
+
+    @Test
+    fun `should log an error and hide the image if there is an error playing the audio`()
+    {
+        val dartboard = makeTestDartboard()
+        captureClip(true)
+
+        dartboard.doBadLuck()
+        flushEdt()
+
+        dartboard.dodgyLabelShouldNotExist()
+        verifyLog(CODE_AUDIO_ERROR, Severity.ERROR)
     }
 
     @Test
@@ -75,8 +125,9 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
         dartboard.dodgyLabelShouldNotExist()
     }
 
-    private fun captureClip(): HackedClip {
-        val clip = HackedClip()
+    private fun captureClip(throwError: Boolean = false): HackedClip
+    {
+        val clip = HackedClip(throwError)
         mockkStatic(AudioSystem::class)
         every { AudioSystem.getLine(any()) } returns clip
         return clip
@@ -100,7 +151,8 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 }
 
-class HackedClip : Clip {
+class HackedClip(private val throwError: Boolean) : Clip
+{
     private var lineListener: LineListener? = null
     private var running: Boolean = true
 
@@ -119,7 +171,11 @@ class HackedClip : Clip {
     override fun close() {}
     override fun getLineInfo() = mockk<Line.Info>()
     override fun open(p0: AudioFormat?, p1: ByteArray?, p2: Int, p3: Int) {}
-    override fun open(p0: AudioInputStream?) {}
+    override fun open(p0: AudioInputStream?) {
+        if (throwError) {
+            throw Exception("Oh dear oh dear")
+        }
+    }
     override fun open() {}
     override fun isOpen() = false
     override fun getControls(): Array<Control> = arrayOf()
