@@ -2,7 +2,6 @@ package dartzee.core.util
 
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
-import dartzee.logging.LoggingCode
 import dartzee.screen.Dartboard
 import dartzee.screen.LAYER_DODGY
 import dartzee.utils.InjectedThings.logger
@@ -142,7 +141,6 @@ private fun Dartboard.playDodgySoundCached(soundName: String)
 private fun Dartboard.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip
 {
     val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
-    logger.info(LoggingCode("clip.class"), "class is ${myClip::class.java}")
 
     //Overwrite the 'latestClip' variable so this always stores the latest sound.
     //Allows us to not dismiss the label until the final sound has finished, in the case of overlapping sounds.
