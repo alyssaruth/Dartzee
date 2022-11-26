@@ -9,7 +9,11 @@ import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache
 import java.util.*
-import javax.sound.sampled.*
+import javax.sound.sampled.AudioInputStream
+import javax.sound.sampled.AudioSystem
+import javax.sound.sampled.Clip
+import javax.sound.sampled.Line
+import javax.sound.sampled.LineEvent
 import javax.swing.ImageIcon
 
 fun Dartboard.doChucklevision()
@@ -118,11 +122,11 @@ fun Dartboard.playDodgySound(soundName: String)
             logger.warn(CODE_RESOURCE_CACHE_NOT_INITIALISED, "Not playing [$soundName] - ResourceCache not initialised")
         }
     }
-    catch (e: Exception)
+    catch (e: Throwable)
     {
         logger.error(CODE_AUDIO_ERROR, "Caught error playing sound [$soundName]", e)
+        resetDodgy()
     }
-
 }
 
 private fun Dartboard.playDodgySoundCached(soundName: String)
@@ -130,14 +134,11 @@ private fun Dartboard.playDodgySoundCached(soundName: String)
     val stream = ResourceCache.borrowInputStream(soundName) ?: return
 
     val clip = initialiseAudioClip(stream, soundName)
-    if (clip != null)
-    {
-        clip.open(stream)
-        clip.start()
-    }
+    clip.open(stream)
+    clip.start()
 }
 
-private fun Dartboard.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip?
+private fun Dartboard.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip
 {
     val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
 
@@ -154,16 +155,18 @@ private fun Dartboard.initialiseAudioClip(stream: AudioInputStream, soundName: S
 
             ResourceCache.returnInputStream(soundName, stream)
 
-            //See whether there's currently any later clip still running. If there isn't, also dismiss our dodgyLabel
             val somethingRunning = latestClip?.isRunning ?: false
-            if (!somethingRunning)
-            {
-                remove(dodgyLabel)
-                repaint()
-                revalidate()
+            if (!somethingRunning) {
+                resetDodgy()
             }
         }
     }
 
     return myClip
+}
+
+private fun Dartboard.resetDodgy() {
+    remove(dodgyLabel)
+    repaint()
+    revalidate()
 }
