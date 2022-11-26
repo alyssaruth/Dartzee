@@ -15,7 +15,7 @@ jobs:
       - name: Build & Unit Test
         uses: GabrielBB/xvfb-action@v1.0
         with:
-          run: ./gradlew koverReport -x integrationAndE2E -x test -x updateScreenshots --info
+          run: ./gradlew koverReport -x integrationAndE2E -x test -x updateScreenshots
       - name: Export test results
         uses: actions/upload-artifact@v2
         with:
