@@ -59,9 +59,16 @@ test {
             '-Dcom.sun.management.jmxremote.ssl=false',
             '-Djava.rmi.server.hostname=localhost',
             '-DscreenshotOs=linux'
+}
 
+tasks.withType(Test) {
     minHeapSize = "512m"
     maxHeapSize = "512m"
+
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
 }
 
 task runDev(type: JavaExec) {
