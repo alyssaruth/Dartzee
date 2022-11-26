@@ -20,7 +20,7 @@ class TestAboutDialog: AbstractTest()
         val dlg = AboutDialog()
         dlg.isVisible = true
 
-        val lbl = dlg.getChild<JLabel> { it.text.contains("zzChange Log") }
+        val lbl = dlg.getChild<JLabel> { it.text.contains("Change Log") }
         lbl.doClick()
 
         dlg.isVisible shouldBe false

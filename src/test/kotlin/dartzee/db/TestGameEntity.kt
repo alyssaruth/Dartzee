@@ -4,7 +4,11 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayerForGame
+import dartzee.helper.randomGuid
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings.mainDatabase
@@ -36,7 +40,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         val sqle = ex.sqlException
         sqle.message shouldContain "duplicate key"
 
-        getCountFromTable("Game") shouldBe 1
+        getCountFromTable("Game") shouldBe 2
     }
 
     @Test
