@@ -40,7 +40,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         val sqle = ex.sqlException
         sqle.message shouldContain "duplicate key"
 
-        getCountFromTable("Game") shouldBe 2
+        getCountFromTable("Game") shouldBe 1
     }
 
     @Test
