@@ -19,6 +19,7 @@ import io.kotlintest.matchers.types.shouldNotBeNull
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -147,6 +148,13 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
         fun beforeAll()
         {
             ResourceCache.initialiseResources()
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll()
+        {
+            ResourceCache.resetCache()
         }
     }
 }
