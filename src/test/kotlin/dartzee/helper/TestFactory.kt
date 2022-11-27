@@ -106,6 +106,23 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: Dart): List<List<Dart>
     return darts.toList().chunked(3)
 }
 
+fun makeClockRounds(inOrder: Boolean, vararg darts: Dart): List<Dart>
+{
+    val targets: MutableSet<Int> = (1..20).toMutableSet()
+
+    darts.forEach { dart ->
+        dart.startingScore = targets.minOf { it }
+        dart.clockTargets = targets.toList()
+
+        val hit = if (inOrder) dart.hitClockTarget(ClockType.Standard) else dart.hitAnyClockTarget(ClockType.Standard)
+        if (hit) {
+            targets.remove(dart.score)
+        }
+    }
+
+    return darts.toList()
+}
+
 fun makeClockPlayerState(clockType: ClockType = ClockType.Standard,
                          inOrder: Boolean = true,
                          isActive: Boolean = false,

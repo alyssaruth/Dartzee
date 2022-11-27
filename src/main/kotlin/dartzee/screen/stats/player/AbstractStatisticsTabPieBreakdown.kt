@@ -21,7 +21,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
 {
     abstract val ranges: List<IntRange>
 
-    private val tableHoleBreakdown = ScrollTable()
+    private val tableHoleBreakdown = ScrollTable(testId = "BreakdownMine")
     val tableHoleBreakdownOther = ScrollTable()
     private val tablePanel = JPanel()
     private val pieChartPanel = JPanel()
@@ -79,7 +79,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         model.addColumn("Avg")
         table.model = model
 
-        val finishedGames = filteredGames.filter{ it.isFinished() }
+        val finishedGames = filteredGames.filter { it.isFinished() }
         populateModel(table, finishedGames)
 
         table.sortBy(0, false)
