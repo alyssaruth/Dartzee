@@ -5,10 +5,10 @@ import dartzee.core.util.DateStatics
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.logging.CODE_SQL
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
-import io.kotlintest.shouldThrow
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.Test
 
 class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()

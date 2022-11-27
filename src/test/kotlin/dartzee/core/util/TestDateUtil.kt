@@ -4,10 +4,10 @@ import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.time.ZonedDateTime

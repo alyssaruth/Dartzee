@@ -4,8 +4,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.screen.game.dartzee.DartzeeRuleTileComplete
 import dartzee.screen.game.dartzee.SoftDisableButtonModel
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 

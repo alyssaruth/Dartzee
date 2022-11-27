@@ -18,7 +18,7 @@ import dartzee.`object`.SegmentType
 import dartzee.stats.GameWrapper
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import java.awt.Point
 import java.sql.Timestamp
 
@@ -78,10 +78,11 @@ fun makeX01RoundsMap(startingScore: Int = 501, vararg darts: List<Dart>): HashMa
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
 {
     var currentScore = startingScore
-    darts.forEach {
+    darts.forEachIndexed { ix, it ->
         var roundScore = currentScore
         it.forEach { dart ->
             dart.startingScore = roundScore
+            dart.roundNumber = ix + 1
             roundScore -= dart.getTotal()
         }
 
@@ -173,6 +174,6 @@ fun makeGolfGameWrapper(
     score shouldBe expectedScore
 
     val wrapper = makeGameWrapper(localId = localId, gameParams = gameParams, finalScore = score, dtStart = dtStart)
-    golfRounds.flatten().forEach { wrapper.addDart(it.roundNumber, it) }
+    golfRounds.flatten().forEach(wrapper::addDart)
     return wrapper
 }

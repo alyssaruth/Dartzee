@@ -1,10 +1,10 @@
 package dartzee.screen.stats.player
 
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
@@ -13,10 +13,14 @@ import dartzee.screen.stats.player.golf.StatisticsTabGolfHoleBreakdown
 import dartzee.screen.stats.player.golf.StatisticsTabGolfOptimalScorecard
 import dartzee.screen.stats.player.golf.StatisticsTabGolfScorecards
 import dartzee.screen.stats.player.rtc.StatisticsTabRoundTheClockHitRate
-import dartzee.screen.stats.player.x01.*
+import dartzee.screen.stats.player.x01.StatisticsTabFinishBreakdown
+import dartzee.screen.stats.player.x01.StatisticsTabX01CheckoutPercent
+import dartzee.screen.stats.player.x01.StatisticsTabX01ThreeDartAverage
+import dartzee.screen.stats.player.x01.StatisticsTabX01ThreeDartScores
+import dartzee.screen.stats.player.x01.StatisticsTabX01TopFinishes
 import dartzee.stats.GameWrapper
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -192,7 +196,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
                     dart.ordinal = ordinal
                     dart.startingScore = startingScore
                     dart.roundNumber = roundNumber
-                    wrapper.addDart(roundNumber, dart)
+                    wrapper.addDart(dart)
                 }
             }
         }

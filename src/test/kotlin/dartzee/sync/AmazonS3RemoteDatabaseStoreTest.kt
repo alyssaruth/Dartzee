@@ -6,10 +6,10 @@ import dartzee.utils.AwsUtils
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.DartsDatabaseUtil.OTHER_DATABASE_NAME
 import dartzee.utils.InjectedThings.databaseDirectory
-import io.kotlintest.matchers.file.shouldExist
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
+import io.kotest.matchers.file.shouldExist
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.*
 import java.io.File
 import java.util.*

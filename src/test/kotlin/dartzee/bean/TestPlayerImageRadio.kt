@@ -4,9 +4,9 @@ import dartzee.core.helper.singleClick
 import dartzee.db.PlayerImageEntity
 import dartzee.db.getBlobValue
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import javax.swing.ButtonGroup
 import javax.swing.border.EmptyBorder

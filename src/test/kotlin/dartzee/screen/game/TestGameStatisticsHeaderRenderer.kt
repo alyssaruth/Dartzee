@@ -2,8 +2,8 @@ package dartzee.screen.game
 
 import dartzee.helper.AbstractTest
 import dartzee.shouldHaveBorderThickness
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JComponent

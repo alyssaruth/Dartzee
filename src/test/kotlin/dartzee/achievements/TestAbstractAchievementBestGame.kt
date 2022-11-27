@@ -6,7 +6,7 @@ import dartzee.game.GameType
 import dartzee.db.PlayerEntity
 import dartzee.helper.*
 import dartzee.utils.Database
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 

@@ -11,8 +11,8 @@ import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
-import io.kotlintest.matchers.numerics.shouldBeLessThan
-import io.kotlintest.shouldBe
+import io.kotest.matchers.comparables.shouldBeLessThan
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.BasicStroke

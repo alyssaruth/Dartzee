@@ -7,11 +7,11 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.*
 import dartzee.utils.DARTS_VERSION_NUMBER
-import io.kotlintest.matchers.maps.shouldContainAll
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.maps.shouldContainAll
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotBeEmpty
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import javax.swing.UIManager

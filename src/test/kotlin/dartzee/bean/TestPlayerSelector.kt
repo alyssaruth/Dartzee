@@ -4,9 +4,9 @@ import dartzee.core.helper.doubleClick
 import dartzee.core.helper.processKeyPress
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 

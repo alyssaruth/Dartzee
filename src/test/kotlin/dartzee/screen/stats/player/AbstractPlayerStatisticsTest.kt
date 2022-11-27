@@ -4,8 +4,8 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.util.containsComponent
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeGameWrapper
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Component

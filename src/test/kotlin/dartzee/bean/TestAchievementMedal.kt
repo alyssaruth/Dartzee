@@ -4,16 +4,16 @@ import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.doHover
 import com.github.alexburlton.swingtest.findChild
 import com.github.alexburlton.swingtest.shouldMatchImage
-import dartzee.game.GameLauncher
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
+import dartzee.game.GameLauncher
 import dartzee.helper.AbstractTest
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -152,7 +152,7 @@ class TestAchievementMedal: AbstractTest()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<PlayerAchievementBreakdown>()
-        (currentScreen as PlayerAchievementBreakdown).achievement shouldBe achievement
+        currentScreen.achievement shouldBe achievement
     }
 
     @Test

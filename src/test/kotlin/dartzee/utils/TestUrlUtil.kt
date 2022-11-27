@@ -3,7 +3,7 @@ package dartzee.utils
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_HYPERLINK_ERROR
 import dartzee.logging.Severity
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -4,7 +4,7 @@ import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.helper.double
 import dartzee.helper.outerSingle
 import dartzee.helper.treble
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeAggregateRuleIncreasing: AbstractDartzeeRuleTest<DartzeeAggregateRuleIncreasing>()

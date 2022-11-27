@@ -6,8 +6,8 @@ import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.FakeDartsScreen
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {

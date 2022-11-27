@@ -4,8 +4,8 @@ import dartzee.helper.AbstractTest
 import dartzee.logging.exceptions.ApplicationFault
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.shouldContainKeyValues
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.sql.SQLException
 

@@ -11,8 +11,9 @@ object DatabaseMigrations
             18 to listOf { db -> createDeletionAudit(db) },
             19 to listOf (
                 { db -> TeamEntity(db).createTable() },
-                { db -> runScript(db, 20, "Participant.sql")}
-            )
+                { db -> runScript(db, 20, "Participant.sql") }
+            ),
+            20 to listOf { db -> runScript(db, 21, "Dart.sql") }
         )
     }
 

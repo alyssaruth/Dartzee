@@ -2,7 +2,7 @@ package dartzee.`object`
 
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSegmentType: AbstractTest()

@@ -4,9 +4,9 @@ import dartzee.`object`.Dart
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
 import dartzee.helper.*
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JButton

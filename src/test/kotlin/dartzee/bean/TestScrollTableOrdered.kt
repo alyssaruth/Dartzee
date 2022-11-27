@@ -6,8 +6,8 @@ import dartzee.core.util.CollectionShuffler
 import dartzee.core.util.InjectedCore
 import dartzee.core.util.TableUtil
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
 import net.miginfocom.swing.MigLayout

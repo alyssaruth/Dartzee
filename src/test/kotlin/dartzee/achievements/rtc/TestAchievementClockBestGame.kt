@@ -4,7 +4,7 @@ import dartzee.achievements.TestAbstractAchievementBestGame
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementClockBestGame: TestAbstractAchievementBestGame<AchievementClockBestGame>()

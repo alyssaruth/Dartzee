@@ -4,7 +4,7 @@ import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

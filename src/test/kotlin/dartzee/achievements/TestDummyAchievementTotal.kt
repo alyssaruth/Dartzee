@@ -2,10 +2,10 @@ package dartzee.achievements
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.numerics.shouldBeLessThan
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.comparables.shouldBeLessThan
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 
 class TestDummyAchievementTotal: AbstractTest()

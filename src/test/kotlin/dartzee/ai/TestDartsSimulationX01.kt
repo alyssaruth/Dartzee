@@ -6,8 +6,8 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.predictableDartsModel
 import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartsSimulationX01: AbstractTest()

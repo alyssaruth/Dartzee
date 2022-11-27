@@ -1,12 +1,12 @@
 package dartzee.screen.game.x01
 
-import dartzee.`object`.Dart
 import dartzee.core.bean.NumberField
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
 import dartzee.game.UniqueParticipantName
 import dartzee.game.state.X01PlayerState
+import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
@@ -175,7 +175,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         return rounds.filter { it.last().startingScore > nfSetupThreshold.getNumber() }.toList()
     }
 
-    private fun getScoringDarts(playerName: UniqueParticipantName): MutableList<Dart>
+    private fun getScoringDarts(playerName: UniqueParticipantName): List<Dart>
     {
         val darts = getFlattenedDarts(playerName)
         return getScoringDarts(darts, nfSetupThreshold.getNumber())

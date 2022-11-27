@@ -5,9 +5,9 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.string.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.string.shouldBeEmpty
 import org.junit.jupiter.api.Test
 
 class TestIncludedPlayerParameters: AbstractTest()

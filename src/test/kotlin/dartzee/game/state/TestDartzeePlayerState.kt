@@ -5,9 +5,9 @@ import dartzee.achievements.AchievementType
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.helper.*
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeePlayerState: AbstractTest()

@@ -1,10 +1,33 @@
 package dartzee.utils
 
-import dartzee.`object`.DartsClient
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
-import dartzee.db.*
-import dartzee.logging.*
+import dartzee.db.AbstractEntity
+import dartzee.db.AchievementEntity
+import dartzee.db.DartEntity
+import dartzee.db.DartsMatchEntity
+import dartzee.db.DartzeeRoundResultEntity
+import dartzee.db.DartzeeRuleEntity
+import dartzee.db.DartzeeTemplateEntity
+import dartzee.db.DatabaseMigrator
+import dartzee.db.DeletionAuditEntity
+import dartzee.db.ForeignDatabaseValidator
+import dartzee.db.GameEntity
+import dartzee.db.MigrationResult
+import dartzee.db.ParticipantEntity
+import dartzee.db.PendingLogsEntity
+import dartzee.db.PlayerEntity
+import dartzee.db.PlayerImageEntity
+import dartzee.db.SyncAuditEntity
+import dartzee.db.TeamEntity
+import dartzee.db.VersionEntity
+import dartzee.db.X01FinishEntity
+import dartzee.logging.CODE_BACKUP_ERROR
+import dartzee.logging.CODE_RESTORE_ERROR
+import dartzee.logging.CODE_STARTING_BACKUP
+import dartzee.logging.CODE_STARTING_RESTORE
+import dartzee.logging.KEY_DB_VERSION
+import dartzee.`object`.DartsClient
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.connectionPoolSize
 import dartzee.utils.InjectedThings.logger
@@ -20,7 +43,7 @@ import kotlin.system.exitProcess
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 20
+    const val DATABASE_VERSION = 21
     const val DATABASE_NAME = "Darts"
     const val OTHER_DATABASE_NAME = "DartsOther" //Tmp name used for restore from backup and/or sync
 

@@ -1,14 +1,16 @@
 package dartzee.utils
 
-import dartzee.`object`.Dart
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
 import dartzee.helper.makeDartsModel
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import dartzee.helper.makeX01Rounds
+import dartzee.`object`.Dart
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestX01Util: AbstractTest()
@@ -103,12 +105,9 @@ class TestX01Util: AbstractTest()
     @Test
     fun testGetScoringDarts()
     {
-        val d1 = Dart(20, 1)
-        val d2 = Dart(20, 1)
-        val d3 = Dart(20, 1)
-        d1.startingScore = 51
-        d2.startingScore = 50
-        d3.startingScore = 49
+        val d1 = makeDart(1, 1, startingScore = 51)
+        val d2 = makeDart(1, 1, startingScore = 50)
+        val d3 = makeDart(20, 1, startingScore = 49)
 
         val list = mutableListOf(d1, d2, d3)
 
@@ -117,19 +116,29 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
+    fun `getScoringRounds should exclude rounds correctly`()
+    {
+        val round1 = listOf(Dart(20, 3), Dart(20, 1), Dart(5, 1)) // 115
+        val round2 = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1)) //  74
+        val round3 = listOf(Dart(9, 1), Dart(14, 1), Dart(1, 1))  //  50
+        val rounds = makeX01Rounds(200, round1, round2, round3)
+
+        getScoringRounds(rounds, 200).shouldBeEmpty()
+        getScoringRounds(rounds, 75).shouldContainExactlyInAnyOrder(listOf(round1))
+        getScoringRounds(rounds, 74).shouldContainExactlyInAnyOrder(round1, round2)
+        getScoringRounds(rounds, 51).shouldContainExactlyInAnyOrder(round1, round2)
+        getScoringRounds(rounds, 50).shouldContainExactlyInAnyOrder(round1, round2, round3)
+    }
+
+    @Test
     fun testCalculateThreeDartAverage()
     {
-        val d1 = Dart(20, 1)
-        val d2 = Dart(20, 2)
-        val d3 = Dart(10, 0)
-        val d4 = Dart(5, 3)
+        val d1 = makeDart(20, 1, startingScore = 100)
+        val d2 = makeDart(20, 2, startingScore = 100)
+        val d3 = makeDart(10, 0, startingScore = 80)
+        val d4 = makeDart(5, 3, startingScore = 100)
 
-        d1.startingScore = 100
-        d2.startingScore = 100
-        d3.startingScore = 80
-        d4.startingScore = 100
-
-        val list = mutableListOf(d1, d2, d3, d4)
+        val list = listOf(d1, d2, d3, d4)
         val result = calculateThreeDartAverage(list, 70)
         val resultTwo = calculateThreeDartAverage(list, 90) //The miss should be excluded
         val resultThree = calculateThreeDartAverage(list, 200) //Test an empty list

@@ -4,7 +4,7 @@ import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.screen.ScreenCache
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

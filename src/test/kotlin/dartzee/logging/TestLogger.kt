@@ -4,9 +4,9 @@ import dartzee.CURRENT_TIME
 import dartzee.helper.AbstractTest
 import dartzee.helper.FakeLogDestination
 import dartzee.shouldContainKeyValues
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

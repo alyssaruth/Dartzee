@@ -3,9 +3,9 @@ package dartzee.`object`
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import java.awt.Point
 

@@ -3,9 +3,9 @@ package dartzee.logging
 import com.amazonaws.auth.BasicAWSCredentials
 import dartzee.helper.AbstractTest
 import dartzee.utils.AwsUtils
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.http.HttpVersion

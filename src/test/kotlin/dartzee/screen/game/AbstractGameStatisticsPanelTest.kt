@@ -4,8 +4,8 @@ import dartzee.game.state.AbstractPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.LoggingCode
-import io.kotlintest.matchers.collections.shouldContainAll
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 abstract class AbstractGameStatisticsPanelTest<PlayerState: AbstractPlayerState<PlayerState>, S: AbstractGameStatisticsPanel<PlayerState>>: AbstractTest()

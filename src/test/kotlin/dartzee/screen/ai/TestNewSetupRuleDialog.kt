@@ -2,10 +2,10 @@ package dartzee.screen.ai
 
 import dartzee.ai.AimDart
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.maps.shouldContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.maps.shouldContain
+import io.kotest.matchers.shouldBe
 import net.miginfocom.swing.MigLayout
 import org.junit.jupiter.api.Test
 

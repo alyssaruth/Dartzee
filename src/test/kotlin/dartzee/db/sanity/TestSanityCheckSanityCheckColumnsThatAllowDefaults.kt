@@ -2,8 +2,8 @@ package dartzee.db.sanity
 
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSanityCheckSanityCheckColumnsThatAllowDefaults: AbstractTest()

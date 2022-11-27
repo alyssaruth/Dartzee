@@ -1,5 +1,6 @@
 package dartzee.screen
 
+import dartzee.core.bean.SwingLabel
 import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
 import dartzee.core.util.getParentWindow
@@ -75,7 +76,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     //For dodgy sounds/animations
     var latestClip: Clip? = null
-    val dodgyLabel = JLabel()
+    val dodgyLabel = SwingLabel("", testId="dodgyLabel")
 
     var dartboardImage: BufferedImage? = null
     val dartboardLabel = JLabel()

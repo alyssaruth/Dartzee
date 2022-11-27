@@ -1,7 +1,7 @@
 package dartzee.db
 
-import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.string.shouldNotBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestPendingLogsEntity: AbstractEntityTest<PendingLogsEntity>()

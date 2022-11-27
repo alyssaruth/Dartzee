@@ -2,8 +2,8 @@ package dartzee.db
 
 import dartzee.core.util.DateStatics
 import dartzee.helper.randomGuid
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 
 class TestTeamEntity: AbstractEntityTest<TeamEntity>()

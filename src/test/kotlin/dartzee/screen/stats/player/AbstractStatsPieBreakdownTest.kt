@@ -1,8 +1,8 @@
 package dartzee.screen.stats.player
 
-import io.kotlintest.matchers.collections.shouldContainNoNulls
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainNoNulls
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Component
 

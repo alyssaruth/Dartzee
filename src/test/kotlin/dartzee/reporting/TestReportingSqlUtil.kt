@@ -3,7 +3,7 @@ package dartzee.reporting
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
 import dartzee.helper.*
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestReportingSqlUtil: AbstractTest()

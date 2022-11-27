@@ -9,9 +9,9 @@ import dartzee.helper.randomGuid
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.Dart
 import dartzee.utils.getAllPossibleSegments
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestGamePanelRoundTheClock: AbstractTest()

@@ -2,7 +2,7 @@ package dartzee.ai
 
 import dartzee.`object`.SegmentType
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAimDart: AbstractTest()

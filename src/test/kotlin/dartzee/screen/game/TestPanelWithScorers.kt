@@ -4,10 +4,10 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.screen.game.scorer.AbstractScorer
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JFrame
 

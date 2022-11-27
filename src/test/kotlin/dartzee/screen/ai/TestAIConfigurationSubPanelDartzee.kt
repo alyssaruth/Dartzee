@@ -5,7 +5,7 @@ import com.github.alexburlton.swingtest.getChild
 import dartzee.ai.DartzeePlayStyle
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JRadioButton
 

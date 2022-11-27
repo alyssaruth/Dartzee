@@ -3,7 +3,7 @@ package dartzee.bean
 import dartzee.helper.AbstractTest
 import dartzee.utils.DartsColour
 import dartzee.utils.translucent
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JComponent

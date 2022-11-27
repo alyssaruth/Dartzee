@@ -8,7 +8,7 @@ import dartzee.helper.insertDartzeeRoundResult
 import dartzee.helper.insertParticipant
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 

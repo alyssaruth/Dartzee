@@ -4,7 +4,7 @@ import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGameForPlayer
 import dartzee.helper.insertPlayer
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestPlayerSummaryUtil: AbstractTest()

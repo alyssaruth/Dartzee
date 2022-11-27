@@ -3,8 +3,8 @@ package dartzee.bean
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestPlayerTypeFilterPanel: AbstractTest()

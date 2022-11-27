@@ -7,7 +7,7 @@ import com.github.alexburlton.swingtest.shouldBeEnabled
 import dartzee.ai.DartsAiModel
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 import javax.swing.JSlider
