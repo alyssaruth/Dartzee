@@ -10,7 +10,7 @@ import dartzee.helper.retrieveAchievement
 import dartzee.helper.testRules
 import dartzee.utils.Database
 import dartzee.utils.insertDartzeeRules
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 

@@ -8,10 +8,10 @@ import dartzee.logging.*
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk

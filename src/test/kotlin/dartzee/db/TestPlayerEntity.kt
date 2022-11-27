@@ -7,9 +7,9 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.makeDartsModel
 import dartzee.shouldMatch
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.ImageIcon
 

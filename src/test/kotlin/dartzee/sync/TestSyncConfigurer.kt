@@ -2,8 +2,8 @@ package dartzee.sync
 
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSyncConfigurer: AbstractTest()

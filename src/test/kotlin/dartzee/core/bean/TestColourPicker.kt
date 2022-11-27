@@ -5,7 +5,7 @@ import dartzee.core.helper.getIconImage
 import dartzee.core.helper.makeMouseEvent
 import dartzee.core.util.InjectedDesktopCore
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

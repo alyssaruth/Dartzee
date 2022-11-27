@@ -9,7 +9,7 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementX01HighestBust: AbstractAchievementTest<AchievementX01HighestBust>()

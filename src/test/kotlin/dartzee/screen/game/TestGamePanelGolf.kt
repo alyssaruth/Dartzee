@@ -15,8 +15,8 @@ import dartzee.helper.randomGuid
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestGamePanelGolf: AbstractTest()

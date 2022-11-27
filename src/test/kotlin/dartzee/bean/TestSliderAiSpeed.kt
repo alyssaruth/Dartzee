@@ -2,9 +2,9 @@ package dartzee.bean
 
 import dartzee.`object`.DartsClient
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.matchers.types.shouldNotBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.types.shouldNotBeInstanceOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSliderAiSpeed: AbstractTest()

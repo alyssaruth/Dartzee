@@ -3,7 +3,7 @@ package dartzee.logging
 import dartzee.CURRENT_TIME_STRING
 import dartzee.helper.AbstractTest
 import dartzee.makeLogRecord
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestLogRecord: AbstractTest()

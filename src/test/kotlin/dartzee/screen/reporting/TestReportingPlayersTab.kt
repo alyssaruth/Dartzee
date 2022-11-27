@@ -4,12 +4,12 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.reporting.IncludedPlayerParameters
 import dartzee.reporting.ReportParameters
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldNotContain
-import io.kotlintest.matchers.maps.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.maps.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestReportingPlayersTab: AbstractTest()

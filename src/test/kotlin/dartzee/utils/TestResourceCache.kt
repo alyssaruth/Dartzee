@@ -3,9 +3,9 @@ package dartzee.utils
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.Severity
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

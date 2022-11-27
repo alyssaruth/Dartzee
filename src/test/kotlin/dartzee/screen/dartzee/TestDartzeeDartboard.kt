@@ -10,7 +10,7 @@ import dartzee.helper.makeSegmentStatus
 import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllPossibleSegments
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.Color

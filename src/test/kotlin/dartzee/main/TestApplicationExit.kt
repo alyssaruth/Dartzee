@@ -6,8 +6,8 @@ import dartzee.helper.assertExits
 import dartzee.logging.LogDestinationElasticsearch
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

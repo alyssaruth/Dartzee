@@ -6,8 +6,8 @@ import dartzee.db.PendingLogsEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.makeLogRecord
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk

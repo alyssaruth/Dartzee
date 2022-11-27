@@ -9,10 +9,10 @@ import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.nulls.shouldBeNull
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 

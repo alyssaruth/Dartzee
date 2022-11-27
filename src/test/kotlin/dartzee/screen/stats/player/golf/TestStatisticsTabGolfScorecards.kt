@@ -10,9 +10,9 @@ import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.stats.GameWrapper
 import dartzee.stats.GolfMode
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JComboBox
 

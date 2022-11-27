@@ -5,7 +5,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.randomGuid
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestHumanConfigurationDialog: AbstractTest()

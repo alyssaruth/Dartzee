@@ -10,7 +10,7 @@ import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.sync.SyncMode
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

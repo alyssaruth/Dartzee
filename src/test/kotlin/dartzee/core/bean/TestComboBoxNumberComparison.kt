@@ -1,7 +1,7 @@
 package dartzee.core.bean
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestComboBoxNumberComparison: AbstractTest()

@@ -5,7 +5,7 @@ import dartzee.helper.double
 import dartzee.helper.miss
 import dartzee.helper.outerSingle
 import dartzee.helper.treble
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeAggregateRuleDistinctScores: AbstractDartzeeRuleTest<DartzeeAggregateRuleDistinctScores>()

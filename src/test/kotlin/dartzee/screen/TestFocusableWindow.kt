@@ -3,7 +3,7 @@ package dartzee.screen
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.KEY_ACTIVE_WINDOW
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 

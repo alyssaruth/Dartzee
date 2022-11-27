@@ -1,9 +1,9 @@
 package dartzee.utils
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

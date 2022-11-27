@@ -23,7 +23,7 @@ import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.utils.*
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag

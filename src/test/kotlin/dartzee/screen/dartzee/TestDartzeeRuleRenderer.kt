@@ -4,7 +4,7 @@ import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeRuleRenderer: AbstractTest()

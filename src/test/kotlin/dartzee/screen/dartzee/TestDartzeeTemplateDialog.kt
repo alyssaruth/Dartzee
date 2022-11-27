@@ -9,9 +9,9 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

@@ -4,8 +4,8 @@ import dartzee.`object`.Dart
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeClockPlayerState
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestRoundTheClockScorecard: AbstractTest()

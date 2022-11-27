@@ -4,8 +4,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.randomGuid
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSanityCheckPlayerIdMismatch: AbstractTest()

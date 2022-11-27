@@ -16,8 +16,8 @@ import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

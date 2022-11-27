@@ -20,9 +20,9 @@ import dartzee.launchParamsEqual
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.*
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.*
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

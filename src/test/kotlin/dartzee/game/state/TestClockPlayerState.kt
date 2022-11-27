@@ -6,9 +6,9 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeClockPlayerState
 import dartzee.helper.makeDart
 import dartzee.utils.getAllPossibleSegments
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.Test
 
 class TestClockPlayerState: AbstractTest()

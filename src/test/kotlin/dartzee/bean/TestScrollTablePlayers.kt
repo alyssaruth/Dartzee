@@ -4,8 +4,8 @@ import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.ListSelectionModel
 

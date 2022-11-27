@@ -13,11 +13,11 @@ import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import dartzee.dartzee.aggregate.DartzeeTotalRuleLessThan
 import dartzee.helper.*
 import dartzee.utils.getAllPossibleSegments
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.doubles.shouldBeBetween
-import io.kotlintest.matchers.doubles.shouldBeExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.doubles.shouldBeBetween
+import io.kotest.matchers.doubles.shouldBeExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAllPossibilities: AbstractTest()

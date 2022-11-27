@@ -2,8 +2,8 @@ package dartzee.core.bean
 
 import dartzee.core.util.enableChildren
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.text.SimpleDateFormat

@@ -2,7 +2,7 @@ package dartzee.game
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestGameType: AbstractTest()

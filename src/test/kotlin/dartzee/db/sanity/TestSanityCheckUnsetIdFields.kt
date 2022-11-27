@@ -5,8 +5,8 @@ import dartzee.db.ParticipantEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.jupiter.api.Test
 
 class TestSanityCheckUnsetIdFields: AbstractTest()

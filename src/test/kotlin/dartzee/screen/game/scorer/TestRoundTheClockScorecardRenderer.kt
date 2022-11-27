@@ -4,9 +4,9 @@ import dartzee.helper.AbstractRegistryTest
 import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import dartzee.utils.PreferenceUtil
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.awt.Color

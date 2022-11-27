@@ -1,7 +1,7 @@
 package dartzee.screen.preference
 
 import dartzee.utils.*
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import java.awt.Color
 
 class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPanelDartboard>()

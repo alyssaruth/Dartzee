@@ -17,10 +17,10 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.insertTeam
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify

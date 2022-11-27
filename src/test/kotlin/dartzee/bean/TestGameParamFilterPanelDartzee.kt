@@ -6,8 +6,8 @@ import dartzee.core.bean.selectedItemTyped
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify

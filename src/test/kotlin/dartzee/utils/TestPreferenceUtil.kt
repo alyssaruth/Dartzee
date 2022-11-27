@@ -1,7 +1,7 @@
 package dartzee.utils
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 

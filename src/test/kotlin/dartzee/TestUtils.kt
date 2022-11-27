@@ -16,9 +16,9 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
-import io.kotlintest.matchers.doubles.shouldBeBetween
-import io.kotlintest.matchers.maps.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.doubles.shouldBeBetween
+import io.kotest.matchers.maps.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
@@ -78,7 +78,7 @@ fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
 }
 
 fun Float.shouldBeBetween(a: Double, b: Double) {
-    return toDouble().shouldBeBetween(a, b, 0.0)
+    toDouble().shouldBeBetween(a, b, 0.0)
 }
 
 fun Component.shouldHaveColours(colours: Pair<Color?, Color?>)

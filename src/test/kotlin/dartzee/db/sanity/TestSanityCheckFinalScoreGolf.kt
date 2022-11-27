@@ -4,9 +4,9 @@ import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.game.GameType
 import dartzee.helper.*
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSanityCheckFinalScoreGolf: AbstractTest()

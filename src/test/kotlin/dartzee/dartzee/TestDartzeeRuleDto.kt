@@ -1,18 +1,29 @@
 package dartzee.dartzee
 
-import dartzee.`object`.Dart
 import dartzee.dartzee.aggregate.DartzeeAggregateRuleRepeats
-import dartzee.dartzee.dart.*
 import dartzee.dartzee.aggregate.DartzeeTotalRuleGreaterThan
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
+import dartzee.dartzee.dart.DartzeeDartRuleAny
+import dartzee.dartzee.dart.DartzeeDartRuleEven
+import dartzee.dartzee.dart.DartzeeDartRuleInner
+import dartzee.dartzee.dart.DartzeeDartRuleOdd
+import dartzee.dartzee.dart.DartzeeDartRuleOuter
+import dartzee.dartzee.dart.DartzeeDartRuleScore
 import dartzee.db.EntityName
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
-import dartzee.helper.*
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import dartzee.helper.AbstractTest
+import dartzee.helper.getFakeValidSegment
+import dartzee.helper.makeColourRule
+import dartzee.helper.makeDart
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.makeScoreRule
+import dartzee.`object`.Dart
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 
 class TestDartzeeRuleDto: AbstractTest()

@@ -7,8 +7,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestPlayerStatsButton: AbstractTest()

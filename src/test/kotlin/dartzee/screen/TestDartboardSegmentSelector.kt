@@ -1,20 +1,20 @@
 package dartzee.screen
 
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
 import dartzee.core.helper.makeMouseEvent
 import dartzee.doubleNineteen
 import dartzee.getColor
 import dartzee.helper.AbstractTest
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.singleNineteen
 import dartzee.trebleTwenty
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAverage
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.event.MouseEvent

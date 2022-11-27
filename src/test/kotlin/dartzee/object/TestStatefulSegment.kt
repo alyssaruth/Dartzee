@@ -1,7 +1,7 @@
 package dartzee.`object`
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Point
 

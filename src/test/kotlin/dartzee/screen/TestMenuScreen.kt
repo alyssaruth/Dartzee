@@ -8,7 +8,7 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
-import io.kotlintest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
 

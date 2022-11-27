@@ -5,10 +5,10 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.screen.game.makeSingleParticipant
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class TestAbstractScorer: AbstractTest()

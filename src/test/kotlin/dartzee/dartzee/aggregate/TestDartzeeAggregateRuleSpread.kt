@@ -7,9 +7,9 @@ import dartzee.helper.double
 import dartzee.helper.miss
 import dartzee.helper.outerSingle
 import dartzee.helper.treble
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import java.text.ParseException
 

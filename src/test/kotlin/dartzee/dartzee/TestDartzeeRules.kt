@@ -3,8 +3,8 @@ package dartzee.dartzee
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeRules: AbstractTest()

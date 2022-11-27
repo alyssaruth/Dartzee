@@ -7,10 +7,10 @@ import dartzee.logging.*
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.Database
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import org.junit.jupiter.api.Test
 
 class TestDatabaseMigrator: AbstractTest()

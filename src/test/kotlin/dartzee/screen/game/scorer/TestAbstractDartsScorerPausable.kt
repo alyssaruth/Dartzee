@@ -16,7 +16,7 @@ import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify

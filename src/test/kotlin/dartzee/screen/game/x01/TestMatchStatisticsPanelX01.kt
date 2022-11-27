@@ -8,7 +8,7 @@ import dartzee.helper.makeX01PlayerStateWithRounds
 import dartzee.helper.makeX01Rounds
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getValueForRow
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestMatchStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState, MatchStatisticsPanelX01>()

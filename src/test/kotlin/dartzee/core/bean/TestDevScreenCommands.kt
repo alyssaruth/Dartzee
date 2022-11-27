@@ -3,10 +3,10 @@ package dartzee.core.bean
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_COMMAND_ERROR
 import dartzee.logging.Severity
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent

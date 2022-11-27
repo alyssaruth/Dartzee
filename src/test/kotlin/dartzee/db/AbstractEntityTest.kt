@@ -1,6 +1,5 @@
 package dartzee.db
 
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AchievementType
 import dartzee.core.util.DateStatics
 import dartzee.core.util.FileUtil
@@ -14,14 +13,15 @@ import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 import java.sql.Blob
 import java.sql.Timestamp

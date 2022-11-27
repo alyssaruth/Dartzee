@@ -2,14 +2,18 @@ package dartzee.bean
 
 import dartzee.core.bean.findByClass
 import dartzee.core.bean.items
-import dartzee.dartzee.dart.*
+import dartzee.dartzee.dart.AbstractDartzeeDartRule
+import dartzee.dartzee.dart.DartzeeDartRuleColour
+import dartzee.dartzee.dart.DartzeeDartRuleEven
+import dartzee.dartzee.dart.DartzeeDartRuleInner
+import dartzee.dartzee.dart.DartzeeDartRuleScore
 import dartzee.dartzee.getAllDartRules
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
 class TestAbstractDartzeeRuleSelector: AbstractTest()

@@ -11,10 +11,10 @@ import dartzee.helper.makeClockPlayerState
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
 import dartzee.screen.game.makeSingleParticipant
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.nulls.shouldBeNull
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
