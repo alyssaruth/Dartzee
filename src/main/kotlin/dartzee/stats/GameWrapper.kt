@@ -1,15 +1,16 @@
 package dartzee.stats
 
-import dartzee.`object`.Dart
 import dartzee.core.obj.HashMapList
 import dartzee.db.DartEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.`object`.Dart
 import dartzee.screen.stats.player.HoleBreakdownWrapper
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
+import dartzee.utils.getScoringRounds
 import dartzee.utils.getSortedDartStr
 import dartzee.utils.sumScore
 import java.sql.Timestamp
@@ -48,46 +49,6 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     private fun getAllDartsFlattened(): MutableList<Dart>
     {
         return hmRoundNumberToDarts.getAllValues()
-    }
-
-    private fun getScoringDartsGroupedByRound(scoreCutOff: Int): MutableList<List<Dart>>
-    {
-        if (scoreCutOff < 62)
-        {
-            throw Exception("Calculating scoring darts with cutoff that makes busts possible: $scoreCutOff")
-        }
-
-        val allDartsInRounds = mutableListOf<List<Dart>>()
-
-        var score = Integer.parseInt(gameParams)
-        for (i in 1..totalRounds)
-        {
-            val drts = getDartsForRound(i)
-            for (j in drts.indices)
-            {
-                val dart = drts[j]
-
-                if (j == drts.size - 1)
-                {
-                    //We've got a full round, add this before we return
-                    allDartsInRounds.add(drts)
-                }
-
-                score -= dart.getTotal()
-                if (score <= scoreCutOff)
-                {
-                    return allDartsInRounds
-                }
-            }
-        }
-
-        if (isFinished())
-        {
-            throw Exception("Unable to calculate scoring darts for finished game $localId. Score never went below threshold: $scoreCutOff")
-        }
-
-        //If we get to here, it's an unfinished game that never went below the threshold. THat's fine - just return what we've got.
-        return allDartsInRounds
     }
 
 
@@ -140,11 +101,10 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
      */
     fun populateThreeDartScoreMap(hmScoreToBreakdownWrapper: MutableMap<Int, ThreeDartScoreWrapper>, scoreThreshold: Int)
     {
-        val dartsRounds = getScoringDartsGroupedByRound(scoreThreshold)
+        val dartRounds = hmRoundNumberToDarts.values.toList()
+        val scoringRounds = getScoringRounds(dartRounds, scoreThreshold)
 
-        for (i in dartsRounds.indices)
-        {
-            val dartsForRound = dartsRounds[i]
+        scoringRounds.forEach { dartsForRound ->
             val score = sumScore(dartsForRound)
 
             var wrapper: ThreeDartScoreWrapper? = hmScoreToBreakdownWrapper[score]
@@ -158,8 +118,6 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
             wrapper.addDartStr(dartStr, localId)
         }
     }
-
-
 
     /**
      * Golf Helpers

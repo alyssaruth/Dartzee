@@ -3,11 +3,13 @@ package dartzee.utils
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
 import dartzee.helper.makeDartsModel
+import dartzee.helper.makeX01Rounds
 import dartzee.`object`.Dart
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -114,6 +116,21 @@ class TestX01Util: AbstractTest()
 
         val result = getScoringDarts(list, 50)
         result.shouldContainExactly(d1)
+    }
+
+    @Test
+    fun `getScoringRounds should exclude rounds correctly`()
+    {
+        val round1 = listOf(Dart(20, 3), Dart(20, 1), Dart(5, 1)) // 115
+        val round2 = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1)) //  74
+        val round3 = listOf(Dart(9, 1), Dart(14, 1), Dart(1, 1))  //  50
+        val rounds = makeX01Rounds(200, round1, round2, round3)
+
+        getScoringRounds(rounds, 200).shouldBeEmpty()
+        getScoringRounds(rounds, 75).shouldContainExactlyInAnyOrder(listOf(round1))
+        getScoringRounds(rounds, 74).shouldContainExactlyInAnyOrder(round1, round2)
+        getScoringRounds(rounds, 51).shouldContainExactlyInAnyOrder(round1, round2)
+        getScoringRounds(rounds, 50).shouldContainExactlyInAnyOrder(round1, round2, round3)
     }
 
     @Test
