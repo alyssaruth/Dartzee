@@ -1,6 +1,7 @@
 package dartzee.screen.stats.player.rtc
 
 import dartzee.core.obj.HashMapCount
+import dartzee.game.RoundTheClockConfig
 import dartzee.screen.stats.player.AbstractStatisticsTabPieBreakdown
 import dartzee.stats.GameWrapper
 import java.awt.Color
@@ -22,6 +23,9 @@ class StatisticsTabRoundTheClockHitRate : AbstractStatisticsTabPieBreakdown()
             else -> Color.getHSBColor(0f, 1f, 1f)
         }
     }
+
+    override fun applyAdditionalFilters(filteredGames: List<GameWrapper>) =
+        filteredGames.filter { RoundTheClockConfig.fromJson(it.gameParams).inOrder }
 
     override fun getTableRows(filteredGames: List<GameWrapper>): Pair<List<List<Any?>>, List<Any>>
     {
@@ -46,14 +50,14 @@ class StatisticsTabRoundTheClockHitRate : AbstractStatisticsTabPieBreakdown()
         return Pair(breakdownRows, totalRow)
     }
 
-    fun getAverageThrowsPerTarget(games: List<GameWrapper>): Map<Int, Double>
+    private fun getAverageThrowsPerTarget(games: List<GameWrapper>): Map<Int, Double>
     {
         return games.flatMap{ it.getAllDarts() }
                     .groupBy{ it.startingScore }
                     .mapValues{ it.value.size.toDouble() / games.size }
     }
 
-    fun getRangeBreakdownPerTarget(games: List<GameWrapper>): Map<Int, HashMapCount<IntRange>>
+    private fun getRangeBreakdownPerTarget(games: List<GameWrapper>): Map<Int, HashMapCount<IntRange>>
     {
         val hmRangeBreakdown = mutableMapOf<Int, HashMapCount<IntRange>>()
 

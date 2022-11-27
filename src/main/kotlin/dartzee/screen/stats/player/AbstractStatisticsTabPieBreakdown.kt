@@ -54,6 +54,8 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
     abstract fun getColorForRange(range: IntRange): Color
     abstract fun getTableRows(filteredGames: List<GameWrapper>): Pair<List<List<Any?>>, List<Any>?>
 
+    open fun applyAdditionalFilters(filteredGames: List<GameWrapper>): List<GameWrapper> = filteredGames
+
     override fun populateStats()
     {
         setTableVisibility()
@@ -64,8 +66,9 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
             populateHoleBreakdown(tableHoleBreakdownOther, otherPieChartPanel, filteredGamesOther)
         }
     }
-    private fun populateHoleBreakdown(table: ScrollTable, chartPanel: ChartPanel, filteredGames: List<GameWrapper>)
+    private fun populateHoleBreakdown(table: ScrollTable, chartPanel: ChartPanel, games: List<GameWrapper>)
     {
+        val filteredGames = applyAdditionalFilters(games)
         val model = TableUtil.DefaultModel()
         model.addColumn("Target")
 
