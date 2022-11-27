@@ -17,8 +17,6 @@ class DartEntity(database: Database = mainDatabase) : AbstractEntity<DartEntity>
     var score = -1
     var multiplier = -1
     var startingScore = -1
-    var posX = -1
-    var posY = -1
     var segmentType = SegmentType.MISS
 
     override fun getTableName() = EntityName.Dart
@@ -32,8 +30,6 @@ class DartEntity(database: Database = mainDatabase) : AbstractEntity<DartEntity>
                 + "Score INT NOT NULL, "
                 + "Multiplier INT NOT NULL, "
                 + "StartingScore INT NOT NULL, "
-                + "PosX INT NOT NULL, "
-                + "PosY INT NOT NULL, "
                 + "SegmentType VARCHAR(255) NOT NULL")
     }
 
@@ -55,8 +51,6 @@ class DartEntity(database: Database = mainDatabase) : AbstractEntity<DartEntity>
             de.multiplier = dart.multiplier
             de.ordinal = ordinal
             de.startingScore = dart.startingScore
-            de.posX = dart.getX() ?: 0
-            de.posY = dart.getY() ?: 0
             de.segmentType = dart.segmentType
             return de
         }

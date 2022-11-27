@@ -104,8 +104,6 @@ class TestAbstractPlayerState: AbstractTest()
     {
         dartEntity.multiplier shouldBe originalDart.multiplier
         dartEntity.score shouldBe originalDart.score
-        dartEntity.posX shouldBe originalDart.getX()
-        dartEntity.posY shouldBe originalDart.getY()
         dartEntity.segmentType shouldBe originalDart.segmentType
         dartEntity.roundNumber shouldBe 1
     }
