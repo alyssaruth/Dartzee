@@ -1,17 +1,21 @@
 package dartzee.dartzee.dart
 
-import dartzee.*
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.dartzee.parseDartRule
+import dartzee.doubleTwenty
 import dartzee.helper.FakeDartzeeSegmentFactory
+import dartzee.outerBull
+import dartzee.singleTwenty
+import dartzee.trebleNineteen
+import dartzee.trebleTwenty
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeEmpty
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -74,14 +78,13 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
         val xml = rule.toDbString()
         val parsedRule = parseDartRule(xml)
 
-        parsedRule.shouldBeInstanceOf<DartzeeDartRuleCustom> {
-            it.segments shouldHaveSize(3)
+        parsedRule.shouldBeInstanceOf<DartzeeDartRuleCustom>()
+        parsedRule.segments shouldHaveSize(3)
 
-            it.isValidSegment(doubleTwenty) shouldBe true
-            it.isValidSegment(singleTwenty) shouldBe false
-            it.name shouldBe "Foo"
-            it.tfName.text shouldBe "Foo"
-        }
+        parsedRule.isValidSegment(doubleTwenty) shouldBe true
+        parsedRule.isValidSegment(singleTwenty) shouldBe false
+        parsedRule.name shouldBe "Foo"
+        parsedRule.tfName.text shouldBe "Foo"
     }
 
     @Test

@@ -12,8 +12,8 @@ import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementsScreen
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
 class TestPlayerAchievementsButton: AbstractTest()
@@ -47,10 +47,8 @@ class TestPlayerAchievementsButton: AbstractTest()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<PlayerAchievementsScreen>()
-
-        val achievementsScreen = currentScreen as PlayerAchievementsScreen
-        achievementsScreen.player shouldBe player
-        achievementsScreen.previousScrn shouldBe startingScreen
+        currentScreen.player shouldBe player
+        currentScreen.previousScrn shouldBe startingScreen
     }
 
     @Test

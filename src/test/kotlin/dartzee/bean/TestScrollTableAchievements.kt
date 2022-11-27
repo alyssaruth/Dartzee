@@ -9,8 +9,8 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.stats.overall.LeaderboardAchievements
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.player.PlayerAchievementsScreen
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import javax.swing.JTabbedPane
 
@@ -30,7 +30,7 @@ class TestScrollTableAchievements: AbstractTest()
         val scrn = ScreenCache.currentScreen()
         scrn.getBackTarget() shouldBe startingScreen
         scrn.shouldBeInstanceOf<PlayerAchievementsScreen>()
-        (scrn as PlayerAchievementsScreen).player shouldBe player
+        scrn.player shouldBe player
     }
 
     @Test

@@ -152,7 +152,7 @@ class TestAchievementMedal: AbstractTest()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<PlayerAchievementBreakdown>()
-        (currentScreen as PlayerAchievementBreakdown).achievement shouldBe achievement
+        currentScreen.achievement shouldBe achievement
     }
 
     @Test

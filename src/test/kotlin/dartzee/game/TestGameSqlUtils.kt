@@ -18,8 +18,8 @@ import dartzee.helper.scoreEighteens
 import dartzee.helper.twoBlackOneWhite
 import dartzee.utils.insertDartzeeRules
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -194,35 +194,34 @@ class TestGameSqlUtils : AbstractTest()
 
     private fun validateTeam(team: IWrappedParticipant, gameId: String, ordinal: Int, p1: PlayerEntity, p2: PlayerEntity)
     {
-        team.shouldBeInstanceOf<TeamParticipant> {
-            val teamEntity = it.participant
-            teamEntity.gameId shouldBe gameId
-            teamEntity.ordinal shouldBe ordinal
-            teamEntity.retrievedFromDb shouldBe true
+        team.shouldBeInstanceOf<TeamParticipant>()
+        val teamEntity = team.participant
+        teamEntity.gameId shouldBe gameId
+        teamEntity.ordinal shouldBe ordinal
+        teamEntity.retrievedFromDb shouldBe true
 
-            val (pt1, pt2) = team.individuals
-            pt1.teamId shouldBe teamEntity.rowId
-            pt1.gameId shouldBe gameId
-            pt1.ordinal shouldBe 0
-            pt1.playerId shouldBe p1.rowId
-            pt1.retrievedFromDb shouldBe true
+        val (pt1, pt2) = team.individuals
+        pt1.teamId shouldBe teamEntity.rowId
+        pt1.gameId shouldBe gameId
+        pt1.ordinal shouldBe 0
+        pt1.playerId shouldBe p1.rowId
+        pt1.retrievedFromDb shouldBe true
 
-            pt2.teamId shouldBe teamEntity.rowId
-            pt2.gameId shouldBe gameId
-            pt2.ordinal shouldBe 1
-            pt2.playerId shouldBe p2.rowId
-            pt2.retrievedFromDb shouldBe true
-        }
+        pt2.teamId shouldBe teamEntity.rowId
+        pt2.gameId shouldBe gameId
+        pt2.ordinal shouldBe 1
+        pt2.playerId shouldBe p2.rowId
+        pt2.retrievedFromDb shouldBe true
+
     }
 
     private fun validateSingleParticipant(pt: IWrappedParticipant, gameId: String, ordinal: Int, player: PlayerEntity)
     {
-        pt.shouldBeInstanceOf<SingleParticipant>() {
-            it.participant.gameId shouldBe gameId
-            it.participant.playerId shouldBe player.rowId
-            it.ordinal() shouldBe ordinal
-            it.participant.teamId shouldBe ""
-            it.participant.retrievedFromDb shouldBe true
-        }
+        pt.shouldBeInstanceOf<SingleParticipant>()
+        pt.participant.gameId shouldBe gameId
+        pt.participant.playerId shouldBe player.rowId
+        pt.ordinal() shouldBe ordinal
+        pt.participant.teamId shouldBe ""
+        pt.participant.retrievedFromDb shouldBe true
     }
 }

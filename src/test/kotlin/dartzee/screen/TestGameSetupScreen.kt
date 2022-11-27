@@ -15,15 +15,27 @@ import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartzeeTemplate
+import dartzee.helper.insertPlayer
+import dartzee.helper.makeDartzeeRuleDto
 import dartzee.launchParamsEqual
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
 import dartzee.utils.InjectedThings
-import io.kotest.matchers.collections.*
-import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -257,10 +269,8 @@ class TestGameSetupScreen: AbstractTest()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
-
-        val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen
-        dartzeeScreen.btnNext.text shouldBe "Launch Game >"
-        dartzeeScreen.nextPressed()
+        currentScreen.btnNext.text shouldBe "Launch Game >"
+        currentScreen.nextPressed()
 
         val expectedParams = GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
         verify { gameLauncher.launchNewGame(expectedParams) }
@@ -287,10 +297,8 @@ class TestGameSetupScreen: AbstractTest()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
-
-        val dartzeeScreen = currentScreen as DartzeeRuleSetupScreen
-        dartzeeScreen.btnNext.text shouldBe "Launch Match >"
-        dartzeeScreen.nextPressed()
+        currentScreen.btnNext.text shouldBe "Launch Match >"
+        currentScreen.nextPressed()
 
         val expectedParams = GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
         verify { gameLauncher.launchNewMatch(any(), expectedParams) }

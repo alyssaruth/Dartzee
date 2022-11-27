@@ -1,12 +1,16 @@
 package dartzee.db.sanity
 
-import dartzee.`object`.SegmentType
 import dartzee.db.ParticipantEntity
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDart
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.`object`.SegmentType
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
 class TestSanityCheckFinalScoreGolf: AbstractTest()
@@ -71,10 +75,8 @@ class TestSanityCheckFinalScoreGolf: AbstractTest()
 
         val result = results.first()
         result.shouldBeInstanceOf<SanityCheckResultFinalScoreMismatch>()
-
-        val mismatch = result as SanityCheckResultFinalScoreMismatch
-        mismatch.getDescription() shouldBe "FinalScores that don't match the raw data (Golf)"
-        mismatch.getCount() shouldBe 1
+        result.getDescription() shouldBe "FinalScores that don't match the raw data (Golf)"
+        result.getCount() shouldBe 1
     }
 
     private fun checkScoreCorrectForSegmentType(segmentType: SegmentType, expectedScore: Int)
@@ -91,7 +93,6 @@ class TestSanityCheckFinalScoreGolf: AbstractTest()
     {
         val game = insertGame(gameType = GameType.GOLF)
         val player = insertPlayer()
-        val pt = insertParticipant(gameId = game.rowId, playerId = player.rowId, finalScore = finalScore)
-        return pt
+        return insertParticipant(gameId = game.rowId, playerId = player.rowId, finalScore = finalScore)
     }
 }
