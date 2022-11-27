@@ -35,12 +35,6 @@ fun Element.getAttributeInt(attributeName: String, defaultValue: Int = 0): Int
     return if (attribute == "") defaultValue else attribute.toInt()
 }
 
-fun Element.getAttributeDouble(attributeName: String): Double
-{
-    val attribute = getAttribute(attributeName)
-    return if (attribute == "") 0.0 else attribute.toDouble()
-}
-
 fun Element.setAttributeAny(key: String, value: Any) = setAttribute(key, "$value")
 
 fun Document.createRootElement(name: String): Element = createElement(name).also { appendChild(it) }

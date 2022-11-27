@@ -2,8 +2,9 @@ package dartzee.dartzee
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.module.kotlin.readValue
+import dartzee.core.util.MathsUtil
+import dartzee.core.util.jsonMapper
 import dartzee.`object`.DartboardSegment
-import dartzee.core.util.*
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DartsColour
 import kotlin.math.sqrt
@@ -55,21 +56,6 @@ data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegme
 
     companion object
     {
-        fun fromDbStringOLD(dbString: String): DartzeeRuleCalculationResult
-        {
-            val doc = dbString.toXmlDoc()!!
-            val root = doc.documentElement
-
-            val validCombinations = root.getAttributeInt("ValidCombinations")
-            val allCombinations = root.getAttributeInt("AllCombinations")
-            val validCombinationProbability = root.getAttributeDouble("ValidCombinationProbability")
-            val allCombinationsProbability = root.getAttributeDouble("AllCombinationsProbability")
-            val validSegments = DartboardSegment.readList(root, "ValidSegment")
-            val scoringSegments = DartboardSegment.readList(root, "ScoringSegment")
-
-            return DartzeeRuleCalculationResult(scoringSegments, validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
-        }
-
         fun fromDbString(dbString: String): DartzeeRuleCalculationResult = jsonMapper().readValue(dbString)
     }
 }
