@@ -2,8 +2,8 @@ package dartzee.bean
 
 import dartzee.helper.AbstractTest
 import dartzee.utils.DartsDatabaseUtil
-import io.kotlintest.matchers.collections.shouldBeOneOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeOneOf
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestTableModelEntity: AbstractTest()

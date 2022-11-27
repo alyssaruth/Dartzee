@@ -3,7 +3,7 @@ package dartzee.core.screen
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.LoggingCode
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSimpleDialog: AbstractTest()

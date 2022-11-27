@@ -3,9 +3,9 @@ package dartzee.db
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeRoundResultEntity: AbstractEntityTest<DartzeeRoundResultEntity>()

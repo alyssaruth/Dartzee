@@ -2,9 +2,9 @@ package dartzee.bean
 
 import dartzee.dartzee.getAllDartRules
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.collections.shouldNotContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeDartRuleSelector : AbstractTest()

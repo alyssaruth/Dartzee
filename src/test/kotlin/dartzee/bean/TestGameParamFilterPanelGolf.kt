@@ -2,7 +2,7 @@ package dartzee.bean
 
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify

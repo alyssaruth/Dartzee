@@ -4,7 +4,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDatabaseMigrationV18toV19: AbstractTest()

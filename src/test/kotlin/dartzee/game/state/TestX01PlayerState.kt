@@ -15,7 +15,7 @@ import dartzee.helper.makeDart
 import dartzee.helper.makeX01PlayerStateWithRounds
 import dartzee.helper.makeX01Rounds
 import dartzee.`object`.Dart
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestX01PlayerState: AbstractTest()

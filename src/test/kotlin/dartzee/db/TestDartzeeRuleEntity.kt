@@ -1,22 +1,22 @@
 package dartzee.db
 
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
-import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import dartzee.doubleNineteen
 import dartzee.helper.insertDartzeeRule
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertGame
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.utils.getAllPossibleSegments
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
 class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()

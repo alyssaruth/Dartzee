@@ -3,9 +3,9 @@ package dartzee.screen.reporting
 import com.github.alexburlton.swingtest.clickChild
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 

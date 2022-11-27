@@ -4,9 +4,9 @@ import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
 import dartzee.utils.PREFERENCES_DOUBLE_HUE_FACTOR
 import dartzee.utils.PreferenceUtil
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestPreferencesPanelScorer: AbstractPreferencePanelTest<PreferencesPanelScorer>()

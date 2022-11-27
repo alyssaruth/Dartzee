@@ -1,7 +1,7 @@
 package dartzee.utils
 
-import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
+import dartzee.`object`.Dart
 
 fun isBust(dart: Dart) = isBust(dart.startingScore, dart)
 fun isBust(score: Int, lastDart: Dart): Boolean
@@ -84,6 +84,11 @@ fun getScoringDarts(allDarts: List<Dart>?, scoreCutOff: Int): MutableList<Dart>
     allDarts ?: return mutableListOf()
 
     return allDarts.filter { it.startingScore > scoreCutOff }.toMutableList()
+}
+
+fun getScoringRounds(dartRounds: List<List<Dart>>, scoreCutOff: Int): List<List<Dart>>
+{
+    return dartRounds.filter { round -> round.all { it.startingScore > scoreCutOff } }
 }
 
 fun calculateThreeDartAverage(darts: List<Dart>, scoreCutOff: Int): Double

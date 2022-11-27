@@ -7,9 +7,9 @@ import dartzee.db.SyncAuditEntity
 import dartzee.helper.*
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp

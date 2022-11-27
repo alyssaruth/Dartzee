@@ -5,8 +5,8 @@ import dartzee.helper.usingInMemoryDatabase
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDatabaseMigrations: AbstractTest()

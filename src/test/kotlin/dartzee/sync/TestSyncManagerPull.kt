@@ -7,9 +7,9 @@ import dartzee.logging.CODE_PULL_ERROR
 import dartzee.logging.Severity
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.databaseDirectory
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.file.shouldExist
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.file.shouldExist
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach

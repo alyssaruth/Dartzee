@@ -5,10 +5,10 @@ import dartzee.helper.*
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldThrow
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach

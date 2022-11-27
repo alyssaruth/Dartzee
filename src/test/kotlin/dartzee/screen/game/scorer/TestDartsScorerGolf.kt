@@ -8,8 +8,8 @@ import dartzee.helper.*
 import dartzee.screen.game.makeSingleParticipant
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartsScorerGolf: AbstractTest()

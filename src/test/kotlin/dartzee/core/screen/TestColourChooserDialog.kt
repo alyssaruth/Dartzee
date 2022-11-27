@@ -1,7 +1,7 @@
 package dartzee.core.screen
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

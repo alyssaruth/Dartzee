@@ -10,9 +10,9 @@ import dartzee.helper.FakeDartzeeRuleFactory
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent

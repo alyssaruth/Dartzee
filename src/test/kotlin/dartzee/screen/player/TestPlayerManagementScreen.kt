@@ -8,8 +8,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.player.PlayerManager
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

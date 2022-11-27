@@ -8,10 +8,10 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.collections.shouldNotContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementUtil: AbstractTest()

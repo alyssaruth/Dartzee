@@ -14,8 +14,8 @@ import dartzee.screen.Dartboard
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.matchers.types.shouldNotBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.nulls.shouldBeNull
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic

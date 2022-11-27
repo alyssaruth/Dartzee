@@ -3,9 +3,9 @@ package dartzee.db
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeUnique
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeUnique
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestLocalIdGenerator: AbstractTest()

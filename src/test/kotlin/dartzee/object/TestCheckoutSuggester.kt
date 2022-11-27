@@ -3,13 +3,13 @@ package dartzee.`object`
 import dartzee.helper.AbstractTest
 import dartzee.utils.getCheckoutScores
 import dartzee.utils.sumScore
-import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.collections.shouldHaveAtMostSize
-import io.kotlintest.matchers.collections.shouldHaveSingleElement
-import io.kotlintest.matchers.maps.shouldContain
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
-import io.kotlintest.shouldThrow
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveAtMostSize
+import io.kotest.matchers.collections.shouldHaveSingleElement
+import io.kotest.matchers.maps.shouldContain
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.Test
 
 class TestCheckoutSuggester: AbstractTest()

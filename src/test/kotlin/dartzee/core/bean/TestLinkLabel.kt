@@ -4,7 +4,7 @@ import com.github.alexburlton.swingtest.doClick
 import com.github.alexburlton.swingtest.doHover
 import com.github.alexburlton.swingtest.doHoverAway
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

@@ -7,8 +7,8 @@ import dartzee.helper.REMOTE_NAME
 import dartzee.helper.REMOTE_NAME_2
 import dartzee.sync.resetRemote
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.matchers.types.shouldNotBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.nulls.shouldBeNull
 import org.junit.jupiter.api.Test
 import javax.swing.JLabel
 

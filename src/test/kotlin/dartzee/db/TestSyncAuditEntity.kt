@@ -7,8 +7,8 @@ import dartzee.helper.makeSyncAudit
 import dartzee.sync.LastSyncData
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.string.shouldNotBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp

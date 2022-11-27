@@ -9,7 +9,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestLeaderboardAchievements: AbstractTest()

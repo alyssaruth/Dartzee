@@ -3,8 +3,8 @@ package dartzee.core.screen
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify

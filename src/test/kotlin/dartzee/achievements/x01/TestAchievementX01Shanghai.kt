@@ -8,7 +8,7 @@ import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.utils.Database
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementX01Shanghai: AbstractMultiRowAchievementTest<AchievementX01Shanghai>()

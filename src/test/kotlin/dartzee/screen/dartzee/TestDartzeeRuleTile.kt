@@ -7,7 +7,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.makeTotalScoreRule
 import dartzee.screen.game.dartzee.DartzeeRuleTile
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeRuleTile: AbstractTest()

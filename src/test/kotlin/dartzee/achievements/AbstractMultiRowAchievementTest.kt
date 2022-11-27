@@ -3,8 +3,8 @@ package dartzee.achievements
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 

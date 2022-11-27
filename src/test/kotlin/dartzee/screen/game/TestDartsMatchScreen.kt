@@ -18,9 +18,9 @@ import dartzee.helper.makeX01PlayerState
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.MatchStatisticsPanelX01
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

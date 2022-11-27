@@ -1,7 +1,7 @@
 package dartzee.helper
 
-import io.kotlintest.fail
-import io.kotlintest.shouldBe
+import io.kotest.assertions.fail
+import io.kotest.matchers.shouldBe
 import java.security.Permission
 
 private class ExitException(val status: Int): SecurityException("Nope")

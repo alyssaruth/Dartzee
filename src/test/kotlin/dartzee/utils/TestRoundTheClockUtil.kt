@@ -5,9 +5,9 @@ import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.factoryClockHit
 import dartzee.helper.randomGuid
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestRoundTheClockUtil: AbstractTest()

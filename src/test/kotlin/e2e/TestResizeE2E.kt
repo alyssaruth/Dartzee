@@ -9,7 +9,7 @@ import dartzee.helper.insertPlayer
 import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
-import io.kotlintest.matchers.numerics.shouldBeLessThan
+import io.kotest.matchers.comparables.shouldBeLessThan
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

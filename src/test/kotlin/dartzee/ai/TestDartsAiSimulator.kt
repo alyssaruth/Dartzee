@@ -16,7 +16,7 @@ import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import getPointForScore
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot

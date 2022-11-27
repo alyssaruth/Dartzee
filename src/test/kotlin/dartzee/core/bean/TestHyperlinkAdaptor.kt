@@ -3,8 +3,8 @@ package dartzee.core.bean
 import dartzee.core.helper.MOUSE_EVENT_SINGLE_CLICK
 import dartzee.core.helper.makeMouseEvent
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldThrow
 import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test

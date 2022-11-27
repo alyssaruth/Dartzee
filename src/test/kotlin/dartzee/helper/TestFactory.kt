@@ -18,7 +18,7 @@ import dartzee.`object`.SegmentType
 import dartzee.stats.GameWrapper
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import java.awt.Point
 import java.sql.Timestamp
 

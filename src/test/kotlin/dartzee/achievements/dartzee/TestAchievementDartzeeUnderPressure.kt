@@ -15,7 +15,7 @@ import dartzee.helper.testRules
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.insertDartzeeRules
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<AchievementDartzeeUnderPressure>()

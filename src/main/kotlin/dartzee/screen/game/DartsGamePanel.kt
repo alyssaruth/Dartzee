@@ -685,6 +685,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
     {
         if (parentWindow is DartsMatchScreen<*>)
         {
+            @Suppress("UNCHECKED_CAST")
             fn(parentWindow as DartsMatchScreen<PlayerState>)
         }
     }

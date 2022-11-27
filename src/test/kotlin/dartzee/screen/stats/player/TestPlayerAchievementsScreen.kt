@@ -14,8 +14,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Container

@@ -3,7 +3,7 @@ package dartzee.screen.ai
 import dartzee.ai.AimDart
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAIConfigurationSubPanelX01: AbstractTest()
