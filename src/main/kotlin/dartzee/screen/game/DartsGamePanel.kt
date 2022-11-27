@@ -307,7 +307,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
         {
             val pt = getParticipant(i)
             val individuals = pt.individuals
-            val sql = ("SELECT drt.RoundNumber, drt.Score, drt.Multiplier, drt.PosX, drt.PosY, drt.SegmentType, drt.StartingScore"
+            val sql = ("SELECT drt.RoundNumber, drt.Score, drt.Multiplier, drt.SegmentType, drt.StartingScore"
                     + " FROM Dart drt"
                     + " WHERE drt.ParticipantId IN " + individuals.getQuotedIdStr { it.rowId }
                     + " AND drt.PlayerId IN " + individuals.getQuotedIdStr { it.playerId }
@@ -324,12 +324,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
                         val roundNumber = rs.getInt("RoundNumber")
                         val score = rs.getInt("Score")
                         val multiplier = rs.getInt("Multiplier")
-                        val posX = rs.getInt("PosX")
-                        val posY = rs.getInt("PosY")
                         val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
                         val startingScore = rs.getInt("StartingScore")
 
-                        val drt = Dart(score, multiplier, Point(posX, posY), segmentType)
+                        val drt = Dart(score, multiplier, segmentType=segmentType)
                         drt.startingScore = startingScore
                         drt.roundNumber = roundNumber
 
