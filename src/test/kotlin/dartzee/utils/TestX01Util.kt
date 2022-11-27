@@ -105,12 +105,9 @@ class TestX01Util: AbstractTest()
     @Test
     fun testGetScoringDarts()
     {
-        val d1 = Dart(20, 1)
-        val d2 = Dart(20, 1)
-        val d3 = Dart(20, 1)
-        d1.startingScore = 51
-        d2.startingScore = 50
-        d3.startingScore = 49
+        val d1 = makeDart(1, 1, startingScore = 51)
+        val d2 = makeDart(1, 1, startingScore = 50)
+        val d3 = makeDart(20, 1, startingScore = 49)
 
         val list = mutableListOf(d1, d2, d3)
 
@@ -136,17 +133,12 @@ class TestX01Util: AbstractTest()
     @Test
     fun testCalculateThreeDartAverage()
     {
-        val d1 = Dart(20, 1)
-        val d2 = Dart(20, 2)
-        val d3 = Dart(10, 0)
-        val d4 = Dart(5, 3)
+        val d1 = makeDart(20, 1, startingScore = 100)
+        val d2 = makeDart(20, 2, startingScore = 100)
+        val d3 = makeDart(10, 0, startingScore = 80)
+        val d4 = makeDart(5, 3, startingScore = 100)
 
-        d1.startingScore = 100
-        d2.startingScore = 100
-        d3.startingScore = 80
-        d4.startingScore = 100
-
-        val list = mutableListOf(d1, d2, d3, d4)
+        val list = listOf(d1, d2, d3, d4)
         val result = calculateThreeDartAverage(list, 70)
         val resultTwo = calculateThreeDartAverage(list, 90) //The miss should be excluded
         val resultThree = calculateThreeDartAverage(list, 200) //Test an empty list

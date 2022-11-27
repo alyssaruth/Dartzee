@@ -79,11 +79,11 @@ fun isFinishRound(round: List<Dart>): Boolean
 /**
  * Refactored out of GameWrapper for use in game stats panel
  */
-fun getScoringDarts(allDarts: List<Dart>?, scoreCutOff: Int): MutableList<Dart>
+fun getScoringDarts(allDarts: List<Dart>?, scoreCutOff: Int): List<Dart>
 {
-    allDarts ?: return mutableListOf()
+    allDarts ?: return emptyList()
 
-    return allDarts.filter { it.startingScore > scoreCutOff }.toMutableList()
+    return allDarts.filter { it.startingScore > scoreCutOff }.toList()
 }
 
 fun getScoringRounds(dartRounds: List<List<Dart>>, scoreCutOff: Int): List<List<Dart>>

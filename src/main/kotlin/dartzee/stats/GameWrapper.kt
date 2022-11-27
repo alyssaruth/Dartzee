@@ -14,6 +14,7 @@ import dartzee.utils.getScoringRounds
 import dartzee.utils.getSortedDartStr
 import dartzee.utils.sumScore
 import java.sql.Timestamp
+import kotlin.math.max
 
 enum class GolfMode {
     FRONT_9,
@@ -46,20 +47,12 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     fun getCheckoutTotal() = if (finalScore == -1) -1 else getScoreForFinalRound()
     fun getGameStartValueX01() = gameParams.toInt()
 
-    private fun getAllDartsFlattened(): MutableList<Dart>
+    private fun getAllDartsFlattened() = hmRoundNumberToDarts.getAllValues()
+
+    fun addDart(dart: Dart)
     {
-        return hmRoundNumberToDarts.getAllValues()
-    }
-
-
-    fun addDart(roundNumber: Int, dart: Dart)
-    {
-        if (roundNumber > totalRounds)
-        {
-            totalRounds = roundNumber
-        }
-
-        hmRoundNumberToDarts.putInList(roundNumber, dart)
+        totalRounds = max(dart.roundNumber, totalRounds)
+        hmRoundNumberToDarts.putInList(dart.roundNumber, dart)
     }
 
     private fun getDartsForRound(roundNumber: Int): List<Dart>
@@ -90,14 +83,14 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         return calculateThreeDartAverage(darts, scoreCutOff)
     }
 
-    fun getScoringDarts(scoreCutOff: Int): MutableList<Dart>
+    fun getScoringDarts(scoreCutOff: Int): List<Dart>
     {
         val allDarts = getAllDartsFlattened()
         return getScoringDarts(allDarts, scoreCutOff)
     }
 
     /**
-     * Burlton Constant
+     * Three dart scores
      */
     fun populateThreeDartScoreMap(hmScoreToBreakdownWrapper: MutableMap<Int, ThreeDartScoreWrapper>, scoreThreshold: Int)
     {
@@ -107,13 +100,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
         scoringRounds.forEach { dartsForRound ->
             val score = sumScore(dartsForRound)
 
-            var wrapper: ThreeDartScoreWrapper? = hmScoreToBreakdownWrapper[score]
-            if (wrapper == null)
-            {
-                wrapper = ThreeDartScoreWrapper()
-                hmScoreToBreakdownWrapper[score] = wrapper
-            }
-
+            val wrapper: ThreeDartScoreWrapper = hmScoreToBreakdownWrapper.getOrPut(score, ::ThreeDartScoreWrapper)
             val dartStr = getSortedDartStr(dartsForRound)
             wrapper.addDartStr(dartStr, localId)
         }

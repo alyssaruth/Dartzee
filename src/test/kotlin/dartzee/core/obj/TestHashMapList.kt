@@ -30,7 +30,7 @@ class TestHashMapList: AbstractTest()
     }
 
     @Test
-    fun `Should return all values across differeny keys`()
+    fun `Should return all values across different keys`()
     {
         val hm = HashMapList<Int, String>()
 
