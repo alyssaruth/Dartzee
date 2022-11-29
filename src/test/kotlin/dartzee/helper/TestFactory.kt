@@ -194,3 +194,17 @@ fun makeGolfGameWrapper(
     golfRounds.flatten().forEach(wrapper::addDart)
     return wrapper
 }
+
+fun makeClockGameWrapper(
+    localId: Long = 1L,
+    config: RoundTheClockConfig = RoundTheClockConfig(ClockType.Standard, true),
+    dartRounds: List<Dart> = emptyList(),
+    finalScore: Int = -1,
+    dtStart: Timestamp = Timestamp(1000)): GameWrapper
+{
+    val rounds = makeClockRounds(config.inOrder, *dartRounds.toTypedArray())
+
+    val wrapper = makeGameWrapper(localId = localId, gameParams = config.toJson(), finalScore = finalScore, dtStart = dtStart)
+    rounds.forEach(wrapper::addDart)
+    return wrapper
+}

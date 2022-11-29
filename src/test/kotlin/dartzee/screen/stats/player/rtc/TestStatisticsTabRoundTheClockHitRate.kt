@@ -5,6 +5,7 @@ import dartzee.core.bean.ScrollTable
 import dartzee.getRows
 import dartzee.helper.GAME_WRAPPER_RTC_IN_ORDER
 import dartzee.helper.GAME_WRAPPER_RTC_OUT_OF_ORDER
+import dartzee.helper.makeClockGameWrapper
 import dartzee.screen.stats.player.AbstractStatsPieBreakdownTest
 import io.kotest.matchers.collections.shouldContainExactly
 import org.junit.jupiter.api.Test
@@ -13,6 +14,7 @@ class TestStatisticsTabRoundTheClockHitRate: AbstractStatsPieBreakdownTest<Stati
 {
     override fun factoryTab() = StatisticsTabRoundTheClockHitRate()
     override fun getAllPossibilitiesForScores() = 1..1000
+    override fun factoryGameWrapper() = makeClockGameWrapper()
 
     @Test
     fun `Should exclude games that were not in order`()
