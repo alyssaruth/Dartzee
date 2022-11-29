@@ -1,14 +1,65 @@
-package dartzee.screen.stats.player.golf
+package dartzee.helper
 
-import dartzee.*
-import dartzee.helper.makeGolfGameWrapper
+import dartzee.drtDoubleEight
+import dartzee.drtDoubleEighteen
+import dartzee.drtDoubleEleven
+import dartzee.drtDoubleFour
+import dartzee.drtDoubleOne
+import dartzee.drtDoubleSeven
+import dartzee.drtDoubleSeventeen
+import dartzee.drtDoubleSix
+import dartzee.drtDoubleSixteen
+import dartzee.drtDoubleTen
+import dartzee.drtDoubleThree
+import dartzee.drtDoubleTwo
+import dartzee.drtInnerFive
+import dartzee.drtInnerFourteen
+import dartzee.drtInnerOne
+import dartzee.drtInnerSixteen
+import dartzee.drtInnerThree
+import dartzee.drtInnerTwelve
+import dartzee.drtMissEight
+import dartzee.drtMissFive
+import dartzee.drtMissFour
+import dartzee.drtMissFourteen
+import dartzee.drtMissNine
+import dartzee.drtMissOne
+import dartzee.drtMissSeven
+import dartzee.drtMissSeventeen
+import dartzee.drtMissSix
+import dartzee.drtMissSixteen
+import dartzee.drtMissTen
+import dartzee.drtMissThirteen
+import dartzee.drtMissTwenty
+import dartzee.drtMissTwo
+import dartzee.drtOuterEight
+import dartzee.drtOuterEighteen
+import dartzee.drtOuterEleven
+import dartzee.drtOuterFifteen
+import dartzee.drtOuterFive
+import dartzee.drtOuterFour
+import dartzee.drtOuterNine
+import dartzee.drtOuterNineteen
+import dartzee.drtOuterOne
+import dartzee.drtOuterSeven
+import dartzee.drtOuterSeventeen
+import dartzee.drtOuterSix
+import dartzee.drtOuterSixteen
+import dartzee.drtOuterTen
+import dartzee.drtOuterThirteen
+import dartzee.drtOuterThree
+import dartzee.drtOuterTwelve
+import dartzee.drtOuterTwo
+import dartzee.drtTrebleFive
+import dartzee.drtTrebleFourteen
+import dartzee.drtTrebleSeven
+import dartzee.drtTrebleTwo
 import dartzee.`object`.Dart
 import dartzee.stats.GameWrapper
 import java.sql.Timestamp
 
-fun golfFrontNine22(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): GameWrapper
-{
-    val rounds = listOf(
+private fun golfFrontNine22Rounds(): List<List<Dart>> =
+    listOf(
         listOf(drtDoubleOne()), // 1
         listOf(drtOuterFifteen(), drtOuterTwo()), // 4
         listOf(drtDoubleThree()), // 1
@@ -18,16 +69,28 @@ fun golfFrontNine22(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): G
         listOf(drtMissSeven(), drtDoubleSeven()), // 1
         listOf(drtInnerSixteen(), drtDoubleEight()), // 1
         listOf(drtOuterTwelve(), drtTrebleFourteen(), drtMissNine()), // 5
-    )
+    ).also(::setRoundNumbers)
+
+fun golfFrontNine22(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): GameWrapper
+{
+    val rounds = golfFrontNine22Rounds()
 
     return makeGolfGameWrapper(localId, gameParams = "9", expectedScore = 22, dartRounds = rounds, dtStart = dtStart)
+}
+
+fun golfFrontNine22EvenRounds(): GameWrapper
+{
+    val rounds = golfFrontNine22Rounds().filterIndexed { ix, _ -> ix % 2 != 0 }
+    return makeGameWrapper(gameParams = "9", teamGame = true).also {
+        rounds.forEach { round -> round.forEach(it::addDart) }
+    }
 }
 
 fun golfFrontNine29(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): GameWrapper
 {
     val rounds = listOf(
         listOf(drtMissOne(), drtMissTwenty(), drtOuterOne()), // 4
-        listOf(drtOuterTwo(), drtOuterTwo()), // 4
+        listOf(drtOuterTwo()), // 4
         listOf(drtOuterThree(), drtOuterThree()), // 4
         listOf(drtOuterEighteen(), drtMissFour(), drtOuterFour()), // 4
         listOf(drtMissFive(), drtTrebleFive()), // 2

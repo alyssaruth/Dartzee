@@ -1,9 +1,9 @@
 package dartzee.stats
 
 import dartzee.helper.AbstractTest
-import dartzee.helper.GAME_WRAPPER_GOLF_9
-import dartzee.helper.GAME_WRAPPER_GOLF_9_2
-import dartzee.helper.GAME_WRAPPER_GOLF_9_EVEN_ROUNDS
+import dartzee.helper.golfFrontNine22
+import dartzee.helper.golfFrontNine22EvenRounds
+import dartzee.helper.golfFrontNine29
 import dartzee.screen.stats.player.golf.OptimalHoleStat
 import dartzee.screen.stats.player.golf.makeOptimalScorecardStartingMap
 import io.kotest.matchers.collections.shouldContainExactly
@@ -16,17 +16,20 @@ class TestGameWrapperGolfUtils : AbstractTest()
     {
         val hm = makeOptimalScorecardStartingMap()
 
-        GAME_WRAPPER_GOLF_9.populateOptimalScorecardMaps(hm)
-        GAME_WRAPPER_GOLF_9_2.populateOptimalScorecardMaps(hm)
+        golfFrontNine22(1L).populateOptimalScorecardMaps(hm)
+        golfFrontNine29(2L).populateOptimalScorecardMaps(hm)
+
+        // Same score in same number of darts, should be game 1
+        getDataRowForHole(hm, 4).shouldContainExactly(1L, 5, 5, 4)
 
         // Same score in game 2, but fewer darts
-        getDataRowForHole(hm, 8).shouldContainExactly(2L, 3)
+        getDataRowForHole(hm, 2).shouldContainExactly(2L, 4)
 
         // Worse score in game 2
-        getDataRowForHole(hm, 3).shouldContainExactly(1L, 3, 4, 1)
+        getDataRowForHole(hm, 7).shouldContainExactly(1L, 5, 1)
 
         // Worse score in game 1
-        getDataRowForHole(hm, 2).shouldContainExactly(2L, 4, 5, 4)
+        getDataRowForHole(hm, 9).shouldContainExactly(2L, 4)
     }
 
     @Test
@@ -34,10 +37,10 @@ class TestGameWrapperGolfUtils : AbstractTest()
     {
         val hm = makeOptimalScorecardStartingMap()
 
-        GAME_WRAPPER_GOLF_9_EVEN_ROUNDS.populateOptimalScorecardMaps(hm)
+        golfFrontNine22EvenRounds().populateOptimalScorecardMaps(hm)
 
         getDataRowForHole(hm, 1).shouldContainExactly(-1L, 5, 5, 5)
-        getDataRowForHole(hm, 4).shouldContainExactly(1L, 2)
+        getDataRowForHole(hm, 4).shouldContainExactly(1L, 5, 5, 4)
     }
 
     private fun getDataRowForHole(optimalHoleMap: MutableMap<Int, OptimalHoleStat>, hole: Int): List<Any>
