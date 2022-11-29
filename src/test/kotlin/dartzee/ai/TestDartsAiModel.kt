@@ -12,9 +12,9 @@ import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores
-import io.kotlintest.matchers.doubles.shouldBeBetween
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.doubles.shouldBeBetween
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach

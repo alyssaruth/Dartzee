@@ -8,8 +8,8 @@ import dartzee.helper.predictableGolfModel
 import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import io.kotlintest.matchers.collections.shouldContainInOrder
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainInOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartsSimulationGolf: AbstractTest()

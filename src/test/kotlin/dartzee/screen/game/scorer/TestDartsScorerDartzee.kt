@@ -19,9 +19,9 @@ import dartzee.screen.game.makeTeam
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.factoryHighScoreResult
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -182,7 +182,6 @@ class TestDartsScorerDartzee: AbstractTest()
     {
         val renderer = tableScores.getColumn(4).cellRenderer
         renderer.shouldBeInstanceOf<DartzeeScoreRenderer>()
-
-        return (renderer as DartzeeScoreRenderer).maxScore
+        return renderer.maxScore
     }
 }

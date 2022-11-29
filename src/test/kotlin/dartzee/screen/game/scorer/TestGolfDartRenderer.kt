@@ -4,7 +4,7 @@ import dartzee.*
 import dartzee.core.util.TableUtil
 import dartzee.helper.AbstractTest
 import dartzee.`object`.Dart
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JLabel
 import javax.swing.JTable

@@ -21,8 +21,8 @@ class DartzeeAimCalculator
 
     fun getPointToAimFor(dartboard: Dartboard, segmentStatus: SegmentStatus, aggressive: Boolean): Point
     {
-        val scoringSegments = segmentStatus.scoringSegments.map { miniDartboard.getSegment(it.score, it.type)!! }
-        val validSegments = segmentStatus.validSegments.map { miniDartboard.getSegment(it.score, it.type)!! }
+        val scoringSegments = segmentStatus.scoringSegments.map { miniDartboard.getSegment(it.score, it.type)!! }.filter { !it.isMiss() }
+        val validSegments = segmentStatus.validSegments.map { miniDartboard.getSegment(it.score, it.type)!! }.filter { !it.isMiss() }
 
         val segmentsToConsiderAimingFor = if (aggressive && scoringSegments.isNotEmpty()) scoringSegments else validSegments
         if (segmentsToConsiderAimingFor.isEmpty())

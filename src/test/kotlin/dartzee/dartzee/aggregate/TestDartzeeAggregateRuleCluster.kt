@@ -7,9 +7,9 @@ import dartzee.helper.double
 import dartzee.helper.miss
 import dartzee.helper.outerSingle
 import dartzee.helper.treble
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import java.text.ParseException
 
@@ -72,9 +72,8 @@ class TestDartzeeAggregateRuleCluster: AbstractDartzeeRuleTest<DartzeeAggregateR
         val xml = rule.toDbString()
         val deserialisedRule = parseAggregateRule(xml)
 
-        deserialisedRule.shouldBeInstanceOf<DartzeeAggregateRuleCluster> {
-            it.spinner.value shouldBe 3
-        }
+        deserialisedRule.shouldBeInstanceOf<DartzeeAggregateRuleCluster>()
+        deserialisedRule.spinner.value shouldBe 3
     }
 
     @Test
@@ -95,11 +94,11 @@ class TestDartzeeAggregateRuleCluster: AbstractDartzeeRuleTest<DartzeeAggregateR
         factory().isValidRound(listOf(outerSingle(20), outerSingle(20), outerSingle(3))) shouldBe false
     }
 
-    val oneApart = listOf(outerSingle(20), outerSingle(18), outerSingle(1))
-    val twoApart = listOf(outerSingle(20), double(4), treble(10))
-    val threeApart = listOf(outerSingle(19), treble(11), outerSingle(5))
-    val fourApart = listOf(outerSingle(10), outerSingle(1), outerSingle(14))
-    val fiveApart = listOf(outerSingle(7), double(12), outerSingle(13))
+    private val oneApart = listOf(outerSingle(20), outerSingle(18), outerSingle(1))
+    private val twoApart = listOf(outerSingle(20), double(4), treble(10))
+    private val threeApart = listOf(outerSingle(19), treble(11), outerSingle(5))
+    private val fourApart = listOf(outerSingle(10), outerSingle(1), outerSingle(14))
+    private val fiveApart = listOf(outerSingle(7), double(12), outerSingle(13))
 
     @Test
     fun `Should validate correctly with spread of 1`()

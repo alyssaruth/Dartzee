@@ -27,6 +27,7 @@ import dartzee.logging.LoggingCode
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.utils.Database
+import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.DriverManager
@@ -185,8 +186,6 @@ fun insertDart(participant: ParticipantEntity,
                startingScore: Int = 501,
                score: Int = 20,
                multiplier: Int = 3,
-               posX: Int = 20,
-               posY: Int = 20,
                segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
                dtCreation: Timestamp = getSqlDateNow(),
                dtLastUpdate: Timestamp = getSqlDateNow(),
@@ -202,8 +201,6 @@ fun insertDart(participant: ParticipantEntity,
     drt.startingScore = startingScore
     drt.multiplier = multiplier
     drt.score = score
-    drt.posX = posX
-    drt.posY = posY
     drt.segmentType = segmentType
 
     drt.saveToDatabase(dtLastUpdate)
@@ -475,4 +472,10 @@ fun Database.getTableNames(): List<String>
     }
 
     return list.toList()
+}
+
+fun runConversion(fromVersion: Int)
+{
+    val conversions = DatabaseMigrations.getConversionsMap()[fromVersion]!!
+    conversions.forEach { it(mainDatabase) }
 }

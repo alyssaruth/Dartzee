@@ -3,9 +3,9 @@ package dartzee.bean
 import dartzee.dartzee.getAllAggregateRules
 import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.collections.shouldNotContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeAggregateRuleSelector : AbstractTest()

@@ -12,8 +12,8 @@ import dartzee.helper.insertPlayerForGame
 import dartzee.logging.CODE_SQL
 import dartzee.reporting.ReportParameters
 import dartzee.screen.ScreenCache
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test

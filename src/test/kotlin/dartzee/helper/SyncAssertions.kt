@@ -5,7 +5,7 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.sync.SYNC_DIR
 import dartzee.utils.Database
-import io.kotlintest.matchers.file.shouldNotExist
+import io.kotest.matchers.file.shouldNotExist
 import io.mockk.mockk
 import io.mockk.verify
 import java.io.File

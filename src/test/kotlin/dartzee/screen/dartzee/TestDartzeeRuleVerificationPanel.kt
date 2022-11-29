@@ -8,9 +8,9 @@ import dartzee.helper.*
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 

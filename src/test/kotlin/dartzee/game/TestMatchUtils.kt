@@ -6,7 +6,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertParticipant
 import dartzee.helper.preparePlayers
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestMatchUtils : AbstractTest()

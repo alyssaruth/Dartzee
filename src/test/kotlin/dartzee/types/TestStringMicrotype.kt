@@ -1,8 +1,8 @@
 package dartzee.types
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 
 class TestStringMicrotype: AbstractTest()

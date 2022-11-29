@@ -1,10 +1,10 @@
 package dartzee.utils
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.doubles.shouldBeBetween
-import io.kotlintest.matchers.doubles.shouldBeGreaterThanOrEqual
-import io.kotlintest.matchers.doubles.shouldBeLessThanOrEqual
-import io.kotlintest.shouldBe
+import io.kotest.matchers.doubles.shouldBeBetween
+import io.kotest.matchers.doubles.shouldBeGreaterThanOrEqual
+import io.kotest.matchers.doubles.shouldBeLessThanOrEqual
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Point
 

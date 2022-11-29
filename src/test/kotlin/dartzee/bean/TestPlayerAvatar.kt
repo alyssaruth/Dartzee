@@ -11,7 +11,7 @@ import dartzee.helper.insertPlayerImage
 import dartzee.screen.IPlayerImageSelector
 import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import java.awt.Cursor

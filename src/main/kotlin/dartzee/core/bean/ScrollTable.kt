@@ -1,16 +1,35 @@
 package dartzee.core.bean
 
 import dartzee.core.util.TableUtil.DefaultModel
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Font
+import java.awt.Rectangle
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import java.util.*
-import javax.swing.*
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTable
+import javax.swing.ListSelectionModel
+import javax.swing.SwingConstants
+import javax.swing.SwingUtilities
 import javax.swing.border.AbstractBorder
 import javax.swing.border.EmptyBorder
-import javax.swing.event.*
-import javax.swing.table.*
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ListSelectionEvent
+import javax.swing.event.ListSelectionListener
+import javax.swing.event.TableColumnModelEvent
+import javax.swing.event.TableColumnModelListener
+import javax.swing.table.DefaultTableModel
+import javax.swing.table.TableCellEditor
+import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableColumn
+import javax.swing.table.TableColumnModel
+import javax.swing.table.TableModel
+import javax.swing.table.TableRowSorter
 
 open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelListener,
     ListSelectionListener, MouseListener
@@ -460,7 +479,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
 
     companion object
     {
-        private const val TABLE_ROW_FOOTER = -2
+        const val TABLE_ROW_FOOTER = -2
         private const val COL_WIDTH_STRING_DT = "DT"
         private const val COL_WIDTH_DT = 115
     }

@@ -19,9 +19,9 @@ import dartzee.screen.stats.player.x01.StatisticsTabFinishBreakdown
 import dartzee.screen.stats.player.x01.StatisticsTabX01ThreeDartScores
 import dartzee.screen.stats.player.x01.StatisticsTabX01TopFinishes
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

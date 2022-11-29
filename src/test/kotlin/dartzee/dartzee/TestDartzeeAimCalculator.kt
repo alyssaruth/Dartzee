@@ -1,20 +1,25 @@
 package dartzee.dartzee
 
 import com.github.alexburlton.swingtest.shouldMatchImage
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.ai.DELIBERATE_MISS
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
+import dartzee.missTwenty
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
-import io.kotlintest.matchers.numerics.shouldBeLessThan
-import io.kotlintest.shouldBe
+import io.kotest.matchers.comparables.shouldBeLessThan
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import java.awt.*
+import java.awt.BasicStroke
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Graphics2D
+import java.awt.Point
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
@@ -101,6 +106,19 @@ class TestDartzeeAimCalculator: AbstractTest()
     fun `Should deliberately miss if no valid segments`()
     {
         val segmentStatus = SegmentStatus(emptyList(), emptyList())
+
+        val dartboard = DartzeeDartboard(400, 400)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.refreshValidSegments(segmentStatus)
+
+        val pt = calculator.getPointToAimFor(dartboard, segmentStatus, true)
+        pt shouldBe DELIBERATE_MISS
+    }
+
+    @Test
+    fun `Should deliberately miss if only valid segments are misses`()
+    {
+        val segmentStatus = SegmentStatus(listOf(missTwenty), listOf(missTwenty))
 
         val dartboard = DartzeeDartboard(400, 400)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)

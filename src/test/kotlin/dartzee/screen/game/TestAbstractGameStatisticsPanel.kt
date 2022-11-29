@@ -5,7 +5,7 @@ import dartzee.game.state.X01PlayerState
 import dartzee.helper.*
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JComponent
 

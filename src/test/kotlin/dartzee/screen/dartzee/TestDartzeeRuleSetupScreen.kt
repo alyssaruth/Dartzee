@@ -14,8 +14,8 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.screen.GameSetupScreen
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

@@ -12,8 +12,8 @@ import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.utils.DartsColour
 import dartzee.utils.getAverage
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Tag

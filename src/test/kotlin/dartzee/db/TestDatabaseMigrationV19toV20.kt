@@ -6,8 +6,8 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertParticipant
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDatabaseMigrationV19toV20: AbstractTest()

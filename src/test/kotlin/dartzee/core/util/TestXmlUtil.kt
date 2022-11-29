@@ -1,7 +1,7 @@
 package dartzee.core.util
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestXmlUtil: AbstractTest()
@@ -92,24 +92,5 @@ class TestXmlUtil: AbstractTest()
         val root = doc.createRootElement("Root")
 
         root.getAttributeInt("Foo") shouldBe 0
-    }
-
-    @Test
-    fun `Should return double value if valid`()
-    {
-        val doc = XmlUtil.factoryNewDocument()
-        val root = doc.createRootElement("Root")
-
-        root.setAttributeAny("Foo", 1.5)
-        root.getAttributeDouble("Foo") shouldBe 1.5
-    }
-
-    @Test
-    fun `Should return 0 if double attrib not present`()
-    {
-        val doc = XmlUtil.factoryNewDocument()
-        val root = doc.createRootElement("Root")
-
-        root.getAttributeDouble("Foo") shouldBe 0.0
     }
 }

@@ -7,9 +7,9 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertDartzeeRule
 import dartzee.helper.insertGame
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestSanityCheckDanglingIdFields: AbstractTest()

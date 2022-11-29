@@ -1,11 +1,15 @@
 package dartzee.dartzee.dart
 
-import dartzee.*
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.dartzee.parseDartRule
-import io.kotlintest.matchers.numerics.shouldBeGreaterThan
-import io.kotlintest.matchers.shouldNotBeInRange
-import io.kotlintest.shouldBe
+import dartzee.doubleTwenty
+import dartzee.missTwenty
+import dartzee.singleTwenty
+import dartzee.trebleNineteen
+import dartzee.trebleTwenty
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.ints.shouldNotBeInRange
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()

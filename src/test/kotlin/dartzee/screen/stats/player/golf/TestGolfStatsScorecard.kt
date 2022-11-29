@@ -5,8 +5,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeGolfRound
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestGolfStatsScorecard : AbstractTest()

@@ -14,8 +14,8 @@ import dartzee.screen.game.makeSingleParticipant
 import dartzee.screen.game.makeTeam
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAbstractDartsScorer: AbstractTest()

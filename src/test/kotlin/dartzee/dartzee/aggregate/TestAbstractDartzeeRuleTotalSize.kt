@@ -1,8 +1,8 @@
 package dartzee.dartzee.aggregate
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.Test
 import java.text.ParseException
 

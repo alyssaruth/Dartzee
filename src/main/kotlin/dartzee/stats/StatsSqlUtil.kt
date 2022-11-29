@@ -60,7 +60,7 @@ fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrappe
                 dart.ordinal = ordinal
                 dart.startingScore = startingScore
                 dart.roundNumber = roundNumber
-                wrapper.addDart(roundNumber, dart)
+                wrapper.addDart(dart)
             }
         }
     }

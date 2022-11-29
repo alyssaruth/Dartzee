@@ -2,7 +2,7 @@ package dartzee.achievements.golf
 
 import dartzee.achievements.TestAbstractAchievementBestGame
 import dartzee.game.GameType
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
 class TestAchievementGolfBestGame: TestAbstractAchievementBestGame<AchievementGolfBestGame>()

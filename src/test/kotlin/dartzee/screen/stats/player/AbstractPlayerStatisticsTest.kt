@@ -4,8 +4,9 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.util.containsComponent
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeGameWrapper
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import dartzee.stats.GameWrapper
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Component
@@ -14,6 +15,7 @@ abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractT
 {
     abstract fun factoryTab(): E
     abstract fun getComponentsForComparison(tab: E): List<Component>
+    open fun factoryGameWrapper(): GameWrapper = makeGameWrapper()
 
     @Test
     fun `Components for comparison should have red foregrounds`()
@@ -33,19 +35,19 @@ abstract class AbstractPlayerStatisticsTest<E: AbstractStatisticsTab>: AbstractT
         val tab = factoryTab()
         val components = getComponentsForComparison(tab)
 
-        tab.setFilteredGames(listOf(makeGameWrapper()), listOf())
+        tab.setFilteredGames(listOf(factoryGameWrapper()), listOf())
         tab.populateStats()
         components.forEach{
             tab.containsComponent(it) shouldBe false
         }
 
-        tab.setFilteredGames(listOf(makeGameWrapper()), listOf(makeGameWrapper()))
+        tab.setFilteredGames(listOf(factoryGameWrapper()), listOf(factoryGameWrapper()))
         tab.populateStats()
         components.forEach{
             tab.containsComponent(it) shouldBe true
         }
 
-        tab.setFilteredGames(listOf(makeGameWrapper()), listOf())
+        tab.setFilteredGames(listOf(factoryGameWrapper()), listOf())
         tab.populateStats()
         components.forEach{
             tab.containsComponent(it) shouldBe false

@@ -9,8 +9,8 @@ import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeGameWrapper
 import dartzee.helper.makeX01RoundsMap
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.plot.XYPlot
 import org.junit.jupiter.api.Test

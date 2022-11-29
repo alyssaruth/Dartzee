@@ -7,8 +7,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
 class TestPlayerStatsButton: AbstractTest()
@@ -71,9 +71,7 @@ class TestPlayerStatsButton: AbstractTest()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<PlayerStatisticsScreen>()
-
-        val statsScreen = currentScreen as PlayerStatisticsScreen
-        statsScreen.player shouldBe player
-        statsScreen.gameType shouldBe GameType.X01
+        currentScreen.player shouldBe player
+        currentScreen.gameType shouldBe GameType.X01
     }
 }

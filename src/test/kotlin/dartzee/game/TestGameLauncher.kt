@@ -3,7 +3,7 @@ package dartzee.game
 import dartzee.helper.AbstractTest
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
-import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

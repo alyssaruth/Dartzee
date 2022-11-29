@@ -10,9 +10,9 @@ import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.UpdateManager
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotBeEmpty
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

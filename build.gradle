@@ -26,7 +26,7 @@ dependencies {
     implementation 'net.lingala.zip4j:zip4j:2.6.4'
 
     testImplementation "io.mockk:mockk:1.9.3"
-    testImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
+    testImplementation 'io.kotest:kotest-assertions-core:5.3.1'
     testImplementation 'com.github.alexburlton:swing-test:1.0.0'
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.1.0"
@@ -59,9 +59,16 @@ test {
             '-Dcom.sun.management.jmxremote.ssl=false',
             '-Djava.rmi.server.hostname=localhost',
             '-DscreenshotOs=linux'
+}
 
+tasks.withType(Test) {
     minHeapSize = "512m"
     maxHeapSize = "512m"
+
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
 }
 
 task runDev(type: JavaExec) {

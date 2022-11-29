@@ -6,7 +6,7 @@ import com.github.alexburlton.swingtest.shouldBeVisible
 import com.github.alexburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import dartzee.sync.SyncStage
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JProgressBar
 

@@ -2,7 +2,7 @@ package dartzee.screen.preference
 
 import com.github.alexburlton.swingtest.uncheck
 import dartzee.utils.*
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 
 class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc>()
 {

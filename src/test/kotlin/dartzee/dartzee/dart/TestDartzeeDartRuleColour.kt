@@ -1,12 +1,21 @@
 package dartzee.dartzee.dart
 
-import dartzee.*
+import dartzee.bullseye
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.dartzee.parseDartRule
+import dartzee.doubleNineteen
+import dartzee.doubleTwenty
 import dartzee.helper.makeColourRule
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import dartzee.missTwenty
+import dartzee.missedBoard
+import dartzee.outerBull
+import dartzee.singleNineteen
+import dartzee.singleTwenty
+import dartzee.trebleNineteen
+import dartzee.trebleTwenty
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 
