@@ -39,7 +39,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/libs/*.jar"
-          commit: master
+          commit: main
           name: ${{ github.event.inputs.name }}
           tag: ${{ github.event.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
