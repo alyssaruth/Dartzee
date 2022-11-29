@@ -14,14 +14,13 @@ import java.awt.Color
 import java.awt.GridLayout
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
-import javax.swing.UIManager
-import javax.swing.border.TitledBorder
+import javax.swing.border.EmptyBorder
 
 abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowSelectionListener
 {
     abstract val ranges: List<IntRange>
 
-    private val tableHoleBreakdown = ScrollTable()
+    private val tableHoleBreakdown = ScrollTable(testId = "BreakdownMine")
     val tableHoleBreakdownOther = ScrollTable()
     private val tablePanel = JPanel()
     private val pieChartPanel = JPanel()
@@ -35,7 +34,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         tableHoleBreakdownOther.tableForeground = Color.RED
         tableHoleBreakdown.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
         tableHoleBreakdownOther.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-        tablePanel.border = TitledBorder(UIManager.getBorder("TitledBorder.border"), "Double Finishes", TitledBorder.LEADING, TitledBorder.TOP, null, Color(0, 0, 0))
+        tablePanel.border = EmptyBorder(5, 5, 5, 5)
         add(tablePanel)
         tablePanel.layout = GridLayout(2, 1, 0, 0)
         tablePanel.add(tableHoleBreakdown)
@@ -54,6 +53,8 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
     abstract fun getColorForRange(range: IntRange): Color
     abstract fun getTableRows(filteredGames: List<GameWrapper>): Pair<List<List<Any?>>, List<Any>?>
 
+    open fun applyAdditionalFilters(filteredGames: List<GameWrapper>): List<GameWrapper> = filteredGames
+
     override fun populateStats()
     {
         setTableVisibility()
@@ -64,8 +65,9 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
             populateHoleBreakdown(tableHoleBreakdownOther, otherPieChartPanel, filteredGamesOther)
         }
     }
-    private fun populateHoleBreakdown(table: ScrollTable, chartPanel: ChartPanel, filteredGames: List<GameWrapper>)
+    private fun populateHoleBreakdown(table: ScrollTable, chartPanel: ChartPanel, games: List<GameWrapper>)
     {
+        val filteredGames = applyAdditionalFilters(games)
         val model = TableUtil.DefaultModel()
         model.addColumn("Target")
 
@@ -76,11 +78,10 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         model.addColumn("Avg")
         table.model = model
 
-        val finishedGames = filteredGames.filter{ it.isFinished() }
+        val finishedGames = filteredGames.filter { it.isFinished() }
         populateModel(table, finishedGames)
 
         table.sortBy(0, false)
-        table.disableSorting()
         table.selectFirstRow()
 
         updatePieChart(table, chartPanel)

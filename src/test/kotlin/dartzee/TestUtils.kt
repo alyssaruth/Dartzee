@@ -140,6 +140,9 @@ private fun Icon.toBufferedImage(): BufferedImage
 fun ScrollTable.getRows(): List<List<Any?>> =
     model.getRows(columnCount)
 
+fun ScrollTable.getFooterRow(): List<Any?> =
+    (0 until columnCount).map { getValueAt(ScrollTable.TABLE_ROW_FOOTER, it)}
+
 fun ScrollTable.getFirstRow() = getRows().first()
 
 fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>>
