@@ -1,7 +1,7 @@
 package dartzee.screen.stats.player.golf
 
-import dartzee.`object`.Dart
 import dartzee.core.util.getSortedValues
+import dartzee.`object`.Dart
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
 import java.awt.BorderLayout
@@ -47,20 +47,12 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
 
     private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, other: Boolean)
     {
-        val hmHoleToBestDarts = mutableMapOf<Int, List<Dart>>()
-        val hmHoleToBestGameId = mutableMapOf<Int, Long>()
-
-        // Add fudge data so we always display something, even if there are no games
-        for (i in 1..18)
-        {
-            hmHoleToBestDarts[i] = listOf(Dart(20, 0), Dart(20, 0), Dart(20, 0))
-            hmHoleToBestGameId[i] = -1
-        }
+        val hmHoleToOptimalScorecard = makeOptimalScorecardStartingMap()
 
         val sortedGames = filteredGames.sortedBy { it.dtStart }
         for (game in sortedGames)
         {
-            game.populateOptimalScorecardMaps(hmHoleToBestDarts, hmHoleToBestGameId)
+            game.populateOptimalScorecardMaps(hmHoleToOptimalScorecard)
         }
 
         val testId = if (other) "scorecardOther" else "scorecardMine"
@@ -70,14 +62,28 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
             scoreSheet.setTableForeground(Color.RED)
         }
 
-        val rounds = hmHoleToBestDarts.values.toList()
-        scoreSheet.populateTable(rounds)
-
-        scoreSheet.addGameIds(hmHoleToBestGameId.getSortedValues())
+        val optimalValues = hmHoleToOptimalScorecard.getSortedValues()
+        scoreSheet.populateTable(optimalValues.map { it.darts })
+        scoreSheet.addGameIds(optimalValues.map { it.localGameId })
 
         panel.removeAll()
         panel.add(scoreSheet, BorderLayout.CENTER)
         panel.revalidate()
         panel.repaint()
     }
+}
+
+data class OptimalHoleStat(val darts: List<Dart>, val localGameId: Long)
+
+fun makeOptimalScorecardStartingMap(): MutableMap<Int, OptimalHoleStat>
+{
+    val hm = mutableMapOf<Int, OptimalHoleStat>()
+
+    // Add fudge data so we always display something, even if there are no games
+    for (i in 1..18)
+    {
+        hm[i] = OptimalHoleStat(listOf(Dart(20, 0), Dart(20, 0), Dart(20, 0)), -1)
+    }
+
+    return hm
 }

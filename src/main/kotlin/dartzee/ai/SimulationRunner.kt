@@ -1,13 +1,17 @@
 package dartzee.ai
 
-import dartzee.`object`.DartsClient
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
 import dartzee.db.BulkInserter
 import dartzee.db.DartEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
-import dartzee.logging.*
+import dartzee.logging.CODE_SIMULATION_CANCELLED
+import dartzee.logging.CODE_SIMULATION_ERROR
+import dartzee.logging.CODE_SIMULATION_FINISHED
+import dartzee.logging.CODE_SIMULATION_PROGRESS
+import dartzee.logging.CODE_SIMULATION_STARTED
+import dartzee.`object`.DartsClient
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.stats.GameWrapper
 import dartzee.utils.DurationTimer
@@ -117,7 +121,7 @@ class SimulationRunner: AbstractSimulationRunner()
                 games.add(it.gameEntity!!)
                 participants.add(it.participantEntity!!)
 
-                darts += it.dartEntities
+                darts += it.simulationDartEntities
 
                 it.clearEntities()
             }

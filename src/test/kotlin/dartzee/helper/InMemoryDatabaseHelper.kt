@@ -24,6 +24,7 @@ import dartzee.db.X01FinishEntity
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.logging.LoggingCode
+import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
@@ -212,6 +213,15 @@ fun getSegmentTypeForMultiplier(multiplier: Int) = when(multiplier)
     2 -> SegmentType.DOUBLE
     3 -> SegmentType.TREBLE
     else -> SegmentType.MISS
+}
+
+fun List<List<Dart>>.insertIntoDatabase(player: PlayerEntity, participant: ParticipantEntity)
+{
+    val state = makeGolfPlayerState(player, participant)
+    forEach { round ->
+        round.forEach(state::dartThrown)
+        state.commitRound()
+    }
 }
 
 fun insertDartzeeRoundResult(participant: ParticipantEntity = insertParticipant(),

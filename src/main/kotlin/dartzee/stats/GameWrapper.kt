@@ -8,6 +8,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.`object`.Dart
 import dartzee.screen.stats.player.HoleBreakdownWrapper
+import dartzee.screen.stats.player.golf.OptimalHoleStat
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
 import dartzee.utils.getScoringRounds
@@ -25,8 +26,14 @@ enum class GolfMode {
 /**
  * Wraps up an entire game of darts from a single player's perspective
  */
-class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timestamp, val dtFinish: Timestamp, val finalScore: Int)
-{
+class GameWrapper(
+    val localId: Long,
+    val gameParams: String,
+    val dtStart: Timestamp,
+    val dtFinish: Timestamp,
+    val finalScore: Int,
+    val teamGame: Boolean
+) {
     private var hmRoundNumberToDarts = HashMapList<Int, Dart>()
     private var totalRounds = 0
 
@@ -184,18 +191,18 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
     private fun getEndHoleForMode(mode: GolfMode) =
         if (mode == GolfMode.FRONT_9) 9 else 18
 
-    fun populateOptimalScorecardMaps(hmHoleToBestDarts: MutableMap<Int, List<Dart>>, hmHoleToBestGameId: MutableMap<Int, Long>)
+    fun populateOptimalScorecardMaps(hmHoleToOptimalHoleStat: MutableMap<Int, OptimalHoleStat>)
     {
         for (i in 1..totalRounds)
         {
             val darts = getDartsForRound(i)
-            val currentDarts = hmHoleToBestDarts.getValue(i)
-            val currentGameId = hmHoleToBestGameId.getValue(i)
+            if (darts.isEmpty()) continue
 
-            if (isBetterGolfRound(i, darts, currentGameId, currentDarts))
+            val currentValue = hmHoleToOptimalHoleStat.getValue(i)
+
+            if (isBetterGolfRound(i, darts, currentValue.localGameId, currentValue.darts))
             {
-                hmHoleToBestDarts[i] = darts
-                hmHoleToBestGameId[i] = localId
+                hmHoleToOptimalHoleStat[i] = OptimalHoleStat(darts, localId)
             }
         }
     }
@@ -224,7 +231,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
             return false
         }
 
-        //Equal scores, so go on number of darts thrown. Less is better.
+        // Equal scores, so go on number of darts thrown. Less is better.
         val newSize = dartsNew.size
         val currentSize = dartsCurrent.size
         return newSize < currentSize
@@ -256,13 +263,13 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
     var gameEntity: GameEntity? = null
     var participantEntity: ParticipantEntity? = null
-    val dartEntities = mutableListOf<DartEntity>()
+    val simulationDartEntities = mutableListOf<DartEntity>()
 
     fun clearEntities()
     {
         gameEntity = null
         participantEntity = null
-        dartEntities.clear()
+        simulationDartEntities.clear()
     }
 
     fun generateRealEntities(gameType: GameType, player: PlayerEntity)
@@ -292,7 +299,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
             darts.forEachIndexed { ix, drt ->
                 val de = DartEntity.factory(drt, player.rowId, pt.rowId, i, ix+1)
-                dartEntities.add(de)
+                simulationDartEntities.add(de)
             }
         }
     }
