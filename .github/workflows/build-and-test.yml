@@ -34,12 +34,12 @@ jobs:
           name: failed-snapshots
           path: /home/runner/**/*.failed.png
       - name: Update coverage
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         run: |
           python scripts/update-coverage.py
       - name: Commit coverage stats
         uses: EndBug/add-and-commit@v7
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         with:
           message: 'Update coverage stats'
   integration-and-e2e:

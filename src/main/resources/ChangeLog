@@ -1,3 +1,12 @@
+--------- v6.0.1 ---------
+
+= Fixed a bug where Dartzee AI got stuck if they were required to miss the board
+= Fixed bugs that caused golf player stats to crash if they had played games as a team
+= Updated Target Breakdown for round the clock to exclude games played out of order, and made the table sortable
+= Fixed X01 Three Dart Scores list to include team games properly
+= Improved handling of errors playing back audio
+= 87.6% test coverage (11842 / 13519 lines covered by 2166 tests)
+
 --------- v6.0.0 ---------
 
 + Pair mode, allowing players to participate in teams of 2 by alternating throws
