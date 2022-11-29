@@ -8,6 +8,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.`object`.Dart
 import dartzee.screen.stats.player.HoleBreakdownWrapper
+import dartzee.screen.stats.player.golf.OptimalHoleStat
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
 import dartzee.utils.getScoringRounds
@@ -190,18 +191,18 @@ class GameWrapper(
     private fun getEndHoleForMode(mode: GolfMode) =
         if (mode == GolfMode.FRONT_9) 9 else 18
 
-    fun populateOptimalScorecardMaps(hmHoleToBestDarts: MutableMap<Int, List<Dart>>, hmHoleToBestGameId: MutableMap<Int, Long>)
+    fun populateOptimalScorecardMaps(hmHoleToOptimalHoleStat: MutableMap<Int, OptimalHoleStat>)
     {
         for (i in 1..totalRounds)
         {
             val darts = getDartsForRound(i)
-            val currentDarts = hmHoleToBestDarts.getValue(i)
-            val currentGameId = hmHoleToBestGameId.getValue(i)
+            if (darts.isEmpty()) continue
 
-            if (isBetterGolfRound(i, darts, currentGameId, currentDarts))
+            val currentValue = hmHoleToOptimalHoleStat.getValue(i)
+
+            if (isBetterGolfRound(i, darts, currentValue.localGameId, currentValue.darts))
             {
-                hmHoleToBestDarts[i] = darts
-                hmHoleToBestGameId[i] = localId
+                hmHoleToOptimalHoleStat[i] = OptimalHoleStat(darts, localId)
             }
         }
     }
@@ -230,7 +231,7 @@ class GameWrapper(
             return false
         }
 
-        //Equal scores, so go on number of darts thrown. Less is better.
+        // Equal scores, so go on number of darts thrown. Less is better.
         val newSize = dartsNew.size
         val currentSize = dartsCurrent.size
         return newSize < currentSize

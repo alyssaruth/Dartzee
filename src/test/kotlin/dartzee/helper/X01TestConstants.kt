@@ -13,7 +13,7 @@ val GAME_WRAPPER_301_1 = makeGameWrapper(gameParams = "301", finalScore = 11, lo
     gameOneRounds.flatten().forEach(it::addDart)
 }
 
-val gameTwoRounds = makeX01Rounds(
+private val gameTwoRounds = makeX01Rounds(
     301,
     listOf(Dart(5, 1), Dart(20, 1), Dart(20, 1)), // 45 (256)
     listOf(Dart(12, 3), Dart(20, 1), Dart(4, 1)), // 60 (196)

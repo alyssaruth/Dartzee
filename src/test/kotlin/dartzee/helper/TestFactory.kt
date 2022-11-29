@@ -57,6 +57,14 @@ fun makeDart(score: Int = 20,
     return dart
 }
 
+fun setRoundNumbers(rounds: List<List<Dart>>) {
+    rounds.forEachIndexed { ix, round ->
+        round.forEach { dart ->
+            dart.roundNumber = ix + 1
+        }
+    }
+}
+
 fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
 {
     darts.forEach { it.roundNumber = golfHole }

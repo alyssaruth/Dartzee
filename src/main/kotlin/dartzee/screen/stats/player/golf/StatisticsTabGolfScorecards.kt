@@ -6,14 +6,19 @@ import dartzee.core.bean.RowSelectionListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
 import dartzee.screen.stats.player.AbstractStatisticsTab
-import dartzee.stats.*
+import dartzee.stats.GameWrapper
+import dartzee.stats.GolfMode
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.DefaultComboBoxModel
+import javax.swing.JComboBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.ListSelectionModel
 
 class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, RowSelectionListener
 {
@@ -100,7 +105,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
 
     private fun addMode(modeDesc: String, mode: GolfMode, model: DefaultComboBoxModel<ComboBoxItem<GolfMode>>)
     {
-        val validGames = filteredGames.filter { it.getRoundScore(mode) > -1 }
+        val validGames = filteredGames.filter { !it.teamGame && it.getRoundScore(mode) > -1 }
         if (validGames.isEmpty())
         {
             return
@@ -110,9 +115,10 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
         model.addElement(item)
     }
 
-    private fun populateTable(filteredGames: List<GameWrapper>, scrollTable: ScrollTableDartsGame)
+    private fun populateTable(games: List<GameWrapper>, scrollTable: ScrollTableDartsGame)
     {
         //Filter out the -1's - these are games that haven't gone on long enough to have all the data
+        val filteredGames = games.filter { !it.teamGame }
         val validGames = filteredGames.filter { it.getRoundScore(mode) > -1 }
 
         //Populate the table from the wrappers
