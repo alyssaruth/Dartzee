@@ -14,8 +14,7 @@ import java.awt.Color
 import java.awt.GridLayout
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
-import javax.swing.UIManager
-import javax.swing.border.TitledBorder
+import javax.swing.border.EmptyBorder
 
 abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowSelectionListener
 {
@@ -35,7 +34,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         tableHoleBreakdownOther.tableForeground = Color.RED
         tableHoleBreakdown.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
         tableHoleBreakdownOther.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-        tablePanel.border = TitledBorder(UIManager.getBorder("TitledBorder.border"), "Double Finishes", TitledBorder.LEADING, TitledBorder.TOP, null, Color(0, 0, 0))
+        tablePanel.border = EmptyBorder(5, 5, 5, 5)
         add(tablePanel)
         tablePanel.layout = GridLayout(2, 1, 0, 0)
         tablePanel.add(tableHoleBreakdown)
@@ -83,7 +82,6 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         populateModel(table, finishedGames)
 
         table.sortBy(0, false)
-        table.disableSorting()
         table.selectFirstRow()
 
         updatePieChart(table, chartPanel)
