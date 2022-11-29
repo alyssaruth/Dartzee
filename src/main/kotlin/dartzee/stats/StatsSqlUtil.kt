@@ -30,7 +30,7 @@ fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrappe
     val zzParticipants = buildParticipantTable(playerId, gameType) ?: return hm
 
     val sb = StringBuilder()
-    sb.append(" SELECT zz.LocalId, zz.GameParams, zz.DtCreation, zz.DtFinish, zz.FinalScore, ")
+    sb.append(" SELECT zz.LocalId, zz.GameParams, zz.DtCreation, zz.DtFinish, zz.FinalScore, zz.TeamId, ")
     sb.append(" drt.RoundNumber,")
     sb.append(" drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.SegmentType")
     sb.append(" FROM Dart drt, $zzParticipants zz")
@@ -53,8 +53,9 @@ fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrappe
                 val multiplier = rs.getInt("Multiplier")
                 val startingScore = rs.getInt("StartingScore")
                 val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
+                val teamId = rs.getString("TeamId")
 
-                val wrapper = hm.getOrPut(gameId) { GameWrapper(gameId, gameParams, dtStart, dtFinish, numberOfDarts) }
+                val wrapper = hm.getOrPut(gameId) { GameWrapper(gameId, gameParams, dtStart, dtFinish, numberOfDarts, teamId.isNotEmpty()) }
 
                 val dart = Dart(score, multiplier, segmentType = segmentType)
                 dart.ordinal = ordinal
@@ -77,19 +78,18 @@ fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrappe
 }
 private fun buildParticipantTable(playerId: String, gameType: GameType): String?
 {
-    val tmp = mainDatabase.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT")
+    val tmp = mainDatabase.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT, TeamId VARCHAR(36)")
     tmp ?: return null
 
     val sb = StringBuilder()
     sb.append(" INSERT INTO $tmp")
-    sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.PlayerId, pt.RowId AS ParticipantId, pt.FinalScore ")
+    sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.PlayerId, pt.RowId AS ParticipantId, pt.FinalScore, pt.TeamId")
     sb.append(" FROM Participant pt, Game g")
     sb.append(" WHERE pt.GameId = g.RowId")
     sb.append(" AND pt.PlayerId = '$playerId'")
     sb.append(" AND g.GameType = '$gameType'")
 
     mainDatabase.executeUpdate(sb)
-
     mainDatabase.executeUpdate("CREATE INDEX ${tmp}_PlayerId_ParticipantId ON $tmp(PlayerId, ParticipantId)")
     return tmp
 }

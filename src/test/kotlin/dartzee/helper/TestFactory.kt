@@ -169,10 +169,11 @@ fun makeGameWrapper(
     dtFinish: Timestamp = DateStatics.END_OF_TIME,
     finalScore: Int = -1,
     dartRounds: HashMapList<Int, Dart> = HashMapList(),
-    totalRounds: Int = dartRounds.size
+    totalRounds: Int = dartRounds.size,
+    teamGame: Boolean = false
 ): GameWrapper
 {
-    return GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore).also {
+    return GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore, teamGame).also {
         it.setHmRoundNumberToDartsThrown(dartRounds)
         it.setTotalRounds(totalRounds)
     }

@@ -1,5 +1,6 @@
 package dartzee.stats
 
+import dartzee.core.util.DateStatics
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
@@ -59,6 +60,27 @@ class TestStatsSqlUtil : AbstractTest()
         val wrapper = map[game.localId]!!
         wrapper.gameParams shouldBe "9"
         wrapper.finalScore shouldBe -1
-        wrapper.dartEntities.size shouldBe 6
+        wrapper.teamGame shouldBe false
+        wrapper.dtFinish shouldBe DateStatics.END_OF_TIME
+        wrapper.finalScore shouldBe -1
+        wrapper.getAllDarts().size shouldBe 6
+    }
+
+    @Test
+    fun `Should identify a team game`()
+    {
+        val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
+        val player = insertPlayer()
+        val pt = insertParticipant(playerId = player.rowId, gameId = game.rowId, teamId = randomGuid())
+
+        val rounds = listOf(
+            listOf(Dart(1, 0), Dart(1, 3)),
+            listOf(Dart(17, 1), Dart(15, 1), Dart(15, 2)),
+            listOf(Dart(3, 2))
+        )
+        rounds.insertIntoDatabase(player, pt)
+
+        val wrapper = retrieveGameData(player.rowId, game.gameType).getValue(game.localId)
+        wrapper.teamGame shouldBe true
     }
 }

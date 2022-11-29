@@ -53,7 +53,7 @@ abstract class AbstractDartsSimulation(val dartboard: Dartboard,
         val totalRounds = currentRound - 1
         val totalScore = getTotalScore()
 
-        val wrapper = GameWrapper(gameId, gameParams, dtStart!!, dtFinish!!, totalScore)
+        val wrapper = GameWrapper(gameId, gameParams, dtStart!!, dtFinish!!, totalScore, false)
         wrapper.setHmRoundNumberToDartsThrown(hmRoundNumberToDarts)
         wrapper.setTotalRounds(totalRounds)
 

@@ -25,8 +25,14 @@ enum class GolfMode {
 /**
  * Wraps up an entire game of darts from a single player's perspective
  */
-class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timestamp, val dtFinish: Timestamp, val finalScore: Int)
-{
+class GameWrapper(
+    val localId: Long,
+    val gameParams: String,
+    val dtStart: Timestamp,
+    val dtFinish: Timestamp,
+    val finalScore: Int,
+    val teamGame: Boolean
+) {
     private var hmRoundNumberToDarts = HashMapList<Int, Dart>()
     private var totalRounds = 0
 
@@ -256,13 +262,13 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
     var gameEntity: GameEntity? = null
     var participantEntity: ParticipantEntity? = null
-    val dartEntities = mutableListOf<DartEntity>()
+    val simulationDartEntities = mutableListOf<DartEntity>()
 
     fun clearEntities()
     {
         gameEntity = null
         participantEntity = null
-        dartEntities.clear()
+        simulationDartEntities.clear()
     }
 
     fun generateRealEntities(gameType: GameType, player: PlayerEntity)
@@ -292,7 +298,7 @@ class GameWrapper(val localId: Long, val gameParams: String, val dtStart: Timest
 
             darts.forEachIndexed { ix, drt ->
                 val de = DartEntity.factory(drt, player.rowId, pt.rowId, i, ix+1)
-                dartEntities.add(de)
+                simulationDartEntities.add(de)
             }
         }
     }
