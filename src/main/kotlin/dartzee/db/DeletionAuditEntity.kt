@@ -32,18 +32,18 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
 
     companion object
     {
-        fun factory(entity: AbstractEntity<*>): DeletionAuditEntity
+        fun factory(entity: AbstractEntity<*>, database: Database = mainDatabase): DeletionAuditEntity
         {
-            val result = DeletionAuditEntity()
+            val result = DeletionAuditEntity(database)
             result.assignRowId()
             result.entityName = entity.getTableName()
             result.entityId = entity.rowId
             return result
         }
 
-        fun factoryAndSave(entity: AbstractEntity<*>): DeletionAuditEntity
+        fun factoryAndSave(entity: AbstractEntity<*>, database: Database = mainDatabase): DeletionAuditEntity
         {
-            return factory(entity).also { it.saveToDatabase() }
+            return factory(entity, database).also { it.saveToDatabase() }
         }
     }
 }
