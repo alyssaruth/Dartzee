@@ -2,8 +2,18 @@ package dartzee.sync
 
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.runInOtherThread
-import dartzee.db.*
-import dartzee.logging.*
+import dartzee.db.DatabaseMerger
+import dartzee.db.DatabaseMigrator
+import dartzee.db.DeletionAuditEntity
+import dartzee.db.ForeignDatabaseValidator
+import dartzee.db.GameEntity
+import dartzee.db.SyncAuditEntity
+import dartzee.logging.CODE_PULL_ERROR
+import dartzee.logging.CODE_PUSH_ERROR
+import dartzee.logging.CODE_REVERT_TO_PULL
+import dartzee.logging.CODE_SYNC_ERROR
+import dartzee.logging.KEY_GAME_IDS
+import dartzee.logging.LoggingCode
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.screen.ScreenCache
 import dartzee.screen.sync.SyncManagementScreen
@@ -139,7 +149,8 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         val resultingDatabase = merger.performMerge()
 
         val resultingGameIds = getGameIds(resultingDatabase)
-        checkAllGamesStillExist(startingGameIds, resultingGameIds)
+        val deletedGameIds = getDeletedGameIds(resultingDatabase)
+        checkAllGamesStillExist(startingGameIds, resultingGameIds, deletedGameIds)
 
         dbStore.pushDatabase(remoteName, resultingDatabase, fetchResult.lastModified)
 
@@ -165,9 +176,12 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
     private fun getGameIds(database: Database) = GameEntity(database).retrieveModifiedSince(null).map { it.rowId }.toSet()
 
-    private fun checkAllGamesStillExist(startingGameIds: Set<String>, resultingGameIds: Set<String>)
+    private fun getDeletedGameIds(database: Database) =
+        DeletionAuditEntity(database).retrieveEntities("EntityName = 'Game'").map { it.entityId }.toSet()
+
+    private fun checkAllGamesStillExist(startingGameIds: Set<String>, resultingGameIds: Set<String>, deletedGameIds: Set<String>)
     {
-        val missingGames = startingGameIds - resultingGameIds
+        val missingGames = startingGameIds - resultingGameIds - deletedGameIds
         if (missingGames.isNotEmpty())
         {
             throw SyncDataLossError(missingGames)

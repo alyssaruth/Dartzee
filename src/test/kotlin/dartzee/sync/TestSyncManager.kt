@@ -1,17 +1,30 @@
 package dartzee.sync
 
 import dartzee.core.util.getSqlDateNow
+import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName
 import dartzee.db.SyncAuditEntity
-import dartzee.helper.*
-import dartzee.logging.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.REMOTE_NAME
+import dartzee.helper.TEST_DB_DIRECTORY
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
+import dartzee.helper.shouldUpdateSyncScreen
+import dartzee.helper.syncDirectoryShouldNotExist
+import dartzee.helper.usingInMemoryDatabase
+import dartzee.logging.CODE_REVERT_TO_PULL
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.CODE_SYNC_ERROR
+import dartzee.logging.KEY_GAME_IDS
+import dartzee.logging.Severity
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -137,6 +150,25 @@ class TestSyncManager: AbstractTest()
             dialogFactory.infosShown.shouldBeEmpty()
             syncDirectoryShouldNotExist()
             databasesSwapped() shouldBe false
+        }
+    }
+
+    @Test
+    fun `Should not throw an error if game from original database was explicitly deleted on another device`()
+    {
+        usingDbWithTestFile { remoteDb ->
+            val g = insertGame(dtLastUpdate = Timestamp(1000), database = mainDatabase)
+            SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
+            DeletionAuditEntity.factoryAndSave(g, remoteDb)
+
+            val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
+
+            val t = SyncManager(store).doSync(REMOTE_NAME)
+            t.join()
+
+            dialogFactory.errorsShown.shouldBeEmpty()
+            syncDirectoryShouldNotExist()
+            databasesSwapped() shouldBe true
         }
     }
 
