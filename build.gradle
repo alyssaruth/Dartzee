@@ -2,6 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.0'
     id 'org.jetbrains.kotlinx.kover' version '0.4.2'
     id 'application'
+    id "com.github.ben-manes.versions" version '0.44.0'
 }
 
 repositories {
@@ -25,11 +26,11 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1'
     implementation 'net.lingala.zip4j:zip4j:2.6.4'
 
-    testImplementation "io.mockk:mockk:1.9.3"
-    testImplementation 'io.kotest:kotest-assertions-core:5.3.1'
+    testImplementation "io.mockk:mockk:1.13.4"
+    testImplementation 'io.kotest:kotest-assertions-core:5.5.4'
     testImplementation 'com.github.alexburlton:swing-test:1.0.0'
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.1.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.9.2"
 }
 
 compileKotlin {
