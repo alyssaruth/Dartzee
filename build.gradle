@@ -17,7 +17,7 @@ dependencies {
     implementation 'org.jfree:jfreechart:1.0.19'
     implementation 'com.mashape.unirest:unirest-java:1.4.9'
     implementation 'com.github.lgooddatepicker:LGoodDatePicker:10.3.1'
-    implementation 'org.apache.derby:derby:10.16.1.1'
+    implementation 'org.apache.derby:derby:10.14.2.0'
     implementation 'com.amazonaws:aws-java-sdk-elasticsearch:1.12.396'
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.396'
     implementation 'com.github.awslabs:aws-request-signing-apache-interceptor:b3772780da'
@@ -34,20 +34,20 @@ dependencies {
 }
 
 compileKotlin {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
 compileTestKotlin {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
