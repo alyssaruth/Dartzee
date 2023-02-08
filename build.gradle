@@ -34,20 +34,20 @@ dependencies {
 }
 
 compileKotlin {
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_1_8
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 
 compileTestKotlin {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 
@@ -59,10 +59,7 @@ test {
             '-Dcom.sun.management.jmxremote.authenticate=false',
             '-Dcom.sun.management.jmxremote.ssl=false',
             '-Djava.rmi.server.hostname=localhost',
-            '-DscreenshotOs=linux',
-            '--add-opens', 'java.desktop/java.awt.event=ALL-UNNAMED',
-            '--add-opens', 'java.desktop/java.awt=ALL-UNNAMED',
-            '--add-opens', 'java.base/java.awt=ALL-UNNAMED'
+            '-DscreenshotOs=linux'
 }
 
 tasks.withType(Test) {
