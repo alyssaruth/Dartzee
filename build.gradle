@@ -62,8 +62,7 @@ test {
             '-DscreenshotOs=linux',
             '--add-opens', 'java.desktop/java.awt.event=ALL-UNNAMED',
             '--add-opens', 'java.desktop/java.awt=ALL-UNNAMED',
-            '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-            '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED'
+            '--add-opens', 'java.base/java.awt=ALL-UNNAMED'
 }
 
 tasks.withType(Test) {
