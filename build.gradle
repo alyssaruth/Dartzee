@@ -59,7 +59,9 @@ test {
             '-Dcom.sun.management.jmxremote.authenticate=false',
             '-Dcom.sun.management.jmxremote.ssl=false',
             '-Djava.rmi.server.hostname=localhost',
-            '-DscreenshotOs=linux'
+            '-DscreenshotOs=linux',
+            '--add-opens=java.desktop/java.awt.event=ALL-UNNAMED',
+            '--add-opens=java.desktop/java.awt=ALL-UNNAMED'
 }
 
 tasks.withType(Test) {
