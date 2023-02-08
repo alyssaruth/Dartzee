@@ -57,12 +57,12 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
         }
 
         val pieChart = ChartFactory.createPieChart("Finishes", dataset, true, true, false)
-        val plot = pieChart.plot as PiePlot
+        val plot = pieChart.plot as PiePlot<String>
         plot.labelGenerator = null
         pieChartPanel.chart = pieChart
     }
 
-    private fun buildFavouriteDoublesData(table: ScrollTable, filteredGames: List<GameWrapper>): DefaultPieDataset
+    private fun buildFavouriteDoublesData(table: ScrollTable, filteredGames: List<GameWrapper>): DefaultPieDataset<String>
     {
         val model = DefaultModel()
         model.addColumn("Double")
@@ -74,7 +74,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
         return dataset
     }
 
-    private fun populateFavouriteDoubles(model: DefaultModel, filteredGames: List<GameWrapper>): DefaultPieDataset
+    private fun populateFavouriteDoubles(model: DefaultModel, filteredGames: List<GameWrapper>): DefaultPieDataset<String>
     {
         val scores = filteredGames.filter { it.isFinished() }.map { it.getDartsForFinalRound().last().score }
 
@@ -87,7 +87,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
         model.addRows(rows)
 
         //Build up the pie set. Unlike the table, we need ALL values
-        val dataset = DefaultPieDataset()
+        val dataset = DefaultPieDataset<String>()
         getCheckoutSingles().sorted().forEach {
             val count = scores.count { score -> score == it }
             dataset.setValue(it.toString(), count)
@@ -115,7 +115,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
     override fun selectionChanged(src: ScrollTable)
     {
         val pieChart = pieChartPanel.chart
-        val plot = pieChart.plot as PiePlot
+        val plot = pieChart.plot as PiePlot<String>
 
         //Unset the old value
         selectedScore?.let { plot.setExplodePercent(it.toString(), 0.0) }
