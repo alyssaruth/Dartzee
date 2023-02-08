@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 fun jsonMapper() = jacksonObjectMapper().apply {
-    registerModule(KotlinModule())
+    registerModule(KotlinModule.Builder().build())
     disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     setSerializationInclusion(JsonInclude.Include.NON_NULL)
 }
