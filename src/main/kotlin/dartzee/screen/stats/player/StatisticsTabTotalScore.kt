@@ -11,6 +11,7 @@ import net.miginfocom.swing.MigLayout
 import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.plot.PlotOrientation
+import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer
 import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset
 import org.jfree.data.xy.XYSeries
@@ -21,8 +22,15 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.beans.PropertyChangeEvent
-import java.util.*
-import javax.swing.*
+import javax.swing.DefaultComboBoxModel
+import javax.swing.ImageIcon
+import javax.swing.JCheckBox
+import javax.swing.JComboBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JTabbedPane
+import javax.swing.JTable
+import javax.swing.SwingConstants
 import javax.swing.border.TitledBorder
 import javax.swing.table.DefaultTableCellRenderer
 
@@ -235,7 +243,8 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         val boxChart = ChartFactory.createBoxAndWhiskerChart("$graphTitle ($gameParams)",
                 "", "", boxDataset, true)
 
-        val renderer = FixedBoxAndWhiskerRenderer()
+        val renderer = BoxAndWhiskerRenderer()
+        renderer.isMeanVisible = false
         renderer.setSeriesPaint(0, Color.BLUE)
         if (includeOtherComparison())
         {

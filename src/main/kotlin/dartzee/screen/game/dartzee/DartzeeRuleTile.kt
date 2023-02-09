@@ -2,7 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.core.util.setFontSize
 import dartzee.dartzee.DartzeeRuleDto
-import org.jfree.chart.imagemap.ImageMapUtilities
+import org.jfree.chart.imagemap.ImageMapUtils
 import java.awt.Dimension
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
@@ -23,8 +23,8 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
 
     private fun getButtonText(hovered: Boolean = false): String
     {
-        val ruleDesc = ImageMapUtilities.htmlEscape(dto.generateRuleDescription())
-        val ruleNameOrDesc = dto.ruleName?.let { ImageMapUtilities.htmlEscape(it) } ?: ruleDesc
+        val ruleDesc = ImageMapUtils.htmlEscape(dto.generateRuleDescription())
+        val ruleNameOrDesc = dto.ruleName?.let { ImageMapUtils.htmlEscape(it) } ?: ruleDesc
 
         val nonHoverHtml = "<html><center><b>#$ruleNumber <br /><br /> $ruleNameOrDesc</b></center></html>"
         val hoverHtml = "<html><center><b>#$ruleNumber <br /><br /> $ruleDesc</b></center></html>"
