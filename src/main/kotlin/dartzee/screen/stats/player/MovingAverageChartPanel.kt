@@ -89,7 +89,7 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) : JP
             if (key.contains("Other")) {
                 colour = Color.red
             }
-            if (key.contains("Moving")) {
+            if (key.contains("(moving)")) {
                 colour = getBrightenedColour(colour!!)
             }
             plot.renderer.setSeriesPaint(ix, colour)
@@ -106,9 +106,8 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) : JP
     private fun createMovingAverage(original: XYSeries, key: String, avgThreshold: Long): XYSeries
     {
         val collection = XYSeriesCollection(original)
-        val movingAvgCollection = MovingAverage.createMovingAverage(collection,"", avgThreshold,avgThreshold - 1)
+        val movingAvgCollection = MovingAverage.createMovingAverage(collection," (moving)", avgThreshold,avgThreshold - 1)
         val movingAvgSeries = (movingAvgCollection as XYSeriesCollection).getSeries(0)
-        movingAvgSeries.key = "Moving avg $key"
         return movingAvgSeries
     }
 

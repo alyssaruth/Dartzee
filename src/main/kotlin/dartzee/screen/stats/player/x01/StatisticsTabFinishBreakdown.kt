@@ -57,7 +57,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
         }
 
         val pieChart = ChartFactory.createPieChart("Finishes", dataset, true, true, false)
-        val plot = pieChart.plot as PiePlot<String>
+        val plot = pieChart.plot as PiePlot<*>
         plot.labelGenerator = null
         pieChartPanel.chart = pieChart
     }
@@ -115,6 +115,8 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
     override fun selectionChanged(src: ScrollTable)
     {
         val pieChart = pieChartPanel.chart
+
+        @Suppress("UNCHECKED_CAST")
         val plot = pieChart.plot as PiePlot<String>
 
         //Unset the old value

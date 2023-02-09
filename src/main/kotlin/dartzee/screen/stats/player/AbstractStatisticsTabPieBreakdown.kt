@@ -114,7 +114,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
 
         val dataset = DefaultPieDataset<String>()
         val pieChart = ChartFactory.createPieChart("" + selectedHole, dataset, true, true, false)
-        val plot = pieChart.plot as PiePlot<String>
+        val plot = pieChart.plot as PiePlot<*>
 
         ranges.forEachIndexed { ix, range ->
             dataset.setValue(range.getDescription(), (table.getValueAt(selectedRow, ix + 1) as Int))
