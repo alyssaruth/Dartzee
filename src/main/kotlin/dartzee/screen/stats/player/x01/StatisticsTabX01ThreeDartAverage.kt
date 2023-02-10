@@ -135,7 +135,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
             rawAverages.add(ordinal, avg)
         }
 
-        chartPanel.addSeries(rawAverages, graphSuffix, nfAverageThreshold.getNumber())
+        chartPanel.addSeries(rawAverages, nfAverageThreshold.getNumber())
 
         //Overall avg, to 1 d.p
         nfThreeDartAverage.text = "" + MathsUtil.round(overallThreeDartAvg, 1)

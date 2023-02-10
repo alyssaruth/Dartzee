@@ -350,7 +350,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             }
         }
 
-        lineChartPanel.addSeries(series, suffix, nfAverageThreshold.getNumber())
+        lineChartPanel.addSeries(series, nfAverageThreshold.getNumber())
 
         appendToDataset(legendKey, hmNoDartsToCount)
 

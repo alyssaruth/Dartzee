@@ -96,19 +96,18 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) : JP
         }
     }
 
-    fun addSeries(series: XYSeries, key: String, avgThreshold: Int)
+    fun addSeries(series: XYSeries, avgThreshold: Int)
     {
-        val movingAvgSeries = createMovingAverage(series, key, avgThreshold.toLong())
+        val movingAvgSeries = createMovingAverage(series, avgThreshold.toLong())
         graphCollection.addSeries(series)
         graphCollection.addSeries(movingAvgSeries)
     }
 
-    private fun createMovingAverage(original: XYSeries, key: String, avgThreshold: Long): XYSeries
+    private fun createMovingAverage(original: XYSeries, avgThreshold: Long): XYSeries
     {
         val collection = XYSeriesCollection(original)
         val movingAvgCollection = MovingAverage.createMovingAverage(collection," (moving)", avgThreshold,avgThreshold - 1)
-        val movingAvgSeries = (movingAvgCollection as XYSeriesCollection).getSeries(0)
-        return movingAvgSeries
+        return (movingAvgCollection as XYSeriesCollection).getSeries(0)
     }
 
     override fun actionPerformed(arg0: ActionEvent)
