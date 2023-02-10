@@ -60,6 +60,10 @@ test {
             '-Dcom.sun.management.jmxremote.ssl=false',
             '-Djava.rmi.server.hostname=localhost',
             '-DscreenshotOs=linux'
+
+    kover {
+        isDisabled.set(true)
+    }
 }
 
 tasks.withType(Test) {
@@ -90,11 +94,19 @@ task updateScreenshots(type: Test) {
     useJUnitPlatform {
         includeTags "screenshot"
     }
+
+    kover {
+        isDisabled.set(true)
+    }
 }
 
 task integrationAndE2E(type: Test) {
     useJUnitPlatform {
         includeTags "integration", "e2e"
+    }
+
+    kover {
+        isDisabled.set(true)
     }
 }
 
