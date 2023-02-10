@@ -8,9 +8,14 @@ resource "aws_iam_access_key" "dartzee_sync_user" {
 
 resource "aws_s3_bucket" "unit_test" {
   bucket = "dartzee-unit-test"
+}
 
-  lifecycle_rule {
-    enabled = true
+resource "aws_s3_bucket_lifecycle_configuration" "unit_test" {
+  bucket = aws_s3_bucket.unit_test.id
+
+  rule {
+    id      = "delete"
+    status  = "Enabled"
 
     expiration {
       days = 1
