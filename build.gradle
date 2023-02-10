@@ -1,5 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
     id 'org.jetbrains.kotlinx.kover' version '0.6.1'
     id 'application'
     id "com.github.ben-manes.versions" version '0.44.0'
@@ -11,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0'
     implementation 'org.apache.commons:commons-math3:3.6.1'
     implementation 'com.miglayout:miglayout-swing:11.0'
     implementation 'org.jfree:jfreechart:1.5.4'
@@ -37,8 +39,9 @@ compileKotlin {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_1_8
 
-    kotlinOptions {
-        jvmTarget = "11"
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        useK2 = true
     }
 }
 
@@ -46,8 +49,9 @@ compileTestKotlin {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 
-    kotlinOptions {
-        jvmTarget = "11"
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        useK2 = true
     }
 }
 
@@ -66,7 +70,7 @@ test {
     }
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
     minHeapSize = "512m"
     maxHeapSize = "512m"
 
@@ -76,20 +80,20 @@ tasks.withType(Test) {
     }
 }
 
-task runDev(type: JavaExec) {
+tasks.register('runDev', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
     args 'devMode', 'trueLaunch'
     main 'dartzee.main.DartsMainKt'
 }
 
-task unitTest(type: Test) {
+tasks.register('unitTest', Test) {
     useJUnitPlatform {
         excludeTags "integration", "e2e"
     }
 }
 
-task updateScreenshots(type: Test) {
+tasks.register('updateScreenshots', Test) {
     jvmArgs '-DupdateSnapshots=true'
     useJUnitPlatform {
         includeTags "screenshot"
@@ -100,7 +104,7 @@ task updateScreenshots(type: Test) {
     }
 }
 
-task integrationAndE2E(type: Test) {
+tasks.register('integrationAndE2E', Test) {
     useJUnitPlatform {
         includeTags "integration", "e2e"
     }
