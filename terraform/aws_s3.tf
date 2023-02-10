@@ -14,8 +14,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "unit_test" {
   bucket = aws_s3_bucket.unit_test.id
 
   rule {
-    id      = "delete"
-    status  = "Enabled"
+    id     = "delete"
+    status = "Enabled"
 
     expiration {
       days = 1

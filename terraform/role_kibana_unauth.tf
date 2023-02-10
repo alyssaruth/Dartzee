@@ -1,4 +1,4 @@
-data aws_iam_policy_document "trust_cognito_unauth" {
+data "aws_iam_policy_document" "trust_cognito_unauth" {
   statement {
     actions = [
       "sts:AssumeRoleWithWebIdentity",
