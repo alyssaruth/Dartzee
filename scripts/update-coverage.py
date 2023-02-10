@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 if __name__ == '__main__':
-    reportLines = open("./build/reports/kover/report.xml").readlines()
+    reportLines = open("./build/reports/kover/xml/report.xml").readlines()
     lineCoverageTotals = list(filter(lambda line: "<counter type=\"LINE\"" in line, reportLines))[-1]
     coverageRegex = re.match('^.*missed="(.*)" covered="(.*)"/>$', lineCoverageTotals)
     print(lineCoverageTotals)
