@@ -4,7 +4,7 @@ provider "aws" {
   secret_key = var.aws_secret_access_key
 }
 
-data aws_caller_identity "current" {}
+data "aws_caller_identity" "current" {}
 
 resource "aws_elasticsearch_domain" "dartzee" {
   domain_name           = "dartzee"

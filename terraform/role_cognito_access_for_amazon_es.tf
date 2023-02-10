@@ -1,4 +1,4 @@
-data aws_iam_policy_document "trust_amazon_es" {
+data "aws_iam_policy_document" "trust_amazon_es" {
   statement {
     actions = [
       "sts:AssumeRole",
