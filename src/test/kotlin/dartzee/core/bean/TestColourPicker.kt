@@ -1,8 +1,9 @@
 package dartzee.core.bean
 
 import com.github.alexburlton.swingtest.doClick
+import com.github.alexburlton.swingtest.doHover
+import com.github.alexburlton.swingtest.doHoverAway
 import dartzee.core.helper.getIconImage
-import dartzee.core.helper.makeMouseEvent
 import dartzee.core.util.InjectedDesktopCore
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
@@ -19,10 +20,10 @@ class TestColourPicker: AbstractTest()
     fun `Should change the cursor to a hand on hover`()
     {
         val cp = ColourPicker()
-        cp.mouseEntered(makeMouseEvent())
+        cp.doHover()
         cp.cursor.type shouldBe Cursor.HAND_CURSOR
 
-        cp.mouseExited(makeMouseEvent())
+        cp.doHoverAway()
         cp.cursor.type shouldBe Cursor.DEFAULT_CURSOR
     }
 

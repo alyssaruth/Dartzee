@@ -1,6 +1,6 @@
 package dartzee.screen.dartzee
 
-import dartzee.core.helper.makeMouseEvent
+import com.github.alexburlton.swingtest.makeMouseEvent
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.aggregate.DartzeeTotalRuleLessThan
 import dartzee.helper.AbstractTest
@@ -47,7 +47,7 @@ class TestDartzeeRuleTile: AbstractTest()
         val dto = makeDartzeeRuleDto(ruleName = "Awesome Rule")
 
         val tile = FakeDartzeeRuleTile(dto, 2)
-        tile.mouseEntered(makeMouseEvent())
+        tile.mouseEntered(makeMouseEvent(tile))
 
         tile.font.size shouldBe 12
         tile.text shouldBe "<html><center><b>#2 <br /><br /> Anything</b></center></html>"
@@ -60,12 +60,12 @@ class TestDartzeeRuleTile: AbstractTest()
 
         val tile = FakeDartzeeRuleTile(dto, 2)
         tile.score = 53
-        tile.mouseEntered(makeMouseEvent())
+        tile.mouseEntered(makeMouseEvent(tile))
 
         tile.font.size shouldBe 24
         tile.text shouldBe "<html><center><b>+ 53</b></center></html>"
 
-        tile.mouseExited(makeMouseEvent())
+        tile.mouseExited(makeMouseEvent(tile))
         tile.font.size shouldBe 12
         tile.text shouldBe "<html><center><b>#2 <br /><br /> Anything</b></center></html>"
     }
@@ -76,7 +76,7 @@ class TestDartzeeRuleTile: AbstractTest()
         val dto = makeDartzeeRuleDto()
         val tile = FakeDartzeeRuleTile(dto, 2)
         tile.score = -10
-        tile.mouseEntered(makeMouseEvent())
+        tile.mouseEntered(makeMouseEvent(tile))
 
         tile.text shouldBe "<html><center><b>- 10</b></center></html>"
     }

@@ -1,15 +1,23 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.SegmentType
+import com.github.alexburlton.swingtest.makeMouseEvent
 import dartzee.ai.DartzeePlayStyle
-import dartzee.core.helper.makeMouseEvent
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.allTwenties
+import dartzee.helper.innerOuterInner
+import dartzee.helper.makeDart
+import dartzee.helper.makeDartsModel
+import dartzee.helper.makeRoundResultEntities
+import dartzee.helper.scoreEighteens
+import dartzee.helper.totalIsFifty
+import dartzee.helper.twoBlackOneWhite
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
@@ -249,7 +257,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
         carousel.mouseEntered(meTotalFifty)
         listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(allTwelves)
 
-        carousel.mouseExited(makeMouseEvent())
+        carousel.mouseExited(makeMouseEvent(totalFiftyTile))
         listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
     }
 

@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import dartzee.core.helper.doubleClick
+import com.github.alexburlton.swingtest.doubleClick
 import dartzee.core.helper.processKeyPress
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

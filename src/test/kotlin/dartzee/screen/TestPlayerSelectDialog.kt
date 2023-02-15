@@ -1,7 +1,7 @@
 package dartzee.screen
 
+import com.github.alexburlton.swingtest.doubleClick
 import dartzee.bean.getAllPlayers
-import dartzee.core.helper.doubleClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import io.kotest.matchers.collections.shouldBeEmpty

@@ -1,12 +1,12 @@
 package dartzee.bean
 
-import dartzee.core.helper.singleClick
+import com.github.alexburlton.swingtest.doClick
 import dartzee.db.PlayerImageEntity
 import dartzee.db.getBlobValue
 import dartzee.helper.AbstractTest
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import javax.swing.ButtonGroup
 import javax.swing.border.EmptyBorder
@@ -34,7 +34,7 @@ class TestPlayerImageRadio: AbstractTest()
         val radio = makePlayerImageRadio()
 
         radio.isSelected() shouldBe false
-        singleClick(radio.lblImg)
+        radio.lblImg.doClick()
         radio.isSelected() shouldBe true
     }
 
@@ -63,7 +63,7 @@ class TestPlayerImageRadio: AbstractTest()
         r1.isSelected() shouldBe true
         r2.isSelected() shouldBe false
 
-        singleClick(r2.lblImg)
+        r2.lblImg.doClick()
 
         r1.isSelected() shouldBe false
         r2.isSelected() shouldBe true

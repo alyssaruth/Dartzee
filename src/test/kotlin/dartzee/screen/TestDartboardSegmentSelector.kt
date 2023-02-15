@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import dartzee.core.helper.makeMouseEvent
+import com.github.alexburlton.swingtest.makeMouseEvent
 import dartzee.doubleNineteen
 import dartzee.getColor
 import dartzee.helper.AbstractTest
@@ -203,6 +203,6 @@ class TestDartboardSegmentSelector: AbstractTest()
     {
         val pt = dartboard.getPointsForSegment(score, segmentType).first()
 
-        return makeMouseEvent(x = pt.x, y = pt.y)
+        return makeMouseEvent(dartboard, x = pt.x, y = pt.y)
     }
 }
