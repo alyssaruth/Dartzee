@@ -71,8 +71,8 @@ test {
 }
 
 tasks.withType(Test).configureEach {
-    minHeapSize = "512m"
-    maxHeapSize = "512m"
+    minHeapSize = "1024m"
+    maxHeapSize = "1024m"
 
     testLogging {
         events "failed"
