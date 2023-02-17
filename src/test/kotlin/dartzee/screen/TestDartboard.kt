@@ -12,8 +12,8 @@ import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.utils.DartsColour
 import dartzee.utils.getAverage
-import io.kotest.matchers.shouldBe
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Tag
@@ -100,6 +100,19 @@ class TestDartboard: AbstractTest()
         Color(doubleTwenty) shouldBe Color.RED
         Color(miss) shouldBe Color.BLACK
         Color(missBoard) shouldBe Color.BLACK
+    }
+
+    @Test
+    fun `Should not explode if hovered over before painting has finished`()
+    {
+        val dartboard = Dartboard(50, 50)
+        dartboard.paintDartboard()
+        dartboard.ensureListening()
+        dartboard.dartboardImage = null
+
+        shouldNotThrowAny {
+            dartboard.highlightDartboard(dartboard.centerPoint)
+        }
     }
 
     @Test
