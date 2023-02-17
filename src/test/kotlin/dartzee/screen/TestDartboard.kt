@@ -106,9 +106,7 @@ class TestDartboard: AbstractTest()
     fun `Should not explode if hovered over before painting has finished`()
     {
         val dartboard = Dartboard(50, 50)
-        dartboard.paintDartboard()
         dartboard.ensureListening()
-        dartboard.dartboardImage = null
 
         shouldNotThrowAny {
             dartboard.highlightDartboard(dartboard.centerPoint)
