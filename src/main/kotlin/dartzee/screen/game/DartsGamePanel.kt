@@ -550,7 +550,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             // If we've been told to pause then we're going to do a reset and not save anything
             if (!shouldAiStopThrowing())
             {
-                SwingUtilities.invokeLater { confirmRound() }
+                confirmRound()
             }
         }
     }
