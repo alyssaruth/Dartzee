@@ -1,13 +1,13 @@
 package dartzee.core.bean
 
+import com.github.alexburlton.swingtest.doLoseFocus
 import dartzee.core.helper.processKeyPress
-import dartzee.core.helper.simulateLoseFocus
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import java.awt.BorderLayout
 import java.awt.Point
@@ -88,7 +88,7 @@ class TestSwingExtensions: AbstractTest()
         val tf = JTextField()
 
         tf.addUpdateListener(actionListener)
-        tf.simulateLoseFocus()
+        tf.doLoseFocus()
 
         actionListener.eventSource shouldBe tf
     }

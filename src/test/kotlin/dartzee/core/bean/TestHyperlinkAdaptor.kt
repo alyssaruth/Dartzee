@@ -1,16 +1,19 @@
 package dartzee.core.bean
 
-import dartzee.core.helper.MOUSE_EVENT_SINGLE_CLICK
-import dartzee.core.helper.makeMouseEvent
+import com.github.alexburlton.swingtest.makeMouseEvent
 import dartzee.helper.AbstractTest
-import io.kotest.matchers.shouldBe
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import java.awt.event.MouseEvent
+import javax.swing.JButton
 import javax.swing.JPanel
+
+private val mouseEventOverLink = makeMouseEvent(JButton())
+private val mouseEventNotOverLink = makeMouseEvent(JButton())
 
 class TestHyperlinkAdaptor: AbstractTest()
 {
@@ -28,10 +31,10 @@ class TestHyperlinkAdaptor: AbstractTest()
         val listener = mockk<TestHyperlinkListener>(relaxed = true)
 
         val adaptor = HyperlinkAdaptor(listener)
-        adaptor.mouseClicked(MOUSE_EVENT_SINGLE_CLICK)
-        adaptor.mouseClicked(makeMouseEvent())
+        adaptor.mouseClicked(mouseEventOverLink)
+        adaptor.mouseClicked(mouseEventNotOverLink)
 
-        verifySequence { listener.linkClicked(MOUSE_EVENT_SINGLE_CLICK); listener.linkClicked(any()) }
+        verifySequence { listener.linkClicked(mouseEventOverLink); listener.linkClicked(mouseEventNotOverLink) }
     }
 
     @Test
@@ -40,19 +43,19 @@ class TestHyperlinkAdaptor: AbstractTest()
         val listener = TestHyperlinkListener()
         val adaptor = HyperlinkAdaptor(listener)
 
-        adaptor.mouseMoved(makeMouseEvent())
+        adaptor.mouseMoved(mouseEventNotOverLink)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
 
-        adaptor.mouseMoved(MOUSE_EVENT_SINGLE_CLICK)
+        adaptor.mouseMoved(mouseEventOverLink)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
 
-        adaptor.mouseMoved(makeMouseEvent())
+        adaptor.mouseMoved(mouseEventNotOverLink)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
 
-        adaptor.mouseEntered(makeMouseEvent())
+        adaptor.mouseEntered(mouseEventNotOverLink)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
 
-        adaptor.mouseEntered(MOUSE_EVENT_SINGLE_CLICK)
+        adaptor.mouseEntered(mouseEventOverLink)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
     }
 
@@ -62,7 +65,7 @@ class TestHyperlinkAdaptor: AbstractTest()
         val listener = TestHyperlinkListener()
         val adaptor = HyperlinkAdaptor(listener)
 
-        adaptor.mouseMoved(MOUSE_EVENT_SINGLE_CLICK)
+        adaptor.mouseMoved(mouseEventOverLink)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
 
         adaptor.mouseExited(null)
@@ -75,7 +78,7 @@ class TestHyperlinkAdaptor: AbstractTest()
         val listener = TestHyperlinkListener()
         val adaptor = HyperlinkAdaptor(listener)
 
-        adaptor.mouseMoved(MOUSE_EVENT_SINGLE_CLICK)
+        adaptor.mouseMoved(mouseEventOverLink)
         listener.cursor shouldBe Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
 
         adaptor.mouseDragged(null)
@@ -87,7 +90,7 @@ private class TestHyperlinkListener: JPanel(), IHyperlinkListener
 {
     override fun isOverHyperlink(arg0: MouseEvent): Boolean
     {
-        return arg0 === MOUSE_EVENT_SINGLE_CLICK
+        return arg0 === mouseEventOverLink
     }
 
     override fun linkClicked(arg0: MouseEvent){}
