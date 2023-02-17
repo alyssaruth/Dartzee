@@ -136,6 +136,19 @@ class TestDartboard: AbstractTest()
 
     @Test
     @Tag("screenshot")
+    fun `Should match snapshot - hovered`()
+    {
+        val dartboard = Dartboard(250, 250)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.ensureListening()
+
+        val pt = dartboard.getPointsForSegment(1, SegmentType.OUTER_SINGLE).first()
+        dartboard.highlightDartboard(pt)
+        dartboard.shouldMatchImage("hovered")
+    }
+
+    @Test
+    @Tag("screenshot")
     fun `Should match snapshot - wireframe`()
     {
         val dartboard = Dartboard(250, 250)
