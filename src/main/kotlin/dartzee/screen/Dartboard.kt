@@ -241,6 +241,9 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun highlightDartboard(hoveredPoint: Point)
     {
+        // We might not have told the dartboard to paint yet (it's invoked later onto the EDT)
+        dartboardImage ?: return
+
         val hoveredSegment = getSegmentForPoint(hoveredPoint)
         if (hoveredSegment == lastHoveredSegment)
         {

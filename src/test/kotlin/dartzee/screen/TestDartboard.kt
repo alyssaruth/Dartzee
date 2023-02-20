@@ -12,8 +12,8 @@ import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.utils.DartsColour
 import dartzee.utils.getAverage
-import io.kotest.matchers.shouldBe
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Tag
@@ -103,6 +103,17 @@ class TestDartboard: AbstractTest()
     }
 
     @Test
+    fun `Should not explode if hovered over before painting has finished`()
+    {
+        val dartboard = Dartboard(50, 50)
+        dartboard.ensureListening()
+
+        shouldNotThrowAny {
+            dartboard.highlightDartboard(dartboard.centerPoint)
+        }
+    }
+
+    @Test
     @Tag("screenshot")
     fun `Should match snapshot - default`()
     {
@@ -119,6 +130,19 @@ class TestDartboard: AbstractTest()
         dartboard.renderScoreLabels = true
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.shouldMatchImage("scores")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - hovered`()
+    {
+        val dartboard = Dartboard(250, 250)
+        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.ensureListening()
+
+        val pt = dartboard.getPointsForSegment(1, SegmentType.OUTER_SINGLE).first()
+        dartboard.highlightDartboard(pt)
+        dartboard.shouldMatchImage("hovered")
     }
 
     @Test
