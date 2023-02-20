@@ -11,6 +11,7 @@ import javax.swing.WindowConstants
 abstract class AbstractDartsGameScreen : FocusableWindow(), WindowListener
 {
     var haveLostFocus = false
+    private var havePacked = false
 
     init
     {
@@ -35,6 +36,14 @@ abstract class AbstractDartsGameScreen : FocusableWindow(), WindowListener
     open fun startNextGameIfNecessary()
     {
         //Do nothing by default
+    }
+    fun packIfNecessary()
+    {
+        if (!havePacked)
+        {
+            pack()
+            havePacked = true
+        }
     }
 
     /**
