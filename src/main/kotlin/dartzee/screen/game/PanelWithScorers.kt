@@ -5,7 +5,6 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.AbstractScorer
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
-import java.awt.Window
 import javax.swing.JPanel
 
 /**
@@ -35,7 +34,7 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
      */
     protected abstract fun factoryScorer(participant: IWrappedParticipant): S
 
-    fun finaliseScorers(parentWindow: Window)
+    fun finaliseScorers(parentWindow: AbstractDartsGameScreen)
     {
         panelEast.removeAll()
         panelWest.removeAll()
@@ -53,7 +52,7 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         eastScorers?.forEach { panelEast.add(it, "growy") }
         westScorers.forEach { panelWest.add(it, "growy") }
 
-        parentWindow.pack()
+        parentWindow.packIfNecessary()
     }
 
     fun assignScorer(participant: IWrappedParticipant): S

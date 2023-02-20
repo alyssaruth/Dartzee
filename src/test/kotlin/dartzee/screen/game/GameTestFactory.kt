@@ -102,7 +102,7 @@ fun makeMatchSummaryPanel(
     statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501")
 ) = MatchSummaryPanel(match, statsPanel)
 
-class FakeDartsScreen() : AbstractDartsGameScreen()
+class FakeDartsScreen : AbstractDartsGameScreen()
 {
     override val windowName = "Fake"
 

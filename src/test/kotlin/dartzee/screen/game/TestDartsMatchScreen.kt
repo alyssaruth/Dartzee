@@ -18,13 +18,14 @@ import dartzee.helper.makeX01PlayerState
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.MatchStatisticsPanelX01
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import java.awt.Dimension
 import javax.swing.JTabbedPane
 import javax.swing.SwingUtilities
 
@@ -174,6 +175,20 @@ class TestDartsMatchScreen: AbstractTest()
         val participants = loadParticipants(gameTwo.rowId)
         participants[0].getParticipantNameHtml(false) shouldBe "<html>Billie</html>"
         participants[1].getParticipantNameHtml(false) shouldBe "<html>Amy</html>"
+    }
+
+    @Test
+    fun `Should not repack the screen after the first time`()
+    {
+        val match = insertDartsMatch(gameParams = "501")
+
+        val scrn = setUpMatchScreen(match = match)
+        scrn.packIfNecessary()
+
+        // Player changes to their desired size...
+        scrn.size = Dimension(1000, 1000)
+        scrn.packIfNecessary()
+        scrn.size.shouldBe(Dimension(1000, 1000))
     }
 
     private fun setUpMatchScreen(

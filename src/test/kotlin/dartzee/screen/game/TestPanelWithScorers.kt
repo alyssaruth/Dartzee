@@ -6,17 +6,16 @@ import dartzee.helper.insertPlayer
 import dartzee.screen.game.scorer.AbstractScorer
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
-import javax.swing.JFrame
 
 class TestPanelWithScorers: AbstractTest()
 {
     @Test
     fun `Assigning a scorer should initialise it`()
     {
-        val scrn = FakeDartsScreen()
+        val scrn = FakePanelWithScorers()
 
         val singleParticipant = makeSingleParticipant()
         scrn.assignScorer(singleParticipant)
@@ -28,10 +27,10 @@ class TestPanelWithScorers: AbstractTest()
     @Test
     fun `Should split 5 scorers correctly`()
     {
-        val scrn = FakeDartsScreen()
+        val scrn = FakePanelWithScorers()
 
         scrn.assignScorers(5)
-        scrn.finaliseScorers(JFrame())
+        scrn.finaliseScorers(FakeDartsScreen())
 
         scrn.scorerCount() shouldBe 5
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1), scrn.getScorer(2))
@@ -41,10 +40,10 @@ class TestPanelWithScorers: AbstractTest()
     @Test
     fun `Should split 4 scorers correctly`()
     {
-        val scrn = FakeDartsScreen()
+        val scrn = FakePanelWithScorers()
 
         scrn.assignScorers(4)
-        scrn.finaliseScorers(JFrame())
+        scrn.finaliseScorers(FakeDartsScreen())
 
         scrn.scorerCount() shouldBe 4
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1))
@@ -54,10 +53,10 @@ class TestPanelWithScorers: AbstractTest()
     @Test
     fun `Should handle just a single scorer`()
     {
-        val scrn = FakeDartsScreen()
+        val scrn = FakePanelWithScorers()
 
         scrn.assignScorer(makeSingleParticipant())
-        scrn.finaliseScorers(JFrame())
+        scrn.finaliseScorers(FakeDartsScreen())
 
         scrn.scorerCount() shouldBe 1
         scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0))
@@ -67,7 +66,7 @@ class TestPanelWithScorers: AbstractTest()
     @Test
     fun `Should assign scorers in order`()
     {
-        val scrn = FakeDartsScreen()
+        val scrn = FakePanelWithScorers()
 
         scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player One")))
         scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player Two")))
@@ -88,7 +87,7 @@ class TestPanelWithScorers: AbstractTest()
         }
     }
 
-    inner class FakeDartsScreen : PanelWithScorers<FakeScorer>()
+    inner class FakePanelWithScorers : PanelWithScorers<FakeScorer>()
     {
         override fun factoryScorer(participant: IWrappedParticipant) = FakeScorer(participant)
 
