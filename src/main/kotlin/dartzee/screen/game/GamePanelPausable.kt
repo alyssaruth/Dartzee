@@ -7,6 +7,7 @@ import dartzee.screen.Dartboard
 import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PreferenceUtil
+import javax.swing.SwingUtilities
 
 abstract class GamePanelPausable<S : AbstractDartsScorerPausable<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
         DartsGamePanel<S, D, PlayerState>(parent, game, totalPlayers)
@@ -94,13 +95,16 @@ abstract class GamePanelPausable<S : AbstractDartsScorerPausable<PlayerState>, D
             cpuThread!!.join()
         }
 
-        //Now the player has definitely stopped, reset the round
-        resetRound()
+        // Now the player has definitely stopped, reset the round.
+        // InvokeLater so we go after any remaining UI updates that the cpu thread may have fired
+        SwingUtilities.invokeLater {
+            resetRound()
 
-        //Set the current round number back to the previous round
-        currentRoundNumber--
+            //Set the current round number back to the previous round
+            currentRoundNumber--
 
-        dartboard.stopListening()
+            dartboard.stopListening()
+        }
     }
 
     fun unpauseLastPlayer()

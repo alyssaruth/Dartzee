@@ -11,7 +11,7 @@ import dartzee.core.util.doBull
 import dartzee.core.util.getSortedValues
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.isEndOfTime
-import dartzee.core.util.runOnEventThreadBlocking
+import dartzee.core.util.runOnEventThread
 import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
@@ -550,7 +550,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             // If we've been told to pause then we're going to do a reset and not save anything
             if (!shouldAiStopThrowing())
             {
-                SwingUtilities.invokeLater { confirmRound() }
+                runOnEventThread { confirmRound() }
             }
         }
     }
@@ -735,7 +735,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
             val pt = computeAiDart(model)
 
             pt?.let {
-                runOnEventThreadBlocking {
+                runOnEventThread {
                     val uiPt = convertForUiDartboard(pt, dartboard)
                     dartboard.dartThrown(uiPt)
                 }
