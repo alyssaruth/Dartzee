@@ -2,6 +2,7 @@ package e2e
 
 import com.github.alexburlton.swingtest.awaitCondition
 import com.github.alexburlton.swingtest.clickChild
+import com.github.alexburlton.swingtest.flushEdt
 import com.github.alexburlton.swingtest.getChild
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
@@ -108,6 +109,9 @@ fun DartsGamePanel<*, *, *>.startGame(players: List<PlayerEntity>)
 fun awaitGameFinish(game: GameEntity)
 {
     awaitCondition(timeout = 30000) { game.isFinished() }
+
+    // Flush the EDT to ensure UI actions fired off from the AI threads are all completed
+    flushEdt()
 }
 
 fun makePlayerWithModel(model: DartsAiModel, name: String = "Clive", image: String = "BaboOne"): PlayerEntity
