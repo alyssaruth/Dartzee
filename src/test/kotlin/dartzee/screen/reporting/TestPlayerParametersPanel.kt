@@ -87,17 +87,17 @@ class TestPlayerParametersPanel: AbstractTest()
         val panel = PlayerParametersPanel()
         panel.valid(player) shouldBe true
 
-        panel.clickChild<JCheckBox>("Position")
+        panel.clickChild<JCheckBox>(text="Position")
         panel.valid(player) shouldBe false
         dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Gordon")
         dialogFactory.errorsShown.clear()
 
-        panel.clickChild<JCheckBox>("Undecided")
+        panel.clickChild<JCheckBox>(text="Undecided")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
 
         panel.cbUndecided.doClick()
-        panel.clickChild<JCheckBox>("1st")
+        panel.clickChild<JCheckBox>(text="1st")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
     }
@@ -106,7 +106,7 @@ class TestPlayerParametersPanel: AbstractTest()
     fun `Should generate the correct parameters for final score`()
     {
         val panel = PlayerParametersPanel()
-        panel.clickChild<JCheckBox>("Game Score")
+        panel.clickChild<JCheckBox>(text="Game Score")
         panel.spinner.value = 20
         panel.comboBox.selectedItem = ComboBoxNumberComparison.FILTER_MODE_GREATER_THAN
 
@@ -119,10 +119,10 @@ class TestPlayerParametersPanel: AbstractTest()
     fun `Should generate the correct parameters for position`()
     {
         val panel = PlayerParametersPanel()
-        panel.clickChild<JCheckBox>("Position")
-        panel.clickChild<JCheckBox>("1st")
-        panel.clickChild<JCheckBox>("5th")
-        panel.clickChild<JCheckBox>("Undecided")
+        panel.clickChild<JCheckBox>(text="Position")
+        panel.clickChild<JCheckBox>(text="1st")
+        panel.clickChild<JCheckBox>(text="5th")
+        panel.clickChild<JCheckBox>(text="Undecided")
 
 
         val params = panel.generateParameters()

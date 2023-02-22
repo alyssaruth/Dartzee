@@ -166,7 +166,7 @@ class TestSyncManagementPanel : AbstractTest()
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Push")
+        panel.clickChild<JButton>(text="Push")
 
         dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
         verifyNotCalled { syncManager.doPush(any()) }
@@ -179,7 +179,7 @@ class TestSyncManagementPanel : AbstractTest()
         every { syncManager.databaseExists(REMOTE_NAME) } returns true
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Push")
+        panel.clickChild<JButton>(text="Push")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device.")
         verifyNotCalled { syncManager.doPush(any()) }
@@ -192,7 +192,7 @@ class TestSyncManagementPanel : AbstractTest()
         every { syncManager.databaseExists(REMOTE_NAME) } returns true
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Push")
+        panel.clickChild<JButton>(text="Push")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device.")
         verify { syncManager.doPush(REMOTE_NAME) }
@@ -203,7 +203,7 @@ class TestSyncManagementPanel : AbstractTest()
     {
         every { syncManager.databaseExists(REMOTE_NAME) } returns false
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Push")
+        panel.clickChild<JButton>(text="Push")
 
         dialogFactory.questionsShown.shouldBeEmpty()
         verify { syncManager.doPush(REMOTE_NAME) }
@@ -218,7 +218,7 @@ class TestSyncManagementPanel : AbstractTest()
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Pull")
+        panel.clickChild<JButton>(text="Pull")
 
         dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
         verifyNotCalled { syncManager.doPull(any()) }
@@ -230,7 +230,7 @@ class TestSyncManagementPanel : AbstractTest()
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Pull")
+        panel.clickChild<JButton>(text="Pull")
 
         dialogFactory.questionsShown.shouldContainExactly(
                 "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device.")
@@ -243,7 +243,7 @@ class TestSyncManagementPanel : AbstractTest()
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Pull")
+        panel.clickChild<JButton>(text="Pull")
 
         dialogFactory.questionsShown.shouldContainExactly(
                 "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device.")
@@ -259,7 +259,7 @@ class TestSyncManagementPanel : AbstractTest()
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Perform Sync")
+        panel.clickChild<JButton>(text="Perform Sync")
 
         dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
         verifyNotCalled { syncManager.doSyncIfNecessary(any()) }
@@ -269,7 +269,7 @@ class TestSyncManagementPanel : AbstractTest()
     fun `Should carry out a sync`()
     {
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Perform Sync")
+        panel.clickChild<JButton>(text="Perform Sync")
 
         dialogFactory.errorsShown.shouldBeEmpty()
         verify { syncManager.doSyncIfNecessary(REMOTE_NAME) }
@@ -284,7 +284,7 @@ class TestSyncManagementPanel : AbstractTest()
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Reset")
+        panel.clickChild<JButton>(text="Reset")
 
         dialogFactory.questionsShown.shouldContainExactly(
                 "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
@@ -299,7 +299,7 @@ class TestSyncManagementPanel : AbstractTest()
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>("Reset")
+        panel.clickChild<JButton>(text="Reset")
 
         dialogFactory.questionsShown.shouldContainExactly(
                 "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."

@@ -33,10 +33,10 @@ class TestAIConfigurationSubPanelDartzee: AbstractTest()
         val model = makeDartsModel()
         val panel = AIConfigurationSubPanelDartzee()
 
-        panel.clickChild<JRadioButton>("Cautious")
+        panel.clickChild<JRadioButton>(text="Cautious")
         panel.populateModel(model).dartzeePlayStyle shouldBe DartzeePlayStyle.CAUTIOUS
 
-        panel.clickChild<JRadioButton>("Aggressive")
+        panel.clickChild<JRadioButton>(text="Aggressive")
         panel.populateModel(model).dartzeePlayStyle shouldBe DartzeePlayStyle.AGGRESSIVE
     }
 }

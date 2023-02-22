@@ -28,7 +28,7 @@ class TestSyncSetupPanel: AbstractTest()
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>("Get Started > ")
+        panel.clickChild<JButton>(text="Get Started > ")
 
         dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
         verifyNotCalled { configurer.doFirstTimeSetup() }
@@ -44,7 +44,7 @@ class TestSyncSetupPanel: AbstractTest()
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>("Get Started > ")
+        panel.clickChild<JButton>(text="Get Started > ")
 
         verifyNotCalled { syncManager.doPull(any()) }
         verifyNotCalled { syncManager.doPush(any()) }
@@ -61,7 +61,7 @@ class TestSyncSetupPanel: AbstractTest()
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>("Get Started > ")
+        panel.clickChild<JButton>(text="Get Started > ")
 
         verify { syncManager.doPull(REMOTE_NAME) }
     }
@@ -76,7 +76,7 @@ class TestSyncSetupPanel: AbstractTest()
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>("Get Started > ")
+        panel.clickChild<JButton>(text="Get Started > ")
 
         verify { syncManager.doPush(REMOTE_NAME) }
     }
@@ -91,7 +91,7 @@ class TestSyncSetupPanel: AbstractTest()
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>("Get Started > ")
+        panel.clickChild<JButton>(text="Get Started > ")
 
         verify { syncManager.doSync(REMOTE_NAME) }
     }

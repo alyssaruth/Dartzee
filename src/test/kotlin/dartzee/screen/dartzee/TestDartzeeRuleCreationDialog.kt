@@ -213,7 +213,7 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     fun `Should prevent an empty rule name`()
     {
         val dlg = showRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text="Custom rule name")
         dlg.btnOk.doClick()
 
         dialogFactory.errorsShown.shouldContainExactly("You cannot have an empty rule name.")
@@ -227,7 +227,7 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         val ruleName = "a".repeat(1001)
 
         val dlg = showRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text="Custom rule name")
         dlg.tfRuleName.text = ruleName
         dlg.btnOk.doClick()
 
@@ -394,7 +394,7 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
     fun `Should populate ruleName correctly when checked`()
     {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text="Custom rule name")
         dlg.tfRuleName.text = "My Rule"
         dlg.btnOk.doClick()
 
@@ -406,9 +406,9 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
     fun `Should not populate ruleName when unchecked`()
     {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text="Custom rule name")
         dlg.tfRuleName.text = "My Rule"
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text="Custom rule name")
         dlg.btnOk.doClick()
 
         val rule = dlg.dartzeeRule!!
@@ -455,10 +455,10 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
         val dlg = DartzeeRuleCreationDialog()
         dlg.tfRuleName.shouldBeDisabled()
 
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text="Custom rule name")
         dlg.tfRuleName.shouldBeEnabled()
 
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text="Custom rule name")
         dlg.tfRuleName.shouldBeDisabled()
     }
 

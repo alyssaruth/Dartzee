@@ -25,7 +25,7 @@ class TestReportingSetupScreen: AbstractTest()
         ScreenCache.switch(scrn)
 
         val gameTab = scrn.getChild<ReportingGameTab>()
-        gameTab.clickChild<JCheckBox>("Start Date")
+        gameTab.clickChild<JCheckBox>(text="Start Date")
         gameTab.getStartDateFilterPanel().makeInvalid()
 
         scrn.btnNext.doClick()
@@ -57,10 +57,10 @@ class TestReportingSetupScreen: AbstractTest()
         val scrn = ReportingSetupScreen()
 
         val gameTab = scrn.getChild<ReportingGameTab>()
-        gameTab.clickChild<JCheckBox>("Game")
+        gameTab.clickChild<JCheckBox>(text="Game")
 
         val playersTab = scrn.getChild<ReportingPlayersTab>()
-        playersTab.clickChild<JCheckBox>("Exclude games with only AI players")
+        playersTab.clickChild<JCheckBox>(text="Exclude games with only AI players")
 
         scrn.btnNext.doClick()
 

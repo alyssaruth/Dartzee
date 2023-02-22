@@ -44,7 +44,7 @@ class SimulationE2E: AbstractTest()
 
         val dlg = AISimulationSetupDialog(player, model, true)
         dlg.getChild<NumberField>().value = 500
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text="Ok")
 
         val statsScrn = awaitStatisticsScreen()
         statsScrn.gameType shouldBe GameType.X01

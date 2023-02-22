@@ -33,16 +33,16 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
     {
         val panel = GameParamFilterPanelRoundTheClock()
 
-        panel.clickChild<JRadioButton>("Standard")
+        panel.clickChild<JRadioButton>(text="Standard")
         panel.getConfig() shouldBe RoundTheClockConfig(ClockType.Standard, true)
         panel.getFilterDesc() shouldBe "Standard games (in order)"
 
-        panel.clickChild<JRadioButton>("Doubles")
-        panel.clickChild<JCheckBox>("In order")
+        panel.clickChild<JRadioButton>(text="Doubles")
+        panel.clickChild<JCheckBox>(text="In order")
         panel.getConfig() shouldBe RoundTheClockConfig(ClockType.Doubles, false)
         panel.getFilterDesc() shouldBe "Doubles games (any order)"
 
-        panel.clickChild<JRadioButton>("Trebles")
+        panel.clickChild<JRadioButton>(text="Trebles")
         panel.getConfig() shouldBe RoundTheClockConfig(ClockType.Trebles, false)
         panel.getFilterDesc() shouldBe "Trebles games (any order)"
     }
@@ -94,14 +94,14 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
         val listener = mockk<ActionListener>(relaxed = true)
 
         panel.addActionListener(listener)
-        panel.clickChild<JRadioButton>("Doubles")
+        panel.clickChild<JRadioButton>(text="Doubles")
 
         verify { listener.actionPerformed(any()) }
 
         clearAllMocks()
 
         panel.removeActionListener(listener)
-        panel.clickChild<JRadioButton>("Trebles")
+        panel.clickChild<JRadioButton>(text="Trebles")
 
         verifyNotCalled { listener.actionPerformed(any()) }
     }
@@ -114,14 +114,14 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
         val listener = mockk<ActionListener>(relaxed = true)
 
         panel.addActionListener(listener)
-        panel.clickChild<JCheckBox>("In order")
+        panel.clickChild<JCheckBox>(text="In order")
 
         verify { listener.actionPerformed(any()) }
 
         clearAllMocks()
 
         panel.removeActionListener(listener)
-        panel.clickChild<JCheckBox>("In order")
+        panel.clickChild<JCheckBox>(text="In order")
 
         verifyNotCalled { listener.actionPerformed(any()) }
     }

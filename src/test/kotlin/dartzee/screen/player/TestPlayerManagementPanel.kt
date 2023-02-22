@@ -64,7 +64,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>("Delete")
+        panel.clickChild<JButton>(text="Delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete Leah?")
         player.dtDeleted shouldBe DateStatics.END_OF_TIME
@@ -83,7 +83,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>("Delete")
+        panel.clickChild<JButton>(text="Delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete BTBF?")
         player.dtDeleted shouldNotBe DateStatics.END_OF_TIME
@@ -219,7 +219,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>("Edit")
+        panel.clickChild<JButton>(text="Edit")
 
         verify { playerManager.amendPlayer(player) }
         panel.lblPlayerName.text shouldBe "New name"
@@ -235,7 +235,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>("Run Simulation")
+        panel.clickChild<JButton>(text="Run Simulation")
 
         verify { playerManager.runSimulation(player) }
     }

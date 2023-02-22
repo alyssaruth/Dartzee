@@ -76,7 +76,7 @@ class TestPlayerManagementScreen: AbstractTest()
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
-        scrn.clickChild<JButton>("", "Add player")
+        scrn.clickChild<JButton>("AddPlayer")
         verify { playerManager.createNewPlayer(true) }
 
         val table = scrn.getChild<ScrollTable>()
@@ -93,7 +93,7 @@ class TestPlayerManagementScreen: AbstractTest()
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
-        scrn.clickChild<JButton>("", "Add computer")
+        scrn.clickChild<JButton>("AddAi")
         verify { playerManager.createNewPlayer(false) }
 
         val table = scrn.getChild<ScrollTable>()
@@ -112,8 +112,8 @@ class TestPlayerManagementScreen: AbstractTest()
 
         insertPlayer()
 
-        scrn.clickChild<JButton>("", "Add computer")
-        scrn.clickChild<JButton>("", "Add player")
+        scrn.clickChild<JButton>("AddAi")
+        scrn.clickChild<JButton>("AddPlayer")
 
         val table = scrn.getChild<ScrollTable>()
         table.rowCount shouldBe 0
