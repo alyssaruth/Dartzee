@@ -4,7 +4,6 @@ import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
-import dartzee.core.bean.SwingLabel
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
 import dartzee.logging.CODE_AUDIO_ERROR
@@ -31,6 +30,7 @@ import javax.sound.sampled.Control
 import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 import javax.sound.sampled.LineListener
+import javax.swing.JLabel
 
 class TestDartboardDodgyUtil : AbstractRegistryTest()
 {
@@ -135,11 +135,11 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 
     private fun Dartboard.dodgyLabelShouldExist() {
-        getChild<SwingLabel> { it.testId == "dodgyLabel" }.shouldBeVisible()
+        getChild<JLabel>("DodgyLabel").shouldBeVisible()
     }
 
     private fun Dartboard.dodgyLabelShouldNotExist() {
-        findChild<SwingLabel> { it.testId == "dodgyLabel" }.shouldBeNull()
+        findChild<JLabel>("DodgyLabel").shouldBeNull()
     }
 
     companion object {
