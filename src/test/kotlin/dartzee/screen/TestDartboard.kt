@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import com.github.alexburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.dartzee.markPoints
 import dartzee.doClick
 import dartzee.helper.AbstractTest

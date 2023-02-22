@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.core.bean.ScrollTable
 import dartzee.getRows
@@ -43,7 +43,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
         table.rowCount shouldBe 1
 
         table.selectRow(0)
-        dlg.clickChild<JButton>("Remove")
+        dlg.clickChild<JButton>(text = "Remove")
 
         table.rowCount shouldBe 0
     }
@@ -53,7 +53,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
     {
         val dlg = AISetupConfigurationDialog(mutableMapOf(48 to AimDart(16, 1)))
 
-        dlg.clickChild<JButton>("Remove")
+        dlg.clickChild<JButton>(text = "Remove")
 
         dialogFactory.errorsShown.shouldContainExactly("You must select row(s) to remove.")
         dlg.getChild<ScrollTable>().rowCount shouldBe 1
@@ -65,7 +65,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
         InjectedThings.aiSetupRuleFactory = MockAiSetupRuleFactory()
         val dlg = AISetupConfigurationDialog(mutableMapOf(48 to AimDart(16, 1)))
 
-        dlg.clickChild<JButton>("Add Rule...")
+        dlg.clickChild<JButton>(text = "Add Rule...")
 
 
         val table = dlg.getChild<ScrollTable>()
@@ -85,8 +85,8 @@ class TestAISetupConfigurationDialog: AbstractTest()
         val map = mutableMapOf(48 to AimDart(16, 1))
         val dlg = AISetupConfigurationDialog(map)
 
-        dlg.clickChild<JButton>("Add Rule...")
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Add Rule...")
+        dlg.clickChild<JButton>(text = "Ok")
 
         map.shouldContainExactly(mapOf(48 to AimDart(16, 1), 10 to AimDart(2, 1)))
     }
@@ -98,8 +98,8 @@ class TestAISetupConfigurationDialog: AbstractTest()
         val map = mutableMapOf(48 to AimDart(16, 1))
         val dlg = AISetupConfigurationDialog(map)
 
-        dlg.clickChild<JButton>("Add Rule...")
-        dlg.clickChild<JButton>("Cancel")
+        dlg.clickChild<JButton>(text = "Add Rule...")
+        dlg.clickChild<JButton>(text = "Cancel")
 
         map.shouldContainExactly(mapOf(48 to AimDart(16, 1)))
     }

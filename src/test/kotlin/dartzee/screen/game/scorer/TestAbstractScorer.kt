@@ -1,6 +1,6 @@
 package dartzee.screen.game.scorer
 
-import com.github.alexburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.game.state.IWrappedParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

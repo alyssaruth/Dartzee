@@ -1,7 +1,12 @@
 package dartzee.sync
 
-import com.github.alexburlton.swingtest.flushEdt
-import dartzee.helper.*
+import com.github.alyssaburlton.swingtest.flushEdt
+import dartzee.helper.AbstractTest
+import dartzee.helper.REMOTE_NAME
+import dartzee.helper.TEST_DB_DIRECTORY
+import dartzee.helper.shouldUpdateSyncScreen
+import dartzee.helper.syncDirectoryShouldNotExist
+import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_PULL_ERROR
 import dartzee.logging.Severity

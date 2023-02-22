@@ -1,7 +1,7 @@
 package dartzee.screen.reporting
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
 import dartzee.getColumnNames
@@ -12,8 +12,8 @@ import dartzee.helper.insertPlayerForGame
 import dartzee.logging.CODE_SQL
 import dartzee.reporting.ReportParameters
 import dartzee.screen.ScreenCache
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -63,7 +63,7 @@ class TestReportingResultsScreen: AbstractTest()
         clearLogs()
         every { dlg.excludedColumns() } returns listOf("Players", "Finish Date")
 
-        scrn.clickChild<JButton>("Configure Columns...")
+        scrn.clickChild<JButton>(text = "Configure Columns...")
         verifyNoLogs(CODE_SQL)
         table.rowCount shouldBe 1
         table.getColumnNames() shouldBe listOf("Game", "Type", "Start Date", "Match")

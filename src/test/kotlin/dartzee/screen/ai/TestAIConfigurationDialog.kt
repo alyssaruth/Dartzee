@@ -1,8 +1,7 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
-import dartzee.`object`.SegmentType
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar
@@ -12,6 +11,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
+import dartzee.`object`.SegmentType
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -62,7 +62,7 @@ class TestAIConfigurationDialog: AbstractTest()
         normalDistPanel.nfStandardDeviation.value shouldBe 75.0
 
         val dartzeePanel = dlg.getChild<AIConfigurationSubPanelDartzee>()
-        dartzeePanel.getChild<JRadioButton>("Aggressive").isSelected shouldBe true
+        dartzeePanel.getChild<JRadioButton>(text = "Aggressive").isSelected shouldBe true
 
         val x01Panel = dlg.getChild<AIConfigurationSubPanelX01>()
         x01Panel.spinnerMercyThreshold.value shouldBe 17
@@ -81,7 +81,7 @@ class TestAIConfigurationDialog: AbstractTest()
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
         normalDistPanel.nfStandardDeviation.value = 75.0
 
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Ok")
 
         val updatedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
         updatedPlayer.name shouldBe "Brooke"
@@ -95,22 +95,22 @@ class TestAIConfigurationDialog: AbstractTest()
         insertPlayer(name = "Duplicate")
 
         val dlg = AIConfigurationDialog()
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Ok")
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
 
         dialogFactory.errorsShown.clear()
         dlg.textFieldName.text = "Duplicate"
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Ok")
         dialogFactory.errorsShown.shouldContainExactly("A player with the name Duplicate already exists.")
 
         dialogFactory.errorsShown.clear()
         dlg.textFieldName.text = "Valid"
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Ok")
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
 
         dialogFactory.errorsShown.clear()
         dlg.avatar.avatarId = "foo"
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Ok")
         dialogFactory.errorsShown.shouldBeEmpty()
 
         val player = PlayerEntity.retrieveForName("Valid")!!
@@ -125,14 +125,14 @@ class TestAIConfigurationDialog: AbstractTest()
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
         normalDistPanel.nfStandardDeviation.value = 0.1
 
-        dlg.clickChild<JButton>("Calculate")
+        dlg.clickChild<JButton>(text = "Calculate")
         dlg.textFieldAverageScore.text shouldBe "60.0"
         dlg.textFieldFinishPercent.text shouldBe "100.0"
         dlg.textFieldMissPercent.text shouldBe "0.0"
         dlg.textFieldTreblePercent.text shouldBe "100.0"
 
         dlg.getChild<AIConfigurationSubPanelX01>().spinnerScoringDart.value = 19
-        dlg.clickChild<JButton>("Re-calculate")
+        dlg.clickChild<JButton>(text = "Re-calculate")
         dlg.textFieldAverageScore.text shouldBe "57.0"
         dlg.textFieldFinishPercent.text shouldBe "100.0"
         dlg.textFieldMissPercent.text shouldBe "0.0"

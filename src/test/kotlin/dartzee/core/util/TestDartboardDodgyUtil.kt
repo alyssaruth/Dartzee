@@ -1,10 +1,9 @@
 package dartzee.core.util
 
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeVisible
-import dartzee.core.bean.SwingLabel
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
 import dartzee.logging.CODE_AUDIO_ERROR
@@ -14,8 +13,8 @@ import dartzee.screen.Dartboard
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -31,6 +30,7 @@ import javax.sound.sampled.Control
 import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 import javax.sound.sampled.LineListener
+import javax.swing.JLabel
 
 class TestDartboardDodgyUtil : AbstractRegistryTest()
 {
@@ -135,11 +135,11 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 
     private fun Dartboard.dodgyLabelShouldExist() {
-        getChild<SwingLabel> { it.testId == "dodgyLabel" }.shouldBeVisible()
+        getChild<JLabel>("DodgyLabel").shouldBeVisible()
     }
 
     private fun Dartboard.dodgyLabelShouldNotExist() {
-        findChild<SwingLabel> { it.testId == "dodgyLabel" }.shouldBeNull()
+        findChild<JLabel>("DodgyLabel").shouldBeNull()
     }
 
     companion object {

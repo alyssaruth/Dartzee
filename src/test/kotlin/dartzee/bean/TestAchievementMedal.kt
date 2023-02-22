@@ -1,9 +1,9 @@
 package dartzee.bean
 
-import com.github.alexburlton.swingtest.doClick
-import com.github.alexburlton.swingtest.doHover
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doHover
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.game.GameLauncher
 import dartzee.helper.AbstractTest
@@ -104,7 +104,7 @@ class TestAchievementMedal: AbstractTest()
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.HAND_CURSOR
 
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter").shouldNotBeNull()
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
     }
 
     @Test
@@ -115,7 +115,7 @@ class TestAchievementMedal: AbstractTest()
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter").shouldNotBeNull()
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
     }
 
     @Test
@@ -127,7 +127,7 @@ class TestAchievementMedal: AbstractTest()
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter") shouldBe null
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter") shouldBe null
     }
 
     @Test

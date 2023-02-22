@@ -1,6 +1,6 @@
 package dartzee.screen.stats.player.rtc
 
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.getFooterRow
 import dartzee.getRows

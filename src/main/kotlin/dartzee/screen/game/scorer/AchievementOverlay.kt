@@ -2,7 +2,6 @@ package dartzee.screen.game.scorer
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
-import dartzee.core.bean.SwingLabel
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -79,7 +78,8 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
 
     private fun factoryTextLabel(text: String, fontSize: Int = 24, testId: String = "") : JLabel
     {
-        val lbl = SwingLabel(text, testId)
+        val lbl = JLabel(text)
+        lbl.name = testId
         lbl.background = fillColor
         lbl.foreground = borderColor.darker()
         lbl.horizontalAlignment = JLabel.CENTER

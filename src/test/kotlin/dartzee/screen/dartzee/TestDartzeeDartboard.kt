@@ -1,12 +1,12 @@
 package dartzee.screen.dartzee
 
-import com.github.alexburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeSegmentStatus
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.`object`.SegmentType
-import dartzee.helper.AbstractTest
-import dartzee.helper.makeSegmentStatus
 import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllPossibleSegments

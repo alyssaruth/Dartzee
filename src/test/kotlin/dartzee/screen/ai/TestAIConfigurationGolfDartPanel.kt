@@ -1,12 +1,16 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.*
-import dartzee.`object`.SegmentType
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeDisabled
+import com.github.alyssaburlton.swingtest.shouldBeEnabled
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
+import dartzee.`object`.SegmentType
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import javax.swing.JComboBox
@@ -39,10 +43,10 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     {
         val panel = AIConfigurationGolfDartPanel(1)
         panel.getChild<JSpinner>().value = 2
-        panel.getChild<JLabel>("or better").shouldBeEnabled()
+        panel.getChild<JLabel>(text = "or better").shouldBeEnabled()
 
         panel.getChild<JSpinner>().value = 1
-        panel.getChild<JLabel>("or better").shouldBeDisabled()
+        panel.getChild<JLabel>(text = "or better").shouldBeDisabled()
     }
 
     @Test

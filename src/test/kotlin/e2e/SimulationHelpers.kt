@@ -1,9 +1,9 @@
 package e2e
 
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.screen.stats.player.PlayerStatisticsScreen

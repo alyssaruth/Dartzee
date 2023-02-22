@@ -1,9 +1,9 @@
 package dartzee.screen.sync
 
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeVisible
-import com.github.alexburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import dartzee.sync.SyncStage
 import io.kotest.matchers.shouldBe

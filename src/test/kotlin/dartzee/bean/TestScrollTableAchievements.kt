@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.items
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest

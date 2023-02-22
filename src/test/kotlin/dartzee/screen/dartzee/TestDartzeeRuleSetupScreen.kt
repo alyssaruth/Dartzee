@@ -1,12 +1,12 @@
 package dartzee.screen.dartzee
 
-import com.github.alexburlton.swingtest.getChild
-import dartzee.game.GameLauncher
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameLaunchParams
+import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
@@ -14,8 +14,8 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.screen.GameSetupScreen
 import dartzee.utils.InjectedThings
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test

@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alexburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doClick
 import dartzee.db.PlayerImageEntity
 import dartzee.db.getBlobValue
 import dartzee.helper.AbstractTest

@@ -1,6 +1,6 @@
 package dartzee.sync
 
-import com.github.alexburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME

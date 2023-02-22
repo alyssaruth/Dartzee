@@ -1,11 +1,15 @@
 package dartzee.screen.reporting
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeDisabled
-import com.github.alexburlton.swingtest.shouldBeEnabled
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeDisabled
+import com.github.alyssaburlton.swingtest.shouldBeEnabled
 import com.github.lgooddatepicker.components.DatePicker
-import dartzee.bean.*
+import dartzee.bean.ComboBoxGameType
+import dartzee.bean.GameParamFilterPanel
+import dartzee.bean.GameParamFilterPanelRoundTheClock
+import dartzee.bean.GameParamFilterPanelX01
+import dartzee.bean.SpinnerX01
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.game.GameType
@@ -15,8 +19,8 @@ import dartzee.reporting.MatchFilter
 import dartzee.reporting.ReportParameters
 import dartzee.updateSelection
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.time.LocalDate
@@ -44,10 +48,10 @@ class TestReportingGameTab: AbstractTest()
     fun `Should toggle game type combo box correctly`()
     {
         val scrn = ReportingGameTab()
-        scrn.clickChild<JCheckBox>("Game")
+        scrn.clickChild<JCheckBox>(text = "Game")
         scrn.getChild<ComboBoxGameType>().shouldBeEnabled()
 
-        scrn.clickChild<JCheckBox>("Game")
+        scrn.clickChild<JCheckBox>(text = "Game")
         scrn.getChild<ComboBoxGameType>().shouldBeDisabled()
     }
 
@@ -57,7 +61,7 @@ class TestReportingGameTab: AbstractTest()
         val scrn = ReportingGameTab()
         scrn.getChild<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelX01>()
 
-        scrn.clickChild<JCheckBox>("Game")
+        scrn.clickChild<JCheckBox>(text = "Game")
         val comboBox = scrn.getChild<ComboBoxGameType>()
         comboBox.updateSelection(GameType.ROUND_THE_CLOCK)
         scrn.getChild<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
@@ -67,10 +71,10 @@ class TestReportingGameTab: AbstractTest()
     fun `Should toggle the game param filter panel correctly`()
     {
         val scrn = ReportingGameTab()
-        scrn.clickChild<JCheckBox>("Type")
+        scrn.clickChild<JCheckBox>(text = "Type")
         scrn.getChild<GameParamFilterPanel>().shouldBeEnabled()
 
-        scrn.clickChild<JCheckBox>("Type")
+        scrn.clickChild<JCheckBox>(text = "Type")
         scrn.getChild<GameParamFilterPanel>().shouldBeDisabled()
     }
 
@@ -78,10 +82,10 @@ class TestReportingGameTab: AbstractTest()
     fun `Should toggle the start date filter panel correctly`()
     {
         val scrn = ReportingGameTab()
-        scrn.clickChild<JCheckBox>("Start Date")
+        scrn.clickChild<JCheckBox>(text = "Start Date")
         scrn.getStartDateFilterPanel().cbDateFrom.shouldBeEnabled()
 
-        scrn.clickChild<JCheckBox>("Start Date")
+        scrn.clickChild<JCheckBox>(text = "Start Date")
         scrn.getStartDateFilterPanel().cbDateFrom.shouldBeDisabled()
     }
 
@@ -89,47 +93,47 @@ class TestReportingGameTab: AbstractTest()
     fun `Should toggle the finish date filter panel correctly`()
     {
         val scrn = ReportingGameTab()
-        scrn.clickChild<JCheckBox>("Finish Date")
+        scrn.clickChild<JCheckBox>(text = "Finish Date")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeEnabled()
-        scrn.getChild<JRadioButton>("Finished:").shouldBeEnabled()
-        scrn.getChild<JRadioButton>("Unfinished").shouldBeEnabled()
+        scrn.getChild<JRadioButton>(text = "Finished:").shouldBeEnabled()
+        scrn.getChild<JRadioButton>(text = "Unfinished").shouldBeEnabled()
 
-        scrn.clickChild<JRadioButton>("Unfinished")
+        scrn.clickChild<JRadioButton>(text = "Unfinished")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeDisabled()
 
-        scrn.clickChild<JRadioButton>("Finished:")
+        scrn.clickChild<JRadioButton>(text = "Finished:")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeEnabled()
 
-        scrn.clickChild<JCheckBox>("Finish Date")
+        scrn.clickChild<JCheckBox>(text = "Finish Date")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeDisabled()
-        scrn.getChild<JRadioButton>("Finished:").shouldBeDisabled()
-        scrn.getChild<JRadioButton>("Unfinished").shouldBeDisabled()
+        scrn.getChild<JRadioButton>(text = "Finished:").shouldBeDisabled()
+        scrn.getChild<JRadioButton>(text = "Unfinished").shouldBeDisabled()
     }
 
     @Test
     fun `Should toggle match radio buttons correctly`()
     {
         val tab = ReportingGameTab()
-        tab.clickChild<JCheckBox>("Part of Match")
-        tab.getChild<JRadioButton>("Yes").shouldBeEnabled()
-        tab.getChild<JRadioButton>("No").shouldBeEnabled()
+        tab.clickChild<JCheckBox>(text = "Part of Match")
+        tab.getChild<JRadioButton>(text = "Yes").shouldBeEnabled()
+        tab.getChild<JRadioButton>(text = "No").shouldBeEnabled()
 
-        tab.clickChild<JCheckBox>("Part of Match")
-        tab.getChild<JRadioButton>("Yes").shouldBeDisabled()
-        tab.getChild<JRadioButton>("No").shouldBeDisabled()
+        tab.clickChild<JCheckBox>(text = "Part of Match")
+        tab.getChild<JRadioButton>(text = "Yes").shouldBeDisabled()
+        tab.getChild<JRadioButton>(text = "No").shouldBeDisabled()
     }
 
     @Test
     fun `Should toggle the sync status radio buttons correctly`()
     {
         val tab = ReportingGameTab()
-        tab.clickChild<JCheckBox>("Sync Status")
-        tab.getChild<JRadioButton>("Pending changes").shouldBeEnabled()
-        tab.getChild<JRadioButton>("Synced").shouldBeEnabled()
+        tab.clickChild<JCheckBox>(text = "Sync Status")
+        tab.getChild<JRadioButton>(text = "Pending changes").shouldBeEnabled()
+        tab.getChild<JRadioButton>(text = "Synced").shouldBeEnabled()
 
-        tab.clickChild<JCheckBox>("Sync Status")
-        tab.getChild<JRadioButton>("Pending changes").shouldBeDisabled()
-        tab.getChild<JRadioButton>("Synced").shouldBeDisabled()
+        tab.clickChild<JCheckBox>(text = "Sync Status")
+        tab.getChild<JRadioButton>(text = "Pending changes").shouldBeDisabled()
+        tab.getChild<JRadioButton>(text = "Synced").shouldBeDisabled()
     }
 
     /**
@@ -139,7 +143,7 @@ class TestReportingGameTab: AbstractTest()
     fun `Should validate against the start date filters`()
     {
         val tab = ReportingGameTab()
-        tab.clickChild<JCheckBox>("Start Date")
+        tab.clickChild<JCheckBox>(text = "Start Date")
         tab.getStartDateFilterPanel().makeInvalid()
 
         tab.valid() shouldBe false
@@ -150,7 +154,7 @@ class TestReportingGameTab: AbstractTest()
     fun `Should validate against the finish date filters`()
     {
         val tab = ReportingGameTab()
-        tab.clickChild<JCheckBox>("Finish Date")
+        tab.clickChild<JCheckBox>(text = "Finish Date")
         tab.getFinishDateFilterPanel().makeInvalid()
 
         tab.valid() shouldBe false
@@ -176,7 +180,7 @@ class TestReportingGameTab: AbstractTest()
         tab.populateReportParameters(rp)
         rp.gameType shouldBe null
 
-        tab.clickChild<JCheckBox>("Game")
+        tab.clickChild<JCheckBox>(text = "Game")
         tab.populateReportParameters(rp)
         rp.gameType shouldBe GameType.X01
 
@@ -194,7 +198,7 @@ class TestReportingGameTab: AbstractTest()
         tab.populateReportParameters(rp)
         rp.gameParams shouldBe ""
 
-        tab.clickChild<JCheckBox>("Type")
+        tab.clickChild<JCheckBox>(text = "Type")
         tab.populateReportParameters(rp)
         rp.gameParams shouldBe "501"
 
@@ -212,11 +216,11 @@ class TestReportingGameTab: AbstractTest()
         tab.populateReportParameters(rp)
         rp.partOfMatch shouldBe MatchFilter.BOTH
 
-        tab.clickChild<JCheckBox>("Part of Match")
+        tab.clickChild<JCheckBox>(text = "Part of Match")
         tab.populateReportParameters(rp)
         rp.partOfMatch shouldBe MatchFilter.MATCHES_ONLY
 
-        tab.clickChild<JRadioButton>("No")
+        tab.clickChild<JRadioButton>(text = "No")
         tab.populateReportParameters(rp)
         rp.partOfMatch shouldBe MatchFilter.GAMES_ONLY
     }
@@ -230,11 +234,11 @@ class TestReportingGameTab: AbstractTest()
         tab.populateReportParameters(rp)
         rp.pendingChanges shouldBe null
 
-        tab.clickChild<JCheckBox>("Sync Status")
+        tab.clickChild<JCheckBox>(text = "Sync Status")
         tab.populateReportParameters(rp)
         rp.pendingChanges shouldBe true
 
-        tab.clickChild<JRadioButton>("Synced")
+        tab.clickChild<JRadioButton>(text = "Synced")
         tab.populateReportParameters(rp)
         rp.pendingChanges shouldBe false
     }
@@ -251,7 +255,7 @@ class TestReportingGameTab: AbstractTest()
 
         val startDate = LocalDate.ofYearDay(2020, 20)
         val endDate = LocalDate.ofYearDay(2020, 30)
-        tab.clickChild<JCheckBox>("Start Date")
+        tab.clickChild<JCheckBox>(text = "Start Date")
         tab.getStartDateFilterPanel().cbDateFrom.date = startDate
         tab.getStartDateFilterPanel().cbDateTo.date = endDate
         tab.populateReportParameters(rp)
@@ -272,7 +276,7 @@ class TestReportingGameTab: AbstractTest()
 
         val startDate = LocalDate.ofYearDay(2020, 20)
         val endDate = LocalDate.ofYearDay(2020, 30)
-        tab.clickChild<JCheckBox>("Finish Date")
+        tab.clickChild<JCheckBox>(text = "Finish Date")
         tab.getFinishDateFilterPanel().cbDateFrom.date = startDate
         tab.getFinishDateFilterPanel().cbDateTo.date = endDate
         tab.populateReportParameters(rp)
@@ -281,7 +285,7 @@ class TestReportingGameTab: AbstractTest()
         rp.unfinishedOnly shouldBe false
 
         rp = ReportParameters()
-        tab.clickChild<JRadioButton>("Unfinished")
+        tab.clickChild<JRadioButton>(text = "Unfinished")
         tab.populateReportParameters(rp)
         rp.dtFinishFrom shouldBe null
         rp.dtFinishTo shouldBe null

@@ -1,9 +1,9 @@
 package e2e
 
-import com.github.alexburlton.swingtest.awaitCondition
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AimDart

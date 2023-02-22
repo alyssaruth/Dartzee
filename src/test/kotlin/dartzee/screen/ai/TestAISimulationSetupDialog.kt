@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AbstractDartsSimulation
 import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.DartsSimulationGolf
@@ -11,9 +11,14 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
 import dartzee.utils.InjectedThings
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.CapturingSlot
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JRadioButton
@@ -32,10 +37,10 @@ class TestAISimulationSetupDialog: AbstractTest()
         val model = makeDartsModel()
         val player = insertPlayer(model)
         val dlg = AISimulationSetupDialog(player, model)
-        dlg.clickChild<JRadioButton>("501")
+        dlg.clickChild<JRadioButton>(text = "501")
         dlg.getChild<NumberField>().value = 15000
 
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Ok")
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 15000, false) }
@@ -57,10 +62,10 @@ class TestAISimulationSetupDialog: AbstractTest()
         val model = makeDartsModel()
         val player = insertPlayer(model)
         val dlg = AISimulationSetupDialog(player, model, true)
-        dlg.clickChild<JRadioButton>("Golf (18 Holes)")
+        dlg.clickChild<JRadioButton>(text = "Golf (18 Holes)")
         dlg.getChild<NumberField>().value = 12000
 
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickChild<JButton>(text = "Ok")
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 12000, true) }

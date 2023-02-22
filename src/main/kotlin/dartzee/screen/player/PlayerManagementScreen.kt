@@ -49,10 +49,12 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
         btnNewPlayer.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addHuman.png"))
         btnNewPlayer.preferredSize = Dimension(30, 30)
         btnNewPlayer.toolTipText = "Add player"
+        btnNewPlayer.name = "AddPlayer"
         panelNorth.add(btnNewPlayer)
         btnNewPlayer.border = EmptyBorder(5, 0, 5, 0)
         btnNewAi.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addAi.png"))
         btnNewAi.toolTipText = "Add computer"
+        btnNewAi.name = "AddAi"
         btnNewAi.preferredSize = Dimension(30, 30)
 
         panelNorth.add(btnNewAi)

@@ -1,7 +1,7 @@
 package e2e
 
-import com.github.alexburlton.swingtest.awaitCondition
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity

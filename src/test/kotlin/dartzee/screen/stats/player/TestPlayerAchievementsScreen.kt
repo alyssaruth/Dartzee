@@ -1,7 +1,7 @@
 package dartzee.screen.stats.player
 
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.x01.AchievementX01BestFinish

@@ -1,14 +1,14 @@
 package dartzee.logging
 
-import com.github.alexburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import dartzee.makeLogRecord
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.comparables.shouldBeGreaterThan
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JLabel

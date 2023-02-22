@@ -1,7 +1,6 @@
 package dartzee
 
-import com.github.alexburlton.swingtest.doClick
-import com.github.alexburlton.swingtest.isEqual
+import com.github.alyssaburlton.swingtest.doClick
 import dartzee.bean.ComboBoxGameType
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
@@ -23,13 +22,11 @@ import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
-import java.awt.image.BufferedImage
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.swing.Icon
 import javax.swing.JComponent
 import javax.swing.table.DefaultTableModel
 
@@ -123,19 +120,6 @@ fun DateFilterPanel.makeInvalid()
 fun ScrollTable.getColumnNames() = (0 until columnCount).map { getColumnName(it) }
 
 fun ScrollTable.getDisplayValueAt(row: Int, col: Int): Any = table.getValueAt(row, col)
-
-fun Icon.shouldMatch(other: Icon)
-{
-    toBufferedImage().isEqual(other.toBufferedImage()) shouldBe true
-}
-private fun Icon.toBufferedImage(): BufferedImage
-{
-    val bi = BufferedImage(iconWidth, iconHeight, BufferedImage.TYPE_INT_RGB)
-    val g = bi.createGraphics()
-    paintIcon(null, g, 0, 0)
-    g.dispose()
-    return bi
-}
 
 fun ScrollTable.getRows(): List<List<Any?>> =
     model.getRows(columnCount)
