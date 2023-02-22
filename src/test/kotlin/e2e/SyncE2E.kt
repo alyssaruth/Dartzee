@@ -107,7 +107,7 @@ class SyncE2E: AbstractRegistryTest()
         deleteGame(mainScreen)
 
         ScreenCache.switch<SyncManagementScreen>()
-        mainScreen.clickChild<JButton>(text="Perform Sync")
+        mainScreen.clickChild<JButton>(text = "Perform Sync")
 
         awaitCondition { SyncProgressDialog.isVisible() }
         awaitCondition { !SyncProgressDialog.isVisible() }
@@ -124,7 +124,7 @@ class SyncE2E: AbstractRegistryTest()
         ScreenCache.switch<UtilitiesScreen>()
         dialogFactory.inputSelection = 1L
         dialogFactory.questionOption = JOptionPane.YES_OPTION
-        mainScreen.clickChild<JButton>(text="Delete Game")
+        mainScreen.clickChild<JButton>(text = "Delete Game")
     }
 
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String
@@ -143,7 +143,7 @@ class SyncE2E: AbstractRegistryTest()
         val remoteName = UUID.randomUUID().toString()
         dialogFactory.inputSelection = remoteName
         dialogFactory.optionSequence.add("Create '$remoteName'")
-        mainScreen.clickChild<JButton>(text="Get Started > ")
+        mainScreen.clickChild<JButton>(text = "Get Started > ")
 
         awaitCondition { mainScreen.findChild<SyncManagementPanel>() != null }
 
@@ -153,7 +153,7 @@ class SyncE2E: AbstractRegistryTest()
     private fun performSync(mainScreen: DartsApp)
     {
         dialogFactory.optionSequence.add("Sync with local data")
-        mainScreen.clickChild<JButton>(text="Get Started > ")
+        mainScreen.clickChild<JButton>(text = "Get Started > ")
         awaitCondition { mainScreen.findChild<SyncManagementPanel>() != null }
     }
 
@@ -163,7 +163,7 @@ class SyncE2E: AbstractRegistryTest()
         DevUtilities.purgeGame(1)
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
-        mainScreen.clickChild<JButton>(text="Reset")
+        mainScreen.clickChild<JButton>(text = "Reset")
         awaitCondition { mainScreen.findChild<SyncSetupPanel>() != null }
     }
 }

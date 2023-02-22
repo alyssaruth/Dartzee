@@ -43,10 +43,10 @@ class TestAIConfigurationGolfDartPanel: AbstractTest()
     {
         val panel = AIConfigurationGolfDartPanel(1)
         panel.getChild<JSpinner>().value = 2
-        panel.getChild<JLabel>("or better").shouldBeEnabled()
+        panel.getChild<JLabel>(text = "or better").shouldBeEnabled()
 
         panel.getChild<JSpinner>().value = 1
-        panel.getChild<JLabel>("or better").shouldBeDisabled()
+        panel.getChild<JLabel>(text = "or better").shouldBeDisabled()
     }
 
     @Test

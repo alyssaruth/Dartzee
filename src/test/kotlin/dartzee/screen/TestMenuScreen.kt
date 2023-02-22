@@ -18,7 +18,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to Sync Management screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="Sync Setup")
+        scrn.clickChild<JButton>(text = "Sync Setup")
         ScreenCache.currentScreen().shouldBeInstanceOf<SyncManagementScreen>()
     }
 
@@ -26,7 +26,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the game setup screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="New Game")
+        scrn.clickChild<JButton>(text = "New Game")
         ScreenCache.currentScreen().shouldBeInstanceOf<GameSetupScreen>()
     }
 
@@ -34,7 +34,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the player management screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="Manage Players")
+        scrn.clickChild<JButton>(text = "Manage Players")
         ScreenCache.currentScreen().shouldBeInstanceOf<PlayerManagementScreen>()
     }
 
@@ -42,7 +42,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the reporting setup screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="Game Report")
+        scrn.clickChild<JButton>(text = "Game Report")
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingSetupScreen>()
     }
 
@@ -50,7 +50,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the leaderboards screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="Leaderboards")
+        scrn.clickChild<JButton>(text = "Leaderboards")
         ScreenCache.currentScreen().shouldBeInstanceOf<LeaderboardsScreen>()
     }
 
@@ -58,7 +58,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the utilities screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="Utilities")
+        scrn.clickChild<JButton>(text = "Utilities")
         ScreenCache.currentScreen().shouldBeInstanceOf<UtilitiesScreen>()
     }
 
@@ -66,7 +66,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the preferences screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="Preferences")
+        scrn.clickChild<JButton>(text = "Preferences")
         ScreenCache.currentScreen().shouldBeInstanceOf<PreferencesScreen>()
     }
 
@@ -74,7 +74,7 @@ class TestMenuScreen: AbstractTest()
     fun `Should go to the dartzee template setup screen`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text="Dartzee")
+        scrn.clickChild<JButton>(text = "Dartzee")
         ScreenCache.currentScreen().shouldBeInstanceOf<DartzeeTemplateSetupScreen>()
     }
 }

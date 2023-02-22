@@ -25,8 +25,8 @@ class TestConfigureReportColumnsDialog: AbstractTest()
     fun `Should exclude unticked options`()
     {
         val dlg = ConfigureReportColumnsDialog()
-        dlg.clickChild<JCheckBox>(text="Type")
-        dlg.clickChild<JCheckBox>(text="Match")
+        dlg.clickChild<JCheckBox>(text = "Type")
+        dlg.clickChild<JCheckBox>(text = "Match")
 
         dlg.excludedColumns().shouldContainExactly("Type", "Match")
     }

@@ -10,4 +10,4 @@ fun AbstractDartsScorer<*>.findAchievementOverlay() = findChild<AchievementOverl
 fun AbstractDartsScorer<*>.getAchievementOverlay() = getChild<AchievementOverlay>()
 fun AchievementOverlay.getAchievementName(): String = getChild<JLabel>("achievementName").text
 fun AchievementOverlay.getPlayerName(): String = getChild<JLabel>("playerName").text
-fun AchievementOverlay.close() = clickChild<JButton>(text="X")
+fun AchievementOverlay.close() = clickChild<JButton>(text = "X")

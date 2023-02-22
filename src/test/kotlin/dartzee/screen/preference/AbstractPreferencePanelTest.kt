@@ -46,7 +46,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
 
         val panel = factory()
         setUiFieldValuesToNonDefaults(panel)
-        panel.clickChild<JButton>(text="Apply")
+        panel.clickChild<JButton>(text = "Apply")
 
         checkPreferencesAreSetToNonDefaults()
     }
@@ -56,7 +56,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     {
         val panel = factory()
         setUiFieldValuesToNonDefaults(panel)
-        panel.clickChild<JButton>(text="Apply")
+        panel.clickChild<JButton>(text = "Apply")
 
         panel.refresh(true)
         panel.refresh(false)
@@ -70,7 +70,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
         val panel = factory()
         panel.refresh(false)
 
-        panel.getChild<JButton>("Apply").shouldBeDisabled()
+        panel.getChild<JButton>(text = "Apply").shouldBeDisabled()
     }
 
     @Test
@@ -80,25 +80,25 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
 
         val panel = factory()
         panel.refresh(false)
-        panel.getChild<JButton>("Apply").shouldBeDisabled()
+        panel.getChild<JButton>(text = "Apply").shouldBeDisabled()
 
-        panel.clickChild<JButton>(text="Restore Defaults")
-        panel.getChild<JButton>("Apply").shouldBeDisabled()
-
-        setUiFieldValuesToNonDefaults(panel)
-        panel.getChild<JButton>("Apply").shouldBeEnabled()
-
-        panel.clickChild<JButton>(text="Restore Defaults")
-        panel.getChild<JButton>("Apply").shouldBeDisabled()
+        panel.clickChild<JButton>(text = "Restore Defaults")
+        panel.getChild<JButton>(text = "Apply").shouldBeDisabled()
 
         setUiFieldValuesToNonDefaults(panel)
-        panel.clickChild<JButton>(text="Apply")
-        panel.getChild<JButton>("Apply").shouldBeDisabled()
+        panel.getChild<JButton>(text = "Apply").shouldBeEnabled()
 
-        panel.clickChild<JButton>(text="Restore Defaults")
-        panel.getChild<JButton>("Apply").shouldBeEnabled()
+        panel.clickChild<JButton>(text = "Restore Defaults")
+        panel.getChild<JButton>(text = "Apply").shouldBeDisabled()
 
         setUiFieldValuesToNonDefaults(panel)
-        panel.getChild<JButton>("Apply").shouldBeDisabled()
+        panel.clickChild<JButton>(text = "Apply")
+        panel.getChild<JButton>(text = "Apply").shouldBeDisabled()
+
+        panel.clickChild<JButton>(text = "Restore Defaults")
+        panel.getChild<JButton>(text = "Apply").shouldBeEnabled()
+
+        setUiFieldValuesToNonDefaults(panel)
+        panel.getChild<JButton>(text = "Apply").shouldBeDisabled()
     }
 }

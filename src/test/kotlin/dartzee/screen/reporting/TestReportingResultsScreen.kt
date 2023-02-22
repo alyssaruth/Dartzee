@@ -63,7 +63,7 @@ class TestReportingResultsScreen: AbstractTest()
         clearLogs()
         every { dlg.excludedColumns() } returns listOf("Players", "Finish Date")
 
-        scrn.clickChild<JButton>(text="Configure Columns...")
+        scrn.clickChild<JButton>(text = "Configure Columns...")
         verifyNoLogs(CODE_SQL)
         table.rowCount shouldBe 1
         table.getColumnNames() shouldBe listOf("Game", "Type", "Start Date", "Match")

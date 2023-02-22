@@ -47,9 +47,9 @@ class TestPlayerManagementPanel: AbstractTest()
 
         panel.lblPlayerName.text shouldBe ""
         panel.getChild<PlayerAvatar>().shouldNotBeVisible()
-        panel.getChild<JButton>("Edit").shouldNotBeVisible()
-        panel.getChild<JButton>("Run Simulation").shouldNotBeVisible()
-        panel.getChild<JButton>("Delete").shouldNotBeVisible()
+        panel.getChild<JButton>(text = "Edit").shouldNotBeVisible()
+        panel.getChild<JButton>(text = "Run Simulation").shouldNotBeVisible()
+        panel.getChild<JButton>(text = "Delete").shouldNotBeVisible()
         panel.getAllChildComponentsForType<PlayerSummaryButton>().shouldBeEmpty()
     }
 
@@ -64,7 +64,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text="Delete")
+        panel.clickChild<JButton>(text = "Delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete Leah?")
         player.dtDeleted shouldBe DateStatics.END_OF_TIME
@@ -83,7 +83,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text="Delete")
+        panel.clickChild<JButton>(text = "Delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete BTBF?")
         player.dtDeleted shouldNotBe DateStatics.END_OF_TIME
@@ -102,9 +102,9 @@ class TestPlayerManagementPanel: AbstractTest()
 
         panel.lblPlayerName.text shouldBe "Alex"
         panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
-        panel.getChild<JButton>("Delete").shouldBeVisible()
-        panel.getChild<JButton>("Edit").shouldBeVisible()
-        panel.getChild<JButton>("Run Simulation").shouldNotBeVisible()
+        panel.getChild<JButton>(text = "Delete").shouldBeVisible()
+        panel.getChild<JButton>(text = "Edit").shouldBeVisible()
+        panel.getChild<JButton>(text = "Run Simulation").shouldNotBeVisible()
     }
 
     @Test
@@ -118,9 +118,9 @@ class TestPlayerManagementPanel: AbstractTest()
 
         panel.lblPlayerName.text shouldBe "Dennis"
         panel.getChild<PlayerAvatar>().icon.shouldMatch(player.getAvatar())
-        panel.getChild<JButton>("Delete").shouldBeVisible()
-        panel.getChild<JButton>("Edit").shouldBeVisible()
-        panel.getChild<JButton>("Run Simulation").shouldBeVisible()
+        panel.getChild<JButton>(text = "Delete").shouldBeVisible()
+        panel.getChild<JButton>(text = "Edit").shouldBeVisible()
+        panel.getChild<JButton>(text = "Run Simulation").shouldBeVisible()
     }
 
     @Test
@@ -219,7 +219,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text="Edit")
+        panel.clickChild<JButton>(text = "Edit")
 
         verify { playerManager.amendPlayer(player) }
         panel.lblPlayerName.text shouldBe "New name"
@@ -235,7 +235,7 @@ class TestPlayerManagementPanel: AbstractTest()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text="Run Simulation")
+        panel.clickChild<JButton>(text = "Run Simulation")
 
         verify { playerManager.runSimulation(player) }
     }

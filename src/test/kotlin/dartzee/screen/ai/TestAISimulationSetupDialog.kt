@@ -37,10 +37,10 @@ class TestAISimulationSetupDialog: AbstractTest()
         val model = makeDartsModel()
         val player = insertPlayer(model)
         val dlg = AISimulationSetupDialog(player, model)
-        dlg.clickChild<JRadioButton>(text="501")
+        dlg.clickChild<JRadioButton>(text = "501")
         dlg.getChild<NumberField>().value = 15000
 
-        dlg.clickChild<JButton>(text="Ok")
+        dlg.clickChild<JButton>(text = "Ok")
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 15000, false) }
@@ -62,10 +62,10 @@ class TestAISimulationSetupDialog: AbstractTest()
         val model = makeDartsModel()
         val player = insertPlayer(model)
         val dlg = AISimulationSetupDialog(player, model, true)
-        dlg.clickChild<JRadioButton>(text="Golf (18 Holes)")
+        dlg.clickChild<JRadioButton>(text = "Golf (18 Holes)")
         dlg.getChild<NumberField>().value = 12000
 
-        dlg.clickChild<JButton>(text="Ok")
+        dlg.clickChild<JButton>(text = "Ok")
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 12000, true) }

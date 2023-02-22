@@ -104,7 +104,7 @@ class TestAchievementMedal: AbstractTest()
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.HAND_CURSOR
 
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter").shouldNotBeNull()
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
     }
 
     @Test
@@ -115,7 +115,7 @@ class TestAchievementMedal: AbstractTest()
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter").shouldNotBeNull()
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
     }
 
     @Test
@@ -127,7 +127,7 @@ class TestAchievementMedal: AbstractTest()
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>("Three Darter") shouldBe null
+        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter") shouldBe null
     }
 
     @Test
