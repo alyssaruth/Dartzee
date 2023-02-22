@@ -1,16 +1,16 @@
 package e2e
 
-import com.github.alexburlton.swingtest.awaitCondition
-import com.github.alexburlton.swingtest.shouldBeVisible
-import dartzee.`object`.Dart
-import dartzee.game.GameLauncher
+import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.core.util.DateStatics
 import dartzee.game.GameLaunchParams
+import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.getRows
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.retrieveGame
 import dartzee.helper.retrieveParticipant
+import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE

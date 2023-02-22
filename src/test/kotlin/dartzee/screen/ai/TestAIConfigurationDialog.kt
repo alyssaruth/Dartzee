@@ -1,8 +1,7 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
-import dartzee.`object`.SegmentType
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar
@@ -12,6 +11,7 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
+import dartzee.`object`.SegmentType
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe

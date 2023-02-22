@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import com.github.alexburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.helper.AbstractTest
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen

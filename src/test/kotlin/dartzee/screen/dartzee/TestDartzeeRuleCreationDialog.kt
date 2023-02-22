@@ -1,13 +1,13 @@
 package dartzee.screen.dartzee
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.makeActionEvent
-import com.github.alexburlton.swingtest.shouldBeDisabled
-import com.github.alexburlton.swingtest.shouldBeEnabled
-import com.github.alexburlton.swingtest.shouldBeVisible
-import com.github.alexburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.makeActionEvent
+import com.github.alyssaburlton.swingtest.shouldBeDisabled
+import com.github.alyssaburlton.swingtest.shouldBeEnabled
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.util.getAllChildComponentsForType

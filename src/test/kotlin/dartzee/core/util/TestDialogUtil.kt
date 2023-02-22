@@ -1,6 +1,6 @@
 package dartzee.core.util
 
-import com.github.alexburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT

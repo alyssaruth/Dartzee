@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import org.junit.jupiter.api.Tag

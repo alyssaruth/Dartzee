@@ -1,7 +1,7 @@
 package dartzee.screen.stats.player.golf
 
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.golfAllMisses

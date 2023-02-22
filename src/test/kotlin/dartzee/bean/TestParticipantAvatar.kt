@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alexburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.game.state.SingleParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant

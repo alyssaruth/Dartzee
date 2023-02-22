@@ -1,14 +1,14 @@
 package dartzee.screen.sync
 
-import com.github.alexburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.findChild
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.REMOTE_NAME_2
 import dartzee.sync.resetRemote
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import org.junit.jupiter.api.Test
 import javax.swing.JLabel
 

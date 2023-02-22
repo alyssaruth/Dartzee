@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AbstractDartsSimulation
 import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.DartsSimulationGolf
@@ -11,9 +11,14 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
 import dartzee.utils.InjectedThings
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.CapturingSlot
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JRadioButton

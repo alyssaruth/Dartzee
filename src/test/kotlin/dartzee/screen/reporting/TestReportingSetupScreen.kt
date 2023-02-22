@@ -1,7 +1,7 @@
 package dartzee.screen.reporting
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.game.GameType
@@ -11,8 +11,8 @@ import dartzee.makeInvalid
 import dartzee.screen.ScreenCache
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotBeEmpty
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 

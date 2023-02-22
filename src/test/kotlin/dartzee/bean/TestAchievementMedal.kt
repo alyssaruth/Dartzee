@@ -1,9 +1,9 @@
 package dartzee.bean
 
-import com.github.alexburlton.swingtest.doClick
-import com.github.alexburlton.swingtest.doHover
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doHover
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.game.GameLauncher
 import dartzee.helper.AbstractTest

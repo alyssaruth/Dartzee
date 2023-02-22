@@ -1,7 +1,12 @@
 package dartzee.screen.preference
 
-import com.github.alexburlton.swingtest.uncheck
-import dartzee.utils.*
+import com.github.alyssaburlton.swingtest.uncheck
+import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
+import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
+import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
+import dartzee.utils.PREFERENCES_INT_AI_SPEED
+import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
+import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
 
 class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc>()

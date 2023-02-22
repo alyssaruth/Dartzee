@@ -1,6 +1,6 @@
 package dartzee.screen.game.scorer
 
-import com.github.alexburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doClick
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow

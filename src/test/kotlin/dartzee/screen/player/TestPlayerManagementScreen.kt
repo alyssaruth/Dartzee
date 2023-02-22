@@ -1,7 +1,7 @@
 package dartzee.screen.player
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest

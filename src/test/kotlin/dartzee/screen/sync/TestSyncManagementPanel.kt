@@ -1,13 +1,17 @@
 package dartzee.screen.sync
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.CURRENT_TIME
 import dartzee.PAST_TIME
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.formatTimestamp
 import dartzee.db.SyncAuditEntity
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.REMOTE_NAME
+import dartzee.helper.REMOTE_NAME_2
+import dartzee.helper.insertGame
+import dartzee.helper.makeSyncAudit
 import dartzee.screen.ScreenCache
 import dartzee.sync.LastSyncData
 import dartzee.sync.SyncManager
@@ -16,10 +20,10 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.nulls.shouldBeNull
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

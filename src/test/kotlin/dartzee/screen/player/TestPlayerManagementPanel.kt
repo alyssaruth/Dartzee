@@ -1,9 +1,10 @@
 package dartzee.screen.player
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeVisible
-import com.github.alexburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldMatch
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
@@ -14,16 +15,19 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertAchievement
+import dartzee.helper.insertGameForPlayer
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertPlayerImage
 import dartzee.player.PlayerManager
 import dartzee.screen.ScreenCache
-import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

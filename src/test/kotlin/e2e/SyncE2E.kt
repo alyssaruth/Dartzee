@@ -1,15 +1,15 @@
 package e2e
 
-import com.github.alexburlton.swingtest.awaitCondition
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.findChild
-import dartzee.game.GameLauncher
+import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.findChild
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
+import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.db.EntityName
 import dartzee.game.GameLaunchParams
+import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.helper.*
 import dartzee.screen.DartsApp

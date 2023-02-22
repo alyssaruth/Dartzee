@@ -1,10 +1,10 @@
 package e2e
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.ai.SimulationRunner
-import com.github.alexburlton.swingtest.awaitCondition
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable

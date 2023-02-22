@@ -1,6 +1,6 @@
 package dartzee.ai
 
-import com.github.alexburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.dartzee.markPoints
 import dartzee.helper.AbstractTest
 import dartzee.`object`.SegmentType

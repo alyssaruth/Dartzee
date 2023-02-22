@@ -1,6 +1,6 @@
 package dartzee.screen.game
 
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics

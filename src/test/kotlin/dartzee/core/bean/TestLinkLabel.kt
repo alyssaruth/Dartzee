@@ -1,8 +1,8 @@
 package dartzee.core.bean
 
-import com.github.alexburlton.swingtest.doClick
-import com.github.alexburlton.swingtest.doHover
-import com.github.alexburlton.swingtest.doHoverAway
+import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doHover
+import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk

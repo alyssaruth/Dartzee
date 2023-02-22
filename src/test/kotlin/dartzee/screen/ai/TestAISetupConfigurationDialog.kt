@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.core.bean.ScrollTable
 import dartzee.getRows

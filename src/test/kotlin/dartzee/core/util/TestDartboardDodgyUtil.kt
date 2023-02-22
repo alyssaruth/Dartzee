@@ -1,9 +1,9 @@
 package dartzee.core.util
 
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.core.bean.SwingLabel
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
@@ -14,8 +14,8 @@ import dartzee.screen.Dartboard
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic

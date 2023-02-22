@@ -1,7 +1,7 @@
 package dartzee.screen.stats.player.x01
 
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
 import dartzee.getRows

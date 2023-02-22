@@ -1,15 +1,15 @@
 package dartzee.bean
 
-import com.github.alexburlton.swingtest.doClick
-import com.github.alexburlton.swingtest.doHover
-import com.github.alexburlton.swingtest.doHoverAway
+import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doHover
+import com.github.alyssaburlton.swingtest.doHoverAway
+import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.screen.IPlayerImageSelector
-import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk

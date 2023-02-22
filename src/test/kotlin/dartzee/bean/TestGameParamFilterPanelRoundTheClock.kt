@@ -1,9 +1,9 @@
 package dartzee.bean
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeDisabled
-import com.github.alexburlton.swingtest.shouldBeEnabled
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeDisabled
+import com.github.alyssaburlton.swingtest.shouldBeEnabled
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig

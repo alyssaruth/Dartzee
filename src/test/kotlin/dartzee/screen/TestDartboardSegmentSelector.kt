@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import com.github.alexburlton.swingtest.makeMouseEvent
+import com.github.alyssaburlton.swingtest.makeMouseEvent
 import dartzee.doubleNineteen
 import dartzee.getColor
 import dartzee.helper.AbstractTest

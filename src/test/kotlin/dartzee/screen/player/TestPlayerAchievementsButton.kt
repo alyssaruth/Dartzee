@@ -1,7 +1,7 @@
 package dartzee.screen.player
 
-import com.github.alexburlton.swingtest.doHover
-import com.github.alexburlton.swingtest.doHoverAway
+import com.github.alyssaburlton.swingtest.doHover
+import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame

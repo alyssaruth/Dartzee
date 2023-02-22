@@ -1,15 +1,15 @@
 package dartzee.db
 
+import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.makeDartsModel
-import dartzee.shouldMatch
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import javax.swing.ImageIcon
 
