@@ -83,6 +83,9 @@ tasks.withType(Test).configureEach {
 tasks.register('runDev', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
+    minHeapSize = "512m"
+    maxHeapSize = "512m"
+
     args 'devMode', 'trueLaunch'
     main 'dartzee.main.DartsMainKt'
 }

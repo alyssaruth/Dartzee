@@ -47,6 +47,50 @@ fun getAdjacentNumbers(number: Int): List<Int>
     return getNumbersWithinN(number, 1).filterNot { it == number }
 }
 
+fun computePointsForSegment(segment: DartboardSegment, centre: Point, diameter: Double): List<Point>
+{
+    if (segment.isMiss()) {
+        return emptyList()
+    }
+
+    val score = segment.score
+    if (score == 25) {
+        return emptyList()
+    } else {
+        val (startAngle, endAngle) = getAnglesForScore(score)
+        val (lowerRadius, upperRadius) = getRadiiForSegmentType(segment.type, diameter)
+        return (startAngle * 10 until endAngle * 10).flatMap { angle ->
+            val actualAngle = angle.toDouble() / 10
+            ((10 * lowerRadius).toInt() until (10 * upperRadius).toInt()).map { r ->
+                translatePoint(centre, r.toDouble() / 10, actualAngle)
+            }
+        }
+    }
+}
+
+fun getAnglesForScore(score: Int): Pair<Int, Int> {
+    val scoreIndex = numberOrder.indexOf(score) - 1
+    val startAngle = 9 + (18 * scoreIndex)
+    val endAngle = 9 + (18 * (scoreIndex + 1))
+
+    return Pair(startAngle, endAngle)
+}
+
+fun getRadiiForSegmentType(segmentType: SegmentType, diameter: Double): Pair<Double, Double> {
+    val radius = diameter / 2
+    val (lowerRatio, upperRatio) = getRatioBounds(segmentType)
+    return Pair((radius * lowerRatio), (radius * upperRatio))
+}
+private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
+    return when (segmentType) {
+        SegmentType.INNER_SINGLE -> Pair(RATIO_OUTER_BULL, LOWER_BOUND_TRIPLE_RATIO)
+        SegmentType.TREBLE -> Pair(LOWER_BOUND_TRIPLE_RATIO, UPPER_BOUND_TRIPLE_RATIO)
+        SegmentType.OUTER_SINGLE -> Pair(UPPER_BOUND_TRIPLE_RATIO, LOWER_BOUND_DOUBLE_RATIO)
+        SegmentType.DOUBLE -> Pair(LOWER_BOUND_DOUBLE_RATIO, UPPER_BOUND_DOUBLE_RATIO)
+        else -> throw IllegalArgumentException("Invalid segment type: $segmentType")
+    }
+}
+
 fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
 {
     val radius = getDistance(dartPt, centerPt)

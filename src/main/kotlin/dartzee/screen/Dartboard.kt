@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import dartzee.core.bean.getPointList
 import dartzee.core.bean.paint
 import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThreadBlocking
@@ -21,12 +20,15 @@ import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.BASE_FONT
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
+import dartzee.utils.computePointsForSegment
 import dartzee.utils.convertForDestinationDartboard
 import dartzee.utils.factorySegmentForPoint
-import dartzee.utils.getAverage
+import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourForSegment
 import dartzee.utils.getDartForSegment
 import dartzee.utils.getPotentialAimPoints
+import dartzee.utils.translatePoint
 import java.awt.Canvas
 import java.awt.Color
 import java.awt.Component
@@ -45,6 +47,7 @@ import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JLayeredPane
 import javax.swing.SwingConstants
+import kotlin.math.roundToInt
 
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
@@ -126,8 +129,17 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         centerPoint = Point(width / 2, height / 2)
         diameter = 0.7 * width
 
+        getAllNonMissSegments().forEach {
+            val pts = computePointsForSegment(it, centerPoint, diameter)
+            val segment = StatefulSegment(it.type, it.score)
+            segment.points.addAll(pts)
+
+            val segmentKey = "${segment.score}_${segment.type}"
+            hmSegmentKeyToSegment[segmentKey] = segment
+        }
+
         //Construct the segments, populated with their points. Cache pt -> segment.
-        getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
+        // getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
         getAllSegments().forEach { it.computeEdgePoints() }
 
         paintDartboardImage()
@@ -175,7 +187,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         //Get the height we want for our labels, which is half the thickness of the outer band
         val radius = diameter / 2
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
-        val lblHeight = Math.round((outerRadius - radius) / 2).toInt()
+        val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
         val fontToUse = getFontForDartboardLabels(lblHeight)
 
@@ -193,8 +205,10 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
             lbl.setSize(lblWidth, lblHeight)
 
             //Work out where to place the label
-            val points = getPointsForSegment(i, SegmentType.MISS)
-            val avgPoint = getAverage(points)
+            val angle = getAnglesForScore(i).toList().average()
+            val radiusForLabel = radius + lblHeight
+            val avgPoint = translatePoint(centerPoint, radiusForLabel, angle)
+
             val lblX = avgPoint.getX().toInt() - lblWidth / 2
             val lblY = avgPoint.getY().toInt() - lblHeight / 2
 

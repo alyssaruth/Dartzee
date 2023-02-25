@@ -23,7 +23,6 @@ class StatefulSegment(val type: SegmentType, val score: Int)
      * Helpers
      */
     fun isMiss() = type == SegmentType.MISS || type == SegmentType.MISSED_BOARD
-    fun isDoubleExcludingBull() = type == SegmentType.DOUBLE && score != 25
     fun getTotal(): Int = score * type.getMultiplier()
 
     fun addPoint(pt: Point)
