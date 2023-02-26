@@ -1,9 +1,7 @@
 
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.AimDart
-import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.utils.getAverage
 import java.awt.Point
 
 /**
@@ -16,11 +14,7 @@ fun getPointForScore(drt: AimDart): Point
     return getPointForScore(score, segmentType)
 }
 
-fun getPointForScore(score: Int, type: SegmentType): Point
-{
-    val points = AI_DARTBOARD.getPointsForSegment(DartboardSegment(type, score))
-    return getAverage(points)
-}
+fun getPointForScore(score: Int, type: SegmentType) = AI_DARTBOARD.getAimPoint(score, type)
 
 /**
  * Get the application-wide default thing to aim for, which applies to any score of 60 or less

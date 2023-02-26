@@ -8,6 +8,7 @@ import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.AimPoint
 import dartzee.utils.DartsColour
@@ -100,7 +101,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
                 && dartboardLabel.height == height
                 && dartboardImage != null
 
-    open fun paintDartboard(colourWrapper: ColourWrapper? = null)
+    fun paintDartboard(colourWrapper: ColourWrapper? = null)
     {
         if (width <= 0 || height <= 0 || repaintingSameSize()) {
             return
@@ -136,10 +137,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
             val colour = getColourFromHashMap(segment, colourWrapperToUse)
             pts.forEach { dartboardImage?.setRGB(it.x, it.y, colour.rgb) }
         }
-
-        //Construct the segments, populated with their points. Cache pt -> segment.
-        // getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
-        // getAllSegments().forEach { it.computeEdgePoints() }
 
         addScoreLabels()
 
@@ -338,10 +335,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     /**
      * Public methods
      */
-    fun getPointsForSegment(segment: DartboardSegment): Set<Point>
-    {
-        return computePointsForSegment(segment, centerPoint, diameter)
-    }
+    fun getPointsForSegment(score: Int, type: SegmentType) = getPointsForSegment(DartboardSegment(type, score))
+    fun getPointsForSegment(segment: DartboardSegment) = computePointsForSegment(segment, centerPoint, diameter)
 
     fun getDeliberateMissPoint(): Point {
         return translatePoint(centerPoint, (diameter / 2) * UPPER_BOUND_OUTSIDE_BOARD_RATIO, 180.0)
