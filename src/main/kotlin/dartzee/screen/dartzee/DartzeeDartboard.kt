@@ -4,6 +4,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getColourFromHashMap
 import java.awt.Color
 
@@ -15,7 +16,7 @@ class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, he
     {
         this.segmentStatus = segmentStatus
 
-        getAllSegments().forEach{
+        getAllNonMissSegments().forEach{
             colourSegment(it, false)
         }
     }

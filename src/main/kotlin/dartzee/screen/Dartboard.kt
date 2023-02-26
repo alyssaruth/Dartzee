@@ -1,11 +1,9 @@
 package dartzee.screen
 
-import dartzee.core.bean.paint
 import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
 import dartzee.logging.CODE_RENDERED_DARTBOARD
-import dartzee.logging.CODE_RENDER_ERROR
 import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
@@ -20,12 +18,15 @@ import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.BASE_FONT
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
+import dartzee.utils.computeEdgePoints
 import dartzee.utils.computePointsForSegment
 import dartzee.utils.convertForDestinationDartboard
 import dartzee.utils.factorySegmentForPoint
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourForSegment
+import dartzee.utils.getColourFromHashMap
+import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getDartForSegment
 import dartzee.utils.getPotentialAimPoints
 import dartzee.utils.translatePoint
@@ -73,7 +74,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     var simulation = false
 
     //Cached things
-    private var lastHoveredSegment: StatefulSegment? = null
+    private var lastHoveredSegment: DartboardSegment? = null
     private var colourWrapper: ColourWrapper? = null
 
     //For dodgy sounds/animations
@@ -101,7 +102,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     private fun repaintingSameSize() =
         dartboardLabel.width == width
                 && dartboardLabel.height == height
-                && hmSegmentKeyToSegment.isNotEmpty()
+                && dartboardImage != null
 
     open fun paintDartboard(colourWrapper: ColourWrapper? = null)
     {
@@ -115,7 +116,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         lastHoveredSegment = null
         stopListening()
-        hmSegmentKeyToSegment.clear()
 
         val width = width
         val height = height
@@ -129,20 +129,21 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         centerPoint = Point(width / 2, height / 2)
         diameter = 0.7 * width
 
-        getAllNonMissSegments().forEach {
-            val pts = computePointsForSegment(it, centerPoint, diameter)
-            val segment = StatefulSegment(it.type, it.score)
-            segment.points.addAll(pts)
+        dartboardImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 
-            val segmentKey = "${segment.score}_${segment.type}"
-            hmSegmentKeyToSegment[segmentKey] = segment
+        val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
+
+        paintOuterBoard(colourWrapperToUse)
+
+        getAllNonMissSegments().forEach { segment ->
+            val pts = computePointsForSegment(segment, centerPoint, diameter)
+            val colour = getColourFromHashMap(segment, colourWrapperToUse)
+            pts.forEach { dartboardImage?.setRGB(it.x, it.y, colour.rgb) }
         }
 
         //Construct the segments, populated with their points. Cache pt -> segment.
         // getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
-        getAllSegments().forEach { it.computeEdgePoints() }
-
-        paintDartboardImage()
+        // getAllSegments().forEach { it.computeEdgePoints() }
 
         addScoreLabels()
 
@@ -160,6 +161,13 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
             KEY_DURATION to duration)
     }
 
+    private fun paintOuterBoard(colourWrapper: ColourWrapper) {
+        val borderSize = (diameter * UPPER_BOUND_OUTSIDE_BOARD_RATIO).toInt()
+        val g = dartboardImage!!.graphics as Graphics2D
+        g.paint = colourWrapper.outerDartboardColour
+        g.fillOval(centerPoint.x - borderSize/2, centerPoint.y - borderSize/2, borderSize, borderSize)
+    }
+
     private fun translateThrownDarts(oldCenter: Point, oldDiameter: Double)
     {
         val points = dartLabels.filter { it.isVisible }.map { it.location }
@@ -167,14 +175,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         clearDarts()
         newPoints.forEach(::addDart)
-    }
-
-    private fun paintDartboardImage()
-    {
-        val hmPointToColor = getAllSegments().flatMap { it.getColorMap(colourWrapper) }.toMap()
-
-        dartboardImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-        dartboardImage?.paint { hmPointToColor[it] }
     }
 
     private fun addScoreLabels()
@@ -258,8 +258,8 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         // We might not have told the dartboard to paint yet (it's invoked later onto the EDT)
         dartboardImage ?: return
 
-        val hoveredSegment = getSegmentForPoint(hoveredPoint)
-        if (hoveredSegment == lastHoveredSegment)
+        val segment = factorySegmentForPoint(hoveredPoint, centerPoint, diameter)
+        if (segment == lastHoveredSegment)
         {
             //Nothing to do
             return
@@ -267,22 +267,21 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         lastHoveredSegment?.let { colourSegment(it, false) }
 
-        lastHoveredSegment = hoveredSegment
-        colourSegment(hoveredSegment, true)
+        lastHoveredSegment = segment
+        colourSegment(segment, true)
     }
 
     open fun getInitialColourForSegment(segment: DartboardSegment) = getColourForSegment(segment, colourWrapper)
 
-    fun colourSegment(segment: StatefulSegment, highlight: Boolean)
+    fun colourSegment(segment: DartboardSegment, highlight: Boolean)
     {
-        val dataSegment = segment.toDataSegment()
         if (segment.isMiss())
         {
             return
         }
 
-        val colour = getInitialColourForSegment(dataSegment)
-        val hoveredColour = if (highlight && shouldActuallyHighlight(dataSegment)) getHighlightedColour(colour) else colour
+        val colour = getInitialColourForSegment(segment)
+        val hoveredColour = if (highlight && shouldActuallyHighlight(segment)) getHighlightedColour(colour) else colour
 
         colourSegment(segment, hoveredColour)
     }
@@ -298,13 +297,14 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     open fun shouldActuallyHighlight(segment: DartboardSegment) = true
 
-    fun colourSegment(segment: StatefulSegment, col: Color)
+    fun colourSegment(segment: DartboardSegment, col: Color)
     {
-        val pointsForCurrentSegment = segment.points
-        val edgeColour = getEdgeColourForSegment(segment.toDataSegment())
-        for (pt in pointsForCurrentSegment)
+        val pts = computePointsForSegment(segment, centerPoint, diameter)
+        val edgeColour = getEdgeColourForSegment(segment)
+        val edgePoints = if (edgeColour != null) computeEdgePoints(pts) else emptyList()
+        for (pt in pts)
         {
-            if (edgeColour != null && segment.isEdgePoint(pt))
+            if (edgeColour != null && edgePoints.contains(pt))
             {
                 colourPoint(pt, edgeColour)
             }
@@ -333,35 +333,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
     }
 
-    fun getAllSegments() = hmSegmentKeyToSegment.values.toList()
-
     fun getDataSegmentForPoint(pt: Point) = factorySegmentForPoint(pt, centerPoint, diameter)
-    protected fun getSegmentForPoint(pt: Point, stackTrace: Boolean = true): StatefulSegment
-    {
-        val segment = getAllSegments().firstOrNull { it.containsPoint(pt) }
-        if (segment != null)
-        {
-            return segment
-        }
-
-        if (stackTrace)
-        {
-            logger.error(CODE_RENDER_ERROR, "Couldn't find segment for point (" + pt.getX() + ", " + pt.getY() + ")."
-                    + "Width = " + width + ", Height = " + height)
-        }
-
-        return factoryAndCacheSegmentForPoint(pt)
-    }
-
-    private fun factoryAndCacheSegmentForPoint(pt: Point): StatefulSegment
-    {
-        val newSegment = factorySegmentForPoint(pt, centerPoint, diameter)
-        val segmentKey = "${newSegment.score}_${newSegment.type}"
-
-        val segment = hmSegmentKeyToSegment.getOrPut(segmentKey) { StatefulSegment(newSegment.type, newSegment.score) }
-        segment.addPoint(pt)
-        return segment
-    }
 
     /**
      * Public methods

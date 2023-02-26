@@ -13,7 +13,7 @@ private val QUADRANTS = arrayOf(TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT)
 
 fun translatePoint(pt: Point, radius: Double, degrees: Double): Point
 {
-    val quadrant = getQuadrantForAngle(degrees) ?: return translatePointAlongAxis(pt, radius, degrees)
+    val quadrant = getQuadrantForAngle(degrees) ?: getQuadrantForAngle(degrees + 360) ?: return translatePointAlongAxis(pt, radius, degrees)
 
     //Need radians for trig functions
     val theta = Math.toRadians(degrees)

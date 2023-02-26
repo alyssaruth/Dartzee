@@ -58,6 +58,9 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, diameter: 
         return emptyList()
     } else {
         val (startAngle, endAngle) = getAnglesForScore(score)
+        if (score == 20) {
+            println("20: $startAngle - $endAngle")
+        }
         val (lowerRadius, upperRadius) = getRadiiForSegmentType(segment.type, diameter)
         return (startAngle * 10 until endAngle * 10).flatMap { angle ->
             val actualAngle = angle.toDouble() / 10
@@ -66,6 +69,19 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, diameter: 
             }
         }
     }
+}
+
+fun computeEdgePoints(segmentPoints: List<Point>): List<Point>
+{
+    val ptsByX = segmentPoints.groupBy { it.x }
+    val ptsByY = segmentPoints.groupBy { it.y }
+
+    val yMins: List<Point> = ptsByX.values.map { points -> points.minByOrNull { it.y }!! }
+    val yMaxes: List<Point> = ptsByX.values.map { points -> points.maxByOrNull { it.y }!! }
+    val xMins: List<Point> = ptsByY.values.map { points -> points.minByOrNull { it.x }!! }
+    val xMaxes: List<Point> = ptsByY.values.map { points -> points.maxByOrNull { it.x }!! }
+
+    return yMins + yMaxes + xMins + xMaxes
 }
 
 fun getAnglesForScore(score: Int): Pair<Int, Int> {
@@ -233,7 +249,7 @@ fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper
     return colourWrapper.getColour(multiplier, score)
 }
 
-private fun getColourWrapperFromPrefs(): ColourWrapper
+fun getColourWrapperFromPrefs(): ColourWrapper
 {
     if (colourWrapperFromPrefs != null)
     {
