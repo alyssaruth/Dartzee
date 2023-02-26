@@ -81,7 +81,7 @@ class TestDartzeeDartboard: AbstractTest()
         missTwentyPts = dartboard.getPointsForSegment(20, SegmentType.MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
 
-        val missedBoardSegments = dartboard.getPointsForSegment(20, SegmentType.MISSED_BOARD)
+        val missedBoardSegments = dartboard.getPointsForSegment(20, SegmentType.MISS)
         missedBoardSegments.forEach { dartboard.getColor(it) shouldBe DartsColour.TRANSPARENT }
     }
 

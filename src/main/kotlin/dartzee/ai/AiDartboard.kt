@@ -3,7 +3,7 @@ package dartzee.ai
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
-import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getAverage
 import java.awt.Point
 
@@ -21,7 +21,7 @@ class AiDartboard: Dartboard(520, 555)
 
     fun cacheCenterPoints()
     {
-        getAllNonMissSegments().forEach {
+        getAllPossibleSegments().forEach {
             segmentToCenterPoint[it] = getAverage(getPointsForSegment(it))
         }
     }

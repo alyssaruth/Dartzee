@@ -53,15 +53,15 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, diameter: 
     }
 
     val score = segment.score
-    if (score == 25) {
-        return emptySet()
+    return if (score == 25) {
+        emptySet()
     } else {
         val (startAngle, endAngle) = getAnglesForScore(score)
         val (lowerRadius, upperRadius) = getRadiiForSegmentType(segment.type, diameter)
-        return (startAngle * 10 until endAngle * 10).flatMap { angle ->
+        (startAngle * 10 until endAngle * 10).flatMap { angle ->
             val actualAngle = angle.toDouble() / 10
-            ((10 * lowerRadius).toInt() until (10 * upperRadius).toInt()).map { r ->
-                translatePoint(centre, r.toDouble() / 10, actualAngle)
+            ((2 * lowerRadius).toInt() until (2 * upperRadius).toInt()).map { r ->
+                translatePoint(centre, r.toDouble() / 2, actualAngle)
             }
         }.toSet()
     }
@@ -162,8 +162,7 @@ private fun calculateTypeForRatioNonBullseye(ratioToDiameter: Double) =
         ratioToDiameter < UPPER_BOUND_TRIPLE_RATIO -> SegmentType.TREBLE
         ratioToDiameter < LOWER_BOUND_DOUBLE_RATIO -> SegmentType.OUTER_SINGLE
         ratioToDiameter < UPPER_BOUND_DOUBLE_RATIO -> SegmentType.DOUBLE
-        ratioToDiameter < UPPER_BOUND_OUTSIDE_BOARD_RATIO -> SegmentType.MISS
-        else -> SegmentType.MISSED_BOARD
+        else -> SegmentType.MISS
     }
 
 private fun getScoreForAngle(angle: Double): Int
@@ -211,12 +210,7 @@ fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper
     val type = segment.type
     if (type == SegmentType.MISS)
     {
-        return colourWrapper.outerDartboardColour
-    }
-
-    if (type == SegmentType.MISSED_BOARD)
-    {
-        return colourWrapper.missedBoardColour
+        throw Error("Cannot get colour for a miss")
     }
 
     val score = segment.score
@@ -285,8 +279,6 @@ fun getAllPossibleSegments(): List<DartboardSegment>
         segments.add(DartboardSegment(SegmentType.TREBLE, i))
         segments.add(DartboardSegment(SegmentType.OUTER_SINGLE, i))
         segments.add(DartboardSegment(SegmentType.INNER_SINGLE, i))
-        segments.add(DartboardSegment(SegmentType.MISS, i))
-        segments.add(DartboardSegment(SegmentType.MISSED_BOARD, i))
     }
 
     segments.add(DartboardSegment(SegmentType.OUTER_SINGLE, 25))
@@ -294,5 +286,3 @@ fun getAllPossibleSegments(): List<DartboardSegment>
 
     return segments.toList()
 }
-
-fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }

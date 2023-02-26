@@ -10,7 +10,7 @@ import dartzee.singleNineteen
 import dartzee.trebleTwenty
 import dartzee.utils.DartsColour
 import dartzee.utils.computeEdgePoints
-import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getAverage
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
@@ -40,7 +40,7 @@ class TestDartboardSegmentSelector: AbstractTest()
     @Test
     fun `should be able to select all`()
     {
-        val allSegments = getAllNonMissSegments()
+        val allSegments = getAllPossibleSegments()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
         dartboard.initState(setOf(doubleNineteen, trebleTwenty))

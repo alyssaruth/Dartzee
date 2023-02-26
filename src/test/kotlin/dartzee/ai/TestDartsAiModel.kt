@@ -171,7 +171,7 @@ class TestDartsAiModel: AbstractTest()
 
         repeat(20) {
             val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatus())
-            AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
+            AI_DARTBOARD.getDataSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.MISS, 3)
         }
     }
 

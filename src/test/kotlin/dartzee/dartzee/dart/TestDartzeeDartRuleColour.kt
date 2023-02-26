@@ -7,7 +7,6 @@ import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.helper.makeColourRule
 import dartzee.missTwenty
-import dartzee.missedBoard
 import dartzee.outerBull
 import dartzee.singleNineteen
 import dartzee.singleTwenty
@@ -38,7 +37,6 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe false
     }
@@ -56,7 +54,6 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe false
     }
@@ -74,7 +71,6 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe true
         rule.isValidSegment(trebleNineteen) shouldBe true
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe true
     }
@@ -92,7 +88,6 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe true
         rule.isValidSegment(outerBull) shouldBe false
     }
@@ -111,7 +106,6 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe true
         rule.isValidSegment(outerBull) shouldBe false
     }

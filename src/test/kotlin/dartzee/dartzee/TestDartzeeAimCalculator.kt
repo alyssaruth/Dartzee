@@ -10,7 +10,7 @@ import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
-import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAllPossibleSegments
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
@@ -23,7 +23,7 @@ import java.awt.Point
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
-private val allNonMisses = getAllNonMissSegments()
+private val allNonMisses = getAllPossibleSegments()
 private val calculator = DartzeeAimCalculator()
 
 class TestDartzeeAimCalculator: AbstractTest()

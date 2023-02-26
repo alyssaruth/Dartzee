@@ -21,7 +21,7 @@ import dartzee.utils.computeEdgePoints
 import dartzee.utils.computePointsForSegment
 import dartzee.utils.convertForDestinationDartboard
 import dartzee.utils.factorySegmentForPoint
-import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourForSegment
 import dartzee.utils.getColourFromHashMap
@@ -132,7 +132,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         paintOuterBoard(colourWrapperToUse)
 
-        getAllNonMissSegments().forEach { segment ->
+        getAllPossibleSegments().forEach { segment ->
             val pts = getPointsForSegment(segment)
             val colour = getColourFromHashMap(segment, colourWrapperToUse)
             pts.forEach { dartboardImage?.setRGB(it.x, it.y, colour.rgb) }

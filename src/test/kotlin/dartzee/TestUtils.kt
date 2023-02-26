@@ -35,7 +35,6 @@ val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
 val innerSingle = DartboardSegment(SegmentType.INNER_SINGLE, 20)
 val outerSingle = DartboardSegment(SegmentType.OUTER_SINGLE, 15)
 val missTwenty = DartboardSegment(SegmentType.MISS, 20)
-val missedBoard = DartboardSegment(SegmentType.MISSED_BOARD, 15)
 
 val singleTwenty = DartboardSegment(SegmentType.INNER_SINGLE, 20)
 val doubleTwenty = DartboardSegment(SegmentType.DOUBLE, 20)
