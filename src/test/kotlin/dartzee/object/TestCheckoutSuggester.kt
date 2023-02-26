@@ -3,13 +3,13 @@ package dartzee.`object`
 import dartzee.helper.AbstractTest
 import dartzee.utils.getCheckoutScores
 import dartzee.utils.sumScore
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveAtMostSize
 import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.Test
 
 class TestCheckoutSuggester: AbstractTest()
@@ -65,10 +65,6 @@ class TestCheckoutSuggester: AbstractTest()
         for (i in 2..150)
         {
             val checkout = CheckoutSuggester.suggestCheckout(i, 3)
-            if (checkout == null)
-            {
-                println(i)
-            }
             checkout shouldNotBe null
         }
     }

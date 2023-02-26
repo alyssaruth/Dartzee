@@ -3,9 +3,7 @@ package dartzee.utils
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractRegistryTest
 import dartzee.makeTestDartboard
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.SegmentType
-import dartzee.`object`.StatefulSegment
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
@@ -72,8 +70,6 @@ class TestDartboardUtil : AbstractRegistryTest()
         drt.score shouldBe score
         drt.multiplier shouldBe multiplier
         drt.segmentType shouldBe segmentType
-
-        assertColourForPointAndSegment(pt, StatefulSegment(segment.type, segment.score), null, expectedColor)
     }
 
     @Test
@@ -83,63 +79,6 @@ class TestDartboardUtil : AbstractRegistryTest()
         val pink = Color.pink
         PreferenceUtil.saveString(PREFERENCES_STRING_EVEN_SINGLE_COLOUR, DartsColour.toPrefStr(pink))
         assertSegment(Point(0, -629), SegmentType.OUTER_SINGLE, 20, 1, pink)
-    }
-
-    @Test
-    fun testWireframe()
-    {
-        val wrapper = ColourWrapper(DartsColour.TRANSPARENT)
-        wrapper.edgeColour = Color.YELLOW
-
-        val fakeSegment = StatefulSegment(SegmentType.OUTER_SINGLE, 20)
-        for (x in 0..200)
-        {
-            for (y in 0..200)
-            {
-                fakeSegment.addPoint(Point(x, y))
-            }
-        }
-
-        fakeSegment.points.shouldHaveSize(40401)
-        fakeSegment.computeEdgePoints()
-
-        //Four corners and four edge mid-points
-        assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(0, 100), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(100, 0), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(0, 200), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(200, 0), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(200, 100), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(100, 200), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(200, 200), fakeSegment, wrapper, Color.YELLOW)
-
-        //Non-edge boundary cases
-        assertColourForPointAndSegment(Point(1, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(199, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(1, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(199, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-
-        //Another non-edge. Let's say we'll highlight this one, to check there's no NPE
-        assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-
-        //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
-        val missSegment = StatefulSegment(SegmentType.MISS, 20)
-        for (x in 0..200)
-        {
-            for (y in 0..200)
-            {
-                missSegment.addPoint(Point(x, y))
-            }
-        }
-
-        assertColourForPointAndSegment(Point(0, 0), missSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(1, 1), missSegment, wrapper, DartsColour.TRANSPARENT)
-    }
-
-    private fun assertColourForPointAndSegment(pt: Point, segment: StatefulSegment, wrapper: ColourWrapper?, expected: Color)
-    {
-        val color = getColourForPointAndSegment(pt, segment, wrapper)
-        color shouldBe expected
     }
 
     @Test

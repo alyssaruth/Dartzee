@@ -9,6 +9,7 @@ import dartzee.`object`.SegmentType
 import dartzee.singleNineteen
 import dartzee.trebleTwenty
 import dartzee.utils.DartsColour
+import dartzee.utils.computeEdgePoints
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAverage
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -161,11 +162,9 @@ class TestDartboardSegmentSelector: AbstractTest()
         val dartboard = DartboardSegmentSelector(100, 100)
         dartboard.paintDartboard()
 
-        val doubleNineteenSegment = dartboard.getSegment(19, SegmentType.DOUBLE)
-        doubleNineteenSegment.shouldNotBeNull()
-
-        val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
-        val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)
+        val doubleNineteenPoints = dartboard.getPointsForSegment(DartboardSegment(SegmentType.DOUBLE, 19))
+        val edgePoints = computeEdgePoints(doubleNineteenPoints)
+        val innerPoints = doubleNineteenPoints.subtract(edgePoints)
 
         edgePoints.forEach {
             dartboard.getColor(it) shouldBe Color.BLACK
@@ -184,11 +183,9 @@ class TestDartboardSegmentSelector: AbstractTest()
 
         dartboard.initState(hashSetOf(doubleNineteen))
 
-        val doubleNineteenSegment = dartboard.getSegment(19, SegmentType.DOUBLE)
-        doubleNineteenSegment.shouldNotBeNull()
-
-        val edgePoints = doubleNineteenSegment.points.filter { doubleNineteenSegment.isEdgePoint(it) }
-        val innerPoints = doubleNineteenSegment.points.subtract(edgePoints)
+        val doubleNineteenPoints = dartboard.getPointsForSegment(DartboardSegment(SegmentType.DOUBLE, 19))
+        val edgePoints = computeEdgePoints(doubleNineteenPoints)
+        val innerPoints = doubleNineteenPoints.subtract(edgePoints)
 
         edgePoints.forEach {
             dartboard.getColor(it) shouldBe Color.BLACK

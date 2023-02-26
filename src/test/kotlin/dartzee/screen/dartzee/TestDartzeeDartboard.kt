@@ -5,10 +5,12 @@ import dartzee.*
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeSegmentStatus
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.`object`.DartboardSegment
 import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
+import dartzee.utils.computeEdgePoints
 import dartzee.utils.getAllPossibleSegments
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
@@ -152,15 +154,13 @@ class TestDartzeeDartboard: AbstractTest()
 
     private fun Dartboard.getEdgePointForSegment(score: Int, segmentType: SegmentType): Point
     {
-        val segment = getSegment(score, segmentType)!!
-        segment.isEdgePoint(Point(0, 0))
-        return segment.edgePoints.first()
+        val segment = getPointsForSegment(DartboardSegment(segmentType, score))
+        return computeEdgePoints(segment).first()
     }
     private fun Dartboard.getNonEdgePointForSegment(score: Int, segmentType: SegmentType): Point
     {
-        val segment = getSegment(score, segmentType)!!
-        segment.isEdgePoint(Point(0, 0))
-        val innerPoints = segment.points - segment.edgePoints
+        val segment = getPointsForSegment(DartboardSegment(segmentType, score))
+        val innerPoints = segment - computeEdgePoints(segment)
         return innerPoints.first()
     }
 }

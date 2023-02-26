@@ -8,8 +8,6 @@ import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
-import dartzee.`object`.StatefulSegment
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.AimPoint
 import dartzee.utils.DartsColour
@@ -56,8 +54,6 @@ const val LAYER_SLIDER = 4
 
 open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), MouseListener, MouseMotionListener
 {
-    protected val hmSegmentKeyToSegment = mutableMapOf<String, StatefulSegment>()
-
     private val dartLabels = mutableListOf<JLabel>()
 
     private val listeners: MutableList<DartboardListener> = mutableListOf()
@@ -136,7 +132,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         paintOuterBoard(colourWrapperToUse)
 
         getAllNonMissSegments().forEach { segment ->
-            val pts = computePointsForSegment(segment, centerPoint, diameter)
+            val pts = getPointsForSegment(segment)
             val colour = getColourFromHashMap(segment, colourWrapperToUse)
             pts.forEach { dartboardImage?.setRGB(it.x, it.y, colour.rgb) }
         }
@@ -162,8 +158,12 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     }
 
     private fun paintOuterBoard(colourWrapper: ColourWrapper) {
-        val borderSize = (diameter * UPPER_BOUND_OUTSIDE_BOARD_RATIO).toInt()
         val g = dartboardImage!!.graphics as Graphics2D
+
+        g.paint = colourWrapper.missedBoardColour
+        g.fillRect(0, 0, width, height)
+
+        val borderSize = (diameter * UPPER_BOUND_OUTSIDE_BOARD_RATIO).toInt()
         g.paint = colourWrapper.outerDartboardColour
         g.fillOval(centerPoint.x - borderSize/2, centerPoint.y - borderSize/2, borderSize, borderSize)
     }
@@ -299,7 +299,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
     fun colourSegment(segment: DartboardSegment, col: Color)
     {
-        val pts = computePointsForSegment(segment, centerPoint, diameter)
+        val pts = getPointsForSegment(segment)
         val edgeColour = getEdgeColourForSegment(segment)
         val edgePoints = if (edgeColour != null) computeEdgePoints(pts) else emptyList()
         for (pt in pts)
@@ -338,13 +338,14 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     /**
      * Public methods
      */
-    fun getPointsForSegment(score: Int, type: SegmentType): Set<Point>
+    fun getPointsForSegment(segment: DartboardSegment): Set<Point>
     {
-        val segmentKey = score.toString() + "_" + type
-        val segment = hmSegmentKeyToSegment[segmentKey]
-        return segment?.points ?: setOf()
+        return computePointsForSegment(segment, centerPoint, diameter)
     }
-    fun getSegment(score: Int, type: SegmentType): StatefulSegment? = hmSegmentKeyToSegment["${score}_$type"]
+
+    fun getDeliberateMissPoint(): Point {
+        return translatePoint(centerPoint, (diameter / 2) * UPPER_BOUND_OUTSIDE_BOARD_RATIO, 180.0)
+    }
 
     fun isDouble(pt: Point): Boolean
     {

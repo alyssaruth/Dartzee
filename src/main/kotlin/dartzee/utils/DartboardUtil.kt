@@ -5,7 +5,6 @@ import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.`object`.StatefulSegment
 import dartzee.screen.Dartboard
 import java.awt.Color
 import java.awt.Point
@@ -47,31 +46,28 @@ fun getAdjacentNumbers(number: Int): List<Int>
     return getNumbersWithinN(number, 1).filterNot { it == number }
 }
 
-fun computePointsForSegment(segment: DartboardSegment, centre: Point, diameter: Double): List<Point>
+fun computePointsForSegment(segment: DartboardSegment, centre: Point, diameter: Double): Set<Point>
 {
     if (segment.isMiss()) {
-        return emptyList()
+        return emptySet()
     }
 
     val score = segment.score
     if (score == 25) {
-        return emptyList()
+        return emptySet()
     } else {
         val (startAngle, endAngle) = getAnglesForScore(score)
-        if (score == 20) {
-            println("20: $startAngle - $endAngle")
-        }
         val (lowerRadius, upperRadius) = getRadiiForSegmentType(segment.type, diameter)
         return (startAngle * 10 until endAngle * 10).flatMap { angle ->
             val actualAngle = angle.toDouble() / 10
             ((10 * lowerRadius).toInt() until (10 * upperRadius).toInt()).map { r ->
                 translatePoint(centre, r.toDouble() / 10, actualAngle)
             }
-        }
+        }.toSet()
     }
 }
 
-fun computeEdgePoints(segmentPoints: List<Point>): List<Point>
+fun computeEdgePoints(segmentPoints: Set<Point>): Set<Point>
 {
     val ptsByX = segmentPoints.groupBy { it.x }
     val ptsByY = segmentPoints.groupBy { it.y }
@@ -81,7 +77,7 @@ fun computeEdgePoints(segmentPoints: List<Point>): List<Point>
     val xMins: List<Point> = ptsByY.values.map { points -> points.minByOrNull { it.x }!! }
     val xMaxes: List<Point> = ptsByY.values.map { points -> points.maxByOrNull { it.x }!! }
 
-    return yMins + yMaxes + xMins + xMaxes
+    return (yMins + yMaxes + xMins + xMaxes).toSet()
 }
 
 fun getAnglesForScore(score: Int): Pair<Int, Int> {
@@ -202,21 +198,6 @@ fun getPotentialAimPoints(centerPt: Point, diameter: Double): Set<AimPoint>
 
     points.add(AimPoint(centerPt, radius, 0, 0.0))
     return points.toSet()
-}
-
-fun getColourForPointAndSegment(pt: Point?, segment: StatefulSegment, colourWrapper: ColourWrapper?): Color
-{
-    val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
-
-    val edgeColour = colourWrapperToUse.edgeColour
-    if (edgeColour != null
-            && !segment.isMiss()
-            && segment.isEdgePoint(pt))
-    {
-        return edgeColour
-    }
-
-    return getColourFromHashMap(segment.toDataSegment(), colourWrapperToUse)
 }
 
 fun getColourForSegment(segment: DartboardSegment, colourWrapper: ColourWrapper?): Color

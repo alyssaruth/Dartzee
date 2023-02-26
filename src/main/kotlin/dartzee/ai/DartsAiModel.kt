@@ -128,7 +128,7 @@ data class DartsAiModel(val standardDeviation: Double,
 
         if (aiDartboardPoint == DELIBERATE_MISS)
         {
-            return AI_DARTBOARD.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
+            return AI_DARTBOARD.getDeliberateMissPoint()
         }
 
         val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint)
