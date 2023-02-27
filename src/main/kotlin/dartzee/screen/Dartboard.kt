@@ -114,7 +114,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         lastHoveredSegment = null
         stopListening()
 
-        val width = width
+        val boardWidth = minOf(width, height)
         val height = height
 
         val timer = DurationTimer()
@@ -124,7 +124,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         //Initialise/clear down variables
         this.colourWrapper = colourWrapper
         centerPoint = Point(width / 2, height / 2)
-        diameter = 0.7 * width
+        diameter = 0.7 * boardWidth
 
         dartboardImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 
