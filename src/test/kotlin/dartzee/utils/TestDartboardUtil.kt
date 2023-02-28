@@ -27,6 +27,25 @@ class TestDartboardUtil : AbstractRegistryTest()
     }
 
     @Test
+    fun `Should return the correct angles for a score`() {
+        getAnglesForScore(20) shouldBe Pair(-9, 9)
+        getAnglesForScore(6) shouldBe Pair(81, 99)
+        getAnglesForScore(3) shouldBe Pair(171, 189)
+        getAnglesForScore(11) shouldBe (Pair(261, 279))
+
+        getAnglesForScore(18) shouldBe Pair(27, 45)
+    }
+
+    @Test
+    fun `Should return non-overlapping sets of points`() {
+        val centre = Point(0, 0)
+        val radius = 250.0
+
+        val allPoints = getAllNonMissSegments().flatMap { computePointsForSegment(it, centre, radius).toList() }
+        allPoints.size shouldBe allPoints.distinct().size
+    }
+
+    @Test
     fun testFactorySegmentKeyForPoint()
     {
         clearPreferences()

@@ -13,7 +13,7 @@ import java.awt.Point
 /**
  * Utilities for the Dartboard object.
  */
-private val numberOrder = mutableListOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
+private val numberOrder = listOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
 
 val hmScoreToOrdinal = initialiseOrdinalHashMap()
 private var colourWrapperFromPrefs: ColourWrapper? = null
@@ -45,6 +45,77 @@ fun getNumbersWithinN(number: Int, n: Int): List<Int>
 fun getAdjacentNumbers(number: Int): List<Int>
 {
     return getNumbersWithinN(number, 1).filterNot { it == number }
+}
+
+fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Double): Set<Point>
+{
+    if (segment.isMiss()) {
+        return emptySet()
+    }
+
+    val score = segment.score
+    return if (score == 25) {
+        val radii = getRadiiForBull(segment.type, radius)
+        generateSegment(centre, 0.0 to 360.0, 2, radii)
+            // .filter { factorySegmentForPoint(it, centre, radius * 2) == segment }.toSet()
+    } else {
+        val (startAngle, endAngle) = getAnglesForScore(score)
+        val radii = getRadiiForSegmentType(segment.type, radius)
+        generateSegment(centre, startAngle.toDouble() to endAngle.toDouble(), 10, radii)
+            // .filter { factorySegmentForPoint(it, centre, radius * 2) == segment }.toSet()
+    }
+}
+
+private fun generateSegment(centre: Point, angleRange: Pair<Double, Double>, angleStep: Int, radiusRange: Pair<Double, Double>): Set<Point> =
+    angleRange.mapStepped(angleStep) { angle ->
+        radiusRange.mapStepped(2) { r ->
+            translatePoint(centre, r, angle)
+        }
+    }.flatten().toSet()
+
+private fun <T> Pair<Double, Double>.mapStepped(stepSize: Int, mapFunction: (Double) -> T): List<T> =
+    ((first * stepSize).toInt() until (second * stepSize).toInt()).map { mapFunction(it.toDouble() / stepSize) }
+
+fun computeEdgePoints(segmentPoints: Set<Point>): Set<Point>
+{
+    val ptsByX = segmentPoints.groupBy { it.x }
+    val ptsByY = segmentPoints.groupBy { it.y }
+
+    val yMins: List<Point> = ptsByX.values.map { points -> points.minByOrNull { it.y }!! }
+    val yMaxes: List<Point> = ptsByX.values.map { points -> points.maxByOrNull { it.y }!! }
+    val xMins: List<Point> = ptsByY.values.map { points -> points.minByOrNull { it.x }!! }
+    val xMaxes: List<Point> = ptsByY.values.map { points -> points.maxByOrNull { it.x }!! }
+
+    return (yMins + yMaxes + xMins + xMaxes).toSet()
+}
+
+fun getAnglesForScore(score: Int): Pair<Int, Int> {
+    val scoreIndex = numberOrder.indexOf(score) - 1
+    val startAngle = 9 + (18 * scoreIndex)
+    val endAngle = 9 + (18 * (scoreIndex + 1))
+
+    return Pair(startAngle, endAngle)
+}
+
+private fun getRadiiForBull(segmentType: SegmentType, radius: Double): Pair<Double, Double> =
+    when (segmentType) {
+        SegmentType.DOUBLE -> Pair(0.0, radius * RATIO_INNER_BULL)
+        SegmentType.OUTER_SINGLE -> Pair(radius * RATIO_INNER_BULL, radius * RATIO_OUTER_BULL)
+        else -> throw IllegalArgumentException("Invalid segment type: $segmentType")
+    }
+
+private fun getRadiiForSegmentType(segmentType: SegmentType, radius: Double): Pair<Double, Double> {
+    val (lowerRatio, upperRatio) = getRatioBounds(segmentType)
+    return Pair((radius * lowerRatio), (radius * upperRatio))
+}
+private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
+    return when (segmentType) {
+        SegmentType.INNER_SINGLE -> Pair(RATIO_OUTER_BULL, LOWER_BOUND_TRIPLE_RATIO)
+        SegmentType.TREBLE -> Pair(LOWER_BOUND_TRIPLE_RATIO, UPPER_BOUND_TRIPLE_RATIO)
+        SegmentType.OUTER_SINGLE -> Pair(UPPER_BOUND_TRIPLE_RATIO, LOWER_BOUND_DOUBLE_RATIO)
+        SegmentType.DOUBLE -> Pair(LOWER_BOUND_DOUBLE_RATIO, UPPER_BOUND_DOUBLE_RATIO)
+        else -> throw IllegalArgumentException("Invalid segment type: $segmentType")
+    }
 }
 
 fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
