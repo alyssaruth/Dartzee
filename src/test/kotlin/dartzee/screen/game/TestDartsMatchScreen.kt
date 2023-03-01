@@ -178,16 +178,22 @@ class TestDartsMatchScreen: AbstractTest()
     }
 
     @Test
-    fun `Should not repack the screen after the first time`()
+    fun `Should not repack the screen when a new game is launched`()
     {
+        val p1 = insertPlayer(name = "Amy")
+        val p2 = insertPlayer(name = "Billie")
+        val gameOneStates = listOf(p1, p2).map { makeX01PlayerState(player = it) }
+
         val match = insertDartsMatch(gameParams = "501")
 
         val scrn = setUpMatchScreen(match = match)
-        scrn.packIfNecessary()
+        val firstGame = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
 
-        // Player changes to their desired size...
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+        every { firstPanel.getPlayerStates() } returns gameOneStates
         scrn.size = Dimension(1000, 1000)
-        scrn.packIfNecessary()
+
+        scrn.startNextGameIfNecessaryOnEdt()
         scrn.size.shouldBe(Dimension(1000, 1000))
     }
 
@@ -210,6 +216,7 @@ private class FakeMatchScreen(match: DartsMatchEntity,
         val panel = mockk<GamePanelX01>(relaxed = true)
         every { panel.gameEntity } returns game
         every { panel.gameTitle } returns "${game.localId}"
+        every { panel.startNewGame(any()) } answers { parent.packIfNecessary() }
         return panel
     }
 

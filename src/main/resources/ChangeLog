@@ -1,3 +1,13 @@
+--------- v6.0.3 ---------
+
+= Fixed a bug where pausing an AI player could sometimes cause the app to freeze
+= Fixed issue where match screens would revert to the default size whenever a new game was launched
+= Fixed dartboard rendering so it always remains in the bounds of the window
+= Fixed a couple of other benign error logs
+= Small tweaks to box and whisker plot rendering
+= Bumped dependency versions
+= 88.2% test coverage (11917 / 13505 lines covered by 2172 tests)
+
 --------- v6.0.2 ---------
 
 = Fixed a bug that prevented syncing when a game had been deleted
