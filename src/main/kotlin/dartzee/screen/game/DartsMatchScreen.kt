@@ -77,6 +77,8 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
             return
         }
 
+        shouldPack = false
+
         val firstGamePanel = hmGameIdToTab.values.first()
         val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
