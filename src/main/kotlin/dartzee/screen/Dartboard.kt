@@ -114,7 +114,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         stopListening()
         hmSegmentKeyToSegment.clear()
 
-        val width = width
+        val boardWidth = minOf(width, height)
         val height = height
 
         val timer = DurationTimer()
@@ -124,7 +124,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         //Initialise/clear down variables
         this.colourWrapper = colourWrapper
         centerPoint = Point(width / 2, height / 2)
-        diameter = 0.7 * width
+        diameter = 0.7 * boardWidth
 
         //Construct the segments, populated with their points. Cache pt -> segment.
         getPointList(width, height).forEach { factoryAndCacheSegmentForPoint(it) }
