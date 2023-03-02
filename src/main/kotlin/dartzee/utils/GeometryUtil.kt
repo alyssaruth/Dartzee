@@ -58,13 +58,6 @@ private fun translatePointAlongAxis(pt: Point, radius: Double, degrees: Double):
     return ret
 }
 
-fun getDistance(dartPt: Point, centerPt: Point): Double
-{
-    val xLength = Math.abs(dartPt.getX() - centerPt.getX())
-    val yLength = Math.abs(dartPt.getY() - centerPt.getY())
-    return Math.sqrt(xLength * xLength + yLength * yLength)
-}
-
 fun getNeighbours(pt: Point) =
     setOf(Point(pt.x, pt.y + 1), Point(pt.x, pt.y - 1), Point(pt.x + 1, pt.y), Point(pt.x - 1, pt.y))
 

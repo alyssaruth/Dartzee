@@ -56,27 +56,33 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Do
     val score = segment.score
     return if (score == 25) {
         val radii = getRadiiForBull(segment.type, radius)
-        generateSegment(centre, 0.0 to 360.0, 2, radii)
-            // .filter { factorySegmentForPoint(it, centre, radius * 2) == segment }.toSet()
+        generateSegment(centre, 0.0 to 360.0, 1.0, radii)
     } else {
         val (startAngle, endAngle) = getAnglesForScore(score)
         val radii = getRadiiForSegmentType(segment.type, radius)
-        generateSegment(centre, startAngle.toDouble() to endAngle.toDouble(), 10, radii)
-            // .filter { factorySegmentForPoint(it, centre, radius * 2) == segment }.toSet()
+        generateSegment(centre, startAngle.toDouble() to endAngle.toDouble(), 0.1, radii)
     }
 }
 
-private fun generateSegment(centre: Point, angleRange: Pair<Double, Double>, angleStep: Int, radiusRange: Pair<Double, Double>): Set<Point> =
+private fun generateSegment(centre: Point, angleRange: Pair<Double, Double>, angleStep: Double, radiusRange: Pair<Double, Double>): Set<Point> =
     angleRange.mapStepped(angleStep) { angle ->
-        radiusRange.mapStepped(2) { r ->
+        radiusRange.mapStepped(0.5) { r ->
             translatePoint(centre, r, angle)
         }
     }.flatten().toSet()
 
-private fun <T> Pair<Double, Double>.mapStepped(stepSize: Int, mapFunction: (Double) -> T): List<T> =
-    ((first * stepSize).toInt() until (second * stepSize).toInt()).map { mapFunction(it.toDouble() / stepSize) }
+private fun <T> Pair<Double, Double>.mapStepped(stepSize: Double, mapFunction: (Double) -> T): List<T> {
+    val ret = mutableListOf<T>()
+    var current = first
+    while (current < second) {
+        ret.add(mapFunction(current))
+        current += stepSize
+    }
 
-fun computeEdgePoints(segmentPoints: Set<Point>): Set<Point>
+    return ret
+}
+
+fun computeEdgePoints(segmentPoints: Collection<Point>): Set<Point>
 {
     val ptsByX = segmentPoints.groupBy { it.x }
     val ptsByY = segmentPoints.groupBy { it.y }
@@ -97,14 +103,14 @@ fun getAnglesForScore(score: Int): Pair<Int, Int> {
     return Pair(startAngle, endAngle)
 }
 
-private fun getRadiiForBull(segmentType: SegmentType, radius: Double): Pair<Double, Double> =
+fun getRadiiForBull(segmentType: SegmentType, radius: Double): Pair<Double, Double> =
     when (segmentType) {
         SegmentType.DOUBLE -> Pair(0.0, radius * RATIO_INNER_BULL)
         SegmentType.OUTER_SINGLE -> Pair(radius * RATIO_INNER_BULL, radius * RATIO_OUTER_BULL)
         else -> throw IllegalArgumentException("Invalid segment type: $segmentType")
     }
 
-private fun getRadiiForSegmentType(segmentType: SegmentType, radius: Double): Pair<Double, Double> {
+fun getRadiiForSegmentType(segmentType: SegmentType, radius: Double): Pair<Double, Double> {
     val (lowerRatio, upperRatio) = getRatioBounds(segmentType)
     return Pair((radius * lowerRatio), (radius * upperRatio))
 }
@@ -120,7 +126,7 @@ private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
 
 fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
 {
-    val radius = getDistance(dartPt, centerPt)
+    val radius = dartPt.distance(centerPt)
     val ratio = 2 * radius / diameter
 
     if (ratio < RATIO_INNER_BULL)
@@ -148,7 +154,7 @@ fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, 
 
 fun convertForDestinationDartboard(sourcePt: Point, oldCenter: Point, oldDiameter: Double, destinationDartboard: Dartboard): Point
 {
-    val relativeDistance = getDistance(sourcePt, oldCenter) / oldDiameter
+    val relativeDistance = sourcePt.distance(oldCenter) / oldDiameter
     val angle = getAngleForPoint(sourcePt, oldCenter)
 
     val newPoint = translatePoint(destinationDartboard.centerPoint, relativeDistance * destinationDartboard.diameter, angle)

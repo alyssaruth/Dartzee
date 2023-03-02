@@ -6,7 +6,6 @@ import dartzee.`object`.ColourWrapper
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
 import dartzee.utils.convertForUiDartboard
-import dartzee.utils.getDistance
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
@@ -43,7 +42,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         val divisor = model.computeProbabilityDensityDivisor()
 
         overlayImg.paint {
-            val radius = getDistance(it, centerPt)
+            val radius = it.distance(centerPt)
             val probability = model.getProbabilityWithinRadius(radius)
             getColorForProbability(probability?.div(divisor))
         }

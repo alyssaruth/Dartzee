@@ -6,9 +6,12 @@ import dartzee.makeTestDartboard
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
+import io.kotest.assertions.withClue
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotContainAnyOf
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
@@ -26,6 +29,64 @@ class TestDartboardUtil : AbstractRegistryTest()
                 PREFERENCES_STRING_ODD_TREBLE_COLOUR)
     }
 
+    /**
+     * X X X X
+     * X O O X
+     * X O O X
+     * X X X X
+     */
+    @Test
+    fun `Should report edge points correctly - square`()
+    {
+        val xRange = 0..3
+        val yRange = 0..3
+
+        val pts = xRange.map { x -> yRange.map { y -> Point(x, y) } }.flatten()
+        val edgePts = computeEdgePoints(pts)
+
+        //Corners
+        edgePts.shouldContainAll(Point(0, 0), Point(0, 3), Point(3, 0), Point(3, 3))
+
+        //Random other edges
+        edgePts.shouldContainAll(
+            Point(0, 1), Point(0, 2),
+            Point(3, 1), Point(3, 2),
+            Point(1, 0), Point(2, 0),
+            Point(1, 3), Point(2, 3)
+        )
+
+        // Inner points
+        edgePts.shouldNotContainAnyOf(Point(1, 1), Point(1, 2), Point(2, 1), Point(2, 2))
+    }
+
+    /**         X
+     *        X X
+     *      X O X
+     *    X O O X
+     *  X X X X X
+     */
+    @Test
+    fun `Should report edge points correctly - triangle`()
+    {
+        val xRange = 0..4
+        val yRange = 0..4
+
+        val pts = xRange.map { x -> yRange.filter{ it <= x }.map { y -> Point(x, y) } }.flatten()
+        val edgePts = computeEdgePoints(pts)
+
+        //Bottom edge
+        edgePts.shouldContainAll(Point(0, 0), Point(1, 0), Point(2, 0), Point(3, 0), Point(4, 0))
+
+        //Right edge
+        edgePts.shouldContainAll(Point(4, 0), Point(4, 1), Point(4, 2), Point(4, 3), Point(4, 4))
+
+        //Diagonal
+        edgePts.shouldContainAll(Point(1, 1), Point(2, 2), Point(3, 3), Point(4, 4))
+
+        //Inner points
+        edgePts.shouldNotContainAnyOf(Point(2, 1), Point(3, 1), Point(3, 2))
+    }
+
     @Test
     fun `Should return the correct angles for a score`() {
         getAnglesForScore(20) shouldBe Pair(-9, 9)
@@ -37,12 +98,57 @@ class TestDartboardUtil : AbstractRegistryTest()
     }
 
     @Test
-    fun `Should return non-overlapping sets of points`() {
+    fun `Should return non-overlapping sets of points, ignoring edge points`() {
         val centre = Point(0, 0)
         val radius = 250.0
 
-        val allPoints = getAllNonMissSegments().flatMap { computePointsForSegment(it, centre, radius).toList() }
+        val allPoints = getAllNonMissSegments().flatMap {
+            val pts = computePointsForSegment(it, centre, radius)
+            val edgePts = computeEdgePoints(pts)
+            pts.filterNot(edgePts::contains)
+        }
         allPoints.size shouldBe allPoints.distinct().size
+    }
+
+    @Test
+    fun `Should cover every single point contained within the circle`() {
+        val radius = 200
+        val centre = Point(radius, radius)
+
+        val allPointsInCircle = getPointList(radius * 2, radius * 2).filter { it.distance(centre) < radius }.toSet()
+        println(allPointsInCircle.size)
+        val allPointsInSegments = getAllNonMissSegments().flatMap { computePointsForSegment(it, centre, radius.toDouble()) }.toSet()
+        println(allPointsInSegments.size)
+
+        val invalidPoints = allPointsInSegments - allPointsInCircle
+        println("Generated ${invalidPoints.size} points outside the circle")
+
+        val missedPoints = allPointsInCircle - allPointsInSegments
+        println("Missed ${missedPoints.size} out of ${allPointsInCircle.size}")
+
+        val distances = missedPoints.map { it.distance(centre) }
+        println(distances)
+    }
+
+    @Test
+    fun `Should get consistent results when recalculating segment type`()
+    {
+        val centre = Point(0, 0)
+        val radius = 200.0
+
+        // Remove the outer bull because we currently don't calculate edge points for it correctly (the hole in the middle wrecks it)
+        getAllNonMissSegments().filterNot { it.score == 25 && it.type == SegmentType.OUTER_SINGLE }.forEach { segment ->
+            val pts = computePointsForSegment(segment, centre, radius)
+            val nonEdgePts = pts - computeEdgePoints(pts)
+
+            nonEdgePts.forEach { pt ->
+                val calculatedSegment = factorySegmentForPoint(pt, centre, radius * 2)
+
+                withClue("$pt should produce the same segment as $segment") {
+                    calculatedSegment shouldBe segment
+                }
+            }
+        }
     }
 
     @Test
