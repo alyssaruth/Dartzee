@@ -18,6 +18,13 @@ import java.awt.Point
 class TestGeometryUtil: AbstractTest()
 {
     @Test
+    fun `should get the right quadrant for the given angle`() {
+        getQuadrantForAngle(-9.0) shouldBe TOP_LEFT
+        getQuadrantForAngle(1.0) shouldBe TOP_RIGHT
+        getQuadrantForAngle(89.0) shouldBe TOP_RIGHT
+    }
+
+    @Test
     fun testTranslatePoint()
     {
         assertPointTranslation(5.0, 0.0, Point(0, -5))

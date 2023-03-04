@@ -7,6 +7,7 @@ import dartzee.`object`.ColourWrapper
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import io.kotest.assertions.withClue
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -112,22 +113,14 @@ class TestDartboardUtil : AbstractRegistryTest()
 
     @Test
     fun `Should cover every single point contained within the circle`() {
-        val radius = 200
+        val radius = 250
         val centre = Point(radius, radius)
 
         val allPointsInCircle = getPointList(radius * 2, radius * 2).filter { it.distance(centre) < radius }.toSet()
-        println(allPointsInCircle.size)
         val allPointsInSegments = getAllNonMissSegments().flatMap { computePointsForSegment(it, centre, radius.toDouble()) }.toSet()
-        println(allPointsInSegments.size)
-
-        val invalidPoints = allPointsInSegments - allPointsInCircle
-        println("Generated ${invalidPoints.size} points outside the circle")
 
         val missedPoints = allPointsInCircle - allPointsInSegments
-        println("Missed ${missedPoints.size} out of ${allPointsInCircle.size}")
-
-        val distances = missedPoints.map { it.distance(centre) }
-        println(distances)
+        missedPoints.shouldBeEmpty()
     }
 
     @Test
