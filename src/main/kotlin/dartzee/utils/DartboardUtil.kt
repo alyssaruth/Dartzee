@@ -71,12 +71,13 @@ private fun generateSegment(centre: Point, angleRange: Pair<Double, Double>, ang
         }
     }.flatten().toSet()
 
-private fun <T> Pair<Double, Double>.mapStepped(stepSize: Double, mapFunction: (Double) -> T): List<T> {
+fun <T> Pair<Double, Double>.mapStepped(stepSize: Double, mapFunction: (Double) -> T): List<T> {
+    val actualStep = (10 * stepSize).toInt()
     val ret = mutableListOf<T>()
     var current = first
     while (current < second) {
         ret.add(mapFunction(current))
-        current += stepSize
+        current = ((current * 10) + actualStep) / 10.0
     }
 
     return ret
