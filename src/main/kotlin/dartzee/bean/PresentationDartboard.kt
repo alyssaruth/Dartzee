@@ -3,6 +3,7 @@ package dartzee.bean
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.IDartboard
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
+import dartzee.utils.computeEdgePoints
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getColourFromHashMap
 import dartzee.utils.getColourWrapperFromPrefs
@@ -26,10 +27,16 @@ class PresentationDartboard(private val colourWrapper: ColourWrapper = getColour
 
         getAllPossibleSegments().forEach { segment ->
             val pts = getPointsForSegment(segment)
+            val edgePts = computeEdgePoints(pts)
             val colour = getColourFromHashMap(segment, colourWrapper)
 
             graphics2D.paint = colour
             pts.forEach { graphics2D.drawLine(it.x, it.y, it.x, it.y) }
+
+            if (colourWrapper.edgeColour != null) {
+                graphics2D.paint = colourWrapper.edgeColour
+                edgePts.forEach { graphics2D.drawLine(it.x, it.y, it.x, it.y) }
+            }
         }
     }
 

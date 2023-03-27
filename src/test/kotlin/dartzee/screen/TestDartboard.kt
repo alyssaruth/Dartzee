@@ -117,7 +117,7 @@ class TestDartboard: AbstractTest()
     @Tag("screenshot")
     fun `Should match snapshot - default`()
     {
-        val dartboard = Dartboard(250, 250)
+        val dartboard = Dartboard(400, 400)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.shouldMatchImage("default")
     }
