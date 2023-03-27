@@ -38,6 +38,7 @@ class TestGeometryUtil: AbstractTest()
         assertPointTranslation(5.0, 126.87, Point(4, 3))
         assertPointTranslation(5.0, 216.87, Point(-3, 4))
         assertPointTranslation(5.0, 306.87, Point(-4, -3))
+        assertPointTranslation(5.0,  -53.13, Point(-4, -3))
 
         // Edge case. We'll mod the angle so we translate it as if it were 0
         assertPointTranslation(100.0, 720.0, Point(0, -100))
