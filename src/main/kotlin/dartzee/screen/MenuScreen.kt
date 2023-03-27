@@ -13,7 +13,6 @@ import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.JButton
-import javax.swing.JLabel
 import javax.swing.JPanel
 
 class MenuScreen : EmbeddedScreen()
@@ -69,13 +68,6 @@ class MenuScreen : EmbeddedScreen()
 
         //Add ActionListeners
         addActionListenerToAllChildren(this)
-    }
-
-    private fun renderDartboard(): JLabel
-    {
-        val dartboard = PresentationDartboard()
-        dartboard.setBounds(200, 65, 400, 400)
-        return dartboard
     }
 
     override fun getScreenName() = "Menu"
