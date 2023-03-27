@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import dartzee.ai.AI_DARTBOARD
+import dartzee.core.util.mapStepped
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
@@ -70,18 +71,6 @@ private fun generateSegment(centre: Point, angleRange: Pair<Double, Double>, ang
             translatePoint(centre, r, angle)
         }
     }.flatten().toSet()
-
-fun <T> Pair<Double, Double>.mapStepped(stepSize: Double, mapFunction: (Double) -> T): List<T> {
-    val actualStep = (10 * stepSize).toInt()
-    val ret = mutableListOf<T>()
-    var current = first
-    while (current < second) {
-        ret.add(mapFunction(current))
-        current = ((current * 10) + actualStep) / 10.0
-    }
-
-    return ret
-}
 
 fun computeEdgePoints(segmentPoints: Collection<Point>): Set<Point>
 {

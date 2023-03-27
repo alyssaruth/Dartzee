@@ -8,6 +8,18 @@ fun Int.ceilDiv(other: Int): Int
     return ceil(this.toDouble() / other).toInt()
 }
 
+fun <T> Pair<Double, Double>.mapStepped(stepSize: Double, mapFunction: (Double) -> T): List<T> {
+    val actualStep = (10 * stepSize).toInt()
+    val ret = mutableListOf<T>()
+    var current = first
+    while (current < second) {
+        ret.add(mapFunction(current))
+        current = ((current * 10) + actualStep) / 10.0
+    }
+
+    return ret
+}
+
 class MathsUtil
 {
     companion object
