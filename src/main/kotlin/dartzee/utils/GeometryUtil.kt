@@ -13,10 +13,11 @@ private val QUADRANTS = arrayOf(TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT)
 
 fun translatePoint(pt: Point, radius: Double, degrees: Double): Point
 {
-    val quadrant = getQuadrantForAngle(degrees) ?: return translatePointAlongAxis(pt, radius, degrees)
+    val positiveAngle = degrees.mod(360.0)
+    val quadrant = getQuadrantForAngle(positiveAngle) ?: return translatePointAlongAxis(pt, radius, positiveAngle)
 
     //Need radians for trig functions
-    val theta = Math.toRadians(degrees)
+    val theta = Math.toRadians(positiveAngle)
     val dSin = Math.abs(radius * Math.sin(theta))
     val dCos = Math.abs(radius * Math.cos(theta))
 
@@ -56,13 +57,6 @@ private fun translatePointAlongAxis(pt: Point, radius: Double, degrees: Double):
     }
 
     return ret
-}
-
-fun getDistance(dartPt: Point, centerPt: Point): Double
-{
-    val xLength = Math.abs(dartPt.getX() - centerPt.getX())
-    val yLength = Math.abs(dartPt.getY() - centerPt.getY())
-    return Math.sqrt(xLength * xLength + yLength * yLength)
 }
 
 fun getNeighbours(pt: Point) =
@@ -106,14 +100,12 @@ fun getAngleForPoint(dartPt: Point, centerPt: Point): Double
 /**
  * For the given angle, return the Quadrant. Returns null if there is none (because we're on an axis).
  */
-private fun getQuadrantForAngle(angle: Double): Quadrant?
-{
-    return QUADRANTS.find { it.minimumAngle < angle && angle < it.maximumAngle }
-}
+private fun getQuadrantForAngle(angle: Double) =
+    QUADRANTS.find { it.minimumAngle < angle && angle < it.maximumAngle }
 
 private fun getQuadrant(xIsPositive: Boolean, yIsPositive: Boolean): Quadrant?
 {
-    return QUADRANTS.find{ it.xIsPositive == xIsPositive && it.yIsPositive == yIsPositive }
+    return QUADRANTS.find { it.xIsPositive == xIsPositive && it.yIsPositive == yIsPositive }
 }
 
 /**

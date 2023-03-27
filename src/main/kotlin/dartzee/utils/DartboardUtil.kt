@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import dartzee.ai.AI_DARTBOARD
+import dartzee.core.util.mapStepped
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
@@ -13,7 +14,7 @@ import java.awt.Point
 /**
  * Utilities for the Dartboard object.
  */
-private val numberOrder = mutableListOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
+private val numberOrder = listOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
 
 val hmScoreToOrdinal = initialiseOrdinalHashMap()
 private var colourWrapperFromPrefs: ColourWrapper? = null
@@ -47,9 +48,75 @@ fun getAdjacentNumbers(number: Int): List<Int>
     return getNumbersWithinN(number, 1).filterNot { it == number }
 }
 
+fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Double): Set<Point>
+{
+    if (segment.isMiss()) {
+        return emptySet()
+    }
+
+    val score = segment.score
+    return if (score == 25) {
+        val radii = getRadiiForBull(segment.type, radius)
+        generateSegment(centre, 0.0 to 360.0, 1.0, radii)
+    } else {
+        val (startAngle, endAngle) = getAnglesForScore(score)
+        val radii = getRadiiForSegmentType(segment.type, radius)
+        generateSegment(centre, startAngle.toDouble() to endAngle.toDouble(), 0.1, radii)
+    }
+}
+
+private fun generateSegment(centre: Point, angleRange: Pair<Double, Double>, angleStep: Double, radiusRange: Pair<Double, Double>): Set<Point> =
+    angleRange.mapStepped(angleStep) { angle ->
+        radiusRange.mapStepped(0.5) { r ->
+            translatePoint(centre, r, angle)
+        }
+    }.flatten().toSet()
+
+fun computeEdgePoints(segmentPoints: Collection<Point>): Set<Point>
+{
+    val ptsByX = segmentPoints.groupBy { it.x }
+    val ptsByY = segmentPoints.groupBy { it.y }
+
+    val yMins: List<Point> = ptsByX.values.map { points -> points.minByOrNull { it.y }!! }
+    val yMaxes: List<Point> = ptsByX.values.map { points -> points.maxByOrNull { it.y }!! }
+    val xMins: List<Point> = ptsByY.values.map { points -> points.minByOrNull { it.x }!! }
+    val xMaxes: List<Point> = ptsByY.values.map { points -> points.maxByOrNull { it.x }!! }
+
+    return (yMins + yMaxes + xMins + xMaxes).toSet()
+}
+
+fun getAnglesForScore(score: Int): Pair<Int, Int> {
+    val scoreIndex = numberOrder.indexOf(score) - 1
+    val startAngle = 9 + (18 * scoreIndex)
+    val endAngle = 9 + (18 * (scoreIndex + 1))
+
+    return Pair(startAngle, endAngle)
+}
+
+fun getRadiiForBull(segmentType: SegmentType, radius: Double): Pair<Double, Double> =
+    when (segmentType) {
+        SegmentType.DOUBLE -> Pair(0.0, radius * RATIO_INNER_BULL)
+        SegmentType.OUTER_SINGLE -> Pair(radius * RATIO_INNER_BULL, radius * RATIO_OUTER_BULL)
+        else -> throw IllegalArgumentException("Invalid segment type: $segmentType")
+    }
+
+fun getRadiiForSegmentType(segmentType: SegmentType, radius: Double): Pair<Double, Double> {
+    val (lowerRatio, upperRatio) = getRatioBounds(segmentType)
+    return Pair((radius * lowerRatio), (radius * upperRatio))
+}
+private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
+    return when (segmentType) {
+        SegmentType.INNER_SINGLE -> Pair(RATIO_OUTER_BULL, LOWER_BOUND_TRIPLE_RATIO)
+        SegmentType.TREBLE -> Pair(LOWER_BOUND_TRIPLE_RATIO, UPPER_BOUND_TRIPLE_RATIO)
+        SegmentType.OUTER_SINGLE -> Pair(UPPER_BOUND_TRIPLE_RATIO, LOWER_BOUND_DOUBLE_RATIO)
+        SegmentType.DOUBLE -> Pair(LOWER_BOUND_DOUBLE_RATIO, UPPER_BOUND_DOUBLE_RATIO)
+        else -> throw IllegalArgumentException("Invalid segment type: $segmentType")
+    }
+}
+
 fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
 {
-    val radius = getDistance(dartPt, centerPt)
+    val radius = dartPt.distance(centerPt)
     val ratio = 2 * radius / diameter
 
     if (ratio < RATIO_INNER_BULL)
@@ -77,7 +144,7 @@ fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, 
 
 fun convertForDestinationDartboard(sourcePt: Point, oldCenter: Point, oldDiameter: Double, destinationDartboard: Dartboard): Point
 {
-    val relativeDistance = getDistance(sourcePt, oldCenter) / oldDiameter
+    val relativeDistance = sourcePt.distance(oldCenter) / oldDiameter
     val angle = getAngleForPoint(sourcePt, oldCenter)
 
     val newPoint = translatePoint(destinationDartboard.centerPoint, relativeDistance * destinationDartboard.diameter, angle)
@@ -189,7 +256,7 @@ fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper
     return colourWrapper.getColour(multiplier, score)
 }
 
-private fun getColourWrapperFromPrefs(): ColourWrapper
+fun getColourWrapperFromPrefs(): ColourWrapper
 {
     if (colourWrapperFromPrefs != null)
     {

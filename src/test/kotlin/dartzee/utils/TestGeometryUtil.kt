@@ -31,31 +31,16 @@ class TestGeometryUtil: AbstractTest()
         assertPointTranslation(5.0, 126.87, Point(4, 3))
         assertPointTranslation(5.0, 216.87, Point(-3, 4))
         assertPointTranslation(5.0, 306.87, Point(-4, -3))
+        assertPointTranslation(5.0,  -53.13, Point(-4, -3))
 
-        //Edge case. It won't know what to do with this angle and should leave the point untouched
-        assertPointTranslation(100.0, 500.0, Point(0, 0))
+        // Edge case. We'll mod the angle so we translate it as if it were 0
+        assertPointTranslation(100.0, 720.0, Point(0, -100))
     }
 
     private fun assertPointTranslation(radius: Double, degrees: Double, expected: Point)
     {
         val result = translatePoint(Point(0, 0), radius, degrees)
         result shouldBe expected
-    }
-
-    @Test
-    fun testGetDistance()
-    {
-        assertDistance(Point(0, 0), Point(3, 4), 5.0)
-        assertDistance(Point(0, 0), Point(0, 7), 7.0) //Along y axis
-        assertDistance(Point(40, 0), Point(0, 0), 40.0) //Along x axis
-        assertDistance(Point(-2, 5), Point(3, -7), 13.0)
-        assertDistance(Point(2, 5), Point(3, -7), 12.041)
-    }
-
-    private fun assertDistance(ptOne: Point, ptTwo: Point, expected: Double)
-    {
-        getDistance(ptTwo, ptOne).shouldBeBetween(expected - 0.001, expected + 0.001, 0.0)
-        getDistance(ptOne, ptTwo).shouldBeBetween(expected - 0.001, expected + 0.001, 0.0)
     }
 
     /**

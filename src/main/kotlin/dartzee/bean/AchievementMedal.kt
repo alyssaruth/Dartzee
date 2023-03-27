@@ -7,8 +7,14 @@ import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.ResourceCache
-import dartzee.utils.getDistance
-import java.awt.*
+import java.awt.Color
+import java.awt.Cursor
+import java.awt.Dimension
+import java.awt.Font
+import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.RenderingHints
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
@@ -96,7 +102,7 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
         }
 
         val pt = e.point
-        highlighted = getDistance(pt, Point(SIZE/2, SIZE/2)) < SIZE/2
+        highlighted = pt.distance(Point(SIZE/2, SIZE/2)) < SIZE/2
 
         ScreenCache.get<PlayerAchievementsScreen>().toggleAchievementDesc(highlighted, achievement)
 

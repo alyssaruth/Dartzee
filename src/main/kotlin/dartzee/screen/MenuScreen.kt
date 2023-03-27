@@ -1,5 +1,6 @@
 package dartzee.screen
 
+import dartzee.bean.PresentationDartboard
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
@@ -7,18 +8,16 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
-import javax.swing.ImageIcon
 import javax.swing.JButton
-import javax.swing.JLabel
 import javax.swing.JPanel
 
 class MenuScreen : EmbeddedScreen()
 {
+    private val dartboard = PresentationDartboard()
     private val btnNewGame = JButton("New Game")
     private val btnManagePlayers = JButton("Manage Players")
     private val btnLeaderboards = JButton("Leaderboards")
@@ -64,21 +63,11 @@ class MenuScreen : EmbeddedScreen()
         btnGameReport.font = buttonFont
         btnGameReport.setBounds(60, 340, 150, 50)
         panel.add(btnGameReport)
-        panel.add(renderDartboard())
+        dartboard.setBounds(200, 65, 400, 400)
+        panel.add(dartboard)
 
         //Add ActionListeners
         addActionListenerToAllChildren(this)
-    }
-
-    private fun renderDartboard(): JLabel
-    {
-        val board = Dartboard(dartboardSize, dartboardSize)
-        board.paintDartboard(null)
-
-        val img = ImageIcon(board.dartboardImage!!)
-        val lbl = JLabel(img)
-        lbl.setBounds(200, 65, dartboardSize, dartboardSize)
-        return lbl
     }
 
     override fun getScreenName() = "Menu"
