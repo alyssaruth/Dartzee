@@ -267,7 +267,7 @@ fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper
     return colourWrapper.getColour(multiplier, score)
 }
 
-private fun getColourWrapperFromPrefs(): ColourWrapper
+fun getColourWrapperFromPrefs(): ColourWrapper
 {
     if (colourWrapperFromPrefs != null)
     {
