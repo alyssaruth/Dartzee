@@ -39,8 +39,8 @@ class TestGeometryUtil: AbstractTest()
         assertPointTranslation(5.0, 216.87, Point(-3, 4))
         assertPointTranslation(5.0, 306.87, Point(-4, -3))
 
-        //Edge case. It won't know what to do with this angle and should leave the point untouched
-        assertPointTranslation(100.0, 500.0, Point(0, 0))
+        // Edge case. We'll mod the angle so we translate it as if it were 0
+        assertPointTranslation(100.0, 720.0, Point(0, -100))
     }
 
     private fun assertPointTranslation(radius: Double, degrees: Double, expected: Point)
