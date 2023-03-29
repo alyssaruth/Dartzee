@@ -1,12 +1,14 @@
 package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.shouldMatchImage
+import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.markPoints
 import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
 import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.`object`.ColourWrapper
+import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
@@ -159,11 +161,12 @@ class TestDartboard: AbstractTest()
     @Tag("screenshot")
     fun `Should get all the correct aim points`()
     {
-        val dartboard = Dartboard(400, 400)
         val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        dartboard.paintDartboard(colourWrapper)
+        val computationalDartboard = ComputationalDartboard(400, 400)
+        val dartboard = PresentationDartboard(colourWrapper)
+        dartboard.size = Dimension(400, 400)
 
-        val pts = dartboard.getPotentialAimPoints().map { it.point }
+        val pts = computationalDartboard.getPotentialAimPoints().map { it.point }
         val lbl = dartboard.markPoints(pts)
         lbl.shouldMatchImage("aim points")
     }
@@ -172,12 +175,12 @@ class TestDartboard: AbstractTest()
     @Tag("screenshot")
     fun `Should correctly scale up an AimPoint calculated from a smaller dartboard`()
     {
-        val smallBoard = Dartboard(200, 200)
-        smallBoard.paintDartboard()
+        val smallBoard = ComputationalDartboard(200, 200)
 
-        val bigBoard = Dartboard(400, 400)
+
         val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        bigBoard.paintDartboard(colourWrapper)
+        val bigBoard = PresentationDartboard(colourWrapper)
+        bigBoard.size = Dimension(400, 400)
 
         val smallPoints = smallBoard.getPotentialAimPoints()
 

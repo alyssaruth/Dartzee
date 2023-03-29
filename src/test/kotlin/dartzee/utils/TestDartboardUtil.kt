@@ -4,6 +4,7 @@ import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractRegistryTest
 import dartzee.makeTestDartboard
 import dartzee.`object`.ColourWrapper
+import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import io.kotest.assertions.withClue
@@ -317,13 +318,13 @@ class TestDartboardUtil : AbstractRegistryTest()
     @Test
     fun `Should preserve the segment type when mapping between dartboards`()
     {
-        val bigDartboard = makeTestDartboard(200, 200)
+        val bigDartboard = ComputationalDartboard(200, 200)
         val smallDartboard = makeTestDartboard(100, 100)
 
         getPointList(200, 200).forEach { pt ->
             val result = convertForDestinationDartboard(pt, bigDartboard, smallDartboard)
 
-            val bigSegment = bigDartboard.getDataSegmentForPoint(pt)
+            val bigSegment = bigDartboard.getSegmentForPoint(pt)
             val smallSegment = smallDartboard.getDataSegmentForPoint(result)
             bigSegment shouldBe smallSegment
         }

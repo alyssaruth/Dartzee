@@ -1,10 +1,11 @@
 package dartzee.ai
 
-import dartzee.screen.Dartboard
+import dartzee.`object`.ComputationalDartboard
 
 /**
  * Arbitrary-seeming width and height values taken from the size the Dartboard used to be fixed at during gameplay
  */
-val AI_DARTBOARD = Dartboard(520, 555).also {
-    it.paintDartboard()
-}
+val AI_DARTBOARD_WIDTH = 520
+val AI_DARTBOARD_HEIGHT = 555
+
+val AI_DARTBOARD = ComputationalDartboard(AI_DARTBOARD_WIDTH, AI_DARTBOARD_HEIGHT)

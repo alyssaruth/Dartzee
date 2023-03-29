@@ -1,13 +1,14 @@
 package dartzee.dartzee
 
 import com.github.alyssaburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.toBufferedImage
+import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DELIBERATE_MISS
+import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
 import dartzee.missTwenty
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
-import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeDartboard
+import dartzee.`object`.ComputationalDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
@@ -107,11 +108,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     {
         val segmentStatus = SegmentStatus(emptyList(), emptyList())
 
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
-
-        val pt = calculator.getPointToAimFor(dartboard, segmentStatus, true)
+        val pt = calculator.getPointToAimFor(AI_DARTBOARD, segmentStatus, true)
         pt shouldBe DELIBERATE_MISS
     }
 
@@ -120,11 +117,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     {
         val segmentStatus = SegmentStatus(listOf(missTwenty), listOf(missTwenty))
 
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
-
-        val pt = calculator.getPointToAimFor(dartboard, segmentStatus, true)
+        val pt = calculator.getPointToAimFor(AI_DARTBOARD, segmentStatus, true)
         pt shouldBe DELIBERATE_MISS
     }
 
@@ -135,13 +128,10 @@ class TestDartzeeAimCalculator: AbstractTest()
         val awkward = allNonMisses.filter { it.score != 25 }
         val segmentStatus = SegmentStatus(awkward, awkward)
 
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
+        val dartboard = ComputationalDartboard(400, 400)
 
         val timer = DurationTimer()
-        repeat(10)
-        {
+        repeat(10) {
             calculator.getPointToAimFor(dartboard, segmentStatus, true)
         }
 
@@ -151,9 +141,8 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     private fun verifyAim(segmentStatus: SegmentStatus, screenshotName: String, aggressive: Boolean = false)
     {
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
+        val dartboard = PresentationDartboard()
+        dartboard.setBounds(0, 0, 400, 400)
 
         val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
         val lbl = dartboard.markPoints(listOf(pt))
@@ -161,9 +150,9 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 }
 
-fun Dartboard.markPoints(points: List<Point>): JLabel
+fun PresentationDartboard.markPoints(points: List<Point>): JLabel
 {
-    val img = dartboardImage!!
+    val img = toBufferedImage()
 
     val g = img.graphics as Graphics2D
     g.color = Color.BLUE

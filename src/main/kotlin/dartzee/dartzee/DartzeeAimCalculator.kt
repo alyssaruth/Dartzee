@@ -2,8 +2,9 @@ package dartzee.dartzee
 
 import dartzee.ai.DELIBERATE_MISS
 import dartzee.core.util.maxOrZero
+import dartzee.`object`.ComputationalDartboard
+import dartzee.`object`.IDartboard
 import dartzee.`object`.SegmentType
-import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.AimPoint
 import dartzee.utils.getAllPossibleSegments
@@ -12,17 +13,12 @@ import java.awt.Point
 
 class DartzeeAimCalculator
 {
-    private val miniDartboard = Dartboard(350, 350)
+    private val miniDartboard = ComputationalDartboard(350, 350)
 
-    init
+    fun getPointToAimFor(dartboard: IDartboard, segmentStatus: SegmentStatus, aggressive: Boolean): Point
     {
-        miniDartboard.paintDartboard()
-    }
-
-    fun getPointToAimFor(dartboard: Dartboard, segmentStatus: SegmentStatus, aggressive: Boolean): Point
-    {
-        val scoringSegments = segmentStatus.scoringSegments.map { miniDartboard.getSegment(it.score, it.type)!! }.filter { !it.isMiss() }
-        val validSegments = segmentStatus.validSegments.map { miniDartboard.getSegment(it.score, it.type)!! }.filter { !it.isMiss() }
+        val scoringSegments = segmentStatus.scoringSegments.filter { !it.isMiss() }
+        val validSegments = segmentStatus.validSegments.filter { !it.isMiss() }
 
         val segmentsToConsiderAimingFor = if (aggressive && scoringSegments.isNotEmpty()) scoringSegments else validSegments
         if (segmentsToConsiderAimingFor.isEmpty())
@@ -30,23 +26,21 @@ class DartzeeAimCalculator
             return DELIBERATE_MISS
         }
 
-        val dataSegmentsToConsiderAimingFor = segmentsToConsiderAimingFor.map { it.toDataSegment() }
-
         //Shortcut straight to the bullseye if all outer singles, inner singles, trebles and bull are valid
         val innerSegments = getAllPossibleSegments().filter { !it.isMiss() && (it.type != SegmentType.DOUBLE || it.score == 25) }
-        if (dataSegmentsToConsiderAimingFor.containsAll(innerSegments))
+        if (segmentsToConsiderAimingFor.containsAll(innerSegments))
         {
-            return dartboard.centerPoint
+            return dartboard.computeCenter()
         }
 
-        val aimingPointSet = segmentsToConsiderAimingFor.flatMap { miniDartboard.getPointsForSegment(it.score, it.type) }.toSet()
-        val validPointSet = validSegments.flatMap { miniDartboard.getPointsForSegment(it.score, it.type) }.toSet()
+        val aimingPointSet = segmentsToConsiderAimingFor.flatMap(miniDartboard::getPointsForSegment).toSet()
+        val validPointSet = validSegments.flatMap(miniDartboard::getPointsForSegment).toSet()
 
         val potentialPointsToAimFor = miniDartboard.getPotentialAimPoints().filter { aimingPointSet.contains(it.point) }
         val contendingPoints = getMaxCirclePoints(validPointSet, potentialPointsToAimFor)
 
-        val bestScore = contendingPoints.map { miniDartboard.getDataSegmentForPoint(it.point).getTotal() }.maxOrZero()
-        val contendingHighScorePoints = contendingPoints.filter { miniDartboard.getDataSegmentForPoint(it.point).getTotal() == bestScore }
+        val bestScore = contendingPoints.map { miniDartboard.getSegmentForPoint(it.point).getTotal() }.maxOrZero()
+        val contendingHighScorePoints = contendingPoints.filter { miniDartboard.getSegmentForPoint(it.point).getTotal() == bestScore }
 
         //Prefer even angles to odd ones
         val bestPoint = contendingHighScorePoints.minByOrNull { it.angle % 2 } !!
