@@ -1,14 +1,16 @@
 package dartzee.dartzee
 
 import com.github.alyssaburlton.swingtest.shouldMatchImage
-import com.github.alyssaburlton.swingtest.toBufferedImage
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DELIBERATE_MISS
 import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
+import dartzee.helper.markPoints
 import dartzee.missTwenty
 import dartzee.`object`.ComputationalDartboard
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
@@ -16,13 +18,6 @@ import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import java.awt.BasicStroke
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Graphics2D
-import java.awt.Point
-import javax.swing.ImageIcon
-import javax.swing.JLabel
 
 private val allNonMisses = getAllNonMissSegments()
 private val calculator = DartzeeAimCalculator()
@@ -143,27 +138,13 @@ class TestDartzeeAimCalculator: AbstractTest()
     {
         val dartboard = PresentationDartboard()
         dartboard.setBounds(0, 0, 400, 400)
-
         val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
-        val lbl = dartboard.markPoints(listOf(pt))
+
+        val oldDartboard = DartzeeDartboard(400, 400)
+        oldDartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
+        oldDartboard.refreshValidSegments(segmentStatus)
+
+        val lbl = oldDartboard.markPoints(listOf(pt))
         lbl.shouldMatchImage(screenshotName)
     }
-}
-
-fun PresentationDartboard.markPoints(points: List<Point>): JLabel
-{
-    val img = toBufferedImage()
-
-    val g = img.graphics as Graphics2D
-    g.color = Color.BLUE
-    g.stroke = BasicStroke(3f)
-    points.forEach { pt ->
-        g.drawLine(pt.x - 5, pt.y - 5, pt.x + 5, pt.y + 5)
-        g.drawLine(pt.x - 5, pt.y + 5, pt.x + 5, pt.y - 5)
-    }
-
-    val lbl = JLabel(ImageIcon(img))
-    lbl.size = Dimension(500, 500)
-    lbl.repaint()
-    return lbl
 }

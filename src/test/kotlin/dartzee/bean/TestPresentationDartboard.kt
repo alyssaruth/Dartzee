@@ -3,7 +3,7 @@ package dartzee.bean
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.`object`.ColourWrapper
-import dartzee.utils.DartsColour
+import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -24,8 +24,7 @@ class TestPresentationDartboard : AbstractTest()
     @Tag("screenshot")
     fun `Should match snapshot - wireframe`()
     {
-        val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        val dartboard = PresentationDartboard(colourWrapper)
+        val dartboard = PresentationDartboard(WIREFRAME_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 250, 250)
         dartboard.shouldMatchImage("wireframe")
     }

@@ -6,6 +6,8 @@ import java.awt.Color
 
 val DEFAULT_COLOUR_WRAPPER = ColourWrapper(DartsColour.DARTBOARD_BLACK, Color.RED, Color.RED, Color.WHITE, Color.GREEN, Color.GREEN, Color.RED, Color.GREEN)
 
+val WIREFRAME_COLOUR_WRAPPER = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
+
 val GREY_COLOUR_WRAPPER = makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIGHT_GRAY)
 
 fun makeMonochromeWrapper(dark: Color, light: Color): ColourWrapper

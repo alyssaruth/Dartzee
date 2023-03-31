@@ -10,6 +10,7 @@ interface IDartboard
     fun computeRadius(): Double
     fun computeCenter(): Point
 
+    fun computeRadius(width: Int, height: Int) = 0.7 * minOf(width, height) / 2.0
     fun getPointsForSegment(segment: DartboardSegment) = computePointsForSegment(segment, computeCenter(), computeRadius())
 
     fun isDouble(pt: Point) = getSegmentForPoint(pt).isDoubleExcludingBull()

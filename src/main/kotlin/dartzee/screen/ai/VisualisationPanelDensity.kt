@@ -2,8 +2,7 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
-import dartzee.`object`.ColourWrapper
-import dartzee.utils.DartsColour
+import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.utils.ResourceCache
 import dartzee.utils.convertForUiDartboard
 import java.awt.Color
@@ -26,8 +25,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         add(dartboard)
         add(overlay)
 
-        val colourWrapper = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
-        dartboard.paintDartboard(colourWrapper)
+        dartboard.paintDartboard(WIREFRAME_COLOUR_WRAPPER)
 
         panelKey.setBounds(0, 0, 100, 500)
         panel.add(panelKey)

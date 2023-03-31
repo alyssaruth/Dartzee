@@ -2,8 +2,8 @@ package dartzee.ai
 
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.bean.PresentationDartboard
-import dartzee.dartzee.markPoints
 import dartzee.helper.AbstractTest
+import dartzee.helper.markPoints
 import dartzee.`object`.SegmentType
 import getPointForScore
 import org.junit.jupiter.api.Tag

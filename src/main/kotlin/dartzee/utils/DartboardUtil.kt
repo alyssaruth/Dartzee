@@ -141,7 +141,7 @@ fun convertForUiDartboard(sourcePt: Point, destinationDartboard: Dartboard): Poi
     convertForDestinationDartboard(sourcePt, AI_DARTBOARD, destinationDartboard)
 
 fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: ComputationalDartboard, destinationDartboard: Dartboard): Point =
-    convertForDestinationDartboard(sourcePt, sourceDartboard.computeCenter(), sourceDartboard.computeRadius() / 2.0, destinationDartboard)
+    convertForDestinationDartboard(sourcePt, sourceDartboard.computeCenter(), sourceDartboard.computeRadius() * 2.0, destinationDartboard)
 
 fun convertForDestinationDartboard(sourcePt: Point, oldCenter: Point, oldDiameter: Double, destinationDartboard: Dartboard): Point
 {
