@@ -16,7 +16,7 @@ class TestComputationalDartboard: AbstractTest()
     fun `Should return the correct radius`()
     {
         val dartboard = ComputationalDartboard(100, 100)
-        dartboard.computeRadius() shouldBe 50
+        dartboard.computeRadius() shouldBe 35
     }
 
     @Test

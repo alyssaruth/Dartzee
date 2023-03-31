@@ -26,7 +26,7 @@ private const val LOWER_BOUND_TRIPLE_RATIO = 0.582
 private const val UPPER_BOUND_TRIPLE_RATIO = 0.629
 private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 
-private const val UPPER_BOUND_DOUBLE_RATIO = 1.0
+const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
 
 fun getDartForSegment(pt: Point, segment: DartboardSegment): Dart
