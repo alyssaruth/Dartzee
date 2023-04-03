@@ -1,7 +1,13 @@
 package dartzee.screen.stats
 
 
-fun List<Int>.median(): Double {
+fun List<Int>.median(): Double
+{
+    if (isEmpty())
+    {
+        return 0.0
+    }
+
     val allKeys = sorted()
 
     val n = allKeys.size
