@@ -113,6 +113,10 @@ private fun getQuadrant(xIsPositive: Boolean, yIsPositive: Boolean): Quadrant?
  */
 fun getAverage(points: Set<Point>): Point
 {
+    if (points.isEmpty()) {
+        throw Error("Can't get average of empty set")
+    }
+
     val xAvg = points.map{ it.x }.average()
     val yAvg = points.map{ it.y }.average()
 
