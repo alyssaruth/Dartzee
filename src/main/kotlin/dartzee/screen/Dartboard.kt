@@ -67,7 +67,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     var renderScoreLabels = false
 
     private var dartCount = 0
-    var simulation = false
 
     //Cached things
     private var lastHoveredSegment: StatefulSegment? = null

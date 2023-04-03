@@ -8,7 +8,6 @@ import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.db.PlayerEntity
-import dartzee.screen.Dartboard
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.simulationRunner
 import net.miginfocom.swing.MigLayout
@@ -53,21 +52,17 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
 
     override fun okPressed()
     {
-        val dartboard = Dartboard(100, 100)
-        dartboard.simulation = true //Don't do animations etc
-        dartboard.paintDartboard()
-
-        val sim = factorySimulationForSelection(dartboard)
+        val sim = factorySimulationForSelection()
         simulationRunner.runSimulation(sim, nfNumberOfGames.getNumber(), modal)
         dispose()
     }
 
-    private fun factorySimulationForSelection(dartboard: Dartboard): AbstractDartsSimulation
+    private fun factorySimulationForSelection(): AbstractDartsSimulation
     {
         return when (panel_1.selection)
         {
-            rdbtn501 -> DartsSimulationX01(dartboard, player, model)
-            else -> DartsSimulationGolf(dartboard, player, model)
+            rdbtn501 -> DartsSimulationX01(player, model)
+            else -> DartsSimulationGolf(player, model)
         }
     }
 }

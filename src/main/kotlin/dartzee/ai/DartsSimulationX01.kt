@@ -3,7 +3,6 @@ package dartzee.ai
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.`object`.Dart
-import dartzee.screen.Dartboard
 import dartzee.utils.isBust
 import dartzee.utils.shouldStopForMercyRule
 
@@ -12,11 +11,11 @@ private const val X01 = 501
 /**
  * Simulate a single game of X01 for an AI
  */
-class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: DartsAiModel) : AbstractDartsSimulation(dartboard, player, model)
+class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) : AbstractDartsSimulation(player, model)
 {
     //Transient things
-    protected var startingScore = -1
-    protected var currentScore = -1
+    private var startingScore = -1
+    private var currentScore = -1
 
     override val gameParams = "$X01"
     override val gameType = GameType.X01
@@ -68,8 +67,8 @@ class DartsSimulationX01(dartboard: Dartboard, player: PlayerEntity, model: Dart
         currentScore -= dartTotal
 
         if (currentScore <= 1
-                || dartsThrown.size == 3
-                || shouldStopForMercyRule(model, startingScore, currentScore))
+            || dartsThrown.size == 3
+            || shouldStopForMercyRule(model, startingScore, currentScore))
         {
             finishedRound()
         }

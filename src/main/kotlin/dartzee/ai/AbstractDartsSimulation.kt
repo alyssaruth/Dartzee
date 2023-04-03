@@ -4,18 +4,15 @@ import dartzee.core.obj.HashMapList
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
 import dartzee.`object`.DartsClient
-import dartzee.screen.Dartboard
 import dartzee.stats.GameWrapper
-import dartzee.utils.convertForUiDartboard
+import dartzee.utils.getDartForSegment
 import java.awt.Point
 import java.sql.Timestamp
 
-abstract class AbstractDartsSimulation(val dartboard: Dartboard,
-                                       val player: PlayerEntity,
-                                       val model: DartsAiModel) : DartboardListener
+abstract class AbstractDartsSimulation(val player: PlayerEntity,
+                                       val model: DartsAiModel)
 {
     //Transient things
     protected var dtStart: Timestamp? = null
@@ -28,14 +25,10 @@ abstract class AbstractDartsSimulation(val dartboard: Dartboard,
     abstract val gameParams: String
     abstract val gameType: GameType
 
-    init
-    {
-        dartboard.addDartboardListener(this)
-    }
-
     abstract fun shouldPlayCurrentRound(): Boolean
     abstract fun startRound()
     abstract fun getTotalScore(): Int
+    abstract fun dartThrown(dart: Dart)
 
     fun simulateGame(gameId: Long): GameWrapper
     {
@@ -75,12 +68,11 @@ abstract class AbstractDartsSimulation(val dartboard: Dartboard,
     protected fun resetRound()
     {
         dartsThrown = mutableListOf()
-        dartboard.clearDarts()
     }
 
     protected fun dartThrown(aiPt: Point)
     {
-        val pt = convertForUiDartboard(aiPt, dartboard)
-        dartboard.dartThrown(pt)
+        val segment = AI_DARTBOARD.getSegmentForPoint(aiPt)
+        dartThrown(getDartForSegment(aiPt, segment))
     }
 }
