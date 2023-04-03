@@ -16,11 +16,8 @@ fun getPointForScore(drt: AimDart): Point
     return getPointForScore(score, segmentType)
 }
 
-fun getPointForScore(score: Int, type: SegmentType): Point
-{
-    val points = AI_DARTBOARD.getPointsForSegment(DartboardSegment(type, score))
-    return getAverage(points)
-}
+fun getPointForScore(score: Int, type: SegmentType): Point =
+    AI_DARTBOARD.getPointToAimAt(DartboardSegment(type, score))
 
 /**
  * Get the application-wide default thing to aim for, which applies to any score of 60 or less

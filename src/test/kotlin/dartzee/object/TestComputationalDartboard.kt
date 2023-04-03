@@ -44,4 +44,16 @@ class TestComputationalDartboard: AbstractTest()
         val lbl = presentationDartboard.markPoints(pts)
         lbl.shouldMatchImage("aim points")
     }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should return a sensible individual aim point`()
+    {
+        val dartboard = ComputationalDartboard(400, 400)
+
+        val pt = dartboard.getPointToAimAt(DartboardSegment(SegmentType.INNER_SINGLE, 6))
+        val presentationDartboard = PresentationDartboard(WIREFRAME_COLOUR_WRAPPER).also { it.size = Dimension(400, 400) }
+        val lbl = presentationDartboard.markPoints(listOf(pt))
+        lbl.shouldMatchImage("inner 6 aim")
+    }
 }
