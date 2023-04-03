@@ -43,17 +43,6 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 
     @Test
-    fun `should not play a sound for a simulation`()
-    {
-        mockkStatic(AudioSystem::class)
-
-        val dartboard = makeTestDartboard().also { it.simulation = true }
-        dartboard.playDodgySound("60")
-
-        verifyNotCalled { AudioSystem.getLine(any()) }
-    }
-
-    @Test
     fun `should not play a sound if preference is disabled`()
     {
         mockkStatic(AudioSystem::class)

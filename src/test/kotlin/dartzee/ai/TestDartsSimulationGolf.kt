@@ -5,7 +5,6 @@ import dartzee.helper.ScoreAndSegmentType
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertPlayer
 import dartzee.helper.predictableGolfModel
-import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import io.kotest.matchers.collections.shouldContainInOrder
@@ -20,9 +19,7 @@ class TestDartsSimulationGolf: AbstractTest()
         val model = beastDartsModel()
         val player = insertPlayer(model = model)
 
-        val dartboard = makeTestDartboard()
-
-        val simulation = DartsSimulationGolf(dartboard, player, model)
+        val simulation = DartsSimulationGolf(player, model)
         val result = simulation.simulateGame(-1)
 
         result.finalScore shouldBe 18
@@ -37,7 +34,6 @@ class TestDartsSimulationGolf: AbstractTest()
     fun `Should pay attention to stop thresholds`()
     {
         val player = insertPlayer()
-        val dartboard = makeTestDartboard()
 
         val hmDartNoToStopThreshold = mutableMapOf(1 to 2, 2 to 3)
         val model = predictableGolfModel(hmDartNoToStopThreshold) { hole, _ ->
@@ -50,7 +46,7 @@ class TestDartsSimulationGolf: AbstractTest()
             }
         }
 
-        val simulation = DartsSimulationGolf(dartboard, player, model)
+        val simulation = DartsSimulationGolf(player, model)
         val result = simulation.simulateGame(-1)
 
         //2 + 3 + 1 + (15*4)

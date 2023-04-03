@@ -36,8 +36,7 @@ class DartsAiModelBenchmarkTest : AbstractTest()
     @Tag("integration")
     fun `Alan Partridge - Full games`()
     {
-        val dartboard = makeTestDartboard(500, 500)
-        val simulation = DartsSimulationX01(dartboard, insertPlayer(), ALAN_PARTRIDGE)
+        val simulation = DartsSimulationX01(insertPlayer(), ALAN_PARTRIDGE)
 
         val results = (1..5000).map { simulation.simulateGame(-it.toLong()).finalScore }
         results.average().shouldBeBetween(50.5, 51.5, SIMPLE_SIMULATION_TOLERANCE)
@@ -63,8 +62,7 @@ class DartsAiModelBenchmarkTest : AbstractTest()
     @Tag("integration")
     fun `Bruce Forsyth - Full games`()
     {
-        val dartboard = makeTestDartboard(500, 500)
-        val simulation = DartsSimulationX01(dartboard, insertPlayer(), BRUCE_FORSYTH)
+        val simulation = DartsSimulationX01(insertPlayer(), BRUCE_FORSYTH)
 
         val results = (1..5000).map { simulation.simulateGame(-it.toLong()).finalScore }
         results.average().shouldBeBetween(44.5, 45.0, SIMPLE_SIMULATION_TOLERANCE)
