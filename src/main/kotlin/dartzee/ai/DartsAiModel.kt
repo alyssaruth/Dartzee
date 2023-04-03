@@ -128,14 +128,11 @@ data class DartsAiModel(val standardDeviation: Double,
 
         if (aiDartboardPoint == DELIBERATE_MISS)
         {
-            return AI_DARTBOARD.getPointsForSegment(3, SegmentType.MISSED_BOARD).first()
+            return AI_DARTBOARD.getDeliberateMissPoint()
         }
 
         val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint)
-
-        val resultingAiPoint = translatePoint(aiDartboardPoint, radius, angle)
-        AI_DARTBOARD.rationalisePoint(resultingAiPoint)
-        return resultingAiPoint
+        return translatePoint(aiDartboardPoint, radius, angle)
     }
 
     data class DistributionSample(val radius: Double, val theta: Double)
@@ -184,7 +181,7 @@ data class DartsAiModel(val standardDeviation: Double,
         }
 
         //Otherwise, we have a Normal Distribution to use to generate an angle more likely to be into the dartboard (rather than out of it)
-        val angleToAvoid = getAngleForPoint(pt, AI_DARTBOARD.centerPoint)
+        val angleToAvoid = getAngleForPoint(pt, AI_DARTBOARD.computeCenter())
         val angleTowardsCenter = (angleToAvoid + 180) % 360
         val angleDistribution = NormalDistribution(angleTowardsCenter, standardDeviationCentral)
         return angleDistribution.sample()

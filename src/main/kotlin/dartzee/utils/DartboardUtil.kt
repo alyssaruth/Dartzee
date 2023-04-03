@@ -3,6 +3,7 @@ package dartzee.utils
 import dartzee.ai.AI_DARTBOARD
 import dartzee.core.util.mapStepped
 import dartzee.`object`.ColourWrapper
+import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -25,7 +26,7 @@ private const val LOWER_BOUND_TRIPLE_RATIO = 0.582
 private const val UPPER_BOUND_TRIPLE_RATIO = 0.629
 private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 
-private const val UPPER_BOUND_DOUBLE_RATIO = 1.0
+const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
 
 fun getDartForSegment(pt: Point, segment: DartboardSegment): Dart
@@ -139,8 +140,8 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): Da
 fun convertForUiDartboard(sourcePt: Point, destinationDartboard: Dartboard): Point =
     convertForDestinationDartboard(sourcePt, AI_DARTBOARD, destinationDartboard)
 
-fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: Dartboard, destinationDartboard: Dartboard): Point =
-    convertForDestinationDartboard(sourcePt, sourceDartboard.centerPoint, sourceDartboard.diameter, destinationDartboard)
+fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: ComputationalDartboard, destinationDartboard: Dartboard): Point =
+    convertForDestinationDartboard(sourcePt, sourceDartboard.computeCenter(), sourceDartboard.computeRadius() * 2.0, destinationDartboard)
 
 fun convertForDestinationDartboard(sourcePt: Point, oldCenter: Point, oldDiameter: Double, destinationDartboard: Dartboard): Point
 {

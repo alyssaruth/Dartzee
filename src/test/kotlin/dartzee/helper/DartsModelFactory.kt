@@ -1,9 +1,15 @@
 package dartzee.helper
 
+import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
+import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.SegmentType
+import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
+import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
+import dartzee.utils.getAnglesForScore
+import dartzee.utils.translatePoint
 import getPointForScore
 import io.mockk.every
 import io.mockk.mockk
@@ -88,11 +94,16 @@ fun makeThrowDartFn(dartsToThrow: List<AimDart>): () -> Point
     val remainingDarts = dartsToThrow.toMutableList()
     val throwDartFn = {
         val dart = remainingDarts.removeAt(0)
-        getPointForScore(dart)
+        if (dart.multiplier == 0) {
+            AI_DARTBOARD.getMissPoint(dart.score)
+        } else getPointForScore(dart)
     }
 
     return throwDartFn
 }
+
+private fun ComputationalDartboard.getMissPoint(score: Int) =
+    translatePoint(computeCenter(), computeRadius() * (UPPER_BOUND_DOUBLE_RATIO + UPPER_BOUND_OUTSIDE_BOARD_RATIO) / 2.0, getAnglesForScore(score).let { (it.first + it.second) / 2.0 })
 
 data class ScoreAndSegmentType(val score: Int, val segmentType: SegmentType)
 fun predictableGolfModel(hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(), fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType): DartsAiModel

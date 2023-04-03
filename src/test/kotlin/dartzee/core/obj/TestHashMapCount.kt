@@ -39,23 +39,6 @@ class TestHashMapCount: AbstractTest()
     }
 
     @Test
-    fun `Should calculate the correct average to 1dp`()
-    {
-        val hm = HashMapCount<Int>()
-
-        hm.incrementCount(1, 1)
-        hm.incrementCount(2, 1)
-
-        hm.calculateAverage() shouldBe 1.5
-
-        hm.incrementCount(2, 2)
-        hm.calculateAverage() shouldBe 1.8
-
-        hm.incrementCount(93, 1)
-        hm.calculateAverage() shouldBe 20.0
-    }
-
-    @Test
     fun `Should return a flattened ordered list`()
     {
         val hm = HashMapCount<Int>()

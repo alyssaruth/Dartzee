@@ -14,7 +14,7 @@ import javax.swing.JLabel
 
 class PresentationDartboard(private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : JLabel(), IDartboard
 {
-    override fun computeRadius() = 0.7 * minOf(width, height) / 2.0
+    override fun computeRadius() = computeRadius(width, height)
     override fun computeCenter() = Point(width / 2, height / 2)
 
     override fun paint(g: Graphics)

@@ -1,10 +1,5 @@
 package dartzee.core.obj
 
-import dartzee.core.util.MathsUtil
-import java.util.ArrayList
-import java.util.HashMap
-import kotlin.Comparator
-
 class HashMapCount<K>: HashMap<K, Int>()
 {
     fun getTotalCount() = values.sum()
@@ -18,21 +13,6 @@ class HashMapCount<K>: HashMap<K, Int>()
     }
 
     fun getCount(key: K) = get(key) ?: 0
-
-    /**
-     * These ONLY WORK FOR INTEGER KEYS
-     */
-    fun calculateAverage(): Double
-    {
-        var totalValue = 0.0
-
-        entries.forEach{
-            totalValue += (it.key as Int * it.value)
-        }
-
-        val avg = totalValue / getTotalCount()
-        return MathsUtil.round(avg, 1)
-    }
 
     /**
      * Returns {1, 1, 1, 1, 1, 2, 2} from {1 -> 5, 2 -> 2}

@@ -1,5 +1,7 @@
 package dartzee.helper
 
+import com.github.alyssaburlton.swingtest.toBufferedImage
+import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
@@ -19,8 +21,17 @@ import dartzee.game.state.SingleParticipant
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.screen.Dartboard
 import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getAllPossibleSegments
+import java.awt.BasicStroke
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.image.BufferedImage
+import javax.swing.ImageIcon
+import javax.swing.JLabel
 
 val twoBlackOneWhite = makeDartzeeRuleDto(makeColourRule(black = true), makeColourRule(black = true), makeColourRule(white = true),
         inOrder = false,
@@ -113,3 +124,23 @@ fun makeDartzeePlayerState(participant: ParticipantEntity = insertParticipant(),
 fun makeSegmentStatus(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),
                       validSegments: List<DartboardSegment> = scoringSegments)
  = SegmentStatus(scoringSegments, validSegments)
+
+fun Dartboard.markPoints(points: List<Point>) = markPoints(dartboardImage!!, points)
+
+fun PresentationDartboard.markPoints(points: List<Point>) = markPoints(toBufferedImage(), points)
+
+private fun markPoints(img: BufferedImage, points: List<Point>): JLabel
+{
+    val g = img.graphics as Graphics2D
+    g.color = Color.BLUE
+    g.stroke = BasicStroke(3f)
+    points.forEach { pt ->
+        g.drawLine(pt.x - 5, pt.y - 5, pt.x + 5, pt.y + 5)
+        g.drawLine(pt.x - 5, pt.y + 5, pt.x + 5, pt.y - 5)
+    }
+
+    val lbl = JLabel(ImageIcon(img))
+    lbl.size = Dimension(500, 500)
+    lbl.repaint()
+    return lbl
+}
