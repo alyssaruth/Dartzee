@@ -6,6 +6,7 @@ import dartzee.core.bean.NumberField
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.TableUtil.DefaultModel
+import dartzee.screen.stats.median
 import dartzee.stats.GameWrapper
 import net.miginfocom.swing.MigLayout
 import org.jfree.chart.ChartFactory
@@ -354,40 +355,12 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
 
         appendToDataset(legendKey, hmNoDartsToCount)
 
-        val avg = hmNoDartsToCount.calculateAverage()
-        val median = calculateMedian(hmNoDartsToCount)
+        val scores = gamesToGraph.map { it.finalScore }
+        val avg = scores.average()
+        val median = scores.median()
         nfMedian.value = median
         nfMean.value = avg
     }
-
-    private fun calculateMedian(hm: HashMapCount<Int>): Double
-    {
-        if (hm.isEmpty())
-        {
-            return 0.0
-        }
-
-        val allKeys = hm.getFlattenedOrderedList(Comparator.comparingInt { k -> k })
-
-        val n = allKeys.size
-        return if (n % 2 == 0)
-        {
-            //Even, so we want either side of the middle value and then to take the average of them.
-            val bigIx = n / 2
-            val smallIx = n / 2 - 1
-
-            val sum = (allKeys[bigIx] + allKeys[smallIx]).toDouble()
-
-            sum / 2
-        }
-        else
-        {
-            //Odd, so we just want the middle value. It's (n-1)/2 because of stupid index starting at 0 not 1.
-            val ix = (n - 1) / 2
-            allKeys[ix].toDouble()
-        }
-    }
-
 
     private fun appendToDataset(legendKey: String, hmNoDartsToCount: HashMapCount<Int>)
     {
@@ -417,7 +390,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
 
         dataset!!.addValue(outlierCount.toDouble(), legendKey, (outlierLimit + 1).toString() + "+")
 
-        //Also add to the Box and Whisker dataset
+        // Also add to the Box and Whisker dataset
         val allValues = hmNoDartsToCount.getFlattenedOrderedList(null)
         boxDataset!!.add(allValues, legendKey, "")
     }
