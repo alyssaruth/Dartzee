@@ -1,9 +1,11 @@
 package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
-import dartzee.screen.Dartboard
+import dartzee.bean.PresentationDartboard
+import dartzee.`object`.ColourWrapper
 import dartzee.utils.DartsColour
 import java.awt.Point
+import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -13,8 +15,8 @@ abstract class AbstractVisualisationPanel : JPanel()
     //Cached stuff
     private var paintedKey = false
 
-    val dartboard = Dartboard(500, 500)
-    var overlayImg = dartboard.factoryOverlay()
+    val dartboard = PresentationDartboard(factoryColourWrapper())
+    var overlayImg = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 
     protected val overlay = JLabel()
     protected val panel = JPanel()
@@ -37,10 +39,11 @@ abstract class AbstractVisualisationPanel : JPanel()
      */
     abstract fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
     abstract fun paintKey()
+    protected abstract fun factoryColourWrapper(): ColourWrapper
 
     fun reset()
     {
-        overlayImg = dartboard.factoryOverlay()
+        overlayImg = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
         overlay.icon = ImageIcon(overlayImg)
         overlay.background = DartsColour.TRANSPARENT
     }

@@ -19,8 +19,6 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         add(overlay)
         add(dartboard)
 
-        dartboard.paintDartboard(factoryColourWrapper())
-
         val label = JLabel("20+")
         label.border = LineBorder(Color(0, 0, 0))
         label.isOpaque = true
@@ -47,7 +45,7 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         panel.add(label_2)
     }
 
-    private fun factoryColourWrapper(): ColourWrapper
+    override fun factoryColourWrapper(): ColourWrapper
     {
         val evenSingle = DartsColour.DARTBOARD_LIGHT_GREY
         val evenDouble = DartsColour.DARTBOARD_LIGHTER_GREY

@@ -25,12 +25,12 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         add(dartboard)
         add(overlay)
 
-        dartboard.paintDartboard(WIREFRAME_COLOUR_WRAPPER)
-
         panelKey.setBounds(0, 0, 100, 500)
         panel.add(panelKey)
         panelKey.icon = ImageIcon(keyImg)
     }
+
+    override fun factoryColourWrapper() = WIREFRAME_COLOUR_WRAPPER
 
     override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
     {
