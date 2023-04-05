@@ -16,7 +16,7 @@ abstract class AbstractVisualisationPanel : JPanel()
     private var paintedKey = false
 
     val dartboard = PresentationDartboard(factoryColourWrapper())
-    var overlayImg = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+    var overlayImg = BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB)
 
     protected val overlay = JLabel()
     protected val panel = JPanel()
@@ -43,7 +43,7 @@ abstract class AbstractVisualisationPanel : JPanel()
 
     fun reset()
     {
-        overlayImg = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+        overlayImg = BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB)
         overlay.icon = ImageIcon(overlayImg)
         overlay.background = DartsColour.TRANSPARENT
     }
