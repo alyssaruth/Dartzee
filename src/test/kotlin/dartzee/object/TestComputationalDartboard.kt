@@ -30,7 +30,10 @@ class TestComputationalDartboard: AbstractTest()
     fun `Should return the correct deliberate miss point`()
     {
         val dartboard = ComputationalDartboard(100, 100)
-        dartboard.getDeliberateMissPoint() shouldBe Point(50, 96)
+        val computedPoint = dartboard.getDeliberateMissPoint()
+        computedPoint.pt shouldBe Point(50, 96)
+        computedPoint.segment shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
+        computedPoint.angle shouldBe 180.0
     }
 
     @Test
