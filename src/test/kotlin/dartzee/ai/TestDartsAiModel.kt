@@ -116,7 +116,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel(standardDeviationDoubles = 100000.0, maxRadius = 1000)
 
         val pt = model.throwX01Dart(40)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldNotBe DartboardSegment(SegmentType.DOUBLE, 20)
+        pt.segment shouldNotBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
     @Test
@@ -125,7 +125,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel(standardDeviationDoubles = null)
 
         val pt = model.throwX01Dart(40)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, 20)
+        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
     @Test
@@ -171,7 +171,7 @@ class TestDartsAiModel: AbstractTest()
 
         repeat(20) {
             val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatus())
-            AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
+            pt.segment shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
         }
     }
 
@@ -184,7 +184,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel(hmScoreToDart = mapOf(77 to AimDart(17, 2)))
 
         val pt = model.throwX01Dart(77)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, 17)
+        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 17)
     }
 
     @Test
@@ -193,7 +193,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel(scoringDart = 18)
 
         val pt = model.throwX01Dart(61)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.TREBLE, 18)
+        pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 18)
     }
 
     @Test
@@ -202,7 +202,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel(scoringDart = 25)
 
         val pt = model.throwX01Dart(501)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
+        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test
@@ -213,7 +213,7 @@ class TestDartsAiModel: AbstractTest()
         for (i in 41..60)
         {
             val pt = model.throwX01Dart(i)
-            AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, i - 40)
+            pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, i - 40)
         }
     }
 
@@ -223,7 +223,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel()
 
         val pt = model.throwX01Dart(37)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 5)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 5)
     }
 
     @Test
@@ -232,7 +232,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel()
 
         val pt = model.throwX01Dart(31)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 15)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 15)
     }
 
     @Test
@@ -241,7 +241,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel()
 
         val pt = model.throwX01Dart(15)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 7)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 7)
     }
 
     @Test
@@ -250,7 +250,7 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel()
 
         val pt = model.throwX01Dart(7)
-        AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 3)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 3)
     }
 
     @Test
@@ -261,7 +261,7 @@ class TestDartsAiModel: AbstractTest()
         val scores = getCheckoutScores().filter{ it <= 40 }
         scores.forEach {
             val pt = model.throwX01Dart(it)
-            AI_DARTBOARD.getSegmentForPoint(pt) shouldBe DartboardSegment(SegmentType.DOUBLE, it/2)
+            pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, it/2)
         }
     }
 
@@ -277,13 +277,13 @@ class TestDartsAiModel: AbstractTest()
         model.getSegmentTypeForDartNo(3) shouldBe SegmentType.TREBLE
 
         val pt1 = model.throwGolfDart(1, 1)
-        AI_DARTBOARD.getSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
+        pt1.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
 
         val pt2 = model.throwGolfDart(1, 2)
-        AI_DARTBOARD.getSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.TREBLE, 1)
+        pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 1)
 
         val pt3 = model.throwGolfDart(1, 3)
-        AI_DARTBOARD.getSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.TREBLE, 1)
+        pt3.segment shouldBe DartboardSegment(SegmentType.TREBLE, 1)
     }
 
     @Test
@@ -293,13 +293,13 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel(hmDartNoToSegmentType = hmDartNoToSegmentType)
 
         val pt1 = model.throwGolfDart(1, 1)
-        AI_DARTBOARD.getSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.TREBLE, 1)
+        pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 1)
 
         val pt2 = model.throwGolfDart(1, 2)
-        AI_DARTBOARD.getSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
+        pt2.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
 
         val pt3 = model.throwGolfDart(1, 3)
-        AI_DARTBOARD.getSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
+        pt3.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
     }
 
     @Test
@@ -330,13 +330,13 @@ class TestDartsAiModel: AbstractTest()
         val model = beastDartsModel()
 
         val pt1 = model.throwClockDart(1, ClockType.Standard)
-        AI_DARTBOARD.getSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
+        pt1.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
 
         val pt2 = model.throwClockDart(13, ClockType.Doubles)
-        AI_DARTBOARD.getSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.DOUBLE, 13)
+        pt2.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 13)
 
         val pt3 = model.throwClockDart(11, ClockType.Trebles)
-        AI_DARTBOARD.getSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.TREBLE, 11)
+        pt3.segment shouldBe DartboardSegment(SegmentType.TREBLE, 11)
     }
 
     /**
@@ -349,13 +349,13 @@ class TestDartsAiModel: AbstractTest()
 
         val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
         val pt1 = model.throwDartzeeDart(0, segmentStatus)
-        AI_DARTBOARD.getSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
         val pt2 = model.throwDartzeeDart(1, segmentStatus)
-        AI_DARTBOARD.getSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
         val pt3 = model.throwDartzeeDart(2, segmentStatus)
-        AI_DARTBOARD.getSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
+        pt3.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test
@@ -365,12 +365,12 @@ class TestDartsAiModel: AbstractTest()
 
         val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
         val pt1 = model.throwDartzeeDart(0, segmentStatus)
-        AI_DARTBOARD.getSegmentForPoint(pt1) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
         val pt2 = model.throwDartzeeDart(1, segmentStatus)
-        AI_DARTBOARD.getSegmentForPoint(pt2) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
         val pt3 = model.throwDartzeeDart(2, segmentStatus)
-        AI_DARTBOARD.getSegmentForPoint(pt3) shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        pt3.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
     }
 }

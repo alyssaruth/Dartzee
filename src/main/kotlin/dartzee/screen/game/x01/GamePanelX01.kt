@@ -12,6 +12,7 @@ import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
+import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
@@ -24,7 +25,6 @@ import dartzee.utils.isNearMissDouble
 import dartzee.utils.isShanghai
 import dartzee.utils.shouldStopForMercyRule
 import dartzee.utils.sumScore
-import java.awt.Point
 
 class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
     GamePanelPausable<DartsScorerX01, Dartboard, X01PlayerState>(parent, game, totalPlayers)
@@ -136,7 +136,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
     override fun shouldStopAfterDartThrown() = getCurrentPlayerState().isCurrentRoundComplete()
 
-    override fun computeAiDart(model: DartsAiModel): Point?
+    override fun computeAiDart(model: DartsAiModel): ComputedPoint?
     {
         val startOfRoundScore = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
         val currentScore = getCurrentPlayerState().getRemainingScore()

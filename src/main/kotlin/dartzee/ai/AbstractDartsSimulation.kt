@@ -4,11 +4,11 @@ import dartzee.core.obj.HashMapList
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.`object`.DartsClient
 import dartzee.stats.GameWrapper
 import dartzee.utils.getDartForSegment
-import java.awt.Point
 import java.sql.Timestamp
 
 abstract class AbstractDartsSimulation(val player: PlayerEntity,
@@ -70,9 +70,8 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
         dartsThrown = mutableListOf()
     }
 
-    protected fun dartThrown(aiPt: Point)
+    protected fun dartThrown(aiPt: ComputedPoint)
     {
-        val segment = AI_DARTBOARD.getSegmentForPoint(aiPt)
-        dartThrown(getDartForSegment(aiPt, segment))
+        dartThrown(getDartForSegment(aiPt.pt, aiPt.segment))
     }
 }

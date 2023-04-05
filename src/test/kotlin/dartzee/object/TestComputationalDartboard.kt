@@ -53,7 +53,7 @@ class TestComputationalDartboard: AbstractTest()
 
         val pt = dartboard.getPointToAimAt(DartboardSegment(SegmentType.INNER_SINGLE, 6))
         val presentationDartboard = PresentationDartboard(WIREFRAME_COLOUR_WRAPPER).also { it.size = Dimension(400, 400) }
-        val lbl = presentationDartboard.markPoints(listOf(pt))
+        val lbl = presentationDartboard.markPoints(listOf(pt.pt))
         lbl.shouldMatchImage("inner 6 aim")
     }
 }

@@ -8,11 +8,11 @@ import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.IWrappedParticipant
+import dartzee.`object`.ComputedPoint
 import dartzee.screen.Dartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
-import java.awt.Point
 
 class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
         GamePanelFixedLength<DartsScorerGolf, Dartboard, GolfPlayerState>(parent, game, totalPlayers)
@@ -31,7 +31,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
         return lastDart.getGolfScore(targetHole)
     }
 
-    override fun computeAiDart(model: DartsAiModel): Point
+    override fun computeAiDart(model: DartsAiModel): ComputedPoint
     {
         val targetHole = currentRoundNumber
         val dartNo = dartsThrownCount() + 1
