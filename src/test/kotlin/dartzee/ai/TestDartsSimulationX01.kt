@@ -4,7 +4,6 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertPlayer
 import dartzee.helper.predictableDartsModel
-import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -18,9 +17,7 @@ class TestDartsSimulationX01: AbstractTest()
         val model = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
         val player = insertPlayer(model = model)
 
-        val dartboard = makeTestDartboard()
-
-        val simulation = DartsSimulationX01(dartboard, player, model)
+        val simulation = DartsSimulationX01(player, model)
         val result = simulation.simulateGame(-1)
 
         result.finalScore shouldBe 9
@@ -48,7 +45,7 @@ class TestDartsSimulationX01: AbstractTest()
 
         val model = predictableDartsModel(aimDarts, mercyThreshold = 7)
 
-        val simulation = DartsSimulationX01(makeTestDartboard(), player, model)
+        val simulation = DartsSimulationX01(player, model)
         val result = simulation.simulateGame(-1)
         result.finalScore shouldBe 13
     }
@@ -67,7 +64,7 @@ class TestDartsSimulationX01: AbstractTest()
         )
 
         val model = predictableDartsModel(aimDarts, mercyThreshold = 7)
-        val simulation = DartsSimulationX01(makeTestDartboard(), player, model)
+        val simulation = DartsSimulationX01(player, model)
         val result = simulation.simulateGame(-1)
         result.finalScore shouldBe 13
     }

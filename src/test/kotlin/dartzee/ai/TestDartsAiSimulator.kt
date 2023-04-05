@@ -68,7 +68,7 @@ class TestDartsAiSimulator : AbstractTest()
         every { model.throwAtDouble(capture(doubleSlot)) } answers {
             val score = doubleSlot.captured
             val segmentType = shuffledSegmentTypes.removeFirst()
-            getPointForScore(score, segmentType)
+            if (segmentType == SegmentType.MISS) AI_DARTBOARD.getDeliberateMissPoint() else getPointForScore(score, segmentType)
         }
 
         return model

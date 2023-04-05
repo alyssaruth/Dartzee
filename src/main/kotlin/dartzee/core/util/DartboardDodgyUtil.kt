@@ -76,7 +76,7 @@ fun Dartboard.doGolfMiss()
 
 private fun Dartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
 {
-    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) || simulation)
+    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
     {
         return
     }
@@ -106,7 +106,7 @@ private fun Dartboard.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, sound
 
 fun Dartboard.playDodgySound(soundName: String)
 {
-    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) || simulation)
+    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
     {
         return
     }
