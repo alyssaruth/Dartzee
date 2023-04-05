@@ -1,11 +1,11 @@
 package dartzee.ai
 
+import dartzee.bean.PresentationDartboard
 import dartzee.core.util.MathsUtil
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.logging.CODE_SIMULATION_STARTED
-import dartzee.screen.Dartboard
+import dartzee.`object`.SegmentType
 import dartzee.utils.InjectedThings.logger
-import dartzee.utils.convertForUiDartboard
 import java.util.*
 
 private const val SCORING_DARTS_TO_THROW = 20000
@@ -13,23 +13,23 @@ private const val DOUBLE_DARTS_TO_THROW = 20000
 
 object DartsAiSimulator
 {
-    fun runSimulation(model: DartsAiModel, dartboard: Dartboard): SimulationWrapper
+    fun runSimulation(model: DartsAiModel, dartboard: PresentationDartboard): SimulationWrapper
     {
         logger.info(CODE_SIMULATION_STARTED, "Simulating scoring and doubles throws")
 
-        val scoringPoints = throwScoringDarts(model, dartboard)
-        val hmPointToCount = scoringPoints.groupBy { it }.mapValues { it.value.size }
-        val scoringDarts = scoringPoints.map { dartboard.convertPointToDart(it, false) }
+        val scoringPoints = throwScoringDarts(model)
+        val hmPointToCount = scoringPoints.groupBy { dartboard.interpretPoint(it) }.mapValues { it.value.size }
+        val scoringSegments = scoringPoints.map { it.segment }
 
-        val totalScore = scoringDarts.sumOf { it.getTotal() }
-        val misses = scoringDarts.count { it.getTotal() == 0 }
-        val trebles = scoringDarts.count { it.isTreble() && it.score == model.scoringDart }
+        val totalScore = scoringSegments.sumOf { it.getTotal() }
+        val misses = scoringSegments.count { it.getTotal() == 0 }
+        val trebles = scoringSegments.count { it.type == SegmentType.TREBLE && it.score == model.scoringDart }
 
         val avgScore = totalScore.toDouble() / SCORING_DARTS_TO_THROW
         val missPercent = MathsUtil.getPercentage(misses, SCORING_DARTS_TO_THROW)
         val treblePercent = MathsUtil.getPercentage(trebles, SCORING_DARTS_TO_THROW)
 
-        val doubles = throwAtDoubles(model, dartboard)
+        val doubles = throwAtDoubles(model)
 
         logger.info(CODE_SIMULATION_FINISHED, "Finished simulating throws")
 
@@ -37,23 +37,20 @@ object DartsAiSimulator
         return SimulationWrapper(avgScore, missPercent, doublePercent, treblePercent, hmPointToCount)
     }
 
-    private fun throwScoringDarts(model: DartsAiModel, dartboard: Dartboard) =
+    private fun throwScoringDarts(model: DartsAiModel) =
         (0 until SCORING_DARTS_TO_THROW).map {
-            val pt = model.throwScoringDart()
-            convertForUiDartboard(pt, dartboard)
+            model.throwScoringDart()
         }
 
-    private fun throwAtDoubles(model: DartsAiModel, dartboard: Dartboard): Double
+    private fun throwAtDoubles(model: DartsAiModel): Double
     {
         val rand = Random()
 
         return (0 until DOUBLE_DARTS_TO_THROW).fold(0.0) { hits, _ ->
             val doubleToAimAt = rand.nextInt(20) + 1
 
-            val pt = model.throwAtDouble(doubleToAimAt)
-            val uiPt = convertForUiDartboard(pt, dartboard)
-            val dart = dartboard.convertPointToDart(uiPt, true)
-            if (dart.score == doubleToAimAt && dart.isDouble()) {
+            val segment = model.throwAtDouble(doubleToAimAt).segment
+            if (segment.score == doubleToAimAt && segment.type == SegmentType.DOUBLE) {
                 hits + 1
             } else {
                 hits

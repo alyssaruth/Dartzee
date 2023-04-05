@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.core.util.jsonMapper
 import dartzee.game.ClockType
 import dartzee.logging.CODE_AI_ERROR
+import dartzee.`object`.ComputedPoint
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
 import dartzee.screen.game.dartzee.SegmentStatus
@@ -12,6 +13,7 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
+import getComputedPointForScore
 import getDefaultDartToAimAt
 import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
@@ -44,7 +46,7 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * X01
      */
-    fun throwX01Dart(score: Int): Point
+    fun throwX01Dart(score: Int): ComputedPoint
     {
         //Check for a specific dart to aim for. It's possible to override any value for a specific AI strategy.
         val drtToAimAt = getOveriddenDartToAimAt(score)
@@ -55,28 +57,25 @@ data class DartsAiModel(val standardDeviation: Double,
         }
 
         //No overridden strategy, do the default thing
-        if (score > 60)
-        {
-            return throwScoringDart()
-        }
-        else
-        {
+        return if (score > 60) {
+            throwScoringDart()
+        } else {
             val defaultDrt = getDefaultDartToAimAt(score)
             val ptToAimAt = getPointForScore(defaultDrt)
-            return throwDartAtPoint(ptToAimAt)
+            throwDartAtPoint(ptToAimAt)
         }
     }
 
-    fun throwScoringDart(): Point
+    fun throwScoringDart(): ComputedPoint
     {
         val ptToAimAt = calculateScoringPoint()
-        return throwDartAtPoint(ptToAimAt)
+        return throwDartAtPoint(ptToAimAt.pt)
     }
 
-    fun calculateScoringPoint(): Point
+    fun calculateScoringPoint(): ComputedPoint
     {
         val segmentType = if (scoringDart == 25) SegmentType.DOUBLE else SegmentType.TREBLE
-        return getPointForScore(scoringDart, segmentType)
+        return getComputedPointForScore(scoringDart, segmentType)
     }
 
     private fun getOveriddenDartToAimAt(score: Int) = hmScoreToDart[score]
@@ -84,7 +83,7 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * Golf
      */
-    fun throwGolfDart(targetHole: Int, dartNo: Int): Point
+    fun throwGolfDart(targetHole: Int, dartNo: Int): ComputedPoint
     {
         val segmentTypeToAimAt = getSegmentTypeForDartNo(dartNo)
         val ptToAimAt = getPointForScore(targetHole, segmentTypeToAimAt)
@@ -94,7 +93,7 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * Clock
      */
-    fun throwClockDart(clockTarget: Int, clockType: ClockType): Point
+    fun throwClockDart(clockTarget: Int, clockType: ClockType): ComputedPoint
     {
         val segmentType = getSegmentTypeForClockType(clockType)
 
@@ -105,7 +104,7 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * Dartzee
      */
-    fun throwDartzeeDart(dartsThrownSoFar: Int, segmentStatus: SegmentStatus): Point
+    fun throwDartzeeDart(dartsThrownSoFar: Int, segmentStatus: SegmentStatus): ComputedPoint
     {
         val aggressive = (dartsThrownSoFar < 2 || dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE)
         val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(AI_DARTBOARD, segmentStatus, aggressive)
@@ -118,12 +117,12 @@ data class DartsAiModel(val standardDeviation: Double,
 
     fun throwAtDouble(double: Int) = throwDartAtPoint(getPointForScore(double, SegmentType.DOUBLE))
 
-    private fun throwDartAtPoint(aiDartboardPoint: Point): Point
+    private fun throwDartAtPoint(aiDartboardPoint: Point): ComputedPoint
     {
         if (standardDeviation == 0.0)
         {
             logger.error(CODE_AI_ERROR, "Gaussian model with SD of 0 - this shouldn't be possible!")
-            return aiDartboardPoint
+            return AI_DARTBOARD.toComputedPoint(aiDartboardPoint)
         }
 
         if (aiDartboardPoint == DELIBERATE_MISS)
@@ -132,7 +131,8 @@ data class DartsAiModel(val standardDeviation: Double,
         }
 
         val (radius, angle) = calculateRadiusAndAngle(aiDartboardPoint)
-        return translatePoint(aiDartboardPoint, radius, angle)
+        val newPoint = translatePoint(aiDartboardPoint, radius, angle)
+        return AI_DARTBOARD.toComputedPoint(newPoint)
     }
 
     data class DistributionSample(val radius: Double, val theta: Double)
