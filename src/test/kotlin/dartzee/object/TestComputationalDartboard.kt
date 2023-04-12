@@ -37,6 +37,22 @@ class TestComputationalDartboard: AbstractTest()
     }
 
     @Test
+    fun `Should convert to a computed point`()
+    {
+        val dartboard = ComputationalDartboard(100, 100)
+        val center = dartboard.toComputedPoint(Point(50, 50))
+        center.pt shouldBe Point(50, 50)
+        center.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
+        center.radius shouldBe 0.0
+
+        val outerSix = dartboard.toComputedPoint(Point(75, 50))
+        outerSix.pt shouldBe Point(75, 50)
+        outerSix.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 6)
+        outerSix.radius * dartboard.computeRadius() shouldBe 25.0
+        outerSix.angle shouldBe 90.0
+    }
+
+    @Test
     @Tag("screenshot")
     fun `Should get all the correct aim points`()
     {
