@@ -1,9 +1,9 @@
 
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.AimDart
+import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.utils.getAverage
 import java.awt.Point
 
 /**
@@ -17,6 +17,9 @@ fun getPointForScore(drt: AimDart): Point
 }
 
 fun getPointForScore(score: Int, type: SegmentType): Point =
+    AI_DARTBOARD.getPointToAimAt(DartboardSegment(type, score)).pt
+
+fun getComputedPointForScore(score: Int, type: SegmentType): ComputedPoint =
     AI_DARTBOARD.getPointToAimAt(DartboardSegment(type, score))
 
 /**

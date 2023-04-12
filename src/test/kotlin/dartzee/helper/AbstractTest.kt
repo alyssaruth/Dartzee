@@ -11,6 +11,7 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotest.assertions.fail
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
@@ -62,6 +63,11 @@ abstract class AbstractTest
     {
         if (!checkedForExceptions)
         {
+            val errors = getErrorsLogged()
+            if (errors.isNotEmpty())
+            {
+                fail("Unexpected error(s) were logged during test: ${errors.map { it.toJsonString() } }")
+            }
             errorLogged() shouldBe false
         }
 
@@ -102,8 +108,10 @@ abstract class AbstractTest
     fun errorLogged(): Boolean
     {
         checkedForExceptions = true
-        return getLogRecords().any { it.severity == Severity.ERROR }
+        return getErrorsLogged().isNotEmpty()
     }
+
+    private fun getErrorsLogged() = getLogRecords().filter { it.severity == Severity.ERROR }
 
     fun getLogRecordsSoFar(): List<LogRecord>
     {

@@ -1,5 +1,6 @@
 package dartzee.ai
 
+import dartzee.bean.PresentationDartboard
 import dartzee.drtDoubleTwenty
 import dartzee.drtMissTwenty
 import dartzee.drtOuterEighteen
@@ -12,22 +13,22 @@ import dartzee.drtTrebleOne
 import dartzee.drtTrebleTwenty
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeThrowDartFn
-import dartzee.makeTestDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import getPointForScore
+import getComputedPointForScore
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Test
+import java.awt.Dimension
 
 class TestDartsAiSimulator : AbstractTest()
 {
     @Test
     fun `Should return expected values for deterministic AI`()
     {
-        val dartboard = makeTestDartboard()
+        val dartboard = PresentationDartboard().also { it.size = Dimension(100, 100) }
 
         val scoringDarts = (1..200).map { drtMissTwenty() } + // 1%
           (1..200).map { drtDoubleTwenty() } + // 1%
@@ -57,7 +58,7 @@ class TestDartsAiSimulator : AbstractTest()
     {
         val model = mockk<DartsAiModel>()
         every { model.scoringDart } returns 20
-        every { model.calculateScoringPoint() } returns getPointForScore(20, SegmentType.TREBLE)
+        every { model.calculateScoringPoint() } returns getComputedPointForScore(20, SegmentType.TREBLE)
 
         val aimDarts = scoringDarts.map { it.toAimDart() }.shuffled()
         val throwDartFn = makeThrowDartFn(aimDarts)
@@ -68,7 +69,7 @@ class TestDartsAiSimulator : AbstractTest()
         every { model.throwAtDouble(capture(doubleSlot)) } answers {
             val score = doubleSlot.captured
             val segmentType = shuffledSegmentTypes.removeFirst()
-            if (segmentType == SegmentType.MISS) AI_DARTBOARD.getDeliberateMissPoint() else getPointForScore(score, segmentType)
+            if (segmentType == SegmentType.MISS) AI_DARTBOARD.getDeliberateMissPoint() else getComputedPointForScore(score, segmentType)
         }
 
         return model

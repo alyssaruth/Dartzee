@@ -1,13 +1,14 @@
 package dartzee.ai
 
+import dartzee.bean.PresentationDartboard
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import dartzee.makeTestDartboard
 import dartzee.`object`.SegmentType
 import dartzee.screen.stats.median
 import io.kotest.matchers.doubles.shouldBeBetween
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import java.awt.Dimension
 
 private const val SIMPLE_SIMULATION_TOLERANCE = 1.0
 
@@ -21,7 +22,7 @@ class DartsAiModelBenchmarkTest : AbstractTest()
     @Tag("integration")
     fun `Alan Partridge - Simple simulation`()
     {
-        val dartboard = makeTestDartboard(500, 500)
+        val dartboard = PresentationDartboard().also { it.size = Dimension(400, 400) }
 
         repeat(5) {
             val result = DartsAiSimulator.runSimulation(ALAN_PARTRIDGE, dartboard)
@@ -47,7 +48,7 @@ class DartsAiModelBenchmarkTest : AbstractTest()
     @Tag("integration")
     fun `Bruce Forsyth - Simple simulation`()
     {
-        val dartboard = makeTestDartboard(500, 500)
+        val dartboard = PresentationDartboard().also { it.size = Dimension(400, 400) }
 
         repeat(5) {
             val result = DartsAiSimulator.runSimulation(BRUCE_FORSYTH, dartboard)

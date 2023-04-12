@@ -19,6 +19,7 @@ import dartzee.game.GameType
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.listener.DartboardListener
+import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
@@ -183,7 +184,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
      * Abstract methods
      */
     abstract fun factoryState(pt: IWrappedParticipant): PlayerState
-    abstract fun computeAiDart(model: DartsAiModel): Point?
+    abstract fun computeAiDart(model: DartsAiModel): ComputedPoint?
 
     abstract fun shouldStopAfterDartThrown(): Boolean
     abstract fun shouldAIStop(): Boolean
@@ -736,7 +737,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
             pt?.let {
                 runOnEventThread {
-                    val uiPt = convertForUiDartboard(pt, dartboard)
+                    val uiPt = convertForUiDartboard(pt.pt, dartboard)
                     dartboard.dartThrown(uiPt)
                 }
             }

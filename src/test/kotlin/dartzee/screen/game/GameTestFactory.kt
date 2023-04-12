@@ -93,7 +93,7 @@ fun DartsGamePanel<*, *, *>.addCompletedRound(dartsThrown: List<Dart>)
 fun DartsGamePanel<*, *, *>.doAiTurn(model: DartsAiModel)
 {
     val pt = computeAiDart(model) ?: return
-    val uiPt = convertForUiDartboard(pt, dartboard)
+    val uiPt = convertForUiDartboard(pt.pt, dartboard)
     dartboard.dartThrown(uiPt)
 }
 

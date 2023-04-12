@@ -4,7 +4,6 @@ import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.utils.ResourceCache
-import dartzee.utils.convertForUiDartboard
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
@@ -25,17 +24,17 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         add(dartboard)
         add(overlay)
 
-        dartboard.paintDartboard(WIREFRAME_COLOUR_WRAPPER)
-
         panelKey.setBounds(0, 0, 100, 500)
         panel.add(panelKey)
         panelKey.icon = ImageIcon(keyImg)
     }
 
+    override fun factoryColourWrapper() = WIREFRAME_COLOUR_WRAPPER
+
     override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
     {
         val modelPt = model.calculateScoringPoint()
-        val centerPt = convertForUiDartboard(modelPt, dartboard)
+        val centerPt = dartboard.interpretPoint(modelPt)
 
         val divisor = model.computeProbabilityDensityDivisor()
 
