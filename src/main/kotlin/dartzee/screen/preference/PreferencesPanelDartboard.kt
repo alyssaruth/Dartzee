@@ -1,12 +1,11 @@
 package dartzee.screen.preference
 
+import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
 import dartzee.core.util.setFontSize
 import dartzee.`object`.ColourWrapper
-import dartzee.screen.Dartboard
 import dartzee.utils.DartsColour
-import dartzee.utils.InjectedThings.preferencesDartboardSize
 import dartzee.utils.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR
 import dartzee.utils.PREFERENCES_STRING_EVEN_SINGLE_COLOUR
 import dartzee.utils.PREFERENCES_STRING_EVEN_TREBLE_COLOUR
@@ -32,16 +31,16 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
     val cpEvenSingle = ColourPicker()
     val cpEvenDouble = ColourPicker()
     val cpEvenTreble = ColourPicker()
-    private val dartboardPreview = Dartboard(preferencesDartboardSize, preferencesDartboardSize)
+    private var dartboard = PresentationDartboard(renderScoreLabels = true)
 
     init
     {
-        panelCenter.layout = MigLayout("al center center, gapy 20")
+        panelCenter.layout = BorderLayout()
         add(panelCenter, BorderLayout.CENTER)
-        panelCenter.add(dartboardPreview)
-        panelCenter.add(panelEast)
+        panelCenter.add(dartboard, BorderLayout.CENTER)
+        panelCenter.add(panelEast, BorderLayout.EAST)
 
-        panelEast.layout = MigLayout("", "[][][]", "[][][]")
+        panelEast.layout = MigLayout("al center center, gapy 20", "[][][]", "[][][]")
         val lblSingleColours = JLabel("Single Colours")
         lblSingleColours.setFontSize(16)
         panelEast.add(lblSingleColours, "cell 0 0")
@@ -59,8 +58,6 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         panelEast.add(lblTrebleColours, "cell 0 2")
         panelEast.add(cpOddTreble, "cell 1 2")
         panelEast.add(cpEvenTreble, "cell 2 2")
-
-        dartboardPreview.renderScoreLabels = true
 
         cpOddSingle.addColourSelectionListener(this)
         cpOddDouble.addColourSelectionListener(this)
@@ -87,12 +84,12 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr)
         val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr)
 
-        cpOddSingle.updateSelectedColor(oddSingle)
-        cpOddDouble.updateSelectedColor(oddDouble)
-        cpOddTreble.updateSelectedColor(oddTreble)
-        cpEvenSingle.updateSelectedColor(evenSingle)
-        cpEvenDouble.updateSelectedColor(evenDouble)
-        cpEvenTreble.updateSelectedColor(evenTreble)
+        cpOddSingle.updateSelectedColor(oddSingle, notify = false)
+        cpOddDouble.updateSelectedColor(oddDouble, notify = false)
+        cpOddTreble.updateSelectedColor(oddTreble, notify = false)
+        cpEvenSingle.updateSelectedColor(evenSingle, notify = false)
+        cpEvenDouble.updateSelectedColor(evenDouble, notify = false)
+        cpEvenTreble.updateSelectedColor(evenTreble, notify = false)
 
         refreshDartboard()
     }
@@ -109,8 +106,11 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         val wrapper = ColourWrapper(evenSingle, evenDouble, evenTreble,
                 oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)
 
-        dartboardPreview.paintDartboard(wrapper)
-        dartboardPreview.ensureListening()
+        panelCenter.remove(dartboard)
+        dartboard = PresentationDartboard(wrapper, renderScoreLabels = true)
+        panelCenter.add(dartboard, BorderLayout.CENTER)
+        panelCenter.revalidate()
+        panelCenter.repaint()
     }
 
     override fun saveImpl()
@@ -138,10 +138,8 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
                     || !cpEvenDouble.matchesPreference(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
                     || !cpEvenTreble.matchesPreference(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
 
-    private fun ColourPicker.matchesPreference(preferenceKey: String): Boolean
-    {
-        return getPrefString() == PreferenceUtil.getStringValue(preferenceKey)
-    }
+    private fun ColourPicker.matchesPreference(preferenceKey: String) =
+        getPrefString() == PreferenceUtil.getStringValue(preferenceKey)
 
     override fun colourSelected(colour: Color)
     {
