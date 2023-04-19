@@ -30,7 +30,7 @@ dependencies {
 
     testImplementation "io.mockk:mockk:1.13.4"
     testImplementation 'io.kotest:kotest-assertions-core:5.5.4'
-    testImplementation 'com.github.alexburlton:swing-test:2.0.0'
+    testImplementation 'com.github.alexburlton:swing-test:3.0.0'
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.2"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.9.2"
 }
@@ -46,8 +46,8 @@ compileKotlin {
 }
 
 compileTestKotlin {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11
