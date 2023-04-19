@@ -2,7 +2,7 @@ name: CI
 on: push
 jobs:
   unit-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -46,7 +46,7 @@ jobs:
         with:
           message: 'Update coverage stats'
   integration-and-e2e:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -68,7 +68,7 @@ jobs:
           name: integration-and-e2e-results
           path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/integrationAndE2E/**/*.html
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
@@ -85,7 +85,7 @@ jobs:
           path: /home/runner/work/Dartzee/Dartzee/build/libs/Dartzee.jar
   test-jar:
     name: Test JAR - Java ${{ matrix.java-version }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: [build]
     strategy:

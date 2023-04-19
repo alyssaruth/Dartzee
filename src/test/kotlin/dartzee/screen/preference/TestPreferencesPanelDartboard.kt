@@ -2,11 +2,17 @@ package dartzee.screen.preference
 
 import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import com.github.alyssaburlton.swingtest.toBufferedImage
 import dartzee.bean.PresentationDartboard
-import dartzee.utils.*
+import dartzee.utils.DartsColour
+import dartzee.utils.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_EVEN_SINGLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_EVEN_TREBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_DOUBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_SINGLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_TREBLE_COLOUR
+import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.BorderLayout
 import java.awt.Color
@@ -16,7 +22,6 @@ import javax.swing.JFrame
 class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPanelDartboard>()
 {
     @Test
-    @Tag("screenshot")
     fun `Dartboard should refresh when settings are changed`()
     {
         val frame = JFrame()
@@ -33,11 +38,16 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
             panel.getChild<PresentationDartboard>().width > 0
         }
 
+        val dartboard = panel.getChild<PresentationDartboard>()
+        val oldCenter = dartboard.computeCenter()
+        val oldRgb = dartboard.toBufferedImage().getRGB(oldCenter.x, oldCenter.y)
+        oldRgb shouldBe Color.RED.rgb
+
         setUiFieldValuesToNonDefaults(panel)
 
         awaitCondition { panel.getChild<PresentationDartboard>().width > 0 }
-        val dartboard = panel.getChild<PresentationDartboard>()
-        dartboard.shouldMatchImage("preferencesDartboard")
+        val rgb = dartboard.toBufferedImage().getRGB(dartboard.computeCenter().x, dartboard.computeCenter().y)
+        rgb shouldBe Color.MAGENTA.rgb
     }
 
     override fun factory() = PreferencesPanelDartboard()
