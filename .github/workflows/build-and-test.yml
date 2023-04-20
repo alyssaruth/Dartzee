@@ -9,7 +9,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 11.0.18
           cache: 'gradle'
       - name: Verify tests
         run: |
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 11.0.18
           cache: 'gradle'
       - name: Integration & E2E
         uses: GabrielBB/xvfb-action@v1.6
@@ -73,7 +73,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 11.0.18
       - name: Build JAR
         run: ./gradlew jar --info
       - name: Export JAR
