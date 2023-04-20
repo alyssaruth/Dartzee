@@ -3,7 +3,6 @@ package dartzee.dartzee
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DELIBERATE_MISS
-import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
 import dartzee.helper.markPoints
@@ -136,8 +135,7 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     private fun verifyAim(segmentStatus: SegmentStatus, screenshotName: String, aggressive: Boolean = false)
     {
-        val dartboard = PresentationDartboard()
-        dartboard.setBounds(0, 0, 400, 400)
+        val dartboard = ComputationalDartboard(400, 400)
         val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
 
         val oldDartboard = DartzeeDartboard(400, 400)
