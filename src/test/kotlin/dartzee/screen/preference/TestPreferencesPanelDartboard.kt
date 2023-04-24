@@ -33,21 +33,20 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
         frame.add(panel, BorderLayout.CENTER)
         frame.isVisible = true
 
-        awaitCondition {
-            panel.getChild<PresentationDartboard>().isShowing &&
-            panel.getChild<PresentationDartboard>().width > 0
-        }
-
-        val dartboard = panel.getChild<PresentationDartboard>()
-        val oldCenter = dartboard.computeCenter()
-        val oldRgb = dartboard.toBufferedImage().getRGB(oldCenter.x, oldCenter.y)
-        oldRgb shouldBe Color.RED.rgb
+        verifyDartboardCenterColour(panel, Color.RED)
 
         setUiFieldValuesToNonDefaults(panel)
 
-        awaitCondition { panel.getChild<PresentationDartboard>().width > 0 }
-        val rgb = dartboard.toBufferedImage().getRGB(dartboard.computeCenter().x, dartboard.computeCenter().y)
-        rgb shouldBe Color.MAGENTA.rgb
+        verifyDartboardCenterColour(panel, Color.MAGENTA)
+    }
+
+    private fun verifyDartboardCenterColour(panel: PreferencesPanelDartboard, color: Color) {
+        val dartboard = panel.getChild<PresentationDartboard>()
+        awaitCondition { dartboard.isShowing && dartboard.width > 0 }
+
+        val center = dartboard.computeCenter()
+        val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)
+        oldRgb shouldBe color.rgb
     }
 
     override fun factory() = PreferencesPanelDartboard()
