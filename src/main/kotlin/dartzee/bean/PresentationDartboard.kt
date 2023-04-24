@@ -12,6 +12,7 @@ import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourFromHashMap
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getFontForDartboardLabels
+import dartzee.utils.getHighlightedColour
 import dartzee.utils.getNeighbours
 import dartzee.utils.translatePoint
 import java.awt.Color
@@ -24,7 +25,7 @@ import javax.swing.JLabel
 import javax.swing.SwingConstants
 import kotlin.math.roundToInt
 
-class PresentationDartboard(
+open class PresentationDartboard(
     private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false,
     private val scoreLabelColour: Color = Color.WHITE
@@ -72,12 +73,13 @@ class PresentationDartboard(
         paintScoreLabels(graphics2D)
     }
 
-    private fun paintSegment(segment: DartboardSegment, graphics: Graphics2D) {
+    protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false) {
         val pts = getPointsForSegment(segment)
         val edgePts = computeEdgePoints(pts)
         val colour = getColourFromHashMap(segment, colourWrapper)
+        val hoveredColour = if (highlight) getHighlightedColour(colour) else colour
 
-        graphics.paint = colour
+        graphics.paint = hoveredColour
         pts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
 
         if (colourWrapper.edgeColour != null) {

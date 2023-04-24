@@ -360,3 +360,13 @@ fun factoryFontMetrics(font: Font): FontMetrics
     //Use a new Canvas rather than going via graphics, as then this will work headless (e.g. from tests)
     return Canvas().getFontMetrics(font)
 }
+
+fun getHighlightedColour(colour: Color): Color =
+    if (colour == DartsColour.DARTBOARD_BLACK)
+    {
+        Color.DARK_GRAY
+    }
+    else
+    {
+        DartsColour.getDarkenedColour(colour)
+    }

@@ -1,6 +1,6 @@
 package dartzee.screen.preference
 
-import dartzee.bean.PresentationDartboard
+import dartzee.bean.InteractiveDartboard
 import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
 import dartzee.core.util.setFontSize
@@ -32,7 +32,7 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
     val cpEvenSingle = ColourPicker()
     val cpEvenDouble = ColourPicker()
     val cpEvenTreble = ColourPicker()
-    private var dartboard = PresentationDartboard(renderScoreLabels = true)
+    private var dartboard = InteractiveDartboard()
 
     init
     {
@@ -109,7 +109,7 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
                 oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)
 
         panelCenter.remove(dartboard)
-        dartboard = PresentationDartboard(wrapper, renderScoreLabels = true)
+        dartboard = InteractiveDartboard(wrapper)
         panelCenter.add(dartboard, BorderLayout.CENTER)
         panelCenter.revalidate()
         panelCenter.repaint()

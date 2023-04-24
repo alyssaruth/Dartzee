@@ -15,8 +15,6 @@ import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.AimPoint
-import dartzee.utils.DartsColour
-import dartzee.utils.DartsColour.DARTBOARD_BLACK
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
@@ -27,6 +25,7 @@ import dartzee.utils.getAverage
 import dartzee.utils.getColourForSegment
 import dartzee.utils.getDartForSegment
 import dartzee.utils.getFontForDartboardLabels
+import dartzee.utils.getHighlightedColour
 import dartzee.utils.getPotentialAimPoints
 import java.awt.Color
 import java.awt.Component
@@ -235,15 +234,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         colourSegment(segment, hoveredColour)
     }
-    private fun getHighlightedColour(colour: Color): Color =
-        if (colour == DARTBOARD_BLACK)
-        {
-            Color.DARK_GRAY
-        }
-        else
-        {
-            DartsColour.getDarkenedColour(colour)
-        }
 
     open fun shouldActuallyHighlight(segment: DartboardSegment) = true
 
