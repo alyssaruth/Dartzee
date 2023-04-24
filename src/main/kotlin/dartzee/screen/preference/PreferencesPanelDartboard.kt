@@ -16,6 +16,7 @@ import dartzee.utils.PreferenceUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Dimension
 import javax.swing.JLabel
 import javax.swing.JPanel
 
@@ -46,6 +47,7 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         panelEast.add(lblSingleColours, "cell 0 0")
         panelEast.add(cpOddSingle, "cell 1 0")
         panelEast.add(cpEvenSingle, "cell 2 0")
+        panelEast.preferredSize = Dimension(300, 100)
 
         val lblDoubleColours = JLabel("Double Colours")
         lblDoubleColours.setFontSize(16)
