@@ -14,6 +14,7 @@ import javax.swing.border.LineBorder
 class ColourPicker : JLabel(), MouseListener
 {
     var selectedColour: Color = Color.BLACK
+        private set
 
     private var listener: ColourSelectionListener? = null
     private var img: BufferedImage = BufferedImage(45, 30, BufferedImage.TYPE_INT_ARGB)
@@ -31,7 +32,7 @@ class ColourPicker : JLabel(), MouseListener
         this.listener = listener
     }
 
-    fun updateSelectedColor(newColor: Color?)
+    fun updateSelectedColor(newColor: Color?, notify: Boolean = true)
     {
         newColor ?: return
 
@@ -40,6 +41,10 @@ class ColourPicker : JLabel(), MouseListener
 
         icon = ImageIcon(img)
         repaint()
+
+        if (notify) {
+            listener?.colourSelected(newColor)
+        }
     }
 
     fun getPrefString() = DartsColour.toPrefStr(selectedColour)
@@ -48,8 +53,6 @@ class ColourPicker : JLabel(), MouseListener
     {
         val newColour = InjectedDesktopCore.colourSelector.selectColour(selectedColour)
         updateSelectedColor(newColour)
-
-        listener?.colourSelected(newColour)
     }
 
     override fun mouseEntered(arg0: MouseEvent)

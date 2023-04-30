@@ -5,6 +5,7 @@ import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractTest
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputationalDartboard
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Assertions.*
@@ -49,9 +50,18 @@ class TestPresentationDartboard : AbstractTest()
     @Tag("screenshot")
     fun `Should match snapshot - default`()
     {
-        val dartboard = PresentationDartboard()
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 400, 400)
         dartboard.shouldMatchImage("default")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - with numbers`()
+    {
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER, renderScoreLabels = true)
+        dartboard.setBounds(0, 0, 500, 500)
+        dartboard.shouldMatchImage("scores")
     }
 
     @Test

@@ -15,24 +15,21 @@ import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.AimPoint
-import dartzee.utils.DartsColour
-import dartzee.utils.DartsColour.DARTBOARD_BLACK
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
-import dartzee.utils.ResourceCache.BASE_FONT
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.convertForDestinationDartboard
+import dartzee.utils.factoryFontMetrics
 import dartzee.utils.factorySegmentForPoint
 import dartzee.utils.getAverage
 import dartzee.utils.getColourForSegment
 import dartzee.utils.getDartForSegment
+import dartzee.utils.getFontForDartboardLabels
+import dartzee.utils.getHighlightedColour
 import dartzee.utils.getPotentialAimPoints
-import java.awt.Canvas
 import java.awt.Color
 import java.awt.Component
 import java.awt.Dimension
-import java.awt.Font
-import java.awt.FontMetrics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.RenderingHints
@@ -204,40 +201,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
     }
 
-    private fun getFontForDartboardLabels(lblHeight: Int): Font
-    {
-        //Start with a fontSize of 1
-        var fontSize = 1f
-        var font = BASE_FONT.deriveFont(Font.PLAIN, fontSize)
-
-        //We're going to increment our test font 1 at a time, and keep checking its height
-        var testFont = font
-        var metrics = factoryFontMetrics(testFont)
-        var fontHeight = metrics.height
-
-        while (fontHeight < lblHeight - 2)
-        {
-            //The last iteration succeeded, so set our return value to be the font we tested.
-            font = testFont
-
-            //Create a new testFont, with incremented font size
-            fontSize++
-            testFont = BASE_FONT.deriveFont(Font.PLAIN, fontSize)
-
-            //Get the updated font height
-            metrics = factoryFontMetrics(testFont)
-            fontHeight = metrics.height
-        }
-
-        return font
-    }
-
-    private fun factoryFontMetrics(font: Font): FontMetrics
-    {
-        //Use a new Canvas rather than going via graphics, as then this will work headless (e.g. from tests)
-        return Canvas().getFontMetrics(font)
-    }
-
     fun highlightDartboard(hoveredPoint: Point)
     {
         // We might not have told the dartboard to paint yet (it's invoked later onto the EDT)
@@ -271,15 +234,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
 
         colourSegment(segment, hoveredColour)
     }
-    private fun getHighlightedColour(colour: Color): Color =
-        if (colour == DARTBOARD_BLACK)
-        {
-            Color.DARK_GRAY
-        }
-        else
-        {
-            DartsColour.getDarkenedColour(colour)
-        }
 
     open fun shouldActuallyHighlight(segment: DartboardSegment) = true
 
@@ -503,8 +457,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     override fun mouseDragged(arg0: MouseEvent) {}
     override fun mouseEntered(arg0: MouseEvent) {}
     override fun mouseExited(arg0: MouseEvent) {}
-
-    fun factoryOverlay() = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 
     companion object
     {

@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.doHover
 import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.core.helper.getIconImage
+import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.InjectedDesktopCore
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
@@ -70,6 +71,18 @@ class TestColourPicker: AbstractTest()
         cp.addColourSelectionListener(listener)
         cp.doClick()
 
-        verify { listener.colourSelected(Color.BLUE) }
+        verify(exactly = 1) { listener.colourSelected(Color.BLUE) }
+    }
+
+    @Test
+    fun `Should not notify its listener if told not to`()
+    {
+        val listener = mockk<ColourSelectionListener>(relaxed = true)
+
+        val cp = ColourPicker()
+        cp.addColourSelectionListener(listener)
+        cp.updateSelectedColor(Color.BLUE, notify = false)
+
+        verifyNotCalled { listener.colourSelected(Color.BLUE) }
     }
 }

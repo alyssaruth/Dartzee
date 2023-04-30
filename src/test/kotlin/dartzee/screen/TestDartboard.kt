@@ -190,7 +190,7 @@ class TestDartboard: AbstractTest()
     {
         val board = Dartboard(200, 200)
         board.renderDarts = true
-        board.paintDartboard()
+        board.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         board.isVisible = true
 
         board.dartThrown(board.getPointForScore(20, SegmentType.INNER_SINGLE))
@@ -198,12 +198,12 @@ class TestDartboard: AbstractTest()
 
         // Scale up
         board.size = Dimension(300, 300)
-        board.paintDartboard()
+        board.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         board.shouldMatchImage("scaledUp")
 
         // Scale down
         board.size = Dimension(150, 150)
-        board.paintDartboard()
+        board.paintDartboard(DEFAULT_COLOUR_WRAPPER)
         board.shouldMatchImage("scaledDown")
     }
 

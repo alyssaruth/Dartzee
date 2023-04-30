@@ -2,20 +2,34 @@ package dartzee.bean
 
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
+import dartzee.`object`.DartboardSegment
 import dartzee.`object`.IDartboard
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
+import dartzee.utils.factoryFontMetrics
 import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourFromHashMap
 import dartzee.utils.getColourWrapperFromPrefs
+import dartzee.utils.getFontForDartboardLabels
+import dartzee.utils.getHighlightedColour
 import dartzee.utils.getNeighbours
 import dartzee.utils.translatePoint
+import java.awt.Color
+import java.awt.Font
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
+import java.awt.RenderingHints
 import javax.swing.JLabel
+import javax.swing.SwingConstants
+import kotlin.math.roundToInt
 
-class PresentationDartboard(private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : JLabel(), IDartboard
+open class PresentationDartboard(
+    private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
+    private val renderScoreLabels: Boolean = false,
+    private val scoreLabelColour: Color = Color.WHITE
+) : JLabel(), IDartboard
 {
     override fun computeRadius() = computeRadius(width, height)
     override fun computeCenter() = Point(width / 2, height / 2)
@@ -54,21 +68,23 @@ class PresentationDartboard(private val colourWrapper: ColourWrapper = getColour
         super.paint(g)
 
         val graphics2D = g as Graphics2D
-
         paintOuterBoard(graphics2D)
+        getAllPossibleSegments().forEach { paintSegment(it, graphics2D) }
+        paintScoreLabels(graphics2D)
+    }
 
-        getAllPossibleSegments().forEach { segment ->
-            val pts = getPointsForSegment(segment)
-            val edgePts = computeEdgePoints(pts)
-            val colour = getColourFromHashMap(segment, colourWrapper)
+    protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false) {
+        val pts = getPointsForSegment(segment)
+        val edgePts = computeEdgePoints(pts)
+        val colour = getColourFromHashMap(segment, colourWrapper)
+        val hoveredColour = if (highlight) getHighlightedColour(colour) else colour
 
-            graphics2D.paint = colour
-            pts.forEach { graphics2D.drawLine(it.x, it.y, it.x, it.y) }
+        graphics.paint = hoveredColour
+        pts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
 
-            if (colourWrapper.edgeColour != null) {
-                graphics2D.paint = colourWrapper.edgeColour
-                edgePts.forEach { graphics2D.drawLine(it.x, it.y, it.x, it.y) }
-            }
+        if (colourWrapper.edgeColour != null) {
+            graphics.paint = colourWrapper.edgeColour
+            edgePts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
         }
     }
 
@@ -81,5 +97,44 @@ class PresentationDartboard(private val colourWrapper: ColourWrapper = getColour
         val center = computeCenter()
         g.paint = colourWrapper.outerDartboardColour
         g.fillOval(center.x - borderSize, center.y - borderSize, borderSize * 2, borderSize * 2)
+    }
+
+    private fun paintScoreLabels(g: Graphics2D)
+    {
+        if (!renderScoreLabels) return
+
+        val radius = computeRadius()
+        val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
+        val lblHeight = ((outerRadius - radius) / 2).roundToInt()
+
+        val fontToUse = getFontForDartboardLabels(lblHeight)
+        (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight)}
+    }
+
+    private fun paintScoreLabel(score: Int, g: Graphics2D, fontToUse: Font, lblHeight: Int)
+    {
+        //Create a label with standard properties
+        val lbl = JLabel(score.toString())
+        lbl.foreground = scoreLabelColour
+        lbl.horizontalAlignment = SwingConstants.CENTER
+        lbl.font = fontToUse
+
+        //Work out the width for this label, based on the text
+        val metrics = factoryFontMetrics(fontToUse)
+        val lblWidth = metrics.stringWidth(score.toString()) + 5
+        lbl.setSize(lblWidth, lblHeight)
+
+        //Work out where to place the label
+        val angle = getAnglesForScore(score).toList().average()
+        val radiusForLabel = computeRadius() + lblHeight
+        val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
+
+        val lblX = avgPoint.getX().toInt() - lblWidth / 2
+        val lblY = avgPoint.getY().toInt() - lblHeight / 2
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        g.translate(lblX, lblY)
+        lbl.paint(g)
+        g.translate(-lblX, -lblY)
     }
 }

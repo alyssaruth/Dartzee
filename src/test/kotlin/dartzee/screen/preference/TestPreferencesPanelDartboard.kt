@@ -1,11 +1,54 @@
 package dartzee.screen.preference
 
-import dartzee.utils.*
+import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.toBufferedImage
+import dartzee.bean.PresentationDartboard
+import dartzee.utils.DartsColour
+import dartzee.utils.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_EVEN_SINGLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_EVEN_TREBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_DOUBLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_SINGLE_COLOUR
+import dartzee.utils.PREFERENCES_STRING_ODD_TREBLE_COLOUR
+import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Test
+import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Dimension
+import javax.swing.JFrame
 
 class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPanelDartboard>()
 {
+    @Test
+    fun `Dartboard should refresh when settings are changed`()
+    {
+        val frame = JFrame()
+        frame.size = Dimension(800, 600)
+        frame.layout = BorderLayout(0, 0)
+
+        val panel = PreferencesPanelDartboard()
+        panel.refresh(true)
+        frame.add(panel, BorderLayout.CENTER)
+        frame.isVisible = true
+
+        verifyDartboardCenterColour(panel, Color.RED)
+
+        setUiFieldValuesToNonDefaults(panel)
+
+        verifyDartboardCenterColour(panel, Color.MAGENTA)
+    }
+
+    private fun verifyDartboardCenterColour(panel: PreferencesPanelDartboard, color: Color) {
+        val dartboard = panel.getChild<PresentationDartboard>()
+        awaitCondition { dartboard.isShowing && dartboard.width > 0 }
+
+        val center = dartboard.computeCenter()
+        val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)
+        oldRgb shouldBe color.rgb
+    }
+
     override fun factory() = PreferencesPanelDartboard()
 
     override fun getPreferencesAffected(): MutableList<String>
@@ -31,15 +74,13 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
 
     override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelDartboard)
     {
-        panel.cpOddSingle.selectedColour = Color.BLUE
-        panel.cpOddDouble.selectedColour = Color(200, 50, 128)
-        panel.cpOddTreble.selectedColour = Color.getHSBColor(0.9f, 0.8f, 1.0f)
+        panel.cpOddSingle.updateSelectedColor(Color.BLUE)
+        panel.cpOddDouble.updateSelectedColor(Color(200, 50, 128))
+        panel.cpOddTreble.updateSelectedColor(Color.getHSBColor(0.9f, 0.8f, 1.0f))
 
-        panel.cpEvenSingle.selectedColour = Color.YELLOW
-        panel.cpEvenDouble.selectedColour = Color.MAGENTA
-        panel.cpEvenTreble.selectedColour = Color.CYAN
-
-        panel.colourSelected(Color.CYAN)
+        panel.cpEvenSingle.updateSelectedColor(Color.YELLOW)
+        panel.cpEvenDouble.updateSelectedColor(Color.MAGENTA)
+        panel.cpEvenTreble.updateSelectedColor(Color.CYAN)
     }
 
     override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelDartboard)
