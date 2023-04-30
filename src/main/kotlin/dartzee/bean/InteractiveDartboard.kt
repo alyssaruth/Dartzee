@@ -4,6 +4,7 @@ import dartzee.core.util.getParentWindow
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DartboardSegment
 import dartzee.utils.getColourWrapperFromPrefs
+import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.event.MouseEvent
@@ -13,11 +14,12 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
 {
     private var lastHoveredSegment: DartboardSegment? = null
 
-    init {
+    init
+    {
         addMouseMotionListener(this)
     }
 
-    private fun highlightDartboard(pt: Point)
+    fun highlightDartboard(pt: Point, graphics: Graphics)
     {
         val hoveredSegment = getSegmentForPoint(pt)
         if (hoveredSegment == lastHoveredSegment)
@@ -36,7 +38,7 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
     {
         if (getParentWindow()?.isFocused == true)
         {
-            highlightDartboard(arg0.point)
+            highlightDartboard(arg0.point, graphics)
         }
     }
 
