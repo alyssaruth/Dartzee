@@ -65,9 +65,17 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Do
     } else {
         val (startAngle, endAngle) = getAnglesForScore(score)
         val radii = getRadiiForSegmentType(segment.type, radius)
-        generateSegment(segment, centre, radius, startAngle.toDouble() - 0.1 to endAngle.toDouble() + 0.1, 0.1, radii)
+        val angleStep = getAngleStepForSegmentType(segment.type)
+        generateSegment(segment, centre, radius, startAngle.toDouble() - 0.1 to endAngle.toDouble() + 0.1, angleStep, radii)
     }
 }
+
+private fun getAngleStepForSegmentType(segmentType: SegmentType) =
+    when (segmentType) {
+        SegmentType.INNER_SINGLE -> 0.2
+        SegmentType.TREBLE -> 0.15
+        else -> 0.1
+    }
 
 private fun generateSegment(segment: DartboardSegment, centre: Point, radius: Double, angleRange: Pair<Double, Double>, angleStep: Double, radiusRange: Pair<Double, Double>): Set<Point> {
     val allPts = angleRange.mapStepped(angleStep) { angle ->
