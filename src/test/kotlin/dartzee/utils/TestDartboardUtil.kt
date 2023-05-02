@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Point
 
+private const val MAX_DARTBOARD_RADIUS = 325
+
 class TestDartboardUtil : AbstractRegistryTest()
 {
     override fun getPreferencesAffected(): MutableList<String>
@@ -101,14 +103,9 @@ class TestDartboardUtil : AbstractRegistryTest()
     }
 
     @Test
-    fun `Should return non-overlapping sets of points, ignoring edge points`() {
-        val centre = Point(0, 0)
-        val radius = 325.0
-
+    fun `Should return non-overlapping sets of points`() {
         val allPoints = getAllNonMissSegments().flatMap {
-            val pts = computePointsForSegment(it, centre, radius)
-            val edgePts = computeEdgePoints(pts)
-            pts.filterNot(edgePts::contains)
+            computePointsForSegment(it, Point(0, 0), MAX_DARTBOARD_RADIUS.toDouble())
         }
         allPoints.size shouldBe allPoints.distinct().size
     }
@@ -128,15 +125,16 @@ class TestDartboardUtil : AbstractRegistryTest()
 
     @Test
     fun `Should cover every single point contained within the circle`() {
-        val radius = 325
+        val radius = MAX_DARTBOARD_RADIUS
         val centre = Point(radius, radius)
 
         val allPointsInCircle = getPointList(radius * 2, radius * 2).filter { it.distance(centre) < radius }.toSet()
         val allPointsInSegments = getAllNonMissSegments().flatMap { computePointsForSegment(it, centre, radius.toDouble()) }.toSet()
 
         val missedPoints = allPointsInCircle - allPointsInSegments
-        println("${allPointsInCircle.size} - ${allPointsInSegments.size} = ${missedPoints.size}")
-        println(missedPoints)
+        missedPoints.forEach {
+            println("$it: ${factorySegmentForPoint(it, centre, radius * 2.0)}")
+        }
         missedPoints.shouldBeEmpty()
     }
 
@@ -149,9 +147,8 @@ class TestDartboardUtil : AbstractRegistryTest()
         // Remove the outer bull because we currently don't calculate edge points for it correctly (the hole in the middle wrecks it)
         getAllNonMissSegments().filterNot { it.score == 25 && it.type == SegmentType.OUTER_SINGLE }.forEach { segment ->
             val pts = computePointsForSegment(segment, centre, radius)
-            val nonEdgePts = pts - computeEdgePoints(pts)
 
-            nonEdgePts.forEach { pt ->
+            pts.forEach { pt ->
                 val calculatedSegment = factorySegmentForPoint(pt, centre, radius * 2)
 
                 withClue("$pt should produce the same segment as $segment") {

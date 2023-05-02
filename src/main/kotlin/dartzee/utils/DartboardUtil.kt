@@ -61,11 +61,11 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Do
     val score = segment.score
     return if (score == 25) {
         val radii = getRadiiForBull(segment.type, radius)
-        generateSegment(segment, centre, radius, 0.0 to 360.0, 1.0, radii)
+        generateSegment(segment, centre, radius, 0.0 to 360.0, 0.5, radii)
     } else {
         val (startAngle, endAngle) = getAnglesForScore(score)
         val radii = getRadiiForSegmentType(segment.type, radius)
-        generateSegment(segment, centre, radius, startAngle.toDouble() - 0.2 to endAngle.toDouble() + 0.2, 0.1, radii)
+        generateSegment(segment, centre, radius, startAngle.toDouble() - 0.1 to endAngle.toDouble() + 0.1, 0.1, radii)
     }
 }
 
