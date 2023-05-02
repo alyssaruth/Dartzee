@@ -103,7 +103,7 @@ class TestDartboardUtil : AbstractRegistryTest()
     @Test
     fun `Should return non-overlapping sets of points, ignoring edge points`() {
         val centre = Point(0, 0)
-        val radius = 250.0
+        val radius = 325.0
 
         val allPoints = getAllNonMissSegments().flatMap {
             val pts = computePointsForSegment(it, centre, radius)
@@ -128,13 +128,15 @@ class TestDartboardUtil : AbstractRegistryTest()
 
     @Test
     fun `Should cover every single point contained within the circle`() {
-        val radius = 250
+        val radius = 325
         val centre = Point(radius, radius)
 
         val allPointsInCircle = getPointList(radius * 2, radius * 2).filter { it.distance(centre) < radius }.toSet()
         val allPointsInSegments = getAllNonMissSegments().flatMap { computePointsForSegment(it, centre, radius.toDouble()) }.toSet()
 
         val missedPoints = allPointsInCircle - allPointsInSegments
+        println("${allPointsInCircle.size} - ${allPointsInSegments.size} = ${missedPoints.size}")
+        println(missedPoints)
         missedPoints.shouldBeEmpty()
     }
 

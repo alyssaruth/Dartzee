@@ -61,20 +61,24 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Do
     val score = segment.score
     return if (score == 25) {
         val radii = getRadiiForBull(segment.type, radius)
-        generateSegment(centre, 0.0 to 360.0, 1.0, radii)
+        generateSegment(segment, centre, radius, 0.0 to 360.0, 1.0, radii)
     } else {
         val (startAngle, endAngle) = getAnglesForScore(score)
         val radii = getRadiiForSegmentType(segment.type, radius)
-        generateSegment(centre, startAngle.toDouble() to endAngle.toDouble(), 0.1, radii)
+        generateSegment(segment, centre, radius, startAngle.toDouble() - 0.2 to endAngle.toDouble() + 0.2, 0.1, radii)
     }
 }
 
-private fun generateSegment(centre: Point, angleRange: Pair<Double, Double>, angleStep: Double, radiusRange: Pair<Double, Double>): Set<Point> =
-    angleRange.mapStepped(angleStep) { angle ->
-        radiusRange.mapStepped(0.5) { r ->
+private fun generateSegment(segment: DartboardSegment, centre: Point, radius: Double, angleRange: Pair<Double, Double>, angleStep: Double, radiusRange: Pair<Double, Double>): Set<Point> {
+    val allPts = angleRange.mapStepped(angleStep) { angle ->
+        radiusRange.mapStepped(0.8) { r ->
             translatePoint(centre, r, angle)
         }
     }.flatten().toSet()
+
+    return allPts.filter { factorySegmentForPoint(it, centre, radius * 2) == segment }.toSet()
+}
+
 
 fun computeEdgePoints(segmentPoints: Collection<Point>): Set<Point>
 {
@@ -106,7 +110,7 @@ fun getRadiiForBull(segmentType: SegmentType, radius: Double): Pair<Double, Doub
 
 fun getRadiiForSegmentType(segmentType: SegmentType, radius: Double): Pair<Double, Double> {
     val (lowerRatio, upperRatio) = getRatioBounds(segmentType)
-    return Pair((radius * lowerRatio), (radius * upperRatio))
+    return Pair((radius * lowerRatio) - 0.5, (radius * upperRatio) + 0.5)
 }
 private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
     return when (segmentType) {
