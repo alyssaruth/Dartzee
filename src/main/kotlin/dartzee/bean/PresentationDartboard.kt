@@ -21,6 +21,7 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.RenderingHints
+import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 import kotlin.math.roundToInt
@@ -29,7 +30,7 @@ open class PresentationDartboard(
     private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false,
     private val scoreLabelColour: Color = Color.WHITE
-) : JLabel(), IDartboard
+) : JComponent(), IDartboard
 {
     override fun computeRadius() = computeRadius(width, height)
     override fun computeCenter() = Point(width / 2, height / 2)
@@ -63,9 +64,9 @@ open class PresentationDartboard(
         pt.setLocation(x, y)
     }
 
-    override fun paint(g: Graphics)
+    override fun paintComponent(g: Graphics)
     {
-        super.paint(g)
+        super.paintComponent(g)
 
         val graphics2D = g as Graphics2D
         paintOuterBoard(graphics2D)
@@ -87,7 +88,6 @@ open class PresentationDartboard(
         val edgePts = computeEdgePoints(pts)
 
         val graphics = customGraphics ?: graphics as Graphics2D
-        // graphics.composite = AlphaComposite.getInstance(AlphaComposite.SRC)
         graphics.paint = color
         pts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
 

@@ -31,7 +31,7 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
     init
     {
         title = "Select Segments"
-        setSize(500, 600)
+        setSize(550, 650)
         setLocationRelativeTo(ScreenCache.mainScreen)
         isResizable = false
         isModal = true
@@ -91,7 +91,7 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
         if (selectedSegments.contains(segment))
         {
             selectedSegments.remove(segment)
-            dartboard.colourSegment(segment, DartsColour.TRANSPARENT)
+            dartboard.colourSegment(segment, DartsColour.COLOUR_PASTEL_BLUE)
         }
         else
         {
