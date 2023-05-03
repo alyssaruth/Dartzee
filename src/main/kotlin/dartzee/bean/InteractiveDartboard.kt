@@ -19,7 +19,7 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
         addMouseMotionListener(this)
     }
 
-    fun highlightDartboard(pt: Point, graphics: Graphics)
+    fun highlightDartboard(pt: Point, customGraphics: Graphics? = null)
     {
         val hoveredSegment = getSegmentForPoint(pt)
         if (hoveredSegment == lastHoveredSegment)
@@ -28,17 +28,19 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
             return
         }
 
-        lastHoveredSegment?.let { paintSegment(it, graphics as Graphics2D, false) }
+        val graphics = customGraphics as? Graphics2D ?: graphics as Graphics2D
+
+        lastHoveredSegment?.let { paintSegment(it, graphics, false) }
 
         lastHoveredSegment = hoveredSegment
-        paintSegment(hoveredSegment, graphics as Graphics2D, true)
+        paintSegment(hoveredSegment, graphics, true)
     }
 
     override fun mouseMoved(arg0: MouseEvent)
     {
         if (getParentWindow()?.isFocused == true)
         {
-            highlightDartboard(arg0.point, graphics)
+            highlightDartboard(arg0.point)
         }
     }
 

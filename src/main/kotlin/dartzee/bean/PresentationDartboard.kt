@@ -73,13 +73,22 @@ open class PresentationDartboard(
         paintScoreLabels(graphics2D)
     }
 
-    protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false) {
-        val pts = getPointsForSegment(segment)
-        val edgePts = computeEdgePoints(pts)
+    protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false)
+    {
         val colour = getColourFromHashMap(segment, colourWrapper)
         val hoveredColour = if (highlight) getHighlightedColour(colour) else colour
 
-        graphics.paint = hoveredColour
+        colourSegment(segment, hoveredColour, graphics)
+    }
+
+    fun colourSegment(segment: DartboardSegment, color: Color?, customGraphics: Graphics2D? = null)
+    {
+        val pts = getPointsForSegment(segment)
+        val edgePts = computeEdgePoints(pts)
+
+        val graphics = customGraphics ?: graphics as Graphics2D
+        // graphics.composite = AlphaComposite.getInstance(AlphaComposite.SRC)
+        graphics.paint = color
         pts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
 
         if (colourWrapper.edgeColour != null) {

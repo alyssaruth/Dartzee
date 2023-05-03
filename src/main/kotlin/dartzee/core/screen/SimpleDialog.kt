@@ -5,6 +5,8 @@ import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JPanel
@@ -26,6 +28,12 @@ abstract class SimpleDialog : JDialog(), ActionListener
 
         btnOk.addActionListener(this)
         btnCancel.addActionListener(this)
+
+        addWindowListener(object : WindowAdapter() {
+            override fun windowOpened(e: WindowEvent?) {
+                dialogShown()
+            }
+        })
     }
 
     /**
@@ -36,6 +44,7 @@ abstract class SimpleDialog : JDialog(), ActionListener
     /**
      * Default methods
      */
+    open fun dialogShown() {}
     open fun allowCancel() = true
     open fun cancelPressed()
     {
