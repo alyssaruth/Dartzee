@@ -6,6 +6,8 @@ import dartzee.helper.AbstractTest
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Assertions.*
@@ -86,5 +88,18 @@ class TestPresentationDartboard : AbstractTest()
         val dartboard = PresentationDartboard(colourWrapper)
         dartboard.setBounds(0, 0, 400, 400)
         dartboard.shouldMatchImage("custom")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should respect overridden segments and retain them on resize`()
+    {
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.setBounds(0, 0, 400, 400)
+        dartboard.overrideSegmentColour(DartboardSegment(SegmentType.OUTER_SINGLE, 11), Color.PINK)
+        dartboard.shouldMatchImage("overridden")
+
+        dartboard.setBounds(0, 0, 200, 200)
+        dartboard.shouldMatchImage("overridden-resized")
     }
 }

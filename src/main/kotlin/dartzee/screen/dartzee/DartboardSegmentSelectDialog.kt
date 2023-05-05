@@ -1,4 +1,4 @@
-package dartzee.screen
+package dartzee.screen.dartzee
 
 import dartzee.bean.PresentationDartboard
 import dartzee.core.screen.SimpleDialog
@@ -6,6 +6,7 @@ import dartzee.core.util.setMargins
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
+import dartzee.screen.ScreenCache
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getColourForSegment
@@ -16,7 +17,6 @@ import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import javax.swing.JButton
 import javax.swing.JPanel
-import javax.swing.SwingUtilities
 
 class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSegment>):
     SimpleDialog(), MouseMotionListener, MouseListener
@@ -33,7 +33,7 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
         title = "Select Segments"
         setSize(550, 650)
         setLocationRelativeTo(ScreenCache.mainScreen)
-        isResizable = false
+        isResizable = true
         isModal = true
 
         val panelCenter = JPanel()
@@ -56,14 +56,12 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
 
         btnSelectNone.addActionListener(this)
         btnSelectAll.addActionListener(this)
+
+        toggleAll(initialSegments)
+        lastDraggedSegment = null
     }
 
     fun getSelection() = selectedSegments.toSet()
-
-    override fun dialogShown()
-    {
-        SwingUtilities.invokeLater { toggleAll(initialSegments) }
-    }
 
     override fun actionPerformed(arg0: ActionEvent)
     {
@@ -91,13 +89,13 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
         if (selectedSegments.contains(segment))
         {
             selectedSegments.remove(segment)
-            dartboard.colourSegment(segment, DartsColour.COLOUR_PASTEL_BLUE)
+            dartboard.overrideSegmentColour(segment, DartsColour.COLOUR_PASTEL_BLUE)
         }
         else
         {
             selectedSegments.add(segment)
             val col = getColourForSegment(segment, DEFAULT_COLOUR_WRAPPER)
-            dartboard.colourSegment(segment, col)
+            dartboard.overrideSegmentColour(segment, col)
         }
     }
 

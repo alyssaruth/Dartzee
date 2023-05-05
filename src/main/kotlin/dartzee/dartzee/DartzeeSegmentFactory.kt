@@ -1,7 +1,7 @@
 package dartzee.dartzee
 
 import dartzee.`object`.DartboardSegment
-import dartzee.screen.DartboardSegmentSelectDialog
+import dartzee.screen.dartzee.DartboardSegmentSelectDialog
 
 abstract class AbstractDartzeeSegmentFactory
 {

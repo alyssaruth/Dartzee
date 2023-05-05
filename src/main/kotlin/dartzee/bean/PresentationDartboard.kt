@@ -32,6 +32,8 @@ open class PresentationDartboard(
     private val scoreLabelColour: Color = Color.WHITE
 ) : JComponent(), IDartboard
 {
+    private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
+
     override fun computeRadius() = computeRadius(width, height)
     override fun computeCenter() = Point(width / 2, height / 2)
 
@@ -76,13 +78,22 @@ open class PresentationDartboard(
 
     protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false)
     {
-        val colour = getColourFromHashMap(segment, colourWrapper)
+        val colour = overriddenSegmentColours[segment] ?: getColourFromHashMap(segment, colourWrapper)
         val hoveredColour = if (highlight) getHighlightedColour(colour) else colour
 
         colourSegment(segment, hoveredColour, graphics)
     }
 
-    fun colourSegment(segment: DartboardSegment, color: Color?, customGraphics: Graphics2D? = null)
+    fun overrideSegmentColour(segment: DartboardSegment, colour: Color)
+    {
+        overriddenSegmentColours[segment] = colour
+
+        if (graphics != null) {
+            colourSegment(segment, colour)
+        }
+    }
+
+    private fun colourSegment(segment: DartboardSegment, color: Color?, customGraphics: Graphics2D? = null)
     {
         val pts = getPointsForSegment(segment)
         val edgePts = computeEdgePoints(pts)
