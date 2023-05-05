@@ -2,6 +2,7 @@ package dartzee
 
 import com.github.alyssaburlton.swingtest.doClick
 import dartzee.bean.ComboBoxGameType
+import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
@@ -15,6 +16,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
 import dartzee.screen.dartzee.DartzeeDartboard
+import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -148,3 +150,5 @@ fun List<List<Dart>>.zipDartRounds(other: List<List<Dart>>): List<List<Dart>> {
     val extraRows = subList(other.size, size)
     return result + extraRows
 }
+
+fun PresentationDartboard.getPointForSegment(segment: DartboardSegment) = getAverage(getPointsForSegment(segment))

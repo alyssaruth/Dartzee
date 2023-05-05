@@ -21,6 +21,7 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.RenderingHints
+import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 import kotlin.math.roundToInt
@@ -29,8 +30,10 @@ open class PresentationDartboard(
     private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false,
     private val scoreLabelColour: Color = Color.WHITE
-) : JLabel(), IDartboard
+) : JComponent(), IDartboard
 {
+    private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
+
     override fun computeRadius() = computeRadius(width, height)
     override fun computeCenter() = Point(width / 2, height / 2)
 
@@ -63,9 +66,9 @@ open class PresentationDartboard(
         pt.setLocation(x, y)
     }
 
-    override fun paint(g: Graphics)
+    override fun paintComponent(g: Graphics)
     {
-        super.paint(g)
+        super.paintComponent(g)
 
         val graphics2D = g as Graphics2D
         paintOuterBoard(graphics2D)
@@ -73,13 +76,30 @@ open class PresentationDartboard(
         paintScoreLabels(graphics2D)
     }
 
-    protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false) {
-        val pts = getPointsForSegment(segment)
-        val edgePts = computeEdgePoints(pts)
-        val colour = getColourFromHashMap(segment, colourWrapper)
+    protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false)
+    {
+        val colour = overriddenSegmentColours[segment] ?: getColourFromHashMap(segment, colourWrapper)
         val hoveredColour = if (highlight) getHighlightedColour(colour) else colour
 
-        graphics.paint = hoveredColour
+        colourSegment(segment, hoveredColour, graphics)
+    }
+
+    fun overrideSegmentColour(segment: DartboardSegment, colour: Color)
+    {
+        overriddenSegmentColours[segment] = colour
+
+        if (graphics != null) {
+            colourSegment(segment, colour)
+        }
+    }
+
+    private fun colourSegment(segment: DartboardSegment, color: Color?, customGraphics: Graphics2D? = null)
+    {
+        val pts = getPointsForSegment(segment)
+        val edgePts = computeEdgePoints(pts)
+
+        val graphics = customGraphics ?: graphics as Graphics2D
+        graphics.paint = color
         pts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
 
         if (colourWrapper.edgeColour != null) {
