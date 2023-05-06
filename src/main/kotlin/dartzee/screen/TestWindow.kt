@@ -12,12 +12,13 @@ class TestWindow : JFrame(), ActionListener
 {
     private val dartboard = GameplayDartboard()
     private val btnClear = JButton("Clear darts")
+    private val btnRepaint = JButton("Repaint dartboard")
 
     init
     {
         contentPane.layout = BorderLayout(0, 0)
-        size = Dimension(400, 400)
-        preferredSize = Dimension(400, 400)
+        size = Dimension(1000, 800)
+        preferredSize = Dimension(1000, 800)
 
         contentPane.add(dartboard, BorderLayout.CENTER)
 
@@ -25,10 +26,16 @@ class TestWindow : JFrame(), ActionListener
         contentPane.add(panelSouth, BorderLayout.SOUTH)
 
         panelSouth.add(btnClear)
+        panelSouth.add(btnRepaint)
+
         btnClear.addActionListener(this)
+        btnRepaint.addActionListener(this)
     }
 
     override fun actionPerformed(e: ActionEvent?) {
-        dartboard.clearDarts()
+        when (e?.source) {
+            btnClear -> dartboard.clearDarts()
+            btnRepaint -> dartboard.repaint()
+        }
     }
 }

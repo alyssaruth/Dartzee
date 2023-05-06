@@ -12,7 +12,6 @@ import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourFromHashMap
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getFontForDartboardLabels
-import dartzee.utils.getHighlightedColour
 import dartzee.utils.getNeighbours
 import dartzee.utils.translatePoint
 import java.awt.Color
@@ -21,17 +20,20 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.RenderingHints
+import java.awt.image.BufferedImage
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 import kotlin.math.roundToInt
 
 open class PresentationDartboard(
-    private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
+    protected val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false
 ) : JComponent(), IDartboard
 {
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
+    private val dirtySegments = mutableListOf<DartboardSegment>()
+    private var lastPaintImage: BufferedImage? = null
 
     override fun computeRadius() = computeRadius(width, height)
     override fun computeCenter() = Point(width / 2, height / 2)
@@ -69,41 +71,53 @@ open class PresentationDartboard(
     {
         super.paintComponent(g)
 
-        val graphics2D = g as Graphics2D
-        paintOuterBoard(graphics2D)
-        getAllPossibleSegments().forEach { paintSegment(it, graphics2D) }
-        paintScoreLabels(graphics2D)
+        if (lastPaintImage != null && lastPaintImage?.width == width && lastPaintImage?.height == height && dirtySegments.isNotEmpty()) {
+            dirtySegments.forEach { paintSegment(it, lastPaintImage!!) }
+            dirtySegments.clear()
+            g.drawImage(lastPaintImage!!, 0, 0, this)
+        } else {
+            val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+            val biGraphics = bi.createGraphics()
+            paintOuterBoard(biGraphics)
+            getAllPossibleSegments().forEach { paintSegment(it, bi) }
+            paintScoreLabels(biGraphics)
+
+            g.drawImage(bi, 0, 0, this)
+            lastPaintImage = bi
+        }
     }
 
-    protected fun paintSegment(segment: DartboardSegment, graphics: Graphics2D, highlight: Boolean = false)
+    private fun paintSegment(segment: DartboardSegment, bi: BufferedImage)
     {
         val colour = overriddenSegmentColours[segment] ?: getColourFromHashMap(segment, colourWrapper)
-        val hoveredColour = if (highlight) getHighlightedColour(colour) else colour
-
-        colourSegment(segment, hoveredColour, graphics)
+        colourSegment(segment, colour, bi)
     }
 
     fun overrideSegmentColour(segment: DartboardSegment, colour: Color)
     {
         overriddenSegmentColours[segment] = colour
+        dirtySegments.add(segment)
 
-        if (graphics != null) {
-            colourSegment(segment, colour)
-        }
+        repaint()
     }
 
-    private fun colourSegment(segment: DartboardSegment, color: Color?, customGraphics: Graphics2D? = null)
+    fun revertOverriddenSegmentColour(segment: DartboardSegment)
+    {
+        overriddenSegmentColours.remove(segment)
+        dirtySegments.add(segment)
+
+        repaint()
+    }
+
+    private fun colourSegment(segment: DartboardSegment, color: Color, bi: BufferedImage)
     {
         val pts = getPointsForSegment(segment)
         val edgePts = computeEdgePoints(pts)
 
-        val graphics = customGraphics ?: graphics as Graphics2D
-        graphics.paint = color
-        pts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
+        pts.forEach { bi.setRGB(it.x, it.y, color.rgb) }
 
-        if (colourWrapper.edgeColour != null) {
-            graphics.paint = colourWrapper.edgeColour
-            edgePts.forEach { graphics.drawLine(it.x, it.y, it.x, it.y) }
+        colourWrapper.edgeColour?.let { edgeColour ->
+            edgePts.forEach { bi.setRGB(it.x, it.y, edgeColour.rgb) }
         }
     }
 

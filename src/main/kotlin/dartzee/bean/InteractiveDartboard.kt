@@ -4,36 +4,44 @@ import dartzee.core.util.getParentWindow
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DartboardSegment
 import dartzee.utils.getColourWrapperFromPrefs
-import java.awt.Graphics
-import java.awt.Graphics2D
+import dartzee.utils.getHighlightedColour
 import java.awt.Point
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
 
 class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : PresentationDartboard(colourWrapper, true), MouseMotionListener
 {
-    private var lastHoveredSegment: DartboardSegment? = null
+    private var hoveredSegment: DartboardSegment? = null
 
     init
     {
         addMouseMotionListener(this)
     }
 
-    fun highlightDartboard(pt: Point, customGraphics: Graphics? = null)
+    fun highlightDartboard(pt: Point)
     {
-        val hoveredSegment = getSegmentForPoint(pt)
-        if (hoveredSegment == lastHoveredSegment)
+        val newHoveredSegment = getSegmentForPoint(pt)
+        if (hoveredSegment == newHoveredSegment)
         {
             //Nothing to do
             return
         }
 
-        val graphics = customGraphics as? Graphics2D ?: graphics as Graphics2D
+        hoveredSegment?.let(::revertOverriddenSegmentColour)
 
-        lastHoveredSegment?.let { paintSegment(it, graphics, false) }
+        if (newHoveredSegment.isMiss())
+        {
+            hoveredSegment = null
+        }
+        else
+        {
+            hoveredSegment = newHoveredSegment
+            overrideSegmentColour(newHoveredSegment, getHighlightedColour(colourWrapper.getColour(newHoveredSegment)))
+        }
 
-        lastHoveredSegment = hoveredSegment
-        paintSegment(hoveredSegment, graphics, true)
+        if (!newHoveredSegment.isMiss()) {
+            overrideSegmentColour(newHoveredSegment, getHighlightedColour(colourWrapper.getColour(newHoveredSegment)))
+        }
     }
 
     override fun mouseMoved(arg0: MouseEvent)
