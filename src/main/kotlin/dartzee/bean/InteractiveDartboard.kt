@@ -38,10 +38,6 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
             hoveredSegment = newHoveredSegment
             overrideSegmentColour(newHoveredSegment, getHighlightedColour(colourWrapper.getColour(newHoveredSegment)))
         }
-
-        if (!newHoveredSegment.isMiss()) {
-            overrideSegmentColour(newHoveredSegment, getHighlightedColour(colourWrapper.getColour(newHoveredSegment)))
-        }
     }
 
     override fun mouseMoved(arg0: MouseEvent)
