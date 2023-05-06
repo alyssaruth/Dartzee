@@ -17,6 +17,7 @@ import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.AimPoint
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.ResourceCache
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.convertForDestinationDartboard
 import dartzee.utils.factoryFontMetrics
@@ -391,7 +392,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         {
             for (i in 0..4)
             {
-                val lbl = JLabel(DARTIMG)
+                val lbl = JLabel(ResourceCache.DART_IMG)
                 lbl.setSize(76, 80)
                 lbl.isVisible = false
                 add(lbl)
@@ -457,9 +458,4 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     override fun mouseDragged(arg0: MouseEvent) {}
     override fun mouseEntered(arg0: MouseEvent) {}
     override fun mouseExited(arg0: MouseEvent) {}
-
-    companion object
-    {
-        private val DARTIMG = ImageIcon(Dartboard::class.java.getResource("/dartImage.png"))
-    }
 }

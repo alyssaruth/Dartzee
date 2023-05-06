@@ -28,8 +28,7 @@ import kotlin.math.roundToInt
 
 open class PresentationDartboard(
     private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
-    private val renderScoreLabels: Boolean = false,
-    private val scoreLabelColour: Color = Color.WHITE
+    private val renderScoreLabels: Boolean = false
 ) : JComponent(), IDartboard
 {
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
@@ -135,7 +134,7 @@ open class PresentationDartboard(
     {
         //Create a label with standard properties
         val lbl = JLabel(score.toString())
-        lbl.foreground = scoreLabelColour
+        lbl.foreground = Color.WHITE
         lbl.horizontalAlignment = SwingConstants.CENTER
         lbl.font = fontToUse
 

@@ -20,6 +20,8 @@ import javax.swing.ImageIcon
  */
 object ResourceCache
 {
+    val DART_IMG = ImageIcon(javaClass.getResource("/dartImage.png"))
+
     val IMG_BRUCE = ImageIcon(javaClass.getResource("/horrific/forsyth.png"))
     val IMG_DEV = ImageIcon(javaClass.getResource("/horrific/dev.png"))
     val IMG_MITCHELL = ImageIcon(javaClass.getResource("/horrific/mitchell.png"))
