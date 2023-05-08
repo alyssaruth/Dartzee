@@ -25,7 +25,6 @@ import io.mockk.clearMocks
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import java.awt.Point
 
 class TestAbstractPlayerState: AbstractTest()
 {
@@ -71,9 +70,9 @@ class TestAbstractPlayerState: AbstractTest()
     fun `Should support committing a round of darts and saving them to the database`()
     {
         val pt = insertParticipant()
-        val dartOne = Dart(20, 1, Point(50, 50), SegmentType.OUTER_SINGLE)
-        val dartTwo = Dart(5, 1, Point(40, 45), SegmentType.OUTER_SINGLE)
-        val dartThree = Dart(1, 1, Point(60, 45), SegmentType.OUTER_SINGLE)
+        val dartOne = Dart(20, 1, SegmentType.OUTER_SINGLE)
+        val dartTwo = Dart(5, 1, SegmentType.OUTER_SINGLE)
+        val dartThree = Dart(1, 1, SegmentType.OUTER_SINGLE)
 
         val state = TestPlayerState(pt)
         state.dartThrown(dartOne)
@@ -114,13 +113,13 @@ class TestAbstractPlayerState: AbstractTest()
         val state = TestPlayerState(insertParticipant())
         state.currentRoundNumber() shouldBe 1
 
-        state.dartThrown(Dart(1, 1, Point(0, 0)))
+        state.dartThrown(Dart(1, 1))
         state.currentRoundNumber() shouldBe 1
 
         state.commitRound()
         state.currentRoundNumber() shouldBe 2
 
-        state.dartThrown(Dart(20, 1, Point(0, 0)))
+        state.dartThrown(Dart(20, 1))
         state.currentRoundNumber() shouldBe 2
 
         state.resetRound()

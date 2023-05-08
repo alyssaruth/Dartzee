@@ -22,7 +22,7 @@ import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import dartzee.screen.Dartboard
+import dartzee.screen.TempDartboardBase
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.GamePanelDartzee
@@ -35,7 +35,6 @@ import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache.ICON_STATS_LARGE
-import dartzee.utils.convertForUiDartboard
 import dartzee.utils.getQuotedIdStr
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -55,7 +54,7 @@ import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 
 
-abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard, PlayerState: AbstractPlayerState<PlayerState>>(
+abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: TempDartboardBase, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
         val gameEntity: GameEntity,
         protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener
@@ -737,8 +736,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: Dartboard
 
             pt?.let {
                 runOnEventThread {
-                    val uiPt = convertForUiDartboard(pt.pt, dartboard)
-                    dartboard.dartThrown(uiPt)
+                    dartboard.dartThrown(pt)
                 }
             }
         }

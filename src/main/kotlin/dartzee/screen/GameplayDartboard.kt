@@ -5,18 +5,21 @@ import dartzee.bean.InteractiveDartboard
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThreadBlocking
+import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.DartsGameScreen
+import dartzee.utils.getDartForSegment
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.JLayeredPane
 
-class GameplayDartboard : JLayeredPane(), MouseListener
+class GameplayDartboard : TempDartboardBase(), MouseListener
 {
     private val dartboard = InteractiveDartboard()
     private val dartsThrown = mutableListOf<ComputedPoint>()
+    private val listeners: MutableList<DartboardListener> = mutableListOf()
+    private var allowInteraction = true
 
     init
     {
@@ -39,7 +42,7 @@ class GameplayDartboard : JLayeredPane(), MouseListener
         dartsThrown.forEach(::addDartLabel)
     }
 
-    fun clearDarts()
+    override fun clearDarts()
     {
         dartsThrown.clear()
         clearDartLabels()
@@ -48,11 +51,18 @@ class GameplayDartboard : JLayeredPane(), MouseListener
 
     private fun clearDartLabels() = getAllChildComponentsForType<DartLabel>().forEach { remove(it) }
 
-    private fun dartThrown(pt: ComputedPoint)
+    override fun addDartboardListener(listener: DartboardListener)
+    {
+        listeners.add(listener)
+    }
+
+    override fun dartThrown(pt: ComputedPoint)
     {
         dartsThrown.add(pt)
 
         runOnEventThreadBlocking { addDartLabel(pt) }
+
+        listeners.forEach { it.dartThrown(getDartForSegment(pt.segment)) }
     }
 
     private fun addDartLabel(computedPt: ComputedPoint)
@@ -63,9 +73,21 @@ class GameplayDartboard : JLayeredPane(), MouseListener
         setLayer(lbl, LAYER_DARTS, 5-dartsThrown.size)
     }
 
+    override fun stopListening()
+    {
+        allowInteraction = false
+        dartboard.stopInteraction()
+    }
+
+    override fun ensureListening()
+    {
+        allowInteraction = true
+        dartboard.allowInteraction()
+    }
+
     override fun mouseReleased(arg0: MouseEvent)
     {
-        if (!suppressClickForGameWindow())
+        if (!suppressClickForGameWindow() && allowInteraction)
         {
             dartThrown(dartboard.toComputedPoint(arg0.point))
         }

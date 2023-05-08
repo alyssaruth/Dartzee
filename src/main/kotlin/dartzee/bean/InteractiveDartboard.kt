@@ -12,6 +12,7 @@ import java.awt.event.MouseMotionListener
 class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : PresentationDartboard(colourWrapper, true), MouseMotionListener
 {
     private var hoveredSegment: DartboardSegment? = null
+    private var allowInteraction = true
 
     init
     {
@@ -40,9 +41,19 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
         }
     }
 
+    fun stopInteraction()
+    {
+        allowInteraction = false
+    }
+
+    fun allowInteraction()
+    {
+        allowInteraction = true
+    }
+
     override fun mouseMoved(arg0: MouseEvent)
     {
-        if (getParentWindow()?.isFocused == true)
+        if (getParentWindow()?.isFocused == true && allowInteraction)
         {
             highlightDartboard(arg0.point)
         }

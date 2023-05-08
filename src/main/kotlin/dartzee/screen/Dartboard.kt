@@ -9,6 +9,7 @@ import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.logging.CODE_RENDER_ERROR
 import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
+import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -20,6 +21,7 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.convertForDestinationDartboard
+import dartzee.utils.convertForUiDartboard
 import dartzee.utils.factoryFontMetrics
 import dartzee.utils.factorySegmentForPoint
 import dartzee.utils.getAverage
@@ -29,7 +31,6 @@ import dartzee.utils.getFontForDartboardLabels
 import dartzee.utils.getHighlightedColour
 import dartzee.utils.getPotentialAimPoints
 import java.awt.Color
-import java.awt.Component
 import java.awt.Dimension
 import java.awt.Graphics2D
 import java.awt.Point
@@ -40,28 +41,25 @@ import java.awt.event.MouseMotionListener
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
-import javax.swing.JLayeredPane
 import javax.swing.SwingConstants
 
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 const val LAYER_SLIDER = 4
 
-open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), MouseListener, MouseMotionListener
+open class Dartboard(width: Int = 400, height: Int = 400): TempDartboardBase(), MouseListener, MouseMotionListener
 {
     protected val hmSegmentKeyToSegment = mutableMapOf<String, StatefulSegment>()
 
     private val dartLabels = mutableListOf<JLabel>()
 
     private val listeners: MutableList<DartboardListener> = mutableListOf()
-    var renderDarts = false
     var centerPoint = Point(200, 200)
         private set
 
     var diameter = 360.0
 
     var scoreLabelColor: Color = Color.WHITE
-    var renderScoreLabels = false
 
     private var dartCount = 0
 
@@ -83,7 +81,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         add(dartboardLabel, Integer.valueOf(-1))
     }
 
-    fun addDartboardListener(listener: DartboardListener)
+    override fun addDartboardListener(listener: DartboardListener)
     {
         listeners.add(listener)
     }
@@ -93,7 +91,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
                 && dartboardLabel.height == height
                 && hmSegmentKeyToSegment.isNotEmpty()
 
-    open fun paintDartboard(colourWrapper: ColourWrapper? = null)
+    override fun paintDartboard(colourWrapper: ColourWrapper?)
     {
         if (width <= 0 || height <= 0 || repaintingSameSize()) {
             return
@@ -319,6 +317,11 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     fun getPotentialAimPoints() = getPotentialAimPoints(centerPoint, diameter)
     fun translateAimPoint(aimPoint: AimPoint) = AimPoint(centerPoint, diameter / 2, aimPoint.angle, aimPoint.ratio).point
 
+    override fun dartThrown(pt: ComputedPoint) {
+        val uiPt = convertForUiDartboard(pt.pt, this)
+        dartThrown(uiPt)
+    }
+
     open fun dartThrown(pt: Point)
     {
         val dart = convertPointToDart(pt, true)
@@ -333,13 +336,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
     }
 
-    fun addOverlay(pt: Point, overlay: Component)
-    {
-        add(overlay)
-        setLayer(overlay, LAYER_SLIDER)
-        overlay.location = pt
-    }
-
     fun convertPointToDart(pt: Point, rationalise: Boolean): Dart
     {
         if (rationalise)
@@ -348,7 +344,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
 
         val segment = getDataSegmentForPoint(pt)
-        return getDartForSegment(pt, segment)
+        return getDartForSegment(segment)
     }
 
     fun rationalisePoint(pt: Point)
@@ -359,7 +355,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         pt.setLocation(x, y)
     }
 
-    fun ensureListening()
+    override fun ensureListening()
     {
         if (!isListening())
         {
@@ -368,7 +364,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         }
     }
 
-    fun stopListening()
+    override fun stopListening()
     {
         if (isListening())
         {
@@ -408,7 +404,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         repaint()
     }
 
-    fun clearDarts()
+    override fun clearDarts()
     {
         for (i in dartLabels.indices)
         {

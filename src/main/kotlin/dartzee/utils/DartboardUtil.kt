@@ -32,11 +32,11 @@ private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
 
-fun getDartForSegment(pt: Point, segment: DartboardSegment): Dart
+fun getDartForSegment(segment: DartboardSegment): Dart
 {
     val score = segment.score
     val multiplier = segment.getMultiplier()
-    return Dart(score, multiplier, pt, segment.type)
+    return Dart(score, multiplier, segment.type)
 }
 
 fun getNumbersWithinN(number: Int, n: Int): List<Int>

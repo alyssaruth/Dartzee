@@ -3,11 +3,9 @@ package dartzee.`object`
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
-import java.awt.Point
 
 class TestDart: AbstractTest()
 {
@@ -46,18 +44,6 @@ class TestDart: AbstractTest()
         val outerOne = makeDart(1, 1, SegmentType.OUTER_SINGLE)
         outerOne.getGolfScore(1) shouldBe 4
         outerOne.getGolfScore(2) shouldBe 5
-    }
-
-    @Test
-    fun `Should report x and y coords correctly`()
-    {
-        val dart = Dart(1, 1)
-        dart.getX().shouldBeNull()
-        dart.getY().shouldBeNull()
-
-        val dartTwo = Dart(1, 1, Point(7, 3))
-        dartTwo.getX() shouldBe 7
-        dartTwo.getY() shouldBe 3
     }
 
     @Test
