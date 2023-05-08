@@ -1,5 +1,7 @@
 package dartzee.screen
 
+import dartzee.core.util.doBadLuck
+import dartzee.core.util.doChucklevision
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -13,6 +15,8 @@ class TestWindow : JFrame(), ActionListener
     private val dartboard = GameplayDartboard()
     private val btnClear = JButton("Clear darts")
     private val btnRepaint = JButton("Repaint dartboard")
+    private val btnChucklevision = JButton("Chucklevision")
+    private val btnBadLuck = JButton("Bad luck")
 
     init
     {
@@ -27,15 +31,21 @@ class TestWindow : JFrame(), ActionListener
 
         panelSouth.add(btnClear)
         panelSouth.add(btnRepaint)
+        panelSouth.add(btnChucklevision)
+        panelSouth.add(btnBadLuck)
 
         btnClear.addActionListener(this)
         btnRepaint.addActionListener(this)
+        btnChucklevision.addActionListener(this)
+        btnBadLuck.addActionListener(this)
     }
 
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
             btnClear -> dartboard.clearDarts()
             btnRepaint -> dartboard.repaint()
+            btnChucklevision -> dartboard.doChucklevision()
+            btnBadLuck -> dartboard.doBadLuck()
         }
     }
 }

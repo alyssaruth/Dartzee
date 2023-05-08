@@ -2,7 +2,6 @@ package dartzee.core.util
 
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
-import dartzee.screen.Dartboard
 import dartzee.screen.LAYER_DODGY
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
@@ -15,8 +14,10 @@ import javax.sound.sampled.Clip
 import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 import javax.swing.ImageIcon
+import javax.swing.JLabel
+import javax.swing.JLayeredPane
 
-fun Dartboard.doChucklevision()
+fun JLayeredPane.doChucklevision()
 {
     val rand = Random()
     val chuckleSound = rand.nextInt(3) + 1
@@ -24,7 +25,7 @@ fun Dartboard.doChucklevision()
     doDodgy(ResourceCache.IMG_CHUCKLE, 266, 279, "chucklevision$chuckleSound")
 }
 
-fun Dartboard.doFawlty()
+fun JLayeredPane.doFawlty()
 {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
@@ -32,7 +33,7 @@ fun Dartboard.doFawlty()
     doDodgy(ResourceCache.IMG_BASIL, 576, 419, "basil$brucey")
 }
 
-fun Dartboard.doForsyth()
+fun JLayeredPane.doForsyth()
 {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
@@ -40,7 +41,7 @@ fun Dartboard.doForsyth()
     doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "forsyth$brucey")
 }
 
-fun Dartboard.doBadLuck()
+fun JLayeredPane.doBadLuck()
 {
     val rand = Random()
     val ix = rand.nextInt(2) + 1
@@ -48,12 +49,12 @@ fun Dartboard.doBadLuck()
     doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "badLuck$ix")
 }
 
-fun Dartboard.doBull()
+fun JLayeredPane.doBull()
 {
     doDodgy(ResourceCache.IMG_DEV, 400, 476, "bull")
 }
 
-fun Dartboard.doBadMiss()
+fun JLayeredPane.doBadMiss()
 {
     val rand = Random()
     val miss = rand.nextInt(5) + 1
@@ -69,12 +70,12 @@ fun Dartboard.doBadMiss()
     }
 }
 
-fun Dartboard.doGolfMiss()
+fun JLayeredPane.doGolfMiss()
 {
     doDodgy(ResourceCache.IMG_DEV, 400, 476, "fourTrimmed")
 }
 
-private fun Dartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
+private fun JLayeredPane.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
 {
     if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
     {
@@ -84,16 +85,18 @@ private fun Dartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName:
     runOnEventThread { doDodgyOnEdt(ii, width, height, soundName) }
 }
 
-private fun Dartboard.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, soundName: String)
+private fun JLayeredPane.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, soundName: String)
 {
+    removeDodgyLabels()
+
+    val dodgyLabel = JLabel("")
+    dodgyLabel.name = "DodgyLabel"
     dodgyLabel.icon = ii
     dodgyLabel.setSize(width, height)
 
     val x = (getWidth() - width) / 2
     val y = getHeight() - height
     dodgyLabel.setLocation(x, y)
-
-    remove(dodgyLabel)
     add(dodgyLabel)
 
     setLayer(dodgyLabel, LAYER_DODGY)
@@ -104,7 +107,7 @@ private fun Dartboard.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, sound
     playDodgySound(soundName)
 }
 
-fun Dartboard.playDodgySound(soundName: String)
+fun JLayeredPane.playDodgySound(soundName: String)
 {
     if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
     {
@@ -129,7 +132,7 @@ fun Dartboard.playDodgySound(soundName: String)
     }
 }
 
-private fun Dartboard.playDodgySoundCached(soundName: String)
+private fun JLayeredPane.playDodgySoundCached(soundName: String)
 {
     val stream = ResourceCache.borrowInputStream(soundName) ?: return
 
@@ -138,7 +141,9 @@ private fun Dartboard.playDodgySoundCached(soundName: String)
     clip.start()
 }
 
-private fun Dartboard.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip
+private var latestClip: Clip? = null
+
+private fun JLayeredPane.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip
 {
     val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
 
@@ -165,8 +170,12 @@ private fun Dartboard.initialiseAudioClip(stream: AudioInputStream, soundName: S
     return myClip
 }
 
-private fun Dartboard.resetDodgy() {
-    remove(dodgyLabel)
+private fun JLayeredPane.resetDodgy() {
+    removeDodgyLabels()
     repaint()
     revalidate()
+}
+
+private fun JLayeredPane.removeDodgyLabels() {
+    getAllChildComponentsForType<JLabel>().filter { it.name == "DodgyLabel" }.forEach(::remove)
 }

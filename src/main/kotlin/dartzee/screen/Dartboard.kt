@@ -38,7 +38,6 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import java.awt.image.BufferedImage
-import javax.sound.sampled.Clip
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JLayeredPane
@@ -71,8 +70,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
     private var colourWrapper: ColourWrapper? = null
 
     //For dodgy sounds/animations
-    var latestClip: Clip? = null
-    val dodgyLabel = JLabel("")
 
     var dartboardImage: BufferedImage? = null
     val dartboardLabel = JLabel()
@@ -83,7 +80,6 @@ open class Dartboard(width: Int = 400, height: Int = 400): JLayeredPane(), Mouse
         preferredSize = Dimension(width, height)
         dartboardLabel.setSize(width, height)
         layout = null
-        dodgyLabel.name = "DodgyLabel"
         add(dartboardLabel, Integer.valueOf(-1))
     }
 
