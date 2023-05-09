@@ -1,5 +1,6 @@
 package dartzee.helper
 
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.logging.LogDestinationSystemOut
@@ -75,6 +76,7 @@ abstract class AbstractTest
         if (visibleWindows.isNotEmpty())
         {
             SwingUtilities.invokeLater { visibleWindows.forEach { it.dispose() } }
+            flushEdt()
         }
 
         checkedForExceptions = false

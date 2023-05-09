@@ -9,6 +9,7 @@ import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.getDartForSegment
+import java.awt.Dimension
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
@@ -23,7 +24,7 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
 
     init
     {
-        isOpaque = false
+        preferredSize = Dimension(500, 500)
         add(dartboard, Integer.valueOf(-1))
 
         dartboard.addMouseListener(this)
@@ -67,10 +68,12 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
 
     private fun addDartLabel(computedPt: ComputedPoint)
     {
-        val lbl = DartLabel()
-        lbl.location = dartboard.interpretPoint(computedPt)
-        add(lbl)
-        setLayer(lbl, LAYER_DARTS, 5-dartsThrown.size)
+        if (width > 80 && height > 80) {
+            val lbl = DartLabel()
+            lbl.location = dartboard.interpretPoint(computedPt)
+            add(lbl)
+            setLayer(lbl, LAYER_DARTS, 5 - dartsThrown.size)
+        }
     }
 
     override fun stopListening()
