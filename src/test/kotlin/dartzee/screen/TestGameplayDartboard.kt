@@ -33,10 +33,7 @@ class TestGameplayDartboard : AbstractTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         dartboard.addDartboardListener(listener)
 
-        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
-        val pt = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-        interactiveDartboard.doClick(pt.x, pt.y)
-
+        dartboard.throwDartByClick()
         verify { listener.dartThrown(Dart(20, 1))}
     }
 
@@ -48,18 +45,13 @@ class TestGameplayDartboard : AbstractTest()
         val listener = mockk<DartboardListener>(relaxed = true)
         dartboard.addDartboardListener(listener)
 
-        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
-        val pt = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-
         dartboard.stopListening()
-        interactiveDartboard.doClick(pt.x, pt.y)
-        flushEdt()
+        dartboard.throwDartByClick()
         verifyNotCalled { listener.dartThrown(any()) }
         dartboard.findChild<DartLabel>().shouldBeNull()
 
         dartboard.ensureListening()
-        interactiveDartboard.doClick(pt.x, pt.y)
-        flushEdt()
+        dartboard.throwDartByClick()
         dartboard.findChild<DartLabel>().shouldNotBeNull()
         verify { listener.dartThrown(Dart(20, 1))}
     }
@@ -72,16 +64,11 @@ class TestGameplayDartboard : AbstractTest()
         parent.add(dartboard)
         parent.haveLostFocus = true
 
-        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
-        val pt = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-        interactiveDartboard.doClick(pt.x, pt.y)
-        flushEdt()
-
+        dartboard.throwDartByClick()
         parent.haveLostFocus shouldBe false
         dartboard.findChild<DartLabel>().shouldBeNull()
 
-        interactiveDartboard.doClick(pt.x, pt.y)
-        flushEdt()
+        dartboard.throwDartByClick()
         dartboard.findChild<DartLabel>().shouldNotBeNull()
     }
 
@@ -90,11 +77,7 @@ class TestGameplayDartboard : AbstractTest()
     {
         val dartboard = factoryGameplayDartboard()
 
-        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
-        val pt = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-
-        interactiveDartboard.doClick(pt.x, pt.y)
-        flushEdt()
+        dartboard.throwDartByClick()
         dartboard.findChild<DartLabel>().shouldNotBeNull()
 
         dartboard.clearDarts()
@@ -105,12 +88,7 @@ class TestGameplayDartboard : AbstractTest()
     fun `Should not render darts if too small`()
     {
         val dartboard = factoryGameplayDartboard()
-
-        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
-        val pt = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-
-        interactiveDartboard.doClick(pt.x, pt.y)
-        flushEdt()
+        dartboard.throwDartByClick()
         dartboard.findChild<DartLabel>().shouldNotBeNull()
 
         dartboard.setBounds(0, 0, 75, 75)
@@ -142,15 +120,8 @@ class TestGameplayDartboard : AbstractTest()
     fun `Should re-render darts in the right places on resize`()
     {
         val dartboard = factoryGameplayDartboard()
-
-        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
-        val pt1 = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-        val pt2 = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.DOUBLE, 14))
-
-        interactiveDartboard.doClick(pt1.x, pt1.y)
-        interactiveDartboard.doClick(pt2.x, pt2.y)
-        flushEdt()
-
+        dartboard.throwDartByClick(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
+        dartboard.throwDartByClick(DartboardSegment(SegmentType.DOUBLE, 14))
         dartboard.shouldMatchImage("darts-original-size")
 
         dartboard.setBounds(0, 0, 150, 150)
@@ -160,6 +131,14 @@ class TestGameplayDartboard : AbstractTest()
         dartboard.setBounds(0, 0, 400, 400)
         flushEdt()
         dartboard.shouldMatchImage("darts-original-size")
+    }
+
+    private fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20))
+    {
+        val interactiveDartboard = getChild<InteractiveDartboard>()
+        val pt = interactiveDartboard.getPointForSegment(segment)
+        interactiveDartboard.doClick(pt.x, pt.y)
+        flushEdt()
     }
 
     private fun factoryGameplayDartboard(): GameplayDartboard {
