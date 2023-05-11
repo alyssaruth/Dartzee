@@ -102,6 +102,27 @@ class TestGameplayDartboard : AbstractTest()
     }
 
     @Test
+    fun `Should not render darts if too small`()
+    {
+        val dartboard = factoryGameplayDartboard()
+
+        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
+        val pt = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
+
+        interactiveDartboard.doClick(pt.x, pt.y)
+        flushEdt()
+        dartboard.findChild<DartLabel>().shouldNotBeNull()
+
+        dartboard.setBounds(0, 0, 75, 75)
+        flushEdt()
+        dartboard.findChild<DartLabel>().shouldBeNull()
+
+        dartboard.setBounds(0, 0, 400, 400)
+        flushEdt()
+        dartboard.findChild<DartLabel>().shouldNotBeNull()
+    }
+
+    @Test
     @Tag("screenshot")
     fun `Should handle layering darts on top of hover state`()
     {
