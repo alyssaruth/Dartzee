@@ -21,6 +21,10 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
 
     fun highlightDartboard(pt: Point)
     {
+        if (!allowInteraction) {
+            return
+        }
+
         val newHoveredSegment = getSegmentForPoint(pt)
         if (hoveredSegment == newHoveredSegment)
         {
@@ -53,7 +57,7 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
 
     override fun mouseMoved(arg0: MouseEvent)
     {
-        if (getParentWindow()?.isFocused == true && allowInteraction)
+        if (getParentWindow()?.isFocused == true)
         {
             highlightDartboard(arg0.point)
         }

@@ -7,7 +7,7 @@ import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
-import dartzee.screen.game.DartsGameScreen
+import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.utils.getDartForSegment
 import java.awt.Dimension
 import java.awt.event.ComponentAdapter
@@ -97,7 +97,7 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
     }
     private fun suppressClickForGameWindow(): Boolean
     {
-        val scrn = getParentWindow() as? DartsGameScreen ?: return false
+        val scrn = getParentWindow() as? AbstractDartsGameScreen ?: return false
         if (scrn.haveLostFocus)
         {
             scrn.haveLostFocus = false

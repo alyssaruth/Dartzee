@@ -94,12 +94,17 @@ class TestPresentationDartboard : AbstractTest()
     @Tag("screenshot")
     fun `Should respect overridden segments and retain them on resize`()
     {
-        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.setBounds(0, 0, 400, 400)
-        dartboard.overrideSegmentColour(DartboardSegment(SegmentType.OUTER_SINGLE, 11), Color.PINK)
-        dartboard.shouldMatchImage("overridden")
+        val segment = DartboardSegment(SegmentType.OUTER_SINGLE, 11)
 
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 200, 200)
+        dartboard.overrideSegmentColour(segment, Color.PINK)
+        dartboard.shouldMatchImage("overridden-small")
+
+        dartboard.setBounds(0, 0, 400, 400)
         dartboard.shouldMatchImage("overridden-resized")
+
+        dartboard.revertOverriddenSegmentColour(segment)
+        dartboard.shouldMatchImage("default")
     }
 }
