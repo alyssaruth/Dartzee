@@ -72,6 +72,6 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
 
     protected fun dartThrown(aiPt: ComputedPoint)
     {
-        dartThrown(getDartForSegment(aiPt.pt, aiPt.segment))
+        dartThrown(getDartForSegment(aiPt.segment))
     }
 }

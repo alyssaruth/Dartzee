@@ -199,7 +199,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         val segmentStr = "" + segment
         segmentStr shouldBe "$score ($segmentType)"
 
-        val drt = getDartForSegment(pt, segment)
+        val drt = getDartForSegment(segment)
 
         drt.score shouldBe score
         drt.multiplier shouldBe multiplier

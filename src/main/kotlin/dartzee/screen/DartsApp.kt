@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import dartzee.`object`.DartsClient
 import dartzee.achievements.convertEmptyAchievements
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
@@ -11,6 +10,7 @@ import dartzee.logging.CODE_SCREEN_LOAD_ERROR
 import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
+import dartzee.`object`.DartsClient
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -21,9 +21,18 @@ import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Image
-import java.awt.event.*
+import java.awt.event.ActionEvent
+import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
+import java.awt.event.WindowEvent
+import java.awt.event.WindowListener
 import java.util.*
-import javax.swing.*
+import javax.swing.AbstractAction
+import javax.swing.ImageIcon
+import javax.swing.JComponent
+import javax.swing.JPanel
+import javax.swing.KeyStroke
+import javax.swing.WindowConstants
 
 private const val CMD_PURGE_GAME = "purge "
 private const val CMD_LOAD_GAME = "load "
@@ -31,6 +40,7 @@ private const val CMD_CLEAR_CONSOLE = "cls"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
 private const val CMD_SANITY = "sanity"
 private const val CMD_GUID = "guid"
+private const val CMD_TEST = "test"
 
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
@@ -204,6 +214,11 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         else if (cmd == "stacktrace")
         {
             logger.error(LoggingCode("test"), "Testing stack trace")
+        }
+        else if (cmd == CMD_TEST)
+        {
+            val window = TestWindow()
+            window.isVisible = true
         }
 
         return textToShow

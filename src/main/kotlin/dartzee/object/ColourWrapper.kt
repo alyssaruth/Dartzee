@@ -37,11 +37,17 @@ class ColourWrapper(private var evenSingleColour : Color, private var evenDouble
             1 -> outerBullColour
             else -> innerBullColour
         }
-
     }
+
+    fun getColour(segment: DartboardSegment) = getColour(segment.getMultiplier(), segment.score)
 
     fun getColour(multiplier: Int, score: Int): Color
     {
+        if (score == 25)
+        {
+            return getBullColour(multiplier)
+        }
+
         val even = hmScoreToOrdinal[Integer.valueOf(score)] ?: false
         return when (multiplier)
         {

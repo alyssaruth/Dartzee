@@ -4,13 +4,11 @@ import dartzee.ai.AimDart
 import dartzee.ai.IDart
 import dartzee.core.util.DateStatics
 import dartzee.game.ClockType
-import java.awt.Point
 import java.sql.Timestamp
 
 open class Dart(
         override val score: Int,
         override  val multiplier: Int,
-        val pt: Point? = null,
         val segmentType: SegmentType = SegmentType.MISS): IDart
 {
     var ordinal = -1
@@ -35,8 +33,6 @@ open class Dart(
      */
 
     fun getGolfScore() = getGolfScore(roundNumber)
-    fun getX() = pt?.x
-    fun getY() = pt?.y
 
     fun getHitScore(): Int
     {

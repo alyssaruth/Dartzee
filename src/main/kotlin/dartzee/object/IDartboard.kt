@@ -3,6 +3,7 @@ package dartzee.`object`
 import dartzee.utils.AimPoint
 import dartzee.utils.computePointsForSegment
 import dartzee.utils.factorySegmentForPoint
+import dartzee.utils.getAngleForPoint
 import java.awt.Point
 
 interface IDartboard
@@ -17,4 +18,12 @@ interface IDartboard
     fun getSegmentForPoint(pt: Point) = factorySegmentForPoint(pt, computeCenter(), computeRadius() * 2)
 
     fun translateAimPoint(aimPoint: AimPoint) = AimPoint(computeCenter(), computeRadius(), aimPoint.angle, aimPoint.ratio).point
+
+    fun toComputedPoint(pt: Point): ComputedPoint {
+        val segment = getSegmentForPoint(pt)
+        val distance = pt.distance(computeCenter()) / computeRadius()
+        val angle = getAngleForPoint(pt, computeCenter())
+
+        return ComputedPoint(pt, segment, distance, angle)
+    }
 }

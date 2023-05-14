@@ -23,7 +23,6 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
-import dartzee.utils.convertForUiDartboard
 
 fun makeSingleParticipant(player: PlayerEntity, gameId: String? = null) =
     makeSingleParticipant(insertParticipant(playerId = player.rowId, gameId = gameId ?: insertGame().rowId))
@@ -93,8 +92,7 @@ fun DartsGamePanel<*, *, *>.addCompletedRound(dartsThrown: List<Dart>)
 fun DartsGamePanel<*, *, *>.doAiTurn(model: DartsAiModel)
 {
     val pt = computeAiDart(model) ?: return
-    val uiPt = convertForUiDartboard(pt.pt, dartboard)
-    dartboard.dartThrown(uiPt)
+    dartboard.dartThrown(pt)
 }
 
 fun makeMatchSummaryPanel(

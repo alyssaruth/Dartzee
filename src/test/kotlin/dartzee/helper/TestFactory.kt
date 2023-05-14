@@ -19,7 +19,6 @@ import dartzee.stats.GameWrapper
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
 import io.kotest.matchers.shouldBe
-import java.awt.Point
 import java.sql.Timestamp
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart
@@ -45,12 +44,11 @@ fun List<Dart>.insertDarts(pt: ParticipantEntity, roundNumber: Int)
 fun makeDart(score: Int = 20,
              multiplier: Int = 1,
              segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
-             pt: Point = Point(0, 0),
              startingScore: Int = -1,
              golfHole: Int = -1,
              clockTargets: List<Int> = emptyList()): Dart
 {
-    val dart = Dart(score, multiplier, pt, segmentType)
+    val dart = Dart(score, multiplier, segmentType)
     dart.startingScore = startingScore
     dart.roundNumber = golfHole
     dart.clockTargets = clockTargets

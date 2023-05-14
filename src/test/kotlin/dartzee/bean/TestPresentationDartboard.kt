@@ -3,6 +3,7 @@ package dartzee.bean
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractTest
+import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
+import java.awt.image.BufferedImage
 
 class TestPresentationDartboard : AbstractTest()
 {
@@ -46,6 +48,24 @@ class TestPresentationDartboard : AbstractTest()
         val smallDartboard = PresentationDartboard().also { it.size = Dimension(100, 100) }
         val result = smallDartboard.interpretPoint(wildPoint)
         result shouldBe Point(99, 99)
+    }
+
+    @Test
+    fun `Should reuse cached image if dimensions are unchanged`()
+    {
+        val bi = BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB)
+
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.setBounds(0, 0, 400, 400)
+        dartboard.paint(bi.graphics)
+        clearLogs()
+
+        dartboard.paint(bi.graphics)
+        verifyNoLogs(CODE_RENDERED_DARTBOARD)
+
+        dartboard.setBounds(0, 0, 401, 401)
+        dartboard.paint(bi.graphics)
+        verifyLog(CODE_RENDERED_DARTBOARD)
     }
 
     @Test
@@ -94,12 +114,17 @@ class TestPresentationDartboard : AbstractTest()
     @Tag("screenshot")
     fun `Should respect overridden segments and retain them on resize`()
     {
-        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.setBounds(0, 0, 400, 400)
-        dartboard.overrideSegmentColour(DartboardSegment(SegmentType.OUTER_SINGLE, 11), Color.PINK)
-        dartboard.shouldMatchImage("overridden")
+        val segment = DartboardSegment(SegmentType.OUTER_SINGLE, 11)
 
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 200, 200)
+        dartboard.overrideSegmentColour(segment, Color.PINK)
+        dartboard.shouldMatchImage("overridden-small")
+
+        dartboard.setBounds(0, 0, 400, 400)
         dartboard.shouldMatchImage("overridden-resized")
+
+        dartboard.revertOverriddenSegmentColour(segment)
+        dartboard.shouldMatchImage("default")
     }
 }

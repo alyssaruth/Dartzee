@@ -6,7 +6,6 @@ import dartzee.`object`.SegmentType
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
-import java.awt.Point
 
 class TestDartEntity: AbstractEntityTest<DartEntity>()
 {
@@ -15,7 +14,7 @@ class TestDartEntity: AbstractEntityTest<DartEntity>()
     @Test
     fun `Should factory with the correct values`()
     {
-        val dart = Dart(20, 3, Point(5, 5), SegmentType.TREBLE)
+        val dart = Dart(20, 3, SegmentType.TREBLE)
         dart.startingScore = 301
         val playerId = randomGuid()
         val participantId = randomGuid()

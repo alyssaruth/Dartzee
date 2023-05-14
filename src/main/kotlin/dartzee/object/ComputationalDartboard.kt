@@ -2,7 +2,6 @@ package dartzee.`object`
 
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.getAllNonMissSegments
-import dartzee.utils.getAngleForPoint
 import dartzee.utils.getAverage
 import dartzee.utils.getPotentialAimPoints
 import dartzee.utils.translatePoint
@@ -29,12 +28,4 @@ class ComputationalDartboard(private val width: Int, private val height: Int): I
             val pt = getAverage(getPointsForSegment(it))
             toComputedPoint(pt)
         }
-
-    fun toComputedPoint(pt: Point): ComputedPoint {
-        val segment = getSegmentForPoint(pt)
-        val distance = pt.distance(computeCenter()) / computeRadius()
-        val angle = getAngleForPoint(pt, computeCenter())
-
-        return ComputedPoint(pt, segment, distance, angle)
-    }
 }
