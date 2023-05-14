@@ -14,6 +14,7 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import javax.swing.SwingUtilities
 
 class GameplayDartboard : TempDartboardBase(), MouseListener
 {
@@ -32,6 +33,8 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
         addComponentListener(object : ComponentAdapter() {
             override fun componentResized(evt: ComponentEvent) = resized()
         })
+
+        SwingUtilities.invokeLater { resized() }
     }
 
     private fun resized()
@@ -68,7 +71,7 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
 
     private fun addDartLabel(computedPt: ComputedPoint)
     {
-        if (width > 80 && height > 80) {
+        if (dartboard.isVisible && dartboard.width > 80 && dartboard.height > 80) {
             val lbl = DartLabel()
             lbl.location = dartboard.interpretPoint(computedPt)
             add(lbl)

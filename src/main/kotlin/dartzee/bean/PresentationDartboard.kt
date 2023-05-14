@@ -1,9 +1,13 @@
 package dartzee.bean
 
+import dartzee.logging.CODE_RENDERED_DARTBOARD
+import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.IDartboard
+import dartzee.utils.DurationTimer
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
 import dartzee.utils.factoryFontMetrics
@@ -71,11 +75,19 @@ open class PresentationDartboard(
     {
         super.paintComponent(g)
 
-        if (lastPaintImage != null && lastPaintImage?.width == width && lastPaintImage?.height == height && dirtySegments.isNotEmpty()) {
-            dirtySegments.forEach { paintSegment(it, lastPaintImage!!) }
-            dirtySegments.clear()
+        if (lastPaintImage != null && lastPaintImage?.width == width && lastPaintImage?.height == height)
+        {
+            if (dirtySegments.isNotEmpty())
+            {
+                dirtySegments.forEach { paintSegment(it, lastPaintImage!!) }
+                dirtySegments.clear()
+            }
+
             g.drawImage(lastPaintImage!!, 0, 0, this)
-        } else {
+        }
+        else
+        {
+            val timer = DurationTimer()
             val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
             val biGraphics = bi.createGraphics()
             paintOuterBoard(biGraphics)
@@ -84,6 +96,11 @@ open class PresentationDartboard(
 
             g.drawImage(bi, 0, 0, this)
             lastPaintImage = bi
+
+            val duration = timer.getDuration()
+            logger.info(
+                CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
+                KEY_DURATION to duration)
         }
     }
 

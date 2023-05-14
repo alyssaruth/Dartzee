@@ -34,7 +34,7 @@ class TestInteractiveDartboard : AbstractTest()
         dartboard.setBounds(0, 0, 400, 400)
 
         val pt = dartboard.getPointsForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 1)).first()
-
+        dartboard.highlightDartboard(pt)
         dartboard.stopInteraction()
         dartboard.highlightDartboard(pt)
         dartboard.shouldMatchImage("hover-diabled")

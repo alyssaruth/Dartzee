@@ -47,6 +47,9 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
 
     fun stopInteraction()
     {
+        hoveredSegment?.let(::revertOverriddenSegmentColour)
+        hoveredSegment = null
+
         allowInteraction = false
     }
 
