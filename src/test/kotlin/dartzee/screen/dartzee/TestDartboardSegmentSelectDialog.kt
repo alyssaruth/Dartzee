@@ -2,11 +2,12 @@ package dartzee.screen.dartzee
 
 import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.makeMouseEvent
 import com.github.alyssaburlton.swingtest.toBufferedImage
 import dartzee.bean.PresentationDartboard
+import dartzee.core.util.runOnEventThreadBlocking
+import dartzee.doClick
 import dartzee.getPointForSegment
 import dartzee.helper.AbstractTest
 import dartzee.`object`.DartboardSegment
@@ -19,6 +20,7 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Component
+import java.awt.Point
 import javax.swing.JButton
 
 class TestDartboardSegmentSelectDialog : AbstractTest()
@@ -31,11 +33,11 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         val (dlg, dartboard) = setup()
 
         val pt = dartboard.getPointForSegment(segment)
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
 
         dlg.getSelection().shouldContainExactly(segment)
 
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
         dlg.getSelection().shouldBeEmpty()
     }
 
@@ -49,7 +51,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         dlg.getSelection() shouldBe allSegments.toSet()
 
         val pt = dartboard.getPointForSegment(segment)
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
         dlg.clickChild<JButton>(text = "Select All")
         dlg.getSelection() shouldBe allSegments.toSet()
     }
@@ -63,7 +65,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         dlg.getSelection().shouldBeEmpty()
 
         val pt = dartboard.getPointForSegment(segment)
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
         dlg.clickChild<JButton>(text = "Select None")
         dlg.getSelection().shouldBeEmpty()
     }
@@ -72,7 +74,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     fun `clicking outside the board should do nothing`()
     {
         val (dlg, dartboard) = setup()
-        dartboard.doClick(1, 1)
+        dartboard.doClick(Point(1, 1))
         dlg.getSelection().shouldBeEmpty()
     }
 
@@ -82,7 +84,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         val (dlg, dartboard) = setup()
 
         val pt = dartboard.getPointForSegment(segment)
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
         dartboard.doDrag(pt.x, pt.y)
 
         dlg.getSelection().shouldContainExactly(segment)
@@ -94,7 +96,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         val (dlg, dartboard) = setup()
 
         val pt = dartboard.getPointForSegment(segment)
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
 
         val newPt = dartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 1))
         dartboard.doDrag(newPt.x, newPt.y)
@@ -132,7 +134,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         awaitCondition { dartboard.width > 0 }
 
         val pt = dartboard.getPointForSegment(segment)
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
         dartboard.toBufferedImage().getRGB(pt.x, pt.y) shouldBe DartsColour.DARTBOARD_BLACK.rgb
     }
 
@@ -142,7 +144,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         val (dlg, dartboard) = setup(setOf(segment))
 
         val pt = dartboard.getPointForSegment(segment)
-        dartboard.doClick(pt.x, pt.y)
+        dartboard.doClick(pt)
         dlg.getSelection().shouldBeEmpty()
 
         dlg.clickChild<JButton>(text = "Cancel")
@@ -163,9 +165,11 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
      * TODO - Bake into swingtest
      */
     private fun Component.doDrag(x: Int = 0, y: Int = 0) {
-        val me = makeMouseEvent(this, x = x, y = y)
-        mouseMotionListeners.forEach {
-            it.mouseDragged(me)
+        runOnEventThreadBlocking {
+            val me = makeMouseEvent(this, x = x, y = y)
+            mouseMotionListeners.forEach {
+                it.mouseDragged(me)
+            }
         }
     }
 }
