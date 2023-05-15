@@ -75,15 +75,11 @@ open class PresentationDartboard(
     {
         super.paintComponent(g)
 
-        if (lastPaintImage != null && lastPaintImage?.width == width && lastPaintImage?.height == height)
+        val cachedImage = lastPaintImage
+        if (cachedImage != null && cachedImage.width == width && cachedImage.height == height)
         {
-            if (dirtySegments.isNotEmpty())
-            {
-                dirtySegments.forEach { paintSegment(it, lastPaintImage!!) }
-                dirtySegments.clear()
-            }
-
-            g.drawImage(lastPaintImage!!, 0, 0, this)
+            repaintDirtySegments(cachedImage)
+            g.drawImage(cachedImage, 0, 0, this)
         }
         else
         {
@@ -101,6 +97,15 @@ open class PresentationDartboard(
             logger.info(
                 CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
                 KEY_DURATION to duration)
+        }
+    }
+
+    private fun repaintDirtySegments(cachedImage: BufferedImage)
+    {
+        if (dirtySegments.isNotEmpty())
+        {
+            dirtySegments.forEach { paintSegment(it, cachedImage) }
+            dirtySegments.clear()
         }
     }
 

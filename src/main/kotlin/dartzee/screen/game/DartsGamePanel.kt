@@ -735,9 +735,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: TempDartb
             val pt = computeAiDart(model)
 
             pt?.let {
-                runOnEventThread {
-                    dartboard.dartThrown(pt)
-                }
+                dartboard.dartThrown(pt)
             }
         }
     }

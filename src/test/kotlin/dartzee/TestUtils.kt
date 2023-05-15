@@ -6,6 +6,7 @@ import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.logging.LogRecord
@@ -152,3 +153,10 @@ fun List<List<Dart>>.zipDartRounds(other: List<List<Dart>>): List<List<Dart>> {
 }
 
 fun PresentationDartboard.getPointForSegment(segment: DartboardSegment) = getAverage(getPointsForSegment(segment))
+
+/**
+ * TODO - swing-test should do all the interactions on the event thread
+ */
+fun PresentationDartboard.doClick(pt: Point) = runOnEventThreadBlocking {
+    doClick(pt.x, pt.y)
+}
