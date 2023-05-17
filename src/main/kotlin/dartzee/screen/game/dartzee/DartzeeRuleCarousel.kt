@@ -1,6 +1,5 @@
 package dartzee.screen.game.dartzee
 
-import dartzee.`object`.Dart
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.core.util.ceilDiv
@@ -8,13 +7,19 @@ import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
+import dartzee.`object`.Dart
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.*
+import javax.swing.ButtonGroup
+import javax.swing.ImageIcon
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JToggleButton
+import javax.swing.ScrollPaneConstants
 
 class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
 {
@@ -150,10 +155,10 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     private fun getFirstIncompleteRule(): DartzeeRuleTilePending? = pendingTiles.firstOrNull()
 
-    fun getSegmentStatus(): SegmentStatus
+    fun getSegmentStatus(): SegmentStatuses
     {
         val statuses = pendingTiles.map { it.getSegmentStatus(dartsThrown) }
-        return SegmentStatus(statuses.flatMap { it.scoringSegments }, statuses.flatMap { it.validSegments })
+        return SegmentStatuses(statuses.flatMap { it.scoringSegments }, statuses.flatMap { it.validSegments })
     }
 
     fun getAvailableRuleTiles() = pendingTiles.filter { it.isVisible }

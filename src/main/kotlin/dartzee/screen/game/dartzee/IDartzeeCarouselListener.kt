@@ -4,6 +4,6 @@ import dartzee.dartzee.DartzeeRoundResult
 
 interface IDartzeeCarouselListener
 {
-    fun hoverChanged(segmentStatus: SegmentStatus)
+    fun hoverChanged(segmentStatuses: SegmentStatuses)
     fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)
 }

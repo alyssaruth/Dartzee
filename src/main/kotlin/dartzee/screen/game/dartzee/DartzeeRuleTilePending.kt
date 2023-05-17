@@ -1,7 +1,7 @@
 package dartzee.screen.game.dartzee
 
-import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.`object`.Dart
 import dartzee.utils.InjectedThings
 import dartzee.utils.setColoursForDartzeeResult
 
@@ -25,7 +25,7 @@ class DartzeeRuleTilePending(dto: DartzeeRuleDto, ruleNumber: Int): DartzeeRuleT
         isVisible = getSegmentStatus(darts).validSegments.isNotEmpty()
     }
 
-    fun getSegmentStatus(darts: List<Dart>): SegmentStatus
+    fun getSegmentStatus(darts: List<Dart>): SegmentStatuses
     {
         val result = if (darts.isEmpty()) dto.calculationResult!! else InjectedThings.dartzeeCalculator.getValidSegments(dto, darts)
         return result.getSegmentStatus()

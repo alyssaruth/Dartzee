@@ -22,7 +22,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.getAllPossibleSegments
 import java.awt.BasicStroke
 import java.awt.Color
@@ -123,7 +123,7 @@ fun makeDartzeePlayerState(participant: ParticipantEntity = insertParticipant(),
 
 fun makeSegmentStatus(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),
                       validSegments: List<DartboardSegment> = scoringSegments)
- = SegmentStatus(scoringSegments, validSegments)
+ = SegmentStatuses(scoringSegments, validSegments)
 
 fun Dartboard.markPoints(points: List<Point>) = markPoints(dartboardImage!!, points)
 

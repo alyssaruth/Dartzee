@@ -34,7 +34,7 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
 
         hoveredSegment?.let(::revertOverriddenSegmentColour)
 
-        if (newHoveredSegment.isMiss())
+        if (newHoveredSegment.isMiss() || isInvalidSegmentForHover(newHoveredSegment))
         {
             hoveredSegment = null
         }
@@ -43,6 +43,11 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
             hoveredSegment = newHoveredSegment
             overrideSegmentColour(newHoveredSegment, getHighlightedColour(colourWrapper.getColour(newHoveredSegment)))
         }
+    }
+
+    private fun isInvalidSegmentForHover(segment: DartboardSegment): Boolean {
+        val status = segmentStatuses
+        return status != null && !status.validSegments.contains(segment)
     }
 
     fun stopInteraction()

@@ -4,7 +4,7 @@ import dartzee.ai.DELIBERATE_MISS
 import dartzee.core.util.maxOrZero
 import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.SegmentType
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.AimPoint
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.translatePoint
@@ -14,10 +14,10 @@ class DartzeeAimCalculator
 {
     private val miniDartboard = ComputationalDartboard(350, 350)
 
-    fun getPointToAimFor(dartboard: ComputationalDartboard, segmentStatus: SegmentStatus, aggressive: Boolean): Point
+    fun getPointToAimFor(dartboard: ComputationalDartboard, segmentStatuses: SegmentStatuses, aggressive: Boolean): Point
     {
-        val scoringSegments = segmentStatus.scoringSegments.filter { !it.isMiss() }
-        val validSegments = segmentStatus.validSegments.filter { !it.isMiss() }
+        val scoringSegments = segmentStatuses.scoringSegments.filter { !it.isMiss() }
+        val validSegments = segmentStatuses.validSegments.filter { !it.isMiss() }
 
         val segmentsToConsiderAimingFor = if (aggressive && scoringSegments.isNotEmpty()) scoringSegments else validSegments
         if (segmentsToConsiderAimingFor.isEmpty())

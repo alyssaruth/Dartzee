@@ -15,7 +15,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import dartzee.screen.game.DartsGameScreen
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.AimPoint
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -377,7 +377,7 @@ open class Dartboard(width: Int = 400, height: Int = 400): TempDartboardBase(), 
         lastHoveredSegment?.let { colourSegment(it, false) }
     }
 
-    override fun refreshValidSegments(segmentStatus: SegmentStatus?) {
+    override fun refreshValidSegments(segmentStatuses: SegmentStatuses?) {
         // not used
     }
 

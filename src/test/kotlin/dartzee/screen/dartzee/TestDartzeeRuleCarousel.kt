@@ -21,7 +21,7 @@ import dartzee.`object`.SegmentType
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -250,15 +250,15 @@ class TestDartzeeRuleCarousel: AbstractTest()
         val eighteensTile = carousel.getDisplayedTiles().find { it.dto == scoreEighteens }!!
         val me = makeMouseEvent(component = eighteensTile)
         carousel.mouseEntered(me)
-        listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(eighteens)
+        listener.segmentStatuses.validSegments.shouldContainExactlyInAnyOrder(eighteens)
 
         val totalFiftyTile = carousel.getDisplayedTiles().find { it.dto == totalIsFifty }!!
         val meTotalFifty = makeMouseEvent(component = totalFiftyTile)
         carousel.mouseEntered(meTotalFifty)
-        listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(allTwelves)
+        listener.segmentStatuses.validSegments.shouldContainExactlyInAnyOrder(allTwelves)
 
         carousel.mouseExited(makeMouseEvent(totalFiftyTile))
-        listener.segmentStatus.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
+        listener.segmentStatuses.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
     }
 
     @Test
@@ -348,12 +348,12 @@ class TestDartzeeRuleCarousel: AbstractTest()
 
     private class TrackingCarouselListener: IDartzeeCarouselListener
     {
-        var segmentStatus: SegmentStatus = SegmentStatus(emptySet(), emptySet())
+        var segmentStatuses: SegmentStatuses = SegmentStatuses(emptySet(), emptySet())
         var roundResult: DartzeeRoundResult? = null
 
-        override fun hoverChanged(segmentStatus: SegmentStatus)
+        override fun hoverChanged(segmentStatuses: SegmentStatuses)
         {
-            this.segmentStatus = segmentStatus
+            this.segmentStatuses = segmentStatuses
         }
 
         override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)

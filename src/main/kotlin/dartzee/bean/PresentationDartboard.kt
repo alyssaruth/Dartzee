@@ -5,12 +5,16 @@ import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
+import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.`object`.IDartboard
+import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.dartzee.getSegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
 import dartzee.utils.factoryFontMetrics
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourFromHashMap
@@ -35,6 +39,7 @@ open class PresentationDartboard(
     private val renderScoreLabels: Boolean = false
 ) : JComponent(), IDartboard
 {
+    protected var segmentStatuses: SegmentStatuses? = null
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
     private val dirtySegments = mutableListOf<DartboardSegment>()
     private var lastPaintImage: BufferedImage? = null
@@ -69,6 +74,33 @@ open class PresentationDartboard(
         val y = pt.y.coerceIn(0, height - 1)
 
         pt.setLocation(x, y)
+    }
+
+    fun overrideSegmentColour(segment: DartboardSegment, colour: Color)
+    {
+        overriddenSegmentColours[segment] = colour
+        dirtySegments.add(segment)
+
+        repaint()
+    }
+
+    fun revertOverriddenSegmentColour(segment: DartboardSegment)
+    {
+        overriddenSegmentColours.remove(segment)
+        dirtySegments.add(segment)
+
+        repaint()
+    }
+
+    fun updateSegmentStatus(segmentStatuses: SegmentStatuses?)
+    {
+        val oldSegmentStatus = this.segmentStatuses
+        this.segmentStatuses = segmentStatuses
+
+        val changed = getAllNonMissSegments().filter { oldSegmentStatus.getSegmentStatus(it) != segmentStatuses.getSegmentStatus(it) }
+        dirtySegments.addAll(changed)
+
+        repaint()
     }
 
     override fun paintComponent(g: Graphics)
@@ -111,24 +143,19 @@ open class PresentationDartboard(
 
     private fun paintSegment(segment: DartboardSegment, bi: BufferedImage)
     {
-        val colour = overriddenSegmentColours[segment] ?: getColourFromHashMap(segment, colourWrapper)
+        val colour = overriddenSegmentColours[segment] ?: defaultColourForSegment(segment)
         colourSegment(segment, colour, bi)
     }
 
-    fun overrideSegmentColour(segment: DartboardSegment, colour: Color)
+    private fun defaultColourForSegment(segment: DartboardSegment): Color
     {
-        overriddenSegmentColours[segment] = colour
-        dirtySegments.add(segment)
-
-        repaint()
-    }
-
-    fun revertOverriddenSegmentColour(segment: DartboardSegment)
-    {
-        overriddenSegmentColours.remove(segment)
-        dirtySegments.add(segment)
-
-        repaint()
+        val default = getColourFromHashMap(segment, colourWrapper)
+        val status = segmentStatuses ?: return default
+        return when {
+            status.scoringSegments.contains(segment) -> default
+            status.validSegments.contains(segment) -> getColourFromHashMap(segment, GREY_COLOUR_WRAPPER)
+            else -> Color.BLACK
+        }
     }
 
     private fun colourSegment(segment: DartboardSegment, color: Color, bi: BufferedImage)
@@ -138,9 +165,16 @@ open class PresentationDartboard(
 
         pts.forEach { bi.setRGB(it.x, it.y, color.rgb) }
 
-        colourWrapper.edgeColour?.let { edgeColour ->
+        getEdgeColourForSegment(segment)?.let { edgeColour ->
             edgePts.forEach { bi.setRGB(it.x, it.y, edgeColour.rgb) }
         }
+    }
+
+    private fun getEdgeColourForSegment(segment: DartboardSegment): Color?
+    {
+        val default = colourWrapper.edgeColour
+        val status = segmentStatuses ?: return default
+        return if (status.scoringSegments.contains(segment)) Color.GRAY else null
     }
 
     private fun paintOuterBoard(g: Graphics2D)

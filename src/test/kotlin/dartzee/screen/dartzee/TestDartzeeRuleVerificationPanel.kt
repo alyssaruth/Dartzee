@@ -1,10 +1,15 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.doClick
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.getFakeValidSegment
+import dartzee.helper.makeDart
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.makeScoreRule
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -25,7 +30,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(dto)
 
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(DartboardSegment(SegmentType.DOUBLE, 20))
+        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactly(DartboardSegment(SegmentType.DOUBLE, 20))
     }
 
     @Test
@@ -64,17 +69,17 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(rule)
 
-        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(0))
+        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(0))
         panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
 
-        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(1))
+        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(1))
         panel.dartThrown(makeDart(2, 1, SegmentType.INNER_SINGLE))
 
-        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
+        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
         panel.dartThrown(makeDart(20, 2, SegmentType.DOUBLE))
 
         //Shouldn't update on the last dart thrown
-        dartboard.segmentStatus!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
+        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
     }
 
     @Test

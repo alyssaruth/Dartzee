@@ -191,11 +191,11 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelDartzee()
     override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerDartzee(this, participant)
 
-    override fun hoverChanged(segmentStatus: SegmentStatus)
+    override fun hoverChanged(segmentStatuses: SegmentStatuses)
     {
         if (dartsThrownCount() < 3)
         {
-            dartboard.refreshValidSegments(segmentStatus)
+            dartboard.refreshValidSegments(segmentStatuses)
         }
     }
 

@@ -1,6 +1,7 @@
 package dartzee.logging
 
 import dartzee.core.bean.WrapLayout
+import dartzee.core.util.runOnEventThread
 import dartzee.core.util.setMargins
 import dartzee.screen.FocusableWindow
 import dartzee.utils.DartsDatabaseUtil
@@ -94,10 +95,12 @@ class LoggingConsole: FocusableWindow(), ILogDestination
         contextPanel.removeAll()
         val labels = context.map(::factoryLabelForContext)
 
-        labels.forEach { contextPanel.add(it) }
+        runOnEventThread {
+            labels.forEach { contextPanel.add(it) }
 
-        contextPanel.validate()
-        contextPanel.repaint()
+            contextPanel.validate()
+            contextPanel.repaint()
+        }
     }
 
     private fun factoryLabelForContext(field: Map.Entry<String, Any?>): Component

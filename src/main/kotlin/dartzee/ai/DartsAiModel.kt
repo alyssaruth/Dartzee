@@ -7,7 +7,7 @@ import dartzee.logging.CODE_AI_ERROR
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle
@@ -104,10 +104,10 @@ data class DartsAiModel(val standardDeviation: Double,
     /**
      * Dartzee
      */
-    fun throwDartzeeDart(dartsThrownSoFar: Int, segmentStatus: SegmentStatus): ComputedPoint
+    fun throwDartzeeDart(dartsThrownSoFar: Int, segmentStatuses: SegmentStatuses): ComputedPoint
     {
         val aggressive = (dartsThrownSoFar < 2 || dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE)
-        val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(AI_DARTBOARD, segmentStatus, aggressive)
+        val ptToAimAt = InjectedThings.dartzeeAimCalculator.getPointToAimFor(AI_DARTBOARD, segmentStatuses, aggressive)
         return throwDartAtPoint(ptToAimAt)
     }
 

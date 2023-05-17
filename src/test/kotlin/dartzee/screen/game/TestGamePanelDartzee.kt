@@ -44,7 +44,7 @@ import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.GamePanelDartzee
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -52,9 +52,9 @@ import dartzee.utils.insertDartzeeRules
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
-import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -322,19 +322,19 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.pendingTiles.size shouldBe reducedRules.size
 
         val expectedSegments = getAllPossibleSegments().filter { !it.isMiss() && !it.isDoubleExcludingBull() }
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
         val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.scoringSegments.toTypedArray()
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
+        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
 
         panel.dartThrown(makeDart(20, 0, SegmentType.MISS))
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldBeEmpty()
+        panel.dartboard.segmentStatuses!!.scoringSegments.shouldBeEmpty()
 
         panel.btnReset.isEnabled = true
         panel.btnReset.doClick()
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
     }
 
     @Test
@@ -386,19 +386,19 @@ class TestGamePanelDartzee: AbstractTest()
         val panel = makeGamePanel(testRules, summaryPanel)
         panel.startNewGame(listOf(makeSingleParticipant()))
 
-        panel.hoverChanged(SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen)))
-        panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleNineteen), listOf(doubleNineteen))
+        panel.hoverChanged(SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen)))
+        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
-        panel.hoverChanged(SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty)))
-        panel.dartboard.segmentStatus shouldBe SegmentStatus(listOf(doubleTwenty), listOf(doubleTwenty))
+        panel.hoverChanged(SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty)))
+        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
-        panel.dartboard.segmentStatus shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
-        panel.hoverChanged(SegmentStatus(listOf(bullseye), listOf(bullseye)))
-        panel.dartboard.segmentStatus shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
+        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
+        panel.hoverChanged(SegmentStatuses(listOf(bullseye), listOf(bullseye)))
+        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test
@@ -452,7 +452,7 @@ class TestGamePanelDartzee: AbstractTest()
         val game = setUpDartzeeGameOnDatabase(1)
 
         val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
-        every { carousel.getSegmentStatus() } returns SegmentStatus(listOf(singleTwenty), getAllPossibleSegments())
+        every { carousel.getSegmentStatus() } returns SegmentStatuses(listOf(singleTwenty), getAllPossibleSegments())
         every { carousel.initialised } returns true
 
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)

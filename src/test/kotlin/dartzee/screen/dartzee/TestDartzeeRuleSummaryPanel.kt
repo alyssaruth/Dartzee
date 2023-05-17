@@ -1,11 +1,15 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeRoundResult
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.beastDartsModel
+import dartzee.helper.getOuterSegments
+import dartzee.helper.makeDart
+import dartzee.helper.makeRoundResultEntities
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
 import io.kotest.matchers.collections.shouldContainExactly
@@ -46,19 +50,19 @@ class TestDartzeeRuleSummaryPanel: AbstractTest()
     {
         val summaryPanel = makeSummaryPanel()
 
-        summaryPanel.getSegmentStatus() shouldBe SegmentStatus(getAllPossibleSegments(), getAllPossibleSegments())
+        summaryPanel.getSegmentStatus() shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test
     fun `Should return the carousel segments once past round one`()
     {
         val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
-        every { carousel.getSegmentStatus() } returns SegmentStatus(getOuterSegments(), getOuterSegments())
+        every { carousel.getSegmentStatus() } returns SegmentStatuses(getOuterSegments(), getOuterSegments())
 
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         summaryPanel.update(listOf(), listOf(), 103, 2)
 
-        summaryPanel.getSegmentStatus() shouldBe SegmentStatus(getOuterSegments(), getOuterSegments())
+        summaryPanel.getSegmentStatus() shouldBe SegmentStatuses(getOuterSegments(), getOuterSegments())
     }
 
     @Test
