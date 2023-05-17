@@ -73,30 +73,33 @@ open class PresentationDartboard(
 
     override fun paintComponent(g: Graphics)
     {
-        super.paintComponent(g)
-
-        val cachedImage = lastPaintImage
-        if (cachedImage != null && cachedImage.width == width && cachedImage.height == height)
+        synchronized(this)
         {
-            repaintDirtySegments(cachedImage)
-            g.drawImage(cachedImage, 0, 0, this)
-        }
-        else
-        {
-            val timer = DurationTimer()
-            val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-            val biGraphics = bi.createGraphics()
-            paintOuterBoard(biGraphics)
-            getAllPossibleSegments().forEach { paintSegment(it, bi) }
-            paintScoreLabels(biGraphics)
+            super.paintComponent(g)
 
-            g.drawImage(bi, 0, 0, this)
-            lastPaintImage = bi
+            val cachedImage = lastPaintImage
+            if (cachedImage != null && cachedImage.width == width && cachedImage.height == height)
+            {
+                repaintDirtySegments(cachedImage)
+                g.drawImage(cachedImage, 0, 0, this)
+            }
+            else
+            {
+                val timer = DurationTimer()
+                val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+                val biGraphics = bi.createGraphics()
+                paintOuterBoard(biGraphics)
+                getAllPossibleSegments().forEach { paintSegment(it, bi) }
+                paintScoreLabels(biGraphics)
 
-            val duration = timer.getDuration()
-            logger.info(
-                CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
-                KEY_DURATION to duration)
+                g.drawImage(bi, 0, 0, this)
+                lastPaintImage = bi
+
+                val duration = timer.getDuration()
+                logger.info(
+                    CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
+                    KEY_DURATION to duration)
+            }
         }
     }
 
