@@ -8,6 +8,7 @@ import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
+import dartzee.screen.game.dartzee.SegmentStatus
 import dartzee.utils.getDartForSegment
 import java.awt.Dimension
 import java.awt.event.ComponentAdapter
@@ -77,6 +78,11 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
             add(lbl)
             setLayer(lbl, LAYER_DARTS, 5 - dartsThrown.size)
         }
+    }
+
+    override fun refreshValidSegments(segmentStatus: SegmentStatus?)
+    {
+
     }
 
     override fun stopListening()

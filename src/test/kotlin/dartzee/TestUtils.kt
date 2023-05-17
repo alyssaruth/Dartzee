@@ -16,7 +16,6 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
@@ -58,7 +57,6 @@ val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:
         .format(CURRENT_TIME)
 
 fun makeTestDartboard(width: Int = 100, height: Int = 100)  = Dartboard(width, height).also { it.paintDartboard() }
-fun makeTestDartzeeDartboard() = DartzeeDartboard(100, 100).also { it.paintDartboard() }
 
 fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)
 

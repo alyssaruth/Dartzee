@@ -11,7 +11,7 @@ class DartzeeDartboard(width: Int = 400, height: Int = 400): Dartboard(width, he
 {
     var segmentStatus: SegmentStatus? = SegmentStatus(emptySet(), emptySet())
 
-    fun refreshValidSegments(segmentStatus: SegmentStatus?)
+    override fun refreshValidSegments(segmentStatus: SegmentStatus?)
     {
         this.segmentStatus = segmentStatus
 
