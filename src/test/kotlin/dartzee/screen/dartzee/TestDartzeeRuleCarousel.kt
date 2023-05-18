@@ -18,10 +18,10 @@ import dartzee.helper.scoreEighteens
 import dartzee.helper.totalIsFifty
 import dartzee.helper.twoBlackOneWhite
 import dartzee.`object`.SegmentType
+import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
-import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import io.kotest.matchers.collections.shouldBeEmpty

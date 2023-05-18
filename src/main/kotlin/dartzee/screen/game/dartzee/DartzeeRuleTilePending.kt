@@ -2,6 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.`object`.Dart
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.InjectedThings
 import dartzee.utils.setColoursForDartzeeResult
 

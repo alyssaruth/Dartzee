@@ -3,7 +3,7 @@ package dartzee.screen
 import dartzee.listener.DartboardListener
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import java.awt.Component
 import java.awt.Point
 import javax.swing.JLayeredPane

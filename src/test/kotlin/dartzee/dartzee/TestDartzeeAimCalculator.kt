@@ -10,7 +10,7 @@ import dartzee.missTwenty
 import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.screen.dartzee.DartzeeDartboard
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.comparables.shouldBeLessThan

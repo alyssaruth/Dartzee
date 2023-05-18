@@ -4,7 +4,7 @@ import dartzee.ai.DELIBERATE_MISS
 import dartzee.core.util.maxOrZero
 import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.SegmentType
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.AimPoint
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.translatePoint

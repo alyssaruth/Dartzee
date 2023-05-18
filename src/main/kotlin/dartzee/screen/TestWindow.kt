@@ -7,9 +7,9 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
+import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
-import dartzee.screen.game.dartzee.SegmentStatuses
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent

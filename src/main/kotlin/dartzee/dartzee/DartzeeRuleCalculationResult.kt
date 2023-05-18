@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.jsonMapper
 import dartzee.`object`.DartboardSegment
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.DartsColour
 import kotlin.math.sqrt
 

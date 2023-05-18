@@ -7,9 +7,9 @@ import dartzee.helper.getOuterSegments
 import dartzee.helper.makeDart
 import dartzee.helper.makeRoundResultEntities
 import dartzee.`object`.SegmentType
+import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
-import dartzee.screen.game.dartzee.SegmentStatuses
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllPossibleSegments
 import io.kotest.matchers.collections.shouldContainExactly

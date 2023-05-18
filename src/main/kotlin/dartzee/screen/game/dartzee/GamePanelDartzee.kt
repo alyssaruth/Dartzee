@@ -16,6 +16,7 @@ import dartzee.`object`.Dart
 import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
+import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.factoryHighScoreResult
 import dartzee.utils.getQuotedIdStr

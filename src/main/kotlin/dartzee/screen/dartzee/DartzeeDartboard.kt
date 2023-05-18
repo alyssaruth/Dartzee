@@ -3,7 +3,7 @@ package dartzee.screen.dartzee
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.screen.Dartboard
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getColourFromHashMap
 import java.awt.Color
 

@@ -7,8 +7,8 @@ import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.`object`.IDartboard
-import dartzee.screen.game.dartzee.SegmentStatuses
-import dartzee.screen.game.dartzee.getSegmentStatus
+import dartzee.screen.game.SegmentStatuses
+import dartzee.screen.game.getSegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO

@@ -15,7 +15,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.`object`.StatefulSegment
 import dartzee.screen.game.DartsGameScreen
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.AimPoint
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger

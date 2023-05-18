@@ -3,6 +3,7 @@ package dartzee.bean
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractTest
+import dartzee.helper.makeSegmentStatuses
 import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputationalDartboard
@@ -10,6 +11,8 @@ import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
+import dartzee.screen.game.SegmentStatuses
+import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
@@ -126,5 +129,30 @@ class TestPresentationDartboard : AbstractTest()
 
         dartboard.revertOverriddenSegmentColour(segment)
         dartboard.shouldMatchImage("default")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should draw edges with segment statuses set`()
+    {
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.setBounds(0, 0, 400, 400)
+        dartboard.updateSegmentStatus(makeSegmentStatuses())
+
+        dartboard.shouldMatchImage("segment-statuses-all-scoring")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should respect segment statuses`()
+    {
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.setBounds(0, 0, 600, 600)
+
+        val scoringSegments = getAllNonMissSegments().filter { listOf(1, 20, 5).contains(it.score) }
+        val validSegments = getAllNonMissSegments().filter { !listOf(19, 3, 17).contains(it.score) }
+
+        dartboard.updateSegmentStatus(SegmentStatuses(scoringSegments, validSegments))
+        dartboard.shouldMatchImage("segment-statuses")
     }
 }

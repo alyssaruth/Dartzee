@@ -8,7 +8,7 @@ import dartzee.helper.makeDartsModel
 import dartzee.helper.makeSegmentStatuses
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores

@@ -8,6 +8,7 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.`object`.Dart
+import dartzee.screen.game.SegmentStatuses
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent

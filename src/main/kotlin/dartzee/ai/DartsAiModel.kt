@@ -7,7 +7,7 @@ import dartzee.logging.CODE_AI_ERROR
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle

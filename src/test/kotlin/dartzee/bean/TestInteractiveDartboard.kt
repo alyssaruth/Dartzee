@@ -5,7 +5,7 @@ import dartzee.helper.AbstractTest
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getAllNonMissSegments
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

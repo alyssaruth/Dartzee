@@ -3,6 +3,7 @@ package dartzee.screen.game.dartzee
 import dartzee.ai.DartsAiModel
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.`object`.Dart
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getAllPossibleSegments
 import java.awt.BorderLayout
 import java.awt.Color
