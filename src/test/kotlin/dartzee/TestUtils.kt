@@ -1,6 +1,7 @@
 package dartzee
 
 import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.DateFilterPanel
@@ -159,4 +160,5 @@ fun PresentationDartboard.getPointForSegment(segment: DartboardSegment) = getAve
  */
 fun PresentationDartboard.doClick(pt: Point) = runOnEventThreadBlocking {
     doClick(pt.x, pt.y)
+    flushEdt()
 }
