@@ -163,12 +163,13 @@ class TestLoggingConsole: AbstractTest()
         console.getAllChildComponentsForType<JLabel>().shouldBeEmpty()
 
         console.contextUpdated(mapOf("appVersion" to "4.1.1"))
+        flushEdt()
         val labels = console.getAllChildComponentsForType<JLabel>()
         labels.size shouldBe 1
         labels.first().text shouldBe "appVersion: 4.1.1"
 
         console.contextUpdated(mapOf("appVersion" to "4.1.1", "devMode" to false))
-
+        flushEdt()
         val newLabels = console.getAllChildComponentsForType<JLabel>()
         newLabels.map { it.text }.shouldContainExactly("appVersion: 4.1.1", "devMode: false")
     }
