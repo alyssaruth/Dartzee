@@ -121,8 +121,8 @@ fun makeDartzeePlayerState(participant: ParticipantEntity = insertParticipant(),
     return DartzeePlayerState(SingleParticipant(participant), completedRounds.toMutableList(), mutableListOf(), false, resultEntities.toMutableList())
 }
 
-fun makeSegmentStatus(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),
-                      validSegments: List<DartboardSegment> = scoringSegments)
+fun makeSegmentStatuses(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),
+                        validSegments: List<DartboardSegment> = scoringSegments)
  = SegmentStatuses(scoringSegments, validSegments)
 
 fun Dartboard.markPoints(points: List<Point>) = markPoints(dartboardImage!!, points)

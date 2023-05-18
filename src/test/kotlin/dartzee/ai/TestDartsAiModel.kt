@@ -5,7 +5,7 @@ import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.makeDartsModel
-import dartzee.helper.makeSegmentStatus
+import dartzee.helper.makeSegmentStatuses
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.dartzee.SegmentStatuses
@@ -170,7 +170,7 @@ class TestDartsAiModel: AbstractTest()
         InjectedThings.dartzeeAimCalculator = mockDartzeeAimCalculator
 
         repeat(20) {
-            val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatus())
+            val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatuses())
             pt.segment shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
         }
     }
