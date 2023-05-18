@@ -79,7 +79,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
     {
         val panel = makeRoundTheClockGamePanel()
         panel.readyForThrow()
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 1 })
+        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 1 })
     }
 
     @Test
@@ -87,7 +87,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
     {
         val panel = makeRoundTheClockGamePanel()
         panel.dartThrown(Dart(1, 1))
-        panel.dartboard.segmentStatus!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 2 })
+        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 2 })
     }
 
     /**

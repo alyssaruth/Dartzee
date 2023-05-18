@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.jsonMapper
 import dartzee.`object`.DartboardSegment
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.DartsColour
 import kotlin.math.sqrt
 
@@ -36,7 +36,7 @@ data class DartzeeRuleCalculationResult(val scoringSegments: List<DartboardSegme
 
     fun getDifficultyDesc() = getDifficulty().desc
 
-    fun getSegmentStatus() = SegmentStatus(scoringSegments, validSegments)
+    fun getSegmentStatus() = SegmentStatuses(scoringSegments, validSegments)
 
     fun getForeground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 1.0)
     fun getBackground() = DartsColour.getProportionalColourRedToGreen(sqrt(percentage), 10, 0.5)

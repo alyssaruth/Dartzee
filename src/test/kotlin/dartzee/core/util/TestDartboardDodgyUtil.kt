@@ -8,8 +8,7 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractRegistryTest
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.Severity
-import dartzee.makeTestDartboard
-import dartzee.screen.Dartboard
+import dartzee.screen.GameplayDartboard
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache
@@ -48,7 +47,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
         mockkStatic(AudioSystem::class)
 
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, false)
-        val dartboard = makeTestDartboard()
+        val dartboard = GameplayDartboard()
         dartboard.playDodgySound("60")
 
         verifyNotCalled { AudioSystem.getLine(any()) }
@@ -59,7 +58,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     {
         mockkStatic(AudioSystem::class)
 
-        val dartboard = makeTestDartboard()
+        val dartboard = GameplayDartboard()
         dartboard.playDodgySound("invalid")
 
         verifyNotCalled { AudioSystem.getLine(any()) }
@@ -68,7 +67,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     @Test
     fun `should log an error and hide the image if there is an error playing the audio`()
     {
-        val dartboard = makeTestDartboard()
+        val dartboard = GameplayDartboard()
         captureClip(true)
 
         dartboard.doBadLuck()
@@ -81,7 +80,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     @Test
     fun `should show image until sound clip has finished playing`()
     {
-        val dartboard = makeTestDartboard()
+        val dartboard = GameplayDartboard()
         val clip = captureClip()
 
         dartboard.doBadLuck()
@@ -96,7 +95,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     @Test
     fun `should continue to show image until the final sound clip has finished playing`()
     {
-        val dartboard = makeTestDartboard()
+        val dartboard = GameplayDartboard()
         val clip1 = captureClip()
 
         dartboard.doBadLuck()
@@ -123,11 +122,11 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
         return clip
     }
 
-    private fun Dartboard.dodgyLabelShouldExist() {
+    private fun GameplayDartboard.dodgyLabelShouldExist() {
         getChild<JLabel>("DodgyLabel").shouldBeVisible()
     }
 
-    private fun Dartboard.dodgyLabelShouldNotExist() {
+    private fun GameplayDartboard.dodgyLabelShouldNotExist() {
         findChild<JLabel>("DodgyLabel").shouldBeNull()
     }
 

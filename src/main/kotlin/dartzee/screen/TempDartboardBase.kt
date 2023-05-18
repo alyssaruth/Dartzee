@@ -3,6 +3,7 @@ package dartzee.screen
 import dartzee.listener.DartboardListener
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
+import dartzee.screen.game.SegmentStatuses
 import java.awt.Component
 import java.awt.Point
 import javax.swing.JLayeredPane
@@ -18,6 +19,7 @@ interface ITempDartboardBase
     fun ensureListening()
     fun stopListening()
     fun paintDartboard(colourWrapper: ColourWrapper? = null)
+    fun refreshValidSegments(segmentStatuses: SegmentStatuses?)
 }
 
 abstract class TempDartboardBase : JLayeredPane(), ITempDartboardBase

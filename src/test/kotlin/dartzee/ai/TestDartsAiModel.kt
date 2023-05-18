@@ -5,10 +5,10 @@ import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.makeDartsModel
-import dartzee.helper.makeSegmentStatus
+import dartzee.helper.makeSegmentStatuses
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getCheckoutScores
@@ -170,7 +170,7 @@ class TestDartsAiModel: AbstractTest()
         InjectedThings.dartzeeAimCalculator = mockDartzeeAimCalculator
 
         repeat(20) {
-            val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatus())
+            val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatuses())
             pt.segment shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
         }
     }
@@ -347,14 +347,14 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
 
-        val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
-        val pt1 = model.throwDartzeeDart(0, segmentStatus)
+        val segmentStatuses = SegmentStatuses(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
+        val pt1 = model.throwDartzeeDart(0, segmentStatuses)
         pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val pt2 = model.throwDartzeeDart(1, segmentStatus)
+        val pt2 = model.throwDartzeeDart(1, segmentStatuses)
         pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val pt3 = model.throwDartzeeDart(2, segmentStatus)
+        val pt3 = model.throwDartzeeDart(2, segmentStatuses)
         pt3.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
@@ -363,14 +363,14 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
 
-        val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
-        val pt1 = model.throwDartzeeDart(0, segmentStatus)
+        val segmentStatuses = SegmentStatuses(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
+        val pt1 = model.throwDartzeeDart(0, segmentStatuses)
         pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val pt2 = model.throwDartzeeDart(1, segmentStatus)
+        val pt2 = model.throwDartzeeDart(1, segmentStatuses)
         pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val pt3 = model.throwDartzeeDart(2, segmentStatus)
+        val pt3 = model.throwDartzeeDart(2, segmentStatuses)
         pt3.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
     }
 }

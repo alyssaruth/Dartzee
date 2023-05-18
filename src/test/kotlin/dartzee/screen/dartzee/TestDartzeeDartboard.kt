@@ -3,7 +3,7 @@ package dartzee.screen.dartzee
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.*
 import dartzee.helper.AbstractTest
-import dartzee.helper.makeSegmentStatus
+import dartzee.helper.makeSegmentStatuses
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.`object`.SegmentType
@@ -25,7 +25,7 @@ class TestDartzeeDartboard: AbstractTest()
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
 
         val scoringSegments = listOf(trebleNineteen, bullseye)
-        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments))
+        dartboard.refreshValidSegments(makeSegmentStatuses(scoringSegments))
 
         val t19Pt = dartboard.getNonEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(t19Pt) shouldBe Color.GREEN
@@ -41,7 +41,7 @@ class TestDartzeeDartboard: AbstractTest()
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
 
         val validSegments = listOf(trebleNineteen, bullseye)
-        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = emptyList(), validSegments = validSegments))
+        dartboard.refreshValidSegments(makeSegmentStatuses(scoringSegments = emptyList(), validSegments = validSegments))
 
         val t19Pt = dartboard.getNonEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(t19Pt) shouldBe GREY_COLOUR_WRAPPER.getColour(3, 19)
@@ -56,7 +56,7 @@ class TestDartzeeDartboard: AbstractTest()
         val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
 
-        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = emptyList(), validSegments = emptyList()))
+        dartboard.refreshValidSegments(makeSegmentStatuses(scoringSegments = emptyList(), validSegments = emptyList()))
 
         val t19Pt = dartboard.getNonEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(t19Pt) shouldBe Color.BLACK
@@ -70,12 +70,12 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(100, 100)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen, missTwenty)))
+        dartboard.refreshValidSegments(makeSegmentStatuses(listOf(trebleNineteen, missTwenty)))
 
         var missTwentyPts = dartboard.getPointsForSegment(20, SegmentType.MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
 
-        dartboard.refreshValidSegments(makeSegmentStatus(emptyList()))
+        dartboard.refreshValidSegments(makeSegmentStatuses(emptyList()))
         missTwentyPts = dartboard.getPointsForSegment(20, SegmentType.MISS)
         missTwentyPts.forEach { dartboard.getColor(it) shouldBe Color.BLACK }
 
@@ -88,7 +88,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(makeSegmentStatus(listOf(trebleNineteen)))
+        dartboard.refreshValidSegments(makeSegmentStatuses(listOf(trebleNineteen)))
 
         dartboard.ensureListening()
 
@@ -103,7 +103,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = listOf(trebleNineteen), validSegments = listOf(trebleNineteen, doubleNineteen)))
+        dartboard.refreshValidSegments(makeSegmentStatuses(scoringSegments = listOf(trebleNineteen), validSegments = listOf(trebleNineteen, doubleNineteen)))
 
         val scoringEdgePt = dartboard.getEdgePointForSegment(19, SegmentType.TREBLE)
         dartboard.getColor(scoringEdgePt) shouldBe Color.GRAY
@@ -120,7 +120,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val dartboard = DartzeeDartboard(150, 150)
         dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(makeSegmentStatus(scoringSegments = listOf(doubleTwenty), validSegments = listOf(singleTwenty, doubleTwenty)))
+        dartboard.refreshValidSegments(makeSegmentStatuses(scoringSegments = listOf(doubleTwenty), validSegments = listOf(singleTwenty, doubleTwenty)))
 
         dartboard.ensureListening()
 
@@ -139,7 +139,7 @@ class TestDartzeeDartboard: AbstractTest()
     {
         val scoringSegments = getAllPossibleSegments().filter { it.score == 20 && !it.isMiss() }
         val validSegments = scoringSegments + getAllPossibleSegments().filter { it.score % 5 == 0 && !it.isMiss() }
-        val segmentStatus = makeSegmentStatus(
+        val segmentStatus = makeSegmentStatuses(
             scoringSegments = scoringSegments,
             validSegments = validSegments
         )

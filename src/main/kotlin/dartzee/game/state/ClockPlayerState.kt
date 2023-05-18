@@ -1,8 +1,8 @@
 package dartzee.game.state
 
-import dartzee.`object`.Dart
 import dartzee.game.RoundTheClockConfig
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.`object`.Dart
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getLongestStreak
 
@@ -24,7 +24,7 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
 
     fun hasHitTarget(target: Int) = getAllDartsFlattened().any { it.hitAnyClockTarget(config.clockType) && it.score == target }
 
-    fun getSegmentStatus(): SegmentStatus
+    fun getSegmentStatus(): SegmentStatuses
     {
         val scoringSegments = getAllPossibleSegments().filter { it.score == findCurrentTarget() }
         val validSegments = if (!config.inOrder)
@@ -36,7 +36,7 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
             getAllPossibleSegments() - scoringSegments
         }
 
-        return SegmentStatus(scoringSegments, validSegments)
+        return SegmentStatuses(scoringSegments, validSegments)
     }
 
     override fun dartThrown(dart: Dart)
