@@ -2,7 +2,7 @@ package dartzee.game.state
 
 import dartzee.game.RoundTheClockConfig
 import dartzee.`object`.Dart
-import dartzee.screen.game.dartzee.SegmentStatuses
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getLongestStreak
 
