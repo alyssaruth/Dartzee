@@ -16,7 +16,7 @@ import java.awt.event.ActionListener
 import javax.swing.JButton
 
 abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>>(
-    private val parent: GamePanelPausable<*, *, *>,
+    private val parent: GamePanelPausable<*, *>,
     participant: IWrappedParticipant
     ) : AbstractDartsScorer<PlayerState>(participant), ActionListener
 {

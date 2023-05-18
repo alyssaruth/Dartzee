@@ -9,18 +9,16 @@ import dartzee.db.GameEntity
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.`object`.ComputedPoint
-import dartzee.screen.GameplayDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
 
 class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
-        GamePanelFixedLength<DartsScorerGolf, GameplayDartboard, GolfPlayerState>(parent, game, totalPlayers)
+        GamePanelFixedLength<DartsScorerGolf, GolfPlayerState>(parent, game, totalPlayers)
 {
     //Number of rounds - 9 holes or 18?
     override val totalRounds = Integer.parseInt(game.gameParams)
 
-    override fun factoryDartboard() = GameplayDartboard()
     override fun factoryState(pt: IWrappedParticipant) = GolfPlayerState(pt)
 
     private fun getScoreForMostRecentDart() : Int

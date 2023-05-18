@@ -44,6 +44,7 @@ import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.GamePanelDartzee
+import dartzee.segmentStatuses
 import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -321,19 +322,19 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.pendingTiles.size shouldBe reducedRules.size
 
         val expectedSegments = getAllPossibleSegments().filter { !it.isMiss() && !it.isDoubleExcludingBull() }
-        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
         val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.scoringSegments.toTypedArray()
-        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
+        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
 
         panel.dartThrown(makeDart(20, 0, SegmentType.MISS))
-        panel.dartboard.segmentStatuses!!.scoringSegments.shouldBeEmpty()
+        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldBeEmpty()
 
         panel.btnReset.isEnabled = true
         panel.btnReset.doClick()
-        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
     }
 
     @Test
@@ -386,18 +387,18 @@ class TestGamePanelDartzee: AbstractTest()
         panel.startNewGame(listOf(makeSingleParticipant()))
 
         panel.hoverChanged(SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen)))
-        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen))
+        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
         panel.hoverChanged(SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty)))
-        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty))
+        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
-        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
+        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
         panel.hoverChanged(SegmentStatuses(listOf(bullseye), listOf(bullseye)))
-        panel.dartboard.segmentStatuses shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
+        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test

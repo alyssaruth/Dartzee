@@ -2,6 +2,7 @@ package dartzee
 
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.DateFilterPanel
@@ -17,6 +18,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.Dartboard
+import dartzee.screen.GameplayDartboard
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
@@ -163,3 +165,5 @@ fun PresentationDartboard.doClick(pt: Point) {
 
     flushEdt()
 }
+
+fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses

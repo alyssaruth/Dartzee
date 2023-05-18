@@ -11,17 +11,15 @@ import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
-import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
 
 class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
-    GamePanelPausable<DartsScorerRoundTheClock, DartzeeDartboard, ClockPlayerState>(parent, game, totalPlayers)
+    GamePanelPausable<DartsScorerRoundTheClock, ClockPlayerState>(parent, game, totalPlayers)
 {
     private val config = RoundTheClockConfig.fromJson(game.gameParams)
 
-    override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = ClockPlayerState(config, pt)
 
     override fun computeAiDart(model: DartsAiModel): ComputedPoint

@@ -39,7 +39,7 @@ open class PresentationDartboard(
     private val renderScoreLabels: Boolean = false
 ) : JComponent(), IDartboard
 {
-    protected var segmentStatuses: SegmentStatuses? = null
+    var segmentStatuses: SegmentStatuses? = null
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
     private val dirtySegments = mutableListOf<DartboardSegment>()
     private var lastPaintImage: BufferedImage? = null

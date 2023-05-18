@@ -81,7 +81,7 @@ fun closeOpenGames()
 
 fun getWindow(fn: (window: Window) -> Boolean) = Window.getWindows().find(fn)
 
-data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *, *>, val listener: DartboardListener)
+data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *>, val listener: DartboardListener)
 
 fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>) =
     setUpGamePanel(game).also {
@@ -100,7 +100,7 @@ fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
     return GamePanelTestSetup(gamePanel, listener)
 }
 
-fun DartsGamePanel<*, *, *>.startGame(players: List<PlayerEntity>)
+fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>)
 {
     val participants = prepareParticipants(gameEntity.rowId, players, false)
     startNewGame(participants)
@@ -122,7 +122,7 @@ fun makePlayerWithModel(model: DartsAiModel, name: String = "Clive", image: Stri
     return player.toDeterministicPlayer(model)
 }
 
-fun verifyState(panel: DartsGamePanel<*, *, *>,
+fun verifyState(panel: DartsGamePanel<*, *>,
                 listener: DartboardListener,
                 dartRounds: List<List<Dart>>,
                 finalScore: Int,

@@ -14,7 +14,6 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
-import dartzee.screen.GameplayDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
@@ -27,12 +26,11 @@ import dartzee.utils.shouldStopForMercyRule
 import dartzee.utils.sumScore
 
 class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
-    GamePanelPausable<DartsScorerX01, GameplayDartboard, X01PlayerState>(parent, game, totalPlayers)
+    GamePanelPausable<DartsScorerX01, X01PlayerState>(parent, game, totalPlayers)
 {
     private val startingScore = Integer.parseInt(game.gameParams)
 
     override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(startingScore, pt)
-    override fun factoryDartboard() = GameplayDartboard()
 
     override fun saveDartsAndProceed()
     {

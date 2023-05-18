@@ -22,7 +22,7 @@ import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import dartzee.screen.TempDartboardBase
+import dartzee.screen.GameplayDartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.GamePanelDartzee
@@ -54,7 +54,7 @@ import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 
 
-abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: TempDartboardBase, PlayerState: AbstractPlayerState<PlayerState>>(
+abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
         val gameEntity: GameEntity,
         protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener
@@ -74,7 +74,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: TempDartb
     /**
      * Screen stuff
      */
-    val dartboard = factoryDartboard()
+    val dartboard = GameplayDartboard()
     private val statsPanel = factoryStatsPanel(gameEntity.gameParams)
 
     private val panelSouth = JPanel()
@@ -189,7 +189,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, D: TempDartb
     abstract fun shouldAIStop(): Boolean
     abstract fun saveDartsAndProceed()
     abstract fun factoryStatsPanel(gameParams: String): AbstractGameStatisticsPanel<PlayerState>
-    abstract fun factoryDartboard(): D
 
     open fun updateVariablesForDartThrown(dart: Dart) {}
 

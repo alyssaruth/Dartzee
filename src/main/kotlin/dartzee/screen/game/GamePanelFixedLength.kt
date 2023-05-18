@@ -2,15 +2,14 @@ package dartzee.screen.game
 
 import dartzee.db.GameEntity
 import dartzee.game.state.AbstractPlayerState
-import dartzee.screen.TempDartboardBase
 import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.utils.doesHighestWin
 import dartzee.utils.setFinishingPositions
 
-abstract class GamePanelFixedLength<S : AbstractDartsScorer<PlayerState>, D: TempDartboardBase, PlayerState: AbstractPlayerState<PlayerState>>(
+abstract class GamePanelFixedLength<S : AbstractDartsScorer<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(
     parent: AbstractDartsGameScreen,
     game: GameEntity,
-    totalPlayers: Int): DartsGamePanel<S, D, PlayerState>(parent, game, totalPlayers)
+    totalPlayers: Int): DartsGamePanel<S, PlayerState>(parent, game, totalPlayers)
 {
     abstract val totalRounds: Int
     val highestWins = doesHighestWin(game.gameType)
