@@ -1,6 +1,7 @@
 package dartzee
 
 import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.DateFilterPanel
@@ -155,6 +156,10 @@ fun PresentationDartboard.getPointForSegment(segment: DartboardSegment) = getAve
 /**
  * TODO - swing-test should do all the interactions on the event thread
  */
-fun PresentationDartboard.doClick(pt: Point) = runOnEventThreadBlocking {
-    doClick(pt.x, pt.y)
+fun PresentationDartboard.doClick(pt: Point) {
+    runOnEventThreadBlocking {
+        doClick(pt.x, pt.y)
+    }
+
+    flushEdt()
 }
