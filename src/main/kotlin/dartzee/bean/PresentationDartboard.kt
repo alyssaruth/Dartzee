@@ -1,5 +1,6 @@
 package dartzee.bean
 
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.logging.CODE_RENDERED_DARTBOARD
 import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
@@ -73,8 +74,7 @@ open class PresentationDartboard(
 
     override fun paintComponent(g: Graphics)
     {
-        synchronized(this)
-        {
+        runOnEventThreadBlocking {
             super.paintComponent(g)
 
             val cachedImage = lastPaintImage
