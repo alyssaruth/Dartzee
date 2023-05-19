@@ -1,13 +1,17 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.SegmentType
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.doubleNineteen
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDart
+import dartzee.helper.makeDartzeeRuleCalculationResult
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.makeScoreRule
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.dartzee.DartzeeRuleTilePending
 import dartzee.trebleTwenty
 import dartzee.utils.InjectedThings
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
@@ -62,11 +66,11 @@ class TestDartzeeRuleTilePending: AbstractTest()
 
         tile.getSegmentStatus(listOf(makeDart(18, 1, SegmentType.OUTER_SINGLE))).validSegments.shouldBeEmpty()
 
-        val eighteenSegments = getAllPossibleSegments().filter { it.score == 18 && !it.isMiss()}.toTypedArray()
+        val eighteenSegments = getAllNonMissSegments().filter { it.score == 18 }.toTypedArray()
         tile.getSegmentStatus(listOf(makeDart(20, 1, SegmentType.OUTER_SINGLE))).validSegments.shouldContainExactlyInAnyOrder(*eighteenSegments)
 
         val twoDarts = listOf(makeDart(20, 2, SegmentType.DOUBLE), makeDart(18, 2, SegmentType.DOUBLE))
-        val nineteenSegments = getAllPossibleSegments().filter { it.score == 19 && !it.isMiss()}.toTypedArray()
+        val nineteenSegments = getAllNonMissSegments().filter { it.score == 19 }.toTypedArray()
         tile.getSegmentStatus(twoDarts).validSegments.shouldContainExactlyInAnyOrder(*nineteenSegments)
     }
 

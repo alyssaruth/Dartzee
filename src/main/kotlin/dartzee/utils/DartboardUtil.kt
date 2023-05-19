@@ -159,8 +159,7 @@ private fun calculateTypeForRatioNonBullseye(ratioToDiameter: Double) =
         ratioToDiameter < UPPER_BOUND_TRIPLE_RATIO -> SegmentType.TREBLE
         ratioToDiameter < LOWER_BOUND_DOUBLE_RATIO -> SegmentType.OUTER_SINGLE
         ratioToDiameter < UPPER_BOUND_DOUBLE_RATIO -> SegmentType.DOUBLE
-        ratioToDiameter < UPPER_BOUND_OUTSIDE_BOARD_RATIO -> SegmentType.MISS
-        else -> SegmentType.MISSED_BOARD
+        else -> SegmentType.MISS
     }
 
 private fun getScoreForAngle(angle: Double): Int
@@ -195,36 +194,6 @@ fun getPotentialAimPoints(centerPt: Point, diameter: Double): Set<AimPoint>
 
     points.add(AimPoint(centerPt, radius, 0, 0.0))
     return points.toSet()
-}
-
-fun getColourForSegment(segment: DartboardSegment, colourWrapper: ColourWrapper?): Color
-{
-    val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
-    return getColourFromHashMap(segment, colourWrapperToUse)
-}
-
-fun getColourFromHashMap(segment: DartboardSegment, colourWrapper: ColourWrapper): Color
-{
-    val type = segment.type
-    if (type == SegmentType.MISS)
-    {
-        return colourWrapper.outerDartboardColour
-    }
-
-    if (type == SegmentType.MISSED_BOARD)
-    {
-        return colourWrapper.missedBoardColour
-    }
-
-    val score = segment.score
-    val multiplier = segment.getMultiplier()
-
-    if (score == 25)
-    {
-        return colourWrapper.getBullColour(multiplier)
-    }
-
-    return colourWrapper.getColour(multiplier, score)
 }
 
 fun getColourWrapperFromPrefs(): ColourWrapper
@@ -283,7 +252,6 @@ fun getAllPossibleSegments(): List<DartboardSegment>
         segments.add(DartboardSegment(SegmentType.OUTER_SINGLE, i))
         segments.add(DartboardSegment(SegmentType.INNER_SINGLE, i))
         segments.add(DartboardSegment(SegmentType.MISS, i))
-        segments.add(DartboardSegment(SegmentType.MISSED_BOARD, i))
     }
 
     segments.add(DartboardSegment(SegmentType.OUTER_SINGLE, 25))

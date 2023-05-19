@@ -1,7 +1,15 @@
 package dartzee.`object`
 
-import dartzee.*
+import dartzee.bullseye
+import dartzee.doubleNineteen
+import dartzee.doubleTwenty
 import dartzee.helper.AbstractTest
+import dartzee.missTwenty
+import dartzee.outerBull
+import dartzee.singleEighteen
+import dartzee.singleTwenty
+import dartzee.trebleNineteen
+import dartzee.trebleTwenty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -13,7 +21,6 @@ class TestDartboardSegment: AbstractTest()
         doubleNineteen.isMiss() shouldBe false
         singleTwenty.isMiss() shouldBe false
         missTwenty.isMiss() shouldBe true
-        missedBoard.isMiss() shouldBe true
     }
 
     @Test
@@ -33,7 +40,6 @@ class TestDartboardSegment: AbstractTest()
         doubleNineteen.getMultiplier() shouldBe 2
         trebleNineteen.getMultiplier() shouldBe 3
         singleTwenty.getMultiplier() shouldBe 1
-        missedBoard.getMultiplier() shouldBe 0
         missTwenty.getMultiplier() shouldBe 0
     }
 
@@ -43,7 +49,6 @@ class TestDartboardSegment: AbstractTest()
         doubleNineteen.getTotal() shouldBe 38
         trebleTwenty.getTotal() shouldBe 60
         singleEighteen.getTotal() shouldBe 18
-        missedBoard.getTotal() shouldBe 0
         missTwenty.getTotal() shouldBe 0
     }
 }

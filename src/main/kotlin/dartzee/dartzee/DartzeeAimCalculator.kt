@@ -6,7 +6,7 @@ import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.AimPoint
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.translatePoint
 import java.awt.Point
 
@@ -26,7 +26,7 @@ class DartzeeAimCalculator
         }
 
         //Shortcut straight to the bullseye if all outer singles, inner singles, trebles and bull are valid
-        val innerSegments = getAllPossibleSegments().filter { !it.isMiss() && (it.type != SegmentType.DOUBLE || it.score == 25) }
+        val innerSegments = getAllNonMissSegments().filter { it.type != SegmentType.DOUBLE || it.score == 25 }
         if (segmentsToConsiderAimingFor.containsAll(innerSegments))
         {
             return dartboard.computeCenter()

@@ -15,9 +15,7 @@ import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
 import dartzee.utils.factoryFontMetrics
 import dartzee.utils.getAllNonMissSegments
-import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.getAnglesForScore
-import dartzee.utils.getColourFromHashMap
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getFontForDartboardLabels
 import dartzee.utils.getNeighbours
@@ -119,7 +117,7 @@ open class PresentationDartboard(
             val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
             val biGraphics = bi.createGraphics()
             paintOuterBoard(biGraphics)
-            getAllPossibleSegments().forEach { paintSegment(it, bi) }
+            getAllNonMissSegments().forEach { paintSegment(it, bi) }
             paintScoreLabels(biGraphics)
 
             g.drawImage(bi, 0, 0, this)
@@ -150,11 +148,11 @@ open class PresentationDartboard(
 
     private fun defaultColourForSegment(segment: DartboardSegment): Color
     {
-        val default = getColourFromHashMap(segment, colourWrapper)
+        val default = colourWrapper.getColour(segment)
         val status = segmentStatuses ?: return default
         return when {
             status.scoringSegments.contains(segment) -> default
-            status.validSegments.contains(segment) -> getColourFromHashMap(segment, GREY_COLOUR_WRAPPER)
+            status.validSegments.contains(segment) -> GREY_COLOUR_WRAPPER.getColour(segment)
             else -> Color.BLACK
         }
     }

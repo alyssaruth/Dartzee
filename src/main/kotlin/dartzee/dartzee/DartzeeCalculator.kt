@@ -1,12 +1,12 @@
 package dartzee.dartzee
 
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
 import dartzee.core.util.allIndexed
 import dartzee.core.util.getAllPermutations
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.utils.getAllNonMissSegments
 
 abstract class AbstractDartzeeCalculator
@@ -47,8 +47,8 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
         val scoringSegments = rule.getScoringSegments(dartsSoFar, validSegments)
 
-        val validPixelPossibility = validCombinations.map { mapCombinationToProbability(it) }.sum()
-        val allProbabilities = allPossibilities.map { mapCombinationToProbability(it) }.sum()
+        val validPixelPossibility = validCombinations.sumOf { mapCombinationToProbability(it) }
+        val allProbabilities = allPossibilities.sumOf { mapCombinationToProbability(it) }
 
         return DartzeeRuleCalculationResult(scoringSegments,
             validSegments,
