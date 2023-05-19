@@ -21,7 +21,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     override val windowName = match.getMatchDesc()
 
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
-    private val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, *, PlayerState>>()
+    private val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, PlayerState>>()
 
     init
     {
@@ -37,9 +37,9 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         parent: AbstractDartsGameScreen,
         game: GameEntity,
         totalPlayers: Int
-    ): DartsGamePanel<*, *, PlayerState>
+    ): DartsGamePanel<*, PlayerState>
 
-    fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *, *>
+    fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *>
     {
         //Cache this screen in ScreenCache
         val gameId = game.rowId
@@ -122,7 +122,7 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     {
         val sourceTabbedPane = e.source as JTabbedPane
         val selectedTab = sourceTabbedPane.selectedComponent
-        if (selectedTab is DartsGamePanel<*, *, *>)
+        if (selectedTab is DartsGamePanel<*, *>)
         {
             val title = selectedTab.gameTitle
             setTitle(title)

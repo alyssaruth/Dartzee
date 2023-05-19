@@ -10,7 +10,7 @@ import dartzee.screen.ScreenCache
  */
 class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen()
 {
-    var gamePanel: DartsGamePanel<*, *, *> = DartsGamePanel.factory(this, game, totalPlayers)
+    var gamePanel: DartsGamePanel<*, *> = DartsGamePanel.factory(this, game, totalPlayers)
     override val windowName = gamePanel.gameTitle
 
     init

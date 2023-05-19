@@ -1,9 +1,17 @@
 package dartzee.utils
 
-import dartzee.game.GameLauncher
 import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.SimulationRunner
-import dartzee.dartzee.*
+import dartzee.dartzee.AbstractDartzeeCalculator
+import dartzee.dartzee.AbstractDartzeeRuleFactory
+import dartzee.dartzee.AbstractDartzeeSegmentFactory
+import dartzee.dartzee.AbstractDartzeeTemplateFactory
+import dartzee.dartzee.DartzeeAimCalculator
+import dartzee.dartzee.DartzeeCalculator
+import dartzee.dartzee.DartzeeRuleFactory
+import dartzee.dartzee.DartzeeSegmentFactory
+import dartzee.dartzee.DartzeeTemplateFactory
+import dartzee.game.GameLauncher
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory
@@ -14,7 +22,11 @@ import dartzee.screen.IPlayerImageSelector
 import dartzee.screen.PlayerImageDialog
 import dartzee.screen.ai.AISetupRuleFactory
 import dartzee.screen.ai.AbstractAISetupRuleFactory
-import dartzee.sync.*
+import dartzee.sync.AmazonS3RemoteDatabaseStore
+import dartzee.sync.IRemoteDatabaseStore
+import dartzee.sync.SYNC_BUCKET_NAME
+import dartzee.sync.SyncConfigurer
+import dartzee.sync.SyncManager
 import java.time.Clock
 
 object InjectedThings
@@ -23,7 +35,6 @@ object InjectedThings
     var databaseDirectory = DATABASE_FILE_PATH
     var mainDatabase: Database = Database()
     var dartzeeCalculator: AbstractDartzeeCalculator = DartzeeCalculator()
-    var dartboardSize = 400
     var preferencesDartboardSize = 450
     var dartzeeRuleFactory: AbstractDartzeeRuleFactory = DartzeeRuleFactory()
     var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()

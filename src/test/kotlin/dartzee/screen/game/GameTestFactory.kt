@@ -65,31 +65,31 @@ fun makeRoundTheClockGamePanel(pt: IWrappedParticipant) =
         insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()),
         1).apply { testInit(pt) }
 
-fun DartsGamePanel<*, *, *>.testInit(playerId: String)
+fun DartsGamePanel<*, *>.testInit(playerId: String)
 {
     val player = insertPlayer(playerId)
     val pt = makeSingleParticipant(player)
     startNewGame(listOf(pt))
 }
 
-fun DartsGamePanel<*, *, *>.testInit(pt: IWrappedParticipant)
+fun DartsGamePanel<*, *>.testInit(pt: IWrappedParticipant)
 {
     startNewGame(listOf(pt))
 }
 
-fun DartsGamePanel<*, *, *>.setDartsThrown(dartsThrown: List<Dart>)
+fun DartsGamePanel<*, *>.setDartsThrown(dartsThrown: List<Dart>)
 {
     btnReset.doClick()
     dartsThrown.forEach(::dartThrown)
 }
 
-fun DartsGamePanel<*, *, *>.addCompletedRound(dartsThrown: List<Dart>)
+fun DartsGamePanel<*, *>.addCompletedRound(dartsThrown: List<Dart>)
 {
     setDartsThrown(dartsThrown)
     btnConfirm.doClick()
 }
 
-fun DartsGamePanel<*, *, *>.doAiTurn(model: DartsAiModel)
+fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel)
 {
     val pt = computeAiDart(model) ?: return
     dartboard.dartThrown(pt)

@@ -1,14 +1,14 @@
  package dartzee.screen.game.scorer
 
-import dartzee.`object`.DartNotThrown
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.IWrappedParticipant
+import dartzee.`object`.DartNotThrown
 import dartzee.screen.game.GamePanelPausable
 import java.awt.BorderLayout
 
-class DartsScorerRoundTheClock(
-    parent: GamePanelPausable<*, *, *>,
+ class DartsScorerRoundTheClock(
+    parent: GamePanelPausable<*, *>,
     private val clockConfig: RoundTheClockConfig,
     participant: IWrappedParticipant) : AbstractDartsScorerPausable<ClockPlayerState>(parent, participant)
 {

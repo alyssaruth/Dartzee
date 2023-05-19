@@ -13,7 +13,6 @@ import dartzee.game.GameType
 import dartzee.game.state.DartzeePlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.`object`.Dart
-import dartzee.screen.dartzee.DartzeeDartboard
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.SegmentStatuses
@@ -27,7 +26,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
                        totalPlayers: Int,
                        private val dtos: List<DartzeeRuleDto>,
                        private val summaryPanel: DartzeeRuleSummaryPanel
-) : GamePanelFixedLength<DartsScorerDartzee, DartzeeDartboard, DartzeePlayerState>(parent, game, totalPlayers),
+) : GamePanelFixedLength<DartsScorerDartzee, DartzeePlayerState>(parent, game, totalPlayers),
     IDartzeeCarouselListener
 {
     override val totalRounds = dtos.size + 1
@@ -38,7 +37,6 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         summaryPanel.setCarouselListener(this)
     }
 
-    override fun factoryDartboard() = DartzeeDartboard(500, 500)
     override fun factoryState(pt: IWrappedParticipant) = DartzeePlayerState(pt)
 
     override fun computeAiDart(model: DartsAiModel) =

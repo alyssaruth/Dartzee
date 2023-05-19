@@ -10,14 +10,21 @@ import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getDartForSegment
+import java.awt.Component
 import java.awt.Dimension
+import java.awt.Point
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import javax.swing.JLayeredPane
 import javax.swing.SwingUtilities
 
-class GameplayDartboard : TempDartboardBase(), MouseListener
+const val LAYER_DARTS = 2
+const val LAYER_DODGY = 3
+const val LAYER_SLIDER = 4
+
+class GameplayDartboard : JLayeredPane(), MouseListener
 {
     private val dartboard = InteractiveDartboard()
     private val dartsThrown = mutableListOf<ComputedPoint>()
@@ -47,7 +54,7 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
         dartsThrown.forEach(::addDartLabel)
     }
 
-    override fun clearDarts()
+    fun clearDarts()
     {
         dartsThrown.clear()
         clearDartLabels()
@@ -56,12 +63,12 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
 
     private fun clearDartLabels() = getAllChildComponentsForType<DartLabel>().forEach { remove(it) }
 
-    override fun addDartboardListener(listener: DartboardListener)
+    fun addDartboardListener(listener: DartboardListener)
     {
         listeners.add(listener)
     }
 
-    override fun dartThrown(pt: ComputedPoint)
+    fun dartThrown(pt: ComputedPoint)
     {
         dartsThrown.add(pt)
 
@@ -80,21 +87,28 @@ class GameplayDartboard : TempDartboardBase(), MouseListener
         }
     }
 
-    override fun refreshValidSegments(segmentStatuses: SegmentStatuses?)
+    fun refreshValidSegments(segmentStatuses: SegmentStatuses?)
     {
         dartboard.updateSegmentStatus(segmentStatuses)
     }
 
-    override fun stopListening()
+    fun stopListening()
     {
         allowInteraction = false
         dartboard.stopInteraction()
     }
 
-    override fun ensureListening()
+    fun ensureListening()
     {
         allowInteraction = true
         dartboard.allowInteraction()
+    }
+
+    fun addOverlay(pt: Point, overlay: Component)
+    {
+        add(overlay)
+        setLayer(overlay, LAYER_SLIDER)
+        overlay.location = pt
     }
 
     override fun mouseReleased(arg0: MouseEvent)

@@ -220,9 +220,9 @@ private class FakeMatchScreen(match: DartsMatchEntity,
         return panel
     }
 
-    fun addGameToMatchOnEdt(gameEntity: GameEntity): DartsGamePanel<*, *, *>
+    fun addGameToMatchOnEdt(gameEntity: GameEntity): DartsGamePanel<*, *>
     {
-        var panel: DartsGamePanel<*, *, *>? = null
+        var panel: DartsGamePanel<*, *>? = null
         SwingUtilities.invokeAndWait {
             panel = addGameToMatch(gameEntity, 2)
         }

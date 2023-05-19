@@ -17,7 +17,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
     private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(),
     PlayerStateListener<PlayerState>
 {
-    private val gameTabs = CopyOnWriteArrayList<DartsGamePanel<*, *, PlayerState>>()
+    private val gameTabs = CopyOnWriteArrayList<DartsGamePanel<*, PlayerState>>()
 
     init
     {
@@ -54,7 +54,7 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
 
     override fun factoryScorer(participant: IWrappedParticipant) = MatchScorer(participant, match)
 
-    fun addGameTab(tab: DartsGamePanel<*, *, PlayerState>)
+    fun addGameTab(tab: DartsGamePanel<*, PlayerState>)
     {
         gameTabs.add(tab)
     }

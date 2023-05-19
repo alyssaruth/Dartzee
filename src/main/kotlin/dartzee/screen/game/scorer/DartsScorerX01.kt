@@ -1,15 +1,15 @@
 package dartzee.screen.game.scorer
 
 import dartzee.game.state.IWrappedParticipant
-import dartzee.`object`.CheckoutSuggester
 import dartzee.game.state.X01PlayerState
+import dartzee.`object`.CheckoutSuggester
 import dartzee.screen.game.GamePanelPausable
 import java.awt.BorderLayout
 import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 
-class DartsScorerX01(parent: GamePanelPausable<*, *, *>, gameParams: String, participant: IWrappedParticipant) :
+class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String, participant: IWrappedParticipant) :
     AbstractDartsScorerPausable<X01PlayerState>(parent, participant)
 {
     private val lblStartingScore = JLabel(gameParams)

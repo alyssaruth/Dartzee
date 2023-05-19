@@ -6,8 +6,8 @@ import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
+import dartzee.screen.GameplayDartboard
 import dartzee.utils.DartsColour
-import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.InjectedThings.dartzeeCalculator
 import java.awt.BorderLayout
 import java.awt.Color
@@ -24,7 +24,7 @@ import javax.swing.border.EmptyBorder
 
 class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
-    val dartboard = DartzeeDartboard(dartboardSize, dartboardSize)
+    val dartboard: GameplayDartboard = GameplayDartboard()
     val dartsThrown = mutableListOf<Dart>()
     private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false, null)
 
@@ -38,11 +38,8 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(400, 400)
 
-        dartboard.renderScoreLabels = true
-        dartboard.paintDartboard()
         dartboard.ensureListening()
         dartboard.addDartboardListener(this)
-        dartboard.renderDarts = true
         add(panelNorth, BorderLayout.NORTH)
         add(dartboard, BorderLayout.CENTER)
         add(lblCombinations, BorderLayout.SOUTH)

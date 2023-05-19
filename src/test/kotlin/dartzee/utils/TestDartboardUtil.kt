@@ -2,11 +2,7 @@ package dartzee.utils
 
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractRegistryTest
-import dartzee.makeTestDartboard
-import dartzee.`object`.ColourWrapper
-import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.SegmentType
-import dartzee.`object`.StatefulSegment
 import io.kotest.assertions.withClue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
@@ -166,33 +162,33 @@ class TestDartboardUtil : AbstractRegistryTest()
         resetCachedDartboardValues()
 
         //Bullseyes
-        assertSegment(Point(0, 0), SegmentType.DOUBLE, 25, 2, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(37, 0), SegmentType.DOUBLE, 25, 2, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(38, 0), SegmentType.OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
-        assertSegment(Point(48, 55), SegmentType.OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
-        assertSegment(Point(0, -93), SegmentType.OUTER_SINGLE, 25, 1, DartsColour.DARTBOARD_GREEN)
+        assertSegment(Point(0, 0), SegmentType.DOUBLE, 25, 2)
+        assertSegment(Point(37, 0), SegmentType.DOUBLE, 25, 2)
+        assertSegment(Point(38, 0), SegmentType.OUTER_SINGLE, 25, 1)
+        assertSegment(Point(48, 55), SegmentType.OUTER_SINGLE, 25, 1)
+        assertSegment(Point(0, -93), SegmentType.OUTER_SINGLE, 25, 1)
 
         //Boundary conditions for varying radius
-        assertSegment(Point(0, 94), SegmentType.INNER_SINGLE, 3, 1, DartsColour.DARTBOARD_BLACK)
-        assertSegment(Point(0, 581), SegmentType.INNER_SINGLE, 3, 1, DartsColour.DARTBOARD_BLACK)
-        assertSegment(Point(0, -582), SegmentType.TREBLE, 20, 3, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(0, -628), SegmentType.TREBLE, 20, 3, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(629, 0), SegmentType.OUTER_SINGLE, 6, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(-952, 0), SegmentType.OUTER_SINGLE, 11, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(953, 0), SegmentType.DOUBLE, 6, 2, DartsColour.DARTBOARD_GREEN)
-        assertSegment(Point(0, -999), SegmentType.DOUBLE, 20, 2, DartsColour.DARTBOARD_RED)
-        assertSegment(Point(0, -1000), SegmentType.MISS, 20, 0, Color.black)
-        assertSegment(Point(0, -1299), SegmentType.MISS, 20, 0, Color.black)
-        assertSegment(Point(0, -1300), SegmentType.MISSED_BOARD, 20, 0, DartsColour.TRANSPARENT)
+        assertSegment(Point(0, 94), SegmentType.INNER_SINGLE, 3, 1)
+        assertSegment(Point(0, 581), SegmentType.INNER_SINGLE, 3, 1)
+        assertSegment(Point(0, -582), SegmentType.TREBLE, 20, 3)
+        assertSegment(Point(0, -628), SegmentType.TREBLE, 20, 3)
+        assertSegment(Point(629, 0), SegmentType.OUTER_SINGLE, 6, 1)
+        assertSegment(Point(-952, 0), SegmentType.OUTER_SINGLE, 11, 1)
+        assertSegment(Point(953, 0), SegmentType.DOUBLE, 6, 2)
+        assertSegment(Point(0, -999), SegmentType.DOUBLE, 20, 2)
+        assertSegment(Point(0, -1000), SegmentType.MISS, 20, 0)
+        assertSegment(Point(0, -1299), SegmentType.MISS, 20, 0)
+        assertSegment(Point(0, -1300), SegmentType.MISSED_BOARD, 20, 0)
 
         //Test 45 degrees etc
-        assertSegment(Point(100, -100), SegmentType.INNER_SINGLE, 4, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(-100, -100), SegmentType.INNER_SINGLE, 9, 1, DartsColour.DARTBOARD_WHITE)
-        assertSegment(Point(-100, 100), SegmentType.INNER_SINGLE, 7, 1, DartsColour.DARTBOARD_BLACK)
-        assertSegment(Point(100, 100), SegmentType.INNER_SINGLE, 15, 1, DartsColour.DARTBOARD_WHITE)
+        assertSegment(Point(100, -100), SegmentType.INNER_SINGLE, 4, 1)
+        assertSegment(Point(-100, -100), SegmentType.INNER_SINGLE, 9, 1)
+        assertSegment(Point(-100, 100), SegmentType.INNER_SINGLE, 7, 1)
+        assertSegment(Point(100, 100), SegmentType.INNER_SINGLE, 15, 1)
     }
 
-    private fun assertSegment(pt: Point, segmentType: SegmentType, score: Int, multiplier: Int, expectedColor: Color)
+    private fun assertSegment(pt: Point, segmentType: SegmentType, score: Int, multiplier: Int)
     {
         val segment = factorySegmentForPoint(pt, Point(0, 0), 2000.0)
 
@@ -204,8 +200,6 @@ class TestDartboardUtil : AbstractRegistryTest()
         drt.score shouldBe score
         drt.multiplier shouldBe multiplier
         drt.segmentType shouldBe segmentType
-
-        assertColourForPointAndSegment(pt, StatefulSegment(segment.type, segment.score), null, expectedColor)
     }
 
     @Test
@@ -214,64 +208,7 @@ class TestDartboardUtil : AbstractRegistryTest()
         resetCachedDartboardValues()
         val pink = Color.pink
         PreferenceUtil.saveString(PREFERENCES_STRING_EVEN_SINGLE_COLOUR, DartsColour.toPrefStr(pink))
-        assertSegment(Point(0, -629), SegmentType.OUTER_SINGLE, 20, 1, pink)
-    }
-
-    @Test
-    fun testWireframe()
-    {
-        val wrapper = ColourWrapper(DartsColour.TRANSPARENT)
-        wrapper.edgeColour = Color.YELLOW
-
-        val fakeSegment = StatefulSegment(SegmentType.OUTER_SINGLE, 20)
-        for (x in 0..200)
-        {
-            for (y in 0..200)
-            {
-                fakeSegment.addPoint(Point(x, y))
-            }
-        }
-
-        fakeSegment.points.shouldHaveSize(40401)
-        fakeSegment.computeEdgePoints()
-
-        //Four corners and four edge mid-points
-        assertColourForPointAndSegment(Point(0, 0), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(0, 100), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(100, 0), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(0, 200), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(200, 0), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(200, 100), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(100, 200), fakeSegment, wrapper, Color.YELLOW)
-        assertColourForPointAndSegment(Point(200, 200), fakeSegment, wrapper, Color.YELLOW)
-
-        //Non-edge boundary cases
-        assertColourForPointAndSegment(Point(1, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(199, 1), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(1, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(199, 199), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-
-        //Another non-edge. Let's say we'll highlight this one, to check there's no NPE
-        assertColourForPointAndSegment(Point(100, 100), fakeSegment, wrapper, DartsColour.TRANSPARENT)
-
-        //Now assign this to be a "miss" segment. We should no longer get the wireframe, even for an edge
-        val missSegment = StatefulSegment(SegmentType.MISS, 20)
-        for (x in 0..200)
-        {
-            for (y in 0..200)
-            {
-                missSegment.addPoint(Point(x, y))
-            }
-        }
-
-        assertColourForPointAndSegment(Point(0, 0), missSegment, wrapper, DartsColour.TRANSPARENT)
-        assertColourForPointAndSegment(Point(1, 1), missSegment, wrapper, DartsColour.TRANSPARENT)
-    }
-
-    private fun assertColourForPointAndSegment(pt: Point, segment: StatefulSegment, wrapper: ColourWrapper?, expected: Color)
-    {
-        val color = getColourForPointAndSegment(pt, segment, wrapper)
-        color shouldBe expected
+        assertSegment(Point(0, -629), SegmentType.OUTER_SINGLE, 20, 1)
     }
 
     @Test
@@ -312,20 +249,5 @@ class TestDartboardUtil : AbstractRegistryTest()
     fun `Should return the right number of segments`()
     {
         getAllPossibleSegments().size shouldBe (20 * 6) + 2
-    }
-
-    @Test
-    fun `Should preserve the segment type when mapping between dartboards`()
-    {
-        val bigDartboard = ComputationalDartboard(200, 200)
-        val smallDartboard = makeTestDartboard(100, 100)
-
-        getPointList(200, 200).forEach { pt ->
-            val result = convertForDestinationDartboard(pt, bigDartboard, smallDartboard)
-
-            val bigSegment = bigDartboard.getSegmentForPoint(pt)
-            val smallSegment = smallDartboard.getDataSegmentForPoint(result)
-            bigSegment shouldBe smallSegment
-        }
     }
 }

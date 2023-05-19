@@ -2,7 +2,9 @@ package dartzee
 
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ComboBoxGameType
+import dartzee.bean.InteractiveDartboard
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
@@ -16,7 +18,7 @@ import dartzee.logging.Severity
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.screen.Dartboard
+import dartzee.screen.GameplayDartboard
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
@@ -56,15 +58,6 @@ val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:
         .withLocale(Locale.UK)
         .withZone(ZoneId.systemDefault())
         .format(CURRENT_TIME)
-
-fun makeTestDartboard(width: Int = 100, height: Int = 100)  = Dartboard(width, height).also { it.paintDartboard() }
-
-fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)
-
-fun Dartboard.doClick(x: Int, y: Int)
-{
-    dartboardLabel.doClick(x, y)
-}
 
 fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
                   severity: Severity = Severity.INFO,
@@ -163,3 +156,12 @@ fun PresentationDartboard.doClick(pt: Point) {
 
     flushEdt()
 }
+
+fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20))
+{
+    val interactiveDartboard = getChild<InteractiveDartboard>()
+    val pt = interactiveDartboard.getPointForSegment(segment)
+    interactiveDartboard.doClick(pt)
+}
+
+fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses
