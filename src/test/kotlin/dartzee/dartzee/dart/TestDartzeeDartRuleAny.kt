@@ -1,7 +1,7 @@
 package dartzee.dartzee.dart
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllSegmentsForDartzee
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -14,7 +14,7 @@ class TestDartzeeDartRuleAny: AbstractDartzeeRuleTest<DartzeeDartRuleAny>()
     {
         val rule = DartzeeDartRuleAny()
 
-        getAllPossibleSegments().forEach {
+        getAllSegmentsForDartzee().forEach {
             rule.isValidSegment(it) shouldBe true
         }
     }

@@ -3,7 +3,7 @@ package dartzee.game.state
 import dartzee.game.RoundTheClockConfig
 import dartzee.`object`.Dart
 import dartzee.screen.game.SegmentStatuses
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getLongestStreak
 
 data class ClockPlayerState(private val config: RoundTheClockConfig,
@@ -26,14 +26,14 @@ data class ClockPlayerState(private val config: RoundTheClockConfig,
 
     fun getSegmentStatus(): SegmentStatuses
     {
-        val scoringSegments = getAllPossibleSegments().filter { it.score == findCurrentTarget() }
+        val scoringSegments = getAllNonMissSegments().filter { it.score == findCurrentTarget() }
         val validSegments = if (!config.inOrder)
         {
-            getAllPossibleSegments().filterNot { hasHitTarget(it.score) || it.score == 25 }
+            getAllNonMissSegments().filterNot { hasHitTarget(it.score) || it.score == 25 }
         }
         else
         {
-            getAllPossibleSegments() - scoringSegments
+            getAllNonMissSegments() - scoringSegments
         }
 
         return SegmentStatuses(scoringSegments, validSegments)

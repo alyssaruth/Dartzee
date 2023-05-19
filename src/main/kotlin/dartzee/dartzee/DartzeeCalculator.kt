@@ -6,8 +6,7 @@ import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
-import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAllSegmentsForDartzee
 
 abstract class AbstractDartzeeCalculator
 {
@@ -120,15 +119,9 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return probabilities.reduce { acc, i -> acc * i }
     }
 
-    private fun getAllSegments(): List<DartboardSegment>
-    {
-        val segments = getAllNonMissSegments()
-        return segments + DartboardSegment(SegmentType.MISS, 20)
-    }
-
     private fun generateAllPossibilities(): List<List<DartboardSegment>>
     {
-        val segments = getAllSegments()
+        val segments = getAllSegmentsForDartzee()
 
         val allPossibilities: MutableList<List<DartboardSegment>> = mutableListOf()
         segments.forEach { s1 ->
@@ -150,7 +143,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
             return allPossibilities
         }
 
-        val segments = getAllSegments()
+        val segments = getAllSegmentsForDartzee()
         val segmentsSoFar = dartsSoFar.map { DartboardSegment(it.segmentType, it.score) }
 
         var allPossibilities: List<List<DartboardSegment>> = segments.map { segmentsSoFar + it }

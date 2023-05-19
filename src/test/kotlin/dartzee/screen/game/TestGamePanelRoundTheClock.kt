@@ -9,7 +9,7 @@ import dartzee.helper.randomGuid
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.Dart
 import dartzee.segmentStatuses
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
@@ -80,7 +80,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
     {
         val panel = makeRoundTheClockGamePanel()
         panel.readyForThrow()
-        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 1 })
+        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 })
     }
 
     @Test
@@ -88,7 +88,7 @@ class TestGamePanelRoundTheClock: AbstractTest()
     {
         val panel = makeRoundTheClockGamePanel()
         panel.dartThrown(Dart(1, 1))
-        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 2 })
+        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 2 })
     }
 
     /**
