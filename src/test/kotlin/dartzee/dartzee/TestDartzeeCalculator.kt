@@ -17,6 +17,7 @@ import dartzee.helper.makeScoreRule
 import dartzee.helper.makeTotalScoreRule
 import dartzee.missTwenty
 import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.outerBull
 import dartzee.singleEighteen
@@ -26,6 +27,7 @@ import dartzee.singleTen
 import dartzee.singleTwenty
 import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.doubles.shouldBeExactly
@@ -260,6 +262,19 @@ class TestValidSegments: AbstractTest()
         val thirdSegmentsWithHit = calculator.getValidSegments(rule, listOf(makeDart(19, 1), makeDart(20, 1)))
         thirdSegmentsWithHit.scoringSegments.shouldContainExactlyInAnyOrder(expectedScoringSegments)
         thirdSegmentsWithHit.validSegments.shouldContainExactlyInAnyOrder(expectedValidSegments)
+    }
+
+    @Test
+    fun `Should return a miss segment as valid if missing is an option`()
+    {
+        val totalRule = makeTotalScoreRule<DartzeeTotalRuleLessThan>(20)
+        val rule = makeDartzeeRuleDto(aggregateRule = totalRule, allowMisses = true)
+
+        val dartsSoFar = listOf(makeDart(15, 1), makeDart(4, 1))
+
+        val segments = DartzeeCalculator().getValidSegments(rule, dartsSoFar)
+        segments.validSegments.shouldContainExactly(DartboardSegment(SegmentType.MISS, 20))
+        segments.scoringSegments.shouldContainExactly(DartboardSegment(SegmentType.MISS, 20))
     }
 }
 
