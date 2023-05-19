@@ -38,11 +38,8 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(400, 400)
 
-        dartboard.renderScoreLabels = true
-        dartboard.paintDartboard()
         dartboard.ensureListening()
         dartboard.addDartboardListener(this)
-        dartboard.renderDarts = true
         add(panelNorth, BorderLayout.NORTH)
         add(dartboard, BorderLayout.CENTER)
         add(lblCombinations, BorderLayout.SOUTH)

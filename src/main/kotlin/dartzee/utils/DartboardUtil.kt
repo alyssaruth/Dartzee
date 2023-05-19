@@ -1,14 +1,10 @@
 package dartzee.utils
 
-import dartzee.ai.AI_DARTBOARD
 import dartzee.core.util.mapStepped
 import dartzee.`object`.ColourWrapper
-import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.`object`.StatefulSegment
-import dartzee.screen.Dartboard
 import java.awt.Canvas
 import java.awt.Color
 import java.awt.Font
@@ -152,32 +148,6 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): Da
     return DartboardSegment(type, score)
 }
 
-fun convertForUiDartboard(sourcePt: Point, destinationDartboard: Dartboard): Point =
-    convertForDestinationDartboard(sourcePt, AI_DARTBOARD, destinationDartboard)
-
-fun convertForDestinationDartboard(sourcePt: Point, sourceDartboard: ComputationalDartboard, destinationDartboard: Dartboard): Point =
-    convertForDestinationDartboard(sourcePt, sourceDartboard.computeCenter(), sourceDartboard.computeRadius() * 2.0, destinationDartboard)
-
-fun convertForDestinationDartboard(sourcePt: Point, oldCenter: Point, oldDiameter: Double, destinationDartboard: Dartboard): Point
-{
-    val relativeDistance = sourcePt.distance(oldCenter) / oldDiameter
-    val angle = getAngleForPoint(sourcePt, oldCenter)
-
-    val newPoint = translatePoint(destinationDartboard.centerPoint, relativeDistance * destinationDartboard.diameter, angle)
-    destinationDartboard.rationalisePoint(newPoint)
-
-    val desiredSegment = factorySegmentForPoint(sourcePt, oldCenter, oldDiameter)
-    val candidatePoints = mutableSetOf(newPoint)
-    while (candidatePoints.none { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment })
-    {
-        val neighbours = candidatePoints.flatMap(::getNeighbours)
-        neighbours.forEach(destinationDartboard::rationalisePoint)
-        candidatePoints.addAll(neighbours)
-    }
-
-    return candidatePoints.first { destinationDartboard.getDataSegmentForPoint(it) == desiredSegment }
-}
-
 /**
  * 1) Calculate the radius from the center to our point
  * 2) Using the diameter, work out whether this makes us a miss, single, double or treble
@@ -225,21 +195,6 @@ fun getPotentialAimPoints(centerPt: Point, diameter: Double): Set<AimPoint>
 
     points.add(AimPoint(centerPt, radius, 0, 0.0))
     return points.toSet()
-}
-
-fun getColourForPointAndSegment(pt: Point?, segment: StatefulSegment, colourWrapper: ColourWrapper?): Color
-{
-    val colourWrapperToUse = colourWrapper ?: getColourWrapperFromPrefs()
-
-    val edgeColour = colourWrapperToUse.edgeColour
-    if (edgeColour != null
-            && !segment.isMiss()
-            && segment.isEdgePoint(pt))
-    {
-        return edgeColour
-    }
-
-    return getColourFromHashMap(segment.toDataSegment(), colourWrapperToUse)
 }
 
 fun getColourForSegment(segment: DartboardSegment, colourWrapper: ColourWrapper?): Color

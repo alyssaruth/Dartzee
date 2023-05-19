@@ -18,7 +18,6 @@ import dartzee.logging.Severity
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.screen.Dartboard
 import dartzee.screen.GameplayDartboard
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
@@ -59,15 +58,6 @@ val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:
         .withLocale(Locale.UK)
         .withZone(ZoneId.systemDefault())
         .format(CURRENT_TIME)
-
-fun makeTestDartboard(width: Int = 100, height: Int = 100)  = Dartboard(width, height).also { it.paintDartboard() }
-
-fun Dartboard.getColor(pt: Point): Color = Color(dartboardImage!!.getRGB(pt.x, pt.y), true)
-
-fun Dartboard.doClick(x: Int, y: Int)
-{
-    dartboardLabel.doClick(x, y)
-}
 
 fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
                   severity: Severity = Severity.INFO,

@@ -21,7 +21,6 @@ import dartzee.game.state.SingleParticipant
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.screen.Dartboard
 import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getAllPossibleSegments
 import java.awt.BasicStroke
@@ -124,8 +123,6 @@ fun makeDartzeePlayerState(participant: ParticipantEntity = insertParticipant(),
 fun makeSegmentStatuses(scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),
                         validSegments: List<DartboardSegment> = scoringSegments)
  = SegmentStatuses(scoringSegments, validSegments)
-
-fun Dartboard.markPoints(points: List<Point>) = markPoints(dartboardImage!!, points)
 
 fun PresentationDartboard.markPoints(points: List<Point>) = markPoints(toBufferedImage(), points)
 

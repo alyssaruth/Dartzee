@@ -41,8 +41,6 @@ import java.awt.Dimension
 import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.sql.SQLException
@@ -51,7 +49,6 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JToggleButton
 import javax.swing.SwingConstants
-import javax.swing.SwingUtilities
 
 
 abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(
@@ -131,7 +128,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     {
         panelCenter.add(dartboard, BorderLayout.CENTER)
         dartboard.addDartboardListener(this)
-        dartboard.renderDarts = true
         panelCenter.add(panelSouth, BorderLayout.SOUTH)
         panelSouth.layout = BorderLayout(0, 0)
         slider.value = 1000
@@ -166,16 +162,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         btnSlider.addActionListener(this)
 
         addMouseListener(this)
-
-        dartboard.renderScoreLabels = true
-
-        addComponentListener(object : ComponentAdapter() {
-            override fun componentResized(evt: ComponentEvent) {
-                SwingUtilities.invokeLater {
-                    dartboard.paintDartboard()
-                }
-            }
-        })
     }
 
 
