@@ -43,7 +43,7 @@ import kotlin.system.exitProcess
  */
 object DartsDatabaseUtil
 {
-    const val DATABASE_VERSION = 21
+    const val DATABASE_VERSION = 22
     const val DATABASE_NAME = "Darts"
     const val OTHER_DATABASE_NAME = "DartsOther" //Tmp name used for restore from backup and/or sync
 
