@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ComboBoxGameType
+import dartzee.bean.InteractiveDartboard
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
@@ -164,6 +165,13 @@ fun PresentationDartboard.doClick(pt: Point) {
     }
 
     flushEdt()
+}
+
+fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20))
+{
+    val interactiveDartboard = getChild<InteractiveDartboard>()
+    val pt = interactiveDartboard.getPointForSegment(segment)
+    interactiveDartboard.doClick(pt)
 }
 
 fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses

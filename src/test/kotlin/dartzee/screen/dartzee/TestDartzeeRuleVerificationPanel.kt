@@ -1,7 +1,6 @@
 package dartzee.screen.dartzee
 
 import dartzee.dartzee.DartzeeCalculator
-import dartzee.doClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.getFakeValidSegment
 import dartzee.helper.makeDart
@@ -10,6 +9,8 @@ import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.makeScoreRule
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.segmentStatuses
+import dartzee.throwDartByClick
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllPossibleSegments
@@ -18,6 +19,8 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
+import java.awt.Dimension
+import javax.swing.JFrame
 
 class TestDartzeeRuleVerificationPanel: AbstractTest()
 {
@@ -30,7 +33,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(dto)
 
-        panel.dartboard.segmentStatuses!!.scoringSegments.shouldContainExactly(DartboardSegment(SegmentType.DOUBLE, 20))
+        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactly(DartboardSegment(SegmentType.DOUBLE, 20))
     }
 
     @Test
@@ -69,17 +72,17 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
 
         panel.updateRule(rule)
 
-        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(0))
+        dartboard.segmentStatuses()!!.validSegments.shouldContainExactly(getFakeValidSegment(0))
         panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
 
-        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(1))
+        dartboard.segmentStatuses()!!.validSegments.shouldContainExactly(getFakeValidSegment(1))
         panel.dartThrown(makeDart(2, 1, SegmentType.INNER_SINGLE))
 
-        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
+        dartboard.segmentStatuses()!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
         panel.dartThrown(makeDart(20, 2, SegmentType.DOUBLE))
 
         //Shouldn't update on the last dart thrown
-        dartboard.segmentStatuses!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
+        dartboard.segmentStatuses()!!.validSegments.shouldContainExactly(getFakeValidSegment(2))
     }
 
     @Test
@@ -174,23 +177,28 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
-        val panel  = DartzeeRuleVerificationPanel()
+        val panel = DartzeeRuleVerificationPanel()
+        val frame = JFrame()
+        frame.size = Dimension(500, 500)
+        frame.contentPane.add(panel)
+        frame.isVisible = true
+
         val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments()))
         panel.updateRule(rule)
 
-        panel.dartboard.doClick(20, 30)
-        panel.dartboard.doClick(30, 20)
-        panel.dartboard.doClick(40, 10)
+        panel.dartboard.throwDartByClick()
+        panel.dartboard.throwDartByClick()
+        panel.dartboard.throwDartByClick()
 
         panel.dartsThrown.size shouldBe 3
 
-        panel.dartboard.doClick(20, 30)
+        panel.dartboard.throwDartByClick()
         panel.dartsThrown.size shouldBe 3
 
         panel.btnReset.doClick()
         panel.dartsThrown.shouldBeEmpty()
 
-        panel.dartboard.doClick(20, y = 30)
+        panel.dartboard.throwDartByClick()
         panel.dartsThrown.size shouldBe 1
     }
 

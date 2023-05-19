@@ -15,6 +15,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.FakeDartsScreen
+import dartzee.throwDartByClick
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -131,14 +132,6 @@ class TestGameplayDartboard : AbstractTest()
         dartboard.setBounds(0, 0, 400, 400)
         flushEdt()
         dartboard.shouldMatchImage("darts-original-size")
-    }
-
-    private fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-    {
-        val interactiveDartboard = getChild<InteractiveDartboard>()
-        val pt = interactiveDartboard.getPointForSegment(segment)
-        interactiveDartboard.doClick(pt.x, pt.y)
-        flushEdt()
     }
 
     private fun factoryGameplayDartboard(): GameplayDartboard {
