@@ -134,9 +134,10 @@ open class PresentationDartboard(
 
     private fun repaintDirtySegments(cachedImage: BufferedImage)
     {
-        if (dirtySegments.isNotEmpty())
+        val dirtySegmentsCopy = dirtySegments.toList()
+        if (dirtySegmentsCopy.isNotEmpty())
         {
-            dirtySegments.forEach { paintSegment(it, cachedImage) }
+            dirtySegmentsCopy.forEach { paintSegment(it, cachedImage) }
             dirtySegments.clear()
         }
     }
