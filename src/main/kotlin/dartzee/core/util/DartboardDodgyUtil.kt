@@ -2,6 +2,7 @@ package dartzee.core.util
 
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
+import dartzee.screen.GameplayDartboard
 import dartzee.screen.LAYER_DODGY
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
@@ -15,9 +16,8 @@ import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 import javax.swing.ImageIcon
 import javax.swing.JLabel
-import javax.swing.JLayeredPane
 
-fun JLayeredPane.doChucklevision()
+fun GameplayDartboard.doChucklevision()
 {
     val rand = Random()
     val chuckleSound = rand.nextInt(3) + 1
@@ -25,7 +25,7 @@ fun JLayeredPane.doChucklevision()
     doDodgy(ResourceCache.IMG_CHUCKLE, 266, 279, "chucklevision$chuckleSound")
 }
 
-fun JLayeredPane.doFawlty()
+fun GameplayDartboard.doFawlty()
 {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
@@ -33,7 +33,7 @@ fun JLayeredPane.doFawlty()
     doDodgy(ResourceCache.IMG_BASIL, 576, 419, "basil$brucey")
 }
 
-fun JLayeredPane.doForsyth()
+fun GameplayDartboard.doForsyth()
 {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
@@ -41,7 +41,7 @@ fun JLayeredPane.doForsyth()
     doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "forsyth$brucey")
 }
 
-fun JLayeredPane.doBadLuck()
+fun GameplayDartboard.doBadLuck()
 {
     val rand = Random()
     val ix = rand.nextInt(2) + 1
@@ -49,12 +49,12 @@ fun JLayeredPane.doBadLuck()
     doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "badLuck$ix")
 }
 
-fun JLayeredPane.doBull()
+fun GameplayDartboard.doBull()
 {
     doDodgy(ResourceCache.IMG_DEV, 400, 476, "bull")
 }
 
-fun JLayeredPane.doBadMiss()
+fun GameplayDartboard.doBadMiss()
 {
     val rand = Random()
     val miss = rand.nextInt(5) + 1
@@ -70,12 +70,12 @@ fun JLayeredPane.doBadMiss()
     }
 }
 
-fun JLayeredPane.doGolfMiss()
+fun GameplayDartboard.doGolfMiss()
 {
     doDodgy(ResourceCache.IMG_DEV, 400, 476, "fourTrimmed")
 }
 
-private fun JLayeredPane.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
+private fun GameplayDartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
 {
     if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
     {
@@ -85,7 +85,7 @@ private fun JLayeredPane.doDodgy(ii: ImageIcon, width: Int, height: Int, soundNa
     runOnEventThread { doDodgyOnEdt(ii, width, height, soundName) }
 }
 
-private fun JLayeredPane.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, soundName: String)
+private fun GameplayDartboard.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, soundName: String)
 {
     removeDodgyLabels()
 
@@ -107,7 +107,7 @@ private fun JLayeredPane.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, so
     playDodgySound(soundName)
 }
 
-fun JLayeredPane.playDodgySound(soundName: String)
+fun GameplayDartboard.playDodgySound(soundName: String)
 {
     if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
     {
@@ -132,7 +132,7 @@ fun JLayeredPane.playDodgySound(soundName: String)
     }
 }
 
-private fun JLayeredPane.playDodgySoundCached(soundName: String)
+private fun GameplayDartboard.playDodgySoundCached(soundName: String)
 {
     val stream = ResourceCache.borrowInputStream(soundName) ?: return
 
@@ -141,9 +141,7 @@ private fun JLayeredPane.playDodgySoundCached(soundName: String)
     clip.start()
 }
 
-private var latestClip: Clip? = null
-
-private fun JLayeredPane.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip
+private fun GameplayDartboard.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip
 {
     val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
 
@@ -170,12 +168,12 @@ private fun JLayeredPane.initialiseAudioClip(stream: AudioInputStream, soundName
     return myClip
 }
 
-private fun JLayeredPane.resetDodgy() {
+private fun GameplayDartboard.resetDodgy() {
     removeDodgyLabels()
     repaint()
     revalidate()
 }
 
-private fun JLayeredPane.removeDodgyLabels() {
+private fun GameplayDartboard.removeDodgyLabels() {
     getAllChildComponentsForType<JLabel>().filter { it.name == "DodgyLabel" }.forEach(::remove)
 }
