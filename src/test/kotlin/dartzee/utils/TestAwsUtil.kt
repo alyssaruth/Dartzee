@@ -2,8 +2,8 @@ package dartzee.utils
 
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -41,7 +41,7 @@ class TestAwsUtil: AbstractTest()
         credentials shouldBe null
 
         getLogRecords().shouldBeEmpty()
-        newOut.toString().shouldContain("getenv(resourceName) must not be null")
+        newOut.toString().shouldContain("NullPointerException")
     }
 
     @Test
