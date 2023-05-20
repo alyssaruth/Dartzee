@@ -1,14 +1,14 @@
 package dartzee.game.state
 
-import dartzee.`object`.Dart
 import dartzee.game.ClockType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeClockPlayerState
 import dartzee.helper.makeDart
-import dartzee.utils.getAllPossibleSegments
+import dartzee.`object`.Dart
+import dartzee.utils.getAllNonMissSegments
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.Test
 
 class TestClockPlayerState: AbstractTest()
@@ -286,28 +286,28 @@ class TestClockPlayerState: AbstractTest()
     {
         val state = makeClockPlayerState(inOrder = true)
         val status = state.getSegmentStatus()
-        status.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 1 } )
-        status.validSegments.shouldContainExactly(getAllPossibleSegments().filterNot { it.score == 1 } )
+        status.scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 } )
+        status.validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 1 } )
 
         state.dartThrown(Dart(1, 1))
         val newStatus = state.getSegmentStatus()
-        newStatus.scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 2 } )
-        newStatus.validSegments.shouldContainExactly(getAllPossibleSegments().filterNot { it.score == 2 } )
+        newStatus.scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 2 } )
+        newStatus.validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 2 } )
     }
 
     @Test
     fun `Should report the correct segmentStatus for out of order mode`()
     {
         val state = makeClockPlayerState(inOrder = false)
-        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 1 })
-        state.getSegmentStatus().validSegments.shouldContainExactly(getAllPossibleSegments().filterNot { it.score == 25 })
+        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 })
+        state.getSegmentStatus().validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 25 })
 
         state.dartThrown(Dart(2, 1))
-        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 1 })
-        state.getSegmentStatus().validSegments.shouldContainExactly(getAllPossibleSegments().filterNot { it.score == 25 || it.score == 2 })
+        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 })
+        state.getSegmentStatus().validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 25 || it.score == 2 })
 
         state.dartThrown(Dart(1, 1))
-        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllPossibleSegments().filter { it.score == 3 })
-        state.getSegmentStatus().validSegments.shouldContainExactly(getAllPossibleSegments().filterNot { it.score == 25 || it.score == 2 || it.score == 1 })
+        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 3 })
+        state.getSegmentStatus().validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 25 || it.score == 2 || it.score == 1 })
     }
 }

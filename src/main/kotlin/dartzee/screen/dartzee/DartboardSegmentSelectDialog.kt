@@ -9,7 +9,6 @@ import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllNonMissSegments
-import dartzee.utils.getColourForSegment
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
@@ -89,12 +88,12 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
         if (selectedSegments.contains(segment))
         {
             selectedSegments.remove(segment)
-            dartboard.overrideSegmentColour(segment, DartsColour.COLOUR_PASTEL_BLUE)
+            dartboard.revertOverriddenSegmentColour(segment)
         }
         else
         {
             selectedSegments.add(segment)
-            val col = getColourForSegment(segment, DEFAULT_COLOUR_WRAPPER)
+            val col = DEFAULT_COLOUR_WRAPPER.getColour(segment)
             dartboard.overrideSegmentColour(segment, col)
         }
     }

@@ -23,7 +23,7 @@ import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
 import dartzee.utils.InjectedThings
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainExactly
@@ -156,8 +156,8 @@ class TestDartzeeRuleCarousel: AbstractTest()
         carousel.dartsThrown.shouldContainExactly(dartOne, dartTwo)
         carousel.getPendingRules().shouldContainExactly(scoreEighteens, totalIsFifty)
 
-        val allSegments = getAllPossibleSegments()
-        val eighteens = allSegments.filter { it.score == 18 && !it.isMiss() }
+        val allSegments = getAllNonMissSegments()
+        val eighteens = allSegments.filter { it.score == 18 }
         val allTwelves = allSegments.filter { it.getTotal() == 12 }
         carousel.getSegmentStatus().validSegments.shouldContainAll(eighteens + allTwelves)
     }
@@ -243,8 +243,8 @@ class TestDartzeeRuleCarousel: AbstractTest()
 
         carousel.getDisplayedRules().shouldContainExactly(scoreEighteens, totalIsFifty)
 
-        val allSegments = getAllPossibleSegments()
-        val eighteens = allSegments.filter { it.score == 18 && !it.isMiss() }
+        val allSegments = getAllNonMissSegments()
+        val eighteens = allSegments.filter { it.score == 18 }
         val allTwelves = allSegments.filter { it.getTotal() == 12 }
 
         val eighteensTile = carousel.getDisplayedTiles().find { it.dto == scoreEighteens }!!

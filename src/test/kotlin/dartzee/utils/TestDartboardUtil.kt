@@ -179,7 +179,6 @@ class TestDartboardUtil : AbstractRegistryTest()
         assertSegment(Point(0, -999), SegmentType.DOUBLE, 20, 2)
         assertSegment(Point(0, -1000), SegmentType.MISS, 20, 0)
         assertSegment(Point(0, -1299), SegmentType.MISS, 20, 0)
-        assertSegment(Point(0, -1300), SegmentType.MISSED_BOARD, 20, 0)
 
         //Test 45 degrees etc
         assertSegment(Point(100, -100), SegmentType.INNER_SINGLE, 4, 1)
@@ -248,6 +247,7 @@ class TestDartboardUtil : AbstractRegistryTest()
     @Test
     fun `Should return the right number of segments`()
     {
-        getAllPossibleSegments().size shouldBe (20 * 6) + 2
+        getAllPossibleSegments().size shouldBe (20 * 5) + 2
+        getAllNonMissSegments().size shouldBe (20 * 4) + 2
     }
 }

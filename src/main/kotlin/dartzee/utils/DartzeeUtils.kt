@@ -1,9 +1,11 @@
 package dartzee.utils
 
-import dartzee.`object`.Dart
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.EntityName
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
 import dartzee.utils.InjectedThings.mainDatabase
 import java.awt.Color
 import java.awt.Component
@@ -35,4 +37,10 @@ fun insertDartzeeRules(gameId: String, dartzeeDtos: List<DartzeeRuleDto>? = null
         val dao = dto.toEntity(ix + 1, EntityName.Game, gameId, database)
         dao.saveToDatabase()
     }
+}
+
+fun getAllSegmentsForDartzee(): List<DartboardSegment>
+{
+    val segments = getAllNonMissSegments()
+    return segments + DartboardSegment(SegmentType.MISS, 20)
 }

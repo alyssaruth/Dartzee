@@ -47,6 +47,7 @@ import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.segmentStatuses
 import dartzee.singleTwenty
 import dartzee.utils.InjectedThings
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.insertDartzeeRules
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -321,7 +322,7 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.completeTiles.shouldBeEmpty()
         carousel.pendingTiles.size shouldBe reducedRules.size
 
-        val expectedSegments = getAllPossibleSegments().filter { !it.isMiss() && !it.isDoubleExcludingBull() }
+        val expectedSegments = getAllNonMissSegments().filter { !it.isDoubleExcludingBull() }
         panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
@@ -452,7 +453,7 @@ class TestGamePanelDartzee: AbstractTest()
         val game = setUpDartzeeGameOnDatabase(1)
 
         val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
-        every { carousel.getSegmentStatus() } returns SegmentStatuses(listOf(singleTwenty), getAllPossibleSegments())
+        every { carousel.getSegmentStatus() } returns SegmentStatuses(listOf(singleTwenty), getAllNonMissSegments())
         every { carousel.initialised } returns true
 
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)

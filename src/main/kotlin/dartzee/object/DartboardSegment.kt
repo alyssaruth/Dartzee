@@ -16,7 +16,7 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
     /**
      * Helpers
      */
-    fun isMiss() = type == SegmentType.MISS || type == SegmentType.MISSED_BOARD
+    fun isMiss() = type == SegmentType.MISS
     fun isDoubleExcludingBull() = type == SegmentType.DOUBLE && score != 25
     fun getMultiplier() = type.getMultiplier()
     fun getTotal(): Int = score * getMultiplier()

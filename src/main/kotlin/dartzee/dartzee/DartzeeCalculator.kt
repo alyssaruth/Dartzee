@@ -1,13 +1,12 @@
 package dartzee.dartzee
 
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
 import dartzee.core.util.allIndexed
 import dartzee.core.util.getAllPermutations
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
-import dartzee.utils.getAllNonMissSegments
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
+import dartzee.utils.getAllSegmentsForDartzee
 
 abstract class AbstractDartzeeCalculator
 {
@@ -47,8 +46,8 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         val validSegments = validCombinations.map { it[dartsSoFar.size] }.distinct()
         val scoringSegments = rule.getScoringSegments(dartsSoFar, validSegments)
 
-        val validPixelPossibility = validCombinations.map { mapCombinationToProbability(it) }.sum()
-        val allProbabilities = allPossibilities.map { mapCombinationToProbability(it) }.sum()
+        val validPixelPossibility = validCombinations.sumOf { mapCombinationToProbability(it) }
+        val allProbabilities = allPossibilities.sumOf { mapCombinationToProbability(it) }
 
         return DartzeeRuleCalculationResult(scoringSegments,
             validSegments,
@@ -120,15 +119,9 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
         return probabilities.reduce { acc, i -> acc * i }
     }
 
-    private fun getAllSegments(): List<DartboardSegment>
-    {
-        val segments = getAllNonMissSegments()
-        return segments + DartboardSegment(SegmentType.MISS, 20)
-    }
-
     private fun generateAllPossibilities(): List<List<DartboardSegment>>
     {
-        val segments = getAllSegments()
+        val segments = getAllSegmentsForDartzee()
 
         val allPossibilities: MutableList<List<DartboardSegment>> = mutableListOf()
         segments.forEach { s1 ->
@@ -150,7 +143,7 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
             return allPossibilities
         }
 
-        val segments = getAllSegments()
+        val segments = getAllSegmentsForDartzee()
         val segmentsSoFar = dartsSoFar.map { DartboardSegment(it.segmentType, it.score) }
 
         var allPossibilities: List<List<DartboardSegment>> = segments.map { segmentsSoFar + it }

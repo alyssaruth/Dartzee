@@ -1,7 +1,13 @@
 package dartzee.dartzee.dart
 
-import dartzee.*
+import dartzee.bullseye
 import dartzee.dartzee.AbstractDartzeeRuleTest
+import dartzee.doubleTwenty
+import dartzee.innerSingle
+import dartzee.missTwenty
+import dartzee.outerBull
+import dartzee.outerSingle
+import dartzee.trebleNineteen
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -21,6 +27,5 @@ class TestDartzeeDartRuleOuter: AbstractDartzeeRuleTest<DartzeeDartRuleOuter>()
         rule.isValidSegment(outerSingle) shouldBe true
         rule.isValidSegment(doubleTwenty) shouldBe true
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
     }
 }

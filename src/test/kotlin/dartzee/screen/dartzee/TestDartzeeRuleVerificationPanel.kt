@@ -13,7 +13,7 @@ import dartzee.segmentStatuses
 import dartzee.throwDartByClick
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -183,7 +183,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
         frame.contentPane.add(panel)
         frame.isVisible = true
 
-        val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(getAllPossibleSegments()))
+        val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(getAllNonMissSegments()))
         panel.updateRule(rule)
 
         panel.dartboard.throwDartByClick()

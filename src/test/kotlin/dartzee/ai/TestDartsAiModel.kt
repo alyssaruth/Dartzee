@@ -10,7 +10,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.InjectedThings
-import dartzee.utils.getAllPossibleSegments
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getCheckoutScores
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.shouldBe
@@ -171,7 +171,7 @@ class TestDartsAiModel: AbstractTest()
 
         repeat(20) {
             val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatuses())
-            pt.segment shouldBe DartboardSegment(SegmentType.MISSED_BOARD, 3)
+            pt.segment shouldBe DartboardSegment(SegmentType.MISS, 3)
         }
     }
 
@@ -347,7 +347,7 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
 
-        val segmentStatuses = SegmentStatuses(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
+        val segmentStatuses = SegmentStatuses(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllNonMissSegments())
         val pt1 = model.throwDartzeeDart(0, segmentStatuses)
         pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
@@ -363,7 +363,7 @@ class TestDartsAiModel: AbstractTest()
     {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
 
-        val segmentStatuses = SegmentStatuses(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
+        val segmentStatuses = SegmentStatuses(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllNonMissSegments())
         val pt1 = model.throwDartzeeDart(0, segmentStatuses)
         pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
