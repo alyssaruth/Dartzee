@@ -17,6 +17,7 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import javax.sound.sampled.Clip
 import javax.swing.JLayeredPane
 import javax.swing.SwingUtilities
 
@@ -26,6 +27,8 @@ const val LAYER_SLIDER = 4
 
 class GameplayDartboard : JLayeredPane(), MouseListener
 {
+    var latestClip: Clip? = null
+
     private val dartboard = InteractiveDartboard()
     private val dartsThrown = mutableListOf<ComputedPoint>()
     private val listeners: MutableList<DartboardListener> = mutableListOf()
