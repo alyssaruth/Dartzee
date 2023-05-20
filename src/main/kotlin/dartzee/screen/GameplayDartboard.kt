@@ -27,7 +27,7 @@ const val LAYER_SLIDER = 4
 
 class GameplayDartboard : JLayeredPane(), MouseListener
 {
-    var GameplayDartboard.latestClip: Clip? = null
+    var latestClip: Clip? = null
 
     private val dartboard = InteractiveDartboard()
     private val dartsThrown = mutableListOf<ComputedPoint>()
