@@ -33,7 +33,6 @@ class BeforeAllTestsExtension: BeforeAllCallback
 
         InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
         InjectedThings.logger = logger
-        InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
         InjectedThings.connectionPoolSize = 1
 

@@ -35,7 +35,6 @@ object InjectedThings
     var databaseDirectory = DATABASE_FILE_PATH
     var mainDatabase: Database = Database()
     var dartzeeCalculator: AbstractDartzeeCalculator = DartzeeCalculator()
-    var preferencesDartboardSize = 450
     var dartzeeRuleFactory: AbstractDartzeeRuleFactory = DartzeeRuleFactory()
     var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
