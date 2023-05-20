@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.toBufferedImage
 import dartzee.bean.PresentationDartboard
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.utils.DartsColour
 import dartzee.utils.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR
 import dartzee.utils.PREFERENCES_STRING_EVEN_SINGLE_COLOUR
@@ -25,13 +26,16 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
     fun `Dartboard should refresh when settings are changed`()
     {
         val frame = JFrame()
-        frame.size = Dimension(800, 600)
-        frame.layout = BorderLayout(0, 0)
-
         val panel = PreferencesPanelDartboard()
-        panel.refresh(true)
-        frame.add(panel, BorderLayout.CENTER)
-        frame.isVisible = true
+
+        runOnEventThreadBlocking {
+            frame.size = Dimension(800, 600)
+            frame.layout = BorderLayout(0, 0)
+
+            panel.refresh(true)
+            frame.add(panel, BorderLayout.CENTER)
+            frame.isVisible = true
+        }
 
         verifyDartboardCenterColour(panel, Color.RED)
 
