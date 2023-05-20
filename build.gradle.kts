@@ -81,6 +81,14 @@ task<JavaExec>("runDev") {
     })
 }
 
+kover {
+    filters {
+        classes {
+            excludes.add("dartzee.screen.TestWindow")
+        }
+    }
+}
+
 task<Test>("unitTest") {
     group = "verification"
     useJUnitPlatform {
