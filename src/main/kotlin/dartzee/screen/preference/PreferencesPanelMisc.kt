@@ -3,7 +3,12 @@ package dartzee.screen.preference
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.bean.NumberField
 import dartzee.core.util.setFontSize
-import dartzee.utils.*
+import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
+import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
+import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
+import dartzee.utils.PREFERENCES_INT_AI_SPEED
+import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
+import dartzee.utils.PreferenceUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent

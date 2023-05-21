@@ -10,9 +10,7 @@ import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getDartForSegment
-import java.awt.Component
 import java.awt.Dimension
-import java.awt.Point
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
@@ -23,7 +21,6 @@ import javax.swing.SwingUtilities
 
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
-const val LAYER_SLIDER = 4
 
 class GameplayDartboard : JLayeredPane(), MouseListener
 {
@@ -105,13 +102,6 @@ class GameplayDartboard : JLayeredPane(), MouseListener
     {
         allowInteraction = true
         dartboard.allowInteraction()
-    }
-
-    fun addOverlay(pt: Point, overlay: Component)
-    {
-        add(overlay)
-        setLayer(overlay, LAYER_SLIDER)
-        overlay.location = pt
     }
 
     override fun mouseReleased(arg0: MouseEvent)
