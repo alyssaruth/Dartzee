@@ -31,10 +31,11 @@ fun runReport(rp: ReportParameters?): List<ReportResultWrapper>
 fun buildBasicSqlStatement(): String
 {
     val sb = StringBuilder()
-    sb.append("SELECT g.RowId, g.LocalId, g.GameType, g.GameParams, g.DtCreation, g.DtFinish, p.Name, pt.FinishingPosition, g.DartsMatchId, g.MatchOrdinal, ")
+    sb.append("SELECT g.RowId, g.LocalId, g.GameType, g.GameParams, g.DtCreation, g.DtFinish, p.Name, pt.FinishingPosition, g.DartsMatchId, g.MatchOrdinal, dt.Name AS TemplateName,")
     sb.append(" CASE WHEN m.LocalId IS NULL THEN -1 ELSE m.LocalId END AS LocalMatchId")
     sb.append(" FROM Participant pt, Player p, Game g")
     sb.append(" LEFT OUTER JOIN DartsMatch m ON (g.DartsMatchId = m.RowId)")
+    sb.append(" LEFT OUTER JOIN DartzeeTemplate dt ON (g.GameType = '${GameType.DARTZEE}' AND g.GameParams = dt.RowId)")
     sb.append(" WHERE pt.GameId = g.RowId")
     sb.append(" AND pt.PlayerId = p.RowId")
 
@@ -47,13 +48,14 @@ data class ReportResultWrapper(val localId: Long,
                                val dtStart: Timestamp,
                                val dtFinish: Timestamp,
                                val localMatchId: Long,
-                               val matchOrdinal: Int)
+                               val matchOrdinal: Int,
+                               val templateName: String?)
 {
     private val participants = mutableListOf<ParticipantWrapper>()
 
     fun getTableRow(): Array<Any>
     {
-        val gameTypeDesc = gameType.getDescription(gameParams)
+        val gameTypeDesc = templateName?.let { "Dartzee - $templateName" } ?: gameType.getDescription(gameParams)
         val playerDesc = getPlayerDesc()
 
         var matchDesc = ""
@@ -88,8 +90,9 @@ data class ReportResultWrapper(val localId: Long,
             val dtFinish = rs.getTimestamp("DtFinish")
             val localMatchId = rs.getLong("LocalMatchId")
             val matchOrdinal = rs.getInt("MatchOrdinal")
+            val templateName = rs.getString("TemplateName")
 
-            return ReportResultWrapper(localId, gameType, gameParams, dtStart, dtFinish, localMatchId, matchOrdinal)
+            return ReportResultWrapper(localId, gameType, gameParams, dtStart, dtFinish, localMatchId, matchOrdinal, templateName)
         }
 
         fun getTableRowsFromWrappers(wrappers: List<ReportResultWrapper>) = wrappers.map { it.getTableRow() }
