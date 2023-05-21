@@ -90,5 +90,4 @@ class TestReportingSqlUtil: AbstractTest()
         rows[1] shouldBe arrayOf(dartzeeGameStandalone.localId, "Dartzee", "Bob (-)", dartzeeGameStandalone.dtCreation, dartzeeGameStandalone.dtFinish, "")
         rows[2] shouldBe arrayOf(x01Game.localId, "501", "Clive (-)", x01Game.dtCreation, x01Game.dtFinish, "")
     }
-
 }
