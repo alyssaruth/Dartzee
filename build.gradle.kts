@@ -113,6 +113,8 @@ task<Test>("integrationAndE2E") {
 }
 
 tasks.withType<Test> {
+    useJUnitPlatform()
+
     minHeapSize = "1024m"
     maxHeapSize = "1024m"
 

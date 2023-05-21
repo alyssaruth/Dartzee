@@ -2,7 +2,13 @@ package dartzee.reporting
 
 import dartzee.core.util.getSqlDateNow
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertDartzeeTemplate
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertPlayerForGame
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -48,14 +54,11 @@ class TestReportingSqlUtil: AbstractTest()
     @Test
     fun `Should separate participants into the correct rows`()
     {
-        val alice = insertPlayer(name = "Alice")
-        val bob = insertPlayer(name = "Bob")
-
         val gAlice = insertGame()
-        insertParticipant(gameId = gAlice.rowId, playerId = alice.rowId, finishingPosition = -1)
+        insertPlayerForGame("Alice", gAlice.rowId)
 
         val gBob = insertGame(dtFinish = getSqlDateNow())
-        insertParticipant(gameId = gBob.rowId, playerId = bob.rowId)
+        insertPlayerForGame("Bob", gBob.rowId)
 
         val results = runReport(ReportParameters())
         results.size shouldBe 2
@@ -64,4 +67,28 @@ class TestReportingSqlUtil: AbstractTest()
         rows[0] shouldBe arrayOf(gAlice.localId, "501", "Alice (-)", gAlice.dtCreation, gAlice.dtFinish, "")
         rows[1] shouldBe arrayOf(gBob.localId, "501", "Bob (-)", gBob.dtCreation, gBob.dtFinish, "")
     }
+
+    @Test
+    fun `Should retrieve Dartzee template names when appropriate`()
+    {
+        val template = insertDartzeeTemplate(name = "BTBF's House Party")
+        val dartzeeGameWithTemplate = insertGame(gameType = GameType.DARTZEE, gameParams = template.rowId)
+        val dartzeeGameStandalone = insertGame(gameType = GameType.DARTZEE, gameParams = "")
+        val x01Game = insertGame(gameType = GameType.X01, gameParams = "501")
+
+        insertPlayerForGame("Alice", dartzeeGameWithTemplate.rowId)
+        insertPlayerForGame("Bob", dartzeeGameStandalone.rowId)
+        insertPlayerForGame("Clive", x01Game.rowId)
+
+        val results = runReport(ReportParameters())
+        results.first { it.localId == 1L }.templateName shouldBe "BTBF's House Party"
+        results.first { it.localId == 2L }.templateName shouldBe null
+        results.first { it.localId == 3L }.templateName shouldBe null
+
+        val rows = ReportResultWrapper.getTableRowsFromWrappers(results)
+        rows[0] shouldBe arrayOf(dartzeeGameWithTemplate.localId, "Dartzee - BTBF's House Party", "Alice (-)", dartzeeGameWithTemplate.dtCreation, dartzeeGameWithTemplate.dtFinish, "")
+        rows[1] shouldBe arrayOf(dartzeeGameStandalone.localId, "Dartzee", "Bob (-)", dartzeeGameStandalone.dtCreation, dartzeeGameStandalone.dtFinish, "")
+        rows[2] shouldBe arrayOf(x01Game.localId, "501", "Clive (-)", x01Game.dtCreation, x01Game.dtFinish, "")
+    }
+
 }
