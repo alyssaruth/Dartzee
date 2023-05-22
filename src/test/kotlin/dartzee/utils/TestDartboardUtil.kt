@@ -129,7 +129,7 @@ class TestDartboardUtil : AbstractRegistryTest()
 
         val missedPoints = allPointsInCircle - allPointsInSegments
         missedPoints.forEach {
-            println("$it: ${factorySegmentForPoint(it, centre, radius * 2.0)}")
+            println("$it: ${factorySegmentForPoint(it, centre, radius.toDouble())}")
         }
         missedPoints.shouldBeEmpty()
     }
@@ -145,7 +145,7 @@ class TestDartboardUtil : AbstractRegistryTest()
             val pts = computePointsForSegment(segment, centre, radius)
 
             pts.forEach { pt ->
-                val calculatedSegment = factorySegmentForPoint(pt, centre, radius * 2)
+                val calculatedSegment = factorySegmentForPoint(pt, centre, radius)
 
                 withClue("$pt should produce the same segment as $segment") {
                     calculatedSegment shouldBe segment
@@ -189,7 +189,7 @@ class TestDartboardUtil : AbstractRegistryTest()
 
     private fun assertSegment(pt: Point, segmentType: SegmentType, score: Int, multiplier: Int)
     {
-        val segment = factorySegmentForPoint(pt, Point(0, 0), 2000.0)
+        val segment = factorySegmentForPoint(pt, Point(0, 0), 1000.0)
 
         val segmentStr = "" + segment
         segmentStr shouldBe "$score ($segmentType)"

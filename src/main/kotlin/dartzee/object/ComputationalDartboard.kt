@@ -21,7 +21,7 @@ class ComputationalDartboard(private val width: Int, private val height: Int): I
 
     fun getPointToAimAt(segment: DartboardSegment) = hmSegmentToCenterPoint.getValue(segment)
 
-    fun getPotentialAimPoints() = getPotentialAimPoints(computeCenter(), 2 * computeRadius())
+    fun getPotentialAimPoints() = getPotentialAimPoints(computeCenter(), computeRadius())
 
     private fun constructCenterPointMap() =
         getAllNonMissSegments().associateWith {
