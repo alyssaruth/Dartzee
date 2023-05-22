@@ -15,7 +15,7 @@ interface IDartboard
     fun getPointsForSegment(segment: DartboardSegment) = computePointsForSegment(segment, computeCenter(), computeRadius())
 
     fun isDouble(pt: Point) = getSegmentForPoint(pt).isDoubleExcludingBull()
-    fun getSegmentForPoint(pt: Point) = factorySegmentForPoint(pt, computeCenter(), computeRadius() * 2)
+    fun getSegmentForPoint(pt: Point) = factorySegmentForPoint(pt, computeCenter(), computeRadius())
 
     fun translateAimPoint(aimPoint: AimPoint) = AimPoint(computeCenter(), computeRadius(), aimPoint.angle, aimPoint.ratio).point
 

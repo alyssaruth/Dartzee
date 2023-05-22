@@ -80,7 +80,7 @@ private fun generateSegment(segment: DartboardSegment, centre: Point, radius: Do
         }
     }.flatten().toSet()
 
-    return allPts.filter { factorySegmentForPoint(it, centre, radius * 2) == segment }.toSet()
+    return allPts.filter { factorySegmentForPoint(it, centre, radius) == segment }.toSet()
 }
 
 
@@ -126,10 +126,10 @@ private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
     }
 }
 
-fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): DartboardSegment
+fun factorySegmentForPoint(dartPt: Point, centerPt: Point, radius: Double): DartboardSegment
 {
-    val radius = dartPt.distance(centerPt)
-    val ratio = 2 * radius / diameter
+    val distance = dartPt.distance(centerPt)
+    val ratio = distance / radius
 
     if (ratio < RATIO_INNER_BULL)
     {
@@ -150,15 +150,15 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, diameter: Double): Da
 
 /**
  * 1) Calculate the radius from the center to our point
- * 2) Using the diameter, work out whether this makes us a miss, single, double or treble
+ * 2) Using the radius, work out whether this makes us a miss, single, double or treble
  */
-private fun calculateTypeForRatioNonBullseye(ratioToDiameter: Double) =
+private fun calculateTypeForRatioNonBullseye(ratioToRadius: Double) =
     when
     {
-        ratioToDiameter < LOWER_BOUND_TRIPLE_RATIO -> SegmentType.INNER_SINGLE
-        ratioToDiameter < UPPER_BOUND_TRIPLE_RATIO -> SegmentType.TREBLE
-        ratioToDiameter < LOWER_BOUND_DOUBLE_RATIO -> SegmentType.OUTER_SINGLE
-        ratioToDiameter < UPPER_BOUND_DOUBLE_RATIO -> SegmentType.DOUBLE
+        ratioToRadius < LOWER_BOUND_TRIPLE_RATIO -> SegmentType.INNER_SINGLE
+        ratioToRadius < UPPER_BOUND_TRIPLE_RATIO -> SegmentType.TREBLE
+        ratioToRadius < LOWER_BOUND_DOUBLE_RATIO -> SegmentType.OUTER_SINGLE
+        ratioToRadius < UPPER_BOUND_DOUBLE_RATIO -> SegmentType.DOUBLE
         else -> SegmentType.MISS
     }
 
@@ -179,10 +179,8 @@ data class AimPoint(val centerPoint: Point, val radius: Double, val angle: Int, 
 {
     val point = translatePoint(centerPoint, radius * ratio, angle.toDouble())
 }
-fun getPotentialAimPoints(centerPt: Point, diameter: Double): Set<AimPoint>
+fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint>
 {
-    val radius = diameter / 2
-
     val points = mutableSetOf<AimPoint>()
     for (angle in 0 until 360 step 9)
     {
