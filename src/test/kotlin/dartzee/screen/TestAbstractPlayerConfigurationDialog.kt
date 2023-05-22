@@ -1,5 +1,7 @@
 package dartzee.screen
 
+import com.github.alyssaburlton.swingtest.getChild
+import dartzee.bean.PlayerAvatar
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
@@ -7,42 +9,60 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
-import io.mockk.impl.annotations.SpyK
-import io.mockk.spyk
+import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import javax.swing.JTextField
 
 class TestAbstractPlayerConfigurationDialog: AbstractTest()
 {
     @Test
     fun `Should not allow an empty player name, and should not call save with a validation error`()
     {
-        val dlg = spyk<DummyPlayerConfigurationDialog>()
+        val callback = mockCallback()
+        val dlg = DummyPlayerConfigurationDialog(callback)
 
         dlg.btnOk.doClick()
 
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
-        verifyNotCalled { dlg.savePlayer() }
+        verifyNotCalled { callback(any()) }
     }
 
     @Test
     fun `Should call save for a valid player`()
     {
-        val dlg = spyk<DummyPlayerConfigurationDialog>()
-        dlg.textFieldName.text = "Clive"
-        dlg.avatar.avatarId = randomGuid()
+        val callback = mockCallback()
+        val dlg = DummyPlayerConfigurationDialog(callback)
+        dlg.getChild<JTextField>("nameField").text = "Clive"
+        dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
 
         dlg.btnOk.doClick()
 
         dialogFactory.errorsShown.shouldBeEmpty()
-        verify { dlg.savePlayer() }
+        verify { callback(any()) }
+    }
+
+    @Test
+    fun `Should call save with the player originally passed`()
+    {
+        val player = insertPlayer()
+
+        val callback = mockCallback()
+        val dlg = DummyPlayerConfigurationDialog(callback, player)
+        dlg.getChild<JTextField>("nameField").text = "Clive"
+        dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
+
+        dlg.btnOk.doClick()
+
+        dialogFactory.errorsShown.shouldBeEmpty()
+        verify { callback(player) }
     }
 
     @Test
     fun `Should not allow a name with fewer than 3 characters`()
     {
         val dlg = DummyPlayerConfigurationDialog()
-        dlg.textFieldName.text = "AA"
+        dlg.getChild<JTextField>("nameField").text = "AA"
 
         dlg.btnOk.doClick()
 
@@ -53,7 +73,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
     fun `Should not allow a name with more than 25 characters`()
     {
         val dlg = DummyPlayerConfigurationDialog()
-        dlg.textFieldName.text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        dlg.getChild<JTextField>("nameField").text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
         dlg.btnOk.doClick()
 
@@ -66,7 +86,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         insertPlayer(name = "Barry")
 
         val dlg = DummyPlayerConfigurationDialog()
-        dlg.textFieldName.text = "Barry"
+        dlg.getChild<JTextField>("nameField").text = "Barry"
 
         dlg.btnOk.doClick()
         dialogFactory.errorsShown.shouldContainExactly("A player with the name Barry already exists.")
@@ -77,9 +97,9 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
     {
         val p = insertPlayer(name = "Barry")
 
-        val dlg = DummyPlayerConfigurationDialog(p)
-        dlg.textFieldName.text = p.name
-        dlg.avatar.avatarId = p.playerImageId
+        val dlg = DummyPlayerConfigurationDialog(mockk(), p)
+        dlg.getChild<JTextField>("nameField").text = p.name
+        dlg.getChild<PlayerAvatar>().avatarId = p.playerImageId
 
         dlg.btnOk.doClick()
 
@@ -90,16 +110,24 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
     fun `Should not allow a player with no avatar`()
     {
         val dlg = DummyPlayerConfigurationDialog()
-        dlg.textFieldName.text = "Derek"
+        dlg.getChild<JTextField>("nameField").text = "Derek"
 
         dlg.btnOk.doClick()
 
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
     }
 
-    class DummyPlayerConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate()): AbstractPlayerConfigurationDialog(player)
+    private fun mockCallback() = mockk<(player: PlayerEntity) -> Unit>(relaxed = true)
+
+    class DummyPlayerConfigurationDialog(callback: (player: PlayerEntity) -> Unit = mockk(), player: PlayerEntity = PlayerEntity.factoryCreate()) :
+        AbstractPlayerConfigurationDialog(callback, player)
     {
-        @SpyK
+        init
+        {
+            add(avatar)
+            add(textFieldName)
+        }
+
         override fun savePlayer() {}
     }
 }

@@ -1,19 +1,23 @@
 package dartzee.screen
 
+import com.github.alyssaburlton.swingtest.getChild
+import dartzee.bean.PlayerAvatar
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.randomGuid
 import io.kotest.matchers.shouldBe
+import io.mockk.mockk
 import org.junit.jupiter.api.Test
+import javax.swing.JTextField
 
 class TestHumanConfigurationDialog: AbstractTest()
 {
     @Test
     fun `Should be modal and non-resizable`()
     {
-        val dlg = HumanConfigurationDialog()
+        val dlg = HumanConfigurationDialog(mockk())
         dlg.isModal shouldBe true
         dlg.isResizable shouldBe false
     }
@@ -21,10 +25,10 @@ class TestHumanConfigurationDialog: AbstractTest()
     @Test
     fun `Should start with correct state for new player`()
     {
-        val dlg = HumanConfigurationDialog()
-        dlg.textFieldName.text shouldBe ""
-        dlg.avatar.avatarId shouldBe ""
-        dlg.avatar.readOnly shouldBe false
+        val dlg = HumanConfigurationDialog(mockk())
+        dlg.getChild<JTextField>("nameField").text shouldBe ""
+        dlg.getChild<PlayerAvatar>().avatarId shouldBe ""
+        dlg.getChild<PlayerAvatar>().readOnly shouldBe false
         dlg.title shouldBe "New Player"
     }
 
@@ -34,10 +38,10 @@ class TestHumanConfigurationDialog: AbstractTest()
         val avatar = insertPlayerImage()
         val player = insertPlayer(name = "Bongo", playerImageId = avatar.rowId)
 
-        val dlg = HumanConfigurationDialog(player)
-        dlg.textFieldName.text shouldBe "Bongo"
-        dlg.avatar.avatarId shouldBe avatar.rowId
-        dlg.avatar.readOnly shouldBe true
+        val dlg = HumanConfigurationDialog(mockk(), player)
+        dlg.getChild<JTextField>("nameField").text shouldBe "Bongo"
+        dlg.getChild<PlayerAvatar>().avatarId shouldBe avatar.rowId
+        dlg.getChild<PlayerAvatar>().readOnly shouldBe true
         dlg.title shouldBe "Amend Player"
     }
 
@@ -46,9 +50,9 @@ class TestHumanConfigurationDialog: AbstractTest()
     {
         val avatarId = randomGuid()
 
-        val dlg = HumanConfigurationDialog()
-        dlg.textFieldName.text = "Barry"
-        dlg.avatar.avatarId = avatarId
+        val dlg = HumanConfigurationDialog(mockk())
+        dlg.getChild<JTextField>("nameField").text = "Barry"
+        dlg.getChild<PlayerAvatar>().avatarId = avatarId
         dlg.btnOk.doClick()
 
         val player = PlayerEntity.retrieveForName("Barry")!!
@@ -63,9 +67,9 @@ class TestHumanConfigurationDialog: AbstractTest()
         val newAvatar = insertPlayerImage()
         val player = insertPlayer(name = "Alex", playerImageId = oldAvatar.rowId)
 
-        val dlg = HumanConfigurationDialog(player)
-        dlg.textFieldName.text = "Alyssa"
-        dlg.avatar.avatarId = newAvatar.rowId
+        val dlg = HumanConfigurationDialog(mockk(), player)
+        dlg.getChild<JTextField>("nameField").text = "Alyssa"
+        dlg.getChild<PlayerAvatar>().avatarId = newAvatar.rowId
         dlg.btnOk.doClick()
 
         val updatedPlayer = PlayerEntity().retrieveForId(player.rowId)!!

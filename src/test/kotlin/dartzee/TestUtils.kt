@@ -27,6 +27,7 @@ import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
+import java.awt.Window
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -164,3 +165,8 @@ fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegm
 }
 
 fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses
+
+/**
+ * Add to swing-test
+ */
+inline fun <reified W : Window> findWindow(fn: (window: W) -> Boolean = { true }): W? = Window.getWindows().find { it is W && fn(it) } as? W
