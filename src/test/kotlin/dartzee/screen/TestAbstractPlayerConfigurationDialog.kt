@@ -109,7 +109,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
     {
         val p = insertPlayer(name = "Barry")
 
-        val dlg = DummyPlayerConfigurationDialog(mockk(), p)
+        val dlg = DummyPlayerConfigurationDialog(mockCallback(), p)
         dlg.getChild<JTextField>("nameField").text = p.name
         dlg.getChild<PlayerAvatar>().avatarId = p.playerImageId
 
@@ -131,7 +131,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
 
     private fun mockCallback() = mockk<(player: PlayerEntity) -> Unit>(relaxed = true)
 
-    class DummyPlayerConfigurationDialog(callback: (player: PlayerEntity) -> Unit = mockk(), player: PlayerEntity = PlayerEntity.factoryCreate()) :
+    class DummyPlayerConfigurationDialog(callback: (player: PlayerEntity) -> Unit = mockk(relaxed = true), player: PlayerEntity = PlayerEntity.factoryCreate()) :
         AbstractPlayerConfigurationDialog(callback, player)
     {
         init

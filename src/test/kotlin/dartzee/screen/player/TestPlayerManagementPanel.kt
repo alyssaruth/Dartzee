@@ -248,7 +248,7 @@ class TestPlayerManagementPanel: AbstractTest()
     @Test
     fun `Should run a simulation for a player`()
     {
-        val player = insertPlayer(strategy = "foo")
+        val player = insertPlayer(makeDartsModel())
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)

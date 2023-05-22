@@ -9,19 +9,12 @@ import dartzee.helper.insertPlayerImage
 import dartzee.helper.randomGuid
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import javax.swing.JTextField
 
 class TestHumanConfigurationDialog: AbstractTest()
 {
-    @Test
-    fun `Should be modal and non-resizable`()
-    {
-        val dlg = HumanConfigurationDialog(mockk())
-        dlg.isModal shouldBe true
-        dlg.isResizable shouldBe false
-    }
-
     @Test
     fun `Should start with correct state for new player`()
     {
@@ -50,7 +43,7 @@ class TestHumanConfigurationDialog: AbstractTest()
     {
         val avatarId = randomGuid()
 
-        val dlg = HumanConfigurationDialog(mockk())
+        val dlg = HumanConfigurationDialog(mockCallback())
         dlg.getChild<JTextField>("nameField").text = "Barry"
         dlg.getChild<PlayerAvatar>().avatarId = avatarId
         dlg.btnOk.doClick()
@@ -67,7 +60,8 @@ class TestHumanConfigurationDialog: AbstractTest()
         val newAvatar = insertPlayerImage()
         val player = insertPlayer(name = "Alex", playerImageId = oldAvatar.rowId)
 
-        val dlg = HumanConfigurationDialog(mockk(), player)
+        val callback = mockCallback()
+        val dlg = HumanConfigurationDialog(callback, player)
         dlg.getChild<JTextField>("nameField").text = "Alyssa"
         dlg.getChild<PlayerAvatar>().avatarId = newAvatar.rowId
         dlg.btnOk.doClick()
@@ -75,5 +69,9 @@ class TestHumanConfigurationDialog: AbstractTest()
         val updatedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
         updatedPlayer.name shouldBe "Alyssa"
         updatedPlayer.playerImageId shouldBe newAvatar.rowId
+
+        verify { callback(player) }
     }
+
+    private fun mockCallback() = mockk<(player: PlayerEntity) -> Unit>(relaxed = true)
 }

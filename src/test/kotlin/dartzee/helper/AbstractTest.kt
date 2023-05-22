@@ -20,6 +20,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
+import sun.awt.AppContext
 import java.awt.Window
 import javax.swing.SwingUtilities
 
@@ -79,6 +80,7 @@ abstract class AbstractTest
             flushEdt()
         }
 
+        AppContext.getAppContext().remove(Window::class.java)
         checkedForExceptions = false
     }
 

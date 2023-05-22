@@ -16,6 +16,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JComboBox
@@ -78,7 +79,8 @@ class TestAIConfigurationDialog: AbstractTest()
     {
         val player = insertPlayer(name = "Sid", strategy = DartsAiModel.new().toJson())
 
-        val dlg = AIConfigurationDialog(mockk(), player)
+        val callback = mockCallback()
+        val dlg = AIConfigurationDialog(callback, player)
         dlg.getChild<JTextField>("nameField").text = "Brooke"
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
         normalDistPanel.nfStandardDeviation.value = 75.0
@@ -89,6 +91,8 @@ class TestAIConfigurationDialog: AbstractTest()
         updatedPlayer.name shouldBe "Brooke"
         val model = updatedPlayer.getModel()
         model shouldBe DartsAiModel.new().copy(standardDeviation = 75.0)
+
+        verify { callback(player) }
     }
 
     @Test
@@ -96,7 +100,7 @@ class TestAIConfigurationDialog: AbstractTest()
     {
         insertPlayer(name = "Duplicate")
 
-        val dlg = AIConfigurationDialog(mockk())
+        val dlg = AIConfigurationDialog(mockCallback())
         dlg.clickChild<JButton>(text = "Ok")
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
 
@@ -140,4 +144,6 @@ class TestAIConfigurationDialog: AbstractTest()
         dlg.textFieldMissPercent.text shouldBe "0.0"
         dlg.textFieldTreblePercent.text shouldBe "100.0"
     }
+
+    private fun mockCallback() = mockk<(player: PlayerEntity) -> Unit>(relaxed = true)
 }
