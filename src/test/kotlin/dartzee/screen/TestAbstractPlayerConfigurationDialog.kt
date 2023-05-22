@@ -1,5 +1,6 @@
 package dartzee.screen
 
+import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.PlayerAvatar
 import dartzee.core.helper.verifyNotCalled
@@ -12,6 +13,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import javax.swing.JButton
 import javax.swing.JTextField
 
 class TestAbstractPlayerConfigurationDialog: AbstractTest()
@@ -56,6 +58,16 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         verify { callback(player) }
+    }
+
+    @Test
+    fun `Should not invoke callback on cancel`()
+    {
+        val callback = mockCallback()
+        val dlg = DummyPlayerConfigurationDialog(callback)
+        dlg.clickChild<JButton>(text = "Cancel")
+
+        verifyNotCalled { callback(any()) }
     }
 
     @Test
