@@ -11,9 +11,9 @@ import javax.swing.JPanel
 
 abstract class SimpleDialog : JDialog(), ActionListener
 {
-    val panelOkCancel = JPanel()
-    val btnOk = JButton("Ok")
-    val btnCancel = JButton("Cancel")
+    protected val panelOkCancel = JPanel()
+    protected val btnOk = JButton("Ok")
+    protected val btnCancel = JButton("Cancel")
 
     init
     {

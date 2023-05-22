@@ -1,5 +1,6 @@
 package dartzee.screen
 
+import dartzee.clickOk
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
@@ -19,7 +20,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
     {
         val dlg = spyk<DummyPlayerConfigurationDialog>()
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
         verifyNotCalled { dlg.savePlayer() }
@@ -32,7 +33,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         dlg.textFieldName.text = "Clive"
         dlg.avatar.avatarId = randomGuid()
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         verify { dlg.savePlayer() }
@@ -44,7 +45,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "AA"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("The player name must be at least 3 characters long.")
     }
@@ -55,7 +56,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("The player name cannot be more than 25 characters long.")
     }
@@ -68,7 +69,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "Barry"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("A player with the name Barry already exists.")
     }
 
@@ -81,7 +82,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         dlg.textFieldName.text = p.name
         dlg.avatar.avatarId = p.playerImageId
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
     }
@@ -92,7 +93,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.textFieldName.text = "Derek"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
     }

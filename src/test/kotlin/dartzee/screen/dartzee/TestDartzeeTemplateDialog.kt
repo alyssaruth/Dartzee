@@ -1,5 +1,7 @@
 package dartzee.screen.dartzee
 
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
@@ -23,7 +25,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
     {
         val dialog = spyk<DartzeeTemplateDialog>()
 
-        dialog.btnOk.doClick()
+        dialog.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name.")
         verifyNotCalled { dialog.dispose() }
@@ -35,7 +37,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
         val dialog = spyk<DartzeeTemplateDialog>()
 
         dialog.tfName.text = "My template"
-        dialog.btnOk.doClick()
+        dialog.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must create at least 2 rules.")
         verifyNotCalled { dialog.dispose() }
@@ -48,7 +50,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
 
         dialog.tfName.text = "My template"
         dialog.rulePanel.addRulesToTable(listOf(makeDartzeeRuleDto()))
-        dialog.btnOk.doClick()
+        dialog.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must create at least 2 rules.")
         verifyNotCalled { dialog.dispose() }
@@ -65,7 +67,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
         val twentyPercentRule = makeDartzeeRuleDto(DartzeeDartRuleOdd(), calculationResult = makeDartzeeRuleCalculationResult(20))
 
         dialog.rulePanel.addRulesToTable(listOf(twentyPercentRule, tenPercentRule))
-        dialog.btnOk.doClick()
+        dialog.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         verify { dialog.dispose() }
@@ -87,7 +89,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
     {
         val dialog = spyk<DartzeeTemplateDialog>()
 
-        dialog.btnCancel.doClick()
+        dialog.clickCancel()
 
         dialog.dartzeeTemplate shouldBe null
         verify { dialog.dispose() }
