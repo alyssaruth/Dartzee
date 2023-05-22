@@ -1,5 +1,7 @@
 package dartzee.core.screen
 
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import io.mockk.spyk
@@ -17,7 +19,7 @@ class TestColourChooserDialog: AbstractTest()
         dlg.selectedColour = Color.BLACK
 
         dlg.colourChooser.color = Color.YELLOW
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dlg.selectedColour shouldBe Color.YELLOW
         verify { dlg.dispose() }
@@ -31,7 +33,7 @@ class TestColourChooserDialog: AbstractTest()
         dlg.selectedColour = Color.BLACK
 
         dlg.colourChooser.color = Color.YELLOW
-        dlg.btnCancel.doClick()
+        dlg.clickCancel()
 
         dlg.selectedColour shouldBe Color.RED
         verify { dlg.dispose() }

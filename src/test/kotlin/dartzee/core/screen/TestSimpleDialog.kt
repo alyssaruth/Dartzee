@@ -1,10 +1,14 @@
 package dartzee.core.screen
 
+import com.github.alyssaburlton.swingtest.getChild
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.LoggingCode
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import javax.swing.JButton
 
 class TestSimpleDialog: AbstractTest()
 {
@@ -15,11 +19,11 @@ class TestSimpleDialog: AbstractTest()
     {
         allowCancel = true
         val dlg = SimpleDialogTestExtension()
-        dlg.btnCancel.isVisible shouldBe true
+        dlg.getChild<JButton>(text = "Cancel").isVisible shouldBe true
 
         allowCancel = false
         val dlg2 = SimpleDialogTestExtension()
-        dlg2.btnCancel.isVisible shouldBe false
+        dlg2.getChild<JButton>(text = "Cancel").isVisible shouldBe false
     }
 
     @Test
@@ -30,7 +34,7 @@ class TestSimpleDialog: AbstractTest()
         val dlg = SimpleDialogTestExtension()
         dlg.isVisible = true
 
-        dlg.btnCancel.doClick()
+        dlg.clickCancel()
 
         dlg.isVisible shouldBe false
     }
@@ -40,7 +44,7 @@ class TestSimpleDialog: AbstractTest()
     {
         val dlg = SimpleDialogTestExtension()
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         verifyLog(LoggingCode("OkPressed"))
     }

@@ -1,5 +1,6 @@
 package dartzee.screen
 
+import dartzee.clickOk
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -49,7 +50,7 @@ class TestHumanConfigurationDialog: AbstractTest()
         val dlg = HumanConfigurationDialog()
         dlg.textFieldName.text = "Barry"
         dlg.avatar.avatarId = avatarId
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val player = PlayerEntity.retrieveForName("Barry")!!
         player.playerImageId shouldBe avatarId
@@ -66,7 +67,7 @@ class TestHumanConfigurationDialog: AbstractTest()
         val dlg = HumanConfigurationDialog(player)
         dlg.textFieldName.text = "Alyssa"
         dlg.avatar.avatarId = newAvatar.rowId
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val updatedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
         updatedPlayer.name shouldBe "Alyssa"

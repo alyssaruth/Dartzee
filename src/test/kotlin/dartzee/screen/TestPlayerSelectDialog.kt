@@ -1,6 +1,7 @@
 package dartzee.screen
 
 import dartzee.bean.getAllPlayers
+import dartzee.clickOk
 import dartzee.core.helper.doubleClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -51,7 +52,7 @@ class TestPlayerSelectDialog: AbstractTest()
         val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
         dlg.buildTable()
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("You must select at least one player.")
     }
 
@@ -64,7 +65,7 @@ class TestPlayerSelectDialog: AbstractTest()
         dlg.buildTable()
 
         dlg.tablePlayers.selectRow(0)
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         dlg.selectedPlayers.size shouldBe 1

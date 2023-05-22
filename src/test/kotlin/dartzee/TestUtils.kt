@@ -1,5 +1,6 @@
 package dartzee
 
+import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
@@ -26,12 +27,14 @@ import io.kotest.matchers.shouldBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
+import java.awt.Container
 import java.awt.Point
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.table.DefaultTableModel
 
@@ -164,3 +167,6 @@ fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegm
 }
 
 fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses
+
+fun Container.clickOk() = clickChild<JButton>(text = "Ok")
+fun Container.clickCancel() = clickChild<JButton>(text = "Cancel")
