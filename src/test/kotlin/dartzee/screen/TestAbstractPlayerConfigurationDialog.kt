@@ -1,8 +1,9 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.PlayerAvatar
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
@@ -13,7 +14,6 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import javax.swing.JButton
 import javax.swing.JTextField
 
 class TestAbstractPlayerConfigurationDialog: AbstractTest()
@@ -24,7 +24,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val callback = mockCallback()
         val dlg = DummyPlayerConfigurationDialog(callback)
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
         verifyNotCalled { callback(any()) }
@@ -38,7 +38,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         dlg.getChild<JTextField>("nameField").text = "Clive"
         dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         verify { callback(any()) }
@@ -54,7 +54,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         dlg.getChild<JTextField>("nameField").text = "Clive"
         dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         verify { callback(player) }
@@ -65,7 +65,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
     {
         val callback = mockCallback()
         val dlg = DummyPlayerConfigurationDialog(callback)
-        dlg.clickChild<JButton>(text = "Cancel")
+        dlg.clickCancel()
 
         verifyNotCalled { callback(any()) }
     }
@@ -76,7 +76,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.getChild<JTextField>("nameField").text = "AA"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("The player name must be at least 3 characters long.")
     }
@@ -87,7 +87,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.getChild<JTextField>("nameField").text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("The player name cannot be more than 25 characters long.")
     }
@@ -100,7 +100,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.getChild<JTextField>("nameField").text = "Barry"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("A player with the name Barry already exists.")
     }
 
@@ -113,7 +113,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         dlg.getChild<JTextField>("nameField").text = p.name
         dlg.getChild<PlayerAvatar>().avatarId = p.playerImageId
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
     }
@@ -124,7 +124,7 @@ class TestAbstractPlayerConfigurationDialog: AbstractTest()
         val dlg = DummyPlayerConfigurationDialog()
         dlg.getChild<JTextField>("nameField").text = "Derek"
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
     }

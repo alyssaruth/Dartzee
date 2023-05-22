@@ -5,6 +5,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar
+import dartzee.clickOk
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.selectedItemTyped
 import dartzee.db.PlayerEntity
@@ -85,7 +86,7 @@ class TestAIConfigurationDialog: AbstractTest()
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()
         normalDistPanel.nfStandardDeviation.value = 75.0
 
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
 
         val updatedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
         updatedPlayer.name shouldBe "Brooke"
@@ -101,22 +102,22 @@ class TestAIConfigurationDialog: AbstractTest()
         insertPlayer(name = "Duplicate")
 
         val dlg = AIConfigurationDialog(mockCallback())
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
 
         dialogFactory.errorsShown.clear()
         dlg.getChild<JTextField>("nameField").text = "Duplicate"
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("A player with the name Duplicate already exists.")
 
         dialogFactory.errorsShown.clear()
         dlg.getChild<JTextField>("nameField").text = "Valid"
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
 
         dialogFactory.errorsShown.clear()
         dlg.getChild<PlayerAvatar>().avatarId = "foo"
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldBeEmpty()
 
         val player = PlayerEntity.retrieveForName("Valid")!!

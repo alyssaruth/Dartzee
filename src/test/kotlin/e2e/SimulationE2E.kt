@@ -1,11 +1,11 @@
 package e2e
 
 import com.github.alyssaburlton.swingtest.awaitCondition
-import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AimDart
 import dartzee.ai.SimulationRunner
 import dartzee.bean.ScrollTableDartsGame
+import dartzee.clickOk
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
@@ -25,7 +25,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import javax.swing.JButton
 
 class SimulationE2E: AbstractTest()
 {
@@ -44,7 +43,7 @@ class SimulationE2E: AbstractTest()
 
         val dlg = AISimulationSetupDialog(player, model, true)
         dlg.getChild<NumberField>().value = 500
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
 
         val statsScrn = awaitStatisticsScreen()
         statsScrn.gameType shouldBe GameType.X01

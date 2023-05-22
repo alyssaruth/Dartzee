@@ -2,6 +2,7 @@ package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.PlayerAvatar
+import dartzee.clickOk
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -46,7 +47,7 @@ class TestHumanConfigurationDialog: AbstractTest()
         val dlg = HumanConfigurationDialog(mockCallback())
         dlg.getChild<JTextField>("nameField").text = "Barry"
         dlg.getChild<PlayerAvatar>().avatarId = avatarId
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val player = PlayerEntity.retrieveForName("Barry")!!
         player.playerImageId shouldBe avatarId
@@ -64,7 +65,7 @@ class TestHumanConfigurationDialog: AbstractTest()
         val dlg = HumanConfigurationDialog(callback, player)
         dlg.getChild<JTextField>("nameField").text = "Alyssa"
         dlg.getChild<PlayerAvatar>().avatarId = newAvatar.rowId
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val updatedPlayer = PlayerEntity().retrieveForId(player.rowId)!!
         updatedPlayer.name shouldBe "Alyssa"

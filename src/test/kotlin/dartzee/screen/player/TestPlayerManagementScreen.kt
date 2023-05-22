@@ -5,6 +5,8 @@ import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.PlayerAvatar
 import dartzee.bean.getAllPlayers
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.findWindow
 import dartzee.helper.AbstractTest
@@ -82,7 +84,7 @@ class TestPlayerManagementScreen: AbstractTest()
 
         dlg.getChild<JTextField>("nameField").text = "Bongo"
         dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         dlg.isVisible shouldBe false
         flushEdt()
 
@@ -103,7 +105,7 @@ class TestPlayerManagementScreen: AbstractTest()
 
         dlg.getChild<JTextField>("nameField").text = "Bingo"
         dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         dlg.isVisible shouldBe false
         flushEdt()
 
@@ -122,12 +124,12 @@ class TestPlayerManagementScreen: AbstractTest()
         scrn.clickChild<JButton>("AddAi")
         val dlg = findWindow<AIConfigurationDialog>()
         dlg.shouldNotBeNull()
-        dlg.clickChild<JButton>(text = "Cancel")
+        dlg.clickCancel()
 
         scrn.clickChild<JButton>("AddPlayer")
         val humanDlg = findWindow<HumanConfigurationDialog>()
         humanDlg.shouldNotBeNull()
-        humanDlg.clickChild<JButton>(text = "Cancel")
+        humanDlg.clickCancel()
 
         flushEdt()
         val table = scrn.getChild<ScrollTable>()

@@ -11,6 +11,7 @@ import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.bean.PlayerAvatar
+import dartzee.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
@@ -220,7 +221,7 @@ class TestPlayerManagementPanel: AbstractTest()
         dlg.shouldNotBeNull()
 
         dlg.getChild<JTextField>("nameField").text = "New name"
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         flushEdt()
 
         panel.lblPlayerName.text shouldBe "New name"
@@ -239,7 +240,7 @@ class TestPlayerManagementPanel: AbstractTest()
         dlg.shouldNotBeNull()
 
         dlg.getChild<JTextField>("nameField").text = "New name"
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
         flushEdt()
 
         panel.lblPlayerName.text shouldBe "New name"

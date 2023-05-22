@@ -1,6 +1,8 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AimDart
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
@@ -87,7 +89,7 @@ class TestNewSetupRuleDialog: AbstractTest()
         dlg.spinner.value = 25
         dlg.rdbtnDouble.doClick()
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldBeEmpty()
         hm.shouldContain(50, AimDart(25, 2))
         hm.size shouldBe 1
@@ -103,7 +105,7 @@ class TestNewSetupRuleDialog: AbstractTest()
         dlg.spinner.value = 25
         dlg.rdbtnDouble.doClick()
 
-        dlg.btnCancel.doClick()
+        dlg.clickCancel()
         dialogFactory.errorsShown.shouldBeEmpty()
         hm.size shouldBe 0
     }
@@ -124,7 +126,7 @@ class TestNewSetupRuleDialog: AbstractTest()
         dlg.spinner.value = 10
         dlg.panel.setSelection(rdbtn)
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldBeEmpty()
         hm.shouldContain(60, AimDart(10, multiplier))
         hm.size shouldBe 1
