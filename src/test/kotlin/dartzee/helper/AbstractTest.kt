@@ -73,14 +73,18 @@ abstract class AbstractTest
             errorLogged() shouldBe false
         }
 
-        val visibleWindows = Window.getWindows().filter { it.isVisible }
-        if (visibleWindows.isNotEmpty())
+        val windows = Window.getWindows()
+        if (windows.isNotEmpty())
         {
-            SwingUtilities.invokeLater { visibleWindows.forEach { it.dispose() } }
+            SwingUtilities.invokeLater {
+                val visibleWindows = windows.filter { it.isVisible }
+                visibleWindows.forEach { it.dispose() }
+            }
+
             flushEdt()
+            AppContext.getAppContext().remove(Window::class.java)
         }
 
-        AppContext.getAppContext().remove(Window::class.java)
         checkedForExceptions = false
     }
 

@@ -11,6 +11,7 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.getPointForSegment
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -135,7 +136,7 @@ class TestGameplayDartboard : AbstractTest()
     }
 
     private fun factoryGameplayDartboard(): GameplayDartboard {
-        val dartboard = GameplayDartboard()
+        val dartboard = GameplayDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 400, 400)
         flushEdt()
         return dartboard
