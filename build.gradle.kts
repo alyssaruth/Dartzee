@@ -1,5 +1,6 @@
 import kotlinx.kover.api.KoverTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
@@ -134,7 +135,7 @@ tasks.withType<Test> {
     }
 
     testLogging {
-        events("failed")
+        mutableSetOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
         exceptionFormat = TestExceptionFormat.FULL
     }
 }

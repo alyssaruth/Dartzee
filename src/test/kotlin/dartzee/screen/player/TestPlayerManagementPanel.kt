@@ -28,6 +28,7 @@ import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetupDialog
+import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -220,7 +221,7 @@ class TestPlayerManagementPanel: AbstractTest()
         val dlg = findWindow<HumanConfigurationDialog>()
         dlg.shouldNotBeNull()
 
-        dlg.getChild<JTextField>("nameField").text = "New name"
+        dlg.getChild<JTextField>("nameField").typeText("New name")
         dlg.clickOk()
         flushEdt()
 
@@ -239,7 +240,7 @@ class TestPlayerManagementPanel: AbstractTest()
         val dlg = findWindow<AIConfigurationDialog>()
         dlg.shouldNotBeNull()
 
-        dlg.getChild<JTextField>("nameField").text = "New name"
+        dlg.getChild<JTextField>("nameField").typeText("New name")
         dlg.clickOk()
         flushEdt()
 

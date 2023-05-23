@@ -1,6 +1,5 @@
 package dartzee.helper
 
-import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.logging.LogDestinationSystemOut
@@ -76,12 +75,11 @@ abstract class AbstractTest
         val windows = Window.getWindows()
         if (windows.isNotEmpty())
         {
-            SwingUtilities.invokeLater {
+            SwingUtilities.invokeAndWait {
                 val visibleWindows = windows.filter { it.isVisible }
                 visibleWindows.forEach { it.dispose() }
             }
 
-            flushEdt()
             AppContext.getAppContext().remove(Window::class.java)
         }
 
