@@ -38,6 +38,7 @@ import java.util.*
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.table.DefaultTableModel
+import javax.swing.text.JTextComponent
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
 val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
@@ -176,3 +177,8 @@ fun Container.clickCancel() = clickChild<JButton>(text = "Cancel")
  * TODO - Add to swing-test
  */
 inline fun <reified W : Window> findWindow(fn: (window: W) -> Boolean = { true }): W? = Window.getWindows().find { it is W && fn(it) } as? W
+
+fun JTextComponent.typeText(newText: String)
+{
+    runOnEventThreadBlocking { text = newText }
+}

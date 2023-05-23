@@ -14,6 +14,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ai.AIConfigurationDialog
+import dartzee.typeText
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -82,7 +83,7 @@ class TestPlayerManagementScreen: AbstractTest()
         val dlg = findWindow<HumanConfigurationDialog>()
         dlg.shouldNotBeNull()
 
-        dlg.getChild<JTextField>("nameField").text = "Bongo"
+        dlg.getChild<JTextField>("nameField").typeText("Bongo")
         dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
         dlg.clickOk()
         dlg.isVisible shouldBe false
@@ -103,7 +104,7 @@ class TestPlayerManagementScreen: AbstractTest()
         val dlg = findWindow<AIConfigurationDialog>()
         dlg.shouldNotBeNull()
 
-        dlg.getChild<JTextField>("nameField").text = "Bingo"
+        dlg.getChild<JTextField>("nameField").typeText("Bingo")
         dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
         dlg.clickOk()
         dlg.isVisible shouldBe false
