@@ -6,9 +6,11 @@ import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
+import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
+import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getDartForSegment
 import java.awt.Component
 import java.awt.Dimension
@@ -25,11 +27,11 @@ const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 const val LAYER_SLIDER = 4
 
-class GameplayDartboard : JLayeredPane(), MouseListener
+class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : JLayeredPane(), MouseListener
 {
     var latestClip: Clip? = null
 
-    private val dartboard = InteractiveDartboard()
+    private val dartboard = InteractiveDartboard(colourWrapper)
     private val dartsThrown = mutableListOf<ComputedPoint>()
     private val listeners: MutableList<DartboardListener> = mutableListOf()
     private var allowInteraction = true

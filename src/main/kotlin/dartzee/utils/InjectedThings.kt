@@ -16,7 +16,6 @@ import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory
 import dartzee.logging.LoggingConsole
-import dartzee.player.PlayerManager
 import dartzee.screen.ChangeLog
 import dartzee.screen.IPlayerImageSelector
 import dartzee.screen.PlayerImageDialog
@@ -31,6 +30,7 @@ import java.time.Clock
 
 object InjectedThings
 {
+    var allowModalDialogs = true
     var connectionPoolSize = 5
     var databaseDirectory = DATABASE_FILE_PATH
     var mainDatabase: Database = Database()
@@ -45,7 +45,6 @@ object InjectedThings
     var logger: Logger = Logger(listOf(loggingConsole, LogDestinationSystemOut(), esDestination))
     var gameLauncher: GameLauncher = GameLauncher()
     var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true } }
-    var playerManager: PlayerManager = PlayerManager()
     var dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: AbstractSimulationRunner = SimulationRunner()

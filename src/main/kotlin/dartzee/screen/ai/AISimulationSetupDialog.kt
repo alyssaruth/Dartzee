@@ -9,6 +9,7 @@ import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.simulationRunner
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -34,7 +35,7 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
         title = "Simulation Options"
         setSize(400, 160)
         setLocationRelativeTo(ScreenCache.mainScreen)
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
 
         nfNumberOfGames.columns = 10
         contentPane.add(panelCenter, BorderLayout.CENTER)

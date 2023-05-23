@@ -37,7 +37,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verifySequence
-import java.awt.Window
 import javax.swing.JButton
 import javax.swing.JToggleButton
 import javax.swing.SwingUtilities
@@ -78,8 +77,6 @@ fun closeOpenGames()
 {
     ScreenCache.getDartsGameScreens().forEach { it.dispose() }
 }
-
-fun getWindow(fn: (window: Window) -> Boolean) = Window.getWindows().find(fn)
 
 data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *>, val listener: DartboardListener)
 

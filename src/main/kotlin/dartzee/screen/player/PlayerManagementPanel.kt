@@ -10,16 +10,23 @@ import dartzee.core.util.setMargins
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
+import dartzee.screen.ai.AIConfigurationDialog
+import dartzee.screen.ai.AISimulationSetupDialog
 import dartzee.stats.getGameCounts
-import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JOptionPane
+import javax.swing.JPanel
+import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
 class PlayerManagementPanel : JPanel(), ActionListener
@@ -129,14 +136,20 @@ class PlayerManagementPanel : JPanel(), ActionListener
         {
             btnEdit -> amendPlayer(selectedPlayer)
             btnDelete -> confirmAndDeletePlayer(selectedPlayer)
-            btnRunSimulation -> InjectedThings.playerManager.runSimulation(selectedPlayer)
+            btnRunSimulation -> AISimulationSetupDialog(selectedPlayer, selectedPlayer.getModel()).isVisible = true
         }
     }
 
     private fun amendPlayer(playerEntity: PlayerEntity)
     {
-        InjectedThings.playerManager.amendPlayer(playerEntity)
-        refresh(playerEntity)
+        if (playerEntity.isAi())
+        {
+            AIConfigurationDialog.amendPlayer(::refresh, playerEntity)
+        }
+        else
+        {
+            HumanConfigurationDialog.amendPlayer(::refresh, playerEntity)
+        }
     }
 
     private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity)
