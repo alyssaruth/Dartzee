@@ -135,7 +135,7 @@ tasks.withType<Test> {
     }
 
     testLogging {
-        mutableSetOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
+        events = mutableSetOf(TestLogEvent.STARTED, TestLogEvent.PASSED, TestLogEvent.FAILED)
         exceptionFormat = TestExceptionFormat.FULL
     }
 }
