@@ -16,7 +16,6 @@ import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory
 import dartzee.logging.LoggingConsole
-import dartzee.screen.ChangeLog
 import dartzee.screen.IPlayerImageSelector
 import dartzee.screen.PlayerImageDialog
 import dartzee.screen.ai.AISetupRuleFactory
@@ -44,7 +43,6 @@ object InjectedThings
     var esDestination = LoggerFactory.constructElasticsearchDestination()
     var logger: Logger = Logger(listOf(loggingConsole, LogDestinationSystemOut(), esDestination))
     var gameLauncher: GameLauncher = GameLauncher()
-    var showChangeLog: () -> Unit = { ChangeLog().also { it.isVisible = true } }
     var dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: AbstractAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: AbstractSimulationRunner = SimulationRunner()

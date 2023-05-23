@@ -86,7 +86,6 @@ class MenuScreen : EmbeddedScreen()
             btnAbout -> {
                 val dialog = AboutDialog()
                 dialog.setLocationRelativeTo(this)
-                dialog.isModal = true
                 dialog.isVisible = true
             }
 
