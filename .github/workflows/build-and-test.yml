@@ -58,7 +58,7 @@ jobs:
         with:
           distribution: zulu
           java-version: 11.0.18
-          cache: "gradle'
+          cache: 'gradle'
       - name: Integration & E2E
         uses: GabrielBB/xvfb-action@v1.6
         env:
@@ -109,7 +109,7 @@ jobs:
       - name: Test JAR
         run: |
           nohup java -jar build/libs/Dartzee.jar > dartzee-log.log 2>&1 &
-          echo "Waiting for Dartzee to start..."
+          echo 'Waiting for Dartzee to start..."
           attempt_counter=0
           max_attempts=10
           until $(cat dartzee-log.log | grep -Eq [databaseCurrent]); do
