@@ -14,7 +14,7 @@ if __name__ == '__main__':
     coverageFormatted = '{:.2%}'.format(coverage)
     print(coverageFormatted)
 
-    with open(os.getenv("GITHUB_ENV"), "a") as file_object:
+    with open(os.getenv("GITHUB_OUTPUT"), "a") as file_object:
         file_object.write(f"\nCOVERAGE={coverageFormatted}")
 
     template = Template(Path("./README_template.md").read_text())
