@@ -1,7 +1,7 @@
+import os
 import re
-from string import Template
 from pathlib import Path
-
+from string import Template
 
 if __name__ == '__main__':
     reportLines = open("./build/reports/kover/xml/report.xml").readlines()
@@ -13,6 +13,9 @@ if __name__ == '__main__':
     coverage = linesCovered / (linesMissed + linesCovered)
     coverageFormatted = '{:.2%}'.format(coverage)
     print(coverageFormatted)
+
+    with open(os.getenv("GITHUB_ENV"), "a") as file_object:
+        file_object.write(f"\nCOVERAGE={coverageFormatted}")
 
     template = Template(Path("./README_template.md").read_text())
     Path("./README.md").write_text(

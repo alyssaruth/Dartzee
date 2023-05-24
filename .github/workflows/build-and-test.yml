@@ -40,6 +40,7 @@ jobs:
             /home/runner/**/*.failed.png
             /home/runner/**/*.comparison.png
       - name: Update coverage
+        id: update-coverage
         if: github.ref == 'refs/heads/main'
         run: |
           python scripts/update-coverage.py
@@ -47,7 +48,7 @@ jobs:
         uses: EndBug/add-and-commit@v7
         if: github.ref == 'refs/heads/main'
         with:
-          message: 'Update coverage stats'
+          message: "Update coverage stats: ${{ steps.update-coverage.outputs.COVERAGE }}"
   integration-and-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -57,7 +58,7 @@ jobs:
         with:
           distribution: zulu
           java-version: 11.0.18
-          cache: 'gradle'
+          cache: "gradle'
       - name: Integration & E2E
         uses: GabrielBB/xvfb-action@v1.6
         env:
