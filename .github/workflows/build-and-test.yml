@@ -19,7 +19,7 @@ jobs:
         with:
           run: |
             ./gradlew koverReport
-            zip -rq coverage-html.zip backend/build/reports/kover/html
+            zip -rq coverage-html.zip build/reports/kover/html
       - name: Export test results
         uses: actions/upload-artifact@v3
         with:
