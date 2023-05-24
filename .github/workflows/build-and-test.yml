@@ -29,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: kover-report
-          path: backend-coverage-html.zip
+          path: coverage-html.zip
       - name: Export snapshots
         uses: actions/upload-artifact@v3
         if: failure()
