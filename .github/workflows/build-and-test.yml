@@ -17,7 +17,9 @@ jobs:
       - name: Build & Unit Test
         uses: GabrielBB/xvfb-action@v1.6
         with:
-          run: ./gradlew koverReport
+          run: |
+            ./gradlew koverReport
+            zip -rq coverage-html.zip backend/build/reports/kover/html
       - name: Export test results
         uses: actions/upload-artifact@v3
         with:
@@ -27,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: kover-report
-          path: /home/runner/work/Dartzee/Dartzee/build/reports/kover/html
+          path: backend-coverage-html.zip
       - name: Export snapshots
         uses: actions/upload-artifact@v3
         if: failure()
