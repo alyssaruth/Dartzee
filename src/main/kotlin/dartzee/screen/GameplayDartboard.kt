@@ -1,6 +1,7 @@
 package dartzee.screen
 
 import dartzee.bean.DartLabel
+import dartzee.bean.IMouseListener
 import dartzee.bean.InteractiveDartboard
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.getParentWindow
@@ -18,7 +19,6 @@ import java.awt.Point
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import javax.sound.sampled.Clip
 import javax.swing.JLayeredPane
 import javax.swing.SwingUtilities
@@ -27,7 +27,7 @@ const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 const val LAYER_SLIDER = 4
 
-class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : JLayeredPane(), MouseListener
+class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : JLayeredPane(), IMouseListener
 {
     var latestClip: Clip? = null
 
@@ -116,11 +116,11 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
         overlay.location = pt
     }
 
-    override fun mouseReleased(arg0: MouseEvent)
+    override fun mouseReleased(e: MouseEvent)
     {
         if (!suppressClickForGameWindow() && allowInteraction)
         {
-            dartThrown(dartboard.toComputedPoint(arg0.point))
+            dartThrown(dartboard.toComputedPoint(e.point))
         }
     }
     private fun suppressClickForGameWindow(): Boolean
@@ -134,9 +134,4 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
 
         return false
     }
-
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mousePressed(e: MouseEvent?) {}
-    override fun mouseEntered(e: MouseEvent?) {}
-    override fun mouseExited(e: MouseEvent?) {}
 }

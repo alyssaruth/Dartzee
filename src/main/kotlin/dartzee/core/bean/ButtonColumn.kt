@@ -1,12 +1,17 @@
 package dartzee.core.bean
 
+import dartzee.bean.IMouseListener
 import java.awt.Color
 import java.awt.Component
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
-import javax.swing.*
+import javax.swing.AbstractCellEditor
+import javax.swing.Action
+import javax.swing.Icon
+import javax.swing.JButton
+import javax.swing.JTable
+import javax.swing.UIManager
 import javax.swing.border.Border
 import javax.swing.border.LineBorder
 import javax.swing.table.TableCellEditor
@@ -25,7 +30,7 @@ import javax.swing.table.TableCellRenderer
  * the model row number of the button that was clicked.
  *
  */
-class ButtonColumn(private val table: ScrollTable, private val action: Action, column: Int) : AbstractCellEditor(), TableCellRenderer, TableCellEditor, ActionListener, MouseListener
+class ButtonColumn(private val table: ScrollTable, private val action: Action, column: Int) : AbstractCellEditor(), TableCellRenderer, TableCellEditor, ActionListener, IMouseListener
 {
     private val originalBorder: Border
 
@@ -112,8 +117,6 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
 
 
     /**
-     * MouseListener
-     *
      * When the mouse is pressed the editor is invoked. If you then then drag
      * the mouse to another cell before releasing it, the editor is still
      * active. Make sure editing is stopped when the mouse is released.
@@ -131,8 +134,4 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
 
         isButtonColumnEditor = false
     }
-
-    override fun mouseClicked(e: MouseEvent) {}
-    override fun mouseEntered(e: MouseEvent) {}
-    override fun mouseExited(e: MouseEvent) {}
 }

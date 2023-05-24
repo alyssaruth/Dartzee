@@ -2,6 +2,7 @@ package dartzee.screen.game.scorer
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementMedal
+import dartzee.bean.IMouseListener
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -10,14 +11,14 @@ import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.border.BevelBorder
 import javax.swing.border.LineBorder
 
-class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement: AbstractAchievement, playerName: String?) : JPanel(), ActionListener, MouseListener
+class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement: AbstractAchievement, playerName: String?) :
+    JPanel(), ActionListener, IMouseListener
 {
     private val btnClose = JButton("X")
     private val fillColor = achievement.getColor(false).brighter()
@@ -95,7 +96,7 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
         repaint()
     }
 
-    override fun mousePressed(e: MouseEvent?)
+    override fun mousePressed(e: MouseEvent)
     {
         btnClose.foreground = borderColor.darker().darker()
         btnClose.background = fillColor.darker()
@@ -103,16 +104,11 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
         btnClose.repaint()
     }
 
-    override fun mouseReleased(e: MouseEvent?)
+    override fun mouseReleased(e: MouseEvent)
     {
         btnClose.background = fillColor
         btnClose.foreground = borderColor.darker()
         btnClose.border = BevelBorder(BevelBorder.RAISED, borderColor, borderColor.darker())
         btnClose.repaint()
     }
-
-    override fun mouseClicked(e: MouseEvent?) {}
-
-    override fun mouseEntered(e: MouseEvent?) {}
-    override fun mouseExited(e: MouseEvent?) {}
 }

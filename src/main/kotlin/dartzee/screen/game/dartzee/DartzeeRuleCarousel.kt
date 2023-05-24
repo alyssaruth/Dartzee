@@ -2,6 +2,7 @@ package dartzee.screen.game.dartzee
 
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
+import dartzee.bean.IMouseListener
 import dartzee.core.util.ceilDiv
 import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRoundResult
@@ -14,7 +15,6 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import javax.swing.ButtonGroup
 import javax.swing.ImageIcon
 import javax.swing.JPanel
@@ -22,7 +22,7 @@ import javax.swing.JScrollPane
 import javax.swing.JToggleButton
 import javax.swing.ScrollPaneConstants
 
-class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, MouseListener
+class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, IMouseListener
 {
     val tilePanel = JPanel()
     private val tileScroller = JScrollPane()
@@ -201,8 +201,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     override fun actionPerformed(e: ActionEvent?)
     {
-        val src = e?.source
-        when (src)
+        when (val src = e?.source)
         {
             toggleButtonPending -> displayTiles(pendingTiles)
             toggleButtonComplete -> displayTiles(completeTiles)
@@ -218,9 +217,9 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         }
     }
 
-    override fun mouseEntered(e: MouseEvent?)
+    override fun mouseEntered(e: MouseEvent)
     {
-        val src = e?.source
+        val src = e.source
         if (src is DartzeeRuleTilePending)
         {
             hoveredTile = src
@@ -228,14 +227,10 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         }
     }
 
-    override fun mouseExited(e: MouseEvent?)
+    override fun mouseExited(e: MouseEvent)
     {
         hoveredTile = null
 
         listener?.hoverChanged(getSegmentStatus())
     }
-
-    override fun mousePressed(e: MouseEvent?) {}
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mouseReleased(e: MouseEvent?) {}
 }

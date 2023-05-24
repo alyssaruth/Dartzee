@@ -16,14 +16,12 @@ import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.RenderingHints
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
-import java.awt.event.MouseMotionListener
 import javax.swing.JComponent
 import javax.swing.JLabel
 
 const val SIZE = 175
 
-class AchievementMedal(val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), MouseListener, MouseMotionListener
+class AchievementMedal(val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), IMouseListener
 {
     private val angle = achievement.getAngle()
     private var highlighted = false
@@ -118,12 +116,7 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
         repaint()
     }
 
-
-    /**
-     * MouseListener
-     */
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mouseReleased(e: MouseEvent?)
+    override fun mouseReleased(e: MouseEvent)
     {
         if (achievement.tmBreakdown != null)
         {
@@ -137,7 +130,6 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
             gameLauncher.loadAndDisplayGame(achievement.gameIdEarned)
         }
     }
-    override fun mousePressed(e: MouseEvent?) {}
 
     override fun mouseEntered(e: MouseEvent)
     {
@@ -149,13 +141,8 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
         updateForMouseOver(e)
     }
 
-    /**
-     * MouseMotionListener
-     */
     override fun mouseMoved(e: MouseEvent)
     {
         updateForMouseOver(e)
     }
-
-    override fun mouseDragged(e: MouseEvent?) {}
 }

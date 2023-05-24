@@ -7,9 +7,9 @@ import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getHighlightedColour
 import java.awt.Point
 import java.awt.event.MouseEvent
-import java.awt.event.MouseMotionListener
 
-class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : PresentationDartboard(colourWrapper, true), MouseMotionListener
+class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) :
+    PresentationDartboard(colourWrapper, true), IMouseListener
 {
     private var hoveredSegment: DartboardSegment? = null
     private var allowInteraction = true
@@ -63,13 +63,11 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
         allowInteraction = true
     }
 
-    override fun mouseMoved(arg0: MouseEvent)
+    override fun mouseMoved(e: MouseEvent)
     {
         if (getParentWindow()?.isFocused == true)
         {
-            highlightDartboard(arg0.point)
+            highlightDartboard(e.point)
         }
     }
-
-    override fun mouseDragged(arg0: MouseEvent) {}
 }
