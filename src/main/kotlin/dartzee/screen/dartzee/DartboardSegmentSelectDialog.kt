@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import dartzee.bean.IMouseListener
 import dartzee.bean.PresentationDartboard
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.setMargins
@@ -12,13 +13,11 @@ import dartzee.utils.getAllNonMissSegments
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
-import java.awt.event.MouseMotionListener
 import javax.swing.JButton
 import javax.swing.JPanel
 
 class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSegment>):
-    SimpleDialog(), MouseMotionListener, MouseListener
+    SimpleDialog(), IMouseListener
 {
     private val selectedSegments = mutableSetOf<DartboardSegment>()
     private var lastDraggedSegment: DartboardSegment? = null
@@ -121,16 +120,9 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
         toggleSegment(segment)
     }
 
-    override fun mouseMoved(e: MouseEvent?) {}
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mousePressed(e: MouseEvent?) {}
-
     override fun mouseReleased(e: MouseEvent)
     {
         val segment = dartboard.getSegmentForPoint(e.point)
         toggleSegment(segment)
     }
-
-    override fun mouseEntered(e: MouseEvent?) {}
-    override fun mouseExited(e: MouseEvent?) {}
 }
