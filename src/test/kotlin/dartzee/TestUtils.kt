@@ -7,6 +7,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
 import dartzee.bean.PresentationDartboard
+import dartzee.core.bean.ButtonColumn
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
@@ -122,6 +123,16 @@ fun ScrollTable.getDisplayValueAt(row: Int, col: Int): Any = table.getValueAt(ro
 
 fun ScrollTable.getRows(): List<List<Any?>> =
     model.getRows(columnCount)
+
+fun ScrollTable.clickTableButton(row: Int, col: Int) {
+    val editor = table.getCellEditor(row, col)
+    if (editor !is ButtonColumn) {
+        throw AssertionError("Cell is not a TableButton: $editor")
+    }
+
+    table.editingRow = row
+    editor.editButton.doClick()
+}
 
 fun ScrollTable.getFooterRow(): List<Any?> =
     (0 until columnCount).map { getValueAt(ScrollTable.TABLE_ROW_FOOTER, it)}

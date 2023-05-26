@@ -1,8 +1,10 @@
 package dartzee.db.sanity
 
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.DeletionAuditEntity
 import dartzee.db.GameEntity
 import dartzee.db.EntityName
+import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertDartzeeRule
@@ -58,5 +60,15 @@ class TestSanityCheckDanglingIdFields: AbstractTest()
 
         results.map { it.getDescription() }.shouldContainExactlyInAnyOrder("DartzeeRule rows where the EntityId points at a non-existent Game",
             "DartzeeRule rows where the EntityId points at a non-existent Player")
+    }
+
+    @Test
+    fun `Should ignore DeletionAudit table`()
+    {
+        val entity = GameEntity.factory(GameType.X01, "501")
+        DeletionAuditEntity.factoryAndSave(entity)
+
+        val results = SanityCheckDanglingIdFields(DeletionAuditEntity()).runCheck()
+        results.shouldBeEmpty()
     }
 }
