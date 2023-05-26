@@ -107,7 +107,6 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
      */
     override fun actionPerformed(e: ActionEvent)
     {
-        println(table.editingRow)
         val row = table.convertRowIndexToModel(table.editingRow)
         fireEditingStopped()
 
