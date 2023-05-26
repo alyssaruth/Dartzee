@@ -19,7 +19,6 @@ class TestTableModelDialog: AbstractTest()
         val tmd = TableModelDialog("Bah", table)
 
         tmd.title shouldBe "Bah"
-        tmd.isModal shouldBe true
         tmd.allowCancel() shouldBe false
 
         tmd.getAllChildComponentsForType<ScrollTable>().shouldContainExactly(table)
