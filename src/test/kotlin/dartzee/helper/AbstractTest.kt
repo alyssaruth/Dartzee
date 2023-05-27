@@ -95,7 +95,7 @@ abstract class AbstractTest
 
     fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
     {
-        val record = getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
+        val record = findLog(code, severity)
         record.shouldNotBeNull()
 
         if (severity == Severity.ERROR)
@@ -105,6 +105,9 @@ abstract class AbstractTest
 
         return record
     }
+
+    protected fun findLog(code: LoggingCode, severity: Severity = Severity.INFO) =
+        getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
 
     fun verifyNoLogs(code: LoggingCode)
     {

@@ -35,7 +35,7 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
     private val originalBorder: Border
 
     private val renderButton = JButton()
-    private val editButton = JButton()
+    val editButton = JButton()
     private var editorValue: Any? = null
     private var isButtonColumnEditor: Boolean = false
 
@@ -117,7 +117,7 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
 
 
     /**
-     * When the mouse is pressed the editor is invoked. If you then then drag
+     * When the mouse is pressed the editor is invoked. If you then drag
      * the mouse to another cell before releasing it, the editor is still
      * active. Make sure editing is stopped when the mouse is released.
      */
