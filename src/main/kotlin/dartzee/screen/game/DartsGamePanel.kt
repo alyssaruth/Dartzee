@@ -38,6 +38,7 @@ import dartzee.utils.ResourceCache.ICON_STATS_LARGE
 import dartzee.utils.getQuotedIdStr
 import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
@@ -74,7 +75,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     private val panelAiSlider = JPanel()
     private val panelSouth = JPanel()
-    protected val slider = SliderAiSpeed(true)
+    protected val slider = SliderAiSpeed()
     private val panelButtons = JPanel()
     val btnConfirm = JButton("")
     val btnReset = JButton("")
@@ -148,8 +149,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         btnSlider.toolTipText = "AI throw speed"
         btnSlider.preferredSize = Dimension(80, 80)
 
+        panelAiSlider.layout = FlowLayout(FlowLayout.CENTER, 0, 0)
         panelAiSlider.add(slider)
         slider.isVisible = false
+        slider.preferredSize = Dimension(320, 30)
 
         panelButtons.add(btnSlider)
 
@@ -259,7 +262,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         }
         else
         {
-            slider.isEnabled = false
             btnConfirm.isEnabled = false
             btnReset.isEnabled = false
         }

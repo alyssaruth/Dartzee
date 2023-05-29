@@ -27,7 +27,7 @@ class PreferencesPanelMisc : AbstractPreferencesPanel(), ActionListener, Propert
 
     private val panelCenter = JPanel()
     private val lblDefaultAiSpeed = JLabel("Default AI speed")
-    val slider = SliderAiSpeed(false)
+    val slider = SliderAiSpeed()
     val chckbxAiAutomaticallyFinish = JCheckBox("AI automatically finish")
     val chckbxCheckForUpdates = JCheckBox("Automatically check for updates")
     private val lblRowsToShow = JLabel("Rows to show on Leaderboards")

@@ -1,43 +1,43 @@
 package dartzee.bean
 
-import dartzee.`object`.DartsClient
-import java.awt.Dimension
-import java.awt.Graphics
-import java.awt.Rectangle
+import java.awt.BorderLayout
+import javax.swing.JLabel
+import javax.swing.JPanel
 import javax.swing.JSlider
-import javax.swing.plaf.synth.SynthContext
-import javax.swing.plaf.synth.SynthSliderUI
+import javax.swing.border.EmptyBorder
+import javax.swing.event.ChangeListener
 
 const val AI_SPEED_MINIMUM = 0 //0s
 const val AI_SPEED_MAXIMUM = 2000 //2s
 
-class SliderAiSpeed(thicken: Boolean) : JSlider()
+class SliderAiSpeed : JPanel()
 {
+    private val labelMin = JLabel("Slow")
+    private val labelMax = JLabel("Fast")
+    private val slider = JSlider()
+    var value
+        get() = slider.value
+        set(value) { slider.value = value }
+
     init
     {
-        minimum = AI_SPEED_MINIMUM
-        maximum = AI_SPEED_MAXIMUM
-        inverted = true
-        setMajorTickSpacing(100)
-        isOpaque = false
+        layout = BorderLayout()
+        add(slider, BorderLayout.CENTER)
+        add(labelMin, BorderLayout.WEST)
+        add(labelMax, BorderLayout.EAST)
 
-        if (thicken && !DartsClient.isAppleOs())
-        {
-            size = Dimension(200, 50)
-            preferredSize = Dimension(200, 50)
-            setUI(CustomSliderUI(this))
-        }
+        labelMin.verticalAlignment = JLabel.CENTER
+        labelMin.border = EmptyBorder(0, 0, 0, 10)
+        labelMax.verticalAlignment = JLabel.CENTER
+        labelMax.border = EmptyBorder(0, 10, 0, 0)
+
+        slider.minimum = AI_SPEED_MINIMUM
+        slider.maximum = AI_SPEED_MAXIMUM
+        slider.inverted = true
     }
-}
 
-class CustomSliderUI(arg0: JSlider) : SynthSliderUI(arg0)
-{
-    override fun getThumbSize() = Dimension(30, 30)
-
-    override fun paintTrack(arg0: SynthContext, arg1: Graphics,
-                            arg2: Rectangle)
+    fun addChangeListener(listener: ChangeListener)
     {
-        arg2.setSize(200, 30)
-        super.paintTrack(arg0, arg1, arg2)
+        slider.addChangeListener(listener)
     }
 }
