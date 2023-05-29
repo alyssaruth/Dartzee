@@ -1,11 +1,13 @@
 package dartzee.screen
 
 import dartzee.db.PlayerEntity
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import javax.swing.JPanel
 
-class HumanConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate()): AbstractPlayerConfigurationDialog(player)
+class HumanConfigurationDialog(saveCallback: (player: PlayerEntity) -> Unit, player: PlayerEntity = PlayerEntity.factoryCreate()) :
+    AbstractPlayerConfigurationDialog(saveCallback, player)
 {
     private val panel = JPanel()
 
@@ -13,7 +15,7 @@ class HumanConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate
     {
         setSize(350, 225)
         isResizable = false
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
         val flowLayout = panel.layout as FlowLayout
         flowLayout.hgap = 20
 
@@ -49,9 +51,9 @@ class HumanConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate
 
     companion object
     {
-        fun amendPlayer(player: PlayerEntity)
+        fun amendPlayer(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity)
         {
-            val dlg = HumanConfigurationDialog(player)
+            val dlg = HumanConfigurationDialog(saveCallback, player)
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true
         }

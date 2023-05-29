@@ -6,6 +6,7 @@ import dartzee.ai.AbstractDartsSimulation
 import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.DartsSimulationGolf
 import dartzee.ai.DartsSimulationX01
+import dartzee.clickOk
 import dartzee.core.bean.NumberField
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -20,7 +21,6 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import javax.swing.JButton
 import javax.swing.JRadioButton
 
 class TestAISimulationSetupDialog: AbstractTest()
@@ -40,7 +40,7 @@ class TestAISimulationSetupDialog: AbstractTest()
         dlg.clickChild<JRadioButton>(text = "501")
         dlg.getChild<NumberField>().value = 15000
 
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 15000, false) }
@@ -65,7 +65,7 @@ class TestAISimulationSetupDialog: AbstractTest()
         dlg.clickChild<JRadioButton>(text = "Golf (18 Holes)")
         dlg.getChild<NumberField>().value = 12000
 
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 12000, true) }

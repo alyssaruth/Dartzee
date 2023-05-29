@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.helper.AbstractTest
 import dartzee.helper.getFakeValidSegment
@@ -182,6 +183,7 @@ class TestDartzeeRuleVerificationPanel: AbstractTest()
         frame.size = Dimension(500, 500)
         frame.contentPane.add(panel)
         frame.isVisible = true
+        flushEdt()
 
         val rule = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(getAllNonMissSegments()))
         panel.updateRule(rule)

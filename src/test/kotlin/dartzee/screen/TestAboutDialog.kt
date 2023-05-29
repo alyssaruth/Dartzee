@@ -2,8 +2,11 @@ package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -15,8 +18,6 @@ class TestAboutDialog: AbstractTest()
     @Test
     fun `Should launch the ChangeLog if the link is clicked`()
     {
-        InjectedThings.showChangeLog = mockk(relaxed = true)
-
         val dlg = AboutDialog()
         dlg.isVisible = true
 
@@ -25,6 +26,8 @@ class TestAboutDialog: AbstractTest()
 
         dlg.isVisible shouldBe false
 
-        verify { InjectedThings.showChangeLog() }
+        val changeLog = findWindow<ChangeLog>()
+        changeLog.shouldNotBeNull()
+        changeLog.shouldBeVisible()
     }
 }

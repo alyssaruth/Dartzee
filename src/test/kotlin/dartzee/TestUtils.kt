@@ -1,11 +1,13 @@
 package dartzee
 
+import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
 import dartzee.bean.PresentationDartboard
+import dartzee.core.bean.ButtonColumn
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
@@ -26,14 +28,18 @@ import io.kotest.matchers.shouldBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
+import java.awt.Container
 import java.awt.Point
+import java.awt.Window
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.table.DefaultTableModel
+import javax.swing.text.JTextComponent
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
 val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
@@ -118,6 +124,16 @@ fun ScrollTable.getDisplayValueAt(row: Int, col: Int): Any = table.getValueAt(ro
 fun ScrollTable.getRows(): List<List<Any?>> =
     model.getRows(columnCount)
 
+fun ScrollTable.clickTableButton(row: Int, col: Int) {
+    val editor = table.getCellEditor(row, col)
+    if (editor !is ButtonColumn) {
+        throw AssertionError("Cell is not a TableButton: $editor")
+    }
+
+    table.editingRow = row
+    editor.editButton.doClick()
+}
+
 fun ScrollTable.getFooterRow(): List<Any?> =
     (0 until columnCount).map { getValueAt(ScrollTable.TABLE_ROW_FOOTER, it)}
 
@@ -164,3 +180,16 @@ fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegm
 }
 
 fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses
+
+fun Container.clickOk() = clickChild<JButton>(text = "Ok")
+fun Container.clickCancel() = clickChild<JButton>(text = "Cancel")
+
+/**
+ * TODO - Add to swing-test
+ */
+inline fun <reified W : Window> findWindow(fn: (window: W) -> Boolean = { true }): W? = Window.getWindows().find { it is W && fn(it) } as? W
+
+fun JTextComponent.typeText(newText: String)
+{
+    runOnEventThreadBlocking { text = newText }
+}

@@ -6,11 +6,11 @@ import dartzee.core.util.DialogUtil
 import dartzee.db.PlayerEntity
 import javax.swing.JTextField
 
-abstract class AbstractPlayerConfigurationDialog(protected val player: PlayerEntity): SimpleDialog()
+abstract class AbstractPlayerConfigurationDialog(protected val saveCallback: (player: PlayerEntity) -> Unit, protected val player: PlayerEntity): SimpleDialog()
 {
     //Components
-    val avatar = PlayerAvatar()
-    val textFieldName = JTextField()
+    protected val avatar = PlayerAvatar()
+    protected val textFieldName = JTextField().also { it.name = "nameField" }
 
     //Abstract methods
     abstract fun savePlayer()
@@ -20,6 +20,7 @@ abstract class AbstractPlayerConfigurationDialog(protected val player: PlayerEnt
         if (valid())
         {
             savePlayer()
+            saveCallback(player)
         }
     }
 

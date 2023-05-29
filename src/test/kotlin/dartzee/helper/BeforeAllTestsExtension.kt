@@ -31,6 +31,7 @@ class BeforeAllTestsExtension: BeforeAllCallback
         DialogUtil.init(TestMessageDialogFactory())
         Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
 
+        InjectedThings.allowModalDialogs = false
         InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
         InjectedThings.logger = logger
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))

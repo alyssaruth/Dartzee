@@ -1,17 +1,17 @@
 package dartzee.screen.game.scorer
 
+import dartzee.bean.IMouseListener
 import dartzee.game.state.DartzeePlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.factoryHighScoreResult
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 
 private const val RULE_COLUMN = 3
 private const val SCORE_COLUMN = 4
 
 class DartsScorerDartzee(private val parent: GamePanelDartzee, participant: IWrappedParticipant) :
-    AbstractDartsScorer<DartzeePlayerState>(participant), MouseListener
+    AbstractDartsScorer<DartzeePlayerState>(participant), IMouseListener
 {
     init
     {
@@ -59,16 +59,11 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee, participant: IWra
         lblAvatar.setSelected(selected, -1, selected)
     }
 
-    override fun mouseReleased(e: MouseEvent?)
+    override fun mouseReleased(e: MouseEvent)
     {
         if (parent.gameEntity.isFinished())
         {
             parent.scorerSelected(this)
         }
     }
-
-    override fun mouseEntered(e: MouseEvent?) {}
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mouseExited(e: MouseEvent?) {}
-    override fun mousePressed(e: MouseEvent?) {}
 }

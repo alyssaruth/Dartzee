@@ -6,7 +6,11 @@ import dartzee.core.screen.TableModelDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.core.util.runOnEventThread
-import dartzee.logging.*
+import dartzee.logging.CODE_SANITY_CHECK_COMPLETED
+import dartzee.logging.CODE_SANITY_CHECK_RESULT
+import dartzee.logging.CODE_SANITY_CHECK_STARTED
+import dartzee.logging.KEY_SANITY_COUNT
+import dartzee.logging.KEY_SANITY_DESCRIPTION
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.logger
@@ -15,46 +19,39 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel
 
-fun getAllSanityChecks(): List<AbstractSanityCheck>
-{
-    //Bog standard checks
-    val checks = mutableListOf(
-            SanityCheckFinishedParticipantsNoScore(),
-            SanityCheckDuplicateDarts(),
-            SanityCheckColumnsThatAllowDefaults(),
-            SanityCheckUnfinishedGamesNoActiveParticipants(),
-            SanityCheckDuplicateMatchOrdinals(),
-            SanityCheckFinalScoreX01(),
-            SanityCheckFinalScoreGolf(),
-            SanityCheckFinalScoreRtc(),
-            SanityCheckPlayerIdMismatch(),
-            SanityCheckX01Finishes())
+private fun getAllSanityChecks(): List<AbstractSanityCheck> {
+    val specificChecks = listOf(
+        SanityCheckFinishedParticipantsNoScore(),
+        SanityCheckDuplicateDarts(),
+        SanityCheckColumnsThatAllowDefaults(),
+        SanityCheckUnfinishedGamesNoActiveParticipants(),
+        SanityCheckDuplicateMatchOrdinals(),
+        SanityCheckFinalScoreX01(),
+        SanityCheckFinalScoreGolf(),
+        SanityCheckFinalScoreRtc(),
+        SanityCheckPlayerIdMismatch(),
+        SanityCheckX01Finishes()
+    )
 
-    //Checks that run on all entities
-    DartsDatabaseUtil.getAllEntities().forEach{
-        checks.add(SanityCheckDanglingIdFields(it))
-        checks.add(SanityCheckUnsetIdFields(it))
+    val genericChecks: List<AbstractSanityCheck> = DartsDatabaseUtil.getAllEntities().flatMap {
+        listOf(SanityCheckDanglingIdFields(it), SanityCheckUnsetIdFields(it))
     }
 
-    return checks
+    return specificChecks + genericChecks
 }
 
 object DatabaseSanityCheck
 {
-    private val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
-
-    fun runSanityCheck()
+    fun runSanityCheck(checks: List<AbstractSanityCheck> = getAllSanityChecks())
     {
         logger.info(CODE_SANITY_CHECK_STARTED, "Running ${getAllSanityChecks().size} sanity checks...")
 
-        sanityErrors.clear()
-
-        runAllChecks()
+        runAllChecks(checks)
     }
 
-    private fun runAllChecks()
+    private fun runAllChecks(checks: List<AbstractSanityCheck>)
     {
-        val r = Runnable { runChecksInOtherThread(getAllSanityChecks())}
+        val r = Runnable { runChecksInOtherThread(checks) }
         val t = Thread(r, "Sanity checks")
         t.start()
     }
@@ -64,9 +61,11 @@ object DatabaseSanityCheck
         val dlg = ProgressDialog.factory("Running Sanity Check", "checks remaining", checks.size)
         dlg.setVisibleLater()
 
+        val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
+
         try
         {
-            getAllSanityChecks().forEach{
+            checks.forEach {
                 val results = it.runCheck()
                 sanityErrors.addAll(results)
 
@@ -79,10 +78,10 @@ object DatabaseSanityCheck
             dlg.disposeLater()
         }
 
-        runOnEventThread { sanityCheckComplete() }
+        runOnEventThread { sanityCheckComplete(sanityErrors) }
     }
 
-    private fun sanityCheckComplete()
+    private fun sanityCheckComplete(sanityErrors: List<AbstractSanityCheckResult>)
     {
         logger.info(CODE_SANITY_CHECK_COMPLETED, "Completed sanity check and found ${sanityErrors.size} issues")
 
@@ -93,7 +92,7 @@ object DatabaseSanityCheck
                     KEY_SANITY_COUNT to it.getCount())
         }
 
-        val tm = buildResultsModel()
+        val tm = buildResultsModel(sanityErrors)
         if (tm.rowCount > 0)
         {
             val showResults = object : AbstractAction()
@@ -133,7 +132,7 @@ object DatabaseSanityCheck
         }
     }
 
-    private fun buildResultsModel(): DefaultTableModel
+    private fun buildResultsModel(sanityErrors: List<AbstractSanityCheckResult>): DefaultTableModel
     {
         val model = DefaultModel()
         model.addColumn("Description")

@@ -1,6 +1,5 @@
 package dartzee.helper
 
-import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.logging.LogDestinationSystemOut
@@ -20,6 +19,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
+import sun.awt.AppContext
 import java.awt.Window
 import javax.swing.SwingUtilities
 
@@ -72,11 +72,15 @@ abstract class AbstractTest
             errorLogged() shouldBe false
         }
 
-        val visibleWindows = Window.getWindows().filter { it.isVisible }
-        if (visibleWindows.isNotEmpty())
+        val windows = Window.getWindows()
+        if (windows.isNotEmpty())
         {
-            SwingUtilities.invokeLater { visibleWindows.forEach { it.dispose() } }
-            flushEdt()
+            SwingUtilities.invokeAndWait {
+                val visibleWindows = windows.filter { it.isVisible }
+                visibleWindows.forEach { it.dispose() }
+            }
+
+            AppContext.getAppContext().remove(Window::class.java)
         }
 
         checkedForExceptions = false
@@ -91,7 +95,7 @@ abstract class AbstractTest
 
     fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
     {
-        val record = getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
+        val record = findLog(code, severity)
         record.shouldNotBeNull()
 
         if (severity == Severity.ERROR)
@@ -101,6 +105,9 @@ abstract class AbstractTest
 
         return record
     }
+
+    protected fun findLog(code: LoggingCode, severity: Severity = Severity.INFO) =
+        getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
 
     fun verifyNoLogs(code: LoggingCode)
     {

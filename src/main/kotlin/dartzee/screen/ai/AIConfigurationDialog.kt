@@ -8,16 +8,23 @@ import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
 import dartzee.screen.AbstractPlayerConfigurationDialog
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JTabbedPane
+import javax.swing.JTextField
+import javax.swing.SwingConstants
 import javax.swing.border.BevelBorder
 import javax.swing.border.EmptyBorder
 import javax.swing.border.SoftBevelBorder
 import javax.swing.border.TitledBorder
 
-class AIConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate()): AbstractPlayerConfigurationDialog(player)
+class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity = PlayerEntity.factoryCreate()) :
+    AbstractPlayerConfigurationDialog(saveCallback, player)
 {
     private val panelScreen = JPanel()
     private val panelNorth = JPanel()
@@ -47,7 +54,7 @@ class AIConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate())
         title = "Configure AI"
         setSize(1100, 720)
         isResizable = false
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
         contentPane.add(panelSouth, BorderLayout.EAST)
         panelSouth.border = null
         panelSouth.layout = BorderLayout(0, 0)
@@ -222,9 +229,9 @@ class AIConfigurationDialog(player: PlayerEntity = PlayerEntity.factoryCreate())
 
     companion object
     {
-        fun amendPlayer(player: PlayerEntity)
+        fun amendPlayer(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity)
         {
-            val dialog = AIConfigurationDialog(player)
+            val dialog = AIConfigurationDialog(saveCallback, player)
             dialog.setLocationRelativeTo(ScreenCache.mainScreen)
             dialog.isVisible = true
         }

@@ -1,15 +1,15 @@
 package dartzee.screen.game.dartzee
 
+import dartzee.bean.IMouseListener
 import dartzee.core.util.setFontSize
 import dartzee.dartzee.DartzeeRuleDto
 import org.jfree.chart.imagemap.ImageMapUtils
 import java.awt.Dimension
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import javax.swing.JButton
 import kotlin.math.abs
 
-abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton(), MouseListener
+abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JButton(), IMouseListener
 {
     init
     {
@@ -48,7 +48,7 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
         return "$prefix ${abs(score)}"
     }
 
-    override fun mouseEntered(e: MouseEvent?)
+    override fun mouseEntered(e: MouseEvent)
     {
         text = getButtonText(true)
 
@@ -57,13 +57,9 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int): JB
         }
     }
 
-    override fun mouseExited(e: MouseEvent?)
+    override fun mouseExited(e: MouseEvent)
     {
         text = getButtonText()
         setFontSize(12)
     }
-
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mouseReleased(e: MouseEvent?) {}
-    override fun mousePressed(e: MouseEvent?) {}
 }

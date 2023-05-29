@@ -6,7 +6,9 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.util.setMargins
 import dartzee.db.PlayerEntity
 import dartzee.screen.EmbeddedScreen
-import dartzee.utils.InjectedThings
+import dartzee.screen.HumanConfigurationDialog
+import dartzee.screen.ScreenCache
+import dartzee.screen.ai.AIConfigurationDialog
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -101,12 +103,10 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 
     private fun createPlayer(human: Boolean)
     {
-        val countBefore = PlayerEntity().count()
-
-        InjectedThings.playerManager.createNewPlayer(human)
-        if (PlayerEntity().count() > countBefore)
-        {
-            initialise()
-        }
+        val dlg = if (human) HumanConfigurationDialog(::playerUpdated) else AIConfigurationDialog(::playerUpdated)
+        dlg.setLocationRelativeTo(ScreenCache.mainScreen)
+        dlg.isVisible = true
     }
+
+    private fun playerUpdated(player: PlayerEntity) = initialise()
 }

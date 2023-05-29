@@ -6,6 +6,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.makeMouseEvent
 import com.github.alyssaburlton.swingtest.toBufferedImage
 import dartzee.bean.PresentationDartboard
+import dartzee.clickCancel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.doClick
 import dartzee.getPointForSegment
@@ -147,7 +148,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         dartboard.doClick(pt)
         dlg.getSelection().shouldBeEmpty()
 
-        dlg.clickChild<JButton>(text = "Cancel")
+        dlg.clickCancel()
         dlg.getSelection().shouldContainExactlyInAnyOrder(segment)
     }
 

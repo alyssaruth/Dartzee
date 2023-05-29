@@ -4,6 +4,7 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
 import dartzee.achievements.getWinAchievementType
 import dartzee.ai.DartsAiModel
+import dartzee.bean.IMouseListener
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadMiss
@@ -42,7 +43,6 @@ import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import java.sql.SQLException
 import javax.swing.ImageIcon
 import javax.swing.JButton
@@ -53,7 +53,7 @@ import javax.swing.JToggleButton
 abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
         val gameEntity: GameEntity,
-        protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, MouseListener
+        protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener
 {
     private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
     private val hmPlayerNumberToScorer = mutableMapOf<Int, S>()
@@ -160,8 +160,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         btnReset.addActionListener(this)
         btnStats.addActionListener(this)
         btnSlider.addActionListener(this)
-
-        addMouseListener(this)
     }
 
     /**
@@ -667,15 +665,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         btnConfirm.isEnabled = false
         btnReset.isEnabled = false
     }
-
-    /**
-     * MouseListener
-     */
-    override fun mouseClicked(e: MouseEvent){}
-    override fun mouseEntered(e: MouseEvent){}
-    override fun mouseExited(e: MouseEvent){}
-    override fun mousePressed(e: MouseEvent){}
-    override fun mouseReleased(e: MouseEvent){}
 
     internal inner class DelayedOpponentTurn : Runnable
     {

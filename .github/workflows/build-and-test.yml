@@ -3,7 +3,7 @@ on: push
 jobs:
   unit-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -17,17 +17,20 @@ jobs:
       - name: Build & Unit Test
         uses: GabrielBB/xvfb-action@v1.6
         with:
-          run: ./gradlew koverReport
+          run: |
+            ./gradlew koverReport
+            zip -rg unit-test-results.zip build/reports/tests/unitTest
+            zip -rq coverage-html.zip build/reports/kover/html
       - name: Export test results
         uses: actions/upload-artifact@v3
         with:
           name: unit-test-results
-          path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/unitTest/**/*.html
+          path: unit-test-results.zip
       - name: Export coverage stats
         uses: actions/upload-artifact@v3
         with:
           name: kover-report
-          path: /home/runner/work/Dartzee/Dartzee/build/reports/kover/html
+          path: coverage-html.zip
       - name: Export snapshots
         uses: actions/upload-artifact@v3
         if: failure()
@@ -37,6 +40,7 @@ jobs:
             /home/runner/**/*.failed.png
             /home/runner/**/*.comparison.png
       - name: Update coverage
+        id: update-coverage
         if: github.ref == 'refs/heads/main'
         run: |
           python scripts/update-coverage.py
@@ -44,7 +48,8 @@ jobs:
         uses: EndBug/add-and-commit@v7
         if: github.ref == 'refs/heads/main'
         with:
-          message: 'Update coverage stats'
+          add: './README.md'
+          message: "Update coverage stats: ${{ steps.update-coverage.outputs.COVERAGE }}"
   integration-and-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20

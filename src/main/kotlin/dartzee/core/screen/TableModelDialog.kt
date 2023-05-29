@@ -1,6 +1,7 @@
 package dartzee.core.screen
 
 import dartzee.core.bean.ScrollTable
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 
 /**
@@ -12,7 +13,7 @@ class TableModelDialog(title: String, val table: ScrollTable) : SimpleDialog()
     {
         setTitle(title)
         setSize(600, 400)
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
 
         contentPane.add(table, BorderLayout.CENTER)
     }

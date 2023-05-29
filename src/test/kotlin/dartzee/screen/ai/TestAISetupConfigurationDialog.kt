@@ -3,6 +3,8 @@ package dartzee.screen.ai
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AimDart
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.getRows
 import dartzee.helper.AbstractTest
@@ -86,7 +88,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
         val dlg = AISetupConfigurationDialog(map)
 
         dlg.clickChild<JButton>(text = "Add Rule...")
-        dlg.clickChild<JButton>(text = "Ok")
+        dlg.clickOk()
 
         map.shouldContainExactly(mapOf(48 to AimDart(16, 1), 10 to AimDart(2, 1)))
     }
@@ -99,7 +101,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
         val dlg = AISetupConfigurationDialog(map)
 
         dlg.clickChild<JButton>(text = "Add Rule...")
-        dlg.clickChild<JButton>(text = "Cancel")
+        dlg.clickCancel()
 
         map.shouldContainExactly(mapOf(48 to AimDart(16, 1)))
     }

@@ -1,13 +1,13 @@
 package dartzee.screen.player
 
+import dartzee.bean.IMouseListener
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import javax.swing.JButton
 
-abstract class PlayerSummaryButton: JButton(), ActionListener, MouseListener
+abstract class PlayerSummaryButton: JButton(), ActionListener, IMouseListener
 {
     abstract val defaultText: String
     abstract val hoverText: String
@@ -27,11 +27,7 @@ abstract class PlayerSummaryButton: JButton(), ActionListener, MouseListener
         text = defaultText
     }
 
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mouseReleased(e: MouseEvent?) {}
-    override fun mousePressed(e: MouseEvent?) {}
-
-    override fun mouseEntered(e: MouseEvent?)
+    override fun mouseEntered(e: MouseEvent)
     {
         if (isEnabled)
         {
@@ -39,7 +35,7 @@ abstract class PlayerSummaryButton: JButton(), ActionListener, MouseListener
         }
     }
 
-    override fun mouseExited(e: MouseEvent?)
+    override fun mouseExited(e: MouseEvent)
     {
         text = defaultText
     }

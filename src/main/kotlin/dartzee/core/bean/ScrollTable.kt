@@ -1,5 +1,6 @@
 package dartzee.core.bean
 
+import dartzee.bean.IMouseListener
 import dartzee.core.util.TableUtil.DefaultModel
 import java.awt.BorderLayout
 import java.awt.Color
@@ -8,7 +9,6 @@ import java.awt.Font
 import java.awt.Rectangle
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -32,7 +32,7 @@ import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelListener,
-    ListSelectionListener, MouseListener
+    ListSelectionListener, IMouseListener
 {
     private var rowNameSingular = "row"
     private var rowNamePlural: String? = null
@@ -464,18 +464,13 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         table.tableHeader.font = font
     }
 
-    override fun mouseClicked(arg0: MouseEvent) {
-        if (arg0.clickCount == 2) {
+    override fun mouseClicked(e: MouseEvent) {
+        if (e.clickCount == 2) {
             for (listener in clickListeners) {
                 listener.doubleClicked(this)
             }
         }
     }
-
-    override fun mouseEntered(arg0: MouseEvent) {}
-    override fun mouseExited(arg0: MouseEvent) {}
-    override fun mousePressed(arg0: MouseEvent) {}
-    override fun mouseReleased(arg0: MouseEvent) {}
 
     companion object
     {

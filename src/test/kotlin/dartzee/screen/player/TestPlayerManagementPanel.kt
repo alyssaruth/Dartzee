@@ -1,6 +1,7 @@
 package dartzee.screen.player
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldMatch
@@ -10,30 +11,34 @@ import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.bean.PlayerAvatar
+import dartzee.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
+import dartzee.findWindow
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertGameForPlayer
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
-import dartzee.player.PlayerManager
+import dartzee.helper.makeDartsModel
+import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings
+import dartzee.screen.ai.AIConfigurationDialog
+import dartzee.screen.ai.AISimulationSetupDialog
+import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JOptionPane
+import javax.swing.JTextField
 
 class TestPlayerManagementPanel: AbstractTest()
 {
@@ -205,39 +210,52 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should support editing a player, and refresh with new details`()
+    fun `Should support editing a human player`()
     {
         val player = insertPlayer(name = "Old name")
-
-        val playerManager = mockk<PlayerManager>(relaxed = true)
-        every { playerManager.amendPlayer(any())} answers {
-            player.name = "New name"
-            player.saveToDatabase()
-        }
-
-        InjectedThings.playerManager = playerManager
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
         panel.clickChild<JButton>(text = "Edit")
 
-        verify { playerManager.amendPlayer(player) }
+        val dlg = findWindow<HumanConfigurationDialog>()
+        dlg.shouldNotBeNull()
+
+        dlg.getChild<JTextField>("nameField").typeText("New name")
+        dlg.clickOk()
+        flushEdt()
+
+        panel.lblPlayerName.text shouldBe "New name"
+    }
+
+    @Test
+    fun `Should support editing an AI player`()
+    {
+        val player = insertPlayer(model = makeDartsModel(), name = "Old name")
+
+        val panel = PlayerManagementPanel()
+        panel.refresh(player)
+        panel.clickChild<JButton>(text = "Edit")
+
+        val dlg = findWindow<AIConfigurationDialog>()
+        dlg.shouldNotBeNull()
+
+        dlg.getChild<JTextField>("nameField").typeText("New name")
+        dlg.clickOk()
+        flushEdt()
+
         panel.lblPlayerName.text shouldBe "New name"
     }
 
     @Test
     fun `Should run a simulation for a player`()
     {
-        val playerManager = mockk<PlayerManager>(relaxed = true)
-        InjectedThings.playerManager = playerManager
-
-        val player = insertPlayer(strategy = "foo")
+        val player = insertPlayer(makeDartsModel())
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
         panel.clickChild<JButton>(text = "Run Simulation")
 
-        verify { playerManager.runSimulation(player) }
+        findWindow<AISimulationSetupDialog>().shouldNotBeNull()
     }
-
 }

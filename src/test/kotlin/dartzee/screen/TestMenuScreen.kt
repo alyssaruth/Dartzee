@@ -1,6 +1,8 @@
 package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
@@ -76,5 +78,15 @@ class TestMenuScreen: AbstractTest()
         val scrn = MenuScreen()
         scrn.clickChild<JButton>(text = "Dartzee")
         ScreenCache.currentScreen().shouldBeInstanceOf<DartzeeTemplateSetupScreen>()
+    }
+
+    @Test
+    fun `Should show the about dialog`()
+    {
+        val scrn = MenuScreen()
+        scrn.clickChild<JButton>(text = "About...")
+
+        val window = findWindow<AboutDialog>()!!
+        window.shouldBeVisible()
     }
 }

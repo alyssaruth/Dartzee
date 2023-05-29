@@ -10,6 +10,11 @@ class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanity
 
     override fun runCheck(): List<AbstractSanityCheckResult>
     {
+        if (entity.getTableName() == EntityName.DeletionAudit)
+        {
+            return emptyList()
+        }
+
         val idColumns = getIdColumns(entity)
 
         idColumns.forEach{
