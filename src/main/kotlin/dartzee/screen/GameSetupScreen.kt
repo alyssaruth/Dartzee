@@ -208,16 +208,11 @@ class GameSetupScreen : EmbeddedScreen()
 
     private fun factoryMatch(): DartsMatchEntity?
     {
-        val match = when
+        return when
         {
             rdbtnFirstTo.isSelected -> DartsMatchEntity.factoryFirstTo(spinnerWins.value as Int)
             rdbtnPoints.isSelected -> DartsMatchEntity.factoryPoints(spinnerGames.value as Int, getPointsJson())
             else -> null
-        }
-
-        return match?.also {
-            it.gameType = gameTypeComboBox.getGameType()
-            it.gameParams = getGameParams()
         }
     }
 
