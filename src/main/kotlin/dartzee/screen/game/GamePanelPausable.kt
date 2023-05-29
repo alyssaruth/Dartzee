@@ -108,10 +108,7 @@ abstract class GamePanelPausable<S : AbstractDartsScorerPausable<PlayerState>, P
 
     fun unpauseLastPlayer()
     {
-        //If we've come through game load, we'll have disabled this.
         aiShouldPause = false
-        slider.isEnabled = true
-
         nextTurn()
     }
 }
