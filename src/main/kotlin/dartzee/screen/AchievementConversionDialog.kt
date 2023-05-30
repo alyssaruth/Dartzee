@@ -7,6 +7,7 @@ import dartzee.bean.PlayerSelector
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
+import dartzee.utils.InjectedThings
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
@@ -29,7 +30,7 @@ class AchievementConversionDialog : SimpleDialog()
         title = "Achievement Conversion"
         setSize(600, 400)
         isResizable = false
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
 
         contentPane.add(playerSelector, BorderLayout.CENTER)
         contentPane.add(panelTop, BorderLayout.NORTH)
