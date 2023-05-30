@@ -7,6 +7,7 @@ import dartzee.logging.LogRecord
 import dartzee.logging.Logger
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
+import dartzee.`object`.DartsClient
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
@@ -44,6 +45,7 @@ abstract class AbstractTest
         clearAllMocks()
 
         DialogUtil.init(dialogFactory)
+        DartsClient.devMode = false
 
         mainDatabase.localIdGenerator.hmLastAssignedIdByEntityName.clear()
 

@@ -1,10 +1,16 @@
 package dartzee.core.screen
 
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JDialog
+import javax.swing.JPanel
+import javax.swing.JProgressBar
+import javax.swing.SwingUtilities
+import javax.swing.WindowConstants
 import javax.swing.border.EmptyBorder
 
 class ProgressDialog(private var workToDo: Int, private var message: String) : JDialog(), ActionListener
@@ -92,7 +98,7 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
             dialog.setSize(300, 90)
             dialog.isResizable = false
             dialog.setLocationRelativeTo(null)
-            dialog.isModal = true
+            dialog.isModal = InjectedThings.allowModalDialogs
 
             return dialog
         }
