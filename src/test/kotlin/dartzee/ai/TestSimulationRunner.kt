@@ -63,7 +63,9 @@ class TestSimulationRunner : AbstractTest()
         val blockingSimulation = mockk<AbstractDartsSimulation>(relaxed = true)
         every { blockingSimulation.simulateGame(any()) } answers {
             try {
+                println("Called simulateGame with ${it.invocation.args} - isLocked: ${lock.isLocked}, isLockedByCurrentThread: ${lock.isHeldByCurrentThread}")
                 lock.lock()
+                println("simulateGame has lock now - isLocked: ${lock.isLocked}, isLockedByCurrentThread: ${lock.isHeldByCurrentThread}")
                 makeGameWrapper()
             } finally {
                 lock.unlock()
@@ -71,18 +73,24 @@ class TestSimulationRunner : AbstractTest()
         }
 
         lock.lock()
+        println("Locked from test thread - isLocked: ${lock.isLocked}, isLockedByCurrentThread: ${lock.isHeldByCurrentThread}")
         awaitCondition { lock.isLocked }
+        println("Awaited lock from test thread - isLocked: ${lock.isLocked}, isLockedByCurrentThread: ${lock.isHeldByCurrentThread}")
 
         val runner = SimulationRunner()
         runner.runSimulation(blockingSimulation, 5, false)
+        println("Called runSimulation")
 
         awaitCondition { findWindow<ProgressDialog>() != null }
         flushEdt()
         val progressDialog = findWindow<ProgressDialog>()!!
         progressDialog.shouldBeVisible()
         runOnEventThreadBlocking { progressDialog.clickCancel() }
+        println("Clicked cancel")
 
         lock.unlock()
+        println("Released lock")
+
         waitForSimulation(CODE_SIMULATION_CANCELLED)
 
         verify { blockingSimulation.simulateGame(-1L) }
