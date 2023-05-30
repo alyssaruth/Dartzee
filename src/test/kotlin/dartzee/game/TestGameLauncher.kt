@@ -3,6 +3,7 @@ package dartzee.game
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
+import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -91,14 +92,17 @@ class TestGameLauncher: AbstractTest()
         val match = DartsMatchEntity.factoryFirstTo(2)
         val p = insertPlayer()
         val p2 = insertPlayer()
-        val params = GameLaunchParams(listOf(p, p2), GameType.X01, "501", false, emptyList())
+        val params = GameLaunchParams(listOf(p, p2), GameType.GOLF, "18", false, emptyList())
 
         GameLauncher().launchNewMatch(match, params)
 
         val scrns = ScreenCache.getDartsGameScreens()
         scrns.size shouldBe 1
         val scrn = scrns.first()
-        scrn.shouldBeInstanceOf<DartsMatchScreen<X01PlayerState>>()
+        scrn.shouldBeInstanceOf<DartsMatchScreen<GolfPlayerState>>()
+
+        match.gameType shouldBe GameType.GOLF
+        match.gameParams shouldBe "18"
     }
 
     @Test

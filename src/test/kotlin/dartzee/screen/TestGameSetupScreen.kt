@@ -202,8 +202,6 @@ class TestGameSetupScreen: AbstractTest()
         verify { gameLauncher.launchNewMatch(any(), launchParams)}
 
         val match = slot.captured
-        match.gameType shouldBe GameType.X01
-        match.gameParams shouldBe "501"
         match.mode shouldBe MatchMode.FIRST_TO
         match.games shouldBe 7
         match.matchParams shouldBe ""
@@ -232,8 +230,6 @@ class TestGameSetupScreen: AbstractTest()
         verify { gameLauncher.launchNewMatch(any(), any())}
 
         val match = slot.captured
-        match.gameType shouldBe GameType.GOLF
-        match.gameParams shouldBe "18"
         match.mode shouldBe MatchMode.POINTS
         match.games shouldBe 8
         match.matchParams shouldBe DartsMatchEntity.constructPointsJson(15, 9, 6, 3, 2, 1)
@@ -306,8 +302,6 @@ class TestGameSetupScreen: AbstractTest()
         val match = slot.captured
         match.games shouldBe 2
         match.mode shouldBe MatchMode.FIRST_TO
-        match.gameParams shouldBe ""
-        match.gameType shouldBe GameType.DARTZEE
     }
 
     @Test

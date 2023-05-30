@@ -58,7 +58,7 @@ class TestSimulationRunner : AbstractTest()
     @Test
     fun `Should show a progress dialog and allow cancelling`()
     {
-        val lock = ReentrantLock()
+        val lock = ReentrantLock(true)
         val blockingSimulation = mockk<AbstractDartsSimulation>(relaxed = true)
         every { blockingSimulation.simulateGame(any()) } answers {
             try {
@@ -162,6 +162,25 @@ class TestSimulationRunner : AbstractTest()
 
         dialogFactory.questionsShown.shouldContainExactly("Save real entities?")
         getCountFromTable(EntityName.Game) shouldBe 0
+    }
+
+    @Test
+    fun `Should save real entities if response is Yes`()
+    {
+        DartsClient.devMode = true
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
+
+        val model = makeDartsModel()
+        val player = insertPlayer(model = model, name = "Alyssa")
+        val simulation = DartsSimulationX01(player, model)
+
+        val runner = SimulationRunner()
+        runner.runSimulation(simulation, 3, true)
+        waitForSimulation()
+
+        dialogFactory.questionsShown.shouldContainExactly("Save real entities?")
+        getCountFromTable(EntityName.Game) shouldBe 3
+        getCountFromTable(EntityName.Participant) shouldBe 3
     }
 
     private fun findResultsWindow() = findWindow<JFrame> { it.title.contains("Simulation Results") }
