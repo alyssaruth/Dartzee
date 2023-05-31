@@ -4,8 +4,8 @@ import com.amazonaws.auth.BasicAWSCredentials
 import dartzee.helper.AbstractTest
 import dartzee.utils.AwsUtils
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import org.apache.http.HttpVersion
@@ -105,7 +105,7 @@ class TestElasticsearchPoster: AbstractTest()
 
         clearLogs()
         poster.postLog("foo")
-        getLogRecords().shouldBeEmpty()
+        flushAndGetLogRecords().shouldBeEmpty()
     }
 
     @Test

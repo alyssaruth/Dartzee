@@ -93,11 +93,11 @@ abstract class AbstractTest
         DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
     }
 
-    fun getLastLog() = getLogRecords().last()
+    fun getLastLog() = flushAndGetLogRecords().last()
 
     fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
     {
-        val record = findLog(code, severity)
+        val record = flushAndGetLogRecords().findLast { it.loggingCode == code && it.severity == severity }
         record.shouldNotBeNull()
 
         if (severity == Severity.ERROR)
@@ -109,11 +109,11 @@ abstract class AbstractTest
     }
 
     protected fun findLog(code: LoggingCode, severity: Severity = Severity.INFO) =
-        getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
+        getLogRecordsSoFar().findLast { it.loggingCode == code && it.severity == severity }
 
     fun verifyNoLogs(code: LoggingCode)
     {
-        getLogRecords().any { it.loggingCode == code } shouldBe false
+        flushAndGetLogRecords().any { it.loggingCode == code } shouldBe false
     }
 
     fun errorLogged(): Boolean
@@ -122,14 +122,14 @@ abstract class AbstractTest
         return getErrorsLogged().isNotEmpty()
     }
 
-    private fun getErrorsLogged() = getLogRecords().filter { it.severity == Severity.ERROR }
+    private fun getErrorsLogged() = flushAndGetLogRecords().filter { it.severity == Severity.ERROR }
 
     fun getLogRecordsSoFar(): List<LogRecord>
     {
         return logDestination.logRecords.toList()
     }
 
-    fun getLogRecords(): List<LogRecord>
+    fun flushAndGetLogRecords(): List<LogRecord>
     {
         logger.waitUntilLoggingFinished()
         return logDestination.logRecords.toList()

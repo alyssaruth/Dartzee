@@ -1,14 +1,18 @@
 package dartzee.db
 
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.factoryPlayer
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertPlayer
+import dartzee.helper.wipeTable
 import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class TestBulkInserter: AbstractTest()
@@ -18,7 +22,7 @@ class TestBulkInserter: AbstractTest()
     {
         clearLogs()
         BulkInserter.insert()
-        getLogRecords().shouldBeEmpty()
+        flushAndGetLogRecords().shouldBeEmpty()
     }
 
     @Test
@@ -64,7 +68,7 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert(rows, 1000, rowsPerInsert)
 
-        getLogRecords() shouldHaveSize(expectedNumberOfBatches)
+        flushAndGetLogRecords() shouldHaveSize(expectedNumberOfBatches)
         getCountFromTable(EntityName.Game) shouldBe rows.size
     }
 
@@ -94,8 +98,8 @@ class TestBulkInserter: AbstractTest()
 
         BulkInserter.insert(rows, 300, 50)
 
-        getLogRecords().filter { it.loggingCode == CODE_SQL }.shouldBeEmpty()
-        val log = getLogRecords().last { it.loggingCode == CODE_BULK_SQL }
+        flushAndGetLogRecords().filter { it.loggingCode == CODE_SQL }.shouldBeEmpty()
+        val log = flushAndGetLogRecords().last { it.loggingCode == CODE_BULK_SQL }
         log.message shouldBe "Inserting 501 rows into Game (2 threads @ 50 rows per insert)"
         getCountFromTable(EntityName.Game) shouldBe 501
 

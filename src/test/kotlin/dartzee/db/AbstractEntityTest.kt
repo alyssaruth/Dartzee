@@ -129,7 +129,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
 
         setValuesAndSaveToDatabase(entity, true)
 
-        val insertLog = getLogRecords().find { it.loggingCode == CODE_SQL
+        val insertLog = flushAndGetLogRecords().find { it.loggingCode == CODE_SQL
                 && it.message.contains("INSERT INTO ${dao.getTableName()} VALUES ('$rowId'") }
         insertLog.shouldNotBeNull()
 
@@ -162,7 +162,7 @@ abstract class AbstractEntityTest<E: AbstractEntity<E>>: AbstractTest()
         //Update
         setValuesAndSaveToDatabase(entity, false)
 
-        val updateLog = getLogRecords().find { it.loggingCode == CODE_SQL && it.message.contains("UPDATE ${dao.getTableName()}") }
+        val updateLog = flushAndGetLogRecords().find { it.loggingCode == CODE_SQL && it.message.contains("UPDATE ${dao.getTableName()}") }
         updateLog.shouldNotBeNull()
 
         getCountFromTable(dao.getTableName()) shouldBe 1
