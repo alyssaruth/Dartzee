@@ -71,11 +71,9 @@ class SimulationRunner: AbstractSimulationRunner()
             catch (t: Throwable)
             {
                 hmGameIdToWrapper.clear()
-                dialog.disposeLater()
                 InjectedThings.logger.error(CODE_SIMULATION_ERROR, "Caught $t running simulation", t)
                 DialogUtil.showErrorLater("A serious problem has occurred with the simulation.")
             }
-
         }
 
         InjectedThings.logger.info(CODE_SIMULATION_FINISHED, "Simulation completed in ${timer.getDuration()} millis")
@@ -117,7 +115,7 @@ class SimulationRunner: AbstractSimulationRunner()
             val participants = mutableListOf<ParticipantEntity>()
             val darts = mutableListOf<DartEntity>()
 
-            wrappers.forEach{
+            wrappers.forEach {
                 games.add(it.gameEntity!!)
                 participants.add(it.participantEntity!!)
 

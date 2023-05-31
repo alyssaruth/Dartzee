@@ -19,6 +19,8 @@ class GameLauncher
     fun launchNewMatch(match: DartsMatchEntity, params: GameLaunchParams)
     {
         val game = GameEntity.factoryAndSave(params, match)
+        match.cacheMetadataFromGame(game)
+
         val participants = insertNewGameEntities(game.rowId, params)
 
         val scrn = factoryMatchScreen(match)

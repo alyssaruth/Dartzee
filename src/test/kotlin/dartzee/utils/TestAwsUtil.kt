@@ -40,7 +40,7 @@ class TestAwsUtil: AbstractTest()
         val credentials = AwsUtils.readCredentials("foo")
         credentials shouldBe null
 
-        getLogRecords().shouldBeEmpty()
+        flushAndGetLogRecords().shouldBeEmpty()
         newOut.toString().shouldContain("NullPointerException")
     }
 
@@ -53,7 +53,7 @@ class TestAwsUtil: AbstractTest()
         val credentials = AwsUtils.readCredentials("foo")
         credentials shouldBe null
 
-        getLogRecords().shouldBeEmpty()
+        flushAndGetLogRecords().shouldBeEmpty()
         newOut.toString().shouldContain("Failed to read in AWS credentials: java.lang.IndexOutOfBoundsException")
     }
 }
