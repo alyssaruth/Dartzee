@@ -11,13 +11,13 @@ import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
-import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -63,7 +63,7 @@ class TestDatabase: AbstractTest()
         val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
         mainDatabase.executeUpdates(updates) shouldBe true
 
-        val records = getLogRecords().filter { it.loggingCode == CODE_SQL }
+        val records = flushAndGetLogRecords().filter { it.loggingCode == CODE_SQL }
         records.size shouldBe 2
         records.first().message shouldContain "CREATE TABLE zzUpdateTest(str VARCHAR(50))"
         records.last().message shouldContain "INSERT INTO zzUpdateTest VALUES ('5')"

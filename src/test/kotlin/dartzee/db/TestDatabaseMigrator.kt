@@ -3,14 +3,19 @@ package dartzee.db
 import dartzee.helper.AbstractTest
 import dartzee.helper.getTableNames
 import dartzee.helper.usingInMemoryDatabase
-import dartzee.logging.*
+import dartzee.logging.CODE_DATABASE_CREATED
+import dartzee.logging.CODE_DATABASE_CREATING
+import dartzee.logging.CODE_DATABASE_NEEDS_UPDATE
+import dartzee.logging.CODE_DATABASE_TOO_OLD
+import dartzee.logging.CODE_DATABASE_UP_TO_DATE
+import dartzee.logging.Severity
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.Database
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import io.kotest.assertions.throwables.shouldNotThrowAny
 import org.junit.jupiter.api.Test
 
 class TestDatabaseMigrator: AbstractTest()
@@ -98,7 +103,7 @@ class TestDatabaseMigrator: AbstractTest()
             result shouldBe MigrationResult.SUCCESS
 
             // Logging
-            val logs = getLogRecords().filter { it.loggingCode == CODE_DATABASE_NEEDS_UPDATE }
+            val logs = flushAndGetLogRecords().filter { it.loggingCode == CODE_DATABASE_NEEDS_UPDATE }
             logs.map { it.message }.shouldContainExactly(
                 "Upgrading Test database to V${DATABASE_VERSION - 1} (2 migrations)",
                 "Upgrading Test database to V${DATABASE_VERSION} (1 migrations)"

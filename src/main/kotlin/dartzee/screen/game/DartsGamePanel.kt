@@ -39,7 +39,7 @@ import dartzee.utils.ResourceCache.ICON_STATS_LARGE
 import dartzee.utils.getQuotedIdStr
 import java.awt.BorderLayout
 import java.awt.Dimension
-import java.awt.Point
+import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
@@ -48,13 +48,12 @@ import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JToggleButton
-import javax.swing.SwingConstants
 
 
 abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(
         protected val parentWindow: AbstractDartsGameScreen,
         val gameEntity: GameEntity,
-        protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener, IMouseListener
+        protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener
 {
     private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
     private val hmPlayerNumberToScorer = mutableMapOf<Int, S>()
@@ -74,8 +73,9 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     val dartboard = GameplayDartboard()
     private val statsPanel = factoryStatsPanel(gameEntity.gameParams)
 
+    private val panelAiSlider = JPanel()
     private val panelSouth = JPanel()
-    protected val slider = SliderAiSpeed(true)
+    protected val slider = SliderAiSpeed()
     private val panelButtons = JPanel()
     val btnConfirm = JButton("")
     val btnReset = JButton("")
@@ -130,10 +130,8 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         dartboard.addDartboardListener(this)
         panelCenter.add(panelSouth, BorderLayout.SOUTH)
         panelSouth.layout = BorderLayout(0, 0)
-        slider.value = 1000
-        slider.size = Dimension(100, 200)
-        slider.preferredSize = Dimension(40, 200)
-        panelSouth.add(panelButtons, BorderLayout.SOUTH)
+        panelSouth.add(panelAiSlider, BorderLayout.NORTH)
+        panelSouth.add(panelButtons, BorderLayout.CENTER)
         btnConfirm.preferredSize = Dimension(80, 80)
         btnConfirm.icon = ImageIcon(javaClass.getResource("/buttons/Confirm.png"))
         btnConfirm.toolTipText = "Confirm round"
@@ -151,8 +149,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         btnSlider.toolTipText = "AI throw speed"
         btnSlider.preferredSize = Dimension(80, 80)
 
-        slider.orientation = SwingConstants.VERTICAL
+        panelAiSlider.layout = FlowLayout(FlowLayout.CENTER, 0, 0)
+        panelAiSlider.add(slider)
         slider.isVisible = false
+        slider.preferredSize = Dimension(320, 30)
 
         panelButtons.add(btnSlider)
 
@@ -160,10 +160,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         btnReset.addActionListener(this)
         btnStats.addActionListener(this)
         btnSlider.addActionListener(this)
-
-        addMouseListener(this)
     }
-
 
     /**
      * Abstract methods
@@ -214,7 +211,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     private fun initForAi(hasAi: Boolean)
     {
-        dartboard.addOverlay(Point(329, 350), slider)
         btnSlider.isVisible = hasAi
 
         val defaultSpd = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED)
@@ -264,7 +260,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         }
         else
         {
-            slider.isEnabled = false
             btnConfirm.isEnabled = false
             btnReset.isEnabled = false
         }
@@ -472,12 +467,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         //If there are any specific variables we need to update (e.g. current score for X01), do it now
         updateVariablesForDartThrown(dart)
 
-        //We've clicked on the dartboard, so dismiss the slider
-        if (getCurrentPlayerState().isHuman())
-        {
-            dismissSlider()
-        }
-
         doAnimations(dart)
 
         //Enable both of these
@@ -595,14 +584,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     override fun actionPerformed(arg0: ActionEvent)
     {
-        val source = arg0.source
-        if (source !== btnSlider)
-        {
-            btnSlider.isSelected = false
-            slider.isVisible = false
-        }
-
-        when (source)
+        when (arg0.source)
         {
             btnReset -> {
                 resetRound()
@@ -617,12 +599,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     private fun toggleSlider()
     {
         slider.isVisible = btnSlider.isSelected
-
-        if (btnStats.isSelected)
-        {
-            btnStats.isSelected = false
-            viewStats()
-        }
     }
 
     private fun viewStats()
@@ -688,17 +664,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     {
         btnConfirm.isEnabled = false
         btnReset.isEnabled = false
-    }
-
-    /**
-     * MouseListener
-     */
-    override fun mouseClicked(e: MouseEvent)
-    {
-        if (e.source !== slider)
-        {
-            dismissSlider()
-        }
     }
 
     internal inner class DelayedOpponentTurn : Runnable
