@@ -1,5 +1,6 @@
 package dartzee.bean
 
+import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.core.helper.doubleClick
 import dartzee.core.helper.processKeyPress
 import dartzee.helper.AbstractTest
@@ -9,6 +10,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
+import javax.swing.JButton
 
 class TestPlayerSelector: AbstractTest()
 {
@@ -46,7 +48,7 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init()
 
-        selector.btnSelect.doClick()
+        selector.clickSelect()
         selector.getSelectedPlayers().shouldBeEmpty()
     }
 
@@ -62,7 +64,7 @@ class TestPlayerSelector: AbstractTest()
 
         selector.tablePlayersToSelectFrom.selectRow(1)
         val playerToMove = selector.tablePlayersToSelectFrom.getSelectedPlayer()
-        selector.btnSelect.doClick()
+        selector.clickSelect()
 
         selector.getSelectedPlayers().shouldContainExactly(playerToMove)
     }
@@ -80,16 +82,16 @@ class TestPlayerSelector: AbstractTest()
 
         selector.tablePlayersToSelectFrom.selectRow(1)
 
-        selector.btnSelect.doClick()
+        selector.clickSelect()
         selector.tablePlayersToSelectFrom.selectedModelRow shouldBe 1
 
-        selector.btnSelect.doClick()
+        selector.clickSelect()
         selector.tablePlayersToSelectFrom.selectedModelRow shouldBe 1
 
-        selector.btnSelect.doClick()
+        selector.clickSelect()
         selector.tablePlayersToSelectFrom.selectedModelRow shouldBe 0
 
-        selector.btnSelect.doClick()
+        selector.clickSelect()
         selector.tablePlayersToSelectFrom.selectedModelRow shouldBe -1
     }
 
@@ -117,7 +119,7 @@ class TestPlayerSelector: AbstractTest()
         val selector = PlayerSelector()
         selector.init(listOf(alex))
 
-        selector.btnUnselect.doClick()
+        selector.clickUnselect()
 
         selector.getSelectedPlayers().shouldContainExactly(alex)
     }
@@ -133,7 +135,7 @@ class TestPlayerSelector: AbstractTest()
         selector.init(listOf(alex, bob, clive))
 
         selector.tablePlayersSelected.selectRow(2)
-        selector.btnUnselect.doClick()
+        selector.clickUnselect()
 
         selector.getSelectedPlayers().shouldContainExactly(alex, bob)
     }
@@ -195,6 +197,9 @@ class TestPlayerSelector: AbstractTest()
         selector.tablePlayersSelected.doubleClick()
         selector.tablePlayersToSelectFrom.rowCount shouldBe 1
     }
+
+    private fun PlayerSelector.clickSelect() = clickChild<JButton>("Select")
+    private fun PlayerSelector.clickUnselect() = clickChild<JButton>("Unselect")
 
     private fun getPlayerNamesToSelectFrom(selector: PlayerSelector): List<String>
     {

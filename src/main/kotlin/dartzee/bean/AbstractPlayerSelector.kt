@@ -30,8 +30,8 @@ abstract class AbstractPlayerSelector<S: ScrollTable> : JPanel(), ActionListener
     abstract val tablePlayersSelected: S
 
     val tablePlayersToSelectFrom = ScrollTable()
-    val btnSelect = JButton("")
-    val btnUnselect = JButton("")
+    private val btnSelect = JButton("")
+    private val btnUnselect = JButton("")
 
     protected fun render()
     {
@@ -42,9 +42,11 @@ abstract class AbstractPlayerSelector<S: ScrollTable> : JPanel(), ActionListener
         panelMovementOptions.minimumSize = Dimension(50, 10)
         add(panelMovementOptions, "cell 1 0,grow")
         panelMovementOptions.layout = MigLayout("al center center, wrap, gapy 20")
+        btnSelect.name = "Select"
         btnSelect.icon = ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/rightArrow.png"))
         btnSelect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnSelect, "cell 0 0,alignx left,aligny top")
+        btnUnselect.name = "Unselect"
         btnUnselect.icon = ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/leftArrow.png"))
         btnUnselect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnUnselect, "cell 0 1,alignx left,aligny top")
