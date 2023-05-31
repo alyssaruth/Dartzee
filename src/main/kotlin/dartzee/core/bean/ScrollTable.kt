@@ -375,8 +375,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
 
     fun scrollToBottom() {
         SwingUtilities.invokeLater {
-            val vertical = scrollPane.verticalScrollBar
-            vertical.value = vertical.maximum
+            scrollPane.scrollToBottom()
         }
     }
 

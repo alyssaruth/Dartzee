@@ -2,7 +2,7 @@ package dartzee.bean
 
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
-import dartzee.utils.InjectedThings.playerImageSelector
+import dartzee.screen.PlayerImageDialog
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
 import dartzee.utils.ResourceCache
@@ -54,17 +54,19 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
                 return
             }
 
-            val playerImageId = playerImageSelector.selectImage()
-            if (playerImageId != null)
-            {
-                avatarId = playerImageId
-                val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
-                icon = newIcon
+            val dlg = PlayerImageDialog(::imageSelected)
+            dlg.isVisible = true
+        }
 
-                player?.let {
-                    it.playerImageId = avatarId
-                    it.saveToDatabase()
-                }
+        private fun imageSelected(imageId: String)
+        {
+            avatarId = imageId
+            val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
+            icon = newIcon
+
+            player?.let {
+                it.playerImageId = avatarId
+                it.saveToDatabase()
             }
         }
 

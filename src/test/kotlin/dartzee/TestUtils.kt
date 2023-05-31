@@ -6,6 +6,7 @@ import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
+import dartzee.bean.PlayerImageRadio
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.ButtonColumn
 import dartzee.core.bean.DateFilterPanel
@@ -21,6 +22,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.GameplayDartboard
+import dartzee.screen.PlayerImageDialog
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
@@ -38,6 +40,9 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.swing.JButton
 import javax.swing.JComponent
+import javax.swing.JPanel
+import javax.swing.JRadioButton
+import javax.swing.JTabbedPane
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.JTextComponent
 
@@ -183,6 +188,19 @@ fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segm
 
 fun Container.clickOk() = clickChild<JButton>(text = "Ok")
 fun Container.clickCancel() = clickChild<JButton>(text = "Cancel")
+
+fun PlayerImageDialog.selectImage(playerImageId: String)
+{
+    runOnEventThreadBlocking {
+        val tabbedPane = getChild<JTabbedPane>()
+        tabbedPane.selectedComponent = getChild<JPanel>("uploadTab")
+
+        val radio = getChild<PlayerImageRadio> { it.playerImageId == playerImageId }
+        radio.clickChild<JRadioButton>()
+    }
+
+    flushEdt()
+}
 
 /**
  * TODO - Add to swing-test

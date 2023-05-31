@@ -5,9 +5,12 @@ import dartzee.core.bean.toBufferedImage
 import dartzee.db.PlayerEntity
 import java.awt.Color
 import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
+import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import kotlin.math.abs
 import kotlin.math.pow
+
 
 const val PLAYER_IMAGE_WIDTH = 150
 const val PLAYER_IMAGE_HEIGHT = 150
@@ -81,4 +84,23 @@ private fun greyscale(rgb: Int): Int
     // Gamma compand and rescale to byte range:
     val grayLevel = (255.0 * lum.toDouble().pow(1.0 / 2.2)).toInt()
     return (grayLevel shl 16) + (grayLevel shl 8) + grayLevel
+}
+
+fun convertImageToAvatarDimensions(imageBytes: ByteArray): ByteArray
+{
+    val icon = ImageIcon(imageBytes)
+    val image = icon.image.toBufferedImage(icon.iconWidth, icon.iconHeight)
+    val minDimension = minOf(icon.iconWidth, icon.iconHeight)
+
+    val xc = (image.width - minDimension) / 2
+    val yc = (image.height - minDimension) / 2
+
+    val croppedImage = image.getSubimage(xc, yc, minDimension, minDimension)
+    val resizedImage = croppedImage
+        .getScaledInstance(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.SCALE_SMOOTH)
+        .toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
+
+    val baos = ByteArrayOutputStream()
+    ImageIO.write(resizedImage, "jpg", baos)
+    return baos.toByteArray()
 }

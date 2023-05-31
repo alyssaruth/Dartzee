@@ -4,15 +4,17 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.doHover
 import com.github.alyssaburlton.swingtest.doHoverAway
 import com.github.alyssaburlton.swingtest.shouldMatch
-import dartzee.core.helper.verifyNotCalled
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.db.PlayerEntity
+import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
-import dartzee.screen.IPlayerImageSelector
+import dartzee.screen.PlayerImageDialog
+import dartzee.selectImage
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import javax.swing.Icon
@@ -24,10 +26,13 @@ class TestPlayerAvatar: AbstractTest()
     fun `Should update on click if not read-only`()
     {
         val image = insertPlayerImage("wage")
-        InjectedThings.playerImageSelector = FakePlayerImageSelector(image.rowId)
 
         val avatar = PlayerAvatar()
         avatar.doClick()
+
+        val window = findWindow<PlayerImageDialog>()!!
+        window.selectImage(image.rowId)
+        window.clickOk()
 
         avatar.icon.shouldMatchAvatar("wage")
         avatar.avatarId shouldBe image.rowId
@@ -36,14 +41,17 @@ class TestPlayerAvatar: AbstractTest()
     @Test
     fun `Should not clear current selection if image selection is cancelled`()
     {
-        InjectedThings.playerImageSelector = FakePlayerImageSelector(null)
-
         val image = insertPlayerImage("wage")
+        val otherImage = insertPlayerImage("dibble")
         val p = insertPlayer(playerImageId = image.rowId)
 
         val avatar = PlayerAvatar()
         avatar.init(p, false)
         avatar.doClick()
+
+        val window = findWindow<PlayerImageDialog>()!!
+        window.selectImage(otherImage.rowId)
+        window.clickCancel()
 
         avatar.icon.shouldMatchAvatar("wage")
         avatar.avatarId shouldBe image.rowId
@@ -55,13 +63,15 @@ class TestPlayerAvatar: AbstractTest()
         val oldImage = insertPlayerImage("wage")
         val newImage = insertPlayerImage("dibble")
 
-        InjectedThings.playerImageSelector = FakePlayerImageSelector(newImage.rowId)
-
         val player = insertPlayer(playerImageId = oldImage.rowId)
         val avatar = PlayerAvatar()
         avatar.init(player, true)
 
         avatar.doClick()
+        val window = findWindow<PlayerImageDialog>()!!
+        window.selectImage(newImage.rowId)
+        window.clickOk()
+
         avatar.icon.shouldMatchAvatar("dibble")
         avatar.avatarId shouldBe newImage.rowId
         player.playerImageId shouldBe newImage.rowId
@@ -76,13 +86,16 @@ class TestPlayerAvatar: AbstractTest()
         val oldImage = insertPlayerImage("wage")
         val newImage = insertPlayerImage("dibble")
 
-        InjectedThings.playerImageSelector = FakePlayerImageSelector(newImage.rowId)
-
         val player = insertPlayer(playerImageId = oldImage.rowId)
         val avatar = PlayerAvatar()
         avatar.init(player, false)
 
         avatar.doClick()
+
+        val window = findWindow<PlayerImageDialog>()!!
+        window.selectImage(newImage.rowId)
+        window.clickOk()
+
         avatar.icon.shouldMatchAvatar("dibble")
         avatar.avatarId shouldBe newImage.rowId //Should still update the UI
         player.playerImageId shouldBe oldImage.rowId
@@ -94,16 +107,11 @@ class TestPlayerAvatar: AbstractTest()
     @Test
     fun `Should do nothing on click in read-only mode`()
     {
-        val imageSelector = mockk<IPlayerImageSelector>(relaxed = true)
-        InjectedThings.playerImageSelector = imageSelector
-
         val avatar = PlayerAvatar()
         avatar.readOnly = true
         avatar.doClick()
 
-        verifyNotCalled {
-            imageSelector.selectImage()
-        }
+        findWindow<PlayerImageDialog>() shouldBe null
     }
 
     @Test
@@ -145,10 +153,5 @@ class TestPlayerAvatar: AbstractTest()
     {
         val expected = ImageIcon(TestPlayerAvatar::class.java.getResource("/avatars/$avatarName.png"))
         shouldMatch(expected)
-    }
-
-    private class FakePlayerImageSelector(val playerImageId: String?): IPlayerImageSelector
-    {
-        override fun selectImage() = playerImageId
     }
 }
