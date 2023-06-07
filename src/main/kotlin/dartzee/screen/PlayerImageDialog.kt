@@ -89,27 +89,6 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         }
     }
 
-    private fun validateAndUploadImage(imgFile: File)
-    {
-        val imgDim = FileUtil.getImageDim(imgFile.absolutePath) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
-        if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT)
-        {
-            DialogUtil.showError("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
-            return
-        }
-
-        val scaled = convertImageToAvatarDimensions(imgFile.readBytes())
-
-        val pi = PlayerImageEntity.factoryAndSave(imgFile.absolutePath, scaled, false)
-        val rdbtn = PlayerImageRadio(pi!!)
-
-        panelPreviouslyUploaded.add(rdbtn)
-        rdbtn.addToButtonGroup(bgUploaded)
-        repaint()
-
-        scrollPaneUploaded.scrollToBottom()
-    }
-
     private fun getPlayerImageIdFromSelection(): String?
     {
         val panel = tabbedPane.selectedComponent as JPanel
@@ -131,8 +110,25 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         dispose()
     }
 
-    override fun fileUploaded(file: File)
+    override fun fileUploaded(file: File): Boolean
     {
-        validateAndUploadImage(file)
+        val imgDim = FileUtil.getImageDim(file.absolutePath) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
+        if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT)
+        {
+            DialogUtil.showError("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
+            return false
+        }
+
+        val scaled = convertImageToAvatarDimensions(file.readBytes())
+
+        val pi = PlayerImageEntity.factoryAndSave(file.absolutePath, scaled, false)
+        val rdbtn = PlayerImageRadio(pi!!)
+
+        panelPreviouslyUploaded.add(rdbtn)
+        rdbtn.addToButtonGroup(bgUploaded)
+        repaint()
+
+        scrollPaneUploaded.scrollToBottom()
+        return true
     }
 }

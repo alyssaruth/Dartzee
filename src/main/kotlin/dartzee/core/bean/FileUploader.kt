@@ -13,9 +13,9 @@ import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 import javax.swing.filechooser.FileFilter
 
-class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), ActionListener
+class FileUploader(ff: FileFilter) : JPanel(), ActionListener
 {
-    var selectedFile: File? = null
+    private var selectedFile: File? = null
     private val listeners = mutableListOf<IFileUploadListener>()
 
     private val textField = JTextField("")
@@ -43,7 +43,6 @@ class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), Ac
         add(panel_1, BorderLayout.EAST)
         panel_1.layout = BorderLayout(0, 0)
         panel_1.add(btnUpload, BorderLayout.CENTER)
-        btnUpload.text = buttonName
 
         btnSelectFile.addActionListener(this)
         btnUpload.addActionListener(this)
@@ -70,12 +69,16 @@ class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), Ac
         val file = selectedFile
         if (file == null)
         {
-            val btnText = btnUpload.text.lowercase()
-            DialogUtil.showError("You must select a file to $btnText.")
+            DialogUtil.showError("You must select a file to upload.")
             return
         }
 
-        listeners.forEach { it.fileUploaded(file) }
+        val success = listeners.all { it.fileUploaded(file) }
+        if (success)
+        {
+            this.selectedFile = null
+            textField.text = ""
+        }
     }
 
     override fun actionPerformed(arg0: ActionEvent)

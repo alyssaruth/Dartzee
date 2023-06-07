@@ -4,5 +4,5 @@ import java.io.File
 
 interface IFileUploadListener
 {
-    fun fileUploaded(file: File)
+    fun fileUploaded(file: File): Boolean
 }
