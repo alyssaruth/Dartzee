@@ -1,12 +1,9 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
-import dartzee.awaitFileChooser
 import dartzee.bean.PlayerImageRadio
-import dartzee.clickButton
 import dartzee.clickOk
 import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
@@ -17,7 +14,7 @@ import dartzee.helper.insertPlayerImage
 import dartzee.only
 import dartzee.selectImage
 import dartzee.selectTab
-import dartzee.typeText
+import dartzee.uploadFileFromResource
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -29,7 +26,6 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import javax.swing.JPanel
 import javax.swing.JTabbedPane
-import javax.swing.text.JTextComponent
 
 class TestPlayerImageDialog : AbstractTest()
 {
@@ -118,16 +114,7 @@ class TestPlayerImageDialog : AbstractTest()
     private fun PlayerImageDialog.uploadResource(resourceName: String)
     {
         val uploader = getChild<FileUploader>()
-        uploader.clickButton("...", async = true)
-
-        val chooserDialog = awaitFileChooser()
-        val rsrcPath = javaClass.getResource(resourceName)!!.path
-        chooserDialog.getChild<JTextComponent>().typeText(rsrcPath)
-        chooserDialog.clickButton("Open")
-        flushEdt()
-
-        uploader.clickButton("Upload")
-        flushEdt()
+        uploader.uploadFileFromResource(resourceName)
     }
 
     private fun makeCallback(): (String) -> Unit = mockk(relaxed = true)

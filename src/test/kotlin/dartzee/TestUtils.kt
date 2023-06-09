@@ -11,6 +11,7 @@ import dartzee.bean.PlayerImageRadio
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.ButtonColumn
 import dartzee.core.bean.DateFilterPanel
+import dartzee.core.bean.FileUploader
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
 import dartzee.core.util.runOnEventThread
@@ -51,6 +52,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JTabbedPane
+import javax.swing.JTextField
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.JTextComponent
 
@@ -213,6 +215,21 @@ fun PlayerImageDialog.selectImage(playerImageId: String)
         radio.clickChild<JRadioButton>()
     }
 
+    flushEdt()
+}
+
+fun FileUploader.uploadFileFromResource(resourceName: String)
+{
+    clickButton("...", async = true)
+
+    val chooserDialog = awaitFileChooser()
+    val rsrcPath = javaClass.getResource(resourceName)!!.path
+    chooserDialog.getChild<JTextComponent>().typeText(rsrcPath)
+    chooserDialog.clickButton("Open")
+    flushEdt()
+
+    getChild<JTextField>().text shouldBe rsrcPath
+    clickButton("Upload")
     flushEdt()
 }
 

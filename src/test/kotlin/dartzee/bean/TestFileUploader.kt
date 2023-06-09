@@ -1,6 +1,5 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.awaitFileChooser
 import dartzee.clickButton
@@ -9,7 +8,7 @@ import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
-import dartzee.typeText
+import dartzee.uploadFileFromResource
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -20,7 +19,6 @@ import java.io.File
 import javax.swing.JComboBox
 import javax.swing.JTextField
 import javax.swing.filechooser.FileNameExtensionFilter
-import javax.swing.text.JTextComponent
 
 class TestFileUploader : AbstractTest()
 {
@@ -62,18 +60,7 @@ class TestFileUploader : AbstractTest()
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickButton("...", async = true)
-
-        val chooserDialog = awaitFileChooser()
-        chooserDialog.getChild<JTextComponent>().typeText(path)
-
-        chooserDialog.clickButton("Open")
-        flushEdt()
-
-        uploader.getChild<JTextField>().text shouldBe path
-        uploader.clickButton("Upload")
-        flushEdt()
-
+        uploader.uploadFileFromResource("/outer-wilds.jpeg")
         uploader.getChild<JTextField>().text shouldBe ""
         verify { listener.fileUploaded(File(path)) }
     }
@@ -88,17 +75,7 @@ class TestFileUploader : AbstractTest()
         val listener = makeFileListener(false)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickButton("...", async = true)
-
-        val chooserDialog = awaitFileChooser()
-        chooserDialog.getChild<JTextComponent>().typeText(path)
-        chooserDialog.clickButton("Open")
-        flushEdt()
-
-        uploader.getChild<JTextField>().text shouldBe path
-        uploader.clickButton("Upload")
-        flushEdt()
-
+        uploader.uploadFileFromResource("/outer-wilds.jpeg")
         uploader.getChild<JTextField>().text shouldBe path
         verify { listener.fileUploaded(File(path)) }
     }
