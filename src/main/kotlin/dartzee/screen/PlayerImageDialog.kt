@@ -110,12 +110,29 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         dispose()
     }
 
-    override fun fileUploaded(file: File): Boolean
+    private fun validateFile(file: File): Boolean
     {
-        val imgDim = FileUtil.getImageDim(file.absolutePath) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
+        val imageReaders = ImageIO.getImageReadersBySuffix(file.extension)
+        if (!imageReaders.hasNext())
+        {
+            DialogUtil.showError("You must select a valid image file.")
+            return false
+        }
+
+        val imgDim = FileUtil.getImageDim(file) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
         if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT)
         {
             DialogUtil.showError("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
+            return false
+        }
+
+        return true
+    }
+
+    override fun fileUploaded(file: File): Boolean
+    {
+        if (!validateFile(file))
+        {
             return false
         }
 

@@ -55,43 +55,30 @@ object FileUtil
         return null
     }
 
-    fun getImageDim(path: String): Dimension?
+    fun getImageDim(file: File): Dimension?
     {
-        val suffix = getFileSuffix(path)
-        val iter = ImageIO.getImageReadersBySuffix(suffix)
+        val iter = ImageIO.getImageReadersBySuffix(file.extension)
         val reader = if (iter.hasNext()) iter.next() else null
         if (reader != null)
         {
             try
             {
-                FileImageInputStream(File(path)).use { stream ->
+                FileImageInputStream(file).use { stream ->
                     reader.input = stream
                     val width = reader.getWidth(reader.minIndex)
                     val height = reader.getHeight(reader.minIndex)
                     return Dimension(width, height)
                 }
             }
-            catch (e: IOException) { logger.error(CODE_FILE_ERROR, "Failed to get img dimensions for $path", e) }
+            catch (e: IOException) { logger.error(CODE_FILE_ERROR, "Failed to get img dimensions for $file", e) }
             finally { reader.dispose() }
         }
         else
         {
-            logger.error(CODE_FILE_ERROR, "No reader found for file extension: $suffix (full path: $path)")
+            logger.error(CODE_FILE_ERROR, "No reader found for file extension: ${file.extension} (full path: ${file.absolutePath})")
         }
 
         return null
-    }
-
-    private fun getFileSuffix(path: String?): String
-    {
-        if (path == null
-            || path.lastIndexOf('.') == -1
-        ) {
-            return ""
-        }
-
-        val dotIndex = path.lastIndexOf('.')
-        return path.substring(dotIndex + 1)
     }
 
     fun getByteArrayForResource(resourcePath: String): ByteArray? =

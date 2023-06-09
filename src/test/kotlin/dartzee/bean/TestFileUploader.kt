@@ -1,16 +1,13 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.awaitCondition
-import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
+import dartzee.awaitWindow
+import dartzee.clickButton
 import dartzee.clickCancel
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.helper.verifyNotCalled
-import dartzee.core.util.runOnEventThread
-import dartzee.core.util.runOnEventThreadBlocking
-import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.typeText
 import io.kotest.matchers.collections.shouldContainExactly
@@ -20,7 +17,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.io.File
-import javax.swing.JButton
+import javax.swing.JComboBox
 import javax.swing.JDialog
 import javax.swing.JTextField
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -32,10 +29,10 @@ class TestFileUploader : AbstractTest()
     fun `Should error if upload is pressed with no file`()
     {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
-        val listener = mockk<IFileUploadListener>(relaxed = true)
+        val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickChild<JButton>(text = "Upload")
+        uploader.clickButton("Upload")
         verifyNotCalled { listener.fileUploaded(any()) }
         dialogFactory.errorsShown.shouldContainExactly("You must select a file to upload.")
     }
@@ -44,10 +41,10 @@ class TestFileUploader : AbstractTest()
     fun `Should not pick a file if cancelled`()
     {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
-        val listener = mockk<IFileUploadListener>(relaxed = true)
+        val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        runOnEventThread { uploader.clickChild<JButton>(text = "...") }
+        uploader.clickButton("...", async = true)
 
         val chooserDialog = awaitFileChooser()
         chooserDialog.clickCancel()
@@ -63,29 +60,71 @@ class TestFileUploader : AbstractTest()
         val path = rsrc.path
 
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
-        val listener = mockk<IFileUploadListener>(relaxed = true)
-        every { listener.fileUploaded(any()) } returns true
+        val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        runOnEventThread { uploader.clickChild<JButton>(text = "...") }
+        uploader.clickButton("...", async = true)
 
         val chooserDialog = awaitFileChooser()
         chooserDialog.getChild<JTextComponent>().typeText(path)
 
-        runOnEventThreadBlocking { chooserDialog.clickChild<JButton>(text = "Open") }
+        chooserDialog.clickButton("Open")
         flushEdt()
 
         uploader.getChild<JTextField>().text shouldBe path
-        runOnEventThreadBlocking { uploader.clickChild<JButton>(text = "Upload") }
+        uploader.clickButton("Upload")
         flushEdt()
 
         uploader.getChild<JTextField>().text shouldBe ""
         verify { listener.fileUploaded(File(path)) }
     }
 
-    private fun awaitFileChooser(): JDialog
+    @Test
+    fun `Should not clear text if file listener reports failure`()
     {
-        awaitCondition { findWindow<JDialog> { it.title == "Open" } != null }
-        return findWindow<JDialog> { it.title == "Open" }!!
+        val rsrc = javaClass.getResource("/outer-wilds.jpeg")!!
+        val path = rsrc.path
+
+        val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
+        val listener = makeFileListener(false)
+        uploader.addFileUploadListener(listener)
+
+        uploader.clickButton("...", async = true)
+
+        val chooserDialog = awaitFileChooser()
+        chooserDialog.getChild<JTextComponent>().typeText(path)
+        chooserDialog.clickButton("Open")
+        flushEdt()
+
+        uploader.getChild<JTextField>().text shouldBe path
+        uploader.clickButton("Upload")
+        flushEdt()
+
+        uploader.getChild<JTextField>().text shouldBe path
+        verify { listener.fileUploaded(File(path)) }
     }
+
+    @Test
+    fun `Should respect the file filter passed in`()
+    {
+        val filter = FileNameExtensionFilter("all", "*")
+        val uploader = FileUploader(filter)
+        val listener = makeFileListener(false)
+        uploader.addFileUploadListener(listener)
+
+        uploader.clickButton("...", async = true)
+
+        val chooserDialog = awaitFileChooser()
+        val combo = chooserDialog.getChild<JComboBox<FileNameExtensionFilter>> { it.selectedItem is FileNameExtensionFilter }
+        combo.selectedItem.shouldBe(filter)
+        combo.itemCount shouldBe 1
+    }
+
+    private fun makeFileListener(success: Boolean = true): IFileUploadListener {
+        val listener = mockk<IFileUploadListener>(relaxed = true)
+        every { listener.fileUploaded(any()) } returns success
+        return listener
+    }
+
+    private fun awaitFileChooser() = awaitWindow<JDialog> { it.title == "Open" }
 }
