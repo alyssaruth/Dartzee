@@ -1,16 +1,20 @@
 package dartzee
 
+import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
+import dartzee.bean.PlayerImageRadio
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.ButtonColumn
 import dartzee.core.bean.DateFilterPanel
+import dartzee.core.bean.FileUploader
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
+import dartzee.core.util.runOnEventThread
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
@@ -21,11 +25,13 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.GameplayDartboard
+import dartzee.screen.PlayerImageDialog
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.MockKMatcherScope
+import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
 import java.awt.Container
@@ -36,8 +42,17 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.swing.AbstractButton
 import javax.swing.JButton
+import javax.swing.JComboBox
 import javax.swing.JComponent
+import javax.swing.JDialog
+import javax.swing.JFrame
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JRadioButton
+import javax.swing.JTabbedPane
+import javax.swing.JTextField
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.JTextComponent
 
@@ -184,9 +199,113 @@ fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segm
 fun Container.clickOk() = clickChild<JButton>(text = "Ok")
 fun Container.clickCancel() = clickChild<JButton>(text = "Cancel")
 
+fun awaitFileChooser() = awaitWindow<JDialog> { it.title == "Open" }
+
+fun <T> List<T>.only(): T {
+    size shouldBe 1
+    return first()
+}
+
+fun PlayerImageDialog.selectImage(playerImageId: String)
+{
+    getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
+
+    runOnEventThreadBlocking {
+        val radio = getChild<PlayerImageRadio> { it.playerImageId == playerImageId }
+        radio.clickChild<JRadioButton>()
+    }
+
+    flushEdt()
+}
+
+fun FileUploader.uploadFileFromResource(resourceName: String)
+{
+    clickButton("...", async = true)
+
+    val chooserDialog = awaitFileChooser()
+    val rsrcPath = javaClass.getResource(resourceName)!!.path
+    chooserDialog.getChild<JTextComponent>().typeText(rsrcPath)
+    chooserDialog.clickButton("Open")
+    flushEdt()
+
+    getChild<JTextField>().text shouldBe rsrcPath
+    clickButton("Upload")
+    flushEdt()
+}
+
 /**
  * TODO - Add to swing-test
  */
+fun Container.dumpComponentTree(prefix: String = "", constraintDesc: String = "")
+{
+    val children = components
+    val borderLayout = layout as? BorderLayout
+    println("$prefix$constraintDesc${this.oneLineDescription()}")
+    children.forEach { child ->
+        val newPrefix = " ".repeat(prefix.length)
+        val childConstraint = borderLayout?.getConstraints(child)?.let { " [$it] "} ?: ""
+        if (child is Container)
+            child.dumpComponentTree("$newPrefix|-", childConstraint)
+        else
+            println("$newPrefix|-$childConstraint ${child.oneLineDescription()}")
+    }
+}
+private fun Component.oneLineDescription(): String
+{
+    val className = javaClass.simpleName.ifEmpty { javaClass.name }
+
+    val desc = when (this) {
+        is AbstractButton -> {
+            val info = (text ?: "").ifEmpty { toolTipText }
+            """$className - "$info""""
+        }
+        is JLabel -> """$className - "$text""""
+        is JFrame -> """$className - "$title" - ${layout?.javaClass?.simpleName}"""
+        is JDialog -> """$className - "$title"" - ${layout?.javaClass?.simpleName}"""
+        is JComboBox<*> -> {
+            val itemType = items().firstOrNull()?.describeClass() ?: "*"
+            val selection = selectedItem?.toString()
+            "JComboBox<$itemType> - Selected item: $selection"
+        }
+        is JComponent -> {
+            val toolTipDesc = toolTipText?.let { """ - "$it"""" } ?: ""
+            """$className$toolTipDesc - ${layout?.javaClass?.simpleName}"""
+        }
+        is Container -> "$className - ${layout?.javaClass?.simpleName}"
+        else -> className
+    }
+
+    return if (name != null) {
+        "$desc [$name]"
+    } else {
+        desc
+    }
+}
+
+private fun Any.describeClass() = javaClass.simpleName.ifEmpty { javaClass.name }
+
+inline fun <reified T: Component> JTabbedPane.selectTab(name: String, noinline filterFn: ((T) -> Boolean)? = null)
+{
+    runOnEventThreadBlocking {
+        selectedComponent = getChild<T>(name, filterFn = filterFn)
+    }
+}
+
+fun Container.clickButton(
+    text: String? = null,
+    async: Boolean = false,
+    filterFn: ((JButton) -> Boolean)? = null)
+{
+    if (async) {
+        runOnEventThread { clickChild<JButton>(null, text, filterFn) }
+    } else {
+        runOnEventThreadBlocking { clickChild<JButton>(null, text, filterFn) }
+    }
+}
+inline fun <reified W : Window> awaitWindow(crossinline fn: (window: W) -> Boolean = { true }): W {
+    awaitCondition { findWindow<W>(fn) != null }
+    return findWindow(fn)!!
+}
 inline fun <reified W : Window> findWindow(fn: (window: W) -> Boolean = { true }): W? = Window.getWindows().find { it is W && fn(it) } as? W
 
 fun JTextComponent.typeText(newText: String)

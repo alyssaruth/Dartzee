@@ -1,15 +1,11 @@
 package dartzee.db
 
 import dartzee.core.util.FileUtil
-import dartzee.logging.CODE_FILE_ERROR
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
-import java.io.File
-import java.nio.file.Files
 import java.sql.Blob
 import java.sql.SQLException
-import java.util.*
 import javax.sql.rowset.serial.SerialBlob
 import javax.swing.ImageIcon
 
@@ -62,25 +58,14 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
 
     companion object
     {
-        private val avatarPresets = arrayOf("BaboOne", "BaboTwo", "Dennis", "robot", "wage", "wallace", "yoshi", "Bean", "Goomba", "Minion", "Sid", "dibble")
+        val avatarPresets = arrayOf("BaboOne", "BaboTwo", "Dennis", "robot", "wage", "wallace", "yoshi", "Bean", "Goomba", "Minion", "Sid", "dibble")
 
         //Image cache, to prevent us hitting the DB too often
         private val hmRowIdToImageIcon = HashMap<String, ImageIcon>()
 
-        fun factoryAndSave(file: File, preset: Boolean): PlayerImageEntity?
+        fun factoryAndSave(originalPath: String, bytes: ByteArray, preset: Boolean): PlayerImageEntity?
         {
-            return try
-            {
-                val path = file.toPath()
-                val bytes = Files.readAllBytes(path)
-                factoryAndSave(file.absolutePath, bytes, preset, mainDatabase)
-            }
-            catch (t: Throwable)
-            {
-                logger.error(CODE_FILE_ERROR, "Failed to read bytes from file $file", t)
-                null
-            }
-
+            return factoryAndSave(originalPath, bytes, preset, mainDatabase)
         }
 
         private fun factoryAndSave(filepath: String, fileBytes: ByteArray?, preset: Boolean, database: Database): PlayerImageEntity?

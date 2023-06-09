@@ -16,8 +16,6 @@ import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory
 import dartzee.logging.LoggingConsole
-import dartzee.screen.IPlayerImageSelector
-import dartzee.screen.PlayerImageDialog
 import dartzee.screen.ai.AISetupRuleFactory
 import dartzee.screen.ai.AbstractAISetupRuleFactory
 import dartzee.sync.AmazonS3RemoteDatabaseStore
@@ -37,7 +35,6 @@ object InjectedThings
     var dartzeeRuleFactory: AbstractDartzeeRuleFactory = DartzeeRuleFactory()
     var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
-    var playerImageSelector: IPlayerImageSelector = PlayerImageDialog()
     var clock: Clock = Clock.systemUTC()
     val loggingConsole = LoggingConsole()
     var esDestination = LoggerFactory.constructElasticsearchDestination()

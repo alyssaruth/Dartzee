@@ -4,8 +4,8 @@ import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_FILE_ERROR
 import dartzee.logging.Severity
 import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -105,11 +105,11 @@ class TestFileUtil: AbstractTest()
     @Test
     fun `Should read image dimensions correctly`()
     {
-        val bean = javaClass.getResource("/Bean.png")
-        val statsIcon = javaClass.getResource("/stats_large.png")
+        val bean = javaClass.getResource("/Bean.png")!!.toURI()
+        val statsIcon = javaClass.getResource("/stats_large.png")!!.toURI()
 
-        FileUtil.getImageDim(bean.path) shouldBe Dimension(150, 150)
-        FileUtil.getImageDim(statsIcon.path) shouldBe Dimension(48, 48)
+        FileUtil.getImageDim(File(bean)) shouldBe Dimension(150, 150)
+        FileUtil.getImageDim(File(statsIcon)) shouldBe Dimension(48, 48)
     }
 
     @Test

@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import com.github.alyssaburlton.swingtest.shouldMatchImage
+import dartzee.core.util.FileUtil
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -8,6 +9,7 @@ import dartzee.helper.insertPlayerImage
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.Dimension
+import javax.swing.ImageIcon
 import javax.swing.JLabel
 
 class TestPlayerImageUtils : AbstractTest()
@@ -75,6 +77,19 @@ class TestPlayerImageUtils : AbstractTest()
         label.size = Dimension(150, 150)
         label.repaint()
         label.shouldMatchImage("split-p2")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should crop and scale an image to avatar dimensions`()
+    {
+        val bytes = FileUtil.getByteArrayForResource("/outer-wilds.jpeg")!!
+        val result = convertImageToAvatarDimensions(bytes)
+
+        val label = JLabel(ImageIcon(result))
+        label.size = Dimension(150, 150)
+        label.repaint()
+        label.shouldMatchImage("outer-wilds-avatar")
     }
 
     private fun setUpPlayers(): Pair<PlayerEntity, PlayerEntity>

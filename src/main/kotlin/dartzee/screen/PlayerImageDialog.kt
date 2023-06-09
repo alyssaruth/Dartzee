@@ -4,28 +4,32 @@ import dartzee.bean.PlayerImageRadio
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.bean.WrapLayout
+import dartzee.core.bean.scrollToBottom
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerImageEntity
+import dartzee.utils.InjectedThings
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
+import dartzee.utils.convertImageToAvatarDimensions
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import java.io.File
 import javax.imageio.ImageIO
-import javax.swing.*
+import javax.swing.ButtonGroup
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTabbedPane
+import javax.swing.SwingConstants
+import javax.swing.UIManager
 import javax.swing.border.TitledBorder
 import javax.swing.filechooser.FileNameExtensionFilter
 
-interface IPlayerImageSelector
-{
-    fun selectImage(): String?
-}
-
-class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelector
+class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
+    SimpleDialog(), IFileUploadListener
 {
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val panelPreset = JPanel()
@@ -35,12 +39,13 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelec
     private val filter = FileNameExtensionFilter("Image files", *ImageIO.getReaderFileSuffixes())
     private val fs = FileUploader(filter)
     private val bgUploaded = ButtonGroup()
+    private val scrollPaneUploaded = JScrollPane()
 
     init
     {
         setSize(650, 400)
         setLocationRelativeTo(null)
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
         title = "Select Avatar"
 
         contentPane.add(tabbedPane, BorderLayout.CENTER)
@@ -48,14 +53,15 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelec
         panelPreset.layout = BorderLayout(0, 0)
         val scrollPanePresets = JScrollPane()
         panelPreset.add(scrollPanePresets)
+        panelPreset.name = "presetTab"
         scrollPanePresets.setViewportView(panelPresets)
         scrollPanePresets.verticalScrollBar.unitIncrement = 16
         panelPresets.layout = WrapLayout()
         tabbedPane.addTab("Upload", null, panelUpload, null)
         panelUpload.layout = BorderLayout(0, 0)
+        panelUpload.name = "uploadTab"
         val panelUploadOptions = JPanel()
         panelUpload.add(panelUploadOptions, BorderLayout.NORTH)
-        val scrollPaneUploaded = JScrollPane()
         scrollPaneUploaded.verticalScrollBar.unitIncrement = 16
         scrollPaneUploaded.border = TitledBorder(UIManager.getBorder("TitledBorder.border"), "Previously Uploaded", TitledBorder.LEADING, TitledBorder.TOP, null, Color(0, 0, 0))
         panelUpload.add(scrollPaneUploaded, BorderLayout.CENTER)
@@ -65,49 +71,23 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelec
         panelUploadOptions.add(fs)
 
         fs.addFileUploadListener(this)
-    }
-
-    override fun selectImage(): String?
-    {
-        setLocationRelativeTo(ScreenCache.mainScreen)
         init()
-        isVisible = true
-
-        return getPlayerImageIdFromSelection()
     }
 
     private fun init()
     {
         val entities = PlayerImageEntity().retrieveEntities()
-        populatePanel(panelPresets, entities.filter{ it.preset }, ButtonGroup())
+        populatePanel(panelPresets, entities.filter { it.preset }, ButtonGroup())
         populatePanel(panelPreviouslyUploaded, entities.filter{ !it.preset }, bgUploaded)
     }
 
     private fun populatePanel(panel: JPanel, entities: List<PlayerImageEntity>, bg: ButtonGroup)
     {
-        entities.forEach{
+        entities.forEach {
             val radio = PlayerImageRadio(it)
             panel.add(radio)
             radio.addToButtonGroup(bg)
         }
-    }
-
-    private fun validateAndUploadImage(imgFile: File)
-    {
-        val imgDim = FileUtil.getImageDim(imgFile.absolutePath) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
-        if (imgDim.getWidth() > PLAYER_IMAGE_WIDTH || imgDim.getHeight() > PLAYER_IMAGE_HEIGHT)
-        {
-            DialogUtil.showError("The image must be no larger than $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
-            return
-        }
-
-        val pi = PlayerImageEntity.factoryAndSave(imgFile, false)
-        val rdbtn = PlayerImageRadio(pi!!)
-
-        panelPreviouslyUploaded.add(rdbtn)
-        rdbtn.addToButtonGroup(bgUploaded)
-
-        repaint()
     }
 
     private fun getPlayerImageIdFromSelection(): String?
@@ -127,11 +107,46 @@ class PlayerImageDialog : SimpleDialog(), IFileUploadListener, IPlayerImageSelec
             return
         }
 
+        imageSelectedCallback(playerImageId)
         dispose()
     }
 
-    override fun fileUploaded(file: File)
+    private fun validateFile(file: File): Boolean
     {
-        validateAndUploadImage(file)
+        val imageReaders = ImageIO.getImageReadersBySuffix(file.extension)
+        if (!imageReaders.hasNext())
+        {
+            DialogUtil.showError("You must select a valid image file.")
+            return false
+        }
+
+        val imgDim = FileUtil.getImageDim(file) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
+        if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT)
+        {
+            DialogUtil.showError("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
+            return false
+        }
+
+        return true
+    }
+
+    override fun fileUploaded(file: File): Boolean
+    {
+        if (!validateFile(file))
+        {
+            return false
+        }
+
+        val scaled = convertImageToAvatarDimensions(file.readBytes())
+
+        val pi = PlayerImageEntity.factoryAndSave(file.absolutePath, scaled, false)
+        val rdbtn = PlayerImageRadio(pi!!)
+
+        panelPreviouslyUploaded.add(rdbtn)
+        rdbtn.addToButtonGroup(bgUploaded)
+        repaint()
+
+        scrollPaneUploaded.scrollToBottom()
+        return true
     }
 }

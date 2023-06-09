@@ -9,7 +9,14 @@ import java.awt.event.ActionListener
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.image.BufferedImage
-import javax.swing.*
+import javax.swing.AbstractAction
+import javax.swing.AbstractButton
+import javax.swing.JComboBox
+import javax.swing.JComponent
+import javax.swing.JScrollPane
+import javax.swing.JTable
+import javax.swing.JTextField
+import javax.swing.KeyStroke
 import javax.swing.text.JTextComponent
 
 
@@ -78,3 +85,9 @@ fun getPointList(width: Int, height: Int): List<Point>
 }
 
 fun AbstractButton.isSelectedAndEnabled() = isEnabled && isSelected
+
+fun JScrollPane.scrollToBottom()
+{
+    val vertical = verticalScrollBar
+    vertical.value = vertical.maximum
+}
