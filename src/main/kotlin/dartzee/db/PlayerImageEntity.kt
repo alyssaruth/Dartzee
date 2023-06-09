@@ -58,7 +58,7 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
 
     companion object
     {
-        private val avatarPresets = arrayOf("BaboOne", "BaboTwo", "Dennis", "robot", "wage", "wallace", "yoshi", "Bean", "Goomba", "Minion", "Sid", "dibble")
+        val avatarPresets = arrayOf("BaboOne", "BaboTwo", "Dennis", "robot", "wage", "wallace", "yoshi", "Bean", "Goomba", "Minion", "Sid", "dibble")
 
         //Image cache, to prevent us hitting the DB too often
         private val hmRowIdToImageIcon = HashMap<String, ImageIcon>()

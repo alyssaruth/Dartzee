@@ -53,6 +53,7 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         panelPreset.layout = BorderLayout(0, 0)
         val scrollPanePresets = JScrollPane()
         panelPreset.add(scrollPanePresets)
+        panelPreset.name = "presetTab"
         scrollPanePresets.setViewportView(panelPresets)
         scrollPanePresets.verticalScrollBar.unitIncrement = 16
         panelPresets.layout = WrapLayout()
@@ -76,7 +77,7 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
     private fun init()
     {
         val entities = PlayerImageEntity().retrieveEntities()
-        populatePanel(panelPresets, entities.filter{ it.preset }, ButtonGroup())
+        populatePanel(panelPresets, entities.filter { it.preset }, ButtonGroup())
         populatePanel(panelPreviouslyUploaded, entities.filter{ !it.preset }, bgUploaded)
     }
 

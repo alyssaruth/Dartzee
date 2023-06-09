@@ -2,7 +2,7 @@ package dartzee.bean
 
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
-import dartzee.awaitWindow
+import dartzee.awaitFileChooser
 import dartzee.clickButton
 import dartzee.clickCancel
 import dartzee.core.bean.FileUploader
@@ -18,7 +18,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.io.File
 import javax.swing.JComboBox
-import javax.swing.JDialog
 import javax.swing.JTextField
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.text.JTextComponent
@@ -125,6 +124,4 @@ class TestFileUploader : AbstractTest()
         every { listener.fileUploaded(any()) } returns success
         return listener
     }
-
-    private fun awaitFileChooser() = awaitWindow<JDialog> { it.title == "Open" }
 }

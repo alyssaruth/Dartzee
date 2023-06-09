@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.doHover
 import com.github.alyssaburlton.swingtest.doHoverAway
 import com.github.alyssaburlton.swingtest.shouldMatch
+import dartzee.awaitWindow
 import dartzee.clickCancel
 import dartzee.clickOk
 import dartzee.db.PlayerEntity
@@ -13,7 +14,6 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.screen.PlayerImageDialog
 import dartzee.selectImage
-import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Cursor
@@ -30,7 +30,7 @@ class TestPlayerAvatar: AbstractTest()
         val avatar = PlayerAvatar()
         avatar.doClick()
 
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = awaitWindow<PlayerImageDialog>()
         window.selectImage(image.rowId)
         window.clickOk()
 
@@ -49,7 +49,7 @@ class TestPlayerAvatar: AbstractTest()
         avatar.init(p, false)
         avatar.doClick()
 
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = awaitWindow<PlayerImageDialog>()
         window.selectImage(otherImage.rowId)
         window.clickCancel()
 
@@ -68,7 +68,7 @@ class TestPlayerAvatar: AbstractTest()
         avatar.init(player, true)
 
         avatar.doClick()
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = awaitWindow<PlayerImageDialog>()
         window.selectImage(newImage.rowId)
         window.clickOk()
 
@@ -92,7 +92,7 @@ class TestPlayerAvatar: AbstractTest()
 
         avatar.doClick()
 
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = awaitWindow<PlayerImageDialog>()
         window.selectImage(newImage.rowId)
         window.clickOk()
 

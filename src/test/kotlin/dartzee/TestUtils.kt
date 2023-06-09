@@ -197,12 +197,18 @@ fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segm
 fun Container.clickOk() = clickChild<JButton>(text = "Ok")
 fun Container.clickCancel() = clickChild<JButton>(text = "Cancel")
 
+fun awaitFileChooser() = awaitWindow<JDialog> { it.title == "Open" }
+
+fun <T> List<T>.only(): T {
+    size shouldBe 1
+    return first()
+}
+
 fun PlayerImageDialog.selectImage(playerImageId: String)
 {
-    runOnEventThreadBlocking {
-        val tabbedPane = getChild<JTabbedPane>()
-        tabbedPane.selectedComponent = getChild<JPanel>("uploadTab")
+    getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
 
+    runOnEventThreadBlocking {
         val radio = getChild<PlayerImageRadio> { it.playerImageId == playerImageId }
         radio.clickChild<JRadioButton>()
     }
@@ -260,6 +266,13 @@ private fun Component.oneLineDescription(): String
 }
 
 private fun Any.describeClass() = javaClass.simpleName.ifEmpty { javaClass.name }
+
+inline fun <reified T: Component> JTabbedPane.selectTab(name: String, noinline filterFn: ((T) -> Boolean)? = null)
+{
+    runOnEventThreadBlocking {
+        selectedComponent = getChild<T>(name, filterFn = filterFn)
+    }
+}
 
 fun Container.clickButton(
     text: String? = null,
