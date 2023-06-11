@@ -12,6 +12,7 @@ import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.wipeTable
 import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GamePanelX01
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -184,6 +185,71 @@ class TestGamePanelX01: AbstractTest()
         retrieveAchievementsForPlayer(p2.rowId).shouldContain(
             AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 2, gameId)
         )
+    }
+
+    @Test
+    fun `Should update the hotel inspector achievement for a unique 3-dart method of scoring of 26`()
+    {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId)
+        val gameId = panel.gameEntity.rowId
+
+        panel.addCompletedRound(listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
+        panel.addCompletedRound(listOf(Dart(5, 1), Dart(20, 1), Dart(1, 1)))
+        panel.addCompletedRound(listOf(Dart(20, 1), Dart(3, 1), Dart(3, 1)))
+        panel.addCompletedRound(listOf(Dart(20, 1), Dart(3, 2)))
+
+        val hotelInspectorRows = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_HOTEL_INSPECTOR }
+        hotelInspectorRows.shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.X01_HOTEL_INSPECTOR, -1, gameId, "20, 5, 1"),
+            AchievementSummary(AchievementType.X01_HOTEL_INSPECTOR, -1, gameId, "20, 3, 3")
+        )
+    }
+
+    @Test
+    fun `Should not update hotel inspector achievement if board is missed, or player is bust`()
+    {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId, gameParams = "101")
+
+        panel.addCompletedRound(listOf(Dart(20, 1), Dart(3, 2), Dart(19, 0)))
+        panel.addCompletedRound(listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1)))
+        panel.addCompletedRound(listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
+
+        val hotelInspectorRows = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_HOTEL_INSPECTOR }
+        hotelInspectorRows.shouldBeEmpty()
+    }
+
+    @Test
+    fun `Should update the chucklevision achievement for a unique 3-dart method of scoring of 69`()
+    {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId)
+        val gameId = panel.gameEntity.rowId
+
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(5, 1), Dart(4, 1)))
+        panel.addCompletedRound(listOf(Dart(4, 1), Dart(5, 1), Dart(20, 3)))
+        panel.addCompletedRound(listOf(Dart(19, 3), Dart(7, 1), Dart(5, 1)))
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(3, 3)))
+
+        val chucklevisionRows = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_CHUCKLEVISION }
+        chucklevisionRows.shouldContainExactlyInAnyOrder(
+            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T20, 5, 4"),
+            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T19, 7, 5")
+        )
+    }
+
+    @Test
+    fun `Should not update chucklevision achievement if board is missed, or player is bust`()
+    {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId, gameParams = "101")
+
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(3, 3), Dart(19, 0)))
+        panel.addCompletedRound(listOf(Dart(5, 1), Dart(4, 1), Dart(20, 3)))
+
+        val chucklevisionRows = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_CHUCKLEVISION }
+        chucklevisionRows.shouldBeEmpty()
     }
 
     private fun GamePanelX01.updateAchievementsForFinish(finishingPosition: Int, score: Int)
