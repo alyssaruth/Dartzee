@@ -27,5 +27,6 @@ enum class AchievementType
     DARTZEE_UNDER_PRESSURE,
     DARTZEE_BINGO,
     DARTZEE_HALVED,
+    X01_CHUCKLEVISION,
     DUMMY_TOTAL
 }

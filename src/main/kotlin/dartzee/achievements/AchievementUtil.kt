@@ -1,6 +1,11 @@
 package dartzee.achievements
 
-import dartzee.achievements.dartzee.*
+import dartzee.achievements.dartzee.AchievementDartzeeBestGame
+import dartzee.achievements.dartzee.AchievementDartzeeBingo
+import dartzee.achievements.dartzee.AchievementDartzeeFlawless
+import dartzee.achievements.dartzee.AchievementDartzeeGamesWon
+import dartzee.achievements.dartzee.AchievementDartzeeHalved
+import dartzee.achievements.dartzee.AchievementDartzeeUnderPressure
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
 import dartzee.achievements.golf.AchievementGolfGamesWon
@@ -9,12 +14,27 @@ import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.achievements.rtc.AchievementClockBestStreak
 import dartzee.achievements.rtc.AchievementClockBruceyBonuses
 import dartzee.achievements.rtc.AchievementClockGamesWon
-import dartzee.achievements.x01.*
+import dartzee.achievements.x01.AchievementX01BestFinish
+import dartzee.achievements.x01.AchievementX01BestGame
+import dartzee.achievements.x01.AchievementX01BestThreeDarts
+import dartzee.achievements.x01.AchievementX01Btbf
+import dartzee.achievements.x01.AchievementX01CheckoutCompleteness
+import dartzee.achievements.x01.AchievementX01Chucklevision
+import dartzee.achievements.x01.AchievementX01GamesWon
+import dartzee.achievements.x01.AchievementX01HighestBust
+import dartzee.achievements.x01.AchievementX01HotelInspector
+import dartzee.achievements.x01.AchievementX01NoMercy
+import dartzee.achievements.x01.AchievementX01Shanghai
+import dartzee.achievements.x01.AchievementX01SuchBadLuck
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.logging.*
+import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_FINISHED
+import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_STARTED
+import dartzee.logging.KEY_ACHIEVEMENT_TIMINGS
+import dartzee.logging.KEY_ACHIEVEMENT_TYPES
+import dartzee.logging.KEY_PLAYER_IDS
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
@@ -126,7 +146,8 @@ fun getAllAchievements() =
         AchievementDartzeeFlawless(),
         AchievementDartzeeUnderPressure(),
         AchievementDartzeeBingo(),
-        AchievementDartzeeHalved()
+        AchievementDartzeeHalved(),
+        AchievementX01Chucklevision(),
     )
 
 fun getAchievementForType(achievementType: AchievementType)

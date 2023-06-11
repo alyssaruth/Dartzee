@@ -9,8 +9,8 @@ import dartzee.game.GameType
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DartsColour
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -203,7 +203,10 @@ abstract class AbstractAchievement
     {
         img.paint {
             val current = Color(img.getRGB(it.x, it.y), true)
-            if (current == Color.BLACK) newColor else current
+            if (current.red == 0 && current.blue == 0 && current.green == 0)
+                Color(newColor.red, newColor.green, newColor.blue, current.alpha)
+            else
+                current
         }
     }
 
