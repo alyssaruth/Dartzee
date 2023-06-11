@@ -50,13 +50,13 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
             if (totalScore == 69)
             {
                 dartboard.doChucklevision()
+                updateForUniqueScore(AchievementType.X01_CHUCKLEVISION)
             }
 
             if (totalScore == 26)
             {
                 dartboard.doFawlty()
-
-                updateHotelInspector()
+                updateForUniqueScore(AchievementType.X01_HOTEL_INSPECTOR)
             }
 
             if (isShanghai(getDartsThrown()))
@@ -78,7 +78,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         super.saveDartsAndProceed()
     }
 
-    private fun updateHotelInspector()
+    private fun updateForUniqueScore(achievementType: AchievementType)
     {
         //Need to have thrown 3 darts, all of which didn't miss.
         if (getDartsThrown().any { d -> d.multiplier == 0 }
@@ -88,10 +88,10 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         }
 
         val methodStr = getSortedDartStr(getDartsThrown())
-        val existingRow = retrieveAchievementForDetail(AchievementType.X01_HOTEL_INSPECTOR, getCurrentPlayerId(), methodStr)
+        val existingRow = retrieveAchievementForDetail(achievementType, getCurrentPlayerId(), methodStr)
         if (existingRow == null)
         {
-            AchievementEntity.insertAchievement(AchievementType.X01_HOTEL_INSPECTOR, getCurrentPlayerId(), getGameId(), methodStr)
+            AchievementEntity.insertAchievement(achievementType, getCurrentPlayerId(), getGameId(), methodStr)
         }
     }
 
