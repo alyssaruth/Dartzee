@@ -81,6 +81,13 @@ fun makeX01RoundsMap(startingScore: Int = 501, vararg darts: List<Dart>): HashMa
     return map
 }
 
+fun insertX01Rounds(participant: ParticipantEntity, startingScore: Int = 501, vararg darts: List<Dart>)
+{
+    makeX01Rounds(startingScore, *darts).flatten().forEach {
+        DartEntity.factory(it, participant.playerId, participant.rowId, it.roundNumber, it.ordinal).saveToDatabase()
+    }
+}
+
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
 {
     var currentScore = startingScore
