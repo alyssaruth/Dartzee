@@ -1,10 +1,10 @@
 package dartzee.game.state
 
-import dartzee.`object`.Dart
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.BulkInserter
 import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
+import dartzee.`object`.Dart
 
 abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 {
@@ -38,6 +38,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     fun isHuman() = !currentIndividual().isAi()
     fun hasMultiplePlayers() = wrappedParticipant.individuals.size > 1
+    fun getPlayerIds() = wrappedParticipant.individuals.map { it.playerId }
 
     /**
      * Modifiers

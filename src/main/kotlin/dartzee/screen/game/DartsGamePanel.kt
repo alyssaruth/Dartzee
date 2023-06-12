@@ -2,9 +2,9 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
+import dartzee.achievements.getTeamWinAchievementType
 import dartzee.achievements.getWinAchievementType
 import dartzee.ai.DartsAiModel
-import dartzee.bean.IMouseListener
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadMiss
@@ -42,7 +42,6 @@ import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.awt.event.MouseEvent
 import java.sql.SQLException
 import javax.swing.ImageIcon
 import javax.swing.JButton
@@ -437,7 +436,13 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     {
         if (playerState.hasMultiplePlayers())
         {
-            // TODO - Team achievements
+            if (finishingPosition == 1)
+            {
+                val type = getTeamWinAchievementType(gameEntity.gameType)
+                playerState.getPlayerIds().forEach { playerId ->
+                    AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
+                }
+            }
         }
         else
         {

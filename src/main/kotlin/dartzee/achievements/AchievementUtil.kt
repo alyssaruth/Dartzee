@@ -158,8 +158,8 @@ fun getAllAchievements() =
         AchievementX01Chucklevision(),
     )
 
-fun getAchievementForType(achievementType: AchievementType)
-        = getAllAchievements().find { it.achievementType == achievementType }
+fun getAchievementForType(achievementType: AchievementType) =
+    getAllAchievements().find { it.achievementType == achievementType }
 
 fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
 {
@@ -167,12 +167,15 @@ fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
     return ref as AbstractAchievementBestGame?
 }
 
-fun getWinAchievementType(gameType : GameType): AchievementType
-{
-    val type = getAllAchievements().find { it is AbstractAchievementGamesWon && it.gameType == gameType }?.achievementType
-    type ?: throw Exception("No total wins achievement found for GameType [$gameType]")
-    return type
-}
+fun getWinAchievementType(gameType : GameType) =
+    getAllAchievements()
+        .first { it is AbstractAchievementGamesWon && it.gameType == gameType }
+        .achievementType
+
+fun getTeamWinAchievementType(gameType: GameType) =
+    getAllAchievements()
+        .first { it is AbstractAchievementTeamGamesWon && it.gameType == gameType }
+        .achievementType
 
 fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String,
                                achievementScoreSql : String, achievementType: AchievementType, database: Database)
