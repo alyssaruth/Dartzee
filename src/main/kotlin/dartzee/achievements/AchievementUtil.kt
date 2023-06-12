@@ -5,15 +5,18 @@ import dartzee.achievements.dartzee.AchievementDartzeeBingo
 import dartzee.achievements.dartzee.AchievementDartzeeFlawless
 import dartzee.achievements.dartzee.AchievementDartzeeGamesWon
 import dartzee.achievements.dartzee.AchievementDartzeeHalved
+import dartzee.achievements.dartzee.AchievementDartzeeTeamGamesWon
 import dartzee.achievements.dartzee.AchievementDartzeeUnderPressure
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
 import dartzee.achievements.golf.AchievementGolfGamesWon
 import dartzee.achievements.golf.AchievementGolfPointsRisked
+import dartzee.achievements.golf.AchievementGolfTeamGamesWon
 import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.achievements.rtc.AchievementClockBestStreak
 import dartzee.achievements.rtc.AchievementClockBruceyBonuses
 import dartzee.achievements.rtc.AchievementClockGamesWon
+import dartzee.achievements.rtc.AchievementClockTeamGamesWon
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
@@ -26,6 +29,7 @@ import dartzee.achievements.x01.AchievementX01HotelInspector
 import dartzee.achievements.x01.AchievementX01NoMercy
 import dartzee.achievements.x01.AchievementX01Shanghai
 import dartzee.achievements.x01.AchievementX01SuchBadLuck
+import dartzee.achievements.x01.AchievementX01TeamGamesWon
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
@@ -125,6 +129,9 @@ fun getAllAchievements() =
         AchievementX01GamesWon(),
         AchievementGolfGamesWon(),
         AchievementClockGamesWon(),
+        AchievementX01TeamGamesWon(),
+        AchievementGolfTeamGamesWon(),
+        AchievementClockTeamGamesWon(),
         AchievementX01BestGame(),
         AchievementGolfBestGame(),
         AchievementClockBestGame(),
@@ -142,6 +149,7 @@ fun getAllAchievements() =
         AchievementX01NoMercy(),
         AchievementGolfCourseMaster(),
         AchievementDartzeeGamesWon(),
+        AchievementDartzeeTeamGamesWon(),
         AchievementDartzeeBestGame(),
         AchievementDartzeeFlawless(),
         AchievementDartzeeUnderPressure(),
