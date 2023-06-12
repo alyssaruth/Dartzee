@@ -28,5 +28,6 @@ enum class AchievementType
     DARTZEE_BINGO,
     DARTZEE_HALVED,
     X01_CHUCKLEVISION,
+    GOLF_ONE_HIT_WONDER,
     DUMMY_TOTAL
 }
