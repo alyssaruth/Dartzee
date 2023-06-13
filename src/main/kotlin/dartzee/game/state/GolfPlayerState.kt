@@ -15,8 +15,7 @@ data class GolfPlayerState(override val wrappedParticipant: IWrappedParticipant,
 
     fun countHoleInOnes(): Int
     {
-        val completedCount = (1..completedRounds.size).count { getScoreForRound(it) == 1 }
-        val currentCount = if (currentRound.lastOrNull()?.getGolfScore() == 1) 1 else 0
-        return completedCount + currentCount
+        val rounds = getRoundsForIndividual(currentIndividual())
+        return rounds.count { it.lastOrNull()?.getGolfScore() == 1 }
     }
 }
