@@ -37,6 +37,11 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     abstract fun factoryAchievement(): E
     abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database = mainDatabase)
 
+    protected fun runConversion(playerIds: List<String> = emptyList(), database: Database = mainDatabase)
+    {
+        factoryAchievement().populateForConversion(playerIds, database)
+    }
+
     protected fun setUpAchievementRowForPlayer(p: PlayerEntity, database: Database = mainDatabase)
     {
         val g = insertRelevantGame(database = database)
