@@ -1,7 +1,7 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievementTest
+import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
@@ -30,7 +30,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
         val pt = insertRelevantParticipant(team = true)
         insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
     }
@@ -54,7 +54,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
         insertDart(pt2, ordinal = 2, startingScore = 2, score = 18, multiplier = 2)
         insertDart(pt2, ordinal = 3, startingScore = 2, score = 20, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
         val achievement = AchievementEntity().retrieveEntities("").first()
@@ -75,7 +75,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
         //Scores 2 in first game
         insertDart(pt, ordinal = 1, startingScore = 50, score = 25, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
         val achievement = AchievementEntity().retrieveEntities("").first()
@@ -102,7 +102,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
         insertDart(pt2, ordinal = 1, startingScore = 2, score = 20, multiplier = 2, dtLastUpdate = Timestamp(200))
         insertDart(pt2, ordinal = 2, startingScore = 2, score = 18, multiplier = 2, dtLastUpdate = Timestamp(250))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
         val achievement = AchievementEntity().retrieveEntities("").first()

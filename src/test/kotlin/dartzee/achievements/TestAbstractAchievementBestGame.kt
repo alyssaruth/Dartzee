@@ -2,9 +2,14 @@ package dartzee.achievements
 
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.game.GameType
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
+import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -34,7 +39,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -48,7 +53,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20, teamId = team.rowId)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -61,7 +66,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -76,7 +81,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         insertParticipant(gameId = badGame.rowId, playerId = alice.rowId, finalScore = 20)
         insertParticipant(gameId = goodGame.rowId, playerId = alice.rowId, finalScore = 31)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         val result = retrieveAchievement()
         result.achievementCounter shouldBe 31
     }
@@ -89,12 +94,12 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = -1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20)
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -111,7 +116,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 15, dtFinished = Timestamp(1000))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -129,7 +134,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(800))
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]
@@ -146,7 +151,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
 
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1000))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val achievementRow = AchievementEntity().retrieveEntities("")[0]

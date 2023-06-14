@@ -79,7 +79,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         val g = insertGame(gameType = otherType)
         setUpAchievementRowForPlayerAndGame(p, g)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -109,7 +109,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         setUpAchievementRowForPlayer(alice)
         setUpAchievementRowForPlayer(bob)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 2
 

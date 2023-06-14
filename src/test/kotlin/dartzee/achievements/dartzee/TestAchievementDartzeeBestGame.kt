@@ -30,7 +30,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         val pt = insertRelevantParticipant(finalScore = 120, team = true)
         insertDartzeeRules(pt.gameId, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -42,7 +42,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertDartzeeRules(pt.gameId, shortList)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -52,7 +52,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         val pt = insertRelevantParticipant(finalScore = -1)
         insertDartzeeRules(pt.gameId, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -61,7 +61,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     {
         setUpAchievementRowForPlayer(insertPlayer())
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         retrieveAchievement().achievementCounter shouldBe 25
     }
 
@@ -72,7 +72,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         val rules = testRules + testRules
         insertDartzeeRules(pt.gameId, rules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         retrieveAchievement().achievementCounter shouldBe 13
     }
 
@@ -85,7 +85,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         setUpGame(player, 120, Timestamp(200))
         setUpGame(player, 121, Timestamp(250))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val achievement = retrieveAchievement()
         achievement.gameIdEarned shouldBe expectedGameId

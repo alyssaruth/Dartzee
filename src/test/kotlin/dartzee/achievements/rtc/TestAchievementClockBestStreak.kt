@@ -27,7 +27,7 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
         val pt = insertRelevantParticipant(team = true)
         insertOpeningStreak(pt)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -43,7 +43,7 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
         insertOpeningStreak(p, g)
         insertOpeningStreak(p, g2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val achievement = AchievementEntity.retrieveAchievement(factoryAchievement().achievementType, p.rowId)!!
         achievement.achievementCounter shouldBe 3
@@ -63,7 +63,7 @@ class TestAchievementClockBestStreak: AbstractAchievementTest<AchievementClockBe
         roundTwo.insertDarts(pt, 2)
         roundThree.insertDarts(pt, 3)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val achievement = AchievementEntity.retrieveAchievement(factoryAchievement().achievementType, pt.playerId)!!
         achievement.achievementCounter shouldBe 5

@@ -33,7 +33,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         val pt = insertRelevantParticipant(team = true)
         insertRiskedDart(pt, SegmentType.INNER_SINGLE, 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 1
     }
 
@@ -46,7 +46,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
         insertDart(pt, roundNumber = 1, ordinal = 1, score = 1, multiplier = 1, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, p.rowId) shouldBe null
     }
@@ -60,7 +60,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         insertRiskedDart(p.rowId, g.rowId, SegmentType.INNER_SINGLE, 1)
         insertRiskedDart(p.rowId, g.rowId, SegmentType.OUTER_SINGLE, 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val achievementRows = retrieveAchievementsForPlayer(p.rowId)
         achievementRows.shouldContainExactlyInAnyOrder(
@@ -79,7 +79,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
         insertDart(pt, roundNumber = 1, ordinal = 2, score = 1, multiplier = 1, segmentType = SegmentType.INNER_SINGLE, dtCreation = Timestamp(1000))
         insertDart(pt, roundNumber = 1, ordinal = 3, score = 1, multiplier = 2, segmentType = SegmentType.DOUBLE, dtCreation = Timestamp(1500))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val achievementRow = retrieveAchievement()
         achievementRow.playerId shouldBe p.rowId
@@ -105,7 +105,7 @@ class TestAchievementGolfPointsRisked: AbstractMultiRowAchievementTest<Achieveme
 
         insertRiskedDart(p.rowId, g.rowId, segmentType)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, p.rowId)!!
         a.achievementCounter shouldBe expectedScore
