@@ -1,10 +1,10 @@
 package dartzee.game.state
 
-import dartzee.`object`.Dart
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.BulkInserter
 import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
+import dartzee.`object`.Dart
 
 abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 {
@@ -44,6 +44,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
      */
     open fun dartThrown(dart: Dart)
     {
+        dart.roundNumber = currentRoundNumber()
         dart.participantId = currentIndividual().rowId
         currentRound.add(dart)
 
