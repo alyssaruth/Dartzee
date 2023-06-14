@@ -61,6 +61,7 @@ object ResourceCache
     val URL_ACHIEVEMENT_DARTZEE_BINGO: URL? = javaClass.getResource("/achievements/bingo.png")
     val URL_ACHIEVEMENT_DARTZEE_HALVED: URL? = javaClass.getResource("/achievements/bust.png")
     val URL_ACHIEVEMENT_X01_CHUCKLEVISION: URL? = javaClass.getResource("/achievements/chucklevision.png")
+    val URL_ACHIEVEMENT_GOLF_ONE_HIT_WONDER: URL? = javaClass.getResource("/achievements/oneHitWonder.png")
 
     val BASE_FONT: Font = Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/trebuc.ttf"))
 

@@ -1,6 +1,15 @@
 package dartzee.game.state
 
-import dartzee.helper.*
+import dartzee.drtDoubleFour
+import dartzee.drtDoubleOne
+import dartzee.drtDoubleThree
+import dartzee.drtInnerTwo
+import dartzee.drtMissTwo
+import dartzee.drtOuterOne
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDart
+import dartzee.helper.makeGolfPlayerState
+import dartzee.helper.makeGolfRound
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -59,4 +68,17 @@ class TestGolfPlayerState: AbstractTest()
         state.getCumulativeScoreForRound(3) shouldBe 8
     }
 
+    @Test
+    fun `Should count total hole in ones correctly`()
+    {
+        val roundOne = makeGolfRound(1, listOf(drtOuterOne(), drtDoubleOne()))
+        val roundTwo = makeGolfRound(2, listOf(drtMissTwo(), drtInnerTwo()))
+        val roundThree = makeGolfRound(3, listOf(drtDoubleThree()))
+
+        val state = makeGolfPlayerState(completedRounds = listOf(roundOne, roundTwo, roundThree))
+        state.countHoleInOnes() shouldBe 2
+
+        state.dartThrown(drtDoubleFour())
+        state.countHoleInOnes() shouldBe 3
+    }
 }

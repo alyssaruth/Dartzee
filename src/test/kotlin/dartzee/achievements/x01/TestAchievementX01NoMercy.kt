@@ -28,7 +28,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         val pt = insertRelevantParticipant(team = true, finalScore = 21)
         insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 1
     }
 
@@ -42,7 +42,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
 
         insertDart(pt, roundNumber = 1, startingScore = 7, ordinal = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -56,7 +56,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         insertDart(pt, roundNumber = 7, ordinal = 1, startingScore = 12, score = 5, multiplier = 1)
         insertDart(pt, roundNumber = 7, ordinal = 2, startingScore = 7, score = 3, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -68,7 +68,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         setUpAchievementRowForPlayer(alice)
         setUpAchievementRowForPlayer(alice)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 2
     }
@@ -83,7 +83,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         setUpFinishForPlayer(alice, 7)
         setUpFinishForPlayer(alice, 9)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 4
     }
@@ -98,7 +98,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         setUpFinishForPlayer(alice, 11)
         setUpFinishForPlayer(alice, 13)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -109,7 +109,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         val p = insertPlayer()
         setUpFinishForPlayer(p, 5)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         retrieveAchievement().achievementCounter shouldBe -1
         retrieveAchievement().achievementDetail shouldBe "5"

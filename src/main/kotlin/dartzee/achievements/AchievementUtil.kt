@@ -9,6 +9,7 @@ import dartzee.achievements.dartzee.AchievementDartzeeUnderPressure
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
 import dartzee.achievements.golf.AchievementGolfGamesWon
+import dartzee.achievements.golf.AchievementGolfOneHitWonder
 import dartzee.achievements.golf.AchievementGolfPointsRisked
 import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.achievements.rtc.AchievementClockBestStreak
@@ -148,6 +149,7 @@ fun getAllAchievements() =
         AchievementDartzeeBingo(),
         AchievementDartzeeHalved(),
         AchievementX01Chucklevision(),
+        AchievementGolfOneHitWonder()
     )
 
 fun getAchievementForType(achievementType: AchievementType)

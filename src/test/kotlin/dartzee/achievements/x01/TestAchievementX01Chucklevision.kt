@@ -34,7 +34,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
 
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), participant = pt)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
     }
@@ -49,7 +49,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
         insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(1, 0), Dart(3, 3)))
         insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3), Dart(1, 0)))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -63,7 +63,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), 69)
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), 70)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -76,7 +76,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
 
         insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3), Dart(1, 1)))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -94,7 +94,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
         insertDartsForPlayer(g, p, makeChucklevisionDarts(),
             participant = pt, roundNumber = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
     }
@@ -107,7 +107,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
 
         insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3)))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -128,7 +128,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
         insertDartsForPlayer(insertRelevantGame(), p, makeChucklevisionDarts().shuffled())
         insertDartsForPlayer(insertRelevantGame(), p, makeChucklevisionDarts().shuffled())
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
 
@@ -148,7 +148,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
         insertDartsForPlayer(g, p, validOne)
         insertDartsForPlayer(g, p, validTwo)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 2
 

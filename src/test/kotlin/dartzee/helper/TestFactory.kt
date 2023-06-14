@@ -165,6 +165,7 @@ fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
                         completedRounds: List<List<Dart>> = emptyList(),
                         currentRound: List<Dart> = emptyList()): GolfPlayerState
 {
+    completedRounds.flatten().forEach { it.participantId = participant.rowId }
     return GolfPlayerState(SingleParticipant(participant), completedRounds.toMutableList(), currentRound.toMutableList())
 }
 

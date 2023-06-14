@@ -77,7 +77,8 @@ class TestGolfE2E: AbstractRegistryTest()
         verifyState(panel, listener, expectedDarts, finalScore = 18, expectedScorerRows = 20)
 
         val expectedAchievementRows = (1..18).map { AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "$it") } +
-                AchievementSummary(AchievementType.GOLF_BEST_GAME, 18, game.rowId)
+                AchievementSummary(AchievementType.GOLF_BEST_GAME, 18, game.rowId) +
+                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 18, game.rowId)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
         checkAchievementConversions(player.rowId)
@@ -93,13 +94,13 @@ class TestGolfE2E: AbstractRegistryTest()
         val expectedRounds = listOf(
             listOf(drtOuterOne(), drtInnerOne()), // 3, 1 gambled
             listOf(drtOuterFifteen(), drtTrebleSeventeen(), drtOuterSeventeen()), // 8, 1 gambled
-            listOf(drtInnerThree(), drtOuterThree(), drtDoubleThree()), // 9, 4 gambled
+            listOf(drtInnerThree(), drtOuterThree(), drtDoubleThree()), // 9, 4 gambled, OHW: 1
             listOf(drtTrebleFour()), // 11, 4 gambled (tests first stopThreshold)
-            listOf(drtDoubleFive()), // 12, 4 gambled
+            listOf(drtDoubleFive()), // 12, 4 gambled, OHW: 2
             listOf(drtOuterSix(), drtOuterSix(), drtOuterSix()), // 16, 6 gambled
             listOf(drtOuterSeven(), drtOuterSixteen(), drtInnerSixteen()), // 21, 7 gambled
             listOf(drtMissEight(), drtInnerEight()), // 24, 7 gambled
-            listOf(drtMissNine(), drtDoubleNine()), // 25, 7 gambled
+            listOf(drtMissNine(), drtDoubleNine()), // 25, 7 gambled, OHW: 3
         )
 
         val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
@@ -119,6 +120,7 @@ class TestGolfE2E: AbstractRegistryTest()
             AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 3, game.rowId, "3"),
             AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, game.rowId, "6"),
             AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "7"),
+            AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 3, game.rowId)
         )
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
@@ -134,16 +136,16 @@ class TestGolfE2E: AbstractRegistryTest()
 
         val p1Rounds = listOf(
             listOf(drtMissOne(), drtOuterOne(), drtOuterOne()), // Gambled 1 in round 1. Total: 4
-            listOf(drtMissThree(), drtDoubleThree()), // CM: 3, Total: 9
-            listOf(drtDoubleFive()), // CM: 5, Total: 13
+            listOf(drtMissThree(), drtDoubleThree()), // CM: 3, OHW: 1, Total: 9
+            listOf(drtDoubleFive()), // CM: 5, OHW: 2, Total: 13
             listOf(drtMissSeven(), drtInnerSeven()), // Total: 17
-            listOf(drtOuterNine(), drtOuterNine(), drtDoubleNine()), // Gambled 2, CM: 9, Total: 23
+            listOf(drtOuterNine(), drtOuterNine(), drtDoubleNine()), // Gambled 2, CM: 9, OHW: 3, Total: 23
         )
 
         val p2Rounds = listOf(
             listOf(drtMissTwo(), drtOuterTwo()), // Total: 8
             listOf(drtOuterFour(), drtMissFour(), drtInnerFour()), // Gambled 1 in round 4, Total: 12
-            listOf(drtDoubleSix()), // CM: 6, Total: 14
+            listOf(drtDoubleSix()), // CM: 6, OHW: 1, Total: 14
             listOf(drtDoubleSixteen(), drtDoubleEleven(), drtMissEight()) // Total: 22
         )
 
@@ -170,11 +172,13 @@ class TestGolfE2E: AbstractRegistryTest()
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "3"),
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "5"),
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "9"),
+            AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 3, game.rowId)
         )
 
         retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "4"),
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "6"),
+            AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 1, game.rowId)
         )
 
         checkAchievementConversions(listOf(p1.rowId, p2.rowId))

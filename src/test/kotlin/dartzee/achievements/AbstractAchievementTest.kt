@@ -37,6 +37,11 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
     abstract fun factoryAchievement(): E
     abstract fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database = mainDatabase)
 
+    protected fun runConversion(playerIds: List<String> = emptyList(), database: Database = mainDatabase)
+    {
+        factoryAchievement().populateForConversion(playerIds, database)
+    }
+
     protected fun setUpAchievementRowForPlayer(p: PlayerEntity, database: Database = mainDatabase)
     {
         val g = insertRelevantGame(database = database)
@@ -74,7 +79,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         val g = insertGame(gameType = otherType)
         setUpAchievementRowForPlayerAndGame(p, g)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -104,7 +109,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         setUpAchievementRowForPlayer(alice)
         setUpAchievementRowForPlayer(bob)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 2
 

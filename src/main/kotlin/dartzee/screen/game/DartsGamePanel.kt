@@ -4,7 +4,6 @@ import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
 import dartzee.achievements.getWinAchievementType
 import dartzee.ai.DartsAiModel
-import dartzee.bean.IMouseListener
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.doBadMiss
@@ -42,7 +41,6 @@ import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.awt.event.MouseEvent
 import java.sql.SQLException
 import javax.swing.ImageIcon
 import javax.swing.JButton
@@ -460,8 +458,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     override fun dartThrown(dart: Dart)
     {
-        dart.roundNumber = currentRoundNumber
-
         getCurrentPlayerState().dartThrown(dart)
 
         //If there are any specific variables we need to update (e.g. current score for X01), do it now

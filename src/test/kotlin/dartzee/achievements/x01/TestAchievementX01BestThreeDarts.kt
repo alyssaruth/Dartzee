@@ -35,7 +35,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
         insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 1
     }
 
@@ -49,7 +49,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
         insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 1)
         insertDart(pt, ordinal = 3, startingScore = 20, score = 20, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -62,7 +62,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
         insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -82,7 +82,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
         insertDart(pt2, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
         insertDart(pt2, ordinal = 3, startingScore = 381, score = 20, multiplier = 3, dtCreation = Timestamp(500))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
 
@@ -117,7 +117,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
         insertDart(pt3, ordinal = 2, startingScore = 451, score = 25, multiplier = 2)
         insertDart(pt3, ordinal = 3, startingScore = 401, score = 25, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
 

@@ -34,7 +34,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         val pt = insertRelevantParticipant(finalScore = 120, team = true)
         insertValidRoundResult(pt, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 1
     }
 
@@ -45,7 +45,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertValidRoundResult(pt, shortList)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -55,7 +55,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         val pt = insertRelevantParticipant(finalScore = -1)
         insertValidRoundResult(pt, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -71,7 +71,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         val lastResult = DartzeeRoundResult(1, true, 20)
         DartzeeRoundResultEntity.factoryAndSave(lastResult, pt, testRules.size + 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -84,7 +84,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         val hardestRuleResult = DartzeeRoundResult(testRules.size, false, 60)
         DartzeeRoundResultEntity.factoryAndSave(hardestRuleResult, pt, testRules.size + 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -94,7 +94,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         val pt = insertRelevantParticipant(finalScore = 275)
         insertValidRoundResult(pt, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val a = retrieveAchievement()
         a.achievementType shouldBe AchievementType.DARTZEE_UNDER_PRESSURE
@@ -113,7 +113,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         insertValidRoundResult(pt, testRules)
         insertValidRoundResult(pt2, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 2
     }
 

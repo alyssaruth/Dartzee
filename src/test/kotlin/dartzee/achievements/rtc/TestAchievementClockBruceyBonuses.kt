@@ -46,7 +46,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
         val pt = insertRelevantParticipant(team = true)
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
     }
@@ -61,7 +61,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
 
         insertDart(pt, ordinal = 3, startingScore = 3, score = 3, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -78,7 +78,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 2, roundNumber = 4)
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 3, roundNumber = 8)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 3
 
@@ -100,7 +100,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
 
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
     }
@@ -115,7 +115,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
 
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 3)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
     }
@@ -130,7 +130,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
 
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 0)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -147,7 +147,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 3)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -164,7 +164,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 1)
         insertDart(pt, ordinal = 4, startingScore = 4, score = 4, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -179,7 +179,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
 
         insertDart(pt, ordinal = 4, startingScore = 4, score = 3, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -196,7 +196,7 @@ class TestAchievementClockBruceyBonuses: AbstractMultiRowAchievementTest<Achieve
         insertDart(pt, ordinal = 4, startingScore = 3, score = 3, multiplier = 1, dtCreation = Timestamp(2000))
         insertDart(pt, ordinal = 4, startingScore = 9, score = 9, multiplier = 1, dtCreation = Timestamp(1500))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 3
         val dtLastUpdates = AchievementEntity().retrieveEntities().map { it.dtAchieved }

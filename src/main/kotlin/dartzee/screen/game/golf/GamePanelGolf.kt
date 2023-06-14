@@ -77,10 +77,14 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
             AchievementEntity.insertAchievementWithCounter(AchievementType.GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, "$currentRoundNumber", pointsRisked)
         }
 
-        if (getDartsThrown().last().getGolfScore(currentRoundNumber) == 1
-         && retrieveAchievementForDetail(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), "$currentRoundNumber") == null)
+        if (getDartsThrown().last().getGolfScore(currentRoundNumber) == 1)
         {
-            AchievementEntity.insertAchievement(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
+            if (retrieveAchievementForDetail(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), "$currentRoundNumber") == null) {
+                AchievementEntity.insertAchievement(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
+            }
+
+            val holeInOneCount = getCurrentPlayerState().countHoleInOnes()
+            AchievementEntity.updateAchievement(AchievementType.GOLF_ONE_HIT_WONDER, getCurrentPlayerId(), getGameId(), holeInOneCount)
         }
     }
 
