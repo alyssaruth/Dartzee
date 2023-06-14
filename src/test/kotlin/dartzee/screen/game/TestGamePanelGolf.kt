@@ -7,6 +7,7 @@ import dartzee.drtDoubleThree
 import dartzee.drtDoubleTwo
 import dartzee.drtInnerThree
 import dartzee.drtOuterOne
+import dartzee.drtTrebleTwo
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.insertAchievement
@@ -21,9 +22,6 @@ import org.junit.jupiter.api.Test
 
 class TestGamePanelGolf: AbstractTest()
 {
-    /**
-     * Updating Gambler achievement
-     */
     @Test
     fun `It should not update gambler achievement for missed darts`()
     {
@@ -85,9 +83,6 @@ class TestGamePanelGolf: AbstractTest()
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_POINTS_RISKED, playerId) shouldBe null
     }
 
-    /**
-     * Updating Course Master achievement
-     */
     @Test
     fun `Should not count darts that aren't a hole in one`()
     {
@@ -99,6 +94,7 @@ class TestGamePanelGolf: AbstractTest()
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
+
     @Test
     fun `Should not count darts for the wrong hole`()
     {
@@ -110,6 +106,7 @@ class TestGamePanelGolf: AbstractTest()
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
+
     @Test
     fun `Should only count the last dart thrown`()
     {
@@ -121,6 +118,7 @@ class TestGamePanelGolf: AbstractTest()
 
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_COURSE_MASTER, playerId) shouldBe null
     }
+
     @Test
     fun `Should insert a row for a new hole in one`()
     {
@@ -135,6 +133,7 @@ class TestGamePanelGolf: AbstractTest()
         rows.size shouldBe 2
         rows.map { it.achievementDetail }.shouldContainExactlyInAnyOrder("1", "2")
     }
+
     @Test
     fun `Should not insert a row for a hole in one already attained`()
     {
@@ -149,9 +148,29 @@ class TestGamePanelGolf: AbstractTest()
         newRow.rowId shouldBe originalRow.rowId
     }
 
-    /**
-     * Team achievements
-     */
+    @Test
+    fun `Should update one hit wonder achievement when record is exceeded`()
+    {
+        val playerId = randomGuid()
+        val otherGameId = randomGuid()
+        val panel = makeGolfGamePanel(playerId)
+        val originalRow = insertAchievement(playerId = playerId, type = AchievementType.GOLF_ONE_HIT_WONDER, gameIdEarned = otherGameId, achievementCounter = 2)
+
+        val roundOne = listOf(drtDoubleOne())
+        val roundTwo = listOf(drtTrebleTwo(), drtDoubleTwo())
+        panel.addCompletedRound(roundOne)
+        panel.addCompletedRound(roundTwo)
+
+        val currentRow = AchievementEntity.retrieveAchievement(AchievementType.GOLF_ONE_HIT_WONDER, playerId)!!
+        currentRow.gameIdEarned shouldBe originalRow.gameIdEarned
+        currentRow.achievementCounter shouldBe originalRow.achievementCounter
+
+        panel.addCompletedRound(listOf(drtDoubleThree()))
+        val newRow = AchievementEntity.retrieveAchievement(AchievementType.GOLF_ONE_HIT_WONDER, playerId)!!
+        newRow.gameIdEarned shouldBe panel.gameEntity.rowId
+        newRow.achievementCounter shouldBe 3
+    }
+
     @Test
     fun `Should unlock the correct achievements for team play`()
     {
