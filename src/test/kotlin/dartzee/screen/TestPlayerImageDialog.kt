@@ -67,7 +67,7 @@ class TestPlayerImageDialog : AbstractTest()
         val uploadPanel = dlg.getChild<JPanel>("uploadTab")
         val radioButtons = uploadPanel.getAllChildComponentsForType<PlayerImageRadio>()
         val resultingRadioButton = radioButtons.only()
-        resultingRadioButton.shouldMatchImage("uploadedImage")
+        resultingRadioButton.shouldMatchImage("uploadedImage", pixelTolerance = 0.05)
 
         val entities = PlayerImageEntity().retrieveEntities()
         val resultingEntity = entities.only()

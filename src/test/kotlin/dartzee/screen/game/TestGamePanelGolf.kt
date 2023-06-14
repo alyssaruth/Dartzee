@@ -160,24 +160,26 @@ class TestGamePanelGolf: AbstractTest()
         val panel = makeGolfGamePanel(team)
         val gameId = panel.gameEntity.rowId
 
-        val roundOne = listOf(drtOuterOne(), drtOuterOne(), drtDoubleOne()) // P1: Risked 2, CM: 1
+        val roundOne = listOf(drtOuterOne(), drtOuterOne(), drtDoubleOne()) // P1: Risked 2, CM: 1, OHW: 1
         panel.addCompletedRound(roundOne)
 
-        val roundTwo = listOf(drtDoubleTwo()) // P2: Risked 0, CM: 2
+        val roundTwo = listOf(drtDoubleTwo()) // P2: Risked 0, CM: 2, OHW: 1
         panel.addCompletedRound(roundTwo)
 
-        val roundThree = listOf(drtInnerThree(), drtDoubleThree()) // P1: Risked 4, CM: 1, 3
+        val roundThree = listOf(drtInnerThree(), drtDoubleThree()) // P1: Risked 4, CM: 1, 3, OHW: 2
         panel.addCompletedRound(roundThree)
 
         retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, gameId, "1"),
             AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, gameId, "3"),
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "1"),
-            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "3")
+            AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "3"),
+            AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 2, gameId)
         )
 
         retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "2"),
+            AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 1, gameId)
         )
     }
 }
