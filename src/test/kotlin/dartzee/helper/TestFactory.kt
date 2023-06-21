@@ -65,7 +65,10 @@ fun setRoundNumbers(rounds: List<List<Dart>>) {
 
 fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
 {
-    darts.forEach { it.roundNumber = golfHole }
+    darts.forEachIndexed { ix, drt ->
+        drt.ordinal = ix + 1
+        drt.roundNumber = golfHole
+    }
     return darts
 }
 

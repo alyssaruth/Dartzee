@@ -145,12 +145,12 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
     {
         val g = insertRelevantGame()
         val p = insertPlayer()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 56, teamId = "foo")
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 56)
 
         val rounds = factorySuccessRounds().toMutableList()
         rounds[4] = listOf(drtMissFive(), drtMissFive(), drtMissFive())
 
-        val golfRounds = makeGolfRounds(factorySuccessRounds())
+        val golfRounds = makeGolfRounds(rounds)
         golfRounds.flatten().forEach {
             insertDart(pt, it)
         }
@@ -165,12 +165,12 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
     {
         val g = insertRelevantGame()
         val p = insertPlayer()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 56, teamId = "foo")
+        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 56)
 
         val rounds = factorySuccessRounds().toMutableList()
         rounds[0] = listOf(drtMissOne(), drtOuterOne(), drtDoubleTwenty())
 
-        val golfRounds = makeGolfRounds(factorySuccessRounds())
+        val golfRounds = makeGolfRounds(rounds)
         golfRounds.flatten().forEach {
             insertDart(pt, it)
         }
