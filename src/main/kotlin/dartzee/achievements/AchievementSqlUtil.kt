@@ -40,7 +40,7 @@ fun getPlayerSql(playerIds: List<String>, alias: String? = "pt", whereOrAnd: Str
 
 fun appendPlayerSql(sb: StringBuilder, playerIds: List<String>, alias: String? = "pt", whereOrAnd: String = "AND")
 {
-    sb.append(getPlayerSql(playerIds, alias, whereOrAnd))
+    sb.append(" ${getPlayerSql(playerIds, alias, whereOrAnd)}")
 }
 
 fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
