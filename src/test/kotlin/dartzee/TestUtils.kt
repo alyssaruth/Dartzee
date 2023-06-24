@@ -139,6 +139,16 @@ fun ScrollTable.getDisplayValueAt(row: Int, col: Int): Any = table.getValueAt(ro
 fun ScrollTable.getRows(): List<List<Any?>> =
     model.getRows(columnCount)
 
+fun ScrollTable.getRenderedRows(): List<List<Any?>> =
+    (0 until rowCount).map { row -> (0 until columnCount)
+        .map { col ->
+            val value = getValueAt(row, col)
+            val r = table.getCellRenderer(row, col)
+            val component = r?.getTableCellRendererComponent(table, value, false, false, row, col)
+            if (component is JLabel) component.text else value
+        }
+    }
+
 fun ScrollTable.clickTableButton(row: Int, col: Int) {
     val editor = table.getCellEditor(row, col)
     if (editor !is ButtonColumn) {

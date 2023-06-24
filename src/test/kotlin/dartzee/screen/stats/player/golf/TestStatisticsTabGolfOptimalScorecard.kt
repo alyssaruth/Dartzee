@@ -2,6 +2,7 @@ package dartzee.screen.stats.player.golf
 
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.getChild
+import dartzee.getRenderedRows
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.golfAllMisses
@@ -99,6 +100,6 @@ class TestStatisticsTabGolfOptimalScorecard : AbstractTest()
         expected.addGameIds(gameIds)
 
         val scorecard = getChild<GolfStatsScorecard> { it.testId == testId }
-        scorecard.tableScores.getRows() shouldBe expected.tableScores.getRows()
+        scorecard.tableScores.getRenderedRows() shouldBe expected.tableScores.getRenderedRows()
     }
 }
