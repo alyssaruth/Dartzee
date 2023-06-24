@@ -86,5 +86,5 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement()
         }
     }
 
-    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_ONE_HIT_WONDER
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_IN_BOUNDS
 }
