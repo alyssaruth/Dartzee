@@ -35,10 +35,10 @@ fun makeTeam(vararg players: PlayerEntity, gameId: String = randomGuid()): TeamP
     return TeamParticipant(team, pts)
 }
 
-fun makeGolfGamePanel(currentPlayerId: String = randomGuid()) =
+fun makeGolfGamePanel(currentPlayerId: String = randomGuid(), gameParams: String = "18") =
     GamePanelGolf(
         FakeDartsScreen(),
-        insertGame(gameType = GameType.GOLF, gameParams = "18"),
+        insertGame(gameType = GameType.GOLF, gameParams = gameParams),
         1).apply { testInit(currentPlayerId) }
 
 fun makeGolfGamePanel(pt: IWrappedParticipant) =
@@ -81,6 +81,11 @@ fun DartsGamePanel<*, *>.setDartsThrown(dartsThrown: List<Dart>)
 {
     btnReset.doClick()
     dartsThrown.forEach(::dartThrown)
+}
+
+fun DartsGamePanel<*, *>.addCompletedRound(vararg dartsThrown: Dart)
+{
+    addCompletedRound(dartsThrown.toList())
 }
 
 fun DartsGamePanel<*, *>.addCompletedRound(dartsThrown: List<Dart>)
