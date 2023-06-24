@@ -2,11 +2,31 @@ package dartzee.screen.game
 
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
+import dartzee.drtDoubleEight
 import dartzee.drtDoubleOne
+import dartzee.drtDoubleSeven
+import dartzee.drtDoubleSixteen
 import dartzee.drtDoubleThree
 import dartzee.drtDoubleTwo
+import dartzee.drtInnerFifteen
+import dartzee.drtInnerNine
+import dartzee.drtInnerSix
 import dartzee.drtInnerThree
+import dartzee.drtInnerTwo
+import dartzee.drtMissSixteen
+import dartzee.drtMissThirteen
+import dartzee.drtOuterEighteen
+import dartzee.drtOuterEleven
+import dartzee.drtOuterFour
+import dartzee.drtOuterFourteen
 import dartzee.drtOuterOne
+import dartzee.drtOuterSeventeen
+import dartzee.drtOuterTen
+import dartzee.drtOuterThirteen
+import dartzee.drtOuterThree
+import dartzee.drtOuterTwenty
+import dartzee.drtTrebleFive
+import dartzee.drtTrebleTwelve
 import dartzee.drtTrebleTwo
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
@@ -200,5 +220,116 @@ class TestGamePanelGolf: AbstractTest()
             AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "2"),
             AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 1, gameId)
         )
+    }
+
+    @Test
+    fun `Should update In Bounds achievement`()
+    {
+        val playerId = randomGuid()
+        val panel = makeGolfGamePanel(playerId, gameParams = "18")
+
+        panel.addCompletedRound(drtOuterOne())
+        panel.addCompletedRound(drtInnerTwo())
+        panel.addCompletedRound(drtOuterThree(), drtOuterThree())
+        panel.addCompletedRound(drtOuterFour())
+        panel.addCompletedRound(drtOuterTwenty(), drtTrebleFive())
+        panel.addCompletedRound(drtInnerSix())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtInnerNine())
+        panel.addCompletedRound(drtOuterTen())
+        panel.addCompletedRound(drtOuterEleven())
+        panel.addCompletedRound(drtTrebleTwelve())
+        panel.addCompletedRound(drtMissThirteen(), drtMissThirteen(), drtOuterThirteen())
+        panel.addCompletedRound(drtOuterFourteen())
+        panel.addCompletedRound(drtInnerFifteen())
+        panel.addCompletedRound(drtMissSixteen(), drtDoubleSixteen())
+        panel.addCompletedRound(drtOuterSeventeen())
+        panel.addCompletedRound(drtOuterEighteen())
+
+        panel.gameEntity.isFinished() shouldBe true
+        val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_IN_BOUNDS, playerId)!!
+        a.gameIdEarned shouldBe panel.gameEntity.rowId
+        a.achievementDetail shouldBe "55"
+    }
+
+    @Test
+    fun `Should not update In Bounds achievement if a number is missed`()
+    {
+        val playerId = randomGuid()
+        val panel = makeGolfGamePanel(playerId, gameParams = "18")
+
+        panel.addCompletedRound(drtOuterOne())
+        panel.addCompletedRound(drtInnerTwo())
+        panel.addCompletedRound(drtOuterThree(), drtOuterThree())
+        panel.addCompletedRound(drtOuterFour())
+        panel.addCompletedRound(drtOuterTwenty(), drtTrebleFive())
+        panel.addCompletedRound(drtInnerSix())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtInnerNine())
+        panel.addCompletedRound(drtOuterTen())
+        panel.addCompletedRound(drtOuterEleven())
+        panel.addCompletedRound(drtTrebleTwelve())
+        panel.addCompletedRound(drtMissThirteen(), drtMissThirteen(), drtMissThirteen())
+        panel.addCompletedRound(drtOuterFourteen())
+        panel.addCompletedRound(drtInnerFifteen())
+        panel.addCompletedRound(drtMissSixteen(), drtDoubleSixteen())
+        panel.addCompletedRound(drtOuterSeventeen())
+        panel.addCompletedRound(drtOuterEighteen())
+
+        panel.gameEntity.isFinished() shouldBe true
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_IN_BOUNDS, playerId) shouldBe null
+    }
+
+    @Test
+    fun `Should not update In Bounds achievement for a team`()
+    {
+        val (p1, p2) = preparePlayers(2)
+        val team = makeTeam(p1, p2)
+        val panel = makeGolfGamePanel(team)
+
+        panel.addCompletedRound(drtOuterOne())
+        panel.addCompletedRound(drtInnerTwo())
+        panel.addCompletedRound(drtOuterThree(), drtOuterThree())
+        panel.addCompletedRound(drtOuterFour())
+        panel.addCompletedRound(drtOuterTwenty(), drtTrebleFive())
+        panel.addCompletedRound(drtInnerSix())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtInnerNine())
+        panel.addCompletedRound(drtOuterTen())
+        panel.addCompletedRound(drtOuterEleven())
+        panel.addCompletedRound(drtTrebleTwelve())
+        panel.addCompletedRound(drtMissThirteen(), drtMissThirteen(), drtOuterThirteen())
+        panel.addCompletedRound(drtOuterFourteen())
+        panel.addCompletedRound(drtInnerFifteen())
+        panel.addCompletedRound(drtMissSixteen(), drtDoubleSixteen())
+        panel.addCompletedRound(drtOuterSeventeen())
+        panel.addCompletedRound(drtOuterEighteen())
+
+        panel.gameEntity.isFinished() shouldBe true
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_IN_BOUNDS, p1.rowId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_IN_BOUNDS, p2.rowId) shouldBe null
+    }
+
+    @Test
+    fun `Should not add to In Bounds achievement for a 9-hole game`()
+    {
+        val playerId = randomGuid()
+        val panel = makeGolfGamePanel(playerId, gameParams = "9")
+
+        panel.addCompletedRound(drtOuterOne())
+        panel.addCompletedRound(drtInnerTwo())
+        panel.addCompletedRound(drtOuterThree(), drtOuterThree())
+        panel.addCompletedRound(drtOuterFour())
+        panel.addCompletedRound(drtOuterTwenty(), drtTrebleFive())
+        panel.addCompletedRound(drtInnerSix())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtInnerNine())
+
+        panel.gameEntity.isFinished() shouldBe true
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_IN_BOUNDS, playerId) shouldBe null
     }
 }

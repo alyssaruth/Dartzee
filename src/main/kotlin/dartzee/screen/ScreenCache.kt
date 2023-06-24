@@ -4,10 +4,11 @@ import dartzee.core.bean.CheatBar
 import dartzee.db.PlayerEntity
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.stats.player.PlayerAchievementsScreen
+import java.util.concurrent.ConcurrentHashMap
 
 object ScreenCache
 {
-    private val hmGameIdToGameScreen = mutableMapOf<String, AbstractDartsGameScreen>()
+    private val hmGameIdToGameScreen = ConcurrentHashMap<String, AbstractDartsGameScreen>()
 
     //Embedded screens
     val hmClassToScreen = mutableMapOf<Class<out EmbeddedScreen>, EmbeddedScreen>()

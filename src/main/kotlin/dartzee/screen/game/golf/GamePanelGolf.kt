@@ -66,6 +66,20 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
         finishRound()
     }
 
+    override fun updateAchievementsForFinish(playerState: GolfPlayerState, finishingPosition: Int, score: Int)
+    {
+        super.updateAchievementsForFinish(playerState, finishingPosition, score)
+
+        if (!playerState.hasMultiplePlayers())
+        {
+            val scores = playerState.completedRounds.map { it.last().getGolfScore() }
+            if (scores.size == 18 && scores.none { it == 5 })
+            {
+                AchievementEntity.insertAchievement(AchievementType.GOLF_IN_BOUNDS, getCurrentPlayerId(), getGameId(), "$score")
+            }
+        }
+    }
+
     private fun unlockAchievements()
     {
         val size = getDartsThrown().size

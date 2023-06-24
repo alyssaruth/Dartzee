@@ -78,7 +78,8 @@ class TestGolfE2E: AbstractRegistryTest()
 
         val expectedAchievementRows = (1..18).map { AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "$it") } +
                 AchievementSummary(AchievementType.GOLF_BEST_GAME, 18, game.rowId) +
-                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 18, game.rowId)
+                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 18, game.rowId) +
+                AchievementSummary(AchievementType.GOLF_IN_BOUNDS, -1, game.rowId, "18")
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(expectedAchievementRows)
         checkAchievementConversions(player.rowId)
