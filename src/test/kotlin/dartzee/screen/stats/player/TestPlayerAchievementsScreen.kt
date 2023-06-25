@@ -9,7 +9,6 @@ import dartzee.achievements.x01.AchievementX01HighestBust
 import dartzee.bean.AchievementMedal
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
-import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
@@ -72,30 +71,30 @@ class TestPlayerAchievementsScreen: AbstractTest()
         achievementsScrn.lblAchievementExtraDetails.text shouldBe ""
     }
 
-    @Test
-    fun `Should be able to select the right tab per game type`()
-    {
-        val p = insertPlayer()
-
-        val achievementsScrn = ScreenCache.switchToAchievementsScreen(p)
-
-        // X01 tab by default
-        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldNotBe null
-        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
-
-        // Golf
-        achievementsScrn.selectTab(GameType.GOLF)
-        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldNotBe null
-        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
-
-        // Dartzee
-        achievementsScrn.selectTab(GameType.DARTZEE)
-        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldNotBe null
-    }
+//    @Test
+//    fun `Should be able to scroll a game type into view`()
+//    {
+//        val p = insertPlayer()
+//
+//        val achievementsScrn = ScreenCache.switchToAchievementsScreen(p)
+//
+//        // X01 tab by default
+//        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldNotBe null
+//        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
+//        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
+//
+//        // Golf
+//        achievementsScrn.selectTab(GameType.GOLF)
+//        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
+//        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldNotBe null
+//        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
+//
+//        // Dartzee
+//        achievementsScrn.selectTab(GameType.DARTZEE)
+//        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
+//        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
+//        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldNotBe null
+//    }
 
     @Test
     fun `Should show achievement progress for the right player and right achievement`()
