@@ -19,7 +19,7 @@ import java.awt.event.MouseEvent
 import javax.swing.JComponent
 import javax.swing.JLabel
 
-const val SIZE = 175
+const val SIZE = 164
 
 class AchievementMedal(val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), IMouseListener
 {
@@ -66,10 +66,13 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
             var y = 30
             if (achievement.isLocked())
             {
-                y = 50
+                y = (SIZE / 2) - 40
             }
 
-            icon?.let{ g.drawImage(icon, null, 52, y) }
+            icon?.let {
+                val x = (SIZE / 2) - (icon.width / 2)
+                g.drawImage(icon, null, x, y)
+            }
 
             if (!achievement.isLocked())
             {

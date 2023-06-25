@@ -93,8 +93,8 @@ class PlayerAchievementsScreen : EmbeddedScreen()
         panel.border = TitledBorder(gameType.getDescription())
 
         val fl = WrapLayout()
-        fl.vgap = 25
-        fl.hgap = 20
+        fl.vgap = 10
+        fl.hgap = 15
         fl.alignment = FlowLayout.LEFT
         panel.layout = fl
 
