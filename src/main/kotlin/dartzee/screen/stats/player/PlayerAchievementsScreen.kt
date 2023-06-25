@@ -120,7 +120,6 @@ class PlayerAchievementsScreen : EmbeddedScreen()
     {
         val medal = getAllChildComponentsForType<AchievementMedal>().first { it.achievement.achievementType == achievementType }
         val bounds = medal.parent.bounds
-        println(bounds)
         achievementsPanel.scrollRectToVisible(bounds)
 
     }

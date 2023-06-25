@@ -17,8 +17,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
-import java.awt.Container
-import javax.swing.JTabbedPane
+import javax.swing.JScrollPane
 
 class TestPlayerAchievementsScreen: AbstractTest()
 {
@@ -71,30 +70,22 @@ class TestPlayerAchievementsScreen: AbstractTest()
         achievementsScrn.lblAchievementExtraDetails.text shouldBe ""
     }
 
-//    @Test
-//    fun `Should be able to scroll a game type into view`()
-//    {
-//        val p = insertPlayer()
-//
-//        val achievementsScrn = ScreenCache.switchToAchievementsScreen(p)
-//
-//        // X01 tab by default
-//        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldNotBe null
-//        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
-//        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
-//
-//        // Golf
-//        achievementsScrn.selectTab(GameType.GOLF)
-//        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
-//        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldNotBe null
-//        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
-//
-//        // Dartzee
-//        achievementsScrn.selectTab(GameType.DARTZEE)
-//        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
-//        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
-//        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldNotBe null
-//    }
+    @Test
+    fun `Should be able to scroll an achievement into view`()
+    {
+        val p = insertPlayer()
+
+        val achievementsScrn = ScreenCache.switchToAchievementsScreen(p)
+
+        val scrollBar = achievementsScrn.getChild<JScrollPane>().verticalScrollBar
+        scrollBar.value shouldBe 0
+
+        achievementsScrn.scrollIntoView(AchievementType.DARTZEE_BEST_GAME)
+        scrollBar.value shouldNotBe 0
+
+        achievementsScrn.scrollIntoView(AchievementType.X01_BEST_GAME)
+        scrollBar.value shouldBe 0
+    }
 
     @Test
     fun `Should show achievement progress for the right player and right achievement`()
@@ -117,8 +108,7 @@ class TestPlayerAchievementsScreen: AbstractTest()
         p2AchievementScreen.findAchievementMedal(AchievementType.X01_HIGHEST_BUST)?.achievement?.isLocked() shouldBe true
     }
 
-    private fun PlayerAchievementsScreen.findAchievementMedal(type: AchievementType) =
-        (getChild<JTabbedPane>().selectedComponent as Container).findChild<AchievementMedal> { it.achievement.achievementType == type }
+    private fun PlayerAchievementsScreen.findAchievementMedal(type: AchievementType) = findChild<AchievementMedal> { it.achievement.achievementType == type }
 
     private fun setUpAchievements(player: PlayerEntity)
     {

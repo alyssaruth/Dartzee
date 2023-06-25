@@ -10,9 +10,10 @@ import dartzee.screen.stats.overall.LeaderboardAchievements
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.player.PlayerAchievementsScreen
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
-import javax.swing.JTabbedPane
+import javax.swing.JScrollPane
 
 class TestScrollTableAchievements: AbstractTest()
 {
@@ -41,18 +42,14 @@ class TestScrollTableAchievements: AbstractTest()
         val selectedAchievement = leaderboard.comboBox.items().find { it.gameType == GameType.DARTZEE }
         leaderboard.comboBox.selectedItem = selectedAchievement
 
-        val startingScreen = LeaderboardsScreen()
-        ScreenCache.switch(startingScreen)
-
         val player = insertPlayer()
 
         val scrollTable = ScrollTableAchievements(leaderboard)
         scrollTable.linkClicked(player)
 
         val scrn = ScreenCache.currentScreen()
-        scrn.getBackTarget() shouldBe startingScreen
         scrn.shouldBeInstanceOf<PlayerAchievementsScreen>()
-        val tabbedPane = scrn.getChild<JTabbedPane>()
-        tabbedPane.selectedIndex shouldBe tabbedPane.indexOfTab(GameType.DARTZEE.getDescription())
+        val scrollPane = scrn.getChild<JScrollPane>()
+        scrollPane.verticalScrollBar.value shouldNotBe 0
     }
 }
