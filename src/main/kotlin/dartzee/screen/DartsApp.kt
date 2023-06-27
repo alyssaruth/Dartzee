@@ -149,18 +149,20 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         val desiredSize = scrn.getDesiredSize()
         if (desiredSize != null)
         {
-            size = desiredSize
             minimumSize = desiredSize
         }
         else
         {
             minimumSize = Dimension(800, 600)
-            setSize(800, 600) //Revert to default
         }
 
-        //Need pack() to ensure the dialog resizes correctly.
+        if (extendedState != MAXIMIZED_BOTH)
+        {
+            size = minimumSize
+            pack()
+        }
+
         //Need repaint() in case we don't resize.
-        pack()
         repaint()
 
         scrn.postInit()

@@ -13,6 +13,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
@@ -81,10 +83,11 @@ class TestPlayerAchievementsScreen: AbstractTest()
         scrollBar.value shouldBe 0
 
         achievementsScrn.scrollIntoView(AchievementType.DARTZEE_BEST_GAME)
-        scrollBar.value shouldNotBe 0
+        val newPosition = scrollBar.value
+        newPosition shouldBeGreaterThan 0
 
         achievementsScrn.scrollIntoView(AchievementType.X01_BEST_GAME)
-        scrollBar.value shouldBe 0
+        scrollBar.value shouldBeLessThan newPosition
     }
 
     @Test

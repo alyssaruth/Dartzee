@@ -44,7 +44,9 @@ import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-fun getAchievementMaximum() = getAllAchievements().size * 6
+const val MAX_ACHIEVEMENT_SCORE = 6
+
+fun getAchievementMaximum() = getAllAchievements().size * MAX_ACHIEVEMENT_SCORE
 
 fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
 {
