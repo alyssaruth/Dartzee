@@ -16,12 +16,13 @@ import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
 import dartzee.screen.player.PlayerManagementScreen
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -34,6 +35,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
 
     private var progressDesc = ""
 
+    private val gridBag = GridBagLayout()
     private val scrollPane = JScrollPane()
     private val centerPanel = JPanel()
     private val achievementsPanel = JPanel()
@@ -51,7 +53,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         scrollPane.setViewportView(achievementsPanel)
         scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         scrollPane.verticalScrollBar.unitIncrement = 16
-        achievementsPanel.layout = MigLayout("al center center", "[grow]", "[][][][]")
+        achievementsPanel.layout = gridBag
 
         centerPanel.add(panelAchievementDesc, BorderLayout.SOUTH)
         panelAchievementDesc.preferredSize = Dimension(200, 100)
@@ -102,7 +104,14 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         fl.alignment = FlowLayout.LEFT
         panel.layout = fl
 
-        achievementsPanel.add(panel, "cell 0 $index, growx")
+        val constraints = GridBagConstraints()
+        constraints.fill = GridBagConstraints.BOTH
+        constraints.gridx = 0
+        constraints.gridy = index
+        constraints.gridwidth = GridBagConstraints.RELATIVE
+        constraints.weightx = 1.0
+        gridBag.setConstraints(panel, constraints)
+        achievementsPanel.add(panel)
 
         getAchievementsForGameType(gameType).forEach {
             addAchievement(it, filteredRows, panel)
