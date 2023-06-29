@@ -55,8 +55,8 @@ object ScreenCache
 
     fun switchToAchievementsScreen(player: PlayerEntity): PlayerAchievementsScreen
     {
-        val scrn = get<PlayerAchievementsScreen>()
-        scrn.player = player
+        val scrn = PlayerAchievementsScreen(player)
+        hmClassToScreen[PlayerAchievementsScreen::class.java] = scrn
         scrn.previousScrn = currentScreen()
 
         switch(scrn)

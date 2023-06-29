@@ -9,17 +9,17 @@ import dartzee.achievements.x01.AchievementX01HighestBust
 import dartzee.bean.AchievementMedal
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
-import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import java.awt.Color
-import java.awt.Container
-import javax.swing.JTabbedPane
+import javax.swing.JScrollPane
 
 class TestPlayerAchievementsScreen: AbstractTest()
 {
@@ -73,28 +73,21 @@ class TestPlayerAchievementsScreen: AbstractTest()
     }
 
     @Test
-    fun `Should be able to select the right tab per game type`()
+    fun `Should be able to scroll an achievement into view`()
     {
         val p = insertPlayer()
 
         val achievementsScrn = ScreenCache.switchToAchievementsScreen(p)
 
-        // X01 tab by default
-        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldNotBe null
-        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
+        val scrollBar = achievementsScrn.getChild<JScrollPane>().verticalScrollBar
+        scrollBar.value shouldBe 0
 
-        // Golf
-        achievementsScrn.selectTab(GameType.GOLF)
-        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldNotBe null
-        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldBe null
+        achievementsScrn.scrollIntoView(AchievementType.DARTZEE_BEST_GAME)
+        val newPosition = scrollBar.value
+        newPosition shouldBeGreaterThan 0
 
-        // Dartzee
-        achievementsScrn.selectTab(GameType.DARTZEE)
-        achievementsScrn.findAchievementMedal(AchievementType.X01_BEST_FINISH) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.GOLF_BEST_GAME) shouldBe null
-        achievementsScrn.findAchievementMedal(AchievementType.DARTZEE_FLAWLESS) shouldNotBe null
+        achievementsScrn.scrollIntoView(AchievementType.X01_BEST_GAME)
+        scrollBar.value shouldBeLessThan newPosition
     }
 
     @Test
@@ -118,8 +111,7 @@ class TestPlayerAchievementsScreen: AbstractTest()
         p2AchievementScreen.findAchievementMedal(AchievementType.X01_HIGHEST_BUST)?.achievement?.isLocked() shouldBe true
     }
 
-    private fun PlayerAchievementsScreen.findAchievementMedal(type: AchievementType) =
-        (getChild<JTabbedPane>().selectedComponent as Container).findChild<AchievementMedal> { it.achievement.achievementType == type }
+    private fun PlayerAchievementsScreen.findAchievementMedal(type: AchievementType) = findChild<AchievementMedal> { it.achievement.achievementType == type }
 
     private fun setUpAchievements(player: PlayerEntity)
     {

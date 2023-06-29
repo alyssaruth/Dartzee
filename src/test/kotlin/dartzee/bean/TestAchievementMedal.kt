@@ -5,18 +5,18 @@ import com.github.alyssaburlton.swingtest.doHover
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
+import dartzee.clickButton
 import dartzee.game.GameLauncher
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementBreakdown
-import dartzee.screen.stats.player.PlayerAchievementsScreen
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.Cursor
@@ -25,12 +25,6 @@ import javax.swing.table.DefaultTableModel
 
 class TestAchievementMedal: AbstractTest()
 {
-    @BeforeEach
-    fun beforeEach()
-    {
-        ScreenCache.get<PlayerAchievementsScreen>().toggleAchievementDesc(false, makeAchievement())
-    }
-
     @Test
     @Tag("screenshot")
     fun `Should match snapshot - locked`()
@@ -97,6 +91,8 @@ class TestAchievementMedal: AbstractTest()
     @Test
     fun `Should update cursor and description for hover if enabled and clickable`()
     {
+        val scrn = ScreenCache.switchToAchievementsScreen(insertPlayer())
+
         val achievement = makeAchievement(30)
         achievement.gameIdEarned = "foo"
         val medal = AchievementMedal(achievement, true)
@@ -104,30 +100,34 @@ class TestAchievementMedal: AbstractTest()
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.HAND_CURSOR
 
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
+        scrn.findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
     }
 
     @Test
     fun `Should not update cursor for hover if not clickable`()
     {
+        val scrn = ScreenCache.switchToAchievementsScreen(insertPlayer())
+
         val achievement = makeAchievement(30)
         val medal = AchievementMedal(achievement, true)
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
+        scrn.findChild<JLabel>(text = "Three Darter").shouldNotBeNull()
     }
 
     @Test
     fun `Should not update anything for hover if hover is disabled`()
     {
+        val scrn = ScreenCache.switchToAchievementsScreen(insertPlayer())
+
         val achievement = makeAchievement(30)
         achievement.gameIdEarned = "foo"
         val medal = AchievementMedal(achievement, false)
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        ScreenCache.get<PlayerAchievementsScreen>().findChild<JLabel>(text = "Three Darter") shouldBe null
+        scrn.findChild<JLabel>(text = "Three Darter") shouldBe null
     }
 
     @Test
@@ -144,6 +144,8 @@ class TestAchievementMedal: AbstractTest()
     @Test
     fun `Should show the achievement breakdown on click if it has one`()
     {
+        val scrn = ScreenCache.switchToAchievementsScreen(insertPlayer())
+
         val achievement = makeAchievement(30)
         achievement.tmBreakdown = DefaultTableModel()
 
@@ -153,6 +155,9 @@ class TestAchievementMedal: AbstractTest()
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<PlayerAchievementBreakdown>()
         currentScreen.achievement shouldBe achievement
+
+        ScreenCache.mainScreen.clickButton(" < Back")
+        ScreenCache.currentScreen() shouldBe scrn
     }
 
     @Test
