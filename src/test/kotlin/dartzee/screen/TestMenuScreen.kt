@@ -1,6 +1,8 @@
 package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.findWindow
 import dartzee.helper.AbstractTest
@@ -10,9 +12,11 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import javax.swing.JLabel
 
 class TestMenuScreen: AbstractTest()
 {
@@ -81,12 +85,15 @@ class TestMenuScreen: AbstractTest()
     }
 
     @Test
-    fun `Should show the about dialog`()
+    fun `Should launch the ChangeLog if the link is clicked`()
     {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text = "About...")
 
-        val window = findWindow<AboutDialog>()!!
-        window.shouldBeVisible()
+        val lbl = scrn.getChild<JLabel> { it.text.contains("Dartzee v") }
+        lbl.doClick()
+
+        val changeLog = findWindow<ChangeLog>()
+        changeLog.shouldNotBeNull()
+        changeLog.shouldBeVisible()
     }
 }
