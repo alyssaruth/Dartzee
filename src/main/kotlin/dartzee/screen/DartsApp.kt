@@ -159,10 +159,10 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         if (extendedState != MAXIMIZED_BOTH)
         {
             size = minimumSize
-            pack()
         }
 
         //Need repaint() in case we don't resize.
+        pack()
         repaint()
 
         scrn.postInit()
