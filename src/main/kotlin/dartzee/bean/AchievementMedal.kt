@@ -105,7 +105,11 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
         val pt = e.point
         highlighted = pt.distance(Point(SIZE/2, SIZE/2)) < SIZE/2
 
-        ScreenCache.get<PlayerAchievementsScreen>().toggleAchievementDesc(highlighted, achievement)
+        val currentScreen = ScreenCache.currentScreen()
+        if (currentScreen is PlayerAchievementsScreen)
+        {
+            currentScreen.toggleAchievementDesc(highlighted, achievement)
+        }
 
         cursor = if (highlighted && achievement.isClickable())
         {
