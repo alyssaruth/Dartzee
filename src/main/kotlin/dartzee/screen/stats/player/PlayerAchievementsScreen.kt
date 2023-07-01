@@ -177,7 +177,5 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         lblAchievementExtraDetails.foreground = fgColor
     }
 
-
     override fun getBackTarget() = previousScrn
-    override fun getDesiredSize() = Dimension(1240, 700)
 }

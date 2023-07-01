@@ -50,7 +50,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
     init
     {
         title = "Darts"
-        setSize(800, 600)
+        setSize(1000, 700)
+        minimumSize = Dimension(1000, 700)
         setLocationRelativeTo(null)
         contentPane.layout = BorderLayout(0, 0)
 
@@ -145,21 +146,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         title = "Darts - $screenName"
 
         logger.addToContext(KEY_CURRENT_SCREEN, scrn.getScreenName())
-
-        val desiredSize = scrn.getDesiredSize()
-        if (desiredSize != null)
-        {
-            minimumSize = desiredSize
-        }
-        else
-        {
-            minimumSize = Dimension(800, 600)
-        }
-
-        if (extendedState != MAXIMIZED_BOTH)
-        {
-            size = minimumSize
-        }
 
         //Need repaint() in case we don't resize.
         pack()

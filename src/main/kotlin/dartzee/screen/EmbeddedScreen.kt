@@ -47,7 +47,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     /**
      * Called after the new screen has been switched in etc
      */
-    fun postInit()
+    open fun postInit()
     {
         btnBack.isVisible = showBackButton()
         btnNext.isVisible = showNextButton()
@@ -106,11 +106,4 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     {
         return false
     }
-
-
-    open fun getDesiredSize() : Dimension?
-    {
-        return null
-    }
-
 }
