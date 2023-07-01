@@ -16,9 +16,10 @@ import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
+import javax.swing.ImageIcon
 import javax.swing.JButton
 
-private const val BUTTON_WIDTH = 200
+private const val BUTTON_WIDTH = 220
 private const val BUTTON_HEIGHT = 80
 
 class MenuScreen : EmbeddedScreen()
@@ -28,7 +29,7 @@ class MenuScreen : EmbeddedScreen()
     private val btnManagePlayers = JButton("Manage Players")
     private val btnLeaderboards = JButton("Leaderboards")
     private val btnPreferences = JButton("Preferences")
-    private val btnDartzeeTemplates = JButton("Dartzee")
+    private val btnDartzeeTemplates = JButton("Dartzee Templates")
     private val btnUtilities = JButton("Utilities")
     private val btnSyncSummary = JButton("Sync Setup")
     private val btnGameReport = JButton("Game Report")
@@ -39,6 +40,8 @@ class MenuScreen : EmbeddedScreen()
     init
     {
         layout = null
+        setLocations(1000, 663)
+
         add(dartboard)
 
         add(btnNewGame)
@@ -54,6 +57,13 @@ class MenuScreen : EmbeddedScreen()
         lblVersion.size = Dimension(100, 20)
         add(lblVersion)
 
+        btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
+        btnManagePlayers.icon = ImageIcon(javaClass.getResource("/buttons/playerManagement.png"))
+        btnUtilities.icon = ImageIcon(javaClass.getResource("/buttons/utilities.png"))
+        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
+        btnGameReport.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
+        btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
+
         getAllChildComponentsForType<JButton>().forEach { button ->
             button.size = Dimension(BUTTON_WIDTH, BUTTON_HEIGHT)
             button.font = buttonFont
@@ -61,7 +71,7 @@ class MenuScreen : EmbeddedScreen()
         }
 
         addComponentListener(object : ComponentAdapter() {
-            override fun componentResized(evt: ComponentEvent) = resized()
+            override fun componentResized(evt: ComponentEvent) = setLocations()
         })
     }
 
@@ -75,14 +85,11 @@ class MenuScreen : EmbeddedScreen()
     override fun postInit()
     {
         super.postInit()
-        resized()
+        setLocations()
     }
 
-    private fun resized()
+    private fun setLocations(width: Int = getWidth(), height: Int = getHeight())
     {
-        val width = width
-        val height = height
-
         val widthToSubtract = maxOf(0, (minOf(width, height) + (2 * BUTTON_WIDTH) + 50) - width)
         val dartboardSize = minOf(width, height) - widthToSubtract
 
