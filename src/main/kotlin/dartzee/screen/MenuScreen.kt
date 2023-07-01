@@ -2,7 +2,7 @@ package dartzee.screen
 
 import dartzee.bean.PresentationDartboard
 import dartzee.core.bean.LinkLabel
-import dartzee.core.util.addActionListenerToAllChildren
+import dartzee.core.util.getAllChildComponentsForType
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesScreen
@@ -11,11 +11,11 @@ import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.ResourceCache
+import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
-import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -38,49 +38,61 @@ class MenuScreen : EmbeddedScreen()
 
     init
     {
-        add(dartboard, BorderLayout.CENTER)
+        val panelCenter = JPanel()
+        panelCenter.layout = BorderLayout(0, 0)
+        add(panelCenter, BorderLayout.CENTER)
+        panelCenter.add(dartboard, BorderLayout.CENTER)
 
+        val panelNorth = JPanel()
         val panelEast = JPanel()
         val panelWest = JPanel()
+        val panelSouth = JPanel()
 
-        add(panelEast, BorderLayout.EAST)
-        add(panelWest, BorderLayout.WEST)
+        val northLayout = FlowLayout()
+        northLayout.hgap = 50
+        panelNorth.layout = northLayout
 
-        panelEast.layout = GridLayout(4, 1, 0, 20)
-        panelWest.layout = GridLayout(4, 1, 0, 20)
-        panelEast.border = EmptyBorder(20, 0, 20, 15)
-        panelWest.border = EmptyBorder(20, 15, 20, 0)
+        val southLayout = FlowLayout()
+        southLayout.hgap = 50
+        panelSouth.layout = southLayout
+
+        panelCenter.add(panelNorth, BorderLayout.NORTH)
+        panelCenter.add(panelEast, BorderLayout.EAST)
+        panelCenter.add(panelWest, BorderLayout.WEST)
+        panelCenter.add(panelSouth, BorderLayout.SOUTH)
+
+        panelNorth.add(btnNewGame)
+        panelNorth.add(btnPreferences)
+        panelSouth.add(btnGameReport)
+        panelSouth.add(btnSyncSummary)
+
+        panelEast.layout = MigLayout("al center center, wrap, gapy 50")
+        panelWest.layout = MigLayout("al center center, wrap, gapy 50")
+        panelEast.border = EmptyBorder(0, 0, 0, 15)
+        panelWest.border = EmptyBorder(0, 15, 0, 0)
 
         panelEast.preferredSize = Dimension(200, 0)
         panelWest.preferredSize = Dimension(200, 0)
 
-        btnNewGame.font = buttonFont
-        btnManagePlayers.font = buttonFont
-        btnLeaderboards.font = buttonFont
-        btnGameReport.font = buttonFont
-        panelWest.add(btnNewGame)
         panelWest.add(btnManagePlayers)
         panelWest.add(btnLeaderboards)
-        panelWest.add(btnGameReport)
-
-        btnPreferences.font = buttonFont
-        panelEast.add(btnPreferences)
-        btnDartzeeTemplates.font = buttonFont
         panelEast.add(btnDartzeeTemplates)
-        btnUtilities.font = buttonFont
         panelEast.add(btnUtilities)
-        btnSyncSummary.font = buttonFont
-        panelEast.add(btnSyncSummary)
 
-        val southLayout = FlowLayout()
-        southLayout.alignment = FlowLayout.TRAILING
-        val panelSouth = JPanel()
-        panelSouth.layout = southLayout
-        add(panelSouth, BorderLayout.SOUTH)
-        panelSouth.add(lblVersion)
+        val versionLayout = FlowLayout()
+        versionLayout.alignment = FlowLayout.TRAILING
+        val panelVersion = JPanel()
+        panelVersion.border = EmptyBorder(0, 0, 10, 15)
+        panelVersion.layout = versionLayout
+        add(panelVersion, BorderLayout.SOUTH)
+        panelVersion.add(lblVersion)
 
         //Add ActionListeners
-        addActionListenerToAllChildren(this)
+        getAllChildComponentsForType<JButton>().forEach { button ->
+            button.preferredSize = Dimension(200, 80)
+            button.font = buttonFont
+            button.addActionListener(this)
+        }
     }
 
     override fun getScreenName() = "Menu"

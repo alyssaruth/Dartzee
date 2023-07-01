@@ -4,7 +4,7 @@ import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeSegmentStatuses
-import dartzee.logging.CODE_RENDERED_DARTBOARD
+import dartzee.logging.CODE_SLOW_DARTBOARD_RENDER
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
@@ -64,11 +64,11 @@ class TestPresentationDartboard : AbstractTest()
         clearLogs()
 
         dartboard.paint(bi.graphics)
-        verifyNoLogs(CODE_RENDERED_DARTBOARD)
+        verifyNoLogs(CODE_SLOW_DARTBOARD_RENDER)
 
         dartboard.setBounds(0, 0, 401, 401)
         dartboard.paint(bi.graphics)
-        verifyLog(CODE_RENDERED_DARTBOARD)
+        verifyLog(CODE_SLOW_DARTBOARD_RENDER)
     }
 
     @Test
