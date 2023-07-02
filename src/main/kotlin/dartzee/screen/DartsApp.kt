@@ -42,6 +42,8 @@ private const val CMD_SANITY = "sanity"
 private const val CMD_GUID = "guid"
 private const val CMD_TEST = "test"
 
+val APP_SIZE = Dimension(1000, 700)
+
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
     override val windowName = "Main Window"
@@ -50,8 +52,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
     init
     {
         title = "Darts"
-        setSize(1000, 700)
-        minimumSize = Dimension(1000, 700)
+        size = APP_SIZE
+        minimumSize = APP_SIZE
         setLocationRelativeTo(null)
         contentPane.layout = BorderLayout(0, 0)
 
