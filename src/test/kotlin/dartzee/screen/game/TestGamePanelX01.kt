@@ -148,7 +148,8 @@ class TestGamePanelX01: AbstractTest()
         panel.updateAchievementsForFinish(1, 30)
 
         retrieveAchievementsForPlayer(p1.rowId).shouldContainExactly(
-            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 60, gameId)
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 60, gameId),
+            AchievementSummary(AchievementType.X01_TEAM_GAMES_WON, -1, gameId, "30"),
         )
 
         retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
@@ -156,7 +157,8 @@ class TestGamePanelX01: AbstractTest()
             AchievementSummary(AchievementType.X01_BEST_FINISH, 9, gameId),
             AchievementSummary(AchievementType.X01_NO_MERCY, -1, gameId, "9"),
             AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 1, gameId),
-            AchievementSummary(AchievementType.X01_BTBF, -1, gameId)
+            AchievementSummary(AchievementType.X01_BTBF, -1, gameId),
+            AchievementSummary(AchievementType.X01_TEAM_GAMES_WON, -1, gameId, "30"),
         )
 
         val finishes = X01FinishEntity().retrieveEntities()
