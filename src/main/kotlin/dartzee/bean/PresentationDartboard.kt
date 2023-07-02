@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import dartzee.logging.CODE_RENDERED_DARTBOARD
+import dartzee.logging.CODE_SLOW_DARTBOARD_RENDER
 import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
@@ -124,9 +124,12 @@ open class PresentationDartboard(
             lastPaintImage = bi
 
             val duration = timer.getDuration()
-            logger.info(
-                CODE_RENDERED_DARTBOARD, "Rendered dartboard[$width, $height] in ${duration}ms",
-                KEY_DURATION to duration)
+            if (duration > 500)
+            {
+                logger.warn(
+                    CODE_SLOW_DARTBOARD_RENDER, "Rendered dartboard[$width, $height] in ${duration}ms",
+                    KEY_DURATION to duration)
+            }
         }
     }
 
