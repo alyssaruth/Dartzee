@@ -1,10 +1,11 @@
 package dartzee.bean
 
+import dartzee.achievements.AchievementType
 import dartzee.core.bean.ScrollTableHyperlink
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.overall.LeaderboardAchievements
-import dartzee.screen.stats.player.PlayerAchievementsScreen
+import javax.swing.SwingUtilities
 
 class ScrollTableAchievements(private val parentScrn: LeaderboardAchievements) : ScrollTableHyperlink("Player")
 {
@@ -12,12 +13,14 @@ class ScrollTableAchievements(private val parentScrn: LeaderboardAchievements) :
     {
         val player = value as PlayerEntity
 
-        val gameType = parentScrn.getSelectedAchievement().gameType
+        val achievementType = parentScrn.getSelectedAchievement().achievementType
 
         val scrn = ScreenCache.switchToAchievementsScreen(player)
-        if (gameType != null)
+        if (achievementType != AchievementType.DUMMY_TOTAL)
         {
-            scrn.selectTab(gameType)
+            SwingUtilities.invokeLater {
+                scrn.scrollIntoView(achievementType)
+            }
         }
     }
 }

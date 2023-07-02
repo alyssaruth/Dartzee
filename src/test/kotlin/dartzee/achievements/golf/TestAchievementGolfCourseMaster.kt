@@ -29,7 +29,7 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
         val pt = insertRelevantParticipant(team = true)
         insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 1
     }
 
@@ -41,7 +41,7 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
         insertDart(pt, dtCreation = Timestamp(1000), score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
         insertDart(pt, dtCreation = Timestamp(500), score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         val a = retrieveAchievement()
         a.achievementDetail shouldBe "1"
@@ -56,7 +56,7 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
 
         insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.TREBLE)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -67,7 +67,7 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
 
         insertDart(pt, score = 1, roundNumber = 2, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -79,7 +79,7 @@ class TestAchievementGolfCourseMaster: AbstractMultiRowAchievementTest<Achieveme
         insertDart(pt, score = 1, roundNumber = 1, segmentType = SegmentType.DOUBLE)
         insertDart(pt, score = 3, roundNumber = 3, segmentType = SegmentType.DOUBLE)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 2
     }

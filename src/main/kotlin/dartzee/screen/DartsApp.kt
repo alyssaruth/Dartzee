@@ -42,6 +42,8 @@ private const val CMD_SANITY = "sanity"
 private const val CMD_GUID = "guid"
 private const val CMD_TEST = "test"
 
+val APP_SIZE = Dimension(1000, 700)
+
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
 {
     override val windowName = "Main Window"
@@ -50,7 +52,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
     init
     {
         title = "Darts"
-        setSize(800, 600)
+        size = APP_SIZE
+        minimumSize = APP_SIZE
         setLocationRelativeTo(null)
         contentPane.layout = BorderLayout(0, 0)
 
@@ -146,19 +149,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
         logger.addToContext(KEY_CURRENT_SCREEN, scrn.getScreenName())
 
-        val desiredSize = scrn.getDesiredSize()
-        if (desiredSize != null)
-        {
-            size = desiredSize
-            minimumSize = desiredSize
-        }
-        else
-        {
-            minimumSize = Dimension(800, 600)
-            setSize(800, 600) //Revert to default
-        }
-
-        //Need pack() to ensure the dialog resizes correctly.
         //Need repaint() in case we don't resize.
         pack()
         repaint()

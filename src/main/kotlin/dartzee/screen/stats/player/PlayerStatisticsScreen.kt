@@ -3,8 +3,6 @@ package dartzee.screen.stats.player
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.`object`.Dart
-import dartzee.`object`.SegmentType
 import dartzee.screen.EmbeddedScreen
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
@@ -21,7 +19,6 @@ import dartzee.screen.stats.player.x01.StatisticsTabX01TopFinishes
 import dartzee.stats.GameWrapper
 import dartzee.stats.retrieveGameData
 import java.awt.BorderLayout
-import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -76,7 +73,6 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     }
 
     override fun getScreenName() = "${gameType.getDescription()} Statistics for $player"
-    override fun getDesiredSize() = Dimension(1240, 700)
 
     override fun initialise()
     {

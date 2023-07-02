@@ -45,6 +45,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
      */
     open fun dartThrown(dart: Dart)
     {
+        dart.roundNumber = currentRoundNumber()
         dart.participantId = currentIndividual().rowId
         currentRound.add(dart)
 

@@ -30,7 +30,7 @@ class TestAchievementDartzeeBingo: AbstractMultiRowAchievementTest<AchievementDa
         val pt = insertRelevantParticipant(finalScore = 120, team = true)
         insertDartzeeRules(pt.gameId, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -42,7 +42,7 @@ class TestAchievementDartzeeBingo: AbstractMultiRowAchievementTest<AchievementDa
         val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertDartzeeRules(pt.gameId, shortList)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -52,7 +52,7 @@ class TestAchievementDartzeeBingo: AbstractMultiRowAchievementTest<AchievementDa
         val pt = insertRelevantParticipant(finalScore = -1)
         insertDartzeeRules(pt.gameId, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -71,7 +71,7 @@ class TestAchievementDartzeeBingo: AbstractMultiRowAchievementTest<AchievementDa
         insertParticipant(gameId = g2.rowId, playerId = p.rowId, finalScore = 7, dtFinished = Timestamp(1000))
         insertParticipant(gameId = g3.rowId, playerId = p.rowId, finalScore = 307, dtFinished = Timestamp(100))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
         val a = retrieveAchievement()
@@ -97,7 +97,7 @@ class TestAchievementDartzeeBingo: AbstractMultiRowAchievementTest<AchievementDa
         insertParticipant(gameId = g2.rowId, playerId = p.rowId, finalScore = 36, dtFinished = Timestamp(1000))
         insertParticipant(gameId = g3.rowId, playerId = p.rowId, finalScore = 247, dtFinished = Timestamp(100))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 3
     }
 }

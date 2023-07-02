@@ -10,6 +10,8 @@ import dartzee.achievements.dartzee.AchievementDartzeeUnderPressure
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.golf.AchievementGolfCourseMaster
 import dartzee.achievements.golf.AchievementGolfGamesWon
+import dartzee.achievements.golf.AchievementGolfInBounds
+import dartzee.achievements.golf.AchievementGolfOneHitWonder
 import dartzee.achievements.golf.AchievementGolfPointsRisked
 import dartzee.achievements.golf.AchievementGolfTeamGamesWon
 import dartzee.achievements.rtc.AchievementClockBestGame
@@ -46,7 +48,9 @@ import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.net.URL
 
-fun getAchievementMaximum() = getAllAchievements().size * 6
+const val MAX_ACHIEVEMENT_SCORE = 6
+
+fun getAchievementMaximum() = getAllAchievements().size * MAX_ACHIEVEMENT_SCORE
 
 fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
 {
@@ -156,6 +160,8 @@ fun getAllAchievements() =
         AchievementDartzeeBingo(),
         AchievementDartzeeHalved(),
         AchievementX01Chucklevision(),
+        AchievementGolfOneHitWonder(),
+        AchievementGolfInBounds()
     )
 
 fun getAchievementForType(achievementType: AchievementType) =

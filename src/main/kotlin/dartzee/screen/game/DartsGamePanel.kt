@@ -465,8 +465,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     override fun dartThrown(dart: Dart)
     {
-        dart.roundNumber = currentRoundNumber
-
         getCurrentPlayerState().dartThrown(dart)
 
         //If there are any specific variables we need to update (e.g. current score for X01), do it now

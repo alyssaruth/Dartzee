@@ -12,4 +12,10 @@ data class GolfPlayerState(override val wrappedParticipant: IWrappedParticipant,
     fun getCumulativeScoreForRound(roundNumber: Int) = (1..roundNumber).map(::getScoreForRound).sum()
 
     fun getScoreForRound(roundNumber: Int) = completedRounds[roundNumber - 1].last().getGolfScore()
+
+    fun countHoleInOnes(): Int
+    {
+        val rounds = getRoundsForIndividual(currentIndividual())
+        return rounds.count { it.lastOrNull()?.getGolfScore() == 1 }
+    }
 }

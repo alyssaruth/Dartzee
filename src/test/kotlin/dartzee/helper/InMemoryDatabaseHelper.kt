@@ -179,6 +179,21 @@ fun insertTeam(uuid: String = randomGuid(),
     return t
 }
 
+fun insertDart(participant: ParticipantEntity, dart: Dart, dtCreation: Timestamp = getSqlDateNow(), database: Database = mainDatabase)
+{
+    insertDart(
+        participant,
+        randomGuid(),
+        dart.roundNumber,
+        dart.ordinal,
+        dart.startingScore,
+        dart.score,
+        dart.multiplier,
+        dart.segmentType,
+        dtCreation = dtCreation,
+        database = database)
+}
+
 fun insertDart(participant: ParticipantEntity,
                uuid: String = randomGuid(),
                roundNumber: Int = 1,

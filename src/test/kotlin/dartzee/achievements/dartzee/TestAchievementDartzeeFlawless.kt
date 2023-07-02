@@ -38,7 +38,7 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
         val pt = insertRelevantParticipant(finalScore = 120, team = true)
         insertSuccessRoundResults(pt, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -49,7 +49,7 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
         val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertSuccessRoundResults(pt, shortList)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -62,7 +62,7 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
         val roundResults = listOf(DartzeeRoundResult(1, true, 100), DartzeeRoundResult(2, false, -50))
         roundResults.forEach { DartzeeRoundResultEntity.factoryAndSave(it, pt, it.ruleNumber + 1) }
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -72,7 +72,7 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
         val pt = insertRelevantParticipant(finalScore = -1)
         insertSuccessRoundResults(pt, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 0
     }
 
@@ -85,7 +85,7 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 250)
         insertSuccessRoundResults(pt, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         val achievement = retrieveAchievement()
         achievement.playerId shouldBe p.rowId
         achievement.achievementCounter shouldBe 250
@@ -104,7 +104,7 @@ class TestAchievementDartzeeFlawless: AbstractMultiRowAchievementTest<Achievemen
         insertSuccessRoundResults(pt, testRules)
         insertSuccessRoundResults(pt2, testRules)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 2
     }
 

@@ -4,7 +4,12 @@ import dartzee.achievements.AbstractAchievementTest
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertDart
+import dartzee.helper.insertFinishForPlayer
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -30,7 +35,7 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         insertDart(pt, ordinal = 1, startingScore = 40, score = 20, multiplier = 1)
         insertDart(pt, ordinal = 2, startingScore = 20, score = 20, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -45,7 +50,7 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         insertDart(pt, ordinal = 1, startingScore = 100, score = 20, multiplier = 1)
         insertDart(pt, ordinal = 2, startingScore = 80, score = 20, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
@@ -58,7 +63,7 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         val game = insertFinishForPlayer(p, 30, dtCreation = Timestamp(500))
         insertFinishForPlayer(p, 30, dtCreation = Timestamp(2000))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val a = retrieveAchievement()
@@ -76,7 +81,7 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
         insertFinishForPlayer(p, 55, dtCreation = Timestamp(500))
         val game = insertFinishForPlayer(p, 68, dtCreation = Timestamp(2000))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val a = retrieveAchievement()

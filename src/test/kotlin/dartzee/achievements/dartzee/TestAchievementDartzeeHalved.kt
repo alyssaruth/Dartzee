@@ -28,7 +28,7 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
         val pt = insertRelevantParticipant(team = true)
         insertDartzeeRoundResult(pt, success = false, score = -100)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
         getAchievementCount() shouldBe 1
     }
 
@@ -38,7 +38,7 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
         val pt = insertRelevantParticipant()
         insertDartzeeRoundResult(pt, success = true, score = 50)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
@@ -51,7 +51,7 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
         insertDartzeeRoundResult(pt, success = false, score = -100)
         insertDartzeeRoundResult(pt, success = false, score = -50)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
 
@@ -70,7 +70,7 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
         insertDartzeeRoundResult(pt, success = false, score = -100, dtCreation = Timestamp(500))
         insertDartzeeRoundResult(pt, success = false, score = -100, dtCreation = Timestamp(1500))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
 

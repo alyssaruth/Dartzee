@@ -65,7 +65,10 @@ fun setRoundNumbers(rounds: List<List<Dart>>) {
 
 fun makeGolfRound(golfHole: Int, darts: List<Dart>): List<Dart>
 {
-    darts.forEach { it.roundNumber = golfHole }
+    darts.forEachIndexed { ix, drt ->
+        drt.ordinal = ix + 1
+        drt.roundNumber = golfHole
+    }
     return darts
 }
 
@@ -165,6 +168,7 @@ fun makeGolfPlayerState(player: PlayerEntity = insertPlayer(),
                         completedRounds: List<List<Dart>> = emptyList(),
                         currentRound: List<Dart> = emptyList()): GolfPlayerState
 {
+    completedRounds.flatten().forEach { it.participantId = participant.rowId }
     return GolfPlayerState(SingleParticipant(participant), completedRounds.toMutableList(), currentRound.toMutableList())
 }
 
@@ -192,7 +196,7 @@ fun makeGolfGameWrapper(
     expectedScore: Int,
     dtStart: Timestamp = Timestamp(1000)): GameWrapper
 {
-    val golfRounds = dartRounds.mapIndexed { ix, round -> makeGolfRound(ix+1, round) }
+    val golfRounds = makeGolfRounds(dartRounds)
 
     val score = golfRounds.sumOf { it.last().getGolfScore() }
     score shouldBe expectedScore
@@ -201,6 +205,8 @@ fun makeGolfGameWrapper(
     golfRounds.flatten().forEach(wrapper::addDart)
     return wrapper
 }
+
+fun makeGolfRounds(rounds: List<List<Dart>>) = rounds.mapIndexed { ix, round -> makeGolfRound(ix+1, round) }
 
 fun makeClockGameWrapper(
     localId: Long = 1L,

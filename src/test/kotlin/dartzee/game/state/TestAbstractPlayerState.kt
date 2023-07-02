@@ -41,7 +41,23 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `It should populate the darts with the ParticipantId`()
+    fun `should populate darts with the ParticipantId and RoundNumber`()
+    {
+        val pt = insertParticipant()
+        val state = TestPlayerState(pt)
+
+        val dart = Dart(20, 1)
+        dart.participantId shouldBe ""
+        dart.roundNumber shouldBe -1
+
+        state.dartThrown(dart)
+
+        dart.participantId shouldBe pt.rowId
+        dart.roundNumber shouldBe 1
+    }
+
+    @Test
+    fun `It should populate completed rounds with the ParticipantId`()
     {
         val pt = insertParticipant()
         val state = TestPlayerState(pt)
