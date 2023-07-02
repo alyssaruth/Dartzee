@@ -24,12 +24,13 @@ private const val BUTTON_HEIGHT = 80
 
 class MenuScreen : EmbeddedScreen()
 {
+    private val changeLog = ChangeLog()
     private val dartboard = PresentationDartboard()
     private val btnNewGame = JButton("New Game")
     private val btnManagePlayers = JButton("Manage Players")
     private val btnLeaderboards = JButton("Leaderboards")
     private val btnPreferences = JButton("Preferences")
-    private val btnDartzeeTemplates = JButton("Dartzee Templates")
+    private val btnDartzeeTemplates = JButton("Dartzee Presets")
     private val btnUtilities = JButton("Utilities")
     private val btnSyncSummary = JButton("Sync Setup")
     private val btnGameReport = JButton("Game Report")
@@ -63,6 +64,8 @@ class MenuScreen : EmbeddedScreen()
         btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
         btnGameReport.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
         btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
+        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
 
         getAllChildComponentsForType<JButton>().forEach { button ->
             button.size = Dimension(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -118,7 +121,7 @@ class MenuScreen : EmbeddedScreen()
 
     private fun linkClicked()
     {
-        ChangeLog().also {
+        changeLog.also {
             it.setLocationRelativeTo(this)
             it.isVisible = true
         }
