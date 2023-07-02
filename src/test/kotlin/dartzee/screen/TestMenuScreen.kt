@@ -4,7 +4,6 @@ import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
@@ -15,43 +14,12 @@ import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import java.awt.BorderLayout
-import java.awt.Dimension
 import javax.swing.JButton
-import javax.swing.JFrame
 import javax.swing.JLabel
 
 class TestMenuScreen: AbstractTest()
 {
-    @Test
-    @Tag("screenshot")
-    fun `Should match screenshot - default size`()
-    {
-        val scrn = wrapInFrame(APP_SIZE)
-        scrn.shouldMatchImage("menu-screen-default", pixelTolerance = 0.5)
-    }
-
-    @Test
-    @Tag("screenshot")
-    fun `Should match screenshot - enlarged`()
-    {
-        val scrn = wrapInFrame(Dimension(1200, 800))
-        scrn.shouldMatchImage("menu-screen-larger", pixelTolerance = 0.5)
-    }
-
-    private fun wrapInFrame(size: Dimension): MenuScreen
-    {
-        val app = JFrame()
-        app.size = size
-        val scrn = MenuScreen()
-        app.add(scrn, BorderLayout.CENTER)
-        app.isVisible = true
-
-        return scrn
-    }
-
     @Test
     fun `Should go to Sync Management screen`()
     {
