@@ -130,7 +130,6 @@ open class PresentationDartboard(
                     CODE_SLOW_DARTBOARD_RENDER, "Rendered dartboard[$width, $height] in ${duration}ms",
                     KEY_DURATION to duration)
             }
-
         }
     }
 
