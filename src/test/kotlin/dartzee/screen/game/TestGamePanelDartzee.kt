@@ -686,9 +686,4 @@ class TestGamePanelDartzee: AbstractTest()
             summaryPanel
         )
     }
-
-    private fun GamePanelDartzee.updateAchievementsForFinish(finishingPosition: Int, score: Int)
-    {
-        updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
-    }
 }

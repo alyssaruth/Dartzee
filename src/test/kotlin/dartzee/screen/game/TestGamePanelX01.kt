@@ -11,7 +11,6 @@ import dartzee.helper.randomGuid
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.wipeTable
 import dartzee.`object`.Dart
-import dartzee.screen.game.x01.GamePanelX01
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
@@ -252,10 +251,5 @@ class TestGamePanelX01: AbstractTest()
 
         val chucklevisionRows = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_CHUCKLEVISION }
         chucklevisionRows.shouldBeEmpty()
-    }
-
-    private fun GamePanelX01.updateAchievementsForFinish(finishingPosition: Int, score: Int)
-    {
-        updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
     }
 }

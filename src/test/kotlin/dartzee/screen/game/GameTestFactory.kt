@@ -9,6 +9,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
@@ -92,6 +93,11 @@ fun DartsGamePanel<*, *>.addCompletedRound(dartsThrown: List<Dart>)
 {
     setDartsThrown(dartsThrown)
     btnConfirm.doClick()
+}
+
+fun <PlayerState: AbstractPlayerState<PlayerState>> DartsGamePanel<*, PlayerState>.updateAchievementsForFinish(finishingPosition: Int, score: Int)
+{
+    updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
 }
 
 fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel)
