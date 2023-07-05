@@ -34,5 +34,6 @@ enum class AchievementType
     X01_CHUCKLEVISION,
     GOLF_ONE_HIT_WONDER,
     GOLF_IN_BOUNDS,
+    X01_STYLISH_FINISH,
     DUMMY_TOTAL
 }
