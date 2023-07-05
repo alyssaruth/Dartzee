@@ -2,6 +2,7 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getBestGameAchievement
+import dartzee.achievements.getTeamWinAchievementType
 import dartzee.achievements.getWinAchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.bean.SliderAiSpeed
@@ -435,7 +436,13 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     {
         if (playerState.hasMultiplePlayers())
         {
-            // TODO - Team achievements
+            if (finishingPosition == 1)
+            {
+                val type = getTeamWinAchievementType(gameEntity.gameType)
+                playerState.getPlayerIds().forEach { playerId ->
+                    AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
+                }
+            }
         }
         else
         {

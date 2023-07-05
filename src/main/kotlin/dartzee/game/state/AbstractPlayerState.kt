@@ -38,6 +38,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
 
     fun isHuman() = !currentIndividual().isAi()
     fun hasMultiplePlayers() = wrappedParticipant.individuals.size > 1
+    fun getPlayerIds() = wrappedParticipant.individuals.map { it.playerId }
 
     /**
      * Modifiers
