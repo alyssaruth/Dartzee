@@ -58,32 +58,41 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
     val tmp1 = database.createTempTable("X01RoundsPt1",
         "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, LastDartOrdinal INT")
 
-    var sb = StringBuilder()
-    sb.append(" INSERT INTO $tmp1")
-    sb.append(" SELECT pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber, MAX(drt.Ordinal)")
-    sb.append(" FROM Dart drtFirst, Participant pt, Game g, Dart drt")
-    sb.append(" WHERE drtFirst.ParticipantId = pt.RowId")
-    sb.append(" AND drtFirst.PlayerId = pt.PlayerId")
-    sb.append(" AND pt.GameId = g.RowId")
-    sb.append(" AND g.GameType = '${GameType.X01}'")
-    sb.append(" AND drtFirst.Ordinal = 1")
-    sb.append(" AND drtFirst.PlayerId = drt.PlayerId")
-    sb.append(" AND drtFirst.ParticipantId = drt.ParticipantId")
-    sb.append(" AND drtFirst.RoundNumber = drt.RoundNumber")
-    appendPlayerSql(sb, playerIds)
-    sb.append(" GROUP BY pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber")
-    database.executeUpdate(sb.toString())
+    database.executeUpdate("""
+        INSERT INTO $tmp1
+        SELECT pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber, MAX(drt.Ordinal)
+        FROM Dart drtFirst, Participant pt, Game g, Dart drt
+        WHERE drtFirst.ParticipantId = pt.RowId
+        AND drtFirst.PlayerId = pt.PlayerId
+        AND pt.GameId = g.RowId
+        AND g.GameType = '${GameType.X01}'
+        AND drtFirst.Ordinal = 1
+        AND drtFirst.PlayerId = drt.PlayerId
+        AND drtFirst.ParticipantId = drt.ParticipantId
+        AND drtFirst.RoundNumber = drt.RoundNumber
+        ${getPlayerSql(playerIds)}
+        GROUP BY pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber
+    """.trimIndent())
 
-    sb = StringBuilder()
-    sb.append(" INSERT INTO $X01_ROUNDS_TABLE")
-    sb.append(" SELECT zz.PlayerId, zz.GameId, zz.ParticipantId, zz.StartingScore, zz.RoundNumber, zz.LastDartOrdinal,")
-    sb.append(" drt.StartingScore - (drt.Score * drt.Multiplier), drt.Score, drt.Multiplier, drt.DtCreation")
-    sb.append(" FROM $tmp1 zz, Dart drt")
-    sb.append(" WHERE zz.PlayerId = drt.PlayerId")
-    sb.append(" AND zz.ParticipantId = drt.ParticipantId")
-    sb.append(" AND zz.RoundNumber = drt.RoundNumber")
-    sb.append(" AND zz.LastDartOrdinal = drt.Ordinal")
-    database.executeUpdate(sb.toString())
+    database.executeUpdate("""
+        INSERT INTO $X01_ROUNDS_TABLE
+        SELECT 
+            zz.PlayerId, 
+            zz.GameId, 
+            zz.ParticipantId, 
+            zz.StartingScore, 
+            zz.RoundNumber, 
+            zz.LastDartOrdinal, 
+            drt.StartingScore - (drt.Score * drt.Multiplier), 
+            drt.Score, 
+            drt.Multiplier, 
+            drt.DtCreation
+        FROM $tmp1 zz, Dart drt
+        WHERE zz.PlayerId = drt.PlayerId
+        AND zz.ParticipantId = drt.ParticipantId
+        AND zz.RoundNumber = drt.RoundNumber
+        AND zz.LastDartOrdinal = drt.Ordinal
+    """.trimIndent())
 }
 
 fun buildQualifyingDartzeeGamesTable(database: Database): String?

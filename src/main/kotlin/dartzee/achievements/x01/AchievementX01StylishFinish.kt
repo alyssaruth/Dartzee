@@ -13,30 +13,17 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
     override val desc = "Finishes that involved hitting another double or treble"
     override val achievementType = AchievementType.X01_STYLISH_FINISH
     override val redThreshold = 1
-    override val orangeThreshold: Int
-        get() = TODO("Not yet implemented")
-    override val yellowThreshold: Int
-        get() = TODO("Not yet implemented")
-    override val greenThreshold: Int
-        get() = TODO("Not yet implemented")
-    override val blueThreshold: Int
-        get() = TODO("Not yet implemented")
-    override val pinkThreshold: Int
-        get() = TODO("Not yet implemented")
-    override val maxValue: Int
-        get() = TODO("Not yet implemented")
-    override val gameType: GameType?
-        get() = TODO("Not yet implemented")
-    override val allowedForTeams: Boolean
-        get() = TODO("Not yet implemented")
+    override val orangeThreshold = 5
+    override val yellowThreshold = 10
+    override val greenThreshold = 25
+    override val blueThreshold = 50
+    override val pinkThreshold = 100
+    override val maxValue = 100
+    override val gameType = GameType.X01
+    override val allowedForTeams = true
 
-    override fun getBreakdownColumns(): List<String> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getBreakdownRow(a: AchievementEntity): Array<Any> {
-        TODO("Not yet implemented")
-    }
+    override fun getBreakdownColumns() = listOf("Finish", "Method", "Game", "Date Achieved")
+    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementCounter, a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
     override fun populateForConversion(playerIds: List<String>, database: Database) {
         TODO("Not yet implemented")
