@@ -53,10 +53,11 @@ class TestX01E2E : AbstractRegistryTest()
         verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
 
         retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.X01_BEST_GAME, 9, game.rowId),
-                AchievementSummary(AchievementType.X01_BEST_FINISH, 141, game.rowId),
-                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
-                AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 12, game.rowId)
+            AchievementSummary(AchievementType.X01_BEST_GAME, 9, game.rowId),
+            AchievementSummary(AchievementType.X01_BEST_FINISH, 141, game.rowId),
+            AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+            AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 12, game.rowId),
+            AchievementSummary(AchievementType.X01_STYLISH_FINISH, 141, game.rowId, "T20, T19, D12")
         )
 
         checkAchievementConversions(player.rowId)
