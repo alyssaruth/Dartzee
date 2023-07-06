@@ -30,6 +30,7 @@ import dartzee.achievements.x01.AchievementX01HighestBust
 import dartzee.achievements.x01.AchievementX01HotelInspector
 import dartzee.achievements.x01.AchievementX01NoMercy
 import dartzee.achievements.x01.AchievementX01Shanghai
+import dartzee.achievements.x01.AchievementX01StylishFinish
 import dartzee.achievements.x01.AchievementX01SuchBadLuck
 import dartzee.achievements.x01.AchievementX01TeamGamesWon
 import dartzee.core.screen.ProgressDialog
@@ -161,7 +162,8 @@ fun getAllAchievements() =
         AchievementDartzeeHalved(),
         AchievementX01Chucklevision(),
         AchievementGolfOneHitWonder(),
-        AchievementGolfInBounds()
+        AchievementGolfInBounds(),
+        AchievementX01StylishFinish()
     )
 
 fun getAchievementForType(achievementType: AchievementType) =
