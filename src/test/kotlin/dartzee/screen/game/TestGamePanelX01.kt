@@ -252,4 +252,46 @@ class TestGamePanelX01: AbstractTest()
         val chucklevisionRows = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_CHUCKLEVISION }
         chucklevisionRows.shouldBeEmpty()
     }
+
+    @Test
+    fun `Should update stylish finish achievement for first dart`()
+    {
+        verifyStylishFinish(listOf(Dart(6, 3), Dart(1, 2)))
+        verifyStylishFinish(listOf(Dart(6, 2), Dart(4, 0), Dart(4, 2)))
+        verifyStylishFinish(listOf(Dart(0, 0), Dart(6, 3), Dart(1, 2)))
+        verifyStylishFinish(listOf(Dart(10, 1), Dart(1, 2), Dart(4, 2)))
+    }
+
+    private fun verifyStylishFinish(finalRound: List<Dart>)
+    {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId, gameParams = "101")
+
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(1, 1), Dart(20, 1)))
+        panel.addCompletedRound(finalRound)
+
+        val stylishFinishes = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_STYLISH_FINISH }
+        stylishFinishes.shouldContainExactly(
+            AchievementSummary(AchievementType.X01_STYLISH_FINISH, 20, panel.gameEntity.rowId, finalRound.joinToString())
+        )
+    }
+
+    @Test
+    fun `Should not add to stylish finish achievement if conditions are not right`()
+    {
+        verifyNotStylishFinish(listOf(Dart(10, 2))) // Just 1 dart
+        verifyNotStylishFinish(listOf(Dart(10, 1), Dart(5, 2)))
+        verifyNotStylishFinish(listOf(Dart(10, 1), Dart(2, 1), Dart(4, 2)))
+    }
+    private fun verifyNotStylishFinish(finalRound: List<Dart>)
+    {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId, gameParams = "101")
+
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(1, 1), Dart(20, 1)))
+        panel.addCompletedRound(finalRound)
+
+        val stylishFinishes = retrieveAchievementsForPlayer(playerId).filter { it.achievementType == AchievementType.X01_STYLISH_FINISH }
+        stylishFinishes.shouldBeEmpty()
+    }
 }

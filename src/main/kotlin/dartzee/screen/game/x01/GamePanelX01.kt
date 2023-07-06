@@ -107,6 +107,12 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         val sum = sumScore(finalRound)
         AchievementEntity.updateAchievement(AchievementType.X01_BEST_FINISH, playerId, getGameId(), sum)
 
+        if (finalRound.count { it.multiplier > 1 } > 1)
+        {
+            val method = finalRound.joinToString()
+            AchievementEntity.insertAchievement(AchievementType.X01_STYLISH_FINISH, playerId, getGameId(), method, sum)
+        }
+
         //Insert into the X01Finishes table for the leaderboard
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
 
