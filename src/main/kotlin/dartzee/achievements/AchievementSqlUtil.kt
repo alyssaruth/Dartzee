@@ -61,7 +61,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
     database.executeUpdate("""
         INSERT INTO $tmp1
         SELECT pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber, MAX(drt.Ordinal)
-        FROM Dart drtFirst, Participant pt, Game g, Dart drt
+        FROM ${EntityName.Dart} drtFirst, ${EntityName.Participant} pt, ${EntityName.Game} g, ${EntityName.Dart} drt
         WHERE drtFirst.ParticipantId = pt.RowId
         AND drtFirst.PlayerId = pt.PlayerId
         AND pt.GameId = g.RowId
@@ -87,7 +87,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database)
             drt.Score, 
             drt.Multiplier, 
             drt.DtCreation
-        FROM $tmp1 zz, Dart drt
+        FROM $tmp1 zz, ${EntityName.Dart} drt
         WHERE zz.PlayerId = drt.PlayerId
         AND zz.ParticipantId = drt.ParticipantId
         AND zz.RoundNumber = drt.RoundNumber
