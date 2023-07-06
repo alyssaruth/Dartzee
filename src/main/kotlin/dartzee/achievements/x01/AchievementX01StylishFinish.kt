@@ -85,11 +85,8 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
         }
     }
 
-    private fun extractMethodStr(rs: ResultSet): String
-    {
-        val darts = listOfNotNull(extractDart(rs, "One"), extractDart(rs, "Two"), extractDart(rs, "Three"))
-        return darts.joinToString(", ") { it.format() }
-    }
+    private fun extractMethodStr(rs: ResultSet) =
+        listOfNotNull(extractDart(rs, "One"), extractDart(rs, "Two"), extractDart(rs, "Three")).joinToString()
 
     private fun extractDart(rs: ResultSet, numberDesc: String): Dart?
     {
@@ -101,5 +98,4 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
     }
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_X01_BTBF
-
 }
