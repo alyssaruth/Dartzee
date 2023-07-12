@@ -6,7 +6,6 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.setFontSize
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
-import dartzee.db.EntityName
 import dartzee.screen.ScreenCache
 import dartzee.utils.saveDartzeeTemplate
 import java.awt.BorderLayout
@@ -20,7 +19,7 @@ class DartzeeTemplateDialog : SimpleDialog()
     var dartzeeTemplate: DartzeeTemplateEntity? = null
 
     private val namePanel = JPanel()
-    val tfName = JTextField()
+    private val tfName = JTextField()
     val rulePanel = DartzeeRuleSetupPanel()
 
     init

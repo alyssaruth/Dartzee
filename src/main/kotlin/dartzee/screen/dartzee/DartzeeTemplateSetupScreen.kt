@@ -24,12 +24,12 @@ import javax.swing.JPanel
 
 class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 {
-    val scrollTable = ScrollTable()
+    private val scrollTable = ScrollTable()
     private val panelEast = JPanel()
-    val btnAdd = JButton()
-    val btnRename = JButton()
-    val btnCopy = JButton()
-    val btnDelete = JButton()
+    private val btnAdd = JButton()
+    private val btnRename = JButton()
+    private val btnCopy = JButton()
+    private val btnDelete = JButton()
 
     init
     {
@@ -42,18 +42,22 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         panelEast.add(btnCopy)
         panelEast.add(btnDelete)
 
+        btnAdd.name = "add"
         btnAdd.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
         btnAdd.toolTipText = "New Template"
         btnAdd.preferredSize = Dimension(40, 40)
 
+        btnRename.name = "rename"
         btnRename.icon = ImageIcon(javaClass.getResource("/buttons/rename.png"))
         btnRename.toolTipText = "Rename Template"
         btnRename.preferredSize = Dimension(40, 40)
 
+        btnCopy.name = "copy"
         btnCopy.icon = ImageIcon(javaClass.getResource("/buttons/copy.png"))
         btnCopy.toolTipText = "Copy Template"
         btnCopy.preferredSize = Dimension(40, 40)
 
+        btnDelete.name = "delete"
         btnDelete.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
         btnDelete.toolTipText = "Delete Template"
         btnDelete.preferredSize = Dimension(40, 40)

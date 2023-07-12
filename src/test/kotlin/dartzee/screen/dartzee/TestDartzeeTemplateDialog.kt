@@ -1,8 +1,10 @@
 package dartzee.screen.dartzee
 
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.clickCancel
 import dartzee.clickOk
-import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartzeeRuleEntity
@@ -11,57 +13,55 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
+import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import io.mockk.spyk
-import io.mockk.verify
 import org.junit.jupiter.api.Test
+import javax.swing.JTextField
 
 class TestDartzeeTemplateDialog: AbstractTest()
 {
     @Test
     fun `Should show an error if template name not specified`()
     {
-        val dialog = spyk<DartzeeTemplateDialog>()
-
+        val dialog = showDialog()
         dialog.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name.")
-        verifyNotCalled { dialog.dispose() }
+        dialog.shouldBeVisible()
     }
 
     @Test
     fun `Should show an error if 0 rules are specified`()
     {
-        val dialog = spyk<DartzeeTemplateDialog>()
-
-        dialog.tfName.text = "My template"
+        val dialog = showDialog()
+        dialog.getChild<JTextField>().typeText("My template")
         dialog.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must create at least 2 rules.")
-        verifyNotCalled { dialog.dispose() }
+        dialog.shouldBeVisible()
     }
 
     @Test
     fun `Should show an error if only 1 rule is specified`()
     {
-        val dialog = spyk<DartzeeTemplateDialog>()
+        val dialog = showDialog()
 
-        dialog.tfName.text = "My template"
+        dialog.getChild<JTextField>().typeText("My template")
         dialog.rulePanel.addRulesToTable(listOf(makeDartzeeRuleDto()))
         dialog.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must create at least 2 rules.")
-        verifyNotCalled { dialog.dispose() }
+        dialog.shouldBeVisible()
     }
 
     @Test
     fun `Should insert the template and rules and dispose if valid`()
     {
-        val dialog = spyk<DartzeeTemplateDialog>()
+        val dialog = showDialog()
 
-        dialog.tfName.text = "ABC"
+        dialog.getChild<JTextField>().typeText("ABC")
 
         val tenPercentRule = makeDartzeeRuleDto(DartzeeDartRuleEven(), calculationResult = makeDartzeeRuleCalculationResult(10))
         val twentyPercentRule = makeDartzeeRuleDto(DartzeeDartRuleOdd(), calculationResult = makeDartzeeRuleCalculationResult(20))
@@ -70,7 +70,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
         dialog.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
-        verify { dialog.dispose() }
+        dialog.shouldNotBeVisible()
 
         //Template should be set on the dialog, and should have been saved to the DB
         val template = dialog.dartzeeTemplate!!
@@ -87,12 +87,12 @@ class TestDartzeeTemplateDialog: AbstractTest()
     @Test
     fun `Should not set the dartzeeTemplate variable if cancelled`()
     {
-        val dialog = spyk<DartzeeTemplateDialog>()
+        val dialog = showDialog()
 
         dialog.clickCancel()
 
         dialog.dartzeeTemplate shouldBe null
-        verify { dialog.dispose() }
+        dialog.shouldNotBeVisible()
     }
 
     @Test
@@ -109,10 +109,18 @@ class TestDartzeeTemplateDialog: AbstractTest()
         val dialog = DartzeeTemplateDialog()
         dialog.copy(template)
 
-        dialog.tfName.text shouldBe "ABC - Copy"
+        dialog.getChild<JTextField>().text shouldBe "ABC - Copy"
         val rules = dialog.rulePanel.getRules()
         rules.size shouldBe 2
         rules[0].generateRuleDescription() shouldBe rule.generateRuleDescription()
         rules[1].generateRuleDescription() shouldBe ruleTwo.generateRuleDescription()
+    }
+
+    private fun showDialog(): DartzeeTemplateDialog
+    {
+        val dialog = DartzeeTemplateDialog()
+        dialog.isModal = false
+        dialog.isVisible = true
+        return dialog
     }
 }
