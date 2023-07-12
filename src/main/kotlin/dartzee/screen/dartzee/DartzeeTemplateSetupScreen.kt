@@ -9,8 +9,9 @@ import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.deleteDartzeeTemplate
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -19,7 +20,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
-import javax.swing.JOptionPane
 import javax.swing.JPanel
 
 class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
@@ -151,27 +151,13 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     private fun deleteTemplate()
     {
         val selection = getSelectedTemplate()
+        val gameCount = scrollTable.model.getValueAt(scrollTable.selectedModelRow, 2) as Int
 
-        val message = when (val gameCount = scrollTable.model.getValueAt(scrollTable.selectedModelRow, 2) as Int)
+        val deleted = deleteDartzeeTemplate(selection, gameCount)
+        if (deleted)
         {
-            0 -> "Are you sure you want to delete the ${selection.name} Template?"
-            else -> "You have played $gameCount games using the ${selection.name} Template." +
-                    "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
+            initialise()
         }
-
-        val ans = DialogUtil.showQuestion(message)
-        if (ans != JOptionPane.YES_OPTION)
-        {
-            return
-        }
-
-        selection.deleteFromDatabase()
-        DartzeeRuleEntity().deleteForTemplate(selection.rowId)
-
-        val gameSql = "UPDATE Game SET GameParams = '' WHERE GameType = '${GameType.DARTZEE}' AND GameParams = '${selection.rowId}'"
-        mainDatabase.executeUpdate(gameSql)
-
-        initialise()
     }
 
     private fun getSelectedTemplate(): DartzeeTemplateEntity

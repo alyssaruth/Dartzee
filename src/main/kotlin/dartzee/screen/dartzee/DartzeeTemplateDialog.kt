@@ -8,6 +8,7 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.screen.ScreenCache
+import dartzee.utils.saveDartzeeTemplate
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JPanel
@@ -46,15 +47,7 @@ class DartzeeTemplateDialog : SimpleDialog()
             return
         }
 
-        val template = DartzeeTemplateEntity.factoryAndSave(tfName.text)
-
-        val rules = rulePanel.getRules()
-        rules.forEachIndexed { ix, rule ->
-            val entity = rule.toEntity(ix + 1, EntityName.DartzeeTemplate, template.rowId)
-            entity.saveToDatabase()
-        }
-
-        dartzeeTemplate = template
+        dartzeeTemplate = saveDartzeeTemplate(tfName.text, rulePanel.getRules())
 
         dispose()
     }
