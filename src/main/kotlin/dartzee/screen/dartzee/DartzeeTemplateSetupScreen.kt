@@ -9,7 +9,6 @@ import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.deleteDartzeeTemplate
 import net.miginfocom.swing.MigLayout
@@ -118,17 +117,16 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
             }
         }
     }
-    private fun addTemplateToTable(template: DartzeeTemplateEntity?, rules: List<DartzeeRuleEntity>, gameCount: Int)
+    private fun addTemplateToTable(template: DartzeeTemplateEntity, rules: List<DartzeeRuleEntity>, gameCount: Int)
     {
         val dtos = rules.sortedBy { it.ordinal }.map { it.toDto() }
         
-        template?.let { scrollTable.addRow(arrayOf(it, dtos, gameCount))}
+        scrollTable.addRow(arrayOf(template, dtos, gameCount))
     }
 
     private fun addTemplate()
     {
-        val template = InjectedThings.dartzeeTemplateFactory.newTemplate()
-        template?.let { initialise() }
+        DartzeeTemplateDialog.createTemplate(::initialise)
     }
 
     private fun renameTemplate()
@@ -148,8 +146,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     {
         val selection = getSelectedTemplate()
 
-        val template = InjectedThings.dartzeeTemplateFactory.copyTemplate(selection)
-        template?.let { initialise() }
+        DartzeeTemplateDialog.createTemplate(::initialise, selection)
     }
 
     private fun deleteTemplate()

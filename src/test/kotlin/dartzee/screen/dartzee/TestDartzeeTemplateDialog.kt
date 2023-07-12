@@ -5,18 +5,24 @@ import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.clickCancel
 import dartzee.clickOk
+import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
+import dartzee.only
 import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import javax.swing.JTextField
 
@@ -25,17 +31,18 @@ class TestDartzeeTemplateDialog: AbstractTest()
     @Test
     fun `Should show an error if template name not specified`()
     {
-        val dialog = showDialog()
+        val (dialog, callback) = showDialog()
         dialog.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You must enter a name.")
         dialog.shouldBeVisible()
+        verifyNotCalled { callback() }
     }
 
     @Test
     fun `Should show an error if 0 rules are specified`()
     {
-        val dialog = showDialog()
+        val (dialog) = showDialog()
         dialog.getChild<JTextField>().typeText("My template")
         dialog.clickOk()
 
@@ -46,7 +53,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
     @Test
     fun `Should show an error if only 1 rule is specified`()
     {
-        val dialog = showDialog()
+        val (dialog) = showDialog()
 
         dialog.getChild<JTextField>().typeText("My template")
         dialog.rulePanel.addRulesToTable(listOf(makeDartzeeRuleDto()))
@@ -59,7 +66,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
     @Test
     fun `Should insert the template and rules and dispose if valid`()
     {
-        val dialog = showDialog()
+        val (dialog, callback) = showDialog()
 
         dialog.getChild<JTextField>().typeText("ABC")
 
@@ -71,9 +78,10 @@ class TestDartzeeTemplateDialog: AbstractTest()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         dialog.shouldNotBeVisible()
+        verify { callback() }
 
         //Template should be set on the dialog, and should have been saved to the DB
-        val template = dialog.dartzeeTemplate!!
+        val template = DartzeeTemplateEntity().retrieveEntities().only()
         template.name shouldBe "ABC"
         template.retrievedFromDb shouldBe true
 
@@ -85,14 +93,15 @@ class TestDartzeeTemplateDialog: AbstractTest()
     }
 
     @Test
-    fun `Should not set the dartzeeTemplate variable if cancelled`()
+    fun `Should not create a template if cancelled`()
     {
-        val dialog = showDialog()
+        val (dialog, callback) = showDialog()
 
         dialog.clickCancel()
 
-        dialog.dartzeeTemplate shouldBe null
+        getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
         dialog.shouldNotBeVisible()
+        verifyNotCalled { callback() }
     }
 
     @Test
@@ -106,7 +115,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
         rule.toEntity(1, EntityName.DartzeeTemplate, template.rowId).saveToDatabase()
         ruleTwo.toEntity(2, EntityName.DartzeeTemplate, template.rowId).saveToDatabase()
 
-        val dialog = DartzeeTemplateDialog()
+        val dialog = DartzeeTemplateDialog(mockk())
         dialog.copy(template)
 
         dialog.getChild<JTextField>().text shouldBe "ABC - Copy"
@@ -116,11 +125,11 @@ class TestDartzeeTemplateDialog: AbstractTest()
         rules[1].generateRuleDescription() shouldBe ruleTwo.generateRuleDescription()
     }
 
-    private fun showDialog(): DartzeeTemplateDialog
+    private fun showDialog(): Pair<DartzeeTemplateDialog, () -> Unit>
     {
-        val dialog = DartzeeTemplateDialog()
-        dialog.isModal = false
+        val callback = mockk<() -> Unit>()
+        val dialog = DartzeeTemplateDialog(callback)
         dialog.isVisible = true
-        return dialog
+        return dialog to callback
     }
 }

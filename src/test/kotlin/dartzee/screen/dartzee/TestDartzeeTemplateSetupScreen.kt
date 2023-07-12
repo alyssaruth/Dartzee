@@ -4,10 +4,12 @@ import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
+import dartzee.awaitWindow
+import dartzee.clickCancel
+import dartzee.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.dartzee.DartzeeRuleDto
-import dartzee.dartzee.DartzeeTemplateFactory
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
@@ -15,31 +17,26 @@ import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
-import dartzee.helper.FakeDartzeeTemplateFactory
 import dartzee.helper.getCountFromTable
+import dartzee.helper.innerOuterInner
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertGame
 import dartzee.helper.insertTemplateAndRule
 import dartzee.helper.makeDartzeeRuleDto
-import dartzee.utils.InjectedThings
+import dartzee.helper.totalIsFifty
+import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JOptionPane
+import javax.swing.JTextField
 
 class TestDartzeeTemplateSetupScreen: AbstractTest()
 {
-    @AfterEach
-    fun afterEach()
-    {
-        InjectedThings.dartzeeTemplateFactory = DartzeeTemplateFactory()
-    }
-
     @Test
     fun `Should pull through a game count of 0 for templates where no games have been played`()
     {
@@ -185,11 +182,12 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     @Test
     fun `Should not add a template if cancelled`()
     {
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(null)
-
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
         scrn.clickChild<JButton>("add")
+
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.clickCancel()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
     }
@@ -200,26 +198,31 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        val template = insertTemplateAndRule(name = "My Template")
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(template)
-
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         scrn.clickChild<JButton>("add")
+
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.getChild<JTextField>().typeText("BTBF's House Party")
+        dlg.rulePanel.addRulesToTable(listOf(innerOuterInner, totalIsFifty))
+        dlg.clickOk()
+
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
-        scrn.getTemplate(0).rowId shouldBe template.rowId
+        scrn.getTemplate(0).name shouldBe "BTBF's House Party"
     }
 
     @Test
     fun `Should do nothing if template copying is cancelled`()
     {
         insertTemplateAndRule(name = "ABC")
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = true)
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("copy")
+
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.clickCancel()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
     }
@@ -228,13 +231,16 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     fun `Should copy a template and add it to the table`()
     {
         insertTemplateAndRule(name = "ABC")
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = false)
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("copy")
+
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.clickOk()
+        dialogFactory.errorsShown.shouldBeEmpty()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 2
         val templates = listOf(scrn.getTemplate(0), scrn.getTemplate(1)).map { it.name }
