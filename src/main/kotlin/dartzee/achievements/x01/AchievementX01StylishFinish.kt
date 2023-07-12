@@ -3,6 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.AbstractMultiRowAchievement
 import dartzee.achievements.AchievementType
 import dartzee.achievements.bulkInsertFromResultSet
+import dartzee.achievements.getPlayerSql
 import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.game.GameType
@@ -44,6 +45,7 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
               AND drt.Ordinal > 1
               AND drt.Multiplier = 2
               AND drt.StartingScore = (drt.Score * drt.Multiplier)
+              ${getPlayerSql(playerIds)}
         """.trimIndent())
 
         val drtTmp = database.createTempTable("RelevantDarts", "StartingScore INT, Score INT, Multiplier INT, ParticipantId VARCHAR(36), RoundNumber INT, Ordinal INT") ?: return
