@@ -40,6 +40,7 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     init
     {
         btnConvertToTemplate.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnConvertToTemplate.name = "convertToTemplate"
         btnConvertToTemplate.preferredSize = Dimension(80, 80)
         btnConvertToTemplate.toolTipText = "Generate template from game"
         btnConvertToTemplate.isVisible = game.gameParams.isEmpty()

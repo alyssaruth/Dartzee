@@ -1,5 +1,9 @@
 package dartzee.screen.game
 
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartzeePlayStyle
@@ -12,6 +16,7 @@ import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.AchievementEntity
 import dartzee.db.DartzeeRoundResultEntity
+import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.doubleNineteen
@@ -26,6 +31,7 @@ import dartzee.helper.getAchievementRows
 import dartzee.helper.getCountFromTable
 import dartzee.helper.innerOuterInner
 import dartzee.helper.insertDart
+import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
@@ -54,7 +60,9 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotBeEmpty
 import io.kotest.matchers.string.shouldNotContain
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -62,6 +70,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
+import javax.swing.JButton
 
 class TestGamePanelDartzee: AbstractTest()
 {
@@ -87,6 +96,53 @@ class TestGamePanelDartzee: AbstractTest()
 
         val gamePanel = makeGamePanel(testRules, summaryPanel)
         carousel.listener shouldBe gamePanel
+    }
+
+    @Test
+    fun `Should not show the convert to template button if game is already part of a template`()
+    {
+        val template = insertDartzeeTemplate()
+        val g = insertGame(gameType = GameType.DARTZEE, gameParams = template.rowId)
+        val panel = makeGamePanel(testRules, game = g)
+        panel.getChild<JButton>("convertToTemplate").shouldNotBeVisible()
+    }
+
+    @Test
+    fun `Should convert to a template, hiding the button and updating the window title`()
+    {
+        val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
+        val parentWindow = FakeDartsScreen()
+
+        dialogFactory.inputSelection = "The Jeneration Game"
+
+        val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
+        panel.clickChild<JButton>("convertToTemplate")
+
+        val templateId = panel.gameEntity.gameParams
+        templateId.shouldNotBeEmpty()
+        val template = DartzeeTemplateEntity().retrieveForId(templateId)!!
+        template.name shouldBe "The Jeneration Game"
+
+        panel.getChild<JButton>("convertToTemplate").shouldNotBeVisible()
+        parentWindow.title shouldBe "Game #1 (Dartzee - The Jeneration Game - practice game)"
+    }
+
+    @Test
+    fun `Should not hide the button or update window title if template generation is cancelled`()
+    {
+        val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
+        val parentWindow = FakeDartsScreen()
+
+        dialogFactory.inputSelection = null
+
+        val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
+        panel.clickChild<JButton>("convertToTemplate")
+
+        val templateId = panel.gameEntity.gameParams
+        templateId.shouldBeEmpty()
+
+        panel.getChild<JButton>("convertToTemplate").shouldBeVisible()
+        parentWindow.title shouldBe ""
     }
 
     @Test
