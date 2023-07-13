@@ -71,7 +71,7 @@ fun generateDartzeeTemplateFromGame(game: GameEntity, dtos: List<DartzeeRuleDto>
     game.gameParams = template.rowId
     game.saveToDatabase()
 
-    DialogUtil.showInfo("Template $templateName successfully created.")
+    DialogUtil.showInfo("Template '$templateName' successfully created.")
 
     return template
 }

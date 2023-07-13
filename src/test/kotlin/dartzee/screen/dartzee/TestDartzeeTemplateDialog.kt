@@ -127,7 +127,7 @@ class TestDartzeeTemplateDialog: AbstractTest()
 
     private fun showDialog(): Pair<DartzeeTemplateDialog, () -> Unit>
     {
-        val callback = mockk<() -> Unit>()
+        val callback = mockk<() -> Unit>(relaxed = true)
         val dialog = DartzeeTemplateDialog(callback)
         dialog.isVisible = true
         return dialog to callback
