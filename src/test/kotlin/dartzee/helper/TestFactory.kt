@@ -84,21 +84,29 @@ fun makeX01RoundsMap(startingScore: Int = 501, vararg darts: List<Dart>): HashMa
     return map
 }
 
+fun makeX01Round(startingScore: Int = 501, roundNumber: Int = 1, vararg darts: Dart): List<Dart>
+{
+    var roundScore = startingScore
+    darts.forEachIndexed { dartIx, dart ->
+        dart.startingScore = roundScore
+        dart.roundNumber = roundNumber
+        dart.ordinal = dartIx + 1
+        roundScore -= dart.getTotal()
+    }
+
+    return darts.toList()
+}
+
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
 {
     var currentScore = startingScore
     darts.forEachIndexed { ix, it ->
-        var roundScore = currentScore
-        it.forEach { dart ->
-            dart.startingScore = roundScore
-            dart.roundNumber = ix + 1
-            roundScore -= dart.getTotal()
-        }
+        makeX01Round(currentScore, ix + 1, *it.toTypedArray())
 
         val lastDartForRound = it.last()
         if (!isBust(lastDartForRound))
         {
-            currentScore = roundScore
+            currentScore = lastDartForRound.startingScore - lastDartForRound.getTotal()
         }
     }
 
