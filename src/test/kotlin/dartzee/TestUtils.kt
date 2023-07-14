@@ -206,9 +206,6 @@ fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegm
 
 fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses
 
-fun Container.clickOk() = clickChild<JButton>(text = "Ok")
-fun Container.clickCancel() = clickChild<JButton>(text = "Cancel")
-
 fun awaitFileChooser() = awaitWindow<JDialog> { it.title == "Open" }
 
 fun <T> List<T>.only(): T {
@@ -246,6 +243,8 @@ fun FileUploader.uploadFileFromResource(resourceName: String)
 /**
  * TODO - Add to swing-test
  */
+fun Container.clickOk() =  clickButton(text = "Ok")
+fun Container.clickCancel() =  clickButton(text = "Cancel")
 fun Container.dumpComponentTree(prefix: String = "", constraintDesc: String = "")
 {
     val children = components
