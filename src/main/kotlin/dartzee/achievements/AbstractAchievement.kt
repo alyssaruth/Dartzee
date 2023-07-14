@@ -33,6 +33,8 @@ abstract class AbstractAchievement
     abstract val gameType: GameType?
     abstract val allowedForTeams: Boolean
 
+    open val allowedForIndividuals = true
+
     open val usesTransactionalTablesForConversion = true
 
     var attainedValue = -1

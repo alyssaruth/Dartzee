@@ -13,6 +13,7 @@ abstract class AbstractAchievementTeamGamesWon : AbstractMultiRowAchievement()
     override val pinkThreshold = 200
     override val maxValue = 200
     override val allowedForTeams = true
+    override val allowedForIndividuals = false
 
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {
