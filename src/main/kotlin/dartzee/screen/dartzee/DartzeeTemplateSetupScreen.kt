@@ -10,7 +10,7 @@ import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.screen.EmbeddedScreen
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.InjectedThings
+import dartzee.utils.deleteDartzeeTemplate
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -19,17 +19,16 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
-import javax.swing.JOptionPane
 import javax.swing.JPanel
 
 class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
 {
-    val scrollTable = ScrollTable()
+    private val scrollTable = ScrollTable()
     private val panelEast = JPanel()
-    val btnAdd = JButton()
-    val btnRename = JButton()
-    val btnCopy = JButton()
-    val btnDelete = JButton()
+    private val btnAdd = JButton()
+    private val btnRename = JButton()
+    private val btnCopy = JButton()
+    private val btnDelete = JButton()
 
     init
     {
@@ -42,18 +41,22 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
         panelEast.add(btnCopy)
         panelEast.add(btnDelete)
 
+        btnAdd.name = "add"
         btnAdd.icon = ImageIcon(javaClass.getResource("/buttons/add.png"))
         btnAdd.toolTipText = "New Template"
         btnAdd.preferredSize = Dimension(40, 40)
 
+        btnRename.name = "rename"
         btnRename.icon = ImageIcon(javaClass.getResource("/buttons/rename.png"))
         btnRename.toolTipText = "Rename Template"
         btnRename.preferredSize = Dimension(40, 40)
 
+        btnCopy.name = "copy"
         btnCopy.icon = ImageIcon(javaClass.getResource("/buttons/copy.png"))
         btnCopy.toolTipText = "Copy Template"
         btnCopy.preferredSize = Dimension(40, 40)
 
+        btnDelete.name = "delete"
         btnDelete.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
         btnDelete.toolTipText = "Delete Template"
         btnDelete.preferredSize = Dimension(40, 40)
@@ -114,17 +117,16 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
             }
         }
     }
-    private fun addTemplateToTable(template: DartzeeTemplateEntity?, rules: List<DartzeeRuleEntity>, gameCount: Int)
+    private fun addTemplateToTable(template: DartzeeTemplateEntity, rules: List<DartzeeRuleEntity>, gameCount: Int)
     {
         val dtos = rules.sortedBy { it.ordinal }.map { it.toDto() }
         
-        template?.let { scrollTable.addRow(arrayOf(it, dtos, gameCount))}
+        scrollTable.addRow(arrayOf(template, dtos, gameCount))
     }
 
     private fun addTemplate()
     {
-        val template = InjectedThings.dartzeeTemplateFactory.newTemplate()
-        template?.let { initialise() }
+        DartzeeTemplateDialog.createTemplate(::initialise)
     }
 
     private fun renameTemplate()
@@ -144,34 +146,19 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
     {
         val selection = getSelectedTemplate()
 
-        val template = InjectedThings.dartzeeTemplateFactory.copyTemplate(selection)
-        template?.let { initialise() }
+        DartzeeTemplateDialog.createTemplate(::initialise, selection)
     }
 
     private fun deleteTemplate()
     {
         val selection = getSelectedTemplate()
+        val gameCount = scrollTable.model.getValueAt(scrollTable.selectedModelRow, 2) as Int
 
-        val message = when (val gameCount = scrollTable.model.getValueAt(scrollTable.selectedModelRow, 2) as Int)
+        val deleted = deleteDartzeeTemplate(selection, gameCount)
+        if (deleted)
         {
-            0 -> "Are you sure you want to delete the ${selection.name} Template?"
-            else -> "You have played $gameCount games using the ${selection.name} Template." +
-                    "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
+            initialise()
         }
-
-        val ans = DialogUtil.showQuestion(message)
-        if (ans != JOptionPane.YES_OPTION)
-        {
-            return
-        }
-
-        selection.deleteFromDatabase()
-        DartzeeRuleEntity().deleteForTemplate(selection.rowId)
-
-        val gameSql = "UPDATE Game SET GameParams = '' WHERE GameType = '${GameType.DARTZEE}' AND GameParams = '${selection.rowId}'"
-        mainDatabase.executeUpdate(gameSql)
-
-        initialise()
     }
 
     private fun getSelectedTemplate(): DartzeeTemplateEntity

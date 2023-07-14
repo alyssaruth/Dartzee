@@ -1,33 +1,42 @@
 package dartzee.screen.dartzee
 
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeDisabled
+import com.github.alyssaburlton.swingtest.shouldBeEnabled
+import dartzee.awaitWindow
+import dartzee.clickCancel
+import dartzee.clickOk
+import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.dartzee.DartzeeRuleDto
-import dartzee.dartzee.DartzeeTemplateFactory
-import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
+import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
-import dartzee.db.GameEntity
 import dartzee.db.EntityName
+import dartzee.db.GameEntity
 import dartzee.game.GameType
-import dartzee.helper.*
-import dartzee.utils.InjectedThings
+import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
+import dartzee.helper.innerOuterInner
+import dartzee.helper.insertDartzeeTemplate
+import dartzee.helper.insertGame
+import dartzee.helper.insertTemplateAndRule
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.totalIsFifty
+import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
+import javax.swing.JButton
 import javax.swing.JOptionPane
+import javax.swing.JTextField
 
 class TestDartzeeTemplateSetupScreen: AbstractTest()
 {
-    @AfterEach
-    fun afterEach()
-    {
-        InjectedThings.dartzeeTemplateFactory = DartzeeTemplateFactory()
-    }
-
     @Test
     fun `Should pull through a game count of 0 for templates where no games have been played`()
     {
@@ -61,19 +70,19 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.btnCopy.isEnabled shouldBe false
-        scrn.btnDelete.isEnabled shouldBe false
-        scrn.btnRename.isEnabled shouldBe false
+        scrn.getChild<JButton>("copy").shouldBeDisabled()
+        scrn.getChild<JButton>("delete").shouldBeDisabled()
+        scrn.getChild<JButton>("rename").shouldBeDisabled()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnCopy.isEnabled shouldBe true
-        scrn.btnDelete.isEnabled shouldBe true
-        scrn.btnRename.isEnabled shouldBe true
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.getChild<JButton>("copy").shouldBeEnabled()
+        scrn.getChild<JButton>("delete").shouldBeEnabled()
+        scrn.getChild<JButton>("rename").shouldBeEnabled()
 
-        scrn.scrollTable.selectRow(-1)
-        scrn.btnCopy.isEnabled shouldBe false
-        scrn.btnDelete.isEnabled shouldBe false
-        scrn.btnRename.isEnabled shouldBe false
+        scrn.getChild<ScrollTable>().selectRow(-1)
+        scrn.getChild<JButton>("copy").shouldBeDisabled()
+        scrn.getChild<JButton>("delete").shouldBeDisabled()
+        scrn.getChild<JButton>("rename").shouldBeDisabled()
     }
 
     @Test
@@ -85,11 +94,11 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnDelete.doClick()
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.clickChild<JButton>("delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
-        scrn.scrollTable.rowCount shouldBe 1
+        scrn.getChild<ScrollTable>().rowCount shouldBe 1
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 1
     }
 
@@ -102,12 +111,12 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnDelete.doClick()
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.clickChild<JButton>("delete")
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
 
-        scrn.scrollTable.rowCount shouldBe 0
+        scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
         getCountFromTable(EntityName.DartzeeRule) shouldBe 0
     }
@@ -121,12 +130,12 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.scrollTable.processKeyPress(KeyEvent.VK_DELETE)
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
         dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
 
-        scrn.scrollTable.rowCount shouldBe 0
+        scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
         getCountFromTable(EntityName.DartzeeRule) shouldBe 0
     }
@@ -140,12 +149,12 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(-1)
-        scrn.scrollTable.processKeyPress(KeyEvent.VK_DELETE)
+        scrn.getChild<ScrollTable>().selectRow(-1)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
         dialogFactory.questionsShown.shouldBeEmpty()
 
-        scrn.scrollTable.rowCount shouldBe 1
+        scrn.getChild<ScrollTable>().rowCount shouldBe 1
     }
 
     @Test
@@ -161,8 +170,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnDelete.doClick()
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.clickChild<JButton>("delete")
 
         dialogFactory.questionsShown.shouldContainExactly("You have played 2 games using the ABC Template." +
                 "\n\nThese will become custom games if you delete it. Are you sure you want to continue?")
@@ -173,13 +182,14 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     @Test
     fun `Should not add a template if cancelled`()
     {
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(null)
-
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
-        scrn.btnAdd.doClick()
+        scrn.clickChild<JButton>("add")
 
-        scrn.scrollTable.rowCount shouldBe 0
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.clickCancel()
+
+        scrn.getChild<ScrollTable>().rowCount shouldBe 0
     }
 
     @Test
@@ -188,43 +198,51 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        val template = insertTemplateAndRule(name = "My Template")
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(template)
+        scrn.getChild<ScrollTable>().rowCount shouldBe 0
+        scrn.clickChild<JButton>("add")
 
-        scrn.scrollTable.rowCount shouldBe 0
-        scrn.btnAdd.doClick()
-        scrn.scrollTable.rowCount shouldBe 1
-        scrn.getTemplate(0).rowId shouldBe template.rowId
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.getChild<JTextField>().typeText("BTBF's House Party")
+        dlg.rulePanel.addRulesToTable(listOf(innerOuterInner, totalIsFifty))
+        dlg.clickOk()
+
+        scrn.getChild<ScrollTable>().rowCount shouldBe 1
+        scrn.getTemplate(0).name shouldBe "BTBF's House Party"
     }
 
     @Test
     fun `Should do nothing if template copying is cancelled`()
     {
         insertTemplateAndRule(name = "ABC")
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = true)
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnCopy.doClick()
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.clickChild<JButton>("copy")
 
-        scrn.scrollTable.rowCount shouldBe 1
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.clickCancel()
+
+        scrn.getChild<ScrollTable>().rowCount shouldBe 1
     }
 
     @Test
     fun `Should copy a template and add it to the table`()
     {
         insertTemplateAndRule(name = "ABC")
-        InjectedThings.dartzeeTemplateFactory = FakeDartzeeTemplateFactory(cancelCopy = false)
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnCopy.doClick()
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.clickChild<JButton>("copy")
 
-        scrn.scrollTable.rowCount shouldBe 2
+        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        dlg.clickOk()
+        dialogFactory.errorsShown.shouldBeEmpty()
+
+        scrn.getChild<ScrollTable>().rowCount shouldBe 2
         val templates = listOf(scrn.getTemplate(0), scrn.getTemplate(1)).map { it.name }
         templates.shouldContainExactlyInAnyOrder("ABC - Copy", "ABC")
     }
@@ -239,8 +257,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnRename.doClick()
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.clickChild<JButton>("rename")
 
         dialogFactory.inputsShown.shouldContainExactly("Rename Template")
         scrn.getTemplate(0).name shouldBe "New"
@@ -258,8 +276,8 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        scrn.scrollTable.selectRow(0)
-        scrn.btnRename.doClick()
+        scrn.getChild<ScrollTable>().selectRow(0)
+        scrn.clickChild<JButton>("rename")
 
         dialogFactory.inputsShown.shouldContainExactly("Rename Template")
         scrn.getTemplate(0).name shouldBe "ABC"
@@ -279,17 +297,17 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
-        val rules = scrn.scrollTable.getValueAt(0, 1) as List<*>
+        val rules = scrn.getChild<ScrollTable>().getValueAt(0, 1) as List<*>
         rules.map { (it as DartzeeRuleDto).generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
     }
 
     private fun DartzeeTemplateSetupScreen.getTemplate(row: Int): DartzeeTemplateEntity
     {
-        return scrollTable.getValueAt(row, 0) as DartzeeTemplateEntity
+        return getChild<ScrollTable>().getValueAt(row, 0) as DartzeeTemplateEntity
     }
 
     private fun DartzeeTemplateSetupScreen.getGameCount(row: Int): Int
     {
-        return scrollTable.getValueAt(row, 2) as Int
+        return getChild<ScrollTable>().getValueAt(row, 2) as Int
     }
 }

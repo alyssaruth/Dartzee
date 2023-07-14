@@ -345,6 +345,7 @@ fun insertTemplateAndRule(name: String = "Template"): DartzeeTemplateEntity
 {
     val template = insertDartzeeTemplate(name = name)
     insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = template.rowId)
+    insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = template.rowId)
     return template
 }
 

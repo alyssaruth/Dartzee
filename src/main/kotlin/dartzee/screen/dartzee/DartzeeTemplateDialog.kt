@@ -6,27 +6,26 @@ import dartzee.core.util.DialogUtil
 import dartzee.core.util.setFontSize
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
-import dartzee.db.EntityName
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings
+import dartzee.utils.saveDartzeeTemplate
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 
-class DartzeeTemplateDialog : SimpleDialog()
+class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleDialog()
 {
-    var dartzeeTemplate: DartzeeTemplateEntity? = null
-
     private val namePanel = JPanel()
-    val tfName = JTextField()
+    private val tfName = JTextField()
     val rulePanel = DartzeeRuleSetupPanel()
 
     init
     {
         title = "New Dartzee Template"
         size = Dimension(800, 600)
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
 
         add(namePanel, BorderLayout.NORTH)
         add(rulePanel, BorderLayout.CENTER)
@@ -46,16 +45,8 @@ class DartzeeTemplateDialog : SimpleDialog()
             return
         }
 
-        val template = DartzeeTemplateEntity.factoryAndSave(tfName.text)
-
-        val rules = rulePanel.getRules()
-        rules.forEachIndexed { ix, rule ->
-            val entity = rule.toEntity(ix + 1, EntityName.DartzeeTemplate, template.rowId)
-            entity.saveToDatabase()
-        }
-
-        dartzeeTemplate = template
-
+        saveDartzeeTemplate(tfName.text, rulePanel.getRules())
+        confirmedCallback()
         dispose()
     }
 
@@ -90,13 +81,12 @@ class DartzeeTemplateDialog : SimpleDialog()
 
     companion object
     {
-        fun createTemplate(templateToCopy: DartzeeTemplateEntity? = null): DartzeeTemplateEntity?
+        fun createTemplate(callback: () -> Unit, templateToCopy: DartzeeTemplateEntity? = null)
         {
-            val dlg = DartzeeTemplateDialog()
+            val dlg = DartzeeTemplateDialog(callback)
             templateToCopy?.let { dlg.copy(it) }
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true
-            return dlg.dartzeeTemplate
         }
     }
 }

@@ -75,7 +75,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     private val panelAiSlider = JPanel()
     private val panelSouth = JPanel()
     protected val slider = SliderAiSpeed()
-    private val panelButtons = JPanel()
+    protected val panelButtons = JPanel()
     val btnConfirm = JButton("")
     val btnReset = JButton("")
     private val btnStats = JToggleButton("")
@@ -216,7 +216,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         slider.value = defaultSpd
     }
 
-    private fun makeGameTitle(): String
+    protected fun makeGameTitle(): String
     {
         val gameNo = gameEntity.localId
         val gameDesc = gameEntity.getTypeDesc()

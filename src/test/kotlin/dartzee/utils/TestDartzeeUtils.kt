@@ -1,9 +1,15 @@
 package dartzee.utils
 
-import dartzee.`object`.Dart
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
-import dartzee.helper.*
+import dartzee.db.GameEntity
+import dartzee.game.GameType
+import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
+import dartzee.helper.innerOuterInner
+import dartzee.helper.insertGame
+import dartzee.helper.twoBlackOneWhite
+import dartzee.`object`.Dart
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
@@ -66,5 +72,43 @@ class TestDartzeeUtils: AbstractTest()
         insertDartzeeRules(game.rowId)
 
         getCountFromTable("DartzeeRule") shouldBe 0
+    }
+
+    @Test
+    fun `Should save a dartzee template`()
+    {
+        val dtos = listOf(innerOuterInner, twoBlackOneWhite)
+        val template = saveDartzeeTemplate("Template", dtos)
+
+        val retrievedRuleDescriptions = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto().generateRuleDescription() }
+        retrievedRuleDescriptions.shouldContainExactlyInAnyOrder(dtos.map { it.generateRuleDescription() })
+    }
+
+    @Test
+    fun `Should return null when generating a template if no name is entered`()
+    {
+        dialogFactory.inputSelection = null
+
+        val result = generateDartzeeTemplateFromGame(insertGame(), listOf())
+        result shouldBe null
+        getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
+    }
+
+    @Test
+    fun `Should generate a template and update the game to point at it`()
+    {
+        dialogFactory.inputSelection = "My Template"
+
+        val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
+        val dtos = listOf(innerOuterInner, twoBlackOneWhite)
+        val result = generateDartzeeTemplateFromGame(g, dtos)!!
+        result.name shouldBe "My Template"
+
+        val retrievedGame = GameEntity().retrieveForId(g.rowId)!!
+        retrievedGame.gameParams shouldBe result.rowId
+
+        val retrievedRuleDescriptions = DartzeeRuleEntity().retrieveForTemplate(result.rowId).map { it.toDto().generateRuleDescription() }
+        retrievedRuleDescriptions.shouldContainExactlyInAnyOrder(dtos.map { it.generateRuleDescription() })
+        dialogFactory.infosShown.shouldContainExactly("Template 'My Template' successfully created.")
     }
 }

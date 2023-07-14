@@ -18,8 +18,13 @@ import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.scorer.DartsScorerDartzee
 import dartzee.utils.factoryHighScoreResult
+import dartzee.utils.generateDartzeeTemplateFromGame
 import dartzee.utils.getQuotedIdStr
 import java.awt.BorderLayout
+import java.awt.Dimension
+import java.awt.event.ActionEvent
+import javax.swing.ImageIcon
+import javax.swing.JButton
 
 class GamePanelDartzee(parent: AbstractDartsGameScreen,
                        game: GameEntity,
@@ -30,11 +35,20 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
     IDartzeeCarouselListener
 {
     override val totalRounds = dtos.size + 1
+    private val btnConvertToTemplate = JButton("")
 
     init
     {
+        btnConvertToTemplate.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnConvertToTemplate.name = "convertToTemplate"
+        btnConvertToTemplate.preferredSize = Dimension(80, 80)
+        btnConvertToTemplate.toolTipText = "Generate template from game"
+        btnConvertToTemplate.isVisible = game.gameParams.isEmpty()
+        panelButtons.add(btnConvertToTemplate)
+
         add(summaryPanel, BorderLayout.NORTH)
         summaryPanel.setCarouselListener(this)
+        btnConvertToTemplate.addActionListener(this)
     }
 
     override fun factoryState(pt: IWrappedParticipant) = DartzeePlayerState(pt)
@@ -212,5 +226,22 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
         }
 
         updateCarousel()
+    }
+
+    private fun generateTemplate()
+    {
+        generateDartzeeTemplateFromGame(gameEntity, dtos) ?: return
+
+        btnConvertToTemplate.isVisible = false
+        parentWindow.title = makeGameTitle()
+    }
+
+    override fun actionPerformed(arg0: ActionEvent)
+    {
+        when (arg0.source)
+        {
+            btnConvertToTemplate -> generateTemplate()
+            else -> super.actionPerformed(arg0)
+        }
     }
 }

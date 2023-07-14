@@ -5,12 +5,10 @@ import dartzee.ai.SimulationRunner
 import dartzee.dartzee.AbstractDartzeeCalculator
 import dartzee.dartzee.AbstractDartzeeRuleFactory
 import dartzee.dartzee.AbstractDartzeeSegmentFactory
-import dartzee.dartzee.AbstractDartzeeTemplateFactory
 import dartzee.dartzee.DartzeeAimCalculator
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.dartzee.DartzeeRuleFactory
 import dartzee.dartzee.DartzeeSegmentFactory
-import dartzee.dartzee.DartzeeTemplateFactory
 import dartzee.game.GameLauncher
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
@@ -33,7 +31,6 @@ object InjectedThings
     var mainDatabase: Database = Database()
     var dartzeeCalculator: AbstractDartzeeCalculator = DartzeeCalculator()
     var dartzeeRuleFactory: AbstractDartzeeRuleFactory = DartzeeRuleFactory()
-    var dartzeeTemplateFactory: AbstractDartzeeTemplateFactory = DartzeeTemplateFactory()
     var dartzeeSegmentFactory: AbstractDartzeeSegmentFactory = DartzeeSegmentFactory()
     var clock: Clock = Clock.systemUTC()
     val loggingConsole = LoggingConsole()
