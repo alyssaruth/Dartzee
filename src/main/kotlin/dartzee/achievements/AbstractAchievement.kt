@@ -203,8 +203,10 @@ abstract class AbstractAchievement
     {
         img.paint {
             val current = Color(img.getRGB(it.x, it.y), true)
-            if (current.red == 0 && current.blue == 0 && current.green == 0)
-                Color(newColor.red, newColor.green, newColor.blue, current.alpha)
+            if (current.red == current.blue && current.blue == current.green && current.red < 255) {
+                val alpha = if (current.alpha == 255) 255 - current.red else current.alpha
+                Color(newColor.red, newColor.green, newColor.blue, alpha)
+            }
             else
                 current
         }

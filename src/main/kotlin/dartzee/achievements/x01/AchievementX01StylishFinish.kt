@@ -99,5 +99,5 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
         return Dart(score, multiplier)
     }
 
-    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_X01_BTBF
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_X01_STYLISH_FINISH
 }
