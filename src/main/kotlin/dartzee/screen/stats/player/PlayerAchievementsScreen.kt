@@ -42,11 +42,11 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
     private val achievementsPanel = JPanel()
     private val panelAchievementDesc = JPanel()
     private val panelAchievementDescNorth = JPanel()
-    val lblAchievementDesc = JLabel()
-    val lblAchievementExtraDetails = JLabel()
-    private val lblIndividuals = JLabel()
     private val lblAchievementName = JLabel()
-    private val lblTeams = JLabel()
+    private val lblAchievementDesc = JLabel()
+    private val lblAchievementExtraDetails = JLabel()
+    private val lblIndividualIndicator = JLabel()
+    private val lblTeamIndicator = JLabel()
 
     init
     {
@@ -64,20 +64,25 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         panelAchievementDesc.layout = BorderLayout()
 
         panelAchievementDesc.add(panelAchievementDescNorth, BorderLayout.NORTH)
-        lblIndividuals.preferredSize = Dimension(48, 48)
-        lblTeams.preferredSize = Dimension(54, 48)
+        lblIndividualIndicator.preferredSize = Dimension(48, 48)
+        lblIndividualIndicator.name = "individualIndicator"
+        lblTeamIndicator.preferredSize = Dimension(54, 48)
+        lblTeamIndicator.name = "teamIndicator"
 
         lblAchievementDesc.horizontalAlignment = JLabel.CENTER
         lblAchievementDesc.font = Font("Trebuchet MS", Font.PLAIN, 20)
+        lblAchievementDesc.name = "description"
         lblAchievementExtraDetails.horizontalAlignment = JLabel.CENTER
         lblAchievementExtraDetails.font = Font("Trebuchet MS", Font.ITALIC, 18)
+        lblAchievementExtraDetails.name = "extraDetails"
 
         lblAchievementName.horizontalAlignment = JLabel.CENTER
         lblAchievementName.font = Font("Trebuchet MS", Font.BOLD, 24)
+        lblAchievementName.name = "name"
 
-        panelAchievementDescNorth.add(lblIndividuals)
+        panelAchievementDescNorth.add(lblIndividualIndicator)
         panelAchievementDescNorth.add(lblAchievementName)
-        panelAchievementDescNorth.add(lblTeams)
+        panelAchievementDescNorth.add(lblTeamIndicator)
 
         panelAchievementDesc.add(lblAchievementDesc, BorderLayout.CENTER)
 
@@ -156,22 +161,16 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
             setPanelColors(color, color.darker().darker())
 
             lblAchievementName.text = achievement.name
-
-            panelAchievementDescNorth.removeAll()
             lblAchievementExtraDetails.setMargins(0, -btnBack.width, 0, 0)
             panelNavigation.add(lblAchievementExtraDetails)
 
             val singlePlayerIcon = if (achievement.allowedForIndividuals) "singlePlayerEnabled" else "singlePlayerDisabled"
-            lblIndividuals.isVisible = true
-            lblIndividuals.icon = ImageIcon(javaClass.getResource("/achievements/$singlePlayerIcon.png"))
+            lblIndividualIndicator.isVisible = true
+            lblIndividualIndicator.icon = ImageIcon(javaClass.getResource("/achievements/$singlePlayerIcon.png"))
 
             val teamIcon = if (achievement.allowedForTeams) "multiPlayerEnabled" else "multiPlayerDisabled"
-            lblTeams.isVisible = true
-            lblTeams.icon = ImageIcon(javaClass.getResource("/achievements/$teamIcon.png"))
-
-            panelAchievementDescNorth.add(lblIndividuals)
-            panelAchievementDescNorth.add(lblAchievementName)
-            panelAchievementDescNorth.add(lblTeams)
+            lblTeamIndicator.isVisible = true
+            lblTeamIndicator.icon = ImageIcon(javaClass.getResource("/achievements/$teamIcon.png"))
 
             if (!achievement.isLocked())
             {
@@ -182,8 +181,8 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         else
         {
             setPanelColors(null, null)
-            lblIndividuals.isVisible = false
-            lblTeams.isVisible = false
+            lblIndividualIndicator.isVisible = false
+            lblTeamIndicator.isVisible = false
             lblAchievementName.text = ""
             lblAchievementDesc.text = ""
             lblAchievementExtraDetails.text = ""
