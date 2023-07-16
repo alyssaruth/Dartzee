@@ -188,7 +188,7 @@ abstract class AbstractAchievement
           || tmBreakdown != null
     }
 
-    fun getIcon(highlighted : Boolean) : BufferedImage?
+    fun getIcon() : BufferedImage?
     {
         var iconURL = getIconURL()
         if (isLocked())
@@ -197,7 +197,7 @@ abstract class AbstractAchievement
         }
 
         val bufferedImage = ImageIO.read(iconURL)
-        changeIconColor(bufferedImage, getColor(highlighted).darker())
+        changeIconColor(bufferedImage, getColor(false).darker())
 
         return bufferedImage
     }

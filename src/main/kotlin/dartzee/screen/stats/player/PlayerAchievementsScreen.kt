@@ -50,10 +50,12 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
 
     init
     {
+        centerPanel.background = Color.WHITE
         add(centerPanel, BorderLayout.CENTER)
         centerPanel.layout = BorderLayout(0, 0)
         centerPanel.add(scrollPane, BorderLayout.CENTER)
 
+        achievementsPanel.background = Color.WHITE
         scrollPane.setViewportView(achievementsPanel)
         scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         scrollPane.verticalScrollBar.unitIncrement = 16
@@ -85,8 +87,9 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         panelAchievementDescNorth.add(lblTeamIndicator)
 
         panelAchievementDesc.add(lblAchievementDesc, BorderLayout.CENTER)
-
         panelAchievementDesc.setMargins(5)
+
+        setPanelColors(Color.WHITE, null)
     }
 
     override fun getScreenName() = "Achievements - ${player.name} - $progressDesc"
@@ -119,11 +122,15 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         fl.hgap = 15
         fl.alignment = FlowLayout.LEFT
         panel.layout = fl
+        panel.background = Color.WHITE
+
+        val col = index % 2
+        val row = index / 2
 
         val constraints = GridBagConstraints()
         constraints.fill = GridBagConstraints.BOTH
-        constraints.gridx = 0
-        constraints.gridy = index
+        constraints.gridx = row
+        constraints.gridy = col
         constraints.gridwidth = GridBagConstraints.RELATIVE
         constraints.weightx = 1.0
         gridBag.setConstraints(panel, constraints)
@@ -180,7 +187,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         }
         else
         {
-            setPanelColors(null, null)
+            setPanelColors(Color.WHITE, null)
             lblIndividualIndicator.isVisible = false
             lblTeamIndicator.isVisible = false
             lblAchievementName.text = ""

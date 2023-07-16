@@ -19,7 +19,7 @@ import java.awt.event.MouseEvent
 import javax.swing.JComponent
 import javax.swing.JLabel
 
-const val SIZE = 164
+const val SIZE = 132
 
 class AchievementMedal(val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), IMouseListener
 {
@@ -58,31 +58,27 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
 
             //Inner circle
             g.color = achievement.getColor(highlighted)
-
             g.fillArc(15, 15, SIZE-30, SIZE-30, 0, 360)
 
-            val icon = achievement.getIcon(highlighted)
-
-            var y = 30
-            if (achievement.isLocked())
+            if (!highlighted || achievement.isLocked())
             {
-                y = (SIZE / 2) - 40
+                val y = (SIZE - 72) / 2
+                val icon = achievement.getIcon()
+                icon?.let {
+                    val x = (SIZE / 2) - (icon.width / 2)
+                    g.drawImage(icon, null, x, y)
+                }
             }
-
-            icon?.let {
-                val x = (SIZE / 2) - (icon.width / 2)
-                g.drawImage(icon, null, x, y)
-            }
-
-            if (!achievement.isLocked())
+            else
             {
+                val y = (SIZE - 24) / 2
                 val label = JLabel(achievement.getProgressDesc())
-                label.setSize(SIZE, 25)
+                label.setSize(SIZE, 24)
                 label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 24f)
                 label.horizontalAlignment = JLabel.CENTER
                 label.foreground = achievement.getColor(highlighted).darker()
 
-                g.translate(0, 100)
+                g.translate(0, y)
                 label.paint(g)
             }
         }
