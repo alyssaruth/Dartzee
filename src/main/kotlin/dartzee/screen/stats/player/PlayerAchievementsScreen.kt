@@ -23,6 +23,7 @@ import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
+import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -40,9 +41,12 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
     private val centerPanel = JPanel()
     private val achievementsPanel = JPanel()
     private val panelAchievementDesc = JPanel()
-    val lblAchievementName = JLabel()
-    val lblAchievementDesc = JLabel()
-    val lblAchievementExtraDetails = JLabel()
+    private val panelAchievementDescNorth = JPanel()
+    private val lblAchievementName = JLabel()
+    private val lblAchievementDesc = JLabel()
+    private val lblAchievementExtraDetails = JLabel()
+    private val lblIndividualIndicator = JLabel()
+    private val lblTeamIndicator = JLabel()
 
     init
     {
@@ -59,16 +63,28 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         panelAchievementDesc.preferredSize = Dimension(200, 100)
         panelAchievementDesc.layout = BorderLayout()
 
-        panelAchievementDesc.add(lblAchievementName, BorderLayout.NORTH)
-        lblAchievementName.horizontalAlignment = JLabel.CENTER
-        lblAchievementName.font = Font("Trebuchet MS", Font.BOLD, 24)
+        panelAchievementDesc.add(panelAchievementDescNorth, BorderLayout.NORTH)
+        lblIndividualIndicator.preferredSize = Dimension(48, 48)
+        lblIndividualIndicator.name = "individualIndicator"
+        lblTeamIndicator.preferredSize = Dimension(54, 48)
+        lblTeamIndicator.name = "teamIndicator"
+
         lblAchievementDesc.horizontalAlignment = JLabel.CENTER
         lblAchievementDesc.font = Font("Trebuchet MS", Font.PLAIN, 20)
+        lblAchievementDesc.name = "description"
         lblAchievementExtraDetails.horizontalAlignment = JLabel.CENTER
         lblAchievementExtraDetails.font = Font("Trebuchet MS", Font.ITALIC, 18)
+        lblAchievementExtraDetails.name = "extraDetails"
+
+        lblAchievementName.horizontalAlignment = JLabel.CENTER
+        lblAchievementName.font = Font("Trebuchet MS", Font.BOLD, 24)
+        lblAchievementName.name = "name"
+
+        panelAchievementDescNorth.add(lblIndividualIndicator)
+        panelAchievementDescNorth.add(lblAchievementName)
+        panelAchievementDescNorth.add(lblTeamIndicator)
 
         panelAchievementDesc.add(lblAchievementDesc, BorderLayout.CENTER)
-        panelAchievementDesc.add(lblAchievementExtraDetails, BorderLayout.SOUTH)
 
         panelAchievementDesc.setMargins(5)
     }
@@ -145,6 +161,16 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
             setPanelColors(color, color.darker().darker())
 
             lblAchievementName.text = achievement.name
+            lblAchievementExtraDetails.setMargins(0, -btnBack.width, 0, 0)
+            panelNavigation.add(lblAchievementExtraDetails)
+
+            val singlePlayerIcon = if (achievement.allowedForIndividuals) "singlePlayerEnabled" else "singlePlayerDisabled"
+            lblIndividualIndicator.isVisible = true
+            lblIndividualIndicator.icon = ImageIcon(javaClass.getResource("/achievements/$singlePlayerIcon.png"))
+
+            val teamIcon = if (achievement.allowedForTeams) "multiPlayerEnabled" else "multiPlayerDisabled"
+            lblTeamIndicator.isVisible = true
+            lblTeamIndicator.icon = ImageIcon(javaClass.getResource("/achievements/$teamIcon.png"))
 
             if (!achievement.isLocked())
             {
@@ -155,9 +181,12 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         else
         {
             setPanelColors(null, null)
+            lblIndividualIndicator.isVisible = false
+            lblTeamIndicator.isVisible = false
             lblAchievementName.text = ""
             lblAchievementDesc.text = ""
             lblAchievementExtraDetails.text = ""
+            panelNavigation.remove(lblAchievementExtraDetails)
         }
     }
 
@@ -167,6 +196,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         panelAchievementDesc.background = bgColor
         panelNext.background = bgColor
         panelBack.background = bgColor
+        panelAchievementDescNorth.background = bgColor
 
         lblAchievementName.background = bgColor
         lblAchievementDesc.background = bgColor
