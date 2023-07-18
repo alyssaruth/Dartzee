@@ -18,8 +18,6 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
-import io.kotest.matchers.comparables.shouldBeGreaterThan
-import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -27,7 +25,6 @@ import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.ImageIcon
 import javax.swing.JLabel
-import javax.swing.JScrollPane
 
 class TestPlayerAchievementsScreen: AbstractTest()
 {
@@ -116,25 +113,6 @@ class TestPlayerAchievementsScreen: AbstractTest()
         achievementsScrn.individualIndicator().icon.shouldMatch(individualNotAllowed)
         achievementsScrn.teamIndicator().icon.shouldMatch(teamAllowed)
     }
-
-    @Test
-    fun `Should be able to scroll an achievement into view`()
-    {
-        val p = insertPlayer()
-
-        val achievementsScrn = ScreenCache.switchToAchievementsScreen(p)
-
-        val scrollBar = achievementsScrn.getChild<JScrollPane>().verticalScrollBar
-        scrollBar.value shouldBe 0
-
-        achievementsScrn.scrollIntoView(AchievementType.DARTZEE_BEST_GAME)
-        val newPosition = scrollBar.value
-        newPosition shouldBeGreaterThan 0
-
-        achievementsScrn.scrollIntoView(AchievementType.X01_BEST_GAME)
-        scrollBar.value shouldBeLessThan newPosition
-    }
-
 
     @Test
     fun `Should show achievement progress for the right player and right achievement`()

@@ -5,19 +5,23 @@ import dartzee.achievements.DummyAchievementTotal
 import dartzee.achievements.getAllAchievements
 import dartzee.bean.ScrollTableAchievements
 import dartzee.core.util.TableUtil
+import dartzee.core.util.sortedBy
 import dartzee.db.PlayerEntity
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.event.ActionEvent
 import java.util.*
-import javax.swing.*
-import dartzee.core.util.sortedBy
+import javax.swing.Box
+import javax.swing.DefaultComboBoxModel
+import javax.swing.JCheckBox
+import javax.swing.JComboBox
+import javax.swing.JPanel
 
 const val ACHIEVEMENT_COLUMN_IX = 3
 
 class LeaderboardAchievements: AbstractLeaderboard()
 {
-    val table = ScrollTableAchievements(this)
+    val table = ScrollTableAchievements()
     private val panelFilters = JPanel()
 
     val cbSpecificAchievement = JCheckBox("Achievement")
@@ -99,7 +103,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
         table.getColumn(ACHIEVEMENT_COLUMN_IX).cellRenderer = renderer
     }
 
-    fun getSelectedAchievement(): AbstractAchievement = if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex) else DummyAchievementTotal()
+    private fun getSelectedAchievement(): AbstractAchievement = if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex) else DummyAchievementTotal()
 
     override fun actionPerformed(e: ActionEvent?)
     {

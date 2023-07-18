@@ -42,11 +42,15 @@ import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_STARTED
 import dartzee.logging.KEY_ACHIEVEMENT_TIMINGS
 import dartzee.logging.KEY_ACHIEVEMENT_TYPES
 import dartzee.logging.KEY_PLAYER_IDS
+import dartzee.utils.DartsColour
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.RenderingHints
 import java.net.URL
 
 const val MAX_ACHIEVEMENT_SCORE = 6
@@ -237,3 +241,35 @@ fun getGamesWonIcon(gameType: GameType): URL? =
         GameType.ROUND_THE_CLOCK -> ResourceCache.URL_ACHIEVEMENT_CLOCK_GAMES_WON
         GameType.DARTZEE -> ResourceCache.URL_ACHIEVEMENT_DARTZEE_GAMES_WON
     }
+
+fun paintMedalCommon(g: Graphics2D, achievement: AbstractAchievement, size: Int, highlighted: Boolean)
+{
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+
+    //Draw the track
+    g.color = Color.DARK_GRAY.brighter()
+    g.fillArc(0, 0, size, size, 0, 360)
+
+    //Mark the levels
+    markThreshold(g, achievement, size, Color.MAGENTA, achievement.pinkThreshold)
+    markThreshold(g, achievement, size, Color.CYAN, achievement.blueThreshold)
+    markThreshold(g, achievement, size, Color.GREEN, achievement.greenThreshold)
+    markThreshold(g, achievement, size, Color.YELLOW, achievement.yellowThreshold)
+    markThreshold(g, achievement, size, DartsColour.COLOUR_ACHIEVEMENT_ORANGE, achievement.orangeThreshold)
+    markThreshold(g, achievement, size, Color.RED, achievement.redThreshold)
+
+    //Draw the actual progress
+    val angle = achievement.getAngle()
+    g.color = achievement.getColor(highlighted).darker()
+    g.fillArc(0, 0, size, size, 90, -angle.toInt())
+
+    //Inner circle
+    g.color = achievement.getColor(highlighted)
+    g.fillArc(15, 15, size -30, size -30, 0, 360)
+}
+private fun markThreshold(g: Graphics2D, achievement: AbstractAchievement, size: Int, color: Color, threshold: Int)
+{
+    g.color = color
+    val thresholdAngle = achievement.getAngle(threshold)
+    g.fillArc(0, 0, size, size, 90 - thresholdAngle.toInt(), 3)
+}
