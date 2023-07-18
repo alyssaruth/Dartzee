@@ -48,12 +48,10 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
 
     init
     {
-        centerPanel.background = Color.WHITE
         add(centerPanel, BorderLayout.CENTER)
         centerPanel.layout = BorderLayout(0, 0)
         centerPanel.add(scrollPane, BorderLayout.CENTER)
 
-        achievementsPanel.background = Color.WHITE
         scrollPane.setViewportView(achievementsPanel)
         scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         scrollPane.verticalScrollBar.unitIncrement = 16
@@ -86,8 +84,6 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
 
         panelAchievementDesc.add(lblAchievementDesc, BorderLayout.CENTER)
         panelAchievementDesc.setMargins(5)
-
-        setPanelColors(Color.WHITE, null)
     }
 
     override fun getScreenName() = "Achievements - ${player.name} - $progressDesc"
@@ -120,7 +116,6 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         fl.hgap = 15
         fl.alignment = FlowLayout.LEFT
         panel.layout = fl
-        panel.background = Color.WHITE
 
         val col = index % 2
         val row = index / 2
@@ -177,7 +172,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         }
         else
         {
-            setPanelColors(Color.WHITE, null)
+            setPanelColors(null, null)
             lblIndividualIndicator.isVisible = false
             lblTeamIndicator.isVisible = false
             lblAchievementName.text = ""
