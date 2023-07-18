@@ -1,29 +1,26 @@
 package dartzee.bean
 
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.paintMedalCommon
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.screen.stats.player.PlayerAchievementsScreen
-import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.ResourceCache
-import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
-import java.awt.RenderingHints
 import java.awt.event.MouseEvent
 import javax.swing.JComponent
 import javax.swing.JLabel
 
-const val SIZE = 132
+private const val SIZE = 132
 
-class AchievementMedal(val achievement : AbstractAchievement, private val hoveringEnabled: Boolean = true): JComponent(), IMouseListener
+class AchievementMedal(val achievement : AbstractAchievement): JComponent(), IMouseListener
 {
-    private val angle = achievement.getAngle()
     private var highlighted = false
 
     init
@@ -38,27 +35,7 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
     {
         if (g is Graphics2D)
         {
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-
-            //Draw the track
-            g.color = Color.DARK_GRAY.brighter()
-            g.fillArc(0, 0, SIZE, SIZE, 0, 360)
-
-            //Mark the levels
-            markThreshold(g, Color.MAGENTA, achievement.pinkThreshold)
-            markThreshold(g, Color.CYAN, achievement.blueThreshold)
-            markThreshold(g, Color.GREEN, achievement.greenThreshold)
-            markThreshold(g, Color.YELLOW, achievement.yellowThreshold)
-            markThreshold(g, DartsColour.COLOUR_ACHIEVEMENT_ORANGE, achievement.orangeThreshold)
-            markThreshold(g, Color.RED, achievement.redThreshold)
-
-            //Draw the actual progress
-            g.color = achievement.getColor(highlighted).darker()
-            g.fillArc(0, 0, SIZE, SIZE, 90, -angle.toInt())
-
-            //Inner circle
-            g.color = achievement.getColor(highlighted)
-            g.fillArc(15, 15, SIZE-30, SIZE-30, 0, 360)
+            paintMedalCommon(g, achievement, SIZE, highlighted)
 
             if (!highlighted || achievement.isLocked())
             {
@@ -84,20 +61,8 @@ class AchievementMedal(val achievement : AbstractAchievement, private val hoveri
         }
     }
 
-    private fun markThreshold(g : Graphics2D, color : Color, threshold : Int)
-    {
-        g.color = color
-        val thresholdAngle = achievement.getAngle(threshold)
-        g.fillArc(0, 0, SIZE, SIZE, 90 - thresholdAngle.toInt(), 3)
-    }
-
     private fun updateForMouseOver(e : MouseEvent)
     {
-        if (!hoveringEnabled)
-        {
-            return
-        }
-
         val pt = e.point
         highlighted = pt.distance(Point(SIZE/2, SIZE/2)) < SIZE/2
 

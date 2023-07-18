@@ -1,7 +1,7 @@
 package dartzee.screen.game.scorer
 
 import dartzee.achievements.AbstractAchievement
-import dartzee.bean.AchievementMedal
+import dartzee.bean.AchievementUnlockedMedal
 import dartzee.bean.IMouseListener
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
@@ -52,7 +52,7 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
         panelCenter.layout = MigLayout("", "[grow]", "[][][][]")
         panelCenter.background = fillColor
 
-        val medal = AchievementMedal(achievement, false)
+        val medal = AchievementUnlockedMedal(achievement)
         medal.preferredSize = Dimension(175, 200)
         panelCenter.add(medal, "cell 0 2, alignx center")
 

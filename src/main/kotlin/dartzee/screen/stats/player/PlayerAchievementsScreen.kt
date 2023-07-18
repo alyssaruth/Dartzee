@@ -1,14 +1,12 @@
 package dartzee.screen.stats.player
 
 import dartzee.achievements.AbstractAchievement
-import dartzee.achievements.AchievementType
 import dartzee.achievements.MAX_ACHIEVEMENT_SCORE
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.getAchievementsForGameType
 import dartzee.achievements.getPlayerAchievementScore
 import dartzee.bean.AchievementMedal
 import dartzee.core.bean.WrapLayout
-import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.setMargins
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
@@ -150,14 +148,6 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
 
         val medal = AchievementMedal(aa)
         panel.add(medal)
-    }
-
-    fun scrollIntoView(achievementType: AchievementType)
-    {
-        val medal = getAllChildComponentsForType<AchievementMedal>().first { it.achievement.achievementType == achievementType }
-        val bounds = medal.parent.bounds
-        achievementsPanel.scrollRectToVisible(bounds)
-
     }
 
     fun toggleAchievementDesc(hovered: Boolean, achievement: AbstractAchievement)

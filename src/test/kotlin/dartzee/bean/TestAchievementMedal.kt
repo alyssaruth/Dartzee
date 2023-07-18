@@ -95,7 +95,7 @@ class TestAchievementMedal: AbstractTest()
 
         val achievement = makeAchievement(30)
         achievement.gameIdEarned = "foo"
-        val medal = AchievementMedal(achievement, true)
+        val medal = AchievementMedal(achievement)
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.HAND_CURSOR
@@ -109,7 +109,7 @@ class TestAchievementMedal: AbstractTest()
         val scrn = ScreenCache.switchToAchievementsScreen(insertPlayer())
 
         val achievement = makeAchievement(30)
-        val medal = AchievementMedal(achievement, true)
+        val medal = AchievementMedal(achievement)
 
         medal.doHover(100, 100)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
@@ -117,25 +117,11 @@ class TestAchievementMedal: AbstractTest()
     }
 
     @Test
-    fun `Should not update anything for hover if hover is disabled`()
-    {
-        val scrn = ScreenCache.switchToAchievementsScreen(insertPlayer())
-
-        val achievement = makeAchievement(30)
-        achievement.gameIdEarned = "foo"
-        val medal = AchievementMedal(achievement, false)
-
-        medal.doHover(100, 100)
-        medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
-        scrn.findChild<JLabel>(text = "Three Darter") shouldBe null
-    }
-
-    @Test
     fun `Should not update for hover if outside the circle`()
     {
         val achievement = makeAchievement(30)
         achievement.gameIdEarned = "foo"
-        val medal = AchievementMedal(achievement, true)
+        val medal = AchievementMedal(achievement)
 
         medal.doHover(0, 0)
         medal.cursor.type shouldBe Cursor.DEFAULT_CURSOR
