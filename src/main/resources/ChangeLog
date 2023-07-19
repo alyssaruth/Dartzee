@@ -1,3 +1,15 @@
+--------- v7.0.0 ---------
+
++ Redesigned the main menu to be responsive and a bit prettier
++ Custom image upload now supports larger images, taking care of resizing/cropping for you
++ Ability to convert ad-hoc games of Dartzee to templates
++ 8 achievements (Chucklevision, Stylish Finish, One Hit Wonder, In Bounds, Team Wins)
++ Achievements now indicate whether they are available in individual or team games
+= Improved performance of dartboard rendering
+= Fixed excessive memory usage of dartboard rendering, which caused the app to crash occasionally
+= Fixed AI speed slider location to cope with resizing games
+= 93.4% test coverage (12766 / 13670 lines covered by 2373 tests)
+
 --------- v6.0.3 ---------
 
 = Fixed a bug where pausing an AI player could sometimes cause the app to freeze
