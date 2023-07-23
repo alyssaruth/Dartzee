@@ -10,7 +10,7 @@
 = Improved performance of dartboard rendering
 = Fixed excessive memory usage of dartboard rendering, which caused the app to crash occasionally
 = Fixed AI speed slider location to cope with resizing games
-= 93.4% test coverage (12766 / 13670 lines covered by 2373 tests)
+= 93.4% test coverage (12797 / 13702 lines covered by 2375 tests)
 
 --------- v6.0.3 ---------
 
