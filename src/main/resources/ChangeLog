@@ -5,6 +5,8 @@
 + Ability to convert ad-hoc games of Dartzee to templates
 + 8 achievements (Chucklevision, Stylish Finish, One Hit Wonder, In Bounds, Team Wins)
 + Achievements now indicate whether they are available in individual or team games
++ Dartboards in Dartzee now indicate when missing the board is allowed
+= Overhauled the achievements layout, so all the achievements now fit on one screen
 = Improved performance of dartboard rendering
 = Fixed excessive memory usage of dartboard rendering, which caused the app to crash occasionally
 = Fixed AI speed slider location to cope with resizing games
