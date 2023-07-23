@@ -3,6 +3,7 @@ package dartzee.bean
 import dartzee.core.util.getParentWindow
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DartboardSegment
+import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getHighlightedColour
 import java.awt.Point
@@ -25,7 +26,11 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
             return
         }
 
-        val newHoveredSegment = getSegmentForPoint(pt)
+        val distance = pt.distance(computeCenter())
+        val newHoveredSegment = if (distance > computeRadius() * UPPER_BOUND_OUTSIDE_BOARD_RATIO) {
+            null
+        } else getSegmentForPoint(pt)
+
         if (hoveredSegment == newHoveredSegment)
         {
             //Nothing to do
@@ -34,20 +39,25 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
 
         hoveredSegment?.let(::revertOverriddenSegmentColour)
 
-        if (newHoveredSegment.isMiss() || isInvalidSegmentForHover(newHoveredSegment))
+        if (newHoveredSegment != null && isValidSegmentForHover(newHoveredSegment))
         {
-            hoveredSegment = null
+            hoveredSegment = newHoveredSegment
+            overrideSegmentColour(newHoveredSegment, getHighlightedColour(defaultColourForSegment(newHoveredSegment)))
         }
         else
         {
-            hoveredSegment = newHoveredSegment
-            overrideSegmentColour(newHoveredSegment, getHighlightedColour(colourWrapper.getColour(newHoveredSegment)))
+            hoveredSegment = null
         }
     }
 
-    private fun isInvalidSegmentForHover(segment: DartboardSegment): Boolean {
-        val status = segmentStatuses
-        return status != null && !status.validSegments.contains(segment)
+    private fun isValidSegmentForHover(segment: DartboardSegment): Boolean {
+        val statuses = segmentStatuses
+        if (statuses != null)
+        {
+            return statuses.validSegments.contains(segment) || (statuses.allowsMissing() && segment.isMiss())
+        }
+
+        return !segment.isMiss()
     }
 
     fun stopInteraction()

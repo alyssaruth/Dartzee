@@ -121,7 +121,7 @@ open class PresentationDartboard(
             val timer = DurationTimer()
             val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
             paintOuterBoard(bi.createGraphics())
-            getAllSegmentsForDartzee().forEach { paintSegment(it, bi) }
+            getAllSegmentsForDartzee().paintAll(bi)
 
             g.drawImage(bi, 0, 0, this)
             lastPaintImage = bi
@@ -141,9 +141,14 @@ open class PresentationDartboard(
         val dirtySegmentsCopy = dirtySegments.toList()
         if (dirtySegmentsCopy.isNotEmpty())
         {
-            dirtySegmentsCopy.forEach { paintSegment(it, cachedImage) }
+            dirtySegmentsCopy.paintAll(cachedImage)
             dirtySegments.clear()
         }
+    }
+
+    private fun List<DartboardSegment>.paintAll(image: BufferedImage)
+    {
+        sortedBy { it.type }.forEach { paintSegment(it, image) }
     }
 
     private fun paintSegment(segment: DartboardSegment, bi: BufferedImage)
@@ -152,12 +157,13 @@ open class PresentationDartboard(
         colourSegment(segment, colour, bi)
     }
 
-    private fun defaultColourForSegment(segment: DartboardSegment): Color
+    protected fun defaultColourForSegment(segment: DartboardSegment): Color
     {
         val default = colourWrapper.getColour(segment)
         val status = segmentStatuses ?: return default
         return when {
-            status.scoringSegments.contains(segment) && !segment.isMiss() -> default
+            status.allowsMissing() && segment.isMiss() -> GREY_COLOUR_WRAPPER.getColour(segment)
+            status.scoringSegments.contains(segment) -> default
             status.validSegments.contains(segment) -> GREY_COLOUR_WRAPPER.getColour(segment)
             else -> Color.BLACK
         }
@@ -192,6 +198,11 @@ open class PresentationDartboard(
     {
         g.paint = colourWrapper.missedBoardColour
         g.fillRect(0, 0, width, height)
+
+        val borderSize = (computeRadius() * UPPER_BOUND_OUTSIDE_BOARD_RATIO).toInt()
+        val center = computeCenter()
+        g.paint = colourWrapper.outerDartboardColour
+        g.fillOval(center.x - borderSize, center.y - borderSize, borderSize * 2, borderSize * 2)
     }
 
     private fun paintOuterRing(g: Graphics2D, color: Color)

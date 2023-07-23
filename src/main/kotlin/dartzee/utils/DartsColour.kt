@@ -13,7 +13,7 @@ object DartsColour
 
     val DARTBOARD_RED: Color = Color.red
     val DARTBOARD_GREEN: Color = Color.green
-    val DARTBOARD_BLACK: Color = Color.getHSBColor(0f, 0f, 0.1.toFloat())
+    val DARTBOARD_BLACK: Color = Color(32, 42, 68)
     val DARTBOARD_WHITE: Color = Color.white
 
     val DARTBOARD_BLACK_STR = toPrefStr(DARTBOARD_BLACK)

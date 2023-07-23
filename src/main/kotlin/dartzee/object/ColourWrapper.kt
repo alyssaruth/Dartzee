@@ -15,7 +15,7 @@ fun makeMonochromeWrapper(dark: Color, light: Color): ColourWrapper
     return ColourWrapper(dark, light, light, light, dark, dark, dark, light)
 }
 
-class ColourWrapper(private var evenSingleColour : Color, private var evenDoubleColour : Color,
+data class ColourWrapper(private var evenSingleColour : Color, private var evenDoubleColour : Color,
                     private var evenTrebleColour : Color, private var oddSingleColour : Color,
                     private var oddDoubleColour : Color, private var oddTrebleColour : Color,
                     private var innerBullColour : Color, private var outerBullColour : Color,

@@ -12,6 +12,7 @@ import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.game.state.DartzeePlayerState
 import dartzee.game.state.IWrappedParticipant
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
@@ -65,6 +66,8 @@ class GamePanelDartzee(parent: AbstractDartsGameScreen,
             val segmentStatus = summaryPanel.getSegmentStatus()
             model.throwDartzeeDart(dartsThrownCount(), segmentStatus)
         }
+
+    override fun colourWrapper() = DEFAULT_COLOUR_WRAPPER
 
     override fun setGameReadOnly()
     {
