@@ -5,6 +5,7 @@ import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.screen.GameplayDartboard
 import dartzee.utils.DartsColour
@@ -24,7 +25,7 @@ import javax.swing.border.EmptyBorder
 
 class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 {
-    val dartboard: GameplayDartboard = GameplayDartboard()
+    val dartboard: GameplayDartboard = GameplayDartboard(DEFAULT_COLOUR_WRAPPER)
     val dartsThrown = mutableListOf<Dart>()
     private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false, null)
 

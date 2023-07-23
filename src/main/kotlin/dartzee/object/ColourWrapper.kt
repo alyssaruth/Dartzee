@@ -8,14 +8,14 @@ val DEFAULT_COLOUR_WRAPPER = ColourWrapper(DartsColour.DARTBOARD_BLACK, Color.RE
 
 val WIREFRAME_COLOUR_WRAPPER = ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
 
-val GREY_COLOUR_WRAPPER = makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIGHT_GRAY)
+val GREY_COLOUR_WRAPPER = makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIGHT_GRAY).also { it.outerDartboardColour = Color.GRAY }
 
 fun makeMonochromeWrapper(dark: Color, light: Color): ColourWrapper
 {
     return ColourWrapper(dark, light, light, light, dark, dark, dark, light)
 }
 
-class ColourWrapper(private var evenSingleColour : Color, private var evenDoubleColour : Color,
+data class ColourWrapper(private var evenSingleColour : Color, private var evenDoubleColour : Color,
                     private var evenTrebleColour : Color, private var oddSingleColour : Color,
                     private var oddDoubleColour : Color, private var oddTrebleColour : Color,
                     private var innerBullColour : Color, private var outerBullColour : Color,
@@ -53,7 +53,8 @@ class ColourWrapper(private var evenSingleColour : Color, private var evenDouble
         {
             1 -> getSingleColour(even)
             2 -> getDoubleColour(even)
-            else -> getTrebleColour(even)
+            3 -> getTrebleColour(even)
+            else -> outerDartboardColour
         }
     }
 

@@ -36,6 +36,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.ResourceCache.ICON_STATS_LARGE
+import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getQuotedIdStr
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -69,7 +70,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     /**
      * Screen stuff
      */
-    val dartboard = GameplayDartboard()
+    val dartboard = GameplayDartboard(colourWrapper())
     private val statsPanel = factoryStatsPanel(gameEntity.gameParams)
 
     private val panelAiSlider = JPanel()
@@ -85,6 +86,8 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     protected fun getActiveCount() = getParticipants().count { it.participant.isActive() }
 
     fun getGameId() = gameEntity.rowId
+
+    open fun colourWrapper() = getColourWrapperFromPrefs()
 
     open fun getFinishingPositionFromPlayersRemaining(): Int
     {

@@ -11,10 +11,11 @@ import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
 import dartzee.utils.factoryFontMetrics
-import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAllSegmentsForDartzee
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getFontForDartboardLabels
@@ -26,6 +27,9 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.RenderingHints
+import java.awt.Shape
+import java.awt.geom.Area
+import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -39,7 +43,7 @@ open class PresentationDartboard(
 {
     var segmentStatuses: SegmentStatuses? = null
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
-    private val dirtySegments = mutableListOf<DartboardSegment>()
+    private val dirtySegments = mutableSetOf<DartboardSegment>()
     private var lastPaintImage: BufferedImage? = null
 
     override fun computeRadius() = computeRadius(width, height)
@@ -95,7 +99,7 @@ open class PresentationDartboard(
         val oldSegmentStatus = this.segmentStatuses
         this.segmentStatuses = segmentStatuses
 
-        val changed = getAllNonMissSegments().filter { oldSegmentStatus.getSegmentStatus(it) != segmentStatuses.getSegmentStatus(it) }
+        val changed = getAllSegmentsForDartzee().filter { oldSegmentStatus.getSegmentStatus(it) != segmentStatuses.getSegmentStatus(it) }
         dirtySegments.addAll(changed)
 
         repaint()
@@ -115,10 +119,8 @@ open class PresentationDartboard(
         {
             val timer = DurationTimer()
             val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-            val biGraphics = bi.createGraphics()
-            paintOuterBoard(biGraphics)
-            getAllNonMissSegments().forEach { paintSegment(it, bi) }
-            paintScoreLabels(biGraphics)
+            paintOuterBoard(bi.createGraphics())
+            getAllSegmentsForDartzee().paintAll(bi)
 
             g.drawImage(bi, 0, 0, this)
             lastPaintImage = bi
@@ -138,9 +140,14 @@ open class PresentationDartboard(
         val dirtySegmentsCopy = dirtySegments.toList()
         if (dirtySegmentsCopy.isNotEmpty())
         {
-            dirtySegmentsCopy.forEach { paintSegment(it, cachedImage) }
+            dirtySegmentsCopy.paintAll(cachedImage)
             dirtySegments.clear()
         }
+    }
+
+    private fun List<DartboardSegment>.paintAll(image: BufferedImage)
+    {
+        sortedBy { it.type }.forEach { paintSegment(it, image) }
     }
 
     private fun paintSegment(segment: DartboardSegment, bi: BufferedImage)
@@ -149,11 +156,12 @@ open class PresentationDartboard(
         colourSegment(segment, colour, bi)
     }
 
-    private fun defaultColourForSegment(segment: DartboardSegment): Color
+    protected fun defaultColourForSegment(segment: DartboardSegment): Color
     {
         val default = colourWrapper.getColour(segment)
         val status = segmentStatuses ?: return default
         return when {
+            status.allowsMissing() && segment.isMiss() -> GREY_COLOUR_WRAPPER.getColour(segment)
             status.scoringSegments.contains(segment) -> default
             status.validSegments.contains(segment) -> GREY_COLOUR_WRAPPER.getColour(segment)
             else -> Color.BLACK
@@ -162,6 +170,12 @@ open class PresentationDartboard(
 
     private fun colourSegment(segment: DartboardSegment, color: Color, bi: BufferedImage)
     {
+        if (segment.isMiss())
+        {
+            paintOuterRing(bi.createGraphics(), color)
+            return
+        }
+
         val pts = getPointsForSegment(segment)
         val edgePts = computeEdgePoints(pts)
 
@@ -188,6 +202,38 @@ open class PresentationDartboard(
         val center = computeCenter()
         g.paint = colourWrapper.outerDartboardColour
         g.fillOval(center.x - borderSize, center.y - borderSize, borderSize * 2, borderSize * 2)
+    }
+
+    private fun paintOuterRing(g: Graphics2D, color: Color)
+    {
+        g.paint = color
+        val ring = createOuterRing()
+        g.fill(ring)
+
+        paintScoreLabels(g)
+    }
+
+    private fun createOuterRing(): Shape
+    {
+        val center = computeCenter()
+        val outerRadius = computeRadius() * UPPER_BOUND_OUTSIDE_BOARD_RATIO
+        val innerRadius = computeRadius() * UPPER_BOUND_DOUBLE_RATIO
+        val thickness = outerRadius - innerRadius
+        val outer: Ellipse2D = Ellipse2D.Double(
+            center.x - outerRadius,
+            center.y - outerRadius,
+            outerRadius + outerRadius,
+            outerRadius + outerRadius
+        )
+        val inner: Ellipse2D = Ellipse2D.Double(
+            center.x - outerRadius + thickness,
+            center.y - outerRadius + thickness,
+            outerRadius + outerRadius - (2 * thickness),
+            outerRadius + outerRadius - (2 * thickness)
+        )
+        val area = Area(outer)
+        area.subtract(Area(inner))
+        return area
     }
 
     private fun paintScoreLabels(g: Graphics2D)

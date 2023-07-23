@@ -61,6 +61,7 @@ val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
 val innerSingle = DartboardSegment(SegmentType.INNER_SINGLE, 20)
 val outerSingle = DartboardSegment(SegmentType.OUTER_SINGLE, 15)
 val missTwenty = DartboardSegment(SegmentType.MISS, 20)
+val missSeventeen = DartboardSegment(SegmentType.MISS, 17)
 
 val singleTwenty = DartboardSegment(SegmentType.INNER_SINGLE, 20)
 val doubleTwenty = DartboardSegment(SegmentType.DOUBLE, 20)
