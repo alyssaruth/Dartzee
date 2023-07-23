@@ -43,7 +43,7 @@ open class PresentationDartboard(
 {
     var segmentStatuses: SegmentStatuses? = null
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
-    private val dirtySegments = mutableListOf<DartboardSegment>()
+    private val dirtySegments = mutableSetOf<DartboardSegment>()
     private var lastPaintImage: BufferedImage? = null
 
     override fun computeRadius() = computeRadius(width, height)
@@ -113,7 +113,6 @@ open class PresentationDartboard(
         if (cachedImage != null && cachedImage.width == width && cachedImage.height == height)
         {
             repaintDirtySegments(cachedImage)
-            paintScoreLabels(cachedImage.createGraphics())
             g.drawImage(cachedImage, 0, 0, this)
         }
         else
